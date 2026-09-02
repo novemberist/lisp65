@@ -1,0 +1,128 @@
+{
+  "accounting": {
+    "hardware_runs": 0,
+    "latency": "0/2 unchanged",
+    "line1": "passed",
+    "line1_budget": "2/3 unchanged",
+    "product_links": 0
+  },
+  "authority": {
+    "existing_zero_literal_gate": {
+      "bytes": 12744,
+      "path": "tools/host-lisp/c2_zero_literal_execution_gate.py",
+      "sha256": "39586230a41ef6a806c15b0267d6578f9803297ccee8514d47704deb7db9fef7"
+    },
+    "hardware_c2d_region": {
+      "bytes": 50816,
+      "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/bank5-c2d-region-live.bin",
+      "sha256": "72aad9da265fb26a472a8eaa19f75e3e8935c0cb6210e519f3697226001545bf"
+    },
+    "hardware_session_image": {
+      "bytes": 119,
+      "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/session-emission-119.bin",
+      "sha256": "176de02000b6d29914175c2303216f7530b5a73f0b8bf6cc7f190ab643602531"
+    },
+    "link48_hardware_first_red": {
+      "bytes": 10154,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link48-zero-literal-append-hardware-first-red.json",
+      "sha256": "f9f17db39694c973968581ac657c1d70fda95c4dd63fc5a81f89b0088864b3a6"
+    },
+    "link48_initial_c2d": {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    "link48_static_code": {
+      "bytes": 34403,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin",
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "probe": {
+      "bytes": 24593,
+      "path": "tools/host-lisp/c2_lite_v6_link48_append_cutpoint_probe.py",
+      "sha256": "135f83b33a602aaff7b60587190088619ce02ca538fcaec9a9b0a4a7b0945c16"
+    },
+    "runtime_slot_contract": {
+      "bytes": 21477,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "462e7179a1cfabd47a039e51fa3b543a3a4ee4428ad71f4fa0d5e5161f203481"
+    },
+    "runtime_source": {
+      "bytes": 129011,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "7138ed3395030ef5e6140e5b776166bdf022b3cea522fcd66fe09ab4fe2159f0"
+    }
+  },
+  "claim_limit": "This receipt proves the rollback root cause and its match to the Link-48 hardware state.  It does not identify the earlier primary append/decode failure and does not authorize or implement a fix.",
+  "classification": "independent-product-contract-breach",
+  "effective_session_slots": {
+    "abort_control": 45,
+    "journal_clear": 30,
+    "journal_reconstruct": 33,
+    "journal_validate": 32,
+    "journal_write": 31,
+    "rollback_finalize": 44,
+    "rollback_prepare": 34,
+    "rollback_unpublish": 43
+  },
+  "format": "lisp65-c2-lite-v6-link48-rollback-order-first-red-v1",
+  "hardware_correlation": {
+    "explanation": "Header visibility was restored by the fail-closed landing, but rollback_unpublish, rollback_finalize and journal_clear never ran in their required order.  The ACTIVE C2J and staged suffix are the exact hardware signature of that empty/rejected plan.",
+    "journal_crc32": "0x914e4da3",
+    "journal_state": "ACTIVE",
+    "published_header_counts_restored": [
+      6,
+      588,
+      2264,
+      283
+    ],
+    "unreachable_suffix_counts": [
+      7,
+      589,
+      2264,
+      283
+    ]
+  },
+  "next_gate": "Class-C product fix must replace the impossible range with an explicit ordered rollback plan",
+  "recorded_on": "2026-07-22",
+  "required_fixture": {
+    "negatives": [
+      "unpublish omitted",
+      "finalize omitted",
+      "clear omitted",
+      "clear before finalize",
+      "descending range delegated to generic helper"
+    ],
+    "positive": "43,44,30 each execute exactly once in that order",
+    "postcondition": "C2D header, suffix, export journal and C2J are byte-identical to the pre-append snapshot after every injected abort."
+  },
+  "source_proof": {
+    "abort_driver_behavior": "rejects 43 > 30 and sets c2_ready=0",
+    "actual_executed_slots": [],
+    "actual_requested_range": [
+      43,
+      30
+    ],
+    "affected_paths": [
+      {
+        "function": "c2_append_begin/v5_fail",
+        "line": 2747
+      },
+      {
+        "function": "c2_append_rollback",
+        "line": 2758
+      },
+      {
+        "function": "c2_append_abort_control_phase",
+        "line": 2801
+      }
+    ],
+    "range_helper_semantics": "ascending inclusive; first > last executes zero phases and returns success",
+    "required_rollback_sequence": [
+      43,
+      44,
+      30
+    ]
+  },
+  "status": "FIRST RED: rollback phase order is not representable by the ascending range helper"
+}

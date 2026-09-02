@@ -1,0 +1,178 @@
+{
+  "artifacts": {
+    "real_carrier": {
+      "bytes": 1781,
+      "path": "build/c2.2/substitution/link33-two-record-island-carrier-probe/island-carrier.bin",
+      "sha256": "8651e7fb23139f642cf7988757cc9a4524c267c597c8df894bb9af67d5833a23"
+    },
+    "report": {
+      "bytes": 5748,
+      "path": "build/c2.2/substitution/link33-two-record-island-carrier-probe/two-record-contract-probe.json",
+      "sha256": "56babafe81867d3ee0ab4592a41e3ea3f0cba3c702228f3a8ad688d47afeb317"
+    },
+    "v2_boot_model": {
+      "bytes": 14325,
+      "path": "build/c2.2/substitution/link33-two-record-island-carrier-probe/l65r-v2-two-record-boot-model.bin",
+      "sha256": "50b707106a94c217dce2c2ab9005a32cfc169b1fca39509ffa8f866a51e73080"
+    }
+  },
+  "boot_store": {
+    "all_ten_records_under_1792": true,
+    "headroom_bytes": 51211,
+    "illegal_combined_model_bytes": 14171,
+    "payload_offset_after": 512,
+    "payload_offset_before": 512,
+    "record_count_after": 10,
+    "record_count_before": 9,
+    "split_alignment_cost_bytes": 154,
+    "two_record_model_bytes": 14325
+  },
+  "capacity_not_measured": {
+    "bank0": "not-run",
+    "bss": "not-run",
+    "e000": "not-run",
+    "island": "not-run",
+    "resident_product_bytes": "not-run",
+    "session_store": "unchanged-by-contract-model"
+  },
+  "claim_limit": "The exact real Island payload, L65R-v2 record semantics, boot-pack geometry and publish-last host model are proven. Target decoder, resident deltas, product link and hardware remain not-run.",
+  "container_format": {
+    "data_only_flag": 8,
+    "dual_decoder": false,
+    "entry_bytes": 32,
+    "header_bytes": 32,
+    "magic": "L65R",
+    "strict_v2_only_product": true,
+    "version": 2
+  },
+  "contract": {
+    "bytes": 2331,
+    "path": "config/c2-resident-island-two-record-contract.json",
+    "sha256": "f7f85e1ceecce76e2ef4c6be5a3ac35072ae18fba4f74b6e41bf332cb6e0c796"
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_links": 0,
+    "real_section_extractions": 10
+  },
+  "failure_cleanup_model": {
+    "destination_wiped": true,
+    "diagnostic": "carrier destination CRC mismatch",
+    "ready": false,
+    "states": [
+      "inactive",
+      "carrier-record-authenticated",
+      "carrier-payload-authenticated",
+      "dma-complete"
+    ],
+    "status": "rejected-fail-closed"
+  },
+  "format": "lisp65-c2-resident-island-two-record-probe-v1",
+  "negative_matrix": {
+    "callable-data-entry": "rejected-fail-closed",
+    "data-abi-one": "rejected-fail-closed",
+    "data-flag-absent": "rejected-fail-closed",
+    "execute-data-record": "rejected-fail-closed",
+    "over-cap": "rejected-fail-closed",
+    "overlay-load-during-installer": "rejected-fail-closed",
+    "premature-ready": "rejected-fail-closed",
+    "runtime-data-role": "rejected-fail-closed",
+    "source-crc-mismatch": "rejected-fail-closed",
+    "stale-generation": "rejected-fail-closed",
+    "target-crc-mismatch": "rejected-fail-closed",
+    "truncated-carrier": "rejected-fail-closed",
+    "unknown-data-flag": "rejected-fail-closed",
+    "v1-header-with-v2-data-record": "rejected-fail-closed",
+    "wrong-destination": "rejected-fail-closed",
+    "zero-length": "rejected-fail-closed"
+  },
+  "next_gate": "separate review of L65R-v2 product implementation and a product-shaped capacity/placement probe before any Link 33",
+  "publication_model": {
+    "destination_sha256": "8651e7fb23139f642cf7988757cc9a4524c267c597c8df894bb9af67d5833a23",
+    "ready": true,
+    "states": [
+      "inactive",
+      "carrier-record-authenticated",
+      "carrier-payload-authenticated",
+      "dma-complete",
+      "destination-authenticated",
+      "ready-published-last"
+    ],
+    "status": "passed"
+  },
+  "real_island": {
+    "bytes": 1781,
+    "crc16": 19555,
+    "placeholder_used": false,
+    "sha256": "8651e7fb23139f642cf7988757cc9a4524c267c597c8df894bb9af67d5833a23",
+    "source_section": ".lisp65_resident_island"
+  },
+  "recorded_on": "2026-07-21",
+  "records": {
+    "carrier": {
+      "abi_version": 0,
+      "bytes": 1781,
+      "crc16": 19555,
+      "data_only": true,
+      "destination": 6144,
+      "entry_offset": 65535,
+      "file_offset": 12544,
+      "headroom_bytes": 11,
+      "id": 9,
+      "physical_source": 136327424
+    },
+    "installer": {
+      "abi_version": 1,
+      "bytes": 102,
+      "claim_limit": "relocatable final-LTO code size, not executable bytes",
+      "data_only": false,
+      "entry_offset": 0,
+      "headroom_bytes": 1690,
+      "id": 8,
+      "source_section_sha256": "ffadf98e836ac67154849162e82eeb36a17879f9ce56eefb7dc294847ec70be7"
+    }
+  },
+  "sources": {
+    "canonical_profile": {
+      "bytes": 1672,
+      "format": "lisp65-c2-link33-product-profile-v1",
+      "path": "config/c2-link33-product-profile.json",
+      "sha256": "4ceb35d4bf31568229423d1d149f9d1172acc75739e9b3ce7edb355f30358764"
+    },
+    "failed_final_lto": {
+      "bytes": 564096,
+      "path": "build/c2.2/substitution/product-link-33-profile-inventory-final/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "76d811ed13cb7c2512a56ec9466fc1af90f69862460b2ccc3d392774e43dd94f"
+    },
+    "failed_final_map": {
+      "bytes": 187979,
+      "path": "build/c2.2/substitution/product-link-33-profile-inventory-final/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "c1d7af175381931d3f84a8a0fccdd62d56843c4f6aad3ba31ad46068d87ff03e"
+    },
+    "resolved_profile": {
+      "bytes": 6361,
+      "path": "build/c2.2/substitution/product-link-33-profile-inventory-final/resolved-profile.txt",
+      "sha256": "3a1e4dd43d9b8178b394c642a627d59be754c6fbc99fb5943f5dc95245399efd"
+    },
+    "seed_elf": {
+      "bytes": 561144,
+      "path": "build/c2.2/substitution/product-link-33-profile-inventory-final/resident-island-seed.prg.elf",
+      "sha256": "50c596006b4cc86f0c1cbd27e557dfb351683fa123eaf27a8ba3513827a13f28"
+    },
+    "slot37_first_red": {
+      "bytes": 11471,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link33-profile-inventory-structural-receipt.json",
+      "sha256": "35e1ac3021b70f1bd8a6f0236356f9a6dc011d401075ec46bfff9bbb8f3fc3c7"
+    }
+  },
+  "status": "passed-contract-capacity-no-product-link",
+  "structural_rules": {
+    "carrier_is_not_callable": true,
+    "no_overlay_calls_overlay": true,
+    "ready_is_last_state": true,
+    "source_and_destination_crc_equal": true,
+    "v1_generation_invalidated_before_v2_restaging": true
+  }
+}

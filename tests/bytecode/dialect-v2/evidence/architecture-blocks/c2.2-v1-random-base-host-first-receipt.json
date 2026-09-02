@@ -1,0 +1,119 @@
+{
+  "artifacts": {
+    "baseline": {
+      "code_bytes": 14297,
+      "directory_bytes": 2373,
+      "manifest": {
+        "bytes": 293332,
+        "path": "build/post-promotion/phase-v/random-base/gate/base/stdlib-p0.manifest.json",
+        "sha256": "38186bd2319be6c8e7334139b8bbb270a6ac14b43274d7949581f74908a26473"
+      },
+      "objects": 339
+    },
+    "candidate": {
+      "code_bytes": 14786,
+      "directory_bytes": 2450,
+      "manifest": {
+        "bytes": 304367,
+        "path": "build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.manifest.json",
+        "sha256": "5a9497a0a49f818b6bd73257bee2f73fe3f5bb96712e549b15eaf7f56d6b5762"
+      },
+      "objects": 350
+    },
+    "candidate_observation": {
+      "bytes": 25115,
+      "path": "build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.observations.json",
+      "sha256": "128097198f7aa9bb42b0a168edf51713e54eec0366bcfc545c6f17ba9006d830"
+    },
+    "candidate_stdout": [
+      "bytecode-p0-stdlib-check: PASS suites=1 functions=349 cases=211 objects=576 code_bytes=19369 dir_bytes=4032 steps=51350",
+      "bytecode-p0-stdlib-artifacts: WROTE build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0 objects=350 code_bytes=14786 ext_bytes=35230 dir_bytes=2450 manifest=build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.manifest.json disasm=build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.disasm.txt",
+      "bytecode-p0-stdlib-embed-check: PASS cases=211 objects=350 literal_nodes=776 literal_patches=720 steps=51350"
+    ],
+    "delta": {
+      "bank2_code_bytes": 489,
+      "directory_bytes": 77,
+      "objects": 11,
+      "resident_bytes": 0,
+      "resolution_words": 31
+    },
+    "projected_post_Link76": {
+      "bank2_headroom_bytes": 24301,
+      "bank2_static_code_bytes": 41235,
+      "entries": 693,
+      "entry_headroom": 1355,
+      "resolution_headroom": 1354,
+      "resolutions": 2742,
+      "root_headroom": 1196,
+      "roots": 340
+    }
+  },
+  "authority": {
+    "baseline_suite": {
+      "bytes": 3405,
+      "path": "tests/bytecode/libs/p0-stdlib-require-resolver.json",
+      "sha256": "e58af5c3bfb1283c5279dc19479bafdde5df8ec6083cea48dfaf965115879fa9"
+    },
+    "contract": {
+      "bytes": 2380,
+      "path": "config/c2-random-contract.json",
+      "sha256": "d6aa1460fb3275d1be0379947d981214a7cde3e2656879c63b7bfe4b475b4e22"
+    },
+    "gate": {
+      "bytes": 14671,
+      "path": "tools/host-lisp/c2_random_base_gate.py",
+      "sha256": "f8c8e28b510b2f4cc8b4fed02243940ef59d38f020cd6ccf4731af0fd2d12049"
+    },
+    "product_profile": {
+      "bytes": 4219,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "f82aa3fc0ebe43add50ef4074a6fef5262e9a2e98d56f25665f3b8ae12c5e834"
+    },
+    "source": {
+      "bytes": 2853,
+      "path": "lib/stdlib-random.lisp",
+      "sha256": "389225da8fddb04294b8a7ea925f216df748be7ea5d1f2348a36231820a26f9d"
+    },
+    "suite": {
+      "bytes": 1726,
+      "path": "tests/bytecode/libs/p0-stdlib-random-base.json",
+      "sha256": "e0cf8deb82d41a44f013632f923d76c61237436ecc4d7573f4519faad7824722"
+    }
+  },
+  "claim_limit": "Host compiler/VM execution and a Link-76-relative Bank-2/C2D capacity projection only. No product link, target timing, hardware entropy-quality or on-metal random claim.",
+  "format": "lisp65-c2.2-v1-random-base-host-first-receipt-v1",
+  "hardware_runs": 0,
+  "mutations_rejected": {
+    "consuming-key-seed": "random source seam drift",
+    "cursor-not-advanced": "random source seam drift",
+    "lag-24-index-30": "random source seam drift",
+    "native-state": "random placement contract drift",
+    "overflow-safe-add-removed": "random source seam drift",
+    "parked-defstruct-dependency": "random suite/composition drift",
+    "plain-modulo-bias": "random source seam drift",
+    "require-dependency": "random introduced require/input-consuming/shadow-registry dependency",
+    "state-width-54": "random source seam drift"
+  },
+  "next_gate": "Owner review of the V2 while contract at Halt #3; one later product-shaped link and the final bundled hardware session.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-28",
+  "source_contract": {
+    "lags": [
+      24,
+      55
+    ],
+    "private_functions": 9,
+    "public_functions": [
+      "random",
+      "random-seed"
+    ],
+    "range_size": 16384,
+    "require_dependency": false,
+    "resident_delta_bytes": 0,
+    "runtime_overlay_records": 0,
+    "state_slots": 55,
+    "status": "passed-source-contract-and-base-composition"
+  },
+  "status": "passed-random-base-host-first-and-capacity-projection"
+}

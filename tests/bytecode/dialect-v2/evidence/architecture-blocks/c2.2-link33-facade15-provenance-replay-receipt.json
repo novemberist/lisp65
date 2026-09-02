@@ -1,0 +1,90 @@
+{
+  "format": "lisp65-c2-link33-facade15-provenance-replay-first-red-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: pure provenance replay rejected the contract interval before relocation binding",
+  "execution_accounting": {
+    "pure_gate_replay_attempts": 1,
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "product_links": 0,
+    "hardware_runs": 0
+  },
+  "diagnostic": "fixed-facade provenance contract drift: ['section']: {'section': None, 'name': 'c2_facade_handle_normalize', 'address': 46540, 'bytes': 3, 'end_exclusive': 46543, 'provenance': 'fixed-facade-contract'}",
+  "root_cause": "the existing symbol_sections helper deliberately omits zero-sized NOTYPE symbols, so the contractual assembler vector has a proven address but no section in that helper's C-function-oriented view",
+  "observed_identity": {
+    "symbol": "c2_facade_handle_normalize",
+    "address": 46540,
+    "symbol_bytes": 0,
+    "symbol_type": "NOTYPE",
+    "symbol_sections_result": null,
+    "owning_output_section": ".lisp65_c2_host_facade",
+    "owning_output_section_address": 46498,
+    "owning_output_section_bytes": 45
+  },
+  "authority": {
+    "contract": {
+      "path": "config/c2-kernal-unmap-contract.json",
+      "bytes": 30567,
+      "sha256": "2fa90e824b96016a0a22683b733e6a0a9be48e251b3d264a3bf35dba60d8b8d9"
+    },
+    "contract_document": {
+      "path": "docs/planning/c2.2-kernal-unmap-contract.md",
+      "bytes": 33643,
+      "sha256": "7bb450d52f27c78c60866aaf57c8d9613922f8f3555ddd12cdf70e1dd6f21d71"
+    },
+    "plan": {
+      "path": "docs/planning/c2.2-link33-coordinated-residency-plan.md",
+      "bytes": 17780,
+      "sha256": "7664ef08ed70ae2a0d7900a40af1942f3d5e2b4ef0f9d4843f1d5186f9f9dd80"
+    }
+  },
+  "implementation": {
+    "gate": {
+      "path": "tools/host-lisp/c2_preinstall_island_guard.py",
+      "bytes": 25824,
+      "sha256": "e4cf2b49576411f7e6c3de444d1a7d271cd407a1a99eabaabc97fcf1b1a2b2f0"
+    },
+    "replay_driver": {
+      "path": "tools/host-lisp/c2_link33_facade15_provenance_replay.py",
+      "bytes": 7734,
+      "sha256": "509c1ab6c1a071e7276551ede520fc0ccefdc80549ed0779984f81a7e5a36509"
+    },
+    "source_model_mutations_before_replay": {
+      "exact_b5cc_three_byte_vector": "accepted",
+      "wrong_address_contract_object": "rejected",
+      "wrong_size_contract_object": "rejected",
+      "unlisted_facade_relocation_address": "rejected"
+    }
+  },
+  "immutable_input": {
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-bss-triage-facade15-placement-probe-receipt.json",
+      "bytes": 5195,
+      "sha256": "59209a27d73a976df4f74f57683f720b9d6a1cfe6633c74f2bb291923351fa3f"
+    },
+    "elf": {
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/bss-triage-facade15-placement-seed.prg.elf",
+      "bytes": 561144,
+      "sha256": "6644da0e46078dd0c8819188c25e9bd5b878ee387cf01719027cbba9d9c50cf3"
+    },
+    "status": "read-only and unchanged"
+  },
+  "capacity": {
+    "claim": "unchanged SHA-bound prior WPLTO map only; replay reached no new capacity gate",
+    "bank0_text": 41,
+    "ordinary_bank0_bss": 229,
+    "fixed_hot_block": 33,
+    "resident_island": 7,
+    "e000": 115,
+    "e000_debit": 422
+  },
+  "rollback_line": {
+    "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+    "bytes": 41542,
+    "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "untouched"
+  },
+  "final_e000_floor": "not-bound",
+  "next_gate": "return to review; no retry, floor binding, Link 33 or hardware",
+  "recommended_next_cut": "derive the owning section from the contractual facade output range or a section-index-preserving ELF view, not from the C-function-only symbol_sections helper; retain the same exact interval and mutations"
+}

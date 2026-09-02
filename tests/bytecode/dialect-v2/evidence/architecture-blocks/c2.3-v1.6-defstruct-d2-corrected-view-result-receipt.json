@@ -1,0 +1,179 @@
+{
+  "authorities": {
+    "C65_BOOT_map_history": {
+      "bytes": 57212,
+      "path": "docs/archive/pre-1.0/reference/mega65-lisp-start-path.md",
+      "sha256": "f9cbbc445d8849fdccbef1c954a8092f167c5d8ce06835aa43271cd4e1e2deb2"
+    },
+    "claim_correction": {
+      "bytes": 87299,
+      "path": "git:9b80f78a86b084d11985ab8052dac70864449b46:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "8b37c04d0cf72054c51df18248b3cff01b9b14bfb9b21bbd609ae720f879521c"
+    },
+    "core_CPU_MAP": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "core_ROM_flags": {
+      "bytes": 42027,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/machine_container.vhdl",
+      "sha256": "867a383d78f8644be15eaa929ee0634f6c7169fbf8adeb566456b7e88d4bec3f"
+    },
+    "core_monitor_format": {
+      "bytes": 60075,
+      "path": "build/upstream-verification/mega65-core/src/monitor/monitor.a65",
+      "sha256": "d7fd09c2a43332a9967310d3043f72de99eb2cf26c89d539f3df5ec6e39208bc"
+    },
+    "deployment": {
+      "bytes": 8053,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/deployment.json",
+      "sha256": "2f4196ac4771457fc72ddb1e6538c37ed924046d7dca7ed46011fac03dbc7669"
+    },
+    "device": {
+      "bytes": 13603,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-corrected-view-device-receipt.json",
+      "sha256": "2c312680e830c4cc09eb33ec2fdeb47c4fc6c5e51937429bc283b8998f466f79"
+    },
+    "diagnostic_window": {
+      "bytes": 8192,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-window.bin",
+      "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+    },
+    "driver": {
+      "bytes": 20695,
+      "path": "tools/host-lisp/c2_v16_corrected_view_result.py",
+      "sha256": "89679e66a6829369647f6bd35c7bcd153277934745bd6907decdf6a88ba4fcfc"
+    },
+    "historical_contact_driver": {
+      "bytes": 30473,
+      "path": "git:a1d733279c05a770cbddd1f12ae4654a921c0952:tools/host-lisp/c2_v16_corrected_view_contact.py",
+      "sha256": "562a4545f37ff16b82c03f120be182ad1906b387584d64c124e08b3eeff1e10e"
+    },
+    "preparation": {
+      "bytes": 7229,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-corrected-view-preparation-receipt.json",
+      "sha256": "46e566bf1286cd4d53a032abf5ae18d71a96b7aa3a17b73a213ca9c1fa9c0b3b"
+    },
+    "prior_attribution": {
+      "bytes": 8240,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-identity-view-desk-attribution-receipt.json",
+      "sha256": "3b58b78750ad4c782fa47374e2b5faeb61c2cc1ca45694cf215ad62d86e78771"
+    },
+    "quiet_choreography": {
+      "bytes": 8335,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-corrected-view-quiet-preparation-receipt.json",
+      "sha256": "33caa36d28b9b8804d12e78347abc5b9e2faf04d50658cb9ae1b89e58f68107a"
+    },
+    "recontact_authorization": {
+      "bytes": 90031,
+      "path": "git:1adb91539f746ff35aa444504e54af95c7a0a5b3:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "6f34d423289301fb7698ad474d606420ecadafadf50f09a3b9dedf29fda8ecc9"
+    }
+  },
+  "claim_limit": "Loud correction of the corrected-view physical RUN. It proves a non-product C65/BOOT high-MAP context only at the three stopped samples; the launch outcome is undecidable because the first t1 had no bound quiet interval. No product hang, F018B membership, R/A/I/G row, form or fix is claimed. A separate owner decision authorizes exactly one quiet-window repeat.",
+  "execution_witnesses": [
+    "all stopped-state reads use the CPU-resolved 0x0777 monitor view",
+    "MAPH=0x8300 and MAPL=0x82a0 are retained in all three samples",
+    "the ROM-enable field proves E000 hardware ROM is not selected",
+    "MAP arithmetic places E1B8 at low20 0x3e1b8, not product 0xfe1b8",
+    "the live E000 stream is stable and differs from the product window",
+    "the live loop and PC/X samples identify the C65/KERNAL context",
+    "the durable entry witness remains reset in all three samples",
+    "the configured ROM mismatch prevents an exact ROM-image overclaim",
+    "the historical runner proves monitor-sync then immediate t1",
+    "the absent pre-t1 quiet bound withdraws the no-handover claim"
+  ],
+  "facts": {
+    "code_owner": {
+      "configured_ROM_exact_match": false,
+      "exact_backing_megabyte_captured": false,
+      "live_E000_bytes": "f724a20fdd54eef005ca10f88018a5d1",
+      "observed_MAPHI": "0x8300",
+      "observed_low20_at_E1B8": "0x3e1b8",
+      "product_E000_bytes": "068a69008507a41fb1048504a001b106",
+      "product_low20_at_E1B8": "0xfe1b8",
+      "product_required_MAPHI": "0x8f00",
+      "selected_owner": "C65/BOOT high-MAP KERNAL/BASIC image; non-product",
+      "symbol_interpretation": "none; ownership precedes symbols"
+    },
+    "correction": {
+      "prior_exact_MEGA65_ROM_owner_superseded": true,
+      "prior_no_handover_claim_withdrawn": true,
+      "prior_non_product_core_holds": true,
+      "reason": "live E000 differs from configured ROM, the E000 ROM enable is clear, and MAPH selects a non-product image; the immediate t1 leaves launch outcome undecidable"
+    },
+    "decision": {
+      "F018B_membership_claim": false,
+      "R_A_I_G_claim": false,
+      "launch_boundary_named": "unresolved due to unbounded pre-t1 runtime",
+      "measured_forms_run": 0,
+      "new_contact_authorized": true,
+      "next_step": "one owner-authorized repeat with the first monitor entry at least 27.653 seconds after capture invocation",
+      "product_code_observed_in_samples": false,
+      "product_hang_claim": false
+    },
+    "launch": {
+      "PCs": [
+        "0xe1c1",
+        "0xe1bc",
+        "0xe1c1"
+      ],
+      "X": [
+        "0x0b",
+        "0x06",
+        "0x05"
+      ],
+      "classification": "LAUNCH-OUTCOME-UNDECIDABLE-EARLY-T1",
+      "control_launch_divergence_explained": false,
+      "entry_observed_during_samples": false,
+      "entry_witness": [
+        "0xd7",
+        "0xd7",
+        "0xd7"
+      ],
+      "first_observation_action": "monitor-sync then immediate t1",
+      "first_observation_quiet_interval_bound": false,
+      "live_loop": "LDX #$0f; CMP $ee54,X; BEQ; DEX; BPL"
+    },
+    "view_proof": {
+      "CPU_left_stopped": true,
+      "E000_hardware_ROM_enabled": false,
+      "MAPH": "0x8300",
+      "MAPL": "0x82a0",
+      "ROM_enable_fields": [
+        "..c..lh.",
+        "..c..lh.",
+        "..c..lh."
+      ],
+      "all_memory_commands": "m0777xxxx",
+      "samples": 3
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-D2-corrected-view-result-v2",
+  "mutations_rejected": {
+    "claim-E000-ROM": "view proof drift",
+    "claim-F018B": "claim/contact boundary drift",
+    "claim-R-A-I-G": "claim/contact boundary drift",
+    "claim-configured-ROM-match": "code-owner conclusion drift",
+    "claim-entry": "launch boundary drift",
+    "claim-launch-explained": "launch boundary drift",
+    "claim-product-code": "claim/contact boundary drift",
+    "claim-product-hang": "claim/contact boundary drift",
+    "discard-MAPH": "view proof drift",
+    "discard-MAPL": "view proof drift",
+    "erase-MAP-separation": "code-owner conclusion drift",
+    "erase-immediate-t1": "launch boundary drift",
+    "invent-form": "claim/contact boundary drift",
+    "invent-quiet-interval": "launch boundary drift",
+    "physical-view": "view proof drift",
+    "resume-CPU": "view proof drift",
+    "retain-exact-ROM-prior": "prior-claim correction drift",
+    "retain-no-handover-claim": "prior-claim correction drift",
+    "revoke-contact": "claim/contact boundary drift",
+    "select-product-owner": "code-owner conclusion drift",
+    "symbolize-before-owner": "code-owner conclusion drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "CORRECTED: NON-PRODUCT SAMPLES; LAUNCH OUTCOME UNDECIDABLE"
+}

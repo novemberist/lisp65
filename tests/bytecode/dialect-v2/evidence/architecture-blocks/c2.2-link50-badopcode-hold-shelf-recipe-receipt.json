@@ -1,0 +1,116 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 2054,
+      "path": "config/c2-badopcode-hold-shelf-recipe.json",
+      "sha256": "6792aa3adcd039f7d4f6dd9997f7357d601caea552fdb501e29857ffec6d0878"
+    },
+    "gate": {
+      "bytes": 8067,
+      "path": "tools/host-lisp/c2_badopcode_hold_shelf_gate.py",
+      "sha256": "0fc135421db33c05640821cee14bea31dbc60164fa9f638f8a401488d2eb5a6f"
+    }
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2-badopcode-hold-shelf-recipe-receipt-v1",
+  "next_use": "instantiate only after a future BADOPCODE recurrence",
+  "promotable": false,
+  "qualification": {
+    "capacity_delta_bytes": 0,
+    "capture_banks": [
+      "0x00000000..0x0000ffff (three timed reads)",
+      "0x00020000..0x0002ffff",
+      "0x00050000..0x0005ffff"
+    ],
+    "capture_symbols": {
+      "vm_buf_bank": {
+        "address": "0xbf92",
+        "bytes": 1
+      },
+      "vm_buf_off": {
+        "address": "0xb976",
+        "bytes": 2
+      },
+      "vm_codebuf": {
+        "address": "0xbf5a",
+        "bytes": 56
+      },
+      "vm_status": {
+        "address": "0x5b",
+        "bytes": 1
+      },
+      "vmr_code": {
+        "address": "0xbf97",
+        "bytes": 2
+      },
+      "vmr_hdrlen": {
+        "address": "0xbf93",
+        "bytes": 2
+      },
+      "vmr_littab": {
+        "address": "0xbf95",
+        "bytes": 2
+      },
+      "vmr_plen": {
+        "address": "0xbf9b",
+        "bytes": 2
+      },
+      "vmr_poff": {
+        "address": "0xbf99",
+        "bytes": 2
+      },
+      "vmr_pwmax": {
+        "address": "0xbf9d",
+        "bytes": 2
+      },
+      "vmr_streaming": {
+        "address": "0xbfa3",
+        "bytes": 1
+      },
+      "vmr_win": {
+        "address": "0xbf9f",
+        "bytes": 2
+      },
+      "vmr_winlen": {
+        "address": "0xbfa1",
+        "bytes": 2
+      }
+    },
+    "elf": {
+      "bytes": 609696,
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "0ac6121a0e1b484efafd81334fbe5c14909b8b741e20ee1f41caa615524f7f47"
+    },
+    "mutations_rejected": {
+      "extra-neighbour-byte": "rejected",
+      "only-opcode-changed": "rejected",
+      "only-operand-changed": "rejected",
+      "wrong-opcode": "rejected",
+      "wrong-relative-target": "rejected"
+    },
+    "patch": {
+      "after_hex": "80fe",
+      "before_hex": "8617",
+      "changed_bytes": 2,
+      "file_size_delta_bytes": 0,
+      "function": "vm_check_status",
+      "function_interval": "0x3766..0x37b1",
+      "instruction_address": "0x3774",
+      "instruction_file_offset": "0x1775"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg",
+      "sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216"
+    },
+    "promotable": false,
+    "status": "passed-prequalified-BADOPCODE-hold-shelf-recipe"
+  },
+  "recorded_on": "2026-07-22",
+  "status": "passed-prequalified-BADOPCODE-hold-shelf-recipe"
+}

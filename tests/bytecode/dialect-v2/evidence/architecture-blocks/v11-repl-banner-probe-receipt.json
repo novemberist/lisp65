@@ -1,0 +1,217 @@
+{
+  "format": "lisp65-v11-repl-banner-probe-receipt-v1",
+  "block_id": "1.1-D-repl-banner",
+  "status": "passed-not-promoted-owner-review-required",
+  "recorded_on": "2026-07-16",
+  "baseline": {
+    "source_commit": "19bba2761d8601205342b6ad1fc84412147b824c",
+    "capacity_authorization": {
+      "path": "config/v11-filter-capacity-authorization.json",
+      "sha256": "7f7333940b655b21478762eec5fd65d50a3a7f382ac4660f6bdf93320194c867"
+    },
+    "post_boot_reserve_bytes": 1795,
+    "standard_composition_ext_headroom_bytes": 25537,
+    "standard_composition_symbol_headroom": 391,
+    "standard_composition_namepool_headroom_bytes": 5668,
+    "resident_entries": 208,
+    "directory_post_align_headroom": 176,
+    "overlay_base": "0xc354",
+    "overlay_ceiling": "0xc356",
+    "overlay_headroom_bytes": 2,
+    "boot_overlay_bytes": 1669,
+    "boot_overlay_sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0",
+    "resident_code_bytes": 6076,
+    "resident_metadata_bytes": 8314,
+    "resident_external_image_bytes": 14390,
+    "artifacts": {
+      "manifest_sha256": "516f5c6052c310c4a536bc3544d51c79e44e5f83b074a32320714250e39d1ccd",
+      "external_image_sha256": "273dfef098e59ccb2ccc594165e219b2ca866be58b5b02194d70e59589812c58",
+      "composition_budget_sha256": "d0ad2e4942daba5c4c0b8536c486535b8c9e266c654025b9f79a424e815cd80b",
+      "footprint_audit_sha256": "0e416049c3707afebd5bf7bfdc6215b436ec2a2f4ba751be931b7c6a4fdcd781",
+      "linked_prg_sha256": "e253109a4b81964a9fe1c3a8c21cd974a4e151ebfd1e6d2ed1e0a00a40010c0a",
+      "resident_prg_sha256": "970a2ffe6960c6165ce28565cc759609f9cc78884094cfbb45590c4cb19b1971"
+    }
+  },
+  "probe_environment": {
+    "method": "detached temporary worktree at the baseline commit; candidate sources were never copied into the live product tree",
+    "path": "/tmp/lisp65-banner-seam-probe",
+    "promotion_state": "not-promoted",
+    "hardware": "not-run"
+  },
+  "implementation": {
+    "persistent_entries": [
+      {
+        "name": "%banner-run",
+        "ordinal": 197,
+        "code_bytes": 248
+      },
+      {
+        "name": "%repl-banner",
+        "ordinal": 198,
+        "code_bytes": 103
+      }
+    ],
+    "private_inline_helpers": [
+      "%banner-runs",
+      "%banner-subtitle"
+    ],
+    "launch_binding": {
+      "kind": "generated-directory-ordinal-seam",
+      "generated_macro": "LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY",
+      "generated_value": 198,
+      "reason": "scr_init and the first prompt are both owned by the native REPL; no Lisp code can execute between them without a minimal native launch seam",
+      "no_magic_literal": true
+    },
+    "screen_contract": {
+      "source": "config/workbench.mk",
+      "base": "0x0800",
+      "columns": 80,
+      "rows": 50,
+      "cell_bytes": 1,
+      "reverse_video": "scr_put_at attribute bit 7",
+      "color": "screen-put-char/screen-write-string attribute 15; no direct color-RAM poke",
+      "separator": "screen-write-string colors columns 1..66, then poke writes raw screen code 64 to 0x09e1..0x0a22"
+    },
+    "source_hashes": {
+      "lib/repl-banner.lisp": "595e4a2431cabdb0ad2c5bd5ac10501ab4b8ed94f780b21caa8f4530596e26dd",
+      "src/repl.c": "6214f7b7712661d08f07df0c62d0fe51a3eedbabccc974e8e3c67e429911ec75",
+      "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json": "a7a7c8fcbe30663cd570e21c07ae4518e21ccfc288be0d1e62297878d4025b67",
+      "tools/host-lisp/bytecode_p0_stdlib.py": "12d3a9bc0574cdc087e34e1636cd61731bdee8437ac24c7b24b2396b2d7f4acd"
+    }
+  },
+  "visual_oracle": {
+    "status": "pass",
+    "oracle_sha256": "0b7547f75d6cfbe7f5d72ac238109a6a457c4d50525199782d1cfc01ad02a3ac",
+    "screen_writes": 235,
+    "lambda_and_block_writes": 147,
+    "separator_writes": 66,
+    "subtitle_writes": 22,
+    "cursor_linefeeds": 9,
+    "first_prompt_row": 9,
+    "separator_screen_code": 64,
+    "separator_address_range": "0x09e1..0x0a22",
+    "p0_steps": 8109,
+    "note": "The independent oracle duplicates the normative run stream and checks the executed screen operations, raw separator bytes and prompt advance. A real-hardware screenshot remains mandatory before wave sealing."
+  },
+  "capacity_delta_scope": "compact-banner-plus-generated-launch-seam-plus-repl-byte-index-correction",
+  "capacity_delta": {
+    "dimensions": {
+      "bank": {
+        "baseline_post_boot_reserve_bytes": 1795,
+        "candidate_post_boot_reserve_bytes": 1876,
+        "release_target_bytes": 1536,
+        "candidate_margin_bytes": 340,
+        "delta_bytes": 81,
+        "authorization_status": "gain-requires-attribution-before-promotion",
+        "attribution": "The generated launch seam alone overflowed the c356 overlay ceiling. Narrowing bounded REPL cursor/status values from int to uint8_t and removing the two unused buffer bytes more than pays for the seam; REPL_BUF_MAX is permanently gated to 2..255."
+      },
+      "ext": {
+        "baseline_standard_composition_headroom_bytes": 25537,
+        "candidate_standard_composition_headroom_bytes": 25186,
+        "floor_bytes": 16384,
+        "delta_bytes": -351,
+        "candidate_margin_bytes": 8802,
+        "authorization_status": "required-before-promotion"
+      },
+      "symbols": {
+        "baseline_headroom": 391,
+        "candidate_headroom": 389,
+        "required_headroom": 32,
+        "delta": -2,
+        "authorization_status": "required-before-promotion"
+      },
+      "namepool": {
+        "baseline_headroom_bytes": 5668,
+        "candidate_headroom_bytes": 5643,
+        "required_headroom_bytes": 384,
+        "delta_bytes": -25,
+        "authorization_status": "required-before-promotion"
+      },
+      "directory": {
+        "baseline_resident_entries": 208,
+        "candidate_resident_entries": 210,
+        "raw_delta": 2,
+        "baseline_post_align_headroom": 176,
+        "candidate_post_align_headroom": 168,
+        "post_align_delta": -8,
+        "reason": "The two entries cross the next eight-entry boot alignment boundary."
+      },
+      "overlay_vma": {
+        "baseline": "0xc354",
+        "candidate": "0xc304",
+        "ceiling": "0xc356",
+        "headroom_before_bytes": 2,
+        "headroom_after_bytes": 82,
+        "headroom_delta_bytes": 80,
+        "authorization_status": "gain-requires-attribution-before-promotion"
+      },
+      "boot_overlay": {
+        "baseline_bytes": 1669,
+        "candidate_bytes": 1669,
+        "size_delta_bytes": 0,
+        "baseline_sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0",
+        "candidate_sha256": "302507a2228d1bc7027884752c7d1208e255238b09429a285b12725f2e1c4136",
+        "byte_identical": false,
+        "different_bytes": 197,
+        "attribution": "No boot-overlay-owned source changed. The REPL correction moves the overlay VMA from c354 to c304, so its absolute relocations change while size and control-audit structure remain unchanged."
+      },
+      "resident_external_image": {
+        "baseline_code_bytes": 6076,
+        "candidate_code_bytes": 6427,
+        "code_delta_bytes": 351,
+        "baseline_metadata_bytes": 8314,
+        "candidate_metadata_bytes": 8690,
+        "metadata_delta_bytes": 376,
+        "baseline_total_bytes": 14390,
+        "candidate_total_bytes": 15117,
+        "total_delta_bytes": 727,
+        "accounting_note": "Only the 351 code bytes remain in EXT after boot. Banner metadata is reclaimed after installation and does not reduce post-composition EXT headroom."
+      }
+    }
+  },
+  "candidate_artifacts": {
+    "codemod_receipt_sha256": "1114f12ec4701057e4880cef5340ba3e3fd1c4d6193f78b64eb042f4f1ebad73",
+    "generated_suite_sha256": "f4bb27d737e494314f21d9ca146eebc44e9a26103e74d6a495482e7bd10eab94",
+    "manifest_sha256": "9779dc26466b1133cf8e1014063ab8fff66e5569a85f9b04ad506559a4059e93",
+    "external_image_sha256": "8cc5291a7b5e2eec55ee862e11b8f54829d043c78169c656c1e3750cc7216897",
+    "composition_budget_sha256": "3c9dfa966b6a634705b25d32a10e5e12310df567ca89e234fdc8f5656dbae4d4",
+    "resolved_profile_sha256": "90afc89eaddb830e097a9d59b56368126ecc5c17612ca2806279cdaca8363c42",
+    "footprint_audit_sha256": "4d349ae111899ab1d02ce78f7fc98bb64fb83338ee4ab3028c1902771d8be336",
+    "layout_sha256": "aa877e5bccc75354b5ba3f34eddb2452e851a7cc233eb7def59440ff08c44c1d",
+    "control_audit_sha256": "45e74b5b07557a13bf1ab64017112b83d45324127d6a83a213d67123c11f7504",
+    "linked_prg": {
+      "bytes": 44548,
+      "sha256": "3009353491b432d0a5e52d24ecfc7a16e9bdf7b02d9542320b0fa391247c958e"
+    },
+    "resident_prg": {
+      "bytes": 39487,
+      "sha256": "eb6c084891f65a8c2badf3b6bd5d7af830fee41ab57feb5b005ac65fdfee8301"
+    }
+  },
+  "verification": {
+    "generated_v2_workbench_suite": "pass: 209 functions, 194 cases, 419 objects, 10613 code bytes, 29877 steps",
+    "embed_check": "pass: 210 objects, 268 literal nodes, 268 literal patches",
+    "visual_oracle": "pass: 235 cells plus nine linefeeds",
+    "repl_byte_index_gate": "pass: REPL_BUF_MAX=255 accepted, 256 rejected at preprocessing; canonical Workbench value is 192",
+    "canonical_product_link": "pass",
+    "composition_budget": "pass",
+    "overlay_control_audit": "pass: 1669 bytes, one resident reference, 21 section pins",
+    "hardware_screenshot": "not-run"
+  },
+  "spec_findings_requiring_owner_resolution": [
+    "The original 150..200-byte blob estimate is exceeded: the smallest measured contract-faithful implementation retains 351 code bytes.",
+    "The native REPL owns scr_init and the first prompt, so the requirement of a purely Lisp startup is replaced by a generated-ordinal launch seam.",
+    "The prose art and explicit coordinate list disagree; the probe treats the explicit coordinate list as normative.",
+    "The actual visible write count is 235, not roughly 180, when the 66-cell separator and 22-cell subtitle are counted.",
+    "The current screen character mapper has no established middle-dot mapping; the probe uses the visible ASCII subtitle WORKBENCH - DIALECT V2 instead of guessing a glyph.",
+    "The boot overlay remains size-neutral but is not byte-identical because the separately attributable REPL correction rebases it."
+  ],
+  "promotion_blockers": [
+    "owner authorization of the measured 351-byte EXT debit, two-symbol debit, 25-byte name-pool debit and eight-entry post-alignment directory debit",
+    "owner acceptance or revision of the five visible/contract corrections listed in spec_findings_requiring_owner_resolution",
+    "promotion of a permanent visual-oracle gate rather than the temporary probe copy",
+    "real-hardware screenshot acceptance",
+    "regular wave-level product and evidence repin"
+  ],
+  "claim_limit": "This receipt proves a compact, real-linked, host-observed Banner candidate and its exact capacity result. It does not authorize any debit or gain, copy candidate product sources into the live tree, promote a product set, accept the visible subtitle substitution, or claim hardware appearance."
+}

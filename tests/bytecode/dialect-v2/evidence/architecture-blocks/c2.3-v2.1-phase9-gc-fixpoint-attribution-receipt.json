@@ -1,0 +1,182 @@
+{
+  "authority": {
+    "CPU_reader_source": {
+      "bytes": 6104,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "7582759be818dc87085ff5d48aea1d73ef26f9cca659de8bed30436ba4d45ed9"
+    },
+    "assembler_ABI_gate": {
+      "bytes": 180732,
+      "path": "build/c2.3/v2.1-map-mask-fix-card/final/c2-asm-leaf-abi-dataflow-gate.json",
+      "sha256": "8f5cddd224235d9b886ef419ff9b35ff4027daf9678d6f989b39f26f63957963"
+    },
+    "candidate_ELF": {
+      "bytes": 628684,
+      "path": "build/c2.3/v2.1-map-mask-fix-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "2091df026ad760ed5931d0290999aaf425ec3a0daa2ed6c96ce8f02e321162ba"
+    },
+    "capture": {
+      "bytes": 16013,
+      "path": "build/c2.3/v2.1-map-mask-phase9-rescue/capture.json",
+      "sha256": "32e3777a2a628d623775c1b4327a6e3ab136c227e96c7532204e8b0b93668484"
+    },
+    "capture_driver": {
+      "bytes": 6244,
+      "path": "tools/host-lisp/c2_v21_phase9_rescue_capture.py",
+      "sha256": "e9fda59a93d3060d2fb562aa89f68baa441b25cbf226b51bcef5ec15e4440f5c"
+    },
+    "device_receipt": {
+      "bytes": 15917,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-gc-fixpoint-device-receipt.json",
+      "sha256": "5c8b7a974e645610e3b3eaed04f5edc17d06cf3a965dd2a277df089c7203b56b"
+    },
+    "mapped_far_facade": {
+      "bytes": 1462,
+      "path": "src/optional/c2_mapped_far_service_v2.s",
+      "sha256": "44ac718f8cd72a2f0c8357da1775c88589bb37c0660d31e29e02be974dec442d"
+    },
+    "mapped_far_source": {
+      "bytes": 9859,
+      "path": "src/c2_mapped_far_convergence.s",
+      "sha256": "697fcc294e30512ccf62255f80ae79c3a75d9bd0ef6bc79c5f920903effcb166"
+    },
+    "mem_source": {
+      "bytes": 49375,
+      "path": "src/mem.c",
+      "sha256": "b85ec5ff9d8136cb8a29a0608c9ba2e38c754f70ffefa6f3925c0045a56cd1f9"
+    }
+  },
+  "claim_limit": "The exact captured A/rc20 value, linked store and source/ELF call closure name a deterministic phase-9 GC fixpoint loop. gc_badobj=4 is cumulative without a before-sample and receives no causal or delta claim. No fix, card, resume or new device contact is authorized.",
+  "classification": {
+    "CPU_reader_exonerated": true,
+    "CPU_reader_reason": "MAPL=$0000 and phases 1..8 completed",
+    "OOM_exonerated": true,
+    "OOM_reason": "mem_oom=0 and freelist=$00A8",
+    "decoder_exonerated": true,
+    "decoder_reason": "phase=9, error=0; sampled PC is GC, not decoder/reader",
+    "gc_badobj_boundary": "gc_badobj=4 is cumulative and has no before-sample; it is retained as an anomaly but is neither used nor erased by the loop claim",
+    "loop_mechanism_named": true,
+    "mechanism": "mapped-far service violates LLVM-MOS callee-save ABI"
+  },
+  "discipline": {
+    "CPU_left_stopped": true,
+    "D2_D5_open": false,
+    "resumes": 0,
+    "runs": 0,
+    "stops": 1
+  },
+  "fix_boundary": {
+    "authorization": "not granted by this read-only attribution",
+    "gate": "The assembler ABI gate must close transitively over ASM-to-ASM callees reachable from a C-called leaf, not stop at the direct facade. A missed callee-saved register or exit must fail. c2_map_cpu_read is the named direct-C sibling for the same one-time audit.",
+    "product": "Every return from the mapped-far call closure must restore every callee-saved pseudo-register it touches; preserve the full touched set or rewrite it into caller-clobbered/owned state, then prove all exits."
+  },
+  "format": "lisp65-c2.3-v2.1-phase9-gc-fixpoint-attribution-v1",
+  "heap_state": {
+    "alloc_high": 119,
+    "allocs_since_gc": 0,
+    "c2_pending_roots": 0,
+    "c2_ready": 0,
+    "ext_mark_window": [
+      119,
+      119
+    ],
+    "freelist": 168,
+    "gc_badobj_cumulative": 4,
+    "gc_frozen": 0,
+    "gc_rootsp": 1,
+    "mem_oom": 0,
+    "str_arena_capacity": 9344,
+    "str_building": 238,
+    "str_building_cell": 119,
+    "str_frozen": 0,
+    "str_top": 9344
+  },
+  "mechanism": {
+    "boolean_changed_expected": [
+      0,
+      1
+    ],
+    "captured_A_before_store": 237,
+    "captured_rc20_rc21": [
+      237,
+      185
+    ],
+    "captured_rc20_word": "0xb9ed",
+    "clobber_chain": [
+      "gc_collect retains uint8_t changed in __rc20/$16",
+      "gc_mark_children_ext calls ext_type while changed is live",
+      "ext_type calls vm_code_load_converged for destination $B9ED",
+      "mapped-far body writes destination+index to __rc20/__rc21",
+      "mapped-far body returns without restoring callee-saved pseudo-registers",
+      "gc_collect ORs $ED into changed and stores $ED at $3BE3",
+      "the marked EXT window remains nonempty, so every pass repeats the clobber"
+    ],
+    "compiler_emitted_preservation_evidence": "gc_collect and gc_mark_spine save __rc20+ on entry; the handwritten far body instead calls __rc20..__rc31 caller-clobbered and saves none",
+    "ext_type_destination": "0xb9ed",
+    "loop_is_structurally_closed": true,
+    "mapped_far_body_preserves_rc20_rc21": false,
+    "sampled_function": "gc_collect+0x220",
+    "sampled_last_instruction": "0x3be1: ldy $06",
+    "sampled_store": "0x3be3: sta $16"
+  },
+  "mutations": {
+    "count": 15,
+    "rejected": [
+      "move-outside-gc",
+      "claim-reader-map-active",
+      "advance-decoder",
+      "invent-decoder-error",
+      "hide-arena-boundary",
+      "invent-OOM",
+      "erase-builder",
+      "move-mark-window",
+      "normalize-captured-A",
+      "normalize-captured-rc20",
+      "move-ext-type-destination",
+      "claim-far-preservation",
+      "weaken-loop-closure",
+      "reblame-reader",
+      "open-D2-D5"
+    ]
+  },
+  "recorded_on": "2026-08-15",
+  "runtime": {
+    "c2d_bytes": 33840,
+    "catalog_crc32": 1599025767,
+    "committed_roots": 0,
+    "entries_offset": 2096,
+    "entry_count": 755,
+    "entry_cursor": 0,
+    "entry_first": 4096,
+    "error": 0,
+    "finished": 0,
+    "generation": 1,
+    "image_count": 6,
+    "image_first": 0,
+    "images_offset": 48,
+    "phase": 9,
+    "reserved": 0,
+    "resolution_count": 2929,
+    "resolution_cursor": 1067,
+    "resolution_first": 0,
+    "resolutions_offset": 22576,
+    "root_count": 352,
+    "root_cursor": 352,
+    "root_first": 0,
+    "roots_offset": 30768,
+    "shelf_bytes": 93681
+  },
+  "status": "PRODUCT-FIRST-RED: GC-FIXPOINT-ABI-CLOBBER",
+  "tuple": {
+    "A": "0xed",
+    "B": "0x00",
+    "MAPH": "0x8000",
+    "MAPL": "0x0000",
+    "PC": "0x3be3",
+    "SP": "0x01c1",
+    "X": "0x77",
+    "Y": "0xa9",
+    "Z": "0x00",
+    "suffix": "A406    00     A0 N.E..... ...P 15 -  00 - .....lh."
+  }
+}

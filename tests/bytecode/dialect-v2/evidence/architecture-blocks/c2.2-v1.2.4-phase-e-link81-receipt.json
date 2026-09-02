@@ -1,0 +1,100 @@
+{
+  "format": "lisp65-c2.2-v1.2.4-phase-e-product-link-receipt-v1",
+  "recorded_on": "2026-07-30",
+  "status": "passed-bound-Link81-and-check-source",
+  "plan": {
+    "path": "docs/planning/1.2.4-work-plan.md",
+    "bytes": 11700,
+    "sha256": "f70ae2ecb1ad1bc02d20e8a9a26b977fc6b4131265f0151c10ff91a611730749"
+  },
+  "execution_accounting": {
+    "qualifying_product_links": 1,
+    "qualifying_WPLTO_closures": 1,
+    "hardware_runs": 0,
+    "pre_link_first_reds": 2,
+    "first_red_product_links": 0,
+    "note": "The two pre-link stops were composition attribution and final source-identity binding. Neither invoked the linker. Link 81 is the only linked v1.2.4 product."
+  },
+  "qualifying_candidate": {
+    "release": "v1.2.4",
+    "link": 81,
+    "resident_prg": {
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/final/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "a10b1dcd1f91ab85f61f3cab130e5ff8d8238c12a313be992ecf92343982bf0f"
+    },
+    "linked_elf": {
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/final/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 622560,
+      "sha256": "7d380f08c24b9f6bebb0d4863b56bf4a8bfaa1982484902857689936c178a222"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/final/resolved-profile.txt",
+      "bytes": 11980,
+      "sha256": "c792e12eb11c164bbe8e47f1be149e78114007192ba1d3fa641289549bc9f9b0"
+    },
+    "canonical_manifest": {
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/canonical-product-manifest.json",
+      "bytes": 18426,
+      "sha256": "7cdca5f7a4a6615c2ebb3c1ee9f0c3afebc763ae576dc5bbdca32ddb65c988cb"
+    },
+    "product_build_id": "0x15da63c2",
+    "bank2": {
+      "bytes": 43218,
+      "sha256": "d0ddf417757f62ef61f9fd453840673bb55ee9efa8800113a3ed78497c1d35b1",
+      "headroom_bytes": 22318
+    },
+    "static_plane": {
+      "images": 6,
+      "entries": 725,
+      "resolutions": 2843,
+      "roots": 340,
+      "direct_entry_refs": 656
+    },
+    "walls": {
+      "bank0_text_headroom_bytes": 243,
+      "e000_headroom_bytes": 54,
+      "fixed_hot_block_headroom_bytes": 2,
+      "ordinary_bank0_bss_headroom_bytes": 137,
+      "resident_island_headroom_bytes": 50,
+      "session_family_headroom_bytes": 113
+    }
+  },
+  "freight": {
+    "fx_bank2_delta_bytes": 1451,
+    "time_bank2_delta_bytes": 282,
+    "resident_delta_bytes": 0,
+    "final_feature_gate": {
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/receipts/v1.2.4-feature-gates.json",
+      "bytes": 3725,
+      "sha256": "f672b5b8848bcfab8b4e0995bd38592685eadda9b3f149a3acafa508e5815583"
+    }
+  },
+  "bound_artifact_parity": {
+    "status": "passed",
+    "carrier_cases": 60,
+    "manifests": 6,
+    "mutations_rejected": 6,
+    "receipt": {
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/receipts/bound-artifact-source-parity.json",
+      "bytes": 6159,
+      "sha256": "c17ec897fd9a67b8e1e09db617c6e03f508c254d59a2c306cdab6a714bbdf66d"
+    },
+    "source_bindings": {
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/receipts/bound-artifact-manifest-source-bindings.json",
+      "bytes": 33959,
+      "sha256": "ff96d7345b984bc45f0ec405fe18969c3a43e993d96fe7147c4f92f36163ae14"
+    }
+  },
+  "check_source": {
+    "status": "passed-no-exceptions",
+    "command": "make check-source",
+    "execution_witness": {
+      "equivalence_lanes": 11,
+      "equivalence_cases": 447,
+      "canary": "COMPLETE",
+      "bound_product_parity": "passed"
+    }
+  },
+  "claim_limit": "Host/WPLTO product construction, complete source gates and bound-artifact parity only. Link 81 is not accepted, hardware-qualified or promoted by this receipt."
+}

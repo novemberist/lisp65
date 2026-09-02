@@ -1,0 +1,91 @@
+{
+  "bindings": {
+    "config": {
+      "bytes": 1793,
+      "path": "config/c2-ship-builder-v1-link86-queue-cpu-witness.json",
+      "sha256": "4c1abf0746e49c9ca8a9332129c7fde5368426368248684ed64c22b80e0ee80e"
+    },
+    "driver": {
+      "bytes": 5922,
+      "path": "tools/host-lisp/c2_v13_link86_queue_cpu_witness_close.py",
+      "sha256": "847391c1ad092581e1dda470d6d4bb1cd28e1594601c226b8fb6d00ccf3b5920"
+    },
+    "image": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link86-queue-cpu-witness/interactive.d81",
+      "sha256": "0415fa9483ac65373cf4ea0a41d9298b1136137ca2009e6885e8d34ba884a387"
+    },
+    "package_readback": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link86-queue-cpu-witness/device/package-readback.d81",
+      "sha256": "0415fa9483ac65373cf4ea0a41d9298b1136137ca2009e6885e8d34ba884a387"
+    },
+    "post_key_witness": {
+      "bytes": 6,
+      "path": "build/ship-builder/v13/link86-queue-cpu-witness/device/post-key-witness.bin",
+      "sha256": "bc96a8fe449bf8a81b4d4b0a403273dc93c5e9ef8a00b79786db63e41a69c40b"
+    },
+    "pre_key_witness": {
+      "bytes": 6,
+      "path": "build/ship-builder/v13/link86-queue-cpu-witness/device/pre-key-witness.bin",
+      "sha256": "1552664e4f01c70d9f0976ecfe4e0fc6c0c595c2ec72300243fd08e0b56d62ef"
+    },
+    "preparation": {
+      "bytes": 6185,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link86-queue-cpu-witness-preparation-receipt.json",
+      "sha256": "e8ce65f4010a4cc609a56d0a11ddf7149cbf5c3aa9cada749590e5eec0d79324"
+    },
+    "session": {
+      "bytes": 5827,
+      "path": "scripts/c2-v13-link86-queue-cpu-witness-hw.sh",
+      "sha256": "38345efff450ee8b9e8f2469e1a4eb58aeca95af164ac0c10e2dfba4bb6fe1fd"
+    }
+  },
+  "candidate_link": 86,
+  "claim_limit": "One non-promotable diagnostic identity, one cold-reset physical-key contact and CPU-side live-I/O samples copied to ordinary RAM. No product fix, product link, virtual key or post-key screen capture.",
+  "contact": {
+    "cold_reset": true,
+    "count": 1,
+    "physical_key": "A",
+    "post_key_screen_captures": 0,
+    "virtual_keys": 0
+  },
+  "decision": {
+    "diagnostic_identity_promotable": false,
+    "product_candidate_bytes_changed": 0,
+    "product_fix_authorized": false,
+    "product_links_created": 0,
+    "v1.3_status": "closed-pending-owner-review"
+  },
+  "format": "lisp65-c2.3-v1.3-link86-queue-cpu-witness-device-v1",
+  "preregistered_interpretation": {
+    "result": "latched=1 and latched_state bit 7 set: CPU saw the physical key in the hardware queue before GETIN; consumer path owns the failure",
+    "selected": "queue-present-consumer-path"
+  },
+  "recorded_on": "2026-08-03",
+  "status": "DEVICE-DISCRIMINATOR-CPU-QUEUE-PRESENT",
+  "witness": {
+    "last_code": "0x41",
+    "last_state": "0x80",
+    "latched": 1,
+    "latched_code": "0x41",
+    "latched_state": "0x80",
+    "post": [
+      255,
+      128,
+      65,
+      1,
+      128,
+      65
+    ],
+    "pre": [
+      255,
+      0,
+      255,
+      0,
+      0,
+      0
+    ],
+    "samples": 255
+  }
+}

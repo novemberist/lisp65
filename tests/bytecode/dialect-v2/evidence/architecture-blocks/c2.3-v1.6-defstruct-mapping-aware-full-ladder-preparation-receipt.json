@@ -1,0 +1,114 @@
+{
+  "authorities": {
+    "ROMC_repair": {
+      "bytes": 11331,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-bootstrap-romc-repair-receipt.json",
+      "sha256": "59664c1447e6f1087024fa8c514e826e8e3ca55c0b94dfc1fdea12083e090f1a"
+    },
+    "driver": {
+      "bytes": 20280,
+      "path": "tools/host-lisp/c2_v16_full_ladder_contact.py",
+      "sha256": "fae22310c9969d4108dbef1318417f58225fa99f86bc28d2462966e444d3e457"
+    },
+    "mapping_boot_GC": {
+      "bytes": 15400,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mapping-aware-data-boot-gc-receipt.json",
+      "sha256": "2bb261b43be79a05ee28309b0bf2a7ac453cbcce9237dc5eaddd415a34946fed"
+    },
+    "owner": {
+      "bytes": 115499,
+      "path": "git:f072b72dfa1dc41237a48fe30bf62ecba0665559:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "67634b3e222c9ca5f73710f9a63d31102bd2979a4f061913f902e210d94b0e85"
+    },
+    "runner": {
+      "bytes": 4299,
+      "path": "scripts/c2-v16-defstruct-full-ladder-hw.sh",
+      "sha256": "017b25178de8e573ddc1f43f734efa2fcf51b036bd89b41227c7b3e525c0abae"
+    }
+  },
+  "claim_limit": "One physical launch ladder under the mapping-aware protocol. No pre-prompt form, product fix, Link or R/A/I/G result is claimed; the CPU remains stopped after the final ladder sample.",
+  "facts": {
+    "appointment": {
+      "CPU_left_stopped": true,
+      "cold_reset": true,
+      "measured_forms_before_prompt": 0,
+      "physical_RUN": true,
+      "quiet_floor_seconds": 27.653,
+      "samples": 3,
+      "spacing_seconds": 5.0
+    },
+    "boot_census": {
+      "allocated": 341,
+      "capacity": 1024,
+      "free": 683
+    },
+    "collection_intervals": [
+      {
+        "end_exclusive": "0x3ec2",
+        "name": "gc_collect",
+        "start": "0x38f7"
+      },
+      {
+        "end_exclusive": "0xe2dd",
+        "name": "c2_product_gc_mark_roots",
+        "start": "0xe0ba"
+      }
+    ],
+    "decision_rows": {
+      "changing_without_prompt": "TEMPORAL-PROGRESS-WITHOUT-VISIBLE-PROMPT",
+      "stable_collection": "STALLED-IN-SINGLE-COLLECTION",
+      "unstamped_post_entry": "BOOT-ENTRY-IDENTITY-FIRST-RED",
+      "visible_prompt": "BOOT-PROGRESSED-TO-VISIBLE-PROMPT"
+    },
+    "identity": {
+      "ELF": {
+        "bytes": 620700,
+        "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-link82-romc-safe.elf",
+        "sha256": "f35da58a7be356244415ca4b99b7cbb6311669026e53de5b02e868e8b8ff2142"
+      },
+      "deployment": {
+        "bytes": 8500,
+        "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/deployment.json",
+        "sha256": "b8505368b08bc9d62258454a6d3d6774e07a98c2167ee65de40aa6d773da5eed"
+      },
+      "product_bytes_changed": 0,
+      "promotable": false
+    },
+    "state_addresses": {
+      "GC_context": "0x0016..0x001f",
+      "alloc_high": "0x0039",
+      "freelist": "0x003d",
+      "gc_frozen": "0x003b",
+      "gc_runs": "0xb9f0",
+      "witness": "0xb5c3"
+    },
+    "view_protocol": {
+      "closed_mapping": {
+        "MAPH": "0x8000",
+        "MAPL": "0x0000"
+      },
+      "code": "CPU-view bytes then unique active-owner binding",
+      "data": "captured mapping then physical Bank-0 translation",
+      "mapping_captured_before_every_data_read": true
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-mapping-aware-full-ladder-preparation-v1",
+  "mutations_rejected": {
+    "change-boot-count": "boot census drift",
+    "change-capacity": "boot census drift",
+    "claim-identity-as-product": "decision-row drift",
+    "drop-mapping-capture": "mapping/code view protocol drift",
+    "one-sample": "appointment boundary drift",
+    "physical-code-owner": "mapping/code view protocol drift",
+    "raw-ROM-data": "mapping/code view protocol drift",
+    "resume-final": "appointment boundary drift",
+    "run-form-early": "appointment boundary drift",
+    "short-quiet": "appointment boundary drift",
+    "virtual-RUN": "appointment boundary drift",
+    "widen-prompt-row": "decision-row drift",
+    "widen-stable-row": "decision-row drift",
+    "zero-spacing": "appointment boundary drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "HOST-GREEN; ONE FULL-LADDER CONTACT AUTHORIZED"
+}

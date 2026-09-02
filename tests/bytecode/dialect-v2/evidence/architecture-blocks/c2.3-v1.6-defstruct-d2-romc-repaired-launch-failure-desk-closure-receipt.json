@@ -1,0 +1,131 @@
+{
+  "authorities": {
+    "CPU_mapping": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "ROMC_repair": {
+      "bytes": 11331,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-bootstrap-romc-repair-receipt.json",
+      "sha256": "59664c1447e6f1087024fa8c514e826e8e3ca55c0b94dfc1fdea12083e090f1a"
+    },
+    "VIC_registers": {
+      "bytes": 295819,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/viciv.vhdl",
+      "sha256": "8bc1db6e5e0e85fe1c1b777e899816362c6e0b06f9f49ee7fa8502b7b13b4ca2"
+    },
+    "device": {
+      "bytes": 12484,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-romc-repaired-launch-failure-device-receipt.json",
+      "sha256": "d0dfbdb6fdd4034b41dd3755af3015c8d4169c2643493171c69b2e3a004dceae"
+    },
+    "diagnostic_ELF": {
+      "bytes": 620700,
+      "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-link82-romc-safe.elf",
+      "sha256": "f35da58a7be356244415ca4b99b7cbb6311669026e53de5b02e868e8b8ff2142"
+    },
+    "driver": {
+      "bytes": 16824,
+      "path": "tools/host-lisp/c2_v16_romc_launch_failure_desk_closure.py",
+      "sha256": "ee3f6c828b2c6affee6c477650a7847d0a57ac8449c782af28ef3a1f29ae3f0e"
+    },
+    "durable_witness_contract": {
+      "bytes": 14701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-boot-order-durable-witness-receipt.json",
+      "sha256": "5ec917daf1308ebab615b7fa73f0997b87abbe52d85ee0488ba41033b0d7cb8e"
+    },
+    "monitor_ROM_fields": {
+      "bytes": 60075,
+      "path": "build/upstream-verification/mega65-core/src/monitor/monitor.a65",
+      "sha256": "d7fd09c2a43332a9967310d3043f72de99eb2cf26c89d539f3df5ec6e39208bc"
+    },
+    "monitor_ROM_wiring": {
+      "bytes": 42027,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/machine_container.vhdl",
+      "sha256": "867a383d78f8644be15eaa929ee0634f6c7169fbf8adeb566456b7e88d4bec3f"
+    },
+    "plan": {
+      "bytes": 110182,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "23037d59f32d6f47586c3056d6525fbcfbc0223e9ec91a445fad8f3639304b17"
+    }
+  },
+  "claim_limit": "Desk closure of the consumed launch-failure capture only. Product handover is proven; liveness and obscured diagnostic state are not. No product hang, GC behavior, witness lifetime, first-error, R/A/I/G result, new contact, reset or resume is claimed.",
+  "execution_witnesses": [
+    "the stopped $3B0D bytes uniquely match the diagnostic product image",
+    "$3B0D resolves to gc_collect+$216 / STY $06 in the bound ELF",
+    "MAPH=$8000 leaves the B000 and C000 blocks to ROM resolution",
+    "active LORAM+HIRAM map B000 reads to BASIC ROM",
+    "active ROMC maps C000 reads to C65 ROM",
+    "raw witness/counter/record bytes match the obscured-view packet",
+    "no measured form ran and the CPU remains stopped"
+  ],
+  "facts": {
+    "capture_classification": {
+      "boot_witness_0x22": "BASIC-ROM byte, not $B5C3 RAM",
+      "durable_witness_lifetime": "not evaluated by this capture",
+      "first_error_ffff": "ROMC bytes, not first-error state",
+      "gc_runs_raw_0x4c03": "BASIC-ROM bytes, not gc_runs",
+      "phase_all_ff": "ROMC bytes, not phase scratch",
+      "phase_owner_00": "visible low-RAM byte but no form was armed or run",
+      "record_all_ff": "ROMC bytes, not the diagnostic record",
+      "record_armed": "not observable through the captured C000 CPU view"
+    },
+    "decision": {
+      "CPU_left_stopped": true,
+      "GC_loop_claim": false,
+      "R_A_I_G_result": null,
+      "boot_witness_overwrite_claim": false,
+      "device_action_authorized": false,
+      "measured_forms": 0,
+      "new_contact_authorized": false,
+      "next_desk_question": "design a stopped-state observation whose record/witness slots remain visible in the executing CPU world, or prove a separate under-ROM read authority, before any new contact question",
+      "product_hang_claim": false,
+      "slow_progress_claim": false
+    },
+    "launch": {
+      "PC": "0x3b0d",
+      "instruction": "STY $06",
+      "instruction_owner": "ROMC-repaired-diagnostic-PRG",
+      "product_handover_proven": true,
+      "single_PC_semantics": "snapshot-only; no hang, loop or progress claim",
+      "symbol": "gc_collect",
+      "symbol_offset": "0x0216",
+      "symbol_start": "0x38f7",
+      "visible_prompt": false
+    },
+    "stopped_view": {
+      "B000_reads": "C64 BASIC ROM at physical $002Bxxxx",
+      "C000_reads": "C65 ROMC at physical $002Cxxxx",
+      "CPU_port_bits_2_1_0": "111",
+      "HIRAM": true,
+      "LORAM": true,
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC_read": "ordinary low RAM; unique diagnostic owner",
+      "ROMC": true,
+      "ROM_port_field": "..c..lhc"
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-romc-launch-failure-desk-closure-v1",
+  "mutations_rejected": [
+    "claim-no-product-handover",
+    "claim-product-hang",
+    "claim-GC-loop",
+    "claim-slow-progress",
+    "claim-gc-runs-19459",
+    "claim-first-error-ffff",
+    "claim-record-reset",
+    "claim-witness-overwrite",
+    "claim-R-A-I-G",
+    "claim-new-contact",
+    "claim-device-action",
+    "claim-CPU-resumed",
+    "drop-ROMC",
+    "drop-BASIC-ROM",
+    "drop-code-owner"
+  ],
+  "recorded_on": "2026-08-05",
+  "status": "PRODUCT HANDOVER PROVEN; DIAGNOSTIC STATE HIDDEN BY ROM WINDOWS"
+}

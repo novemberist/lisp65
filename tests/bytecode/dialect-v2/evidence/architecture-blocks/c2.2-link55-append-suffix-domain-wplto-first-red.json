@@ -1,0 +1,189 @@
+{
+  "authority": {
+    "append_suffix_contract_probe": {
+      "bytes": 2843,
+      "mode": "0444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link54-phase06a-suffix-contract-probe-receipt.json",
+      "sha256": "8ab10e9a0b858f162900d6d527dfd902fcca7f0e97a6115e4151546af88d607a"
+    },
+    "append_suffix_read_domain_contract": {
+      "bytes": 2672,
+      "path": "config/c2-append-suffix-read-domain-contract.json",
+      "sha256": "f20282928acd4226e62dd29be04e8c6230f606758562108b9ac48bf7df976add"
+    },
+    "link54_hardware_first_red": {
+      "bytes": 7512,
+      "mode": "0444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link54-phase06a-cutpoint-hardware-first-red.json",
+      "sha256": "08cb5b0a3a258a47614bb01f60ca71ace2c20101f3b1442c9bc137765fe64ad8"
+    },
+    "link54_rollback_product": {
+      "bytes": 41542,
+      "mode": "0444",
+      "path": "build/c2.2/substitution/product-link-54-c2-lite-v6-phase06a-cutpoint/lisp65-c2-substitution-linked.prg",
+      "sha256": "4cfc797f4ac4fac6cc4fea363ea684ea0dc8c7b395372ebc8bbfe2072fedef07",
+      "status": "untouched"
+    },
+    "link54_structural_receipt": {
+      "bytes": 414655,
+      "mode": "0444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link54-c2-lite-v6-phase06a-cutpoint-structural-receipt.json",
+      "sha256": "1d57762c36832d70f91299e6cc7ea44b72a5634301075983ffd3441ae3a08b34"
+    }
+  },
+  "counters": {
+    "completed_latency_measurements": "0/2",
+    "line1_product_first_reds": "2/3"
+  },
+  "execution": {
+    "compiler_runs": 1,
+    "hardware_runs": 0,
+    "product_links": 0,
+    "retries": 0,
+    "wplto_runs": 1
+  },
+  "first_red": {
+    "candidate_geometry": {
+      "c2_resident": {
+        "bytes": 7574,
+        "end": "0xfe33",
+        "start": "0xe09e"
+      },
+      "c2_stream_shelf_read": {
+        "bytes": 615,
+        "start": "0xe5a0"
+      },
+      "reopen_gap0": {
+        "bytes": 128,
+        "end": "0xfeb3",
+        "start": "0xfe34"
+      },
+      "reopen_gap1": {
+        "bytes": 238,
+        "end": "0xff6f",
+        "start": "0xfe82"
+      }
+    },
+    "exact_attribution": {
+      "c2_resident_delta_bytes": 406,
+      "c2_stream_shelf_read_delta_bytes": 406,
+      "other_c2_resident_delta_bytes": 0
+    },
+    "fixed_geometry_collisions": {
+      "c2_resident_over_session_emitter_bytes": 274,
+      "profile_rodata_over_reopen_gap0_bytes": 78,
+      "reopen_gap0_over_reopen_gap1_bytes": 50
+    },
+    "link54_baseline": {
+      "c2_resident": {
+        "bytes": 7168,
+        "end": "0xfc9d",
+        "start": "0xe09e"
+      },
+      "c2_stream_shelf_read": {
+        "bytes": 209,
+        "start": "0xe5a0"
+      },
+      "e000_headroom_bytes": 58
+    },
+    "window_floor": {
+      "candidate_projected_headroom_bytes": -348,
+      "contract_floor_bytes": 54,
+      "deficit_against_floor_bytes": 402
+    }
+  },
+  "format": "lisp65-c2-link55-append-suffix-domain-wplto-first-red-v1",
+  "product_fix_semantics": {
+    "boot_full_stage_preserved": true,
+    "dynamic_source_domain": "after READY only the active append's tagged private Session span may reach DMA",
+    "new_state_bytes": 0,
+    "suffix_lower_bound": "c2_stream_context.image_first",
+    "suffix_phases": [
+      "06a",
+      "06b",
+      "07",
+      "08"
+    ]
+  },
+  "recorded_on": "2026-07-23",
+  "source_gate": {
+    "fixture_cases_passed": 11,
+    "negative_mutations": [
+      "phase06a-starts-at-zero",
+      "phase06b-starts-at-zero",
+      "phase07-starts-at-zero",
+      "phase08-starts-at-zero",
+      "boot-skips-image-zero",
+      "append-reads-prefix",
+      "ready-accepts-shelf-domain",
+      "ready-accepts-missing-session-tag",
+      "ready-accepts-foreign-decode-context",
+      "ready-accepts-before-transaction-span",
+      "ready-accepts-after-transaction-span",
+      "ready-accepts-wrapped-transaction-span",
+      "domain-failure-starts-dma"
+    ],
+    "status": "passed-four-phase-suffix-and-source-domain-contract"
+  },
+  "source_truth": {
+    "decoder": {
+      "bytes": 37210,
+      "path": "scripts/c2-stream-decoder.c",
+      "sha256": "f6a91e8544694e6fb06b9cd13bae0eb444b5c897faf6545d5137adde91eaedb8"
+    },
+    "gate": {
+      "bytes": 13728,
+      "path": "tools/host-lisp/c2_append_suffix_read_domain_gate.py",
+      "sha256": "c275dd0e0a7345b6a94d1610e6264c0c32c24bc66039db439bfe2de17e9840a4"
+    },
+    "permanent_preflight": {
+      "bytes": 21664,
+      "path": "mk/gates.mk",
+      "sha256": "ac1aeb19bce6ae56b885697d81f15128cfeac31f7fa6b941e9206cf35afbce79"
+    },
+    "runtime": {
+      "bytes": 137521,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "faf84a09e27ac34f4efd5ca7da48d49dbf10373370f380f044357f4b7c175888"
+    },
+    "wplto_driver": {
+      "bytes": 7816,
+      "path": "tools/host-lisp/c2_lite_v6_link55_append_suffix_domain_wplto.py",
+      "sha256": "d07674ebe1d0afa0a0d992c564b74c523821613393a8cd64572163e71e92b045"
+    }
+  },
+  "status": "first-red-source-domain-guard-expands-resident-window-by-406-bytes",
+  "truth_artifacts": {
+    "baseline_map": {
+      "bytes": 189958,
+      "mode": "0444",
+      "path": "build/c2.2/substitution/link54-phase06a-cutpoint-wplto/resident-island-seed.prg.map",
+      "sha256": "4a0371b15dadeb0cd321c0532ff0021d0cef74bd161f572509554647ac2a7e12"
+    },
+    "candidate_lto_object": {
+      "bytes": 610884,
+      "mode": "0444",
+      "path": "build/c2.2/substitution/link55-append-suffix-domain-wplto/resident-island-seed.prg.lto.o",
+      "sha256": "ce0ada9fc556a9be896a9ece6a3ab2a9c71645510f31e85f735058d4d738ba6f"
+    },
+    "candidate_map": {
+      "bytes": 191445,
+      "mode": "0444",
+      "path": "build/c2.2/substitution/link55-append-suffix-domain-wplto/resident-island-seed.prg.map",
+      "sha256": "b67291e2ca5d485a5341f28d9c255852c30658fe829980eb5c7e043e017030f0"
+    },
+    "linker_diagnostic": {
+      "bytes": 3607,
+      "mode": "0444",
+      "path": "build/c2.2/substitution/link55-append-suffix-domain-wplto/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "b9dde60c129ba2f5b49d626e0c41673d08fafd7b8bbf73eb2aed9128385f33a0"
+    }
+  },
+  "unreached": [
+    "final linked ELF",
+    "linked suffix/read-domain gate",
+    "remaining capacity walls",
+    "product Link 55",
+    "hardware"
+  ]
+}

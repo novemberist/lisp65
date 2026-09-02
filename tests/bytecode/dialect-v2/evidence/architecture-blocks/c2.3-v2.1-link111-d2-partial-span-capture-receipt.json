@@ -1,0 +1,253 @@
+{
+  "append": {
+    "append_scalars": {
+      "attic": 0,
+      "code_len": 20,
+      "code_off": 64,
+      "entries": 1,
+      "length": 148,
+      "literals": 1,
+      "meta_len": 64,
+      "meta_off": 84,
+      "new_entries": 772,
+      "new_images": 9,
+      "new_resolutions": 3349,
+      "new_roots": 563,
+      "old_entries": 771,
+      "old_images": 8,
+      "old_resolutions": 3348,
+      "old_roots": 563,
+      "roots": 0
+    },
+    "committed": 0,
+    "decoder_context": {
+      "c2d_bytes": 33840,
+      "catalog_crc32": 1599025767,
+      "entries_offset": 2096,
+      "entry_count": 772,
+      "entry_cursor": 0,
+      "entry_first": 771,
+      "error": 7,
+      "finished": 0,
+      "generation": 1,
+      "image_count": 9,
+      "image_cursor": 563,
+      "image_first": 8,
+      "images_offset": 48,
+      "pair_depth_max": 563,
+      "phase": 10,
+      "reserved": 0,
+      "resolution_count": 3349,
+      "resolution_cursor": 3348,
+      "resolution_first": 3348,
+      "resolutions_offset": 22576,
+      "root_first": 563,
+      "roots_offset": 30768,
+      "shelf_bytes": 93681
+    },
+    "installer_trace": {
+      "flags": 128,
+      "interpretation": "cleanup/rollback provenance only; phase-10 decoder state names the forward failure",
+      "last_slot": 39
+    },
+    "rollback_rebuild_header": 0,
+    "staged": 1
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 629736,
+      "path": "build/c2.3/v2.1-terminal-screen-lease-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "08b51ddd4b511d1cefa7b28bb42aa3cf5548e4f01cbb830bf5e8fc3475ec3be7"
+    },
+    "capture_checker": {
+      "bytes": 14835,
+      "path": "tools/host-lisp/c2_v21_d2_partial_span_capture.py",
+      "sha256": "168473180c0648dfa5987969a2646a3322c84ac560ac38e6cc2319945b1eb937"
+    },
+    "desk_receipt": {
+      "bytes": 5282,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-link111-d2-partial-span-desk-receipt.json",
+      "sha256": "958eff9abab96e68d0d49308fa1e44d2c2ddb605bc4a42e5171927e24c1ed8ee"
+    },
+    "historical_capture": {
+      "bytes": 11083,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-name-freight-d2-defun-badopcode-capture-receipt.json",
+      "sha256": "c4bc5063300a13f15e2a002648de5754a77efafa29b6686d6c521ddcf0543de7"
+    }
+  },
+  "capture": {
+    "CPU_remains_stopped": true,
+    "device_resumes": 0,
+    "device_stops": 1,
+    "physical_reads": [
+      {
+        "bytes": 65536,
+        "path": "build/c2.3/v2.1-link111-d2-partial-span-capture/physical-bank0.bin",
+        "sha256": "f5ab3316533eb1499c6eabffafe485f2de2f421c39651eab54978d57f45d6b2d"
+      },
+      {
+        "bytes": 27648,
+        "path": "build/c2.3/v2.1-link111-d2-partial-span-capture/physical-bank4.bin",
+        "sha256": "17dd539ddde1c948457b868fe0b92db5ad9f23b5ec76280a88d01a934574aed9"
+      },
+      {
+        "bytes": 50816,
+        "path": "build/c2.3/v2.1-link111-d2-partial-span-capture/physical-bank5.bin",
+        "sha256": "120f15bd9453363894fd40377f80111008fec5d0d900e1e95f3126cb5f84e15d"
+      }
+    ],
+    "registers": {
+      "A": "0xcf",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC": "0xe004",
+      "SP": "0x01d8",
+      "X": "0xcf",
+      "Y": "0x00",
+      "Z": "0x00",
+      "raw_hex": "74310d0a0d0a2e720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303034204346204346203030203030203030203031443820383030302030303030203035303520202020303020202020204131204e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737374530303420204630203244202020202042455120202024453033330d0a0d0a2e",
+      "row": "E004 CF CF 00 00 00 01D8 8000 0000 0505    00     A1 N.E....C ...P 15 -  00 - .....lh.",
+      "tail": "0505    00     A1 N.E....C ...P 15 -  00 - .....lh."
+    }
+  },
+  "claim_limit": "This capture proves target membership and the failure mechanism. It authorizes no fix, relink, media rebuild, resume, or D3-D5 continuation.",
+  "conclusion": {
+    "D3_D5_open": false,
+    "evidence_chain": [
+      "the delivered primitive accepts the retained first byte without a full-span rescan",
+      "the current target staged the exact historical poisoned object byte for byte",
+      "phase 10 rejected its noncanonical 0xa0 resolution name",
+      "rollback left C2J CLEAR and the committed runtime unchanged"
+    ],
+    "fix_authorized": false,
+    "mechanism": "the first-difference-only convergence verifier returned before the complete requested span was content-converged",
+    "next": "owner disposition for pricing a verifier that covers the whole span under real partial transfers",
+    "partial_span_F018B_family_membership": true,
+    "product_guard_behavior": "correct fail-closed rollback; no C2D commit",
+    "slot39_correction": "slot 39 is cleanup/rollback provenance and does not name the forward failure"
+  },
+  "execution_accounting": {
+    "WPLTO": 0,
+    "device_contacts": 1,
+    "device_resumes": 0,
+    "device_stops": 1,
+    "links": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2.3-v2.1-link111-D2-partial-span-capture-v1",
+  "historical_control": {
+    "current_staged_object_byteidentical": true,
+    "receipt": {
+      "bytes": 11083,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-name-freight-d2-defun-badopcode-capture-receipt.json",
+      "sha256": "c4bc5063300a13f15e2a002648de5754a77efafa29b6686d6c521ddcf0543de7"
+    },
+    "same_terminal_surface": "defun trace-probe -> VM_BADOPCODE",
+    "staged_object_sha256": "40acc5f061b755f2a2ddda4b6cbd64ac3bba9eae1c6295493411d38b09d86fcd"
+  },
+  "mutations_rejected": [
+    "move-decoder-phase",
+    "erase-resolution-error",
+    "claim-commit",
+    "change-staged-sha",
+    "normalize-symbol-byte",
+    "break-staged-CRC",
+    "deny-historical-identity",
+    "invent-OOM",
+    "invent-phase-owner",
+    "withdraw-membership",
+    "silently-authorize-fix",
+    "open-D3",
+    "resume-after-capture"
+  ],
+  "recorded_on": "2026-08-16",
+  "staged_object": {
+    "all_CRCs_valid": true,
+    "bytes": 148,
+    "code": {
+      "bytes": 20,
+      "decoded_body": [
+        "PUSHARG0",
+        "PUSHI8 1",
+        "ADD",
+        "RET"
+      ],
+      "decoded_prefix": [
+        "PUSHLIT 0",
+        "CALLPRIM symbol-value/1",
+        "DROP"
+      ],
+      "flags": 2,
+      "hex": "b50100020b0001000006003d13013b0b01010205",
+      "literal_count": 1,
+      "nargs": 1,
+      "nlocals": 0,
+      "payload_bytes": 11,
+      "payload_hex": "06003d13013b0b01010205"
+    },
+    "metadata": {
+      "bytes": 64,
+      "entry_hex": "00000014000000010000010000000000",
+      "literal_descriptor": {
+        "hex": "080001000d000000",
+        "kind": 8,
+        "length": 1,
+        "string_offset": 13
+      },
+      "strings": [
+        {
+          "bytes": "trace-probe",
+          "length": 11,
+          "offset": 0
+        },
+        {
+          "canonical_ASCII": false,
+          "hex": "a0",
+          "length": 1,
+          "offset": 13
+        }
+      ]
+    },
+    "physical_address": "0x00046a00",
+    "sha256": "40acc5f061b755f2a2ddda4b6cbd64ac3bba9eae1c6295493411d38b09d86fcd"
+  },
+  "status": "PARTIAL-SPAN-F018B-TARGET-MEMBERSHIP-PROVEN",
+  "target_state": {
+    "C2J_CLEAR": true,
+    "c2_journal_count": 0,
+    "committed_runtime": {
+      "c2d_bytes": 33840,
+      "catalog_crc32": 1599025767,
+      "entries_offset": 2096,
+      "entry_count": 771,
+      "entry_cursor": 0,
+      "entry_first": 4096,
+      "error": 0,
+      "finished": 1,
+      "generation": 1,
+      "image_count": 8,
+      "image_cursor": 563,
+      "image_first": 7,
+      "images_offset": 48,
+      "pair_depth_max": 563,
+      "phase": 13,
+      "reserved": 0,
+      "resolution_count": 3348,
+      "resolution_cursor": 3348,
+      "resolution_first": 3338,
+      "resolutions_offset": 22576,
+      "root_first": 563,
+      "roots_offset": 30768,
+      "shelf_bytes": 93681
+    },
+    "gc_badobj": 0,
+    "gc_runs": 6,
+    "mem_oom": 0,
+    "namepool_used": 10021,
+    "phase_owner": 0,
+    "sym_name_scratch_hex": "a0000000000000000000000000000000000000000000000000000000000000000000",
+    "symbol_count": 711,
+    "vm_status_after_REPL_cleanup": 0
+  }
+}

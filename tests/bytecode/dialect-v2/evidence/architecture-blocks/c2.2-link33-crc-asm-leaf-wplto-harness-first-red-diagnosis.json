@@ -1,0 +1,91 @@
+{
+  "format": "lisp65-c2-crc-asm-leaf-wplto-harness-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "first-red-harness-key-contract-no-replay",
+  "scope": {
+    "authorized_product_shaped_wplto_probes": 1,
+    "consumed_product_shaped_wplto_probes": 1,
+    "whole_program_lto_internal_links": 2,
+    "product_closure_links": 0,
+    "product_candidates": 0,
+    "hardware_runs": 0,
+    "pure_replays_after_first_red": 0
+  },
+  "first_red": {
+    "type": "KeyError",
+    "message": "'status'",
+    "location": "c2_l65r_v2_boot_family_probe.run_once receipt assembly",
+    "cause": "extract_provisional_kernal_window returns identity_status because the 8-KiB window is intentionally not identity-pinned in a probe; the receipt builder incorrectly indexed a non-existent generic status field after all probe work had completed",
+    "classification": "probe-harness-contract-error-not-product-not-capacity-not-crc",
+    "fix": "record provisional_window=passed for the already-proved 8-KiB extraction while retaining identity_status=provisional-unpinned-hardware-prohibited as the separate identity claim"
+  },
+  "immutable_evidence": {
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-crc-asm-leaf-wplto-probe-receipt.json",
+      "bytes": 17026,
+      "sha256": "832639c8bf1d9694d5670802091582f4c1e00883ec5ab9331544ed5dd96dd57f"
+    },
+    "placement_elf": {
+      "path": "build/c2.2/substitution/link33-crc-asm-leaf-wplto/l65r-v2-boot-family-placement.prg.elf",
+      "bytes": 565564,
+      "sha256": "5d80c52c39cff7844f4206209416aa3a9a4d01bad1472f9e292472df44a117b0"
+    },
+    "placement_map": {
+      "path": "build/c2.2/substitution/link33-crc-asm-leaf-wplto/l65r-v2-boot-family-placement.prg.map",
+      "bytes": 180886,
+      "sha256": "4cabcf761abf800cb08523ce65e17786a57a9d3264af83f5248fb6a417a46561"
+    },
+    "rollback_product": {
+      "path": "build/c2.2/substitution/product-link-33-handoff-reanchor-final/lisp65-c2-substitution-linked.prg",
+      "sha256": "5f44b65a1a67530a9c3c8b687d7be597422978ae749f56101f42bdcebaf50044",
+      "status": "untouched"
+    }
+  },
+  "read_only_post_stop_diagnosis": {
+    "assembler_leaf": {
+      "section": ".text",
+      "symbol_type": "Function",
+      "address": 8749,
+      "bytes": 66,
+      "link33_c_baseline_bytes": 41,
+      "function_delta_bytes": 25,
+      "dew_count": 0,
+      "byte_decrement_operands": [4, 5],
+      "pointer_progress_instruction_count": 1,
+      "catalog_crc_call_count": 1
+    },
+    "crc_equivalence": {
+      "status": "passed-linked-final-elf-read-only-diagnosis",
+      "vectors": 5,
+      "lengths": [0, 9, 256, 1156, 4097],
+      "canonical_123456789_crc16": 10673
+    },
+    "resident_walls": {
+      "bank0_text_headroom_bytes": 55,
+      "ordinary_bank0_bss_headroom_bytes": 195,
+      "fixed_hot_block_headroom_bytes": 33,
+      "resident_island_headroom_bytes": 7,
+      "e000_headroom_bytes": 115
+    },
+    "structural_results_reached_before_harness_error": {
+      "handoff": "passed",
+      "pre_ownership": "passed",
+      "profile_data_references": "passed",
+      "fixed_facade": "passed",
+      "runtime_family_identity": "passed",
+      "one_truth": "passed",
+      "kernal_freedom": "passed",
+      "verifier_publish_last": "passed",
+      "boot_lifetime": "passed-single-boot-installer-lifetime-closure",
+      "preinstallation_island": "passed-static-preinstallation-Island-gate",
+      "f011_mount_window": "pass-measured-owner-accepted-contract-limit"
+    },
+    "claim_limit": "Read-only diagnosis of the immutable failed-probe artifacts. These values are not a green probe receipt, product link, product identity, hardware result, promotion or acceptance."
+  },
+  "next_decision": {
+    "recommended": "one pure replay of the corrected receipt and gates against the SHA-bound placement ELF, with zero compiler or linker invocations",
+    "automatic_replay_authorized": false,
+    "successor_product_link_authorized": false,
+    "hardware_authorized": false
+  }
+}

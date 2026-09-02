@@ -1,0 +1,119 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 325639,
+    "commit": "46ddd514e4f8ad3d5e1f40a2154db04e02da6d32",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "e3e82116fec3a17096c4d93b4a10cb207b2cc2f2b6876f44fa2efe385a5935e4"
+  },
+  "claim_limit": "Host/ELF reachability classification only. The exact 0xc8b5 device symptom was observed on v1.6, not replayed on v1.5 hardware. No product fix, link, media or device action is authorized.",
+  "decision": {
+    "known_issue": "required for v1.6 release documentation",
+    "question_1": "pre-existing-product-defect",
+    "question_2": "SKIPPED: question 1 made v1.6 capacity pricing unnecessary",
+    "question_3": "SKIPPED: question 1 did not say blocks",
+    "successor": "v1.7 constructive-retirement backstop",
+    "v1.6_release_effect": "items 1 and 2 are not blocked by this class"
+  },
+  "execution": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v1.6-retired-window-release-classification-v1",
+  "inputs": {
+    "inversion_study": {
+      "bytes": 7226,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-retired-window-carrier-inversion-study.json",
+      "sha256": "8f4066b6de8e79b70306d2d706fbf9e623529c75dbbe79d73da9e2c9266f40ff"
+    },
+    "v1.5_publication_receipt": {
+      "bytes": 5151,
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/v150-public-publication-receipt-20260818.json",
+      "sha256": "d13546618521c1f6c084986b978e6a742c74d637bd22c6744a7b70f14020a60b"
+    },
+    "v1.5_shipped_ELF": {
+      "bytes": 630792,
+      "path": "build/release-v1.5.0/pack-product-b/lisp65-1.5.0/proof/product/lisp65-c2-lite-product.elf",
+      "sha256": "4f899d1e0c9bcc89d14c9d13c5384e6a843c4093ba9d1029b321820a11bf4942"
+    },
+    "v1.6_first_red_ELF": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8bb00fd560ddfef9b4f1da5d6269e134de8dc6548a33e3659eb79fc580fecd45"
+    }
+  },
+  "recorded_on": "2026-08-21",
+  "same_mechanism": {
+    "abort_driver_bytes_both": 134,
+    "c8b5_static_origins_v1.5": [
+      {
+        "opcode": 76,
+        "opcode_address": 51179,
+        "relocation": 51180,
+        "section": ".lisp65_rt_c2append_reserve_transient_code"
+      }
+    ],
+    "c8b5_static_origins_v1.6": [
+      {
+        "opcode": 76,
+        "opcode_address": 51179,
+        "relocation": 51180,
+        "section": ".lisp65_rt_c2append_reserve_transient_code"
+      }
+    ],
+    "overlay_interval": [
+      50006,
+      51857
+    ],
+    "resident_overlay_call": {
+      "byte_identical": true,
+      "bytes": 29,
+      "sha256": "a06846e2094be5f7ed8633a64aff4381cb6a0a5cdadd22bd38db3983c0fbc67b"
+    },
+    "transient_phase": {
+      "byte_identical": true,
+      "bytes": 1470,
+      "sha256": "4e7c6695cdd6fea7fec93ded5fd18afa54bb06d9c96477845f64beef4ddd0d12"
+    }
+  },
+  "status": "PRE-EXISTING V1.5 PRODUCT DEFECT; NOT A V1.6 REGRESSION",
+  "v1.5_reachability": {
+    "cleanup_and_reentry_sites": {
+      "abort_driver_to_overlay": [
+        65325
+      ],
+      "abort_driver_to_overlay_range": [
+        65347
+      ],
+      "cleanup_to_abort_driver": [
+        11971
+      ],
+      "cleanup_to_wipe": [
+        11943
+      ],
+      "lisp_abort_to_cleanup": [
+        11916
+      ],
+      "ordinary_eval_error": [
+        41476
+      ]
+    },
+    "ordinary_eval_error_site": "eval+0x4c2@0xa204 -> lisp_abort_code",
+    "overlay_error_path": [
+      "c2_append_reserve_transient_code_phase",
+      "c2_stage_crc",
+      "ext_disk_get",
+      "ext_dma_read_or_abort",
+      "lisp_abort_code"
+    ],
+    "proof": "the shipped final ELF can enter the byte-identical transient phase, reach the ordinary abort path, wipe the active window, and run the abort driver's overlay calls; it has no retirement-liveness sanitizer or execution-boundary backstop"
+  },
+  "v1.6_delta_classification": {
+    "new_prevention": "continuation/active-frame sanitation, incomplete but protective",
+    "new_trigger_needed": false,
+    "reason": "ordinary undefined-function evaluation and the abort/overlay choreography already exist in v1.5",
+    "relocation": "same 134-byte abort driver moved from E000 to far service"
+  }
+}

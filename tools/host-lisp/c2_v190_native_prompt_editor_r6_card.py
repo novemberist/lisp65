@@ -55,9 +55,21 @@ REPORT = ROOT / "docs/planning/v1.9.0-native-prompt-editor-card-report.md"
 ELF = BUILD / "wplto/lisp65-c2-substitution-linked.prg.elf"
 PRG = BUILD / "wplto/lisp65-c2-substitution-linked.prg"
 PROFILE = BUILD / "wplto/resolved-profile.txt"
+FINAL_PRODUCT_ROOT: Path | None = None
 DRIVER = Path(__file__).resolve()
 FORMAT = "lisp65-c2-v190-native-prompt-editor-card-r6-v1"
 STATUS = "PASS: V1.9 B-LIGHT R6 NATIVE PROMPT EDITOR GREEN"
+
+
+def configure_final_product_root(root: Path) -> None:
+    global FINAL_PRODUCT_ROOT
+    if FINAL_PRODUCT_ROOT is not None and FINAL_PRODUCT_ROOT != root:
+        raise R6Error("final product output root configured twice")
+    FINAL_PRODUCT_ROOT = root
+
+
+def final_product_root() -> Path:
+    return FINAL_PRODUCT_ROOT if FINAL_PRODUCT_ROOT is not None else BUILD / "wplto"
 
 ORIGINAL_AUTHORITY = CARD.authority
 ORIGINAL_SETUP = CARD.setup_child
@@ -543,7 +555,8 @@ def final_fixed_code_gate() -> dict[str, Any]:
     for label, elf, map_path in (
         ("seed", BUILD / "wplto/resident-island-seed.prg.elf",
          BUILD / "wplto/resident-island-seed.prg.map"),
-        ("final", ELF, BUILD / "wplto/lisp65-c2-substitution-linked.prg.map")):
+        ("final", ELF,
+         final_product_root() / "lisp65-c2-substitution-linked.prg.map")):
         truth = ElfTruth.read(elf, llvm_readobj=CARD.READOBJ,
                               include_section_data=True)
         section = truth.section(".lisp65_c2_fixed_bank0_code")

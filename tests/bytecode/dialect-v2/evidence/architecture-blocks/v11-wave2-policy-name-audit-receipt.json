@@ -1,0 +1,240 @@
+{
+  "baseline": {
+    "all_present_in_current_standard_composition": true,
+    "namepool_bytes": 191,
+    "policy_review_names": [
+      "*ide-buffers*",
+      "bytecode",
+      "compile-load",
+      "delete-backward",
+      "delete-forward",
+      "find-file",
+      "goto-line",
+      "line-end",
+      "line-start",
+      "lisp-mode",
+      "move-left",
+      "move-right",
+      "move-up",
+      "newline",
+      "self-insert",
+      "switch-buffer",
+      "write-file"
+    ],
+    "symbols": 17
+  },
+  "bindings": {
+    "contract": {
+      "bytes": 2967,
+      "path": "config/v11-wave2-policy-name-revocation.json",
+      "sha256": "edd4fce350ee6faadbd90a2af7df4f1c35a3211986ed7ad0eae9dbd3d03f3187"
+    },
+    "ide_sources": [
+      {
+        "bytes": 148,
+        "path": "lib/ide-status.lisp",
+        "sha256": "f0d0cfd26e19952fc25549e9eabd6f752e1912fc1c0e66c945b3c8e6bf2ebf20"
+      },
+      {
+        "bytes": 3157,
+        "path": "lib/ide-syntax.lisp",
+        "sha256": "f3308ffc75cadb78994180f3bb24d043ae9b95d08743f6877f094b8e04c847ce"
+      },
+      {
+        "bytes": 28590,
+        "path": "lib/ide-buffer.lisp",
+        "sha256": "91a4a31bf90a9ec401dbaa017402602156d7dc519b731550bbe747bc168cebb5"
+      },
+      {
+        "bytes": 41885,
+        "path": "lib/ide-ui.lisp",
+        "sha256": "56bb07ba65c044dc377977a65f08d94892ff667553ca3b8420c0313dcff9c2c6"
+      },
+      {
+        "bytes": 21575,
+        "path": "lib/ide-disk.lisp",
+        "sha256": "a0c8df7bb444d92eeeaac2596e91b81e9cc2b3ffc89200b8edd2bc81be1ca7a8"
+      }
+    ],
+    "manifests": [
+      {
+        "bytes": 288779,
+        "path": "build/bytecode/dialect-v2/libs/ide.manifest.json",
+        "sha256": "d0b420e304fed647e4f209c5482b1c149b050037f052d4f33f3ef5470eb6b66f"
+      },
+      {
+        "bytes": 71035,
+        "path": "build/bytecode/dialect-v2/libs/idex.manifest.json",
+        "sha256": "06cf0fd40291455b2d2e230e3c7d5980bcbbc1d8e71c810a9d8ddb793c277f36"
+      },
+      {
+        "bytes": 63874,
+        "path": "build/bytecode/dialect-v2/libs/m65d.manifest.json",
+        "sha256": "e190f33c405ae89f9127826b5bad9198c6dec2574c75a7f8e31a3326e66ace45"
+      }
+    ],
+    "measurement": {
+      "bytes": 22866,
+      "path": "docs/planning/measurements/v1.1-prewave-measurements.json",
+      "sha256": "b45a4926a916a5a748493c5b4885ef9eea03a08b62e29b0dad723e03725da40c"
+    }
+  },
+  "claim_limit": "This contract prepares an already authorized Wave-2-repin change. It neither changes product bytes now nor pre-authorizes the measured implementation deltas.",
+  "format": "lisp65-v11-wave2-policy-name-audit-receipt-v1",
+  "implementation_plan": {
+    "command_ids": [
+      {
+        "id": 1008,
+        "name": "compile-load"
+      },
+      {
+        "id": 1101,
+        "name": "delete-backward"
+      },
+      {
+        "id": 1102,
+        "name": "delete-forward"
+      },
+      {
+        "id": 1002,
+        "name": "find-file"
+      },
+      {
+        "id": 1012,
+        "name": "goto-line"
+      },
+      {
+        "id": 1103,
+        "name": "line-end"
+      },
+      {
+        "id": 1104,
+        "name": "line-start"
+      },
+      {
+        "id": 1105,
+        "name": "lisp-mode"
+      },
+      {
+        "id": 1106,
+        "name": "move-left"
+      },
+      {
+        "id": 1107,
+        "name": "move-right"
+      },
+      {
+        "id": 1108,
+        "name": "move-up"
+      },
+      {
+        "id": 1109,
+        "name": "newline"
+      },
+      {
+        "id": 1110,
+        "name": "self-insert"
+      },
+      {
+        "id": 1006,
+        "name": "switch-buffer"
+      },
+      {
+        "id": 1004,
+        "name": "write-file"
+      }
+    ],
+    "echo_cases": [
+      "compile-load",
+      "delete-backward",
+      "delete-forward",
+      "find-file",
+      "goto-line",
+      "line-end",
+      "line-start",
+      "lisp-mode",
+      "move-left",
+      "move-right",
+      "move-up",
+      "newline",
+      "self-insert",
+      "switch-buffer",
+      "write-file",
+      "private-buffer-state-survives-ide-reentry",
+      "function-kind-still-returns-bytecode",
+      "unknown-m-x-command-remains-rejected"
+    ],
+    "private_state": "reuse ide-buffers value cell under Lisp-2",
+    "product_identity_change_at_wave2_repin": true,
+    "product_identity_change_now": false,
+    "receipt_regeneration": [
+      "the four-engine Workbench artifact differential receipt",
+      "the IDE behavior evidence bound to the regenerated IDE/IDEX containers",
+      "the export-only-interning/capacity receipt"
+    ]
+  },
+  "m_x": {
+    "display_strings_unchanged": [
+      "find-file",
+      "save-buffer",
+      "compile-load",
+      "goto-line",
+      "eval-buffer"
+    ],
+    "display_to_id": {
+      "compile-load": 1008,
+      "eval-buffer": 1014,
+      "find-file": 1002,
+      "goto-line": 1012,
+      "save-buffer": 1001
+    },
+    "mapping": "String-to-numeric-ID",
+    "runtime_intern": false
+  },
+  "owner_classification": {
+    "projected_namepool_recovery_bytes": 182,
+    "retained": "bytecode",
+    "retained_namepool_bytes": 9,
+    "revoked_after_wave2": [
+      "*ide-buffers*",
+      "compile-load",
+      "delete-backward",
+      "delete-forward",
+      "find-file",
+      "goto-line",
+      "line-end",
+      "line-start",
+      "lisp-mode",
+      "move-left",
+      "move-right",
+      "move-up",
+      "newline",
+      "self-insert",
+      "switch-buffer",
+      "write-file"
+    ],
+    "revoked_symbols": 16,
+    "source_occurrences": {
+      "*ide-buffers*": 5,
+      "bytecode": 1,
+      "compile-load": 3,
+      "delete-backward": 6,
+      "delete-forward": 7,
+      "find-file": 7,
+      "goto-line": 4,
+      "line-end": 2,
+      "line-start": 2,
+      "lisp-mode": 2,
+      "move-left": 6,
+      "move-right": 6,
+      "move-up": 6,
+      "newline": 6,
+      "self-insert": 8,
+      "switch-buffer": 2,
+      "write-file": 4
+    }
+  },
+  "recorded_on": "2026-07-18",
+  "status": "prepared-no-product-change-awaiting-wave2-repin",
+  "version": 1
+}

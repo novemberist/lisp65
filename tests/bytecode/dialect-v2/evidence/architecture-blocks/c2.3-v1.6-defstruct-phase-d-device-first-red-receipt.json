@@ -1,0 +1,100 @@
+{
+  "schema": "lisp65-c2-v16-defstruct-phase-d-device-first-red-v1",
+  "date": "2026-08-04",
+  "status": "FIRST RED: D1 reproduced the parked editor stall; D2 never reached a measured form",
+  "authority": {
+    "phase_D_authorization_commit": "af23f4d4add0b837cee1eba5ac1f1efd78d16465",
+    "authorization_rebind_commit": "94e630cb",
+    "cold_isolated_D2_continuation_commit": "71a3ba79",
+    "setup_reserve_commit": "b76e72a2",
+    "runner": "scripts/c2-v16-defstruct-phase-c-hw.sh"
+  },
+  "identities": {
+    "ordinary_D1_medium": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.3.0-candidate-media-link88-r1/lisp65-product.d81",
+      "sha256": "7c07f6130f404b540dd3e4228b1c51139b3a012a8f00ddcaf313561c570fee38"
+    },
+    "D2_library_medium": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v1-device-session/defstruct-media/require-defstruct-ship-session.d81",
+      "sha256": "871b90824924dacbe27f071d56b0b97488257da0c1a0b9e80f5d5eeae5f23380"
+    },
+    "diagnostic_elf": {
+      "bytes": 620648,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.elf",
+      "sha256": "fdb8de75a95027f9fdd0813fbe9a2d47a2d36f63ae1b1f7cd0ba661700608d96"
+    },
+    "diagnostic_prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+      "sha256": "405549c882d18faf61949037cfcc2d0c2435d97b52a95ae4b94e2d6bd4251706"
+    },
+    "diagnostic_window": {
+      "bytes": 8192,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-window.bin",
+      "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+    }
+  },
+  "D1_editor_quiet_typing": {
+    "measured_form": "64 ordinary a keys in measure3, no per-key observation",
+    "precondition": {
+      "buffer": "measure3",
+      "line_count": 1,
+      "fill": 0,
+      "point": [0, 0],
+      "source": "live symbol value plus Bank-0/4 heap and active string arena"
+    },
+    "postcondition": {
+      "buffer": "measure3",
+      "line_count": 1,
+      "line_lengths": [56],
+      "fill": 56,
+      "point": [0, 56],
+      "expected_fill": 64,
+      "result": "failed"
+    },
+    "one_stop_packet": {
+      "gc_runs": 9,
+      "queue_state": 0,
+      "queue_code": 0,
+      "PC": "0xe035",
+      "A": "0x00",
+      "X": "0xce",
+      "Y": "0x00",
+      "Z": "0x00",
+      "SP": "0x0192",
+      "sha256": "2ed2fcdbc6152befe8a022bbfc15cf89fc11eab847bb7655cfb1003ce209ca9e"
+    },
+    "interpretation": "A natural, quiet second sighting of the parked editor 55-to-56 boundary. It is a D1 product observation only and does not attribute the mechanism."
+  },
+  "D2_contact_1": {
+    "fresh_BASIC_assert": "passed",
+    "medium_readback": "byteidentical",
+    "seven_preload_readbacks": "byteidentical",
+    "measured_forms_started": 0,
+    "boot_screen": "BASIC run: intermediate state, no lisp65 prompt",
+    "boot_screen_sha256": "7c4f24447986bc95fdafed53bcabd6f9c9d0d5292ac487987618b508c376ccf1",
+    "delayed_setup_check": "same run: state",
+    "setup_finding": "The Phase-C runner omitted the established one-RETURN handling used by the bound Link-80/82 deployment runners. The setup-only reserve was rebound with that exact fallback."
+  },
+  "D2_contact_2_setup_reserve": {
+    "fresh_BASIC_assert": "passed",
+    "medium_readback": "byteidentical",
+    "seven_preload_readbacks": "byteidentical",
+    "measured_forms_started": 0,
+    "boot_screen": "BASIC READY state, no run: intermediate and no lisp65 prompt",
+    "boot_screen_sha256": "56f832ba3db8552814e5f013cfe7c5933e811ad72b3cac0b49c4bf5d419d8e8f",
+    "fallback_applicable": false,
+    "result": "setup reserve consumed without entering D2"
+  },
+  "phase_D_result": {
+    "D1": "FIRST RED with complete one-stop packet",
+    "D2": "not executed",
+    "R_A_I_G_row": null,
+    "diagnostic_record_read": false,
+    "product_or_diagnostic_bytes_changed": false,
+    "additional_hardware_authorized": false
+  },
+  "claim_limit": "This receipt proves the D1 56-of-64 quiet editor observation and two D2 setup failures before any measured form. It does not attribute the editor stall, classify defstruct as R/A/I/G, weaken the Link-75 product observation, authorize a fix, or authorize a third hardware contact."
+}

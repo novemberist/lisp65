@@ -17,10 +17,13 @@ if str(HOST) not in sys.path:
 
 import c2_v170_release_media as BASE  # noqa: E402
 import c2_v18_capture_hybrid_product_card as CARD  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 PLAN = ROOT / "docs/planning/v1.7.0-pre-plan.md"
+RELOCATED_PLAN = ROOT / "docs/planning/v1.8.0-cycle-decisions.md"
+PLAN_SEAL_ERA = "f886932d54c13fea77585f0d66ebc0f7e6f87b0f"
 CARD_BUILD = CARD.BUILD
 WPLTO = CARD_BUILD / "wplto"
 SOURCE_STATIC = CARD.PLANE_ROOT
@@ -79,15 +82,44 @@ def bind(path: Path) -> dict[str, Any]:
             "sha256": hashlib.sha256(raw).hexdigest()}
 
 
-def owner_ratification() -> dict[str, Any]:
-    text = PLAN.read_text(encoding="utf-8")
+def owner_ratification_from(raw: bytes, path: str) -> dict[str, Any]:
+    text = raw.decode("utf-8")
     header = "## Owner ratification — v1.8 substrate release and v1.9 client register — 2026-08-28"
     require(text.count(header) == 1, "substrate owner-ratification section drift")
     section = header + text.split(header, 1)[1]
     section = section.split("\n## ", 1)[0].rstrip() + "\n"
     raw = section.encode()
-    return {"path": PLAN.relative_to(ROOT).as_posix(), "section": header,
+    return {"path": path, "section": header,
             "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
+
+
+def owner_ratification() -> dict[str, Any]:
+    path = PLAN.relative_to(ROOT).as_posix()
+    return owner_ratification_from(ERA.era_blob(PLAN_SEAL_ERA, path), path)
+
+
+def era_separation_selftest() -> dict[str, Any]:
+    """The sealed receipt must never consume a later planning location."""
+    sealed = owner_ratification()
+    expected = {
+        "path": PLAN.relative_to(ROOT).as_posix(),
+        "section": "## Owner ratification — v1.8 substrate release and v1.9 client register — 2026-08-28",
+        "bytes": 1842,
+        "sha256": "ab7a396d94cba41b37af74b985fc3f481d927446c77f665a2b3f37b1ba353d61",
+    }
+    require(sealed == expected, "sealed v1.8 owner-ratification identity drift")
+    rejected = 0
+    try:
+        owner_ratification_from(
+            PLAN.read_bytes(), PLAN.relative_to(ROOT).as_posix())
+    except MediaError:
+        rejected += 1
+    relocated = owner_ratification_from(
+        RELOCATED_PLAN.read_bytes(), RELOCATED_PLAN.relative_to(ROOT).as_posix())
+    if relocated != expected:
+        rejected += 1
+    require(rejected == 2, "live/sealed planning-era mixing survived")
+    return {"seal_commit": PLAN_SEAL_ERA, "mutations_rejected": rejected}
 
 
 def accepted_pair() -> dict[str, Any]:
@@ -118,7 +150,8 @@ def lifecycle_gate() -> dict[str, Any]:
 
 
 def authority() -> dict[str, Any]:
-    plan = PLAN.read_text(encoding="utf-8")
+    plan = ERA.era_blob(
+        PLAN_SEAL_ERA, PLAN.relative_to(ROOT).as_posix()).decode("utf-8")
     closure = load(CLOSURE)
     repair = load(REPAIR)
     final_red = load(FINAL_RED)
@@ -489,6 +522,7 @@ def build() -> None:
 
 
 def check() -> None:
+    era_separation_selftest()
     configure()
     BASE.PREP.configure_paths()
     BASE.PREP.MEDIA.check()

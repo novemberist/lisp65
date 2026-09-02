@@ -1,0 +1,113 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-vic-unlock-tailcall-attribution-v1",
+  "recorded_on": "2026-08-03",
+  "status": "ATTRIBUTED AND HOST-FIXED; SUCCESSOR DEVICE PROOF REQUIRED",
+  "source_first_red": {
+    "candidate_link": 89,
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link89-parity-toy-vm-type-first-red.json",
+    "observation": "The autonomous parity-toy drew its panel and then terminated with RUNTIME_VM_ERROR=$E3 and VM_TYPEERROR=3 before physical input. The shape slot remained untouched."
+  },
+  "discriminators": {
+    "workbench_pointer_geometry": {
+      "result": [
+        248,
+        15,
+        0
+      ],
+      "decoded": "0x000ff8",
+      "disposition": "Valid only for the Workbench composition; it did not prove the separately booted Ship composition."
+    },
+    "post_unlock_witness": {
+      "result": "no post-unlock witness byte was established",
+      "disposition": "The deterministic VM_TYPEERROR precedes the first statement after the standalone %m65-vic-open call."
+    },
+    "exact_pair_fixture": {
+      "image_sha256": "3eba9f223826add79ec1954f7bdb821d564c9541a2549bca5d0dde23634c821f",
+      "runtime_elf_sha256": "36ecba43d0ea31dbfa195888ac448ea6a59e4ecdbf519936556ceda2ed02b649",
+      "host_execution": "passed with result t and vm_status 0",
+      "target_runtime_hex": "038f00000100000538015040ff800000",
+      "target_runtime_sha256": "567f23601b2fa01b669d63659e6e380d47b3b9cf5532b864c1e4bc7a85b3a9f7",
+      "target_state": "RUNTIME_COMPLETE=3",
+      "target_state_sha256": "084fed08b978af4d7d196a7446a86b58009e636b611db16211b65a9aadff29c5",
+      "sequence": "ordinary CALL+DROP for $D02F=$47 followed by ordinary CALL+DROP for $D02F=$53",
+      "virtual_or_physical_input": false
+    }
+  },
+  "mechanism": {
+    "old_emitted_artifact": {
+      "disassembly": {
+        "path": "build/post-promotion/v14/parity-toy-artifact-inspect-3/stdlib-p0.disasm.txt",
+        "sha256": "eec432c6a36a5a2295087d35ed9fb23454308e9d1bfbe38730ce67e4d44216ca"
+      },
+      "manifest": {
+        "path": "build/post-promotion/v14/parity-toy-artifact-inspect-3/stdlib-p0.manifest.json",
+        "sha256": "eab625e101fb59737894e24f4c48eeaabc4f42e8f5e9576f7f975f28100db41e"
+      },
+      "facts": [
+        "%m65-vic-open is a standalone 30-byte code object",
+        "its first m65-byte-write is CALL+DROP",
+        "its second m65-byte-write is TAILCALL",
+        "m65-sprite-shape reaches the pair through CALL %m65-vic-open"
+      ]
+    },
+    "attribution": "The exact VIC-IV unlock writes are target-green when emitted as two ordinary calls. The extra standalone helper/TAILCALL resume edge is the sole structural difference at the proven failure boundary and owns the target-only VM_TYPEERROR.",
+    "excluded": [
+      "invalid Workbench pointer-table geometry",
+      "failure of the raw $47/$53 register sequence",
+      "missing %m65-vic-open from the Ship closure",
+      "shape-payload recursion after the unlock"
+    ]
+  },
+  "fix": {
+    "rule": "%m65-vic-open is a private-inline function; m65-sprite-shape emits the two ordinary m65-byte-write calls directly and no standalone helper or target TAILCALL remains.",
+    "contract": {
+      "path": "config/c2-m65-hw-contract.json",
+      "sha256": "3f9bbcd508bff79872bbcaa61b69b3069b73e74b3f09204862c95621a16f61b7"
+    },
+    "suite": {
+      "path": "tests/bytecode/libs/p0-stdlib-m65-hw-base.json",
+      "sha256": "dcb57c2008be2c640f27140829ce7dee19bfd01dd8fcc7c507623d80f79447a5"
+    },
+    "gate": {
+      "path": "tools/host-lisp/c2_m65_hw_gate.py",
+      "sha256": "2d5cd0d46df32d806799df49527077f356baabac025288fc7571a85c992e3d73",
+      "result": "PASS public=15 cases=13x2 mutations=10 bank2=1768/2048 headroom=280 resident=+0",
+      "class_closer": "vic-open-tailcall-restored mutation is rejected"
+    },
+    "artifact_delta": {
+      "bank2_bytes_before": 1784,
+      "bank2_bytes_after": 1768,
+      "bank2_delta": -16,
+      "objects_before": 31,
+      "objects_after": 30,
+      "resident_bytes": 0
+    }
+  },
+  "successor_ship_artifact": {
+    "image": {
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.d81",
+      "bytes": 819200,
+      "sha256": "640d115e01d238413821ab9cf5b59056abf553e96e27cf0c64d8db75ef8a2bde"
+    },
+    "runtime_elf": {
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.runtime.elf",
+      "sha256": "dcb415da6379d0fc68185a4a486ab07a72442524bbefbca0fc7b3cffda8e841f"
+    },
+    "host_execution": "PASS entry=main result=t status=0 input=1 boot-armed=1 boot-verified=1 input-armed=1",
+    "emitted_disassembly": {
+      "path": "build/post-promotion/v14/parity-toy-link90-artifact/stdlib-p0.disasm.txt",
+      "sha256": "b55b74b85a54f8ca533641620ed771ee168ca4979536179ebdede8df5c8a567c"
+    },
+    "emitted_manifest": {
+      "path": "build/post-promotion/v14/parity-toy-link90-artifact/stdlib-p0.manifest.json",
+      "sha256": "0b7a18928b0c961d2dfb5f1dd87a4d590586679f262ed690113805cff52d6308"
+    },
+    "artifact_assertions": [
+      "no standalone %m65-vic-open code object",
+      "no target TAILCALL to %m65-vic-open",
+      "m65-sprite-shape contains ordinary CALL+DROP for both $47 and $53 writes"
+    ]
+  },
+  "next_gate": "Fresh successor WPLTO/product identity, then one autonomous parity-toy device boot before any physical key or SID claim.",
+  "claim_limit": "The Link-89 target failure is attributed and the source/emitted-artifact fix is host-green. No successor product identity or fixed-target sprite/SID claim is made by this receipt."
+}

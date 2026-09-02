@@ -1,0 +1,129 @@
+{
+  "format": "lisp65-v11-c1-identity-restore-capacity-probe-receipt-v1",
+  "version": 1,
+  "status": "capacity-red-rolled-back-owner-decision-required",
+  "recorded_on": "2026-07-16",
+  "scope": "The single owner-authorized bounded probe of an identity-bound C1 compiler restore. The probe may establish admissibility only if it first links inside every fixed capacity boundary and then proves reset safety, zero leak and a definition-to-first-call improvement against the 95-frame reference. It is not product, G5 or promotion evidence.",
+  "attempt_policy": {
+    "authorized_attempts": 1,
+    "attempts_consumed": 1,
+    "result": "capacity-red",
+    "continuation": "No further restore tuning is authorized. Return to the owner decision between a dated 1.90-second 1.1 exception with C2 named for 1.2, and C1 rollback with immediate C2 replanning."
+  },
+  "input_evidence": {
+    "definition_call_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-definition-call-reopening-probe-receipt.json",
+    "probe_11_product_identity": {
+      "resident_prg_sha256": "9a11fab4aee751c304a144cf682b5d510468a0a855dd2cf1fa9e198d42b5be15",
+      "preload_sha256": "e8b0680045632d37f177d89a4838d749e99ad2244bbeb26c16443526f967081b",
+      "runtime_overlays_sha256": "afda9e3c80ccb1b1681f656c231a013195a2127f9b3f563907d7533025e0a7bb",
+      "attic_shelf_sha256": "042c95f9eab0d8f9259f1ba67547051c252fb21ffc7977a4d9a4857c060617cf"
+    },
+    "before_reference": {
+      "definition_to_first_call_frames": 95,
+      "definition_to_first_call_milliseconds": 1900
+    }
+  },
+  "probe_design": {
+    "cache": "Copy the once-validated and fully patched 9,420-byte compiler image to an identity-bound Attic cache during retirement.",
+    "restore": "On the same boot, copy the cached image back to Bank 5, rebase ENTRY_REF roots to the current placement and republish the directory without the generic 663-patch/144-entry materialization path.",
+    "identity_and_reset_intent": "A same-boot validity marker and exact compiler identity were required; reset must invalidate the marker so no stale Bank-5 pointers or ordinals can survive.",
+    "placement_history": "A first placement of the F018B copy wrapper in Bank 0 crossed the fixed overlay VMA by 150 bytes and was discarded inside this same bounded attempt. Moving only that transport primitive into the existing resident island removed the Bank-0 placement issue, but the real product link still failed the runtime-slice limits below."
+  },
+  "capacity_gate": {
+    "result": "fail-before-product-package",
+    "hard_slice_limit_bytes": 1792,
+    "fixed_overlay_vma": "0xc356",
+    "baseline_map": "build/products/workbench/c1-identity-restore-baseline/resident-island-seed-linked.prg.map",
+    "baseline_map_sha256": "9ff8795a7fcad683e5df891efb48d479d04249525cd835599011d449d7bd6be8",
+    "candidate_map": "build/products/workbench/c1-identity-restore-probe/resident-island-seed-linked.prg.map",
+    "candidate_map_sha256": "e084ebaa5de3585be823bf47446d2d6f82c54c4cd979af04b135d95abb86e670",
+    "measured_sections": [
+      {
+        "id": "l65m-commit-00",
+        "baseline_bytes": 1403,
+        "candidate_bytes": 1895,
+        "delta_bytes": 492,
+        "headroom_after_bytes": -103,
+        "result": "hard-slice-limit-fail"
+      },
+      {
+        "id": "l65m-commit-01",
+        "baseline_bytes": 564,
+        "candidate_bytes": 1098,
+        "delta_bytes": 534,
+        "packed-allocation_growth_bytes": 512,
+        "result": "slice-fits-but-runtime-bank-cannot-absorb-growth"
+      },
+      {
+        "id": "c1-compiler-lifetime",
+        "baseline_bytes": 1728,
+        "candidate_bytes": 1908,
+        "delta_bytes": 180,
+        "headroom_after_bytes": -116,
+        "result": "hard-slice-limit-fail"
+      },
+      {
+        "id": "resident-island-payload",
+        "baseline_bytes": 1531,
+        "candidate_bytes": 1637,
+        "delta_bytes": 106,
+        "hard_limit_bytes": 2048,
+        "headroom_after_bytes": 411,
+        "result": "fits-in-isolation"
+      }
+    ],
+    "runtime_overlay_bank": {
+      "baseline_bytes": 65472,
+      "hard_limit_bytes": 65536,
+      "baseline_margin_bytes": 64,
+      "minimum_already-proved_packed_growth_bytes": 512,
+      "minimum_deficit_bytes": 448,
+      "result": "fail-even-before-accounting-for-all-other-growth"
+    },
+    "unavailable_deltas": {
+      "bank": "No candidate product linked; no promotable Bank delta exists.",
+      "ext": "No candidate product linked; no promotable EXT delta exists.",
+      "symbols": "No candidate product linked; no promotable symbol delta exists.",
+      "namepool": "No candidate product linked; no promotable name-pool delta exists.",
+      "directory": "No candidate product linked; no promotable directory delta exists.",
+      "boot_overlay": "No candidate product linked; no promotable boot-overlay delta exists."
+    }
+  },
+  "proof_obligations": {
+    "reset_safety": "not-run-capacity-gate-stopped-first",
+    "repeated_definition_cycle_zero_leak": "not-run-capacity-gate-stopped-first",
+    "after_definition_frame_measurement": "not-run-capacity-gate-stopped-first",
+    "safety_pass": false,
+    "performance_pass": false,
+    "reason": "Hardware execution of a candidate that cannot satisfy the fixed product memory contracts would create misleading evidence."
+  },
+  "rollback": {
+    "probe_code_removed": true,
+    "source_search": "No IDENTITY_RESTORE, RESTORE_CACHE or RESTORE_ATTIC implementation token remains in src, scripts, mk or Makefile. The identity_restore name remains only in decision/evidence metadata describing this rejected probe.",
+    "clean_baseline_build": "build/products/workbench/c1-identity-restore-baseline",
+    "clean_baseline_footprint_audit": "build/products/workbench/c1-identity-restore-baseline/footprint-audit.json",
+    "clean_baseline_footprint_audit_sha256": "22acc4b8f44ca3f54566b0ea167d744bc6e2b65ad7e89d760e4fb1e369d6397e",
+    "clean_baseline_footprint_result": "pass",
+    "restored_sizes": {
+      "l65m_commit_00_bytes": 1403,
+      "l65m_commit_01_bytes": 564,
+      "l65m_commit_06_bytes": 1186,
+      "c1_compiler_lifetime_bytes": 1728,
+      "resident_island_payload_bytes": 1531,
+      "runtime_overlay_bank_bytes": 65472,
+      "resident_prg_bytes": 39561,
+      "preload_bytes": 17047
+    },
+    "historical_identity_limit": "The historical Probe-11 SHAs remain bound by the input receipt, but were not re-created by the rollback build because live provenance inputs changed during the later gate work. The rollback claim is deliberately limited to absence of restore code plus exact restoration of the pre-probe code and footprint sizes; it does not relabel a new build as the historical product.",
+    "promotion_effect": "none-no-product-linked-no-commit-no-case-receipt-no-G5-resume"
+  },
+  "decision": {
+    "probe_result": "red",
+    "reason": "The smallest complete identity-restore design measured in this bounded attempt exceeds two independent 1,792-byte slices and cannot fit the runtime-overlay bank with its 64-byte remaining margin.",
+    "next_owner_options": [
+      "dated-exception: document the 1.90-second first call after definition as a 1.1 limitation and commit C2 as the named 1.2 cure",
+      "reject-exception: roll back C1 and immediately replan C2, including the known filter and banner unwind consequences"
+    ]
+  },
+  "claim_limit": "This receipt proves that the one authorized restore attempt is capacity-inadmissible and was rolled back to the measured pre-probe footprint. It does not prove reset safety, leak freedom, a latency improvement, an acceptable definition-cycle threshold, product identity, capacity authorization, promotion, G5/G6 evidence or a release claim."
+}

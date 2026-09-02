@@ -1,0 +1,158 @@
+{
+  "capacity": {
+    "diagnostic_walls": {
+      "bank0_text_headroom_bytes": 19,
+      "e000_headroom_bytes": 353,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 86,
+      "resident_island_headroom_bytes": 170
+    },
+    "headroom_delta_bytes": {
+      "bank0_text_headroom_bytes": -16,
+      "e000_headroom_bytes": 0,
+      "fixed_hot_block_headroom_bytes": 0,
+      "ordinary_bank0_bss_headroom_bytes": 0,
+      "resident_island_headroom_bytes": 0
+    },
+    "link44_walls": {
+      "bank0_text_headroom_bytes": 35,
+      "e000_headroom_bytes": 353,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 86,
+      "resident_island_headroom_bytes": 170
+    },
+    "new_bss_bytes": 0,
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98,
+    "status": "passed-one-site-diagnostic-capacity",
+    "window_delta_bytes": 0
+  },
+  "delegation": {
+    "class": "B",
+    "cycle": "1-of-3"
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "whole_program_lto_closure_links": 1
+  },
+  "format": "lisp65-c2-lite-v6-vm-run-dir-latch-diagnostic-link-v1",
+  "identity": {
+    "bytes": 41542,
+    "diagnostic_only": true,
+    "path": "build/c2.2/substitution/link44-vm-run-dir-latch-diagnostic/lisp65-c2-substitution-linked.prg",
+    "sha256": "b9c4c8071c478e9fdbf480b5d32be7ffa0904ff513f682872a9b989f92446da1"
+  },
+  "internal_structural_receipt": {
+    "bytes": 286393,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-vm-run-dir-latch-diagnostic-internal-structural.json",
+    "sha256": "28432d9a71b20f2e91c901893d9ac93a44f2bcc4cf2577ca4cc3817c68f45905"
+  },
+  "link44_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+    "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+    "status": "untouched"
+  },
+  "linked_latch": {
+    "cells": {
+      "vmr_hdrlen": {
+        "address": "0xbfc3",
+        "bytes": 2,
+        "section": ".bss"
+      },
+      "vmr_poff": {
+        "address": "0xbfc5",
+        "bytes": 2,
+        "section": ".bss"
+      }
+    },
+    "function_sizes": {
+      "vm_check_status": {
+        "delta_bytes": 0,
+        "diagnostic_bytes": 15,
+        "link44_bytes": 15
+      },
+      "vm_run_dir": {
+        "delta_bytes": 16,
+        "diagnostic_bytes": 153,
+        "link44_bytes": 137
+      },
+      "vm_run_inner": {
+        "delta_bytes": 0,
+        "diagnostic_bytes": 7975,
+        "link44_bytes": 7975
+      }
+    },
+    "helper_functions": 0,
+    "new_bss_bytes": 0,
+    "renderer_delta_bytes": 0,
+    "size_rule": "sizes are provenance; absence of latch dataflow is the invariant",
+    "status": "passed-linked-one-site-two-cell-jtag-raw-latch",
+    "uninstrumented_function_latch_references": {
+      "vm_check_status": {
+        "vmr_hdrlen": {
+          "diagnostic_references": 0,
+          "link44_references": 0
+        },
+        "vmr_poff": {
+          "diagnostic_references": 0,
+          "link44_references": 0
+        }
+      },
+      "vm_run_inner": {
+        "vmr_hdrlen": {
+          "diagnostic_references": 14,
+          "link44_references": 14
+        },
+        "vmr_poff": {
+          "diagnostic_references": 10,
+          "link44_references": 10
+        }
+      }
+    },
+    "vm_run_dir_references": {
+      "vmr_hdrlen": [
+        "68d0:      \tsta\t$bfc3 <vmr_hdrlen>",
+        "68d3:      \tstx\t$bfc4 <vmr_hdrlen+0x1>"
+      ],
+      "vmr_poff": [
+        "68d8:      \tstx\t$bfc5 <vmr_poff>",
+        "68dd:      \tstx\t$bfc6 <vmr_poff+0x1>"
+      ]
+    }
+  },
+  "next_gate": "deploy once; submit one expression; JTAG-read tuple",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "source_gate": {
+    "instrumented_sites": 1,
+    "mutations_rejected": {
+      "context-store-removed": "rejected",
+      "helper-reintroduced": "rejected",
+      "lookup-store-removed": "rejected",
+      "second-site": "rejected",
+      "second-state": "rejected",
+      "valid-bit-removed": "rejected",
+      "wrong-family": "rejected",
+      "wrong-site": "rejected"
+    },
+    "new_state_bytes": 0,
+    "new_string_bytes": 0,
+    "renderer": "none; JTAG only",
+    "site": 1,
+    "site_name": "vm_run_dir-entry-length",
+    "status": "passed-one-site-jtag-raw-vm-run-dir-latch-source-gate",
+    "tuple": {
+      "vmr_hdrlen": "raw signed int directory ordinal, little-endian",
+      "vmr_poff_high": "0x82 = valid bit plus Session family 2",
+      "vmr_poff_low": "site = 1"
+    }
+  },
+  "status": "passed-nonpromotable-vm-run-dir-latch-hardware-not-run",
+  "structural_report": {
+    "bytes": 286114,
+    "path": "build/c2.2/substitution/link44-vm-run-dir-latch-diagnostic/link44-c2-lite-v6-real-abi-structural.json",
+    "sha256": "cf42ef7c2fd695c5900336b53a7eb6aa98a708eaffb1da09c021937039537dc3"
+  }
+}

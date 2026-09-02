@@ -1,0 +1,257 @@
+{
+  "abi_profile": "dialect-v2",
+  "artifact_role": "disk-lib",
+  "base_addr": "0x000000",
+  "blob": "build/bytecode/dialect-v2/libs/buffer.blob.bin",
+  "blob_sha256": "d218ff4ba23620eb02fbdb35c4b9795cf98404c0955091bcb7ded6487c24c747",
+  "c_source": "build/bytecode/dialect-v2/libs/buffer.c",
+  "cases": [
+    "buffer-predicate-normalizes",
+    "buffer-predicate-rejects-string",
+    "buffer-is-zero-filled-and-zero-based",
+    "buffer-set-returns-byte",
+    "buffer-mutation-freezes-byte-exactly",
+    "freeze-transfers-ownership"
+  ],
+  "code_bytes": 104,
+  "cost": {
+    "dependency_gate": {
+      "allowed_external_calls": [],
+      "checked": true,
+      "known_targets": 298
+    },
+    "dir_slots": 7,
+    "dir_slots_after_align8": 8,
+    "largest_code_object": "bufferp",
+    "largest_code_object_bytes": 19,
+    "macro_entries": 0,
+    "max_code_object_bytes": 255,
+    "private_inline_gate": {
+      "expansions": 0,
+      "functions": 0,
+      "names": [],
+      "resident_functions": 0
+    },
+    "region_bytes": 104,
+    "symbol_count_estimate": 7,
+    "symbol_names": [
+      "buffer->string",
+      "buffer-length",
+      "buffer-ref",
+      "buffer-set!",
+      "bufferp",
+      "make-buffer",
+      "string->buffer"
+    ],
+    "vm_dir_budget": null
+  },
+  "d81_name": "BUFFER",
+  "directory": "build/bytecode/dialect-v2/libs/buffer.dir.bin",
+  "directory_bytes": 49,
+  "directory_note": "raw dir.bin uses host-heap name_obj values; native loaders should intern entries[].name and call vm_dir_add()",
+  "directory_sha256": "c1a75d75c6e57d5b34833fd114781a163e44dc26d069670be2d8e07379141d42",
+  "disasm": "build/bytecode/dialect-v2/libs/buffer.disasm.txt",
+  "disasm_sha256": "991202a01c1c73a2f74d677c6cc21d9e55c5bfd9a5109cfc89eb421db00a7361",
+  "embed": {
+    "address_encoding": "vm_embed_entry.bank/off/len are derived from each object's ext_addr/length",
+    "bank_symbol": "lisp65_stdlib_bank",
+    "base_addr_macro": "LISP65_BYTECODE_STDLIB_BASE_ADDR",
+    "blob_len_symbol": "lisp65_stdlib_blob_len",
+    "blob_symbol": "lisp65_stdlib_blob",
+    "compat_blob_macro": "lisp65_bytecode_stdlib_blob",
+    "compat_table_macro": "lisp65_bytecode_stdlib_embed",
+    "count_macro": "LISP65_BYTECODE_STDLIB_EMBED_COUNT",
+    "count_symbol": "lisp65_embed_count",
+    "entry_type": "vm_embed_entry",
+    "flags_field": "vm_embed_entry.flags bit0 marks macro entries; all other bits are reserved and must be zero",
+    "name_field": "vm_embed_entry.name is a NUL-terminated runtime string; native registration interns that name",
+    "off_symbol": "lisp65_stdlib_off",
+    "table_symbol": "lisp65_embed"
+  },
+  "entries": [
+    {
+      "blob_offset": 0,
+      "code_flags": 2,
+      "ext_addr": "0x000000",
+      "flags": 0,
+      "kind": "function",
+      "length": 19,
+      "lit_count": 0,
+      "lit_first": 0,
+      "literals": [],
+      "name": "bufferp",
+      "name_obj": "0x021c"
+    },
+    {
+      "blob_offset": 19,
+      "code_flags": 2,
+      "ext_addr": "0x000013",
+      "flags": 0,
+      "kind": "function",
+      "length": 14,
+      "lit_count": 0,
+      "lit_first": 0,
+      "literals": [],
+      "name": "make-buffer",
+      "name_obj": "0x021e"
+    },
+    {
+      "blob_offset": 33,
+      "code_flags": 2,
+      "ext_addr": "0x000021",
+      "flags": 0,
+      "kind": "function",
+      "length": 14,
+      "lit_count": 0,
+      "lit_first": 0,
+      "literals": [],
+      "name": "buffer-length",
+      "name_obj": "0x0220"
+    },
+    {
+      "blob_offset": 47,
+      "code_flags": 2,
+      "ext_addr": "0x00002f",
+      "flags": 0,
+      "kind": "function",
+      "length": 15,
+      "lit_count": 0,
+      "lit_first": 0,
+      "literals": [],
+      "name": "buffer-ref",
+      "name_obj": "0x0222"
+    },
+    {
+      "blob_offset": 62,
+      "code_flags": 2,
+      "ext_addr": "0x00003e",
+      "flags": 0,
+      "kind": "function",
+      "length": 14,
+      "lit_count": 0,
+      "lit_first": 0,
+      "literals": [],
+      "name": "buffer-set!",
+      "name_obj": "0x0224"
+    },
+    {
+      "blob_offset": 76,
+      "code_flags": 2,
+      "ext_addr": "0x00004c",
+      "flags": 0,
+      "kind": "function",
+      "length": 14,
+      "lit_count": 0,
+      "lit_first": 0,
+      "literals": [],
+      "name": "buffer->string",
+      "name_obj": "0x0226"
+    },
+    {
+      "blob_offset": 90,
+      "code_flags": 2,
+      "ext_addr": "0x00005a",
+      "flags": 0,
+      "kind": "function",
+      "length": 14,
+      "lit_count": 0,
+      "lit_first": 0,
+      "literals": [],
+      "name": "string->buffer",
+      "name_obj": "0x0228"
+    }
+  ],
+  "exports": [],
+  "external_image": {
+    "bytes": 290,
+    "code_bytes": 104,
+    "code_offset": 4,
+    "file_header_bytes": 4,
+    "file_header_format": "u16 blob_len, u16 md_len",
+    "format": "lisp65-bytecode-p0-disk-lib-image-v1",
+    "load_addr": "0x000000",
+    "metadata_addr": "0x000068",
+    "metadata_bytes": 182,
+    "metadata_format": {
+      "endianness": "little",
+      "entry_flags": {
+        "bit0": "macro entry; loader registers T_MACRO(BCODE) instead of a function cell"
+      },
+      "entry_record": "u16 name_off, u8 bank, u8 flags, u16 off, u16 len",
+      "header_bytes": 38,
+      "literal_index_record": "u16 node",
+      "literal_node_record": "u8 kind, u8 reserved, i16 value, u16 first, u16 count, u16 name_off_or_0xffff",
+      "literal_patch_record": "u16 blob_offset, u16 node",
+      "magic": "L65M",
+      "string_pool": "NUL-terminated UTF-8 strings referenced by name_off",
+      "version": 1
+    },
+    "metadata_offset": 108,
+    "metadata_sha256": "c77732deac1f836c90d6009cbf4c43ec4c1760bd7351d59eaddd1fc8b8c1dd25",
+    "path": "build/bytecode/dialect-v2/libs/buffer.ext.bin",
+    "runtime_code_offset": 0,
+    "runtime_metadata_offset": 104,
+    "sha256": "184a86125cc96c59906a183d9c35c673665e7dc19ef7c08441cef8f89d8c4ad0"
+  },
+  "format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+  "functions": [
+    "bufferp",
+    "make-buffer",
+    "buffer-length",
+    "buffer-ref",
+    "buffer-set!",
+    "buffer->string",
+    "string->buffer"
+  ],
+  "header": "build/bytecode/dialect-v2/libs/buffer.h",
+  "late_bound_exports": [],
+  "literal_format": {
+    "entry_fields": "lisp65_bytecode_stdlib_entries[].lit_first/lit_count map each code object's littab slots to literal_index nodes",
+    "index_table": "lisp65_bytecode_stdlib_literal_index",
+    "materialization": "boot loader walks literal_patches, materializes each node, and overwrites the raw host obj word at blob_offset before execution",
+    "node_table": "lisp65_bytecode_stdlib_literal_nodes",
+    "patch_fields": "lisp65_bytecode_stdlib_literal_patches[].blob_offset points at each raw 16-bit littab obj word; .node selects the materialized literal node",
+    "patch_table": "lisp65_bytecode_stdlib_literal_patches"
+  },
+  "literal_index": [],
+  "literal_nodes": [],
+  "literal_note": "code-object literal-table obj words are host placeholders; native loaders must rewrite them from literal_format before running",
+  "literal_patches": [],
+  "name": "buffer",
+  "objects": 7,
+  "omission_gate": {
+    "defmacro_count": 0,
+    "defmacros": [],
+    "defun_count": 0,
+    "defuns": []
+  },
+  "override_exports": [],
+  "private_inline_functions": [],
+  "provides": [
+    "bufferp",
+    "make-buffer",
+    "buffer-length",
+    "buffer-ref",
+    "buffer-set!",
+    "buffer->string",
+    "string->buffer"
+  ],
+  "relocation": {
+    "disk_lib_contract": "disk-lib files are [u16 blob_len][u16 md_len][blob][L65M]; entry bank/off and literal patch offsets are blob-relative; the device loader stages blob at lib_hw, trailer at lib_hw+blob_len, then supplies the final Bank-5 base",
+    "kind": "runtime-relative"
+  },
+  "requires": [
+    "core"
+  ],
+  "resident_overrides": [],
+  "resident_private_inline_functions": [],
+  "resident_suites": [
+    "build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json"
+  ],
+  "sources": [
+    "lib/buffer.lisp"
+  ],
+  "strict_arity": true,
+  "suite": "tests/bytecode/libs/p0-buffer-lib.json",
+  "suite_format": "lisp65-bytecode-p0-disk-lib-suite-v1"
+}

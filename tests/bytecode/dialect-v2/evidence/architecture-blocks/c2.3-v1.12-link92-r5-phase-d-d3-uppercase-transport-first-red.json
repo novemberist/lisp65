@@ -1,0 +1,93 @@
+{
+  "bindings": {
+    "boot_screen": {
+      "bytes": 3202,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-boot.png",
+      "sha256": "3b2bfcf852228d3cf933e208ca1b7fa770e5225628188ff5b5c269a9e8f85bfd"
+    },
+    "boot_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-boot.txt",
+      "sha256": "ba6797106016eca8e28e37e590345ba63ee6abc92b90102fd2f7b990326ed75d"
+    },
+    "C2J_before_run": {
+      "bytes": 64,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-c2j-before-run.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-library-readback.d81",
+      "sha256": "3182314c3ebb1328d608dd9ca6dfc44d7e2e5c2ea64b2fe5f43e40238c726213"
+    },
+    "preparation": {
+      "bytes": 7155,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d3-preparation-receipt.json",
+      "sha256": "0e15a5c68b6d16e82b780ef156cba2c2f0ba02ad51c1c2172fbea93ca413e9e1"
+    },
+    "require_input_echo": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-require-input-input-attempt-1.txt",
+      "sha256": "822625015564af75fd7a8132d7ee93e36af2c090388397168735af84efa2b3f8"
+    },
+    "require_screen": {
+      "bytes": 3608,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-require.png",
+      "sha256": "3049c8f3f050ffe2d5e94f63a46aa70eade6314a67afe3e5495513b5834e9c6d"
+    },
+    "require_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-require.txt",
+      "sha256": "7cd70ce7cf8cb2248b60d38b703188ba5bcc89308dd116738fddaaff5a2c4745"
+    },
+    "uppercase_attempt_1": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-capitalize-input-attempt-1.txt",
+      "sha256": "4ee922bd4d02793a13b8c1dfbe8c651bec65fffc683d5e8e07707302e019a16c"
+    },
+    "uppercase_attempt_2": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-capitalize-input-attempt-2.txt",
+      "sha256": "4ee922bd4d02793a13b8c1dfbe8c651bec65fffc683d5e8e07707302e019a16c"
+    },
+    "uppercase_attempt_3": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-capitalize-input-attempt-3.txt",
+      "sha256": "4ee922bd4d02793a13b8c1dfbe8c651bec65fffc683d5e8e07707302e019a16c"
+    },
+    "final_clear": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-capitalize-input-attempt-3-clear.txt",
+      "sha256": "7cd70ce7cf8cb2248b60d38b703188ba5bcc89308dd116738fddaaff5a2c4745"
+    }
+  },
+  "classification": {
+    "actual_active_input": "(capitalize \"h\")",
+    "attempts": 3,
+    "expected_active_input": "(capitalize \"hELLO\")",
+    "mechanism": "The virtual keyboard transport did not deliver the uppercase E/L/L/O characters. Verified-input rejected every incomplete echo before RETURN and cleared it back to the empty prompt.",
+    "product_claim": "none",
+    "recommended_correction": "Use the lowercase-only smoke fixture (capitalize \"hello\") => \"Hello\" for the ordinary, traced and post-untrace calls; keep all trace/restoration postconditions unchanged.",
+    "type": "harness-first-red-virtual-uppercase-transport"
+  },
+  "execution_accounting": {
+    "D1": "green-before-contact",
+    "D2_rows": 0,
+    "D3_comfort_forms_executed": 0,
+    "D3_editor_entered": false,
+    "D3_require_forms_executed": 1,
+    "hardware_contacts": 1,
+    "preload_readbacks_byteidentical": 7,
+    "virtual_RETURNs_for_failed_capitalize": 0
+  },
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-d3-uppercase-transport-first-red-v1",
+  "recorded_on": "2026-08-07",
+  "status": "first-red-D3-uppercase-virtual-input-before-first-comfort-form",
+  "stopped_state": {
+    "C2J": "CLEAR-before-run",
+    "comfort": "required-successfully-t",
+    "D2": "untouched",
+    "editor": "not-entered",
+    "REPL": "live-empty-prompt-after-three-verified-clears"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "artifacts": {
+    "baseline": {
+      "code_bytes": 15990,
+      "manifest": {
+        "bytes": 315770,
+        "path": "build/post-promotion/v124/q/host-first/base/stdlib-p0.manifest.json",
+        "sha256": "6a146f7aed047ed931333bb68a452bb1976ff16d1e848683c57d916cb41a5dc7"
+      },
+      "objects": 363
+    },
+    "candidate": {
+      "code_bytes": 17441,
+      "manifest": {
+        "bytes": 341012,
+        "path": "build/post-promotion/v124/q/host-first/candidate/stdlib-p0.manifest.json",
+        "sha256": "cf9fe71a59f869b6ce0495221947cdfc15c85a0db6c1713b6d702f2255b547fc"
+      },
+      "objects": 389
+    },
+    "current_composition": {
+      "bank2_headroom_bytes": 19597,
+      "bank2_static_code_bytes": 45939,
+      "direct_entry_refs": 674,
+      "entries": 753,
+      "entry_headroom": 1295,
+      "resolution_headroom": 1176,
+      "resolutions": 2920,
+      "root_headroom": 1186,
+      "roots": 350
+    },
+    "delta": {
+      "bank2_code_bytes": 1451,
+      "directory_bytes": 182,
+      "objects": 26,
+      "resident_bytes": 0,
+      "resolution_words": 71
+    },
+    "execution": {
+      "artifact_cases_total": 259,
+      "independent_oracle_cases_per_lane": 36,
+      "math_io_witness_rows": 38,
+      "observations": {
+        "bytes": 34537,
+        "path": "build/post-promotion/v124/q/host-first/candidate/observations.json",
+        "sha256": "c43b4c9a9c3ef4e99381f9609bf3223a0fa9adacc41067512305ab79f6d8a967"
+      },
+      "source_cases_total": 259,
+      "source_stdout": [
+        "bytecode-p0-stdlib-check: PASS suites=1 functions=388 cases=259 objects=663 code_bytes=23092 dir_bytes=4641 steps=69035",
+        "bytecode-p0-stdlib-artifacts: WROTE build/post-promotion/v124/q/host-first/candidate/stdlib-p0 objects=389 code_bytes=17441 ext_bytes=40313 dir_bytes=2723 manifest=build/post-promotion/v124/q/host-first/candidate/stdlib-p0.manifest.json disasm=build/post-promotion/v124/q/host-first/candidate/stdlib-p0.disasm.txt",
+        "bytecode-p0-stdlib-embed-check: PASS cases=259 objects=389 literal_nodes=876 literal_patches=820 steps=69035"
+      ],
+      "tracked_q_cases_per_lane": 12
+    },
+    "projected_post_Link80": {
+      "bank2_headroom_bytes": 22600,
+      "bank2_static_code_bytes": 42936,
+      "direct_entry_refs": 656,
+      "entries": 722,
+      "entry_headroom": 1326,
+      "resolution_headroom": 1265,
+      "resolutions": 2831,
+      "root_headroom": 1186,
+      "roots": 350
+    }
+  },
+  "authority": {
+    "base_suite": {
+      "bytes": 1726,
+      "path": "tests/bytecode/libs/p0-stdlib-random-base.json",
+      "sha256": "e0cf8deb82d41a44f013632f923d76c61237436ecc4d7573f4519faad7824722"
+    },
+    "contract": {
+      "bytes": 4351,
+      "path": "config/c2-q-contract.json",
+      "sha256": "4f884536eceb1a8852df8a92c57d5827904084f4fe7c9c94e9ec64e9f16b602e"
+    },
+    "design": {
+      "bytes": 10548,
+      "path": "docs/planning/1.3-ship-builder-work-plan.md",
+      "sha256": "cef44642805ad5c258607e299342c56f0c1d1a3b66bd9542abcf7a754f4fd517"
+    },
+    "gate": {
+      "bytes": 24362,
+      "path": "tools/host-lisp/c2_q_gate.py",
+      "sha256": "e96d90ad1e00427763829d8b5f0656f8723abbdec9938dd2a5753550f2479b8c"
+    },
+    "host_vm": {
+      "bytes": 100151,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "126320a94168219b539efc3f6b15e6818671312417ed3056915b0f0b78ea44fd"
+    },
+    "profile": {
+      "bytes": 6456,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "01893e5c4743bbe2a5a6dacabdf9f8f9cede3de57148c8a0b0feb0f0e2caa228"
+    },
+    "source": {
+      "bytes": 5826,
+      "path": "lib/stdlib-q.lisp",
+      "sha256": "de9f66d3f8b2ce50f668f3118016eda4f1d0123a4d30252c5aaaa51c81ab90d3"
+    },
+    "stdlib_runner": {
+      "bytes": 131292,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "14340a60d22c1b7605ad878f8999df61c7eac3dcb285503602ff9ea1f042ec80"
+    },
+    "suite": {
+      "bytes": 2680,
+      "path": "tests/bytecode/libs/p0-stdlib-q-base.json",
+      "sha256": "c80ea37e281befc109730fa06c2085fd2686ff494f8acda8a34276f72902b6a2"
+    }
+  },
+  "claim_limit": "Independent host arithmetic, source/artifact P0 execution over a modeled math register file and projected capacity only; no target register or on-metal q claim.",
+  "composition": {
+    "product_build_id": "0x14d980c3",
+    "successors": [
+      "time",
+      "require-option-A",
+      "ship-v1.3"
+    ]
+  },
+  "format": "lisp65-c2.2-v1.3-q-host-first-receipt-v1",
+  "hardware_runs": 0,
+  "mutations_rejected": {
+    "built-but-not-executed": "q execution witness absent: q-multiply-main",
+    "legacy-public-alias": "q public surface revived a legacy fx alias",
+    "legacy-source-reintroduced": "q revived its legacy implementation or require dependency",
+    "math-inside-multiply-transaction": "arithmetic entered the shared math-unit transaction",
+    "parked-defstruct-dependency": "q base-composition suite drift",
+    "require-dependency": "q revived its legacy implementation or require dependency",
+    "resident-byte": "q placement contract drift",
+    "scale-256": "q semantic contract drift",
+    "truncate-rounding": "q semantic contract drift",
+    "wrong-fraction-contract-byte": "q math-register contract drift",
+    "wrong-fraction-high-byte": "q result-register read drift",
+    "wrong-product-low-byte": "q result-register read drift"
+  },
+  "next_gate": "Exactly one non-promotable WPLTO capacity card, then Phase M confirms the target register layout before any product link.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-08-01",
+  "source_contract": {
+    "private_functions": 18,
+    "public_functions": [
+      "q",
+      "int->q",
+      "q->int",
+      "q+",
+      "q-",
+      "q*",
+      "q/",
+      "q->string"
+    ],
+    "require_dependency": false,
+    "resident_delta_bytes": 0,
+    "runtime_overlay_records": 0,
+    "status": "passed-Q8.7-source-and-transaction-contract",
+    "transaction_input_writes": 8
+  },
+  "status": "passed-q-host-reference-modeled-register-and-capacity"
+}

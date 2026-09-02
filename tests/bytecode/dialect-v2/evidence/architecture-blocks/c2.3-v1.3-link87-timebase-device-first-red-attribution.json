@@ -1,0 +1,130 @@
+{
+  "bindings": {
+    "boot_gate": {
+      "bytes": 6289,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-ship-boot-inheritance-gate-receipt.json",
+      "sha256": "1b9e09c9d33d154c27d1221a34b256c28d67b73ed4d0f85823cd79ce7903e78e"
+    },
+    "config": {
+      "bytes": 1011,
+      "path": "config/c2-ship-builder-v1-link87-interactive-human-test.json",
+      "sha256": "5a9ff7cb44a3ee7544878948dc8c0b84f8514851095ccd961f039a552a7d4462"
+    },
+    "contract": {
+      "bytes": 2100,
+      "path": "config/c2-ship-boot-inheritance-contract.json",
+      "sha256": "5034aa86f172a841c967687a71757566b923c9f60918baf579133dc39fcdb19a"
+    },
+    "device_state": {
+      "bytes": 1,
+      "path": "build/ship-builder/v13/link87-interactive-human-test/run/state.bin",
+      "sha256": "ab61ba11a38b007ff98baa3ab20e2a584e15269fd428db3c857e2a2d568b5725"
+    },
+    "driver": {
+      "bytes": 10324,
+      "path": "tools/host-lisp/c2_v13_link87_timebase_first_red_attribution.py",
+      "sha256": "b3a0cf16d5e582732daec92ef21e6d3628cae8d36815691dd317f1efbb3900b6"
+    },
+    "elf_truth": {
+      "bytes": 18934,
+      "path": "tools/host-lisp/elf_truth.py",
+      "sha256": "b10ee96bf33b54f408dab3e6869b6705966bce5477efa0aced9bbc85c0bff6e9"
+    },
+    "fresh_basic_screen": {
+      "bytes": 4214,
+      "path": "build/ship-builder/v13/link87-interactive-human-test/run/fresh-basic.png",
+      "sha256": "07716e63bc17c9da3d7052b139d190bac6d894b95e02974139f9300eb5162be8"
+    },
+    "fresh_repro": {
+      "bytes": 561,
+      "path": "build/ship-builder/v13/link87-interactive-repro-3bcb488d/reproducibility.json",
+      "sha256": "43983ec5c5fe60510f11a9b51a63eac6acd26adc48222193a5297e67168efe17"
+    },
+    "image": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link87-final-3bcb488d/interactive.d81",
+      "sha256": "11fa01d62445d81f0768b0071c90e5e4f748088c20886b034ee827facb3bdd49"
+    },
+    "owner_review": {
+      "bytes": 61134,
+      "path": "docs/planning/1.3-link84-closing-first-red-review.md",
+      "sha256": "7db0a8d2fe43a1e5ab30384f0c6cec288ccc1d60ccce2ed307755ae6a40f727e"
+    },
+    "package_readback": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link87-interactive-human-test/run/package-readback.d81",
+      "sha256": "11fa01d62445d81f0768b0071c90e5e4f748088c20886b034ee827facb3bdd49"
+    },
+    "runtime_elf": {
+      "bytes": 39980,
+      "path": "build/ship-builder/v13/link87-final-3bcb488d/interactive.runtime.elf",
+      "sha256": "87bf58d6db1f604990ce95966d90e807648c015525711167de1009a6757e8468"
+    },
+    "session": {
+      "bytes": 3589,
+      "path": "scripts/c2-v13-link87-interactive-human-test-hw.sh",
+      "sha256": "8d5d9a1e8eb5cf9cedfa5a0776ee5f5c920dda3e345709bdc6899f9e8deba662"
+    },
+    "ship_io": {
+      "bytes": 9358,
+      "path": "products/runtime-core/ship_io.c",
+      "sha256": "23ac5f4b4a5246266d6327d0e31974557c31cc5cac141c8f78048f8a7fd624ff"
+    },
+    "upload_log": {
+      "bytes": 2485,
+      "path": "build/ship-builder/v13/link87-interactive-human-test/run/upload.log",
+      "sha256": "44c67f2d51bd5f2c9335210000641f1d981ed49e7585b9bf8b06e2c658eba945"
+    },
+    "wplto": {
+      "bytes": 13578,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link87-repeated-timebase-wplto-receipt.json",
+      "sha256": "45851c5ed6d7978158221d03b5922a25b1921b3beb130e562ff6b4fde270bf2a"
+    }
+  },
+  "candidate_link": 87,
+  "claim_limit": "The exact Link-87 image failed before input. The linked low-byte oracle is rejected for every one of 312 starting raster phases; no corrected product, successor link or physical pass is claimed.",
+  "device_first_red": {
+    "meaning": "RUNTIME_IO_ERROR before physical input",
+    "package_readback_byteidentical": true,
+    "physical_keys_requested": 0,
+    "runtime_state": "0xe5",
+    "virtual_keys_sent": 0
+  },
+  "executed_phase_matrix": {
+    "d012_low_decrease_passes": 0,
+    "d012_low_decrease_rejections": 312,
+    "first_bad_delta_histogram": {
+      "0": 312
+    },
+    "full_9bit_wrap_passes": 312,
+    "required_deltas": 3,
+    "start_phases": 312
+  },
+  "format": "lisp65-c2.3-v1.3-link87-timebase-device-first-red-attribution-v1",
+  "gate_lesson": {
+    "missing_world_fact": "$D012 alone is the low byte of a 9-bit raster",
+    "old_host_oracle": "one synthetic callback per assumed frame",
+    "required_closure": "the gate oracle must execute the 9-bit target raster model and reject the low-byte-only implementation",
+    "why_green": "the host supplied one event per logical frame and never executed the target register transition sequence"
+  },
+  "mechanism": {
+    "correct_reference_shape": "$D011 bit-8 high-to-low transition, i.e. one full 9-bit raster frame wrap",
+    "decreases_per_frame": [
+      "line 255 -> 256: D012 ff -> 00, owned IRQ just advanced",
+      "last line -> line 0: D012 37 -> 00, no owned IRQ advanced"
+    ],
+    "effect": "the verifier samples one zero counter delta within at most two verification edges and returns RUNTIME_IO_ERROR",
+    "implementation_oracle": "successive $D012 low-byte decrease",
+    "raster_domain": "9-bit raster with 312 modeled lines"
+  },
+  "recorded_on": "2026-08-03",
+  "release_ready": false,
+  "scope": {
+    "additional_hardware_contacts": 0,
+    "additional_product_links": 0,
+    "next": "owner decision required before a corrected successor link",
+    "product_bytes_changed_after_link": 0,
+    "v1.3_status": "closed-pending-owner-review"
+  },
+  "status": "ATTRIBUTED-D012-LOW-BYTE-HAS-TWO-DECREASES-PER-FRAME"
+}

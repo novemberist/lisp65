@@ -1,0 +1,181 @@
+{
+  "authority": {
+    "diagnostic_latch_source": {
+      "bytes": 56897,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "3cf389c2a9d564aa040bf7869aaee620dbd3b619e09bc67451d0148d33eb26f0"
+    },
+    "exact_crc_leaf_exoneration": {
+      "bytes": 6469,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link34-crc-leaf-hardware-exoneration-receipt.json",
+      "sha256": "9aa04a67689366e415fb1dd4a81e0796397cf0713db0326154cd2e426e806bff"
+    },
+    "exact_crc_leaf_hardware_result": {
+      "bytes": 2285,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/hardware-result.json",
+      "sha256": "95e1467afecf5a7766195e663628b75c96c03849248938841cbbee01cb883232"
+    },
+    "link34_first_red": {
+      "bytes": 8257,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link34-runtime-island-hardware-first-red-diagnosis.json",
+      "sha256": "803c5b1e5d474e7a02f8ac1afe435f444d9169b7e2aeaa5f301ce0a7c91d68fe"
+    },
+    "link34_rollback_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+      "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+      "status": "untouched"
+    },
+    "link34_structural_baseline": {
+      "bytes": 172560,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link34-crc-asm-leaf-structural-receipt.json",
+      "sha256": "b4610ac561b576f85bdbb7491bcb0bec79974edeef1a4c691657adf313d67509"
+    }
+  },
+  "capacity": {
+    "bank0_text_headroom_bytes": 19,
+    "e000": {
+      "actual_headroom_bytes": 115,
+      "debit_bytes": 422,
+      "debit_cap_bytes": 450,
+      "equations": [
+        "531 - 416 = 115",
+        "416 + 6 = 422"
+      ],
+      "facade_debit_bytes_outside_window": 6,
+      "final_floor_bytes": 115,
+      "headroom_above_floor_bytes": 0,
+      "in_window_debit_bytes": 416,
+      "pre_package_headroom_bytes": 531,
+      "third_opening": "forbidden"
+    },
+    "fixed_hot_block_headroom_bytes": 33,
+    "ordinary_bank0_bss_headroom_bytes": 195,
+    "resident_island_headroom_bytes": 7,
+    "runtime_overlay_bank": {
+      "boot_bytes": 15605,
+      "boot_headroom_bytes": 49931,
+      "session_bytes": 60062,
+      "session_headroom_bytes": 5474
+    },
+    "runtime_slices": {
+      "cap_bytes": 1792,
+      "count": 53,
+      "largest_bytes": 1761,
+      "minimum_headroom_bytes": 31
+    }
+  },
+  "capacity_delta_vs_link34": {
+    "bank0_text_headroom_bytes": -36,
+    "e000_headroom_bytes": 0,
+    "fixed_hot_block_headroom_bytes": 0,
+    "ordinary_bank0_bss_headroom_bytes": 0,
+    "resident_island_headroom_bytes": 0
+  },
+  "claim_limit": "One fully gated but permanently non-promotable diagnostic link. It may be used only for the authorized inner-status hardware run; it cannot satisfy product acceptance or promotion.",
+  "diagnostic_latch": {
+    "fail_closed_wipe_unchanged": true,
+    "negative_matrix": {
+      "invalid-verifier-index": "rejected",
+      "length-over-slice-cap": "rejected",
+      "success-is-not-a-failure-status": "rejected"
+    },
+    "outer_E2f_mapping_unchanged": true,
+    "owner": "vm_runtime_overlay_exec_family",
+    "saved_before_rtov_fail": true,
+    "state_symbols": {
+      "rtov_call_context": {
+        "address": 110,
+        "bytes": 2,
+        "type": "b"
+      },
+      "rtov_call_result": {
+        "address": 112,
+        "bytes": 2,
+        "type": "b"
+      },
+      "rtov_fault": {
+        "address": 124,
+        "bytes": 1,
+        "type": "b"
+      },
+      "rtov_loaded_len": {
+        "address": 121,
+        "bytes": 2,
+        "type": "b"
+      }
+    },
+    "status": "passed-four-existing-bytes-no-new-state",
+    "store_addresses": [
+      "0x6e",
+      "0x6f",
+      "0x70",
+      "0x71"
+    ]
+  },
+  "evidence_file_count": 64,
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_candidates": 0,
+    "whole_program_lto_closure_links": 1
+  },
+  "format": "lisp65-c2-link34-island-status-latch-diagnostic-link-v1",
+  "fresh_gates": {
+    "capacity_gate": "passed",
+    "crc_assembler_leaf": "passed-linked-assembler-leaf-crc-equivalence",
+    "crc_codegen": "passed-target-stable-bytewise-crc-loop",
+    "diagnostic_latch": "passed-four-existing-bytes-no-new-state",
+    "direct_entry_encoding": "passed-637-of-637-fixnum-values-zero",
+    "f011_mount_window": "pass-measured-owner-accepted-contract-limit",
+    "fixed_host_facade_gate": "passed",
+    "handoff_z_abi_gate": "passed",
+    "hot_refill": "passed",
+    "identity_gate": "passed",
+    "kernal_freedom_gate": "passed",
+    "one_truth_gate": "passed",
+    "overlay_closure": "passed-final-elf-overlay-closure",
+    "pre_ownership_gate": "passed",
+    "preinstallation_island": "passed-static-preinstallation-Island-gate",
+    "runtime_family_identity": "passed",
+    "total_publish_last": "passed"
+  },
+  "link34_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+    "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+    "status": "untouched"
+  },
+  "mode": "diagnostic-link",
+  "next_gate": "one owner-authorized diagnostic hardware run; stop after capture",
+  "post_link_identity": {
+    "actual_changed_bytes": 32,
+    "declared_mutable_product_bytes": 34,
+    "status": "passed"
+  },
+  "product_identity": {
+    "elf": {
+      "bytes": 565708,
+      "path": "build/c2.2/substitution/link34-island-status-latch-diagnostic/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c5e87e3157ec9114b24c61620109a7414ba05eafea01f5867ae69761b0aeb2e9"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/link34-island-status-latch-diagnostic/lisp65-c2-substitution-linked.prg",
+      "sha256": "f1e1e772471b93482f73fd81729ed53dad10cbb4bd691f3a830a4060edbe3028"
+    },
+    "resolved_profile": {
+      "bytes": 6531,
+      "path": "build/c2.2/substitution/link34-island-status-latch-diagnostic/resolved-profile.txt",
+      "sha256": "50619318a3fc1ccef1b1bddfdc1e2742d4ba5fcb3c60f922b7220d5d3ef643f2"
+    }
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "report": {
+    "bytes": 6289,
+    "path": "build/c2.2/substitution/link34-island-status-latch-diagnostic/diagnostic-island-latch-link.json",
+    "sha256": "a28045e39eee7a1ee745533e708a33ffda207be40b504a87f4b611e05d4efa1c"
+  },
+  "section_count": 94,
+  "status": "passed-nonpromotable-diagnostic-link-hardware-not-run"
+}

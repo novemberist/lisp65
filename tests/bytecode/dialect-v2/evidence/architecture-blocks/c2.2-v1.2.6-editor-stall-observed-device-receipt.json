@@ -1,0 +1,281 @@
+{
+  "authority": {
+    "commission": {
+      "bytes": 19812,
+      "path": "docs/planning/c2.2-v1.2.6-editor-halt1-first-red-review.md",
+      "sha256": "0cac2f1aead3ab3f5a3031b58d66694955cf69c063fa2d7c1a8245b6372e0ea2"
+    },
+    "driver": {
+      "bytes": 79515,
+      "path": "tools/host-lisp/c2_v126_editor_stall_device.py",
+      "sha256": "9074a332682f89e66a5bc9fea0db23c771493b9725945e91a5b6a98d0d9906af"
+    },
+    "expectation_table": {
+      "bytes": 89989,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-key-expectation-table-receipt.json",
+      "sha256": "99d4fd1875c1c2b29e18a50a6ba9405a04d57399bc21849bb23d720cbec828d3"
+    },
+    "host_dry_run": {
+      "bytes": 6335,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-observed-host-dry-run-receipt.json",
+      "sha256": "bfd35e63da466b0aeb25ecb0b999390ef5ec8ef5b72a54287ea6c83b00c475c4"
+    },
+    "preparation": {
+      "bytes": 3962,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-observed-preparation-receipt.json",
+      "sha256": "7ad8958adc452709ae9b2436fe3bf9593695e5c4624e0311c113b6e27fb04c4e"
+    }
+  },
+  "contact": {
+    "contact": 2,
+    "event": {
+      "evidence": {
+        "CPU_left_stopped": true,
+        "arrival": {
+          "CPU_resumed": false,
+          "arrival_kind": "physical-break-pending-latch",
+          "break_pending": 0,
+          "breakpoint": "0xe00b",
+          "breakpoint_cleared": true,
+          "expected_code": 3,
+          "gc_runs": 4,
+          "matched": false,
+          "matrix_commands": [
+            "sffd3615 3f 7f",
+            "sffd3615 7f 7f 7f"
+          ],
+          "queue_code": 0,
+          "queue_present": false,
+          "queue_state": 0,
+          "raw": {
+            "break_pending": "6d30303030666638610d0a3a30303030464638413a30303030303030303030303038363041413630384134303938454432423938430d0a0d0a2e",
+            "gc_runs": "6d30303030623966300d0a3a30303030423946303a30343030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "queue_code": "6d30303030643631390d0a3a30303030443631393a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "queue_state": "6d30303030643630610d0a3a30303030443630413a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "registers": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303137203030204345203030203030203030203031393220383030302030303030204144304144362020303020202020203233202e2e452e2e2e5a43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737374530313720203130203141202020202042504c20202024453033330d0a0d0a2e",
+            "trigger": "62653030620d0a0d0a2e73666664333631352033662037660d0a0d0a2e73666664333631352037662037662037660d0a0d0a2e"
+          },
+          "registers": {
+            "A": "0x00",
+            "B": "0x00",
+            "PC": "0xe017",
+            "SP": "0x0192",
+            "X": "0xce",
+            "Y": "0x00",
+            "Z": "0x00",
+            "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303137203030204345203030203030203030203031393220383030302030303030204144304144362020303020202020203233202e2e452e2e2e5a43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737374530313720203130203141202020202042504c20202024453033330d0a0d0a2e"
+          }
+        },
+        "before": {
+          "gc_runs": 4,
+          "queue_code": 0,
+          "queue_state": 0,
+          "raw": {
+            "gc_runs": "6d30303030623966300d0a3a30303030423946303a30343030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "queue_code": "6d30303030643631390d0a3a30303030443631393a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "queue_state": "6d30303030643630610d0a3a30303030443630413a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e"
+          },
+          "registers": {
+            "A": "0x01",
+            "B": "0x00",
+            "PC": "0x8299",
+            "SP": "0x0194",
+            "X": "0xce",
+            "Y": "0x00",
+            "Z": "0x00",
+            "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a38323939203031204345203030203030203030203031393420383030302030303030204136313920202020303020202020204131204e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c30373737383239392020383620303520202020205354582020202430350d0a0d0a2e"
+          }
+        },
+        "classification": "tooling-transport-arrival-First-Red",
+        "expectation_row": {
+          "expected_petscii": 3,
+          "expected_petscii_hex": "0x03",
+          "fold_authority": "control-token-contract",
+          "payload": "~C",
+          "phase": "context-scratch-abort",
+          "sequence": 42,
+          "source_ascii": null
+        },
+        "expected_code": 3,
+        "payload": "~C",
+        "phase": "context-scratch-abort",
+        "product_claimed": false,
+        "sequence": 42
+      },
+      "phase": "context-scratch-abort",
+      "reason": "injected key absent or different at stopped queue head"
+    },
+    "observed_keys": 42,
+    "product_bytes_changed": 0,
+    "status": "FIRST-RED-observed-transport-tooling"
+  },
+  "contacts": [
+    {
+      "contact": 1,
+      "event": {
+        "evidence": {
+          "CPU_left_stopped": true,
+          "arrival": {
+            "CPU_resumed": false,
+            "arrival_kind": "typed-queue-head-before-dequeue",
+            "break_pending": 0,
+            "breakpoint": "0xe01c",
+            "breakpoint_cleared": true,
+            "expected_code": 101,
+            "gc_runs": 0,
+            "matched": false,
+            "matrix_commands": [
+              "sffd3615 0e 7f",
+              "sffd3615 7f 7f 7f"
+            ],
+            "queue_code": 0,
+            "queue_present": false,
+            "queue_state": 0,
+            "raw": {
+              "break_pending": "6d30303030666638610d0a3a30303030464638413a30303030303030303030303038363041413630384134303938454432423938430d0a0d0a2e",
+              "gc_runs": "6d30303030623966300d0a3a30303030423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "queue_code": "6d30303030643631390d0a3a30303030443631393a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "queue_state": "6d30303030643630610d0a3a30303030443630413a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "registers": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303146203435204346203030203030203030203031443820383030302030303030204144313944362020303020202020203231202e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737374530314620203844203139204436202053544120202024443631390d0a0d0a2e",
+              "trigger": "62653031630d0a0d0a2e73666664333631352030652037660d0a0d0a2e210d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303146203435204346203030203030203030203031443820383030302030303030204144313944362020303020202020203231202e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737374530314620203844203139204436202053544120202024443631390d0a0d0a2e73666664333631352037662037662037660d0a0d0a2e"
+            },
+            "registers": {
+              "A": "0x45",
+              "B": "0x00",
+              "PC": "0xe01f",
+              "SP": "0x01d8",
+              "X": "0xcf",
+              "Y": "0x00",
+              "Z": "0x00",
+              "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303146203435204346203030203030203030203031443820383030302030303030204144313944362020303020202020203231202e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737374530314620203844203139204436202053544120202024443631390d0a0d0a2e"
+            }
+          },
+          "before": {
+            "gc_runs": 0,
+            "queue_code": 0,
+            "queue_state": 0,
+            "raw": {
+              "gc_runs": "6d30303030623966300d0a3a30303030423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "queue_code": "6d30303030643631390d0a3a30303030443631393a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "queue_state": "6d30303030643630610d0a3a30303030443630413a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e"
+            },
+            "registers": {
+              "A": "0x01",
+              "B": "0x00",
+              "PC": "0x8291",
+              "SP": "0x01da",
+              "X": "0x00",
+              "Y": "0x00",
+              "Z": "0x00",
+              "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a38323931203031203030203030203030203030203031444120383030302030303030204135313620202020303020202020203231202e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737373832393120204630203138202020202042455120202024383241420d0a0d0a2e"
+            }
+          },
+          "classification": "tooling-transport-arrival-First-Red",
+          "expected_code": 101,
+          "payload": "e",
+          "phase": "context-scratch-launch-char-2",
+          "product_claimed": false,
+          "sequence": 2
+        },
+        "phase": "context-scratch-launch-char-2",
+        "reason": "injected key absent or different at stopped queue head"
+      },
+      "observed_keys": 2,
+      "product_bytes_changed": 0,
+      "status": "FIRST-RED-observed-transport-tooling"
+    },
+    {
+      "contact": 2,
+      "event": {
+        "evidence": {
+          "CPU_left_stopped": true,
+          "arrival": {
+            "CPU_resumed": false,
+            "arrival_kind": "physical-break-pending-latch",
+            "break_pending": 0,
+            "breakpoint": "0xe00b",
+            "breakpoint_cleared": true,
+            "expected_code": 3,
+            "gc_runs": 4,
+            "matched": false,
+            "matrix_commands": [
+              "sffd3615 3f 7f",
+              "sffd3615 7f 7f 7f"
+            ],
+            "queue_code": 0,
+            "queue_present": false,
+            "queue_state": 0,
+            "raw": {
+              "break_pending": "6d30303030666638610d0a3a30303030464638413a30303030303030303030303038363041413630384134303938454432423938430d0a0d0a2e",
+              "gc_runs": "6d30303030623966300d0a3a30303030423946303a30343030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "queue_code": "6d30303030643631390d0a3a30303030443631393a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "queue_state": "6d30303030643630610d0a3a30303030443630413a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "registers": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303137203030204345203030203030203030203031393220383030302030303030204144304144362020303020202020203233202e2e452e2e2e5a43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737374530313720203130203141202020202042504c20202024453033330d0a0d0a2e",
+              "trigger": "62653030620d0a0d0a2e73666664333631352033662037660d0a0d0a2e73666664333631352037662037662037660d0a0d0a2e"
+            },
+            "registers": {
+              "A": "0x00",
+              "B": "0x00",
+              "PC": "0xe017",
+              "SP": "0x0192",
+              "X": "0xce",
+              "Y": "0x00",
+              "Z": "0x00",
+              "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303137203030204345203030203030203030203031393220383030302030303030204144304144362020303020202020203233202e2e452e2e2e5a43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737374530313720203130203141202020202042504c20202024453033330d0a0d0a2e"
+            }
+          },
+          "before": {
+            "gc_runs": 4,
+            "queue_code": 0,
+            "queue_state": 0,
+            "raw": {
+              "gc_runs": "6d30303030623966300d0a3a30303030423946303a30343030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "queue_code": "6d30303030643631390d0a3a30303030443631393a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+              "queue_state": "6d30303030643630610d0a3a30303030443630413a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e"
+            },
+            "registers": {
+              "A": "0x01",
+              "B": "0x00",
+              "PC": "0x8299",
+              "SP": "0x0194",
+              "X": "0xce",
+              "Y": "0x00",
+              "Z": "0x00",
+              "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a38323939203031204345203030203030203030203031393420383030302030303030204136313920202020303020202020204131204e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c30373737383239392020383620303520202020205354582020202430350d0a0d0a2e"
+            }
+          },
+          "classification": "tooling-transport-arrival-First-Red",
+          "expectation_row": {
+            "expected_petscii": 3,
+            "expected_petscii_hex": "0x03",
+            "fold_authority": "control-token-contract",
+            "payload": "~C",
+            "phase": "context-scratch-abort",
+            "sequence": 42,
+            "source_ascii": null
+          },
+          "expected_code": 3,
+          "payload": "~C",
+          "phase": "context-scratch-abort",
+          "product_claimed": false,
+          "sequence": 42
+        },
+        "phase": "context-scratch-abort",
+        "reason": "injected key absent or different at stopped queue head"
+      },
+      "observed_keys": 42,
+      "product_bytes_changed": 0,
+      "status": "FIRST-RED-observed-transport-tooling"
+    }
+  ],
+  "execution_accounting": {
+    "physical_contacts": 2,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "reserve_consumed": true
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-stall-observed-device-v1",
+  "next_step": "owner review; no product fix or link inferred by the runner",
+  "recorded_on": "2026-07-31",
+  "status": "FIRST-RED-observed-transport-tooling"
+}

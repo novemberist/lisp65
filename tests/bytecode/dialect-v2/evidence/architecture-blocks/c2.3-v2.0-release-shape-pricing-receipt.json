@@ -1,0 +1,578 @@
+{
+  "authority": {
+    "clean_receipt": {
+      "bytes": 180602,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-domain-tier1-product-card-r1-receipt.json",
+      "sha256": "8909d9a33770272e4487d64fa8c160de4298d268981180067cc2024fa2200258"
+    },
+    "current_receipt": {
+      "bytes": 2117412,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-block3-hot-path-repair-card-r1-receipt.json",
+      "sha256": "168fd05624c23eec212caaa8aeb57b3ba1ea4a1bd9b28f9560e5e51d18dc777b"
+    },
+    "device_red": {
+      "bytes": 4430,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-block3-hot-path-repair-device-result-receipt.json",
+      "sha256": "367ed2ebe8535e3eaebf863fefd3cef54945f48adb13b34bb0ee6cefbc8daf1d"
+    },
+    "review": {
+      "bytes": 1430,
+      "commit": "3c88d046",
+      "path": "docs/planning/v2.0.0-pre-plan.md",
+      "right": "host-only two-shape price; no WPLTO, link, media or device",
+      "section": "## Reviewer ratification \u2014 Block 3 finally descoped; two divergences sealed \u2014 2026-09-02",
+      "sha256": "da57f4229b91319cff77969affdb2d8bd1fcfd280546aa69c96ad13cb80c1021"
+    }
+  },
+  "dormancy_test": {
+    "active_key_path": [
+      {
+        "caller": "%read-line-loop",
+        "opcode": "CALL",
+        "target": "%rl-poll"
+      },
+      {
+        "caller": "%rl-poll",
+        "opcode": "TAILCALL",
+        "target": "%rl-clear"
+      },
+      {
+        "caller": "%rl-clear",
+        "opcode": "CALL",
+        "target": "%rl-idle"
+      },
+      {
+        "caller": "%rl-clear",
+        "opcode": "CALL",
+        "target": "%cursor-blink"
+      },
+      {
+        "caller": "%rl-idle",
+        "opcode": "TAILCALL",
+        "target": "%sexp-scan"
+      },
+      {
+        "caller": "%rl-idle",
+        "opcode": "TAILCALL",
+        "target": "%sexp-close"
+      },
+      {
+        "caller": "%rl-idle",
+        "opcode": "TAILCALL",
+        "target": "%sexp-open"
+      },
+      {
+        "caller": "%rl-idle",
+        "opcode": "TAILCALL",
+        "target": "%sexp-paint"
+      }
+    ],
+    "conclusion": "the current packed world executes Block-3 freight from the delivered read-line path; calling it dormant would be false",
+    "derived_from": {
+      "bytes": 2660,
+      "path": "build/c2.3/v2.0-block3-hot-path-repair-card-r1-preflight/setup-owned/static-plane/narrow-static/product/substitution-artifacts.json",
+      "sha256": "0cc8b0c04a3eeece1fb72d50272fe14a99acfd8d85ba2017bf65863fc3a1caaa"
+    },
+    "device_effect": {
+      "key_feel": "noticeably worse than v1.9",
+      "matcher": "no visible mark"
+    },
+    "is_dormant": false,
+    "status": "FAIL: CURRENT FREIGHT IS ACTIVE"
+  },
+  "format": "lisp65-c2-v200-release-shape-pricing-v1",
+  "freight": {
+    "added_call_sites": 236,
+    "added_objects": 38,
+    "components": {
+      "ide": {
+        "added": [
+          {
+            "name": "%ide-blink",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 235
+          },
+          {
+            "name": "%ide-clear",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 173
+          },
+          {
+            "name": "%ide-close",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 181
+          },
+          {
+            "name": "%ide-idle",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 102
+          },
+          {
+            "name": "%ide-idle-mini-start",
+            "name_bytes_NUL_inclusive": 21,
+            "object_bytes": 197
+          },
+          {
+            "name": "%ide-init",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 108
+          },
+          {
+            "name": "%ide-kind",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 169
+          },
+          {
+            "name": "%ide-open",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 174
+          },
+          {
+            "name": "%ide-paint",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 232
+          },
+          {
+            "name": "%ide-poll",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 228
+          },
+          {
+            "name": "%ide-scan",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 136
+          },
+          {
+            "name": "%ide-start",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 252
+          }
+        ],
+        "added_name_bytes_NUL_inclusive": 136,
+        "added_object_bytes": 2187,
+        "changed_existing": [
+          {
+            "after_bytes": 58,
+            "before_bytes": 46,
+            "delta_bytes": 12,
+            "name": "%ide-drain-pending"
+          },
+          {
+            "after_bytes": 142,
+            "before_bytes": 101,
+            "delta_bytes": 41,
+            "name": "%ide-line-net-depth"
+          },
+          {
+            "after_bytes": 52,
+            "before_bytes": 47,
+            "delta_bytes": 5,
+            "name": "ide"
+          },
+          {
+            "after_bytes": 30,
+            "before_bytes": 96,
+            "delta_bytes": -66,
+            "name": "ide-run"
+          }
+        ],
+        "changed_existing_net_bytes": -8,
+        "clean_code_bytes": 13544,
+        "clean_manifest": {
+          "bytes": 336586,
+          "path": "build/release-v1.5.0/public-product-build/build/bytecode/dialect-v2/libs/ide.manifest.json",
+          "sha256": "1633cf3a44cb454dbb5115e4267262fce0f42154e4175f959d17052d3bb55300"
+        },
+        "code_delta_bytes": 2179,
+        "current_code_bytes": 15723,
+        "current_manifest": {
+          "bytes": 367889,
+          "path": "build/c2.3/v2.0-block3-hot-path-repair-card-r1-preflight/setup-owned/static-plane/narrow-static/ide.manifest.json",
+          "sha256": "c4efd31761e38a3dc9c3a7ff1be0c93fb8b43d60cdb90643a37e2d6c14c1b24a"
+        },
+        "removed": []
+      },
+      "stdlib-p0": {
+        "added": [
+          {
+            "name": "%cursor-blink",
+            "name_bytes_NUL_inclusive": 14,
+            "object_bytes": 173
+          },
+          {
+            "name": "%frame-low",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 19
+          },
+          {
+            "name": "%ide-line-net-depth",
+            "name_bytes_NUL_inclusive": 20,
+            "object_bytes": 142
+          },
+          {
+            "name": "%repl-prompt",
+            "name_bytes_NUL_inclusive": 13,
+            "object_bytes": 80
+          },
+          {
+            "name": "%repl-read",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 234
+          },
+          {
+            "name": "%repl-step",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 251
+          },
+          {
+            "name": "%rl-clear",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 163
+          },
+          {
+            "name": "%rl-close",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 208
+          },
+          {
+            "name": "%rl-idle",
+            "name_bytes_NUL_inclusive": 9,
+            "object_bytes": 92
+          },
+          {
+            "name": "%rl-kind",
+            "name_bytes_NUL_inclusive": 9,
+            "object_bytes": 182
+          },
+          {
+            "name": "%rl-open",
+            "name_bytes_NUL_inclusive": 9,
+            "object_bytes": 199
+          },
+          {
+            "name": "%rl-paint",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 228
+          },
+          {
+            "name": "%rl-poll",
+            "name_bytes_NUL_inclusive": 9,
+            "object_bytes": 127
+          },
+          {
+            "name": "%rl-scan",
+            "name_bytes_NUL_inclusive": 9,
+            "object_bytes": 168
+          },
+          {
+            "name": "%rl-session",
+            "name_bytes_NUL_inclusive": 12,
+            "object_bytes": 168
+          },
+          {
+            "name": "%rl-start",
+            "name_bytes_NUL_inclusive": 10,
+            "object_bytes": 208
+          },
+          {
+            "name": "%rl-wait",
+            "name_bytes_NUL_inclusive": 9,
+            "object_bytes": 152
+          },
+          {
+            "name": "%sexp-close",
+            "name_bytes_NUL_inclusive": 12,
+            "object_bytes": 197
+          },
+          {
+            "name": "%sexp-code",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 22
+          },
+          {
+            "name": "%sexp-match",
+            "name_bytes_NUL_inclusive": 12,
+            "object_bytes": 102
+          },
+          {
+            "name": "%sexp-open",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 218
+          },
+          {
+            "name": "%sexp-paint",
+            "name_bytes_NUL_inclusive": 12,
+            "object_bytes": 175
+          },
+          {
+            "name": "%sexp-rest",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 18
+          },
+          {
+            "name": "%sexp-scan",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 119
+          },
+          {
+            "name": "%sexp-step",
+            "name_bytes_NUL_inclusive": 11,
+            "object_bytes": 145
+          },
+          {
+            "name": "repl",
+            "name_bytes_NUL_inclusive": 5,
+            "object_bytes": 250
+          }
+        ],
+        "added_name_bytes_NUL_inclusive": 282,
+        "added_object_bytes": 4040,
+        "changed_existing": [
+          {
+            "after_bytes": 225,
+            "before_bytes": 250,
+            "delta_bytes": -25,
+            "name": "%read-line-loop"
+          },
+          {
+            "after_bytes": 118,
+            "before_bytes": 236,
+            "delta_bytes": -118,
+            "name": "read-line"
+          }
+        ],
+        "changed_existing_net_bytes": -143,
+        "clean_code_bytes": 18990,
+        "clean_manifest": {
+          "bytes": 358089,
+          "path": "build/c2.3/v2.0-domain-tier1-product-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.manifest.json",
+          "sha256": "f129e9aed04faa06c3625414cde93f1dd1cfe12225de970b26ad4c5a3d3136c4"
+        },
+        "code_delta_bytes": 3897,
+        "current_code_bytes": 22887,
+        "current_manifest": {
+          "bytes": 388456,
+          "path": "build/c2.3/v2.0-block3-hot-path-repair-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.manifest.json",
+          "sha256": "f1161df51ff1d2cee29a8792da16d521dab22bcd5bfe6f9ab5d9557b33bceafc"
+        },
+        "removed": []
+      }
+    },
+    "largest_hole_cost_bytes": 6076,
+    "name_bytes_NUL_inclusive": 418,
+    "plane_bytes": 6076
+  },
+  "mutations_rejected": [
+    "hide-active-read-line-to-block3-edge",
+    "label-active-current-world-dormant",
+    "omit-added-freight-member",
+    "misstate-plane-or-capacity-delta",
+    "claim-device-latency-green",
+    "break-v1.9-hot-path-byteidentity",
+    "claim-true-dormancy-costs-zero-links"
+  ],
+  "next": "owner/reviewer chooses strip or explicitly waives the active-world reds",
+  "options": {
+    "keep_current_as_documented_dormant": {
+      "dormant": false,
+      "keeps_cost": {
+        "namepool_bytes": 418,
+        "packed_call_sites": 236,
+        "packed_objects": 38,
+        "plane_bytes": 6076,
+        "symbol_slots": 38
+      },
+      "new_WPLTOs": 0,
+      "new_product_links": 0,
+      "release_eligibility": "not eligible under the standing device no-regression rule without an explicit owner waiver",
+      "true_dormant_variant": {
+        "minimum_new_product_links": 1,
+        "price_advantage_over_strip": "none established",
+        "requires_product_change": true
+      },
+      "why": [
+        "active on the delivered key path",
+        "matcher has no visible device effect",
+        "typing is noticeably worse than v1.9"
+      ]
+    },
+    "strip": {
+      "keeps": [
+        "Tier-1 domain discipline",
+        "v1.9 Capture and native editor",
+        "$22 first-fault latch",
+        "resident delivery-chain architecture",
+        "closure and generation-coherence gates"
+      ],
+      "new_WPLTOs": 1,
+      "new_product_links": 1,
+      "qualification_debt": [
+        "full difference attribution",
+        "all authority-consumption gates",
+        "Scope and Acceptance",
+        "packed closure and generation coherence"
+      ],
+      "reclaims": {
+        "largest_contiguous_hole_bytes": 6076,
+        "namepool_bytes": 418,
+        "packed_call_sites": 236,
+        "packed_objects": 38,
+        "plane_bytes": 6076,
+        "symbol_slots": 38
+      },
+      "release_eligibility": "eligible after one green product card",
+      "target": "qualified Tier-1 object population and semantics"
+    }
+  },
+  "process_accounting": {
+    "WPLTO": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "recommendation": {
+    "basis": [
+      "only priced form that removes the device-red active path",
+      "restores the ten-object v1.9 editor hot path byte-for-byte",
+      "reclaims all 6076 Plane bytes and all 38 names",
+      "a truly dormant variant also requires a product change and link"
+    ],
+    "choice": "strip",
+    "implementation_started": false,
+    "owner_decision_required": true
+  },
+  "recorded_on": "2026-09-02",
+  "status": "PASS: V2.0 RELEASE SHAPES PRICED; OWNER DECISION REQUIRED",
+  "stripped_hot_path_identity": {
+    "objects": [
+      {
+        "byteidentical": true,
+        "name": "%native-prompt",
+        "sha256": "cc39d570352699c65c0328095fa9c2c419172ef5ec39ebb1c5a7ee499e9a494f",
+        "stripped_bytes": 21,
+        "v1_9_bytes": 21
+      },
+      {
+        "byteidentical": true,
+        "name": "%native-read-line",
+        "sha256": "ff32228678911d9265494fbe023e67ca3e36952cf3da41fa5e6b5193d0e9a6b7",
+        "stripped_bytes": 16,
+        "v1_9_bytes": 16
+      },
+      {
+        "byteidentical": true,
+        "name": "%read-line-loop",
+        "sha256": "f5b7d363a56da6dcfd97bd373f19e141eec09b1644c174cecc2fc06674d51aaf",
+        "stripped_bytes": 250,
+        "v1_9_bytes": 250
+      },
+      {
+        "byteidentical": true,
+        "name": "%rl-render",
+        "sha256": "7cd7d1de848895b0c6ea08d535d19ee4128f6f271e6b3ec521bae5044343c37f",
+        "stripped_bytes": 104,
+        "v1_9_bytes": 104
+      },
+      {
+        "byteidentical": true,
+        "name": "%rl-cut",
+        "sha256": "2687db329cf514b80f67349d9a4d3afbc63be141979a2fd8078bb1705f90f02b",
+        "stripped_bytes": 253,
+        "v1_9_bytes": 253
+      },
+      {
+        "byteidentical": true,
+        "name": "%rl-move",
+        "sha256": "66bce4aa1f86f581f1a945a3e7886f54a52415a6fc6ea40f0997bd98d61570c5",
+        "stripped_bytes": 199,
+        "v1_9_bytes": 199
+      },
+      {
+        "byteidentical": true,
+        "name": "%rl-put",
+        "sha256": "c9a3258df73724564349813712eee0e754736b63d9aadb1acfb0ac88ae4362d7",
+        "stripped_bytes": 240,
+        "v1_9_bytes": 240
+      },
+      {
+        "byteidentical": true,
+        "name": "%rl-dispatch",
+        "sha256": "e9fc3a1d9a49943bac435d990a8149c938ed3dbcbacbdd86f464f76f4ff72499",
+        "stripped_bytes": 248,
+        "v1_9_bytes": 248
+      },
+      {
+        "byteidentical": true,
+        "name": "%rl-screen-tail",
+        "sha256": "b5282545964f1d9fde23c86cbbd44ca57e591197fd57233433c30cd168d1db1e",
+        "stripped_bytes": 223,
+        "v1_9_bytes": 223
+      },
+      {
+        "byteidentical": true,
+        "name": "read-line",
+        "sha256": "1d59d6920cd36af638fb467861cfd7e69e7a89227d328b6dac7a9ca0cec8852f",
+        "stripped_bytes": 236,
+        "v1_9_bytes": 236
+      }
+    ],
+    "status": "PASS: STRIPPED EDITOR HOT PATH BYTEIDENTICAL TO V1.9",
+    "stripped_blob": {
+      "bytes": 18990,
+      "path": "build/c2.3/v2.0-domain-tier1-product-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.blob.bin",
+      "sha256": "6e686f8154f6f8bca142fa624c19ebc57195c436011f98a9be301dbee1cc6eca"
+    },
+    "stripped_manifest": {
+      "bytes": 358089,
+      "path": "build/c2.3/v2.0-domain-tier1-product-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "f129e9aed04faa06c3625414cde93f1dd1cfe12225de970b26ad4c5a3d3136c4"
+    },
+    "v1_9_blob": {
+      "bytes": 18664,
+      "path": "build/c2.3/v1.9.0-release-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.blob.bin",
+      "sha256": "6b853b700220adf3226514b156e6161a54a811f66b18871a42290dcee0a24277"
+    },
+    "v1_9_manifest": {
+      "bytes": 363991,
+      "path": "build/c2.3/v1.9.0-release-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "f3ebef32226bab9db48e71acaafe37cc2876baeaf8c279de84e2b5ca37c61b94"
+    }
+  },
+  "worlds": {
+    "current_block3": {
+      "ELF_sha256": "00a7fa2cc7f800c6b1077b2f96b16979d0201f86b9d93e373fca3a7d82b5a639",
+      "PRG_sha256": "ffdbe24f22f0966dde2c604b6fb9e49ff4b2823aaed5b335ffad5a6f3e5382f0",
+      "batch_margin_percent": 29.189403777444344,
+      "closure": {
+        "call_site_count": 2672,
+        "duplicate_public_owners": [],
+        "failures": [],
+        "object_count": 798,
+        "status": "PASS"
+      },
+      "largest_contiguous_hole": 9795,
+      "namepool_bytes": 1068,
+      "plane_bytes": 53871,
+      "single_key_VM_steps": 904.0,
+      "single_key_step_ratio": 1.0022172949002217,
+      "symbol_slots": 71
+    },
+    "stripped_reference": {
+      "ELF_sha256": "2895704bd5e62f6e8a9906f2cd8c7f62e1ef74169796e00b05b3037560ec2c38",
+      "PRG_sha256": "5c09c8e623a4a3c58d2b937706fc66496ab14355d71ae136f39e7aa0749a7f68",
+      "closure": {
+        "call_site_count": 2436,
+        "duplicate_public_owners": [],
+        "failures": [],
+        "object_count": 760,
+        "status": "PASS"
+      },
+      "largest_contiguous_hole": 15871,
+      "largest_object_bytes": 253,
+      "namepool_bytes": 1486,
+      "plane_bytes": 47795,
+      "resident_delta": 0,
+      "symbol_slots": 109
+    }
+  }
+}

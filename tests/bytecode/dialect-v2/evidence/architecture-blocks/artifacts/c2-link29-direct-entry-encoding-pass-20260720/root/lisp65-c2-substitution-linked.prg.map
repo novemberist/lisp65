@@ -1,0 +1,1472 @@
+     VMA      LMA     Size Align Out     In      Symbol
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 __lisp65_workbench_noinit_end = ADDR(.noinit) + SIZEOF(.noinit)
+       0        0        0     1 __lisp65_workbench_overlay_min_start = ALIGN(__lisp65_workbench_noinit_end + 1, 2)
+       0        0        0     1 __lisp65_workbench_required_boot_stack = DEFINED(__lisp65_workbench_required_boot_stack_param) ? __lisp65_workbench_required_boot_stack_param : 0x0200
+       0        0        0     1 __lisp65_workbench_required_runtime_stack = DEFINED(__lisp65_workbench_required_runtime_stack_param) ? __lisp65_workbench_required_runtime_stack_param : 1450
+       0        0        0     1 __lisp65_workbench_required_post_boot_reserve = DEFINED(__lisp65_workbench_required_post_boot_reserve_param) ? __lisp65_workbench_required_post_boot_reserve_param : 0x0400
+       0        0        0     1 __lisp65_workbench_runtime_overlay_max_vma = DEFINED(__lisp65_workbench_runtime_overlay_max_vma_param) ? __lisp65_workbench_runtime_overlay_max_vma_param : 0xc356
+       0        0        0     1 __lisp65_workbench_runtime_overlay_fixed_vma = DEFINED(__lisp65_workbench_runtime_overlay_vma_param) ? __lisp65_workbench_runtime_overlay_vma_param : __lisp65_workbench_runtime_overlay_max_vma
+       0        0        0     1 __lisp65_workbench_runtime_transport_max_bytes = 1792
+       0        0        0     1 __lisp65_error_overlay_max_bytes = DEFINED(__lisp65_error_overlay_max_bytes_param) ? __lisp65_error_overlay_max_bytes_param : 1320
+       0        0        0     1 __lisp65_workbench_screen_base = 0x0800
+       0        0        0     1 __lisp65_workbench_screen_columns = 80
+       0        0        0     1 __lisp65_workbench_screen_rows = 50
+       0        0        0     1 __lisp65_workbench_screen_cell_bytes = 1
+       0        0        0     1 __lisp65_workbench_screen_limit = __lisp65_workbench_screen_base + (__lisp65_workbench_screen_columns * __lisp65_workbench_screen_rows * __lisp65_workbench_screen_cell_bytes)
+       0        0        0     1 __lisp65_resident_island_base = 0x1800
+       0        0        0     1 __lisp65_resident_island_limit = 0x2000
+       0        0        0     1 __lisp65_resident_island_payload_capacity = 2048
+       0        0        0     1 __lisp65_workbench_runtime_overlay_vma = __lisp65_workbench_runtime_overlay_fixed_vma
+       0        0     ca46     1 
+    ca46        0        0     1 __lisp65_resident_island_seed_lma = ALIGN(LOADADDR(.lisp65_rt_buffer_alloc) + SIZEOF(.lisp65_rt_buffer_alloc), 0x100)
+    ca46        0        0     1 __lisp65_workbench_overlay_start = ADDR(.lisp65_workbench_overlay)
+    ca46        0        0     1 __lisp65_workbench_overlay_end = ADDR(.lisp65_workbench_overlay) + SIZEOF(.lisp65_workbench_overlay)
+    ca46        0        0     1 __lisp65_workbench_overlay_entry = vm_workbench_boot_overlay_entry
+    ca46        0        0     1 __lisp65_workbench_resident_file_end = __data_load_start + __data_size
+    ca46        0        0     1 __lisp65_workbench_runtime_overlay_limit = __stack - __lisp65_workbench_required_runtime_stack
+    ca46        0        0     1 __lisp65_workbench_boot_slice_limit = __stack - __lisp65_workbench_required_boot_stack
+    ca46        0        0     1 __lisp65_rt_rtov_catalog_start = ADDR(.lisp65_rt_rtov_catalog)
+    ca46        0        0     1 __lisp65_rt_rtov_catalog_end = ADDR(.lisp65_rt_rtov_catalog) + SIZEOF(.lisp65_rt_rtov_catalog)
+    ca46        0        0     1 __lisp65_rt_rtov_record_start = ADDR(.lisp65_rt_rtov_record)
+    ca46        0        0     1 __lisp65_rt_rtov_record_end = ADDR(.lisp65_rt_rtov_record) + SIZEOF(.lisp65_rt_rtov_record)
+    ca46        0        0     1 __lisp65_rt_c2d_00_start = ADDR(.lisp65_rt_c2d_00)
+    ca46        0        0     1 __lisp65_rt_c2d_00_end = ADDR(.lisp65_rt_c2d_00) + SIZEOF(.lisp65_rt_c2d_00)
+    ca46        0        0     1 __lisp65_rt_c2d_00b_start = ADDR(.lisp65_rt_c2d_00b)
+    ca46        0        0     1 __lisp65_rt_c2d_00b_end = ADDR(.lisp65_rt_c2d_00b) + SIZEOF(.lisp65_rt_c2d_00b)
+    ca46        0        0     1 __lisp65_rt_c2d_01_start = ADDR(.lisp65_rt_c2d_01)
+    ca46        0        0     1 __lisp65_rt_c2d_01_end = ADDR(.lisp65_rt_c2d_01) + SIZEOF(.lisp65_rt_c2d_01)
+    ca46        0        0     1 __lisp65_rt_c2d_02a_start = ADDR(.lisp65_rt_c2d_02a)
+    ca46        0        0     1 __lisp65_rt_c2d_02a_end = ADDR(.lisp65_rt_c2d_02a) + SIZEOF(.lisp65_rt_c2d_02a)
+    ca46        0        0     1 __lisp65_rt_c2d_02b_start = ADDR(.lisp65_rt_c2d_02b)
+    ca46        0        0     1 __lisp65_rt_c2d_02b_end = ADDR(.lisp65_rt_c2d_02b) + SIZEOF(.lisp65_rt_c2d_02b)
+    ca46        0        0     1 __lisp65_rt_c2d_03_start = ADDR(.lisp65_rt_c2d_03)
+    ca46        0        0     1 __lisp65_rt_c2d_03_end = ADDR(.lisp65_rt_c2d_03) + SIZEOF(.lisp65_rt_c2d_03)
+    ca46        0        0     1 __lisp65_rt_c2d_04_start = ADDR(.lisp65_rt_c2d_04)
+    ca46        0        0     1 __lisp65_rt_c2d_04_end = ADDR(.lisp65_rt_c2d_04) + SIZEOF(.lisp65_rt_c2d_04)
+    ca46        0        0     1 __lisp65_rt_c2d_05_start = ADDR(.lisp65_rt_c2d_05)
+    ca46        0        0     1 __lisp65_rt_c2d_05_end = ADDR(.lisp65_rt_c2d_05) + SIZEOF(.lisp65_rt_c2d_05)
+    ca46        0        0     1 __lisp65_rt_c2d_06a_start = ADDR(.lisp65_rt_c2d_06a)
+    ca46        0        0     1 __lisp65_rt_c2d_06a_end = ADDR(.lisp65_rt_c2d_06a) + SIZEOF(.lisp65_rt_c2d_06a)
+    ca46        0        0     1 __lisp65_rt_c2d_06b_start = ADDR(.lisp65_rt_c2d_06b)
+    ca46        0        0     1 __lisp65_rt_c2d_06b_end = ADDR(.lisp65_rt_c2d_06b) + SIZEOF(.lisp65_rt_c2d_06b)
+    ca46        0        0     1 __lisp65_rt_c2d_07_start = ADDR(.lisp65_rt_c2d_07)
+    ca46        0        0     1 __lisp65_rt_c2d_07_end = ADDR(.lisp65_rt_c2d_07) + SIZEOF(.lisp65_rt_c2d_07)
+    ca46        0        0     1 __lisp65_rt_c2d_08_start = ADDR(.lisp65_rt_c2d_08)
+    ca46        0        0     1 __lisp65_rt_c2d_08_end = ADDR(.lisp65_rt_c2d_08) + SIZEOF(.lisp65_rt_c2d_08)
+    ca46        0        0     1 __lisp65_rt_c2d_09_start = ADDR(.lisp65_rt_c2d_09)
+    ca46        0        0     1 __lisp65_rt_c2d_09_end = ADDR(.lisp65_rt_c2d_09) + SIZEOF(.lisp65_rt_c2d_09)
+    ca46        0        0     1 __lisp65_rt_c2d_10_start = ADDR(.lisp65_rt_c2d_10)
+    ca46        0        0     1 __lisp65_rt_c2d_10_end = ADDR(.lisp65_rt_c2d_10) + SIZEOF(.lisp65_rt_c2d_10)
+    ca46        0        0     1 __lisp65_rt_c2d_11_start = ADDR(.lisp65_rt_c2d_11)
+    ca46        0        0     1 __lisp65_rt_c2d_11_end = ADDR(.lisp65_rt_c2d_11) + SIZEOF(.lisp65_rt_c2d_11)
+    ca46        0        0     1 __lisp65_rt_c2d_12_start = ADDR(.lisp65_rt_c2d_12)
+    ca46        0        0     1 __lisp65_rt_c2d_12_end = ADDR(.lisp65_rt_c2d_12) + SIZEOF(.lisp65_rt_c2d_12)
+    ca46        0        0     1 __lisp65_rt_c2d_13_start = ADDR(.lisp65_rt_c2d_13)
+    ca46        0        0     1 __lisp65_rt_c2d_13_end = ADDR(.lisp65_rt_c2d_13) + SIZEOF(.lisp65_rt_c2d_13)
+    ca46        0        0     1 __lisp65_rt_c2emit_prepare_start = ADDR(.lisp65_rt_c2emit_prepare)
+    ca46        0        0     1 __lisp65_rt_c2emit_prepare_end = ADDR(.lisp65_rt_c2emit_prepare) + SIZEOF(.lisp65_rt_c2emit_prepare)
+    ca46        0        0     1 __lisp65_rt_c2emit_name_start = ADDR(.lisp65_rt_c2emit_name)
+    ca46        0        0     1 __lisp65_rt_c2emit_name_end = ADDR(.lisp65_rt_c2emit_name) + SIZEOF(.lisp65_rt_c2emit_name)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_prep_start = ADDR(.lisp65_rt_c2emit_literal_prep)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_prep_end = ADDR(.lisp65_rt_c2emit_literal_prep) + SIZEOF(.lisp65_rt_c2emit_literal_prep)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_atom_start = ADDR(.lisp65_rt_c2emit_literal_atom)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_atom_end = ADDR(.lisp65_rt_c2emit_literal_atom) + SIZEOF(.lisp65_rt_c2emit_literal_atom)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_append_start = ADDR(.lisp65_rt_c2emit_literal_append)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_append_end = ADDR(.lisp65_rt_c2emit_literal_append) + SIZEOF(.lisp65_rt_c2emit_literal_append)
+    ca46        0        0     1 __lisp65_rt_c2emit_code_start = ADDR(.lisp65_rt_c2emit_code)
+    ca46        0        0     1 __lisp65_rt_c2emit_code_end = ADDR(.lisp65_rt_c2emit_code) + SIZEOF(.lisp65_rt_c2emit_code)
+    ca46        0        0     1 __lisp65_rt_c2emit_final_meta_start = ADDR(.lisp65_rt_c2emit_final_meta)
+    ca46        0        0     1 __lisp65_rt_c2emit_final_meta_end = ADDR(.lisp65_rt_c2emit_final_meta) + SIZEOF(.lisp65_rt_c2emit_final_meta)
+    ca46        0        0     1 __lisp65_rt_c2emit_final_crc_start = ADDR(.lisp65_rt_c2emit_final_crc)
+    ca46        0        0     1 __lisp65_rt_c2emit_final_crc_end = ADDR(.lisp65_rt_c2emit_final_crc) + SIZEOF(.lisp65_rt_c2emit_final_crc)
+    ca46        0        0     1 __lisp65_rt_c2append_envelope_start = ADDR(.lisp65_rt_c2append_envelope)
+    ca46        0        0     1 __lisp65_rt_c2append_envelope_end = ADDR(.lisp65_rt_c2append_envelope) + SIZEOF(.lisp65_rt_c2append_envelope)
+    ca46        0        0     1 __lisp65_rt_c2append_crc_start = ADDR(.lisp65_rt_c2append_crc)
+    ca46        0        0     1 __lisp65_rt_c2append_crc_end = ADDR(.lisp65_rt_c2append_crc) + SIZEOF(.lisp65_rt_c2append_crc)
+    ca46        0        0     1 __lisp65_rt_c2append_metadata_start = ADDR(.lisp65_rt_c2append_metadata)
+    ca46        0        0     1 __lisp65_rt_c2append_metadata_end = ADDR(.lisp65_rt_c2append_metadata) + SIZEOF(.lisp65_rt_c2append_metadata)
+    ca46        0        0     1 __lisp65_rt_c2append_capacity_start = ADDR(.lisp65_rt_c2append_capacity)
+    ca46        0        0     1 __lisp65_rt_c2append_capacity_end = ADDR(.lisp65_rt_c2append_capacity) + SIZEOF(.lisp65_rt_c2append_capacity)
+    ca46        0        0     1 __lisp65_rt_c2append_stage_start = ADDR(.lisp65_rt_c2append_stage)
+    ca46        0        0     1 __lisp65_rt_c2append_stage_end = ADDR(.lisp65_rt_c2append_stage) + SIZEOF(.lisp65_rt_c2append_stage)
+    ca46        0        0     1 __lisp65_rt_c2append_image_start = ADDR(.lisp65_rt_c2append_image)
+    ca46        0        0     1 __lisp65_rt_c2append_image_end = ADDR(.lisp65_rt_c2append_image) + SIZEOF(.lisp65_rt_c2append_image)
+    ca46        0        0     1 __lisp65_rt_c2append_entries_start = ADDR(.lisp65_rt_c2append_entries)
+    ca46        0        0     1 __lisp65_rt_c2append_entries_end = ADDR(.lisp65_rt_c2append_entries) + SIZEOF(.lisp65_rt_c2append_entries)
+    ca46        0        0     1 __lisp65_rt_c2append_header_start = ADDR(.lisp65_rt_c2append_header)
+    ca46        0        0     1 __lisp65_rt_c2append_header_end = ADDR(.lisp65_rt_c2append_header) + SIZEOF(.lisp65_rt_c2append_header)
+    ca46        0        0     1 __lisp65_rt_c2append_publish_names_start = ADDR(.lisp65_rt_c2append_publish_names)
+    ca46        0        0     1 __lisp65_rt_c2append_publish_names_end = ADDR(.lisp65_rt_c2append_publish_names) + SIZEOF(.lisp65_rt_c2append_publish_names)
+    ca46        0        0     1 __lisp65_rt_c2append_publish_cells_start = ADDR(.lisp65_rt_c2append_publish_cells)
+    ca46        0        0     1 __lisp65_rt_c2append_publish_cells_end = ADDR(.lisp65_rt_c2append_publish_cells) + SIZEOF(.lisp65_rt_c2append_publish_cells)
+    ca46        0        0     1 __lisp65_rt_c2append_rollback_start = ADDR(.lisp65_rt_c2append_rollback)
+    ca46        0        0     1 __lisp65_rt_c2append_rollback_end = ADDR(.lisp65_rt_c2append_rollback) + SIZEOF(.lisp65_rt_c2append_rollback)
+    ca46        0        0     1 __lisp65_rt_l65e_start = ADDR(.lisp65_rt_l65e)
+    ca46        0        0     1 __lisp65_rt_l65e_end = ADDR(.lisp65_rt_l65e) + SIZEOF(.lisp65_rt_l65e)
+    ca46        0        0     1 __lisp65_rt_buffer_read_start = ADDR(.lisp65_rt_buffer_read)
+    ca46        0        0     1 __lisp65_rt_buffer_read_end = ADDR(.lisp65_rt_buffer_read) + SIZEOF(.lisp65_rt_buffer_read)
+    ca46        0        0     1 __lisp65_rt_buffer_write_start = ADDR(.lisp65_rt_buffer_write)
+    ca46        0        0     1 __lisp65_rt_buffer_write_end = ADDR(.lisp65_rt_buffer_write) + SIZEOF(.lisp65_rt_buffer_write)
+    ca46        0        0     1 __lisp65_rt_buffer_alloc_start = ADDR(.lisp65_rt_buffer_alloc)
+    ca46        0        0     1 __lisp65_rt_buffer_alloc_end = ADDR(.lisp65_rt_buffer_alloc) + SIZEOF(.lisp65_rt_buffer_alloc)
+    ca46        0        0     1 __lisp65_resident_island_start = ADDR(.lisp65_resident_island)
+    ca46        0        0     1 __lisp65_resident_island_end = ADDR(.lisp65_resident_island) + SIZEOF(.lisp65_resident_island)
+    ca46        0        0     1 __lisp65_resident_island_annex_start = ADDR(.lisp65_resident_island_annex)
+    ca46        0        0     1 __lisp65_resident_island_annex_end = ADDR(.lisp65_resident_island_annex) + SIZEOF(.lisp65_resident_island_annex)
+    ca46        0        0     1 __lisp65_rt_island_00_start = ADDR(.lisp65_rt_island_00)
+    ca46        0        0     1 __lisp65_rt_island_00_end = ADDR(.lisp65_rt_island_00) + SIZEOF(.lisp65_rt_island_00)
+    ca46        0        0     1 __lisp65_rt_rtov_catalog_entry = vm_runtime_overlay_catalog_verifier
+    ca46        0        0     1 __lisp65_rt_rtov_record_entry = vm_runtime_overlay_record_verifier
+    ca46        0        0     1 __lisp65_rt_c2d_00_entry = c2_stream_phase_00
+    ca46        0        0     1 __lisp65_rt_c2d_00b_entry = c2_stream_phase_00b
+    ca46        0        0     1 __lisp65_rt_c2d_01_entry = c2_stream_phase_01
+    ca46        0        0     1 __lisp65_rt_c2d_02a_entry = c2_stream_phase_02a
+    ca46        0        0     1 __lisp65_rt_c2d_02b_entry = c2_stream_phase_02b
+    ca46        0        0     1 __lisp65_rt_c2d_03_entry = c2_stream_phase_03
+    ca46        0        0     1 __lisp65_rt_c2d_04_entry = c2_stream_phase_04
+    ca46        0        0     1 __lisp65_rt_c2d_05_entry = c2_stream_phase_05
+    ca46        0        0     1 __lisp65_rt_c2d_06a_entry = c2_stream_phase_06a
+    ca46        0        0     1 __lisp65_rt_c2d_06b_entry = c2_stream_phase_06b
+    ca46        0        0     1 __lisp65_rt_c2d_07_entry = c2_stream_phase_07
+    ca46        0        0     1 __lisp65_rt_c2d_08_entry = c2_stream_phase_08
+    ca46        0        0     1 __lisp65_rt_c2d_09_entry = c2_stream_phase_09
+    ca46        0        0     1 __lisp65_rt_c2d_10_entry = c2_stream_phase_10
+    ca46        0        0     1 __lisp65_rt_c2d_11_entry = c2_stream_phase_11
+    ca46        0        0     1 __lisp65_rt_c2d_12_entry = c2_stream_phase_12
+    ca46        0        0     1 __lisp65_rt_c2d_13_entry = c2_stream_phase_13
+    ca46        0        0     1 __lisp65_rt_c2emit_prepare_entry = c2_session_emit_prepare_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_name_entry = c2_session_emit_name_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_prep_entry = c2_session_emit_literal_prep_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_atom_entry = c2_session_emit_literal_atom_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_append_entry = c2_session_emit_literal_append_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_code_entry = c2_session_emit_code_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_final_meta_entry = c2_session_emit_final_meta_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_final_crc_entry = c2_session_emit_final_crc_phase
+    ca46        0        0     1 __lisp65_rt_c2append_envelope_entry = c2_append_envelope_phase
+    ca46        0        0     1 __lisp65_rt_c2append_crc_entry = c2_append_crc_phase
+    ca46        0        0     1 __lisp65_rt_c2append_metadata_entry = c2_append_metadata_phase
+    ca46        0        0     1 __lisp65_rt_c2append_capacity_entry = c2_append_capacity_phase
+    ca46        0        0     1 __lisp65_rt_c2append_stage_entry = c2_append_stage_phase
+    ca46        0        0     1 __lisp65_rt_c2append_image_entry = c2_append_image_phase
+    ca46        0        0     1 __lisp65_rt_c2append_entries_entry = c2_append_entries_phase
+    ca46        0        0     1 __lisp65_rt_c2append_header_entry = c2_append_header_phase
+    ca46        0        0     1 __lisp65_rt_c2append_publish_names_entry = c2_append_publish_names_phase
+    ca46        0        0     1 __lisp65_rt_c2append_publish_cells_entry = c2_append_publish_cells_phase
+    ca46        0        0     1 __lisp65_rt_c2append_rollback_entry = c2_append_rollback_phase
+    ca46        0        0     1 __lisp65_rt_l65e_entry = lisp65_error_overlay_entry
+    ca46        0        0     1 __lisp65_rt_buffer_read_entry = lisp65_buffer_overlay_read_entry
+    ca46        0        0     1 __lisp65_rt_buffer_write_entry = lisp65_buffer_overlay_write_entry
+    ca46        0        0     1 __lisp65_rt_buffer_alloc_entry = lisp65_buffer_overlay_alloc_entry
+    ca46        0        0     1 __lisp65_rt_island_00_entry = vm_resident_island_install
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+       0        0       cc     1 .comment
+       0        0       cc     1         <internal>:(.comment)
+       0        0     3830     4 .symtab
+       0        0     3830     4         <internal>:(.symtab)
+       0        0     3da8     1 .strtab
+       0        0     3da8     1         <internal>:(.strtab)
+       0        0      e43     1 .shstrtab
+       0        0      e43     1         <internal>:(.shstrtab)
+       0        0       27     1 .lisp65_error_callsites
+       0        0       27     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_error_callsites)
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+       0        0        f     1 .llvm_sympart
+       0        0        f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.llvm_sympart)
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 __basic_zp_start = 0x0002
+    ca46     ca46        0     1 __basic_zp_end = 0x0090
+    ca46     ca46        0     1 __rc0 = __basic_zp_start
+    ca46     ca46        0     1 __rc1 = __rc0 + 1
+    ca46     ca46        0     1 PROVIDE(__rc2 = __rc1 + 1)
+    ca46     ca46        0     1 __rc3 = __rc2 + 1
+    ca46     ca46        0     1 PROVIDE(__rc4 = __rc3 + 1)
+    ca46     ca46        0     1 __rc5 = __rc4 + 1
+    ca46     ca46        0     1 PROVIDE(__rc6 = __rc5 + 1)
+    ca46     ca46        0     1 __rc7 = __rc6 + 1
+    ca46     ca46        0     1 PROVIDE(__rc8 = __rc7 + 1)
+    ca46     ca46        0     1 __rc9 = __rc8 + 1
+    ca46     ca46        0     1 PROVIDE(__rc10 = __rc9 + 1)
+    ca46     ca46        0     1 __rc11 = __rc10 + 1
+    ca46     ca46        0     1 PROVIDE(__rc12 = __rc11 + 1)
+    ca46     ca46        0     1 __rc13 = __rc12 + 1
+    ca46     ca46        0     1 PROVIDE(__rc14 = __rc13 + 1)
+    ca46     ca46        0     1 __rc15 = __rc14 + 1
+    ca46     ca46        0     1 PROVIDE(__rc16 = __rc15 + 1)
+    ca46     ca46        0     1 __rc17 = __rc16 + 1
+    ca46     ca46        0     1 PROVIDE(__rc18 = __rc17 + 1)
+    ca46     ca46        0     1 __rc19 = __rc18 + 1
+    ca46     ca46        0     1 PROVIDE(__rc20 = __rc19 + 1)
+    ca46     ca46        0     1 __rc21 = __rc20 + 1
+    ca46     ca46        0     1 PROVIDE(__rc22 = __rc21 + 1)
+    ca46     ca46        0     1 __rc23 = __rc22 + 1
+    ca46     ca46        0     1 PROVIDE(__rc24 = __rc23 + 1)
+    ca46     ca46        0     1 __rc25 = __rc24 + 1
+    ca46     ca46        0     1 PROVIDE(__rc26 = __rc25 + 1)
+    ca46     ca46        0     1 __rc27 = __rc26 + 1
+    ca46     ca46        0     1 PROVIDE(__rc28 = __rc27 + 1)
+    ca46     ca46        0     1 __rc29 = __rc28 + 1
+    ca46     ca46        0     1 PROVIDE(__rc30 = __rc29 + 1)
+    ca46     ca46        0     1 __rc31 = __rc30 + 1
+    ca46     ca46        0     1 __basic_zp_size = __basic_zp_end - __basic_zp_start
+    2001     2001       16     1 .basic_header
+    2001     2001       16     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/basic-header.o:(.basic_header)
+    2015     2015        0     1                 next_line
+      22     2017        c     1 .zp.data
+      22     2017        0     1         __zp_data_start = .
+      22     2017        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.zp.data)
+      22     2017        2     1                 str_cur_off
+      24     2019        2     1                 str_alt_off
+      26     201b        8     1                 bndbit
+      2e     2023        0     1 __zp_data_load_start = LOADADDR(.zp.data)
+      2e     2023        0     1 __zp_data_size = SIZEOF(.zp.data)
+      2e       2e       4f     1 .zp.bss
+      2e       2e        0     1         __zp_bss_start = .
+      2e       2e       4f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.zp.bss)
+      2e       2e        2     1                 c2_journal_count
+      30       30        2     1                 cs_str
+      32       32        2     1                 lisp_t
+      34       34        2     1                 k_other
+      36       36        1     1                 pending_code
+      37       37        2     1                 disk_file_pos
+      39       39        2     1                 disk_file_len
+      3b       3b        2     1                 alloc_high
+      3d       3d        2     1                 gc_frozen
+      3f       3f        2     1                 freelist
+      41       41        2     1                 gc_badobj
+      43       43        2     1                 allocs_since_gc
+      45       45        2     1                 ext_mark_lo
+      47       47        2     1                 ext_mark_hi
+      49       49        2     1                 str_top
+      4b       4b        2     1                 str_frozen
+      4d       4d        1     1                 reader_status
+      4e       4e        1     1                 reader_error_code
+      4f       4f        2     1                 rd_str
+      51       51        2     1                 rd_sf
+      53       53        1     1                 rd_sc
+      54       54        1     1                 rd_sn
+      55       55        1     1                 rd_depth
+      56       56        1     1                 lisp_toplevel_active
+      57       57        1     1                 screen_row
+      58       58        2     1                 scr_base
+      5a       5a        1     1                 cols_
+      5b       5b        1     1                 rows_
+      5c       5c        1     1                 cursor_on
+      5d       5d        1     1                 crow
+      5e       5e        1     1                 ccol
+      5f       5f        2     1                 nsym
+      61       61        1     1                 vm_status
+      62       62        2     1                 vm_upvals
+      64       64        2     1                 gc_rootsp
+      66       66        2     1                 vm_workbench_error_symbols.7
+      68       68        2     1                 vm_k_key
+      6a       6a        2     1                 vm_k_control
+      6c       6c        2     1                 vm_k_meta
+      6e       6e        1     1                 ov_started
+      6f       6f        1     1                 vm_boot_overlay_status
+      70       70        2     1                 rtov_call_context
+      72       72        2     1                 rtov_call_result
+      74       74        2     1                 rtov_batch_entry
+      76       76        2     1                 rtov_repeat
+      78       78        1     1                 rtov_batch_slot_id
+      79       79        2     1                 rtov_loaded_len
+      7b       7b        1     1                 rtov_busy
+      7c       7c        1     1                 rtov_fault
+      7d       7d        0     1 __zp_bss_size = SIZEOF(.zp.bss)
+      7d       7d        c     1 .zp
+      7d       7d        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.zp.noinit)
+      89       89        7     1 .lisp65_c2_fixed_zp
+      89       89        0     1         __lisp65_c2_fixed_zp_phase_owner = .
+      89       89        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_zp.phase_owner)
+      89       89        1     1                 c2_phase_owner
+      8a       8a        0     1         __lisp65_c2_fixed_zp_pending_roots = .
+      8a       8a        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_zp.pending_roots)
+      8a       8a        2     1                 c2_pending_roots
+      8c       8c        0     1         __lisp65_c2_fixed_zp_ready = .
+      8c       8c        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_zp.ready)
+      8c       8c        1     1                 c2_ready
+      8d       8d        0     1         __lisp65_c2_fixed_zp_str_building = .
+      8d       8d        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_zp.str_building)
+      8d       8d        2     1                 str_building
+      8f       8f        0     1         __lisp65_c2_fixed_zp_mem_oom = .
+      8f       8f        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_zp.mem_oom)
+      8f       8f        1     1                 mem_oom
+    2023     2023     93ae     1 .text
+    2023     2023        0     1         _init = .
+    2023     2023        0     1         _start = .
+    2023     2023        e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/unmap-basic.o:(.init.010)
+    2031     2031        8     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(init-stack.S.obj):(.init.100)
+    2031     2031        0     1                 __do_init_stack
+    2039     2039        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-bss.c.obj):(.init.200)
+    2039     2039        0     1                 __do_zero_bss
+    203c     203c        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-zp-bss.c.obj):(.init.200)
+    203c     203c        0     1                 __do_zero_zp_bss
+    203f     203f        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(copy-zp-data.c.obj):(.init.200)
+    203f     203f        0     1                 __do_copy_zp_data
+    2042     2042        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.init.250)
+    2042     2042        0     1                 shift
+    2047     2047        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/crt0.o:(.call_main)
+    204a     204a        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(exit-custom.S.obj):(.after_main)
+    204a     204a        0     1                 __after_main
+    204d     204d        0     1         _fini = .
+    204d     204d        a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/unmap-basic.o:(.fini.990)
+    2057     2057        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/crt0.o:(.fini_rts)
+    2058     2058       ac     1         /tmp/mega65_math-9c558a.o:(.text.mega65_math_div)
+    2058     2058        4     1                 lisp65_hw_udivhi3
+    205c     205c        4     1                 lisp65_hw_umodhi3
+    2060     2060       a4     1                 lisp65_hw_udivmodhi4
+    2104     2104       69     1         /tmp/mega65_math-9c558a.o:(.text.mega65_math_sdiv)
+    2104     2104        4     1                 lisp65_hw_divhi3
+    2108     2108       65     1                 lisp65_hw_modhi3
+    216d     216d       1e     1         /tmp/mega65_math-9c558a.o:(.text.mega65_math_mod_adjust)
+    216d     216d       1e     1                 lisp65_mod_adjust_tagged
+    218b     218b       2c     1         /tmp/mega65_math-9c558a.o:(.text.mega65_math_mul)
+    218b     218b       2c     1                 lisp65_hw_mulhi3
+    21b7     21b7       3e     1         /tmp/f011_guarded_write-15b170.o:(.text.lisp65_f011_mount_token_op)
+    21b7     21b7       3e     1                 lisp65_f011_mount_token_op
+    21f5     21f5       38     1         /tmp/f011_guarded_write-15b170.o:(.text.lisp65_f011_scratch_buffer)
+    21f5     21f5       38     1                 lisp65_f011_scratch_buffer
+    222d     222d       13     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-bss.c.obj):(.text.__zero_bss)
+    222d     222d       13     1                 __zero_bss
+    2240     2240       67     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libc.a(setjmp.S.obj):(.text.setjmp)
+    2240     2240        0     1                 setjmp
+    22a7     22a7       6b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libc.a(setjmp.S.obj):(.text.longjmp)
+    22a7     22a7        0     1                 longjmp
+    2312     2312        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/libcrt.a(call-indir.S.obj):(.text)
+    2312     2312        0     1                 __call_indir
+    2315     2315       13     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-zp-bss.c.obj):(.text.__zero_zp_bss)
+    2315     2315       13     1                 __zero_zp_bss
+    2328     2328       17     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(copy-zp-data.c.obj):(.text.__copy_zp_data)
+    2328     2328       17     1                 __copy_zp_data
+    233f     233f       43     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cell_type)
+    233f     233f       43     1                 cell_type
+    233f     233f       43     1                 cell_type.6
+    233f     233f       43     1                 cell_type.16
+    233f     233f       43     1                 cell_type.155
+    233f     233f       43     1                 cell_type.65
+    233f     233f       43     1                 cell_type.90
+    2382     2382       44     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2_facade_target_c2_dma)
+    2382     2382       44     1                 c2_facade_target_c2_dma
+    23c6     23c6       26     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_code_load)
+    23c6     23c6       26     1                 vm_code_load
+    23ec     23ec       2a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.sympool_read)
+    23ec     23ec       2a     1                 sympool_read
+    2416     2416       57     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.symval_set)
+    2416     2416       57     1                 symval_set
+    246d     246d       69     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.nameoff_get)
+    246d     246d       69     1                 nameoff_get
+    24d6     24d6       57     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.symfn_ext_set)
+    24d6     24d6       57     1                 symfn_ext_set
+    252d     252d       58     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2_facade_target_overlay_call_family)
+    252d     252d       58     1                 c2_facade_target_overlay_call_family
+    2585     2585      38f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2_product_entry_read)
+    2585     2585      38f     1                 c2_product_entry_read
+    2914     2914       60     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2_facade_target_c2e_overlay)
+    2914     2914       60     1                 c2_facade_target_c2e_overlay
+    2974     2974       3f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2e_symbol)
+    2974     2974       3f     1                 c2e_symbol
+    2974     2974       3f     1                 is_sym
+    29b3     29b3       2b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2e_w16)
+    29b3     29b3       2b     1                 c2e_w16
+    29de     29de        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2e_put)
+    29de     29de        c     1                 c2e_put
+    29ea     29ea       4a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2e_w24)
+    29ea     29ea       4a     1                 c2e_w24
+    2a34     2a34        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2e_get)
+    2a34     2a34        c     1                 c2e_get
+    2a40     2a40       3f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.c2e_w32)
+    2a40     2a40       3f     1                 c2e_w32
+    2a7f     2a7f       4f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cell_set_a)
+    2a7f     2a7f       4f     1                 cell_set_a
+    2a7f     2a7f       4f     1                 cell_set_a.61
+    2a7f     2a7f       4f     1                 cell_set_a.156
+    2ace     2ace       5d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cell_set_b)
+    2ace     2ace       5d     1                 cell_set_b
+    2b2b     2b2b       2d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.car)
+    2b2b     2b2b       2d     1                 car
+    2b58     2b58       55     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cell_a)
+    2b58     2b58       55     1                 cell_a
+    2b58     2b58       55     1                 cell_a.153
+    2b58     2b58       55     1                 cell_a.47
+    2bad     2bad       2d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cdr)
+    2bad     2bad       2d     1                 cdr
+    2bda     2bda       5f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cell_b)
+    2bda     2bda       5f     1                 cell_b
+    2bda     2bda       5f     1                 cell_b.154
+    2bda     2bda       5f     1                 cell_b.48
+    2c39     2c39      9a4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.eval_v2_workbench_service)
+    2c39     2c39      9a4     1                 eval_v2_workbench_service
+    35dd     35dd       a9     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cs_fetch)
+    35dd     35dd       a9     1                 cs_fetch
+    3686     3686       2f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_check_status)
+    3686     3686       2f     1                 vm_check_status
+    36b5     36b5      103     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.eval_vm_native_apply_checked)
+    36b5     36b5      103     1                 eval_vm_native_apply_checked
+    37b8     37b8      104     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.eval)
+    37b8     37b8      104     1                 eval
+    38bc     38bc       2d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.lisp_abort_symbol)
+    38bc     38bc       2d     1                 lisp_abort_symbol
+    38e9     38e9        7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.lisp_abort_code)
+    38e9     38e9        7     1                 lisp_abort_code
+    38f0     38f0      13d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.lisp65_error_render_pending)
+    38f0     38f0      13d     1                 lisp65_error_render_pending
+    3a2d     3a2d       80     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.lisp_input_event)
+    3a2d     3a2d       80     1                 lisp_input_event
+    3aad     3aad       58     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.io_disk_read_sector)
+    3aad     3aad       58     1                 io_disk_read_sector
+    3b05     3b05       77     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.f011_read_at)
+    3b05     3b05       77     1                 f011_read_at
+    3b7c     3b7c        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.io_disk_transaction_capture_mount_token)
+    3b7c     3b7c        5     1                 io_disk_transaction_capture_mount_token
+    3b81     3b81       1b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.io_disk_transaction_classify_status)
+    3b81     3b81       1b     1                 io_disk_transaction_classify_status
+    3b9c     3b9c       8e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.io_disk_write_sector_guarded)
+    3b9c     3b9c       8e     1                 io_disk_write_sector_guarded
+    3c2a     3c2a       73     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.f011_issue_write_guarded)
+    3c2a     3c2a       73     1                 f011_issue_write_guarded
+    3c9d     3c9d      144     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.disk_chain_to_scratch)
+    3c9d     3c9d      144     1                 disk_chain_to_scratch
+    3de1     3de1      230     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.main)
+    3de1     3de1      230     1                 main
+    4011     4011       44     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_dma)
+    4011     4011       44     1                 ext_dma
+    4055     4055       39     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_b)
+    4055     4055       39     1                 ext_b
+    408e     408e       39     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_a)
+    408e     408e       39     1                 ext_a
+    40c7     40c7       22     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.str_write_byte)
+    40c7     40c7       22     1                 str_write_byte
+    40e9     40e9        f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.str_len)
+    40e9     40e9        f     1                 str_len
+    40f8     40f8       2c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.str_byte)
+    40f8     40f8       2c     1                 str_byte
+    4124     4124       26     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.str_read_byte)
+    4124     4124       26     1                 str_read_byte
+    414a     414a       2e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_set_type)
+    414a     414a       2e     1                 ext_set_type
+    4178     4178      119     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.alloc)
+    4178     4178      119     1                 alloc
+    4291     4291       5c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cell_set_b.62)
+    4291     4291       5c     1                 cell_set_b.62
+    4291     4291       5c     1                 cell_set_b.98
+    42ed     42ed      5cb     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.gc_collect)
+    42ed     42ed      5cb     1                 gc_collect
+    48b8     48b8       e7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.gc_mark1)
+    48b8     48b8       e7     1                 gc_mark1
+    499f     499f       9b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.gc_mark_spine)
+    499f     499f       9b     1                 gc_mark_spine
+    4a3a     4a3a       36     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_type)
+    4a3a     4a3a       36     1                 ext_type
+    4a70     4a70       41     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.str_copy_to_alt)
+    4a70     4a70       41     1                 str_copy_to_alt
+    4ab1     4ab1       dd     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.str_relocate)
+    4ab1     4ab1       dd     1                 str_relocate
+    4b8e     4b8e       37     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_set_b)
+    4b8e     4b8e       37     1                 ext_set_b
+    4bc5     4bc5       37     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_set_a)
+    4bc5     4bc5       37     1                 ext_set_a
+    4bfc     4bfc        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.alloc_oom)
+    4bfc     4bfc        5     1                 alloc_oom
+    4c01     4c01       22     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_disk_put)
+    4c01     4c01       22     1                 ext_disk_put
+    4c23     4c23       26     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.ext_disk_get)
+    4c23     4c23       26     1                 ext_disk_get
+    4c49     4c49      1a4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.gc_mark)
+    4c49     4c49      1a4     1                 gc_mark
+    4ded     4ded       e8     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.cons)
+    4ded     4ded       e8     1                 cons
+    4ed5     4ed5       c4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.str_open)
+    4ed5     4ed5       c4     1                 str_open
+    4f99     4f99      13f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.str_putc)
+    4f99     4f99      13f     1                 str_putc
+    50d8     50d8       12     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.emit)
+    50d8     50d8       12     1                 emit
+    50ea     50ea       14     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.emit_str)
+    50ea     50ea       14     1                 emit_str
+    50fe     50fe      302     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.print_obj)
+    50fe     50fe      302     1                 print_obj
+    5400     5400       47     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.reader_from_fetch)
+    5400     5400       47     1                 reader_from_fetch
+    5447     5447       28     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.reader_skip_peek)
+    5447     5447       28     1                 reader_skip_peek
+    546f     546f       7f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.skip_ws)
+    546f     546f       7f     1                 skip_ws
+    54ee     54ee       39     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.rd_next)
+    54ee     54ee       39     1                 rd_next
+    5527     5527      34e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.read_expr_1)
+    5527     5527      34e     1                 read_expr_1
+    5875     5875       3f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.reader_finish)
+    5875     5875       3f     1                 reader_finish
+    58b4     58b4        7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.reader_fail)
+    58b4     58b4        7     1                 reader_fail
+    58bb     58bb      124     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.read_string)
+    58bb     58bb      124     1                 read_string
+    59df     59df      125     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.sugar)
+    59df     59df      125     1                 sugar
+    5b04     5b04       27     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.rd_peek2)
+    5b04     5b04       27     1                 rd_peek2
+    5b2b     5b2b       2f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.is_delim)
+    5b2b     5b2b       2f     1                 is_delim
+    5b5a     5b5a      1f3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.read_atom)
+    5b5a     5b5a      1f3     1                 read_atom
+    5d4d     5d4d       29     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.read_expr_stream)
+    5d4d     5d4d       29     1                 read_expr_stream
+    5d76     5d76      2cb     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.repl)
+    5d76     5d76      2cb     1                 repl
+    6041     6041       77     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.scr_init)
+    6041     6041       77     1                 scr_init
+    60b8     60b8       1a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.scr_clear)
+    60b8     60b8       1a     1                 scr_clear
+    60d2     60d2       38     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.fill_row)
+    60d2     60d2       38     1                 fill_row
+    610a     610a       41     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.scr_cursor)
+    610a     610a       41     1                 scr_cursor
+    614b     614b       c9     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.scr_putc)
+    614b     614b       c9     1                 scr_putc
+    6214     6214       32     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.to_screen)
+    6214     6214       32     1                 to_screen
+    6246     6246      15d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.sym_lookup)
+    6246     6246      15d     1                 sym_lookup
+    63a3     63a3      1dd     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.intern)
+    63a3     63a3      1dd     1                 intern
+    6580     6580       a4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.symname)
+    6580     6580       a4     1                 symname
+    6624     6624       6c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.sym_value)
+    6624     6624       6c     1                 sym_value
+    6690     6690       7e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.sidx)
+    6690     6690       7e     1                 sidx
+    670e     670e       57     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.set_sym_value)
+    670e     670e       57     1                 set_sym_value
+    6765     6765       33     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.sym_boundp)
+    6765     6765       33     1                 sym_boundp
+    6798     6798       6c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.sym_function)
+    6798     6798       6c     1                 sym_function
+    6804     6804       8c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.set_sym_function)
+    6804     6804       8c     1                 set_sym_function
+    6890     6890       89     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_run_dir)
+    6890     6890       89     1                 vm_run_dir
+    6919     6919       27     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_run)
+    6919     6919       27     1                 vm_run
+    6940     6940     1f2f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_run_inner)
+    6940     6940     1f2f     1                 vm_run_inner
+    886f     886f       38     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_arity_accepts)
+    886f     886f       38     1                 vm_arity_accepts
+    88a7     88a7      282     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_frame_fill)
+    88a7     88a7      282     1                 vm_frame_fill
+    8b29     8b29      133     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_fixbinop)
+    8b29     8b29      133     1                 vm_fixbinop
+    8c5c     8c5c       32     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.dir_find)
+    8c5c     8c5c       32     1                 dir_find
+    8c8e     8c8e     14a7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_callprim)
+    8c8e     8c8e     14a7     1                 vm_callprim
+    a135     a135       5b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_upval_nth)
+    a135     a135       5b     1                 vm_upval_nth
+    a190     a190      3fb     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_native_call)
+    a190     a190      3fb     1                 vm_native_call
+    a58b     a58b      186     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_key_event)
+    a58b     a58b      186     1                 vm_key_event
+    a711     a711       61     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_byte_args)
+    a711     a711       61     1                 vm_byte_args
+    a772     a772      27d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_install_staged_boot_overlay)
+    a772     a772      27d     1                 vm_install_staged_boot_overlay
+    a9ef     a9ef       26     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_runtime_overlay_exec)
+    a9ef     a9ef       26     1                 vm_runtime_overlay_exec
+    aa15     aa15      51e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_runtime_overlay_exec_family)
+    aa15     aa15      51e     1                 vm_runtime_overlay_exec_family
+    af33     af33       46     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.rtov_wipe)
+    af33     af33       46     1                 rtov_wipe
+    af79     af79       13     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.rtov_fail)
+    af79     af79       13     1                 rtov_fail
+    af8c     af8c       47     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.rtov_read)
+    af8c     af8c       47     1                 rtov_read
+    afd3     afd3       48     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.rtov_crc_mem)
+    afd3     afd3       48     1                 rtov_crc_mem
+    b01b     b01b       75     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_runtime_overlay_select_family)
+    b01b     b01b       75     1                 vm_runtime_overlay_select_family
+    b090     b090       1d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.vm_runtime_overlay_abort_cleanup)
+    b090     b090       1d     1                 vm_runtime_overlay_abort_cleanup
+    b0ad     b0ad      205     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.shelf_crc32)
+    b0ad     b0ad      205     1                 shelf_crc32
+    b2b2     b2b2       68     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.crc32_update)
+    b2b2     b2b2       68     1                 crc32_update
+    b31a     b31a        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.exit)
+    b31a     b31a        5     1                 exit
+    b31f     b31f       24     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.memcpy)
+    b31f     b31f       24     1                 memcpy
+    b343     b343       32     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.memcmp)
+    b343     b343       32     1                 memcmp
+    b375     b375       1c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.__memset)
+    b375     b375       1c     1                 __memset
+    b391     b391       35     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.strlen)
+    b391     b391       35     1                 strlen
+    b3c6     b3c6        b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.text.__ashlqi3)
+    b3c6     b3c6        b     1                 __ashlqi3
+    b3d1     b3d1        0     1         __init_array_start = .
+    b3d1     b3d1        0     1         __init_array_end = .
+    b3d1     b3d1        0     1         __fini_array_start = .
+    b3d1     b3d1        0     1         __fini_array_end = .
+    b481     b481      121     1 .lisp65_c2_kernal_handoff
+    b481     b481      121     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_kernal_handoff)
+    b481     b481       54     1                 c2_kernal_take_ownership
+    b4d5     b4d5       61     1                 c2k_copy
+    b536     b536       6c     1                 c2k_crc16
+    b5a2     b5a2       27     1 .lisp65_c2_host_facade
+    b5a2     b5a2       27     1         /tmp/c2_kernal_facade-e040f0.o:(.lisp65_c2_host_facade)
+    b5a2     b5a2        0     1                 c2_facade_vm_code_load
+    b5a5     b5a5        0     1                 c2_facade_c2_dma
+    b5a8     b5a8        0     1                 c2_facade_overlay_call_family
+    b5ab     b5ab        0     1                 c2_facade_c2e_cons
+    b5ae     b5ae        0     1                 c2_facade_c2e_overlay
+    b5b1     b5b1        0     1                 c2_facade_car
+    b5b4     b5b4        0     1                 c2_facade_cdr
+    b5b7     b5b7        0     1                 c2_facade_gc_collect
+    b5ba     b5ba        0     1                 c2_facade_str_open
+    b5bd     b5bd        0     1                 c2_facade_str_putc
+    b5c0     b5c0        0     1                 c2_facade_intern
+    b5c3     b5c3        0     1                 c2_facade_select_family
+    b5c6     b5c6        0     1                 c2_facade_gc_mark
+    b5c9     b5c9        b     1 .lisp65_c2_kernal_io_reveal
+    b5c9     b5c9        b     1         /tmp/c2_kernal_map-808992.o:(.lisp65_c2_kernal_io_reveal)
+    b5c9     b5c9        0     1                 c2_kernal_reveal_io
+    b5d4     b5d4        a     1 .lisp65_c2_kernal_map_switch
+    b5d4     b5d4        a     1         /tmp/c2_kernal_map-808992.o:(.lisp65_c2_kernal_map_switch)
+    b5d4     b5d4        0     1                 c2_kernal_map_window
+    b5e0     b5e0       14     1 .lisp65_c2_kernal_state
+    b5e0     b5e0       14     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_kernal_state)
+    b5e0     b5e0       14     1                 c2k_dma_job
+    fd12    41d12      156     1 .lisp65_c2_kernal_window.profile_rodata
+    fd12    41d12        0     1         __lisp65_c2_profile_rodata_start = .
+    fd12    41d12        0     1         __lisp65_c2_profile_rodata_eval_start = .
+    fd12    41d12       20     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.eval_v2_workbench_service)
+    fd32    41d32        0     1         __lisp65_c2_profile_rodata_eval_end = .
+    fd32    41d32        0     1         __lisp65_c2_profile_rodata_callprim_start = .
+    fd32    41d32       a4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.vm_callprim)
+    fdd6    41dd6        0     1         __lisp65_c2_profile_rodata_callprim_end = .
+    fdd6    41dd6        0     1         __lisp65_c2_profile_rodata_native_start = .
+    fdd6    41dd6       92     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.vm_native_call)
+    fe68    41e68        0     1         __lisp65_c2_profile_rodata_native_end = .
+    fe68    41e68        0     1         __lisp65_c2_profile_rodata_end = .
+    b5f4     b5f4      320     1 .rodata
+    b5f4     b5f4        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/libcrt.a(const.S.obj):(.rodata)
+    b5f4     b5f4        0     1                 __set_v
+    b5f5     b5f5        8     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.lisp65_buffer_overlay_read_entry)
+    b5fd     b5fd        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.print_obj)
+    b609     b609       16     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.read_expr_1)
+    b61f     b61f       84     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.vm_run_inner)
+    b6a3     b6a3       16     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.vm_fixbinop)
+    b6b9     b6b9       12     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.c2_stream_phase_08)
+    b6cb     b6cb       10     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.c2_append_stage_zero_plane.zeros)
+    b6cb     b6cb       10     1                 c2_append_stage_zero_plane.zeros
+    b6db     b6db       10     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.c2_append_rollback_zero_plane.zeros)
+    b6db     b6db       10     1                 c2_append_rollback_zero_plane.zeros
+    b6eb     b6eb      225     1         <internal>:(.rodata.str1.1)
+    b910     b910        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata.numeric_error_sentinel)
+    b910     b910        1     1                 numeric_error_sentinel
+    b911     b911        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rodata..Lswitch.table.vm_runtime_overlay_install_island)
+    b914     b914       20     1 .lisp65_runtime_overlay_verifier_bindings
+    b914     b914        0     1         __lisp65_rtov_binding_section_start = .
+    b914     b914       20     1         /tmp/runtime_overlay_verifier_bindings-5abcf4.o:(.lisp65_runtime_overlay_verifier_bindings)
+    b914     b914        0     1                 __lisp65_rtov_verifier_bindings_start
+    b914     b914        0     1                 rtov_boot_verifiers
+    b924     b924        0     1                 rtov_verifiers
+    b934     b934        0     1                 __lisp65_rtov_verifier_bindings_end
+    b934     b934        0     1         __lisp65_rtov_binding_section_end = .
+    b934     b934       16     1 .data
+    b934     b934        0     1         __data_start = .
+    b934     b934        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.data.vm_buf_off)
+    b934     b934        2     1                 vm_buf_off
+    b936     b936       14     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.data.rtov_edma_job)
+    b936     b936       14     1                 rtov_edma_job
+    b94a     b94a        0     1         __data_end = .
+    b94a     b94a        0     1 __data_load_start = LOADADDR(.data)
+    b94a     b94a        0     1 __data_size = SIZEOF(.data)
+    b94a     b94a      723     1 .bss
+    b94a     b94a        0     1         __bss_start = .
+    b94a     b94a        9     1         /tmp/f011_guarded_write-15b170.o:(.bss.f011_guard)
+    b953     b953        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.c2_dma_list)
+    b953     b953        c     1                 c2_dma_list
+    b95f     b95f        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.cs_idx)
+    b95f     b95f        2     1                 cs_idx
+    b961     b961        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.k_bytecode)
+    b961     b961        2     1                 k_bytecode
+    b963     b963        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.k_primitive)
+    b963     b963        2     1                 k_primitive
+    b965     b965        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.k_closure)
+    b965     b965        2     1                 k_closure
+    b967     b967        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.k_macro)
+    b967     b967        2     1                 k_macro
+    b969     b969        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.eval.k_lccrun)
+    b969     b969        2     1                 eval.k_lccrun
+    b96b     b96b        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.pending_symbol)
+    b96b     b96b        2     1                 pending_symbol
+    b96d     b96d        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.disk_source_pos)
+    b96d     b96d        1     1                 disk_source_pos
+    b96e     b96e        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.disk_source_len)
+    b96e     b96e        1     1                 disk_source_len
+    b96f     b96f        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.ext_stg1)
+    b96f     b96f        1     1                 ext_stg1
+    b970     b970        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.ext_stg)
+    b970     b970        2     1                 ext_stg
+    b972     b972        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.gc_runs)
+    b972     b972        2     1                 gc_runs
+    b974     b974      200     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.markstack)
+    b974     b974      200     1                 markstack
+    bb74     bb74       86     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.marks)
+    bb74     bb74       86     1                 marks
+    bbfa     bbfa        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.ext_dl)
+    bbfa     bbfa        c     1                 ext_dl
+    bc06     bc06        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.str_stg1)
+    bc06     bc06        1     1                 str_stg1
+    bc07     bc07       c0     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.repl.buf)
+    bc07     bc07       c0     1                 repl.buf
+    bcc7     bcc7       13     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.lisp_toplevel)
+    bcc7     bcc7       13     1                 lisp_toplevel
+    bcda     bcda        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.gensym.tag)
+    bcda     bcda        2     1                 gensym.tag
+    bcdc     bcdc       5e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.symbnd)
+    bcdc     bcdc       5e     1                 symbnd
+    bd3a     bd3a       5e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.symfnptr)
+    bd3a     bd3a       5e     1                 symfnptr
+    bd98     bd98        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.npool)
+    bd98     bd98        2     1                 npool
+    bd9a     bd9a      178     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.namelen4)
+    bd9a     bd9a      178     1                 namelen4
+    bf12     bf12        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_t)
+    bf12     bf12        2     1                 vm_t
+    bf14     bf14        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.0)
+    bf14     bf14        2     1                 vm_workbench_error_symbols.0
+    bf16     bf16        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.1)
+    bf16     bf16        2     1                 vm_workbench_error_symbols.1
+    bf18     bf18        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.2)
+    bf18     bf18        2     1                 vm_workbench_error_symbols.2
+    bf1a     bf1a        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.3)
+    bf1a     bf1a        2     1                 vm_workbench_error_symbols.3
+    bf1c     bf1c        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.4)
+    bf1c     bf1c        2     1                 vm_workbench_error_symbols.4
+    bf1e     bf1e        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.5)
+    bf1e     bf1e        2     1                 vm_workbench_error_symbols.5
+    bf20     bf20        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.6)
+    bf20     bf20        2     1                 vm_workbench_error_symbols.6
+    bf22     bf22        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.8)
+    bf22     bf22        2     1                 vm_workbench_error_symbols.8
+    bf24     bf24        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.9)
+    bf24     bf24        2     1                 vm_workbench_error_symbols.9
+    bf26     bf26        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_workbench_error_symbols.10)
+    bf26     bf26        2     1                 vm_workbench_error_symbols.10
+    bf28     bf28        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_k_shift)
+    bf28     bf28        2     1                 vm_k_shift
+    bf2a     bf2a       38     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_codebuf)
+    bf2a     bf2a       38     1                 vm_codebuf
+    bf62     bf62       f0     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.heap)
+    bf62     bf62       f0     1                 heap
+    c052     c052        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_buf_bank)
+    c052     c052        1     1                 vm_buf_bank
+    c053     c053        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_hdrlen)
+    c053     c053        2     1                 vmr_hdrlen
+    c055     c055        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_littab)
+    c055     c055        2     1                 vmr_littab
+    c057     c057        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_code)
+    c057     c057        2     1                 vmr_code
+    c059     c059        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_poff)
+    c059     c059        2     1                 vmr_poff
+    c05b     c05b        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_plen)
+    c05b     c05b        2     1                 vmr_plen
+    c05d     c05d        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_pwmax)
+    c05d     c05d        2     1                 vmr_pwmax
+    c05f     c05f        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_win)
+    c05f     c05f        2     1                 vmr_win
+    c061     c061        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_winlen)
+    c061     c061        2     1                 vmr_winlen
+    c063     c063        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vmr_streaming)
+    c063     c063        1     1                 vmr_streaming
+    c064     c064        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.vm_run_inner.poll_)
+    c064     c064        1     1                 vm_run_inner.poll_
+    c065     c065        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.lisp_error_msg)
+    c065     c065        2     1                 lisp_error_msg
+    c067     c067        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.rtov_batch_crc)
+    c067     c067        2     1                 rtov_batch_crc
+    c069     c069        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.rtov_family)
+    c069     c069        1     1                 rtov_family
+    c06a     c06a        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.rtov_family_generation)
+    c06a     c06a        2     1                 rtov_family_generation
+    c06c     c06c        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.bss.rtov_island_state)
+    c06c     c06c        1     1                 rtov_island_state
+    c06d     c06d        0     1         __bss_end = .
+    c080     c080      198     1 .lisp65_c2_fixed_bank0
+    c080     c080        0     1         __lisp65_c2_fixed_bank0_committed_roots = .
+    c080     c080        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_bank0.committed_roots)
+    c080     c080        2     1                 c2_committed_roots
+    c082     c082        0     1         __lisp65_c2_fixed_bank0_decode_active = .
+    c082     c082        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_bank0.decode_active)
+    c082     c082        2     1                 c2_decode_active
+    c084     c084        0     1         __lisp65_c2_fixed_bank0_runtime = .
+    c084     c084       2e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_bank0.runtime)
+    c084     c084       2e     1                 c2_runtime
+    c0b2     c0b2        0     1         __lisp65_c2_fixed_bank0_edma_job = .
+    c0b2     c0b2       14     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_bank0.edma_job)
+    c0b2     c0b2       14     1                 c2_edma_job
+    c0c6     c0c6        0     1         __lisp65_c2_fixed_bank0_phase_scratch = .
+    c0c6     c0c6      130     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_bank0.phase_scratch)
+    c0c6     c0c6      130     1                 lisp65_c2_phase_scratch
+    c1f6     c1f6        0     1         __lisp65_c2_fixed_bank0_sym_name_scratch = .
+    c1f6     c1f6       22     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_bank0.sym_name_scratch)
+    c1f6     c1f6       22     1                 sym_name_scratch
+    c218     c218       2d     1 .lisp65_c2_fixed_bank0_code
+    c218     c218        0     1         __lisp65_c2_fixed_bank0_code_start = .
+    c218     c218        0     1         __lisp65_c2_fixed_bank0_code_kb_cursor_off = .
+    c218     c218        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_bank0_code.kb_cursor_off)
+    c218     c218        5     1                 kb_cursor_off
+    c21d     c21d        0     1         __lisp65_c2_fixed_bank0_code_c2e_cons = .
+    c21d     c21d       28     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_fixed_bank0_code.c2e_cons)
+    c21d     c21d       28     1                 c2_facade_target_c2e_cons
+    c245     c245        0     1         __lisp65_c2_fixed_bank0_code_end = .
+    c245     c245        0     1 __bss_size = SIZEOF(.bss)
+    c245     c245        0     1 .noinit
+    c245     c245        0     1         __heap_start = ALIGN(., 2)
+    c356    10000      6af     1 .lisp65_workbench_overlay
+    c356    10000      4f9     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_boot)
+    c356    10000       a7     1                 defprim
+    c3fd    100a7      44f     1                 eval_init
+    c84c    104f6        3     1                 vm_workbench_boot_overlay_entry
+    c84f    104f9      1b6     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_boot.names)
+    c84f    104f9        8     1                 workbench_boot_name_funcall
+    c857    10501        6     1                 workbench_boot_name_apply
+    c85d    10507       14     1                 workbench_boot_name_setfn
+    c871    1051b        7     1                 workbench_boot_name_gensym
+    c878    10522        7     1                 workbench_boot_name_boundp
+    c87f    10529        5     1                 workbench_boot_name_peek
+    c884    1052e        5     1                 workbench_boot_name_poke
+    c889    10533        5     1                 workbench_boot_name_load
+    c88e    10538       12     1                 workbench_boot_name_disk_read_sector
+    c8a0    1054a        b     1                 workbench_boot_name_disk_byte
+    c8ab    10555        b     1                 workbench_boot_name_disk_poke
+    c8b6    10560       13     1                 workbench_boot_name_disk_write_sector
+    c8c9    10573        5     1                 workbench_boot_name_save
+    c8ce    10578        e     1                 workbench_boot_name_macroexpand_1
+    c8dc    10586        c     1                 workbench_boot_name_lcc_install
+    c8e8    10592        b     1                 workbench_boot_name_set_macro
+    c8f3    1059d       22     1                 workbench_boot_name_lcc_invalid_parameter_list
+    c915    105bf       16     1                 workbench_boot_name_list_malformed
+    c92b    105d5        4     1                 workbench_boot_name_set
+    c92f    105d9        a     1                 workbench_boot_name_key_event
+    c939    105e3        c     1                 workbench_boot_name_fasl_stage
+    c945    105ef       10     1                 workbench_boot_name_fasl_stage_get
+    c955    105ff       10     1                 workbench_boot_name_fasl_read_form
+    c965    1060f        e     1                 workbench_boot_name_cs_read_open
+    c973    1061d        b     1                 workbench_boot_name_write_char
+    c97e    10628        6     1                 workbench_boot_name_prin1
+    c984    1062e        9     1                 workbench_boot_name_bytecode
+    c98d    10637        a     1                 workbench_boot_name_primitive
+    c997    10641        8     1                 workbench_boot_name_closure
+    c99f    10649        6     1                 workbench_boot_name_macro
+    c9a5    1064f        6     1                 workbench_boot_name_other
+    c9ab    10655        9     1                 workbench_boot_name_nreverse
+    c9b4    1065e        7     1                 workbench_boot_name_rplaca
+    c9bb    10665        7     1                 workbench_boot_name_rplacd
+    c9c2    1066c        d     1                 workbench_boot_name_symbol_count
+    c9cf    10679        b     1                 workbench_boot_name_symbol_max
+    c9da    10684        f     1                 workbench_boot_name_number_to_string
+    c9e9    10693        c     1                 workbench_boot_name_symbol_name
+    c9f5    1069f        e     1                 workbench_boot_name_function_kind
+    ca03    106ad        2     1                 workbench_boot_name_t
+    c356    106af      479     1 .lisp65_rt_rtov_catalog
+    c356    106af      479     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_rtov_catalog)
+    c356    106af       23     1                 rtov_c_build_id
+    c379    106d2       26     1                 rtov_c_crc_byte
+    c39f    106f8      143     1                 rtov_c_crc_ext
+    c4e2    1083b        c     1                 rtov_c_u16
+    c4ee    10847      2e1     1                 vm_runtime_overlay_catalog_verifier
+    c356    10b28      52e     1 .lisp65_rt_rtov_record
+    c356    10b28      52e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_rtov_record)
+    c356    10b28       23     1                 rtov_r_build_id
+    c379    10b4b        c     1                 rtov_r_u16
+    c385    10b57      4ff     1                 vm_runtime_overlay_record_verifier
+    c356    11056      553     1 .lisp65_rt_c2d_00
+    c356    11056      553     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_00)
+    c356    11056      553     1                 c2_stream_phase_00
+    c356    115a9      5a3     1 .lisp65_rt_c2d_00b
+    c356    115a9      5a3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_00b)
+    c356    115a9      5a3     1                 c2_stream_phase_00b
+    c356    11b4c      69b     1 .lisp65_rt_c2d_01
+    c356    11b4c      69b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_01)
+    c356    11b4c      69b     1                 c2_stream_phase_01
+    c356    121e7      681     1 .lisp65_rt_c2d_02a
+    c356    121e7      681     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_02a)
+    c356    121e7      681     1                 c2_stream_phase_02a
+    c356    12868       f3     1 .lisp65_rt_c2d_02b
+    c356    12868       f3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_02b)
+    c356    12868       f3     1                 c2_stream_phase_02b
+    c356    1295b      630     1 .lisp65_rt_c2d_03
+    c356    1295b      630     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_03)
+    c356    1295b      630     1                 c2_stream_phase_03
+    c356    12f8b      430     1 .lisp65_rt_c2d_04
+    c356    12f8b      430     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_04)
+    c356    12f8b      430     1                 c2_stream_phase_04
+    c356    133bb      68b     1 .lisp65_rt_c2d_05
+    c356    133bb      68b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_05)
+    c356    133bb      68b     1                 c2_stream_phase_05
+    c356    13a46      5a7     1 .lisp65_rt_c2d_06a
+    c356    13a46      5a7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_06a)
+    c356    13a46      5a7     1                 c2_stream_phase_06a
+    c356    13fed      3f1     1 .lisp65_rt_c2d_06b
+    c356    13fed      3f1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_06b)
+    c356    13fed      3f1     1                 c2_stream_phase_06b
+    c356    143de      437     1 .lisp65_rt_c2d_07
+    c356    143de      437     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_07)
+    c356    143de      437     1                 c2_stream_phase_07
+    c356    14815      5a5     1 .lisp65_rt_c2d_08
+    c356    14815      5a5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_08)
+    c356    14815      5a5     1                 c2_stream_phase_08
+    c356    14dba      5d4     1 .lisp65_rt_c2d_09
+    c356    14dba      5d4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_09)
+    c356    14dba      5d4     1                 c2_stream_phase_09
+    c356    1538e      501     1 .lisp65_rt_c2d_10
+    c356    1538e      501     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_10)
+    c356    1538e      501     1                 c2_stream_phase_10
+    c356    1588f      6c2     1 .lisp65_rt_c2d_11
+    c356    1588f      6c2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_11)
+    c356    1588f      6c2     1                 c2_stream_phase_11
+    c356    15f51      67e     1 .lisp65_rt_c2d_12
+    c356    15f51      67e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_12)
+    c356    15f51      67e     1                 c2_stream_phase_12
+    c356    165cf      6f0     1 .lisp65_rt_c2d_13
+    c356    165cf      6f0     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2d_13)
+    c356    165cf      6f0     1                 c2_stream_phase_13
+    c356    16cbf      501     1 .lisp65_rt_c2emit_prepare
+    c356    16cbf      501     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2emit_prepare)
+    c356    16cbf      501     1                 c2_session_emit_prepare_phase
+    c356    171c0      31e     1 .lisp65_rt_c2emit_name
+    c356    171c0      31e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2emit_name)
+    c356    171c0      31e     1                 c2_session_emit_name_phase
+    c356    174de      58f     1 .lisp65_rt_c2emit_literal_prep
+    c356    174de      58f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2emit_literal_prep)
+    c356    174de      464     1                 c2_session_emit_literal_prep_phase
+    c7ba    17942       38     1                 c2e_append_desc
+    c7f2    1797a       f3     1                 c2e_write_desc
+    c356    17a6d      61e     1 .lisp65_rt_c2emit_literal_atom
+    c356    17a6d      61e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2emit_literal_atom)
+    c356    17a6d      171     1                 c2_session_emit_literal_atom_phase
+    c4c7    17bde      4ad     1                 c2e_prepare_atom
+    c356    1808b      21e     1 .lisp65_rt_c2emit_literal_append
+    c356    1808b      21e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2emit_literal_append)
+    c356    1808b      21e     1                 c2_session_emit_literal_append_phase
+    c356    182a9      4f6     1 .lisp65_rt_c2emit_code
+    c356    182a9      4f6     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2emit_code)
+    c356    182a9      4f6     1                 c2_session_emit_code_phase
+    c356    1879f      517     1 .lisp65_rt_c2emit_final_meta
+    c356    1879f      517     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2emit_final_meta)
+    c356    1879f      517     1                 c2_session_emit_final_meta_phase
+    c356    18cb6      488     1 .lisp65_rt_c2emit_final_crc
+    c356    18cb6      488     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2emit_final_crc)
+    c356    18cb6      369     1                 c2_session_emit_final_crc_phase
+    c6bf    1901f      11f     1                 c2e_crc
+    c356    1913e      5c1     1 .lisp65_rt_c2append_envelope
+    c356    1913e      5c1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_envelope)
+    c356    1913e      5c1     1                 c2_append_envelope_phase
+    c356    196ff      433     1 .lisp65_rt_c2append_crc
+    c356    196ff      433     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_crc)
+    c356    196ff      30b     1                 c2_append_crc_phase
+    c661    19a0a      128     1                 c2_stage_crc
+    c356    19b32      297     1 .lisp65_rt_c2append_metadata
+    c356    19b32      297     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_metadata)
+    c356    19b32      297     1                 c2_append_metadata_phase
+    c356    19dc9      576     1 .lisp65_rt_c2append_capacity
+    c356    19dc9      576     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_capacity)
+    c356    19dc9      576     1                 c2_append_capacity_phase
+    c356    1a33f      518     1 .lisp65_rt_c2append_stage
+    c356    1a33f      518     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_stage)
+    c356    1a33f      454     1                 c2_append_stage_phase
+    c7aa    1a793       c4     1                 c2_append_stage_zero_plane
+    c356    1a857      30a     1 .lisp65_rt_c2append_image
+    c356    1a857      30a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_image)
+    c356    1a857      30a     1                 c2_append_image_phase
+    c356    1ab61      3c0     1 .lisp65_rt_c2append_entries
+    c356    1ab61      3c0     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_entries)
+    c356    1ab61      3c0     1                 c2_append_entries_phase
+    c356    1af21      1b1     1 .lisp65_rt_c2append_header
+    c356    1af21      1b1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_header)
+    c356    1af21      1b1     1                 c2_append_header_phase
+    c356    1b0d2      485     1 .lisp65_rt_c2append_publish_names
+    c356    1b0d2      485     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_publish_names)
+    c356    1b0d2      485     1                 c2_append_publish_names_phase
+    c356    1b557      6ac     1 .lisp65_rt_c2append_publish_cells
+    c356    1b557      6ac     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_publish_cells)
+    c356    1b557      6ac     1                 c2_append_publish_cells_phase
+    c356    1bc03      515     1 .lisp65_rt_c2append_rollback
+    c356    1bc03      515     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_c2append_rollback)
+    c356    1bc03      3af     1                 c2_append_rollback_phase
+    c705    1bfb2       a2     1                 c2_append_restore_exports
+    c7a7    1c054       c4     1                 c2_append_rollback_zero_plane
+    c356    1c118      4e3     1 .lisp65_rt_l65e
+    c356    1c118      1e1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_l65e)
+    c356    1c118        c     1                 l65e_u16
+    c362    1c124      1d5     1                 lisp65_error_overlay_entry
+    c537    1c2f9      302     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_l65e_data)
+    c537    1c2f9      302     1                 l65e_table
+    c356    1c5fb      1f1     1 .lisp65_rt_island_00
+    c356    1c5fb       66     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_island_00)
+    c356    1c5fb       66     1                 vm_resident_island_install
+    c3bc    1c661      18b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_island_00_data)
+    c3bc    1c661      18b     1                 rtov_island_image
+    1800    1d600      18b     1 .lisp65_resident_island
+    1800    1d600      18b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_resident_island)
+    1800    1d600       89     1                 disk_source_fetch
+    1889    1d689       2e     1                 vm_buffer_call
+    18b7    1d6b7       9a     1                 rtov_run_batch
+    1951    1d751       3a     1                 vm_runtime_overlay_exec_batch_island
+    198c    1d78c      104     2 .lisp65_resident_island_annex
+    198c    1d78c        2     2         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_resident_island_annex.00_before)
+    198c    1d78c        2     1                 lisp65_rootstack_canary_before
+    198e    1d78e      100     2         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_resident_island_annex.01_stack)
+    198e    1d78e      100     1                 gc_rootstack
+    1a8e    1d88e        2     2         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_resident_island_annex.02_after)
+    1a8e    1d88e        2     1                 lisp65_rootstack_canary_after
+    e000    40000       1f     1 .lisp65_c2_kernal_window.typed_queue_driver
+    e000    40000       1f     1         /tmp/c2_kernal_window-92ef77.o:(.lisp65_c2_kernal_window.typed_queue_driver)
+    e000    40000        0     1                 c2_kernal_window_poll
+    e01f    4001f        9     1 .lisp65_c2_kernal_window.frame_source
+    e01f    4001f        9     1         /tmp/c2_kernal_window-92ef77.o:(.lisp65_c2_kernal_window.frame_source)
+    e01f    4001f        0     1                 c2_kernal_frame_tick
+    e028    40028       2d     1 .lisp65_c2_kernal_window.irq_handler
+    e028    40028       2d     1         /tmp/c2_kernal_window-92ef77.o:(.lisp65_c2_kernal_window.irq_handler)
+    e028    40028        0     1                 c2_kernal_irq_handler
+    e055    40055        9     1 .lisp65_c2_kernal_window.nmi_and_freezer_return
+    e055    40055        9     1         /tmp/c2_kernal_window-92ef77.o:(.lisp65_c2_kernal_window.nmi_and_freezer_return)
+    e055    40055        0     1                 c2_kernal_nmi_handler
+    e05e    4005e        e     1 .lisp65_c2_kernal_window.map_switch_and_guards
+    e05e    4005e        e     1         /tmp/c2_kernal_window-92ef77.o:(.lisp65_c2_kernal_window.map_switch_and_guards)
+    e05e    4005e        0     1                 c2_kernal_fail_closed
+    e06c    4006c        4     1 .lisp65_c2_kernal_window.post_startup_output_seam
+    e06c    4006c        4     1         /tmp/c2_kernal_window-92ef77.o:(.lisp65_c2_kernal_window.post_startup_output_seam)
+    e06c    4006c        0     1                 c2_kernal_output_cell
+    e070    40070       2e     1 .lisp65_c2_kernal_window.event_poll
+    e070    40070       2e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_kernal_window.event_poll)
+    e070    40070       2e     1                 c2_kernal_event_poll
+    e09e     e09e        0     1 .lisp65_c2_kernal_window.session_emitter_code
+    e09e     e09e        0     1         __lisp65_c2_session_emitter_code_start = .
+    e09e     e09e        0     1         __lisp65_c2_session_emitter_code_end = .
+    e09e    4009e     1b1a     1 .lisp65_c2_kernal_window.c2_resident
+    e09e    4009e     1b1a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_kernal_window.c2_resident)
+    e09e    4009e       d1     1                 c2_stream_shelf_read
+    e16f    4016f       91     1                 c2_dma_copy
+    e200    40200       57     1                 c2_stream_c2d_read
+    e257    40257       5e     1                 c2_stream_c2d_write
+    e2b5    402b5      28c     1                 c2_stream_product_image_read
+    e541    40541      278     1                 c2_stream_product_string_record_any
+    e7b9    407b9       69     1                 c2_stream_product_string_record
+    e822    40822      1aa     1                 c2_stream_product_canonical_name
+    e9cc    409cc      214     1                 c2_stream_product_child_value
+    ebe0    40be0      341     1                 c2_stream_name_value
+    ef21    40f21       7e     1                 c2_stream_gc_checkpoint
+    ef9f    40f9f       b0     1                 c2_product_entry_length
+    f04f    4104f      288     1                 c2_entry_records
+    f2d7    412d7       72     1                 c2_source_read
+    f349    41349       1d     1                 c2_overlay_call
+    f366    41366      223     1                 c2_product_gc_mark_roots
+    f589    41589      1c8     1                 c2_decode_from
+    f751    41751       2a     1                 c2_header_counts
+    f77b    4177b      13b     1                 c2_append_begin
+    f8b6    418b6       2f     1                 c2_session_emit_reset
+    f8e5    418e5      1f9     1                 c2_session_emit_add
+    fade    41ade       56     1                 c2_session_emit_finalize
+    fb34    41b34       84     1                 vm_logical_relative_target
+    fbb8    41bb8      15a     1 .lisp65_c2_kernal_window.session_emitter_state
+    fbb8    41bb8        0     1         __lisp65_c2_session_emitter_state_start = .
+    fbb8    41bb8      15a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_c2_kernal_window.session_emitter_state)
+    fbb8    41bb8      15a     1                 c2e
+    fd12    41d12        0     1         __lisp65_c2_session_emitter_state_end = .
+    ff80    41f80       10     1 .lisp65_c2_kernal_window.state
+    ff80    41f80       10     1         /tmp/c2_kernal_window-92ef77.o:(.lisp65_c2_kernal_window.state)
+    fffa    41ffa        6     1 .lisp65_c2_vectors
+    fffa    41ffa        6     1         /tmp/c2_kernal_window-92ef77.o:(.lisp65_c2_vectors)
+    c356    1c7ec      48e     1 .lisp65_rt_buffer_read
+    c356    1c7ec      48e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_buffer_read)
+    c356    1c7ec      3f1     1                 lisp65_buffer_overlay_read_entry
+    c747    1cbdd       2c     1                 buf_byte
+    c773    1cc09       62     1                 buf_freeze
+    c7d5    1cc6b        f     1                 buf_len
+    c356    1cc7a      2a8     1 .lisp65_rt_buffer_write
+    c356    1cc7a      2a8     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_buffer_write)
+    c356    1cc7a      26e     1                 lisp65_buffer_overlay_write_entry
+    c5c4    1cee8       3a     1                 buf_set
+    c356    1cf22      69e     1 .lisp65_rt_buffer_alloc
+    c356    1cf22      69e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.lisp65_rt_buffer_alloc)
+    c356    1cf22      299     1                 lisp65_buffer_overlay_alloc_entry
+    c5ef    1d1bb      1f4     1                 buf_allocate
+    c7e3    1d3af       67     1                 buf_from_stage
+    c84a    1d416      139     1                 buf_from_string
+    c983    1d54f        7     1                 buf_make
+    c98a    1d556       6a     1                 buf_to_stage
+    c9f4    1d5c0        0     1 __stack = 0xd000
+       0        0    21b34     4 .rela.text
+       0        0      180     4         /tmp/mega65_math-9c558a.o:(.rela.text.mega65_math_div)
+     180      180       fc     4         /tmp/mega65_math-9c558a.o:(.rela.text.mega65_math_sdiv)
+     27c      27c       24     4         /tmp/mega65_math-9c558a.o:(.rela.text.mega65_math_mod_adjust)
+     2a0      2a0       18     4         /tmp/mega65_math-9c558a.o:(.rela.text.mega65_math_mul)
+     2b8      2b8       30     4         /tmp/f011_guarded_write-15b170.o:(.rela.text.lisp65_f011_mount_token_op)
+     2e8      2e8       90     4         /tmp/f011_guarded_write-15b170.o:(.rela.text.lisp65_f011_scratch_buffer)
+     378      378        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/crt0.o:(.rela.call_main)
+     384      384        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-bss.c.obj):(.rela.init.200)
+     390      390       60     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-bss.c.obj):(.rela.text.__zero_bss)
+     3f0      3f0       30     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(init-stack.S.obj):(.rela.init.100)
+     420      420        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(exit-custom.S.obj):(.rela.after_main)
+     42c      42c      1a4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libc.a(setjmp.S.obj):(.rela.text.setjmp)
+     5d0      5d0      1d4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libc.a(setjmp.S.obj):(.rela.text.longjmp)
+     7a4      7a4        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/libcrt.a(call-indir.S.obj):(.rela.text)
+     7b0      7b0        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-zp-bss.c.obj):(.rela.init.200)
+     7bc      7bc       60     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-zp-bss.c.obj):(.rela.text.__zero_zp_bss)
+     81c      81c        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(copy-zp-data.c.obj):(.rela.init.200)
+     828      828       84     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(copy-zp-data.c.obj):(.rela.text.__copy_zp_data)
+     8ac      8ac        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.init.250)
+     8b8      8b8      120     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cell_type)
+     9d8      9d8      108     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2_facade_target_c2_dma)
+     ae0      ae0       c0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_code_load)
+     ba0      ba0       b4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.sympool_read)
+     c54      c54      174     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.symval_set)
+     dc8      dc8      1b0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.nameoff_get)
+     f78      f78      174     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.symfn_ext_set)
+    10ec     10ec      12c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2_facade_target_overlay_call_family)
+    1218     1218      cf0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2_product_entry_read)
+    1f08     1f08      168     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2_facade_target_c2e_overlay)
+    2070     2070       3c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2e_symbol)
+    20ac     20ac       cc     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2e_w16)
+    2178     2178        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2e_put)
+    2184     2184      12c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2e_w24)
+    22b0     22b0        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2e_get)
+    22bc     22bc      108     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.c2e_w32)
+    23c4     23c4      144     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cell_set_a)
+    2508     2508      150     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cell_set_b)
+    2658     2658       3c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.car)
+    2694     2694      15c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cell_a)
+    27f0     27f0       3c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cdr)
+    282c     282c      174     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cell_b)
+    29a0     29a0     228c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.eval_v2_workbench_service)
+    4c2c     4c2c      240     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cs_fetch)
+    4e6c     4e6c       30     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_check_status)
+    4e9c     4e9c      3f0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.eval_vm_native_apply_checked)
+    528c     528c      3f0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.eval)
+    567c     567c       b4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.lisp_abort_symbol)
+    5730     5730       18     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.lisp_abort_code)
+    5748     5748      438     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.lisp65_error_render_pending)
+    5b80     5b80      1d4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.lisp_input_event)
+    5d54     5d54      168     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.io_disk_read_sector)
+    5ebc     5ebc       78     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.f011_read_at)
+    5f34     5f34        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.io_disk_transaction_capture_mount_token)
+    5f40     5f40       3c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.io_disk_transaction_classify_status)
+    5f7c     5f7c      1b0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.io_disk_write_sector_guarded)
+    612c     612c       6c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.f011_issue_write_guarded)
+    6198     6198      4e0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.disk_chain_to_scratch)
+    6678     6678      744     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.main)
+    6dbc     6dbc      108     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_dma)
+    6ec4     6ec4       d8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_b)
+    6f9c     6f9c       d8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_a)
+    7074     7074       9c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.str_write_byte)
+    7110     7110       30     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.str_len)
+    7140     7140       90     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.str_byte)
+    71d0     71d0       a8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.str_read_byte)
+    7278     7278       c0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_set_type)
+    7338     7338      42c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.alloc)
+    7764     7764      174     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cell_set_b.62)
+    78d8     78d8     1734     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.gc_collect)
+    900c     900c      300     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.gc_mark1)
+    930c     930c      234     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.gc_mark_spine)
+    9540     9540       cc     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_type)
+    960c     960c      138     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.str_copy_to_alt)
+    9744     9744      3d8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.str_relocate)
+    9b1c     9b1c       f0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_set_b)
+    9c0c     9c0c       f0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_set_a)
+    9cfc     9cfc        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.alloc_oom)
+    9d08     9d08       84     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_disk_put)
+    9d8c     9d8c       90     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.ext_disk_get)
+    9e1c     9e1c      66c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.gc_mark)
+    a488     a488      414     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.cons)
+    a89c     a89c      2e8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.str_open)
+    ab84     ab84      4ec     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.str_putc)
+    b070     b070       30     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.emit)
+    b0a0     b0a0       54     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.emit_str)
+    b0f4     b0f4      b10     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.print_obj)
+    bc04     bc04      168     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.reader_from_fetch)
+    bd6c     bd6c       9c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.reader_skip_peek)
+    be08     be08      1e0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.skip_ws)
+    bfe8     bfe8      108     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.rd_next)
+    c0f0     c0f0      b7c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.read_expr_1)
+    cc6c     cc6c       78     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.reader_finish)
+    cce4     cce4       18     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.reader_fail)
+    ccfc     ccfc      468     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.read_string)
+    d164     d164      4b0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.sugar)
+    d614     d614       84     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.rd_peek2)
+    d698     d698       24     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.is_delim)
+    d6bc     d6bc      60c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.read_atom)
+    dcc8     dcc8       cc     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.read_expr_stream)
+    dd94     dd94      9e4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.repl)
+    e778     e778       e4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.scr_init)
+    e85c     e85c       78     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.scr_clear)
+    e8d4     e8d4       fc     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.fill_row)
+    e9d0     e9d0      12c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.scr_cursor)
+    eafc     eafc      330     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.scr_putc)
+    ee2c     ee2c      4ec     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.sym_lookup)
+    f318     f318      6c0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.intern)
+    f9d8     f9d8      1ec     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.symname)
+    fbc4     fbc4      1bc     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.sym_value)
+    fd80     fd80      180     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.sidx)
+    ff00     ff00      1b0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.set_sym_value)
+   100b0    100b0       c0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.sym_boundp)
+   10170    10170      1bc     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.sym_function)
+   1032c    1032c      240     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.set_sym_function)
+   1056c    1056c      228     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_run_dir)
+   10794    10794       90     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_run)
+   10824    10824     795c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_run_inner)
+   18180    18180       9c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_arity_accepts)
+   1821c    1821c      aa4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_frame_fill)
+   18cc0    18cc0      4a4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_fixbinop)
+   19164    19164       54     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.dir_find)
+   191b8    191b8     47d0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_callprim)
+   1d988    1d988       f0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_upval_nth)
+   1da78    1da78      d50     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_native_call)
+   1e7c8    1e7c8      60c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_key_event)
+   1edd4    1edd4      120     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_byte_args)
+   1eef4    1eef4      894     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_install_staged_boot_overlay)
+   1f788    1f788       c0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_runtime_overlay_exec)
+   1f848    1f848     1278     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_runtime_overlay_exec_family)
+   20ac0    20ac0      108     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.rtov_wipe)
+   20bc8    20bc8       3c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.rtov_fail)
+   20c04    20c04       cc     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.rtov_read)
+   20cd0    20cd0       d8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.rtov_crc_mem)
+   20da8    20da8      174     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_runtime_overlay_select_family)
+   20f1c    20f1c       6c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.vm_runtime_overlay_abort_cleanup)
+   20f88    20f88      7f8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.shelf_crc32)
+   21780    21780      1b0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.crc32_update)
+   21930    21930        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.exit)
+   2193c    2193c       60     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.memcpy)
+   2199c    2199c       78     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.memcmp)
+   21a14    21a14       3c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.__memset)
+   21a50    21a50       e4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.text.strlen)
+       0        0       9c     4 .rela.lisp65_c2_host_facade
+       0        0       9c     4         /tmp/c2_kernal_facade-e040f0.o:(.rela.lisp65_c2_host_facade)
+       0        0       18     4 .rela.lisp65_c2_kernal_window.irq_handler
+       0        0       18     4         /tmp/c2_kernal_window-92ef77.o:(.rela.lisp65_c2_kernal_window.irq_handler)
+       0        0        c     4 .rela.lisp65_c2_kernal_window.map_switch_and_guards
+       0        0        c     4         /tmp/c2_kernal_window-92ef77.o:(.rela.lisp65_c2_kernal_window.map_switch_and_guards)
+       0        0       24     4 .rela.lisp65_c2_vectors
+       0        0       24     4         /tmp/c2_kernal_window-92ef77.o:(.rela.lisp65_c2_vectors)
+       0        0        c     4 .rela.basic_header
+       0        0        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/basic-header.o:(.rela.basic_header)
+       0        0     1908     4 .rela.lisp65_rt_buffer_alloc
+       0        0     1908     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_buffer_alloc)
+       0        0      f00     4 .rela.lisp65_rt_buffer_read
+       0        0      f00     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_buffer_read)
+       0        0      504     4 .rela.rodata
+       0        0       30     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.lisp65_buffer_overlay_read_entry)
+      30       30       48     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.print_obj)
+      78       78       84     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.read_expr_1)
+      fc       fc      318     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.vm_run_inner)
+     414      414       84     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.vm_fixbinop)
+     498      498       6c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.c2_stream_phase_08)
+       0        0      930     4 .rela.lisp65_rt_buffer_write
+       0        0      930     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_buffer_write)
+       0        0      2d0     4 .rela.lisp65_c2_kernal_handoff
+       0        0      2d0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_c2_kernal_handoff)
+       0        0       84     4 .rela.lisp65_c2_kernal_window.event_poll
+       0        0       84     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_c2_kernal_window.event_poll)
+       0        0     65f4     4 .rela.lisp65_c2_kernal_window.c2_resident
+       0        0     65f4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_c2_kernal_window.c2_resident)
+       0        0     1044     4 .rela.lisp65_rt_c2append_envelope
+       0        0     1044     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_envelope)
+       0        0     117c     4 .rela.lisp65_rt_c2append_crc
+       0        0     117c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_crc)
+       0        0      924     4 .rela.lisp65_rt_c2append_metadata
+       0        0      924     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_metadata)
+       0        0     1440     4 .rela.lisp65_rt_c2append_capacity
+       0        0     1440     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_capacity)
+       0        0     144c     4 .rela.lisp65_rt_c2append_stage
+       0        0     144c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_stage)
+       0        0      b04     4 .rela.lisp65_rt_c2append_image
+       0        0      b04     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_image)
+       0        0      ec4     4 .rela.lisp65_rt_c2append_entries
+       0        0      ec4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_entries)
+       0        0      6cc     4 .rela.lisp65_rt_c2append_header
+       0        0      6cc     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_header)
+       0        0     10b0     4 .rela.lisp65_rt_c2append_publish_names
+       0        0     10b0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_publish_names)
+       0        0     198c     4 .rela.lisp65_rt_c2append_publish_cells
+       0        0     198c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_publish_cells)
+       0        0     14c4     4 .rela.lisp65_rt_c2append_rollback
+       0        0     14c4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2append_rollback)
+       0        0       30     4 .rela.lisp65_c2_fixed_bank0_code
+       0        0       24     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_c2_fixed_bank0_code.c2e_cons)
+      24       24        c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_c2_fixed_bank0_code.kb_cursor_off)
+       0        0     102c     4 .rela.lisp65_rt_c2emit_prepare
+       0        0     102c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2emit_prepare)
+       0        0      a08     4 .rela.lisp65_rt_c2emit_name
+       0        0      a08     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2emit_name)
+       0        0     147c     4 .rela.lisp65_rt_c2emit_literal_prep
+       0        0     147c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2emit_literal_prep)
+       0        0     1674     4 .rela.lisp65_rt_c2emit_literal_atom
+       0        0     1674     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2emit_literal_atom)
+       0        0      84c     4 .rela.lisp65_rt_c2emit_literal_append
+       0        0      84c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2emit_literal_append)
+       0        0     1284     4 .rela.lisp65_rt_c2emit_code
+       0        0     1284     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2emit_code)
+       0        0     10f8     4 .rela.lisp65_rt_c2emit_final_meta
+       0        0     10f8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2emit_final_meta)
+       0        0     11ac     4 .rela.lisp65_rt_c2emit_final_crc
+       0        0     11ac     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2emit_final_crc)
+       0        0      654     4 .rela.lisp65_rt_l65e
+       0        0      654     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_l65e)
+       0        0     15d8     4 .rela.lisp65_workbench_overlay
+       0        0     15d8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_boot)
+       0        0      804     4 .rela.lisp65_c2_kernal_window.profile_rodata
+       0        0       c0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.eval_v2_workbench_service)
+      c0       c0      3d8     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.vm_callprim)
+     498      498      36c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.rodata.vm_native_call)
+       0        0      5c4     4 .rela.lisp65_resident_island
+       0        0      5c4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_resident_island)
+       0        0      f84     4 .rela.lisp65_rt_rtov_catalog
+       0        0      f84     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_rtov_catalog)
+       0        0     11d0     4 .rela.lisp65_rt_rtov_record
+       0        0     11d0     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_rtov_record)
+       0        0      18c     4 .rela.lisp65_rt_island_00
+       0        0      18c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_island_00)
+       0        0     111c     4 .rela.lisp65_rt_c2d_00
+       0        0     111c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_00)
+       0        0     13d4     4 .rela.lisp65_rt_c2d_00b
+       0        0     13d4     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_00b)
+       0        0     1674     4 .rela.lisp65_rt_c2d_01
+       0        0     1674     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_01)
+       0        0     1854     4 .rela.lisp65_rt_c2d_02a
+       0        0     1854     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_02a)
+       0        0      324     4 .rela.lisp65_rt_c2d_02b
+       0        0      324     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_02b)
+       0        0     1530     4 .rela.lisp65_rt_c2d_03
+       0        0     1530     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_03)
+       0        0      f0c     4 .rela.lisp65_rt_c2d_04
+       0        0      f0c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_04)
+       0        0     1710     4 .rela.lisp65_rt_c2d_05
+       0        0     1710     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_05)
+       0        0     1314     4 .rela.lisp65_rt_c2d_06a
+       0        0     1314     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_06a)
+       0        0      e4c     4 .rela.lisp65_rt_c2d_06b
+       0        0      e4c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_06b)
+       0        0      f9c     4 .rela.lisp65_rt_c2d_07
+       0        0      f9c     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_07)
+       0        0     1410     4 .rela.lisp65_rt_c2d_08
+       0        0     1410     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_08)
+       0        0     1518     4 .rela.lisp65_rt_c2d_09
+       0        0     1518     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_09)
+       0        0     1338     4 .rela.lisp65_rt_c2d_10
+       0        0     1338     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_10)
+       0        0     1848     4 .rela.lisp65_rt_c2d_11
+       0        0     1848     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_11)
+       0        0     1788     4 .rela.lisp65_rt_c2d_12
+       0        0     1788     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_12)
+       0        0     1a88     4 .rela.lisp65_rt_c2d_13
+       0        0     1a88     4         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-29-direct-entry-encoding/lisp65-c2-substitution-linked.prg.lto.o:(.rela.lisp65_rt_c2d_13)

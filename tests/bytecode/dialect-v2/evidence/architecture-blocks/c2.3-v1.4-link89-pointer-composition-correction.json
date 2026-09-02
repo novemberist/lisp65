@@ -1,0 +1,29 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-pointer-composition-correction-v1",
+  "recorded_on": "2026-08-03",
+  "status": "WORKBENCH POINTER GEOMETRY GREEN; SHIP POINTER GEOMETRY STILL OPEN",
+  "candidate_link": 89,
+  "observation": {
+    "identity": "exact Link-89 Workbench product and Bank-2 image",
+    "form": "(list(m65-byte-read 208 108)(m65-byte-read 208 109)(m65-byte-read 208 110))",
+    "result": [248, 15, 0],
+    "decoded_pointer_table": "0x000ff8",
+    "screen_text": {
+      "path": "build/post-promotion/v14/link89-device-session/run/d2-pointer.txt",
+      "sha256": "3a8dd1e4edd8e86e15fca85b3693f358fb95b009ef7ac24d142bb05f63a700e7"
+    },
+    "screen_png": {
+      "path": "build/post-promotion/v14/link89-device-session/run/d2-pointer.png",
+      "sha256": "78a41362c523d4343815e803f8bdcaf8a015dc754d4b08a3d2e2f288611e42e3"
+    }
+  },
+  "correction": "The earlier discriminator was too broad: a valid live pointer-table address in the Workbench does not clear a live-register guard in the separately booted Ship composition. The register is not initialized by lib/m65-hw, scr_init or the product ownership path, so composition identity is material.",
+  "next_discriminator": "Boot the byte-identical parity-toy without injected input, wait for its deterministic E3 state, then read only ordinary RAM: the 0x17c0-0x17ff shape slot, 0x0ff8-0x0fff pointer-table bytes and the runtime state block. An untouched shape slot places the rejection before the recursive payload write; payload with an untouched pointer byte places it at the pointer publication edge; payload plus pointer 95 proves m65-sprite-shape completed and moves the type error to the next call.",
+  "runner": {
+    "path": "scripts/c2-v14-link89-device-session-hw.sh",
+    "sha256": "67c6dcb8468360cb69699ea1ba38f9fb0d36a58efccc1683d8df41290f407617",
+    "action": "probe-d2-ship-state",
+    "virtual_repl_input": false
+  },
+  "claim_limit": "The Workbench live geometry is valid. No claim is made yet about the Ship live geometry or the exact m65-sprite-shape failure edge."
+}

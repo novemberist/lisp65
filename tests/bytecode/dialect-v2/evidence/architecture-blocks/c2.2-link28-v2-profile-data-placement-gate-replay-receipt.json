@@ -1,0 +1,144 @@
+{
+  "format": "lisp65-c2-link28-v2-profile-data-placement-gate-replay-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "passed-existing-immutable-elf-no-new-link",
+  "authorization_accounting": {
+    "authorized_corrected_gate_replays": 1,
+    "completed_corrected_gate_replays": 1,
+    "compiler_invocations": 0,
+    "linker_invocations": 0,
+    "new_seed_links": 0,
+    "new_product_links": 0,
+    "link_28_product_candidates": 0
+  },
+  "inputs": {
+    "tool": "tools/host-lisp/c2_product_substitution_link.py",
+    "tool_sha256": "e4cf526e033d706499ac5ef70adade387a96c21bc2f0ee96fcaa1deba5852056",
+    "contract": "config/c2-kernal-unmap-contract.json",
+    "contract_sha256": "ccc8b32eba62a7bf2dd11438d61f1c8ab0a5912443ca88f97af4ef268cb164de",
+    "contract_document": "docs/planning/c2.2-kernal-unmap-contract.md",
+    "contract_document_sha256": "f91a31d25521101da5ba7e12ffbc6e7bb9bac4f764f62c7603567c94f816176d",
+    "section_inventory_pin": "config/c2-final-section-inventory-pin.txt",
+    "section_inventory_pin_sha256": "3e644eb6f892e31baca3167b040ad3a5f60f148f1d3b2dae523ddb26da0bd6a3",
+    "first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link28-v2-profile-data-reference-gate-replay-first-red-receipt.json",
+    "first_red_receipt_sha256": "f45bb443b8b398a2a22f495a32583038267792d8033282e4e64194e02d44eb2b"
+  },
+  "immutable_source": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-v2-profile-data-placement-wrapper-inventory-order-first-red-20260720/root",
+    "canonical_tree_sha256": "76b30ab24d650c831840bd46c267c52459a2cb25540791efb71fc900aa9a65a1",
+    "elf_sha256": "92b9eac60ba766a0ba30cee97ca34c07a28076e6e00800ca1c62a740f3acb339",
+    "lto_object_sha256": "7fd609bbffdca8ec0dcab9d53494222bfb9fa7f8dbd052864ea7ae5edb536223",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "corrected_proof_model": {
+    "target_resolution": "owned output-section base plus relocation addend is resolved into the three moved input-component intervals",
+    "source_resolution": "each matched source address is bound to exactly one positive-sized section-qualified function interval",
+    "ownership_boundary": "the bound function interval is compared with explicit pre-handoff function intervals including the main-prefix cutpoint",
+    "negative_matrix": {
+      "missing_component_reference": "rejected",
+      "pre_handoff_function_reference": "rejected",
+      "unknown_source_function": "rejected",
+      "overlapping_function_provenance": "rejected",
+      "unsized_function_provenance": "rejected",
+      "output_section_plus_addend_reference": "passed"
+    }
+  },
+  "profile_data_reference_gate": {
+    "status": "passed",
+    "moved_components_covered": "3/3",
+    "matched_relocations": 5,
+    "pre_handoff_references": 0,
+    "function_interval_count": 314,
+    "pre_handoff_function_intervals": [
+      {
+        "name": "main",
+        "section": ".text",
+        "address": 15839,
+        "bytes": 31,
+        "end_exclusive": 15870,
+        "ownership_class": "main-prefix-before-ownership-call"
+      }
+    ],
+    "bound_sources": [
+      {
+        "component": ".rodata.eval_v2_workbench_service",
+        "source_function": "eval_v2_workbench_service",
+        "function_address": 11321,
+        "function_bytes": 2466,
+        "relocation_offsets": [11402]
+      },
+      {
+        "component": ".rodata.vm_callprim",
+        "source_function": "vm_callprim",
+        "function_address": 35970,
+        "function_bytes": 5285,
+        "relocation_offsets": [36013, 36028, 37858]
+      },
+      {
+        "component": ".rodata.vm_native_call",
+        "source_function": "vm_native_call",
+        "function_address": 41346,
+        "function_bytes": 1019,
+        "relocation_offsets": [41982]
+      }
+    ],
+    "report_sha256": "5eeba91f4353712d09350c72d4f600677592a87b6b6f7ac36a8749b3026345fe"
+  },
+  "fresh_gate_results": {
+    "final_section_inventory": "passed-exact-140-name-membership-and-count",
+    "section_order": "provenance-only",
+    "lto_partition_metadata": "passed",
+    "final_relocation_sections": 57,
+    "handoff_z_and_io": "passed",
+    "pre_ownership": "passed",
+    "profile_data_references": "passed",
+    "fixed_facade": "passed",
+    "kernal_freedom": "passed",
+    "owned_control_flow_edges": 319,
+    "reports": {
+      "full_replay": "13ff632534141bdf847caec276841322afbee6e2369995c38b332673bd7f9b32",
+      "inventory": "0b9bf703d53270a9cc99cde377afe9d164a808076b099ec183f8c78ddf934114",
+      "lto_partition_metadata": "ebc0453cdb59394b36cf90c73a788eb9d2c48025ba7b327b476b731d0914efdc",
+      "handoff_z_and_io": "57810a3f02919cbf19c96c5aaa7bc97b96571abe8266a7f96f3db886f1ea7edf",
+      "pre_ownership": "508f7359ad0f9b1aa2ae2837154fd147d3f12b6909377bed4677fcab4732c188",
+      "fixed_facade": "d55c6991c99c0d72cd5ace27e823f73652327129b808fea548576b6c5afeafb0",
+      "kernal_freedom": "2971bef4ec7da778d93eceb22c1c4a67fe76aa892fbe06d5cf9d57c5c9203bde"
+    }
+  },
+  "capacity": {
+    "bank0_text_headroom_bytes": 184,
+    "ordinary_bank0_bss_headroom_bytes": 19,
+    "e000_future_margin_bytes": 386,
+    "e000_growth_policy": "closed-to-new-tenants",
+    "runtime_slice_cap_bytes": 1792,
+    "largest_runtime_slice_bytes": 1776,
+    "runtime_overlay_bank": {
+      "boot_image_bytes": 13665,
+      "boot_headroom_bytes": 51871,
+      "session_image_bytes": 50334,
+      "session_headroom_bytes": 15202
+    }
+  },
+  "provisional_window_identity": {
+    "bytes": 8192,
+    "crc16": "0xfc2b",
+    "sha256": "70b5562c9f75a1f5f18face3068096203a6d365c1015cc269d8015f8e1cf10ce",
+    "status": "gate-replay-passed-awaiting-separate-pin-for-one-authorized-link-28"
+  },
+  "immutable_replay_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-v2-profile-data-placement-gate-replay-pass-20260720/root",
+    "files": 15,
+    "total_file_bytes": 162037,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "261e9d370934f9605062cf25d6a38b6eae4f3dd98e7c703debcf58f77f7e185f",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "decision": {
+    "corrected_gate_replay": "passed",
+    "additional_seed_or_product_link": "not-run-in-this-replay",
+    "next_step": "pin this provisional window identity, then run at most the one already-authorized Link 28 under first-red discipline"
+  },
+  "claim_limit": "This receipt proves a zero-compiler, zero-link replay over one immutable product-shaped ELF passed exact section membership, LTO metadata and relocation retention, handoff, pre-ownership, function-bound profile-data references, fixed facade and KERNAL-freedom gates. It is not Link 28, hardware acceptance, promotion or a release claim."
+}

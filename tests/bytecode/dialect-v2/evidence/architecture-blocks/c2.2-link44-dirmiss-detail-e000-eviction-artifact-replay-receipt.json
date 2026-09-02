@@ -1,0 +1,347 @@
+{
+  "authority": {
+    "engine_first_red": {
+      "bytes": 938,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-dirmiss-detail-e000-eviction-wplto-engine-receipt.json",
+      "sha256": "cc0a4aa19934279dc90071f18a5e7c8632a22206b1aad32ddcb50c3b46b0b527"
+    },
+    "evacuation_contract": {
+      "bytes": 2120,
+      "path": "config/c2-vm-dirmiss-detail-e000-evacuation-contract.json",
+      "sha256": "3e599f198b6658042ad9185e9c2373c506199dac01a88321bdbda144cd6168f4"
+    },
+    "relocation_model_first_red": {
+      "bytes": 28539,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-dirmiss-detail-e000-eviction-wplto-internal-structural.json",
+      "sha256": "8f731016a166c8493793e79b1ca0a039e47436219c667134df23c019a3cb09a3"
+    },
+    "replay_driver": {
+      "bytes": 14862,
+      "path": "tools/host-lisp/c2_lite_v6_link44_dirmiss_e000_eviction_artifact_replay.py",
+      "sha256": "cd577060604439a8f66fdb02a6ca7dc5abdca14351cff1e943c491d3e0833eda"
+    }
+  },
+  "candidate_selection": {
+    "authority": {
+      "bytes": 608544,
+      "path": "build/c2.2/substitution/link44-dirmiss-detail-wplto/resident-island-seed.prg.lto.o",
+      "sha256": "20b5487a3fa3d79ff5af8aa47f7d62dd5e24159606785bd53e6a88049021ad3f"
+    },
+    "candidates": [
+      {
+        "bytes": 97,
+        "disposition": "selected",
+        "external_code_targets": [],
+        "symbol": "vm_byte_args",
+        "temperature": "hot"
+      },
+      {
+        "bytes": 93,
+        "disposition": "cell_type/cell_b calls",
+        "external_code_targets": [
+          ".text.cell_b.159",
+          ".text.cell_type.160"
+        ],
+        "symbol": "vm_upval_nth",
+        "temperature": "hot"
+      },
+      {
+        "bytes": 126,
+        "disposition": "ext_a call and heap data",
+        "external_code_targets": [
+          ".text.ext_a"
+        ],
+        "symbol": "sidx",
+        "temperature": "hot"
+      },
+      {
+        "bytes": 108,
+        "disposition": "sidx and DMA-facade calls",
+        "external_code_targets": [
+          ".text.sidx"
+        ],
+        "symbol": "sym_function",
+        "temperature": "hot"
+      },
+      {
+        "bytes": 108,
+        "disposition": "sidx and DMA-facade calls",
+        "external_code_targets": [
+          ".text.sidx"
+        ],
+        "symbol": "sym_value",
+        "temperature": "hot"
+      },
+      {
+        "bytes": 128,
+        "disposition": "abort/event-poll calls",
+        "external_code_targets": [
+          ".text.lisp_abort_code"
+        ],
+        "symbol": "lisp_input_event",
+        "temperature": "hot"
+      },
+      {
+        "bytes": 104,
+        "disposition": "wrong temperature",
+        "external_code_targets": [],
+        "symbol": "crc32_update",
+        "temperature": "boot-cold"
+      }
+    ],
+    "minimum_relief_bytes": 86,
+    "selected": "vm_byte_args",
+    "status": "passed-temperature-and-edge-profile-selection"
+  },
+  "capacity": {
+    "e000_floor_bytes": 115,
+    "e000_floor_clearance_bytes": 557,
+    "measured_bank0_relief_from_first_red_bytes": 107,
+    "required_relief_bytes": 86,
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98,
+    "standing_text_reserve_bytes": 53,
+    "status": "passed-frozen-WPLTO-all-walls-and-aggregate",
+    "walls": {
+      "bank0_text_headroom_bytes": 53,
+      "e000_headroom_bytes": 672,
+      "fixed_hot_block_headroom_bytes": 273,
+      "ordinary_bank0_bss_headroom_bytes": 86,
+      "resident_island_headroom_bytes": 170
+    }
+  },
+  "claim_limit": "Artifact-only completion of the one authorized WPLTO. No compiler, linker, product-candidate, hardware, latency or promotion claim.",
+  "class_a_gate_correction": {
+    "capacity_effect_bytes": 0,
+    "new_model": "structured target section plus addend resolves uniquely into the sized helper interval",
+    "old_model": "relocation target symbol name must equal vm_dirmiss_detail",
+    "product_bytes_changed": 0
+  },
+  "counters": {
+    "class_b": "3/3 exhausted",
+    "completed_latency_measurements": "0/2",
+    "line1_product_first_reds": "2/3"
+  },
+  "detail_source_contract": {
+    "detail_domains": [
+      "SYMI",
+      "BCODE",
+      "NIL"
+    ],
+    "mutations_rejected": {
+      "bcode-rendered-as-symbol": "rejected",
+      "consumer-drops-detail": "rejected",
+      "discard-inner-callprim": "rejected",
+      "omit-compile-defun": "rejected",
+      "omit-compile-inner-helper": "rejected",
+      "omit-op-call": "rejected",
+      "omit-op-closure": "rejected",
+      "omit-op-tailcall": "rejected",
+      "omit-vm-run-dir": "rejected",
+      "op-call-detail-nil": "rejected",
+      "op-tailcall-detail-nil": "rejected",
+      "overwrite-inner-op-call": "rejected",
+      "second-status-writer": "rejected",
+      "stale-global-detail": "rejected",
+      "symbol-render-bypassed": "rejected"
+    },
+    "non_symbol_mapping": "VM_DIRMISS+BCODE/NIL -> numeric code 41",
+    "numeric_symbol_mapping": "VM_DIRMISS+SYMI -> code 28 + symbol",
+    "producer_count": 6,
+    "producer_map": {
+      "compile-defun": "if (di < 0) return vm_dirmiss_detail(defname);",
+      "compile-inner-helper": "if (di < 0) return vm_dirmiss_detail(u.fn[i].name);",
+      "op-call": "} else {\n                r = vm_dirmiss_detail(sym); goto done;\n            }\n            if (vm_status != VM_OK)",
+      "op-closure": "if (di < 0) return vm_dirmiss_detail(sym);",
+      "op-tailcall": "#endif\n                r = vm_dirmiss_detail(sym); goto done;\n            }\n#ifdef LISP65_VM_DIAGNOSTICS",
+      "vm-run-dir": "return vm_dirmiss_detail(\n            (di >= 0 && (uint16_t)di < 4096u) ? MK_BCODE((uint16_t)di) : NIL);"
+    },
+    "status": "passed-six-producer-one-seam-status-plus-detail-contract",
+    "transport": {
+      "c2j_bytes": 0,
+      "new_bss_bytes": 0,
+      "new_gc_roots": 0,
+      "pre_terminal": "ordinary obj return value plus vm_status",
+      "terminal": "existing pending_symbol/pending_code"
+    }
+  },
+  "evacuation_source_contract": {
+    "destination_section": ".lisp65_c2_kernal_window.c2_resident",
+    "lifetime": "post-ownership-only",
+    "mutations_rejected": {
+      "bank0-residency-regression": "rejected",
+      "chip-ram-lifetime-guard-removed": "rejected",
+      "outbound-facade-edge": "rejected",
+      "outbound-poll-edge": "rejected",
+      "second-callsite": "rejected",
+      "status-contract-removed": "rejected"
+    },
+    "new_section": false,
+    "new_state_bytes": 0,
+    "new_vector": false,
+    "status": "passed-purpose-bound-hot-leaf-source-contract",
+    "symbol": "vm_byte_args",
+    "temperature": "hot-CALLPRIM-byte-domain-validation"
+  },
+  "format": "lisp65-c2-lite-v6-link44-dirmiss-e000-artifact-replay-v1",
+  "fresh_gate_replay": {
+    "facade_vector_count": 15,
+    "gate_artifacts": {
+      "data_reference": {
+        "bytes": 4141,
+        "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/profile-data-reference-final.json",
+        "sha256": "3ed0c074a20f34bd196c170529be7aee570dc2a2b57a5b3b4d3a8b2910255e99"
+      },
+      "facade": {
+        "bytes": 2449,
+        "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/fixed-host-facade-final.json",
+        "sha256": "2e023b37269e7cca6e18da5c7371b753986295432b0a3698df794d9df10b4903"
+      },
+      "handoff": {
+        "bytes": 2157,
+        "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/handoff-z-abi-final.json",
+        "sha256": "cf6a8d7c5ecf42ddedba1d140d699540f8ad015a0fe7d8946ea41dadd227d39b"
+      },
+      "inventory": {
+        "bytes": 49171,
+        "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/final-section-inventory-lisp65-c2-substitution-linked.prg.json",
+        "sha256": "4fe519f280511af71725c7e79e43738653c4abe9e22c5f6a703ed875ad75864d"
+      },
+      "kernal_freedom": {
+        "bytes": 6892,
+        "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/kernal-freedom-link.json",
+        "sha256": "4998111469ead9224be75b69b9bbf40d62e707bd92291aadb0e7980487b6b703"
+      },
+      "pre_ownership": {
+        "bytes": 3316,
+        "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/pre-ownership-closure-final.json",
+        "sha256": "cf39a26305b2680417fc7fc418b73101e213fd2be8c8acf7c17d1ea4f7c11fb5"
+      }
+    },
+    "generic_gate_status": {
+      "capacity_gate": "passed",
+      "fixed_host_facade_gate": "passed",
+      "handoff_z_abi_gate": "passed",
+      "identity_gate": "passed",
+      "kernal_freedom_gate": "passed",
+      "one_truth_gate": "passed",
+      "pre_ownership_gate": "passed"
+    },
+    "kernal_control_flow_edges": 384,
+    "new_vector": false,
+    "reasoning": "The prior replacement gate set returned before the newly added detail gate raised its exact relocation-model error; every generic gate also records passed in the frozen link artifacts.",
+    "status": "passed-frozen-fresh-gates-and-prior-replacement-reachability"
+  },
+  "frozen_identity": {
+    "elf": {
+      "bytes": 608704,
+      "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "fcdce59ad5d8397179de0455d0a117d9c2192b316b1f6d406794b0988a31a4ee"
+    },
+    "map": {
+      "bytes": 199774,
+      "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "8c7068b62ca592bed0027910b07827da03efba4c1d1d9f20b26839538d3f3f0b"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d73408341d462700952f63f596156545b3529e07ccc71fcd13362bb94928dc1a"
+    }
+  },
+  "linked_detail": {
+    "helper": {
+      "address": "0x68aa",
+      "bytes": 5,
+      "section": ".text"
+    },
+    "linked_reference_count": 4,
+    "linked_references": [
+      {
+        "owner": "vm_run_dir",
+        "relocation_addend": 18567,
+        "relocation_target": ".text",
+        "resolved_address": 26794,
+        "source_offset": 26910,
+        "source_section": ".text"
+      },
+      {
+        "owner": "vm_run_inner",
+        "relocation_addend": 18567,
+        "relocation_target": ".text",
+        "resolved_address": 26794,
+        "source_offset": 28320,
+        "source_section": ".text"
+      },
+      {
+        "owner": "vm_run_inner",
+        "relocation_addend": 18567,
+        "relocation_target": ".text",
+        "resolved_address": 26794,
+        "source_offset": 34887,
+        "source_section": ".text"
+      },
+      {
+        "owner": "vm_run_inner",
+        "relocation_addend": 18567,
+        "relocation_target": ".text",
+        "resolved_address": 26794,
+        "source_offset": 34930,
+        "source_section": ".text"
+      }
+    ],
+    "model_correction": "Relocation identity is (target section, resolved addend); a local function name need not survive as the relocation symbol.",
+    "mutations": {
+      "addend-after-interval": "rejected",
+      "addend-before-interval": "rejected",
+      "symbol-name-only": "rejected-no-direct-symbol-relocations",
+      "wrong-section": "rejected"
+    },
+    "status": "passed-section-plus-addend-canonical-detail-seam",
+    "terminal_cells": {
+      "pending_code": {
+        "address": "0x0038",
+        "bytes": 1,
+        "section": ".zp.bss"
+      },
+      "pending_symbol": {
+        "address": "0xba16",
+        "bytes": 2,
+        "section": ".bss"
+      }
+    }
+  },
+  "linked_eviction": {
+    "address": "0xfb89",
+    "bytes": 97,
+    "control_transfers": 4,
+    "fixed_data_edge": "vm_status",
+    "new_vector": false,
+    "outbound_control_transfers": 0,
+    "section": ".lisp65_c2_kernal_window.c2_resident",
+    "status": "passed-sized-post-ownership-call-free-window-tenant",
+    "symbol": "vm_byte_args"
+  },
+  "next_gate": "the already authorized one successor product link",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "replay_report": {
+    "bytes": 12534,
+    "path": "build/c2.2/substitution/link44-dirmiss-detail-e000-eviction-artifact-replay/artifact-replay-report.json",
+    "sha256": "a7ffeecdd449fb176974b9da9f93507dcaae2f36d0bfa5303a346b3a9f2874cd"
+  },
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+    "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+    "status": "untouched"
+  },
+  "scope": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_links": 0,
+    "replayed_prior_wplto_artifacts": 1
+  },
+  "status": "passed-complete-dirmiss-detail-E000-evacuation-WPLTO-artifact-replay"
+}

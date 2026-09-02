@@ -1,0 +1,135 @@
+{
+  "authorization": {
+    "bytes": 4211,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-op-closure-hold-cycle2-patch-receipt.json",
+    "sha256": "e8b6e275c2bf4c476d8d151f11ec72c6b2fb0494da8e8b6c6c0498ff434de2ca"
+  },
+  "budgets": {
+    "class_b_diagnostic_cycles": "2/3 consumed",
+    "completed_latency_measurements": "0/2 unchanged",
+    "line1_product_first_reds": "2/3 unchanged"
+  },
+  "capture_timing": {
+    "bytes": 291,
+    "path": "build/c2.2/hardware-link44-op-closure-hold-cycle2/capture-timing.json",
+    "sha256": "f2b81b178aa9cc30982fb719aea27398b59efb96a86e09576171222d97c72b2a"
+  },
+  "captures": [
+    {
+      "capture": 1,
+      "elapsed_after_form_return_ms": 1342,
+      "vm": {
+        "bytes": 74,
+        "path": "build/c2.2/hardware-link44-op-closure-hold-cycle2/capture-1-vm-bfd9-c022.bin",
+        "sha256": "1eda761191a34845d4b4b677f08d391374aeafdd271bfe166d1070c9bdc42229"
+      },
+      "zp": {
+        "bytes": 6,
+        "hex": "cecfcecf0100",
+        "path": "build/c2.2/hardware-link44-op-closure-hold-cycle2/capture-1-zp-0016-001b.bin",
+        "sha256": "a2a68780a2f8c6337d7aa7771ce9030e98112c8b537ddc5a85764493ea5f2dab"
+      }
+    },
+    {
+      "capture": 2,
+      "elapsed_after_form_return_ms": 1934,
+      "vm": {
+        "bytes": 74,
+        "path": "build/c2.2/hardware-link44-op-closure-hold-cycle2/capture-2-vm-bfd9-c022.bin",
+        "sha256": "1eda761191a34845d4b4b677f08d391374aeafdd271bfe166d1070c9bdc42229"
+      },
+      "zp": {
+        "bytes": 6,
+        "hex": "0101cecf0100",
+        "path": "build/c2.2/hardware-link44-op-closure-hold-cycle2/capture-2-zp-0016-001b.bin",
+        "sha256": "f5a33357c1727f976ead4bc0d8d9dd184fb6b56a7bf02dbc66616d128c788a65"
+      }
+    },
+    {
+      "capture": 3,
+      "elapsed_after_form_return_ms": 3026,
+      "vm": {
+        "bytes": 74,
+        "path": "build/c2.2/hardware-link44-op-closure-hold-cycle2/capture-3-vm-bfd9-c022.bin",
+        "sha256": "1eda761191a34845d4b4b677f08d391374aeafdd271bfe166d1070c9bdc42229"
+      },
+      "zp": {
+        "bytes": 6,
+        "hex": "cecfcecf0100",
+        "path": "build/c2.2/hardware-link44-op-closure-hold-cycle2/capture-3-zp-0016-001b.bin",
+        "sha256": "a2a68780a2f8c6337d7aa7771ce9030e98112c8b537ddc5a85764493ea5f2dab"
+      }
+    }
+  ],
+  "claim_limit": "This is a nonpromotable diagnostic First Red. The failing lookup identity is not claimed or reconstructed.",
+  "delegation": {
+    "class": "B",
+    "consumed": 2,
+    "cycle": 2,
+    "cycle_cap": 3
+  },
+  "deployment": {
+    "bytes": 4347,
+    "path": "build/c2.2/hardware-link44-op-closure-hold-cycle2/deployment.json",
+    "sha256": "5052cf67401948099546e31ddbc422b449c14e51d55660384574143fcac7f4ae"
+  },
+  "device_state": "intentionally held in the $8755 self-loop; safe to power off",
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link44-op-closure-hold-cycle2/lisp65-link44-op-closure-hold-cycle2-NONPROMOTABLE.prg",
+    "sha256": "b38df65558f1915c411823874e67d43668f7761cc7b789034bd42caaa5e4d48e"
+  },
+  "execution_accounting": {
+    "changed_bytes": 2,
+    "compiler_runs": 0,
+    "diagnostic_byte_patches": 1,
+    "hardware_runs": 1,
+    "linker_runs": 0,
+    "read_only_post_stop_captures": 6,
+    "remaining_class_b_cycles": 1
+  },
+  "first_red": {
+    "capture1_equals_capture2_vm": true,
+    "capture1_equals_capture3_vm": true,
+    "capture1_equals_capture3_zp": true,
+    "gate": "three time-separated raw capture pairs must be byteidentical",
+    "interpretation": "Only $0016/$0017 changed, from $cfce to $0101 and back; the remaining four ZP bytes and all 74 VM bytes stayed exact. The commissioned cursor provenance is therefore not stable under real JTAG/IRQ observation and reconstruction is forbidden.",
+    "vm_byteidentical": true,
+    "vm_drift": [],
+    "zp_byteidentical": false,
+    "zp_drift": [
+      {
+        "address": "0x0016",
+        "values": [
+          "0xce",
+          "0x01",
+          "0xce"
+        ]
+      },
+      {
+        "address": "0x0017",
+        "values": [
+          "0xcf",
+          "0x01",
+          "0xcf"
+        ]
+      }
+    ]
+  },
+  "format": "lisp65-c2-lite-v6-link44-op-closure-hold-hardware-cycle2-first-red-v1",
+  "input": {
+    "additional_forms_submitted": 0,
+    "form": "(list(peek 255 132)(peek 255 131)(peek 255 132))",
+    "forms_submitted": 1
+  },
+  "link44_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+    "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+    "status": "untouched"
+  },
+  "next_action": "Review the falsified cursor-provenance model before any Class-B cycle 3; no autonomous retry.",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: Class-B cycle 2 capture-stability contract failed"
+}

@@ -1,0 +1,64 @@
+{
+  "acceptance_probe": {
+    "placement_gate": "passed",
+    "status": "PASS"
+  },
+  "active_registry_population": [
+    "input-fidelity",
+    "product-cold-disk-chain",
+    "symbol22-first-fault-latch"
+  ],
+  "attempt_accounting": {
+    "acceptance_probe_runs": 1,
+    "new_WPLTOs": 0,
+    "new_product_links": 0,
+    "scope_probe_runs": 0
+  },
+  "format": "lisp65-c2-v200-domain-tier1-product-card-v1-acceptance-freight-conversion-v1",
+  "frozen_pair": {
+    "ELF": {
+      "bytes": 636100,
+      "path": "build/c2.3/v2.0-domain-tier1-product-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "2895704bd5e62f6e8a9906f2cd8c7f62e1ef74169796e00b05b3037560ec2c38"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/c2.3/v2.0-domain-tier1-product-card-r1/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "5c09c8e623a4a3c58d2b937706fc66496ab14355d71ae136f39e7aa0749a7f68"
+    }
+  },
+  "latch_proof_rows": [
+    {
+      "membership_authority": "symbol22-first-fault-latch",
+      "name": ".lisp65_symbol22_first_fault_latch",
+      "placement_proof": {
+        "gate": "composed-raw-owner/preheap-gap",
+        "relation": "code-start-equals-derived-raw-owner-end",
+        "status": "passed"
+      }
+    },
+    {
+      "membership_authority": "symbol22-first-fault-latch",
+      "name": ".lisp65_symbol22_first_fault_state",
+      "placement_proof": {
+        "gate": "composed-raw-owner/preheap-gap",
+        "relation": "state-start-equals-hot-bss-end-before-heap",
+        "status": "passed"
+      }
+    }
+  ],
+  "mechanism": "the successor Acceptance inherited the active registry union but not the composed-raw-owner/preheap-gap placement prover",
+  "mutations_rejected": [
+    "symbol22-code-vma-shifted",
+    "symbol22-state-vma-shifted",
+    "active-registry-omitted"
+  ],
+  "next": "commit conversion and repeat the complete read-only resume",
+  "observed_red": {
+    "acceptance_error": "mapped additive freight violates arena contract: .lisp65_symbol22_first_fault_latch",
+    "scope_before_red": "PASS"
+  },
+  "product_defect": false,
+  "recorded_on": "2026-09-01",
+  "status": "PASS: ACCEPTANCE CONSUMES ACTIVE LATCH PLACEMENT PROVER"
+}

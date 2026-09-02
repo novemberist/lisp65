@@ -1,0 +1,198 @@
+{
+  "bindings": {
+    "builder": {
+      "bytes": 50586,
+      "path": "tools/host-lisp/ship_builder.py",
+      "sha256": "8b6ac7edb2e8a8558780335137a6a03e046aeb27db4521b082afdfc4b5435c6e"
+    },
+    "capture_correction": {
+      "bytes": 8045,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link86-queue-capture-view-host-elf-attribution-receipt.json",
+      "sha256": "c929d4235bcbe042b43a957ad87376a2da89a188bd08a4759713eec2febb6c37"
+    },
+    "compiler_wrapper": {
+      "bytes": 223,
+      "path": "scripts/c2-v13-link86-queue-cpu-witness-cc.sh",
+      "sha256": "5a4483a5da335c44038ee710c3e977708cdf9fe26cfa36f492d4c9ed9b090687"
+    },
+    "config": {
+      "bytes": 1793,
+      "path": "config/c2-ship-builder-v1-link86-queue-cpu-witness.json",
+      "sha256": "4c1abf0746e49c9ca8a9332129c7fde5368426368248684ed64c22b80e0ee80e"
+    },
+    "driver": {
+      "bytes": 13384,
+      "path": "tools/host-lisp/c2_v13_link86_queue_cpu_witness.py",
+      "sha256": "b0d79740b502568be47ca426d12055dd0d2b44b660a93326ce6f4bb29ed099af"
+    },
+    "owner_review": {
+      "bytes": 48501,
+      "path": "docs/planning/1.3-link84-closing-first-red-review.md",
+      "sha256": "8e962c5547e04eab90c7d7f10e3df21360605fdebe0a1dcfe7a21ad820db51ba"
+    },
+    "source": {
+      "bytes": 6628,
+      "path": "products/runtime-core/ship_io.c",
+      "sha256": "9151d2b3c2bfca8ea32de625c195983268e2c9efcce141f8f46afe2cae6c202f"
+    }
+  },
+  "candidate_link": 86,
+  "claim_limit": "Setup First Red before physical input: Runtime state 2 did not prove the GETIN edge had been reached. The GETIN-only CPU sampler remained zero both immediately and 28 seconds later. No physical key, product result, product fix or product link is claimed.",
+  "diagnostic": {
+    "build_output": "ship-builder build: PASS image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/ship-builder/v13/link86-queue-cpu-witness/interactive.d81 sha256=a6f3b724c849df7d0ce4ef65713d2208208c440ee87f9e51c51253e1d1e28c26",
+    "image": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link86-queue-cpu-witness-getin-only-first-red/interactive.d81",
+      "sha256": "a6f3b724c849df7d0ce4ef65713d2208208c440ee87f9e51c51253e1d1e28c26"
+    },
+    "io_accesses": [
+      {
+        "address": "0xd60a",
+        "direction": "read",
+        "instruction": "ldx",
+        "pc": "0x6821",
+        "section": ".text"
+      },
+      {
+        "address": "0xd619",
+        "direction": "read",
+        "instruction": "ldy",
+        "pc": "0x6824",
+        "section": ".text"
+      }
+    ],
+    "runtime_elf": {
+      "bytes": 39884,
+      "path": "build/ship-builder/v13/link86-queue-cpu-witness-getin-only-first-red/interactive.runtime.elf",
+      "sha256": "1a927a8cb3ac5b741f0f72d1360aa2efae1325634d34499c678f36309e1265bc"
+    },
+    "runtime_state": {
+      "address": "0x0085",
+      "bytes": 1,
+      "name": "lisp65_runtime_state",
+      "section": ".zp.bss"
+    },
+    "source_commit": "a99f8b705f5c5ec7ac14bdc175cc0048c6c3acf5",
+    "verify_output": "ship-builder verify: PASS members=9 sha256=a6f3b724c849df7d0ce4ef65713d2208208c440ee87f9e51c51253e1d1e28c26",
+    "witnesses": [
+      {
+        "address": "0x8b2f",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_samples",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b30",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_last_state",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b31",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_last_code",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b32",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_latched",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b33",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_latched_state",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b34",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_latched_code",
+        "section": ".bss"
+      }
+    ]
+  },
+  "device_preflight_first_red": {
+    "classification": "tool-premise-first-red-before-physical-input",
+    "cold_reset": true,
+    "exact_diagnostic_image_readback": true,
+    "physical_keys": 0,
+    "post_key_screen_captures": 0,
+    "runtime_state": 2,
+    "witness_immediate": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "witness_28_seconds_later": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "reason": "Runtime state 2 is published before entry bytecode. A sampler only at GETIN cannot prove itself live while the sample may still be at its initial frame-wait boundary.",
+    "disposition": "discarded non-promotable identity; extend the same non-consuming sampler to the frame-peek edge before any physical-key contact"
+  },
+  "facts": {
+    "contact": {
+      "physical_keys": 1,
+      "post_key_screen_captures": 0,
+      "virtual_keys": 0
+    },
+    "identity": {
+      "diagnostic_images": 1,
+      "product_candidate_bytes_changed": 0,
+      "promotable": false
+    },
+    "sampler": {
+      "cpu_reads": [
+        "0xd60a",
+        "0xd619"
+      ],
+      "io_writes": [],
+      "latches_first_present_event": true,
+      "ordinary_ram_witnesses": 6
+    }
+  },
+  "format": "lisp65-c2.3-v1.3-link86-queue-cpu-witness-preparation-v1",
+  "interpretation": {
+    "invalid": "samples=0, pre-key latch nonzero, or inconsistent latch/state: harness First Red; no product claim",
+    "queue_empty": "samples>0 and latched=0 after the physical key: queue also empty in CPU I/O view; production/configuration below owns the failure",
+    "queue_present": "latched=1 and latched_state bit 7 set: CPU saw the physical key in the hardware queue before GETIN; consumer path owns the failure"
+  },
+  "recorded_on": "2026-08-03",
+  "reference_candidate": {
+    "image": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link86-final-5a7c0d18/interactive.d81",
+      "sha256": "c9194a714f16e43181ab43b3b1fa1c138e1a74def3311e6d86dc35ffc8cf6c16"
+    },
+    "runtime_elf": {
+      "bytes": 39536,
+      "path": "build/ship-builder/v13/link86-final-5a7c0d18/interactive.runtime.elf",
+      "sha256": "6a256512378142ece82ca6405cbf01a60f7c01f2312a84b9eb4f37969d26a0b4"
+    },
+    "unchanged_after_build": true
+  },
+  "status": "TOOL-FIRST-RED-GETIN-ONLY-SAMPLER-NOT-LIVE",
+  "verification": {
+    "executions": 1,
+    "mutation_count": 8,
+    "mutations_rejected": {
+      "add-dequeue-write": "CPU sampler semantics drift",
+      "add-screen-capture": "contact budget drift",
+      "add-virtual-key": "contact budget drift",
+      "claim-product-delta": "diagnostic identity boundary drift",
+      "drop-d60a-read": "CPU sampler semantics drift",
+      "drop-d619-read": "CPU sampler semantics drift",
+      "make-promotable": "diagnostic identity boundary drift",
+      "remove-first-event-latch": "CPU sampler semantics drift"
+    }
+  }
+}

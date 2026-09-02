@@ -1,0 +1,424 @@
+{
+  "alternatives": [
+    {
+      "cost": {
+        "code_bytes": 48,
+        "new_BSS_bytes": 0,
+        "packed_state_bytes": 5,
+        "projected_text_edge_bytes": 3
+      },
+      "loss": "none; caller, pointer and all 34 NUL-stopped bytes retained",
+      "name": "split ordinary Bank-0 code/state",
+      "selected": true
+    },
+    {
+      "cost": {
+        "bytes": 57,
+        "logical_owners": 2
+      },
+      "loss": "terminal-return guard would overwrite state and code",
+      "name": "co-located original handoff-gap latch",
+      "selected": false
+    },
+    {
+      "cost": {
+        "additional": "MAP entry/exit and call stub",
+        "available_bytes": 11,
+        "body_bytes": 48,
+        "shortfall_bytes": 37
+      },
+      "loss": "requires arena/transport work and a nesting proof at the fault edge",
+      "name": "mapped Far-Service body",
+      "selected": false
+    },
+    {
+      "cost": {
+        "available_bytes": 47,
+        "body_bytes": 48,
+        "shortfall_bytes": 1
+      },
+      "loss": "misses the $8000 VMA boundary by one byte before entry freight",
+      "name": "mapped Product-Cold body",
+      "selected": false
+    },
+    {
+      "cost": {
+        "existing_payload_allocation_bytes": 0,
+        "new_payload_bytes": 34,
+        "writes_per_full_fault": 34
+      },
+      "loss": "adds MAP-dependent stopped-read state and does not place the helper",
+      "name": "Bank-2 payload carrier",
+      "selected": false
+    },
+    {
+      "cost": {
+        "minimum_bytes": 5
+      },
+      "loss": "loses atomic commit, caller or name pointer; inadmissible",
+      "name": "state smaller than five bytes",
+      "selected": false
+    },
+    {
+      "cost": {
+        "helper_plus_edge_bytes": 51,
+        "projected_next_owner_reserve_bytes": 50
+      },
+      "loss": "larger facade/LMA/relocation movement than the disjoint fixed-code gap",
+      "name": "put helper in ordinary .text",
+      "selected": false
+    }
+  ],
+  "authority": {
+    "original_price": {
+      "bytes": 8565,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-symbol22-first-fault-pricing-receipt.json",
+      "sha256": "34de78cf6c00f96363209cc7b89f14c14247be69bec37bdf33af6e8feec41a56"
+    },
+    "owner_red": {
+      "bytes": 15776,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-symbol22-first-fault-product-card-r1-owner-red.json",
+      "sha256": "fd735fd9e927181e55ef512fcff65ef167722ba3cbe3b0f16cab7bfb6afd0fa5"
+    },
+    "review_authorization": {
+      "bytes": 1976,
+      "commit": "8cc0161d3bdbbe5c9a1b41fc75dfb4464fe2d57b",
+      "path": "docs/planning/v2.0.0-pre-plan.md",
+      "section": "## Reviewer disposition \u2014 phase-0 double occupancy \u2014 2026-08-31",
+      "sha256": "b962169314c1ae0284c50542d0e1b1ae2c10fdfcdb6070d66f16959bcd5f8f9f"
+    }
+  },
+  "budget": {
+    "new_WPLTOs_authorized": 0,
+    "new_product_links_authorized": 0,
+    "prior_product_closure_links": 0,
+    "prior_seed_WPLTOs": 1
+  },
+  "candidate": {
+    "code_bytes": 48,
+    "code_section": ".lisp65_symbol22_first_fault_latch",
+    "failure_edge": {
+      "helper_returns": true,
+      "projected_text_delta_bytes": 3,
+      "then_existing_abort": "lisp_abort_static($22)"
+    },
+    "object": {
+      "bytes": 716,
+      "path": "build/phase0-symbol22-first-fault-repricing/symbol22-first-fault-split-latch.o",
+      "sha256": "9e31ed500d4952dab863ce2a2e3cb17511b17df57e69267350b95da9cc8534d6"
+    },
+    "record": {
+      "NUL_stopped": true,
+      "payload_bytes": 34,
+      "second_fault_preserves_first": true,
+      "state": [
+        "commit_tag",
+        "caller_low",
+        "caller_high",
+        "name_pointer_low",
+        "name_pointer_high"
+      ]
+    },
+    "relocation_targets": {
+      "c2_symbol22_repl_buf": 1,
+      "lisp65_symbol22_latch_state": 6
+    },
+    "relocations": [
+      {
+        "addend": 0,
+        "kind": "R_MOS_ADDR16",
+        "offset": 1,
+        "target": "lisp65_symbol22_latch_state"
+      },
+      {
+        "addend": 1,
+        "kind": "R_MOS_ADDR16",
+        "offset": 10,
+        "target": "lisp65_symbol22_latch_state"
+      },
+      {
+        "addend": 2,
+        "kind": "R_MOS_ADDR16",
+        "offset": 16,
+        "target": "lisp65_symbol22_latch_state"
+      },
+      {
+        "addend": 3,
+        "kind": "R_MOS_ADDR16",
+        "offset": 21,
+        "target": "lisp65_symbol22_latch_state"
+      },
+      {
+        "addend": 4,
+        "kind": "R_MOS_ADDR16",
+        "offset": 26,
+        "target": "lisp65_symbol22_latch_state"
+      },
+      {
+        "addend": 0,
+        "kind": "R_MOS_ADDR16",
+        "offset": 33,
+        "target": "c2_symbol22_repl_buf"
+      },
+      {
+        "addend": 0,
+        "kind": "R_MOS_ADDR16",
+        "offset": 45,
+        "target": "lisp65_symbol22_latch_state"
+      }
+    ],
+    "state_bytes": 5,
+    "state_section": ".lisp65_symbol22_first_fault_state",
+    "total_materialized_bytes": 53
+  },
+  "claim_limit": "Host-only successor price. No product implementation, final-LTO identity, media, device, Comfort or Block-3 claim.",
+  "final_card_obligations": [
+    "derive both intervals and every claimant class from the final candidate",
+    "prove the packed five-byte state origin is zero",
+    "execute the positive control on the final ELF",
+    "prove state and repl.buf payload survive longjmp, cleanup and wipe",
+    "prove the successful intern path is byte-identical",
+    "prove the helper returns directly into the existing $22 abort edge",
+    "rerun all standing composition, MAP and capacity walls"
+  ],
+  "format": "lisp65-c2.3-v200-symbol22-first-fault-repricing-v1",
+  "geometry": {
+    "boundaries": {
+      "fixed_hot_end": 49997,
+      "heap_boundary": 50004,
+      "ordinary_bss_end": 49146,
+      "ordinary_noinit": [
+        49997,
+        49997
+      ],
+      "runtime_overlay_max_end": 51798,
+      "runtime_overlay_start": 50006
+    },
+    "claimant_classes": [
+      {
+        "candidate_conflicts": 0,
+        "class": "SHF_ALLOC sections"
+      },
+      {
+        "active_adjacent_owner": "terminal-return guard",
+        "candidate_conflicts": 0,
+        "class": "fixed raw data accessors"
+      },
+      {
+        "candidate_conflicts": 0,
+        "class": "zero-size and named-capacity contracts",
+        "successor_action": "five bytes of former-noinit gap become state owner"
+      },
+      {
+        "candidate_conflicts": 0,
+        "class": "range writers/wipers",
+        "facts": [
+          "BSS wipe ends at BFFA",
+          "runtime-overlay wipe begins at C356"
+        ]
+      },
+      {
+        "candidate_conflicts": 0,
+        "class": "mapping-domain aliases",
+        "domain": "baseline physical Bank-0, VMA=LMA",
+        "mapped_physical_intervals": [
+          {
+            "end_exclusive": 179853,
+            "owner": "mapped-bank2-far-service",
+            "start": 178354
+          }
+        ]
+      },
+      {
+        "candidate_conflicts": 0,
+        "class": "loader initialization",
+        "handoff": "candidate state is five emitted PROGBITS zero bytes"
+      },
+      {
+        "candidate_conflicts": 0,
+        "class": "temporal scratch owner",
+        "cutpoint": "before further input",
+        "owner": "repl.buf"
+      }
+    ],
+    "code_interval": {
+      "allocated_claimants": [],
+      "bytes": 50,
+      "candidate_bytes": 48,
+      "candidate_end": 46530,
+      "end_exclusive": 46532,
+      "fixed_raw_claimants": [],
+      "packed_initial_hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "residual_bytes": 2,
+      "start": 46482
+    },
+    "inactive_claims_proven": {
+      "LISP65_C2_REFILL_BOUNDARY_WITNESS": "absent in release and seed profiles",
+      "LISP65_C2_TERMINAL_RETURN_GUARD": "ACTIVE, enumerated, retained",
+      "LISP65_V200_SYMBOL22_FIRST_FAULT": "absent in release; selected by successor"
+    },
+    "mapped_alternatives": {
+      "far_service": {
+        "capacity_bytes": 1499,
+        "demand_bytes": 1488,
+        "free_bytes": 11
+      },
+      "product_cold": {
+        "VMA_end": 32721,
+        "VMA_limit": 32768,
+        "capacity_bytes": 371,
+        "demand_bytes": 324,
+        "free_bytes": 47
+      }
+    },
+    "ordinary_text_projection": {
+      "authority": "projection-only; final LTO must derive",
+      "facade_bytes": 98,
+      "fault_edge_delta_bytes": 3,
+      "ordinary_text_floor_bytes": 32,
+      "predecessor_end": 46012,
+      "projected_facade_VMA": 46047,
+      "projected_next_owner_reserve_bytes": 98
+    },
+    "payload": {
+      "address": 48265,
+      "candidate_interval": [
+        48265,
+        48299
+      ],
+      "capacity_bytes": 192,
+      "new_allocation_bytes": 0,
+      "owner": "repl.buf",
+      "temporal_handoff": "fault capture until stopped read; no new input"
+    },
+    "rejected_seed": {
+      "ELF": {
+        "bytes": 635980,
+        "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r1/wplto/resident-island-seed.prg.elf",
+        "sha256": "bbf80a2b2abd08d718da660604223954c52a893a592cb4358e175b78ce50fe01"
+      },
+      "logical_owners": [
+        ".lisp65_symbol22_first_fault_latch",
+        "raw-fixed-address-terminal-return-guard"
+      ],
+      "profile": {
+        "bytes": 13898,
+        "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r1/wplto/resolved-profile.txt",
+        "sha256": "77219d206b5532a04e10de4917dd07be94ee63c49b475ea16a997530511d1b9c"
+      }
+    },
+    "release": {
+      "ELF": {
+        "bytes": 635508,
+        "path": "build/c2.3/v1.9.0-release-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "37cb8eff54b5394aff3130c279979ad22441c2d929c75dafc48679e3ad4b190e"
+      },
+      "PRG": {
+        "bytes": 41564,
+        "path": "build/c2.3/v1.9.0-release-card-r1/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "fad7578736349f485fed2a49c9192e37e50bcfbd8b288c102cf8a799c4781347"
+      },
+      "profile": {
+        "bytes": 13286,
+        "path": "build/c2.3/v1.9.0-release-card-r1/wplto/resolved-profile.txt",
+        "sha256": "1b46228197f843e4eb7c59c367ea9170669f3efde3880c80830a15767943b2c8"
+      }
+    },
+    "state_interval": {
+      "allocated_claimants": [],
+      "bytes": 7,
+      "candidate_bytes": 5,
+      "candidate_end": 50002,
+      "end_exclusive": 50004,
+      "fixed_raw_claimants": [],
+      "initialization": "candidate packed PROGBITS zeros",
+      "predecessor_capacity_owners": [
+        "former-noinit-named-gap",
+        "heap-alignment-gap"
+      ],
+      "residual_bytes": 2,
+      "start": 49997
+    },
+    "terminal_return_guard": {
+      "active": true,
+      "data_references": 64,
+      "disjoint_from_candidate": true,
+      "emitted_sections": [
+        ".lisp65_rt_c2append_header",
+        ".lisp65_rt_c2append_publish_clear",
+        ".lisp65_rt_c2append_publish_plan_resolve",
+        ".lisp65_rt_c2append_publish_plan_scan"
+      ],
+      "feature": "LISP65_C2_TERMINAL_RETURN_GUARD",
+      "raw_interval": [
+        46466,
+        46482
+      ]
+    }
+  },
+  "inputs": {
+    "driver": {
+      "bytes": 36223,
+      "path": "tools/host-lisp/c2_v200_symbol22_first_fault_repricing.py",
+      "sha256": "d9ffc9debda325ded605a0d445fef2d4a3a38be21c7a8062392fee6f938f7268"
+    },
+    "full_map_contract": {
+      "bytes": 10635,
+      "path": "config/c2-full-map-ownership-contract.json",
+      "sha256": "6bf412202fc7b2b6b04780da8766056a2c785026a5425376c5402601a76c751c"
+    },
+    "gate_register": {
+      "bytes": 47378,
+      "path": "docs/reference/gate-and-tool-register.md",
+      "sha256": "1ef79bbe39f3deb31313c491f4a4290346bd8019d3c24fd354dcc9975f514e0c"
+    },
+    "state_ownership_contract": {
+      "bytes": 6445,
+      "path": "config/c2-state-ownership-contract.json",
+      "sha256": "d3aab71ef52a8b52b6302eb2b7ca932860f230b7f0d27289a0aaa1a040bb06f0"
+    }
+  },
+  "positive_control": {
+    "code_address": 46482,
+    "final_product_positive_control_still_required": true,
+    "full_34_bytes_preserved": true,
+    "payload_address": 48265,
+    "record_hex": "a5674500066162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768",
+    "second_fault_preserves_first": true,
+    "short_name_stops_at_NUL": true,
+    "state_address": 49997,
+    "status": "PASS: RELOCATED TARGET MICRO EXECUTED",
+    "steps_to_return": 219
+  },
+  "recorded_on": "2026-08-31",
+  "selection": {
+    "code": "48 bytes at derived terminal-guard raw end",
+    "name": "split ordinary Bank-0 code/state",
+    "payload": "unchanged 34-byte NUL-stopped repl.buf alias",
+    "reason": "preserves every discriminating byte, adds no BSS/name/MAP freight, and leaves two bytes in each destination interval",
+    "state": "5 packed zero bytes after empty .noinit"
+  },
+  "status": "PASS: DISJOINT SPLIT LATCH PRICED; PRODUCT CARD REQUIRED",
+  "verification": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "mutations_rejected": [
+      "assume-terminal-guard-inactive",
+      "omit-fixed-raw-claimants",
+      "omit-range-writer-claimant-class",
+      "code-overlaps-host-facade",
+      "state-crosses-heap-boundary",
+      "payload-only-33-bytes",
+      "state-only-four-bytes",
+      "copy-ignores-NUL",
+      "second-fault-overwrites",
+      "mapped-shortfall-selected",
+      "final-positive-control-removed",
+      "survival-proof-removed",
+      "product-link-spent-during-price"
+    ],
+    "product_links": 0,
+    "product_source_edits": 0
+  }
+}

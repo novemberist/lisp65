@@ -1,0 +1,77 @@
+{
+  "actual_leaf": {
+    "address": "0x226f",
+    "bytes": 39,
+    "critical_relocations": [
+      {
+        "offset": "0x2274",
+        "symbol": "rtov_edma_complete",
+        "type": "R_MOS_ADDR16"
+      },
+      {
+        "offset": "0x2284",
+        "symbol": "rtov_edma_job",
+        "type": "R_MOS_ADDR16_HI"
+      },
+      {
+        "offset": "0x2289",
+        "symbol": "rtov_edma_job",
+        "type": "R_MOS_ADDR16_LO"
+      },
+      {
+        "offset": "0x228e",
+        "symbol": "rtov_edma_complete",
+        "type": "R_MOS_ADDR16"
+      }
+    ],
+    "elf_section": ".text",
+    "elf_symbol_type": "STT_FUNC",
+    "job_address": "0xb976",
+    "marker_address": "0xbfd1",
+    "opcode_sequence": [
+      "php",
+      "sei",
+      "marker-reset",
+      "two-job-trigger",
+      "marker-cmp-bne",
+      "plp",
+      "rts"
+    ]
+  },
+  "capacity": {
+    "bank0_text_headroom_bytes": 19,
+    "e000_delta_bytes": 0,
+    "e000_headroom_bytes": 115,
+    "fixed_hot_block_headroom_bytes": 33,
+    "ordinary_bank0_bss_headroom_bytes": 174,
+    "resident_island_headroom_bytes": 7,
+    "runtime_slice_minimum_headroom_bytes": 31
+  },
+  "diagnosis": {
+    "class": "post-link verifier model error",
+    "current_gate_error": "The gate searched disassembly text for the combined literal $b976. The 4510 leaf necessarily materializes the job address as separate #$b9 and #$76 immediates, so that combined token cannot occur.",
+    "product_finding": "none",
+    "required_gate_model": "Use the structured ELF relocation truth: require exactly one R_MOS_ADDR16_HI and one R_MOS_ADDR16_LO relocation to rtov_edma_job inside the sized leaf interval, plus the two R_MOS_ADDR16 marker relocations. Do not infer a split address from rendered disassembly text.",
+    "retry_needed": false
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "product_links": 0,
+    "wplto_probe_links": 1
+  },
+  "format": "lisp65-c2-link34-dma-completion-leaf-gate-first-red-diagnosis-v1",
+  "identity": {
+    "elf_sha256": "75000fa0de4de803e2e6585cbdc69abac88ab9534828c1558fec6631cea76937",
+    "first_red_receipt_sha256": "8c608cf5a3530231fcb577154ab0868a09f1d51bf1b68b7d9b9048ef024be9f9",
+    "product_sha256": "3df3cf3d457cbbbf691e6f60834300dc64f6214f65a9a32de82556b0f98b36c4",
+    "structural_report_sha256": "9607f79951d3bd0e7d4d40a49b26c2c076be374eb9c70f7878e10be76dc3d9e2"
+  },
+  "link34_rollback": {
+    "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+    "status": "untouched"
+  },
+  "next_gate": "Owner/review authorization for a tool-only relocation gate correction and pure replay against the read-only WPLTO artifacts; no compiler, linker or hardware run.",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: product and capacity green; post-link leaf gate modeled a split immediate as one disassembly token"
+}

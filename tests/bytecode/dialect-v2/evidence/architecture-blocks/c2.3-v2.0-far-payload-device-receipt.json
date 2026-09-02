@@ -1,0 +1,189 @@
+{
+  "authority": {
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 39145,
+      "commit": "11166ae4f08c1731a3939e892435ad79d7ad5173",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "a8cb2149100bc32175a3e806288a90901c15e6c4ebdb266609f0d17f68493fe6"
+    },
+    "candidate_ELF": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-crc-carveout-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+    },
+    "capture_contract": {
+      "bytes": 3792,
+      "path": "config/c2-v20-building-heap-capture-row.json",
+      "sha256": "390d395d9bae1030a7a96823821df7ed55f834a1ccd8928b694d578f47b16e1c"
+    },
+    "delivery": {
+      "bytes": 8910,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-far-payload-delivery-closure-receipt.json",
+      "sha256": "db111b95ca62bb22185a4b3831591a9fe968d62f74ec83e4223b15af2e05f254"
+    },
+    "driver": {
+      "bytes": 14517,
+      "path": "tools/host-lisp/c2_v20_far_payload_device_result.py",
+      "sha256": "c438858c92ad29a63ea707d3721974ebdde5e7a4d3d9340a7d7590de70d46f56"
+    },
+    "prior_device_driver": {
+      "bytes": 23885,
+      "path": "tools/host-lisp/c2_v20_building_heap_device_result.py",
+      "sha256": "1d7a1086345668e1c74b516d69883ff9a4b29ff6f70bfba3af1846c70dad9dbf"
+    },
+    "prior_device_result": {
+      "bytes": 10107,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-building-heap-device-receipt.json",
+      "sha256": "04b74faabfe64d6032d5bb7a664d7894a55699aa0381b695aefaaa3ba7f3d5b7"
+    }
+  },
+  "claim_limit": "One preserved D1 stopped-state row only: recurrent uninitialised descriptor and mapped-view BRK under the delivered-media identity. No target-RAM payload, service-entry, product-fault, fix, new contact, D2-D5 or release-readiness claim.",
+  "comparison_to_pre_delivery_red": {
+    "BRK_frame_byteidentical": true,
+    "only_tuple_delta": "PC advanced within the same E096/E097 fail loop",
+    "physical_ranges_byteidentical": 10,
+    "physical_ranges_compared": 10
+  },
+  "contact": {
+    "cpu_view": {
+      "fail_loop": {
+        "PC_within": [
+          "0xE096",
+          "0xE097"
+        ],
+        "bytes": 64,
+        "logical": "0xE080",
+        "raw_hex": "80e648ad0dddee85ff684078a9008d1ad0a9028d20d04c96e09d0008608508ae8ec0ac8fc0a9025aa4048406a40584077a8404a40884054ccab5ac80c0ad81c0",
+        "sha256": "8355160349bfb1542047517ebda3ab99857adb3f341e5983234cea8678e232f2"
+      },
+      "nameoff_get": {
+        "bytes": 99,
+        "interpretation": "active MAPL=0x2480 makes the linked nameoff_get body invisible",
+        "logical": "0x3143",
+        "raw_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "sha256": "4b298058e1d5fd3f2fa20ead21773912a5dc38da3c0da0bbc7de1adfb6011f1c"
+      }
+    },
+    "one_stopped_session": {
+      "CPU_left_stopped": true,
+      "D2_D5_executed": false,
+      "resumes": 0,
+      "stops": 1
+    },
+    "owner_observation": {
+      "absent": [
+        "LISP65: LOADING LIBRARIES",
+        "WORKBENCH 1.5.0",
+        "lisp65>"
+      ],
+      "frame": "red",
+      "screenshot_sha256": "7550769c93947242ab482ebc046ab1fa8fad731c9e87ce5d9cc5c68027d79d3d",
+      "visible": [
+        "LISP65: STAGING MEDIA",
+        "LISP65: BUILDING HEAP"
+      ]
+    },
+    "physical_state": {
+      "allocator-zp": {
+        "bytes": 16,
+        "physical_address": "0x0000003D",
+        "raw_hex": "00000000600000000000000000000000"
+      },
+      "c2-runtime-state": {
+        "bytes": 50,
+        "physical_address": "0x0000C080",
+        "raw_hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "convergence-state": {
+        "bytes": 66,
+        "physical_address": "0x0000C000",
+        "raw_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "gc-runs": {
+        "bytes": 2,
+        "physical_address": "0x0000B9EE",
+        "raw_hex": "0000"
+      },
+      "hardware-stack": {
+        "bytes": 256,
+        "physical_address": "0x00000100",
+        "raw_hex": "0000000000000000000000000000000000e300b3a0820083001180b100e0008300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000042e400b40000328731b803bb2e2f0060605cc5390105ddc92240a818005ca46218004920de276420b103b300e300833dc1ea2d31ea362f20"
+      },
+      "ordinary-dma-list": {
+        "bytes": 12,
+        "physical_address": "0x0000B9D3",
+        "raw_hex": "000200a3cf0022fa05000000"
+      },
+      "ownership-and-convergence-zp": {
+        "bytes": 9,
+        "physical_address": "0x00000087",
+        "raw_hex": "020000000000000000"
+      },
+      "pending-error-pointer": {
+        "bytes": 2,
+        "physical_address": "0x0000BFEF",
+        "raw_hex": "0000"
+      },
+      "runtime-overlay-state": {
+        "bytes": 4,
+        "physical_address": "0x0000BFF7",
+        "raw_hex": "00810000"
+      },
+      "vm-and-boot-zp": {
+        "bytes": 21,
+        "physical_address": "0x0000005F",
+        "raw_hex": "03000000e000000000000000000000000000000901"
+      }
+    },
+    "readback_identity": {
+      "delivered_CODE_BIN_sha256": "94479944eb6f8ece405be2902a424961b72e1936534ecd6acb0e8a2287a9c4ec",
+      "product_D81_sha256": "d2ab92b14140caab5f3ca87b51fa8e4ab65183b387d6fe76ee4ae1588fcd1130"
+    },
+    "register_read_sha256": "b3486d04a2fdc9adca3db660a60aa5684e41c1aa744c62986fe3303e00546352",
+    "tuple_first": {
+      "A": "0x02",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x2480",
+      "PC": "0xE097",
+      "SP": "0x01C9",
+      "X": "0x00",
+      "Y": "0xB4",
+      "Z": "0x00"
+    }
+  },
+  "decision": {
+    "BRK": {
+      "linked_context": "nameoff_get",
+      "stacked_B": 1,
+      "stacked_continuation": "0x3187"
+    },
+    "descriptor": {
+      "all_zero": true,
+      "bytes": 66,
+      "physical_address": "0x0000C000"
+    },
+    "mapping": {
+      "MAPH": "0x8000",
+      "MAPL": "0x2480",
+      "ordinary_required_MAPL": "0x0000"
+    },
+    "result": "the convergence descriptor was not initialized before the recurrent mapped-view BRK",
+    "selected_row": "far-service-descriptor-never-initialized",
+    "status_0x87": {
+      "clear": "0x5A",
+      "committed": "0xA5",
+      "legal": false,
+      "observed": "0x02"
+    }
+  },
+  "exonerations": [
+    "the packed D81 contains the complete linked far-service extent",
+    "the linked service geometry and eight audited exits remain unchanged"
+  ],
+  "format": "lisp65-c2.3-v20-far-payload-device-result-v1",
+  "open_boundary": "The authorised row did not read physical target RAM at the far-service LMA.  It therefore does not prove that the D81 payload was installed there, nor that service entry executed.",
+  "recorded_on": "2026-08-12",
+  "status": "D1-HEAP-RED-REPRODUCED; FAR-DESCRIPTOR-UNINITIALIZED"
+}

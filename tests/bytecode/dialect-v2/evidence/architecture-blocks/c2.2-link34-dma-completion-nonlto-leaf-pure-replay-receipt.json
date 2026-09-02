@@ -1,0 +1,267 @@
+{
+  "authority": {
+    "c_source": {
+      "bytes": 60539,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "ece063fc8f47c14196755f11ba22c1d14d8687bb4754df21ae51d25aaeabc8a7"
+    },
+    "contract": {
+      "bytes": 4087,
+      "path": "config/c2-runtime-overlay-dma-completion-contract.json",
+      "sha256": "7fa45c183fa470114d0d91d8dce34deb7bb7e75d7f94aa6f7d5ebc148245fc03"
+    },
+    "contract_document": {
+      "bytes": 5251,
+      "path": "docs/planning/c2.2-runtime-overlay-dma-completion-contract.md",
+      "sha256": "07db0888da14a63b6176a60dd0c4aba3a899138ff59c87165d8ff070703bd3a8"
+    },
+    "elf_truth_layer": {
+      "bytes": 18102,
+      "path": "tools/host-lisp/elf_truth.py",
+      "sha256": "26632d6c5ea3e63cdb349515c6f546e1171930e01b0cd4e9aa1d4a15b06599f3"
+    },
+    "first_red_diagnosis": {
+      "bytes": 2864,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-nonlto-leaf-gate-first-red-diagnosis.json",
+      "sha256": "d5b01c8c319fd394d103ac3b244e870ee2db2347ab3f338f5090e318932e6e2f"
+    },
+    "first_red_receipt": {
+      "bytes": 3268,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-nonlto-leaf-wplto-presmoke-receipt.json",
+      "sha256": "8c608cf5a3530231fcb577154ab0868a09f1d51bf1b68b7d9b9048ef024be9f9"
+    },
+    "immutable_inputs": [
+      {
+        "bytes": 3268,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-nonlto-leaf-wplto-presmoke-receipt.json",
+        "sha256": "8c608cf5a3530231fcb577154ab0868a09f1d51bf1b68b7d9b9048ef024be9f9"
+      },
+      {
+        "bytes": 2864,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-nonlto-leaf-gate-first-red-diagnosis.json",
+        "sha256": "d5b01c8c319fd394d103ac3b244e870ee2db2347ab3f338f5090e318932e6e2f"
+      },
+      {
+        "bytes": 41542,
+        "path": "build/c2.2/substitution/link34-dma-completion-leaf-presmoke/lisp65-c2-substitution-linked.prg",
+        "sha256": "3df3cf3d457cbbbf691e6f60834300dc64f6214f65a9a32de82556b0f98b36c4"
+      },
+      {
+        "bytes": 565788,
+        "path": "build/c2.2/substitution/link34-dma-completion-leaf-presmoke/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "75000fa0de4de803e2e6585cbdc69abac88ab9534828c1558fec6631cea76937"
+      },
+      {
+        "bytes": 1966,
+        "path": "build/c2.2/substitution/link34-dma-completion-leaf-presmoke/product-substitution-link.json",
+        "sha256": "9607f79951d3bd0e7d4d40a49b26c2c076be374eb9c70f7878e10be76dc3d9e2"
+      }
+    ],
+    "mutation_matrix": {
+      "barrier-call-removed": "rejected",
+      "chain-removed": "rejected",
+      "fill-removed": "rejected",
+      "interrupt-mask-removed": "rejected",
+      "interrupt-restore-removed": "rejected",
+      "marker-address-wrong": "rejected",
+      "marker-reset-removed": "rejected",
+      "poll-branch-removed": "rejected",
+      "poll-value-wrong": "rejected"
+    },
+    "negative_hardware_first_red": {
+      "bytes": 3565,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link34-catalog-verifier-edma-completion-hardware-first-red-diagnosis.json",
+      "sha256": "ec6203f0e11399a32eb765d0268f7a27c31fe0533dce3a8f8fcb722657d82bb0"
+    },
+    "nonlto_leaf_source": {
+      "bytes": 933,
+      "path": "src/rtov_dma_completion.s",
+      "sha256": "7c23f280aaacd833f35a3269a8eed58314d46add4ec408c49f538ca29a0b1bb2"
+    },
+    "source_gate": {
+      "compiler_barrier": "external non-LTO call boundary",
+      "consumer_seams": [
+        "island-source-crc-chunk",
+        "island-carrier-record",
+        "island-carrier-payload",
+        "catalog-directory-crc-chunk",
+        "catalog-header",
+        "record-entry",
+        "verifier-payload",
+        "application-payload",
+        "function-pointer-binding"
+      ],
+      "hardware_barrier": "ordered marker poll inside leaf",
+      "leaf_section": ".text.rtov_dma_submit_wait",
+      "status": "passed-one-nonlto-leaf-nine-consumer-seams"
+    },
+    "superseded_c_wplto_diagnosis": {
+      "bytes": 4147,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-wplto-capacity-first-red-diagnosis.json",
+      "sha256": "440ad3119904635bc5a9878c70b040d511b634e7293358c7de69ad9b7ab33c09"
+    },
+    "superseded_c_wplto_first_red": {
+      "bytes": 2295,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-wplto-presmoke-receipt.json",
+      "sha256": "2bda14161179ac63a405f4b3b9564f3fd9f4f64df3d30067e5e61bd4936a497a"
+    }
+  },
+  "capacity": {
+    "bank0_text_headroom_bytes": 19,
+    "e000": {
+      "actual_headroom_bytes": 115,
+      "debit_bytes": 422,
+      "debit_cap_bytes": 450,
+      "equations": [
+        "531 - 416 = 115",
+        "416 + 6 = 422"
+      ],
+      "facade_debit_bytes_outside_window": 6,
+      "final_floor_bytes": 115,
+      "headroom_above_floor_bytes": 0,
+      "in_window_debit_bytes": 416,
+      "pre_package_headroom_bytes": 531,
+      "third_opening": "forbidden"
+    },
+    "fixed_hot_block_headroom_bytes": 33,
+    "ordinary_bank0_bss_headroom_bytes": 174,
+    "resident_island_headroom_bytes": 7,
+    "runtime_overlay_bank": {
+      "boot_bytes": 15605,
+      "boot_headroom_bytes": 49931,
+      "session_bytes": 60062,
+      "session_headroom_bytes": 5474
+    },
+    "runtime_slices": {
+      "cap_bytes": 1792,
+      "count": 53,
+      "largest_bytes": 1761,
+      "minimum_headroom_bytes": 31
+    }
+  },
+  "claim_limit": "Artifact-only correction and replay of one post-link verifier. No compiler, linker, hardware, product acceptance or promotion claim.",
+  "execution_accounting": {
+    "artifact_only_replays": 1,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0
+  },
+  "format": "lisp65-c2-link34-dma-completion-leaf-pure-replay-v1",
+  "fresh_artifact_only_gates": {
+    "capacity_gate": "passed",
+    "dma_completion_leaf": "passed-named-sized-nonlto-leaf-exact-critical-region",
+    "fixed_host_facade_gate": "passed",
+    "handoff_z_abi_gate": "passed",
+    "hot_refill": "passed",
+    "identity_gate": "passed",
+    "kernal_freedom_gate": "passed",
+    "one_truth_gate": "passed",
+    "overlay_closure": "passed-final-elf-overlay-closure",
+    "pre_ownership_gate": "passed",
+    "preinstallation_island": "passed-static-preinstallation-Island-gate"
+  },
+  "gate_correction": {
+    "elf_truth_selftest": {
+      "contract-interval": "passed",
+      "notype-st-shndx": "passed",
+      "overlay-awareness": "passed",
+      "registered-absolute": "passed",
+      "section-symbol-addend": "passed",
+      "split-address-hi-lo": "passed",
+      "split-address-missing-pair": "rejected",
+      "structured-json": "passed",
+      "unique-sized-interval": "passed"
+    },
+    "leaf": {
+      "caller_relocation": {
+        "offset": 45001,
+        "type": "R_MOS_ADDR16"
+      },
+      "critical_region_opcodes": [
+        "php",
+        "sei",
+        "marker-reset",
+        "two-job-trigger",
+        "marker-cmp-bne",
+        "plp",
+        "rts"
+      ],
+      "job": {
+        "address": 47478,
+        "bytes": 40,
+        "type": "D"
+      },
+      "job_split_binding": {
+        "addend": 0,
+        "high": {
+          "offset": 8836,
+          "type": "R_MOS_ADDR16_HI",
+          "value": 185
+        },
+        "low": {
+          "offset": 8841,
+          "type": "R_MOS_ADDR16_LO",
+          "value": 118
+        },
+        "owner": "rtov_dma_submit_wait",
+        "owner_bytes": 39,
+        "owner_section": ".text",
+        "owner_start": 8815,
+        "resolved_value": 47478,
+        "target": "rtov_edma_job",
+        "target_section": ".data",
+        "target_value": 47478
+      },
+      "leaf": {
+        "address": 8815,
+        "bytes": 39,
+        "type": "T"
+      },
+      "leaf_section": ".text",
+      "marker": {
+        "address": 49105,
+        "bytes": 1,
+        "type": "B"
+      },
+      "marker_relocations": [
+        {
+          "offset": 8820,
+          "type": "R_MOS_ADDR16"
+        },
+        {
+          "offset": 8846,
+          "type": "R_MOS_ADDR16"
+        }
+      ],
+      "status": "passed-named-sized-nonlto-leaf-exact-critical-region"
+    },
+    "status": "passed-structured-hi-lo-relocation-truth"
+  },
+  "hard_capacity_contract": {
+    "e000_delta_bytes": 0,
+    "e000_floor_bytes": 115
+  },
+  "link34_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+    "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+    "status": "untouched"
+  },
+  "next_gate": "combined completion plus first-status-wins successor link",
+  "product_identity": {
+    "elf": {
+      "bytes": 565788,
+      "path": "build/c2.2/substitution/link34-dma-completion-leaf-presmoke/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "75000fa0de4de803e2e6585cbdc69abac88ab9534828c1558fec6631cea76937"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/link34-dma-completion-leaf-presmoke/lisp65-c2-substitution-linked.prg",
+      "sha256": "3df3cf3d457cbbbf691e6f60834300dc64f6214f65a9a32de82556b0f98b36c4"
+    }
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "section_count": 94,
+  "status": "passed-artifact-only-structured-relocation-leaf-replay"
+}

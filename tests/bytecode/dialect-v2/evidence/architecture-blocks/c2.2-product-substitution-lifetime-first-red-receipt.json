@@ -1,0 +1,148 @@
+{
+  "format": "lisp65-c2-product-substitution-lifetime-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "attempt": {
+    "authorization": "Option A: addendum, receipt, then exactly one complete substitution-link pipeline; stop on first red",
+    "pipeline_stage_reached": "resident-island seed link",
+    "status": "failed-not-promoted",
+    "first_red_policy": "honored",
+    "automatic_further_attempt_allowed": false,
+    "product_bytes_emitted": 0,
+    "family_images_emitted": 0,
+    "hardware_smoke": "not-run"
+  },
+  "contract": {
+    "path": "config/c2-runtime-slice-lifetime-substitution-contract.json",
+    "sha256": "dfcafb5fb7b6d6776b56246b56a14c520d99f93585dc639db172b7af1548e79a",
+    "addendum": {
+      "path": "docs/planning/c2.2-runtime-slice-lifetime-substitution-addendum.md",
+      "sha256": "c5d118e8785de4b50ca4f9dc947314dfbcc0729d7b800d3cffb4cf10c74b258b"
+    },
+    "gate": {
+      "path": "tools/host-lisp/c2_runtime_slice_lifetime_gate.py",
+      "sha256": "d89029ad326a89b5d028fb2001c0788a5fc622b0b8640d0311f265b50d82cff3",
+      "families": 2,
+      "negative_cases": 8,
+      "mutations_rejected": 9,
+      "status": "passed"
+    }
+  },
+  "family_model": {
+    "boot": {
+      "physical_base": "0x08200000",
+      "dense_slots": 8,
+      "raw_payload_bytes_from_real_link": 10711,
+      "projected_image_bytes": 12129,
+      "headroom_below_u16_ceiling_bytes": 53407,
+      "contents": "two verifiers, phases 0/1/2a/2b/3, resident-island installer"
+    },
+    "session": {
+      "physical_base": "0x08000000",
+      "dense_slots": 44,
+      "raw_payload_bytes_from_real_link": 50678,
+      "projected_image_bytes": 58275,
+      "headroom_below_u16_ceiling_bytes": 7261,
+      "contents": "two verifiers, phases 4 through 13b, emitter, append/publication and runtime services"
+    },
+    "store_ceiling_bytes_per_family": 65536,
+    "slot_namespace_reused": true,
+    "switch_cutpoint": "successful phase 3 before phase 4",
+    "wrong_family_rejected_before_catalog_read": true,
+    "storage_gate_status": "passed-by-exact-map-arithmetic; pack not reached"
+  },
+  "preceding_reslice_candidate": {
+    "map": {
+      "path": "build/c2-product-link-split8/resident-island-seed.prg.map",
+      "bytes": 104584,
+      "sha256": "4f3afae23f562efef0dbeb8d278a6cd9fc678ba1c4c49e658abcdd0d235143b1"
+    },
+    "resident": {
+      "text_bytes": 41438,
+      "rodata_bytes": 639,
+      "data_bytes": 24,
+      "bss_bytes": 2726,
+      "bss_end": 53054,
+      "minimum_relief_to_fixed_overlay_bytes": 3049
+    }
+  },
+  "lifetime_candidate": {
+    "map": {
+      "path": "build/c2-product-link-lifetime/resident-island-seed.prg.map",
+      "bytes": 106612,
+      "sha256": "3bebd95dc5b58bb63bd44c73f9169efa242aa00653a3211f6cdd2fe078db2493"
+    },
+    "resolved_profile": {
+      "path": "build/c2-product-link-lifetime/resolved-profile.txt",
+      "sha256": "7779f91ad3bb4ee6d8eebd8d67cee8ad7d55d75f94be708e10bd1ddf480a74b9"
+    },
+    "linker": {
+      "path": "build/c2-product-link-lifetime/c2-substitution.ld",
+      "sha256": "84b8a4e464090a575f2543d160ca0aac725bc70da3d06df9bdf2f709614c8bb3"
+    },
+    "fixed_overlay_vma": 50006,
+    "resident": {
+      "text_bytes": 42010,
+      "rodata_bytes": 655,
+      "data_bytes": 24,
+      "bss_bytes": 2729,
+      "bss_end": 53645,
+      "minimum_relief_to_fixed_overlay_bytes": 3639,
+      "linker_ram_overflow_bytes": 397
+    },
+    "delta_from_preceding_reslice": {
+      "text_bytes": 572,
+      "rodata_bytes": 16,
+      "data_bytes": 0,
+      "bss_bytes": 3,
+      "resident_address_footprint_bytes": 591,
+      "runtime_overlay_vma_bytes": 2
+    }
+  },
+  "implementation_inputs": {
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "3399a55e6fcaca2334773d4f971c7ccd6e42da976f9b2039c61778a2bf54afa0"
+    },
+    "runtime_transport": {
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "7a7e0f7f71e64fd2094857dbd918e81708e6d37f3b61711ccd147bc20242dd6c"
+    },
+    "runtime_transport_header": {
+      "path": "src/vm_runtime_overlay.h",
+      "sha256": "8cb7847fc40f4f6236c5f0c84e99296f8ea71ca8006b78d38edbf4ba91caecdd"
+    },
+    "product_runtime": {
+      "path": "src/c2_product_runtime.c",
+      "sha256": "aa48de23f4be1f2853d22a79e6638337cb601d2d4e65080253f2fa3384ad27f6"
+    },
+    "slot_contract": {
+      "path": "src/c2_product_runtime.h",
+      "sha256": "c6c098ac9a3163aa0f4a8374608ebbdd572a8a4f1236970975db5b5423fecfe1"
+    },
+    "boot_sequence": {
+      "path": "src/main.c",
+      "sha256": "7979eebfffe11901db164c7a6550532349a3f41c492002952a7512ba41894fd1"
+    }
+  },
+  "first_red": {
+    "gate": "Bank-0 resident/overlay separation",
+    "linker_diagnostics": [
+      "workbench overlay overlaps resident BSS",
+      "workbench overlay moved below the heap floor",
+      "resident/noinit state overlaps the fixed runtime-overlay VMA",
+      "section .bss will not fit in region ram: overflowed by 397 bytes"
+    ],
+    "finding": "The two-family model removes the single-store u16 overflow, but the family selector and binding do not relocate the remaining resident C2 facade. They add 591 resident bytes, raising the required Bank-0 relief from 3049 to 3639 bytes.",
+    "invalidated_assumption": "Measured boot-exclusive runtime-store bytes alone close the combined Bank-0 plus runtime-store deficit.",
+    "architecture_question": "A further result would require an explicitly reviewed relocation of at least 3639 resident bytes into the now-spacious session family, or a different residency model. That is a new layout attempt and is not authorized by this receipt.",
+    "next_action": "return to owner/review; do not tune, relink, widen a ceiling or emit product artifacts"
+  },
+  "preserved_constraints": {
+    "runtime_slice_limit_bytes": 1792,
+    "l65r_u16_ceiling_unchanged": true,
+    "interactive_compilation_present_in_attempt": true,
+    "legacy_l65m_path_present": false,
+    "single_c2_emitter_decoder_rule_preserved": true,
+    "c3_growth_path_recorded": "general multibank or Attic-addressed native store"
+  }
+}

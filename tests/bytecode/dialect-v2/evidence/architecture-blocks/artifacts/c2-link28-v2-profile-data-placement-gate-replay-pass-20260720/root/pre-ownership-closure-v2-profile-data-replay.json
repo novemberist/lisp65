@@ -1,0 +1,106 @@
+{
+  "boot_roots": [
+    {
+      "entry": "vm_runtime_overlay_catalog_verifier",
+      "section": ".lisp65_rt_rtov_catalog",
+      "vma": 50415
+    },
+    {
+      "entry": "vm_runtime_overlay_record_verifier",
+      "section": ".lisp65_rt_rtov_record",
+      "vma": 50054
+    },
+    {
+      "entry": "c2_stream_phase_00",
+      "section": ".lisp65_rt_c2d_00",
+      "vma": 50006
+    },
+    {
+      "entry": "c2_stream_phase_00b",
+      "section": ".lisp65_rt_c2d_00b",
+      "vma": 50006
+    },
+    {
+      "entry": "c2_stream_phase_01",
+      "section": ".lisp65_rt_c2d_01",
+      "vma": 50006
+    },
+    {
+      "entry": "c2_stream_phase_02a",
+      "section": ".lisp65_rt_c2d_02a",
+      "vma": 50006
+    },
+    {
+      "entry": "c2_stream_phase_02b",
+      "section": ".lisp65_rt_c2d_02b",
+      "vma": 50006
+    },
+    {
+      "entry": "c2_stream_phase_03",
+      "section": ".lisp65_rt_c2d_03",
+      "vma": 50006
+    },
+    {
+      "entry": "vm_resident_island_install",
+      "section": ".lisp65_rt_island_00",
+      "vma": 50006
+    }
+  ],
+  "boot_section_count": 9,
+  "claim_limit": "Section-qualified direct pre-handoff and boot-phase closures plus source-order gate; hardware behavior and unresolved indirect call targets are not claimed.",
+  "format": "lisp65-c2-pre-ownership-closure-v3",
+  "link_stage": "v2-profile-data-replay",
+  "main_ownership_call_address": 15870,
+  "negative_matrix": {
+    "boot-before-ownership": "rejected",
+    "boot-edge-to-c2e-cons-vector": "rejected",
+    "boot-edge-to-session-code": "rejected",
+    "boot-operand-to-session-state": "rejected",
+    "overlay-install-before-ownership": "rejected",
+    "pre-handoff-edge-to-c2-root-walker": "rejected",
+    "pre-handoff-edge-to-kernal-window": "rejected",
+    "pre-handoff-edge-to-vm-logical-pc-helper": "rejected",
+    "pre-handoff-operand-to-fixed-state": "rejected",
+    "prepare-before-ownership": "rejected",
+    "repl-before-ownership": "rejected",
+    "same-vma-section-identity": "passed"
+  },
+  "node_identity": "section-and-vma",
+  "ordinary_closure_function_count": 13,
+  "post_handoff_only_helpers": {
+    "c2_product_gc_mark_roots": "0xf366",
+    "vm_logical_relative_target": "0xfb34"
+  },
+  "pre_handoff_closure_function_count": 0,
+  "pre_handoff_fixed_domain": {
+    "consumer_count": 0,
+    "fixed_bank0": "0xc080-0xc244",
+    "kernal_window": "0xe000-0xffff"
+  },
+  "pre_handoff_function_intervals": [
+    {
+      "address": 15839,
+      "bytes": 31,
+      "end_exclusive": 15870,
+      "name": "main",
+      "ownership_class": "main-prefix-before-ownership-call",
+      "section": ".text"
+    }
+  ],
+  "pre_handoff_source_sections": [
+    ".text"
+  ],
+  "session_code_edges_from_boot_closure": 0,
+  "session_cons_vector_edges_from_boot_closure": 0,
+  "session_emitter_code": {
+    "address": 57502,
+    "bytes": 0
+  },
+  "session_emitter_state": {
+    "address": 64440,
+    "bytes": 346
+  },
+  "session_state_operands_from_boot_closure": 0,
+  "source_order": "c2_kernal_take_ownership-before-overlay-install-c2_product_prepare_boot-c2_product_boot-and-repl",
+  "status": "passed"
+}

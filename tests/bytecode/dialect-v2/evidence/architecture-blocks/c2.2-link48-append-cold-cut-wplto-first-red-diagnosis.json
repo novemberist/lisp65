@@ -1,0 +1,120 @@
+{
+  "accounting": {
+    "authorized_WPLTO_attempts": 1,
+    "completed_WPLTO_links": 0,
+    "compiler_runs": 1,
+    "failed_seed_link_attempts": 1,
+    "hardware_runs": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "cold_cut_design": {
+      "bytes": 5899,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-temperature-residency-design-receipt.json",
+      "sha256": "431bdfec4f0cdad9103a0438894324edb628b625053be634ef72b7b0f71adf20"
+    },
+    "failed_link_diagnostic": {
+      "bytes": 3829,
+      "path": "build/c2.2/substitution/link48-append-cold-cut-wplto/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "1904a3075175ea7c977920c8f46777466fd5ba7520d7ce6d5c7e0d8a91c53e1f"
+    },
+    "failed_lto_object": {
+      "bytes": 609396,
+      "path": "build/c2.2/substitution/link48-append-cold-cut-wplto/resident-island-seed.prg.lto.o",
+      "sha256": "09ceae2f0ff8114e96964df9e6b43db75cf64237017146dd0f9f396343bd7f2e"
+    },
+    "failed_map": {
+      "bytes": 189431,
+      "path": "build/c2.2/substitution/link48-append-cold-cut-wplto/resident-island-seed.prg.map",
+      "sha256": "1e4616fa953fbbddb5886d2e4b896dba44e0b5b71c810347eb31c605146e7b12"
+    },
+    "link48_baseline_map": {
+      "bytes": 199010,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/resident-island-seed.prg.map",
+      "sha256": "f990f82d02038a292f126e71c99ff53b5d48ca9ed84d66333443f1c92f006170"
+    }
+  },
+  "format": "lisp65-c2-lite-v6-link48-append-cold-cut-wplto-first-red-v1",
+  "measured_walls": {
+    "bank0_ordinary_bss": {
+      "baseline_address": 47607,
+      "baseline_bytes": 1587,
+      "baseline_headroom_bytes": 86,
+      "failed_address": 47797,
+      "failed_bytes": 1587,
+      "failed_headroom_bytes": -104,
+      "finding": "the BSS payload did not grow; its 190-byte displacement is a positional consequence of the preceding resident image growth"
+    },
+    "bank0_text": {
+      "baseline_bytes": 37999,
+      "baseline_headroom_bytes": 17,
+      "failed_bytes": 38192,
+      "failed_headroom_bytes": -176,
+      "growth_bytes": 193,
+      "largest_named_deltas": {
+        "c2_facade_target_overlay_call_family": 99,
+        "c2_product_install": 60,
+        "vm_check_status": 40
+      }
+    },
+    "e000_window": {
+      "baseline_live_bytes": 8056,
+      "baseline_margin_bytes": 136,
+      "failed_live_bytes": 8132,
+      "failed_margin_bytes": 60,
+      "floor_bytes": 115,
+      "floor_shortfall_bytes": 55,
+      "growth_bytes": 76,
+      "growth_attribution": {
+        "c2_abort_driver": 24,
+        "c2_append_begin": 46,
+        "c2_overlay_call_range": 6
+      },
+      "local_gap0_overlap_bytes": 14
+    },
+    "fixed_hot_block": {
+      "failed_end_exclusive": 49973,
+      "headroom_to_overlay_bytes": 33,
+      "status": "green"
+    },
+    "resident_island": {
+      "annex_bytes": 260,
+      "main_bytes": 1779,
+      "plan_walker_bytes": 75,
+      "remaining_bytes": 9,
+      "status": "green"
+    },
+    "session_aggregate": {
+      "baseline_bytes": 65438,
+      "baseline_reserve_bytes": 98,
+      "failed_bytes": 65694,
+      "overflow_bytes": 158,
+      "pack_delta_bytes": 256,
+      "sole_quantum_crossing": {
+        "baseline_pack_bytes": 1024,
+        "baseline_payload_bytes": 971,
+        "failed_pack_bytes": 1280,
+        "failed_payload_bytes": 1088,
+        "section": ".lisp65_rt_c2append_publish_exports"
+      }
+    }
+  },
+  "recorded_on": "2026-07-22",
+  "result": {
+    "cold_cut_successes": [
+      "the duplicate 150-byte E000 append seam is absent",
+      "the generic E000 overlay seam returned from 56 to 29 bytes",
+      "the 75-byte plan walker fits the Island with 9 bytes remaining",
+      "all individual append slices remain below the 1792-byte ceiling"
+    ],
+    "fundamental_remainder": {
+      "bank0_text_overflow_bytes": 176,
+      "e000_floor_shortfall_bytes": 55,
+      "session_aggregate_overflow_bytes": 158
+    },
+    "interpretation": "The fourth placement attempt does not reduce to one misplaced object. The minimum raw error transport and caller handoff cost resident Bank 0, the serial append/abort drivers remain structurally resident despite being cold in frequency, and terminal publication crosses one paid 256-byte pack quantum. These are three independent currencies, not LTO noise or a single housing choice.",
+    "status": "FIRST RED: clean temperature split still exceeds three hard currencies"
+  },
+  "status": "FIRST RED: one authorized WPLTO consumed; stop for Class-C fundamental review",
+  "stop_rule": "No retry, shaving, fifth placement attempt, floor change, product link or hardware run is authorized."
+}

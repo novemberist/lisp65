@@ -1,0 +1,571 @@
+{
+  "acceptance": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "candidate_lma_order_entries": 89,
+      "candidate_lma_order_sha256": "ca9e277c780ff51d60a1426ccab86e95f8b76e7d1639a0a3d8a805ae60e3657e",
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 140,
+          "candidate_max_end_exclusive": 45860,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 625,
+          "candidate_max_end_exclusive": 31772,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "VMA-invariants-exact-candidate-freight-validated",
+      "derived_freight_sha256": "ab64fe07c1dfd4efaa41fc5b7a305ebd5d69e901284474b32859d2322d7c6c0b",
+      "derived_vma_order_entries": 103,
+      "derived_vma_order_sha256": "86173f419915bef751c5663be20b6928a23934b5e3b7f7e8d497b14764e1b9df",
+      "fixed_boundary_symbols": 27,
+      "invariant_projection_sha256": "f75326245a7e15448174056eefd49cbec20a88a84b3394289521a75067f15603"
+    },
+    "delivered_bytes": {
+      "candidate_elf": {
+        "bytes": 628736,
+        "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "339c52c08236cffc827834d6806150a0526b2ef840cba2ddae9217837c6f6af5"
+      },
+      "completed_resident_prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "40608c1eef0bc8dcbcdb907ab6c0cb522f27e61b12f791a7aa6be5ad84182385"
+      },
+      "identity_bytes": 290,
+      "identity_mismatches": 0,
+      "load_address": "0x2001",
+      "new_staging_roles": 0,
+      "publish_last": {
+        "addresses": [
+          46324,
+          46330
+        ],
+        "bytes": 2,
+        "independent_crc16": "0xe5d3",
+        "independent_window_bytes": 8192,
+        "independent_window_sha256": "39b6b2f68881f78b4cfd2e20c8c8da25f1c66763bf2dffae88e1d38c7eefaffe",
+        "observed_values": [
+          229,
+          211
+        ],
+        "producer_report": {
+          "bytes": 1562,
+          "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/kernal-window-publish-last.json",
+          "sha256": "fafbe016e50de7496dce53d98d6c9a36d5be7334dee34fbeb74d3588ce1835eb"
+        },
+        "values_correct": true
+      },
+      "sections": [
+        {
+          "bytes": 223,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb4a3",
+          "lma_equals_vma": true,
+          "publish_last_values": [
+            {
+              "address": 46324,
+              "correct": true,
+              "expected": 229,
+              "observed": 229
+            },
+            {
+              "address": 46330,
+              "correct": true,
+              "expected": 211,
+              "observed": 211
+            }
+          ],
+          "resident_prg_offset": 38052,
+          "section": ".lisp65_c2_kernal_handoff",
+          "vma": "0xb4a3"
+        },
+        {
+          "bytes": 48,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5c4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38341,
+          "section": ".lisp65_c2_host_facade",
+          "vma": "0xb5c4"
+        },
+        {
+          "bytes": 11,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5f4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38389,
+          "section": ".lisp65_c2_kernal_io_reveal",
+          "vma": "0xb5f4"
+        },
+        {
+          "bytes": 10,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5ff",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38400,
+          "section": ".lisp65_c2_kernal_map_switch",
+          "vma": "0xb5ff"
+        }
+      ],
+      "status": "passed-identity-plus-independent-CRC-value"
+    },
+    "delivery_mutations_rejected": [
+      "drop-section",
+      "rewrite-LMA",
+      "grow-carveout",
+      "widen-carveout-bytes",
+      "replace-independent-CRC",
+      "accept-wrong-high",
+      "accept-wrong-low",
+      "hide-identity-mismatch",
+      "replace-oracle-window",
+      "add-staging-role"
+    ],
+    "far_payload": {
+      "LMA_end_exclusive": "0x0002bc1c",
+      "LMA_start": "0x0002b8b2",
+      "VMA": "0x78b2",
+      "bytes": 874,
+      "section": ".lisp65_c2_mapped_far_service",
+      "sha256": "2e948761a4c7f012687a6ad4519ae10d52ee87e14a10f8025837078f0c69c096",
+      "status": "passed-linked-far-payload-extent-identity"
+    },
+    "linked_MAP_mutations_rejected": [
+      "old-A",
+      "old-X",
+      "old-machine-code",
+      "wrong-offset",
+      "wrong-block",
+      "wrong-entry",
+      "mapped-block1",
+      "skip-descriptor-store"
+    ],
+    "linked_MAP_tuple": {
+      "VMA": "0xB3C2",
+      "block1_unchanged": true,
+      "bytes": "48da5aa940a282a000a3805ceaa3007afa6860",
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "first_descriptor_store": {
+        "bytes": "a9048d00c0",
+        "effect": "STA $C000 <= $04",
+        "physical_PC": "0x02B8E4"
+      },
+      "service_entry_physical": "0x02B9DC",
+      "status": "passed-primary-semantics-linked-tuple",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "low_resident_LMA_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    },
+    "source_authoritative_oracle": {
+      "VMA": "0xc356",
+      "bytes": 1671,
+      "c2d_crc16": [
+        "0xe27e",
+        "0x8cc6",
+        "0x74d8",
+        "0x277a",
+        "0x9866",
+        "0xe9dc"
+      ],
+      "capacity": 1792,
+      "delivery_inputs": [
+        {
+          "bytes": 93681,
+          "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+          "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+        },
+        {
+          "bytes": 33840,
+          "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+        }
+      ],
+      "generated_decoder": {
+        "bytes": 41388,
+        "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "fb5f0a9c8cccb33cdea5ec04df817647c95dd5d9b7e5db9586f0a83979e7c6fc"
+      },
+      "generated_owner": {
+        "bytes": 548,
+        "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+      },
+      "oracle_offset": 0,
+      "records_per_image": 6,
+      "reserve": 121,
+      "section": ".lisp65_rt_c2d_02a",
+      "shelf_crc16": [
+        "0xce26",
+        "0x46f5",
+        "0xfccb",
+        "0xbc88",
+        "0xf871",
+        "0xe3f7"
+      ],
+      "status": "passed-linked-delivery-bound-CRC-oracle",
+      "timeout_frames": 64
+    }
+  },
+  "adapter_contract": {
+    "header_consumption_wrapper": "PREVIOUS.configure_chain",
+    "non_exported_adapter_calls": 0,
+    "replacement_wrapper": "CARD.configure_chain",
+    "status": "PASS: both wrappers call only exported chain entries"
+  },
+  "artifacts_after": {
+    "elf": {
+      "bytes": 628736,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "339c52c08236cffc827834d6806150a0526b2ef840cba2ddae9217837c6f6af5"
+    },
+    "generated_decoder": {
+      "bytes": 41388,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "fb5f0a9c8cccb33cdea5ec04df817647c95dd5d9b7e5db9586f0a83979e7c6fc"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69977,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/c2-substitution.ld",
+      "sha256": "6cfeb54b8a04dabc70fff638a4d43cab0f304d163a9124e7a02699ae7c5a8a58"
+    },
+    "lto": {
+      "bytes": 620716,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "4efbeec50eca78970b6a37143151230b6a3fb3c6bd7fee712fc75dfa185a8a4d"
+    },
+    "map": {
+      "bytes": 194973,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "df1048557bc95b4a54a1c34629da51846e71d7854b233ff1b5ab2a7132395db6"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "40608c1eef0bc8dcbcdb907ab6c0cb522f27e61b12f791a7aa6be5ad84182385"
+    },
+    "publish_last": {
+      "bytes": 1562,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/kernal-window-publish-last.json",
+      "sha256": "fafbe016e50de7496dce53d98d6c9a36d5be7334dee34fbeb74d3588ce1835eb"
+    },
+    "resolved_profile": {
+      "bytes": 12883,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "fc8409cae672707b584b0d7c05884028f38dc9172f4511dfff81b8d94ba64682"
+    },
+    "seed_lto": {
+      "bytes": 620716,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "dc1dbaa61e73fc8e1f8a3bbb2d86fcfb99ee016a0d6a0a517052b05bf97ed6db"
+    }
+  },
+  "artifacts_before": {
+    "elf": {
+      "bytes": 628736,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "339c52c08236cffc827834d6806150a0526b2ef840cba2ddae9217837c6f6af5"
+    },
+    "generated_decoder": {
+      "bytes": 41388,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "fb5f0a9c8cccb33cdea5ec04df817647c95dd5d9b7e5db9586f0a83979e7c6fc"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69977,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/c2-substitution.ld",
+      "sha256": "6cfeb54b8a04dabc70fff638a4d43cab0f304d163a9124e7a02699ae7c5a8a58"
+    },
+    "lto": {
+      "bytes": 620716,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "4efbeec50eca78970b6a37143151230b6a3fb3c6bd7fee712fc75dfa185a8a4d"
+    },
+    "map": {
+      "bytes": 194973,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "df1048557bc95b4a54a1c34629da51846e71d7854b233ff1b5ab2a7132395db6"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "40608c1eef0bc8dcbcdb907ab6c0cb522f27e61b12f791a7aa6be5ad84182385"
+    },
+    "publish_last": {
+      "bytes": 1562,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/kernal-window-publish-last.json",
+      "sha256": "fafbe016e50de7496dce53d98d6c9a36d5be7334dee34fbeb74d3588ce1835eb"
+    },
+    "resolved_profile": {
+      "bytes": 12883,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "fc8409cae672707b584b0d7c05884028f38dc9172f4511dfff81b8d94ba64682"
+    },
+    "seed_lto": {
+      "bytes": 620716,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "dc1dbaa61e73fc8e1f8a3bbb2d86fcfb99ee016a0d6a0a517052b05bf97ed6db"
+    }
+  },
+  "attempt_accounting": {
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 1,
+    "replacement_cards_authorized": 1,
+    "replacement_cards_consumed": 1,
+    "wplto_runs": 1
+  },
+  "authority": {
+    "attribution": {
+      "bytes": 10680,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-link105-phase02b-extent-attribution-receipt.json",
+      "sha256": "a24c53aa7abe96d154eed49e7376ae898d1ee9cf965d314545fb52c846d47608"
+    },
+    "driver": {
+      "bytes": 19237,
+      "path": "tools/host-lisp/c2_v20_phase02b_header_consumption_replacement_card.py",
+      "sha256": "a4b8d4c6f584532aface371ed52948f76c75671341b194d4b24482237e98196d"
+    },
+    "historical_final_red": {
+      "bytes": 2854,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-phase02b-header-consumption-card-final-red.json",
+      "sha256": "bd49e050efe98e79a9c5a6147a21866009e1732ab0fdc874f54bff30a1937058"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 63751,
+      "commit": "480a9f5ea6d279532a2a266c364792ce6423bfa9",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "d64c8e330a86f653a661556b351c076deda3ec160e74d31fbe08d4746d21d51f"
+    },
+    "preflight": {
+      "bytes": 3287,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-preflight/preflight.json",
+      "sha256": "595d5603d4634832972b47a8a4da79106618fac6d758c79221e17bad1948fd41"
+    }
+  },
+  "candidate_oracle_inputs": {
+    "bytes": 1377,
+    "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/receipts/candidate-oracle-input-closure.json",
+    "sha256": "d45a72b4f7be7dc1cbe64cd83621b455b623fe4811162600a4dc11ab83a32704"
+  },
+  "claim_limit": "One replacement product card and linked artifacts only; completion, media and device have not run.",
+  "compiler_input_consumption": {
+    "final": {
+      "binding": {
+        "bytes": 1387,
+        "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg.compiler-input-consumption.json",
+        "sha256": "1db38157ea113ff2768ed3f55f5a773cbee78faa35ac6b7fa41eb27b87e8da5d"
+      },
+      "result": {
+        "actual_force_include_flags": [
+          "-include",
+          "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "-include",
+          "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.compiler-input-assert.h"
+        ],
+        "bound_header": {
+          "bytes": 293,
+          "path": "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "sha256": "f58bc7a13282e468489945363306918e84d7fcc17c8fa064bd300fa223fb0e37"
+        },
+        "compile_time_assertion": {
+          "bytes": 232,
+          "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.compiler-input-assert.h",
+          "sha256": "d4962cf8ef0a11be96afa0079796013493984c51c93c5025fa45b06910a97656"
+        },
+        "consumed_value": 46043,
+        "consumer": "c2_product_substitution_link.compile_link",
+        "force_include_order": [
+          "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.compiler-input-assert.h"
+        ],
+        "format": "lisp65-real-compiler-input-consumption-v1",
+        "historical_same_basename_accepted": false,
+        "macro": "LISP65_C2_LITE_STATIC_CODE_BYTES",
+        "status": "passed-bound-candidate-header-consumed",
+        "target": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/lisp65-c2-substitution-linked.prg"
+      }
+    },
+    "seed": {
+      "binding": {
+        "bytes": 1351,
+        "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resident-island-seed.prg.compiler-input-consumption.json",
+        "sha256": "4680e65e124c6c9d66d67df69aef62d93089a848ea8f9bd638b0986a1d2ab11c"
+      },
+      "result": {
+        "actual_force_include_flags": [
+          "-include",
+          "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "-include",
+          "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resident-island-seed.compiler-input-assert.h"
+        ],
+        "bound_header": {
+          "bytes": 293,
+          "path": "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "sha256": "f58bc7a13282e468489945363306918e84d7fcc17c8fa064bd300fa223fb0e37"
+        },
+        "compile_time_assertion": {
+          "bytes": 232,
+          "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resident-island-seed.compiler-input-assert.h",
+          "sha256": "d4962cf8ef0a11be96afa0079796013493984c51c93c5025fa45b06910a97656"
+        },
+        "consumed_value": 46043,
+        "consumer": "c2_product_substitution_link.compile_link",
+        "force_include_order": [
+          "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resident-island-seed.compiler-input-assert.h"
+        ],
+        "format": "lisp65-real-compiler-input-consumption-v1",
+        "historical_same_basename_accepted": false,
+        "macro": "LISP65_C2_LITE_STATIC_CODE_BYTES",
+        "status": "passed-bound-candidate-header-consumed",
+        "target": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/resident-island-seed.prg"
+      }
+    }
+  },
+  "format": "lisp65-c2.3-v20-phase02b-header-consumption-replacement-card-v1",
+  "mutations": {
+    "consumed_vs_bound": [
+      "bound-but-not-consumed",
+      "consume-after-ordinary-headers"
+    ],
+    "exported_adapter": [
+      "restore-non-exported-predecessor-adapter",
+      "replacement-calls-non-exported-card-adapter"
+    ],
+    "path_identity": [
+      "historical-header-path",
+      "candidate-binding-SHA-drift"
+    ],
+    "single_owner_inherited": 8,
+    "total": 14
+  },
+  "next": "completion and same-world media, then D1",
+  "owner_scope": {
+    "historical_body_selected": false,
+    "real_global_inventory": {
+      "declared_functions": 29,
+      "duplicate-successor-in-global-asm-domain": "rejected",
+      "status": "passed-real-global-assembler-inventory"
+    },
+    "relapse_mutation": "duplicate successor in global src/*.s domain rejected",
+    "selected_owner": "mapped-far-content-convergence",
+    "selected_successor_copies": 1,
+    "status": "PASS: one name, one owner, one body per inventory"
+  },
+  "process_isolation": {
+    "acceptance": 158450,
+    "all_distinct": true,
+    "owner_scope": 158449,
+    "parent": 157797,
+    "producer": 157822
+  },
+  "recorded_on": "2026-08-13",
+  "status": "PASS: replacement Link-106 consumed candidate header"
+}

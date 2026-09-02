@@ -1,0 +1,178 @@
+{
+  "answer": "The shared vm_codebuf no longer belongs to dynamic ordinal 588 at the held edge. Its actual owner tuple is Bank tag 1, ordinal 171 (lcc-run). That owner's scalar header and final streamed payload window are byteidentical to Bank 2 in all three captures. Both the callee object and the restored caller window are exact; the first-call VM_BADOPCODE is downstream in VM logical cursor, dispatch or operand-stack state.",
+  "budgets": {
+    "class_b_first-execution-diagnostic": "1/3 consumed",
+    "completed_latency_measurements": "0/2 unchanged",
+    "line1_product_first_reds": "2/3 unchanged"
+  },
+  "capture_truth": {
+    "bank2": {
+      "address": "0x00020000",
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank2.bin",
+      "sha256": "6a279f96c614e6e9abd695effec5f634bfcf94efb19bfa6eff22ed8fc31d15d1"
+    },
+    "bank5": {
+      "address": "0x00050000",
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank5.bin",
+      "sha256": "4e2d5b36cff8487d66ac054aaa885ea22047ef934cddcd07f8a2ba6725768b7d"
+    },
+    "captures": [
+      {
+        "active_owner_bank_tag": 1,
+        "active_owner_ordinal": 171,
+        "address": "0x00000000",
+        "bytes": 65536,
+        "c2_journal_count": 0,
+        "c2_ready": 1,
+        "capture": 1,
+        "elapsed_ms": 1215,
+        "owner_cache_exact": true,
+        "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank0-1.bin",
+        "sha256": "d2103dea1f1c4c5aaa2784c76fa1417c3691c4af5511131933dc1dc65577a2ea",
+        "vm_status": 2
+      },
+      {
+        "active_owner_bank_tag": 1,
+        "active_owner_ordinal": 171,
+        "address": "0x00000000",
+        "bytes": 65536,
+        "c2_journal_count": 0,
+        "c2_ready": 1,
+        "capture": 2,
+        "elapsed_ms": 2930,
+        "owner_cache_exact": true,
+        "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank0-2.bin",
+        "sha256": "5c4aab0dc38e3ff8a6e03c659eb1b2a784ebb4bac8ed8a6ce0e445b2a1cf0b9e",
+        "vm_status": 2
+      },
+      {
+        "active_owner_bank_tag": 1,
+        "active_owner_ordinal": 171,
+        "address": "0x00000000",
+        "bytes": 65536,
+        "c2_journal_count": 0,
+        "c2_ready": 1,
+        "capture": 3,
+        "elapsed_ms": 4646,
+        "owner_cache_exact": true,
+        "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank0-3.bin",
+        "sha256": "c497be86ee467cada44846dd9774ff59ce38a1a1b6778390471e9ee007e6fa07",
+        "vm_status": 2
+      }
+    ],
+    "held_active_owner": {
+      "active_owner_cache_exact": true,
+      "bank_tag": 1,
+      "c2d_entry": {
+        "code_length": 76,
+        "code_offset": 3899,
+        "generation": 1,
+        "image_slot": 0,
+        "literal_count": 3,
+        "ordinal": 171,
+        "raw_hex": "00033b0f4c00ad000100",
+        "resolution_base": 173
+      },
+      "header": {
+        "bytes": 13,
+        "code_pointer": "0xbf67",
+        "expected_scalar_hex": "b50101023f0003",
+        "littab_pointer": "0xbf61",
+        "materialized_literal_table_hex": "18e11ae11ce1",
+        "scalar_bytes": 7,
+        "scalar_exact": true,
+        "scalar_hex": "b50101023f0003"
+      },
+      "object_hex": "b50101023f00030000000000000b3c00013a010b361d070b3406011e1c012b1d0d0b353439012b3d26023d2302050b361d070b3406021e1c012b1d0939010b35343d26020539012c3d260205",
+      "object_name": "lcc-run",
+      "object_sha256": "a1df2dba815c518fe7489cefc6550ff0865c0954928bdfcb37e5ca4277880fee",
+      "ordinal": 171,
+      "payload": {
+        "expected_window_hex": "1d0939010b35343d26020539012c3d260205",
+        "held_window_hex": "1d0939010b35343d26020539012c3d260205",
+        "length": 63,
+        "offset": 13,
+        "streaming": 1,
+        "window_exact": true,
+        "window_length": 18,
+        "window_max": 43,
+        "window_start": 45
+      }
+    },
+    "owner_name_authority": {
+      "bytes": 10154,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link48-zero-literal-append-hardware-first-red.json",
+      "sha256": "f9f17db39694c973968581ac657c1d70fda95c4dd63fc5a81f89b0088864b3a6"
+    },
+    "published_dynamic_callee": {
+      "bank2_code_hex": "b50000020200002c05",
+      "c2d_entry": {
+        "code_length": 9,
+        "code_offset": 34403,
+        "generation": 1,
+        "image_slot": 6,
+        "literal_count": 0,
+        "ordinal": 588,
+        "raw_hex": "060063860900d8080100",
+        "resolution_base": 2264
+      },
+      "ordinal": 588,
+      "status": "byteidentical-and-separate-from-held-cache-owner"
+    },
+    "timing": {
+      "bytes": 1469,
+      "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/capture-timing.json",
+      "sha256": "980b12241d9233c4885331a9611bc70c0ce313c8226b8caa4d72d8a34144a005"
+    }
+  },
+  "claim_limit": "This correction exonerates the active Bank-2 refill and narrows the fault domain. It does not identify the exact BADOPCODE site, change a product byte, authorize a product fix, or claim latency.",
+  "classifier_mutations": {
+    "different-active-owner": "passed",
+    "exact-active-owner": "passed"
+  },
+  "delegation": {
+    "class": "A evidence-interpretation correction",
+    "reason": "The correction changes no product byte, diagnostic byte, capacity, compiler output, link output or hardware state."
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "completed_latency_attempts": 0,
+    "diagnostic_bytes_changed": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0,
+    "pure_read_only_evidence_replay": true,
+    "remaining_class_b_cycles": 2
+  },
+  "format": "lisp65-c2-link50-badopcode-hold-cycle1-interpretation-correction-v1",
+  "next_gate": "Read-only ELF/dataflow feasibility for Class-B cycle 2: identify an inner VM_BADOPCODE cutpoint whose live frame gives a stable logical PC/opcode witness before unwind. No product change.",
+  "preserved_historical_receipt": {
+    "bytes": 5698,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-first-call-badopcode-hold-cycle1-hardware-receipt.json",
+    "sha256": "24f13b1a8b03336c48606e5e37cd57be174b2a6aebfb4d2fc44c5f5cde88ab8a",
+    "status": "immutable-mistaken-interpretation-preserved"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg",
+    "sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "status": "untouched"
+  },
+  "status": "corrected-active-owner-refill-exonerated",
+  "superseded_claims": [
+    {
+      "field": "observations[].matches_published_object",
+      "old_model": "Compare vm_codebuf to dynamic ordinal 588 regardless of the held cache-owner tuple.",
+      "replacement": "Resolve vm_codebuf through (vm_buf_bank, vm_buf_off), then compare its scalar header and current payload window to that owner's Bank-2 object."
+    },
+    {
+      "field": "classification",
+      "old": "different-buffer-bank2-to-vm-codebuf-refill",
+      "replacement": "active-owner-window-byteidentical-vm-execution-state"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "answer": "The published Bank-2 object is exact, but vm_codebuf differs at the held failure edge. The runtime Bank-2-to-window refill is the direct first-call failure.",
+  "authorization": {
+    "bytes": 4725,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-first-call-badopcode-hold-cycle1-patch-receipt.json",
+    "sha256": "cadbfd471ef01cf8152ab4bb230f92c08afc7981e820b415647942e7d45ab55f"
+  },
+  "claim_limit": "One non-promotable Class-B diagnostic hardware run. It is not a product link, presmoke, latency result, promotion or acceptance.",
+  "classification": "different-buffer-bank2-to-vm-codebuf-refill",
+  "classifier_mutations": {
+    "different-buffer": "passed",
+    "exact-buffer": "passed"
+  },
+  "delegation": {
+    "class": "B",
+    "cycle": 1,
+    "cycle_cap": 3
+  },
+  "deployment": {
+    "bytes": 4165,
+    "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/deployment.json",
+    "sha256": "e1b3d6143fc80fe010de5b07c5c8fe3fbc67b9b00dc8304410fbc167762c88eb"
+  },
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link50-first-call-badopcode-hold-cycle1-NONPROMOTABLE/lisp65-link50-badopcode-hold-cycle1-NONPROMOTABLE.prg",
+    "sha256": "908c64f52f2279a6fc5c3f9da02ad89d61f5c9e37f3f9a0962b4e97bb3ab4860"
+  },
+  "disposition": "The diagnostic identity remains isolated, read-only and permanently excluded from product and receipt-archive mixing.",
+  "execution_accounting": {
+    "changed_bytes": 2,
+    "compiler_runs": 0,
+    "completed_latency_attempts": 0,
+    "diagnostic_instruction_patches": 1,
+    "hardware_runs": 1,
+    "linker_runs": 0,
+    "read_only_post_stop_captures": 5,
+    "remaining_autonomous_cycles": 2
+  },
+  "format": "lisp65-c2-link50-badopcode-hold-cycle1-hardware-v1",
+  "next_gate": "Class C: repair and gate the runtime Bank-2 refill dataflow; no second diagnostic cycle is needed.",
+  "observations": [
+    {
+      "address": "0x00000000",
+      "bytes": 65536,
+      "c2_journal_count": 0,
+      "c2_ready": 1,
+      "capture": 1,
+      "elapsed_ms": 1215,
+      "matches_published_object": false,
+      "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank0-1.bin",
+      "sha256": "d2103dea1f1c4c5aaa2784c76fa1417c3691c4af5511131933dc1dc65577a2ea",
+      "vm_buf_bank": 1,
+      "vm_buf_off": "0x00ab",
+      "vm_codebuf_prefix_hex": "b50101023f000318e1",
+      "vm_status": 2,
+      "vm_window_state_hex": "010d0061bf67bf0d003f002b002d00120001"
+    },
+    {
+      "address": "0x00000000",
+      "bytes": 65536,
+      "c2_journal_count": 0,
+      "c2_ready": 1,
+      "capture": 2,
+      "elapsed_ms": 2930,
+      "matches_published_object": false,
+      "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank0-2.bin",
+      "sha256": "5c4aab0dc38e3ff8a6e03c659eb1b2a784ebb4bac8ed8a6ce0e445b2a1cf0b9e",
+      "vm_buf_bank": 1,
+      "vm_buf_off": "0x00ab",
+      "vm_codebuf_prefix_hex": "b50101023f000318e1",
+      "vm_status": 2,
+      "vm_window_state_hex": "010d0061bf67bf0d003f002b002d00120001"
+    },
+    {
+      "address": "0x00000000",
+      "bytes": 65536,
+      "c2_journal_count": 0,
+      "c2_ready": 1,
+      "capture": 3,
+      "elapsed_ms": 4646,
+      "matches_published_object": false,
+      "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank0-3.bin",
+      "sha256": "c497be86ee467cada44846dd9774ff59ce38a1a1b6778390471e9ee007e6fa07",
+      "vm_buf_bank": 1,
+      "vm_buf_off": "0x00ab",
+      "vm_codebuf_prefix_hex": "b50101023f000318e1",
+      "vm_status": 2,
+      "vm_window_state_hex": "010d0061bf67bf0d003f002b002d00120001"
+    }
+  ],
+  "patch_gate": {
+    "after_hex": "80fe",
+    "after_semantics": "BRA $3774, hold before status clear and renderer",
+    "before_hex": "8617",
+    "before_semantics": "STX __rc21, continue to status mapping and abort",
+    "changed_bytes": 2,
+    "changed_cpu_addresses": [
+      "0x3774",
+      "0x3775"
+    ],
+    "changed_file_offsets": [
+      "0x1775",
+      "0x1776"
+    ],
+    "file_size_delta_bytes": 0,
+    "function": "vm_check_status",
+    "function_interval": "0x3766..0x37b1",
+    "instruction_address": "0x3774",
+    "instruction_file_offset": "0x1775",
+    "mutations_rejected": {
+      "extra-neighbour-byte": "rejected",
+      "only-opcode-changed": "rejected",
+      "only-operand-changed": "rejected",
+      "wrong-opcode": "rejected",
+      "wrong-relative-target": "rejected"
+    },
+    "status": "passed-exact-two-byte-badopcode-self-loop-patch"
+  },
+  "promotable": false,
+  "published_object": {
+    "bank2_capture": {
+      "address": "0x00020000",
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank2.bin",
+      "sha256": "6a279f96c614e6e9abd695effec5f634bfcf94efb19bfa6eff22ed8fc31d15d1"
+    },
+    "bank2_code_hex": "b50000020200002c05",
+    "c2d_capture": {
+      "address": "0x00050000",
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-link50-badopcode-hold-cycle1/held-bank5.bin",
+      "sha256": "4e2d5b36cff8487d66ac054aaa885ea22047ef934cddcd07f8a2ba6725768b7d"
+    },
+    "c2d_entry": {
+      "code_length": 9,
+      "code_offset": 34403,
+      "generation": 1,
+      "image_slot": 6,
+      "literal_count": 0,
+      "ordinal": 588,
+      "raw_hex": "060063860900d8080100",
+      "resolution_base": 2264
+    }
+  },
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg",
+    "sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "status": "untouched"
+  },
+  "status": "answered-first-call-refill-versus-dispatch"
+}

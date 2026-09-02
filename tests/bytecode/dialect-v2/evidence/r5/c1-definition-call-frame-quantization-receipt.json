@@ -1,0 +1,68 @@
+{
+  "format": "lisp65-v11-c1-definition-call-frame-quantization-receipt-v1",
+  "version": 1,
+  "status": "historical-owner-authorized-one-frame-tolerance-superseded-by-session-curve",
+  "recorded_on": "2026-07-17",
+  "scope": "Harness- and contract-only correction of the C1 definition-to-first-call stability pin after the stopped R5 hardware case exposed the 20 ms frame-counter quantization edge.",
+  "product": {
+    "artifact_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+    "product_bytes_changed": false,
+    "r4_seal_remains_valid": true
+  },
+  "measurement_clock": {
+    "register": "$D7FA",
+    "resolution_milliseconds": 20,
+    "arithmetic": "modulo-256 end-minus-start"
+  },
+  "baseline": [
+    {
+      "frames": 95,
+      "result": "(t 237 76)",
+      "authority": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-definition-call-reopening-probe-receipt.json",
+      "authority_sha256": "c224f4000d78b096e7d31bb1548831fa5aa7fedc9f005c1d18b7aeb564868925"
+    },
+    {
+      "frames": 96,
+      "result": "(t 29 125)",
+      "authority": "tests/bytecode/dialect-v2/evidence/r5/diagnostics/c1-definition-call-96-stopped-run.txt",
+      "authority_sha256": "cd97eca0dfa86a01daf80a45aa73fd6eb342225b3973b50b8c07e10bb234e124"
+    },
+    {
+      "frames": 96,
+      "result": "(t 30 126)",
+      "authority": "tests/bytecode/dialect-v2/evidence/r5/diagnostics/c1-definition-call-96-fresh-third.txt",
+      "authority_sha256": "b914a644234fc20467ae40c6c829c5a5b42194446e47b83b33895db758d231df"
+    }
+  ],
+  "decision": {
+    "previous_stability_maximum_frames": 95,
+    "new_stability_maximum_frames": 96,
+    "tolerance_frames": 1,
+    "tolerance_milliseconds": 20,
+    "policy": "one-time-not-iterative; a constant or single observed 97-frame result is a regression and must stop",
+    "performance_bar": "not-passed",
+    "user_claim": "about 1.90 seconds",
+    "user_claim_changed": false,
+    "cure": "C2/1.2"
+  },
+  "supersession": {
+    "reason": "A later twelve-cycle hardware curve proved a 95-to-98-frame jitter distribution without demonstrated growth. The original 95-to-96 quantization decision remains historically valid but no longer defines the current session stability gate.",
+    "current_receipt": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-session-band-authorization-receipt.json",
+    "current_maximum_frames": 98,
+    "iterative_tolerance": false
+  },
+  "bindings": {
+    "exception_contract": "config/v11-c1-definition-call-latency-exception.json",
+    "exception_contract_sha256": "32b5a8b6e914aa776f6e889a41c6f5dc0f4b659862d6eda4a32a36f5184e4249",
+    "architecture_decision": "config/v11-c1-architecture-decision.json",
+    "architecture_decision_sha256": "b5b93a6d14d282f59bf20f8fb983034a2b6570b1adbd94de71a853567d18e8f9",
+    "verifier": "tools/host-lisp/v11_c1_repl_latency.py",
+    "verifier_sha256": "a250503f04bae6a3496b0ffe57ee59622dd15705d777c44f0a6a39f963e2c6a8"
+  },
+  "stopped_run": {
+    "G5": "0/14",
+    "case_receipt_created": false,
+    "remaining_cases_started": false
+  },
+  "claim_limit": "This historical receipt proves the original one-frame measurement-quantization decision. It is superseded for the current stability gate by the owner-authorized twelve-cycle session-band receipt; it does not pass the performance target, alter product bytes, preserve a G5 case receipt, or claim G5/G6 acceptance."
+}

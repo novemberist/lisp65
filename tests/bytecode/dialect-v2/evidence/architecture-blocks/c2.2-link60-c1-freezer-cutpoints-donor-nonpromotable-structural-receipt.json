@@ -1,0 +1,114 @@
+{
+  "authority": {
+    "cutpoint_contract": {
+      "bytes": 4715,
+      "path": "config/c2-c1-freezer-cutpoint-contract.json",
+      "sha256": "ec310bbfa00da6e05dfb268f350f855046050f11b0c220cad42a10fec9f4d831"
+    },
+    "cutpoint_source_gate": {
+      "bytes": 1157,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/c1-freezer-cutpoint-source-gate.json",
+      "sha256": "d25bee00ccad297e9c1f5cb6d9b6b40564ac3c5b862028c51970b97fb2da9513"
+    },
+    "driver": {
+      "bytes": 14180,
+      "path": "tools/host-lisp/c2_c1_freezer_cutpoint_build_link60.py",
+      "sha256": "894845ae6e1613c3572dbf2c7dec92f21230f8f9926c3228bbe24f8e1f8f7d99"
+    },
+    "historical_checker_first_red": {
+      "bytes": 28628,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link60-c1-freezer-cutpoints-donor-internal.json",
+      "sha256": "53d7f7f0929caf23e3a968e3bfc94804c4e593c8423ebd070b1a2d283c289f13"
+    },
+    "immutable_link60_product": {
+      "bytes": 41566,
+      "path": "build/c2.2/substitution/product-link-60-two-region-e000-s1-completion/lisp65-c2-substitution-linked.prg",
+      "sha256": "7fc3bb84acf6039ea34ff863ba4f6d39458400a7848ae7077a8085ccd9cf2416"
+    },
+    "link60_receipt": {
+      "bytes": 8217,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link60-two-region-e000-s1-structural-receipt.json",
+      "sha256": "48eb48b97610ba822ab52b83a3962ce7911a306c0a1ac619719b8e80c48db0ad"
+    }
+  },
+  "carrier_eligibility": {
+    "affected_region0_slots": {
+      "30": {
+        "bytes": 1732,
+        "pack_headroom_bytes": 60,
+        "section": ".lisp65_rt_c2append_journal_prepare"
+      },
+      "39": {
+        "bytes": 1526,
+        "pack_headroom_bytes": 266,
+        "section": ".lisp65_rt_c2append_header"
+      },
+      "40": {
+        "bytes": 1330,
+        "pack_headroom_bytes": 462,
+        "section": ".lisp65_rt_c2append_publish_clear"
+      },
+      "41": {
+        "bytes": 768,
+        "pack_headroom_bytes": 1024,
+        "section": ".lisp65_rt_c2append_rollback_unpublish"
+      }
+    },
+    "dense_records": 51,
+    "format_version": 4,
+    "main_bytes": 64926,
+    "region1_byteidentical_link60": true,
+    "region1_bytes": 1956
+  },
+  "claim_limit": "Overlay donor only. The diagnostic resident image is forbidden from deployment and carries no product, matrix, acceptance or release claim.",
+  "diagnostic_identity": {
+    "deployment_role": "overlay-donor-only",
+    "elf": {
+      "bytes": 619644,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ecaef987c93f5ff10963d15a729a278fe7b4a13c072a0299ffd1752dcc11ae95"
+    },
+    "feature": "LISP65_C2_C1_FREEZER_CUTPOINT_FIXTURE",
+    "map": {
+      "bytes": 208811,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "d3678621ff3743cbd9ebac573564803a1deedeee666904038bb5e382692291f0"
+    },
+    "product": {
+      "bytes": 41566,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg",
+      "sha256": "97bd02a6301d735c8893aadaf399e807e8783a84fcc1bfbd260d6c4413358b14"
+    },
+    "product_bytes_changed": 0,
+    "resident_image_deployed": false,
+    "session_main": {
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/runtime-overlays-session-final.bin",
+      "sha256": "03e99627d34119fbdecd54dd57e9d45529593b23ae5ae3a17507a627c5cdd9c1"
+    },
+    "session_region1": {
+      "bytes": 1956,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/runtime-overlays-session-final-region1.bin",
+      "sha256": "38e5771ab7f6840d487715d473a63b8e3ea268a23c6993928be7535152ad7b6b"
+    }
+  },
+  "execution_accounting": {
+    "artifact_completion_compiler_runs": 0,
+    "artifact_completion_linker_runs": 0,
+    "automatic_retries": 0,
+    "diagnostic_WPLTO_closure_links": 1,
+    "hardware_runs": 0,
+    "latency_attempts_consumed": 0,
+    "promotable_product_links": 0
+  },
+  "format": "lisp65-c2.2-link60-C1-Freezer-WPLTO-donor-v1",
+  "historical_checker_disposition": {
+    "classification": "class-A-model-only",
+    "compiler_or_linker_rerun": false,
+    "reason": "The inherited consolidation gate pins product payload sizes; a cutpoint donor intentionally changes four cold payloads. Both region extents and every hard slice cap remain green."
+  },
+  "next_gate": "artifact-only structured relocation rebind to immutable Link 60, v4 region rebuild and exact main-stage binding",
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "status": "passed-nonpromotable-Link60-C1-overlay-donor-hardware-not-run"
+}

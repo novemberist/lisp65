@@ -1,0 +1,74 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "product_ELFs": 0,
+    "product_PRGs": 0,
+    "product_links_completed": 0
+  },
+  "authority": {
+    "driver": {
+      "bytes": 8155,
+      "path": "tools/host-lisp/c2_v21_cpu_transport_card_red_attribution.py",
+      "sha256": "09d79e2db4a049aaa45e5f469236c037e6340f0530e4e8cdf378a2227b8823b3"
+    },
+    "final_red": {
+      "bytes": 9325,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-cpu-transport-card-final-red.json",
+      "sha256": "1c358161e15f5823e902cff69cbf05feb008e246c9fedc1fd0a473e9e6fd8af5"
+    },
+    "map_tuple_configurator": {
+      "bytes": 21998,
+      "path": "tools/host-lisp/c2_v20_map_tuple_fix_card.py",
+      "sha256": "78e697a0129a2b7b80057827e1385e2c096f0c2fecc0a15b8cadb873a0a1c088"
+    },
+    "product": {
+      "bytes": 337100,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+    }
+  },
+  "claim_limit": "Desk attribution only. No repair, replay, product or device claim.",
+  "disposition": {
+    "narrow_repair_if_authorized": "make MAP-tuple source replacement identity-targeted/additive, then run the source-owner gate after configure_fix_source against the real compile list",
+    "owner_decision_required": true,
+    "retry_authorized": false,
+    "why_preflight_missed_it": "preflight validated the default registry before configure_fix_source; it did not execute the real producer configurator before enumerating sources"
+  },
+  "final_red": {
+    "owner_disposition_required": true,
+    "retry_authorized": false,
+    "status": "FINAL RED: Link-107 returns to owner"
+  },
+  "format": "lisp65-c2.3-v2.1-cpu-transport-card-red-attribution-v1",
+  "mutations_rejected": [
+    "erase-pre-registered-owner",
+    "make-configurator-additive",
+    "invent-reader-object",
+    "invent-product-link",
+    "authorize-retry"
+  ],
+  "objects": {
+    "CPU_reader_objects": [],
+    "convergence_owner_objects": [
+      "059-c2_mapped_far_service_v2.s.o",
+      "060-c2_mapped_far_convergence.s.o"
+    ],
+    "object_count": 65
+  },
+  "recorded_on": "2026-08-14",
+  "root_cause": {
+    "class": "BOUND-SOURCE-OWNER-NOT-CONSUMED-BY-REAL-PRODUCER",
+    "discarded_owner": "src/optional/c2_map_cpu_read.s",
+    "registered_at_real_consumer": [
+      "mapped-far-content-convergence"
+    ],
+    "registered_before_real_consumer": [
+      "mapped-far-content-convergence",
+      "map-cpu-library-read"
+    ],
+    "status": "PASS: later configurator substitutes rather than extends owner registry"
+  },
+  "status": "ATTRIBUTED: REAL-PRODUCER-OWNER-REGISTRY-SUBSTITUTION"
+}

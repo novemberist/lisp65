@@ -1,0 +1,71 @@
+{
+  "format": "lisp65-r5-wave3-harness-stop-diagnosis-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "diagnosed-harness-fixture-drift-no-case-receipt",
+  "source_commit": "c7653eab83930dcbcef5be624777ce93c0a18d39",
+  "candidate": {
+    "product_artifact_set_sha256": "048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024",
+    "build_id": "f144fd48",
+    "historical_candidate_manifest_sha256": "90ef01235b554276f5af31aa413095f206b1c56990c4b4cbe84c6c3d595b3b09",
+    "historical_test_closure_set_sha256": "c1082fb47e6172cf56534b9c7b2f1777398b58d944cd42fe700bf144ed1699c2",
+    "corrected_candidate_manifest_sha256": "32edfe151d0287cd24557a0cfea4b6e380ea3423cfdaed515f42424c9d4f3d1a",
+    "corrected_test_closure_manifest_sha256": "8bcb2ba81340633589e76c262145243c6a36ec0dd824861e24c7954fa3d06d15",
+    "corrected_test_closure_set_sha256": "de526115ea122b3b75a467075a4da97456a3a31bd064fa9370cc7c78f958bf32",
+    "corrected_static_preflight_receipt_sha256": "1116487d2f99f9505010daa1c9536997f1e8835b61ba1ad70b72658cf9a8e442"
+  },
+  "trigger": {
+    "gate": "G5",
+    "run_id": "r5-run-20260719-wave3-01",
+    "case": "workbench-persistence/save-new",
+    "phase": "external-d81-oracle",
+    "hardware_marker": "save new pass 5/5",
+    "expected_by_stale_fixture": "T45/S32 -> T45/S33",
+    "observed": "T45/S31 -> T45/S32",
+    "case_receipt": "not-emitted",
+    "raw_evidence": {
+      "path": "build/r5-global-g5/evidence/r5-run-20260719-wave3-01/workbench-save-new-diagnosis-attempt-1",
+      "before_d81_sha256": "be4372699ba04aa76c5879021e0fca8408734ba7f9317c49200208dd2be9ab8e",
+      "after_d81_sha256": "e023e2347e4d954b94f0c64a95f833de0237dc64508b1c8a90d3b927e72f782f",
+      "marker_sha256": "d62e91af11d7736e1a5f7fe20b460ae348237e10d2a16beca461aee3fd336331",
+      "source_sha256": "37fccc180122d7f2c3c943015234fc885ee1a2db1637214babc7fdd53cbb445e",
+      "independent_readback_sha256": "37fccc180122d7f2c3c943015234fc885ee1a2db1637214babc7fdd53cbb445e"
+    }
+  },
+  "diagnosis": {
+    "classification": "harness-fixture-drift-after-wave3-workbench-media-layout-change",
+    "root": "The fixed allocator scans track 45 from sector 20 and selects the first two free sectors. The Wave-3 workbench image has S31 and S32 free, while the prior Wave-2 image first exposed S32 and S33. The fixture retained the old allocation pair. The exact D81 oracle also assumed both sectors shared one BAM bitmap byte and therefore could not represent the valid S31/S32 boundary case.",
+    "product_behavior": "The product created a valid two-block m5src file at T45/S31 -> T45/S32. c1541 listed the file and independently read back all 373 source bytes with the exact source SHA. The BAM free count changed 9 -> 7, S31 changed 0x80 -> 0x00, and S32 changed 0xff -> 0xfe.",
+    "comparison": {
+      "wave2_before_d81_sha256": "ebc6cb484b1631dca039f3399450423469360081cfd6ce6c67eadf79ae085659",
+      "wave2_first_free_pair": "T45/S32,S33",
+      "wave3_first_free_pair": "T45/S31,S32"
+    },
+    "conclusion": "The product candidate is correct and unchanged; the failure is confined to the R5 fixture and its independent oracle. The stopped attempt remains receipt-less."
+  },
+  "structural_fix": {
+    "fixture": "save-new is repinned to S31/S32 and save-new-scan reserves S31 before expecting S32/S33.",
+    "oracle": "The exact D81 verifier now supports allocation pairs across BAM bitmap-byte boundaries.",
+    "pre_hardware_gate": "Fixed-allocation cases assert before hardware execution that the configured pair is exactly the allocator's first two free sectors from S20.",
+    "negative_proof": "Supplying the former S32/S33 plan against the Wave-3 before image is rejected as allocator-plan drift.",
+    "compatibility_proof": "The prior Wave-2 S32/S33 before/after pair remains accepted by the generalized exact oracle.",
+    "product_artifact_effect": "none",
+    "required_repin": "R5 test closure and static preflight only"
+  },
+  "resume": {
+    "static_preflight": "14/14 ready against corrected closure; six verifier mutations rejected",
+    "passed_cases": [
+      "workbench-ux/overlay-stack-guard",
+      "workbench-ux/stdlib-runtime",
+      "workbench-ux/ux-complete",
+      "workbench-persistence/bam-read",
+      "workbench-persistence/bam-alloc",
+      "workbench-persistence/chain-write",
+      "workbench-persistence/dir-write"
+    ],
+    "passed_receipts": "raw evidence must be byte-preserved, repacked against the corrected candidate manifest, and immediately offline reverified",
+    "hardware_rerun": "save-new and all later not-yet-run cases only",
+    "r4": "historical-and-still-valid",
+    "claim": "diagnosis and harness-only rebind; no save-new pass and no product acceptance"
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "authority": {
+    "allocation_contract": {
+      "bytes": 2075,
+      "path": "docs/planning/c2.2-v1.2.6-editor-allocation-contract.md",
+      "sha256": "9971818ec7ffac5cbe7053f4de87f9695939d19fc8b5e00495c902c6d8aeeb77"
+    },
+    "config": {
+      "bytes": 4739,
+      "path": "config/c2-v126-editor-hardware-session.json",
+      "sha256": "db14f84b0fd0cad4aca4b92d055a10f313e073e827fdd51a7aae93be52905ab2"
+    },
+    "driver": {
+      "bytes": 97271,
+      "path": "tools/host-lisp/c2_v126_editor_hardware.py",
+      "sha256": "c13376b09f7a981b4b4437960404d4e3e5fc2df078db963674bba3c80c72d65f"
+    },
+    "work_plan": {
+      "bytes": 5675,
+      "path": "docs/planning/1.2.6-work-plan.md",
+      "sha256": "6842de145f79a7a70ce3a56532901abac99565136ecd5ab7ba60c6d218e51fc9"
+    }
+  },
+  "candidate": {
+    "ELF": {
+      "bytes": 622560,
+      "name": "lisp65-c2-substitution-linked.prg.elf",
+      "path": "build/c2.2/v1.2.6-candidate-product-link83/final/lisp65-c2-substitution-linked.prg.elf",
+      "role": "linked-product-elf",
+      "sha256": "06cd0eaf5dbc343343407acb60b82e61575d9ad7e4b19dabc380789d0c1d1890"
+    },
+    "artifact_set_sha256": "0170949c37d00886ab15ddafb0dcd4e9fccd4426c384badb15c92b4a1a026250",
+    "canonical_product": {
+      "bytes": 19930,
+      "path": "build/c2.2/v1.2.6-candidate-product-link83/canonical-product-manifest.json",
+      "sha256": "b3844ad34709719596c1f557bf276da37b1e2c893b1ef7fb5bef602c40b1e870"
+    },
+    "deployment": {
+      "bytes": 4244,
+      "path": "build/c2.2/v1.2.6-editor-hardware/deployment.json",
+      "sha256": "7958ff1c4f4d9a439d72184b46140848857a1fd47a547e5ef69731275686ff70"
+    },
+    "link": 83,
+    "manifest": {
+      "bytes": 15606,
+      "path": "build/c2.2/v1.2.6-candidate-media/candidate-manifest.json",
+      "sha256": "d088bb6bc1a29158a8ea5a2afd27d7aa2e2801885867206660cb83772e459202"
+    },
+    "package_medium": {
+      "bytes": 819200,
+      "name": "lisp65-product.d81",
+      "path": "build/c2.2/v1.2.6-candidate-media/lisp65-product.d81",
+      "role": "product-d81",
+      "sha256": "fef071559a3a5af5e31f7b9aebe0f520d8f463889d4ed11a05cc73753e19f8c2"
+    },
+    "package_visible_files": [
+      "autoboot.c65",
+      "boot.bin",
+      "boot.id",
+      "bootstage.bin",
+      "c2d.bin",
+      "code.bin",
+      "ide",
+      "idex",
+      "lisp65.prg",
+      "m65d",
+      "profile",
+      "region1.bin",
+      "session.bin",
+      "shelf.bin",
+      "window.bin"
+    ],
+    "preloads": [
+      {
+        "address": "0x00050000",
+        "bytes": 33840,
+        "name": "initial.c2d-v6.bin",
+        "path": "build/c2.2/v1.2.6-candidate-product-link83/final/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+        "role": "c2d-v6-code-plane",
+        "sha256": "339ac255005aa69229c3a54ae10b39647145dbd5ea4f1572e4ed7cb15d5478fe"
+      },
+      {
+        "address": "0x00058500",
+        "bytes": 3286,
+        "name": "bootstage.bin",
+        "path": "build/c2.2/v1.2.6-candidate-product-link83/artifacts/bootstage.bin",
+        "role": "c2-two-record-boot-stage",
+        "sha256": "a2c5804455578eb0113c8f811acd692406105e961716fff99a6b49093bec71d4"
+      },
+      {
+        "address": "0x08000000",
+        "bytes": 65423,
+        "name": "runtime-overlays-session-final.bin",
+        "path": "build/c2.2/v1.2.6-candidate-product-link83/final/runtime-overlays-session-final.bin",
+        "role": "c2-session-family-region-0",
+        "sha256": "e8b9d53b3ba7378e489d5aa7aa5d334e47810a207e9715805c29dc4d448fc148"
+      },
+      {
+        "address": "0x08100000",
+        "bytes": 92437,
+        "name": "product-shelf-v4-direct.bin",
+        "path": "build/c2.2/v1.2.6-candidate-product-link83/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+        "role": "c2-product-shelf",
+        "sha256": "f1d61c4d094acc1df8bc9dd77c05832cc45c7498f44f47c22da906919bad40bd"
+      },
+      {
+        "address": "0x08200000",
+        "bytes": 19402,
+        "name": "runtime-overlays-boot-final.bin",
+        "path": "build/c2.2/v1.2.6-candidate-product-link83/final/runtime-overlays-boot-final.bin",
+        "role": "c2-boot-family",
+        "sha256": "67329ecb684e9fcc8a89aac09085b79d9c29378093897fc613a6e9deb4cb7247"
+      },
+      {
+        "address": "0x08300000",
+        "bytes": 1956,
+        "name": "runtime-overlays-session-final-region1.bin",
+        "path": "build/c2.2/v1.2.6-candidate-product-link83/final/runtime-overlays-session-final-region1.bin",
+        "role": "c2-session-family-region-1",
+        "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
+      },
+      {
+        "address": "0x087fe000",
+        "bytes": 8192,
+        "name": "c2-product-kernal-window.bin",
+        "path": "build/c2.2/v1.2.6-candidate-product-link83/final/c2-product-kernal-window.bin",
+        "role": "c2-kernal-window",
+        "sha256": "39c12585c6460a7e080ee7d983bd38d6c71adc5bdd9f45bc51f93f85184fc319"
+      },
+      {
+        "address": "0x0005c640",
+        "bytes": 64,
+        "name": "zero-c2j.bin",
+        "path": "build/c2.2/v1.2.6-editor-hardware/zero-c2j.bin",
+        "role": "harness-zero-C2J-baseline",
+        "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+      }
+    ],
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "name": "lisp65-c2-substitution-linked.prg",
+      "path": "build/c2.2/v1.2.6-candidate-product-link83/final/lisp65-c2-substitution-linked.prg",
+      "role": "c2-resident-prg",
+      "sha256": "9a39c43cfd680116440b01086850c8d46b951e8a827449df7440f61ad3f3bf53"
+    },
+    "release": "v1.2.6"
+  },
+  "claim_limit": "One non-promotable Link-83 editor measurement session. It proves only the named typing, wrap, scroll, smoke and quiescent rows; R4/R5/R6/G5/G6 and release remain separate.",
+  "format": "lisp65-c2.2-v1.2.6-editor-hardware-preparation-v1",
+  "host_proofs": {
+    "WPLTO": {
+      "bytes": 9863,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-wplto-receipt.json",
+      "sha256": "ba4c138113777893f634d012c06db3b7141b40307388fbbfe8e0327b7d72495f"
+    },
+    "allocation_gate": {
+      "bytes": 36767,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2-v126-editor-allocation-gate-receipt.json",
+      "sha256": "bda8404d7e9a7f9464bfa7415f1dcb05c660095f3f8ad8669ba2952a5fb8cefc"
+    },
+    "memsave_exit_harness_first_red": {
+      "bytes": 1708,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-hardware-memsave-exit-first-red.json",
+      "sha256": "0c28715a7acf0965442d5b81defb7fad3d4f1147b24976497e9d87b0ac22de7a"
+    },
+    "monitor_resume_harness_first_red": {
+      "bytes": 1380,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-hardware-monitor-resume-first-red.json",
+      "sha256": "e3f1a7c344911bfed0744698bf3a4daa685fb4477c620f19155db67cb34d38e7"
+    },
+    "preload_harness_first_red": {
+      "bytes": 1965,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-hardware-preload-first-red.json",
+      "sha256": "99e8e50c1c0510b435d28b44e0eb1eee570d6baf159a00335b200f4c2f6d523f"
+    },
+    "verified_input_forms": 20,
+    "virtual_RUN_harness_first_red": {
+      "bytes": 1444,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-hardware-virtual-run-first-red.json",
+      "sha256": "8e95ade246bd197f822e7b4ffc86f1974b54954d594031604197eac30b636ea3"
+    },
+    "zero_C2J_harness_first_red": {
+      "bytes": 2553,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-hardware-zero-c2j-first-red.json",
+      "sha256": "a464f505a95ef0db12f72a7299c402c8b03e7cea6f27531db66f1ea13eba06c3"
+    }
+  },
+  "measurement_contract": {
+    "D2_time_spot_checks": [
+      "wrap",
+      "scroll"
+    ],
+    "dropped_characters": 0,
+    "dropped_returns": 0,
+    "frame_ceiling_average": 88,
+    "frame_ceiling_single": 177,
+    "plain_burst_keys": 40,
+    "total_printable_keys": 80,
+    "total_return_keys": 49
+  },
+  "recorded_on": "2026-07-31",
+  "safety": {
+    "C2J_CLEAR_preload_required": {
+      "address": "0x0005c640",
+      "bytes": 64,
+      "path": "build/c2.2/v1.2.6-editor-hardware/zero-c2j.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "cold_reset_and_fresh_BASIC_gate": true,
+    "direct_entry": "0x00002023",
+    "direct_entry_control_transfer": "etherload tiny trigger PRG plus --jump 2023",
+    "direct_entry_product_load": "m65 USB with full byteidentity readback",
+    "direct_entry_trigger": {
+      "address": "0x00000400",
+      "bytes": 4,
+      "path": "build/c2.2/v1.2.6-editor-hardware/direct-entry-trigger.prg",
+      "sha256": "6e1ae50c2c807c6630b5a02ea29761a723e422e503100fc2ee23f2d715d3a001"
+    },
+    "fail_closed_red_frame_is_terminal": true,
+    "ftp_progress_guard_seconds": 120,
+    "package_upload_readback_required": true,
+    "preload_target_readback_required": true,
+    "product_bytes_changed_by_session": 0,
+    "promotable_candidates": 0
+  },
+  "status": "prepared-host-green-link83-bound-one-device-session",
+  "target_ELF_witnesses": {
+    "c2_phase_owner": "0x00000089",
+    "gc_badobj": "0x0000003f",
+    "gc_runs": "0x0000b9f0",
+    "lisp65_c2_phase_scratch": "0x0000c0c6",
+    "mem_oom": "0x0000008f"
+  }
+}

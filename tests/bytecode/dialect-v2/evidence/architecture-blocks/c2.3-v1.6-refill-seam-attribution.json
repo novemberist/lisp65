@@ -1,0 +1,131 @@
+{
+  "claim_limit": "Decides the commissioned binary attribution and names the old code-window/refill family. It authorizes no fix, card, link, medium or device contact.",
+  "controls": {
+    "failed_refill": {
+      "expected_sha256": "78ddd9d901a8c06cf94daa02d302ca62a221dc6be9475c48ff8f1ec54f78af57",
+      "frame_slots": 11,
+      "header_bytes": 35,
+      "logical_pc": 69,
+      "observed_sha256": null,
+      "operand_depth_before_drop": 1,
+      "owner_after": "%repl-step",
+      "owner_before": "nested-callee",
+      "payload_bytes": 220,
+      "refill_success": false,
+      "requested_window": [
+        69,
+        90
+      ],
+      "restored_window_exact": false,
+      "window_capacity": 21
+    },
+    "wrong_window": {
+      "expected_sha256": "78ddd9d901a8c06cf94daa02d302ca62a221dc6be9475c48ff8f1ec54f78af57",
+      "frame_slots": 11,
+      "header_bytes": 35,
+      "logical_pc": 69,
+      "observed_sha256": "0ba150af4ca9bed50e292399207bcb738733ec3e532399a5986a67473b7225d1",
+      "operand_depth_before_drop": 1,
+      "owner_after": "%repl-step",
+      "owner_before": "nested-callee",
+      "payload_bytes": 220,
+      "refill_success": true,
+      "requested_window": [
+        69,
+        90
+      ],
+      "restored_window_exact": false,
+      "window_capacity": 21
+    }
+  },
+  "decision": {
+    "class": "REAL TARGET REFILL FAILURE",
+    "code_window_family": "CONFIRMED",
+    "reason": "the same emitted caller/callee world returns with one operand, successfully refills $45..$59 and restores those bytes exactly; the stopped target recorded the same requested window plus VM_BAD_BYTECODE, so the unresolved bit is the real refill result",
+    "split_calling_convention": "EXCLUDED",
+    "wrong_restored_window": "EXCLUDED"
+  },
+  "format": "lisp65-c2.3-v1.6-refill-seam-attribution-v1",
+  "host_reconstruction": {
+    "expected_sha256": "78ddd9d901a8c06cf94daa02d302ca62a221dc6be9475c48ff8f1ec54f78af57",
+    "frame_slots": 11,
+    "header_bytes": 35,
+    "logical_pc": 69,
+    "observed_sha256": "78ddd9d901a8c06cf94daa02d302ca62a221dc6be9475c48ff8f1ec54f78af57",
+    "operand_depth_before_drop": 1,
+    "owner_after": "%repl-step",
+    "owner_before": "nested-callee",
+    "payload_bytes": 220,
+    "refill_success": true,
+    "requested_window": [
+      69,
+      90
+    ],
+    "restored_window_exact": true,
+    "window_capacity": 21
+  },
+  "identical_call": {
+    "argc": 6,
+    "call_pc": 66,
+    "callee": "%rl-screen-tail",
+    "caller": "%repl-step",
+    "return_pc": 69
+  },
+  "inputs": {
+    "attribution_tool": {
+      "bytes": 12612,
+      "path": "tools/host-lisp/c2_v160_refill_seam_attribution.py",
+      "sha256": "e978708eef8efea133a8f91280e7b23342308becfff2646dc63fb52812c63f7e"
+    },
+    "candidate_ELF": {
+      "bytes": 632960,
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "347a2e6b4070a9f9e02c21216d59c5c18f66015373bbe93df14027eba0107c42"
+    },
+    "comfort_manifest": {
+      "bytes": 16558,
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/library-inputs/repl-comfort.manifest.json",
+      "sha256": "4e7b1b8e7b2247f9d8145db76ea1774228c3b09c936c89db0c8cb0325de5d63b"
+    },
+    "first_red": {
+      "bytes": 4366,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-display-entry-first-red-attribution.json",
+      "sha256": "c0a1e27ae2f72f2ed7a8bc3ffcb64ded8fa98dffc2e9c919cc7ad195475a38ec"
+    },
+    "host_VM": {
+      "bytes": 98920,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "0544151da0b7a86b21906f9252519dae485d6bc88251159db732c0f55c783db8"
+    },
+    "host_suite": {
+      "bytes": 3518,
+      "path": "tests/bytecode/libs/p0-repl-comfort.json",
+      "sha256": "53539fb1e444eebba3c9acffc23215f6039d7028f9ca89f5861dcf0a998f1bf2"
+    },
+    "target_VM": {
+      "bytes": 104864,
+      "path": "src/vm.c",
+      "sha256": "c17349cccf193dd22aa1241d2563ad097da744c61df8364dd77396661e7fb7aa"
+    },
+    "v16core_manifest": {
+      "bytes": 23445,
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/library-inputs/v16core.manifest.json",
+      "sha256": "771dc24700b5e41f5c017ce9bf196b6ac900305e6140fc4ad9dc08f8eecf61d3"
+    }
+  },
+  "permanent_gate_form": {
+    "claims": [
+      "refill return is success",
+      "restored bytes equal source",
+      "operand depth at $45 is exactly one"
+    ],
+    "fixture": "streamed 255-byte caller, 14 literals, 21-byte window, nested CALL at $42 and post-return DROP at $45",
+    "mutations": [
+      "refill returns failure",
+      "successful refill starts at $46",
+      "post-CALL result omitted"
+    ]
+  },
+  "recorded_on": "2026-08-22",
+  "status": "ATTRIBUTED: REAL TARGET CALLER REFILL FAILED"
+}

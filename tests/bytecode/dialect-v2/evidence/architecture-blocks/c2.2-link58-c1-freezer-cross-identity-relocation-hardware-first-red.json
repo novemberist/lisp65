@@ -1,0 +1,174 @@
+{
+  "captures": {
+    "bank0": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/boot-bank0.bin",
+      "sha256": "9d753d5fca93127e9aacb3ca7371f14d98e71f9371f0751c7e1b6c4c6d154fe7"
+    },
+    "bank2": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/boot-bank2.bin",
+      "sha256": "ceabda728319f08d33a7ff08ed9477f507d49f19edc3764db0d5cacfa3a9f40a"
+    },
+    "bank3": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/boot-bank3.bin",
+      "sha256": "4c3c15007fd582da265bc6c4ca7a7a3f1a06ff9b7170b28391d5d9df35ff492f"
+    },
+    "bank5": {
+      "bytes": 50816,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/boot-bank5.bin",
+      "sha256": "4a72b3e952a9c18c5ccbe9d313b8430cc99bf46f9296e6f326cb08584ffb49d7"
+    },
+    "deployment": {
+      "bytes": 7515,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/deployment.json",
+      "sha256": "16c357d196cf90d0b9ceb920ae1112145778b9029cc07a0a161575ed38bfbead"
+    },
+    "misleading_boot_observer_state": {
+      "bytes": 1255,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/hardware-state.json",
+      "sha256": "086d4bf5866b3794f445a0abca558c703a39eb9c800172b84c02e2b33b9191fe"
+    },
+    "screen_ansi": {
+      "bytes": 71129,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/boot-first-red.ansi.txt",
+      "sha256": "7db5ab147928ccef37f28a7c96ec3cf2d388d8ee96dcc1463351877b0468b103"
+    },
+    "screen_png": {
+      "bytes": 2831,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/boot-first-red.png",
+      "sha256": "39fda72ece849f92a5c7bf5ef1cea84d4acd1dcbd1433684cf69d34e98708eb4"
+    },
+    "screen_text": {
+      "bytes": 2241,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/boot-first-red.txt",
+      "sha256": "92469226a455dd8450c0fd48947fbb6f17ca5dca65c80bd2e5aa6e967b37bc3b"
+    },
+    "session_readback": {
+      "bytes": 65438,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/deploy-readback-runtime-overlays-session-c1-freezer-stage-bound.bin",
+      "sha256": "ca893583117e5ef5a8360d8e7ddbdd4ca614a689f0553be8750e2c029942473b"
+    },
+    "zero_C2J_readback": {
+      "bytes": 64,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt3-NONPROMOTABLE/deploy-readback-zero-c2j.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    }
+  },
+  "claim_limit": "Harness First Red only. No C1 cutpoint, matrix closure, promotion, acceptance-chain result or release claim.",
+  "diagnosis": {
+    "cause": "Four diagnostic overlay payloads came from a separate WPLTO identity. Their internal relocations remained valid, but seven resolved calls still targeted that identity rather than the immutable Link-58 resident image.",
+    "class": "artifact-only-cross-WPLTO-identity-relocation-drift",
+    "external_relocation_sites": 7,
+    "sites": [
+      {
+        "diagnostic_encoded": 46035,
+        "diagnostic_value": 46035,
+        "identity": "memcpy",
+        "link58_encoded": 46025,
+        "link58_value": 46025,
+        "relocation_offset": 50440,
+        "relocation_type": "R_MOS_ADDR16",
+        "section": ".lisp65_rt_c2append_header",
+        "section_offset": 434
+      },
+      {
+        "diagnostic_encoded": 16928,
+        "diagnostic_value": 16928,
+        "identity": "alloc",
+        "link58_encoded": 16932,
+        "link58_value": 16932,
+        "relocation_offset": 50669,
+        "relocation_type": "R_MOS_ADDR16",
+        "section": ".lisp65_rt_c2append_publish_clear",
+        "section_offset": 663
+      },
+      {
+        "diagnostic_encoded": 19565,
+        "diagnostic_value": 19565,
+        "identity": "ext_set_a",
+        "link58_encoded": 19569,
+        "link58_value": 19569,
+        "relocation_offset": 50726,
+        "relocation_type": "R_MOS_ADDR16",
+        "section": ".lisp65_rt_c2append_publish_clear",
+        "section_offset": 720
+      },
+      {
+        "diagnostic_encoded": 19510,
+        "diagnostic_value": 19510,
+        "identity": "ext_set_b",
+        "link58_encoded": 19514,
+        "link58_value": 19514,
+        "relocation_offset": 50737,
+        "relocation_type": "R_MOS_ADDR16",
+        "section": ".lisp65_rt_c2append_publish_clear",
+        "section_offset": 731
+      },
+      {
+        "diagnostic_encoded": 26662,
+        "diagnostic_value": 26662,
+        "identity": "set_sym_function",
+        "link58_encoded": 26666,
+        "link58_value": 26666,
+        "relocation_offset": 50858,
+        "relocation_type": "R_MOS_ADDR16",
+        "section": ".lisp65_rt_c2append_publish_clear",
+        "section_offset": 852
+      },
+      {
+        "diagnostic_encoded": 46035,
+        "diagnostic_value": 46035,
+        "identity": "memcpy",
+        "link58_encoded": 46025,
+        "link58_value": 46025,
+        "relocation_offset": 50165,
+        "relocation_type": "R_MOS_ADDR16",
+        "section": ".lisp65_rt_c2append_rollback_unpublish",
+        "section_offset": 159
+      },
+      {
+        "diagnostic_encoded": 26662,
+        "diagnostic_value": 26662,
+        "identity": "set_sym_function",
+        "link58_encoded": 26666,
+        "link58_value": 26666,
+        "relocation_offset": 50744,
+        "relocation_type": "R_MOS_ADDR16",
+        "section": ".lisp65_rt_c2append_rollback_unpublish",
+        "section_offset": 738
+      }
+    ]
+  },
+  "failed_diagnostic_carrier": {
+    "bytes": 65438,
+    "path": "build/c2.2/substitution/link58-c1-freezer-hybrid-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-stage-bound.bin",
+    "sha256": "ca893583117e5ef5a8360d8e7ddbdd4ca614a689f0553be8750e2c029942473b"
+  },
+  "format": "lisp65-c2.2-C1-Freezer-cross-identity-relocation-hardware-first-red-v1",
+  "hardware": {
+    "C1_cutpoints_reached": 0,
+    "C2J": "all-zero",
+    "boots": 1,
+    "c2_ready": 1,
+    "latency_attempts_consumed": 0,
+    "rtov_family": 2,
+    "rtov_fault": 0,
+    "screen": "*** vm: undefined function",
+    "vm_status": 6,
+    "vm_status_name": "VM_DIRMISS"
+  },
+  "next_gate": "structured Link-58 relocation rebind and hardened boot observer; then separate authorization for a fresh hardware run",
+  "observer_gap": {
+    "cause": "The boot observer checked READY, C2J and Bank-2 identity but did not require a rendered banner/REPL prompt or reject a non-success vm_status. Its saved pass is preserved as superseded evidence, not reused.",
+    "superseded_status": "passed-boot-ready-for-cutpoint-1"
+  },
+  "product": {
+    "bytes": 41563,
+    "path": "build/c2.2/substitution/product-link-58-matrix-addenda-fixed-block/lisp65-c2-substitution-linked.prg",
+    "sha256": "4bab8371aa54060bef4ab9493e12dd6afd230baeb83a11f07daccdaa05000e6f"
+  },
+  "promotable": false,
+  "status": "first-red-harness-cross-identity-relocations-no-C1-cutpoint-reached"
+}

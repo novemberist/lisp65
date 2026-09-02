@@ -1,0 +1,39 @@
+{
+  "authorities": {
+    "consumed_driver": {
+      "bytes": 19889,
+      "path": "git:7864ee13:tools/host-lisp/c2_v16_mem_init_before_after_contact.py",
+      "sha256": "af1e232722c97ba3fb3744cb747c78484da1703c6efc176076fe278246eb1b93"
+    },
+    "consumed_preparation": {
+      "bytes": 4055,
+      "path": "git:7864ee13:tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-contact-preparation-receipt.json",
+      "sha256": "2b980d1f043659e6a51541f44cd79fd88c8d642496a41e3eea43bd0e64db0b5c"
+    }
+  },
+  "cause": "The inherited mapping helper required the RECA8LHC column labels inside parse_registers()' value-only tail. The live row carried valid MAPH/MAPL and raw flag values, so the contact stopped once and then rejected its own parser.",
+  "claim_limit": "Tool parser First Red only; no device-state classification.",
+  "contact": {
+    "CPU_already_stopped": true,
+    "additional_RUN": 0,
+    "additional_monitor_entries": 0,
+    "additional_stops": 0
+  },
+  "format": "lisp65-c2.3-v1.6-mem-init-before-after-capture-first-red-v1",
+  "recorded_on": "2026-08-05",
+  "status": "TOOL-FIRST-RED; CPU ALREADY STOPPED; NO PRODUCT CLAIM",
+  "stopped_registers_after_first_red": {
+    "A": "0x02",
+    "B": "0x00",
+    "MAPH": "0x8000",
+    "MAPL": "0x0000",
+    "PC": "0xb434",
+    "SP": "0x0105",
+    "X": "0xbd",
+    "Y": "0x00",
+    "Z": "0x00",
+    "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a42343334203032204244203030203030203030203031303520383030302030303030203443333142342020303020202020203034202e2e2e2e2e492e2e202e2e2e50203533202d20203030202d202e2e632e2e2e2e2e0d0a2c30373737423433342020383620313720202020205354582020202431370d0a0d0a2e",
+    "row": "B434 02 BD 00 00 00 0105 8000 0000 4C31B4  00     04 .....I.. ...P 53 -  00 - ..c.....",
+    "tail": "4C31B4  00     04 .....I.. ...P 53 -  00 - ..c....."
+  }
+}

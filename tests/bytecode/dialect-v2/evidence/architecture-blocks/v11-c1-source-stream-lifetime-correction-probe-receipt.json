@@ -1,0 +1,170 @@
+{
+  "format": "lisp65-v11-c1-source-stream-lifetime-correction-probe-v1",
+  "version": 1,
+  "recorded_on": "2026-07-16",
+  "status": "passed-probe-owner-capacity-authorization-required-not-promoted",
+  "trigger": {
+    "candidate_product_artifact_set_sha256": "9ce312127c98d13d7b324029dd96a48b57aa3d4d5ca2df2a29321823e9a0834a",
+    "g5_run": "r5-run-20260716-wave1-03",
+    "case": "workbench-persistence/chain-write",
+    "passed_cases_before_stop": 5,
+    "case_receipt_emitted": false,
+    "observed": "The exact 275-byte, two-sector source chain was written and independently verified, but %disk-load-file stopped after the first evaluated top-level form with *** reader: unclosed list.",
+    "hardware_evidence": [
+      {
+        "path": "build/r5-global-g5/evidence/r5-run-20260716-wave1-03/workbench-chain-write/r5-g5-chain-write-load-chain.txt",
+        "sha256": "65fe82e63e8795c5564712366327fd87bf2e710dea434825b504b54e4db53479"
+      },
+      {
+        "path": "build/r5-global-g5/evidence/r5-run-20260716-wave1-03/workbench-chain-write/before.d81",
+        "sha256": "d5e133334b8c3e89bc72883641d8f650f4a0de243584ef5959ae165e0ec823f0"
+      },
+      {
+        "path": "build/r5-global-g5/evidence/r5-run-20260716-wave1-03/workbench-chain-write/after.d81",
+        "sha256": "89706ce43ba296465581683f04a2df410ab095b942f9cc0cf613e06a1decaf0e"
+      }
+    ]
+  },
+  "diagnosis": {
+    "fixture": {
+      "path": "tests/disk/m3-chain-source.lisp",
+      "bytes": 275,
+      "sectors": 2,
+      "sha256": "61013780beff72bcb5769ce14c3cd376b26983d8d3454272bbaa0dde99e559a2"
+    },
+    "hardware_state_after_failure": {
+      "disk_file_len": 275,
+      "disk_file_pos": 209,
+      "file_scratch_contents": "C1 compiler L65M container rather than the unread source tail"
+    },
+    "root_cause": "load_source_stream evaluates each top-level form through resident lcc-run. C1 then stages the compiler tier into DISK_EXT_FILE before the reader has consumed the remaining source, so the source stream and compiler container have overlapping lifetimes in one scratch window.",
+    "failure_class": "lifetime overlap across a nested public entry seam; disk bytes and 1581 chain geometry were correct"
+  },
+  "correction": {
+    "source_stream": "The current 1581 sector is kept in the disjoint 256-byte DISK_EXT_DIR scratch and the next chain sector is fetched only when the reader requests it.",
+    "public_load_ceiling_bytes": 38400,
+    "public_load_ceiling_delta_bytes": 0,
+    "reader_state_bss_bytes": 2,
+    "resident_source_fetch_bytes": 137,
+    "resident_source_fetch_address": "0x19c4",
+    "installer_consolidation": "vm_runtime_overlay_exec remains the sole owner of profile/build identity, entry ABI, source bounds and source CRC immediately before entry. The boot installer owns destination copy and an independent destination CRC; duplicate context ABI, cookie and capacity checks were removed.",
+    "installer_code_bytes_before": 212,
+    "installer_code_bytes_after": 102,
+    "installer_code_delta_bytes": -110
+  },
+  "capacity_delta": {
+    "bank0": {
+      "baseline_resident_prg_bytes": 39561,
+      "candidate_resident_prg_bytes": 39456,
+      "resident_prg_delta_bytes": -105,
+      "baseline_post_boot_reserve_bytes": 1802,
+      "candidate_post_boot_reserve_bytes": 1905,
+      "post_boot_reserve_delta_bytes": 103,
+      "release_target_bytes": 1536,
+      "baseline_banked_headroom_bytes": 266,
+      "candidate_banked_headroom_bytes": 369
+    },
+    "resident_island": {
+      "capacity_bytes": 2048,
+      "baseline_payload_bytes": 1531,
+      "candidate_payload_bytes": 1668,
+      "payload_delta_bytes": 137,
+      "baseline_alignment_bytes": 1,
+      "candidate_alignment_bytes": 0,
+      "annex_bytes": 260,
+      "baseline_reserve_bytes": 256,
+      "candidate_reserve_bytes": 120,
+      "reserve_delta_bytes": -136,
+      "authorization": null
+    },
+    "resident_island_installer_slice": {
+      "hard_limit_bytes": 1792,
+      "sealed_baseline_bytes": 1743,
+      "candidate_bytes": 1770,
+      "sealed_baseline_headroom_bytes": 49,
+      "candidate_headroom_bytes": 22,
+      "delta_from_sealed_bytes": -27,
+      "latest_owner_authorized_headroom_pin_bytes": 27,
+      "delta_from_latest_owner_pin_bytes": -5,
+      "arithmetic": "1531 + 212 = 1743; 1668 + 102 = 1770",
+      "authorization": null
+    },
+    "ext": {
+      "baseline_standard_composition_headroom_bytes": 25073,
+      "candidate_standard_composition_headroom_bytes": 25073,
+      "delta_bytes": 0
+    },
+    "boot_overlay": {
+      "baseline_bytes": 1669,
+      "candidate_bytes": 1669,
+      "delta_bytes": 0,
+      "vma_headroom_bytes": 0
+    },
+    "runtime_overlay_bank": {
+      "baseline_bytes": 65472,
+      "candidate_bytes": 65472,
+      "delta_bytes": 0,
+      "hard_limit_bytes": 65536,
+      "remaining_bytes": 64
+    },
+    "symbols": {
+      "baseline_headroom": 298,
+      "candidate_headroom": 298,
+      "delta": 0
+    },
+    "namepool": {
+      "baseline_headroom_bytes": 4602,
+      "candidate_headroom_bytes": 4602,
+      "delta_bytes": 0
+    },
+    "directory": {
+      "baseline_post_align_headroom": 168,
+      "candidate_post_align_headroom": 168,
+      "delta": 0
+    }
+  },
+  "candidate_probe_identity": {
+    "scope": "eight canonical Workbench core artifacts before the R3 product rebuild",
+    "product_sha256": "d44ee0a0d5f255cfd42716276ca256c3bcebe1e80a0575bdd46283a3ce14f036",
+    "artifact_set_sha256": "f9b474e05edaa9807d8ebec95c0531c74637aa0004b49496c92cdcb44925aea0",
+    "linked_elf_sha256": "63e306e1f7ab629e34e1e63e0336bf2f7d760ad5aeb3fdd7b3dfdb87ad13a20a",
+    "resident_prg_sha256": "99b2a7443bfe796319461dd194061247ec2ce1adc343a3d190db99bc86df2b0e",
+    "runtime_overlays_sha256": "e3e2d3a2f9217cd51ee981b8bbf6a9c87a77c9d6440ba44412447eb5cf1c13b9",
+    "stdlib_preload_sha256": "d71ba791e7c8b7b7487d36de24714f55bb4cc017976588a4ecf0df0e378e894d"
+  },
+  "verification": {
+    "source_stream_gate": {
+      "path": "build/reports/workbench/v11-source-stream-lifetime.json",
+      "sha256": "598f63d2e2b749c626bc529028835fec4ab60bb5f94cd8748dfb0375d5463e64",
+      "result": "pass: old shared scratch corrupts at the hardware-observed 209/275 boundary; disjoint sector scratch remains byte-identical"
+    },
+    "island_inventory": {
+      "path": "build/reports/workbench/bank0-island.json",
+      "sha256": "f6994af104824bc3edc1de486af1c2a605c491b556ae66e8cb29a289c8914901",
+      "result": "pass: 1668-byte immutable payload, 260-byte annex, 120-byte reserve, eleven declared allocations, zero unattributed bytes"
+    },
+    "runtime_overlay_transport": "pass: reusable, batch and 45 fail-closed cases, including independent destination-copy corruption detection",
+    "canonical_product_link": "pass: stack guard, overlay footprint and final 44-slice binding",
+    "source_gate_boundary": "All current source gates through the system/runtime family pass. The full make check-source run then stops at the immutable Prelude family evidence, which is intentionally not regenerated from changed live product sources.",
+    "local_reproducibility_note": "The legacy local workbench-overlay-reproducibility target still selects the historical pre-poke profile and stops before linking. The canonical varied fresh-clone double build consumes a committed tree and is therefore required after owner authorization and commit, before R3 promotion."
+  },
+  "required_owner_decision": {
+    "resident_island_reserve": "Authorize repin from 256 B to 120 B.",
+    "resident_island_installer_slice": "Authorize the additional five-byte debit against the latest 27-byte owner pin, yielding 22 B; the actual sealed-product comparison is 49 B to 22 B because the intervening structural allocation credit remains historical.",
+    "rejected_shortcuts": [
+      "Do not reduce the public 38,400-byte source-load ceiling.",
+      "Do not relax the 1,792-byte installer-slice hard limit.",
+      "Do not remove product/build identity or either CRC boundary from the transport chain."
+    ]
+  },
+  "next_gates_after_authorization": [
+    "record a capacity authorization bound to this receipt",
+    "commit the correction",
+    "run the varied-environment fresh-clone double build",
+    "rebuild and repin R3/R4/R5/R6",
+    "run all fourteen G5 cases fresh because the product SHA changed",
+    "run the applicable G6 hardware set fresh",
+    "seal Wave 1 only after the hardware chain-write case loads and executes the complete two-sector source"
+  ],
+  "claim_limit": "This receipt proves the diagnosed scratch-lifetime class, the disjoint-sector model, exact current source/link bindings, fail-closed transport behavior and measured capacity. It authorizes no capacity debit, does not promote a product set, does not replace the canonical varied fresh-clone build and claims no G5/G6 hardware acceptance."
+}

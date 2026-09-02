@@ -1,0 +1,146 @@
+{
+  "accounting": {
+    "device_recontacts": 0,
+    "measured_forms": 1,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "authorities": {
+    "backing_planes": {
+      "Bank-2": {
+        "bytes": 65536,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-ownership-crc-full-run/post-bank2-source.bin",
+        "sha256": "f6e8e542daabe28a399906f4249865fe183bf0b3d0ffca380f233f80e7f68747"
+      },
+      "C2D": {
+        "bytes": 50816,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-ownership-crc-full-run/post-c2d-reset-domain.bin",
+        "sha256": "b41d949a307dd6f7e2382cba66c8592ab4bfe1ff763effa5d11a86fbe7ab7a00"
+      },
+      "C2J": {
+        "bytes": 64,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-ownership-crc-full-run/post-c2j.bin",
+        "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+      }
+    },
+    "device": {
+      "bytes": 27645,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-ownership-crc-full-run-device-receipt.json",
+      "sha256": "5c86e06c6e55ce9ceadb5ca777e6446ff35212eaba76de1f9c0fb982047a02bf"
+    },
+    "phase_A": {
+      "bytes": 1842382,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-a-host-reconstruction-receipt.json",
+      "sha256": "10dc7b68f9bb21afaddb96af59c54f5ac38ffdf475b0e64e97df7ea59653c4d0"
+    },
+    "phase_B": {
+      "bytes": 35761,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-b-guard-partition-receipt.json",
+      "sha256": "83a8328a7dc3e4c395ff42b368f79aaed8d258076efebada021736afce96428a"
+    },
+    "runtime_overlay_manifest": {
+      "bytes": 44598,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/final/runtime-overlays-session-final.json",
+      "sha256": "8b52e9a7b371e5b69695ca04367f40411f50390c4ceb52b60b3c51f99091569c"
+    }
+  },
+  "claim_limit": "A is attributed to c2-append-header slot 39 on the first generated persistent append (make-point). This result does not identify the internal predicate within that 1419-byte slice, claim F018B membership, authorize a fix/link/device run, or widen the two retained refill views into a claim about every historical refill.",
+  "decision": {
+    "R_A_I_G": "A",
+    "append": {
+      "C2J_after_cleanup": "CLEAR",
+      "first_failed_persistent_definition": "make-point",
+      "first_non_ok_checkpoint": 39,
+      "phase_owner_after_cleanup": "NONE",
+      "slot": {
+        "entry": 50033,
+        "file_size": 1419,
+        "id": 39,
+        "memory_size": 1419,
+        "name": "c2-append-header",
+        "section": ".lisp65_rt_c2append_header",
+        "sha256": "57daff5bb39482b08f14f936fe9342e8ec3cf07ce2c24393d09ccea3d05f61e2",
+        "source_address": 251648,
+        "vma": 50006
+      },
+      "target_definition_landed": false
+    },
+    "classifier": "c2_v16_defstruct_phase_b.classify",
+    "excluded": {
+      "G": "first-error record unreached and mem_oom=0",
+      "I": "A has precedence and pure-I precondition D01A=1 is absent (D01A=0)",
+      "R": "both retained completed refill bytes equal captured source"
+    },
+    "terminal_precedence": [
+      "R",
+      "A",
+      "G",
+      "I"
+    ]
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-ownership-crc-full-run-result-v1",
+  "mem_init": {
+    "after_freelist_head": "0x0060",
+    "classification": "INIT-BUILT-NO-FAILURE-REPRODUCED",
+    "current_freelist_head": "0x0354"
+  },
+  "post_require_state": {
+    "code_bytes": 44933,
+    "entries": 757,
+    "images": 8,
+    "matches_Phase_A_require_only": true,
+    "next_C2D_entry_757_raw_hex": "00000000000000000000",
+    "resolutions": 2984,
+    "roots": 358
+  },
+  "recorded_on": "2026-08-06",
+  "source_oracle": {
+    "C2D_entry": {
+      "code_length": 42,
+      "code_offset": 36240,
+      "generation": 1,
+      "image_slot": 5,
+      "literal_count": 6,
+      "ordinal": 628,
+      "raw_hex": "0506908d2a0006090100",
+      "resolution_base": 2310
+    },
+    "R_excluded": true,
+    "bank_tag": 1,
+    "header_bytes": 19,
+    "object_sha256": "e03383594b04650b891c8ec3cccd7b0a109ac8bd9b5e90c46c73f266ee377e91",
+    "ordinal": 628,
+    "owner_model": "Link-82 C2 product bank-tag plus C2D ordinal",
+    "retained_fills": [
+      {
+        "cursor": 16,
+        "expected": 11,
+        "fetched": 11,
+        "identity_correct": true,
+        "oracle": "bound-C2D-source",
+        "owner_bank_tag": 1,
+        "owner_ordinal": 628,
+        "tagged": true
+      },
+      {
+        "cursor": 20,
+        "expected": 62,
+        "fetched": 62,
+        "identity_correct": true,
+        "oracle": "bound-C2D-source",
+        "owner_bank_tag": 1,
+        "owner_ordinal": 628,
+        "tagged": true
+      }
+    ],
+    "scope": "last-two-retained-completed-refills-only"
+  },
+  "status": "A-PERSISTENT-APPEND-SLOT39-HEADER-NON-OK",
+  "stopped_state": {
+    "CPU_left_stopped": true,
+    "PC": "0xb431",
+    "code_owner": "ownership-CRC-bound-diagnostic-PRG",
+    "record_hex": "a1a2a31000a4017402a51000a60ba7a81400a9017402aa1400ab3e5c5dcc5ecccc5fcc60cccccc61ccccb2b327b400b500b6b701b800b900ba9701bbbc00bd0600",
+    "stable_reads": 3
+  }
+}

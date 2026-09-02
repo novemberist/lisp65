@@ -1,0 +1,234 @@
+{
+  "authority": {
+    "commission": {
+      "authority": "git-blob",
+      "bytes": 2123,
+      "commit": "149839fec059c122a7e5feb4c5fc317bc50290e0",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "a27b717438318193a3a02bee18840b07827188edfdf564dc784a664ac158e7b1"
+    },
+    "contract": {
+      "bytes": 1661,
+      "path": "config/c2-v21-cpu-transport-release-contract.json",
+      "sha256": "f634962a309c9ad5e53621ceb888c289750ee6dffb42f0e68232b7783f22e91b"
+    },
+    "decoder": {
+      "bytes": 41049,
+      "path": "scripts/c2-stream-decoder.c",
+      "sha256": "64fbbc1b7ae18e93b4a01affc8b5e2454aa91a9de5e353703fc61b3f8bf39a82"
+    },
+    "device": {
+      "bytes": 6434,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-loading-libraries-progress-map-device-receipt.json",
+      "sha256": "78ae6a3e6f9b9de0af712958a3fd26d45341568dc908b4d2cae7436df392a40d"
+    },
+    "driver": {
+      "bytes": 25513,
+      "path": "tools/host-lisp/c2_v21_cpu_transport_preflight.py",
+      "sha256": "69f9804fd0937446e40240fe35d2b03a04254bdc374debbfcf206aa37406760a"
+    },
+    "granularity": {
+      "bytes": 12288,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-convergence-granularity-review-receipt.json",
+      "sha256": "ae449f4c8c7c0ea751e695d64f49848e0623aed3a60f417f7d2fe77b3690e829"
+    },
+    "media_base": {
+      "bytes": 52342,
+      "path": "tools/host-lisp/c2_lite_media_product.py",
+      "sha256": "8a746a89dbe4479fb713d7ea0c6326cffe7db18d31e3382fcc7d032debe770fa"
+    },
+    "producer": {
+      "bytes": 337100,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+    },
+    "reader": {
+      "bytes": 2993,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "f66fcfb11e3a4be500dc59d705d0b4172347c7306d8f12b0fa7e5b36555b3cbc"
+    },
+    "reconciliation": {
+      "bytes": 5808,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-cpu-transport-reconciliation-receipt.json",
+      "sha256": "9f7d2b549058525cafb9ac5c44e823b067f57b04d31fce4fdc5c60cd22fe74d3"
+    },
+    "runtime": {
+      "bytes": 164002,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "4f2a04c1d45e9d40c242d033aeeb1ebdcd89a0004802d8194c07ced35b996e17"
+    },
+    "runtime_header": {
+      "bytes": 26938,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "bc3841df851f24c0b2f3829bf7495aa9283882b1b88fc983cb366616cf4cfdb5"
+    }
+  },
+  "claim_limit": "Host preflight proves routing, MAP arithmetic, full admitted source domains, no-DMA transport shape and workload removal. The MAP hardware receipt proves the tested Bank-5/Attic transport form, not a wall-time. No product, media, boot or release claim exists before the one card and D1.",
+  "crc": {
+    "feature_shape": "branch form selected only in 2.1; historical expression retained",
+    "maximum_admitted_bytes": 64,
+    "pessimistic_instruction_ceiling": 16896,
+    "pessimistic_seconds_at_40MHz": 0.0004224,
+    "ring_attribution": "fixed state with final PC in crc32_update; no 6.5-s/read claim",
+    "status": "PASS: CRC semantics identical; sampled PC is not a wall-cost proof",
+    "vectors": 67
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-cpu-transport-preflight-v1",
+  "hardware": {
+    "claim_limit": "The MAP claim is limited to 256 repeated four-byte CPU reads at each tested Bank-5 and Attic source base. The ring decides life versus fixed state and measures its observed interval rate; it does not by itself promote a transport or diagnose every remaining reader.",
+    "probe_reads": {
+      "attic": 256,
+      "bank5": 256
+    },
+    "probe_status": "0xa5/0xa5",
+    "ring": {
+      "counter": 18,
+      "final_pc": "0xb0b1",
+      "fixed_seconds": 118.23115113728207,
+      "pc_interpretation": "single final PC sample inside phase-03 CRC computation; not by itself a loop proof",
+      "samples": 4
+    },
+    "status": "PASS: Bank-5 and Attic MAP CPU reads target-proven"
+  },
+  "media_closure": {
+    "common_API": {
+      "complete": true,
+      "executed": [
+        "artifact.bin"
+      ],
+      "registered": [
+        "artifact.bin"
+      ],
+      "results": {
+        "artifact.bin": {
+          "sha256": "88cb8a087b6e8cebfc9ae5602f5a2159a6bcf923e7f2c56809bcda6cad1727a7",
+          "status": "PASS"
+        }
+      }
+    },
+    "historical_diagnostic_defect": "actual packed stager ELF omitted STAGING MEDIA",
+    "mutations_rejected": [
+      "omit-registered-gate",
+      "gate-undelivered-artifact"
+    ],
+    "status": "PASS: packed artifact gates are closure-owned for every successor builder",
+    "successor_requirement": "2.1 media builder passes the liveness opt-in and closes its actual packed ELF through MEDIA.close_packed_artifacts"
+  },
+  "mutations_rejected": [
+    "lose-bank5-proof",
+    "map-wrong-cpu-block",
+    "accept-wide-call",
+    "add-DMA-to-cpu-reader",
+    "change-write-family",
+    "change-historical-world",
+    "drop-library-read",
+    "retain-probe-job",
+    "promote-sampled-PC-to-price",
+    "omit-packed-artifact-closure",
+    "drop-shelf-cpu-route",
+    "drop-c2d-cpu-route",
+    "cpu-route-C2D-write",
+    "drop-source-owner",
+    "drop-SEI",
+    "drop-MAP-restore",
+    "accept-high-length"
+  ],
+  "next": "run exactly one Link-107 product card under producer discipline",
+  "range_model": {
+    "domains": {
+      "c2d-bank5": {
+        "base": "0x00050000",
+        "boundary_reads_checked": 210,
+        "bytes": 50816,
+        "exhaustive_bytes_checked": 50816,
+        "last": "0x0005c67f",
+        "megabyte": "0x00"
+      },
+      "product-shelf-attic": {
+        "base": "0x08100000",
+        "boundary_reads_checked": 375,
+        "bytes": 93681,
+        "exhaustive_bytes_checked": 93681,
+        "last": "0x08116df0",
+        "megabyte": "0x81"
+      },
+      "session-attic": {
+        "base": "0x08400000",
+        "boundary_reads_checked": 4203,
+        "bytes": 1048576,
+        "exhaustive_bytes_checked": 1048576,
+        "last": "0x084fffff",
+        "megabyte": "0x84"
+      }
+    },
+    "mapped_cpu_block": 2,
+    "mapped_window": "0x4000..0x5fff",
+    "maximum_call_bytes": 64,
+    "preserved_high_mask": "block-7 only",
+    "status": "PASS: full source domains resolve through block-2 MAP",
+    "total_exhaustive_bytes_checked": 1193073
+  },
+  "reader": {
+    "dma_register_references": 0,
+    "interrupt_window": "PHP/SEI through full MAP restore/PLP",
+    "object_bytes": 169,
+    "pre_card_ceiling_bytes": 192,
+    "section": ".text.c2_map_cpu_read",
+    "status": "PASS: real reader assembles and closes synchronous MAP path"
+  },
+  "recorded_on": "2026-08-14",
+  "routing": {
+    "historical_worlds_changed": 0,
+    "read_families": [
+      "Shelf/Session",
+      "C2D/Bank-5"
+    ],
+    "source_owner_scope": {
+      "scopes": [
+        {
+          "defines": [
+            "LISP65_C2_ASM_CONVERGENCE",
+            "LISP65_CODE_WINDOW_CONVERGENCE",
+            "LISP65_DMA_CONTENT_CONVERGENCE"
+          ],
+          "name": "mapped-far-content-convergence",
+          "selected": false,
+          "sources": [
+            "src/c2_mapped_far_convergence.s",
+            "src/c2_mapped_far_service.s"
+          ]
+        },
+        {
+          "defines": [
+            "LISP65_C2_MAP_CPU_TRANSPORT"
+          ],
+          "name": "map-cpu-library-read",
+          "selected": true,
+          "sources": [
+            "src/optional/c2_map_cpu_read.s"
+          ]
+        }
+      ],
+      "status": "passed-define-and-source-owner-scope-closure"
+    },
+    "status": "PASS: exactly both immutable library readers use CPU MAP",
+    "write_families_changed": 0
+  },
+  "status": "HOST-GREEN; ONE-PRODUCT-CARD-NOT-YET-RUN",
+  "workload": {
+    "duration_authority": "fresh D1/progress-ring confirmation; MAP probe carried no timing",
+    "expected_device_seconds": null,
+    "logical_reads_rerouted": 346298,
+    "payload_bytes": 1180781,
+    "possible_primary_dma_jobs_removed": 346298,
+    "probe_dma_jobs_removed": 2361562,
+    "remaining_DMA_write_calls": 4773,
+    "status": "PASS: all bound library reads move to synchronous CPU transport",
+    "structural_instruction_upper_bound": 53851755
+  }
+}

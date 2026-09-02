@@ -1,0 +1,138 @@
+{
+  "artifacts": {
+    "baseline": {
+      "code_bytes": 16256,
+      "manifest": {
+        "bytes": 328616,
+        "path": "build/post-promotion/v124/time/host-first/base/stdlib-p0.manifest.json",
+        "sha256": "3330c32c7ccc9c1cf226129b186d123e4dcebbc7896f5c9657ff2639422cd5eb"
+      },
+      "objects": 376
+    },
+    "candidate": {
+      "code_bytes": 16538,
+      "manifest": {
+        "bytes": 332742,
+        "path": "build/post-promotion/v124/time/host-first/candidate/stdlib-p0.manifest.json",
+        "sha256": "250420afae819eb8d35419f3881442a0a4226bd031c192fe1978b0b66ae382e6"
+      },
+      "objects": 379
+    },
+    "delta": {
+      "bank2_code_bytes": 282,
+      "directory_bytes": 21,
+      "native_primitives": 0,
+      "objects": 3,
+      "resident_bytes": 0,
+      "resolution_words": 12
+    },
+    "execution": {
+      "independent_oracle_cases_per_lane": 12,
+      "lanes": 2,
+      "observations": {
+        "bytes": 28822,
+        "path": "build/post-promotion/v124/time/host-first/candidate/observations.json",
+        "sha256": "47a0a97f42d1c7f429c953a8b9f96258a93553f282173133fbc5049bd724d5d5"
+      },
+      "stdout": [
+        "bytecode-p0-stdlib-check: PASS suites=1 functions=378 cases=242 objects=636 code_bytes=21962 dir_bytes=4452 steps=60790",
+        "bytecode-p0-stdlib-artifacts: WROTE build/post-promotion/v124/time/host-first/candidate/stdlib-p0 objects=379 code_bytes=16538 ext_bytes=38938 dir_bytes=2653 manifest=build/post-promotion/v124/time/host-first/candidate/stdlib-p0.manifest.json disasm=build/post-promotion/v124/time/host-first/candidate/stdlib-p0.disasm.txt",
+        "bytecode-p0-stdlib-embed-check: PASS cases=242 objects=379 literal_nodes=858 literal_patches=802 steps=60790"
+      ],
+      "tracked_cases_per_lane": 7
+    },
+    "projected": {
+      "admission_budget_bytes": 512,
+      "bank2_headroom_bytes": 22318,
+      "bank2_static_code_bytes": 43218
+    }
+  },
+  "authority": {
+    "contract": {
+      "bytes": 2199,
+      "path": "config/c2-time-contract.json",
+      "sha256": "a8a50b9a0a2edc1bf5a9dce8f9160418a5aacd16a7e2636f6ab9dc0e48fe0c21"
+    },
+    "fx_predecessor": {
+      "bytes": 5568,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-fx-host-first-receipt.json",
+      "sha256": "3875f93709221f81997d5fecf62a40f3ddb7e2b81d5fa80d935f3d9233f80397"
+    },
+    "gate": {
+      "bytes": 17709,
+      "path": "tools/host-lisp/c2_v124_time_gate.py",
+      "sha256": "f2c47ec99628a67b945b2212a425112cc9863bb9846d7e2b71093524e124c53f"
+    },
+    "host_vm": {
+      "bytes": 88857,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "18290568c7217f1597505664f6bfdcab8d55e31a3f7d5254a9eea612af7f8389"
+    },
+    "phase_m": {
+      "bytes": 9663,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-phase-m-hardware-receipt.json",
+      "sha256": "b821f41a37426b97c701256f0b0abebf3e76196264210c756a697c639cadc724"
+    },
+    "profile": {
+      "bytes": 4487,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "1abcc4e01d0103b8466f4abec90698404f082df472c6e1b6129678fcc5c715ea"
+    },
+    "source": {
+      "bytes": 1420,
+      "path": "lib/stdlib-time.lisp",
+      "sha256": "82ad7be3de1c32ced8a04d0a0196a7f1315b9145490b6c3e3eb9ecfb04a73057"
+    },
+    "stdlib_runner": {
+      "bytes": 124923,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "72f72f2bae171ca95b9b2ea83eaefeaadb40811500ecd5451a59b6bc703d49de"
+    },
+    "suite": {
+      "bytes": 1190,
+      "path": "tests/bytecode/libs/p0-stdlib-time-base.json",
+      "sha256": "3058d6dd13e1d103ad9a8f0f2434065353e5b7eef3fe0b341d3684fbd9102180"
+    }
+  },
+  "claim_limit": "Host source/artifact semantics and projected Bank-2 admission only; no successor product or release claim.",
+  "composition": {
+    "original_receipt": {
+      "bytes": 5001,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-time-host-first-receipt.json",
+      "sha256": "6ec5a84e4da73ab39a0e237bf0691beefb212f11c568f2f491c71c13e7aaf693"
+    },
+    "product_build_id": "0x15da63c2",
+    "release_banner": "WORKBENCH 1.2.4"
+  },
+  "format": "lisp65-c2.2-v1.2.4-time-host-first-receipt-v1",
+  "hardware_runs": 0,
+  "mutations_rejected": {
+    "borrow-removed": "time source seam drift",
+    "budget-relaxed": "time placement/admission drift",
+    "form-evaluated-twice": "time source seam drift",
+    "macro-built-not-executed": "time suite/execution witness drift",
+    "missing-retry": "time source seam drift",
+    "non-atomic-read": "time source seam drift",
+    "output-removed": "time source seam drift",
+    "overflow-admitted": "time source seam drift",
+    "resident-byte": "time placement/admission drift",
+    "wrong-high-byte-contract": "time clock authority drift",
+    "wrong-high-read": "time source seam drift"
+  },
+  "next_gate": "One non-promotable combined fx+time WPLTO card.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-30",
+  "source_contract": {
+    "counter": "$FF84/$FF83/$FF84",
+    "maximum_reportable_frames": 16383,
+    "native_primitives": 0,
+    "private_functions": 2,
+    "public_macros": [
+      "time"
+    ],
+    "resident_delta_bytes": 0,
+    "status": "passed-time-source-contract"
+  },
+  "status": "passed-time-host-reference-in-final-v1.2.4-composition"
+}

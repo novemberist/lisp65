@@ -1,0 +1,106 @@
+{
+  "format": "lisp65-c2-v17-init-l65-card-first-red-v1",
+  "status": "FIRST RED: FINAL-ELF CALL-ORDER WITNESS KEYS ON OBJDUMP SPELLING AND LINEAR ORDER",
+  "card": "v1.7 native INIT.L65 implementation r4",
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "product_links": 1,
+    "scope_runs": 1,
+    "acceptance_runs": 1,
+    "media_builds": 0,
+    "device_contacts": 0
+  },
+  "observed": {
+    "failing_consumer": "c2_v17_init_l65_card.linked_failure_gate",
+    "failure": "substring not found",
+    "expected_objdump_labels_in_linear_order": [
+      "<setjmp>",
+      "<scr_init>",
+      "<vm_run_dir>",
+      "<vm_status_error_code>",
+      "<lisp_abort_code>"
+    ],
+    "candidate_symbols": {
+      "repl": "0xA9D7",
+      "setjmp": "0x2473",
+      "scr_init": "0xA960",
+      "vm_run_dir": "0x44B8",
+      "vm_status_error_code": "0x975A",
+      "lisp_abort_code": "0x2FA1"
+    },
+    "candidate_normal_boot_edges": [
+      "0xA9EC -> setjmp@0x2473",
+      "0xAC78 -> scr_init@0xA960",
+      "0xAC89 -> vm_run_dir@0x44B8",
+      "0xAC95 -> vm_status_error_code@0x975A",
+      "0xAC98 -> lisp_abort_code@0x2FA1"
+    ],
+    "objdump_rendering": {
+      "0xA9EC": "jsr $2473 <setjmp>",
+      "0xAC78": "jsr $A960 <__lisp65_c2_mapped_product_cold_end+0x298F>",
+      "0xAC89": "jsr $44B8 <vm_run_dir>",
+      "0xAC95": "jsr $975A <__lisp65_c2_mapped_product_cold_end+0x1789>",
+      "0xAC98": "jsr $2FA1 <lisp_abort_code>"
+    },
+    "linear_order_counterexample": "repl also calls lisp_abort_code at 0xAA6D and 0xABE3 on editor/error paths before the normal boot block at 0xAC74; first textual occurrence is not control-flow order",
+    "resident_text_bytes": {
+      "predecessor": 37707,
+      "candidate": 37664,
+      "delta": -43,
+      "bar_max": 0
+    },
+    "candidate_plane": {
+      "predecessor_bytes": 46043,
+      "candidate_bytes": 46053,
+      "delta": 10,
+      "objects": 393,
+      "stdlib_code_bytes": 17248,
+      "repl_banner_bytes": 155
+    },
+    "scope_status": "PASS",
+    "acceptance_status": "PASS"
+  },
+  "attribution": {
+    "classification": "real-caller/semantic-control-flow witness reduced to objdump mnemonic identity plus linear text order",
+    "product_defect": false,
+    "mechanism_open": false,
+    "product_facts": "all five target symbols and the intended normal-boot edges exist in the final ELF; the gate cannot name two local targets through objdump rendering and mistakes unrelated earlier abort edges for boot ordering"
+  },
+  "review_boundary": {
+    "seam_self_dispositions_consumed": 3,
+    "disposition": "STOP: full r1-r4 chain returns to Review before any conversion or retry",
+    "recommended_conversion": "derive call targets from ElfTruth symbol addresses and prove the normal post-setjmp control-flow path as a CFG property; never use objdump labels or first textual occurrence as identity/order",
+    "required_mutations_if_authorized": [
+      "normal-boot scr_init edge removed or moved before setjmp",
+      "vm_run_dir error edge no longer reaches vm_status_error_code then lisp_abort_code",
+      "numeric target remains correct while objdump label spelling changes"
+    ]
+  },
+  "artifacts": {
+    "invocation": {
+      "path": "build/c2.3/v1.7-init-l65-card-r4b-preflight/candidate-invocation.json",
+      "bytes": 2275,
+      "sha256": "81d6d6930b8eafd7b1c9902c1be27a4fcd671c647a724dac2e5a8b5272ed3f4d"
+    },
+    "ELF": {
+      "path": "build/c2.3/v1.7-init-l65-card-r4/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 647280,
+      "sha256": "4ae360b0ff583505d0c584c7c20a269526b8145f9406f1ef0752433099a021b9"
+    },
+    "PRG": {
+      "path": "build/c2.3/v1.7-init-l65-card-r4/wplto/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "f2ea6e12333ff036067a21ec04c32b26cda66b004e16df2814e3b5fbaa1813b7"
+    },
+    "scope": {
+      "path": "build/c2.3/v1.7-init-l65-card-r4/owner-scope-result.json",
+      "bytes": 3260,
+      "sha256": "8c5173c457c356b0a4ca0b6c0bca7e0f4fbfe99ac9272a6605231cd0602d77f9"
+    },
+    "acceptance": {
+      "path": "build/c2.3/v1.7-init-l65-card-r4/artifact-acceptance.json",
+      "bytes": 15201,
+      "sha256": "d989e82864ed8cbdb988b1d7f03c13046ba8b569b9a837a07c89222ec51c4f25"
+    }
+  }
+}

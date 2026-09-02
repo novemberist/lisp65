@@ -1,0 +1,32 @@
+{
+  "classification": "harness-first-red-before-first-product-instruction",
+  "evidence": {
+    "resident_start_stub": {
+      "address": "0x00002001",
+      "bytes": 32,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/start-first-red-stub-20260731.bin",
+      "sha256": "9cd80d8663f81e30fd20a7c9b84f8de603aea23eab3c51dbf5cc914e77b4fa41"
+    },
+    "terminal_screen": {
+      "bytes": 5525,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/start-first-red-screen-20260731.png",
+      "sha256": "0abe55a9f83135fd768b0a651cc7832765db4876a3419845e793bda3f0843108"
+    }
+  },
+  "finding": {
+    "candidate_executed": false,
+    "mechanism": "The bound BASIC start stub remained byteidentical in RAM, while both the pending-RUN RETURN injection and m65 --vtyperet failed to submit a BASIC command. The failure is confined to the virtual keyboard start transport.",
+    "product_semantics_claimed": false,
+    "terminal_screen_state": "BASIC READY after virtual RUN/RETURN syntax errors"
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-virtual-run-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "remedy": {
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0,
+    "resume_condition": "owner-authorized direct control transfer reaches the bound 0x2023 entry without using the failed BASIC auto-RUN path",
+    "semantic_rows_changed": 0
+  },
+  "status": "closed-virtual-keyboard-start-transport-boundary"
+}

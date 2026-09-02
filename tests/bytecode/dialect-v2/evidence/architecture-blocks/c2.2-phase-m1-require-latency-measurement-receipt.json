@@ -1,0 +1,421 @@
+{
+  "attribution": {
+    "decision_relevant_result": "The idempotent repeat performs 98.55% of first-run VM instructions and 96.24% of first-run Prim-67 reads while doing no publication. The accepted target wall totals are 12 s first and 9 s repeat. Thus most observed require work is common parse/validation/resolution work, not the two first-run library loads. This does not attribute any remainder to GC.",
+    "measured": [
+      "exact compiled-VM instruction counts",
+      "exact Prim-67 call/read counts",
+      "exact disk/load operations",
+      "runtime host-heap allocation operations",
+      "instrumented Python-host phase timings"
+    ],
+    "not_measured": [
+      "target GC collection count during require",
+      "target phase wall time",
+      "target DMA latency",
+      "target CPU or IRQ behavior"
+    ]
+  },
+  "authority": {
+    "driver": {
+      "bytes": 20819,
+      "path": "tools/host-lisp/c2_phase_m_require_latency.py",
+      "sha256": "0aebc02f488ab7e20ef12fd8c6f08d1dbe069661ee4fb8fa5e8935624300475c"
+    },
+    "media": {
+      "bytes": 819200,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/library-media-successor/require-defstruct-link75-bound.d81",
+      "sha256": "b022e919d4347bc6f0a20df3a39584a076e35caf4042ac9b6d5af92d90ede34f"
+    },
+    "resolver_fixture": {
+      "bytes": 23389,
+      "path": "tools/host-lisp/c2_link75_real_require_resolver_host.py",
+      "sha256": "3238e5f4fce07c36c3cb0f819828ac30e16d2d559e66c80a6c262f9e3bff97d9"
+    },
+    "static_bank2": {
+      "bytes": 40284,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+      "sha256": "d7dcf8bd3771468536fe6ba1c44a13bef75f159906df0dfe4ce9f801dd369d36"
+    },
+    "static_c2d": {
+      "bytes": 33840,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "54611b56534eccace3aa8afeba0c9274e036a1e0080de2b4b2c47c2cc7a89c80"
+    },
+    "stdlib": {
+      "bytes": 285326,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/static-plane/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "034818a0e95b18494e7b3a912cbe03732a99e93021b368ff90635118279f3acc"
+    }
+  },
+  "claim_limit": "Phase timings are Python-host measurements with tracing overhead and are not target timing estimates. Semantic counts are exact for the bound bytecode fixture. The host heap does not implement the target garbage collector, so this receipt makes no target collection-count claim.",
+  "classifier_gate": {
+    "cases_passed": 5,
+    "mutated_precedence_cases_rejected": 3
+  },
+  "format": "lisp65-c2.2-phase-m1-require-latency-v1",
+  "hardware_runs": 0,
+  "hardware_wall_truth": {
+    "current_valid_full_reset_product_bound_media": {
+      "first_receipt": {
+        "bytes": 180,
+        "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware-symbol-read-session-v2/retry-require-first-timing.json",
+        "sha256": "7979434df7e9cd577402a7cfe76dabafad21a0c4611b4dae0f8e073dfaa4322b"
+      },
+      "first_require_seconds": 12,
+      "idempotent_repeat_seconds": 9,
+      "repeat_receipt": {
+        "bytes": 179,
+        "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware-symbol-read-session-v2/retry-require-repeat-timing.json",
+        "sha256": "3a4763b68a3c6a26fc865630714ccc411b15d4dc4b806f97885e8ea98f5157c2"
+      },
+      "resolution_seconds": 1
+    },
+    "historical_30_second_observation": {
+      "reason": "The later full-reset run against product-bound successor media measured 12 s first and 9 s repeat.",
+      "status": "superseded-coarse-observation",
+      "used_as_current_baseline": false
+    }
+  },
+  "host_measurement": {
+    "first_require": {
+      "c2d_and_code_changed": true,
+      "disk_sector_reads": 2,
+      "instrumented_host_seconds": {
+        "max": 1.182154,
+        "median": 1.173622,
+        "min": 1.145911,
+        "p90": 1.182154
+      },
+      "loader_attempts": 2,
+      "outer_instrumented_host_seconds": {
+        "max": 1.182153,
+        "median": 1.173621,
+        "min": 1.145911,
+        "p90": 1.182153
+      },
+      "phase_allocations": {
+        "control": 1,
+        "load_publish": 464,
+        "parse": 139,
+        "resolve": 256
+      },
+      "phase_host_percent_median": {
+        "control": 0.0114,
+        "load_publish": 14.3941,
+        "parse": 78.3607,
+        "resolve": 7.1865
+      },
+      "phase_host_seconds_median": {
+        "control": 0.000133,
+        "load_publish": 0.168071,
+        "parse": 0.91471,
+        "resolve": 0.083787
+      },
+      "phase_instruction_percent": {
+        "control": 0.0073,
+        "load_publish": 15.1815,
+        "parse": 77.4862,
+        "resolve": 7.325
+      },
+      "phase_instructions": {
+        "control": 10,
+        "load_publish": 20763,
+        "parse": 105974,
+        "resolve": 10018
+      },
+      "prim67_reads": 399,
+      "primitive_calls": {
+        "15": 2,
+        "16": 149,
+        "18": 2,
+        "19": 4526,
+        "20": 4144,
+        "28": 7,
+        "29": 2,
+        "44": 1,
+        "5": 1,
+        "6": 773,
+        "67": 399
+      },
+      "runtime_allocations": 860,
+      "top_functions_by_instruction": [
+        {
+          "direct_instrumented_host_seconds": 0.687323,
+          "instructions": 83226,
+          "name": "%l65i-crc-bits",
+          "percent": 60.8533
+        },
+        {
+          "direct_instrumented_host_seconds": 0.092657,
+          "instructions": 13248,
+          "name": "%require-address",
+          "percent": 9.6867
+        },
+        {
+          "direct_instrumented_host_seconds": 0.058968,
+          "instructions": 7784,
+          "name": "1-",
+          "percent": 5.6915
+        },
+        {
+          "direct_instrumented_host_seconds": 0.045458,
+          "instructions": 4389,
+          "name": "%require-c2d-byte",
+          "percent": 3.2092
+        },
+        {
+          "direct_instrumented_host_seconds": 0.038407,
+          "instructions": 3510,
+          "name": "%l65i-row-crc-byte",
+          "percent": 2.5664
+        },
+        {
+          "direct_instrumented_host_seconds": 0.025591,
+          "instructions": 3108,
+          "name": "%require-c2d-bytes=",
+          "percent": 2.2725
+        },
+        {
+          "direct_instrumented_host_seconds": 0.031899,
+          "instructions": 3072,
+          "name": "%l65i-next-byte",
+          "percent": 2.2462
+        },
+        {
+          "direct_instrumented_host_seconds": 0.023585,
+          "instructions": 2436,
+          "name": "%l65i-crc-byte",
+          "percent": 1.7812
+        },
+        {
+          "direct_instrumented_host_seconds": 0.014043,
+          "instructions": 1524,
+          "name": "nth",
+          "percent": 1.1143
+        },
+        {
+          "direct_instrumented_host_seconds": 0.011736,
+          "instructions": 1280,
+          "name": "%require-c2d-u16",
+          "percent": 0.9359
+        },
+        {
+          "direct_instrumented_host_seconds": 0.009966,
+          "instructions": 1116,
+          "name": "%load-name-code-at",
+          "percent": 0.816
+        },
+        {
+          "direct_instrumented_host_seconds": 0.005937,
+          "instructions": 816,
+          "name": "zerop",
+          "percent": 0.5966
+        },
+        {
+          "direct_instrumented_host_seconds": 0.006797,
+          "instructions": 814,
+          "name": "%l65i-name-bytes",
+          "percent": 0.5952
+        },
+        {
+          "direct_instrumented_host_seconds": 0.005325,
+          "instructions": 676,
+          "name": "1+",
+          "percent": 0.4943
+        },
+        {
+          "direct_instrumented_host_seconds": 0.005399,
+          "instructions": 648,
+          "name": "%require-row-zeroes-p",
+          "percent": 0.4738
+        },
+        {
+          "direct_instrumented_host_seconds": 0.007218,
+          "instructions": 630,
+          "name": "%l65i-next-row",
+          "percent": 0.4606
+        }
+      ],
+      "vm_instructions": 136765
+    },
+    "idempotent_repeat": {
+      "c2d_and_code_changed": false,
+      "disk_sector_reads": 2,
+      "instrumented_host_seconds": {
+        "max": 1.161746,
+        "median": 1.153643,
+        "min": 1.141154,
+        "p90": 1.161746
+      },
+      "loader_attempts": 0,
+      "outer_instrumented_host_seconds": {
+        "max": 1.161746,
+        "median": 1.153643,
+        "min": 1.141154,
+        "p90": 1.161746
+      },
+      "phase_allocations": {
+        "control": 0,
+        "load_publish": 320,
+        "parse": 139,
+        "resolve": 323
+      },
+      "phase_host_percent_median": {
+        "control": 0.0104,
+        "load_publish": 9.8388,
+        "parse": 79.5507,
+        "resolve": 10.5511
+      },
+      "phase_host_seconds_median": {
+        "control": 0.000118,
+        "load_publish": 0.11393,
+        "parse": 0.916068,
+        "resolve": 0.12196
+      },
+      "phase_instruction_percent": {
+        "control": 0.0074,
+        "load_publish": 10.6308,
+        "parse": 78.6227,
+        "resolve": 10.7391
+      },
+      "phase_instructions": {
+        "control": 10,
+        "load_publish": 14329,
+        "parse": 105974,
+        "resolve": 14475
+      },
+      "prim67_reads": 384,
+      "primitive_calls": {
+        "15": 2,
+        "16": 149,
+        "19": 4527,
+        "20": 4143,
+        "28": 7,
+        "29": 2,
+        "44": 1,
+        "5": 1,
+        "6": 740,
+        "67": 384
+      },
+      "runtime_allocations": 782,
+      "top_functions_by_instruction": [
+        {
+          "direct_instrumented_host_seconds": 0.704608,
+          "instructions": 83226,
+          "name": "%l65i-crc-bits",
+          "percent": 61.7459
+        },
+        {
+          "direct_instrumented_host_seconds": 0.095221,
+          "instructions": 13356,
+          "name": "%require-address",
+          "percent": 9.9089
+        },
+        {
+          "direct_instrumented_host_seconds": 0.057887,
+          "instructions": 7456,
+          "name": "1-",
+          "percent": 5.5316
+        },
+        {
+          "direct_instrumented_host_seconds": 0.04436,
+          "instructions": 4224,
+          "name": "%require-c2d-byte",
+          "percent": 3.1338
+        },
+        {
+          "direct_instrumented_host_seconds": 0.03952,
+          "instructions": 3510,
+          "name": "%l65i-row-crc-byte",
+          "percent": 2.6041
+        },
+        {
+          "direct_instrumented_host_seconds": 0.032418,
+          "instructions": 3072,
+          "name": "%l65i-next-byte",
+          "percent": 2.2791
+        },
+        {
+          "direct_instrumented_host_seconds": 0.024138,
+          "instructions": 2436,
+          "name": "%l65i-crc-byte",
+          "percent": 1.8073
+        },
+        {
+          "direct_instrumented_host_seconds": 0.01829,
+          "instructions": 2220,
+          "name": "%require-c2d-bytes=",
+          "percent": 1.647
+        },
+        {
+          "direct_instrumented_host_seconds": 0.011129,
+          "instructions": 1200,
+          "name": "%require-c2d-u16",
+          "percent": 0.8903
+        },
+        {
+          "direct_instrumented_host_seconds": 0.009479,
+          "instructions": 1116,
+          "name": "%load-name-code-at",
+          "percent": 0.828
+        },
+        {
+          "direct_instrumented_host_seconds": 0.007329,
+          "instructions": 864,
+          "name": "%require-row-zeroes-p",
+          "percent": 0.641
+        },
+        {
+          "direct_instrumented_host_seconds": 0.006953,
+          "instructions": 814,
+          "name": "%l65i-name-bytes",
+          "percent": 0.6039
+        },
+        {
+          "direct_instrumented_host_seconds": 0.005959,
+          "instructions": 784,
+          "name": "1+",
+          "percent": 0.5817
+        },
+        {
+          "direct_instrumented_host_seconds": 0.007416,
+          "instructions": 772,
+          "name": "nth",
+          "percent": 0.5728
+        },
+        {
+          "direct_instrumented_host_seconds": 0.007198,
+          "instructions": 630,
+          "name": "%l65i-next-row",
+          "percent": 0.4674
+        },
+        {
+          "direct_instrumented_host_seconds": 0.006475,
+          "instructions": 620,
+          "name": "%require-row-byte",
+          "percent": 0.46
+        }
+      ],
+      "vm_instructions": 134788
+    },
+    "repeat_over_first": {
+      "first_only_loader_attempts": 2,
+      "first_only_prim67_reads": 15,
+      "first_only_vm_instructions": 1977,
+      "prim67_read_ratio": 0.962406,
+      "vm_instruction_ratio": 0.985545
+    }
+  },
+  "product_delta_bytes": 0,
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-28",
+  "sample_count": 5,
+  "status": "passed-exact-workload-host-timing-target-GC-unmodeled",
+  "target_gc_collections": {
+    "count": null,
+    "false_claim_rejected": "zero collections",
+    "reason": "bytecode_p0.Heap is append-only and has no target GC, heap ceiling, roots, mark, sweep, or external-cell DMA.",
+    "status": "not-modeled-by-bytecode_p0_heap"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "authority": {
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 113763,
+      "commit": "3cfa7a36306ebceb620b8964bba2b8e59e7494e7",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "505b18f58323e2f99a376d621a4242c2681703490a87113f224ac2b33cf8c7ec"
+    },
+    "current_driver": {
+      "bytes": 27386,
+      "path": "tools/host-lisp/c2_v20_map_tuple_fix_card.py",
+      "sha256": "f7bda0510dca7e74b9fad3d95b2bb94731ad14589069482837e89abff83525ae"
+    },
+    "historical_final_red": {
+      "bytes": 2581,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-map-tuple-fix-card-final-red.json",
+      "sha256": "8df43176407d923a06ac1bb5056ab514b7ee9910b2c59059cab94a4c15328b93"
+    },
+    "historical_fixture_rebind": {
+      "bytes": 2664,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-map-tuple-fixture-scope-rebind-2026-08-14.json",
+      "sha256": "a36ce746ec706152a63d3b78d500bead17ca7ff436c5f67877a49f8c1ea56b4a"
+    },
+    "prior_rebind": {
+      "bytes": 1965,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-map-tuple-fix-card-final-red-rebind-2026-08-14.json",
+      "sha256": "20508da7fd4faf14b35cf92e8969436af91089d69c2d9887b798b49949d46bde"
+    },
+    "rebind_driver": {
+      "bytes": 9645,
+      "path": "tools/host-lisp/c2_v20_map_tuple_inventory_rebind_20260816.py",
+      "sha256": "8a6a1f131a78f0f57b9a622027751502e16c9ba7f9e2d02ec4509c5339eca651"
+    }
+  },
+  "change": {
+    "expectation": "rule-based-classification",
+    "historical_receipt_rewritten": false,
+    "semantic_claims_changed": false
+  },
+  "claim_limit": "Consumer/rebind only. Historical Link-101 evidence is untouched; no card, WPLTO, link, media or device action.",
+  "delta": {
+    "authorized_successors": [
+      "c2_map_cpu_read",
+      "c2_map_cpu_selector"
+    ],
+    "classification": "all-current-members-policy-backed",
+    "count": 2
+  },
+  "format": "lisp65-c2.3-v20-map-tuple-inventory-rebind-v1",
+  "historical": {
+    "declared_functions": 29,
+    "evidence_untouched": true,
+    "fixture_rebind_evidence_untouched": true,
+    "fixture_selected_successor_copies": 1
+  },
+  "live_inventory": {
+    "authorized_successors": {
+      "c2_map_cpu_read": {
+        "policy": "ASM->ASM: physical source A/X/__rc2/__rc3; destination __rc4/__rc5; length __rc6/__rc7; result A; only caller-clobbered __rc2..__rc15; unmap on every exit",
+        "source": "src/optional/c2_map_cpu_read.s"
+      },
+      "c2_map_cpu_selector": {
+        "policy": "fixed-facade->ASM: classify hardware return identity, restore hardware stack, tail to c2_map_cpu_read or historical runtime overlay; no callee-saved imaginary-register clobber",
+        "source": "src/optional/c2_map_cpu_read.s"
+      }
+    },
+    "classified_functions": [
+      "c2_append_journal_prepare_phase",
+      "c2_append_plan_walk",
+      "c2_completion_mode_length",
+      "c2_kernal_event_poll",
+      "c2_map_cpu_read",
+      "c2_map_cpu_selector",
+      "c2_mapped_far_enter",
+      "c2_mapped_far_leave",
+      "c2_mapped_far_physical_read_converged",
+      "c2_mapped_far_vm_code_load_converged",
+      "c2_physical_read_converged",
+      "l65e_emit_bcode_ordinal",
+      "lisp65_ash_tagged",
+      "lisp65_error_overlay_entry",
+      "lisp65_f011_mount_token_op",
+      "lisp65_f011_scratch_buffer",
+      "lisp65_hw_divhi3",
+      "lisp65_hw_modhi3",
+      "lisp65_hw_mulhi3",
+      "lisp65_hw_udivhi3",
+      "lisp65_hw_udivmodhi4",
+      "lisp65_hw_umodhi3",
+      "lisp65_mod_adjust_tagged",
+      "rtov_crc_mem",
+      "rtov_dma_submit_wait",
+      "scr_backspace",
+      "vm_bank3_boot_stage_entry",
+      "vm_boot_overlay_chain_commit",
+      "vm_c2d_byte",
+      "vm_code_load_converged",
+      "vm_l65m_batch_repeat"
+    ],
+    "declared_functions": 31,
+    "duplicate-successor-in-global-asm-domain": "rejected",
+    "expectation": "rule-classified-candidate-inventory",
+    "historical_count_expectations": 0,
+    "status": "passed-real-global-assembler-inventory",
+    "unclassified_functions": []
+  },
+  "mutations_rejected": [
+    "restore-live-count-29",
+    "drop-authorized-successor",
+    "accept-unclassified-member",
+    "rewrite-history",
+    "rewrite-fixture-history"
+  ],
+  "recorded_on": "2026-08-16",
+  "status": "PASS: Link-101 inventory expectation is rule-classified"
+}

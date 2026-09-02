@@ -1,0 +1,109 @@
+{
+  "authorization_scope": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "link33_attempts": 0,
+    "linker_runs": 0,
+    "product_closure_links": 0,
+    "pure_replays_consumed": 1,
+    "wplto_retries": 0
+  },
+  "bound_evidence": {
+    "immutable_elf": {
+      "mode": "0444",
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/l65r-v2-boot-family-placement.prg.elf",
+      "sha256": "c82b9bd0763e1c515e083c615b7f35742b571a262e75b03649a5798382110d2b"
+    },
+    "immutable_map": {
+      "mode": "0444",
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/l65r-v2-boot-family-placement.prg.map",
+      "sha256": "3c756c120f3f2d3227e30efacbc91ae148f62d28a29860f8122efd38f334fcf4"
+    },
+    "pure_replay_first_red": {
+      "mode": "0444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-pure-replay-receipt.json",
+      "sha256": "d5138f910c3271cac41b51e31222302c8dd509357fc9002f007a8bfbb017cad1"
+    }
+  },
+  "diagnosis": {
+    "actual_installer_geometry": {
+      "address": "0xc356",
+      "bytes": 1273,
+      "end_exclusive": "0xc84f",
+      "section": ".lisp65_rt_island_00"
+    },
+    "actual_installer_target_relocations": {
+      "external_source_count": 0,
+      "internal_source_count": 40,
+      "source_sections": {
+        ".lisp65_rt_island_00": 40
+      },
+      "target_sections": {
+        ".lisp65_rt_island_00": 40
+      }
+    },
+    "first_red_rows": {
+      "count": 42,
+      "representative_section_qualified_targets": [
+        {
+          "reported_target": "0xc7e3",
+          "source": "vm_callprim",
+          "target_section": ".lisp65_rt_buffer_alloc",
+          "target_symbol": "buf_from_stage"
+        },
+        {
+          "reported_target": "0xc3f0",
+          "source": "defprim/eval_init",
+          "target_section": ".lisp65_workbench_overlay",
+          "target_symbol": "defprim"
+        },
+        {
+          "reported_target": "0xc3fd",
+          "source": "vm_workbench_boot_overlay_entry",
+          "target_section": ".lisp65_workbench_overlay",
+          "target_symbol": "eval_init"
+        }
+      ],
+      "source_counts": {
+        ".lisp65_workbench_overlay:defprim": 2,
+        ".lisp65_workbench_overlay:eval_init": 38,
+        ".lisp65_workbench_overlay:vm_workbench_boot_overlay_entry": 1,
+        ".text:vm_callprim": 1
+      }
+    },
+    "model_error": "The lifetime gate treats the numeric VMA interval 0xc356..0xc84e as a globally unique installer identity. The fixed-overlay model deliberately assigns this VMA to multiple section-qualified slices, so numeric direct targets in workbench and buffer overlays are misclassified as installer edges.",
+    "product_finding": "none: retained relocation provenance finds zero external references whose target section is .lisp65_rt_island_00",
+    "required_identity": "(target section, target symbol/addend), never bare VMA, for fixed-overlay ownership",
+    "status": "gate-model-first-red"
+  },
+  "format": "lisp65-c2-handoff-reanchor-wplto-boot-lifetime-gate-diagnosis-v1",
+  "prior_gate_result": {
+    "authorized_correction": "whole-Island zero wipe from vm_runtime_overlay_install_island only",
+    "permitted_linked_writes": 3,
+    "retained_references": 6,
+    "status": "passed"
+  },
+  "proposed_bounded_continuation": {
+    "gate_correction": "Replace bare-VMA disassembly ownership with retained-relocation target-section provenance. An external relocation targeting .lisp65_rt_island_00 remains red; an equal numeric target owned by another overlay section is not an installer edge.",
+    "negative_matrix": [
+      "same VMA owned by workbench or buffer overlay must pass",
+      "external relocation to installer section symbol must fail",
+      "external relocation to installer section plus addend must fail",
+      "unresolved or ambiguous target-section provenance must fail"
+    ],
+    "requested_execution": "one additional pure replay against the same immutable evidence only",
+    "still_forbidden": [
+      "compiler run",
+      "linker run",
+      "WPLTO retry",
+      "Link 33",
+      "hardware run"
+    ]
+  },
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+    "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "unchanged"
+  }
+}

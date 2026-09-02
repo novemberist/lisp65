@@ -1,0 +1,887 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "commission": {
+      "authority": "git-blob",
+      "bytes": 12939,
+      "commit": "44b790b8e233cdcefbf1c9e02dfa986285dbc7f9",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "70f4af106e0575b07b1f670e77a912b547b95608d888498e00c464c4c58050e4"
+    },
+    "driver": {
+      "bytes": 17870,
+      "path": "tools/host-lisp/c2_v21_call_seam_pricing.py",
+      "sha256": "92fcece56f176113772e69d87af9816f4778a3e024c4ca2c7b7ed211a79fe184"
+    },
+    "facade": {
+      "bytes": 1407,
+      "path": "src/c2_kernal_facade.s",
+      "sha256": "5441b50be28f03d7983ab877bc8d276633ebd4307261f7f82afdc70bf1c97164"
+    },
+    "facade_extensions": {
+      "bytes": 828,
+      "path": "src/c2_kernal_facade_reopen.s",
+      "sha256": "7661066f8bfd100829cd33ae0636da43bbb6e30646074804cdbb2bbefa038c6a"
+    },
+    "final_red": {
+      "bytes": 12287,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-cpu-transport-shrink-card-final-red.json",
+      "sha256": "c69bf56e9ddba0b95712502075c99d1c9545062c9572e4d21d55aef94954b93d"
+    },
+    "linked_ELF": {
+      "bytes": 628488,
+      "path": "build/c2.3/v2.1-cpu-transport-shrink-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "5f9a5d6955e3af475a7875d4e79b38f0c308360526d4b6c8c8eba3791af45689"
+    },
+    "linked_map": {
+      "bytes": 184475,
+      "path": "build/c2.3/v2.1-cpu-transport-shrink-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "3f93f2c38c801d8b1bcbcb03b54aaebc19eacaeeaf076a574dca5586ed32090a"
+    },
+    "ownership": {
+      "bytes": 10635,
+      "path": "config/c2-full-map-ownership-contract.json",
+      "sha256": "6bf412202fc7b2b6b04780da8766056a2c785026a5425376c5402601a76c751c"
+    },
+    "product_linker": {
+      "bytes": 337100,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+    },
+    "reader": {
+      "bytes": 3185,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "28b7bd1bc55989c66a7868545814d9208ff374f21343bd9f281262a67653b875"
+    },
+    "runtime": {
+      "bytes": 164002,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "4f2a04c1d45e9d40c242d033aeeb1ebdcd89a0004802d8194c07ced35b996e17"
+    },
+    "runtime_header": {
+      "bytes": 26938,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "bc3841df851f24c0b2f3829bf7495aa9283882b1b88fc983cb366616cf4cfdb5"
+    }
+  },
+  "claim_limit": "Host/ELF pricing only. No facade retirement, source change, card, product, media, device or runtime claim.",
+  "direct_vector_references": {
+    "c2_facade_append_plan_walk": {
+      "count": 3,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0xf1bf",
+          "target": "0xb5f1"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf281",
+          "target": "0xb5f1"
+        },
+        {
+          "instruction": "jmp",
+          "source": "0xf2f3",
+          "target": "0xb5f1"
+        }
+      ]
+    },
+    "c2_facade_c2_dma": {
+      "count": 10,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0x233e",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x3075",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x3108",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x3181",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x31d8",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jmp",
+          "source": "0xa260",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc8e0",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc6ad",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc50f",
+          "target": "0xb5c7"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xe8b0",
+          "target": "0xb5c7"
+        }
+      ]
+    },
+    "c2_facade_c2e_cons": {
+      "count": 22,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0x7a8a",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7a9a",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7aad",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc3b0",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc3f6",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc479",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc4f4",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc4fe",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc579",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc583",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc614",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc61e",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc6a2",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc73e",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc748",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc7a4",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc499",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5a3",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5cc",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5c3",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xeef4",
+          "target": "0xb5cd"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xef9e",
+          "target": "0xb5cd"
+        }
+      ]
+    },
+    "c2_facade_c2e_overlay": {
+      "count": 8,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0xefac",
+          "target": "0xb5d0"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xefb7",
+          "target": "0xb5d0"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf01a",
+          "target": "0xb5d0"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf02a",
+          "target": "0xb5d0"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf058",
+          "target": "0xb5d0"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf060",
+          "target": "0xb5d0"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf095",
+          "target": "0xb5d0"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf09d",
+          "target": "0xb5d0"
+        }
+      ]
+    },
+    "c2_facade_car": {
+      "count": 16,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0x7ad4",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7ae5",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7af6",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc3c6",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc486",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc50b",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc590",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc630",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc75d",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc7b4",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc4d5",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc780",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5b0",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5e4",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5d2",
+          "target": "0xb5d3"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xeff9",
+          "target": "0xb5d3"
+        }
+      ]
+    },
+    "c2_facade_cdr": {
+      "count": 23,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0x7a97",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7aa7",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7aaa",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7aba",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7abd",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7ac0",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7ae2",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7af0",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x7af3",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc3ed",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc4e3",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc568",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5f1",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc693",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc72b",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc838",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc730",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5c5",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc5d6",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc616",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc802",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xeee9",
+          "target": "0xb5d6"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf039",
+          "target": "0xb5d6"
+        }
+      ]
+    },
+    "c2_facade_gc_collect": {
+      "count": 0,
+      "rows": []
+    },
+    "c2_facade_gc_mark": {
+      "count": 2,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0xe1cb",
+          "target": "0xb5e8"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xe26b",
+          "target": "0xb5e8"
+        }
+      ]
+    },
+    "c2_facade_handle_normalize": {
+      "count": 1,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0xecad",
+          "target": "0xb5ee"
+        }
+      ]
+    },
+    "c2_facade_intern": {
+      "count": 5,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0x7d11",
+          "target": "0xb5e2"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc44a",
+          "target": "0xb5e2"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc57c",
+          "target": "0xb5e2"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xeb59",
+          "target": "0xb5e2"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xef69",
+          "target": "0xb5e2"
+        }
+      ]
+    },
+    "c2_facade_overlay_call_family": {
+      "count": 9,
+      "rows": [
+        {
+          "instruction": "jmp",
+          "source": "0xe0b7",
+          "target": "0xb5ca"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf4e2",
+          "target": "0xb5ca"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf4fd",
+          "target": "0xb5ca"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf518",
+          "target": "0xb5ca"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf53a",
+          "target": "0xb5ca"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf555",
+          "target": "0xb5ca"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf577",
+          "target": "0xb5ca"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf592",
+          "target": "0xb5ca"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf5ad",
+          "target": "0xb5ca"
+        }
+      ]
+    },
+    "c2_facade_runtime_overlay_exec": {
+      "count": 0,
+      "rows": []
+    },
+    "c2_facade_select_family": {
+      "count": 2,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0xa5c2",
+          "target": "0xb5e5"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xf5dc",
+          "target": "0xb5e5"
+        }
+      ]
+    },
+    "c2_facade_str_open": {
+      "count": 1,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0xe940",
+          "target": "0xb5dc"
+        }
+      ]
+    },
+    "c2_facade_str_putc": {
+      "count": 1,
+      "rows": [
+        {
+          "instruction": "jsr",
+          "source": "0xea08",
+          "target": "0xb5df"
+        }
+      ]
+    },
+    "c2_facade_vm_code_load": {
+      "count": 10,
+      "rows": [
+        {
+          "instruction": "jmp",
+          "source": "0x2e12",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0x6994",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc4e7",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc688",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc7fd",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc965",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc691",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc52d",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc6cf",
+          "target": "0xb5c4"
+        },
+        {
+          "instruction": "jsr",
+          "source": "0xc7d6",
+          "target": "0xb5c4"
+        }
+      ]
+    }
+  },
+  "fixed_facade": {
+    "base": "0xb5c4",
+    "contiguous_free_bytes": 0,
+    "end_exclusive": "0xb5f4",
+    "next_owner": ".lisp65_c2_kernal_io_reveal",
+    "next_owner_address": "0xb5f4",
+    "status": "PASS: sixteen named vectors occupy every byte before IO reveal",
+    "vector_bytes": 48,
+    "vector_count": 16,
+    "vectors": [
+      {
+        "address": "0xb5c4",
+        "name": "c2_facade_vm_code_load"
+      },
+      {
+        "address": "0xb5c7",
+        "name": "c2_facade_c2_dma"
+      },
+      {
+        "address": "0xb5ca",
+        "name": "c2_facade_overlay_call_family"
+      },
+      {
+        "address": "0xb5cd",
+        "name": "c2_facade_c2e_cons"
+      },
+      {
+        "address": "0xb5d0",
+        "name": "c2_facade_c2e_overlay"
+      },
+      {
+        "address": "0xb5d3",
+        "name": "c2_facade_car"
+      },
+      {
+        "address": "0xb5d6",
+        "name": "c2_facade_cdr"
+      },
+      {
+        "address": "0xb5d9",
+        "name": "c2_facade_gc_collect"
+      },
+      {
+        "address": "0xb5dc",
+        "name": "c2_facade_str_open"
+      },
+      {
+        "address": "0xb5df",
+        "name": "c2_facade_str_putc"
+      },
+      {
+        "address": "0xb5e2",
+        "name": "c2_facade_intern"
+      },
+      {
+        "address": "0xb5e5",
+        "name": "c2_facade_select_family"
+      },
+      {
+        "address": "0xb5e8",
+        "name": "c2_facade_gc_mark"
+      },
+      {
+        "address": "0xb5eb",
+        "name": "c2_facade_runtime_overlay_exec"
+      },
+      {
+        "address": "0xb5ee",
+        "name": "c2_facade_handle_normalize"
+      },
+      {
+        "address": "0xb5f1",
+        "name": "c2_facade_append_plan_walk"
+      }
+    ]
+  },
+  "format": "lisp65-c2.3-v2.1-call-seam-pricing-v1",
+  "mutations_rejected": [
+    "treat-zero-xref-vector-as-free",
+    "erase-selector-deficit",
+    "invent-fixed-byte",
+    "erase-new-vector-deficit",
+    "erase-far-overflow",
+    "accept-self-unmap",
+    "authorize-card",
+    "invent-card-run"
+  ],
+  "pricing": {
+    "candidate_1_existing_selector": {
+      "best_semantic_seam": "c2_facade_runtime_overlay_exec@0xb5eb",
+      "direct_linked_references": 0,
+      "direct_reassignment_allowed": false,
+      "fixed_bytes_added": 0,
+      "lower_bound_excludes": [
+        "reader-ABI marshalling",
+        "context storage",
+        "selector setup at both E000 callers"
+      ],
+      "ordinary_bytes_available": 1,
+      "ordinary_control_lower_bound_bytes": 7,
+      "ordinary_deficit_lower_bound_bytes": 6,
+      "reason": "All sixteen addresses retain named semantic ABI identities. A direct retarget would retire runtime_overlay_exec, not share it. Preserving it requires at least compare plus long branch before the old path; nested overlay dispatch is also illegal from the transported E000 phase.",
+      "status": "REJECTED: preserving selector does not fit current ordinary text",
+      "why_best": "slot/context ABI is the only existing selector-shaped seam",
+      "zero_direct_references_do_not_free_contract": true
+    },
+    "candidate_2_new_fixed_vector": {
+      "collides_with": ".lisp65_c2_kernal_io_reveal@0xb5f4",
+      "fixed_bytes_added": 3,
+      "fixed_bytes_available": 0,
+      "fixed_deficit_bytes": 3,
+      "historical_precedent": {
+        "bytes": 3856,
+        "path": "config/c2-fail-closed-blackbox-contract.json",
+        "sha256": "cddc74e3e1b9f973709afabbe8b94ae583e2e28f39ef8bc87f4e2030ed81f446"
+      },
+      "risk": "Insertion would reanchor IO reveal, MAP switch, fixed state and rodata; their pinned identities are not freight budgets.",
+      "status": "REJECTED: three fixed bytes collide with the next fixed owner",
+      "would_start": "0xb5f4"
+    },
+    "candidate_3_reader_in_far_service": {
+      "contract_overflow_bytes": 166,
+      "disjoint_blocks_are_not_sufficient": true,
+      "execution_window": "CPU block 3 ($6000..$7fff)",
+      "far_service_bytes_added": 166,
+      "far_service_bytes_after": 1040,
+      "far_service_bytes_before": 874,
+      "far_service_contract_bytes": 874,
+      "hidden_callee_proof": "The reader first executes MAP with A=0,X=0,Z=$80, disabling every low block before changing the low-half megabyte selector. From block 3 its next instruction is therefore fetched outside its own body.",
+      "ordinary_bytes_delta": -166,
+      "reader_target_window": "CPU block 2 ($4000..$5fff)",
+      "shared_selector_proof": "The body is installed at physical $02b8b2 while admitted sources span Bank 5 and physical $08100000/$08400000. One low-half megabyte selector cannot keep block 3 on the body while block 2 follows all source domains.",
+      "status": "REJECTED: owner-contract overflow and self-unmapping code"
+    },
+    "decision": {
+      "least_expensive_preserving_shape": "free at least six additional ordinary bytes, then multiplex the existing runtime-overlay-exec vector without changing its identity",
+      "owner_disposition_required": true,
+      "recommended_card": null,
+      "separate_zero_byte_shape_requiring_new_authority": "prove full shipped-world retirement of an unused fixed ABI identity, then reassign its three-byte vector; direct-reference absence alone is not retirement proof",
+      "status": "NONE-OF-THREE-FITS"
+    },
+    "linked_capacity": {
+      "mapped_far_facade_start": "0xb3b0",
+      "ordinary_bytes_available": 1,
+      "ordinary_text_end_exclusive": "0xb3af",
+      "reader_address": "0x2277",
+      "reader_bytes": 166
+    }
+  },
+  "recorded_on": "2026-08-14",
+  "rejected_E000_edges": [
+    {
+      "instruction": "jsr",
+      "source": "0xe326",
+      "target": "0x2277"
+    },
+    {
+      "instruction": "jsr",
+      "source": "0xe84b",
+      "target": "0x2277"
+    }
+  ],
+  "source_domains": {
+    "C2D/Bank-5": "5u",
+    "Session": "0x08400000UL",
+    "Shelf": "0x08100000UL"
+  },
+  "status": "PRICED: NONE OF THREE CALL SEAMS FITS"
+}

@@ -1,0 +1,104 @@
+{
+  "format": "lisp65-c2.2-v1.2.3-phase-b-product-link-receipt-v1",
+  "recorded_on": "2026-07-30",
+  "status": "passed-B3-bound-successor-product-link-and-check-source",
+  "plan": {
+    "path": "docs/planning/1.2.3-work-plan.md",
+    "bytes": 9212,
+    "sha256": "313d61ffab64f11b8b39e1d4cf3ab2b0dad8e7285ad19db7541de342500c2305"
+  },
+  "execution_accounting": {
+    "pre_B3_product_links": 1,
+    "qualifying_product_links": 1,
+    "qualifying_WPLTO_closures": 1,
+    "hardware_runs": 0,
+    "reason_for_successor": "B3 was committed after the pre-B3 candidate had linked; reusing or renaming those bytes would omit the owner-required visible release banner."
+  },
+  "superseded_pre_B3_candidate": {
+    "status": "not-authoritative-never-deployed",
+    "resident_prg_sha256": "b76a4fad1bf8fb1a3ec9b9b64a685687b4e57a002b8475240a9ba80f19d5428c",
+    "profile_sha256": "bb7f8451e06e4c4aaf569ee26eb94f548402499bcb418533ffc90a8f0e067acc",
+    "linked_elf_sha256": "4dee71c1a4222d7bfc514194d65943a77fd8e618afb3036cd70fc0b2f41bb3e3"
+  },
+  "qualifying_candidate": {
+    "release": "v1.2.3",
+    "link": 80,
+    "resident_prg": {
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "5130971b4cb66fe226fec9b37b8cc974056b3541c1824431d78ec0c2074bb659"
+    },
+    "linked_elf": {
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 622560,
+      "sha256": "687134067263173763a6777859d3e2404cb44ba2fb483f30ddab87df7e5afede"
+    },
+    "resolved_profile_sha256": "09198927095bb56fca7e557d9cc373c8fcaec46faccb61bea80d4055d3632a38",
+    "product_build_id": "0x7356f9e6",
+    "bank2": {
+      "bytes": 41485,
+      "sha256": "c193033d5f1e318b5c6b67e94b045e6848ebb57bef7e091abd3bf818dda3cf31",
+      "headroom_bytes": 24051
+    },
+    "static_plane": {
+      "images": 6,
+      "entries": 696,
+      "resolutions": 2760,
+      "roots": 340,
+      "direct_entry_refs": 656
+    },
+    "walls": {
+      "bank0_text_headroom_bytes": 243,
+      "e000_headroom_bytes": 54,
+      "fixed_hot_block_headroom_bytes": 2,
+      "ordinary_bank0_bss_headroom_bytes": 137,
+      "resident_island_headroom_bytes": 50,
+      "session_family_headroom_bytes": 113
+    }
+  },
+  "banner": {
+    "subtitle": "WORKBENCH 1.2.3",
+    "length": 15,
+    "start_column": 48,
+    "source": {
+      "path": "lib/repl-banner.lisp",
+      "bytes": 1644,
+      "sha256": "d3cc7f92e33a7565096873c7a69cbce3edab93bfa1e4f29ad0360c892895c0ee"
+    },
+    "release_authority": {
+      "path": "config/v12-known-issues.json",
+      "bytes": 5924,
+      "sha256": "8d316bff3281a7d5b108cd2f248df58a525ca712906070f5fedb3a7ad8ca2505"
+    },
+    "permanent_gate": {
+      "path": "tools/host-lisp/c2_repl_banner_version_gate.py",
+      "bytes": 4355,
+      "sha256": "e056d6efb7807b4029dc434e0a6af08adc2441fb86addc7048decdbc54cabd0c",
+      "mutations_rejected": 4
+    },
+    "visual_oracle": {
+      "path": "build/post-promotion/v1.2.3/banner-visual.json",
+      "bytes": 1106,
+      "sha256": "a80844a72fcfe4d761f11115df3151ba6ff93f5e09ba16dbcb30e5fd1e49a3c2",
+      "screen_writes": 228,
+      "steps": 8693
+    }
+  },
+  "bound_artifact_parity": {
+    "status": "passed",
+    "carrier_cases": 60,
+    "manifests": 6,
+    "mutations_rejected": 6,
+    "receipt_sha256": "2b53dc67a9ec85b86d007e54dd91489c7504fade9effb444935182eb31c15d10",
+    "source_bindings_sha256": "fbb19633f89c2edaeb3ec75ba6dbc3cadbaddf0fdb2c13c66087b0c631e6db30"
+  },
+  "check_source": {
+    "status": "passed-no-exceptions",
+    "log": {
+      "path": "build/post-promotion/v1.2.3/check-source.log",
+      "bytes": 61798,
+      "sha256": "f9f1f4a73727cce1630f342f174b6e0212ff0737046f0ffb7f6e33455adcb0e9"
+    }
+  },
+  "claim_limit": "Host/WPLTO product construction and source parity only. Link 80 is not hardware-confirmed or promoted by this receipt."
+}

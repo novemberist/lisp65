@@ -1,0 +1,931 @@
+{
+  "authority": {
+    "ELF": {
+      "bytes": 619644,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ecaef987c93f5ff10963d15a729a278fe7b4a13c072a0299ffd1752dcc11ae95"
+    },
+    "base_result": {
+      "bytes": 4539,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link60-c1-freezer-cutpoints-donor-base-result.json",
+      "sha256": "b42b32af7ac4346c5a7e57aa5a751ea4b0eb6c8681b2a528ecad9cf5d6885e8a"
+    },
+    "completion_source_gate": {
+      "bytes": 3422,
+      "path": "build/c2.2/c1-freezer-cutpoints-link60/write-completion-source-gate.json",
+      "sha256": "dd634426f3615f1606d915c5425dc8fe19ca094c37e31b86608aeb2c7d476343"
+    },
+    "contract": {
+      "bytes": 7673,
+      "path": "config/c2-two-region-session-store-contract.json",
+      "sha256": "7067cbb5842334cee8ddf9ee123eb01b10338e7fe155291b417531e4f3a6bab7"
+    },
+    "driver": {
+      "bytes": 11675,
+      "path": "tools/host-lisp/c2_two_region_e000_s1_final_wplto.py",
+      "sha256": "1b3e7d97c127542af4dced8f72437f37c1494981007c5a531a1d5322a1ce2eb2"
+    },
+    "emitter_union_gate": {
+      "bytes": 1529,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link60-c1-freezer-cutpoints-donor-emitter-union.json",
+      "sha256": "835f717a44be58256a19586cc14b8fbc17b913741889500178fa6fd4c9777dfe"
+    },
+    "format_and_stage_gate": {
+      "bytes": 2824,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link60-c1-freezer-cutpoints-donor-format-stage.json",
+      "sha256": "dc0be96c71a586f706a7d91ed6a973b7ce50dfdbd45293d4ae217b882fbae0a7"
+    },
+    "map": {
+      "bytes": 208811,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "d3678621ff3743cbd9ebac573564803a1deedeee666904038bb5e382692291f0"
+    },
+    "preinstall_source_host_gate": {
+      "bytes": 3291,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link60-c1-freezer-cutpoints-donor-preinstall-source-host.json",
+      "sha256": "576b42df0cfcf16b3ea72d44e936d5ba51677e52212a9bf22a2879605809c717"
+    },
+    "runner": {
+      "bytes": 10370,
+      "path": "tools/host-lisp/c2_c1_freezer_cutpoint_build_link60.py",
+      "sha256": "e9fd91748535ee73813c49cb7c240a8221ddc08229aa9537878235ba13349ee2"
+    },
+    "tuple_feature_lifetime_gate": {
+      "bytes": 2644,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-e000-s1-tuple-feature-lifetime-gate.json",
+      "sha256": "88e009e23437b8de509d44a0054d37187b2b983b8894af6f642ddd6bd98d682b"
+    }
+  },
+  "claim_limit": "Exactly one product-shaped WPLTO map. No product identity, hardware, C1 closure, matrix fall or acceptance-chain claim.",
+  "decisions": {
+    "E000_S1": {
+      "deliberate_cost": "cold batch operations are slower",
+      "replacement": "complete authenticated single-record path per repeat",
+      "retired_symbols": [
+        "rtov_run_batch",
+        "vm_runtime_overlay_exec_batch_island"
+      ]
+    },
+    "record_verifier": {
+      "composite_authority": "emitter bounds + record CRC + final manifest binding + target family CRC before VERIFIED",
+      "private_region_source_reconstruction": "absent"
+    }
+  },
+  "execution_accounting": {
+    "automatic_retries": 0,
+    "final_map_driver_attempts": 1,
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "whole_program_LTO_closure_links": 1
+  },
+  "format": "lisp65-c2-two-region-E000-S1-final-WPLTO-v1",
+  "gates": {
+    "all_fresh_green": false,
+    "base_WPLTO": "FIRST RED: product-shaped two-region package did not close",
+    "format_and_stage": "passed-strict-v4-two-region-format-and-mutations",
+    "preinstall_static": {
+      "E000_S1": {
+        "deliberate_cost": "cold batch operations repeat verification",
+        "final_ELF_occurrences": 0,
+        "mutations": {
+          "Island-batch-wrapper": "rejected",
+          "batch-limit-success": "rejected",
+          "direct-entry-bypass": "rejected",
+          "predicate-before-proof": "rejected",
+          "same-payload-runner": "rejected"
+        },
+        "replacement": "vm_runtime_overlay_exec once per requested repetition",
+        "retired_symbols": [
+          "rtov_run_batch",
+          "vm_runtime_overlay_exec_batch_island"
+        ],
+        "status": "passed-full-single-record-repeat"
+      },
+      "Island_control_edges": [
+        {
+          "source": "rtov_transaction_context_if_ready",
+          "target_address": 7562,
+          "target_names": [
+            "rtov_transaction_context"
+          ]
+        }
+      ],
+      "Island_relocation_references": [
+        {
+          "addend": 0,
+          "offset": 44766,
+          "relocation_section": ".rela.text",
+          "source_function": {
+            "address": 44713,
+            "bytes": 211,
+            "end_exclusive": 44924,
+            "name": "vm_runtime_overlay_install_island",
+            "section": ".text"
+          },
+          "source_section": ".text",
+          "target": "__lisp65_resident_island_start",
+          "type": "R_MOS_ADDR16_LO"
+        },
+        {
+          "addend": 0,
+          "offset": 44770,
+          "relocation_section": ".rela.text",
+          "source_function": {
+            "address": 44713,
+            "bytes": 211,
+            "end_exclusive": 44924,
+            "name": "vm_runtime_overlay_install_island",
+            "section": ".text"
+          },
+          "source_section": ".text",
+          "target": "__lisp65_resident_island_start",
+          "type": "R_MOS_ADDR16_HI"
+        },
+        {
+          "addend": 0,
+          "offset": 44816,
+          "relocation_section": ".rela.text",
+          "source_function": {
+            "address": 44713,
+            "bytes": 211,
+            "end_exclusive": 44924,
+            "name": "vm_runtime_overlay_install_island",
+            "section": ".text"
+          },
+          "source_section": ".text",
+          "target": "__lisp65_resident_island_start",
+          "type": "R_MOS_ADDR16_LO"
+        },
+        {
+          "addend": 0,
+          "offset": 44820,
+          "relocation_section": ".rela.text",
+          "source_function": {
+            "address": 44713,
+            "bytes": 211,
+            "end_exclusive": 44924,
+            "name": "vm_runtime_overlay_install_island",
+            "section": ".text"
+          },
+          "source_section": ".text",
+          "target": "__lisp65_resident_island_start",
+          "type": "R_MOS_ADDR16_HI"
+        },
+        {
+          "addend": 0,
+          "offset": 44851,
+          "relocation_section": ".rela.text",
+          "source_function": {
+            "address": 44713,
+            "bytes": 211,
+            "end_exclusive": 44924,
+            "name": "vm_runtime_overlay_install_island",
+            "section": ".text"
+          },
+          "source_section": ".text",
+          "target": "__lisp65_resident_island_start",
+          "type": "R_MOS_ADDR16_LO"
+        },
+        {
+          "addend": 0,
+          "offset": 44855,
+          "relocation_section": ".rela.text",
+          "source_function": {
+            "address": 44713,
+            "bytes": 211,
+            "end_exclusive": 44924,
+            "name": "vm_runtime_overlay_install_island",
+            "section": ".text"
+          },
+          "source_section": ".text",
+          "target": "__lisp65_resident_island_start",
+          "type": "R_MOS_ADDR16_HI"
+        }
+      ],
+      "append_facade_contract_interval": {
+        "address": 46577,
+        "bytes": 3,
+        "end_exclusive": 46580,
+        "name": "c2_facade_append_plan_walk",
+        "provenance": "fixed-facade-contract",
+        "section": ".lisp65_c2_host_facade"
+      },
+      "append_facade_section_evidence": {
+        "address": 46577,
+        "bytes": 0,
+        "name": "c2_facade_append_plan_walk",
+        "owner_address": 46532,
+        "owner_bytes": 48,
+        "range_crosscheck": "passed",
+        "section": ".lisp65_c2_host_facade",
+        "st_shndx": 14,
+        "type": "None"
+      },
+      "claim_limit": "Static direct-control and retained-relocation proof. Before READY, the sole Bank-0 data-reference exception is the machine-proven complete-Island zero wipe used to erase or fail-close the destination; no Island-owned value is consumed and no unguarded code is entered.",
+      "fixed_facade_Island_references": [
+        {
+          "addend": 0,
+          "offset": 46575,
+          "relocation_section": ".rela.lisp65_c2_host_facade",
+          "source_function": {
+            "address": 46574,
+            "bytes": 3,
+            "end_exclusive": 46577,
+            "name": "c2_facade_handle_normalize",
+            "provenance": "fixed-facade-contract",
+            "section": ".lisp65_c2_host_facade"
+          },
+          "source_section": ".lisp65_c2_host_facade",
+          "target": "c2_product_handle_normalize",
+          "type": "R_MOS_ADDR16"
+        },
+        {
+          "addend": 0,
+          "offset": 46578,
+          "relocation_section": ".rela.lisp65_c2_host_facade",
+          "source_function": {
+            "address": 46577,
+            "bytes": 3,
+            "end_exclusive": 46580,
+            "name": "c2_facade_append_plan_walk",
+            "provenance": "fixed-facade-contract",
+            "section": ".lisp65_c2_host_facade"
+          },
+          "source_section": ".lisp65_c2_host_facade",
+          "target": "c2_append_plan_walk",
+          "type": "R_MOS_ADDR16"
+        }
+      ],
+      "fixed_facade_contract_interval": {
+        "address": 46574,
+        "bytes": 3,
+        "end_exclusive": 46577,
+        "name": "c2_facade_handle_normalize",
+        "provenance": "fixed-facade-contract",
+        "section": ".lisp65_c2_host_facade"
+      },
+      "fixed_facade_section_evidence": {
+        "address": 46574,
+        "bytes": 0,
+        "name": "c2_facade_handle_normalize",
+        "owner_address": 46532,
+        "owner_bytes": 48,
+        "range_crosscheck": "passed",
+        "section": ".lisp65_c2_host_facade",
+        "st_shndx": 14,
+        "type": "None"
+      },
+      "guard_machine_branch_count": 3,
+      "installer_direct_call_edges": [
+        {
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 44897,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 46010,
+          "target_names": [
+            "__memset"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 43240,
+          "target_names": [
+            "vm_runtime_overlay_exec_family"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 46010,
+          "target_names": [
+            "__memset"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 44897,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 46010,
+          "target_names": [
+            "__memset"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 49733,
+          "target_names": [
+            "__lisp65_c2_fixed_bank0_code_rtov_fail",
+            "rtov_fail"
+          ]
+        },
+        {
+          "source": "rtov_fail",
+          "target_address": 43170,
+          "target_names": [
+            "rtov_wipe"
+          ]
+        },
+        {
+          "source": "rtov_wipe",
+          "target_address": 46010,
+          "target_names": [
+            "__memset"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43416,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43416,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43416,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43418,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43442,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43170,
+          "target_names": [
+            "rtov_wipe"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43521,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44492,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43170,
+          "target_names": [
+            "rtov_wipe"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44490,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43418,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44492,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43539,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43539,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44530,
+          "target_names": [
+            "rtov_transaction_context_if_ready"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44124,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44492,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44502,
+          "target_names": [
+            "rtov_read"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 8749,
+          "target_names": [
+            "rtov_crc_mem"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44498,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44498,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 9190,
+          "target_names": [
+            "__call_indir"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43170,
+          "target_names": [
+            "rtov_wipe"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44490,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44492,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44102,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43685,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44235,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44530,
+          "target_names": [
+            "rtov_transaction_context_if_ready"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43987,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44492,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44235,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44235,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44492,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44492,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 8749,
+          "target_names": [
+            "rtov_crc_mem"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44498,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 44498,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 9190,
+          "target_names": [
+            "__call_indir"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43170,
+          "target_names": [
+            "rtov_wipe"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43418,
+          "target_names": []
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 49733,
+          "target_names": [
+            "__lisp65_c2_fixed_bank0_code_rtov_fail",
+            "rtov_fail"
+          ]
+        },
+        {
+          "source": "vm_runtime_overlay_exec_family",
+          "target_address": 43418,
+          "target_names": []
+        },
+        {
+          "source": "rtov_transaction_context_if_ready",
+          "target_address": 7562,
+          "target_names": [
+            "rtov_transaction_context"
+          ]
+        },
+        {
+          "source": "rtov_read",
+          "target_address": 46532,
+          "target_names": [
+            "c2_facade_vm_code_load"
+          ]
+        },
+        {
+          "source": "c2_facade_vm_code_load",
+          "target_address": 9302,
+          "target_names": [
+            "vm_code_load"
+          ]
+        },
+        {
+          "source": "vm_code_load",
+          "target_address": 46535,
+          "target_names": [
+            "c2_facade_c2_dma"
+          ]
+        },
+        {
+          "source": "c2_facade_c2_dma",
+          "target_address": 65424,
+          "target_names": [
+            "SETMSG",
+            "__SETMSG",
+            "c2_facade_target_c2_dma"
+          ]
+        }
+      ],
+      "installer_non_local_exit_gate": {
+        "forbidden_classes": [
+          "poll",
+          "abort",
+          "longjmp",
+          "c2j-abort-cleanup"
+        ],
+        "linked_violations": [],
+        "mutations": {
+          "abort-edge": "rejected",
+          "c2j-abort-cleanup-edge": "rejected",
+          "clean-status-returning-failure": "passed",
+          "longjmp-edge": "rejected",
+          "poll-edge": "rejected"
+        },
+        "status": "passed-zero-linked-non-local-exit-edges"
+      },
+      "installer_root": {
+        "address": 44713,
+        "section": ".text"
+      },
+      "negative_matrix": {
+        "abort-edge": "rejected",
+        "append-unlisted-facade-address": "rejected",
+        "append-wrong-address-contract-object": "rejected",
+        "append-wrong-elf-section-index": "rejected",
+        "append-wrong-size-contract-object": "rejected",
+        "c2j-abort-cleanup-edge": "rejected",
+        "clean-status-returning-failure": "passed",
+        "direct-ldx-zero-txa": "passed",
+        "exact-b5ee-three-byte-vector": "accepted",
+        "exact-b5f1-three-byte-vector": "accepted",
+        "extra-reference": "rejected",
+        "half-address-pair": "rejected",
+        "installer-Island-data-reference": "rejected",
+        "longjmp-edge": "rejected",
+        "missing-txa": "rejected",
+        "missing-wipe": "rejected",
+        "nonzero-fill": "rejected",
+        "nonzero-x": "rejected",
+        "poll-edge": "rejected",
+        "retired-batch-control-edge": "rejected",
+        "transaction-ready-guarded-control-edge": "passed",
+        "unguarded-control-edge": "rejected",
+        "unlisted-facade-relocation-address": "rejected",
+        "wrong-address-contract-object": "rejected",
+        "wrong-call-target": "rejected",
+        "wrong-elf-section-index": "rejected",
+        "wrong-length": "rejected",
+        "wrong-size-contract-object": "rejected",
+        "wrong-target": "rejected",
+        "x-clobber": "rejected",
+        "x-preserving-store": "passed"
+      },
+      "permitted_pre_READY_manufacturing_writes": [
+        {
+          "addend": 0,
+          "call_address": 44780,
+          "call_target": "__memset",
+          "fill": 0,
+          "fill_dataflow": {
+            "bounded_instruction_count": 2,
+            "dominator": {
+              "address": 44777,
+              "mnemonic": "ldx",
+              "operand": "#$0"
+            },
+            "transfer": {
+              "address": 44779,
+              "mnemonic": "txa",
+              "operand": ""
+            },
+            "transparent_instructions": [],
+            "value": 0
+          },
+          "length": 2048,
+          "pair_complete": true,
+          "relocations": [
+            {
+              "addend": 0,
+              "offset": 44766,
+              "relocation_section": ".rela.text",
+              "source_function": {
+                "address": 44713,
+                "bytes": 211,
+                "end_exclusive": 44924,
+                "name": "vm_runtime_overlay_install_island",
+                "section": ".text"
+              },
+              "source_section": ".text",
+              "target": "__lisp65_resident_island_start",
+              "type": "R_MOS_ADDR16_LO"
+            },
+            {
+              "addend": 0,
+              "offset": 44770,
+              "relocation_section": ".rela.text",
+              "source_function": {
+                "address": 44713,
+                "bytes": 211,
+                "end_exclusive": 44924,
+                "name": "vm_runtime_overlay_install_island",
+                "section": ".text"
+              },
+              "source_section": ".text",
+              "target": "__lisp65_resident_island_start",
+              "type": "R_MOS_ADDR16_HI"
+            }
+          ],
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 6144,
+          "target_symbol": "__lisp65_resident_island_start"
+        },
+        {
+          "addend": 0,
+          "call_address": 44832,
+          "call_target": "__memset",
+          "fill": 0,
+          "fill_dataflow": {
+            "bounded_instruction_count": 3,
+            "dominator": {
+              "address": 44827,
+              "mnemonic": "ldx",
+              "operand": "#$0"
+            },
+            "transfer": {
+              "address": 44831,
+              "mnemonic": "txa",
+              "operand": ""
+            },
+            "transparent_instructions": [
+              {
+                "address": 44829,
+                "mnemonic": "sta",
+                "operand": "$16"
+              }
+            ],
+            "value": 0
+          },
+          "length": 2048,
+          "pair_complete": true,
+          "relocations": [
+            {
+              "addend": 0,
+              "offset": 44816,
+              "relocation_section": ".rela.text",
+              "source_function": {
+                "address": 44713,
+                "bytes": 211,
+                "end_exclusive": 44924,
+                "name": "vm_runtime_overlay_install_island",
+                "section": ".text"
+              },
+              "source_section": ".text",
+              "target": "__lisp65_resident_island_start",
+              "type": "R_MOS_ADDR16_LO"
+            },
+            {
+              "addend": 0,
+              "offset": 44820,
+              "relocation_section": ".rela.text",
+              "source_function": {
+                "address": 44713,
+                "bytes": 211,
+                "end_exclusive": 44924,
+                "name": "vm_runtime_overlay_install_island",
+                "section": ".text"
+              },
+              "source_section": ".text",
+              "target": "__lisp65_resident_island_start",
+              "type": "R_MOS_ADDR16_HI"
+            }
+          ],
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 6144,
+          "target_symbol": "__lisp65_resident_island_start"
+        },
+        {
+          "addend": 0,
+          "call_address": 44867,
+          "call_target": "__memset",
+          "fill": 0,
+          "fill_dataflow": {
+            "bounded_instruction_count": 3,
+            "dominator": {
+              "address": 44862,
+              "mnemonic": "ldx",
+              "operand": "#$0"
+            },
+            "transfer": {
+              "address": 44866,
+              "mnemonic": "txa",
+              "operand": ""
+            },
+            "transparent_instructions": [
+              {
+                "address": 44864,
+                "mnemonic": "sta",
+                "operand": "$16"
+              }
+            ],
+            "value": 0
+          },
+          "length": 2048,
+          "pair_complete": true,
+          "relocations": [
+            {
+              "addend": 0,
+              "offset": 44851,
+              "relocation_section": ".rela.text",
+              "source_function": {
+                "address": 44713,
+                "bytes": 211,
+                "end_exclusive": 44924,
+                "name": "vm_runtime_overlay_install_island",
+                "section": ".text"
+              },
+              "source_section": ".text",
+              "target": "__lisp65_resident_island_start",
+              "type": "R_MOS_ADDR16_LO"
+            },
+            {
+              "addend": 0,
+              "offset": 44855,
+              "relocation_section": ".rela.text",
+              "source_function": {
+                "address": 44713,
+                "bytes": 211,
+                "end_exclusive": 44924,
+                "name": "vm_runtime_overlay_install_island",
+                "section": ".text"
+              },
+              "source_section": ".text",
+              "target": "__lisp65_resident_island_start",
+              "type": "R_MOS_ADDR16_HI"
+            }
+          ],
+          "source": "vm_runtime_overlay_install_island",
+          "target_address": 6144,
+          "target_symbol": "__lisp65_resident_island_start"
+        }
+      ],
+      "reachable_function_count": 13,
+      "reachable_functions": [
+        "__call_indir",
+        "__memset",
+        "c2_facade_c2_dma",
+        "c2_facade_target_c2_dma",
+        "c2_facade_vm_code_load",
+        "rtov_crc_mem",
+        "rtov_fail",
+        "rtov_read",
+        "rtov_transaction_context_if_ready",
+        "rtov_wipe",
+        "vm_code_load",
+        "vm_runtime_overlay_exec_family",
+        "vm_runtime_overlay_install_island"
+      ],
+      "status": "passed-static-preinstallation-Island-gate",
+      "unguarded_or_consuming_data_references": []
+    },
+    "preinstall_static_exception": null,
+    "stage_source_authority": {
+      "hot_record_verifier_region_dispatch": "absent",
+      "hot_record_verifier_source_bounds_reconstruction": "absent",
+      "mutations": {
+        "emitter-source-comparison-removed": "rejected",
+        "family-published-before-target-crc": "rejected",
+        "manifest-crc-not-consumed": "rejected",
+        "record-crc-binding-moved": "rejected",
+        "runtime-region-dispatch-restored": "rejected",
+        "session-overflow-proof-removed": "rejected"
+      },
+      "publication_order": "emitter-bounds -> record-CRC -> final-manifest-binding -> target-family-CRC -> region1-target-CRC -> VERIFIED",
+      "status": "passed-emitter-bound-record-and-target-stage-composite-proof"
+    }
+  },
+  "next_gate": "First-Red review; no product link or hardware",
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "regions": {
+    "main_bytes": 64926,
+    "main_headroom_bytes": 610,
+    "overflow_headroom_bytes": 76,
+    "overflow_slices": [
+      {
+        "bytes": 954,
+        "name": "c2-append-rollback-wipe-plane",
+        "source_address": 376064
+      },
+      {
+        "bytes": 506,
+        "name": "c2-append-rollback-wipe-chip",
+        "source_address": 377088
+      },
+      {
+        "bytes": 420,
+        "name": "c2-append-rollback-wipe-attic",
+        "source_address": 377600
+      }
+    ],
+    "overflow_used_bytes": 1956,
+    "status": "passed"
+  },
+  "status": "FIRST RED: final E000-S1 map or qualification did not close",
+  "wall_requirements": {
+    "E000_floor_bytes": 54,
+    "bank0_text_noise_headroom_bytes": 32,
+    "fixed_hot_block_headroom_bytes": 0,
+    "ordinary_bank0_bss_headroom_bytes": 0,
+    "resident_island_headroom_bytes": 0
+  },
+  "walls": null
+}

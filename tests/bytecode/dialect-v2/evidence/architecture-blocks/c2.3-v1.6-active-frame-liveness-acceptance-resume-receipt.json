@@ -1,0 +1,480 @@
+{
+  "acceptance": {
+    "receipt": {
+      "bytes": 17244,
+      "path": "build/c2.3/v1.6-active-frame-liveness-third-replacement-card/artifact-acceptance.json",
+      "sha256": "42ce67631f05bb732e5dc9eab7079f28f8680bff7199bab9183a080bf8b01d86"
+    },
+    "status": "PASS"
+  },
+  "active_frame_final_gate": {
+    "ELF": {
+      "bytes": 632780,
+      "path": "build/c2.3/v1.6-active-frame-liveness-third-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "632c794b65a8040d25d891dcbe74479815b5a0c96d3926b84ad1ba86ef2bbb0a"
+    },
+    "enforcement": {
+      "hot_path_checks": 0,
+      "section": ".lisp65_c2_mapped_far_service",
+      "stack_return_offset": 7,
+      "walker_bytes": 80
+    },
+    "far_service": {
+      "capacity_bytes": 1499,
+      "free_bytes": 37,
+      "used_bytes": 1462
+    },
+    "input_counters": {
+      "commit_sites": {
+        "C2K_INPUT_EVENTS_SEEN": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_capture_main",
+          "site": 64792
+        },
+        "C2K_INPUT_EVENTS_STORED": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_capture_helper",
+          "site": 65276
+        },
+        "C2K_INPUT_EVENTS_TAKEN": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_consumer",
+          "site": 65343
+        }
+      },
+      "counter_addresses": {
+        "C2K_INPUT_EVENTS_SEEN": 48381,
+        "C2K_INPUT_EVENTS_STORED": 48382,
+        "C2K_INPUT_EVENTS_TAKEN": 48383
+      },
+      "loss_wall": {
+        "dropped": 0,
+        "events": 94,
+        "seen": 94,
+        "stored": 94,
+        "taken": 94
+      },
+      "reserve_events": 14,
+      "ring_usable_events": 108
+    },
+    "population": {
+      "coverage": "exact equality with final-ELF-derived population",
+      "derived_population": [
+        {
+          "call_site": 51513,
+          "callee": "lisp_abort_symbol",
+          "caller": "c2_append_fronts_phase",
+          "generation_section": ".lisp65_rt_c2append_roots_fronts",
+          "resident_retirement_chain": [
+            {
+              "callee": "c2_product_abort_cleanup",
+              "caller": "lisp_abort_symbol",
+              "site": 11916
+            },
+            {
+              "callee": "c2_rtov_retire_continuations_facade",
+              "caller": "c2_product_abort_cleanup",
+              "site": 11937
+            },
+            {
+              "callee": "c2_rtov_retire_continuations",
+              "caller": "c2_rtov_retire_continuations_facade",
+              "site": 46030
+            }
+          ],
+          "stored_return_offset_from_walker_sp": 7
+        }
+      ],
+      "population_count": 1
+    }
+  },
+  "authority": {
+    "Final_Red": {
+      "bytes": 10981,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-active-frame-liveness-third-replacement-card-final-red.json",
+      "sha256": "e4b4b5d5fcaf77b1aa972efd959c6245281629ad045e5fd3fa91919e3164076a"
+    },
+    "driver": {
+      "bytes": 4506,
+      "path": "tools/host-lisp/c2_v160_active_frame_liveness_third_replacement_card.py",
+      "sha256": "04a36bae626e47f061513820131f9e8f8a4fffd4a8d833b9e2770a1d440b313c"
+    },
+    "original_resume": {
+      "authority": "git-blob",
+      "bytes": 286635,
+      "commit": "e782e159",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "cfe83e3564fb9bf8a78ef5c38c67afbaf808ffe6d1acc0afdcb126d5c767a6e3"
+    },
+    "resume_Final_Red": {
+      "bytes": 3224,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-active-frame-liveness-acceptance-resume-final-red.json",
+      "sha256": "25e866f0e1b22344e45f5c8b5574be45a0d901172ac7676eb29fe6ae7e09647c"
+    },
+    "review": {
+      "authority": "git-blob",
+      "bytes": 288844,
+      "commit": "7902b7c6",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "d2a0d224dc4a9842ab1e1738246d0b602e130554a092fece4219d740475afe87"
+    }
+  },
+  "consumer_size": {
+    "contract": "0 < candidate bytes <= 70",
+    "section_bytes": 70,
+    "source": "final linked candidate",
+    "stored_67_pin_rejected": true,
+    "symbol_bytes": 70
+  },
+  "device_contacts": 0,
+  "execution_witness": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "scope_acceptance_resumes": 1
+  },
+  "final_world_claims": {
+    "claim_source": "final linked ELF only",
+    "final_ELF": {
+      "bytes": 632780,
+      "path": "build/c2.3/v1.6-active-frame-liveness-third-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "632c794b65a8040d25d891dcbe74479815b5a0c96d3926b84ad1ba86ef2bbb0a"
+    },
+    "format": "lisp65-c2-v160-input-service-hybrid-final-world-v1",
+    "isolated_object_claims": 0,
+    "loss": {
+      "authority": "capture wall plus final-ELF consumer execution",
+      "capture_model": {
+        "dropped": 0,
+        "events_captured": 94,
+        "events_produced": 94,
+        "final_head": 94,
+        "final_tail": 94,
+        "maximum_ring_occupancy": 94,
+        "ordered": true,
+        "sixth_event_present": true
+      },
+      "linked_consumer_cycles": 5611,
+      "linked_dropped": 0,
+      "linked_events_drained": 94,
+      "linked_ordered": true,
+      "normalized_event_order": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        91,
+        92,
+        93,
+        94,
+        95,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "raw_event_order": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "sixth_event": 37
+    },
+    "membership": {
+      "capture_sections": {
+        ".lisp65_c2_kernal_window.input_capture_helper": 31,
+        ".lisp65_c2_kernal_window.input_capture_main": 34
+      },
+      "consumer_sha256": "e45d9db1f805e18658e8aae695869a697c9560034fbc1da416e0b807245880c3",
+      "counter_bytes": 3,
+      "physical_allocation_bytes": 112,
+      "ring_index_values": 109,
+      "ring_symbols": {
+        "C2K_INPUT_EVENTS_SEEN": 48381,
+        "C2K_INPUT_EVENTS_STORED": 48382,
+        "C2K_INPUT_EVENTS_TAKEN": 48383,
+        "C2K_INPUT_RING_BASE": 48272,
+        "C2K_INPUT_RING_HEAD": 65420,
+        "C2K_INPUT_RING_SLOTS": 109,
+        "C2K_INPUT_RING_TAIL": 65421
+      },
+      "section": ".lisp65_c2_kernal_window.input_consumer",
+      "section_address": 65280,
+      "section_bytes": 70,
+      "symbol": "c2_kernal_input_take",
+      "symbol_address": 65280,
+      "symbol_bytes": 70,
+      "usable_ring_events": 108
+    },
+    "normalization": {
+      "a0_to_space": true,
+      "authority": "executed final-ELF c2_kernal_input_take bytes",
+      "executions": 512,
+      "maximum_linked_consumer_cycles": 78,
+      "modes": [
+        2,
+        3
+      ],
+      "parity": true,
+      "raw_inputs": 256
+    },
+    "responsiveness": {
+      "authority": "batch VM route plus executed final-ELF consumer",
+      "batch_fixture": 8,
+      "boundary_count": 6,
+      "characters": 40,
+      "dynamic_vm_steps": 8995,
+      "frames_per_character": 0.7749366666666667,
+      "heap_cells_per_character": 1,
+      "linked_native_cycles_per_character": 66,
+      "linked_native_instructions_per_character": 23,
+      "margin_percent": 29.042803497920254,
+      "screen_cells": 45,
+      "screen_cells_per_character": 1.125,
+      "service_events_per_frame": 1.2904280349792026,
+      "vm_steps_per_character": 224.875
+    },
+    "status": "PASS: HYBRID CLAIMS PROVED ON FINAL ELF",
+    "synthetic_profile_claims": 0
+  },
+  "final_world_mutations_rejected": {
+    "isolated-object-substitution": "claim authority escaped final linked world",
+    "linked-consumer-absent": "final linked hybrid consumer membership red",
+    "recorded-loss-not-enforced": "final linked hybrid claim wall red",
+    "restore-stored-consumer-size-67": "stored hybrid consumer-size pin differs from candidate",
+    "synthetic-profile-substitution": "claim authority escaped final linked world"
+  },
+  "format": "lisp65-c2-v160-active-frame-liveness-third-replacement-card-v1-acceptance-resume-v1",
+  "frozen_pair_after": {
+    "ELF": {
+      "bytes": 632780,
+      "path": "build/c2.3/v1.6-active-frame-liveness-third-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "632c794b65a8040d25d891dcbe74479815b5a0c96d3926b84ad1ba86ef2bbb0a"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-active-frame-liveness-third-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "5ac9bb9462bfaf6fee57f545b71fc9b1444b93d0605252b54b3e4ff2f5e86419"
+    }
+  },
+  "frozen_pair_before": {
+    "ELF": {
+      "bytes": 632780,
+      "path": "build/c2.3/v1.6-active-frame-liveness-third-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "632c794b65a8040d25d891dcbe74479815b5a0c96d3926b84ad1ba86ef2bbb0a"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-active-frame-liveness-third-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "5ac9bb9462bfaf6fee57f545b71fc9b1444b93d0605252b54b3e4ff2f5e86419"
+    }
+  },
+  "liveness_contract_closed": true,
+  "media_authorized": false,
+  "next": "Comfort prompt card, then fresh same-world media",
+  "predecessor_attempt_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "scope_acceptance_resumes": 1
+  },
+  "real_resume_adapter_preflight": {
+    "consumer": "resume tail adapter",
+    "field": "enforcement.walker_bytes",
+    "legacy_symbol_bytes_mutation_rejected": true,
+    "producer": "ACTIVE.final_gate",
+    "status": "PASS: REAL RESUME ADAPTER CONSUMED PRODUCER VOCABULARY",
+    "value": 80
+  },
+  "rebuild_mutations_rejected": [
+    "WPLTO_runs",
+    "product_links",
+    "cards_consumed"
+  ],
+  "recorded_on": "2026-08-21",
+  "scope": {
+    "receipt": {
+      "bytes": 2436,
+      "path": "build/c2.3/v1.6-active-frame-liveness-third-replacement-card/owner-scope-result.json",
+      "sha256": "7122893612ed22b6d684195516d49a51b43439da09386d8ed069e033c749c1cd"
+    },
+    "status": "PASS"
+  },
+  "status": "PASS: V1.6 ACTIVE-FRAME LIVENESS CLOSED READ-ONLY"
+}

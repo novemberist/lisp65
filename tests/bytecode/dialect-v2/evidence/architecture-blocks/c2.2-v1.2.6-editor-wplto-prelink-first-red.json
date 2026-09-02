@@ -1,0 +1,19 @@
+{
+  "format": "lisp65-c2.2-v1.2.6-editor-WPLTO-prelink-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "status": "FIRST RED: execution-contract static-plane geometry retained the Link-82 authority",
+  "promotable": false,
+  "target_linker_invocations": 0,
+  "wplto_probes_consumed": 0,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "observed": {
+    "profile_static_use_bytes": 45049,
+    "profile_gross_headroom_bytes": 20487,
+    "execution_contract_static_use_bytes": 43237,
+    "execution_contract_gross_headroom_bytes": 22299
+  },
+  "attribution": "The linker-free profile preflight updated the profile and target header but omitted the execution contract's duplicate physical-plane pins. The static gate rejected the mismatch before the target linker.",
+  "disposition": "Move both contract pins with the canonical profile, add that update to the preflight driver, preserve the failed scratch tree, and resume the still-unconsumed one-WPLTO card.",
+  "claim_limit": "A pre-link static-authority First Red only."
+}

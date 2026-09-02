@@ -1,0 +1,353 @@
+{
+  "bootstrap_answer": {
+    "c356_overlay_service_acyclic": false,
+    "c356_reason": "The service would occupy the same C356 execution window as its phase-overlay callers. Installing either evicts the other; restoring the service requires the refill seam that the service must protect.",
+    "largest_overlay_section": ".lisp65_rt_c2append_entries",
+    "mapped_bank2_reason": "The far bytes are a contiguous suffix of the canonical Bank-2 artifact. The cold stager writes and independently reads back that role before it chains to the resident entry, so no protected runtime refill is needed to install or map the service.",
+    "mapped_bank2_service_acyclic": true
+  },
+  "candidates": {
+    "fit_count": 1,
+    "recommendation": "select mapped-bank2-far-service: it is the sole fit (1/4), keeps all four refill paths and eleven content consumers, and pays its only displacement as 1499 bytes of measured Bank-2 append capacity",
+    "rows": [
+      {
+        "aggregate_deficit_bytes": 1156,
+        "aggregate_stable_capacity_bytes": 389,
+        "code_demand_bytes": 1545,
+        "code_owner": "new KEEP-ed low-resident service section",
+        "contiguous_island_deficit_bytes": 1302,
+        "facade_bytes": 0,
+        "fits": false,
+        "id": "fixed-low-resident-island",
+        "largest_contiguous_span_bytes": 243,
+        "proven_cold_domain_moves_bytes": 0,
+        "rejection": "Only 389 stable low bytes exist in three disjoint spans; the largest contiguous span is 243 bytes. No boot body has an already valid cold home before the first protected consumer.",
+        "simultaneous_live_envelope_bytes": 1629,
+        "stable_free_spans": [
+          {
+            "bytes": 96,
+            "end_exclusive": 6144,
+            "start": 6048
+          },
+          {
+            "bytes": 50,
+            "end_exclusive": 8192,
+            "start": 8142
+          },
+          {
+            "bytes": 243,
+            "end_exclusive": 46243,
+            "start": 46000
+          }
+        ],
+        "state_stack": "fits-owned-c000/c074-arenas"
+      },
+      {
+        "available_capacity_bytes": 54,
+        "code_demand_bytes": 1545,
+        "code_owner": "new KEEP-ed C2 E000 service section",
+        "deficit_bytes": 1491,
+        "facade_bytes": 0,
+        "fits": false,
+        "id": "owned-e000-service-slot",
+        "post_boot_reachable_existing_bytes": 7203,
+        "post_boot_reachable_existing_functions": 25,
+        "proven_cold_move_bytes": 0,
+        "rejection": "All 25 E000 functions (7203 bytes) are post-boot reachable; no body may fund the slot. Only the existing 54-byte floor is free.",
+        "simultaneous_live_envelope_bytes": 9767,
+        "state_stack": "fits-owned-c000/c074-arenas"
+      },
+      {
+        "bootstrap_acyclic": false,
+        "code_owner": "reserved C356 service subrange plus stable facade",
+        "deficit_bytes": 1524,
+        "facade_bytes": 3,
+        "fits": false,
+        "id": "overlay-service-with-bootstrap-closure",
+        "largest_live_overlay": {
+          "bytes": 1771,
+          "section": ".lisp65_rt_c2append_entries"
+        },
+        "overlay_capacity_bytes": 1792,
+        "overlay_window_live_envelope_bytes": 3316,
+        "rejection": "The 1545-byte service and the 1771-byte live phase slice require 3316 bytes in a 1792-byte window. Loading either displaces the other; reloading the service would traverse the seam it protects.",
+        "service_bytes": 1545,
+        "simultaneous_live_envelope_bytes": 3400,
+        "state_stack": "fits-owned-c000/c074-arenas"
+      },
+      {
+        "acceptance": "1499 far bytes consume only measured Bank-2 append headroom; the exact 98-byte resident facade fits the 243-byte text tail with 145 bytes remaining. The boot stage is acyclic and the owned raster IRQ remains entirely visible.",
+        "bank2_inventory": {
+          "current_headroom_bytes": 18254,
+          "current_owner_count": 6,
+          "current_static_bytes": 47282,
+          "displaced_owner": {
+            "bytes": 1499,
+            "existing_product_bytes_displaced": 0,
+            "owner": "future persistent/transient Bank-2 append capacity",
+            "required_low_front_floor": 48781
+          },
+          "physical_base": 131072,
+          "post_service_headroom_bytes": 16755,
+          "post_service_static_bytes": 48781,
+          "service_end_exclusive": 179853,
+          "service_start": 178354
+        },
+        "bootstrap": {
+          "acyclic": true,
+          "media_role": "c2-bank2-static-code-plane",
+          "protected_refill_used_to_install_service": false,
+          "service_install": "contiguous bytes in the same authenticated Bank-2 artifact; staged and independently read back before the resident PRG is chained",
+          "stage_policy": "stage-and-independent-target-readback"
+        },
+        "call_abi": {
+          "entry_wrappers": 2,
+          "interrupt_flag": "unchanged; MAP inhibits only until EOM",
+          "map_enter_bytes": 19,
+          "map_leave_bytes": 15,
+          "register_preservation": "A/X/Y/Z across map-enter; A status across map-leave; Z=0 at C return",
+          "wrapper_bytes_each": 9
+        },
+        "code_owner": "native suffix of the boot-staged Bank-2 static artifact, exposed through one KEEP-ed two-entry mapped facade",
+        "existing_product_bytes_displaced": 0,
+        "far_code_bytes": 1499,
+        "far_symbols": [
+          {
+            "bytes": 682,
+            "name": "vm_code_load_converged"
+          },
+          {
+            "bytes": 142,
+            "name": "c2_edma_prepare"
+          },
+          {
+            "bytes": 480,
+            "name": "c2_physical_read_converged"
+          },
+          {
+            "bytes": 195,
+            "name": "c2_physical_source_byte"
+          }
+        ],
+        "fits": true,
+        "id": "mapped-bank2-far-service",
+        "interrupt_discipline": {
+          "d000_io_block6_remains_unmapped": true,
+          "far_dependency_edges_into_hidden_block3": 0,
+          "fits": true,
+          "irq_and_vectors_remain_in_high_map_block7": true,
+          "irq_handler_calls_into_hidden_block3": 0,
+          "map_atomicity": "MAP inhibits interrupt entry until EOM; the prior I state is unchanged",
+          "raster_irq_vma": 57400,
+          "zero_page_and_stack_block0_remain_unmapped": true
+        },
+        "mapping": {
+          "cpu_window": {
+            "block": 3,
+            "capacity_bytes": 8192,
+            "end_exclusive": "0x8000",
+            "start": "0x6000"
+          },
+          "map_tuple": {
+            "maphi_y": "0x00",
+            "maphi_z": "0x80",
+            "maplo_a": "0x80",
+            "maplo_x": "0x24",
+            "mapped_physical_slab_start": "0x0002a000",
+            "mapped_service_cpu_end_exclusive": "0x7e8d",
+            "mapped_service_cpu_start": "0x78b2",
+            "restore_a": "0x00",
+            "restore_x": "0x00",
+            "restore_y": "0x00",
+            "restore_z": "0x80"
+          },
+          "underlying_live_owner": [
+            {
+              "bytes": 8192,
+              "end_exclusive": 32768,
+              "owner": "ordinary-bank0-text",
+              "section": ".text",
+              "start": 24576
+            }
+          ],
+          "underlying_owner_restored_before_caller_return": true
+        },
+        "protected_content_consumers": 11,
+        "protected_refill_paths": 4,
+        "resident_code": {
+          "available_capacity_bytes": 243,
+          "dma_abort_wrapper_bytes": 46,
+          "headroom_after_bytes": 145,
+          "map_trampoline_bytes": 52,
+          "total_bytes": 98,
+          "vma_end_exclusive": 46098,
+          "vma_start": 46000
+        },
+        "simultaneous_live_envelope": {
+          "bank2_capacity_bytes": 65536,
+          "bank2_dynamic_capacity_remaining_bytes": 16755,
+          "bank2_static_and_far_bytes": 48781,
+          "completion_scratch_zp_bytes": 2,
+          "far_bytes_inside_mapped_slab": 1499,
+          "mapped_cpu_slab_bytes": 8192,
+          "mapped_slab_unused_bytes": 6693,
+          "resident_facade_and_wrapper_bytes": 98,
+          "service_state_bytes": 68,
+          "source_marker_bytes": 2,
+          "static_stack_bytes": 12,
+          "temporarily_occluded_bank0_text_bytes": 8192
+        },
+        "state_stack": "fits-owned-c000/c074-arenas"
+      }
+    ],
+    "shared_state_and_stack": {
+      "completion_scratch_zp": {
+        "capacity_bytes": 2,
+        "end_exclusive": "0x92",
+        "start": "0x90"
+      },
+      "fits": true,
+      "headroom_to_owned_state_after_source_markers": 7,
+      "ordinary_bss_end": 49143,
+      "ordinary_bss_end_after_source_markers": 49145,
+      "ordinary_bss_headroom_bytes": 137,
+      "service_state_arena": {
+        "capacity_bytes": 68,
+        "end_exclusive": "0xc044",
+        "start": "0xc000"
+      },
+      "static_stack_arena": {
+        "capacity_bytes": 12,
+        "end_exclusive": "0xc080",
+        "start": "0xc074"
+      },
+      "unallocated_gap_bytes": 48
+    }
+  },
+  "claim_limit": "Architecture inventory and candidate pricing only; no product identity, WPLTO, hardware or release claim.",
+  "contract": {
+    "bytes": 15638,
+    "path": "config/c2-stack-overlay-ownership-contract.json",
+    "sha256": "a84415a4a2dfc9283f6389a160db3a39a084f8e86bb9339d09e649e3a51c9b9c"
+  },
+  "execution_witness": {
+    "candidate_rows_evaluated": 4,
+    "inventory_and_mutation_executions": 6,
+    "mapped_far_micro_elf_executions": 2,
+    "mapped_far_mutation_executions": 5,
+    "stack_micro_elf_executions": 5,
+    "total_executions": 22
+  },
+  "format": "lisp65-c2-stack-overlay-ownership-halt1-pricing-v1",
+  "inventory_receipt_expected_sha256": "c10209cfe6a1837b37d4d6af8d33085e2cfb8537b2aa9bf014b5df4225876ef8",
+  "mapped_far_service_micro_elf": {
+    "assembly_sha256": "8997024b62b61606dac86d2c92cfaf5ce4ac87e745872dae507df4e6398fe1bb",
+    "call_abi": {
+      "entry_wrappers": 2,
+      "interrupt_flag": "unchanged; MAP inhibits only until EOM",
+      "map_enter_bytes": 19,
+      "map_leave_bytes": 15,
+      "register_preservation": "A/X/Y/Z across map-enter; A status across map-leave; Z=0 at C return",
+      "wrapper_bytes_each": 9
+    },
+    "executions": [
+      {
+        "case": "priced-facade-and-service",
+        "facade_bytes": 98,
+        "facade_headroom_bytes": 145,
+        "facade_vma": 46000,
+        "far_bytes": 1499,
+        "far_lma": 178354,
+        "far_vma": 30898,
+        "irq_vma": 57400,
+        "map_enter_machine_code": "48da5adba980a224a000a3805ceafb7afa6860",
+        "map_leave_machine_code": "48a900a200a000a3805cea68a30060",
+        "map_opcode_count": 2,
+        "status": "passed",
+        "symbol_bytes": {
+          "c2_dma_read_or_abort": 46,
+          "far_c2_edma_prepare": 142,
+          "far_c2_physical_read_converged": 480,
+          "far_c2_physical_source_byte": 195,
+          "far_vm_code_load_converged": 682,
+          "mapped_c2_physical_read_converged": 9,
+          "mapped_far_enter": 19,
+          "mapped_far_leave": 15,
+          "mapped_vm_code_load_converged": 9
+        }
+      },
+      {
+        "case": "resident-capacity-plus-one",
+        "facade_bytes": 244,
+        "status": "rejected"
+      }
+    ],
+    "linker_sha256": "67eb0fb07d8fb8046c68b23124426f7394246e2386bcf177a22e00952a86cd46",
+    "map_offset": 147456,
+    "map_tuple": {
+      "maphi_y": "0x00",
+      "maphi_z": "0x80",
+      "maplo_a": "0x80",
+      "maplo_x": "0x24",
+      "mapped_physical_slab_start": "0x0002a000",
+      "mapped_service_cpu_end_exclusive": "0x7e8d",
+      "mapped_service_cpu_start": "0x78b2",
+      "restore_a": "0x00",
+      "restore_x": "0x00",
+      "restore_y": "0x00",
+      "restore_z": "0x80"
+    }
+  },
+  "mapped_far_service_mutations": {
+    "bank2-owner-overlap": "rejected",
+    "far-call-into-hidden-block": "rejected",
+    "irq-not-visible": "rejected",
+    "recursive-bootstrap": "rejected",
+    "resident-trampoline-overflow": "rejected"
+  },
+  "recorded_on": "2026-08-04",
+  "stack_micro_elf_fixtures": {
+    "arena_capacity_bytes": 12,
+    "arena_start": 49268,
+    "executions": [
+      {
+        "load_segments": 1,
+        "overlay_floor": 50004,
+        "stack_bytes": 3,
+        "stack_vma": 49268,
+        "status": "passed",
+        "structured_sections": 8
+      },
+      {
+        "load_segments": 1,
+        "overlay_floor": 50004,
+        "stack_bytes": 4,
+        "stack_vma": 49268,
+        "status": "passed",
+        "structured_sections": 8
+      },
+      {
+        "load_segments": 1,
+        "overlay_floor": 50004,
+        "stack_bytes": 6,
+        "stack_vma": 49268,
+        "status": "passed",
+        "structured_sections": 8
+      },
+      {
+        "load_segments": 1,
+        "overlay_floor": 50004,
+        "stack_bytes": 12,
+        "stack_vma": 49268,
+        "status": "passed",
+        "structured_sections": 8
+      },
+      {
+        "stack_bytes": 13,
+        "status": "rejected-capacity-plus-one"
+      }
+    ],
+    "overlay_floor": 50004
+  },
+  "status": "halt-1-fourth-class-priced-one-row-fits"
+}

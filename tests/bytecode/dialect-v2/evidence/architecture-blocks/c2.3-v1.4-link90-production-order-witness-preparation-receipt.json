@@ -1,0 +1,158 @@
+{
+  "bindings": {
+    "config": {
+      "bytes": 1233,
+      "path": "config/c2-v14-link90-production-order-witness.json",
+      "sha256": "a6e4654b83b35b46f2b2af59e9bafbe4de9a201e490d47463ca6f5bf1d546457"
+    },
+    "deployment": {
+      "bytes": 770,
+      "path": "build/post-promotion/v14/link90-production-order-witness/deployment.json",
+      "sha256": "e09fd6632380318d63da53a82f9ce333bfa9d98f0998b49b3477eeaf9ce0ac42"
+    },
+    "driver": {
+      "bytes": 24254,
+      "path": "tools/host-lisp/c2_v14_link90_production_order_witness.py",
+      "sha256": "362cd35ed3d7d4c37aa79a6070af4de8b967e7ba48e0951478452ba5fb5c5ce3"
+    },
+    "fixture": {
+      "bytes": 2323,
+      "path": "tests/bytecode/dialect-v2/fixtures/v14-parity-toy-production-order/main.l65",
+      "sha256": "6535ce646f55fb11bd0d5371564600ae4b7a1f132cc3cd8adf0c76f8ab6de14d"
+    },
+    "hardware_script": {
+      "bytes": 3531,
+      "path": "scripts/c2-v14-link90-production-order-witness-hw.sh",
+      "sha256": "6969cd6fc763e2d1e07569e0defff8c9bc915c108e3805449565ada504e1ae95"
+    },
+    "library": {
+      "bytes": 9049,
+      "path": "lib/m65-hw.lisp",
+      "sha256": "4ebd0bba15cdf826291c88b9a67916a334a40b0b9cd3d75d271fe4100200567d"
+    },
+    "owner_review": {
+      "bytes": 15251,
+      "path": "docs/planning/1.4-parity-pilot-work-plan.md",
+      "sha256": "af4c9d69db6c9f4010da10b6722aaff78d23acdbc0d0e63b24ca18635dba2467"
+    },
+    "project": {
+      "bytes": 111,
+      "path": "tests/bytecode/dialect-v2/fixtures/v14-parity-toy-production-order/project.l65p",
+      "sha256": "2258dd5cec93346e977be9c83a150250366851652bc655a2b966be1b13065711"
+    },
+    "ship_builder": {
+      "bytes": 52043,
+      "path": "tools/host-lisp/ship_builder.py",
+      "sha256": "fc5e9ab08a181804e89576a211791ebc3cd7fe0646341af8cea670656ee286ad"
+    }
+  },
+  "candidate_link": 90,
+  "diagnostic": {
+    "build_output": "ship-builder build: PASS image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/post-promotion/v14/link90-production-order-witness/v14-order.d81 sha256=1debd7fd2c0f533e72b1d2519b14acc40ec2eacb8a43a8714ccad8b332a7da16",
+    "image": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v14/link90-production-order-witness/v14-order.d81",
+      "sha256": "1debd7fd2c0f533e72b1d2519b14acc40ec2eacb8a43a8714ccad8b332a7da16"
+    },
+    "runtime_elf": {
+      "bytes": 40116,
+      "path": "build/post-promotion/v14/link90-production-order-witness/v14-order.runtime.elf",
+      "sha256": "eeeaf7ed333dc2977dd585e010c877f8bd5e579832ebdc844eaaa9607caa9c3e"
+    },
+    "ship_receipt": {
+      "bytes": 2368,
+      "path": "build/post-promotion/v14/link90-production-order-witness/v14-order.receipt.json",
+      "sha256": "c4cc918f27add3b95aaf5c2d354e81da35e6c935246dd1d9046e0cb446b2f3e5"
+    }
+  },
+  "facts": {
+    "contact": {
+      "hardware_contacts": 1,
+      "monitor_reads_during_execution": 0,
+      "physical_keys": 0,
+      "post_stop_ram_reads": 2,
+      "screen_polls_during_execution": 0,
+      "virtual_keys": 0
+    },
+    "identity": {
+      "diagnostic_identities": 1,
+      "product_candidate_bytes_changed": 0,
+      "product_links": 0,
+      "promotable": false
+    },
+    "path_equivalence": {
+      "first_write_exact": true,
+      "first_write_token": "(m65-byte-write (%m65-sprite-shape-slot-hi) (+ (%m65-sprite-shape-slot-lo) index) (string-ref shape index))",
+      "guard_token": "(and (%m65-sprite-number-p sprite) (stringp shape) (= (string-length shape) 63))",
+      "order_proven": true,
+      "outer_guard_exact": true,
+      "pointer_guard_exact": true,
+      "pointer_token": "(and (= table-high 0) (<= table-low 248))"
+    },
+    "witness": {
+      "address": "0x17b0",
+      "bytes": 6,
+      "live_geometry_offsets": [
+        3,
+        4,
+        5
+      ],
+      "ordinary_ram_only": true,
+      "stages": [
+        {
+          "meaning": "argument-guard-passed",
+          "offset": 0,
+          "value": 161
+        },
+        {
+          "meaning": "pointer-guard-passed",
+          "offset": 1,
+          "value": 178
+        },
+        {
+          "meaning": "first-shape-byte-completed",
+          "offset": 2,
+          "value": 195
+        }
+      ]
+    }
+  },
+  "format": "lisp65-c2.3-v1.4-link90-production-order-preparation-v1",
+  "recorded_on": "2026-08-03",
+  "reference_candidate": {
+    "image": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.d81",
+      "sha256": "640d115e01d238413821ab9cf5b59056abf553e96e27cf0c64d8db75ef8a2bde"
+    },
+    "runtime_elf": {
+      "bytes": 40116,
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.runtime.elf",
+      "sha256": "dcb415da6379d0fc68185a4a486ab07a72442524bbefbca0fc7b3cffda8e841f"
+    },
+    "unchanged_after_build": true
+  },
+  "status": "PREPARED-NON-PROMOTABLE-PRODUCTION-ORDER-WITNESS",
+  "verification": {
+    "executions": 2,
+    "mutation_count": 16,
+    "mutations_rejected": {
+      "add-physical-key": "device-contact boundary drift",
+      "add-screen-poll": "device-contact boundary drift",
+      "break-first-write-equivalence": "production-path equivalence drift",
+      "break-outer-equivalence": "production-path equivalence drift",
+      "break-pointer-equivalence": "production-path equivalence drift",
+      "change-argument-stamp": "production-order witness contract drift",
+      "change-pointer-stamp": "production-order witness contract drift",
+      "change-shape-stamp": "production-order witness contract drift",
+      "claim-product-delta": "diagnostic identity boundary drift",
+      "claim-product-link": "diagnostic identity boundary drift",
+      "drop-live-geometry": "production-order witness contract drift",
+      "drop-post-stop-read": "device-contact boundary drift",
+      "erase-order-proof": "production-path equivalence drift",
+      "make-promotable": "diagnostic identity boundary drift",
+      "move-witness": "production-order witness contract drift",
+      "read-during-execution": "device-contact boundary drift"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "CPU_left_stopped": true,
+  "authorities": {
+    "preparation": {
+      "bytes": 3810,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-irq-origin-contact-preparation-receipt.json",
+      "sha256": "a905765f3d598d3a2e18760c85475bf65d93636ec0a537d77375ea0ad2245aaa"
+    },
+    "record": {
+      "bytes": 65,
+      "path": "build/c2.3/defstruct-irq-origin-contact/device/origin-record.bin",
+      "sha256": "b39e8baeb78f368f4bd6786e54424f09ac48c48db2a95c267dec2c71757cd800"
+    },
+    "registers": {
+      "bytes": 785,
+      "path": "build/c2.3/defstruct-irq-origin-contact/device/final-registers.json",
+      "sha256": "0747d9b89cb8e04271b60a689fad39122effe95fcf1edc5fc8a94183b8f1c513"
+    }
+  },
+  "claim_limit": "One terminal origin row only. It distinguishes BRK from hardware IRQ and records readable internal sources; it does not identify the earlier control-flow corruptor, authorize a fix or authorize another contact.",
+  "format": "lisp65-c2.3-post-v1.4-defstruct-irq-origin-contact-device-v1",
+  "mapping": {
+    "MAPH": "0x8000",
+    "MAPL": "0x0000"
+  },
+  "preparation_status": "HOST-GREEN; ONE TERMINAL CONTACT AUTHORIZED",
+  "raw_record_hex": "d03073bf0000000002003620000100e10a00a901b802aa0a00ab0ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "recorded_on": "2026-08-10",
+  "register_tuple": {
+    "A": "0x02",
+    "B": "0x00",
+    "MAPH": "0x8000",
+    "MAPL": "0x0000",
+    "PC": "0xb42c",
+    "SP": "0x018d",
+    "X": "0x8d",
+    "Y": "0x0b",
+    "Z": "0x03",
+    "raw_hex": "74310d0a0d0a2e720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a42343243203032203844203042203033203030203031384420383030302030303030203443324342342020303020202020203235202e2e452e2e492e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c30373737423432432020344320324320423420204a4d5020202024423432430d0a0d0a2e",
+    "row": "B42C 02 8D 0B 03 00 018D 8000 0000 4C2CB4  00     25 ..E..I.C ...P 15 -  00 - .....lh.",
+    "tail": "4C2CB4  00     25 ..E..I.C ...P 15 -  00 - .....lh."
+  },
+  "status": "BRK-CONTROL-FLOW-ESCAPE",
+  "terminal_row": {
+    "resume_neighborhood_PC_minus_2_through_plus_1": "00000000",
+    "sources": {
+      "AudioDMA_IRQ": "0x00",
+      "AutoIEC_IRQ": "0x20",
+      "CIA1_ICR": "0x02",
+      "CIA2_ICR": "0x00",
+      "D019_witness": "0x00",
+      "D01A": "0xE1",
+      "Ethernet_IRQ": "0x36",
+      "episode_latch": "0x01"
+    },
+    "stacked_B": 1,
+    "stacked_P": "0x30",
+    "stacked_return_PC": "0xBF73",
+    "status": "BRK-CONTROL-FLOW-ESCAPE"
+  }
+}

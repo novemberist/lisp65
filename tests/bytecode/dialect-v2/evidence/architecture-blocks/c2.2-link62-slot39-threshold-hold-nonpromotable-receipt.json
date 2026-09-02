@@ -1,0 +1,94 @@
+{
+  "authority": {
+    "driver": {
+      "bytes": 21923,
+      "path": "tools/host-lisp/c2_link62_slot39_threshold_hold.py",
+      "sha256": "58b7dbb48fc1a7221e71907acb696c738763f5ff7e9e31bd72aa02c0b1964bea"
+    },
+    "hardware_First_Red": {
+      "bytes": 7913,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link62-C1-Freezer-cutpoint3-prefreezer-hardware-first-red.json",
+      "sha256": "7c8309f790796c5b711e1d60fd818db038874ba0283ea3e458506556345645ab"
+    },
+    "hardware_driver": {
+      "bytes": 3499,
+      "path": "scripts/c2-link62-slot39-threshold-hold-hw.sh",
+      "sha256": "7ee5108704894d202f280c33a716bd7847f7fd4d9144cd0a3c308bdfbd229321"
+    },
+    "host_ELF_attribution": {
+      "bytes": 10198,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link62-slot39-completion-host-elf-attribution.json",
+      "sha256": "739bd351360f480bd878c6c7ec3221b963a86e5e9a8c680969428705fe5e6dd4"
+    },
+    "source_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link62-c1-freezer-cutpoints-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-link62-stage-bound.bin",
+      "sha256": "f7ac2e34d8a8566e93c928c7bfa9aa7bc0379241ca01f6f7941694ba0faf2206"
+    },
+    "source_deployment": {
+      "bytes": 9636,
+      "path": "build/c2.2/c1-freezer-hardware-link62-cutpoints3-4-NONPROMOTABLE/deployment.json",
+      "sha256": "f06f679b1b60ad78aa821ae0df6af501de8905571d95fedc2a7bb7d4bea99234"
+    }
+  },
+  "candidate": {
+    "carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link62-slot39-threshold-hold-NONPROMOTABLE/runtime-overlays-session-link62-slot39-threshold-hold-NONPROMOTABLE.bin",
+      "sha256": "3abb2c9fe7cb69b2c3a4640ad246f150755eb453f66ebba99ec8865c848d9fb4"
+    },
+    "directory": "build/c2.2/substitution/link62-slot39-threshold-hold-NONPROMOTABLE",
+    "identity_separate_from_Link62": true,
+    "lifecycle": "nonpromotable; discard after the diagnostic receipt",
+    "manifest": {
+      "bytes": 1483,
+      "path": "build/c2.2/substitution/link62-slot39-threshold-hold-NONPROMOTABLE/fixed-length-threshold-hold-manifest.json",
+      "sha256": "aca6f36777d4eac4ba7bf9eba4452dca2a03a9af98e2da8746b34fcc4232c012"
+    }
+  },
+  "capture_contract": {
+    "PC": "breakpoint-trigger at $c8ca",
+    "completion_record": "$c17c..$c19b",
+    "phase_trace": "$c1f0..$c1f7",
+    "poll_start": "$17 high, $1e low",
+    "producer_seal": "$c195/$c196",
+    "target_C2J": "$05c640..$05c67f",
+    "timed_capture_count": 3
+  },
+  "claim_limit": "Nonpromotable diagnostic identity only; no product, C1, matrix-gate, acceptance-chain or release claim.",
+  "construction": {
+    "carrier_bytes_changed": 1,
+    "carrier_size_delta": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "exact_patch_gate": {
+    "after_hex": "b0fe",
+    "before_hex": "b003",
+    "carrier_size_delta": 0,
+    "changed_bytes": 1,
+    "changed_file_offsets": [
+      56437
+    ],
+    "instruction_VMA": "0xc8ca",
+    "instruction_bytes": 2,
+    "instruction_file_offset": 56436,
+    "mutation_count": 5,
+    "mutations_rejected": {
+      "extra-left-neighbour": "rejected",
+      "extra-right-neighbour": "rejected",
+      "opcode-changed": "rejected",
+      "operand-unchanged": "rejected",
+      "wrong-self-loop-displacement": "rejected"
+    },
+    "status": "passed-exact-threshold-branch-self-loop"
+  },
+  "format": "lisp65-c2.2-Link62-slot39-threshold-hold-patch-v1",
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "status": "passed-nonpromotable-threshold-hold-hardware-not-run"
+}

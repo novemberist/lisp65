@@ -1,0 +1,257 @@
+{
+  "accounting": {
+    "additional_hardware_inputs_after_first_deviation": 0,
+    "completed_latency_measurements": "0/2 unchanged",
+    "line_1_product_first_red_budget": "2/3 unchanged",
+    "line_1_status": "passed",
+    "new_product_links_during_read_only_diagnosis": 0
+  },
+  "candidate": {
+    "deployment": {
+      "bytes": 3632,
+      "path": "build/c2.2/hardware-presmoke-link48-zero-literal/deployment.json",
+      "sha256": "5073343b7bac1bd739424b85d951a617232eedccdaf170c4673624862818d0d0"
+    },
+    "elf": {
+      "bytes": 608744,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "1844e69f265025d5d3179db3e6a4e0d8ffd22b67f14b121e2a8ee139864e0404"
+    },
+    "link": 48,
+    "map": {
+      "bytes": 203536,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "283685ba1916ef7fbde56784019f12d828242c0b79b972c4ef01acdf8a68a0a8"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg",
+      "sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6"
+    },
+    "qualified_wplto_receipt": {
+      "bytes": 8717,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link47-zero-literal-wplto-receipt.json",
+      "sha256": "d8cdd3f3df1aad0483c78b81075be740006490c4e840039ff327cf71bb8b667f"
+    },
+    "structural_receipt": {
+      "bytes": 340673,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link48-c2-lite-v6-zero-literal-execution-structural-receipt.json",
+      "sha256": "867bd59ff9c669e98b4969062eeb0dfd39b0fb633f21dd3e19f067fedb3c7f25"
+    }
+  },
+  "claim_boundary": {
+    "not_proved": [
+      "the exact append/decode/publication slice that first returned red",
+      "the exact rollback slice that prevented journal/suffix cleanup",
+      "any cold or warm latency value",
+      "a product fix for this newly exposed downstream defect"
+    ],
+    "proved": [
+      "Link 48 passed hardware line 1 with banner and REPL",
+      "the requested zero-literal record-reader rejection is removed",
+      "the dynamic emitter produced a valid one-entry, zero-literal image",
+      "Bank 2 is byte-identical to the Link-48 authority",
+      "append reached journal write and staged the new image and entry",
+      "fail-closed restored the published C2D counts and removed READY"
+    ]
+  },
+  "classification": "Class C: dynamic zero-literal emit succeeds, then append/rollback fails before a completed definition or latency measurement",
+  "fixture_assessment": {
+    "gap_exposed_by_hardware": "The fixture did not execute a real dynamically emitted zero-literal definition through append, publication, and install. It must be strengthened at that end-to-end boundary in the next authorized product cut.",
+    "proved_before_hardware": "Reader/model acceptance, the linked vm_run_dir-to-entry-record chain, and seven malformed-record negatives.",
+    "source_gate": {
+      "path": "tools/host-lisp/c2_zero_literal_execution_gate.py",
+      "sha256": "39586230a41ef6a806c15b0267d6578f9803297ccee8514d47704deb7db9fef7"
+    }
+  },
+  "format": "lisp65-c2-lite-v6-link48-zero-literal-append-hardware-first-red-v1",
+  "hardware_result": {
+    "definition_setup": {
+      "expected": "a successfully appended and published definition",
+      "form": "(defun %c2h()(quote t))",
+      "observed": "*** vm: bad bytecode",
+      "screen": {
+        "bytes": 3862,
+        "path": "build/c2.2/hardware-presmoke-link48-zero-literal/latency/definition_setup.png",
+        "sha256": "4d8fc02fed2ca4c6ae1b92993a3701f13a199885dfa70111f2bcf019349d2a3c"
+      },
+      "status": "first-red",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link48-zero-literal/latency/definition_setup.txt",
+        "sha256": "1fd6f363ea2096be9e0634675c87205f131cbce56ee71deb4fda8fae9e1c5b70"
+      }
+    },
+    "line_1": {
+      "observed": "complete Workbench Dialect V2 banner and REPL",
+      "screen": {
+        "bytes": 3265,
+        "path": "build/c2.2/hardware-presmoke-link48-zero-literal/line1/screen.png",
+        "sha256": "7bc0ff2468c8dcbd089f000422dc62f4f607f2e7394ae04790f06ef4d3725e6c"
+      },
+      "status": "passed"
+    }
+  },
+  "next_action": "Class-C review. No product fix, diagnostic link, additional hardware input, promotion, acceptance, or release is authorized by this receipt.",
+  "read_only_localization": {
+    "append_transaction": {
+      "c2d_capture": {
+        "bytes": 50752,
+        "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/bank5-c2d-live.bin",
+        "sha256": "8f9a7f6ded2bcc0f58ec3d4172560fc57eabcbf5a4e77ce45ef0e1223d7dc009"
+      },
+      "c2d_plus_journal_capture": {
+        "bytes": 50816,
+        "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/bank5-c2d-region-live.bin",
+        "sha256": "72aad9da265fb26a472a8eaa19f75e3e8935c0cb6210e519f3697226001545bf"
+      },
+      "finding": "The append wrote a valid persistent C2J and staged one image and one entry. The public header was restored to the old counts, but the suffix rows and ACTIVE journal remain. This localizes the First Red to the downstream append/rollback chain, after successful zero-literal emission.",
+      "persistent_journal": {
+        "active": 1,
+        "computed_crc32": "0x914e4da3",
+        "delta_counts": [
+          1,
+          0,
+          0
+        ],
+        "flags": 0,
+        "generation": 1,
+        "journal_count": 0,
+        "magic": "C2J\u0000",
+        "new_counts": [
+          7,
+          589,
+          2264,
+          283
+        ],
+        "old_counts": [
+          6,
+          588,
+          2264,
+          283
+        ],
+        "session_length": 119,
+        "session_offset": 0,
+        "stored_crc32": "0x914e4da3",
+        "version": 1,
+        "watermark": 4096
+      },
+      "published_header_counts": [
+        6,
+        588,
+        2264,
+        283
+      ],
+      "scratch": {
+        "code_length": 9,
+        "code_offset": 64,
+        "committed": 1,
+        "entries": 1,
+        "journal_result": 1,
+        "length": 119,
+        "literals": 0,
+        "metadata_length": 46,
+        "metadata_offset": 73,
+        "new_counts": [
+          7,
+          589,
+          2264,
+          283
+        ],
+        "old_counts": [
+          6,
+          588,
+          2264,
+          283
+        ],
+        "rollback_flags": 1,
+        "roots": 0,
+        "staged": 1
+      },
+      "unreachable_suffix": {
+        "entry_ordinal": 588,
+        "entry_row_hex": "06 00 63 86 09 00 d8 08 01 00",
+        "image_index": 6,
+        "image_row_hex": "01 00 00 00 01 00 4c 02 01 00 d8 08 00 00 1b 01 00 00 63 86 00 09 00 00 00 00 00 00 0a d3 f6 2a"
+      }
+    },
+    "dynamic_emission": {
+      "code_length": 9,
+      "code_offset": 64,
+      "emitter_active": 0,
+      "emitter_failed": 0,
+      "emitter_state_hex": "49 00 01 00 00 00 06 00 00 00",
+      "entry_count": 1,
+      "export_name": "%c2h",
+      "image": {
+        "bytes": 119,
+        "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/session-emission-119.bin",
+        "sha256": "176de02000b6d29914175c2303216f7530b5a73f0b8bf6cc7f190ab643602531"
+      },
+      "length": 119,
+      "literal_count": 0,
+      "metadata_length": 46,
+      "metadata_offset": 73,
+      "status": "valid-complete-zero-literal-L65S-v4-image",
+      "string_bytes": 6
+    },
+    "fail_closed_boundary": {
+      "ready": 0,
+      "resident_journal_count": 0,
+      "restored_runtime": {
+        "c2d_bytes": 33840,
+        "catalog_crc32": "0x3d6302f3",
+        "entry_count": 588,
+        "error": 0,
+        "finished": 1,
+        "generation": 1,
+        "image_count": 6,
+        "phase": 13,
+        "resolution_count": 2264,
+        "root_count": 283,
+        "shelf_bytes": 70897
+      },
+      "vm_status_after_renderer_reset": 0
+    },
+    "outer_execution_frame": {
+      "attribution": "static ordinal 171, stdlib lcc-run",
+      "code_window": {
+        "bytes": 256,
+        "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/vm-codebuf-256.bin",
+        "sha256": "e65bb8e9de1b2c37b9ad3ace7d780f432a628e664a0a9fe77b2d113df67ad29d"
+      },
+      "not_proved": "The exact failing opcode/PC is not persisted and is not inferred from the final streamed window.",
+      "proved": "The zero-literal callee reader no longer rejects %lcc-consp; execution advanced through lcc-run to its install suffix.",
+      "state": {
+        "buffer_bank": 1,
+        "buffer_ordinal": 171,
+        "code_vma": "0xbfe6",
+        "header_length": 13,
+        "literal_table_vma": "0xbfe0",
+        "payload_length": 63,
+        "payload_offset": 13,
+        "payload_window_max": 43,
+        "status_after_renderer_reset": 0,
+        "streaming": 1,
+        "window_length": 18,
+        "window_pc": 45
+      }
+    },
+    "static_code_plane": {
+      "authority": {
+        "bytes": 34403,
+        "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin",
+        "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+      },
+      "hardware": {
+        "bytes": 34403,
+        "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/bank2-static-code.bin",
+        "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+      },
+      "status": "byte-identical-to-Link-48-authority"
+    }
+  },
+  "recorded_on": "2026-07-22",
+  "status": "first-red-product-semantics-review-required",
+  "value_string": "link48=1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6 line1=pass banner=repl definition=FIRST-RED-VM_BADOPCODE emit=L65S-v4/119B/entries1/literals0 bank2=34403-identical append=staged+committed c2j=ACTIVE old=6/588/2264/283 new=7/589/2264/283 ready=0 line1-budget=2/3 latency=0/2 acceptance=blocked"
+}

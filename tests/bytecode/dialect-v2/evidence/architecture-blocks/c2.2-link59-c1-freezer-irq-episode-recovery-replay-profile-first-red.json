@@ -1,0 +1,18 @@
+{
+  "format": "lisp65-c2-link59-c1-freezer-irq-episode-recovery-replay-profile-first-red-v1",
+  "recorded_on": "2026-07-23",
+  "status": "FIRST RED after the sole WPLTO and before read-only gate completion",
+  "cause": "the recovery driver invoked the read-only replay in the same Python process as the WPLTO; the shared canonical profile was therefore applied a second time to already configured slice tables and reached the historical Link-33 cardinality assertion",
+  "precedent": "the Link-39 Class-A single-profile-application correction",
+  "correction": "retain the completed immutable WPLTO tree and run its read-only qualification in a fresh process under a fresh replay identity",
+  "product_semantics_changed": false,
+  "product_bytes_changed": 0,
+  "execution_accounting": {
+    "whole_program_LTO_closure_links": 1,
+    "additional_compiler_runs": 0,
+    "additional_linker_runs": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0
+  },
+  "claim_limit": "Harness First Red only; no capacity or linked-gate PASS was claimed."
+}

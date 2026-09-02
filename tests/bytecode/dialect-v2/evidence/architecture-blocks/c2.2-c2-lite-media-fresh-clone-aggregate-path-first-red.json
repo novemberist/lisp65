@@ -1,0 +1,57 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: varied fresh-clone media artifact sets diverged",
+  "source_commit": "ef31d1c4baa24c876c60491fe18399bbb5b1ae7d",
+  "variation_axes": [
+    "fresh-clone",
+    "PYTHONHASHSEED",
+    "SOURCE_DATE_EPOCH",
+    "timezone-and-calendar-date"
+  ],
+  "failed_step": "complete 19-role aggregate comparison",
+  "diagnostic": "varied fresh-clone C2-lite builds diverged: artifact_set_sha256",
+  "cause": "The static-plane emitter received checkout-absolute suite and output-prefix arguments. Those private paths entered diagnostic manifests; their raw manifest binding then entered resolved-profile.txt and changed product/media identity between clone directories.",
+  "correction": "The canonical wrapper supplies checkout-relative emitter arguments. Diagnostic paths remain private evidence, while the resolved profile and all 19 media roles become independent of the fresh-clone directory name.",
+  "failed_driver": {
+    "path": "tools/host-lisp/c2_lite_product_reproducibility.py",
+    "bytes": 20796,
+    "sha256": "71b962abd1a20491441a21b0d1d40ef1fc2031072163883fd9bf30ed647fd6bb"
+  },
+  "failed_canonical_builder": {
+    "path": "tools/host-lisp/c2_lite_canonical_product.py",
+    "bytes": 48331,
+    "sha256": "b7957fd352efddc534aef84e48105a5e76105a584a3260b8bc444becc4d6f03b"
+  },
+  "representative_axis_evidence": {
+    "substitution_manifest_bytes": 2376,
+    "substitution_manifest_sha256": "669edb28f0809d7306c0f3d2b56a45ad50bb846b82995ef1c767732eec3be8cb",
+    "resolved_profile_bytes": 11048,
+    "resolved_profile_sha256": "e33af43773fe523230e9f2615f6dcbbf0184cc368a51c5f6ce21ebe6eb7ddc6c",
+    "path_bearing_fields": [
+      "suite",
+      "blob",
+      "external_image.path",
+      "directory",
+      "disasm",
+      "header",
+      "c_source"
+    ]
+  },
+  "execution_accounting": {
+    "fresh_clones_started": 2,
+    "canonical_product_links_completed": 2,
+    "media_role_sets_completed": 2,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

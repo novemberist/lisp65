@@ -1,0 +1,105 @@
+{
+  "addresses": {
+    "gc_collect": "0x38f7..0x3ec1",
+    "gc_runs": "0x0000b9f0",
+    "queue_code": "0x0000d619",
+    "queue_state": "0x0000d60a"
+  },
+  "authorities": {
+    "commission": {
+      "bytes": 13143,
+      "path": "docs/planning/c2.2-v1.2.6-editor-halt1-first-red-review.md",
+      "sha256": "f436dd5f91ddec4252b6deab74e7d3e35daed5f12199f67fa74c4452074656d7"
+    },
+    "driver": {
+      "bytes": 32652,
+      "path": "tools/host-lisp/c2_v126_editor_stall_device.py",
+      "sha256": "2b98cec4339ce36817708768d571782d703930290f49a2a1330602c15c1462cb"
+    },
+    "host_attribution": {
+      "bytes": 7525,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-host-attribution-receipt.json",
+      "sha256": "844e67cd545fd972670120ca06fafae019a32ec9610073a43eb9800411d7df4e"
+    },
+    "reauthorization_commit": "7723c638"
+  },
+  "candidate": {
+    "ELF": {
+      "bytes": 622560,
+      "name": "lisp65-c2-substitution-linked.prg.elf",
+      "path": "build/c2.2/v1.2.6-candidate-product-link83/final/lisp65-c2-substitution-linked.prg.elf",
+      "role": "linked-product-elf",
+      "sha256": "06cd0eaf5dbc343343407acb60b82e61575d9ad7e4b19dabc380789d0c1d1890"
+    },
+    "deployment": {
+      "bytes": 4244,
+      "path": "build/c2.2/v1.2.6-editor-hardware/deployment.json",
+      "sha256": "7958ff1c4f4d9a439d72184b46140848857a1fd47a547e5ef69731275686ff70"
+    },
+    "link": 83,
+    "package_medium": {
+      "bytes": 819200,
+      "name": "lisp65-product.d81",
+      "path": "build/c2.2/v1.2.6-candidate-media/lisp65-product.d81",
+      "role": "product-d81",
+      "sha256": "fef071559a3a5af5e31f7b9aebe0f520d8f463889d4ed11a05cc73753e19f8c2"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "name": "lisp65-c2-substitution-linked.prg",
+      "path": "build/c2.2/v1.2.6-candidate-product-link83/final/lisp65-c2-substitution-linked.prg",
+      "role": "c2-resident-prg",
+      "sha256": "9a39c43cfd680116440b01086850c8d46b951e8a827449df7440f61ad3f3bf53"
+    },
+    "release": "v1.2.6"
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-stall-device-retry-preparation-v1",
+  "protocol": {
+    "CPU_final_state": "stopped after PC capture",
+    "abort_before_measurement_on_assert_failure": true,
+    "accepted_before_discriminator": 55,
+    "cold_reset_and_asserted_BASIC": true,
+    "contacts": 1,
+    "context_reconstruction": {
+      "authorities": {
+        "forms": {
+          "bytes": 2241,
+          "path": "build/c2.2/v1.2.6-editor-hardware/session-01/d1-query-scratch.txt",
+          "sha256": "aaaba91677b04ada03b9e781e3947071410f12d9693feef943b1731bad9e65b3"
+        },
+        "measure3": {
+          "bytes": 2241,
+          "path": "build/c2.2/v1.2.6-editor-hardware/session-01/d1-measure3-editor.txt",
+          "sha256": "cb8e70904de79ee690a9d988ac2c0b3a68c473393c8be9131bd83077da4f2acc"
+        },
+        "scratch": {
+          "bytes": 2241,
+          "path": "build/c2.2/v1.2.6-editor-hardware/session-01/d1-scratch-after.txt",
+          "sha256": "bcdde6e47325b84ce729affb6874a6b138cd55a4346fda6634a88bcb79e9e236"
+        }
+      },
+      "claim": "replays the persistent definitions and live scratch binding that moved the cached 626 symbol count to the freshly rendered measure3 630 count in the original First Red",
+      "forms": [
+        "(defun %ib(n)(%ide-buffers-find n(symbol-value(quote ide-buffers))))",
+        "(defun %ib(n a)(if a(if(string= n(caar a))(cdar a)(%ib n(cdr a)))nil))",
+        "(progn(setq b(%ib\"scratch\"(symbol-value(quote ide-buffers))))t)"
+      ],
+      "scratch_text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabc"
+    },
+    "machine_checked_immediate_context": [
+      "cold reset -> screenshot proves fresh BASIC 65 READY",
+      "mounted bound D81 AUTOBOOT -> screenshot proves WORKBENCH 1.2.6 REPL",
+      "scratch editor -> exact original 32*a+b+c line -> RUN/STOP",
+      "exact original %ib legacy definition -> corrected definition -> scratch binding",
+      "editor launch -> screenshot proves -- measure3 L1 -- 630/752"
+    ],
+    "one_key_per_visible_ack": true,
+    "package_upload_readback": true,
+    "product_bytes_changed": 0,
+    "reserve": 1,
+    "stalled_key": 56
+  },
+  "recorded_on": "2026-07-31",
+  "status": "prepared-reauthorized-one-contact-plus-one-reserve-read-only"
+}

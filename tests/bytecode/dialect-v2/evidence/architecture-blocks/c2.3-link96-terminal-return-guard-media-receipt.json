@@ -1,0 +1,180 @@
+{
+  "attempt_accounting": {
+    "hardware_green_runs": 0,
+    "media_builds": 2,
+    "prior_hardware_first_reds": 1,
+    "product_links": 0
+  },
+  "authority": {
+    "device_result_recorder": {
+      "bytes": 14736,
+      "path": "tools/host-lisp/c2_terminal_return_guard_device_result.py",
+      "sha256": "22cd0b295fa7fb3736a5d3ce04250c98e87d20dd2fc98b6ed310dcb3fd1fb158"
+    },
+    "guard_gate": {
+      "bytes": 8189,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-elf-receipt.json",
+      "sha256": "8d4a708023cf7877e85abcebd5b3c34dcd1b7cc0bb3899e9c6b424fa01db7dd0"
+    },
+    "media_stager_first_red": {
+      "bytes": 1515,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-media-stager-path-first-red.json",
+      "sha256": "69bd5a7f4fa89f837ee2269c417ecbfa7a7b348f8e57b381aad585aa25531f46"
+    },
+    "missing_place_device_first_red": {
+      "bytes": 3157,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-missing-place-device-first-red.json",
+      "sha256": "03ee921f42fca2ed4bfb6ea072cceaa88ed9b683e0ae3d40b3912b503fcef519"
+    },
+    "producer": {
+      "bytes": 24803,
+      "path": "tools/host-lisp/c2_terminal_return_guard_media.py",
+      "sha256": "5d148978c3069d887d0e8cef9fe4991ea9374d762ddfa7587f64ea0705cab2bb"
+    },
+    "product_card": {
+      "bytes": 4189,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-product-receipt.json",
+      "sha256": "9a5453faecd78a861de2bf844ade46a5e3192098791a839ed09ab893d7c0d4ba"
+    },
+    "product_manifest": {
+      "bytes": 21534,
+      "path": "build/c2.3/terminal-return-guard-link96/canonical-product-manifest.json",
+      "sha256": "769490bf8c5978bc7bac6c1b6b2ba7271f801a22a6153bee28e73a0ee7be6742"
+    },
+    "stager_producer": {
+      "bytes": 51304,
+      "path": "tools/host-lisp/c2_lite_media_product.py",
+      "sha256": "ae69c1020664d16c1662f6a2a0de2334890859c9aac8cc479b8ca0f3e0f52e93"
+    }
+  },
+  "claim_limit": "Link-96 guarded product/defstruct media preparation only; no device, point, writer attribution, release or surface claim.",
+  "defstruct_library": {
+    "D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/defstruct-library/lisp65-library.d81",
+      "sha256": "6090dba14e9e4554459d32bbfa18d2db69b1dc3140e04bbe4fb147bf0775fa71"
+    },
+    "defstruct": {
+      "bytes": 2877,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/defstruct-library/defstruct.l65s",
+      "sha256": "a7c7d6776bc66dc16cb2a4bea24790ce0b6f6e552a47ab415cbd0454afcf7ad5"
+    },
+    "index": {
+      "bytes": 128,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/defstruct-library/l65index",
+      "sha256": "db5329d1d38cc2f8cd3ab68e28c4a729b1ca3c1c539405e06a6851f27f03ede3"
+    },
+    "place": {
+      "bytes": 1925,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/defstruct-library/place.l65s",
+      "sha256": "a68243774dd2489c8eddc4bd6f0eebda0783c02b09d9fbabe17cee851b580c11"
+    },
+    "readback": "passed"
+  },
+  "dependency_closure": {
+    "dependency_ordinals": {
+      "defstruct": [
+        0
+      ],
+      "place": []
+    },
+    "mutations_rejected": 2,
+    "requested": "defstruct",
+    "resolver_order": [
+      "place",
+      "defstruct"
+    ],
+    "rows": [
+      "place",
+      "defstruct"
+    ]
+  },
+  "format": "lisp65-c2.3-link96-terminal-return-guard-media-v1",
+  "guard_readback": {
+    "arm_must_be_zero": true,
+    "interpretation": "all tags zero means clean; tag 1/2/3 carries live and shadow return-low/return-high/phase-owner bytes",
+    "physical_range": "0x0000b582..0x0000b591",
+    "records": 4
+  },
+  "hardware_handoff": {
+    "expected": "(point 3 4)",
+    "forms": [
+      "(require (quote defstruct))",
+      "(defstruct point x y)",
+      "(make-point 3 4)"
+    ],
+    "physical_owner_keyboard": true,
+    "polling_during_persistent_form": false,
+    "status": "prepared-not-run"
+  },
+  "mutation_contract": [
+    "claim-product-link",
+    "claim-hardware",
+    "change-product-world",
+    "change-library-world",
+    "change-row-count",
+    "skip-readback",
+    "move-shadow-arena",
+    "allow-virtual-input",
+    "allow-active-polling",
+    "drop-make-point",
+    "claim-point",
+    "drop-guard-authority",
+    "drop-result-recorder",
+    "drop-place-row",
+    "change-defstruct-dependency",
+    "drop-device-first-red"
+  ],
+  "pair_identity": {
+    "index_rows": 2,
+    "library_build_ids": {
+      "defstruct": "0x14d980c3",
+      "place": "0x14d980c3"
+    },
+    "mounted_C2D_sha256": "90e84f17227b7971f471231a58d4619809dfad587c39aa93ccecf7e9d9bbdc99",
+    "product_build_id": "0x14d980c3",
+    "result": "same-world-pair",
+    "row_names": [
+      "place",
+      "defstruct"
+    ]
+  },
+  "recorded_on": "2026-08-11",
+  "session": {
+    "contract": {
+      "bytes": 1463,
+      "path": "config/c2-terminal-return-guard-link96-device-session.json",
+      "sha256": "768fcf77fc9513042caa5a6ef964195af9b168a86073314fdbd34dfa665c1ef3"
+    },
+    "runner": {
+      "bytes": 2322,
+      "path": "scripts/c2-terminal-return-guard-link96-hw.sh",
+      "sha256": "6a664604aa6d2f523eb4ca4d2079443e8aaacaf92a9f566356a2f4433965d132"
+    }
+  },
+  "shared_system": {
+    "artifact_count": 19,
+    "artifact_set_sha256": "cf5b3ea84c0d9cc91e41e051823554316485072e7d15fb61fdf7f3ddc28dc0c3",
+    "manifest": {
+      "bytes": 17161,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/shared-system/candidate-manifest.json",
+      "sha256": "9af457fd27e1edb7909119aac8799ea50ac2b29ddd7f294d5066759396189955"
+    },
+    "predecessor_product_byteidentical": true,
+    "product_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/shared-system/lisp65-product.d81",
+      "sha256": "b54a619d0de241a60081a30accec5ee5e1f44871251f4aefac2078dd868f9267"
+    },
+    "work_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/shared-system/lisp65-work.d81",
+      "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3"
+    }
+  },
+  "stager_live_binding_gate": {
+    "mutations_rejected": 1,
+    "status": "passed-live-successor-stager-path-bindings"
+  },
+  "status": "LINK96-GUARDED-MEDIA-R2-GREEN; POINT-HARDWARE-ROW-READY"
+}

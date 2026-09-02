@@ -1,0 +1,131 @@
+{
+  "accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "claim_limit": "This is a pre-media lifecycle/claim attribution.  It does not invalidate the review-green native substrate or its host walls.",
+  "decision": {
+    "media_authorized_but_not_produced": true,
+    "media_preflight": "STOP",
+    "no_successor_before_decision": true,
+    "reason": "The frozen product is an inert Capture/Hybrid substrate. The accepted claim world excludes its sole activation owner; hardware would exercise the public scalar key-event path and could not retire the fast-typing Known Issue.",
+    "requires_owner_decision": true
+  },
+  "final_elf_origin": {
+    "authority": "ElfTruth section bytes from the frozen final ELF",
+    "initial_bytes_hex": "00000000000000000000000000ff0000",
+    "initial_tail": 255,
+    "meaning": "capture closed",
+    "section": ".lisp65_c2_kernal_window.state",
+    "section_address": 65408,
+    "section_bytes": 16,
+    "tail_offset": 13,
+    "tail_symbol": 65421
+  },
+  "format": "lisp65-c2-v18-capture-hybrid-acceptance-pre-media-first-red-v1",
+  "frozen_pair": {
+    "ELF": {
+      "bytes": 648612,
+      "path": "build/c2.3/v1.8-capture-hybrid-product-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "67f89b7354d0f473c3057508ed6a47af69edad29c0807bc1d6f031442daaceab"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.8-capture-hybrid-product-card-r1/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "4a08b5a8e2cc1eb6924af0e43201fccaeea305bc56b7aa9ab37393d2e5e26123"
+    }
+  },
+  "lifecycle_owners": {
+    "arm_owner": "lib/repl-comfort.lisp",
+    "arm_sequence": [
+      "(poke 255 141 255)",
+      "(poke 255 140 0)",
+      "(dotimes (counter 4 nil)",
+      "(poke 188 (+ 252 counter) 0)",
+      "(poke 255 141 0)"
+    ],
+    "consumer": "closed-tail returns empty; cannot arm itself",
+    "interrupt": "read-only lifecycle guard",
+    "live_editor": "modes 2/3 consume only after an owner arms",
+    "native_repl": "close-only on abort",
+    "sources": {
+      "capture": {
+        "bytes": 2859,
+        "path": "src/optional/c2_kernal_input_capture.s",
+        "sha256": "66c40172c56a01b204fccc1d63ad4e052ef2ecd640681f2b1323212662aecd0e"
+      },
+      "comfort": {
+        "bytes": 3782,
+        "path": "lib/repl-comfort.lisp",
+        "sha256": "de3f47bc879f70798a6f0bc60a65e3d39c50c20734d3dbc687a418540135ad2b"
+      },
+      "consumer": {
+        "bytes": 1083,
+        "path": "src/optional/c2_kernal_input_consumer.s",
+        "sha256": "0862de7f2ed5cee6463a36553e4d5cdc25bc040108bce15c6a4ae174cfcc3132"
+      },
+      "editor": {
+        "bytes": 15920,
+        "path": "lib/stdlib-read-line.lisp",
+        "sha256": "671b280d7e31195c22d494455d40d5e060c6f7d7b2c0f13ac8475406f6f014d8"
+      },
+      "interrupt": {
+        "bytes": 6580,
+        "path": "src/interrupt.c",
+        "sha256": "8f68517539d3e62590abb42125909fdbc7fb13b737c495bd7542d7394bbfafec"
+      },
+      "native_repl": {
+        "bytes": 14450,
+        "path": "src/repl.c",
+        "sha256": "18817bfdf4097352ce76e6e7524a4da82313ce704b4df3c4b1a4cf0591fe46c2"
+      }
+    }
+  },
+  "mutations": {
+    "closed_tail_is_treated_as_armed": "RED",
+    "excluded_arm_owner_is_hidden": "RED",
+    "substrate_without_activation_claims_losslessness": "RED"
+  },
+  "product_world": {
+    "activation_in_product": false,
+    "closed_freight": [
+      "Comfort library",
+      "Block-3",
+      "diagnostic-witness"
+    ],
+    "excluded": [
+      "repl-comfort",
+      "Block-3",
+      "diagnostic-witness"
+    ],
+    "features_present": [
+      "LISP65_V160_INPUT_CAPTURE",
+      "LISP65_V160_INPUT_HYBRID"
+    ],
+    "native_substrate_present": true,
+    "product_receipt": {
+      "bytes": 8034203,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.8-capture-hybrid-product-card-r1-receipt.json",
+      "sha256": "9e9f11c36243393e4bdfdc2de391bebbbb6eaa06bb95dba5cc5fdefa2f104d0d"
+    }
+  },
+  "recorded_on": "2026-08-28",
+  "selected_media_claim_world": {
+    "B2_1_executable": false,
+    "activation_owner_shipped": false,
+    "available_optional_library_roles": [
+      "v16core"
+    ],
+    "claim": "B2-1 lossless normal and fast typing",
+    "claim_excludes": [
+      "Comfort",
+      "Matcher/Blink",
+      "Block 3",
+      "$22"
+    ],
+    "comfort_absent_from_release_library": true
+  },
+  "status": "FIRST RED: LOSSLESSNESS CLAIM HAS NO SHIPPED CAPTURE ACTIVATION OWNER"
+}

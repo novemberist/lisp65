@@ -1,0 +1,57 @@
+{
+  "actual_second_wipe_machine_form": {
+    "call": "jsr __memset",
+    "fill_proof": [
+      "ldx #$00",
+      "sta __rc20",
+      "txa"
+    ],
+    "interpretation": "STA preserves the returned inner status in A without changing X; the following TXA therefore supplies fill byte zero to __memset.",
+    "length": 2048,
+    "target": "0x1800"
+  },
+  "capacity": {
+    "bank0_text_headroom_bytes": 19,
+    "e000_delta_bytes": 0,
+    "e000_headroom_bytes": 115,
+    "fixed_hot_block_headroom_bytes": 33,
+    "ordinary_bank0_bss_headroom_bytes": 174,
+    "resident_island_headroom_bytes": 7,
+    "runtime_slice_minimum_headroom_bytes": 31
+  },
+  "diagnosis": {
+    "class": "post-link verifier instruction-dataflow model error",
+    "current_gate_assumption": "The zero-fill proof accepts only adjacent LDX #0; TXA immediately before JSR __memset.",
+    "new_machine_form": "The first-status fix must preserve the transport result across the fail-closed destination wipe. WPLTO inserted STA __rc20 between LDX #0 and TXA. STA does not alter X, so TXA still proves A=0 at the call.",
+    "product_finding": "none",
+    "required_gate_model": "Retain structured relocation proof for target, length and call owner. For fill, use a bounded backward register slice: TXA establishes A from X; exactly one dominating LDX #0 establishes X; any intervening X-mutating or unknown instruction is red, while stores that provably preserve X are permitted. Pin nonzero-X, missing-TXA, X-clobber and wrong-call mutations.",
+    "retry_needed": false
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "product_closure_links": 1,
+    "pure_replays": 0
+  },
+  "first_status_semantics": {
+    "asan": "passed",
+    "positive_cases": 12,
+    "specific_fixture": "ERR_VERSION survives outer Island cleanup",
+    "ubsan": "passed",
+    "wrong_generic_overwrite_mutation": "reproduced red"
+  },
+  "format": "lisp65-c2-link35-preinstall-wipe-gate-first-red-diagnosis-v1",
+  "identity": {
+    "elf_sha256": "b7cd1aac14c569fdb3e9f3e08a072a5909b34f0fbcf4f2f10ac6e435d5781d0f",
+    "first_red_receipt_sha256": "cd4b2e78751c06bc2ea55e56449018f448f34353cd05fd61a3dc7cf452e69d42",
+    "product_sha256": "54c731559fdb72d5d1cb8478b9da7e78a422741e4e5267d64b07fe4c6f763a65",
+    "structural_report_sha256": "e80913375d89e1fcca6714bdbd7f5a0592f882b68895cbe8262f442547337990"
+  },
+  "link34_rollback": {
+    "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+    "status": "untouched"
+  },
+  "next_gate": "Owner/review authorization for a tool-only bounded register-dataflow correction and pure replay against the read-only Link-35 artifacts; no compiler, linker or hardware run.",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: product and capacity green; preinstall wipe gate rejected a zero-preserving status spill"
+}

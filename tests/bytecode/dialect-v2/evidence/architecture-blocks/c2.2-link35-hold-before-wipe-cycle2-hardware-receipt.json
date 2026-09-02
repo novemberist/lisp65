@@ -1,0 +1,125 @@
+{
+  "answer": "After marker 0xa5 and the already-failed on-device CRC, the held destination reached the exact catalog-verifier payload no later than the capture at 691 ms after the launch command completed. The marker is an early publication witness, not a completion boundary.",
+  "authorization": {
+    "bytes": 4544,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link35-hold-before-wipe-fixed-patch-cycle2-receipt.json",
+    "sha256": "2a5a27d2ae365a61f04bd2961f81bba6515c1a80c3608896aea6f5ebc5fbb09a"
+  },
+  "claim_limit": "One non-promotable Class-B diagnostic hardware run. It is not promotion, acceptance, latency or product evidence.",
+  "classifier_mutations": {
+    "changing": "passed",
+    "converged": "passed",
+    "stable-wrong": "passed"
+  },
+  "delegation": {
+    "class": "B",
+    "cycle": 2,
+    "cycle_cap": 3
+  },
+  "deployment": {
+    "bytes": 3368,
+    "path": "build/c2.2/link35-hold-before-wipe-hardware-cycle2/deployment.json",
+    "sha256": "83c34bfe599262fcc68316f1bbe86a8f8f5bd1695d2552aaf6758f5afdefca80"
+  },
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link35-hold-before-wipe-fixed-patch-cycle2/lisp65-link35-hold-before-wipe-cycle2-NONPROMOTABLE.prg",
+    "sha256": "c49462bc65527c463390b19873221e9d75e2c8ffd7df37342ea57b71e4e623db"
+  },
+  "disposition": "Diagnostic identity remains isolated under its Class-B path, read-only and permanently excluded from promotion/archive mixing.",
+  "execution_accounting": {
+    "changed_bytes": 2,
+    "compiler_runs": 0,
+    "diagnostic_byte_patches": 1,
+    "hardware_runs": 1,
+    "linker_runs": 0,
+    "read_only_post_stop_captures": 5,
+    "remaining_autonomous_cycles": 1
+  },
+  "format": "lisp65-c2-link35-hold-before-wipe-cycle2-hardware-v1",
+  "link35_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/lisp65-c2-substitution-linked.prg",
+    "sha256": "54c731559fdb72d5d1cb8478b9da7e78a422741e4e5267d64b07fe4c6f763a65",
+    "status": "untouched"
+  },
+  "next_gate": "Class C: define and authorize a real completion boundary",
+  "observations": {
+    "classification": "converged-to-exact-payload-after-first-failed-crc",
+    "completion_marker": "0xa5",
+    "expected_crc16": "0xe856",
+    "held_state": {
+      "busy": 1,
+      "family": "boot",
+      "fault": 0,
+      "island_state": "INSTALLING",
+      "loaded_len": 1156
+    },
+    "source_post_stop": {
+      "bytes": 15605,
+      "matches_deployed": true,
+      "path": "build/c2.2/link35-hold-before-wipe-hardware-cycle2/held-boot-family.bin",
+      "sha256": "2703d1e868369c6e54d432e25f0548e9ab85df1a4994442b96e7096bf0ac541d"
+    },
+    "timed_target_captures": [
+      {
+        "bytes": 1156,
+        "capture": 1,
+        "crc16": "0xe8d8",
+        "elapsed_after_launch_ms": 1,
+        "matches_expected": false,
+        "nonmatching_bytes": 1133,
+        "path": "build/c2.2/link35-hold-before-wipe-hardware-cycle2/held-target-capture-1.bin",
+        "sha256": "57bb5795ca8ba3869aac186dc75836f8eed55c5d3902f13e9042007b154cb9c4"
+      },
+      {
+        "bytes": 1156,
+        "capture": 2,
+        "crc16": "0xe856",
+        "elapsed_after_launch_ms": 691,
+        "matches_expected": true,
+        "nonmatching_bytes": 0,
+        "path": "build/c2.2/link35-hold-before-wipe-hardware-cycle2/held-target-capture-2.bin",
+        "sha256": "0927d78ea21c2737cd7d32a4266c164b596fcae364da45a6cbeace5cd768a42b"
+      },
+      {
+        "bytes": 1156,
+        "capture": 3,
+        "crc16": "0xe856",
+        "elapsed_after_launch_ms": 2381,
+        "matches_expected": true,
+        "nonmatching_bytes": 0,
+        "path": "build/c2.2/link35-hold-before-wipe-hardware-cycle2/held-target-capture-3.bin",
+        "sha256": "0927d78ea21c2737cd7d32a4266c164b596fcae364da45a6cbeace5cd768a42b"
+      }
+    ]
+  },
+  "patch_gate": {
+    "after_instruction_hex": "4c01ad",
+    "after_semantics": "JMP $AD01 (hold before verifier entry and wipe)",
+    "before_instruction_hex": "4c69af",
+    "before_semantics": "JMP $AF69 (return ERR_CRC)",
+    "changed_bytes": 2,
+    "changed_cpu_addresses": [
+      "0xad02",
+      "0xad03"
+    ],
+    "changed_file_offsets": [
+      "0x8d03",
+      "0x8d04"
+    ],
+    "file_size_delta_bytes": 0,
+    "instruction_address": "0xad01",
+    "instruction_file_offset": "0x8d02",
+    "load_address": "0x2001",
+    "mutations": {
+      "one-operand-byte": "rejected",
+      "opcode-change": "rejected",
+      "third-byte-change": "rejected"
+    },
+    "status": "passed-exact-two-operand-byte-self-loop-patch"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "answered-E2f-completion-convergence"
+}

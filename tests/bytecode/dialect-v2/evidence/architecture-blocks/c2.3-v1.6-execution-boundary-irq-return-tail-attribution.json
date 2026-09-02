@@ -1,0 +1,37 @@
+{
+  "authority": {
+    "commit": "3fba877f",
+    "decision": "known linked control-flow owner and tail-identity family; final self-disposition applies"
+  },
+  "candidate_elf": {
+    "bytes": 647612,
+    "path": "build/c2.3/v1.6-execution-boundary-backstop-uint8-abi-facade-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "dc3c78e6c02f56bab9c1582234aa6be3dcd91816c79256a6fa84529f975d89af"
+  },
+  "final_red": {
+    "bytes": 24757,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-execution-boundary-backstop-uint8-abi-facade-replacement-card-final-red.json",
+    "sha256": "d6f99a38f62f7320d001d657e6c2d3157feb572023e7564646b083f10946cf51"
+  },
+  "finding": {
+    "edge": {
+      "opcode": "jmp",
+      "source_address": "0x222d",
+      "source_section": ".text",
+      "source_symbol": "retired_window_brk_classifier",
+      "target_address": "0xe068",
+      "target_symbol": "c2_kernal_irq_return"
+    },
+    "mechanism": "The control-flow gate accepts cross-function JMP only at an STT_FUNC entry. c2_kernal_irq_return is deliberately an internal sized-zero handler label, while the classifier is an IRQ-owned continuation that must rejoin exactly that internal return point.",
+    "other_violations_in_configured_final_world": 0,
+    "product_defect": false
+  },
+  "successor": {
+    "change": "derive and admit exactly the classifier-to-IRQ-return tail pair from final linked symbol identities",
+    "foreign_source": "rejected",
+    "foreign_target": "rejected",
+    "jsr_substitution": "rejected",
+    "missing_edge": "rejected"
+  },
+  "status": "ATTRIBUTED: IRQ CONTINUATION REJOINS INTERNAL HANDLER RETURN"
+}

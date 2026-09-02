@@ -1,0 +1,99 @@
+{
+  "authority": {
+    "C3_addendum": {
+      "bytes": 14097,
+      "path": "config/c2-cross-invariant-c2.2-open-addenda.json",
+      "sha256": "73aa314bc1a8f9dceaa3e0ce144262335dd197503ea11afca2356d5b67671777"
+    },
+    "hardware_first_red": {
+      "bytes": 10017,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link58-C1-Freezer-memory-hold-cutpoint3-continuation-hardware-first-red.json",
+      "sha256": "e92631fb1dcefbd014020c05408cda5b5fb7b65e8221918ca9ed05e90bc7c200"
+    },
+    "window_source": {
+      "bytes": 3562,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "f4c8bdf95677c23957c1500d11a7d02d7ccf9e1d0f5bfa481b96965f9c15b4cd"
+    }
+  },
+  "avoided_diagnostic_cycle": {
+    "new_carrier_built": false,
+    "new_hardware_runs": 0,
+    "new_product_bytes": 0,
+    "reason": "existing FF83/FF84/FF86/FF89 witnesses and exact source control flow already distinguish the proposed hypotheses"
+  },
+  "causal_chain": [
+    "cutpoint 2 first Freezer return increments FF86 from 0 to 1",
+    "ordinary owned raster IRQs advance frames but never reset FF86",
+    "cutpoint 3 second Freezer return increments FF86 from 1 to 2",
+    "the explicit cmp-2 branch enters c2_kernal_fail_closed",
+    "red border, stable frame, ACTIVE C2J and no REPL continuation follow"
+  ],
+  "claim_limit": "Diagnosis only. No product fix, C1 closure, matrix-gate fall, promotion or acceptance-chain claim.",
+  "counterfactual_gate_model": {
+    "candidate_not_authorized_as_fix": "reset the episode latch only on a real owned raster IRQ",
+    "first_source_less_after_each_owned_raster": "allowed",
+    "second_consecutive_source_less_without_owned_raster": "still-fail-closed"
+  },
+  "existing_memory_witnesses": {
+    "2": {
+      "hold-after": {
+        "frame": 6654,
+        "product_state": 4,
+        "source_less_IRQ_count": 1,
+        "unowned_VIC_sources": 0
+      },
+      "hold-before": {
+        "frame": 2548,
+        "product_state": 4,
+        "source_less_IRQ_count": 0,
+        "unowned_VIC_sources": 0
+      },
+      "post": {
+        "frame": 7106,
+        "product_state": 4,
+        "source_less_IRQ_count": 1,
+        "unowned_VIC_sources": 0
+      }
+    },
+    "3": {
+      "hold-after": {
+        "frame": 11289,
+        "product_state": 4,
+        "source_less_IRQ_count": 2,
+        "unowned_VIC_sources": 0
+      },
+      "hold-before": {
+        "frame": 8604,
+        "product_state": 4,
+        "source_less_IRQ_count": 1,
+        "unowned_VIC_sources": 0
+      },
+      "post": {
+        "frame": 11289,
+        "product_state": 4,
+        "source_less_IRQ_count": 2,
+        "unowned_VIC_sources": 0
+      }
+    }
+  },
+  "format": "lisp65-c2.2-C1-Freezer-source-less-IRQ-episode-diagnosis-v1",
+  "matrix_row": "C1",
+  "matrix_status": "OPEN-product-semantics-first-red",
+  "next_gate": "Class-C contract decision for source-less IRQ episode reset; then host mutations, product probe/link and a fresh bundled C1 hardware run",
+  "source_attribution": {
+    "fail_closed": [
+      "SEI",
+      "disable VIC IRQ mask",
+      "set border red",
+      "loop forever"
+    ],
+    "owned_raster_path_resets_source_less_counter": false,
+    "source_less_path": [
+      "increment FF86",
+      "allow values below 2",
+      "jump c2_kernal_fail_closed at value 2"
+    ]
+  },
+  "status": "diagnosed-cumulative-source-less-IRQ-counter-first-red"
+}

@@ -1,0 +1,112 @@
+{
+  "format": "lisp65-c2-product-substitution-link-13-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "status": "first-red",
+  "attempt": {
+    "name": "thirteenth-substitution-link",
+    "first_red_stage": "resident-island-seed-link",
+    "second_attempt_performed": false
+  },
+  "confirmed_fix": {
+    "link_12_address_space_divergence": "closed",
+    "shared_zero_page_qualifier": "LISP65_C2_ZP",
+    "definition_and_declaration_compile_result": "passed",
+    "capacity_delta_bytes": 0,
+    "historical_negative_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-link-12-first-red-receipt.json"
+  },
+  "first_red": {
+    "class": "fixed-layout-model-collision",
+    "independent_findings": [
+      {
+        "name": "private-symbol-linker-assertion",
+        "detail": "The linker script addressed private C names c2_phase_owner and c2_committed_roots directly; lld does not expose those local names to script expressions even though their dedicated input sections are present."
+      },
+      {
+        "name": "handoff-facade-overlap",
+        "handoff": {
+          "start": "0xb4a2",
+          "bytes": 289,
+          "end_exclusive": "0xb5c3"
+        },
+        "facade": {
+          "start": "0xb5a2",
+          "bytes": 36,
+          "end_exclusive": "0xb5c6"
+        },
+        "overlap_bytes": 33
+      },
+      {
+        "name": "ordinary-bss-fixed-state-overlap",
+        "ordinary_bss": {
+          "start": "0xb8ba",
+          "bytes": 1983,
+          "end_exclusive": "0xc079"
+        },
+        "fixed_bank0_state": {
+          "start": "0xc060",
+          "bytes": 754,
+          "end_exclusive": "0xc352"
+        },
+        "overlap_bytes": 25
+      }
+    ]
+  },
+  "map_evidence": {
+    "path": "build/c2.2/substitution/product-link-13/resident-island-seed.prg.map",
+    "sha256": "66d0afc9be0fa2031ec9d5d2206436b688d7a39e348ebb2a4b3d852af0f40ec8",
+    "zero_page_fixed_layout": {
+      "status": "arithmetically_exact",
+      "ordinary_end": "0x0089",
+      "fixed_start": "0x0089",
+      "fixed_bytes": 7,
+      "fixed_end": "0x0090"
+    },
+    "fixed_bank0_input_sections": {
+      "status": "complete",
+      "bytes": 754,
+      "section_end": "0xc352"
+    },
+    "session_emitter_residency": {
+      "target_symbol": "c2_facade_target_c2e_cons",
+      "current_low_resident_target_bytes": 40,
+      "current_fixed_bank0_state_bytes": 346,
+      "pre_ownership_reachability": "none by product sequencing; both are session-emitter-only"
+    }
+  },
+  "artifact_boundary": {
+    "seed_binary_emitted": false,
+    "product_bytes_emitted": 0,
+    "identity_gate": "not-run",
+    "capacity_gate": "not-run",
+    "fixed_host_facade_gate": "not-run",
+    "one_truth_gate": "not-run",
+    "kernal_freedom_gate": "not-run"
+  },
+  "recommended_next_layout": {
+    "private_state_markers": "Define linker-owned boundary symbols immediately before each exact KEEP input section; keep the C objects private.",
+    "handoff": "Place the historical handoff explicitly at 0xb481.",
+    "session_emitter_residency": "Move the 40-byte c2_facade_target_c2e_cons implementation and its 346-byte c2e state into named owned-E000 code/state sections; its fixed facade vector remains at 0xb5ab. Both objects are session-only and the pre-ownership closure must reject any edge to them.",
+    "projection": {
+      "text_end_after_relocation": "0xb47a",
+      "gap_before_fixed_handoff_bytes": 7,
+      "handoff_end_after_fixed_placement": "0xb5a2",
+      "ordinary_bss_end": "0xc079",
+      "revised_fixed_bank0_start": "0xc080",
+      "revised_fixed_bank0_bytes": 408,
+      "revised_fixed_bank0_end": "0xc218",
+      "gap_before_fixed_bank0_state_bytes": 1,
+      "bank0_headroom_after_fixed_state_bytes": 318,
+      "additional_e000_bytes": 386,
+      "projected_e000_margin_after_relocation_bytes": 3332
+    },
+    "required_gate": "The session-only target and state must be absent from the pre-ownership call/data closure, and all fixed state positions must be checked through linker-owned markers.",
+    "authorization": "A fresh link attempt requires review; the real link remains authoritative for every projected value."
+  },
+  "input_sha256": {
+    "layout_header": "01ec04db2ea01eca593fff45f60d5dbef24a031507f3600e62846bb3c7e53bf7",
+    "mem_header": "77bca22ba2375e77073c697a00441042585c49a5ff00927de7accccc66f4bdf1",
+    "mem_source": "ff902c400e80ae88af52feea370d85f7e02d258704d3953505271d84f812b519",
+    "link_driver": "6c5893863dd9d1adc430ab3b5ee9bc6a60971203545c480a0084b2eb0fdbfeb0"
+  },
+  "claim_limit": "First-red layout evidence only. Projected relocation values are not capacity authorization, product identity, structural closure, hardware acceptance or promotion claims."
+}

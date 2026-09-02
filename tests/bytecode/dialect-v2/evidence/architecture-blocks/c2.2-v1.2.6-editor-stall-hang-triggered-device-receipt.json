@@ -1,0 +1,139 @@
+{
+  "authority": {
+    "commission": {
+      "bytes": 6655,
+      "path": "docs/planning/c2.2-v1.2.6-editor-jtag-method-review.md",
+      "sha256": "d2d300439b43baa4fc49b292cc6c3dcb95f70333bbb3ac5fc7cd588c55b3d35c"
+    },
+    "driver": {
+      "bytes": 19089,
+      "path": "tools/host-lisp/c2_v126_editor_stall_hang_triggered_device.py",
+      "sha256": "7a7e3f402ceddb0800d340d586c3484fb18c080933eef74c45e12e239881b74c"
+    },
+    "host_dry_run": {
+      "bytes": 2486,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-hang-triggered-host-dry-run-receipt.json",
+      "sha256": "51c5d5e23b75e6212846d9e83109410349573f3035327703c5358dccd4cb90d6"
+    },
+    "preparation": {
+      "bytes": 3246,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-hang-triggered-preparation-receipt.json",
+      "sha256": "41ffdcb20a8f2df4377894e10f995a381a3b08142e5187474170e30c97791f27"
+    }
+  },
+  "contact": {
+    "contact": 1,
+    "event": {
+      "CPU_halts": 1,
+      "CPU_left_stopped": true,
+      "attempts": 88,
+      "buffer": "scratch",
+      "decision": {
+        "PC": "0xe000",
+        "PC_in_gc_collect_body": false,
+        "PC_symbol": {
+          "address": "0xe000",
+          "name": "c2_kernal_event_poll",
+          "offset": 0
+        },
+        "expected_queue_code": "0x41",
+        "gc_runs_before": 0,
+        "gc_runs_delta": 1,
+        "gc_runs_stalled": 1,
+        "outcome": "c-post-gc-or-gc-callee-pc-needs-symbol-reading",
+        "queue_code": "0x00",
+        "queue_present": false
+      },
+      "expected_fill": 34,
+      "last_errors": [
+        "fill=13",
+        "fill=13",
+        "fill=13",
+        "fill=13",
+        "fill=13",
+        "fill=13",
+        "fill=13",
+        "fill=13",
+        "fill=13",
+        "fill=13"
+      ],
+      "phase": "context-scratch-text",
+      "pre_key": {
+        "gc_runs": 0,
+        "gc_runs_capture": {
+          "address": "0x0000b9f0",
+          "bytes": 2,
+          "path": "build/c2.2/v1.2.6-editor-stall-hang-triggered/contact-01/context-scratch-text-pre-gc_runs.bin",
+          "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+        },
+        "queue_code": 0,
+        "queue_code_capture": {
+          "address": "0x0000d619",
+          "bytes": 1,
+          "path": "build/c2.2/v1.2.6-editor-stall-hang-triggered/contact-01/context-scratch-text-pre-queue_code.bin",
+          "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+        },
+        "queue_state": 0,
+        "queue_state_capture": {
+          "address": "0x0000d60a",
+          "bytes": 1,
+          "path": "build/c2.2/v1.2.6-editor-stall-hang-triggered/contact-01/context-scratch-text-pre-queue_state.bin",
+          "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+        }
+      },
+      "stopped": {
+        "CPU_left_stopped": true,
+        "gc_runs": 1,
+        "queue_code": 0,
+        "queue_state": 0,
+        "raw": {
+          "gc_runs": "6d30303030623966300d0a3a30303030423946303a30313030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "queue_code": "6d30303030643631390d0a3a30303030443631393a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "queue_state": "6d30303030643630610d0a3a30303030443630413a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e"
+        },
+        "registers": {
+          "A": "0x01",
+          "B": "0x00",
+          "PC": "0xe000",
+          "SP": "0x0192",
+          "X": "0xce",
+          "Y": "0x00",
+          "Z": "0x00",
+          "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303030203031204345203030203030203030203031393220383030302030303030203230303045302020303020202020204131204e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c30373737453030302020413520303420202020204c44412020202430340d0a0d0a2e"
+        }
+      }
+    },
+    "product_bytes_changed": 0,
+    "status": "buffer-timeout-mechanically-classified-c"
+  },
+  "execution_accounting": {
+    "physical_contacts": 1,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "reserve_consumed": false
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-stall-hang-triggered-device-v1",
+  "next_step": "Option-2 pre-staged diagnostic-medium equivalence review; no reserve contact",
+  "offline_review": {
+    "classification": "FIRST-RED-option1-setup-partial-normal-input",
+    "mechanical_predicate": "c-post-gc-or-gc-callee-pc-needs-symbol-reading",
+    "mechanical_predicate_limit": "The predicate distinguishes non-GC PC after a gc_runs increment, but it does not prove that the PC is still in render/persist work.",
+    "observed": {
+      "CPU_resumed_after_receipt": true,
+      "PC": "0xe000",
+      "PC_symbol": "c2_kernal_event_poll+0",
+      "buffer": "scratch",
+      "expected_fill": 34,
+      "stable_fill": 13,
+      "gc_runs_before": 0,
+      "gc_runs_stopped": 1,
+      "queue_state": 0,
+      "queue_code": 0
+    },
+    "reading": "The collection completed and the CPU returned to the idle event poll with an empty queue. Only 13 of 34 normally submitted setup characters persisted. This is a setup/input-delivery failure, not the original key-56 editor stall and not a live target-only GC hang.",
+    "product_claimed": false,
+    "reserve_authorized": false
+  },
+  "recorded_on": "2026-07-31",
+  "status": "FIRST-RED-option1-setup-partial-normal-input"
+}

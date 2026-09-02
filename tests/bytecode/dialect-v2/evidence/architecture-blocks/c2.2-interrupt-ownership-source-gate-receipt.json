@@ -1,0 +1,124 @@
+{
+  "documentation": {
+    "bundled_hardware_line": {
+      "bytes": 1298,
+      "path": "config/c2-interrupt-ownership-hardware-session.json",
+      "sha256": "75a4d3b0099a2cb5607e382ca249530b38c1537f93029ee7adff6c1cd88f172d"
+    },
+    "known_issue_authority": {
+      "bytes": 6965,
+      "path": "config/v12-known-issues.json",
+      "sha256": "71d65f9f0c615ac9cf3796c239378ab8863168b3d88b24eed99b292a31590cfc"
+    },
+    "public_known_issue": {
+      "bytes": 14246,
+      "path": "docs/known-issues.md",
+      "sha256": "184af6d86546d9e6ee5322d569240e2e8123f52cb3e581ea412ca161def8ba12"
+    },
+    "upstream_L11": {
+      "bytes": 14775,
+      "path": "docs/upstream-findings.md",
+      "sha256": "70ee0066765e08c33154ee7ca8b2467de401c3efc303c5fbe685804a91e73eb3"
+    }
+  },
+  "final_ELF": {
+    "status": "not-requested-source-gate-only"
+  },
+  "format": "lisp65-c2-interrupt-ownership-gate-v1",
+  "mutations": {
+    "policy_mutations_rejected": [
+      "audio-dma-classified-impossible",
+      "f011-classified-live"
+    ],
+    "rejected": 16,
+    "source_mutations_rejected": [
+      "ethernet-mask-omitted",
+      "ethernet-mask-value",
+      "ethernet-wrong-register",
+      "ethernet-readback-omitted",
+      "auto-iec-mask-omitted",
+      "auto-iec-mask-value",
+      "auto-iec-wrong-register",
+      "auto-iec-readback-omitted",
+      "audio-dma-mask-omitted",
+      "audio-dma-mask-value",
+      "audio-dma-wrong-register",
+      "audio-dma-readback-omitted",
+      "crc-restored-to-fixed-handoff",
+      "crc-moved-to-owned-e000-window"
+    ],
+    "total": 16
+  },
+  "policy": {
+    "bytes": 16790,
+    "external_exclusions": [
+      "cartridge-irq",
+      "cartridge-nmi"
+    ],
+    "inventory_rows": 18,
+    "new_mask_families": [
+      "ethernet",
+      "auto-iec",
+      "audio-dma"
+    ],
+    "path": "config/c2-interrupt-ownership-policy.json",
+    "sha256": "6a9cb864ea9c449c93ab9bc2159f5ff5eae585d0962033d331c6032da31d928e",
+    "tested_core": "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6"
+  },
+  "shared_raster_arm": {
+    "bytes": 1047,
+    "path": "src/mega65_raster_timebase.h",
+    "sha256": "d6e5c91501855ba852cc592c48821f072c33535d432c1b0407c72a2bf1012912"
+  },
+  "source": {
+    "bytes": 5933,
+    "path": "src/c2_kernal_runtime.c",
+    "sha256": "7264b2cb879a4d7842e4b8dd83efd0de3914a0b347d2fb4d0d3521129e871180"
+  },
+  "source_contract": {
+    "SEI_before_personality": true,
+    "boot_only_crc": {
+      "direct_callers": [
+        "c2_kernal_take_ownership"
+      ],
+      "input_section": ".text.c2_kernal_boot_only",
+      "linked_output_section": ".text",
+      "post_ownership_reachable": false,
+      "symbol": "c2k_crc16"
+    },
+    "handler_changed": false,
+    "personality_before_masks": true,
+    "raster_enable_and_CLI_last": true,
+    "raster_enable_authority": {
+      "bytes": 1047,
+      "path": "src/mega65_raster_timebase.h",
+      "sha256": "d6e5c91501855ba852cc592c48821f072c33535d432c1b0407c72a2bf1012912"
+    },
+    "readback_before_window_publish": true,
+    "source_masks": {
+      "audio-dma": {
+        "address": "$D713",
+        "readback_mask": 15,
+        "write": 0
+      },
+      "auto-iec": {
+        "address": "$D697",
+        "readback_mask": 15,
+        "write": 240
+      },
+      "ethernet": {
+        "address": "$D6E1",
+        "readback_mask": 192,
+        "write": 0
+      }
+    }
+  },
+  "status": "passed-strict-internal-interrupt-ownership",
+  "window_handler": {
+    "bytes": 4928,
+    "path": "src/c2_kernal_window.s",
+    "sha256": "af702f315296ae569e053915e87eb018e37a410279a919acc7bad29825b04c39",
+    "source_less_episode_guard": "retained",
+    "unchanged_by_policy": true
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "attempt_accounting": {
+    "acceptance_runs": 0,
+    "new_WPLTOs": 0,
+    "new_product_links": 0,
+    "scope_runs": 0
+  },
+  "candidate_plane": {
+    "bytes": 16441,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-domain-tier1-client-lifecycle-qualification-view.json",
+    "sha256": "7bc9002109d58fe36d94e8536259eae839dfdd2edf7fd0a2d36f2a4861314783"
+  },
+  "delivered_extent": {
+    "candidate_plane": {
+      "bytes": 16441,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-domain-tier1-client-lifecycle-qualification-view.json",
+      "sha256": "7bc9002109d58fe36d94e8536259eae839dfdd2edf7fd0a2d36f2a4861314783"
+    },
+    "code": {
+      "bytes": 47795,
+      "path": "build/c2.3/v2.0-domain-tier1-product-card-r1-preflight/setup-owned/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+      "sha256": "1f58813b2423cdc47e647e8ef7ecf44c500fab8a534bb02e8f21dda2b732a924"
+    },
+    "historical_literal_retired": 47469,
+    "mutation_diagnostic": "delivered consumer extent differs from candidate Plane authority",
+    "mutation_rejected": "candidate-plane-extent-diverges",
+    "observed_bytes": 47795,
+    "status": "PASS: DELIVERED EXTENT DERIVED FROM CANDIDATE PLANE"
+  },
+  "format": "lisp65-c2-v200-domain-tier1-product-card-v1-inherited-final-gate-conversions-v1",
+  "frozen_pair": {
+    "ELF": {
+      "bytes": 636100,
+      "path": "build/c2.3/v2.0-domain-tier1-product-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "2895704bd5e62f6e8a9906f2cd8c7f62e1ef74169796e00b05b3037560ec2c38"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/c2.3/v2.0-domain-tier1-product-card-r1/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "5c09c8e623a4a3c58d2b937706fc66496ab14355d71ae136f39e7aa0749a7f68"
+    }
+  },
+  "intern_semantic_identity": {
+    "hardware_stack": {
+      "all_reaching_depths": [
+        4
+      ],
+      "persistent_bytes": 4,
+      "post_JSR_caller_offsets": [
+        7,
+        8
+      ]
+    },
+    "helper_edge": {
+      "address": 12802,
+      "callee": 46482
+    },
+    "intern": {
+      "address": 12522,
+      "bytes": 665
+    },
+    "name_pointer": {
+      "clobbers": [],
+      "pair": [
+        "__rc20",
+        "__rc21"
+      ],
+      "setup_end": 12569
+    },
+    "status": "PASS: CANDIDATE ABI AND SUCCESS PATH DERIVED",
+    "successful_path_identity": {
+      "all_other_semantics_identical": true,
+      "candidate_bytes": 665,
+      "candidate_projected_instruction_count": 347,
+      "data_symbol_relation_mutation": "rejected",
+      "identity": "instruction and CFG identity after projecting the single fault-only capture edge",
+      "only_replacement": "LDA #$22; JSR abort -> JSR capture; LDA #$22; JSR abort",
+      "predecessor_bytes": 662,
+      "predecessor_instruction_count": 347,
+      "success_path_extra_instruction_mutation": "rejected"
+    }
+  },
+  "mutations_rejected": [
+    "candidate-plane-extent-diverges",
+    "success-path-extra-instruction",
+    "data-symbol-relation-diverges"
+  ],
+  "next": "commit conversion, then continue the frozen-pair read-only resume",
+  "recorded_on": "2026-09-01",
+  "rules": [
+    "delivered extent is candidate Plane geometry, never a release literal",
+    "data operands are symbol identities plus byte relations, never linked addresses",
+    "instructions and CFG remain exact outside the single fault-only edge"
+  ],
+  "status": "PASS: INHERITED FINAL GATES DERIVE LIVING IDENTITIES"
+}

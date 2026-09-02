@@ -1,0 +1,25 @@
+{
+  "format": "lisp65-c2.2-v1.2.6-editor-profile-preflight-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "status": "FIRST RED: IDE root delta was omitted from the arithmetic preflight",
+  "promotable": false,
+  "target_linker_invocations": 0,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "expected_before_emission": {
+    "bank2_static_code_bytes": 45049,
+    "entries": 749,
+    "resolutions": 2930,
+    "roots": 340
+  },
+  "fresh_emission": {
+    "bank2_static_code_bytes": 45049,
+    "entries": 749,
+    "resolutions": 2930,
+    "roots": 350,
+    "product_build_id": "0x05093384"
+  },
+  "attribution": "The 24 new IDE entries introduce ten additional static-root references. Code, entry, and resolution arithmetic was exact; roots were incorrectly assumed unchanged.",
+  "disposition": "Bind the measured root delta (+10), discard the linker-free scratch emission, and repeat the profile emission. No WPLTO or product-link budget was consumed.",
+  "claim_limit": "A linker-free profile arithmetic First Red only."
+}

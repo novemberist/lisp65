@@ -1,0 +1,1885 @@
+{
+  "artifacts": {
+    "candidate_elf": {
+      "bytes": 643260,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "1b8f75fce3bfcc619ec67d59bb196db5ea196e29f16a8c30b905b1a4f20b4e9b"
+    },
+    "candidate_lto": {
+      "bytes": 620832,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "cf0f41e42fadfdd4f45aab8a0654019c723cd086d01912abf6d3425932b3a411"
+    },
+    "candidate_map": {
+      "bytes": 183074,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "2f6d502aa9225825837fc7df2eba36f09d4f521013a01cac7a6b97436212a29e"
+    },
+    "candidate_prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "884d576e92b086e2b2a620e9a8a14a3fd72fb79a5accbde7c05d592bea0195df"
+    },
+    "linker": {
+      "bytes": 69243,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/wplto/c2-substitution.ld",
+      "sha256": "a979c9209296a9169d42424595978bcf0a482da2339afd33a2885b85a2302d1c"
+    },
+    "producer_log": {
+      "bytes": 288,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/receipts/v20-producer.log",
+      "sha256": "e594ef05dac226d9a466443e294594c4f7adddee6037b43bf2377feb8dd9e796"
+    },
+    "resolved_profile": {
+      "bytes": 12391,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/wplto/resolved-profile.txt",
+      "sha256": "2628a643d8c703248565ea706742e9570e4a00df23d7cacf8b404f8384fb8860"
+    },
+    "seed_lto": {
+      "bytes": 620832,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "38803b01c2dca30f6926120b77bb0ca18b827e9f5f1132f27290eb6e51a77250"
+    }
+  },
+  "attempt_accounting": {
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "golden_comparison_reached": true,
+    "linked_candidate_elf_emitted": true,
+    "product_link_attempts": 1,
+    "wplto_runs": 1
+  },
+  "authority": {
+    "driver": {
+      "bytes": 24636,
+      "path": "tools/host-lisp/c2_v20_ownership_recharter.py",
+      "sha256": "3675cefc0403dcdcf0eba9c83ea6298a3d18e52009b802976bbe30cfcff8aa04"
+    },
+    "golden": {
+      "bytes": 26436,
+      "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-owned-layout-v1.json",
+      "sha256": "65a13501c36db615f356bb7f992dcbb1c6a6f932fcf1968bf34646f9cbc7b4f7"
+    },
+    "invocation": {
+      "bytes": 770,
+      "path": "build/c2.3/v2.0-ownership-recharter-preflight/card-invocation.json",
+      "sha256": "e973029de32dc96d033e34edd41262e72fd7b6994977e2448840f2212bbbf1a7"
+    },
+    "owner_commission": {
+      "bytes": 2570,
+      "git_commit": "f50f4714bb998526dc371aed16480e17a832f013",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "eab28882f985a9fcbe58dfb6a4979758a13508037d9c0554e4534fc0b62ebee3"
+    },
+    "preflight": {
+      "bytes": 6419,
+      "path": "build/c2.3/v2.0-ownership-recharter-preflight/preflight.json",
+      "sha256": "839b62a68974bf583c1c4473219b51a9269faa9cde9042bc0c289ad0cc702ecb"
+    }
+  },
+  "claim_limit": "The sole 2.0 card is consumed. No retry, replacement card, narrower golden, device session, release or parity claim.",
+  "error": {
+    "message": "linked product layout differs from the reviewed golden artifact",
+    "type": "GoldenLayoutError"
+  },
+  "final_owner_disposition_required": true,
+  "format": "lisp65-c2.3-v20-ownership-recharter-final-red-v1",
+  "layout_delta": {
+    "candidate_layout_sha256": "d9a56b8111a0e2f92250bf27a123d8463d25d2010492b031aa537c0ff78119c6",
+    "differing_boundaries": {
+      "__lisp65_workbench_overlay_end": {
+        "candidate": 51857,
+        "golden": 51740
+      }
+    },
+    "differing_sections": [
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1501,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 67387,
+          "name": ".lisp65_boot_bank3_stage",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1501,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 67270,
+          "name": ".lisp65_boot_bank3_stage",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_boot_bank3_stage"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1738,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 142336,
+          "name": ".lisp65_resident_island",
+          "section_type": "SHT_PROGBITS",
+          "vma": 6144
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1738,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 141824,
+          "name": ".lisp65_resident_island",
+          "section_type": "SHT_PROGBITS",
+          "vma": 6144
+        },
+        "name": ".lisp65_resident_island"
+      },
+      {
+        "candidate": {
+          "alignment": 2,
+          "bytes": 260,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_WRITE"
+          ],
+          "lma": 144074,
+          "name": ".lisp65_resident_island_annex",
+          "section_type": "SHT_NOBITS",
+          "vma": 7882
+        },
+        "golden": {
+          "alignment": 2,
+          "bytes": 260,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_WRITE"
+          ],
+          "lma": 143562,
+          "name": ".lisp65_resident_island_annex",
+          "section_type": "SHT_NOBITS",
+          "vma": 7882
+        },
+        "name": ".lisp65_resident_island_annex"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1414,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 98294,
+          "name": ".lisp65_rt_bank3_stage_session",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1414,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 98038,
+          "name": ".lisp65_rt_bank3_stage_session",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_bank3_stage_session"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1687,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 140110,
+          "name": ".lisp65_rt_buffer_alloc",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1687,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 139504,
+          "name": ".lisp65_rt_buffer_alloc",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_buffer_alloc"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1166,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 138264,
+          "name": ".lisp65_rt_buffer_read",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1166,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 137658,
+          "name": ".lisp65_rt_buffer_read",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_buffer_read"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 680,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 139430,
+          "name": ".lisp65_rt_buffer_write",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 680,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 138824,
+          "name": ".lisp65_rt_buffer_write",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_buffer_write"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 268,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 135407,
+          "name": ".lisp65_rt_c2append_abort_control",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 268,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 134801,
+          "name": ".lisp65_rt_c2append_abort_control",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_abort_control"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1655,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 110768,
+          "name": ".lisp65_rt_c2append_crc_metadata",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1655,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 110510,
+          "name": ".lisp65_rt_c2append_crc_metadata",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_crc_metadata"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1771,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 125288,
+          "name": ".lisp65_rt_c2append_entries",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1771,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 125030,
+          "name": ".lisp65_rt_c2append_entries",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_entries"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1478,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 109290,
+          "name": ".lisp65_rt_c2append_envelope",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1478,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 109032,
+          "name": ".lisp65_rt_c2append_envelope",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_envelope"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1534,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 129558,
+          "name": ".lisp65_rt_c2append_header",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1419,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 129182,
+          "name": ".lisp65_rt_c2append_header",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_header"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 724,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 124564,
+          "name": ".lisp65_rt_c2append_image",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 724,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 124306,
+          "name": ".lisp65_rt_c2append_image",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_image"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1732,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 118495,
+          "name": ".lisp65_rt_c2append_journal_prepare",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1732,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 118237,
+          "name": ".lisp65_rt_c2append_journal_prepare",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_journal_prepare"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1102,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 121191,
+          "name": ".lisp65_rt_c2append_journal_reconstruct",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1102,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 120933,
+          "name": ".lisp65_rt_c2append_journal_reconstruct",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_journal_reconstruct"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 964,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 120227,
+          "name": ".lisp65_rt_c2append_journal_validate",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 964,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 119969,
+          "name": ".lisp65_rt_c2append_journal_validate",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_journal_validate"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1410,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 131092,
+          "name": ".lisp65_rt_c2append_publish_clear",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1295,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 130601,
+          "name": ".lisp65_rt_c2append_publish_clear",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_publish_clear"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 713,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 128845,
+          "name": ".lisp65_rt_c2append_publish_plan_resolve",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 753,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 128429,
+          "name": ".lisp65_rt_c2append_publish_plan_resolve",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_publish_plan_resolve"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1786,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 127059,
+          "name": ".lisp65_rt_c2append_publish_plan_scan",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1628,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 126801,
+          "name": ".lisp65_rt_c2append_publish_plan_scan",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_publish_plan_scan"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 690,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 116389,
+          "name": ".lisp65_rt_c2append_reserve_persistent_bounds",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 690,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 116131,
+          "name": ".lisp65_rt_c2append_reserve_persistent_bounds",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_reserve_persistent_bounds"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1416,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 117079,
+          "name": ".lisp65_rt_c2append_reserve_persistent_code",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1416,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 116821,
+          "name": ".lisp65_rt_c2append_reserve_persistent_code",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_reserve_persistent_code"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 986,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 113933,
+          "name": ".lisp65_rt_c2append_reserve_transient_bounds",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 986,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 113675,
+          "name": ".lisp65_rt_c2append_reserve_transient_bounds",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_reserve_transient_bounds"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1470,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 114919,
+          "name": ".lisp65_rt_c2append_reserve_transient_code",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1470,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 114661,
+          "name": ".lisp65_rt_c2append_reserve_transient_code",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_reserve_transient_code"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 267,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 135140,
+          "name": ".lisp65_rt_c2append_rollback_finalize",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 267,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 134534,
+          "name": ".lisp65_rt_c2append_rollback_finalize",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_rollback_finalize"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 758,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 132502,
+          "name": ".lisp65_rt_c2append_rollback_unpublish",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 758,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 131896,
+          "name": ".lisp65_rt_c2append_rollback_unpublish",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_rollback_unpublish"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 420,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 134720,
+          "name": ".lisp65_rt_c2append_rollback_wipe_attic",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 420,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 134114,
+          "name": ".lisp65_rt_c2append_rollback_wipe_attic",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_rollback_wipe_attic"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 506,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 134214,
+          "name": ".lisp65_rt_c2append_rollback_wipe_chip",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 506,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 133608,
+          "name": ".lisp65_rt_c2append_rollback_wipe_chip",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_rollback_wipe_chip"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 954,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 133260,
+          "name": ".lisp65_rt_c2append_rollback_wipe_plane",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 954,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 132654,
+          "name": ".lisp65_rt_c2append_rollback_wipe_plane",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_rollback_wipe_plane"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1510,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 112423,
+          "name": ".lisp65_rt_c2append_roots_fronts",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1510,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 112165,
+          "name": ".lisp65_rt_c2append_roots_fronts",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_roots_fronts"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1110,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 122293,
+          "name": ".lisp65_rt_c2append_stage_copy",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1110,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 122035,
+          "name": ".lisp65_rt_c2append_stage_copy",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_stage_copy"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1161,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 123403,
+          "name": ".lisp65_rt_c2append_stage_plane",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1161,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 123145,
+          "name": ".lisp65_rt_c2append_stage_plane",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2append_stage_plane"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1560,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 71547,
+          "name": ".lisp65_rt_c2d_00",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1417,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 71430,
+          "name": ".lisp65_rt_c2d_00",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_00"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1567,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 73107,
+          "name": ".lisp65_rt_c2d_00b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1567,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 72847,
+          "name": ".lisp65_rt_c2d_00b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_00b"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1691,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 74674,
+          "name": ".lisp65_rt_c2d_01",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1691,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 74414,
+          "name": ".lisp65_rt_c2d_01",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_01"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1665,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 76365,
+          "name": ".lisp65_rt_c2d_02a",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1665,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 76105,
+          "name": ".lisp65_rt_c2d_02a",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_02a"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 837,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 78030,
+          "name": ".lisp65_rt_c2d_02b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 837,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 77770,
+          "name": ".lisp65_rt_c2d_02b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_02b"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1584,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 78867,
+          "name": ".lisp65_rt_c2d_03",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1584,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 78607,
+          "name": ".lisp65_rt_c2d_03",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_03"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1379,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 80451,
+          "name": ".lisp65_rt_c2d_03b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1383,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 80191,
+          "name": ".lisp65_rt_c2d_03b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_03b"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1404,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 81830,
+          "name": ".lisp65_rt_c2d_04",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1404,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 81574,
+          "name": ".lisp65_rt_c2d_04",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_04"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1127,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 83234,
+          "name": ".lisp65_rt_c2d_05a",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1127,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 82978,
+          "name": ".lisp65_rt_c2d_05a",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_05a"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1655,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 84361,
+          "name": ".lisp65_rt_c2d_05b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1655,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 84105,
+          "name": ".lisp65_rt_c2d_05b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_05b"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1504,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 86016,
+          "name": ".lisp65_rt_c2d_06a",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1504,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 85760,
+          "name": ".lisp65_rt_c2d_06a",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_06a"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 992,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 87520,
+          "name": ".lisp65_rt_c2d_06b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 992,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 87264,
+          "name": ".lisp65_rt_c2d_06b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_06b"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1088,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 88512,
+          "name": ".lisp65_rt_c2d_07",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1088,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 88256,
+          "name": ".lisp65_rt_c2d_07",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_07"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1485,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 89600,
+          "name": ".lisp65_rt_c2d_08",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1485,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 89344,
+          "name": ".lisp65_rt_c2d_08",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_08"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1585,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 91085,
+          "name": ".lisp65_rt_c2d_09",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1585,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 90829,
+          "name": ".lisp65_rt_c2d_09",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_09"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1288,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 92670,
+          "name": ".lisp65_rt_c2d_10",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1288,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 92414,
+          "name": ".lisp65_rt_c2d_10",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_10"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 849,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 93958,
+          "name": ".lisp65_rt_c2d_11a",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 849,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 93702,
+          "name": ".lisp65_rt_c2d_11a",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_11a"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1666,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 94807,
+          "name": ".lisp65_rt_c2d_11b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1666,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 94551,
+          "name": ".lisp65_rt_c2d_11b",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_11b"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1700,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 96473,
+          "name": ".lisp65_rt_c2d_12",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1700,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 96217,
+          "name": ".lisp65_rt_c2d_12",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_12"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 121,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 98173,
+          "name": ".lisp65_rt_c2d_13",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 121,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 97917,
+          "name": ".lisp65_rt_c2d_13",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2d_13"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1268,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 105531,
+          "name": ".lisp65_rt_c2emit_code",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1268,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 105275,
+          "name": ".lisp65_rt_c2emit_code",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2emit_code"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1183,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 108107,
+          "name": ".lisp65_rt_c2emit_final_crc",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1181,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 107851,
+          "name": ".lisp65_rt_c2emit_final_crc",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2emit_final_crc"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1308,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 106799,
+          "name": ".lisp65_rt_c2emit_final_meta",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1308,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 106543,
+          "name": ".lisp65_rt_c2emit_final_meta",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2emit_final_meta"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 655,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 104876,
+          "name": ".lisp65_rt_c2emit_literal_append",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 655,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 104620,
+          "name": ".lisp65_rt_c2emit_literal_append",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2emit_literal_append"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1571,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 103305,
+          "name": ".lisp65_rt_c2emit_literal_atom",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1571,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 103049,
+          "name": ".lisp65_rt_c2emit_literal_atom",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2emit_literal_atom"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1506,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 101799,
+          "name": ".lisp65_rt_c2emit_literal_prep",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1506,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 101543,
+          "name": ".lisp65_rt_c2emit_literal_prep",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2emit_literal_prep"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 803,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 100996,
+          "name": ".lisp65_rt_c2emit_name",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 803,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 100740,
+          "name": ".lisp65_rt_c2emit_name",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2emit_name"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1288,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 99708,
+          "name": ".lisp65_rt_c2emit_prepare",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1288,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 99452,
+          "name": ".lisp65_rt_c2emit_prepare",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_c2emit_prepare"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 399,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 141797,
+          "name": ".lisp65_rt_intern_service",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 399,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 141191,
+          "name": ".lisp65_rt_intern_service",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_intern_service"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1383,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 136881,
+          "name": ".lisp65_rt_island_00",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1383,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 136275,
+          "name": ".lisp65_rt_island_00",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_island_00"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1206,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 135675,
+          "name": ".lisp65_rt_l65e",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1206,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 135069,
+          "name": ".lisp65_rt_l65e",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_l65e"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1225,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 68888,
+          "name": ".lisp65_rt_rtov_catalog",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1225,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 68771,
+          "name": ".lisp65_rt_rtov_catalog",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_rtov_catalog"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1434,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 70113,
+          "name": ".lisp65_rt_rtov_record",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1434,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 69996,
+          "name": ".lisp65_rt_rtov_record",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_rt_rtov_record"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 1851,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 65536,
+          "name": ".lisp65_workbench_overlay",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 1734,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 65536,
+          "name": ".lisp65_workbench_overlay",
+          "section_type": "SHT_PROGBITS",
+          "vma": 50006
+        },
+        "name": ".lisp65_workbench_overlay"
+      },
+      {
+        "candidate": {
+          "alignment": 1,
+          "bytes": 37633,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 8227,
+          "name": ".text",
+          "section_type": "SHT_PROGBITS",
+          "vma": 8227
+        },
+        "golden": {
+          "alignment": 1,
+          "bytes": 37744,
+          "flags": [
+            "SHF_ALLOC",
+            "SHF_EXECINSTR"
+          ],
+          "lma": 8227,
+          "name": ".text",
+          "section_type": "SHT_PROGBITS",
+          "vma": 8227
+        },
+        "name": ".text"
+      }
+    ],
+    "golden_layout_sha256": "65a13501c36db615f356bb7f992dcbb1c6a6f932fcf1968bf34646f9cbc7b4f7"
+  },
+  "recorded_on": "2026-08-12",
+  "retry_authorized": false,
+  "status": "FINAL RED: 2.0 plan returns to owner"
+}

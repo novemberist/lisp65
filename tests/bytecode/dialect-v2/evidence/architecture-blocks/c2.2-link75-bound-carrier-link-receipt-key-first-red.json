@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-c2.2-link75-bound-carrier-link-receipt-key-first-red-v1",
+  "recorded_on": "2026-07-28",
+  "status": "FIRST RED: artifact-receipt-key-missing-after-one-product-link",
+  "classification": "class-A-receipt-schema-only",
+  "product_semantic_delta_bytes": 0,
+  "execution_accounting": {
+    "whole_program_product_links": 1,
+    "additional_product_links_authorized": 0,
+    "artifact_completion_compiler_runs": 0,
+    "artifact_completion_linker_runs": 0,
+    "hardware_runs": 0
+  },
+  "observed": {
+    "error": "static_code_bytes",
+    "stage": "post-WPLTO accepted-map comparison before publish-last artifact completion",
+    "linked_product_status": "passed",
+    "linked_product_closure_link_count": 1
+  },
+  "cause": {
+    "mechanism": "The Link-75 WPLTO receipt carried the value only as static_geometry.bank2_static_code_bytes while the inherited artifact-side successor expected the established top-level static_code_bytes descriptive key.",
+    "product_bytes": "already linked once and unchanged",
+    "fix": "Add the descriptive compatibility key, run publish-last artifact completion with zero compiler/linker executions, then replay the final bound gates without relinking."
+  },
+  "first_red_rule": "No retry of the whole-program link is permitted; completion and final receipt repair are artifact-side only.",
+  "claim_limit": "This receipt records a checker/receipt schema stop only. It makes no Link-75 completion or hardware claim."
+}

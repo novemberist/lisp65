@@ -1,0 +1,558 @@
+{
+  "authority": {
+    "c2d_truth": {
+      "bytes": 33840,
+      "path": "build/c2.3/v2.0-source-oracle-replacement3-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+    },
+    "candidate_elf": {
+      "bytes": 628736,
+      "path": "build/c2.3/v2.0-source-oracle-replacement3-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bfdad683c3fd0f4aa158770cab30c357d6bacdafa35a92f97fadcaaafd194b6a"
+    },
+    "capture_driver": {
+      "bytes": 19070,
+      "path": "tools/host-lisp/c2_v20_link105_phase02a_capture.py",
+      "sha256": "f7726f45b2ed02f53bcd8fb76c492a668ccb3359cf725f4bb754a10802afb762"
+    },
+    "first_red": {
+      "bytes": 3252,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-source-oracle-d1-first-red-receipt.json",
+      "sha256": "b1df6c678bd1c423539fb0f67e02102fba8ea1bc6d38e067b302b631608a61a9"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 59345,
+      "commit": "9d8ea782be82ac89939d22f6450f55f80ae59a65",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "8ec9eca3dba86200522fef21ca030c024a1f88b0c67f198f41c13ebbdc791132"
+    },
+    "row": {
+      "bytes": 2343,
+      "path": "config/c2-v20-link105-phase02a-capture-row.json",
+      "sha256": "2501f40156ed19450aab9e9451bbe8406d2e7368e46b1192ab41c83a1fe9d9e4"
+    },
+    "shelf_truth": {
+      "bytes": 93681,
+      "path": "build/c2.3/v2.0-source-oracle-replacement3-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+      "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+    },
+    "static_checkpoint": {
+      "bytes": 16070,
+      "path": "build/c2.3/v2.0-source-oracle-d1/phase02a-link105-row/static-checkpoint.json",
+      "sha256": "ee3226904a09dec32e33d6ddf913d961082167fc761e68249f729a4ae01dfe47"
+    }
+  },
+  "claim_limit": "This is a capture-harness first red, not a product, oracle-sourcing or transport-latency result. No further device read, resume, reset, repeat, fix, card, media, D2-D5 or release action is authorized.",
+  "classification": {
+    "actual_expected_matches_delivery_truth": true,
+    "latency_claim": "NOT-YET-AUTHORIZED",
+    "reason": "without the current runtime error byte, this row cannot exclude a subsequent phase-02a Shelf-validation failure; the physical source read was not retained",
+    "site": "inner D705 Shelf cross-read, record 5",
+    "target_matches_expected_at_stopped_read": true
+  },
+  "device_discipline": {
+    "CPU_left_stopped": true,
+    "D2_D5_executed": false,
+    "dynamic_raw_persisted_before_interpretation": false,
+    "static_checkpoint": {
+      "CPU_left_stopped": true,
+      "D2_D5_executed": false,
+      "raw_before_interpretation": true,
+      "resets": 0,
+      "resumes": 0,
+      "runs": 0,
+      "stops": 1
+    }
+  },
+  "format": "lisp65-c2.3-v20-link105-phase02a-capture-first-red-v1",
+  "harness_first_red": {
+    "missing_authorized_fields": [
+      "current c2_runtime.error / phase cutpoint",
+      "persisted physical source row 0x081000c0",
+      "surviving exact timeout start (the implementation restores it)"
+    ],
+    "raw_first_gap": "the separately issued dynamic 32-byte source/target reads were not persisted before the identity check raised",
+    "trigger": "the post-error CPU view at logical 0xc356 contained 24 bytes of 0xff rather than the phase-02a overlay; the driver correctly refused to interpret that view as the linked oracle table"
+  },
+  "preserved": {
+    "actual_expected_crc16_from_preserved_phase_frame": "0xe3f7",
+    "configured_timeout_frames": 64,
+    "delivery_bound_shelf_truth": {
+      "crc16": "0xe3f7",
+      "hex": "6c63630000000000f59400c61f4d5001a41dab59048f4aac868cc3f2a6a30100",
+      "row": 5
+    },
+    "fail_loop": {
+      "bytes": "4c96e0",
+      "rows": [
+        {
+          "command": "m0777e096",
+          "logical": "0xe096",
+          "raw_hex": "6d30373737653039360d0a3a30373737453039363a34433936453039443030303836303835303841453845433041433846433041390d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        }
+      ]
+    },
+    "preceding_c2d_target_at_stop": {
+      "address": "0x0000cf2d",
+      "crc16": "0xe9dc",
+      "hex": "0000050001008d02660043092e0260010000159400c61f0000000000895e202f"
+    },
+    "site": {
+      "descriptor": {
+        "command": 0,
+        "length": 32,
+        "source": 135266496,
+        "target": 53069
+      },
+      "family": "D705",
+      "geometry": {
+        "c2d_target": 53037,
+        "initial_static_stack": 53248,
+        "inner_shelf_target": 53069,
+        "outer_shelf_target": 53101,
+        "phase02a_frame": 53023
+      },
+      "row": 5,
+      "site": "inner-Shelf-cross-read",
+      "source": 135266496,
+      "table": "shelf",
+      "target": 53069
+    },
+    "stopped_frame_counter_hex": "1d00",
+    "target_at_stop": {
+      "address": "0x0000cf4d",
+      "crc16": "0xe3f7",
+      "hex": "6c63630000000000f59400c61f4d5001a41dab59048f4aac868cc3f2a6a30100"
+    },
+    "target_matches_delivery_truth_at_stopped_read": true,
+    "tuple": {
+      "A": "0x02",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC": "0xe096",
+      "SP": "0x01e4",
+      "X": "0x64",
+      "Y": "0x01",
+      "Z": "0x00",
+      "suffix": "4C96E0  00     04 .....I.. ...P 15 -  00 - ..c..lhc"
+    }
+  },
+  "raw_static_checkpoint": {
+    "authority": {
+      "authorization": {
+        "authority": "git-blob",
+        "bytes": 59345,
+        "commit": "9d8ea782be82ac89939d22f6450f55f80ae59a65",
+        "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+        "sha256": "8ec9eca3dba86200522fef21ca030c024a1f88b0c67f198f41c13ebbdc791132"
+      },
+      "c2d": {
+        "bytes": 33840,
+        "path": "build/c2.3/v2.0-source-oracle-replacement3-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+        "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+      },
+      "candidate_elf": {
+        "bytes": 628736,
+        "path": "build/c2.3/v2.0-source-oracle-replacement3-card/final/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "bfdad683c3fd0f4aa158770cab30c357d6bacdafa35a92f97fadcaaafd194b6a"
+      },
+      "driver": {
+        "bytes": 19070,
+        "path": "tools/host-lisp/c2_v20_link105_phase02a_capture.py",
+        "sha256": "f7726f45b2ed02f53bcd8fb76c492a668ccb3359cf725f4bb754a10802afb762"
+      },
+      "first_red": {
+        "bytes": 3252,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-source-oracle-d1-first-red-receipt.json",
+        "sha256": "b1df6c678bd1c423539fb0f67e02102fba8ea1bc6d38e067b302b631608a61a9"
+      },
+      "library_readback": {
+        "bytes": 819200,
+        "path": "build/c2.3/v2.0-source-oracle-d1/library-readback.d81",
+        "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+      },
+      "media": {
+        "bytes": 8959,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-source-oracle-media-closure-receipt.json",
+        "sha256": "9c2d7df63e94850462b7084e2ccb3066f08c3bae81b75520199e1a435d273992"
+      },
+      "mutations_rejected": [
+        "drop-stop",
+        "add-resume",
+        "open-D2-D5",
+        "short-record",
+        "short-timeout",
+        "wrong-shelf-oracle",
+        "omit-target-oracle",
+        "interpret-before-raw",
+        "resume-command"
+      ],
+      "oracle_contract": {
+        "bytes": 1269,
+        "path": "config/c2-v20-source-authoritative-oracle-contract.json",
+        "sha256": "8d5aeb1976e646d561246cb93c92fa8b08a0303083f79efb6e54c24f64270dc8"
+      },
+      "product_readback": {
+        "bytes": 819200,
+        "path": "build/c2.3/v2.0-source-oracle-d1/product-readback.d81",
+        "sha256": "c7e3e5bcd9a252bceb0f38f277901776840c29ff60e6e537c9cd0018f8e18b2e"
+      },
+      "row": {
+        "bytes": 2343,
+        "path": "config/c2-v20-link105-phase02a-capture-row.json",
+        "sha256": "2501f40156ed19450aab9e9451bbe8406d2e7368e46b1192ab41c83a1fe9d9e4"
+      },
+      "screen": {
+        "bytes": 2655,
+        "path": "build/c2.3/v2.0-source-oracle-d1/product-boot.png",
+        "sha256": "27225182cc1222b075900be7dbb69099ddb20d89e0c13d839bbc683889d09a7a"
+      },
+      "shelf": {
+        "bytes": 93681,
+        "path": "build/c2.3/v2.0-source-oracle-replacement3-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+        "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+      }
+    },
+    "discipline": {
+      "CPU_left_stopped": true,
+      "D2_D5_executed": false,
+      "raw_before_interpretation": true,
+      "resets": 0,
+      "resumes": 0,
+      "runs": 0,
+      "stops": 1
+    },
+    "fail_loop": {
+      "bytes": "4c96e0",
+      "rows": [
+        {
+          "command": "m0777e096",
+          "logical": "0xe096",
+          "raw_hex": "6d30373737653039360d0a3a30373737453039363a34433936453039443030303836303835303841453845433041433846433041390d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        }
+      ]
+    },
+    "format": "lisp65-c2.3-v20-link105-phase02a-static-v1",
+    "reads": [
+      {
+        "address": "0x00000002",
+        "bytes": 30,
+        "monitor_rows": [
+          {
+            "command": "m00000002",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030303030320d0a3a30303030303030323a30304430313930303030434646414635303030304239393230314339303430300d0a0d0a2e",
+            "returned_address": "0x00000002",
+            "returned_hex": "00d0190000cffaf50000b99201c90400"
+          },
+          {
+            "command": "m00000010",
+            "consumed_bytes": 14,
+            "consumed_offset": 2,
+            "raw_hex": "6d30303030303031300d0a3a30303030303031303a30343030303130433533324430303138363243303030313030383135314330300d0a0d0a2e",
+            "returned_address": "0x00000010",
+            "returned_hex": "0400010c532d001862c0001008151c00"
+          }
+        ],
+        "name": "compiler-static-stack-and-pseudo-registers",
+        "observed_hex": "00d0190000cffaf50000b99201c90400010c532d001862c0001008151c00",
+        "view": "physical-bank0"
+      },
+      {
+        "address": "0x00000087",
+        "bytes": 2,
+        "monitor_rows": [
+          {
+            "command": "m00000087",
+            "consumed_bytes": 2,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030303038370d0a3a30303030303038373a41354135303030303030303030303030303034304646383030303030303030300d0a0d0a2e",
+            "returned_address": "0x00000087",
+            "returned_hex": "a5a50000000000000040ff8000000000"
+          }
+        ],
+        "name": "convergence-done-markers",
+        "observed_hex": "a5a5",
+        "view": "physical-bank0"
+      },
+      {
+        "address": "0x0000b9d3",
+        "bytes": 12,
+        "monitor_rows": [
+          {
+            "command": "m0000b9d3",
+            "consumed_bytes": 12,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030623964330d0a3a30303030423944333a30303230303030303030303341334346303030303030303030303030313245300d0a0d0a2e",
+            "returned_address": "0x0000b9d3",
+            "returned_hex": "002000000003a3cf00000000000012e0"
+          }
+        ],
+        "name": "D700-primary-descriptor",
+        "observed_hex": "002000000003a3cf00000000",
+        "view": "physical-bank0"
+      },
+      {
+        "address": "0x0000c0b2",
+        "bytes": 20,
+        "monitor_rows": [
+          {
+            "command": "m0000c0b2",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030633062320d0a3a30303030433042323a30423830383138313030383530313030303032303030433030303030344443460d0a0d0a2e",
+            "returned_address": "0x0000c0b2",
+            "returned_hex": "0b80818100850100002000c000004dcf"
+          },
+          {
+            "command": "m0000c0b6",
+            "consumed_bytes": 4,
+            "consumed_offset": 12,
+            "raw_hex": "6d30303030633062360d0a3a30303030433042363a30303835303130303030323030304330303030303444434630303030303030300d0a0d0a2e",
+            "returned_address": "0x0000c0b6",
+            "returned_hex": "00850100002000c000004dcf00000000"
+          }
+        ],
+        "name": "D705-primary-descriptor",
+        "observed_hex": "0b80818100850100002000c000004dcf00000000",
+        "view": "physical-bank0"
+      },
+      {
+        "address": "0x0000cf00",
+        "bytes": 256,
+        "monitor_rows": [
+          {
+            "command": "m0000cf00",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636630300d0a3a30303030434630303a34323432343234323432343234323432343234323432343234323432343234320d0a0d0a2e",
+            "returned_address": "0x0000cf00",
+            "returned_hex": "42424242424242424242424242424242"
+          },
+          {
+            "command": "m0000cf10",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636631300d0a3a30303030434631303a34323432343234323432343234323432343234323432343230383130303036300d0a0d0a2e",
+            "returned_address": "0x0000cf10",
+            "returned_hex": "42424242424242424242424208100060"
+          },
+          {
+            "command": "m0000cf20",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636632300d0a3a30303030434632303a43333035303045334637303041303643433332444346383443303030303030350d0a0d0a2e",
+            "returned_address": "0x0000cf20",
+            "returned_hex": "c30500e3f700a06cc32dcf84c0000005"
+          },
+          {
+            "command": "m0000cf30",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636633300d0a3a30303030434633303a30303031303038443032363630303433303932453032363030313030303031350d0a0d0a2e",
+            "returned_address": "0x0000cf30",
+            "returned_hex": "0001008d02660043092e026001000015"
+          },
+          {
+            "command": "m0000cf40",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636634300d0a3a30303030434634303a39343030433631463030303030303030303038393545323032463643363336330d0a0d0a2e",
+            "returned_address": "0x0000cf40",
+            "returned_hex": "9400c61f0000000000895e202f6c6363"
+          },
+          {
+            "command": "m0000cf50",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636635300d0a3a30303030434635303a30303030303030303030463539343030433631463444353030314134314441420d0a0d0a2e",
+            "returned_address": "0x0000cf50",
+            "returned_hex": "0000000000f59400c61f4d5001a41dab"
+          },
+          {
+            "command": "m0000cf60",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636636300d0a3a30303030434636303a35393034384634414143383638434333463241364133303130303643363336330d0a0d0a2e",
+            "returned_address": "0x0000cf60",
+            "returned_hex": "59048f4aac868cc3f2a6a301006c6363"
+          },
+          {
+            "command": "m0000cf70",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636637300d0a3a30303030434637303a30303030303030303030463539343030433631463444353030304432303530380d0a0d0a2e",
+            "returned_address": "0x0000cf70",
+            "returned_hex": "0000000000f59400c61f4d5000d20508"
+          },
+          {
+            "command": "m0000cf80",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636638300d0a3a30303030434638303a31303030433039314346303139393030353643334335434643364346353643390d0a0d0a2e",
+            "returned_address": "0x0000cf80",
+            "returned_hex": "1000c091cf01990056c3c5cfc6cf56c9"
+          },
+          {
+            "command": "m0000cf90",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636639300d0a3a30303030434639303a44303533324443464346434638344330353643333536353332443030323934350d0a0d0a2e",
+            "returned_address": "0x0000cf90",
+            "returned_hex": "d0532dcfcfcf84c056c356532d002945"
+          },
+          {
+            "command": "m0000cfa0",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636661300d0a3a30303030434641303a30333246304334433336333535323034323032303043303030303033303037450d0a0d0a2e",
+            "returned_address": "0x0000cfa0",
+            "returned_hex": "032f0c4c3635520420200c000003007e"
+          },
+          {
+            "command": "m0000cfb0",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636662300d0a3a30303030434642303a46344136463732303030303030324341344330303030423938413030303030300d0a0d0a2e",
+            "returned_address": "0x0000cfb0",
+            "returned_hex": "f4a6f720000002ca4c0000b98a000000"
+          },
+          {
+            "command": "m0000cfc0",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636663300d0a3a30303030434643303a30303030303034313830464634433336333534354531363532353030303032350d0a0d0a2e",
+            "returned_address": "0x0000cfc0",
+            "returned_hex": "0000004180ff4c363545e16525000025"
+          },
+          {
+            "command": "m0000cfd0",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636664300d0a3a30303030434644303a34333332343430303036333032303041303031303031303030363030343030300d0a0d0a2e",
+            "returned_address": "0x0000cfd0",
+            "returned_hex": "433244000630200a0010010006004000"
+          },
+          {
+            "command": "m0000cfe0",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636665300d0a3a30303030434645303a46333032303030383731304230303130363030313030303633303030333030380d0a0d0a2e",
+            "returned_address": "0x0000cfe0",
+            "returned_hex": "f3020008710b00106001000630003008"
+          },
+          {
+            "command": "m0000cff0",
+            "consumed_bytes": 16,
+            "consumed_offset": 0,
+            "raw_hex": "6d30303030636666300d0a3a30303030434646303a33303538333037383330383430363030363733323446354633454535303130340d0a0d0a2e",
+            "returned_address": "0x0000cff0",
+            "returned_hex": "305830783084060067324f5f3ee50104"
+          }
+        ],
+        "name": "phase02a-preserved-frame-domain",
+        "observed_hex": "4242424242424242424242424242424242424242424242424242424208100060c30500e3f700a06cc32dcf84c00000050001008d02660043092e0260010000159400c61f0000000000895e202f6c63630000000000f59400c61f4d5001a41dab59048f4aac868cc3f2a6a301006c63630000000000f59400c61f4d5000d205081000c091cf01990056c3c5cfc6cf56c9d0532dcfcfcf84c056c356532d002945032f0c4c3635520420200c000003007ef4a6f720000002ca4c0000b98a0000000000004180ff4c363545e16525000025433244000630200a0010010006004000f3020008710b00106001000630003008305830783084060067324f5f3ee50104",
+        "view": "physical-bank0"
+      },
+      {
+        "address": "0x0000c356",
+        "bytes": 24,
+        "monitor_rows": [
+          {
+            "command": "m0777c356",
+            "logical": "0xc356",
+            "raw_hex": "6d30373737633335360d0a3a30373737433335363a46464646464646464646464646464646464646464646464646464646464646460d0a0d0a2e",
+            "view": "CPU-resolved-0x0777xxxx"
+          },
+          {
+            "command": "m0777c366",
+            "logical": "0xc366",
+            "raw_hex": "6d30373737633336360d0a3a30373737433336363a46464646464646464646464646464646464646464646464646464646464646460d0a0d0a2e",
+            "view": "CPU-resolved-0x0777xxxx"
+          }
+        ],
+        "name": "linked-verifier-oracle-tables",
+        "observed_hex": "ffffffffffffffffffffffffffffffffffffffffffffffff",
+        "view": "cpu-resolved-0x0777xxxx"
+      },
+      {
+        "address": "0x0000c990",
+        "bytes": 20,
+        "monitor_rows": [
+          {
+            "command": "m0777c990",
+            "logical": "0xc990",
+            "raw_hex": "6d30373737633939300d0a3a30373737433939303a42303035323046314341383030333230454243413230444643414139303132300d0a0d0a2e",
+            "view": "CPU-resolved-0x0777xxxx"
+          },
+          {
+            "command": "m0777c9a0",
+            "logical": "0xc9a0",
+            "raw_hex": "6d30373737633961300d0a3a30373737433941303a39344342414430304444303931303239444638443030444443363937443043440d0a0d0a2e",
+            "view": "CPU-resolved-0x0777xxxx"
+          }
+        ],
+        "name": "linked-timeout-compare",
+        "observed_hex": "b00520f1ca800320ebca20dfcaa9012094cbad00",
+        "view": "cpu-resolved-0x0777xxxx"
+      },
+      {
+        "address": "0x0000ff83",
+        "bytes": 2,
+        "monitor_rows": [
+          {
+            "command": "m0777ff83",
+            "logical": "0xff83",
+            "raw_hex": "6d30373737666638330d0a3a30373737464638333a31443030303030313031303430303030303030303030303030303836304141360d0a0d0a2e",
+            "view": "CPU-resolved-0x0777xxxx"
+          }
+        ],
+        "name": "frame-counter",
+        "observed_hex": "1d00",
+        "view": "cpu-resolved-0x0777xxxx"
+      }
+    ],
+    "register_raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303936203032203634203031203030203030203031453420383030302030303030203443393645302020303020202020203034202e2e2e2e2e492e2e202e2e2e50203135202d20203030202d202e2e632e2e6c68630d0a2c30373737453039362020344320393620453020204a4d5020202024453039360d0a0d0a2e",
+    "stop_raw_hex": "74310d0a0d0a2e",
+    "tuple": {
+      "A": "0x02",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC": "0xe096",
+      "SP": "0x01e4",
+      "X": "0x64",
+      "Y": "0x01",
+      "Z": "0x00",
+      "suffix": "4C96E0  00     04 .....I.. ...P 15 -  00 - ..c..lhc"
+    }
+  },
+  "recorded_on": "2026-08-13",
+  "required_rescue_if_authorized": {
+    "physical_ranges": [
+      {
+        "address": "0x0000c080",
+        "bytes": 50,
+        "purpose": "runtime phase/error/cutpoint"
+      },
+      {
+        "address": "0x081000c0",
+        "bytes": 32,
+        "purpose": "selected immutable Shelf source row"
+      }
+    ],
+    "resumes": 0,
+    "rule": "persist both raw ranges before any interpretation",
+    "stops": 0
+  },
+  "status": "CAPTURE-HARNESS-RED; STATIC-RAW-SALVAGED; MECHANISM-UNDECIDED",
+  "unlock": {
+    "D1": false,
+    "D2_D5": false
+  }
+}

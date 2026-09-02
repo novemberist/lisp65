@@ -1,0 +1,110 @@
+{
+  "format": "lisp65-c2-link28-v2-profile-data-placement-orphan-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-lto-internal-orphan-product-link-28-blocked",
+  "authorization_accounting": {
+    "authorized_followup_placement_probes": 1,
+    "completed_followup_placement_probes": 1,
+    "resident_island_seed_links": 1,
+    "product_closure_links": 0,
+    "link_28_product_candidates": 0,
+    "additional_retry_or_tuning_links": 0
+  },
+  "inputs": {
+    "tool": "tools/host-lisp/c2_product_substitution_link.py",
+    "tool_sha256": "4ac95552c115d0ea685c018db3290b570f62db3397c62d968de7f69f36889827",
+    "contract": "config/c2-kernal-unmap-contract.json",
+    "contract_sha256": "48d17505798b11312b72001cc3cb6b27ecf3a40bb7a5ebd2f406cb938a81c2d4",
+    "generated_linker_sha256": "abacd9d551552d834bb1aef88bfe775358800583f37f10a405e0317e8edda6c2",
+    "failed_map_sha256": "1349da79f415323b7ad046cde22120e484386a568564a1121f7df68230b9bb3a"
+  },
+  "first_red": {
+    "gate": "orphan-handling=error",
+    "section": ".llvm_sympart",
+    "bytes": 15,
+    "linker_error": ".llvm_sympart is being placed in '.llvm_sympart'",
+    "important_observation": "The generated script contains an exact .llvm_sympart INFO output command, KEEP(*(.llvm_sympart)), a nonempty assertion and an address-zero assertion. lld still classifies the LTO-generated section as an orphan before a final ELF exists.",
+    "conclusion": "The approved assumption that .llvm_sympart can be handled as the sixth ordinary output-section allowlist member is disproved for this pinned lld/LTO pipeline."
+  },
+  "failed_map_observations_not_passed_gates": {
+    "explicit_e000_predecessor_chain": {
+      "typed_queue_driver": "0xe000",
+      "frame_source": "0xe01f",
+      "irq_handler": "0xe028",
+      "nmi_and_freezer_return": "0xe055",
+      "map_switch_and_guards": "0xe05e",
+      "post_startup_output_seam": "0xe06c",
+      "event_poll": "0xe070",
+      "c2_resident": "0xe09e",
+      "session_emitter_state": "0xfbb8",
+      "status": "map geometry matches the pre-cut window chain; no post-link gate claim"
+    },
+    "profile_data": {
+      "address": "0xfd12",
+      "bytes": 342,
+      "end_exclusive": "0xfe68",
+      "component_bytes": [32, 164, 146]
+    },
+    "ordinary_bank0": {
+      ".rodata_bytes": 800,
+      ".bss_start": "0xb94a",
+      ".bss_bytes": 1827,
+      ".bss_end_exclusive": "0xc06d",
+      "fixed_c2_start": "0xc080",
+      "headroom_bytes": 19,
+      "growth_policy": "full; contingency only, not resident growth budget"
+    },
+    "e000": {
+      "prior_passed_margin_bytes": 728,
+      "new_profile_data_bytes": 342,
+      "projected_post_cut_margin_bytes": 386,
+      "growth_policy": "closed to new tenants",
+      "qualification": "projection only because lld emitted no ELF"
+    },
+    "retained_relocation_sections_visible_in_map": true,
+    "profile_data_relocation_output_bytes": 2052
+  },
+  "gate_status": {
+    "linker_explicit_vma_geometry": "map-observed-not-a-pass",
+    "ordinary_bank0_19_byte_currency": "map-observed-not-a-pass",
+    "orphan_handling": "first-red",
+    "profile_data_reference_gate": "not-reached-not-passed",
+    "pre_ownership": "not-reached-not-passed",
+    "runtime_slice_capacity": "not-reached-not-passed",
+    "fixed_facade": "not-reached-not-passed",
+    "kernal_freedom": "not-reached-not-passed",
+    "identity": "not-reached-not-passed",
+    "hardware": "not-run"
+  },
+  "bounded_followup_candidates_not_authorized": {
+    "recommended": {
+      "name": "save-then-explicitly-discard-LTO-partition-metadata",
+      "mechanism": "Use lld --lto-obj-path to retain the generated LTO object as evidence, require .llvm_sympart to exist there with the expected non-ALLOC classification, and name it explicitly in /DISCARD/ so orphan-handling=error remains globally unchanged. The final ELF retains the relocation sections needed by the data-reference gate; .llvm_sympart itself is compiler partition metadata, not a relocation record.",
+      "why": "This preserves hard orphan failure, makes the exceptional input observable, and avoids pretending internal LTO bookkeeping is product proof payload."
+    },
+    "exact_warning_wrapper": {
+      "mechanism": "Run orphan-handling=warn and promote every warning except the exact .llvm_sympart diagnostic to a wrapper error, followed by a total post-link section inventory.",
+      "why_not_first": "Log parsing would replace a native linker hard error with a wrapper convention."
+    },
+    "remove_emit_relocs": {
+      "status": "rejected",
+      "reason": "Would destroy the separately required low/high-immediate data-reference proof."
+    }
+  },
+  "immutable_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-v2-profile-data-placement-orphan-first-red-20260720/root",
+    "files": 11,
+    "total_file_bytes": 252794,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "eb7d4de780aef1e285aa8078274b41ad44c4159196aa8d57caeac8f7871098ff",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "decision": {
+    "explicit_e000_vma_chain": "retained-pending-successful-link",
+    "direct-sixth-output-allowlist-member": "disproved",
+    "third_placement_probe": "not-authorized-not-run",
+    "link_28": "blocked-not-run"
+  },
+  "claim_limit": "This receipt proves the second authorized placement attempt stopped at lld's hard orphan gate even though the generated script named and retained .llvm_sympart. The failed map supports, but does not prove, the corrected E000 chain, 342-byte data move, 19-byte Bank-0 remainder and 386-byte E000 projection. No ELF, data-reference PASS, structural closure, hardware acceptance, promotion or release claim exists."
+}

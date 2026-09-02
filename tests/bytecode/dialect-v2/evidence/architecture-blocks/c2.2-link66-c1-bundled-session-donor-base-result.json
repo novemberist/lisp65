@@ -1,0 +1,144 @@
+{
+  "WPLTO": {
+    "exception": null,
+    "product_completed": true,
+    "raw_receipt": {
+      "bytes": 16136,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link66-c1-bundled-session-donor-raw.json",
+      "sha256": "d83e7be9956a2dd1b37ee1736cddf7e48ef870b90ac328e606ea62c986734842"
+    },
+    "return_code": 2
+  },
+  "authority": {
+    "completion_source_gate": {
+      "bytes": 5720,
+      "path": "build/c2.2/c1-bundled-session-link66/write-completion-source-gate.json",
+      "sha256": "7d276c061b1af7c1f232225668910f93bea744e767c2ccb4abf6afe3a7b2f618"
+    },
+    "contract": {
+      "bytes": 9218,
+      "path": "config/c2-two-region-session-store-contract.json",
+      "sha256": "412e241e2635f3e7a61968e866d8e97e7ad577921d213f2fefdd7c44644c14b7"
+    },
+    "driver": {
+      "bytes": 12191,
+      "path": "tools/host-lisp/c2_two_region_session_store_wplto.py",
+      "sha256": "9b12c904d2794b8a5cf96227ff8c210f74225e8feb582e573d47911cf61fdc97"
+    },
+    "emitter_union_gate": {
+      "bytes": 1529,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link66-c1-bundled-session-donor-emitter-union.json",
+      "sha256": "835f717a44be58256a19586cc14b8fbc17b913741889500178fa6fd4c9777dfe"
+    },
+    "format_gate": {
+      "bytes": 5400,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link66-c1-bundled-session-donor-format-stage.json",
+      "sha256": "35b1793f72262fa7f13efaeffc4d1d45c68021ea96d5a7a2c2eb3f1098796f1f"
+    }
+  },
+  "claim_limit": "Capacity/placement WPLTO only. No product link, C1 closure, matrix-gate fall or acceptance-chain claim.",
+  "completion_gate": {
+    "mutations": 25,
+    "status": "passed-single-submit-stateless-four-point-C2J-seal-source-model-awaiting-WPLTO"
+  },
+  "emitter_union_gate": {
+    "geometry": {
+      "installer_trace_offset": 302,
+      "new_gc_roots": 0,
+      "phase_scratch_bytes": 304,
+      "removed_E000_bytes": 10,
+      "session_state_bytes": 10,
+      "work_state_bytes": 302
+    },
+    "mutations": {
+      "code-before-literal-end": "rejected",
+      "final-before-add-end": "rejected",
+      "function-after-final": "rejected",
+      "literal-after-code": "rejected"
+    },
+    "status": "passed-sanitized-lifetime-union-and-mutations"
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "whole_program_LTO_closure_links": 1
+  },
+  "format": "lisp65-c2-two-region-session-store-l65r-v4-WPLTO-v1",
+  "format_gate": {
+    "mutations": {
+      "main-as-overflow": "source-address",
+      "overflow-as-main": "source-address",
+      "overflow-capacity": "bank-overflow",
+      "overflow-truncated": "overflow-binding",
+      "region-without-record-crc": "record-crc",
+      "source-reserved-byte": "bad-region",
+      "unknown-region": "bad-region",
+      "v3-as-v4": "bad-version",
+      "v4-as-v3": "bad-version",
+      "wrong-source-bank": "source-address",
+      "wrong-source-low": "source-address",
+      "wrong-source-megabyte": "source-address",
+      "zero-record-crc": "record-crc-zero"
+    },
+    "status": "passed-strict-v4-two-region-format-and-mutations"
+  },
+  "gates": {
+    "all_slices_under_1792": true,
+    "main_region_at_most_u16": true,
+    "overflow_region_at_most_2032": true
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "rollback_slices": {
+    "rollback_finalize": {
+      "bytes": 267,
+      "region_id": 0
+    },
+    "rollback_unpublish": {
+      "bytes": 768,
+      "region_id": 0
+    },
+    "rollback_wipe_attic": {
+      "bytes": 420,
+      "region_id": 1
+    },
+    "rollback_wipe_chip": {
+      "bytes": 506,
+      "region_id": 1
+    },
+    "rollback_wipe_plane": {
+      "bytes": 954,
+      "region_id": 1
+    }
+  },
+  "session_regions": {
+    "c2d_append_scratch_floor_bytes": 14544,
+    "main_bytes": 64926,
+    "main_headroom_bytes": 610,
+    "overflow_capacity_bytes": 2032,
+    "overflow_headroom_bytes": 76,
+    "overflow_slices": [
+      {
+        "bytes": 954,
+        "file_offset": 0,
+        "id": 42,
+        "name": "c2-append-rollback-wipe-plane"
+      },
+      {
+        "bytes": 506,
+        "file_offset": 1024,
+        "id": 43,
+        "name": "c2-append-rollback-wipe-chip"
+      },
+      {
+        "bytes": 420,
+        "file_offset": 1536,
+        "id": 44,
+        "name": "c2-append-rollback-wipe-attic"
+      }
+    ],
+    "overflow_used_bytes": 1956,
+    "worst_case_dynamic_entry_delta_rows": -25
+  },
+  "status": "FIRST RED: product-shaped two-region package did not close"
+}

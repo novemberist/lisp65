@@ -1,0 +1,155 @@
+{
+  "accounting": {
+    "hardware_runs": 0,
+    "latency": "0/2 unchanged",
+    "line1": "passed",
+    "line1_budget": "2/3 unchanged",
+    "product_links": 0
+  },
+  "authority": {
+    "existing_zero_literal_gate": {
+      "bytes": 12744,
+      "path": "tools/host-lisp/c2_zero_literal_execution_gate.py",
+      "sha256": "39586230a41ef6a806c15b0267d6578f9803297ccee8514d47704deb7db9fef7"
+    },
+    "hardware_c2d_region": {
+      "bytes": 50816,
+      "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/bank5-c2d-region-live.bin",
+      "sha256": "72aad9da265fb26a472a8eaa19f75e3e8935c0cb6210e519f3697226001545bf"
+    },
+    "hardware_session_image": {
+      "bytes": 119,
+      "path": "build/c2.2/hardware-presmoke-link48-zero-literal/first-red/session-emission-119.bin",
+      "sha256": "176de02000b6d29914175c2303216f7530b5a73f0b8bf6cc7f190ab643602531"
+    },
+    "link48_hardware_first_red": {
+      "bytes": 10154,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link48-zero-literal-append-hardware-first-red.json",
+      "sha256": "f9f17db39694c973968581ac657c1d70fda95c4dd63fc5a81f89b0088864b3a6"
+    },
+    "link48_initial_c2d": {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    "link48_static_code": {
+      "bytes": 34403,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin",
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "probe": {
+      "bytes": 24593,
+      "path": "tools/host-lisp/c2_lite_v6_link48_append_cutpoint_probe.py",
+      "sha256": "135f83b33a602aaff7b60587190088619ce02ca538fcaec9a9b0a4a7b0945c16"
+    },
+    "runtime_slot_contract": {
+      "bytes": 21477,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "462e7179a1cfabd47a039e51fa3b543a3a4ee4428ad71f4fa0d5e5161f203481"
+    },
+    "runtime_source": {
+      "bytes": 129011,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "7138ed3395030ef5e6140e5b776166bdf022b3cea522fcd66fe09ab4fe2159f0"
+    }
+  },
+  "claim_limit": "The exact success oracle is not a product execution result.  The fixture remains red until it drives the real phase plan and proves byte-identical restoration at every cutpoint.",
+  "exact_hardware_image_success_oracle": {
+    "append": {
+      "entry_ordinal": 588,
+      "entry_row_hex": "060063860900d8080100",
+      "image_row_hex": "0100000001004c020100d80800001b010000638600090000000000000ad3f62a",
+      "image_slot": 6,
+      "new_counts": [
+        7,
+        589,
+        2264,
+        283
+      ],
+      "old_counts": [
+        6,
+        588,
+        2264,
+        283
+      ]
+    },
+    "call": {
+      "literal_reads": 0,
+      "opcodes": [
+        "PUSHT",
+        "RET"
+      ],
+      "result": "T"
+    },
+    "input": {
+      "code_hex": "b50000020200002c05",
+      "entries": 1,
+      "export": "%c2h",
+      "length": 119,
+      "literals": 0
+    },
+    "publish_install": {
+      "handle": 588,
+      "symbol": "%c2h"
+    },
+    "status": "passed-byte-exact-success-oracle"
+  },
+  "format": "lisp65-c2-lite-v6-link48-zero-literal-end-to-end-fixture-first-red-v1",
+  "old_fixture_gap": {
+    "covered": [
+      "entry reader",
+      "entry length",
+      "vm_run_dir ELF edge"
+    ],
+    "missing": [
+      "dynamic emission",
+      "append phases",
+      "publication",
+      "installation",
+      "actual call",
+      "abort restoration"
+    ]
+  },
+  "recorded_on": "2026-07-22",
+  "required_product_end_to_end_fixture": {
+    "current_blocker": {
+      "abort_driver_behavior": "rejects 43 > 30 and sets c2_ready=0",
+      "actual_executed_slots": [],
+      "actual_requested_range": [
+        43,
+        30
+      ],
+      "affected_paths": [
+        {
+          "function": "c2_append_begin/v5_fail",
+          "line": 2747
+        },
+        {
+          "function": "c2_append_rollback",
+          "line": 2758
+        },
+        {
+          "function": "c2_append_abort_control_phase",
+          "line": 2801
+        }
+      ],
+      "range_helper_semantics": "ascending inclusive; first > last executes zero phases and returns success",
+      "required_rollback_sequence": [
+        43,
+        44,
+        30
+      ]
+    },
+    "cutpoints": "inject before and after every actual overlay call; after each abort compare C2D header, suffix, export cells, Bank-2 suffix and C2J with the pre-append snapshot",
+    "positive_chain": [
+      "emit exact 119-byte zero-literal image",
+      "append through every real Session-family phase",
+      "publish %c2h last",
+      "install persistent handle 588",
+      "call exact PUSHT/RET code and observe T"
+    ],
+    "source_gate": "the real phase driver may not delegate a semantic rollback sequence to a numerically ascending slot range"
+  },
+  "status": "FIRST RED: exact success oracle passes but real product rollback plan is structurally invalid",
+  "why_red_is_required": "The byte oracle proves that zero literals and the emitted code are valid.  It is not permitted to turn that oracle green while the real product can skip all three rollback phases; that would repeat the model/product split exposed by hardware."
+}

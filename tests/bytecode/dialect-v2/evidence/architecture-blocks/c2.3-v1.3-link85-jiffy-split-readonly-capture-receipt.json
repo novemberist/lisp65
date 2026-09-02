@@ -1,0 +1,130 @@
+{
+  "binary_split": {
+    "fix_target": "Ship boot initialization must establish and verify the time base rather than inherit it; the host lane must assert the same boot precondition.",
+    "input_layer": "not-reached-not-tested",
+    "live_boundary": "wait-before-read-line",
+    "mechanism": "Ship released interrupts without arming the inherited KERNAL time base; D01A remained zero and A1/A2 did not advance, so the sample blocked in its leading (wait 1).",
+    "outcome": "jiffy-frozen"
+  },
+  "bindings": {
+    "capture_driver": {
+      "bytes": 8826,
+      "path": "tools/host-lisp/c2_v13_link85_jiffy_split_capture.py",
+      "sha256": "220e59a7b4e8eddcc69a0f5be4863f42e7d485c755934fc285b42979bd22e38b"
+    },
+    "host_elf_attribution": {
+      "bytes": 9280,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link85-ship-input-boot-host-elf-attribution-receipt.json",
+      "sha256": "1385f5564d24607ae1bdb84b36fbcb35dc02b1fcb782080d04cb05f0825f12f9"
+    },
+    "m65_tool": {
+      "bytes": 286728,
+      "path": "tools/m65tools/m65",
+      "sha256": "158c932c07a82771704c86e8ee79700c992e150fe0cd64b2ba99b10071233bc4"
+    },
+    "owner_review": {
+      "bytes": 30848,
+      "path": "docs/planning/1.3-link84-closing-first-red-review.md",
+      "sha256": "1f25f01970cc416819a5afd4f87db2768210a141f19a3ae2da78cdfaa4297fa7"
+    },
+    "raw": {
+      "d01a-1.bin": {
+        "bytes": 1,
+        "path": "build/ship-builder/v13/link85-jiffy-split-capture/run/d01a-1.bin",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      },
+      "d01a-2.bin": {
+        "bytes": 1,
+        "path": "build/ship-builder/v13/link85-jiffy-split-capture/run/d01a-2.bin",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      },
+      "getinvec-1.bin": {
+        "bytes": 2,
+        "path": "build/ship-builder/v13/link85-jiffy-split-capture/run/getinvec-1.bin",
+        "sha256": "84232c3cd28c54f29e76cbd31aa41c207c9991c691027b7458d7fdf4813dd84c"
+      },
+      "getinvec-2.bin": {
+        "bytes": 2,
+        "path": "build/ship-builder/v13/link85-jiffy-split-capture/run/getinvec-2.bin",
+        "sha256": "84232c3cd28c54f29e76cbd31aa41c207c9991c691027b7458d7fdf4813dd84c"
+      },
+      "irqvec-1.bin": {
+        "bytes": 2,
+        "path": "build/ship-builder/v13/link85-jiffy-split-capture/run/irqvec-1.bin",
+        "sha256": "2743bf99cfffad30cee2731bf4c5e8a54787f2d3a69cbba3510feb74fb3cedcd"
+      },
+      "irqvec-2.bin": {
+        "bytes": 2,
+        "path": "build/ship-builder/v13/link85-jiffy-split-capture/run/irqvec-2.bin",
+        "sha256": "2743bf99cfffad30cee2731bf4c5e8a54787f2d3a69cbba3510feb74fb3cedcd"
+      },
+      "jiffy-1.bin": {
+        "bytes": 2,
+        "path": "build/ship-builder/v13/link85-jiffy-split-capture/run/jiffy-1.bin",
+        "sha256": "4658d6abbbaf7748c172ed5a3e003cdb8997648f88724834e41f75e54520e142"
+      },
+      "jiffy-2.bin": {
+        "bytes": 2,
+        "path": "build/ship-builder/v13/link85-jiffy-split-capture/run/jiffy-2.bin",
+        "sha256": "4658d6abbbaf7748c172ed5a3e003cdb8997648f88724834e41f75e54520e142"
+      }
+    }
+  },
+  "candidate_link": 85,
+  "capture_timing": {
+    "first_tool_timestamp": "2026-08-02T17:22:54.637Z",
+    "nominal_explicit_delay_seconds": 1,
+    "second_tool_timestamp": "2026-08-02T17:22:56.306Z",
+    "tool_timestamp_separation_seconds": 1.669
+  },
+  "claim_limit": "One owner-authorized read-only capture of the still-live Link-85 interactive wait state. It attributes this silence to the frozen pre-input jiffy and does not test GETIN, key-event, read-line, a product fix, a successor link, acceptance or release readiness.",
+  "format": "lisp65-c2.3-v1.3-link85-jiffy-split-readonly-capture-v1",
+  "recorded_on": "2026-08-02",
+  "samples": {
+    "first": {
+      "d01a": 0,
+      "getin_vector": 62233,
+      "irq_vector": 63860,
+      "jiffy_bytes": [
+        100,
+        0
+      ],
+      "jiffy_word": 25600
+    },
+    "second": {
+      "d01a": 0,
+      "getin_vector": 62233,
+      "irq_vector": 63860,
+      "jiffy_bytes": [
+        100,
+        0
+      ],
+      "jiffy_word": 25600
+    }
+  },
+  "scope": {
+    "access": "read-only-memory-dumps",
+    "device": "/dev/ttyUSB1",
+    "keyboard_or_screenshot_before_capture": false,
+    "product_bytes_changed": 0,
+    "product_links_created": 0,
+    "reset_before_capture": false
+  },
+  "separate_latent_finding": {
+    "address": "0x0091",
+    "class": "Ship-RUNSTOP-assumption",
+    "disposition": "separate-not-exercised-by-this-capture"
+  },
+  "status": "hardware-readonly-capture-jiffy-frozen-wait-boundary-attributed",
+  "verification": {
+    "executions": 1,
+    "mutation_results": {
+      "advancing-jiffy": "rejected",
+      "armed-vic": "rejected",
+      "input-overclaim": "rejected",
+      "irq-vector-drift": "rejected",
+      "product-byte-claim": "rejected"
+    },
+    "mutations_rejected": 5
+  }
+}

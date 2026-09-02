@@ -1,0 +1,98 @@
+{
+  "authority": {
+    "config": {
+      "bytes": 3359,
+      "path": "config/c2-v124-post-release-soak.json",
+      "sha256": "1b51a7759cb4cbe90289e65868cea284e377b4a1f064dcdae4924d662d30d1fc"
+    },
+    "contract": {
+      "bytes": 3365,
+      "path": "docs/planning/c2d-append-visibility-measurement-contract.md",
+      "sha256": "684734ce1582050b68df3776ba2be127b0e63c777809764d65d3dfbf7eb19709"
+    },
+    "host_fixture": {
+      "bytes": 411,
+      "path": "tests/equivalence/c2-v124-post-release-soak.lisp",
+      "sha256": "2914df33669cdc6c90a3856f3b7b3e88a9848b870f984f821d61ea564d4b1bae"
+    },
+    "roadmap": {
+      "bytes": 6677,
+      "path": "docs/planning/post-1.2.4-roadmap.md",
+      "sha256": "96b46b4e58ea0d0263640d6fb96dd867f6d8d353668da3c186125173087ff656"
+    },
+    "runner": {
+      "bytes": 24901,
+      "path": "scripts/c2-v124-post-release-soak-hw.sh",
+      "sha256": "ef49ff4f79b69710723e252f8768859593172dbc26b5bfd9fcf681473ef77d3c"
+    }
+  },
+  "claim_limit": "One non-promotable post-release measurement against the released v1.2.4 medium. No product bytes, link, publish-path change, C2-full claim or acceptance claim.",
+  "format": "lisp65-c2.2-v1.2.4-post-release-soak-preparation-v1",
+  "host_dry_run": {
+    "lcc": {
+      "lines": 2,
+      "status": "passed-exact-helper-definitions-compiled",
+      "stdout_sha256": "3820f2d4e72f738bfb9d5796ff01bce9b54f8ee153c7f1156617d601b1d1e64b"
+    },
+    "product_session": {
+      "cases": 2,
+      "mutations_rejected": 12,
+      "persistent_appends": 3,
+      "status": "passed-real-emitter-append-resolution-materialization-lane",
+      "stdout_sha256": "5c767018496f37ec14c7a46289b3f3e17eb0ad4bad1d8274e8bef5ce4b36e1d6"
+    },
+    "vm": {
+      "lines": 2,
+      "status": "passed-exact-helper-definitions-compiled",
+      "stdout_sha256": "3820f2d4e72f738bfb9d5796ff01bce9b54f8ee153c7f1156617d601b1d1e64b"
+    }
+  },
+  "recorded_on": "2026-07-30",
+  "released_product": {
+    "artifact_set_sha256": "f686c8a78d7e65927740049e0b33c51f879613f21593b46be8342840c18093f8",
+    "d81": {
+      "bytes": 819200,
+      "path": "build/c2.2/v1.2.4-acceptance/r5/product/15-lisp65-product.d81",
+      "sha256": "d88bb06db2f8e179bf73211a999eb036e920b585ab7a5ab85e251a117b423844"
+    },
+    "elf": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.4-acceptance/r5/product/14-lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "7d380f08c24b9f6bebb0d4863b56bf4a8bfaa1982484902857689936c178a222"
+    },
+    "product_build_id": "6edd4f69",
+    "profile_build_id": "c792e12e",
+    "remote_media": "L65V124.D81"
+  },
+  "safety": {
+    "cold_reset_and_fresh_BASIC_gate": true,
+    "first_anomaly_action": "stop feature activity, capture only",
+    "ftp_progress_guard_seconds": 120,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "readback_map": [
+      "trace",
+      "c2d_header",
+      "place_row",
+      "C2J",
+      "phase_owner",
+      "GC counters"
+    ]
+  },
+  "schedule": {
+    "batches": 31,
+    "bound_cycles": 1860,
+    "bound_start_span_seconds": 1800,
+    "cycles_per_batch": 60,
+    "minimum_cycles": 1800,
+    "minimum_session_seconds": 1800,
+    "start_interval_seconds": 60
+  },
+  "status": "prepared-host-green-nonpromotable-soak",
+  "target_ELF_witnesses": {
+    "gc_badobj": "0x0000003f",
+    "gc_runs": "0x0000b9f0",
+    "mem_oom": "0x0000008f",
+    "trace": "0x0000c1f4"
+  }
+}

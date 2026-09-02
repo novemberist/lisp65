@@ -1,0 +1,75 @@
+{
+  "addresses": {
+    "preload": 327680,
+    "preload_detail": 138,
+    "result": 136,
+    "state": 135
+  },
+  "error": null,
+  "evidence": [
+    {
+      "file": "prestage-bank5.bin",
+      "role": "prestage-bank5",
+      "sha256": "50acd43b1879c27feec0a99f1db204b5a6256ed674b6078f9ca88b6fc604a9bc",
+      "size": 595
+    },
+    {
+      "file": "stage-build-id-mismatch.bin",
+      "role": "stage-payload",
+      "sha256": "1c8ed17b802514756121125f86abe9cd1ba2ca8786ffa3ddf308e60999706fb9",
+      "size": 595
+    },
+    {
+      "file": "staged-bank5.bin",
+      "role": "staged-bank5",
+      "sha256": "1c8ed17b802514756121125f86abe9cd1ba2ca8786ffa3ddf308e60999706fb9",
+      "size": 595
+    },
+    {
+      "file": "runtime-state.bin",
+      "role": "runtime-state",
+      "sha256": "5e1effe9b7bab73dce628ccd9f0cbbb16c1e6efc6c4f311e59992a467bc119fd",
+      "size": 1
+    },
+    {
+      "file": "runtime-result.bin",
+      "role": "runtime-result",
+      "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+      "size": 2
+    },
+    {
+      "file": "runtime-preload-detail.bin",
+      "role": "runtime-preload-detail",
+      "sha256": "dbc1b4c900ffe48d575b5da5c638040125f65db0fe3e24494b76ea986457d986",
+      "size": 1
+    }
+  ],
+  "expected": {
+    "effective_bank5_sha256": "1c8ed17b802514756121125f86abe9cd1ba2ca8786ffa3ddf308e60999706fb9",
+    "mutation": "verified foreign preload with a different profile build-id",
+    "preload_detail": 2,
+    "result_raw": 0,
+    "state": 228
+  },
+  "foreign_manifest_sha256": "f2e76416251d5968c1b10736ed5c3ace663eb60f31cb174135c9fd52d23aed1f",
+  "foreign_profile_build_id": 3142987063,
+  "gate": "G5",
+  "manifest_sha256": "589844faff2d8674baf75f4e8faeef22ab4e7eef2d0db698c4a928c53461f6f6",
+  "observed": {
+    "preload_detail": 2,
+    "result_fixnum": null,
+    "result_raw": 0,
+    "state": 228
+  },
+  "operator": {
+    "cycle_id": "ap82-build-id-20260712-04",
+    "power_cycle_ack": "POWER-CYCLED",
+    "prestage_digest": "50acd43b1879c27feec0a99f1db204b5a6256ed674b6078f9ca88b6fc604a9bc"
+  },
+  "oracle_sha256": "e7db0887bab3f601793f2bcee6073518ccd626bfa2bf29e01c57f44336def3ba",
+  "phase": "build-id-mismatch",
+  "profile_build_id": 322146288,
+  "schema": "lisp65-runtime-export-hw-receipt-v2",
+  "scope": "runtime-export-g5-single-phase",
+  "status": "PASS"
+}

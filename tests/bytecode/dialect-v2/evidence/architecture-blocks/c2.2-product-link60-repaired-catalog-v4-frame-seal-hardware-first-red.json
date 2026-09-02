@@ -1,0 +1,114 @@
+{
+  "format": "lisp65-c2-link60-repaired-catalog-v4-frame-seal-hardware-first-red-v1",
+  "date": "2026-07-24",
+  "status": "first-red-product-semantic-review-required",
+  "promotable": false,
+  "scope": "First hardware boot of the artifact-repaired 12-record Link-60 Boot catalog, before C1 Cutpoint 3 or 4 was armed.",
+  "authority": {
+    "product": {
+      "path": "build/c2.2/substitution/product-link-60-boot-inventory-artifact-repair/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "5a4e2221c1e03cad4ec5fa1dd3529cdd2e3f593c84e9ee4e7e8cd53eaf750227"
+    },
+    "elf": {
+      "path": "build/c2.2/substitution/product-link-60-boot-inventory-artifact-repair/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 619416,
+      "sha256": "017761d31df0c0216cc3f52f9affe9831c32448466d79061a71c2b2b79b9fb2a"
+    },
+    "generated_runtime_source": {
+      "path": "build/c2.2/substitution/product-link-60-boot-inventory-artifact-repair/generated-product-sources/vm_runtime_overlay.c",
+      "bytes": 91693,
+      "sha256": "889b5de5e150120db604122128eecdf718371c52de62b958e24ffa483c6f592d"
+    },
+    "pure_replay_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link60-boot-inventory-pure-replay-receipt.json",
+      "sha256": "e21de13e39ba674986ec4753f825cc18f558d07d86233583c646a178fdf3ac12"
+    },
+    "deployment": {
+      "path": "build/c2.2/c1-freezer-hardware-link60-repaired-cutpoints3-4-NONPROMOTABLE/deployment.json",
+      "bytes": 9734,
+      "sha256": "31cec12722893f07c29d1864d195e321899cd610f1427b3bd9c7faf158c5f165"
+    }
+  },
+  "hardware_evidence": {
+    "operator_gate": "device reported ready before the run",
+    "upload_readback": "all eight deployment inputs compared byteidentical before reset",
+    "screen": {
+      "visible": "E2f",
+      "path": "build/c2.2/c1-freezer-hardware-link60-repaired-cutpoints3-4-NONPROMOTABLE/boot-screen.png",
+      "bytes": 2654,
+      "sha256": "3e28585724c14cc6e6c8f499426bd562b86fddd11fb58330cfbe0d925529f5d8"
+    },
+    "captures": {
+      "bank0": {
+        "path": "build/c2.2/c1-freezer-hardware-link60-repaired-cutpoints3-4-NONPROMOTABLE/boot-bank0.bin",
+        "bytes": 65536,
+        "sha256": "b51f014f315bfd4ca02664a7c91b62513390696d5c6a86965963bf0189c7d5b7"
+      },
+      "bank2": {
+        "path": "build/c2.2/c1-freezer-hardware-link60-repaired-cutpoints3-4-NONPROMOTABLE/boot-bank2.bin",
+        "bytes": 65536,
+        "sha256": "297220d9b88ca3d852ebb2dc08ee050d179c8a63efc4691b74abeb3a32479e4b"
+      },
+      "bank3": {
+        "path": "build/c2.2/c1-freezer-hardware-link60-repaired-cutpoints3-4-NONPROMOTABLE/boot-bank3.bin",
+        "bytes": 65536,
+        "sha256": "43e26d86f6d8339dc9e5e365f052947491bd9f53d924aac7d40e392a8b69a94f"
+      },
+      "bank5": {
+        "path": "build/c2.2/c1-freezer-hardware-link60-repaired-cutpoints3-4-NONPROMOTABLE/boot-bank5.bin",
+        "bytes": 50816,
+        "sha256": "5bc88a21dc7405001daf23704be8c3bc34720732432392f4be646555ffa9f397"
+      }
+    },
+    "state": {
+      "rtov_island_state_0x007a": 3,
+      "rtov_fault_0xbfdb": 20,
+      "rtov_fault_name": "VM_RUNTIME_OVERLAY_ERR_ISLAND",
+      "rtov_family_0xbfdc": 1,
+      "c2_ready_0x008c": 0,
+      "resident_island_0x1800_0x1fff": "all-zero-after-fail-closed-wipe",
+      "cutpoint_3_armed": false,
+      "cutpoint_4_armed": false
+    }
+  },
+  "finding": {
+    "inventory_repair_result": "The previous slot-10 DATA_ONLY-as-installer rejection is gone: the corrected catalog reaches and executes the linked slot-10 installer. The new failure is inside that installer and is mapped outward to ERR_ISLAND.",
+    "root_cause": "In the L65R-v4 record verifier, the authenticated frame seal is calculated and published before the v4 absolute-source transformation rewrites frame.slot and frame.count. Both fields are inside the sealed prefix. The installer recomputes the seal over the transformed frame and therefore rejects the otherwise valid handoff as VM_RUNTIME_ISLAND_ERR_BINDING.",
+    "source_order": [
+      "generated vm_runtime_overlay.c:1621 computes context->seal",
+      "generated vm_runtime_overlay.c:1623 publishes RTOV_INSTALL_CONTEXT",
+      "generated vm_runtime_overlay.c:1632 rewrites context->slot; context->count follows",
+      "generated vm_runtime_overlay.c:803 recomputes the seal at the installer consumer"
+    ],
+    "deterministic_reconstruction": {
+      "sealed_prefix_bytes": 50,
+      "producer_slot_count": [
+        10,
+        12
+      ],
+      "consumer_slot_count": [
+        0,
+        130
+      ],
+      "producer_crc16": "0x2036",
+      "consumer_crc16": "0x5d3c",
+      "equal": false
+    },
+    "classification": "L65R-v4 producer-consumer frame-ordering defect; not a transport failure and not a recurrence of the repaired Boot inventory omission."
+  },
+  "required_product_decision": {
+    "minimal_direction": "Perform the v4 absolute-source transformation before computing and publishing the frame seal, so the producer seals exactly the representation consumed by the installer.",
+    "gate_extension": "Add an end-to-end v4 fixture that runs record verification through installer seal consumption and rejects any mutation between final frame transformation and seal publication.",
+    "capacity": "Whole-Program-LTO measurement required; no byte or wall claim is made by this diagnosis."
+  },
+  "execution_accounting": {
+    "hardware_runs": 1,
+    "cutpoints_run": 0,
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "automatic_retries": 0
+  },
+  "claim_limit": "Binds the repaired-catalog hardware First Red and its deterministic source-order cause only. It does not authorize or claim a product fix, a successor link, C1 closure, matrix closure, promotion or acceptance-chain progress.",
+  "next_gate": "Class-C review of the v4 frame-order fix, then WPLTO and a separately authorized product link before the C1 Cutpoint 3/4 appointment is retried."
+}

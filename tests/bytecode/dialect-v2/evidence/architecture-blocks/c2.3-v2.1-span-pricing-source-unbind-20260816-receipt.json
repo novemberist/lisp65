@@ -1,0 +1,115 @@
+{
+  "authority": {
+    "driver": {
+      "bytes": 10453,
+      "path": "tools/host-lisp/c2_v21_span_pricing_source_unbind_20260816.py",
+      "sha256": "042422b0a974f21628e1482c52fd0b3b443660204d86cc302738957e67f34114"
+    },
+    "historical_receipt": {
+      "bytes": 12544,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-span-verification-pricing-receipt.json",
+      "sha256": "2aa04b329c010e53252e95af4424a60d24c0497b8c45170aefbbcf0acb2608e6"
+    },
+    "living_root_fix": {
+      "bytes": 7063,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-probe-oracle-root-fix-receipt.json",
+      "sha256": "7d77e1456227d54b700b38510012b5aa797d638ff6c2ae11e06a7ede255ab654"
+    },
+    "standing_owner_clause": {
+      "authority": "git-blob",
+      "bytes": 114473,
+      "commit": "bbfcfade36c3dd1af431babb08a099a7067285fc",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "4dea29d688141baa72f2e5ed29029c801d954b362d1569c22e7a8d770568520d"
+    }
+  },
+  "claim_limit": "Authority-only source unbind. Historical evidence, pricing and claims remain byteidentical; living semantics are owned by the MAP-CPU root-fix gates.",
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-span-pricing-source-unbind-v1",
+  "historical": {
+    "DMA_source": {
+      "bytes": 10398,
+      "path": "src/c2_platform_dma.c",
+      "sha256": "0e58051fd8ecc7780c03172d966b1ac621260705df47aa3350b1300fdc3e87cf"
+    },
+    "EXT_source": {
+      "bytes": 49375,
+      "path": "src/mem.c",
+      "sha256": "b85ec5ff9d8136cb8a29a0608c9ba2e38c754f70ffefa6f3925c0045a56cd1f9"
+    },
+    "checker": {
+      "bytes": 24215,
+      "path": "tools/host-lisp/c2_v21_span_verification_pricing.py",
+      "sha256": "5e383e05d8fc72556eebe0dddb7b1333b16ed38b3519343f70ba4035a75dfb29"
+    },
+    "claims_changed": false,
+    "receipt": {
+      "bytes": 12544,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-span-verification-pricing-receipt.json",
+      "sha256": "2aa04b329c010e53252e95af4424a60d24c0497b8c45170aefbbcf0acb2608e6"
+    },
+    "receipt_rewritten": false,
+    "receipt_sha256": "2aa04b329c010e53252e95af4424a60d24c0497b8c45170aefbbcf0acb2608e6",
+    "status": "FULL-SPAN-COMPARE-SELECTED; FIX-AND-CARD-PENDING"
+  },
+  "historical_full_span": {
+    "DMA_source": {
+      "bytes": 10398,
+      "path": "src/c2_platform_dma.c",
+      "sha256": "0e58051fd8ecc7780c03172d966b1ac621260705df47aa3350b1300fdc3e87cf"
+    },
+    "claims_changed": false,
+    "linker": {
+      "bytes": 337100,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+    },
+    "receipt": {
+      "bytes": 9173,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-full-span-convergence-receipt.json",
+      "sha256": "c497c108d4334ceec0ece960c4559cb10f6ef0181f91950718ce05bfcb3d5dfb"
+    },
+    "receipt_rewritten": false,
+    "receipt_sha256": "c497c108d4334ceec0ece960c4559cb10f6ef0181f91950718ce05bfcb3d5dfb",
+    "status": "HOST-GREEN: FULL-SPAN SUCCESSOR ARMED"
+  },
+  "living": {
+    "DMA_source": {
+      "bytes": 10853,
+      "path": "src/c2_platform_dma.c",
+      "sha256": "3dcb76e9072868c890513471d7d4e0c16f7803853968f91d4f52e7fb0b0ea8d6"
+    },
+    "EXT_source": {
+      "bytes": 49881,
+      "path": "src/mem.c",
+      "sha256": "eed1a86672a92efdfed914f03272708d2ee7a0ec7fa3950e91a640c9062faba0"
+    },
+    "acceptance_authority": "nine-reader MAP-CPU root-fix receipt",
+    "historical_sources_are_live_predicates": false,
+    "linker": {
+      "bytes": 347820,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "861d9c464c38aab15c2f81494810b8fdad9bbbfc6c965f3c578fb6f8145ea21e"
+    },
+    "reader_count": 9
+  },
+  "mutations_rejected": [
+    "rewrite-history",
+    "change-claim",
+    "rewrite-full-span-history",
+    "change-full-span-claim",
+    "restore-DMA-live-predicate",
+    "collapse-DMA-worlds",
+    "collapse-EXT-worlds",
+    "collapse-linker-worlds",
+    "lose-reader",
+    "invent-link"
+  ],
+  "recorded_on": "2026-08-16",
+  "status": "PASS: HISTORICAL-SPAN-PRICING-DETACHED-FROM-LIVE-SOURCES"
+}

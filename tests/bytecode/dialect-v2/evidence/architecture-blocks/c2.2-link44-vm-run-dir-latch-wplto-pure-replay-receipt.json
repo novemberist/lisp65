@@ -1,0 +1,278 @@
+{
+  "bank2_target_dataflow": {
+    "bank3_session_stage_slot": 9,
+    "boot_stage_slot": 8,
+    "elf": {
+      "bytes": 608032,
+      "path": "build/c2.2/substitution/link44-vm-run-dir-latch-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "879f74d00f12be6df4148c3a04f03f80a4f01a3c3460627c570fc49312655ee0"
+    },
+    "phase": {
+      "address": 50006,
+      "bytes": 1379,
+      "headroom_bytes": 413,
+      "section": ".lisp65_rt_c2d_03b"
+    },
+    "required_edges": {
+      "bank2_readback": {
+        "address": 46532,
+        "present": true
+      },
+      "physical_copy": {
+        "address": 58579,
+        "present": true
+      }
+    },
+    "status": "passed-real-target-dataflow-and-bounded-cold-slice"
+  },
+  "bank2_workbench_scratch_negative": {
+    "c2d": {
+      "bytes": 33840,
+      "path": "build/c2-lite/v6-coresident-diet-successor-wplto-probe/shared-semantics/host-v6/initial.c2d-v6.bin",
+      "sha256": "6d0a9517d09502da1e2d0115c1d0c6f9e9c4f5edea2a08ebf1287026b0f33992"
+    },
+    "expected_bank2": {
+      "bytes": 34403,
+      "path": "build/c2-lite/v6-coresident-diet-successor-wplto-probe/shared-semantics/host-v6/bank2-static-code.bin",
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "expected_plane_all_target_crcs": "passed",
+    "ready_if_workbench_scratch_remains": false,
+    "record_count": 6,
+    "records": [
+      {
+        "bytes": 8293,
+        "crc32": "0x310f6e91",
+        "image": 0,
+        "source": 224,
+        "target": 0
+      },
+      {
+        "bytes": 11612,
+        "crc32": "0x1bcc928d",
+        "image": 1,
+        "source": 8517,
+        "target": 8293
+      },
+      {
+        "bytes": 2940,
+        "crc32": "0x1e25566a",
+        "image": 2,
+        "source": 20129,
+        "target": 19905
+      },
+      {
+        "bytes": 4083,
+        "crc32": "0x2cf10cd3",
+        "image": 3,
+        "source": 23069,
+        "target": 22845
+      },
+      {
+        "bytes": 104,
+        "crc32": "0xc01acbb8",
+        "image": 4,
+        "source": 27152,
+        "target": 26928
+      },
+      {
+        "bytes": 7371,
+        "crc32": "0x42ae39f0",
+        "image": 5,
+        "source": 27256,
+        "target": 27032
+      }
+    ],
+    "shelf": {
+      "bytes": 70897,
+      "path": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+    },
+    "static_plane_bytes": 34403,
+    "status": "passed-six-record-target-and-workbench-negative",
+    "workbench": {
+      "bytes": 1731,
+      "path": "build/c2.2/hardware-presmoke-link43-export-symbol-domain/boot-overlay.raw.bin",
+      "sha256": "9d6bb3df12de7de367724c460a261ad85aaaf37423bf148a28162776aadd4fc3"
+    },
+    "workbench_scratch_bytes": 1731,
+    "workbench_scratch_passing_records": 0
+  },
+  "base_gate_status": {
+    "capacity_gate": "passed",
+    "fixed_host_facade_gate": "passed",
+    "handoff_z_abi_gate": "passed",
+    "identity_gate": "passed",
+    "kernal_freedom_gate": "passed",
+    "one_truth_gate": "passed",
+    "pre_ownership_gate": "passed"
+  },
+  "capacity": {
+    "diagnostic_walls": {
+      "bank0_text_headroom_bytes": 9,
+      "e000_headroom_bytes": 353,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 86,
+      "resident_island_headroom_bytes": 170
+    },
+    "headroom_delta_bytes": {
+      "bank0_text_headroom_bytes": -26,
+      "e000_headroom_bytes": 0,
+      "fixed_hot_block_headroom_bytes": 0,
+      "ordinary_bank0_bss_headroom_bytes": 0,
+      "resident_island_headroom_bytes": 0
+    },
+    "link44_walls": {
+      "bank0_text_headroom_bytes": 35,
+      "e000_headroom_bytes": 353,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 86,
+      "resident_island_headroom_bytes": 170
+    },
+    "new_bss_bytes": 0,
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98,
+    "status": "passed-one-site-diagnostic-capacity",
+    "window_delta_bytes": 0
+  },
+  "class_a_gate_correction": {
+    "compiler_runs": 0,
+    "corrected_model": "only vm_run_dir may reference either latch cell; other function sizes are provenance",
+    "linker_runs": 0,
+    "old_model": "unrelated LTO function sizes must remain byteidentical",
+    "product_bytes_changed": 0
+  },
+  "execution_accounting": {
+    "class_b_cycles_consumed": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "replayed_existing_ELFs": 1
+  },
+  "first_red": {
+    "bytes": 27616,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-vm-run-dir-latch-wplto-internal-structural.json",
+    "sha256": "473c22934cb19317284a61cf8e253c816232ffe66b0ec88a754d382edf6271e6"
+  },
+  "format": "lisp65-c2-lite-v6-vm-run-dir-latch-pure-replay-v1",
+  "identity": {
+    "diagnostic_only": true,
+    "elf": {
+      "bytes": 608032,
+      "path": "build/c2.2/substitution/link44-vm-run-dir-latch-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "879f74d00f12be6df4148c3a04f03f80a4f01a3c3460627c570fc49312655ee0"
+    },
+    "map": {
+      "bytes": 193654,
+      "path": "build/c2.2/substitution/link44-vm-run-dir-latch-wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "b73d7e3dda1bd72231725ee33c20a4c4271abb170e020923f113176bdb2d4bd6"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/link44-vm-run-dir-latch-wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d0acc0b7b9490d5de59d4c43ac00d01cec24536327cf8c628c77b574c5a16b6b"
+    }
+  },
+  "link44_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+    "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+    "status": "untouched"
+  },
+  "linked_latch": {
+    "cells": {
+      "vmr_hdrlen": {
+        "address": "0xbfc3",
+        "bytes": 2,
+        "section": ".bss"
+      },
+      "vmr_poff": {
+        "address": "0xbfc5",
+        "bytes": 2,
+        "section": ".bss"
+      }
+    },
+    "function_sizes": {
+      "vm_check_status": {
+        "delta_bytes": 0,
+        "diagnostic_bytes": 15,
+        "link44_bytes": 15
+      },
+      "vm_run_dir": {
+        "delta_bytes": 16,
+        "diagnostic_bytes": 153,
+        "link44_bytes": 137
+      },
+      "vm_run_inner": {
+        "delta_bytes": 8,
+        "diagnostic_bytes": 7983,
+        "link44_bytes": 7975
+      }
+    },
+    "helper_functions": 0,
+    "new_bss_bytes": 0,
+    "renderer_delta_bytes": 0,
+    "size_rule": "sizes are provenance; absence of latch dataflow is the invariant",
+    "status": "passed-linked-one-site-two-cell-jtag-raw-latch",
+    "uninstrumented_function_latch_references": {
+      "vm_check_status": {
+        "vmr_hdrlen": {
+          "diagnostic_references": 0,
+          "link44_references": 0
+        },
+        "vmr_poff": {
+          "diagnostic_references": 0,
+          "link44_references": 0
+        }
+      },
+      "vm_run_inner": {
+        "vmr_hdrlen": {
+          "diagnostic_references": 14,
+          "link44_references": 14
+        },
+        "vmr_poff": {
+          "diagnostic_references": 10,
+          "link44_references": 10
+        }
+      }
+    },
+    "vm_run_dir_references": {
+      "vmr_hdrlen": [
+        "68d0:      \tsta\t$bfc3 <vmr_hdrlen>",
+        "68d3:      \tstx\t$bfc4 <vmr_hdrlen+0x1>"
+      ],
+      "vmr_poff": [
+        "68d8:      \tstx\t$bfc5 <vmr_poff>",
+        "68dd:      \tstx\t$bfc6 <vmr_poff+0x1>"
+      ]
+    }
+  },
+  "next_gate": "one nonpromotable Class-B diagnostic link",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "source_gate": {
+    "instrumented_sites": 1,
+    "mutations_rejected": {
+      "context-store-removed": "rejected",
+      "helper-reintroduced": "rejected",
+      "lookup-store-removed": "rejected",
+      "second-site": "rejected",
+      "second-state": "rejected",
+      "valid-bit-removed": "rejected",
+      "wrong-family": "rejected",
+      "wrong-site": "rejected"
+    },
+    "new_state_bytes": 0,
+    "new_string_bytes": 0,
+    "renderer": "none; JTAG only",
+    "site": 1,
+    "site_name": "vm_run_dir-entry-length",
+    "status": "passed-one-site-jtag-raw-vm-run-dir-latch-source-gate",
+    "tuple": {
+      "vmr_hdrlen": "raw signed int directory ordinal, little-endian",
+      "vmr_poff_high": "0x82 = valid bit plus Session family 2",
+      "vmr_poff_low": "site = 1"
+    }
+  },
+  "status": "passed-vm-run-dir-latch-WPLTO-pure-replay-no-hardware"
+}

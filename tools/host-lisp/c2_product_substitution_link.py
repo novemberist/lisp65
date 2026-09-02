@@ -29,8 +29,8 @@ from elf_truth import ElfTruth, ElfTruthError
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUT = ROOT / "build/c2.2/substitution/product-link"
-PRODUCT_ARTIFACTS_MANIFEST = (
-    ROOT / "build/c2.2/substitution/substitution-artifacts.json")
+PRODUCT_ARTIFACTS_MANIFEST: Path | None = None
+PRODUCT_ARTIFACTS_MANIFEST_RESOLVER: object | None = None
 INITIAL_C2D = ROOT / "build/c2.2/substitution/initial.c2d-v3.bin"
 PRODUCT_SHELF = ROOT / "build/c2.2/substitution/product-shelf-v4-direct.bin"
 TOOLCHAIN = ROOT / "tools/llvm-mos/bin"
@@ -94,6 +94,21 @@ INPUT_HYBRID_SOURCE = Path(INPUT_HYBRID_BUILD_CONFIGURATION["source"])
 INPUT_CAPTURE_SOURCE = Path(INPUT_CAPTURE_BUILD_CONFIGURATION["source"])
 INPUT_CAPTURE_BASE_SOURCE = Path(
     INPUT_CAPTURE_BUILD_CONFIGURATION["base_source"])
+SYMBOL22_LATCH_BUILD_CONFIGURATION = {
+    "name": "v200-symbol22-first-fault-latch",
+    "feature": "LISP65_V200_SYMBOL22_FIRST_FAULT",
+    "source": ROOT / "src/optional/c2_symbol22_first_fault_latch.s",
+    "allocated": (
+        ".lisp65_symbol22_first_fault_latch",
+        ".lisp65_symbol22_first_fault_state",
+    ),
+}
+SYMBOL22_LATCH_FEATURE = str(
+    SYMBOL22_LATCH_BUILD_CONFIGURATION["feature"])
+SYMBOL22_LATCH_SOURCE = Path(
+    SYMBOL22_LATCH_BUILD_CONFIGURATION["source"])
+SYMBOL22_LATCH_ENABLED = False
+SYMBOL22_LATCH_CODE_START: int | None = None
 REFILL_WITNESS_BUILD_CONFIGURATION = {
     "name": "v160-refill-boundary-witness",
     "feature": "LISP65_C2_REFILL_BOUNDARY_WITNESS",
@@ -564,6 +579,43 @@ COMPILER_CONSUMED_REPL_BANNER_ENTRY: int | None = None
 COMPILER_CONSUMED_FEATURE_PROFILE: Path | None = None
 COMPILER_CONSUMED_FEATURE_PROFILE_BINDING: dict[str, object] | None = None
 COMPILER_CONSUMED_FEATURES: tuple[str, ...] = ()
+
+
+def configure_product_artifacts_manifest(manifest: Path) -> None:
+    """Bind the product authority explicitly; historical defaults are forbidden."""
+    global PRODUCT_ARTIFACTS_MANIFEST
+    global PRODUCT_ARTIFACTS_MANIFEST_RESOLVER
+    if not isinstance(manifest, Path) or not manifest.is_file() \
+            or manifest.is_symlink():
+        raise RuntimeError("product-artifacts authority is not a regular file")
+    PRODUCT_ARTIFACTS_MANIFEST = manifest
+    PRODUCT_ARTIFACTS_MANIFEST_RESOLVER = None
+
+
+def configure_product_artifacts_manifest_resolver(resolver: object) -> None:
+    """Resolve the product authority at each real compiler/link consumer."""
+    global PRODUCT_ARTIFACTS_MANIFEST_RESOLVER
+    if not callable(resolver):
+        raise RuntimeError("product-artifacts authority resolver is not callable")
+    PRODUCT_ARTIFACTS_MANIFEST_RESOLVER = resolver
+
+
+def resolved_product_artifacts_manifest() -> Path:
+    """Return the explicitly bound authority or fail closed.
+
+    The former module default selected a historical C2.2 artifact world when
+    a successor forgot to bind its candidate.  Absence is now an error; a
+    product world can no longer be invented by configuration fall-through.
+    """
+    value = (PRODUCT_ARTIFACTS_MANIFEST_RESOLVER()
+             if PRODUCT_ARTIFACTS_MANIFEST_RESOLVER is not None
+             else PRODUCT_ARTIFACTS_MANIFEST)
+    if not isinstance(value, Path):
+        raise RuntimeError(
+            "product-artifacts authority is unbound; silent defaults are forbidden")
+    if not value.is_file() or value.is_symlink():
+        raise RuntimeError("resolved product-artifacts authority is not a regular file")
+    return value
 
 
 def configure_compiler_consumed_static_header(
@@ -1064,7 +1116,32 @@ SOURCE_OWNER_SCOPES = ({
     "trigger": PRODUCT_COLD_FEATURE,
     "defines": (PRODUCT_COLD_FEATURE,),
     "sources": (PRODUCT_COLD_SOURCE,),
+}, {
+    "name": "v200-symbol22-first-fault-latch",
+    "trigger": SYMBOL22_LATCH_FEATURE,
+    "defines": (SYMBOL22_LATCH_FEATURE,),
+    "sources": (SYMBOL22_LATCH_SOURCE,),
 })
+
+
+def configure_symbol22_first_fault_latch(code_start: int) -> dict[str, object]:
+    """Select the split v2.0 first-fault latch product freight."""
+    global CONVERGENCE_DEFINES, SYMBOL22_LATCH_ENABLED, SYMBOL22_LATCH_CODE_START
+    if SYMBOL22_LATCH_ENABLED:
+        raise RuntimeError("symbol22 first-fault latch configured twice")
+    if not 0 <= code_start <= 0xffff:
+        raise RuntimeError("symbol22 latch code start escaped Bank 0")
+    SYMBOL22_LATCH_ENABLED = True
+    SYMBOL22_LATCH_CODE_START = code_start
+    if SYMBOL22_LATCH_FEATURE not in CONVERGENCE_DEFINES:
+        CONVERGENCE_DEFINES = (*CONVERGENCE_DEFINES, SYMBOL22_LATCH_FEATURE)
+    return {
+        "feature": SYMBOL22_LATCH_FEATURE,
+        "source": SYMBOL22_LATCH_SOURCE.relative_to(ROOT).as_posix(),
+        "sections": list(SYMBOL22_LATCH_BUILD_CONFIGURATION["allocated"]),
+        "code_start": code_start,
+        "authority": "final-byte raw-owner end and fixed-hot-BSS end",
+    }
 
 
 def ownership_scope_selected(
@@ -2153,11 +2230,16 @@ def _publish_last_domain_errors(
 def publish_kernal_window_binding(out: Path, target: Path) -> dict[str, object]:
     """Bind the sole product link's window through two post-link operands."""
     elf = Path(str(target) + ".elf")
-    original = target.read_bytes()
+    current = target.read_bytes()
     unbound = out / "lisp65-c2-substitution-unbound.prg"
-    if unbound.exists():
-        raise RuntimeError("publish-last unbound product already exists")
-    write(unbound, original)
+    resumed = unbound.exists()
+    if resumed:
+        original = unbound.read_bytes()
+        if len(current) != len(original):
+            raise RuntimeError("publish-last continuation length drift")
+    else:
+        original = current
+        write(unbound, original)
 
     extract_provisional_kernal_window(out, target)
     window = out / "c2-product-kernal-window.bin"
@@ -2182,6 +2264,10 @@ def publish_kernal_window_binding(out: Path, target: Path) -> dict[str, object]:
         {"name": "kernal-window-crc-low",
          "file_offset": low_offset, "expected": bytes([window_crc & 0xFF])},
     ]
+    if current != original and (
+            errors := _publish_last_domain_errors(original, current, domains)):
+        raise RuntimeError(
+            f"publish-last continuation escaped declared state: {errors}")
     if errors := _publish_last_domain_errors(original, bytes(patched), domains):
         raise RuntimeError(f"KERNAL publish-last range red: {errors}")
 
@@ -2230,6 +2316,7 @@ def publish_kernal_window_binding(out: Path, target: Path) -> dict[str, object]:
         "actual_changed_bytes": len(changed),
         "changed_file_offsets": changed,
         "changed_range_confined": True,
+        "resumed_from_bound_unbound_copy": resumed,
         "unbound_product_sha256": hashlib.sha256(original).hexdigest(),
         "window_bound_product_sha256": hashlib.sha256(bytes(patched)).hexdigest(),
         "generated_header_prior_sha256": prior_header_sha,
@@ -2509,12 +2596,50 @@ ASSERT(__lisp65_rtov_verifier_bindings_start ==
            __lisp65_rtov_binding_section_start + {VERIFIER_BINDING_BYTES},
        "runtime-overlay verifier tuple order or labels drifted");
 {stage_assert}"""
+    symbol22_latch_layout = f"""
+    .lisp65_symbol22_first_fault_latch 0x{SYMBOL22_LATCH_CODE_START:04x} :
+        AT(0x{SYMBOL22_LATCH_CODE_START:04x}) {{
+        KEEP(*(.lisp65_symbol22_first_fault_latch))
+    }} >ram
+""" if SYMBOL22_LATCH_ENABLED else ""
+    symbol22_state_layout = r"""
+SECTIONS {
+    .lisp65_symbol22_first_fault_state
+        (ADDR(.lisp65_c2_fixed_bank0_hot_bss) +
+         SIZEOF(.lisp65_c2_fixed_bank0_hot_bss)) :
+        AT(ADDR(.lisp65_c2_fixed_bank0_hot_bss) +
+           SIZEOF(.lisp65_c2_fixed_bank0_hot_bss)) {
+        KEEP(*(.lisp65_symbol22_first_fault_state))
+    } >ram
+} INSERT AFTER .lisp65_c2_fixed_bank0_hot_bss;
+""" if SYMBOL22_LATCH_ENABLED else ""
+    symbol22_latch_assertions = f"""
+ASSERT(ADDR(.lisp65_symbol22_first_fault_latch) ==
+           0x{SYMBOL22_LATCH_CODE_START:04x} &&
+       LOADADDR(.lisp65_symbol22_first_fault_latch) ==
+           ADDR(.lisp65_symbol22_first_fault_latch) &&
+       SIZEOF(.lisp65_symbol22_first_fault_latch) == 48 &&
+       ADDR(.lisp65_symbol22_first_fault_latch) +
+           SIZEOF(.lisp65_symbol22_first_fault_latch) <=
+               ADDR(.lisp65_c2_host_facade),
+       "symbol22 first-fault code escaped the derived raw-owner/facade gap");
+ASSERT(ADDR(.lisp65_symbol22_first_fault_state) ==
+           ADDR(.lisp65_c2_fixed_bank0_hot_bss) +
+               SIZEOF(.lisp65_c2_fixed_bank0_hot_bss) &&
+       LOADADDR(.lisp65_symbol22_first_fault_state) ==
+           ADDR(.lisp65_symbol22_first_fault_state) &&
+       SIZEOF(.lisp65_symbol22_first_fault_state) == 5 &&
+       ADDR(.lisp65_symbol22_first_fault_state) +
+           SIZEOF(.lisp65_symbol22_first_fault_state) <= __heap_start,
+       "symbol22 first-fault state escaped the derived pre-heap gap");
+""" if SYMBOL22_LATCH_ENABLED else ""
     kernal_layout = r"""/* Product-resident handoff code is ordinary PRG material.  Name it here so
  * neither fixed-VMA artifact can capture an orphan section. */
 SECTIONS {
     .lisp65_c2_kernal_handoff 0xb4a3 : {
         KEEP(*(.lisp65_c2_kernal_handoff))
     } >ram
+{symbol22_latch_layout}
     .lisp65_c2_host_facade 0xb5c4 : {
         KEEP(*(.lisp65_c2_host_facade))
     } >ram
@@ -2666,6 +2791,7 @@ SECTIONS {
 
 ASSERT(ADDR(.basic_header) == 0x2001,
        "C2 load domains moved the product PRG header");
+{symbol22_latch_assertions}
 ASSERT(LOADADDR(.lisp65_workbench_overlay) == ORIGIN(c2_runtime_load),
        "C2 runtime-slice load domain did not start at its own origin");
 ASSERT(__lisp65_resident_island_seed_lma + SIZEOF(.lisp65_resident_island) <=
@@ -2770,6 +2896,9 @@ ASSERT(ADDR(.lisp65_c2_kernal_window.state) == 0xff80 &&
 ASSERT(ADDR(.lisp65_c2_vectors) == 0xfffa && SIZEOF(.lisp65_c2_vectors) == 6,
        "C2 owned vector geometry drift");
 """
+    kernal_layout = kernal_layout.replace(
+        "{symbol22_latch_layout}", symbol22_latch_layout).replace(
+            "{symbol22_latch_assertions}", symbol22_latch_assertions)
     callprim_profile_bytes = PROFILE_RODATA_INPUT_SECTIONS[
         ".rodata.vm_callprim"]
     native_profile_bytes = PROFILE_RODATA_INPUT_SECTIONS[
@@ -3414,7 +3543,8 @@ ASSERT(ADDR({section_name}) == {cpu_start:#06x} &&
        "{label} escaped its mapped arena");
 """
     result = (memory_layout + text + "\n" + binding_layout + kernal_layout
-              + owned_layout + bss_triage_layout + reopen_layout
+              + owned_layout + bss_triage_layout + symbol22_state_layout
+              + reopen_layout
               + metadata_layout).replace(
         "directly after Slot 37", "directly after the final C2 runtime slice")
     result = full_map_rewrite_product_linker(result)
@@ -3770,6 +3900,12 @@ def compile_link(out: Path, name: str, headers: list[Path],
 
     target = out / name
     target_arg = checkout_arg(target)
+    manifest_path = resolved_product_artifacts_manifest()
+    manifest_artifacts = json.loads(
+        manifest_path.read_text(encoding="utf-8"))
+    if manifest_artifacts != artifacts:
+        raise RuntimeError(
+            "compile consumer artifacts diverge from bound product authority")
     product_definitions = definitions(artifacts)
     scoped_definitions = scoped_probe_definitions(probe_definitions)
     compiler_sources = source_list(probe_definitions)
@@ -3962,6 +4098,22 @@ def compile_link(out: Path, name: str, headers: list[Path],
             compiler, *compile_flags, *compiler_sources,
             *link_flags,
         ]
+    # Inventory the authority axis as well as the consumer axis before a link
+    # can spend its budget.  Manifest-derived compiler constants are
+    # discovered by perturbing every scalar leaf through the real definition
+    # renderer; active force-includes and phase-owned linker geometry are
+    # collected from this exact invocation.  No list of known constants is
+    # maintained here.
+    import consolidated_consumption_authority as consumption_authority
+    authority_inventory = consumption_authority.build_authority_input_inventory(
+        target=target, manifest_path=manifest_path,
+        artifacts=manifest_artifacts, renderer=definitions,
+        static_report=consumed_report, stdlib_report=stdlib_consumed_report,
+        linker_script=out / "c2-substitution.ld",
+        compiler_sources=compiler_sources,
+        feature_report=feature_consumption_report)
+    write(Path(str(target) + ".authority-input-consumption.json"),
+          json.dumps(authority_inventory, indent=2, sort_keys=True) + "\n")
     if os.environ.get("LISP65_DISABLE_LINK_ASLR") == "1":
         setarch = Path("/usr/bin/setarch")
         if not setarch.is_file() or not os.access(setarch, os.X_OK):
@@ -4976,6 +5128,9 @@ def active_card_freight_registries() -> list[dict[str, object]]:
          "mapped-arena-contract"),
         ("product-cold-disk-chain", product_cold_inventory_registration(),
          "mapped-arena-contract"),
+        ("symbol22-first-fault-latch",
+         symbol22_latch_inventory_registration(),
+         "composed-raw-owner/preheap-gap"),
     )
     active: list[dict[str, object]] = []
     for registry, registration, placement_gate in candidates:
@@ -4991,6 +5146,108 @@ def active_card_freight_registries() -> list[dict[str, object]]:
     if len(names) != len(set(names)):
         raise RuntimeError("active card registries have double authority")
     return active
+
+
+def symbol22_latch_inventory_registration(
+        definitions: tuple[str, ...] | None = None) -> dict[str, object]:
+    """Project split-latch allocation and emitted relocation membership.
+
+    Allocation does not imply relocation freight.  The helper's symbolic
+    operands emit records; the packed-zero state has none.  The product card
+    binds this registration to the compiled micro object before WPLTO, while
+    the final inventory rechecks the same membership on the candidate ELF.
+    """
+    selected_definitions = (tuple(CONVERGENCE_DEFINES)
+                            if definitions is None else tuple(definitions))
+    selected = SYMBOL22_LATCH_FEATURE in selected_definitions
+    if definitions is None and selected != SYMBOL22_LATCH_ENABLED:
+        raise RuntimeError("symbol22 latch inventory/build activation disagree")
+    linked = {Path(path).resolve() for path in source_list(selected_definitions)}
+    if (SYMBOL22_LATCH_SOURCE.resolve() in linked) != selected:
+        raise RuntimeError("symbol22 latch source was not compiler-consumed")
+    allocated = (tuple(SYMBOL22_LATCH_BUILD_CONFIGURATION["allocated"])
+                 if selected else ())
+    relocation_sources = (allocated[:1] if selected else ())
+    relocation_free = (allocated[1:] if selected else ())
+    relocations = tuple(f".rela{name}" for name in relocation_sources)
+    return {
+        "feature": SYMBOL22_LATCH_FEATURE,
+        "selected": selected,
+        "source": SYMBOL22_LATCH_SOURCE.relative_to(ROOT).as_posix(),
+        "allocated": list(allocated),
+        "relocation_sources": list(relocation_sources),
+        "relocation_free_allocated": list(relocation_free),
+        "relocations": list(relocations),
+        "names": [*allocated, *relocations],
+        "relocation_membership_authority": (
+            "compiled feature micro-object, rebound to final ELF records"),
+        "physical_placement": {
+            "kind": "split-derived-raw-owner-end-and-pre-heap-gap",
+            "code_start": SYMBOL22_LATCH_CODE_START if selected else None,
+            "authority": "final-byte raw-owner end plus linker ADDR/SIZEOF relation",
+        },
+        "capacity_bytes": {"code": 50, "state": 7},
+        "authority": "source-owner registry and composed claimant map",
+    }
+
+
+def _registered_relocation_membership_violations(
+        registration: dict[str, object], emitted_sources: list[str],
+        actual_section_names: list[str]) -> list[str]:
+    """Check relocation membership without inventing one RELA per allocation."""
+    allocated = [str(name) for name in registration["allocated"]]
+    registered_sources = [str(name)
+                          for name in registration["relocation_sources"]]
+    relocation_free = [str(name)
+                       for name in registration["relocation_free_allocated"]]
+    registered_relocations = [str(name)
+                              for name in registration["relocations"]]
+    emitted = sorted(set(str(name) for name in emitted_sources
+                         if str(name) in allocated))
+    present_relocations = sorted(
+        name for name in actual_section_names
+        if name in {f".rela{section}" for section in allocated})
+    expected_relocations = sorted(f".rela{name}" for name in emitted)
+    violations: list[str] = []
+    if sorted(registered_sources) != emitted:
+        violations.append("registered-relocation-source-membership")
+    if sorted(relocation_free) != sorted(set(allocated) - set(emitted)):
+        violations.append("registered-relocation-free-membership")
+    if sorted(registered_relocations) != expected_relocations:
+        violations.append("registered-relocation-section-membership")
+    if present_relocations != expected_relocations:
+        violations.append("emitted-relocation-section-membership")
+    return violations
+
+
+def _registered_relocation_membership_selftest() -> dict[str, str]:
+    code = ".lisp65_test_code"
+    state = ".lisp65_test_state"
+    registration: dict[str, object] = {
+        "allocated": [code, state],
+        "relocation_sources": [code],
+        "relocation_free_allocated": [state],
+        "relocations": [f".rela{code}"],
+    }
+    if _registered_relocation_membership_violations(
+            registration, [code], [code, state, f".rela{code}"]):
+        raise AssertionError("valid zero-relocation allocation was rejected")
+    cases = {
+        "emitted-relocation-without-rela": (
+            [code, state], [code, state, f".rela{code}"]),
+        "fabricated-rela-for-zero-relocation-state": (
+            [code], [code, state, f".rela{code}", f".rela{state}"]),
+        "registry-omits-emitted-source": (
+            [code, state], [code, state, f".rela{code}", f".rela{state}"]),
+    }
+    rejected: dict[str, str] = {}
+    for name, (emitted, actual) in cases.items():
+        if not _registered_relocation_membership_violations(
+                registration, emitted, actual):
+            raise AssertionError(
+                f"relocation-membership mutation accepted: {name}")
+        rejected[name] = "rejected"
+    return {"zero-relocation-state": "accepted", **rejected}
 
 
 def input_capture_consumption_closure(
@@ -5041,6 +5298,8 @@ def input_capture_compile_profile(
         (INPUT_HYBRID_FEATURE, INPUT_HYBRID_ENABLED, "input-hybrid"),
         (RECOVERY_QUIESCENCE_FEATURE, RECOVERY_QUIESCENCE_ENABLED,
          "recovery-quiescence"),
+        (SYMBOL22_LATCH_FEATURE, SYMBOL22_LATCH_ENABLED,
+         "symbol22-first-fault-latch"),
     )
     for feature, enabled, label in features:
         count = definitions.count(feature)
@@ -5147,6 +5406,8 @@ def final_section_inventory_expectation() -> dict[str, object]:
     product_cold_inventory = product_cold_inventory_registration()
     profile_names.extend(
         str(name) for name in product_cold_inventory["names"])
+    symbol22_inventory = symbol22_latch_inventory_registration()
+    profile_names.extend(str(name) for name in symbol22_inventory["names"])
     if FULL_MAP_OWNERSHIP:
         profile_names.extend(
             str(row["name"]) for row in _full_map_final_section_owners())
@@ -5177,6 +5438,7 @@ def final_section_inventory_expectation() -> dict[str, object]:
         "input_capture_registration": capture_inventory,
         "refill_witness_registration": witness_inventory,
         "product_cold_registration": product_cold_inventory,
+        "symbol22_latch_registration": symbol22_inventory,
         "derivation": (
             "Link-28 stable envelope minus its append ABI, plus the configured "
             "decoder/append ABIs and the exact E000-reopening/BSS-triage "
@@ -5189,6 +5451,8 @@ def final_section_inventory_expectation() -> dict[str, object]:
             "sections and their relocation sections; "
             "the selected product-cold feature contributes its mapped disk-"
             "chain section and relocation from the same build authority; "
+            "the selected symbol22 first-fault feature contributes its one "
+            "derived-gap section and relocation from the same registry; "
             "the selected full-map profile adds its five named owned sections "
             "and two relocation sections from the independent v1.8 contract; "
             "the target ELF is never an expectation source"),
@@ -5398,6 +5662,17 @@ def final_section_inventory_check(target: Path) -> dict[str, object]:
         for row in sections]
     violations = _final_section_inventory_violations(
         expected, checked_sections)
+    symbol22_registration = expectation["symbol22_latch_registration"]
+    symbol22_relocation_sources = sorted({
+        row.source_section for row in truth.relocations
+        if row.source_section in symbol22_registration["allocated"]})
+    symbol22_relocation_violations = (
+        _registered_relocation_membership_violations(
+            symbol22_registration, symbol22_relocation_sources,
+            [str(row["name"]) for row in sections])
+        if symbol22_registration["selected"] else [])
+    violations.extend(
+        f"symbol22-{name}" for name in symbol22_relocation_violations)
     if violations:
         actual = [str(row["name"]) for row in sections]
         missing = [name for name in expected if name not in actual]
@@ -5447,6 +5722,20 @@ def final_section_inventory_check(target: Path) -> dict[str, object]:
         },
         "unknown_sections": [],
         "missing_sections": [],
+        "symbol22_relocation_membership": {
+            "status": "passed" if symbol22_registration["selected"]
+                else "not-selected",
+            "emitted_source_sections": symbol22_relocation_sources,
+            "registered_source_sections": list(
+                symbol22_registration["relocation_sources"]),
+            "registered_relocation_sections": list(
+                symbol22_registration["relocations"]),
+            "relocation_free_allocated": list(
+                symbol22_registration["relocation_free_allocated"]),
+            "negative_matrix": (
+                _registered_relocation_membership_selftest()
+                if symbol22_registration["selected"] else {}),
+        },
         "negative_matrix": _final_section_inventory_model_selftest(),
     }
     return report
@@ -5525,7 +5814,8 @@ def _lto_partition_metadata_model_selftest() -> dict[str, str]:
             **{name: "rejected" for name in cases}}
 
 
-def lto_partition_metadata_gate(out: Path, target: Path) -> dict[str, object]:
+def lto_partition_metadata_check(target: Path) -> dict[str, object]:
+    """Validate saved LTO metadata without changing target or its directory."""
     lto_object = Path(str(target) + ".lto.o")
     final_elf = Path(str(target) + ".elf")
     if not lto_object.is_file() or not final_elf.is_file():
@@ -5543,7 +5833,6 @@ def lto_partition_metadata_gate(out: Path, target: Path) -> dict[str, object]:
     relocation_sections = [row for row in final_sections
                            if str(row["name"]).startswith((".rel", ".rela"))]
     lto_sha = hashlib.sha256(lto_object.read_bytes()).hexdigest()
-    lto_object.chmod(0o444)
     report = {
         "format": "lisp65-c2-lto-partition-metadata-disposition-v1",
         "status": "passed",
@@ -5552,7 +5841,7 @@ def lto_partition_metadata_gate(out: Path, target: Path) -> dict[str, object]:
             "path": str(lto_object.relative_to(ROOT)),
             "bytes": lto_object.stat().st_size,
             "sha256": lto_sha,
-            "mode": "0444",
+            "mode": format(lto_object.stat().st_mode & 0o777, "04o"),
             "required_section": partition,
         },
         "final_elf": {
@@ -5571,6 +5860,14 @@ def lto_partition_metadata_gate(out: Path, target: Path) -> dict[str, object]:
         ),
         "negative_matrix": _lto_partition_metadata_model_selftest(),
     }
+    return report
+
+
+def lto_partition_metadata_gate(out: Path, target: Path) -> dict[str, object]:
+    report = lto_partition_metadata_check(target)
+    lto_object = Path(str(target) + ".lto.o")
+    lto_object.chmod(0o444)
+    report["saved_lto_object"]["mode"] = "0444"
     report_path = out / f"lto-partition-metadata-{target.name}.json"
     write(report_path, json.dumps(report, indent=2, sort_keys=True) + "\n")
     return report
@@ -7377,7 +7674,7 @@ def substitution_balance(out: Path, final: Path,
     boot = json.loads((out / "runtime-overlays-boot-final.json").read_text())
     session = json.loads((out / "runtime-overlays-session-final.json").read_text())
     artifacts = json.loads(
-        PRODUCT_ARTIFACTS_MANIFEST.read_text(encoding="utf-8"))
+        resolved_product_artifacts_manifest().read_text(encoding="utf-8"))
     c2d = ROOT / artifacts["artifacts"]["initial_c2d"]["path"]
     shelf = ROOT / artifacts["artifacts"]["shelf"]["path"]
     sections = section_table(Path(str(final) + ".elf"))
@@ -7615,7 +7912,7 @@ def finish_single_link(out: Path, final: Path, contract: Path) -> None:
 
 def whole_phase_facade_probe(out: Path) -> None:
     """One bounded capacity/control-flow probe; never a product candidate."""
-    manifest_path = PRODUCT_ARTIFACTS_MANIFEST
+    manifest_path = resolved_product_artifacts_manifest()
     artifacts = json.loads(manifest_path.read_text(encoding="utf-8"))
     old_window_pin = kernal_window_identity_pin()
     out.mkdir(parents=True, exist_ok=True)
@@ -7824,7 +8121,7 @@ def whole_phase_facade_probe(out: Path) -> None:
 
 def coarse_split_capacity_probe(out: Path) -> None:
     """Measure 02a/02b/06a/06b in the product-shaped seed link only."""
-    manifest_path = PRODUCT_ARTIFACTS_MANIFEST
+    manifest_path = resolved_product_artifacts_manifest()
     artifacts = json.loads(manifest_path.read_text(encoding="utf-8"))
     out.mkdir(parents=True, exist_ok=True)
     write_product_linker_sources(out)
@@ -7967,7 +8264,7 @@ def coarse_split_capacity_probe(out: Path) -> None:
 
 def v2_profile_data_placement_probe(out: Path) -> None:
     """Run the one authorized Link-28 immutable-data placement probe."""
-    manifest_path = PRODUCT_ARTIFACTS_MANIFEST
+    manifest_path = resolved_product_artifacts_manifest()
     artifacts = json.loads(manifest_path.read_text(encoding="utf-8"))
     out.mkdir(parents=True, exist_ok=True)
     profile = write_v2_profile_report(out, artifacts)
@@ -8385,7 +8682,7 @@ def single_link(out: Path, *,
         ("feature_defines=" + ",".join(probe_definitions)
          if line.startswith("feature_defines=") else line)
         for line in extra_contract_lines)
-    manifest_path = PRODUCT_ARTIFACTS_MANIFEST
+    manifest_path = resolved_product_artifacts_manifest()
     artifacts = json.loads(manifest_path.read_text(encoding="utf-8"))
     tool(direct_entry_check_tool, "check")
     if not direct_entry_receipt.is_file():

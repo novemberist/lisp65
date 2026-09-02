@@ -1,0 +1,209 @@
+{
+  "authorities": {
+    "MEGA65_ROM": {
+      "bytes": 131072,
+      "path": "/home/alex/.local/share/xemu-lgb/mega65/MEGA65.ROM",
+      "sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0"
+    },
+    "ROM_contract": {
+      "bytes": 11018,
+      "path": "config/r3-g3-g6-contract.json",
+      "sha256": "5c8e224184d7a54d0d818b77b90a50604b33966bbb3c8f1489524064fcc17681"
+    },
+    "cold_boot_upper_bound": {
+      "bytes": 6719,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link47-zero-literal-entry-hardware-first-red.json",
+      "sha256": "4b96c62a98b12a7649d1fd0246615f2ac2d4d80f1b6c2d1c706cc77e72ce8d31"
+    },
+    "core_CPU_view": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "core_monitor_format": {
+      "bytes": 60075,
+      "path": "build/upstream-verification/mega65-core/src/monitor/monitor.a65",
+      "sha256": "d7fd09c2a43332a9967310d3043f72de99eb2cf26c89d539f3df5ec6e39208bc"
+    },
+    "deployment": {
+      "bytes": 8053,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/deployment.json",
+      "sha256": "2f4196ac4771457fc72ddb1e6538c37ed924046d7dca7ed46011fac03dbc7669"
+    },
+    "driver": {
+      "bytes": 35260,
+      "path": "tools/host-lisp/c2_v16_corrected_view_contact.py",
+      "sha256": "1b602456e34e48d010c0cd87057f4966b9405e1658766735eaea7ef21372ee9a"
+    },
+    "hardware_runner": {
+      "bytes": 4481,
+      "path": "scripts/c2-v16-defstruct-corrected-view-hw.sh",
+      "sha256": "ca94e7f66bc96ba240b0d6ea565a0809e0253b346a2e81aaeb4e90f3e4e9b70b"
+    },
+    "identity_view_attribution": {
+      "bytes": 8240,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-identity-view-desk-attribution-receipt.json",
+      "sha256": "3b58b78750ad4c782fa47374e2b5faeb61c2cc1ca45694cf215ad62d86e78771"
+    },
+    "owner": {
+      "bytes": 90031,
+      "path": "git:1adb91539f746ff35aa444504e54af95c7a0a5b3:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "6f34d423289301fb7698ad474d606420ecadafadf50f09a3b9dedf29fda8ecc9"
+    },
+    "prior_durable_preparation": {
+      "bytes": 5930,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-durable-progress-preparation-receipt.json",
+      "sha256": "f4e17ffee7fd35c17b1da25c6e933c7700ab076a3882ef7df4bdff022f04b6a0"
+    }
+  },
+  "claim_limit": "Owner-authorized corrected-view physical recontact with the 27.653-second quiet floor and three CPU-view samples. It authorizes no Lisp form, R/A/I/G row, product fix, Link or release.",
+  "execution_witnesses": [
+    "all fixed state reads carry the 0x0777 CPU-view prefix",
+    "MAPH and MAPL are parsed and retained in every register sample",
+    "raw monitor tails retain the ROM-enable fields",
+    "stopped-PC bytes are compared independently with product and ROM",
+    "an ambiguous code owner is fail-closed",
+    "the fixed E000 probe distinguishes product window from KERNAL ROM",
+    "no Lisp form or R/A/I/G measurement runs in this contact",
+    "the first t1 waits at least 27.653 seconds after capture starts",
+    "the CPU remains stopped after the final sample"
+  ],
+  "facts": {
+    "appointment": {
+      "R_A_I_G_claimed": false,
+      "capture_invocation_follows_owner_launch": true,
+      "first_observation_quiet_seconds": 27.653,
+      "implementation": {
+        "first_device_access_after_sleep": true,
+        "ordered_steps": [
+          "owner-authorization",
+          "quiet-start",
+          "27.653-second-sleep",
+          "serial-open",
+          "monitor-sync",
+          "t1"
+        ]
+      },
+      "leave_CPU_stopped_after_final_sample": true,
+      "measured_forms": 0,
+      "minimum_sample_offsets_seconds": [
+        27.653,
+        32.653,
+        37.653
+      ],
+      "monitor_entry_before_quiet_floor": "FIRST-RED",
+      "physical_RUN": true,
+      "recontact_authorized": true,
+      "samples": 3,
+      "spacing_seconds": 5.0
+    },
+    "code_owner_oracle": {
+      "comparison": "exact CPU-view bytes at the stopped PC",
+      "fixed_E000_probe": "0xe1b8..0xe1c7",
+      "kernal_BASIC_idle_discriminators": [
+        "unique MEGA65-ROM match at stopped PC",
+        "unique MEGA65-ROM match for the fixed E000 probe",
+        "PC in bound KERNAL descending-X loop 0xe1be..0xe1c7",
+        "entry sentinel remains 0xd7"
+      ],
+      "sources": [
+        "diagnostic-PRG",
+        "diagnostic-E000-window",
+        "MEGA65-ROM"
+      ]
+    },
+    "decision_table": {
+      "ambiguous_view_or_owner": "VIEW-OR-OWNER-FIRST-RED",
+      "entered_plus_GC_generation_growth": "ALLOCATION-GC-REENTRY-LOOP",
+      "entered_plus_changing_state": "TEMPORALLY-OBSERVED-PROGRESS",
+      "entered_plus_other_stable_product_PC": "POST-ENTRY-HANG-SITE",
+      "entered_plus_stable_product_GC": "STALLED-IN-SINGLE-COLLECTION",
+      "reset_stamp_other": "BOOT-ENTRY-IDENTITY-FIRST-RED",
+      "reset_stamp_plus_kernal_idle": "KERNAL-BASIC-IDLE-LAUNCH-NOT-HANDED-OVER"
+    },
+    "identity": {
+      "base_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+        "sha256": "d95bd77c3ea0ec6d091630895e59d31ad5f6df5896292c0f20a9aadbc9ac7936"
+      },
+      "diagnostic_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-corrected-view-quiet-appointment/diagnostic-link82-corrected-view-b5c3.prg",
+        "sha256": "347ecdd0aa9d8dda70a20177b9c77409264b1102ecfd01b23ba1ab3b7c27ab59"
+      },
+      "diagnostic_bytes_changed": 2,
+      "diagnostic_window": {
+        "bytes": 8192,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-window.bin",
+        "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+      },
+      "entry_stamp": {
+        "address": "0xb5c3",
+        "entered": "0x44",
+        "reset": "0xd7"
+      },
+      "product_bytes_changed": 0,
+      "promotable": false
+    },
+    "view_contract": {
+      "all_fixed_monitor_reads": [
+        "m0777b5c3",
+        "m0777003d",
+        "m0777b9f0",
+        "m07770016",
+        "m0777e1b8"
+      ],
+      "ambiguous_owner_is_red": true,
+      "code_owner_before_symbol_interpretation": true,
+      "fixed_logical_reads": [
+        "0xb5c3",
+        "0x003d",
+        "0xb9f0",
+        "0x0016",
+        "0xe1b8"
+      ],
+      "logical_to_monitor": "0x07770000 | logical_16_bit_address",
+      "mapping_bound_per_sample": true,
+      "physical_underlay_reset_readback_required": true,
+      "prelaunch_CPU_value_is_context_only": true,
+      "register_fields_retained": [
+        "PC",
+        "A",
+        "X",
+        "Y",
+        "Z",
+        "B",
+        "SP",
+        "MAPH",
+        "MAPL",
+        "raw-row-tail-including-ROM-flags"
+      ]
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-D2-corrected-view-quiet-preparation-v1",
+  "mutations_rejected": {
+    "accept-ambiguous-owner": "corrected CPU-view contract drift",
+    "change-spacing": "appointment boundary drift",
+    "claim-R-A-I-G": "appointment boundary drift",
+    "discard-MAPH": "corrected CPU-view contract drift",
+    "discard-MAPL": "corrected CPU-view contract drift",
+    "drop-decision-row": "decision table closure drift",
+    "drop-idle-discriminator": "code-owner/idle oracle drift",
+    "drop-sample": "appointment boundary drift",
+    "early-t1": "appointment boundary drift",
+    "early-t1-source-order": "monitor entry precedes the bound quiet interval",
+    "mapping-not-bound": "corrected CPU-view contract drift",
+    "measured-form": "appointment boundary drift",
+    "metadata-owner-oracle": "code-owner/idle oracle drift",
+    "physical-view-read": "corrected CPU-view contract drift",
+    "resume-final": "appointment boundary drift",
+    "revoke-recontact": "appointment boundary drift",
+    "skip-physical-underlay-readback": "corrected CPU-view contract drift",
+    "symbolize-before-owner": "corrected CPU-view contract drift",
+    "treat-prelaunch-CPU-value-as-underlay": "corrected CPU-view contract drift",
+    "virtual-RUN": "appointment boundary drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "HOST-GREEN; ONE QUIET RECONTACT AUTHORIZED"
+}

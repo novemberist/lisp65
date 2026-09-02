@@ -1,0 +1,157 @@
+{
+  "authority": {
+    "bytes": 236356,
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "dafe8ac381b8fcd17b197ddbef958f528b2dcb157bd6c11743fd9d78f52d627c"
+  },
+  "claim_limit": "Track 1 names the primary fault but authorizes no fix/card. Track 2 is a read specification only: no device access, product change, link or medium. The primary fault and stale-holder/liveness class remain independently open.",
+  "format": "lisp65-c2.3-v1.6-primary-vm-type-attribution-v1",
+  "inputs": {
+    "candidate_elf": {
+      "bytes": 632156,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a03f9fafc5629f913dcf213925d7f007fd91b353ab2229a6189080c37f604c9c"
+    },
+    "candidate_profile_receipt": {
+      "bytes": 100037,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/input-fidelity-reopen-host.json",
+      "sha256": "073a5aa3ee577fe20a08fd51c6fe56b499ca1c39391badc5cbddcd03beb89480"
+    },
+    "comfort_blob": {
+      "bytes": 600,
+      "path": "build/c2.3/v1.6-items12-hybrid-device-preparation/library-inputs/repl-comfort.blob.bin",
+      "sha256": "c44fe646da818aebd4c22a1e7a5cdd4a9e6d2a62a695e8c3b23830ce05ed6361"
+    },
+    "comfort_manifest": {
+      "bytes": 15661,
+      "path": "build/c2.3/v1.6-items12-hybrid-device-preparation/library-inputs/repl-comfort.manifest.json",
+      "sha256": "46807322e1f5bd54e8f7b19e6d334398196d28571531b0562413aea07c16ea5f"
+    },
+    "comfort_source": {
+      "bytes": 2786,
+      "path": "lib/repl-comfort.lisp",
+      "sha256": "6885485fd1374529f66fbf4cb387e333bd01503ff07270ac932cc37c20417e31"
+    },
+    "editor_source": {
+      "bytes": 6746,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "114ebb6331fc23bf56ece4a793ce819fd662a758708ee77665ec72c833430777"
+    },
+    "stopped_state": {
+      "bytes": 18335,
+      "path": "build/c2.3/v1.6-items12-hybrid-owner-contact/hybrid-entry-first-red-stopped-state/capture.json",
+      "sha256": "73827d43bb82102b434bd81a92bc2ce216bf9c3c5b67cc85b3b9b29a89188992"
+    },
+    "v16core_blob": {
+      "bytes": 1484,
+      "path": "build/c2.3/v1.6-items12-hybrid-device-preparation/library-inputs/v16core.blob.bin",
+      "sha256": "b88d0b3fb2eadcafc0fc43c3c399dae429f1f0f56c1031cf015d22aec48d0d02"
+    },
+    "v16core_manifest": {
+      "bytes": 22337,
+      "path": "build/c2.3/v1.6-items12-hybrid-device-preparation/library-inputs/v16core.manifest.json",
+      "sha256": "1d10bd164f7297dbf12d192cd36484c4225114923453140fb560bb0665ad08f5"
+    }
+  },
+  "recorded_on": "2026-08-20",
+  "status": "ATTRIBUTED: PRIMARY VM_TYPE; HOLDER READ SPECIFIED NOT EXECUTED",
+  "track_1": {
+    "activation": "(repl), empty history",
+    "classification": "blocking-contract/nonblocking-consumer mismatch",
+    "delivered_artifact_gap_case": {
+      "cases": 1,
+      "literal_index": 36,
+      "literal_nodes": 36,
+      "literal_patches": 36,
+      "objects": 391,
+      "steps": 4196
+    },
+    "expected_type": "fixnum key code",
+    "faulting_form": "(>= code 32)",
+    "faulting_function": "%read-line-loop",
+    "fixture_gap": "Former cases preload all later keys. Cursor Down followed by an already queued Return never exposes the empty producer interval and passes.",
+    "physical_sequence": [
+      "Cursor Down ($11)",
+      "producer interval with no key"
+    ],
+    "preloaded_return_control": {
+      "cases": 1,
+      "literal_index": 36,
+      "literal_nodes": 36,
+      "literal_patches": 36,
+      "objects": 391,
+      "steps": 4642
+    },
+    "received_type": "NIL",
+    "reproduced": true,
+    "resident_candidate_parity": {
+      "encoded_bytes": 240,
+      "function": "%read-line-loop",
+      "header_and_payload_byteidentical": true,
+      "payload_bytes": 213
+    },
+    "source": "Comfort replaces blocking key-event mode 1 with private mode 2 via %rl-render(row=-1). Mode 2 is a nonblocking scalar dequeue. After Cursor Down is consumed and redispatched with empty history, the recursive loop observes an empty ring as NIL; its legacy event adapter applies cadr to NIL and then submits NIL to the numeric >= comparison.",
+    "world": "delivered repl-comfort blob plus its real resident suite"
+  },
+  "track_2": {
+    "decision": "decode all 16-bit objects in the live gc_rootstack prefix, jmp_buf, evaluator holders, upvalues and named Bank-5 value/function cells; the first object or callable target in $C356..$CA91 names the dynamic holder",
+    "protocol": [
+      "one stop only; no resume/reset/input",
+      "persist every range raw-first before interpretation",
+      "read only the enumerated broadened ranges after identity confirmation",
+      "leave CPU stopped; power-off is allowed only after raw persistence"
+    ],
+    "ranges": [
+      {
+        "bytes": 2,
+        "first": "0x0060",
+        "last": "0x0061",
+        "owner": "gc_rootsp",
+        "purpose": "bind the live prefix of the VM/evaluator root stack",
+        "space": "physical-bank0"
+      },
+      {
+        "bytes": 256,
+        "first": "0x1ecc",
+        "last": "0x1fcb",
+        "owner": "gc_rootstack[128]",
+        "purpose": "enumerate live VM/evaluator arguments, forms and continuations",
+        "space": "physical-bank0"
+      },
+      {
+        "bytes": 8,
+        "first": "0xb9e1",
+        "last": "0xb9e8",
+        "owner": "k_primitive/k_closure/eval.k_lccrun/pending_symbol",
+        "purpose": "bind dynamic evaluator and pending-publication holders",
+        "space": "physical-bank0"
+      },
+      {
+        "bytes": 19,
+        "first": "0xbd47",
+        "last": "0xbd59",
+        "owner": "lisp_toplevel jmp_buf",
+        "purpose": "capture the live non-local continuation record",
+        "space": "physical-bank0"
+      },
+      {
+        "bytes": 2,
+        "first": "0xbf92",
+        "last": "0xbf93",
+        "owner": "vm_upvals",
+        "purpose": "capture the active bytecode closure continuation root",
+        "space": "physical-bank0"
+      },
+      {
+        "bytes": 14720,
+        "first": "0x05c680",
+        "last": "0x05ffff",
+        "owner": "namepool + symval + nameoff + symfn for MAX_SYM=752",
+        "purpose": "resolve every dynamic value/function publication by name and value",
+        "space": "physical-bank5"
+      }
+    ],
+    "status": "SPECIFIED; OWNER CONTACT REQUIRED; NOT EXECUTED",
+    "trigger": "reproduce the bound B=1 / continuation-$C5B8 stop; confirm tuple and media identities before any read"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "authority": {
+    "cycle1_interpretation_correction": {
+      "bytes": 7235,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-first-call-badopcode-hold-cycle1-interpretation-correction.json",
+      "sha256": "c0aaedca3cddae2658456c2448fc50d5b3d6eca9001f7e2424290de8ab49d391"
+    },
+    "elf": {
+      "bytes": 609696,
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "0ac6121a0e1b484efafd81334fbe5c14909b8b741e20ee1f41caa615524f7f47"
+    },
+    "map": {
+      "bytes": 201442,
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "d7a8ada85ffab8f88c79224297528c2d7da2c19c62dac7bbe9e7ecfd47d2447c"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg",
+      "sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216"
+    },
+    "source_deployment": {
+      "bytes": 3618,
+      "path": "build/c2.2/hardware-presmoke-link50-persistent-header/deployment.json",
+      "sha256": "9a2d61d22f0c47a050d4e35b06d489a2bcaa9881abb3611234d7a09b91270628"
+    },
+    "structural_receipt": {
+      "bytes": 271399,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link50-c2-lite-v6-persistent-header-artifact-replay-structural-receipt.json",
+      "sha256": "e7f47adebda448583efa6e28d86ff28bb335adf3178853b5177e736cccd36170"
+    }
+  },
+  "budgets": {
+    "class_b_first-execution-diagnostic": "1/3 consumed; prospective hardware run consumes cycle 2",
+    "completed_latency_measurements": "0/2 unchanged",
+    "line1_product_first_reds": "2/3 unchanged"
+  },
+  "capacity_effect": {
+    "bank0_text_bytes": 0,
+    "e000_bytes": 0,
+    "file_bytes": 0,
+    "fixed_hot_block_bytes": 0,
+    "ordinary_bank0_bss_bytes": 0,
+    "resident_island_bytes": 0,
+    "runtime_slice_bytes": 0,
+    "session_family_bytes": 0
+  },
+  "claim_limit": "This is feasibility only. It proves fixed-size inner holds and their live witnesses; it creates no diagnostic identity, runs no hardware, changes no product and makes no latency claim.",
+  "classification_contract": {
+    "no_hold_error_renderer": "all three inner edges exonerated; cycle 3 may target the append/rollback service boundary only after review of this evidence",
+    "vm_status_0": "invalid-opcode-dispatch; $16/$17 is after-op physical cursor, $04/$05 is opcode address, and owner/window yields logical PC",
+    "vm_status_nonzero_and_frame_pcur_62": "lcc-run final CALLPRIM propagation after lcc-install",
+    "vm_status_nonzero_and_other_frame_pcur": "post-handler error inside the still-live vm_run_inner frame"
+  },
+  "elf_dataflow": {
+    "anchors": {
+      "callprim_status": [
+        "780d: 20 8f 8c",
+        "7816: a6 5b",
+        "7818: f0 03",
+        "781a: 4c 5d 88"
+      ],
+      "invalid_dispatch": [
+        "6dba: a6 04",
+        "6dc2: e3 16",
+        "6dc4: b2 04",
+        "6dc6: c9 42",
+        "6dca: 4c b7 6a"
+      ],
+      "pcur_frame_reads": [
+        "784d: a0 08",
+        "784f: b1 02",
+        "7859: a0 07",
+        "785b: b1 02"
+      ],
+      "post_handler_status": [
+        "705f: a6 5b",
+        "7061: d0 03",
+        "7066: 4c bb 6a"
+      ]
+    },
+    "callprim_dataflow": "vm_callprim returns, LDX vm_status immediately dominates the patched edge, and the success-side ELF reads pcur back from software-frame offsets +8/+7. lcc-run's final CALLPRIM 38,2 starts at PC 59 and has pcur 62.",
+    "interrupt_stability": "Every prospective hold executes SEI before entering its branch loop. Thus the prior IRQ/compiler-scratch instability of $16/$17 cannot recur while the read-only captures are taken.",
+    "invalid_dispatch_dataflow": "$04/$05 is copied to $16/$17, INW advances $16/$17 once, then the opcode at ($04),Z is compared with 0x42; no write to $04/$05 or $16/$17 occurs before the patched edge.",
+    "lcc_run_final_call_pc": 59,
+    "lcc_run_final_pcur": 62,
+    "lcc_run_final_tail_hex": "3d260205",
+    "post_handler_dataflow": "LDX vm_status immediately dominates the nonzero branch and the patched edge; the vm_run_inner frame has not entered unwind.",
+    "vm_run_inner": {
+      "address": "0x69aa",
+      "bytes": 7934,
+      "section": ".text"
+    }
+  },
+  "format": "lisp65-c2-link50-badopcode-inner-hold-cycle2-feasibility-v1",
+  "next_gate": "create one SHA-bound nonpromotable Class-B cycle-2 identity",
+  "promotable": false,
+  "prospective_patch": {
+    "changed_bytes": 9,
+    "changed_file_offsets": [
+      "0x4dcb",
+      "0x4dcc",
+      "0x4dcd",
+      "0x5067",
+      "0x5068",
+      "0x5069",
+      "0x581b",
+      "0x581c",
+      "0x581d"
+    ],
+    "file_size_delta_bytes": 0,
+    "hold_hex": "7880fe",
+    "hold_semantics": "SEI once, then BRA to itself; live frame and ZP stop changing",
+    "mutations_rejected": {
+      "extra-neighbour-byte": "rejected",
+      "irq-open-callprim-propagation": "rejected",
+      "irq-open-invalid-opcode-dispatch": "rejected",
+      "irq-open-post-handler-status": "rejected",
+      "missing-callprim-propagation": "rejected",
+      "missing-invalid-opcode-dispatch": "rejected",
+      "missing-post-handler-status": "rejected",
+      "wrong-loop-callprim-propagation": "rejected",
+      "wrong-loop-invalid-opcode-dispatch": "rejected",
+      "wrong-loop-post-handler-status": "rejected"
+    },
+    "sites": [
+      {
+        "after_hex": "7880fe",
+        "before_hex": "4cb76a",
+        "instruction_address": "0x6dca",
+        "instruction_file_offset": "0x4dcb",
+        "name": "invalid-opcode-dispatch",
+        "precondition": "opcode >= 0x42; vm_status is still VM_OK",
+        "witness": "__rc20/__rc21 is the physical cursor immediately after the fetched opcode"
+      },
+      {
+        "after_hex": "7880fe",
+        "before_hex": "4cbb6a",
+        "instruction_address": "0x7066",
+        "instruction_file_offset": "0x5067",
+        "name": "post-handler-status",
+        "precondition": "LDX vm_status observed a nonzero handler status",
+        "witness": "vm_status is nonzero; the live vm_run_inner frame has not unwound"
+      },
+      {
+        "after_hex": "7880fe",
+        "before_hex": "4c5d88",
+        "instruction_address": "0x781a",
+        "instruction_file_offset": "0x581b",
+        "name": "callprim-propagation",
+        "precondition": "LDX vm_status observed a nonzero vm_callprim result",
+        "witness": "software-frame offsets +7/+8 retain CALLPRIM pcur; lcc-run final pcur is 62"
+      }
+    ],
+    "status": "passed-three-exact-sei-bra-inner-holds"
+  },
+  "recorded_on": "2026-07-22",
+  "scope": {
+    "class": "A read-only ELF/paper feasibility",
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "patched_artifacts_created": 0,
+    "product_bytes_changed": 0
+  },
+  "status": "passed-zero-growth-three-edge-inner-hold-feasibility-hardware-not-run"
+}

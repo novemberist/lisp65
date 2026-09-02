@@ -1,0 +1,74 @@
+{
+  "attribution": {
+    "cause": "the one-byte Slot-39 payload patch invalidated its L65R-v4 payload/record/directory/header identities and the outer Link-62 session-family CRC",
+    "class": "diagnostic-harness First Red",
+    "product_finding": false,
+    "repair": "preserve the executable one-byte patch; canonically rebind all derived v4 identities and solve the existing six-byte post-RTS tail back to family CRC 0x8d75"
+  },
+  "authority": {
+    "invalid_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link62-slot39-threshold-hold-NONPROMOTABLE/runtime-overlays-session-link62-slot39-threshold-hold-NONPROMOTABLE.bin",
+      "sha256": "3abb2c9fe7cb69b2c3a4640ad246f150755eb453f66ebba99ec8865c848d9fb4"
+    },
+    "invalid_deployment": {
+      "bytes": 4637,
+      "path": "build/c2.2/hardware-link62-slot39-threshold-hold-NONPROMOTABLE/deployment.json",
+      "sha256": "2c53599e61d8c1ca50ebabe0e48cbf9d6e75b971c72d9bea47f66d1e807d4856"
+    },
+    "invalid_driver": {
+      "bytes": 21923,
+      "path": "tools/host-lisp/c2_link62_slot39_threshold_hold.py",
+      "sha256": "58b7dbb48fc1a7221e71907acb696c738763f5ff7e9e31bd72aa02c0b1964bea"
+    },
+    "invalid_hardware_driver": {
+      "bytes": 3499,
+      "path": "scripts/c2-link62-slot39-threshold-hold-hw.sh",
+      "sha256": "7ee5108704894d202f280c33a716bd7847f7fd4d9144cd0a3c308bdfbd229321"
+    },
+    "invalid_patch_receipt": {
+      "bytes": 3711,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link62-slot39-threshold-hold-nonpromotable-receipt.json",
+      "sha256": "ded82ca5c6b26ff4b173f9c9637a324e9b8cde1c968287f65c536d58bbe38046"
+    },
+    "late_fixed_state": {
+      "bytes": 310,
+      "path": "build/c2.2/hardware-link62-slot39-threshold-hold-NONPROMOTABLE/boot-fixed-late.bin",
+      "sha256": "616b18830fe4ac3cc17c772639493ae7d504bf6920d48b327db89a70b2ef5b41"
+    },
+    "late_runtime_ZP": {
+      "address": "0x00000070",
+      "bytes": 48,
+      "path": "build/c2.2/hardware-link62-slot39-threshold-hold-NONPROMOTABLE/boot-zp-late.bin",
+      "sha256": "5e701bc0f5046cf2b46d39be8d4ba4478a94c8f11f8d7a54765a999b48319758"
+    },
+    "screen_png": {
+      "bytes": 2650,
+      "path": "build/c2.2/hardware-link62-slot39-threshold-hold-NONPROMOTABLE/boot-screen.png",
+      "sha256": "a9af842668b79a39225ae3a80f2e53621267354f97af647516b8aea49020df7f"
+    },
+    "screen_text": {
+      "bytes": 2241,
+      "path": "build/c2.2/hardware-link62-slot39-threshold-hold-NONPROMOTABLE/boot-screen.txt",
+      "sha256": "98c33986378f2cc2d2f9c4f61cbd28457664449613ab2173fd9cbe80a18e76b5"
+    }
+  },
+  "claim_limit": "Harness First Red only; no threshold, product, C1, matrix-gate, acceptance-chain, promotion or release claim.",
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "diagnostic_hardware_cycles_consumed": 1,
+    "latency_attempts_consumed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-Link62-slot39-threshold-hold-carrier-seal-first-red-v1",
+  "observation": {
+    "clean_REPL_reached": false,
+    "screen": "E3e",
+    "test_form_sent": false,
+    "threshold_capture_taken": false
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "status": "first-red-diagnostic-carrier-seals-not-rebound"
+}

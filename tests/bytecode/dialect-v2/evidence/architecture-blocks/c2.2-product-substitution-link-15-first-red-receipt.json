@@ -1,0 +1,135 @@
+{
+  "format": "lisp65-c2-product-substitution-link-15-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "status": "first-red",
+  "attempt": {
+    "name": "fifteenth-substitution-link",
+    "command_mode": "--prepare-smoke",
+    "first_red_stage": "pre-ownership-smoke-gate",
+    "second_attempt_performed": false
+  },
+  "confirmed_link_15_fix": {
+    "link_14_text_handoff_overlap": "closed",
+    "ordinary_text": {
+      "start": "0x2023",
+      "bytes": 37972,
+      "end_exclusive": "0xb477"
+    },
+    "handoff": {
+      "start": "0xb481",
+      "bytes": 289,
+      "end_exclusive": "0xb5a2",
+      "gap_after_ordinary_text_bytes": 10
+    },
+    "relocated_helper": {
+      "symbol": "kb_cursor_off",
+      "section": ".lisp65_c2_fixed_bank0_code",
+      "start": "0xc218",
+      "bytes": 5,
+      "end_exclusive": "0xc21d"
+    },
+    "fixed_bank0_headroom_bytes": 313,
+    "linker_geometry_assertions": "passed",
+    "historical_negative_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-link-14-first-red-receipt.json"
+  },
+  "first_red": {
+    "class": "pre-ownership-call-graph-address-alias",
+    "gate_message": "pre-ownership red: boot roots absent ['c2_product_decode_02a', 'c2_product_decode_02b', 'c2_stream_phase_00', 'c2_stream_phase_00b', 'c2_stream_phase_01', 'c2_stream_phase_03', 'vm_resident_island_install']",
+    "observed_roots": [
+      {
+        "symbol": "c2_product_decode_02a",
+        "vma": "0xc356",
+        "section": ".lisp65_rt_c2d_02a"
+      },
+      {
+        "symbol": "c2_product_decode_02b",
+        "vma": "0xc356",
+        "section": ".lisp65_rt_c2d_02b"
+      },
+      {
+        "symbol": "c2_stream_phase_00",
+        "vma": "0xc356",
+        "section": ".lisp65_rt_c2d_00"
+      },
+      {
+        "symbol": "c2_stream_phase_00b",
+        "vma": "0xc356",
+        "section": ".lisp65_rt_c2d_00b"
+      },
+      {
+        "symbol": "c2_stream_phase_01",
+        "vma": "0xc356",
+        "section": ".lisp65_rt_c2d_01"
+      },
+      {
+        "symbol": "c2_stream_phase_03",
+        "vma": "0xc356",
+        "section": ".lisp65_rt_c2d_03"
+      },
+      {
+        "symbol": "vm_resident_island_install",
+        "vma": "0xc356",
+        "section": ".lisp65_rt_island_00"
+      }
+    ],
+    "independent_presence_evidence": "llvm-nm and per-section llvm-objdump both show every reported-missing root in the smoke ELF. They share one VMA by the proven mutually exclusive runtime-overlay design.",
+    "gate_defect": "pre_ownership_gate stored parsed functions in a dictionary keyed only by integer VMA. Every new function header at 0xc356 replaced the previous section's root before name_to_address was constructed.",
+    "product_interpretation": "This stop does not prove a missing product path and does not prove pre-ownership safety. It proves that a raw-address graph cannot represent lifetime-exclusive overlay sections."
+  },
+  "artifact_boundary": {
+    "resident_island_seed_emitted": true,
+    "runtime_overlay_bootstrap_emitted": true,
+    "boot_runtime_family_packed": true,
+    "session_runtime_family_packed": true,
+    "smoke_binary_emitted": true,
+    "smoke_binary_is_product_candidate": false,
+    "final_product_candidate_emitted": false,
+    "pre_ownership_gate": "failed-model-before-result",
+    "fixed_host_facade_gate": "not-run",
+    "identity_gate": "not-run",
+    "capacity_gate": "not-run",
+    "one_truth_gate": "not-run",
+    "kernal_freedom_gate": "not-run"
+  },
+  "evidence": {
+    "smoke_binary": {
+      "path": "build/c2.2/substitution/product-link-15/lisp65-c2-reslice-smoke.prg",
+      "sha256": "5ef8d18f051a810b621476dec3c8df5b6ed9180829788cc227765ddba8a13283"
+    },
+    "smoke_map": {
+      "path": "build/c2.2/substitution/product-link-15/lisp65-c2-reslice-smoke.prg.map",
+      "sha256": "83503b7d2ebb6fdfbefba778327d939a2ab8ead404f3e81849c220b5ba4f8678"
+    },
+    "bootstrap_binary": {
+      "path": "build/c2.2/substitution/product-link-15/runtime-overlay-bootstrap.prg",
+      "sha256": "da24a07cdfea0fc0637d8709c2c82ff2784921a0221a28d6651d46b1653fe900"
+    },
+    "generated_linker_script": {
+      "path": "build/c2.2/substitution/product-link-15/c2-substitution.ld",
+      "sha256": "4b7c917499838360713ad2f4ca3a054b9be4a416aaadeffe27296563ba00383b"
+    }
+  },
+  "static_inputs": {
+    "repl_source_sha256": "0abc660c84df174c720f8c3b65f5df603f1698fd5f3441e1f85016cddaca5850",
+    "layout_header_sha256": "6d1fda4f43956e75657553a686334b757fbbed411a5b5c1cbca17b07894445b1",
+    "link_driver_sha256": "e36411b252997a234f43947b09d413c8ec921760bf1e67d01abcada7a8d8d5f5",
+    "contract_sha256_before_first_red_status_update": "26889e7f67ec99b706a697f6e175045d391664fd7b2a063e298b38b4db24a9d1",
+    "contract_document_sha256": "71b05a5e2c166eaa420758127b174841d010bb91542bf9209b4ad4723679210a",
+    "driver_selftest": "passed",
+    "json_python_and_whitespace_gates": "passed before the authorized link"
+  },
+  "recommended_next_gate_model": {
+    "node_identity": "Represent overlay functions by (section, VMA), never VMA alone.",
+    "boot_slice_rule": "Derive the boot sections from the same BOOT slice specifications that drive packing. Scan every instruction in each boot section, then follow calls leaving that section into the ordinary low-resident graph.",
+    "same_vma_rule": "A target inside the current overlay section resolves section-locally; another section at the same VMA is neither an alias nor a reachable edge because lifetime families and slices are mutually exclusive.",
+    "negative_cases": [
+      "two boot roots at one runtime VMA are both retained as distinct graph nodes",
+      "a boot slice direct edge to session-only E000 code is rejected",
+      "a boot slice operand into session-only E000 state is rejected",
+      "a boot slice edge through the c2e-cons facade vector is rejected"
+    ],
+    "product_byte_expectation": "zero; proof-model and gate implementation only",
+    "authorization": "A corrected gate and any fresh substitution link require review."
+  },
+  "claim_limit": "Receipt-less diagnostic first-red only. It confirms the five-byte relocation and exposes a section-alias defect in the new proof gate; it proves no pre-ownership closure, fixed-facade closure, final product identity, capacity, one-truth, KERNAL freedom, hardware behavior or promotion claim."
+}

@@ -1,0 +1,93 @@
+{
+  "active_owner": {
+    "active_owner_cache_exact": true,
+    "bank_tag": 1,
+    "c2d_entry": {
+      "code_length": 76,
+      "code_offset": 3899,
+      "generation": 1,
+      "image_slot": 0,
+      "literal_count": 3,
+      "ordinal": 171,
+      "raw_hex": "00033b0f4c00ad000100",
+      "resolution_base": 173
+    },
+    "header": {
+      "bytes": 13,
+      "code_pointer": "0xbf67",
+      "expected_scalar_hex": "b50101023f0003",
+      "littab_pointer": "0xbf61",
+      "materialized_literal_table_hex": "18e11ae11ce1",
+      "scalar_bytes": 7,
+      "scalar_exact": true,
+      "scalar_hex": "b50101023f0003"
+    },
+    "object_hex": "b50101023f00030000000000000b3c00013a010b361d070b3406011e1c012b1d0d0b353439012b3d26023d2302050b361d070b3406021e1c012b1d0939010b35343d26020539012c3d260205",
+    "object_name": "lcc-run",
+    "object_sha256": "a1df2dba815c518fe7489cefc6550ff0865c0954928bdfcb37e5ca4277880fee",
+    "ordinal": 171,
+    "payload": {
+      "expected_window_hex": "1d0939010b35343d26020539012c3d260205",
+      "held_window_hex": "1d0939010b35343d26020539012c3d260205",
+      "length": 63,
+      "offset": 13,
+      "streaming": 1,
+      "window_exact": true,
+      "window_length": 18,
+      "window_max": 43,
+      "window_start": 45
+    }
+  },
+  "c2d_counts": {
+    "entry_count": 589,
+    "image_count": 7,
+    "resolution_count": 2264
+  },
+  "conclusion": "Link 51 reproduces Link 50's byte-exact post-refill state: dynamic Entry 588 is published and exact, and restored ordinal 171/lcc-run owns an exact final streamed window. The outer hold cannot distinguish logical cursor, dispatch, operand-stack or nested-service origin after unwind.",
+  "current_hardware": {
+    "bytes": 7570,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link51-badopcode-hold-shelf-hardware-receipt.json",
+    "sha256": "a5e0e0facef24a8d6d6d3d00a6892f8652aa50c358c314799ef8d62bd8a3587a"
+  },
+  "dynamic_code_hex": "b50000020200002c05",
+  "dynamic_entry_588": {
+    "code_length": 9,
+    "code_offset": 34403,
+    "generation": 1,
+    "image_slot": 6,
+    "literal_count": 0,
+    "ordinal": 588,
+    "raw_hex": "060063860900d8080100",
+    "resolution_base": 2264
+  },
+  "exact_vm_fields": {
+    "vm_buf_bank": true,
+    "vm_buf_off": true,
+    "vm_codebuf": true,
+    "vmr_code": true,
+    "vmr_hdrlen": true,
+    "vmr_littab": true,
+    "vmr_plen": true,
+    "vmr_poff": true,
+    "vmr_pwmax": true,
+    "vmr_streaming": true,
+    "vmr_win": true,
+    "vmr_winlen": true
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "completed_latency_measurements": 0,
+    "hardware_runs_added": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2-link51-badopcode-link50-comparison-v1",
+  "historical_interpretation": {
+    "bytes": 7235,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-first-call-badopcode-hold-cycle1-interpretation-correction.json",
+    "sha256": "c0aaedca3cddae2658456c2448fc50d5b3d6eca9001f7e2424290de8ab49d391"
+  },
+  "recorded_on": "2026-07-22",
+  "status": "same-post-refill-badopcode-fingerprint-reproduced",
+  "stop_rule": "Do not infer a product fix or repeat this outer hold. A next step must provide a proved live inner execution witness or be an explicit product-scope decision."
+}

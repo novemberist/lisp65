@@ -1,0 +1,115 @@
+{
+  "attempt": {
+    "build_stage": "resident-island-seed-link",
+    "first_red_policy": "stopped-before-island-materialization-and-before-final-product-link",
+    "product_bytes_emitted": 0,
+    "status": "failed-not-promoted"
+  },
+  "baseline": {
+    "map": {
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.map",
+      "sha256": "322147a5b818f5591f10c4a25e315fccd1f50d6757b16cabda41b77d205aaa92"
+    },
+    "resident": {
+      "bss_bytes": 2246,
+      "data_bytes": 20,
+      "file_end": 47645,
+      "rodata_bytes": 1152,
+      "text_bytes": 38243
+    },
+    "runtime_overlay": {
+      "image_bytes": 65472,
+      "manifest": {
+        "path": "build/products/workbench/overlay-stack-guard/runtime-overlays-manifest.json",
+        "sha256": "910e88e118676e02b8ca41dde752a32b003273aa326e81916ac411d5aea8ad08"
+      },
+      "payload_bytes": 58832,
+      "slice_count": 44
+    }
+  },
+  "candidate_partial_link": {
+    "map": {
+      "bytes": 88174,
+      "path": "build/c2.2/substitution/product-link/resident-island-seed.prg.map",
+      "sha256": "cc04aba53f7d53648511e8e72ff22d3cc1312531e46f5d3a60fa25b0f643b9a5"
+    },
+    "resident": {
+      "bss_bytes": 2247,
+      "data_bytes": 22,
+      "file_end": 65084,
+      "file_end_delta_bytes": 17439,
+      "rodata_bytes": 623,
+      "text_bytes": 56210,
+      "text_delta_bytes": 17967
+    },
+    "resident_c2_text": {
+      "bytes": 18172,
+      "largest_functions": [
+        {"bytes": 5907, "name": "c2_append_begin"},
+        {"bytes": 2471, "name": "c2_session_emit_add"},
+        {"bytes": 1926, "name": "c2_session_emit_finalize"},
+        {"bytes": 1109, "name": "c2e_prepare_literal"},
+        {"bytes": 973, "name": "c2_publish_exports_from"}
+      ]
+    }
+  },
+  "format": "lisp65-c2-product-substitution-first-red-receipt-v1",
+  "gates": {
+    "bank0_resident_fit": {
+      "linker_overflow_bytes": 11836,
+      "status": "failed"
+    },
+    "c2_decoder_slice_fit": {
+      "aggregate_bytes": 26869,
+      "aggregate_excess_over_individual_caps_bytes": 3306,
+      "failed_slice_count": 7,
+      "limit_bytes": 1792,
+      "slices": [
+        {"bytes": 1672, "headroom": 120, "phase": 0},
+        {"bytes": 1691, "headroom": 101, "phase": 1},
+        {"bytes": 2102, "over_by": 310, "phase": 2},
+        {"bytes": 1584, "headroom": 208, "phase": 3},
+        {"bytes": 1432, "headroom": 360, "phase": 4},
+        {"bytes": 2074, "over_by": 282, "phase": 5},
+        {"bytes": 2799, "over_by": 1007, "phase": 6},
+        {"bytes": 1380, "headroom": 412, "phase": 7},
+        {"bytes": 1732, "headroom": 60, "phase": 8},
+        {"bytes": 2391, "over_by": 599, "phase": 9},
+        {"bytes": 2460, "over_by": 668, "phase": 10},
+        {"bytes": 2037, "over_by": 245, "phase": 11},
+        {"bytes": 1528, "headroom": 264, "phase": 12},
+        {"bytes": 1987, "over_by": 195, "phase": 13}
+      ],
+      "status": "failed"
+    },
+    "one_truth_closure": {
+      "status": "not-run-link-failed-before-final-closure"
+    },
+    "substitution_balance": {
+      "status": "not-claimable-link-failed-before-final-artifacts"
+    }
+  },
+  "inputs": {
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "d34142af88255aa77ffeea6f83f4b14a3ca4720f16eccc5bb5a967c328a9c47c"
+    },
+    "linker": {
+      "path": "build/c2.2/substitution/product-link/c2-substitution.ld",
+      "sha256": "8a8f3ca1bfe97e48ae6efa037a0c1ea9cc2d98703383fae3ae5e4cd8ef35ca98"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link/resolved-profile.txt",
+      "sha256": "7a6b186bd25eb8de78c517e0b76623a90fdc0cc834bfed59b7f29784d6ff5f18"
+    }
+  },
+  "prerequisite": {
+    "hardware_smoke": {
+      "passes": 2,
+      "receipt_policy": "receipt-less-non-authoritative-fail-fast",
+      "shelf_sha256": "2a848f541a487eb63ce07a497bf443bead97c6957d17fbfbbf6c61dd3d915525",
+      "status": "passed",
+      "target_sha256": "a99411038c53cab8790c236a897a1027a8d7d4130c2d25e408ee364d86275020"
+    }
+  }
+}

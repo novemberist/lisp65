@@ -1,0 +1,183 @@
+{
+  "additional_class_a_correction": {
+    "cause": "the section-inventory expectation derived the append ABI from the configured profile but retained Link-28's unsplit decoder ABI",
+    "first_replay_result": "correctly rejected 11 versus 11a/11b expectation drift",
+    "fix": "derive both decoder and append section-name sets from their configured canonical slice lists",
+    "product_delta_bytes": 0
+  },
+  "claim_limit": "Read-only replay of one previously emitted, nonpromotable WPLTO artifact set. No product link, hardware, performance, promotion or acceptance claim.",
+  "cold_eviction": {
+    "actual_c2_resident_section": {
+      "after_bytes": 6244,
+      "before_bytes": 7462,
+      "measured_credit_bytes": 1218
+    },
+    "anchor_resolution": {
+      "after_overlap_bytes": 0,
+      "before_overlap_bytes": 188,
+      "gap_after_bytes": 1030,
+      "resident_end_exclusive": 63746,
+      "session_state_base": 64776
+    },
+    "authorized_gross_tenants": {
+      "child_value_bytes": 536,
+      "entry_records_bytes": 559,
+      "source_read_bytes": 123,
+      "total_bytes": 1218
+    },
+    "cold_destinations": {
+      "child_value": {
+        "bytes": 1665,
+        "reason": "the consumer half 11b owns allocation; 11a is overwritten before 11b and overlay-to-overlay calls remain forbidden",
+        "section": ".lisp65_rt_c2d_11b"
+      },
+      "entry_records": {
+        "replacement": ".lisp65_rt_c2append_publish_plan",
+        "replacement_bytes": 1314,
+        "status": "retired-no-final-symbol"
+      },
+      "source_read": {
+        "replacement": "cold staged/publication source reads only; no hot C2I seam",
+        "status": "retired-no-final-symbol"
+      }
+    },
+    "e000_floor": {
+      "measured_headroom_bytes": 1000,
+      "required_bytes": 115,
+      "status": "passed"
+    },
+    "retired_symbols": {
+      "c2_entry_records": 0,
+      "c2_source_read": 0,
+      "c2_stream_product_child_value": 0
+    },
+    "status": "passed"
+  },
+  "first_red": {
+    "bytes": 12188,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-cold-eviction-wplto-probe-receipt.json",
+    "sha256": "20b3b866ab4111a175200421d08175b73dba19233676a77afcc602894e9c218a"
+  },
+  "format": "lisp65-c2-lite-v6-cold-eviction-wplto-pure-replay-v1",
+  "fresh_structural_gates": {
+    "crc_assembler_leaf": "passed-linked-assembler-leaf-crc-equivalence",
+    "crc_codegen": "passed-target-stable-bytewise-crc-loop",
+    "f011_mount_window": "pass-measured-owner-accepted-contract-limit",
+    "fixed_facade": "passed",
+    "handoff_z_abi": "passed",
+    "kernal_freedom": "passed",
+    "one_truth_closure": "passed",
+    "overlay_closure": "passed-final-elf-overlay-closure",
+    "overlay_closure_phase_count": 22,
+    "pre_ownership": "passed",
+    "profile_data_reference": "passed",
+    "provisional_window": {
+      "bytes": 8192,
+      "crc16": "0xd517",
+      "identity_status": "provisional-unpinned-hardware-prohibited",
+      "path": "build/c2-lite/v6-cold-eviction-wplto-pure-replay/c2-product-kernal-window.bin",
+      "sha256": "1bf2c33ddce5c9c6876bf7efea13a904ddb48f235c4fa535916b4f9cece9150c"
+    },
+    "section_inventory": "passed"
+  },
+  "harness_correction": {
+    "cause": "the old gate selected the first rtov_read occurrence, a forward declaration, instead of the function definition",
+    "class": "A",
+    "fix": "shared brace-aware definition extraction skips prototypes and forward declarations",
+    "gate_after": "passed",
+    "gate_before": "false red",
+    "product_delta_bytes": 0
+  },
+  "immutable_inputs": {
+    "measurement_elf": {
+      "bytes": 565640,
+      "path": "build/c2-lite/v6-cold-eviction-wplto-probe/full-product-wplto/c2-lite-v6-full-seed.prg.elf",
+      "sha256": "ad6cfea48b141890a1775be0511c967d2c9a9b112618d335bda7cf39fd11f230"
+    },
+    "measurement_map": {
+      "bytes": 184360,
+      "path": "build/c2-lite/v6-cold-eviction-wplto-probe/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "sha256": "c6e123c04bf10146ab4c29f68f9cb582ae08bdb8578dead6f8157f48940af971"
+    },
+    "measurement_prg": {
+      "bytes": 41542,
+      "path": "build/c2-lite/v6-cold-eviction-wplto-probe/full-product-wplto/c2-lite-v6-full-seed.prg",
+      "sha256": "bff5232abea4d53328db419fcc4a8de0eb35a0e2d500a85b8f8137c8fbf70f59"
+    },
+    "saved_lto_object": {
+      "bytes": 567464,
+      "path": "build/c2-lite/v6-cold-eviction-wplto-probe/full-product-wplto/c2-lite-v6-full-seed.prg.lto.o",
+      "sha256": "dd111a92ca4eb53f142c1342a54462e0cdacf986572d604bf4e3cdd154b83341"
+    }
+  },
+  "next_gate": "Class-C review before the first C2-lite product link",
+  "recorded_on": "2026-07-21",
+  "replay_alias_correction": {
+    "cause": "the generic one-truth gate expects the canonical final-family filename, while the C2-lite probe pack is suffixed c2-lite",
+    "fix": "byte-identical replay-only aliases of both immutable family packs; no pack, compiler or linker rerun",
+    "product_delta_bytes": 0
+  },
+  "replay_report": {
+    "bytes": 6841,
+    "path": "build/c2-lite/v6-cold-eviction-wplto-pure-replay/pure-replay-report.json",
+    "sha256": "884726f0849226ce236bff8620fa91c1fe4475b061a17db650b0bf8625a00b8b"
+  },
+  "rollback_line": {
+    "product": "Link 35",
+    "status": "untouched"
+  },
+  "scope": {
+    "class": "A",
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "status": "passed-pure-replay-no-compiler-no-link-no-hardware",
+  "whole_program_lto_replay": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "hot_no_runtime_attic_gate": {
+      "checks": {
+        "bytecode_reads_bank2": true,
+        "entry_read_has_no_attic_dma": true,
+        "entry_read_has_no_shelf_read": true,
+        "materializer_has_no_shelf_read": true,
+        "native_read_has_no_completion_retry": true,
+        "native_slices_read_bank3": true
+      },
+      "status": "passed-after-definition-aware-parser-fix"
+    },
+    "linker_runs": 0,
+    "runtime_slices": {
+      "all_fit": true,
+      "cap_bytes": 1792,
+      "count": 55,
+      "largest_bytes": 1768,
+      "minimum_headroom_bytes": 24
+    },
+    "status": "passed-pure-artifact-replay",
+    "successor_bank3_pack": {
+      "boot": {
+        "bytes": 15442,
+        "headroom_bytes": 50094,
+        "path": "build/c2-lite/v6-cold-eviction-wplto-probe/full-product-wplto/runtime-overlays-boot-c2-lite.bin",
+        "sha256": "300695801ddfd8f3af9849c09db5201be7293aca140fa34f928b1ab66691cf5c"
+      },
+      "session": {
+        "bytes": 61854,
+        "headroom_bytes": 3682,
+        "path": "build/c2-lite/v6-cold-eviction-wplto-probe/full-product-wplto/runtime-overlays-session-c2-lite.bin",
+        "sha256": "2380d653a14f8c96e84ad5cc9a1a02b58f270364695b2a30ac6912acc3a849dd"
+      }
+    },
+    "walls": {
+      "bank0_text_headroom_bytes": 86,
+      "e000_headroom_bytes": 1000,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 144,
+      "resident_island_headroom_bytes": 170
+    }
+  }
+}

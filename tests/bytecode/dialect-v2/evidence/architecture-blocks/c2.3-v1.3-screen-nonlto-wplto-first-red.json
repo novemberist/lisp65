@@ -1,0 +1,179 @@
+{
+  "format": "lisp65-c2.3-v1.3-screen-nonlto-WPLTO-first-red-v1",
+  "recorded_on": "2026-08-01",
+  "status": "FIRST RED: explicit non-LTO boundary produced a 12-byte compiler static stack instead of the pinned six bytes",
+  "promotable": false,
+  "target_linker_invocations": 1,
+  "wplto_attempt_in_v13_series": 3,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "linker_diagnostics": [
+    "workbench overlay moved below the heap floor",
+    "resident/noinit state overlaps the fixed runtime-overlay VMA",
+    "C2 inherited noinit/fixed-block geometry drift",
+    "section .noinit virtual address range overlaps with .lisp65_rt_c2append_reserve_persistent_bounds"
+  ],
+  "preflight": {
+    "status": "passed-before-WPLTO",
+    "input_wait_cases": "11x2",
+    "mutations_rejected": 17,
+    "native_leaf_object_bytes": 105,
+    "native_leaf_noinit_bytes": 0,
+    "ship_samples": 4,
+    "ship_host_executions": 4,
+    "ship_media_members": 36
+  },
+  "linked_shape_at_failure": {
+    "native_leaf": {
+      "name": "scr_backspace",
+      "address": "$2277",
+      "bytes": 105,
+      "source_section": ".text.scr_backspace"
+    },
+    "lto_caller": {
+      "name": "scr_putc",
+      "address": "$943C",
+      "bytes": 157,
+      "call_edges_to_leaf": 1
+    },
+    "fixed_noinit": {
+      "address": "$C34D",
+      "bytes": 12,
+      "sole_input_section": ".noinit..Lstatic_stack",
+      "end_exclusive": "$C359",
+      "computed_overlay_min_start": "$C35A",
+      "required_bytes": 6,
+      "required_overlay_min_start": "$C354",
+      "immutable_runtime_overlay_vma": "$C356"
+    },
+    "separate_zero_page_state": {
+      "section": ".zp.noinit",
+      "address": "$58",
+      "bytes": 6,
+      "classification": "private screen leaf state ABI; not part of the fixed-block .noinit failure"
+    }
+  },
+  "three_card_partition_matrix": [
+    {
+      "method": "LTO outlined",
+      "scr_putc_bytes": 109,
+      "leaf_bytes": 90,
+      "compiler_static_stack_bytes": 3,
+      "overlay_floor": "$C350"
+    },
+    {
+      "method": "LTO forced-inline",
+      "scr_putc_bytes": 210,
+      "leaf_bytes": 0,
+      "compiler_static_stack_bytes": 4,
+      "overlay_floor": "$C352"
+    },
+    {
+      "method": "explicit native non-LTO leaf",
+      "scr_putc_bytes": 157,
+      "leaf_bytes": 105,
+      "compiler_static_stack_bytes": 12,
+      "overlay_floor": "$C35A"
+    }
+  ],
+  "attribution": {
+    "boundary_proven": true,
+    "leaf_semantics_proven": true,
+    "exact_geometry_restored": false,
+    "mechanism": "The assembler leaf is outside LLVM bitcode and owns no .noinit. Its external call boundary changes the remaining whole-program optimizer state enough that llvm-mos allocates a 12-byte .noinit..Lstatic_stack. The fixed-block failure is compiler stack, not leaf state or text capacity.",
+    "stable_but_different_is_red": true,
+    "not_a_padding_candidate": true,
+    "no_fourth_card": true
+  },
+  "owner_round_required": {
+    "options": [
+      "defer the common Workbench and Ship read-line freight to the successor",
+      "pull architectural Stack/Overlay Ownership forward before v1.3.0",
+      "commission an explicit fixed-block re-layout for the 12-byte profile"
+    ],
+    "forbidden_shortcuts": [
+      "padding compiler-owned .noinit",
+      "weakening the exact fixed-block assertion",
+      "silently accepting a stable but different geometry",
+      "a fourth WPLTO source-partition attempt without owner review"
+    ]
+  },
+  "authority": {
+    "owner_review": {
+      "path": "docs/planning/1.3-ship-builder-extended-halt1-review.md",
+      "bytes": 10532,
+      "sha256": "d9288be88c27da14291de63d1c5e47c6403a968320cadce148fc08c47e896ca7"
+    },
+    "screen_driver": {
+      "path": "src/screen.c",
+      "bytes": 10117,
+      "sha256": "694a769777e5ac525c0cd0f504be1e57f43d06aae8ba2834383fc55ab42345d6"
+    },
+    "native_leaf_source": {
+      "path": "src/screen_backspace_nonlto.s",
+      "bytes": 1339,
+      "sha256": "93d9216daf7de039077f48af611db446bc022d3171f9fcda967e06fbef22509e"
+    },
+    "input_wait_contract": {
+      "path": "config/c2-ship-input-wait-contract.json",
+      "bytes": 3740,
+      "sha256": "41341f0d8599f0064f0a1862d339261ea9ae223d4b76bbf1408089fae9c1868b"
+    },
+    "input_wait_gate": {
+      "path": "tools/host-lisp/c2_ship_input_wait_gate.py",
+      "bytes": 19469,
+      "sha256": "890c46618a2b2efa68ca1e0021f020f65cc46d7c5c3d610141b7047eba1684ff"
+    },
+    "input_wait_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.3-ship-input-wait-host-first-receipt.json",
+      "bytes": 6098,
+      "sha256": "184011b3759684a05ce6826ae8270ecad258f86d3407dcf589d9140196236d03"
+    },
+    "product_link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "bytes": 295128,
+      "sha256": "5b5de22c7e874b1ddd0069fab79c5f51cec3de8d3c680af04131fc415fe637e9"
+    },
+    "ship_builder": {
+      "path": "tools/host-lisp/ship_builder.py",
+      "bytes": 50657,
+      "sha256": "29ea1972d6079cc034876b6968b1c850672cbf73c70c4e3c5080e22664046810"
+    },
+    "card_driver": {
+      "path": "tools/host-lisp/c2_v13_screen_nonlto_wplto.py",
+      "bytes": 10364,
+      "sha256": "ec052dcb0a19ee59bd4cb08a1a93ddd2371bc2fada908b0b0682611701b01303"
+    },
+    "outlined_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-ship-joint-wplto-first-red.json",
+      "bytes": 3870,
+      "sha256": "b6151b9608504d2c42b3f8d07cbcf5c2b1ea6967c6ffb92e351da649b5cfa7de"
+    },
+    "inline_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-backspace-inline-wplto-first-red.json",
+      "bytes": 5618,
+      "sha256": "897da6c201360329183d39cc0c5d8a2db3d33acfc9d6ca4cc566fd692d981d8b"
+    },
+    "ship_fleet_receipt": {
+      "path": "build/ship-builder/v1-fleet-final/fleet-receipt.json",
+      "bytes": 2084,
+      "sha256": "c0eb7172ad4e1d9adec0892f9f08b97ff79af29c5c41a841df5eb688c3fa2812"
+    },
+    "candidate_map": {
+      "path": "build/ship-builder/v13/screen-nonlto-wplto/wplto/resident-island-seed.prg.map",
+      "bytes": 173454,
+      "sha256": "9b4fe2741262c3cb92f190f025bee39f404abff00ee376c0b84c60eb93beefd3"
+    },
+    "candidate_lto_object": {
+      "path": "build/ship-builder/v13/screen-nonlto-wplto/wplto/resident-island-seed.prg.lto.o",
+      "bytes": 618568,
+      "sha256": "1e9608000a4440932b59be388b4668669b7962fa39fc4b48793e210a6cc93ee4"
+    },
+    "link_stderr": {
+      "path": "build/ship-builder/v13/screen-nonlto-wplto/wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 664,
+      "sha256": "6ebf7ff065efa3a5bdca654a608716aaeef807a94734831c434a0de447a7ad4c"
+    }
+  },
+  "claim_limit": "Three failed non-promotable v1.3 WPLTO cards in total; no successor product link, hardware, acceptance or release claim."
+}

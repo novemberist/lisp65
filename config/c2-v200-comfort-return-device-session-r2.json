@@ -1,0 +1,283 @@
+{
+  "choreography": {
+    "automated_device_access": "one final stop and read-only ranges",
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_BASIC_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only_after_boot": true,
+    "product_mounted_last": true,
+    "resumes_after_stop": 0,
+    "stops": 1
+  },
+  "claim_scope": {
+    "accepts": [
+      "v2.0-Comfort-return-hardware-acceptance"
+    ],
+    "excludes": [
+      "Block-3-acceptance",
+      "latch-retention-decision",
+      "release",
+      "domain-fixes"
+    ],
+    "green_consequence": "Comfort accepted; Block 3 remains independently open"
+  },
+  "decision_table": {
+    "all-seven-groups-green": "Comfort hardware-accepted; Block 3 opens",
+    "claim-expansion": "forbidden during this contact",
+    "counter-or-visible-input-mismatch": "input path red at named arc",
+    "daily-use-blocker": "final composition contact red: Comfort descopes; no further medium",
+    "rare-or-cosmetic": "Known Issue plus v2.0 register row",
+    "tag-A5": "stop; latch names writer and repair is priced"
+  },
+  "evidence_limit": "one final composition contact; no external editor duplicate and no further media round",
+  "execution_order": [
+    "C1",
+    "C2",
+    "C3",
+    "C5",
+    "C4",
+    "C6",
+    "C7"
+  ],
+  "format": "lisp65-c2-v200-comfort-return-device-session-v3",
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-comfort-return-final-composition/library/lisp65-library.d81",
+      "remote_name": "V20CFR3L.D81",
+      "sha256": "22f1e73c7e2903bc4a9ba813e0988ffea248a68616a40eb507961418a2ab37e2"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-comfort-return-final-composition/shared-system/lisp65-product.d81",
+      "remote_name": "V20CFR3P.D81",
+      "sha256": "e20c161509f790aeecd1f6fa008e84bd2020f303a26500a41df49b9c980b0d0c"
+    }
+  },
+  "recorded_on": "2026-08-31",
+  "rows": [
+    {
+      "actions": [
+        "cold boot product and mount the prepared library physically",
+        "at lisp65> submit (require 'repl-comfort), then submit (repl)",
+        "at l65> submit one empty line; at lisp65> submit (repl) again"
+      ],
+      "expect": [
+        "require returns t",
+        "Comfort prompt is l65>",
+        "empty balanced line returns to one native lisp65>",
+        "second entry returns to l65>"
+      ],
+      "group": "entry and prompts",
+      "id": "C1"
+    },
+    {
+      "actions": [
+        "submit (list 1 3)",
+        "submit (+ 10 on one physical line and 32) on the next",
+        "submit (list 7 8), then press Up and Return",
+        "submit one unmatched closing parenthesis"
+      ],
+      "expect": [
+        "(1 3)",
+        "42",
+        "(7 8) is recalled and evaluated again",
+        "over-close is rejected before evaluation and l65> remains live"
+      ],
+      "group": "evaluation, multiline, history, over-close",
+      "id": "C2"
+    },
+    {
+      "actions": [
+        "at l65> submit (+ nil 32)",
+        "after native recovery submit (repl) once"
+      ],
+      "expect": [
+        "*** vm: type error",
+        "no red frame",
+        "one native lisp65> appears practically immediately",
+        "Comfort re-entry shows l65>"
+      ],
+      "group": "A0 abort recovery",
+      "id": "C3",
+      "trigger": {
+        "authority": {
+          "bytes": 192572,
+          "path": "config/public-surface-domain-contract.json",
+          "sha256": "8c20226e0889ccaedc5ed9b3726fded8ff241236d178335f553db57296a418a7"
+        },
+        "classification": "error-raised",
+        "detail": "expected two fixnums",
+        "domain": "nil",
+        "error": "TypeError",
+        "forbidden_surrogate": "(>= nil 32)",
+        "form": "(+ nil 32)",
+        "function": "+"
+      }
+    },
+    {
+      "actions": [
+        "at l65> submit (progn (setq s (read-line)) (print (string-length s)) (wait 16383))",
+        "on the blank nested row type 01234567012345670123456701234567 six times; after each pass delete exactly four groups of eight until blank",
+        "use ordinary pace for passes 1-2 and fast pace for passes 3-6",
+        "type abcdefg and press Return; touch no further key"
+      ],
+      "collection": {
+        "controller": "(progn (setq s (read-line)) (print (string-length s)) (wait 16383))",
+        "controller_purpose": "nested read-line establishes one counter origin; print is the numeric oracle; wait holds the stopped cutpoint",
+        "delete_events_per_pass": 32,
+        "event_arithmetic": {
+          "counter_width_bits": 8,
+          "delete": 192,
+          "expected_each_modulo_256": 136,
+          "physical": 392,
+          "printable": 199,
+          "return": 1,
+          "wraps": 1
+        },
+        "final_text": "abcdefg",
+        "heap_cells_per_printable": 1,
+        "numeric_oracle": 7,
+        "nursery_cells": 192,
+        "pace": {
+          "passes_1_to_2": "ordinary",
+          "passes_3_to_6": "fast"
+        },
+        "passes": 6,
+        "pattern": "01234567012345670123456701234567",
+        "printable_insertions": 199,
+        "proof": "199 * 1 > 192; at least one collection under armed Capture",
+        "required_printable_insertions_independent_of_incoming_phase": 193,
+        "visible_groups": [
+          "01234567",
+          "01234567",
+          "01234567",
+          "01234567"
+        ]
+      },
+      "expect": [
+        "each token stays exact and each 32nd deletion empties the row",
+        "visible numeric oracle is 7",
+        "wait holds the counters before another prompt can re-zero them"
+      ],
+      "group": "lossless fast typing over forced collection",
+      "id": "C4"
+    },
+    {
+      "actions": [
+        "during C1/C2 inspect the active Comfort row and result handoff"
+      ],
+      "expect": [
+        "l65> prompt, editable input and cursor share one row",
+        "evaluated (1 3) row has no stale input tail",
+        "next l65> has one cursor and no second positioning model"
+      ],
+      "group": "composed display",
+      "id": "C5"
+    },
+    {
+      "actions": [
+        "Codex stops the CPU once while wait is active",
+        "read five state bytes raw-first; if tag=A5 read payload now"
+      ],
+      "expect": [
+        "00 00 00 00 00 is the clean no-recurrence branch",
+        "A5 plus caller/name and NUL payload names the writer"
+      ],
+      "group": "$22 latch at final cutpoint",
+      "id": "C6",
+      "ranges": {
+        "conditional_payload": {
+          "address": "0xBC89",
+          "bytes": 34,
+          "when": "read in the same stop if tag is 0xA5"
+        },
+        "state": {
+          "address": "0xC34D",
+          "bytes": 5,
+          "committed_tag": "0xA5",
+          "layout": [
+            "tag",
+            "caller-lo",
+            "caller-hi",
+            "name-lo",
+            "name-hi"
+          ]
+        }
+      }
+    },
+    {
+      "actions": [
+        "in the same stop read BCFC..BCFF, nsym and npool"
+      ],
+      "expect": [
+        "raw=seen=stored=taken=136 (0x88), all nonzero",
+        "752-nsym >= 32",
+        "10208-npool >= 384"
+      ],
+      "group": "loaded-world counters and D5",
+      "id": "C7",
+      "projection_only": {
+        "free_name_bytes": 1435,
+        "free_symbol_slots": 105
+      },
+      "ranges": {
+        "D5": {
+          "encoding": "little-endian",
+          "npool": {
+            "address": "0xBE1A",
+            "bytes": 2
+          },
+          "nsym": {
+            "address": "0x005A",
+            "bytes": 2
+          }
+        },
+        "input": {
+          "raw": "0xBCFC",
+          "seen": "0xBCFD",
+          "stored": "0xBCFE",
+          "taken": "0xBCFF"
+        }
+      }
+    }
+  ],
+  "status": "READY: OWNER V2.0 FINAL COMFORT COMPOSITION CONTACT",
+  "world": {
+    "final_composition": {
+      "external_editor_duplicate": false,
+      "library_rows": [
+        "repl-comfort"
+      ],
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-comfort-return-final-composition-receipt.json",
+      "resident_editor_owner": true
+    },
+    "product_build_id": "0x8c6cc520",
+    "qualified_pair": {
+      "ELF": {
+        "bytes": 636112,
+        "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r2/completion-r4/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "21733ddc170f7c9ceba60d7e2e351932248435e9fb9266394d908febc721e04b"
+      },
+      "PRG": {
+        "bytes": 41811,
+        "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r2/completion-r4/lisp65-c2-substitution-linked.prg",
+        "sha256": "dc8c44e403866ff4b9d4acdb158c6d2dae068cddb94b3e2c9598f37c40032c79"
+      }
+    },
+    "same_world_pair": {
+      "index_rows": 1,
+      "library_build_ids": {
+        "repl-comfort": "0x8c6cc520"
+      },
+      "mounted_C2D_sha256": "642e50cdd45e672295f2e0d132388e0b01a75ca84f3e3d64e1249907d4fea419",
+      "product_build_id": "0x8c6cc520",
+      "result": "same-world-pair",
+      "row_names": [
+        "repl-comfort"
+      ]
+    },
+    "sealed_comfort_commit": "870e5f53"
+  }
+}

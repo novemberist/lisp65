@@ -1,0 +1,29 @@
+{
+  "format": "lisp65-c2.3-ship-builder-v1-xemu-prefilter-receipt",
+  "date": "2026-07-31",
+  "source_commit": "30c31383e5df42054f7708a82e687e9241b440ed",
+  "status": "inconclusive-known-xemu-f011-default-d81-stager-gap",
+  "claim": "The Xemu boot-logic prefilter reaches the Ship stager and its media error path, while an already hardware-proven C2-lite control reaches its own media error path under the identical SD-internal default-D81 choreography.",
+  "claim_limit": "This is not a Ship product failure and not a hardware boot proof. The control reproduces the same Xemu/F011 limitation, so physical hardware is required by Phase S-D.",
+  "emulator": {
+    "version": "/var/aur/xmega65-git/xemu makepkg 40dfef0d1d5f56be2469492715c12bdb32c75b67 20260129235930 custom-build",
+    "launcher": "scripts/xmega65-safe-run.sh",
+    "mode": "system SD image, D81 injected at sector 11552, -defd81fromsd -autoload",
+    "timeout_seconds": 45
+  },
+  "ship_row": {
+    "image": "hello.d81",
+    "image_sha256": "6b2435b420f84d6992bfa7a9019484235ff36887f912c090fba5b6b6885478a7",
+    "dump_sha256": "ffc27dd09ea5c1962fef31f0585852dd350c5d58e083f9c4f06c550eb7993c19",
+    "observed_text": "L65APP DISK ERROR",
+    "result": "stager reached; default-D81 media not consumable in Xemu"
+  },
+  "control_row": {
+    "identity": "hardware-proven current C2-lite package-readback D81",
+    "image_sha256": "fef071559a3a5af5e31f7b9aebe0f520d8f463889d4ed11a05cc73753e19f8c2",
+    "dump_sha256": "6b03c1c00a18224b7c4b5b423b5b8637dac04864bca2941bee89d35537d2f87e",
+    "observed_text": "L65SYS DISK ERROR",
+    "result": "product stager reached; same default-D81 media limitation"
+  },
+  "disposition": "prefilter recorded without a product claim; proceed to the already commissioned quiet physical-device session"
+}

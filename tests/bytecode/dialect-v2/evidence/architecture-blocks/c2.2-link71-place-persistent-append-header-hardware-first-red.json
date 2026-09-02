@@ -1,0 +1,116 @@
+{
+  "format": "lisp65-c2.2-Link71-place-persistent-append-header-hardware-first-red-v1",
+  "recorded_on": "2026-07-27",
+  "status": "hardware-first-red-first-persistent-library-append-fails-in-slot39",
+  "candidate": {
+    "link": 71,
+    "product_sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e",
+    "elf_sha256": "b618b6eee3521bdfaa9ce1ae8a1a41511f9ebd5ff502502c344b630d96de4d94",
+    "media_sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+  },
+  "results": {
+    "boot_watch": {
+      "form": "(list (+ 2 3) (function-kind (quote intern)) (function-kind (quote require)))",
+      "result": "(5 primitive bytecode)",
+      "status": "passed"
+    },
+    "require_first": {
+      "form": "(require (quote defstruct))",
+      "result": "*** vm: bad bytecode",
+      "status": "first-red"
+    },
+    "resolver_parser": {
+      "form": "(if (%l65i-parse) t nil)",
+      "result": "t",
+      "status": "passed-canonical-header-and-complete-index-parser"
+    },
+    "first_dependency_direct_load": {
+      "form": "(%disk-load-lib 39 1)",
+      "artifact": "place.l65s",
+      "artifact_bytes": 1925,
+      "result": "*** vm: bad bytecode",
+      "status": "reproduced-without-resolver-or-dependency-orchestration"
+    },
+    "failure_provenance": {
+      "primary_slot_decimal": 39,
+      "primary_slot_hex": "0x27",
+      "primary_locked": true,
+      "inner_path_entered": true,
+      "slot_name": "c2-append-header",
+      "c2_ready_after_rollback": 1,
+      "published_library_records": 0,
+      "c2d_counts_after_rollback": {
+        "images": 6,
+        "entries": 676,
+        "resolutions": 2677,
+        "roots": 340
+      }
+    }
+  },
+  "attribution": {
+    "proven": [
+      "Link 71 reaches a clean REPL and the boot-watch passes",
+      "the complete L65I parser accepts the canonical two-row index",
+      "the first dependency artifact alone reproduces the failure",
+      "the first locked product failure is Session slot 39",
+      "rollback restores the baseline C2D counts and READY remains one"
+    ],
+    "excluded": [
+      "canonical L65I header CRC domain",
+      "index parsing",
+      "dependency ordering",
+      "defstruct payload",
+      "published-library idempotence"
+    ],
+    "open": "which completion mode or header precondition fails at the first persistent-library append"
+  },
+  "evidence": {
+    "deployment": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/deployment.json",
+      "bytes": 7372,
+      "sha256": "080714bffaa3e3a50979a99532aec0df237d7a2bfeb4b79390398a16bf419384"
+    },
+    "observations": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/observed-rows.json",
+      "bytes": 582,
+      "sha256": "619a9877df91bdb5bee3e1304d60fe088fbc8e387cb2d3e1e2c8f91ecf242589"
+    },
+    "require_screen": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/row-require-first.txt",
+      "bytes": 2241,
+      "sha256": "e6bf2caa6b0b29b88220fdaeb01e3212832bacd24f7b6d8b537976b87fa307a8"
+    },
+    "parser_screen": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/diag-parser-only.txt",
+      "bytes": 2241,
+      "sha256": "477b060191b316e6fb5d2ffa952b4f1d73b053800dacf3af819087187e5ffc7f"
+    },
+    "direct_place_screen": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/diag-load-place.txt",
+      "bytes": 2241,
+      "sha256": "56ae99ff602982ea27af4011ea2d567ed3ccc1c10257411401d6dc240383d68f"
+    },
+    "require_phase_scratch": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/first-red-phase-scratch.bin",
+      "bytes": 304,
+      "sha256": "93fa677d790a25a5aa4470109cf98ecd39b870daa900649adebb76b26b870d07"
+    },
+    "direct_place_phase_scratch": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/diag-load-place-phase-scratch.bin",
+      "bytes": 304,
+      "sha256": "d26c0d61210ab6b510639e843fe99731774d2d9625ee632c34283e6a7861c888"
+    },
+    "direct_place_c2d_header": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/diag-load-place-c2d-header.bin",
+      "bytes": 48,
+      "sha256": "d2fbfcac664713d3657f59fffd1271b6feaeb85070a499676f322da13540b4b6"
+    }
+  },
+  "execution_accounting": {
+    "new_product_links": 0,
+    "product_byte_changes": 0,
+    "hardware_sessions": 1,
+    "first_red": true
+  },
+  "claim_limit": "Link 71 require/defstruct freight remains unqualified. This receipt attributes only the first persistent-library append failure."
+}

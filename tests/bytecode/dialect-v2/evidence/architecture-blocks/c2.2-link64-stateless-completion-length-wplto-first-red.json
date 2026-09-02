@@ -1,0 +1,174 @@
+{
+  "format": "lisp65-c2.2-Link64-stateless-completion-length-WPLTO-first-red-v1",
+  "recorded_on": "2026-07-25",
+  "status": "FIRST RED: WPLTO keeps a live completion length across the nested reader and retry",
+  "claim_limit": "Exactly one product-shaped WPLTO map and read-only ELF attribution. No Link 64 product identity, hardware run, Cutpoint-3/4 result, C1 closure, matrix-gate fall or acceptance-chain claim.",
+  "authority": {
+    "prior_hardware_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link63-C1-Freezer-cutpoint3-completion-authority-hardware-first-red.json",
+      "bytes": 8570,
+      "sha256": "c002e9c6324310065b198e72f8ccf1028034402da4246a8fa65f90e45ea06925"
+    },
+    "contract": {
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "bytes": 13121,
+      "sha256": "1d7097f18db1d96f178fc9c823706dd2c28fe81b61c8b1a0edcf756310b0414a"
+    },
+    "contract_document": {
+      "path": "docs/planning/c2.2-cpu-chip-write-completion-contract.md",
+      "bytes": 5831,
+      "sha256": "e67476528aaf39b3b787cabbfe04bc7d3e59406986ddf9cb78081910e6eb724e"
+    },
+    "product_source": {
+      "path": "src/c2_product_runtime.c",
+      "bytes": 154823,
+      "sha256": "ec452df55138a488ed47c80ed7eb817ffb3e46a38635d3c294c5716c398fe96a"
+    },
+    "source_gate": {
+      "path": "tools/host-lisp/c2_cpu_chip_write_completion_gate.py",
+      "bytes": 26286,
+      "sha256": "2feb9fbfac602dcdc3de373d2999e25b878d578bfe1c064d43e9d17bbd4c5395"
+    },
+    "source_gate_receipt": {
+      "path": "build/c2.2/two-region-session-store/link64-stateless-completion-length-write-completion-source-gate.json",
+      "bytes": 4721,
+      "sha256": "524197a2db770f3393acef6adadc37e543476c23400defb2be8a82fec29748cd"
+    },
+    "linked_ELF_gate": {
+      "path": "tools/host-lisp/c2_completion_retry_length_elf_gate.py",
+      "bytes": 10254,
+      "sha256": "08df72931138b22fdd28a00a53608c167f144b7e1283fd632a3b3f3b545b7489"
+    },
+    "WPLTO_driver": {
+      "path": "tools/host-lisp/c2_link64_stateless_completion_wplto.py",
+      "bytes": 2096,
+      "sha256": "d6fbe9e3dcbe2beeec10e46bc8e1a631aaa346827458115f7e1d9d9d30910296"
+    },
+    "WPLTO_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-stateless-completion-length-wplto-receipt.json",
+      "bytes": 29755,
+      "sha256": "fb5cf07b8f14d4c75602f8f45f05e874a5ec6b4dad10a119b86da7c8b764ddd2"
+    },
+    "WPLTO_internal": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-stateless-completion-length-wplto-internal.json",
+      "bytes": 25886,
+      "sha256": "44b0e0512a68f56869d7734c84b9808ea8db694456607076540db890a1835fe4"
+    },
+    "immutable_product": {
+      "path": "build/c2.2/substitution/link64-stateless-completion-length-wplto/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "ff84bbbc4216c24eebc2feca5f4d694ab5d0d8b19f3740638fcd6535a1960cdf"
+    },
+    "immutable_ELF": {
+      "path": "build/c2.2/substitution/link64-stateless-completion-length-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 619412,
+      "sha256": "64fda0223830d68c3ff9885c0eaf74f16e7190fbf29e17bf82a439ab41db87d3"
+    },
+    "immutable_map": {
+      "path": "build/c2.2/substitution/link64-stateless-completion-length-wplto/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 202769,
+      "sha256": "391ca9f8a99838edf7750c1e8b7f7c7f61ea2a48ac3bb8eabe65c9ae1ee1eef6"
+    }
+  },
+  "requested_property": {
+    "authority": "completion mode only; no record, phase scratch or call-scratch length authority",
+    "mode_lengths": {
+      "PUBLISH": 48,
+      "C2J_ACTIVE": 64,
+      "C2J_ROLLBACK": 64,
+      "C2J_CLEAR": 64
+    },
+    "per_attempt_rule": "Rematerialize from mode before poison, before DMA and before comparison; the retry edge must return through the rematerialization point.",
+    "required_mutations": [
+      "record[27] clobbered",
+      "call scratch clobbered",
+      "pre-poison rematerialization removed",
+      "pre-DMA rematerialization removed",
+      "pre-compare rematerialization removed",
+      "retry bypasses rematerialization"
+    ]
+  },
+  "source_result": {
+    "status": "passed-stateless-mode-length-four-point-C2J-seal-source-model-awaiting-WPLTO",
+    "mutations_rejected": 24,
+    "record_27_authority_removed": true,
+    "source_rematerialization_sites": 3
+  },
+  "linked_result": {
+    "status": "FIRST RED",
+    "section": ".lisp65_rt_c2append_header",
+    "poll": {
+      "symbol": "c2_completion_poll",
+      "address": "0xc6af",
+      "bytes": 537
+    },
+    "nested_reader": {
+      "symbol": "c2_stream_c2d_read",
+      "address": "0xe691",
+      "callsite": "0xc77d"
+    },
+    "mode_length_helper": {
+      "symbol": "c2_completion_mode_length",
+      "ELF_symbol_count": 0,
+      "verdict": "LTO inlined the helper; no function boundary survives"
+    },
+    "retired_record_27": {
+      "address": "0xc197",
+      "references_in_poll": 0,
+      "verdict": "the second mutable authority is removed"
+    },
+    "actual_dataflow": [
+      {
+        "range": "0xc73b..0xc751",
+        "effect": "mode-derived attempt length is materialized once and stored in $1a"
+      },
+      {
+        "range": "0xc759..0xc775",
+        "effect": "poison and DMA consume the live $1a value"
+      },
+      {
+        "address": "0xc77d",
+        "effect": "nested c2_stream_c2d_read executes while the attempt length remains live"
+      },
+      {
+        "range": "0xc786..0xc796",
+        "effect": "a second mode-derived value is formed before CRC, but no isolated helper boundary survives"
+      },
+      {
+        "address": "0xc878",
+        "instruction": "JMP $c759",
+        "effect": "timeout retry returns directly to poison and bypasses mode derivation"
+      }
+    ],
+    "linked_gate_output": "c2-stateless-completion-length-elf-gate: FIRST RED: symbol identity is not unique: c2_completion_mode_length (0)",
+    "root_cause": "The C helper was inline and the four source expressions were commoned/hoisted by whole-program LTO. The linked machine therefore still carries a live length in scratch across the nested reader and reuses it on retry. The source expresses stateless derivation, but the product does not.",
+    "gate_gap_closed": "Qualification now requires a sized, section-owned helper in the ELF, four linked calls in the required order, a retry edge through the pre-poison call, no record[27] reference and linked rejection of constant, authority and bypass mutations."
+  },
+  "capacity_observation": {
+    "claim": "informational only because linked semantics are red",
+    "session_main_bytes": 64926,
+    "session_main_headroom_bytes": 610,
+    "session_overflow_bytes": 1956,
+    "session_overflow_headroom_bytes": 76
+  },
+  "secondary_harness_first_red": {
+    "status": "historical post-WPLTO qualification checker red",
+    "classification": "Class A inherited checker authority; not replayed because the linked product property is already red",
+    "effect": "does not change the product First Red or authorize a second WPLTO"
+  },
+  "execution_accounting": {
+    "whole_program_LTO_closure_links": 1,
+    "automatic_retries": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "product_bytes_published": 0,
+    "linked_mutation_suite_run": 0
+  },
+  "required_product_decision": {
+    "class": "C",
+    "implemented_here": false,
+    "recommended_form": "Make c2_completion_mode_length a real optimizer-proof leaf (prefer the established non-LTO assembler-leaf pattern), call it at all four linked boundaries, and let the ELF-derived ABI and stateless-length gates prove the actual calls and retry edge.",
+    "why_not_another_C_hint": "The requested property is specifically independence from optimizer-chosen liveness. A noinline hint still negotiates with the optimizer; an assembler leaf removes that jurisdiction and has existing project precedent.",
+    "next_after_authorization": "Implement the leaf and its exact ABI/constant proof, run one fresh WPLTO, then only after every wall and gate is green build Link 64 and prepare the Cutpoint-3/4 hardware appointment."
+  }
+}

@@ -1,0 +1,286 @@
+{
+  "authority": {
+    "driver": {
+      "bytes": 10687,
+      "path": "tools/host-lisp/c2_v14_parity_pilot_wplto.py",
+      "sha256": "652c961c82a731e931f8fbbd7d93ec3d88f495bd40c5a8aaa62e600653e3a622"
+    },
+    "ide_manifest": {
+      "bytes": 342211,
+      "path": "build/bytecode/dialect-v2/libs/ide.manifest.json",
+      "sha256": "3a2ae3728e7da6c0a697d2c33a9dfbfac1ca4eedce2277ed20530a6d8e62d0bb"
+    },
+    "input_wait_contract": {
+      "bytes": 4412,
+      "path": "config/c2-ship-input-wait-contract.json",
+      "sha256": "6d3103de066ad94aab55e45eaef953768eec879bea80289c262433a301dc62bb"
+    },
+    "linked_ELF": {
+      "bytes": 622588,
+      "path": "build/post-promotion/v14/parity-pilot-wplto/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "7c54d8b338e1d21dc436626d1fe0b8066864b39016f21b4de12d9c8db3792cac"
+    },
+    "m65_contract": {
+      "bytes": 5759,
+      "path": "config/c2-m65-hw-contract.json",
+      "sha256": "0e03b530991824e2edf064b782d13e35339c1a5ef2e9fa22672651cd5d603e3e"
+    },
+    "m65_hw": {
+      "bytes": 2860,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-m65-hw-host-first-receipt.json",
+      "sha256": "412e9c13e023681e6eca1aeb586dcd31998f215b0ad45b4772864bdceb572687"
+    },
+    "profile": {
+      "bytes": 5757,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "b7087d2e5afb250429e0d85a1a5c2f10850860002b0f1accb548996cea3cee64"
+    },
+    "q_contract": {
+      "bytes": 4351,
+      "path": "config/c2-q-contract.json",
+      "sha256": "4f884536eceb1a8852df8a92c57d5827904084f4fe7c9c94e9ec64e9f16b602e"
+    },
+    "ship_contract": {
+      "bytes": 2612,
+      "path": "config/ship-builder-v1.json",
+      "sha256": "27eaf09d076b9638a11df128fed749535a13387dd5f03e2baca66d9e4e5a4a14"
+    },
+    "ship_fleet": {
+      "bytes": 2785,
+      "path": "build/post-promotion/v14/sample-fleet-host/fleet-receipt.json",
+      "sha256": "a16ce9540109baca10701aad0c07a4925e46133c25e92cc8e34c9af691417a0d"
+    },
+    "static_product": {
+      "bytes": 2334,
+      "path": "build/post-promotion/v14/parity-pilot-wplto/static-plane/narrow-static/product/substitution-artifacts.json",
+      "sha256": "ec7f9fcb7d20bb2f8fd47bf32cad03c2c793014729baa3d56eed9ea9de69cf02"
+    },
+    "stdlib_manifest": {
+      "bytes": 371533,
+      "path": "build/post-promotion/v14/m65-hw/host-first/m65-hw.manifest.json",
+      "sha256": "29cc87e58d7eacfbdf1e22d04646f8234dbaab77e74b76e5a9896e8c9752cdd4"
+    }
+  },
+  "capacity": {
+    "append_records": 24,
+    "pack_quantum_bytes": 256,
+    "publish_clear_bytes": 1295,
+    "publish_clear_headroom_bytes": 497,
+    "region1_rollback_sequence": [
+      "c2-append-rollback-unpublish",
+      "c2-append-rollback-wipe-plane",
+      "c2-append-rollback-wipe-chip",
+      "c2-append-rollback-wipe-attic",
+      "c2-append-rollback-finalize"
+    ],
+    "retired_sections_present": {
+      ".lisp65_rt_c2append_journal_clear": false,
+      ".lisp65_rt_c2append_publish_exports": false
+    },
+    "session_catalog_records": 52,
+    "session_family_bytes": 65423,
+    "session_family_headroom_bytes": 113,
+    "session_service_bytes": 399,
+    "session_service_records": 1,
+    "slice_cap_bytes": 1792,
+    "status": "passed-current-v4-two-region-session-aggregate"
+  },
+  "claim_limit": "One non-promotable product-shaped WPLTO and five host-executed Ship samples; no successor identity or hardware claim.",
+  "format": "lisp65-c2.3-v1.4-parity-pilot-WPLTO-v1",
+  "hardware_runs": 0,
+  "host_gate_summaries": {
+    "editor": "c2-v126-editor-allocation: PASS keys=165 mutations=6",
+    "input_wait": "c2-ship-input-wait-gate: PASS cases=11x2 mutations=14 keys=266 max-cells/key=4 bank2=+451 resident=+0 native=+0",
+    "m65_hw": "c2-m65-hw: PASS public=15 cases=12x2 mutations=9 bank2=1784/2048 headroom=264 resident=+0",
+    "q": "c2-q-gate: PASS oracle=36x2 io=38 mutations=12 bank2=+1451 headroom=22600 resident=+0",
+    "ship_contract": "ship-builder selftest: PASS mutations=9",
+    "ship_fleet": "ship-builder fleet: PASS samples=5 host-executions=5 media-members=45",
+    "surface": "v11-surface-delivery-parity: PASS bound_names=90 names=*,+,-,/,/=,1+,1-,<,<=,=,>,>=,append,apply,assoc,atom,boundp,car,cdr,char-downcase,char-upcase,cons,consp,count,edit,eq,eql,equal,eval,every,filter,find,funcall,function-kind,int->q,key-event,length,list,load-lib,load-libs,mapc,mapcar,member,minusp,mod,not,nth,nthcdr,null,numberp,plusp,position,q,q*,q+,q-,q->int,q->string,q/,random,random-seed,read-from-string,read-line,reduce,reverse,search,set,some,string-append,string-downcase,string-equal,string-length,string-prefix-p,string-ref,string-suffix-p,string-trim,string-upcase,string<,string=,stringp,substring,symbol-name,symbol-value,symbolp,terpri,time,wait,write,write-char,zerop"
+  },
+  "inherited_native_geometry": {
+    "noinit_address": "0xc34d",
+    "noinit_bytes": 6,
+    "overlay_floor": "0xc354",
+    "status": "restored-exactly"
+  },
+  "native_primitive_delta": 0,
+  "next_gate": "one Link 89 successor and the bundled v1.4 device session",
+  "predecessor": {
+    "bytes": 13632,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link88-full-raster-wplto-receipt.json",
+    "sha256": "3e86541875cc5b463e23cda1decc1657bcf08da938e386ff6203682e772e8ada"
+  },
+  "product_links": 0,
+  "profile_preflight": {
+    "bytes": 4922,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-parity-pilot-profile-receipt.json",
+    "sha256": "43a6686d0efb4a12131bfeb091a5e4caf7d4330413a1b1b3725a5695ebf2da9f"
+  },
+  "promotable": false,
+  "recorded_on": "2026-08-03",
+  "resident_delta_bytes": 0,
+  "sample_fleet": {
+    "bytes": 2785,
+    "path": "build/post-promotion/v14/sample-fleet-host/fleet-receipt.json",
+    "sha256": "a16ce9540109baca10701aad0c07a4925e46133c25e92cc8e34c9af691417a0d"
+  },
+  "static_geometry": {
+    "bank2_headroom_bytes": 18238,
+    "bank2_sha256": "eb45f07ed2edc179812c585399aef5ee9ceb0dbdd02f1126e086e357156f4c30",
+    "bank2_static_code_bytes": 47298,
+    "delta": {
+      "bank2_code_bytes": 1784,
+      "direct_entry_refs": 0,
+      "entries": 31,
+      "resolution_words": 87,
+      "roots": 0,
+      "stdlib_kind4_literal_nodes": 70
+    },
+    "direct_entry_refs": 710,
+    "entries": 788,
+    "product_build_id": "0xac5f997a",
+    "resolutions": 3034,
+    "roots": 350
+  },
+  "status": "passed-v1.4-parity-pilot-one-product-shaped-WPLTO",
+  "target_stdlib_header": {
+    "manifest": {
+      "bytes": 371533,
+      "path": "build/post-promotion/v14/m65-hw/host-first/m65-hw.manifest.json",
+      "sha256": "29cc87e58d7eacfbdf1e22d04646f8234dbaab77e74b76e5a9896e8c9752cdd4"
+    },
+    "source": {
+      "bytes": 3294,
+      "path": "build/post-promotion/v14/m65-hw/host-first/m65-hw.h",
+      "sha256": "5634934b25a6278e42f4251b9a5e2d342a084b2ed2406723dd4ae349c5ebd852"
+    },
+    "status": "passed-selected-manifest-header-to-target-include",
+    "target": {
+      "bytes": 3294,
+      "path": "build/post-promotion/v14/parity-pilot-wplto/static-plane/narrow-static/workbench/stdlib-p0.h",
+      "sha256": "5634934b25a6278e42f4251b9a5e2d342a084b2ed2406723dd4ae349c5ebd852"
+    }
+  },
+  "wall_headroom_delta_from_link88": {
+    "bank0_text_headroom_bytes": 0,
+    "e000_headroom_bytes": 0,
+    "fixed_hot_block_headroom_bytes": 0,
+    "ordinary_bank0_bss_headroom_bytes": 0,
+    "resident_island_headroom_bytes": 0
+  },
+  "walls": {
+    "bank0_text_headroom_bytes": 243,
+    "e000_headroom_bytes": 54,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 50
+  },
+  "wplto": {
+    "historical_checker_boundary": {
+      "captured_driver_log": {
+        "bytes": 1332,
+        "path": "build/post-promotion/v14/parity-pilot-wplto/receipts/wplto-historical-driver.log",
+        "sha256": "9105e05d9c5fa42f4aa315636ce6b07b453179b282785cfdd503d22beda3a8a5"
+      },
+      "classification": "qualification-model-only-not-a-product-or-link-red",
+      "current_replacement_gates": {
+        "assembler_leaf_ABI": {
+          "callsite_count": 9,
+          "unclassified_C_called_functions": []
+        },
+        "capacity": {
+          "append_records": 24,
+          "pack_quantum_bytes": 256,
+          "publish_clear_bytes": 1295,
+          "publish_clear_headroom_bytes": 497,
+          "region1_rollback_sequence": [
+            "c2-append-rollback-unpublish",
+            "c2-append-rollback-wipe-plane",
+            "c2-append-rollback-wipe-chip",
+            "c2-append-rollback-wipe-attic",
+            "c2-append-rollback-finalize"
+          ],
+          "retired_sections_present": {
+            ".lisp65_rt_c2append_journal_clear": false,
+            ".lisp65_rt_c2append_publish_exports": false
+          },
+          "session_catalog_records": 52,
+          "session_family_bytes": 65423,
+          "session_family_headroom_bytes": 113,
+          "session_service_bytes": 399,
+          "session_service_records": 1,
+          "slice_cap_bytes": 1792,
+          "status": "passed-current-v4-two-region-session-aggregate"
+        },
+        "historical_maps_replaced": [
+          "BADOPCODE retirement WPLTO crossed a bound wall or gate",
+          "Link-53 first-fault WPLTO qualification red",
+          "Link-54 phase-06a cutpoint WPLTO qualification red",
+          "Link-55 append geometry WPLTO qualification red",
+          "Link-55 append suffix/read-domain WPLTO qualification red",
+          "Link-55 cold append source-domain WPLTO qualification red",
+          "Link-55 one-quantum fusion qualification red",
+          "install-phase WPLTO crossed a bound wall or linked gate",
+          "selector tail-Z WPLTO qualification red"
+        ],
+        "pre_publish_identity": {
+          "elf": {
+            "bytes": 622588,
+            "path": "build/post-promotion/v14/parity-pilot-wplto/wplto/lisp65-c2-substitution-linked.prg.elf",
+            "role": "elf",
+            "sha256": "7c54d8b338e1d21dc436626d1fe0b8066864b39016f21b4de12d9c8db3792cac"
+          },
+          "map": {
+            "bytes": 178688,
+            "path": "build/post-promotion/v14/parity-pilot-wplto/wplto/lisp65-c2-substitution-linked.prg.map",
+            "role": "map",
+            "sha256": "7af50bab4ac6a66ed5f924c4a353afb6293e9fb47c07d090c6b65b15d8a11c55"
+          },
+          "product": {
+            "bytes": 41566,
+            "path": "build/post-promotion/v14/parity-pilot-wplto/wplto/lisp65-c2-substitution-linked.prg",
+            "role": "product",
+            "sha256": "f5ac7548880c8ed75506baed570aa5a4472ee48e936af762d1492b19d17621d8"
+          }
+        },
+        "pre_publish_session_regions": {
+          "region_0": {
+            "bytes": 65423,
+            "path": "build/post-promotion/v14/parity-pilot-wplto/wplto/runtime-overlays-session-final.bin",
+            "sha256": "5872a25d95bfb724c6249283efc655144ed0c933fb10fb9d7cac1b0ddad8477f"
+          },
+          "region_1": {
+            "bytes": 1956,
+            "path": "build/post-promotion/v14/parity-pilot-wplto/wplto/runtime-overlays-session-final-region1.bin",
+            "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
+          }
+        },
+        "sealed_role_check": "deferred-to-post-publish-public-clean-build-gate",
+        "status": "passed-current-v4-pre-publish-WPLTO-closure",
+        "walls": {
+          "bank0_text_headroom_bytes": 243,
+          "e000_headroom_bytes": 54,
+          "fixed_hot_block_headroom_bytes": 2,
+          "ordinary_bank0_bss_headroom_bytes": 137,
+          "resident_island_headroom_bytes": 50
+        }
+      },
+      "raw_error": "historical post-WPLTO qualification checker red",
+      "raw_status": "FIRST RED: historical checker stopped current-product L-full keymap WPLTO"
+    },
+    "historical_profile_label": "0xb94e retained only inside the sealed legacy profile text",
+    "linked_gate": {
+      "bytes": 17784,
+      "path": "build/post-promotion/v14/parity-pilot-wplto/receipts/single-submit-linked-gates.json",
+      "sha256": "d9315fda8bf27e6ebd6a02c9638d354033e33b60b3a0525542ff0dc1940c78cb"
+    },
+    "publish_last_authority": "0xb98a",
+    "qualification": {
+      "bytes": 29515,
+      "path": "build/post-promotion/v14/parity-pilot-wplto/receipts/wplto-qualification.json",
+      "sha256": "18389eb76ef9c664e6b5098da6e9d0a5455ae4fa87e631c686ae5461e9d8793c"
+    },
+    "status": "passed-one-current-WPLTO-closure-at-typed-historical-qualification-boundary"
+  },
+  "wplto_probes_consumed": 1
+}

@@ -1,0 +1,75 @@
+{
+  "format": "lisp65-c2.2-v1.2.2-fail-closed-blackbox-terminal-first-red-v1",
+  "recorded_on": "2026-07-29",
+  "status": "FIRST RED: fixed-facade closure rejected the blackbox",
+  "promotable": false,
+  "candidate_source_commit": "663a17abe2ddef7e476408a8303bceb77c9ef941",
+  "execution_accounting": {
+    "prelink_checker_stops": 1,
+    "whole_program_LTO_closure_links": 1,
+    "successor_product_links": 0,
+    "hardware_runs": 0
+  },
+  "prelink_checker_stop": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.2-fail-closed-blackbox-wplto-first-red.json",
+    "classification": "stale exact ASM-entry inventory: 59 before the new nonreturning entry, 60 in the candidate",
+    "linked_ELFs": 0,
+    "WPLTO_budget_consumed": 0
+  },
+  "terminal_WPLTO": {
+    "status": "red-after-target-link-before-product-closure",
+    "error": "fixed facade red: E000 code bypasses the fixed vectors [{\"section\": \".lisp65_c2_kernal_window.irq_handler\", \"target\": \"0x222d\", \"instruction\": \"jmp\\t$222d\"}]",
+    "linked_ELF": {
+      "path": "build/post-release/v1.2.2/fail-closed-blackbox/wplto-v2/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "f9acf15bdd5bdbb81df7e2acecfa749342602840a38d105c7f5fcdd9bda5ce03"
+    },
+    "linked_map": {
+      "path": "build/post-release/v1.2.2/fail-closed-blackbox/wplto-v2/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "80258f5d5c13f3fcd1c01423db036c81f5f699fde8b821e328263d2e72ea78e2"
+    },
+    "base_result": {
+      "path": "build/post-release/v1.2.2/fail-closed-blackbox/wplto-v2/receipts/wplto-base-result.json",
+      "sha256": "4f67f648a646e9e0a58b4738ccacbbc6937c55e991246fedce42324407ef7e5f"
+    }
+  },
+  "candidate": {
+    "blackbox_symbol": "c2_kernal_sourceless_fail_blackbox",
+    "address": "0x222d",
+    "bytes": 65,
+    "source_sha256": "b2ecaee8fbb4d4b5af30dd13e22df69f207b6f05890f6eb4e38e8f0cd4b6a582",
+    "contract_sha256": "668ee508082d8a7fcd5f9e155cbbf903a92fcc93208cc2374a6d8b6213e4bd18",
+    "linked_gate": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.2-fail-closed-blackbox-linked-first-red-gate.json",
+      "sha256": "2f9504aced1ad5f1da734fb3544106643ba7c1e8723dcc03c16848fcdeacfc18"
+    },
+    "proved_before_closure_stop": {
+      "source_mutations_rejected": "19/19",
+      "IRQ_nonterminal_delta_bytes": 0,
+      "generic_fail_closed_delta_bytes": 0,
+      "window_state_growth_bytes": 0,
+      "calls_before_SEI": 0,
+      "display_seam_calls": 2
+    }
+  },
+  "capacity_and_closure": {
+    "predecessor_Link78": {
+      "bank0_text_headroom_bytes": 243,
+      "e000_headroom_bytes": 54,
+      "fixed_hot_block_headroom_bytes": 2
+    },
+    "candidate_bank0_text_headroom_bytes_before_closure_gate": 178,
+    "e000_headroom_bytes": 54,
+    "fixed_facade_vector_required_bytes": 3,
+    "fixed_hot_block_available_bytes": 2,
+    "fixed_hot_block_deficit_bytes": 1,
+    "classification": "architecture/closure First Red, not a window-floor or ordinary-text First Red"
+  },
+  "disposition": {
+    "blackbox": "withdrawn; no second form, WPLTO or instrument revision under the hard budget",
+    "product_authority": "Link 78 remains untouched",
+    "successor_link": "not built",
+    "hardware": "not requested",
+    "defstruct": "permanently parked for this era because the final commissioned path did not reach a legal product link"
+  },
+  "claim_limit": "The candidate capture and normal-path invariants passed their source/linked gate, but the product closure rejected its cross-domain edge. No blackbox product, visible F2 code, defstruct attribution or hardware result is claimed."
+}

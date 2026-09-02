@@ -1,0 +1,18 @@
+{
+  "format": "lisp65-c2.3-v1.6-mem-init-repeat-day-rollover-first-red-v1",
+  "recorded_on": "2026-08-06",
+  "status": "TOOL-FIRST-RED; DATE ROLLOVER; ZERO DEVICE ACTIONS",
+  "authority": {
+    "commit": "afa5b2f5",
+    "preparation_recorded_on": "2026-08-05"
+  },
+  "facts": {
+    "device_actions": 0,
+    "failed_before_cold_reset": true,
+    "failed_check": "mem_init before/after receipt drift; run build deliberately",
+    "cause": "Stable preparation and historical result expectations used the current calendar date, so the accepted 2026-08-05 receipts became unequal after midnight.",
+    "fix": "Preparation and historical-result expectations bind their authored dates; only a newly captured device receipt uses the actual capture date.",
+    "reintroduced_date_today_rejected": true
+  },
+  "claim_limit": "Host receipt-timebase First Red only. No reset, staging, RUN, monitor entry, stop, measured form, product claim or R/A/I/G claim occurred."
+}

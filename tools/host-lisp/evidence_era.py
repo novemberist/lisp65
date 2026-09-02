@@ -14,9 +14,12 @@ media artifacts, counts, geometry, readbacks -- stays live.
 
 from __future__ import annotations
 
+from datetime import date
 import hashlib
+import json
 from pathlib import Path
 import subprocess
+import tempfile
 from typing import Any
 
 
@@ -49,6 +52,20 @@ def era_bind(commit: str, path: Path | str) -> dict[str, Any]:
             "sha256": hashlib.sha256(raw).hexdigest()}
 
 
+def stable_recorded_on(receipt: Path) -> str:
+    """Preserve a receipt's creation date across later verification runs."""
+    if receipt.is_file():
+        try:
+            value = json.loads(receipt.read_text(encoding="utf-8"))
+            recorded = value.get("recorded_on")
+            if isinstance(recorded, str):
+                date.fromisoformat(recorded)
+                return recorded
+        except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+            pass
+    return date.today().isoformat()
+
+
 def selftest() -> None:
     """The era view must differ from the living view when the file moved."""
     tracked = "config/c2-v150-release-contract.json"
@@ -63,7 +80,12 @@ def selftest() -> None:
         pass
     else:
         raise EraError("a missing era authority was bound silently")
-    print("evidence-era: SELFTEST PASS shape=3 missing=rejected")
+    with tempfile.TemporaryDirectory() as directory:
+        receipt = Path(directory) / "receipt.json"
+        receipt.write_text('{"recorded_on":"2000-01-02"}\n', encoding="utf-8")
+        if stable_recorded_on(receipt) != "2000-01-02":
+            raise EraError("an existing receipt date was rewritten")
+    print("evidence-era: SELFTEST PASS shape=3 missing=rejected date=stable")
 
 
 if __name__ == "__main__":

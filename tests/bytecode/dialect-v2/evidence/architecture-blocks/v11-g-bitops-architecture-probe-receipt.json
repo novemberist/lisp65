@@ -1,0 +1,138 @@
+{
+  "format": "lisp65-v11-g-bitops-architecture-probe-receipt-v1",
+  "status": "passed-not-promoted",
+  "claim_limit": "architecture-and-capacity-comparison-only-no-product-or-abi-promotion",
+  "contract": {
+    "functions": [
+      "logand",
+      "logior",
+      "logxor",
+      "ash"
+    ],
+    "arity": "exactly-two-fixnums",
+    "representation": "signed-15-bit-fixnum",
+    "bitwise_result": "low-15-bit-two-complement-reinterpreted-as-signed-fixnum",
+    "ash": "arithmetic-right; left-shift-fails-on-fixnum-overflow; count-minus14-through-plus14"
+  },
+  "baseline": {
+    "capacity": {
+      "bank_post_boot_reserve_bytes": 1849,
+      "ext_post_load_headroom_bytes": 25482,
+      "symbol_headroom": 303,
+      "namepool_headroom_bytes": 4702,
+      "directory_post_align_headroom": 176,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "max_runtime_slice_headroom_bytes": 9
+    },
+    "resident": {
+      "objects": 207,
+      "code_bytes": 5963,
+      "directory_bytes": 1449,
+      "ext_bytes": 14181
+    }
+  },
+  "variants": {
+    "opcode": {
+      "status": "real-link-rejected",
+      "reason": "attic-library-shelf-exceeds-u16-catalog",
+      "details": {
+        "container_bytes": {
+          "ide": 28104,
+          "idex": 7694,
+          "m65d": 6573,
+          "buffer": 290,
+          "lcc": 23008
+        },
+        "shelf_bytes": 65862,
+        "u16_limit_bytes": 65535,
+        "over_limit_bytes": 327
+      },
+      "abi_ledger_gate": "passed",
+      "abi_ledger_log": {
+        "bytes": 342,
+        "sha256": "445d94bfae5911a7351550799c005f12fe6447a746eb4e35e572745de9330d98"
+      },
+      "real_link": {
+        "bytes": 8782,
+        "sha256": "4da738feee7b3c717ffe40780e8b345977aee7362ff90347d50d96991a854cc4"
+      },
+      "tail": "cc.ext.bin' \\\n\t--integration src/vm_embed.c --scratch-source src/io.c \\\n\t--out 'build/bytecode/dialect-v2/libs/lcc-native-validator.txt'\nl65m-transport-ops: PASS phases=21 iterations=2903 app-loads=21 crc-runs=126 report=build/bytecode/dialect-v2/libs/lcc-native-validator.txt\npython3 tools/host-lisp/v11_c1_compiler_contract.py \\\n\t--manifest 'build/bytecode/dialect-v2/libs/lcc.manifest.json' \\\n\t--container 'build/bytecode/dialect-v2/libs/lcc.ext.bin' \\\n\t--shelf-contract 'config/v11-attic-library-shelf.json' \\\n\t--validator-report 'build/bytecode/dialect-v2/libs/lcc-native-validator.txt' \\\n\t--header 'build/bytecode/dialect-v2/libs/lcc-contract.h' \\\n\t--receipt 'build/bytecode/dialect-v2/libs/lcc-contract.json'\nv11-c1-compiler-contract: PASS bytes=23008 entries=146 crc16=7ace\npython3 tools/host-lisp/v11_attic_library_shelf.py --selftest \\\n\t--out 'build/bytecode/dialect-v2/shelf/library-shelf.bin' --manifest-out 'build/bytecode/dialect-v2/shelf/library-shelf-manifest.json'\nTraceback (most recent call last):\n  File \"/tmp/lisp65-v11-g-bitops-ec66kvks/opcode/tools/host-lisp/v11_attic_library_shelf.py\", line 244, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/tmp/lisp65-v11-g-bitops-ec66kvks/opcode/tools/host-lisp/v11_attic_library_shelf.py\", line 233, in main\n    selftest()\n    ~~~~~~~~^^\n  File \"/tmp/lisp65-v11-g-bitops-ec66kvks/opcode/tools/host-lisp/v11_attic_library_shelf.py\", line 207, in selftest\n    first = build(shelf, manifest)\n  File \"/tmp/lisp65-v11-g-bitops-ec66kvks/opcode/tools/host-lisp/v11_attic_library_shelf.py\", line 126, in build\n    raise ShelfError(\"complete shelf exceeds u16 catalog address space\")\nShelfError: complete shelf exceeds u16 catalog address space\nmake: *** [mk/workbench.mk:243: attic-library-shelf-selftest] Error 1\n"
+    },
+    "runtime-slice": {
+      "status": "real-link-rejected",
+      "reason": "runtime-slice-exceeds-1792-byte-cap",
+      "details": {
+        "c1_compiler_slice_bytes": 2395,
+        "slice_limit_bytes": 1792,
+        "over_limit_bytes": 603
+      },
+      "abi_ledger_gate": "not-applicable-no-abi-change",
+      "abi_ledger_log": null,
+      "real_link": {
+        "bytes": 24979,
+        "sha256": "45a154331cac5f14c4963febc2cd98a65eb13f0a2139c5f17e186e57b1da70b8"
+      },
+      "tail": "l,-T,scripts/lisp65-mega65-workbench-overlay.ld \\\n\t-Wl,--defsym=__lisp65_workbench_required_boot_stack_param=512 \\\n\t-Wl,--defsym=__lisp65_workbench_required_runtime_stack_param=1450 \\\n\t-Wl,--defsym=__lisp65_workbench_required_post_boot_reserve_param=1024 \\\n\t-Wl,--defsym=__lisp65_workbench_runtime_overlay_vma_param=0xc356 \\\n\t-Wl,--defsym=__lisp65_workbench_runtime_overlay_max_vma_param=0xc356 \\\n\t-Wl,--defsym=__lisp65_error_overlay_max_bytes_param=1320 \\\n\t-Wl,--defsym=__lisp65_workbench_screen_base_param=0x0800 -Wl,--defsym=__lisp65_workbench_screen_columns_param=80 -Wl,--defsym=__lisp65_workbench_screen_rows_param=50 -Wl,--defsym=__lisp65_workbench_screen_cell_bytes_param=1 -Wl,--defsym=__lisp65_resident_island_base_param=0x1800 -Wl,--defsym=__lisp65_resident_island_limit_param=0x2000 -Wl,--defsym=__lisp65_resident_island_payload_capacity_param=2048 -Wl,-Map='build/probe/resident-island-seed-linked.prg.map' -o 'build/probe/resident-island-seed-linked.prg'\nsrc/eval.c:92:12: warning: unused function 'cadr' [-Wunused-function]\n   92 | static obj cadr(obj o) { return car(cdr(o)); }\n      |            ^~~~\nsrc/eval.c:257:17: warning: unused function 'hilo' [-Wunused-function]\n  257 | static unsigned hilo(obj hi, obj lo) {\n      |                 ^~~~\nsrc/eval.c:118:12: warning: variable 'k_lcc_invalid_parameter_list' set but not used [-Wunused-but-set-global]\n  118 | static obj k_lcc_invalid_parameter_list;\n      |            ^\n3 warnings generated.\nld.lld: error: runtime overlay C1 compiler lifetime exceeds its stack-safe window\nmos-mega65-clang: error: ld.lld command failed with exit code 1 (use -v to see invocation)\nmake[1]: *** [mk/workbench.mk:440: build/probe/resident-island-seed-linked.prg] Error 1\nmake: *** [mk/workbench.mk:717: workbench-overlay-stack-guard] Error 2\n"
+    }
+  },
+  "abi_consequences": {
+    "dialect_v1": "opcode-20-through-23-remain-reserved-and-decode-fail-closed",
+    "dialect_v2": "reserved-to-active-20-LOGAND-21-LOGIOR-22-LOGXOR-23-ASH",
+    "permanent_identity": "names-and-none-operands-enter-the-nonreusable-ledger",
+    "required_views": [
+      "product-c-vm",
+      "python-p0-vm",
+      "python-p0-compiler",
+      "python-disassembler",
+      "resident-lisp-lcc",
+      "live-abi-extension-doc"
+    ],
+    "frozen_v1_source": "lib/lcc.lisp-unchanged-v2-mirror-lives-in-lcc-profile",
+    "four_engine_acceptance": "required-after-owner-selection-before-promotion; probe-covers-model-emitter-device-link-and-lcc-mirror-not-hardware"
+  },
+  "recommendation": "defer-or-fund-prerequisite-reclaim",
+  "recommendation_reason": "Neither authorized architecture fits the pinned product. The runtime-slice cut exceeds the compiler-lifetime slice cap; the compact opcode cut preserves the frozen v1 ABI but makes the five-library Attic shelf exceed its u16 catalog. Bitops must therefore be deferred or preceded by a separately measured reclaim; neither cap may be relaxed as part of this block.",
+  "source_bindings": {
+    "tools/host-lisp/v11_g_bitops_architecture_probe.py": {
+      "bytes": 33162,
+      "sha256": "4a31db9b3061714c6a3eaaa1113ff26f652a977ead9734c01a58a8efeaa39bf7"
+    },
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-g-green-surface-implementation-receipt.json": {
+      "bytes": 9466,
+      "sha256": "322f8c560c90ad861ec1a20f6ce7fe5424ae3050fb933bcae1c65b5d21d27de2"
+    },
+    "config/bytecode-abi-ledger.json": {
+      "bytes": 9821,
+      "sha256": "f0aa23f6100289361a3b88ef9375cb81c3903a8d20c0afb4ec9ac8d944b3c560"
+    },
+    "docs/contracts/bytecode-abi.md": {
+      "bytes": 1858,
+      "sha256": "bc0478bae5f2d603c3b0d6df76e1069fdd9b4728c4abc49b8b4ce4484da56011"
+    },
+    "src/vm.c": {
+      "bytes": 72709,
+      "sha256": "7a0e7b6ae35ba94527ad8587f70a4b456a9cc27c402736852a14f768fd5bea74"
+    },
+    "src/vm.h": {
+      "bytes": 6632,
+      "sha256": "c5398009a0ef63a649c1da7908b822160f73cbf66a415ca416db90987d38aae2"
+    },
+    "tools/host-lisp/bytecode_p0.py": {
+      "bytes": 85570,
+      "sha256": "9e687360447910916d1e9b5fbd2d86171b4f58eb136474da6ed43399f3236a35"
+    },
+    "tools/host-lisp/bytecode_p0_compiler.py": {
+      "bytes": 47002,
+      "sha256": "f41d7d7aed5ee4a4bcb0c34256144d101a167b92c340d29d8ce43d2dac6efbe6"
+    },
+    "lib/lcc.lisp": {
+      "bytes": 34673,
+      "sha256": "a246593450d38dc78b5337bc422af06259d43220366948bdfef84298fdc8b910"
+    },
+    "lib/dialect-v2/lcc-profile.lisp": {
+      "bytes": 10960,
+      "sha256": "4d898c56831e676fa308c497bc25b7fa776de4883d5e86ad2ad2c07107129882"
+    }
+  }
+}

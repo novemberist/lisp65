@@ -1,0 +1,237 @@
+{
+  "format": "lisp65-c2-cpu-chip-write-completion-rollback-finalize-attribution-v1",
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: rollback-finalize already consumes the shared completion boundary; the remaining genuine wipe freight and known co-residence candidates cannot close the Session aggregate",
+  "promotable": false,
+  "authority": {
+    "completion_contract": {
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "sha256": "f4e1646ec72271533116686a39e5c7be38f928c2cb8d299dc6642697f67efe7f"
+    },
+    "runtime": {
+      "path": "src/c2_product_runtime.c",
+      "sha256": "cd6aa9dd49c14417e7fab93f41c38dd67e1ad2d70684bd1da56fec2000d04ec5"
+    },
+    "baseline_map": {
+      "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-recovery-wplto/resident-island-seed.prg.map",
+      "sha256": "3e679955c3680ade54125d359b8a787e9c3d02809c9bb3160d734ea470e7c4ac"
+    },
+    "seal_first_red_map": {
+      "path": "build/c2.2/substitution/cpu-chip-write-completion-c2j-seal-wplto/resident-island-seed.prg.map",
+      "sha256": "a55b296d3f8c2c06a55cdc77d2111086db58f634ab4f8a935f906ecdcc441e14"
+    },
+    "seal_first_red_lto_object": {
+      "path": "build/c2.2/substitution/cpu-chip-write-completion-c2j-seal-wplto/resident-island-seed.prg.lto.o",
+      "sha256": "67966ec5c8b836e27930604bc8be7e939f80a00271052e0618deb3a6482853bf"
+    },
+    "seal_wplto_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cpu-chip-write-completion-c2j-seal-wplto-receipt.json",
+      "sha256": "7b5973a0f8d83576a65d17cf7a4614f4bb4c24749688cd275cc7da8fce42e345"
+    }
+  },
+  "rollback_finalize_attribution": {
+    "baseline_section_bytes": 1692,
+    "seal_section_bytes": 2214,
+    "delta_bytes": 522,
+    "slice_cap_bytes": 1792,
+    "slice_overhang_bytes": 422,
+    "linked_objects": [
+      {
+        "symbol": "c2_append_rollback_finalize_phase",
+        "bytes": 1295,
+        "temperature": "cold rollback control and final bookkeeping",
+        "freight": "genuine"
+      },
+      {
+        "symbol": "c2_append_rollback_zero_plane",
+        "bytes": 195,
+        "temperature": "cold Bank-5 suffix wipe",
+        "freight": "genuine"
+      },
+      {
+        "symbol": "c2_append_rollback_zero_chip_code",
+        "bytes": 432,
+        "temperature": "cold Bank-2 suffix wipe added by the complete C2-lite rollback contract",
+        "freight": "genuine"
+      },
+      {
+        "symbol": "c2_append_rollback_zero_attic",
+        "bytes": 292,
+        "temperature": "cold Session-Attic suffix wipe",
+        "freight": "genuine"
+      }
+    ],
+    "baseline_linked_objects": [
+      {
+        "symbol": "c2_append_rollback_finalize_phase",
+        "bytes": 1204
+      },
+      {
+        "symbol": "c2_append_rollback_zero_plane",
+        "bytes": 196
+      },
+      {
+        "symbol": "c2_append_rollback_zero_attic",
+        "bytes": 292
+      },
+      {
+        "symbol": "c2_append_rollback_zero_chip_code",
+        "bytes": 0
+      }
+    ],
+    "delta_explanation": {
+      "new_Bank2_wipe_bytes": 432,
+      "finalize_body_growth_bytes": 91,
+      "Bank5_zero_loop_delta_bytes": -1,
+      "Attic_zero_loop_delta_bytes": 0,
+      "sum_bytes": 522
+    }
+  },
+  "private_completion_copy_audit": {
+    "status": "none remain",
+    "searched_closure": [
+      "c2_append_rollback_finalize_phase",
+      "c2_append_rollback_zero_plane",
+      "c2_append_rollback_zero_chip_code",
+      "c2_append_rollback_zero_attic"
+    ],
+    "absent_from_finalize_closure": [
+      "c2_completion_poll",
+      "rtov_crc_mem",
+      "poison loop",
+      "independent readback loop",
+      "timeout loop",
+      "c2_stream_c2d_read",
+      "vm_ext_read"
+    ],
+    "shared_boundary_consumed_before_finalize": {
+      "plan_station": "the first c2-append-header invocation in the rollback plan",
+      "mode": "C2_COMPLETION_ROLLBACK_MARK",
+      "proof": "the shared header body polls the sealed C2J before rollback-unpublish and rollback-finalize may restore or wipe"
+    },
+    "finalize_write_model": "ordered writes only; the later C2J CLEAR bookend is the common proof of the complete rollback tail"
+  },
+  "session_aggregate_feasibility": {
+    "baseline_bytes": 65438,
+    "baseline_headroom_bytes": 98,
+    "seal_probe_packed_delta_bytes": 1536,
+    "seal_probe_projected_bytes": 66974,
+    "seal_probe_overflow_bytes": 1438,
+    "rollback_chain": {
+      "members": [
+        {
+          "name": "rollback-unpublish",
+          "raw_bytes": 758,
+          "current_minimum_packed_bytes": 768
+        },
+        {
+          "name": "rollback-finalize",
+          "raw_bytes": 2214,
+          "current_minimum_packed_bytes": 2304
+        },
+        {
+          "name": "abort-control",
+          "raw_bytes": 267,
+          "current_minimum_packed_bytes": 512
+        }
+      ],
+      "raw_total_bytes": 3239,
+      "current_minimum_packed_total_bytes": 3584,
+      "generous_two_record_lower_bound_bytes": 3328,
+      "maximum_pack_recovery_without_removing_semantics_bytes": 256,
+      "note": "This lower bound grants an ideal semantic split and arbitrary cut positions while preserving two records under the 1792-byte cap."
+    },
+    "other_clear_256_byte_candidate": {
+      "members": [
+        {
+          "name": "c2-decode-13",
+          "bytes": 121
+        },
+        {
+          "name": "c2-emit-prepare",
+          "bytes": 1289
+        }
+      ],
+      "combined_bytes": 1410,
+      "packed_before_bytes": 1792,
+      "packed_after_bytes": 1536,
+      "maximum_recovery_bytes": 256,
+      "qualification": "generous arithmetic credit only; semantic co-residence has not been authorized or proved"
+    },
+    "generous_known_recovery_upper_bound_bytes": 512,
+    "projected_bytes_after_generous_known_recovery": 66462,
+    "remaining_overflow_bytes": 926,
+    "stronger_local_threshold": {
+      "additional_true_code_reduction_required_before_the_rollback_chain_can_recover_a_second_quantum_bytes": 167,
+      "projected_bytes_if_that_unproved_second_quantum_and_the_other_256_byte_candidate_both_succeeded": 66206,
+      "remaining_overflow_bytes": 670
+    },
+    "verdict": "A rollback-finalize split is locally mandatory but cannot make the aggregate green. The requested one-cut lane has no numerically complete construction."
+  },
+  "parallel_named_fund_attribution": {
+    "ordinary_text": {
+      "required_recovery_bytes": 50,
+      "linked_delta_bytes": 55,
+      "objects": [
+        {
+          "symbol": "vm_ext_write",
+          "baseline_bytes": 0,
+          "probe_bytes": 33,
+          "delta_bytes": 33,
+          "classification": "wrapper made out-of-line by the new Bank-2 wipe caller",
+          "legitimate_candidate": "call the already pinned c2_facade_c2_dma seam directly from the cold wipe"
+        },
+        {
+          "symbol": "c2_product_install",
+          "baseline_bytes": 598,
+          "probe_bytes": 620,
+          "delta_bytes": 22,
+          "classification": "genuine completion orchestration and WPLTO movement; no obsolete branch or duplicate truth identified"
+        }
+      ],
+      "best_named_recovery_bytes": 33,
+      "remaining_deficit_bytes": 17,
+      "verdict": "red; the one legitimate wrapper removal is insufficient and no second named fund exists"
+    },
+    "E000": {
+      "required_recovery_bytes": 28,
+      "linked_delta_bytes": 29,
+      "objects": [
+        {
+          "symbol": "c2_append_begin",
+          "baseline_bytes": 489,
+          "probe_bytes": 513,
+          "delta_bytes": 24,
+          "classification": "genuine transaction setup"
+        },
+        {
+          "symbol": "c2_append_run_rollback_plan",
+          "baseline_bytes": 24,
+          "probe_bytes": 29,
+          "delta_bytes": 5,
+          "classification": "genuine canonical completion-marker setup at four resident rollback callers"
+        }
+      ],
+      "named_recovery_bytes": 0,
+      "remaining_deficit_bytes": 28,
+      "verdict": "red; no fossil, duplicate or unreachable branch was found"
+    }
+  },
+  "decision": {
+    "split_implemented": false,
+    "reason": "The attribution disproved the proposed private-copy cut, and even a generous optimal split/fusion bound remains 926 bytes over the Session u16 ceiling while the text and E000 walls remain independently red.",
+    "new_WPLTO_run": false,
+    "reason_no_WPLTO": "There is no product-shaped construction capable of satisfying the simultaneous gates. A compiler/linker run would only spend the authorized attempt to reproduce a proved arithmetic First Red.",
+    "product_link": false,
+    "hardware_run": false,
+    "next_action": "Class-C aggregate/resident-scope decision with the measured 926-byte generous lower-bound deficit, 17-byte residual text deficit after the only named candidate, and 28-byte E000 deficit."
+  },
+  "execution_accounting": {
+    "new_source_or_mutation_runs": 0,
+    "new_whole_program_lto_runs": 0,
+    "new_product_links": 0,
+    "new_hardware_runs": 0
+  },
+  "claim_limit": "Read-only attribution and arithmetic feasibility only. No new source form, split, WPLTO, product candidate, C1 closure, matrix-gate fall or acceptance-chain claim.",
+  "rollback_line": "Link 59 remains untouched."
+}

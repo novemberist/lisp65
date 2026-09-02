@@ -1,0 +1,166 @@
+{
+  "format": "lisp65-post-v1.2-lisp-comment-translation-link-receipt-v1",
+  "version": 1,
+  "recorded_on": "2026-07-30",
+  "scope": {
+    "authorized_work": "Translate the 98 classified German comment lines in lib/*.lisp and carry them through the one carrier/link cycle that the raw-source binding requires.",
+    "class_c_items_not_touched": [
+      "while/random delivered-head disposition and acceptance-chain coverage",
+      "materialization of the four missing R6/G6 archives"
+    ],
+    "hardware_runs": 0,
+    "promotion_runs": 0,
+    "public_release_changes": 0,
+    "product_link_invocations": 1
+  },
+  "source_state": {
+    "translation_commit": "eaecb8ba7b984369af7bb96d16e5cd42a213c545",
+    "receipt_head": "ab2d2097436c846924d1117b15fa66cdf2d072cc",
+    "branch": "codex/post-1.0-docs-cleanup",
+    "remote": "github/codex/post-1.0-docs-cleanup"
+  },
+  "comment_translation": {
+    "classifier": "tools/host-lisp/comment_language_gate.py semantics: German character, or at least two words from its German-word set, in a recognized comment line",
+    "classified_lines_before": 98,
+    "classified_lines_after": 0,
+    "coherent_comment_blocks_translated": true,
+    "files": [
+      {
+        "bytes": 28606,
+        "path": "lib/ide-buffer.lisp",
+        "sha256": "345ac2308ac75c6b5a7493f3c186370578c6466f14d7b7fb58b32842dfe9cf11"
+      },
+      {
+        "bytes": 21863,
+        "path": "lib/ide-disk.lisp",
+        "sha256": "4e7f37fced2227898bc9e3a33b25bf0816eb340eb5a85bb6342373e734b7046a"
+      },
+      {
+        "bytes": 1422,
+        "path": "lib/ide-launch.lisp",
+        "sha256": "85f8261ea52efc0cfeac6dae7893647da708a1e555392acaf48f4a576d6a3c8b"
+      },
+      {
+        "bytes": 3237,
+        "path": "lib/ide-syntax.lisp",
+        "sha256": "6b1ace4d307b5443a4eb563bfa3c4b3fecc9ec60acdbc14b8ef364f39b11c7f6"
+      },
+      {
+        "bytes": 37869,
+        "path": "lib/ide-ui.lisp",
+        "sha256": "f4c9ef348c1bd7e29f79b0e0bf153ccdb43aeab7fc03391ee6e341e1638f07ef"
+      },
+      {
+        "bytes": 15148,
+        "path": "lib/lcc-fasl.lisp",
+        "sha256": "e262731b7a5b813aea7c2179d2064be2024c91ca032829520f52c390c82ae42a"
+      },
+      {
+        "bytes": 36291,
+        "path": "lib/lcc.lisp",
+        "sha256": "e657f80c387d623c0a51d628dfae89d8cfa35cb44290c0ca32df3c34153785b2"
+      },
+      {
+        "bytes": 3224,
+        "path": "lib/prelude-macros.lisp",
+        "sha256": "041af626f4618001f585444f178b432e3b24c681d069b2d1cc95629d4739a9f9"
+      },
+      {
+        "bytes": 3388,
+        "path": "lib/stdlib-load-lib.lisp",
+        "sha256": "0f6dac5983289aec3a55dd5b0c3ccf8f76ef28bd9ddde2d7073e4e31f9f88665"
+      },
+      {
+        "bytes": 2790,
+        "path": "lib/stdlib-load.lisp",
+        "sha256": "de5a35c2c37cc2b1515410d19e6c0095579f21a1b05e7d87a039ce7e9dabb859"
+      },
+      {
+        "bytes": 5717,
+        "path": "lib/stdlib-places.lisp",
+        "sha256": "605aba9cada3f5979b6b491c40ffa496c0e396f0d2fbe69df6c9faa40db3379a"
+      }
+    ]
+  },
+  "verification": {
+    "comment_classifier_recount": "PASS classified_current=0",
+    "comment_language": "PASS baseline=v1.1.0 mutations=2",
+    "source_syntax": "PASS files=1050 python=904 shell=146 failures=0; selftest cases=4",
+    "equivalence_chain": "PASS lanes=11 executed=447 canary=COMPLETE"
+  },
+  "carrier_regeneration": {
+    "tier_generation_before_sha256": "00b5f91290d1e9bb572899f56d4cab9b3fd1f0dead4dbd3a7f5e968ab6b96524",
+    "tier_generation_after": {
+      "bytes": 1313,
+      "path": "build/post-promotion/phase-v/while/gate/compiler-tier/tier-generation.json",
+      "sha256": "dfa33d915bf94d26828026ecc978c5db21bf1768db1b3ddd9ada6be8531217d9"
+    },
+    "carrier_blob": {
+      "bytes": 7854,
+      "path": "build/post-promotion/phase-v/while/gate/carrier/lcc.blob.bin",
+      "sha256_before_and_after": "d4473ead0e30c0f95509dca86e35df95c7d75c302ea1f4dd83f14ebf197b8f98"
+    },
+    "carrier_manifest": {
+      "path": "build/post-promotion/phase-v/while/gate/carrier/lcc.manifest.json",
+      "sha256_before_and_after": "7b2a5f913f9ac1898292e5d5713d128d2c1efac79f4317e4b84efaddfb245708"
+    },
+    "execution_probe_payload_sha256_before_and_after": "a004f00c18c7b7c4664447a516fa2163a895846e921409059704a970240c540f",
+    "conclusion": "The raw source binding changed as required, while the packed compiler carrier and its executed probe payload remained byte-identical."
+  },
+  "single_link_result": {
+    "command": "make --no-print-directory workbench-product",
+    "candidate_manifest": {
+      "bytes": 15562,
+      "path": "build/c2.2/v1.2.2-candidate-media/candidate-manifest.json",
+      "sha256": "4db811292746f6d42abf7b0c485412278d19cecef1eff3d471075663550c92a6"
+    },
+    "candidate_artifact_set_sha256": "f40f958ffa87c845ea487d21e901ba63dd1db23e6c58fb6965b35130fbd9fb74",
+    "published_v1_2_2_artifact_set_sha256": "359809d4a6b3bde95b9624f375ae38c32446ea54024a58691e07eb4673bcf7de",
+    "candidate_identity": {
+      "linked_product_elf_sha256": "dbc501c4769f3c9270c67a59c3d66c6fd6fdc515060fe5dd5afd4fc7a4ecc577",
+      "resident_prg_sha256": "24936eb16b54e8d2950859c27e0723c73c03f217d8ca7dc6182475af55a89fda",
+      "resolved_profile_sha256": "ac22da1f81a0cb476756b762026d594376c7dea2f89b4cbb233eae8072270dae"
+    },
+    "walls": {
+      "bank0_text_headroom_bytes": 243,
+      "e000_headroom_bytes": 54,
+      "session_family_headroom_bytes": 113
+    },
+    "role_comparison_to_published_v1_2_2": {
+      "unchanged_count": 9,
+      "unchanged_roles": [
+        "c2-bank2-static-code-plane",
+        "c2-kernal-window",
+        "c2-product-shelf",
+        "c2-session-family-region-1",
+        "c2d-v6-code-plane",
+        "library-ide",
+        "library-idex",
+        "library-m65d",
+        "work-d81"
+      ],
+      "changed_count": 10,
+      "changed_roles": [
+        "boot-descriptor",
+        "c2-boot-family",
+        "c2-resident-prg",
+        "c2-session-family-region-0",
+        "c2-two-record-boot-stage",
+        "cold-stager",
+        "linked-product-elf",
+        "product-d81",
+        "product-mount-descriptor",
+        "resolved-profile"
+      ],
+      "bank2_static_code_sha256_before_and_after": "cac8e6392de04b9086f37d77b38db7a2f2fd99e904b7b985c50af93db4b16c09"
+    },
+    "clean_build_sealed_role_check": {
+      "status": "FIRST RED",
+      "first_mismatch": "linked-product-elf",
+      "classification": "The executable carrier and Bank-2 static plane are byte-identical, but the product's source/build identity intentionally binds the changed raw Lisp source. The published v1.2.2 seal therefore cannot be inherited.",
+      "effect": "No second link, acceptance-chain run, promotion, public sync, tag, release, or hardware claim was made."
+    }
+  },
+  "claim_limit": "This receipt closes the bounded comment-translation and single-link task only. The candidate is not accepted or promotable; any decision to ship the new source-bound product identity remains Class C.",
+  "status": "passed-bounded-translation-and-one-link-with-expected-seal-first-red"
+}

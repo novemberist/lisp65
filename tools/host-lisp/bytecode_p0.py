@@ -916,6 +916,12 @@ class P0VM:
             return NIL
         self.key_events.pop(0)
         self.io_counters["key_event"] += 1
+        # The delivered private-ring path is polled through the same VM loop
+        # that owns the RUN/STOP latch.  Model that boundary here as well: a
+        # private source must not turn RUN/STOP into an ordinary editor byte.
+        if code == 3:
+            self.memory[0xFF8A] = 0
+            raise VMError("Stopped", "RUN/STOP")
         return mkfix(code)
 
     def _consume_empty_poll(self):

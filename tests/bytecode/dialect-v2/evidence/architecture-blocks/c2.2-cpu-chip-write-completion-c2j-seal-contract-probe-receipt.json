@@ -1,0 +1,167 @@
+{
+  "C2J_seal_fixture": {
+    "format_crc32_preserved": true,
+    "normal_match": true,
+    "record_bytes": 64,
+    "recovery_match": true,
+    "seal_bytes": 2
+  },
+  "authority": {
+    "contract": {
+      "bytes": 14700,
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "sha256": "e779c9b8e98be06e2f1ba504f1aa274b6c848e5caf7c7b5375e5161167ce9e52"
+    },
+    "emitter": {
+      "bytes": 26781,
+      "path": "src/c2_session_emitter.c",
+      "sha256": "b9376f3c3bfac1d6e9ce008a1d6c9c374a0ed2172472f98106dc832755f395cd"
+    },
+    "gate": {
+      "bytes": 30859,
+      "path": "tools/host-lisp/c2_cpu_chip_write_completion_gate.py",
+      "sha256": "a53b4ef3173d9876b38e58b58e033f4d5ee0196b9a24b52320b25cbf3f7af187"
+    },
+    "historical_hardware_evidence": {
+      "Link63_completion_authority_first_red": {
+        "bytes": 8570,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link63-C1-Freezer-cutpoint3-completion-authority-hardware-first-red.json",
+        "sha256": "c002e9c6324310065b198e72f8ccf1028034402da4246a8fa65f90e45ea06925"
+      },
+      "Link64_LTO_hoist_first_red": {
+        "bytes": 8186,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-stateless-completion-length-wplto-first-red.json",
+        "sha256": "874723d33c363548c371b1451655c020f712b3d5b5db79083e00e9897eed9bc0"
+      },
+      "hardware_first_red": {
+        "bytes": 7830,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link59-C1-Freezer-cutpoint4-late-chip-write-hardware-first-red.json",
+        "sha256": "beb1ae44a5e60462161fa4ee5c24df297bf4d8478eddaa1eebd15711ebbc5b3e"
+      }
+    },
+    "mode_length_leaf": {
+      "bytes": 853,
+      "path": "src/c2_completion_mode_length.s",
+      "sha256": "19d70e59fbe9ac287cce6c6929183401e57d7fcd0178e0f6aa8466fbf52c5429"
+    },
+    "runtime": {
+      "bytes": 163560,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "8d1ab8d0150fa2401094613372ebf57143027c612d4612a4479ecfe43e2c6b00"
+    }
+  },
+  "claim_limit": "No WPLTO, product-link, hardware or C1 closure claim.",
+  "delayed_read_delivery_fixture": {
+    "first_compare_matches": false,
+    "poison_count": 1,
+    "read_submit_count": 1,
+    "second_compare_after_delivery_matches": true
+  },
+  "format": "lisp65-c2-cpu-chip-write-completion-probe-v7",
+  "interleaving_fixture": {
+    "ACTIVE_converged_before_mutation": true,
+    "CLEAR_converged_last": true,
+    "bank2_exact_after_abort": true,
+    "bank5_exact_after_abort": true,
+    "cutpoint4_freezer_delta_bytes": 0,
+    "pending_jobs_after_abort": 0,
+    "pre_rollback_data_barrier": true
+  },
+  "mutation_count": 25,
+  "mutations_rejected": [
+    "same-buffer-false-green",
+    "removed-convergence-drain",
+    "C2J-target-byte-corrupted",
+    "C2J-seal-corrupted",
+    "C2J-recovery-reseal-removed",
+    "retry-length-scratch-clobber-without-rematerialization",
+    "retry-length-record27-authority-regression",
+    "retry-length-unknown-mode-accepted",
+    "retry-read-result-repoisoned",
+    "ACTIVE-removed",
+    "pre-rollback-barrier-removed",
+    "rollback-wipe-removed",
+    "CLEAR-removed",
+    "pre-header-data-barrier-removed",
+    "header-publish-before-target-proof",
+    "rollback-before-data-barrier",
+    "bookkeeping-NONE-before-CLEAR-proof",
+    "C2J-CLEAR-not-last",
+    "producer-private-poll-regression",
+    "completion-timeout-removed",
+    "nonlocal-abort-bypasses-barrier",
+    "nonlocal-abort-bypasses-CLEAR-proof",
+    "symbol-write-class-omitted",
+    "C2J-seal-before-format-CRC",
+    "C2J-field-reconstruction-regression"
+  ],
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "retry_length_fixtures": {
+    "C2J": {
+      "mode": "C2J",
+      "mode_length": "0x0040",
+      "nested_read_clobber": "0xbb04",
+      "poison_loop_bounded": true,
+      "record_27_clobber": "0xfc",
+      "record_clobber_semantically_inert": true,
+      "retry_length": "0x0040",
+      "timeout_boundary_reachable": true
+    },
+    "PUBLISH": {
+      "mode": "PUBLISH",
+      "mode_length": "0x0030",
+      "nested_read_clobber": "0xbb04",
+      "poison_loop_bounded": true,
+      "record_27_clobber": "0xfc",
+      "record_clobber_semantically_inert": true,
+      "retry_length": "0x0030",
+      "timeout_boundary_reachable": true
+    }
+  },
+  "source_gate": {
+    "C2J_identity": {
+      "bookend_seal": "CRC16/CCITT-FALSE over all 64 emitted bytes",
+      "field_reconstruction_comparisons": 0,
+      "format_crc": "CRC32/IEEE in record bytes 60..63",
+      "seal_storage": "phase-scratch record[25..26]",
+      "target_leaf": "rtov_crc_mem"
+    },
+    "converged_points": 4,
+    "journal_bookends": 2,
+    "private_completion_helpers": 0,
+    "readback_retry": {
+      "poison_passes": 1,
+      "retry_scope": "local observed-buffer comparison only",
+      "target_read_submissions": 1
+    },
+    "retry_length": {
+      "C2J_bytes": 64,
+      "Publish_bytes": 48,
+      "record_27_references": 0,
+      "rematerialization_points": 3,
+      "storage_authority": "none",
+      "target_implementation": "non-LTO assembler leaf",
+      "target_section": ".lisp65_rt_c2append_header",
+      "target_symbol": "c2_completion_mode_length"
+    },
+    "serial_plans": {
+      "rollback": "common barrier -> restore/wipe -> CLEAR write -> common CLEAR",
+      "stage": "journal-write -> common ACTIVE -> mutations"
+    },
+    "shared_cold_body": ".lisp65_rt_c2append_header",
+    "transaction_data_barriers": 2,
+    "write_classes": [
+      "Bank-2 code",
+      "Bank-5 C2D suffix",
+      "export scratch",
+      "C2J",
+      "sympool",
+      "nameoff",
+      "symval",
+      "symfn",
+      "emitter roots"
+    ]
+  },
+  "status": "passed-single-submit-stateless-four-point-C2J-seal-source-model-awaiting-WPLTO"
+}

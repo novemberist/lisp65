@@ -1,0 +1,160 @@
+{
+  "authority": {
+    "base_elf": {
+      "bytes": 609660,
+      "path": "build/c2.2/substitution/product-link-51-c2-lite-v6-canonical-t/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "963ad38cbd0c88a33908313f8734b227abde74b1df98a3a74c7183d497fb86ec"
+    },
+    "base_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-51-c2-lite-v6-canonical-t/lisp65-c2-substitution-linked.prg",
+      "sha256": "22ab996f5c14db54a7449c0fbcecd22ec4c0d806f72803eb7c49eb953c271629"
+    },
+    "shelf_qualification": {
+      "capacity_delta_bytes": 0,
+      "capture_banks": [
+        "0x00000000..0x0000ffff (three timed reads)",
+        "0x00020000..0x0002ffff",
+        "0x00050000..0x0005ffff"
+      ],
+      "capture_symbols": {
+        "vm_buf_bank": {
+          "address": "0xbf92",
+          "bytes": 1
+        },
+        "vm_buf_off": {
+          "address": "0xb976",
+          "bytes": 2
+        },
+        "vm_codebuf": {
+          "address": "0xbf5a",
+          "bytes": 56
+        },
+        "vm_status": {
+          "address": "0x5d",
+          "bytes": 1
+        },
+        "vmr_code": {
+          "address": "0xbf97",
+          "bytes": 2
+        },
+        "vmr_hdrlen": {
+          "address": "0xbf93",
+          "bytes": 2
+        },
+        "vmr_littab": {
+          "address": "0xbf95",
+          "bytes": 2
+        },
+        "vmr_plen": {
+          "address": "0xbf9b",
+          "bytes": 2
+        },
+        "vmr_poff": {
+          "address": "0xbf99",
+          "bytes": 2
+        },
+        "vmr_pwmax": {
+          "address": "0xbf9d",
+          "bytes": 2
+        },
+        "vmr_streaming": {
+          "address": "0xbfa3",
+          "bytes": 1
+        },
+        "vmr_win": {
+          "address": "0xbf9f",
+          "bytes": 2
+        },
+        "vmr_winlen": {
+          "address": "0xbfa1",
+          "bytes": 2
+        }
+      },
+      "elf": {
+        "bytes": 609660,
+        "path": "build/c2.2/substitution/product-link-51-c2-lite-v6-canonical-t/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "963ad38cbd0c88a33908313f8734b227abde74b1df98a3a74c7183d497fb86ec"
+      },
+      "mutations_rejected": {
+        "extra-neighbour-byte": "rejected",
+        "only-opcode-changed": "rejected",
+        "only-operand-changed": "rejected",
+        "wrong-opcode": "rejected",
+        "wrong-relative-target": "rejected"
+      },
+      "patch": {
+        "after_hex": "80fe",
+        "before_hex": "8617",
+        "changed_bytes": 2,
+        "file_size_delta_bytes": 0,
+        "function": "vm_check_status",
+        "function_interval": "0x375e..0x37a9",
+        "instruction_address": "0x376c",
+        "instruction_file_offset": "0x176d"
+      },
+      "product": {
+        "bytes": 41542,
+        "path": "build/c2.2/substitution/product-link-51-c2-lite-v6-canonical-t/lisp65-c2-substitution-linked.prg",
+        "sha256": "22ab996f5c14db54a7449c0fbcecd22ec4c0d806f72803eb7c49eb953c271629"
+      },
+      "promotable": false,
+      "status": "passed-prequalified-BADOPCODE-hold-shelf-recipe"
+    }
+  },
+  "capacity_effect": {
+    "bank0_text_bytes": 0,
+    "e000_bytes": 0,
+    "file_bytes": 0,
+    "fixed_hot_block_bytes": 0,
+    "ordinary_bank0_bss_bytes": 0,
+    "resident_island_bytes": 0,
+    "runtime_slice_bytes": 0,
+    "session_family_bytes": 0
+  },
+  "claim_limit": "SHA-bound fixed-length diagnostic derivative only; never promotable and never latency or acceptance evidence.",
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link51-badopcode-hold-shelf-NONPROMOTABLE/lisp65-link51-badopcode-hold-shelf-NONPROMOTABLE.prg",
+    "sha256": "314c75ab8397e7041c6fd20053655f666cd05c6f17b0856a3c47e75233fe1954"
+  },
+  "execution_accounting": {
+    "changed_bytes": 2,
+    "compiler_runs": 0,
+    "completed_latency_measurements": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0
+  },
+  "format": "lisp65-c2-link51-badopcode-hold-shelf-patch-v1",
+  "manifest": {
+    "bytes": 4763,
+    "path": "build/c2.2/substitution/link51-badopcode-hold-shelf-NONPROMOTABLE/fixed-length-patch-manifest.json",
+    "sha256": "deaf8cc338dd443556cbafb2514359c6030a07791f5d4d3cbaac0ce1c3b4436a"
+  },
+  "patch": {
+    "after_hex": "80fe",
+    "before_hex": "8617",
+    "changed_bytes": 2,
+    "changed_file_offsets": [
+      "0x176d",
+      "0x176e"
+    ],
+    "file_size_delta_bytes": 0,
+    "function": "vm_check_status",
+    "function_interval": "0x375e..0x37a9",
+    "instruction_address": "0x376c",
+    "instruction_file_offset": "0x176d",
+    "mutations_rejected": {
+      "extra-neighbour-byte": "rejected",
+      "only-opcode-changed": "rejected",
+      "only-operand-changed": "rejected",
+      "wrong-opcode": "rejected",
+      "wrong-relative-target": "rejected"
+    },
+    "status": "passed-exact-two-byte-self-loop"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "status": "passed-nonpromotable-link51-badopcode-hold",
+  "trigger": "Link 51 latency-line-2 VM_BADOPCODE recurrence"
+}

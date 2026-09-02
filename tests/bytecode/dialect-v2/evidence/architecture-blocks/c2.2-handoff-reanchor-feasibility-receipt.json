@@ -1,0 +1,562 @@
+{
+  "authority": {
+    "bytes": 2257,
+    "path": "config/c2-handoff-reanchor-feasibility-contract.json",
+    "sha256": "e15d9a7f09f15707b3c341039f6d9f2ef96a98036b824113f45c9f510bc38046"
+  },
+  "banner_trim_comparison": {
+    "complete_native_banner_launch_removal_historical_upper_bound_bytes": 3,
+    "evidence": [
+      {
+        "bytes": 2358,
+        "path": "config/v11-repl-banner-native-binding-capacity-authorization.json",
+        "sha256": "e4cc25db90b2747f7f40df90ddede3a0fc0bff0d512aa1a14af5a58cc9fb0732"
+      },
+      {
+        "bytes": 3701,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-repl-banner-native-binding-diagnosis.json",
+        "sha256": "4cf88484730d732f5f514ba5bf7deaa412d053dfe57ee399c41cc54f98579680"
+      },
+      {
+        "bytes": 8674,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-repl-banner-block-receipt.json",
+        "sha256": "4a7528093415a8c5d179a33daad91dad2565ceb8cdeab53eb2c519977ba21f2e"
+      },
+      {
+        "bytes": 6774,
+        "path": "docs/planning/repl-banner-spec-1.1.md",
+        "sha256": "3e8e3b16fe9292adf40556bf516b4df71fd479b9bcb2875dcacc8f2b13920563"
+      },
+      {
+        "bytes": 12883,
+        "path": "src/repl.c",
+        "sha256": "0abc660c84df174c720f8c3b65f5df603f1698fd5f3441e1f85016cddaca5850"
+      },
+      {
+        "bytes": 1651,
+        "path": "lib/repl-banner.lisp",
+        "sha256": "8171c70fb0a7bf6dfa4f0727a9356b64f9776655a5b0a8cdd873e65553df224e"
+      }
+    ],
+    "reason": "The visible banner is Lisp bytecode; trimming its runs/text changes the shelf/C2 image, not the native Bank-0 launch seam.",
+    "satisfies_32_byte_standing_reserve": false,
+    "standing_reserve_if_upper_bound_carried_to_current_map_bytes": 1,
+    "upper_bound_scope": "Measured 2026-07-16 for replacing the generated vm_run_dir launch with the smaller legacy fallback while retaining the separately beneficial REPL byte-index correction. It is a comparison value, not a current WPLTO result.",
+    "visible_lisp_banner_content_trim_bank0_resident_saving_bytes": 0,
+    "warning": "Rolling back the whole historical banner block is not a 3-byte trim: that block also carried a net 81-byte Bank-0 correction, so its unrelated credits must not be discarded or misattributed."
+  },
+  "bound_inputs": {
+    "current_first_red_diagnosis": {
+      "bytes": 6183,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v2-boot-branch-relocation-first-red-diagnosis.json",
+      "sha256": "2217ab1eff952428dbb54e35be19feccd404f678b9610bb1fc9711ba1093fa32"
+    },
+    "current_first_red_map": {
+      "bytes": 182518,
+      "path": "build/c2.2/substitution/link33-l65r-v2-boot-branch-probe/l65r-v2-boot-family-seed.prg.map",
+      "sha256": "9e365be63b4d6dce04a7d60d0314b1cdae063f8e2f140866513bbfe2fe7b804e"
+    },
+    "last_valid_predecessor_map": {
+      "bytes": 183591,
+      "path": "build/c2.2/substitution/product-link-33-profile-inventory-final/resident-island-seed.prg.map",
+      "sha256": "88e1eb02bfb06f0eb667678938ef2c7bda5d0d2c25dc5f41b4093bd59187d954"
+    },
+    "untouched_link32_rollback_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+      "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a"
+    }
+  },
+  "claim_limit": "This receipt proves only arithmetic feasibility against two SHA-bound maps and inventories the one-time repin surface. It authorizes no reanchor, source change, compiler/linker run, product byte, Link 33, hardware run, promotion, or acceptance.",
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "link32": "untouched",
+    "link33": "not-run",
+    "linker_runs": 0,
+    "product_bytes_created_or_changed": 0
+  },
+  "facade_vectors": [
+    {
+      "after": "0xb5c4",
+      "before": "0xb5a2",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_vm_code_load"
+    },
+    {
+      "after": "0xb5c7",
+      "before": "0xb5a5",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_c2_dma"
+    },
+    {
+      "after": "0xb5ca",
+      "before": "0xb5a8",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_overlay_call_family"
+    },
+    {
+      "after": "0xb5cd",
+      "before": "0xb5ab",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_c2e_cons"
+    },
+    {
+      "after": "0xb5d0",
+      "before": "0xb5ae",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_c2e_overlay"
+    },
+    {
+      "after": "0xb5d3",
+      "before": "0xb5b1",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_car"
+    },
+    {
+      "after": "0xb5d6",
+      "before": "0xb5b4",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_cdr"
+    },
+    {
+      "after": "0xb5d9",
+      "before": "0xb5b7",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_gc_collect"
+    },
+    {
+      "after": "0xb5dc",
+      "before": "0xb5ba",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_str_open"
+    },
+    {
+      "after": "0xb5df",
+      "before": "0xb5bd",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_str_putc"
+    },
+    {
+      "after": "0xb5e2",
+      "before": "0xb5c0",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_intern"
+    },
+    {
+      "after": "0xb5e5",
+      "before": "0xb5c3",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_select_family"
+    },
+    {
+      "after": "0xb5e8",
+      "before": "0xb5c6",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_gc_mark"
+    },
+    {
+      "after": "0xb5eb",
+      "before": "0xb5c9",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_runtime_overlay_exec"
+    },
+    {
+      "after": "0xb5ee",
+      "before": "0xb5cc",
+      "bytes": 3,
+      "delta_bytes": 34,
+      "name": "c2_facade_handle_normalize"
+    }
+  ],
+  "finding": {
+    "current_text_end_exclusive": "0xb483",
+    "current_text_headroom_bytes": -2,
+    "decision_note": "The requested 32-byte standing reserve fits with 195 bytes left before the unchanged 0xc080 fixed block. No combination with banner trim is required for feasibility.",
+    "maximum_absorbable_reanchor_delta_bytes": 229,
+    "maximum_anchor": "0xb566",
+    "maximum_text_headroom_bytes": 227,
+    "new_handoff_anchor": "0xb4a3",
+    "old_handoff_anchor": "0xb481",
+    "option_1": "feasible-by-map",
+    "required_reanchor_delta_bytes": 34,
+    "target_standing_text_headroom_bytes": 32
+  },
+  "fixed_points": [
+    {
+      "after": {
+        "end_exclusive": "0xc218",
+        "start": "0xc080"
+      },
+      "before": {
+        "end_exclusive": "0xc218",
+        "start": "0xc080"
+      },
+      "bytes": 408,
+      "classification": "fixed-point-unchanged",
+      "delta_bytes": 0,
+      "name": ".lisp65_c2_fixed_bank0"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xc245",
+        "start": "0xc218"
+      },
+      "before": {
+        "end_exclusive": "0xc245",
+        "start": "0xc218"
+      },
+      "bytes": 45,
+      "classification": "fixed-point-unchanged",
+      "delta_bytes": 0,
+      "name": ".lisp65_c2_fixed_bank0_code"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xc335",
+        "start": "0xc245"
+      },
+      "before": {
+        "end_exclusive": "0xc335",
+        "start": "0xc245"
+      },
+      "bytes": 240,
+      "classification": "fixed-point-unchanged",
+      "delta_bytes": 0,
+      "name": ".lisp65_c2_fixed_bank0_hot_bss"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xc335",
+        "start": "0xc335"
+      },
+      "before": {
+        "end_exclusive": "0xc335",
+        "start": "0xc335"
+      },
+      "bytes": 0,
+      "classification": "fixed-point-unchanged",
+      "delta_bytes": 0,
+      "name": ".noinit"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xca19",
+        "start": "0xc356"
+      },
+      "before": {
+        "end_exclusive": "0xca19",
+        "start": "0xc356"
+      },
+      "bytes": 1731,
+      "classification": "fixed-point-unchanged",
+      "delta_bytes": 0,
+      "name": ".lisp65_workbench_overlay"
+    }
+  ],
+  "format": "lisp65-c2-handoff-reanchor-feasibility-receipt-v1",
+  "negative_matrix": {
+    "banner-content-trim-as-resident-credit": "rejected",
+    "failed-map-two-byte-gap-as-pocket": "rejected-by-contract",
+    "historical-b86d-table-as-current-pin": "rejected",
+    "post-fixed-33-byte-pocket-as-pre-fixed-capacity": "rejected-by-position",
+    "target-shift-minus-one": "rejected"
+  },
+  "objectwise_chain": [
+    {
+      "after": {
+        "end_exclusive": "0xb5c4",
+        "start": "0xb4a3"
+      },
+      "before": {
+        "end_exclusive": "0xb5a2",
+        "start": "0xb481"
+      },
+      "bytes": 289,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".lisp65_c2_kernal_handoff"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xb5f1",
+        "start": "0xb5c4"
+      },
+      "before": {
+        "end_exclusive": "0xb5cf",
+        "start": "0xb5a2"
+      },
+      "bytes": 45,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".lisp65_c2_host_facade"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xb5fc",
+        "start": "0xb5f1"
+      },
+      "before": {
+        "end_exclusive": "0xb5da",
+        "start": "0xb5cf"
+      },
+      "bytes": 11,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".lisp65_c2_kernal_io_reveal"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xb606",
+        "start": "0xb5fc"
+      },
+      "before": {
+        "end_exclusive": "0xb5e4",
+        "start": "0xb5da"
+      },
+      "bytes": 10,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".lisp65_c2_kernal_map_switch"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xb61a",
+        "start": "0xb606"
+      },
+      "before": {
+        "end_exclusive": "0xb5f8",
+        "start": "0xb5e4"
+      },
+      "bytes": 20,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".lisp65_c2_kernal_state"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xb954",
+        "start": "0xb61a"
+      },
+      "before": {
+        "end_exclusive": "0xb932",
+        "start": "0xb5f8"
+      },
+      "bytes": 826,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".rodata"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xb974",
+        "start": "0xb954"
+      },
+      "before": {
+        "end_exclusive": "0xb952",
+        "start": "0xb932"
+      },
+      "bytes": 32,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".lisp65_runtime_overlay_verifier_bindings"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xb98a",
+        "start": "0xb974"
+      },
+      "before": {
+        "end_exclusive": "0xb968",
+        "start": "0xb952"
+      },
+      "bytes": 22,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".data"
+    },
+    {
+      "after": {
+        "end_exclusive": "0xbfbd",
+        "start": "0xb98a"
+      },
+      "before": {
+        "end_exclusive": "0xbf9b",
+        "start": "0xb968"
+      },
+      "bytes": 1587,
+      "classification": "moves-as-one-predecessor-bound-chain",
+      "delta_bytes": 34,
+      "name": ".bss"
+    }
+  ],
+  "pocket_ledger": {
+    "lawful_pre_fixed_pocket": {
+      "after_bytes": 195,
+      "before_bytes": 229,
+      "consumed_bytes": 34,
+      "range_after": "0xbfbd..0xc07f",
+      "range_before": "0xbf9b..0xc07f"
+    },
+    "post_fixed_pocket": {
+      "bytes": 33,
+      "classification": "unchanged and non-fungible for this reanchor",
+      "range": "0xc335..0xc355"
+    },
+    "rejected_failed_map_alignment": {
+      "bytes": 2,
+      "classification": "not-capacity; already rejected predecessor-placement drift"
+    },
+    "text_corridor": {
+      "after_bytes": 32,
+      "before_bytes": -2,
+      "change_bytes": 34
+    }
+  },
+  "publish_last_projection": {
+    "address_correction": "0xb86d is historical Link 19, not the current table. Link 28 pinned 0xb914; the last valid Link-33 WPLTO geometry already places the table at 0xb932.",
+    "kernal_crc_high_after_projection": "0xb4cc",
+    "kernal_crc_high_before": "0xb4aa",
+    "kernal_crc_low_after_projection": "0xb4d0",
+    "kernal_crc_low_before": "0xb4ae",
+    "rule": "All 34 named post-link bytes remain the sole mutation domain; their addresses are successor-pinned after the one real link, never inferred as acceptance from this map calculation.",
+    "verifier_table_after_reanchor_projection": "0xb954",
+    "verifier_table_before_current_valid_geometry": "0xb932",
+    "verifier_table_bytes": 32
+  },
+  "recorded_on": "2026-07-21",
+  "repin_inventory": {
+    "current_authorities": [
+      {
+        "bytes": 42669,
+        "path": "config/c2-kernal-unmap-contract.json",
+        "role": "machine-readable address and mutation-domain contract",
+        "sha256": "d0c94e8ec3b72109439db1c88fa34e0acfc4976c9fd53d22c2558b76050af8c8"
+      },
+      {
+        "bytes": 1712,
+        "path": "config/c2-link33-product-profile.json",
+        "role": "canonical fifteen-vector profile and handle-normalize VMA",
+        "sha256": "238ec497fef75e209aeb5ba9bab6fe82029178c723cf32522b65ab9e17fa1fdc"
+      },
+      {
+        "bytes": 41282,
+        "path": "docs/planning/c2.2-kernal-unmap-contract.md",
+        "role": "human-readable handoff/facade/publish-last contract",
+        "sha256": "f8f8fd54c892f4d2f24431584ca8a7a974e1cac469735fc54ed805a3614631e8"
+      },
+      {
+        "bytes": 32858,
+        "path": "docs/planning/c2.2-link33-coordinated-residency-plan.md",
+        "role": "current Link-33 layout and fixed-margin record",
+        "sha256": "5db00d3c68f66fe4feeab88041fe56bac536284a3f9a9d50e3a16c1eeac5e1b9"
+      },
+      {
+        "bytes": 244128,
+        "path": "tools/host-lisp/c2_product_substitution_link.py",
+        "role": "canonical linker generator and all final structural gates",
+        "sha256": "b4245eb34f64fa8ff85ee901aee9796423b112632f1f2dc0634406ae6765df51"
+      }
+    ],
+    "effort_summary": {
+      "authority_files": 5,
+      "facade_vector_address_pins": 15,
+      "gate_source_files": 11,
+      "post_link_address_pins": 3,
+      "successor_receipt_families": 6
+    },
+    "execution_gate_sources": [
+      {
+        "bytes": 4008,
+        "path": "tools/host-lisp/c2_link33_product_profile.py",
+        "role": "canonical profile validator",
+        "sha256": "5557cf912f1cf8951f08921a90f3749ed16d4da0977caca7194a91b261d26e17"
+      },
+      {
+        "bytes": 28630,
+        "path": "tools/host-lisp/c2_preinstall_island_guard.py",
+        "role": "pre-install closure and exact facade interval",
+        "sha256": "8e1761da9e8ddd79c402fa70a781afc86637fcac71dddba67422af5570a61019"
+      },
+      {
+        "bytes": 8693,
+        "path": "tools/host-lisp/c2_link33_facade15_section_replay.py",
+        "role": "fifteenth-vector section proof",
+        "sha256": "aba14f2f451aac4a50502a9ba7d0c86df8191ea1614dbc11c8736d13667d49e5"
+      },
+      {
+        "bytes": 7734,
+        "path": "tools/host-lisp/c2_link33_facade15_provenance_replay.py",
+        "role": "fifteenth-vector provenance proof",
+        "sha256": "509c1ab6c1a071e7276551ede520fc0ccefdc80549ed0779984f81a7e5a36509"
+      },
+      {
+        "bytes": 6673,
+        "path": "tools/host-lisp/c2_link33_profile_binding_replay.py",
+        "role": "profile hash binding",
+        "sha256": "a357507eacb37f4b56e8175e499d2725b33e86f12ad75313d00f834fd4980fe2"
+      },
+      {
+        "bytes": 7466,
+        "path": "tools/host-lisp/c2_link33_section_inventory_replay.py",
+        "role": "profile-derived final-section inventory",
+        "sha256": "f3c6d42d3181c2103fed0803293261f20005ea574444dcf2352d23afb22e4f75"
+      },
+      {
+        "bytes": 36622,
+        "path": "tools/host-lisp/c2_link33_bss_triage_probe.py",
+        "role": "WPLTO placement and headroom probe",
+        "sha256": "9a195c73a1a66ce02a88dee46a4f2676ea94851131874852fc3b1c72280fbac4"
+      },
+      {
+        "bytes": 18689,
+        "path": "tools/host-lisp/c2_link33_bss_triage_product_link.py",
+        "role": "fresh Link-33 driver and prerequisite pins",
+        "sha256": "0ce08e65cf3accb41f49b2e31f7192a3b033d8d04f4b1413c27b76e64c052fc9"
+      },
+      {
+        "bytes": 21448,
+        "path": "tools/host-lisp/c2_l65r_v2_product_probe.py",
+        "role": "L65R-v2 product-shaped probe",
+        "sha256": "1838d54cbff57ffaefae8d3038931d8a35a342e4c0409ad050645f724c49e98a"
+      },
+      {
+        "bytes": 23257,
+        "path": "tools/host-lisp/c2_l65r_v2_boot_family_probe.py",
+        "role": "boot-family WPLTO probe",
+        "sha256": "9dfa0fd6f083963228059b84519bdf26de290c3bc5eaea7ab50a38a3cb219062"
+      },
+      {
+        "bytes": 12131,
+        "path": "tools/host-lisp/c2_l65r_v2_boot_branch_relocation_probe.py",
+        "role": "current branch-relocation WPLTO wrapper",
+        "sha256": "21ef7b39793c99587d0c095f38b225899fab13bf07a049d36036196ed0a57a29"
+      }
+    ],
+    "historical_receipts": "immutable; they retain their historical addresses and SHAs",
+    "successor_receipts_to_regenerate": [
+      "facade-15 section/provenance replays",
+      "canonical-profile binding replay",
+      "profile-derived section-inventory replay",
+      "WPLTO capacity/placement receipt",
+      "fresh Link-33 structural and publish-last receipts",
+      "hardware-presmoke identity receipt after structural acceptance"
+    ]
+  },
+  "status": "passed-map-only-option-1-feasible-owner-decision-pending",
+  "version": 1
+}

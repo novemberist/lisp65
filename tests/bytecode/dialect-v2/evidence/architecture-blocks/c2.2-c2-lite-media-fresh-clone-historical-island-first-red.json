@@ -1,0 +1,31 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: historical Link-30 stale-Island witness existed only in the local build tree",
+  "source_commit": "2c61fd4bcbfeff2baa43329bafb575cd462fbe48",
+  "axis": "fresh-clone-seed-23-pago-pago-2002",
+  "failed_step": "C2-lite WPLTO pre-installation Island host lifecycle gate",
+  "diagnostic": "[Errno 2] No such file or directory: build/c2.2/substitution/product-link-30-hot-refill/resident-island.h",
+  "cause": "The current WPLTO generated its own Island header, but the independent stale-predecessor lifecycle regression still loaded its exact Link-30 witness from an untracked historical build directory.",
+  "correction": "Version the exact 1,291-byte Link-30 stale-Island witness as a SHA-pinned hex fixture. The host regression consumes that immutable historical witness; current WPLTO Island construction remains fresh and separate.",
+  "witness": {
+    "decoded_bytes": 1291,
+    "decoded_sha256": "5d0141d0c78cfd29bacc993b0050c2ba5770938b36236f6c4e12bf740600b40a"
+  },
+  "execution_accounting": {
+    "fresh_clones_started": 1,
+    "product_links_completed": 0,
+    "media_packages": 0,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

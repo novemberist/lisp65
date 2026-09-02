@@ -1,0 +1,79 @@
+{
+  "format": "lisp65-v11-c1-definition-call-session-band-authorization-receipt-v1",
+  "version": 1,
+  "status": "owner-authorized-session-band-correction",
+  "recorded_on": "2026-07-17",
+  "scope": "Harness, contract and documentation correction only. Product bytes are unchanged. The current definition-to-first-call stability gate is derived from a complete twelve-cycle hardware curve rather than an isolated overrun.",
+  "product": {
+    "artifact_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+    "product_bytes_changed": false,
+    "r4_seal_remains_historical": true,
+    "g5_case_receipts_preserved": 0
+  },
+  "evidence": {
+    "session_curve": {
+      "path": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-session-curve-receipt.json",
+      "sha256": "0bb578d10402614432b7e7c98608d3720964bf0bad32cbf4de61669a9dcf41ed",
+      "frames": [95, 97, 95, 97, 96, 95, 96, 96, 98, 95, 98, 96],
+      "minimum_frames": 95,
+      "maximum_frames": 98,
+      "mean_frames": 96.1666666667,
+      "classification": "jitter-without-demonstrated-growth-or-plateau"
+    },
+    "historical_quantization": {
+      "path": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-frame-quantization-receipt.json",
+      "sha256": "64926d39693cb3a4523d8f463a64bfe582dec1798184c7ff29cf5187612e3d25",
+      "disposition": "historically valid but superseded as current gate authority"
+    },
+    "consecutive_cycle_stop": {
+      "path": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-consecutive-cycle-diagnosis.json",
+      "sha256": "0085bdaff5f3b899e1f14af0e7eac61a012d96eb5223417a47469aeab274d22c",
+      "disposition": "correct stop under the then-valid 96-frame gate; resolved by this independent curve-based correction"
+    },
+    "bounded_optimization": {
+      "path": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-crc-nibble-negative-probe-receipt.json",
+      "sha256": "220c29ec2578d367f04e67003a6174a62dcea208a05e23c4385fd12803c04435",
+      "result": "102 frames on the first cycle; fully rolled back; no further micro-tuning authorized"
+    }
+  },
+  "owner_decision": {
+    "confirmed_on": "2026-07-17",
+    "previous_maximum_frames": 96,
+    "new_maximum_frames": 98,
+    "materiality": "The 95-to-98 distribution spans 60 ms on an approximately two-second operation and does not demonstrate per-definition growth.",
+    "classification": "measured-band-correction-not-iterative-tolerance",
+    "next_value_above_maximum": "stop; no automatic widening",
+    "performance_bar": "not-passed",
+    "cure": "C2/1.2 remains required",
+    "longer_observation": "A 110-frame observation remains visible and unexplained. No cause is attributed. It does not silently widen this gate."
+  },
+  "bindings": {
+    "latency_exception": {
+      "path": "config/v11-c1-definition-call-latency-exception.json",
+      "sha256": "77a8128ed5310b5ca6da0741b762a4f8d45afd443e8176121867bb00e66480a6"
+    },
+    "architecture_decision": {
+      "path": "config/v11-c1-architecture-decision.json",
+      "sha256": "127fb932d351e3a50683240502feeb3a599cb6a7665e65890440f49587148981"
+    },
+    "verifier": {
+      "path": "tools/host-lisp/v11_c1_repl_latency.py",
+      "sha256": "2b79fbefcc0764cecf79ed2f633463a2a3a0475d870eb2f584c914d4c738ff74"
+    },
+    "language_reference": {
+      "path": "docs/language-reference.md",
+      "sha256": "57560183d135ec7a90de710128fb42814f4aa76fd1005fe348475e58c491f977"
+    },
+    "wave_candidate_notes": {
+      "path": "docs/releases/1.1-wave-1-candidate.md",
+      "sha256": "86aab577a84dff7a3a0b6cd37aadd0db12b27549ba3de20ec7d4f1a3cb795122"
+    }
+  },
+  "required_gate_value": "LIMITATION-STABLE performance-bar=not-passed exception=owner-dated-2026-07-16 session-band=owner-corrected-2026-07-17:95..98frames longer-observation=visible-unexplained cure=C2/1.2",
+  "matrix": {
+    "G5": "0/14",
+    "case_receipt_created": false,
+    "next_step": "rebuild the test closure and static preflight, restage the exact e14de21 product candidate, then start case 1 fresh"
+  },
+  "claim_limit": "This receipt authorizes the 98-frame stability band for the unchanged candidate and binds the user-facing limitation text. It does not pass the performance target, explain the longer observation, alter product bytes, preserve a G5 case receipt or claim G5/G6 acceptance."
+}

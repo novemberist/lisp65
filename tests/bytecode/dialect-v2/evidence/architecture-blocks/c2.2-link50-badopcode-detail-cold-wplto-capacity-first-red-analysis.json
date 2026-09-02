@@ -1,0 +1,161 @@
+{
+  "format": "lisp65-c2-lite-v6-badopcode-detail-cold-wplto-capacity-first-red-analysis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: cold-branch BADOPCODE detail remains resident-capacity negative",
+  "promotable": false,
+  "authority": {
+    "wplto_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-detail-cold-wplto-receipt.json",
+      "bytes": 3243,
+      "sha256": "13aecec5a642d2047552004509985d4fd6615df88c5ec73b526bc6cfe4090aa7"
+    },
+    "internal_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-detail-cold-wplto-internal-structural.json",
+      "bytes": 19997,
+      "sha256": "47acea6b9b2954198106e88074adaba98825625e743f115ff2a9d4e4bc084550"
+    },
+    "whole_program_lto_object": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-cold-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 610432,
+      "sha256": "644a612afbe5dd208ed37acad7580983b92fc173a789b900b83c83e141952be2"
+    },
+    "link_map": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-cold-wplto/resident-island-seed.prg.map",
+      "bytes": 192498,
+      "sha256": "5294508cdc6267b39af2b0c95026d48dab19523f02acbc202b5206da5a9edc60"
+    },
+    "link_stderr": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-cold-wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 3157,
+      "sha256": "f173d0d3dd4c3bd5f4fc7014831eb7376db5e40f69360cb74e5abebff4187783"
+    },
+    "link50_baseline_map": {
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/resident-island-seed.prg.map",
+      "bytes": 196938,
+      "sha256": "23ea4d3ba26ba771873f1b2291bc380e09d2f10d873963cbbc9c612a34404e8b"
+    },
+    "cold_cut_sources": {
+      "src/vm.c": "56b202b257b3dd28909115654296dd3f920f68de3880ed77403ef8d0217987e1",
+      "src/vm.h": "b5d49fbf40c582dc8ad2b128c1ed52b3d5ef1d5d9c97e33b6ba99edc36780a01",
+      "tools/host-lisp/c2_vm_badopcode_detail_gate.py": "fda57f2bbaa01bcec00e5c04b3c2b58dc8447d226d51a69ff67550a712431c1b",
+      "config/c2-vm-badopcode-detail-contract.json": "75cdaf6828863ca5f4f84d0936444d573e9cf57bfe514f15a252a9d9e41da008"
+    }
+  },
+  "execution_accounting": {
+    "prelink_gate_runs": 1,
+    "whole_program_lto_closure_links": 1,
+    "successful_product_links": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "retry_runs": 0
+  },
+  "source_qualification": {
+    "source_files_syntax_checked": 605,
+    "badopcode_detail_mutations_rejected": 28,
+    "assembler_leaf_abi_mutations_rejected": 28,
+    "crc_leaf_mutations_rejected": 3,
+    "l65e_slice_bytes": 1173,
+    "l65e_slice_headroom_bytes": 147,
+    "finding": "setup and refill failures construct typed details only at their cold dying branches; the common done path accepts only completed logical cursors in 0..1792"
+  },
+  "measured_text": {
+    "link50_baseline": {
+      "start": "0x2023",
+      "bytes": 37979,
+      "handoff_start": "0xb4a3",
+      "headroom_bytes": 37
+    },
+    "hot_done_first_red": {
+      "bytes": 38558,
+      "delta_from_baseline_bytes": 579,
+      "handoff_overlap_bytes": 542
+    },
+    "cold_branch_wplto": {
+      "start": "0x2023",
+      "bytes": 38529,
+      "end_exclusive": "0xb6a4",
+      "handoff_start": "0xb4a3",
+      "delta_from_baseline_bytes": 550,
+      "delta_from_hot_done_first_red_bytes": -29,
+      "handoff_overlap_bytes": 513,
+      "required_noise_reserve_bytes": 32,
+      "resulting_headroom_bytes": -513
+    }
+  },
+  "object_attribution_bytes": [
+    {
+      "symbol": "vm_run_inner",
+      "baseline": 7934,
+      "hot_done_first_red": 8447,
+      "cold_branch_wplto": 8418,
+      "cold_delta_from_baseline": 484,
+      "cold_delta_from_hot_done": -29,
+      "temperature": "hot VM dispatch function containing cold error branches"
+    },
+    {
+      "symbol": "c2_product_install",
+      "baseline": 570,
+      "cold_branch_wplto": 599,
+      "cold_delta_from_baseline": 29,
+      "temperature": "cold append/install"
+    },
+    {
+      "symbol": "vm_check_status",
+      "baseline": 76,
+      "cold_branch_wplto": 99,
+      "cold_delta_from_baseline": 23,
+      "temperature": "resident terminal error boundary"
+    },
+    {
+      "symbol": "vm_badopcode_detail",
+      "baseline": 0,
+      "cold_branch_wplto": 14,
+      "cold_delta_from_baseline": 14,
+      "temperature": "cold error constructor"
+    },
+    {
+      "symbol": "vm_callprim",
+      "baseline": 5140,
+      "cold_branch_wplto": 5142,
+      "cold_delta_from_baseline": 2,
+      "temperature": "hot VM primitive dispatch"
+    },
+    {
+      "symbol": "eval_v2_workbench_service",
+      "baseline": 1757,
+      "cold_branch_wplto": 1755,
+      "cold_delta_from_baseline": -2,
+      "temperature": "resident service"
+    }
+  ],
+  "downstream_geometry": {
+    "rodata_vma": {
+      "baseline": "0xb61d",
+      "cold_branch_wplto": "0xb81e",
+      "shift_bytes": 513
+    },
+    "bss_vma": {
+      "baseline": "0xb978",
+      "cold_branch_wplto": "0xbb79",
+      "bytes": 1587,
+      "shift_bytes": 513,
+      "fixed_block_start": "0xc080",
+      "overlap_bytes": 300
+    },
+    "fixed_block_moved": false,
+    "handoff_moved": false
+  },
+  "finding": "The source-level temperature split is semantically correct but does not create a placement boundary: the cold branches are still compiled inside vm_run_inner. Whole-program LTO removes only 29 of the prior 513-byte vm_run_inner growth; 484 bytes remain in that resident function, and the complete feature remains 550 bytes over the Link-50 text baseline.",
+  "unreached_gates": [
+    "final wall qualification",
+    "session aggregate qualification",
+    "post-link identity binding"
+  ],
+  "claim_limit": "This receipt measures one nonpromotable WPLTO failure. It makes no product-link, hardware, semantic-root-cause or latency claim.",
+  "counters": {
+    "class_b_diagnostic_cycles": "3/3 closed",
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  },
+  "next_gate": "Class-C review of the measured 484-byte vm_run_inner residue; no retry, product link or hardware run"
+}

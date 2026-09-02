@@ -1,0 +1,155 @@
+{
+  "authorized_deployment": {
+    "bytes": 11402,
+    "path": "build/c2.3/v1.6-defstruct-closing-session/d2-pre-rollback-shadow-repeat/authorized-deployment.json",
+    "sha256": "e556e332b5b210389dbfd577462b69fc6c880f8210cf212317142d6d6e892f62"
+  },
+  "claim_limit": "Preparation for one non-promotable shadow-armed measured-form repeat. No device result, forward slot or R/A/I/G row is claimed.",
+  "execution_witnesses": 11,
+  "facts": {
+    "authorities": {
+      "base_deployment": {
+        "bytes": 11188,
+        "path": "build/c2.3/v1.6-defstruct-pre-rollback-shadow/deployment.json",
+        "sha256": "79d1ff1df72496d88b994037838e9e22d64d19846d3bd68d77517b384664e080"
+      },
+      "driver": {
+        "bytes": 28297,
+        "path": "tools/host-lisp/c2_v16_pre_rollback_shadow_contact.py",
+        "sha256": "715cd23528909933d5453e02fa80e91a81df5766ed0e22685708d477e28d72b9"
+      },
+      "gate_wiring": {
+        "bytes": 49280,
+        "path": "mk/gates.mk",
+        "sha256": "5e0c42887a6e3c73015a06b2b43cbb46600d9e8c42f40abd497cacaa89724c79"
+      },
+      "phase_B": {
+        "bytes": 35761,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-b-guard-partition-receipt.json",
+        "sha256": "83a8328a7dc3e4c395ff42b368f79aaed8d258076efebada021736afce96428a"
+      },
+      "plan": {
+        "bytes": 162163,
+        "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+        "sha256": "fa82b6287948e92b7ce36e41c994595e4798236780485083545430bea1f37d41"
+      },
+      "runner": {
+        "bytes": 7040,
+        "path": "scripts/c2-v16-defstruct-pre-rollback-shadow-hw.sh",
+        "sha256": "077902c1fe7bea5115789e6e16617ef330eae96cbccc703bdf80bd86ba24cd9d"
+      },
+      "shadow_preparation": {
+        "bytes": 9197,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-pre-rollback-shadow-preparation-receipt.json",
+        "sha256": "a132a761c4daba20c07687ff30032141562fd4980f9732b5d4a54c26ec4f29c0"
+      }
+    },
+    "choreography": {
+      "actions": [
+        "stage",
+        "verify-boot",
+        "arm",
+        "capture"
+      ],
+      "boot_quiet_floor_seconds": 27.653,
+      "defstruct_quiet_seconds": 180.0,
+      "owner_input": [
+        "RUN",
+        "(require 'defstruct)",
+        "(defstruct point x y)"
+      ],
+      "prelaunch_monitor_accesses": 0,
+      "record_arm": "shadow reset plus A1 only after visible require=t",
+      "shadow_address": "0xc06b",
+      "stops_during_measured_form": 1,
+      "virtual_key_events": 0
+    },
+    "classification": {
+      "R_A_I_G_rows": [
+        "R",
+        "A",
+        "I",
+        "G"
+      ],
+      "claim_widening_allowed": false,
+      "pending_independent_oracle_decode": true,
+      "shadow_provenance_required": true
+    },
+    "identity": {
+      "diagnostic_ELF": {
+        "bytes": 621404,
+        "path": "build/c2.3/v1.6-defstruct-pre-rollback-shadow/artifacts/diagnostic-pre-rollback-shadow.elf",
+        "sha256": "339ec393309b601ba6ded266607b290295b2e786ae71c448b02d5e9949140c86"
+      },
+      "diagnostic_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-pre-rollback-shadow/artifacts/diagnostic-pre-rollback-shadow.prg",
+        "sha256": "0c12fa9100fb0ddb7126ab28bee092b75879e3d0f33d55d058f2f16bb0c3c481"
+      },
+      "diagnostic_window": {
+        "bytes": 8192,
+        "path": "build/c2.3/v1.6-defstruct-pre-rollback-shadow/artifacts/diagnostic-pre-rollback-shadow-window.bin",
+        "sha256": "b824b20316b6d23e8939146f579277efdb9a407495e4738c39a12bae3f8f3da7"
+      },
+      "expected_G4_crc16": "0xD5CB",
+      "product_bytes_changed": 0,
+      "promotable": false,
+      "recontact_authorized": true
+    },
+    "owner_authority": {
+      "bytes": 160671,
+      "path": "git:a26e70f5ca3a22a91e852464354616e9fdf64f18:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "1be2648c68b46ba280d761ea83e672c9ee2b69160a1ce56ea821862132893a81"
+    },
+    "read_protocol": {
+      "CPU_left_stopped": true,
+      "code": "CPU-view bytes plus unique active-owner binding",
+      "data": "capture MAPH/MAPL then physical Bank-0 RAM underlay",
+      "far_planes": [
+        "C2J",
+        "C2D-reset-domain",
+        "Bank-2-source"
+      ],
+      "record_stable_reads": 3,
+      "shadow_in_complete_record": true
+    },
+    "reset_domain": {
+      "C2J_CLEAR_before_RUN": true,
+      "bytes": 50816,
+      "null_suffix_bytes": 16976,
+      "prefix_bytes": 33840
+    },
+    "shadow": {
+      "committed_range": [
+        150,
+        173
+      ],
+      "decode": "low seven bits name last entered forward slot",
+      "legacy_terminal_overwriter_retired": true,
+      "record_address": "0xc06b",
+      "reset_sentinel": "0x7f",
+      "rollback_reachable": false
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-pre-rollback-shadow-contact-preparation-v1",
+  "mutations_rejected": {
+    "change-product": "shadow contact identity drift",
+    "dirty-c2j": "reset-domain contract drift",
+    "drop-authorization": "shadow contact identity drift",
+    "omit-shadow-read": "read/classification boundary drift",
+    "preclaim-row": "read/classification boundary drift",
+    "prefix-only-stage": "reset-domain contract drift",
+    "prelaunch-monitor": "physical/quiet/one-stop choreography drift",
+    "promote-diagnostic": "shadow contact identity drift",
+    "restore-terminal-overwriter": "pre-rollback shadow contract drift",
+    "resume-after-read": "read/classification boundary drift",
+    "rollback-reaches-shadow": "pre-rollback shadow contract drift",
+    "second-stop": "physical/quiet/one-stop choreography drift",
+    "short-quiet": "physical/quiet/one-stop choreography drift",
+    "use-old-crc": "shadow contact identity drift",
+    "virtual-input": "physical/quiet/one-stop choreography drift",
+    "widen-row": "read/classification boundary drift"
+  },
+  "recorded_on": "2026-08-06",
+  "status": "HOST-GREEN; OWNER-AUTHORIZED SHADOW REPEAT READY"
+}

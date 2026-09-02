@@ -1,0 +1,125 @@
+{
+  "ELF_feasibility": {
+    "capture_seam": {
+      "linked_relation": "observed = software_stack_base + 10",
+      "observed_pointer": "__rc24/__rc25 at $001a/$001b",
+      "proof_bytes": "18a502690a851aa5036900851b",
+      "register_state_assumptions": 0,
+      "software_stack_base": "__rc0/__rc1 at $0002/$0003"
+    },
+    "dataflow": "c2_stream_c2d_read return in A; TAX sets Z; BNE is taken iff the Bank-5 reader returned nonzero",
+    "hold_address": "0xc82c",
+    "instruction": "BNE $c831 -> BNE $c82c",
+    "outcomes": {
+      "bad_bytecode": "reader returned zero",
+      "hangs": "reader returned nonzero; capture the live 64-byte observed buffer before CRC comparison"
+    },
+    "poll_address": "0xc706",
+    "poll_bytes": 563,
+    "poll_symbol": "c2_completion_poll",
+    "reader_call": "JSR $e691 at $c828"
+  },
+  "authority": {
+    "ACTIVE_false_attribution": {
+      "bytes": 6677,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-ACTIVE-false-host-ELF-attribution.json",
+      "sha256": "f6adb687be76893fa267bb8b7d5ba22db1f298400a19a869dd92bce667757e2c"
+    },
+    "ACTIVE_return_hardware_First_Red": {
+      "bytes": 10646,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-ACTIVE-return-hardware-first-red.json",
+      "sha256": "19f49981131ab0e305de60bc8b1d7be436e928843987c311773919d6de966ee2"
+    },
+    "donor_ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "driver": {
+      "bytes": 25167,
+      "path": "tools/host-lisp/c2_link64_slot39_reader_return_hold.py",
+      "sha256": "e0a886d342c0072b3b466cd616ead6139469564fc7ac9994501ffc0d4ad65927"
+    },
+    "hardware_driver": {
+      "bytes": 5575,
+      "path": "scripts/c2-link64-slot39-reader-return-hold-hw.sh",
+      "sha256": "a71997958f8b7ce4fd310e099842433069dd83f07c7c01ab35963a8584da71b6"
+    },
+    "source_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-link64-stage-bound.bin",
+      "sha256": "bb436ba264065ec49a76dc90f60b9226f1d59065d51ef181e9454990cc40ce1b"
+    },
+    "source_deployment": {
+      "bytes": 10049,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt4-NONPROMOTABLE/deployment.json",
+      "sha256": "aec06ae9fdafb74298389ab356c7dc51bff4f66c170152878d8e0518bfbeb27d"
+    }
+  },
+  "candidate": {
+    "carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-slot39-reader-return-hold-NONPROMOTABLE/runtime-overlays-session-link64-slot39-reader-return-hold.bin",
+      "sha256": "d974de2ef490b69dd484bed8f1984e677537908402f251b69758bb7a05625587"
+    },
+    "identity_separate_from_Link64": true,
+    "lifecycle": "discard after one diagnostic outcome",
+    "manifest": {
+      "bytes": 1736,
+      "path": "build/c2.2/substitution/link64-slot39-reader-return-hold-NONPROMOTABLE/manifest.json",
+      "sha256": "60f022d276dd5cdac25b1bf5050141ca9f74369089e97c647f3cb894aef2e830"
+    }
+  },
+  "claim_limit": "Nonpromotable reader-return discriminator only. C1 remains OPEN; no acceptance, promotion or release claim.",
+  "construction": {
+    "all_capacity_deltas": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2.2-Link64-slot39-reader-return-hold-patch-v1",
+  "patch_and_rebinding": {
+    "after_hex": "d0fe",
+    "all_changed_file_offsets": [
+      24,
+      25,
+      26,
+      27,
+      1300,
+      1301,
+      1302,
+      1303,
+      56279,
+      56547,
+      56548
+    ],
+    "before_hex": "d003",
+    "carrier_size_delta": 0,
+    "derived_identity_bytes_changed": 10,
+    "directory_crc16": "0xc780",
+    "executable_operand_bytes_changed": 1,
+    "family_crc16": "0x472a",
+    "header_crc16": "0xc10b",
+    "instruction_VMA": "0xc82c",
+    "instruction_file_offset": 56278,
+    "mutation_count": 5,
+    "mutations_rejected": [
+      "opcode",
+      "operand",
+      "payload-CRC",
+      "record-CRC",
+      "family-tail"
+    ],
+    "payload_crc16": "0x1bf2",
+    "record_crc16": "0xfb8c",
+    "section": ".lisp65_rt_c2append_header",
+    "slot": 39,
+    "status": "passed-one-byte-reader-return-hold-and-complete-v4-rebinding"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "status": "ready-authorized-nonpromotable-reader-discriminator"
+}

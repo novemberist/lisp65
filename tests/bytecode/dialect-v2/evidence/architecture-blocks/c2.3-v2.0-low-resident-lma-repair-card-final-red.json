@@ -1,0 +1,123 @@
+{
+  "artifacts": {
+    "elf": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-low-resident-lma-repair-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "10ab42e4c19ae4e6b20b93c1b9598ff576aabfc7bb357865da199e593d61d4f8"
+    },
+    "linker": {
+      "bytes": 69977,
+      "path": "build/c2.3/v2.0-low-resident-lma-repair-card/wplto/c2-substitution.ld",
+      "sha256": "6cfeb54b8a04dabc70fff638a4d43cab0f304d163a9124e7a02699ae7c5a8a58"
+    },
+    "lto": {
+      "bytes": 620832,
+      "path": "build/c2.3/v2.0-low-resident-lma-repair-card/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "a2b80c9a095a2631a5de675bf74e35b512f5eb24edbba0e62694d5b49a71f344"
+    },
+    "map": {
+      "bytes": 185518,
+      "path": "build/c2.3/v2.0-low-resident-lma-repair-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "764fbbe955034463fe729981e149881c600e390d2bf18c0a7ef525830e1779dd"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.0-low-resident-lma-repair-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "4e6ea7ebe53692d01c31d44bf369fc8ec2f8055e884b1ebfc78f918ed7327f6f"
+    },
+    "producer_log": {
+      "bytes": 288,
+      "path": "build/c2.3/v2.0-low-resident-lma-repair-card/receipts/v20-producer.log",
+      "sha256": "e594ef05dac226d9a466443e294594c4f7adddee6037b43bf2377feb8dd9e796"
+    }
+  },
+  "attempt_accounting": {
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "product_link_attempts": 1,
+    "wplto_runs": 1
+  },
+  "acceptance_observation": {
+    "candidate_derived_load_ranges_nonoverlapping": true,
+    "capacity_arenas_passed": 11,
+    "delivered_bytes": [
+      {
+        "bytes": 223,
+        "exact_bytes_delivered": true,
+        "lma": "0xb4a3",
+        "section": ".lisp65_c2_kernal_handoff",
+        "vma": "0xb4a3"
+      },
+      {
+        "bytes": 48,
+        "exact_bytes_delivered": true,
+        "lma": "0xb5c4",
+        "section": ".lisp65_c2_host_facade",
+        "vma": "0xb5c4"
+      },
+      {
+        "bytes": 11,
+        "exact_bytes_delivered": true,
+        "lma": "0xb5f4",
+        "section": ".lisp65_c2_kernal_io_reveal",
+        "vma": "0xb5f4"
+      },
+      {
+        "bytes": 10,
+        "exact_bytes_delivered": true,
+        "lma": "0xb5ff",
+        "section": ".lisp65_c2_kernal_map_switch",
+        "vma": "0xb5ff"
+      }
+    ],
+    "fixed_boundary_deviations": 0,
+    "invariant_projection_exact": true,
+    "load_order_first_divergence": {
+      "candidate": ".lisp65_c2_kernal_handoff",
+      "golden": ".rodata",
+      "index": 4,
+      "reason": "the repaired resident LMAs sort before ordinary rodata"
+    },
+    "narrow_capacity_margins_bytes": {
+      "low_resident_and_ordinary_chain": 5,
+      "owned_bank0_state": 7,
+      "runtime_overlay_slices": 6
+    },
+    "section_invariant_deviations": 0
+  },
+  "authority": {
+    "driver": {
+      "bytes": 19296,
+      "path": "tools/host-lisp/c2_v20_lma_repair_card.py",
+      "sha256": "7cd6a6773a4bb5929e1812dcf8358ae7b2d0ab8bd52fc28c51e39620ab334acd"
+    },
+    "invocation": {
+      "bytes": 812,
+      "path": "build/c2.3/v2.0-low-resident-lma-repair-preflight/card-invocation.json",
+      "sha256": "59fa02168b04fc9c1e5c898b557d92326bfe24e6581a6360e96011a325d0c73b"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 16308,
+      "commit": "cf2b489e8041e3d8d7034dc4bfd0bfd053131b54",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "3a4957f9170ec840b7351c64f79333b4ecd2c543178630c9546b046206388c4b"
+    },
+    "preflight": {
+      "bytes": 2949,
+      "path": "build/c2.3/v2.0-low-resident-lma-repair-preflight/preflight.json",
+      "sha256": "038b3e114f728670b39df29252ff4e476defebf848900ee2aae028f8b638ef69"
+    }
+  },
+  "claim_limit": "The sole authorized replacement card is consumed.",
+  "error": {
+    "message": "candidate load order differs from invariant golden",
+    "type": "InvariantGoldenError"
+  },
+  "format": "lisp65-c2.3-v20-low-resident-lma-repair-final-red-v1",
+  "owner_disposition_required": true,
+  "recorded_on": "2026-08-12",
+  "retry_authorized": false,
+  "status": "FINAL RED: LMA-repair card returns to owner"
+}

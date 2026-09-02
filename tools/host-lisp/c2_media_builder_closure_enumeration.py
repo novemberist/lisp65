@@ -59,6 +59,8 @@ PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v17-receipt.json"
 PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v18-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v19-receipt.json"
 BANK4 = ARCH / "c2.3-v2.1-bank4-map-probe-receipt.json"
 DEVICE_PREPARATION = ARCH / (
     "c2.3-v1.6-item1-only-media-r1-public2-receipt.json")
@@ -79,7 +81,9 @@ INIT_L65_PRODUCT_VARIANTS_MEDIA = ARCH / (
     "c2.3-v1.7-init-l65-product-variants-media-receipt.json")
 BLOCKS_AB_MEDIA = ARCH / (
     "c2.3-v1.9-blocks-ab-acceptance-media-receipt.json")
-FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v18"
+BLOCK3_RETURN_MEDIA = ARCH / (
+    "c2.3-v2.0-block3-return-device-media-receipt.json")
+FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v19"
 SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 
 # The registry is deliberately explicit.  Discovery below is independent of
@@ -140,6 +144,7 @@ REGISTERED = {
     "tools/host-lisp/c2_v17_init_l65_acceptance_media.py",
     "tools/host-lisp/c2_v17_init_l65_product_variants_media.py",
     "tools/host-lisp/c2_v190_blocks_ab_acceptance_media.py",
+    "tools/host-lisp/c2_v200_block3_return_device_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media_liveness.py",
     "tools/host-lisp/c2_v20_far_payload_delivery.py",
@@ -191,6 +196,8 @@ CURRENT = {
         "native INIT.L65 artifact-only one-drive product variants with one frozen product filesystem and INIT-only diff attribution",
     "tools/host-lisp/c2_v190_blocks_ab_acceptance_media.py":
         "v1.9 Blocks A+B artifact-only product/work media with packed-facade, composed-Bank2 and physical-session closure",
+    "tools/host-lisp/c2_v200_block3_return_device_media.py":
+        "v2.0 Block-3 artifact-only product/work media with packed-byte transitive callee closure",
 }
 
 
@@ -354,6 +361,9 @@ def active_closure() -> dict[str, Any]:
     blocks_ab_source = (HOST /
         "c2_v190_blocks_ab_acceptance_media.py").read_text(encoding="utf-8")
     blocks_ab = load(BLOCKS_AB_MEDIA)
+    block3_return_source = (HOST /
+        "c2_v200_block3_return_device_media.py").read_text(encoding="utf-8")
+    block3_return = load(BLOCK3_RETURN_MEDIA)
     require(
         "PACKED_ARTIFACT_GATES" in far_source
         and "run_packed_artifact_gates()" in far_source
@@ -496,6 +506,29 @@ def active_closure() -> dict[str, Any]:
         and blocks_ab.get("optional_library_media") ==
             "not built; boot-surface group requires none",
         "v1.9 Blocks A+B medium builder lacks product-only packed closure")
+    require(
+        "packed_readback_closure(" in block3_return_source
+        and "D81.visible_files(" in block3_return_source
+        and "CLOSURE.derive(" in block3_return_source
+        and block3_return.get("status") ==
+            "PASS: V2.0 BLOCK3 RETURN DEVICE MEDIA READY"
+        and block3_return.get("accounting") == {
+            "WPLTO_runs": 0, "product_links": 0, "product_cards": 0,
+            "artifact_completions": 1, "product_media_builds": 1,
+            "work_media_builds": 1, "device_contacts": 0}
+        and block3_return.get("packed_transitive_closure", {}).get(
+            "status") == "PASS: CLOSURE REDERIVED FROM PACKED D81 BYTES"
+        and block3_return.get("packed_transitive_closure", {}).get(
+            "closure", {}).get("object_count") == 792
+        and block3_return.get("packed_transitive_closure", {}).get(
+            "closure", {}).get("call_site_count") == 2651
+        and block3_return.get("packed_transitive_closure", {}).get(
+            "mutations_rejected", [])[:2] == [
+                "packed-code-prefix-truncated", "packed-component-omitted"]
+        and block3_return.get("composed_bank2", {}).get(
+            "static_plane", {}).get("largest_contiguous_hole", {}).get(
+                "bytes") == 11167,
+        "v2.0 Block-3 medium builder lacks packed-byte transitive closure")
     return {"current": dict(sorted(CURRENT.items())),
             "repair_registry": repaired,
             "breadcrumb_registry": traced,
@@ -554,6 +587,16 @@ def active_closure() -> dict[str, Any]:
                 "packed_facade_gate": True,
                 "composed_bank2_gate": True,
                 "product_and_work_readback": True,
+                "optional_library_media": False,
+                "device_contacts_during_build": 0},
+            "block3_return_registry": {
+                "producer":
+                    "tools/host-lisp/c2_v200_block3_return_device_media.py",
+                "artifact_only": True,
+                "packed_facade_gate": True,
+                "composed_bank2_gate": True,
+                "packed_readback_transitive_closure": True,
+                "objects": 792, "calls": 2651,
                 "optional_library_media": False,
                 "device_contacts_during_build": 0}}
 
@@ -633,7 +676,10 @@ def audit(value: dict[str, Any]) -> None:
             "init_l65_product_variants_registry", {}).get(
                 "one_frozen_product_filesystem") is True
         and value.get("active_closure", {}).get(
-            "blocks_ab_registry", {}).get("composed_bank2_gate") is True,
+            "blocks_ab_registry", {}).get("composed_bank2_gate") is True
+        and value.get("active_closure", {}).get(
+            "block3_return_registry", {}).get(
+                "packed_readback_transitive_closure") is True,
         "media-builder structural enumeration drift")
 
 
@@ -661,6 +707,9 @@ def mutations(base: dict[str, Any]) -> list[str]:
             ["device_preparation_registry"].update(artifact_count=0)),
         ("incomplete-blocks-ab-registry", lambda x: x["active_closure"]
             ["blocks_ab_registry"].update(composed_bank2_gate=False)),
+        ("incomplete-block3-return-registry", lambda x: x["active_closure"]
+            ["block3_return_registry"].update(
+                packed_readback_transitive_closure=False)),
         ("incomplete-public-release-registry", lambda x: x["active_closure"]
             ["public_release_registry"].update(artifact_count=0)),
         ("incomplete-comfort-product-profile-registry", lambda x:
@@ -690,7 +739,7 @@ def mutations(base: dict[str, Any]) -> list[str]:
             audit(trial)
         except EnumerationError:
             rejected.append(name)
-    require(len(rejected) == 16,
+    require(len(rejected) == 17,
             "media-builder enumeration mutation survived")
     return sorted(rejected)
 
@@ -761,6 +810,16 @@ def check() -> dict[str, Any]:
                 "packed_facade_gate": True,
                 "composed_bank2_gate": True,
                 "product_and_work_readback": True,
+                "optional_library_media": False,
+                "device_contacts_during_build": 0}
+            and value["active_closure"]["block3_return_registry"] == {
+                "producer":
+                    "tools/host-lisp/c2_v200_block3_return_device_media.py",
+                "artifact_only": True,
+                "packed_facade_gate": True,
+                "composed_bank2_gate": True,
+                "packed_readback_transitive_closure": True,
+                "objects": 792, "calls": 2651,
                 "optional_library_media": False,
                 "device_contacts_during_build": 0},
             "media-builder enumeration reconstruction drift")

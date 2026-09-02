@@ -1,0 +1,88 @@
+{
+  "authority": {
+    "capture": {
+      "bytes": 29773,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/device-session/contact-r1/abort-recovery-stall/capture.json",
+      "sha256": "edf7553b4c3dac1ebb28b946ff9e850d4d4dfffb642a366488aca058f55b2076"
+    },
+    "final_elf": {
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+    },
+    "library_medium": {
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/library/lisp65-library.d81",
+      "sha256": "6ad3ec8edbeba5f5688e9660535fdf5fd9d3e0ddf93668129809f9aade5949f3"
+    },
+    "product_medium": {
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/shared-system/lisp65-product.d81",
+      "sha256": "8bbb1f5f15eb44023932bedbfc82f069280a24462e2efc905ec521213274df97"
+    }
+  },
+  "claim_limit": "One owner-authorized read-only stopped-state attribution of the repaired Comfort abort row. No second repair, product acceptance, release claim or additional device contact.",
+  "decision": {
+    "comfort_phase1b": "not accepted on hardware",
+    "next_block": "Block 3: matcher plus blinking cursor",
+    "rule": "The daily-use blocker consumed its one bounded repair round; another product repair is forbidden by the commissioned anti-rabbit-hole triage.",
+    "status": "automatic-feature-descope"
+  },
+  "decoded_state": {
+    "C2J_all_zero": true,
+    "abort_driver": {
+      "abort_done": 0,
+      "abort_end_slot": 32,
+      "abort_start_slot": 31,
+      "abort_state": 0,
+      "abort_state_name": "VALIDATE"
+    },
+    "c2_phase_owner": 2,
+    "c2_phase_owner_name": "APPEND",
+    "c2_ready": 1,
+    "crc": {
+      "current_pointer": "0xc650",
+      "loaded_length": 1434,
+      "remaining_length": 671
+    },
+    "lisp_toplevel_active": 1,
+    "rtov_busy": 1,
+    "rtov_fault": 0,
+    "vm_status": 0
+  },
+  "device_observation": {
+    "input": "(>= nil 32)",
+    "result": "Comfort input row disappeared; screen remained at the earlier native 'lisp65> (repl)' row and no new prompt appeared",
+    "red_frame": false
+  },
+  "format": "lisp65-c2-v17-comfort-abort-reentry-repair-stall-attribution-v1",
+  "mechanism": {
+    "class": "synchronous-recovery-service-time-on-prompt-path",
+    "exonerated": [
+      "second E29/READY-loss mechanism",
+      "new VM error",
+      "overlay fault latch",
+      "stale C2J payload",
+      "red-frame execution-boundary failure"
+    ],
+    "final_elf_path": [
+      "repl restored setjmp landing",
+      "c2_product_abort_recover",
+      "c2_abort_driver_facade",
+      "c2_abort_driver",
+      "vm_runtime_overlay_exec_family",
+      "rtov_crc_mem"
+    ],
+    "first_instruction_witness": {
+      "pc": "0x22c5",
+      "symbol": "rtov_crc_mem+0x3c",
+      "top_stack_return": "0x2c21",
+      "top_stack_return_decodes_to": "the JSR rtov_crc_mem in vm_runtime_overlay_exec_family"
+    },
+    "finding": "The two-stage ordering preserves READY, but the restored prompt path synchronously runs the full transported abort driver. Even with an empty journal it had not completed its first validate/reconstruct load when stopped. The UI therefore presents a hang while bounded overlay verification and CRC work executes before error rendering.",
+    "second_repair_shapes_not_authorized": [
+      "empty-journal fast path",
+      "deferred or asynchronous transported recovery",
+      "a different prompt/recovery architecture"
+    ]
+  },
+  "recorded_on": "2026-08-25",
+  "status": "PASS: MECHANISM NAMED; ONE-ROUND LIMIT SELECTS DESCOPE"
+}

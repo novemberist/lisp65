@@ -1,0 +1,196 @@
+{
+  "artifacts": [
+    {
+      "path": "resolved-profile.txt",
+      "role": "resolved-profile",
+      "sha256": "bb562d379a65692c808069fdcb07e7672b1723ea2c15272b0c4dee869ec2c62d",
+      "size": 1775
+    },
+    {
+      "path": "runtime-app.json",
+      "role": "application-descriptor",
+      "sha256": "abd4aeafbadba57a599091d896ca4eb541664fbbb3febb8a1fb4bf6eeea29f6b",
+      "size": 478
+    },
+    {
+      "path": "runtime-app.l65m",
+      "role": "application-l65m",
+      "sha256": "4e9b2803015c48e26de808e99997933590a81511b28c022652e5f4cc0b46b948",
+      "size": 587
+    },
+    {
+      "path": "runtime-preload.bin",
+      "role": "bank5-preload",
+      "sha256": "1c8ed17b802514756121125f86abe9cd1ba2ca8786ffa3ddf308e60999706fb9",
+      "size": 595
+    },
+    {
+      "path": "runtime.prg",
+      "role": "runtime-prg",
+      "sha256": "f58eb3f5e64ef168549187a3db7c7024bcb0bf4a6a4a893216affb9b7fb70245",
+      "size": 26266
+    },
+    {
+      "path": "toolchain-report.txt",
+      "role": "toolchain-report",
+      "sha256": "5bdd53232d1d28221f786a05495443a1d7c0bf018ca84ee8bbb0446b585b6a63",
+      "size": 819
+    }
+  ],
+  "claims": {
+    "interactive_product": false,
+    "language_semantics": false,
+    "release": false,
+    "runtime_export": true
+  },
+  "format": "lisp65-runtime-export-ship-v2",
+  "gates": {
+    "G0": {
+      "dependency_closure": "passed-at-pack",
+      "l65m_preflight": "passed-at-pack",
+      "schema": "passed-at-pack"
+    },
+    "G1": {
+      "native_host_vm": "not-run-by-packer",
+      "python_vm": "passed-at-artifact-build"
+    },
+    "G2": {
+      "budgets": {
+        "boot_stack_gap": 18791,
+        "post_boot_reserve": 14118,
+        "post_boot_reserve_target": 12288,
+        "prg_file_end": 34457,
+        "status": "passed",
+        "symbol_headroom": 703
+      },
+      "elf_surface": {
+        "resident_overlay_control_refs": 1,
+        "status": "passed"
+      },
+      "inline_overlay_audit": "passed",
+      "package_verifier": "required-post-pack",
+      "prg_preload_binding": "passed-at-pack",
+      "reproducibility": "required-post-pack"
+    },
+    "G4": {
+      "deploy_dry_run": "required-post-pack"
+    },
+    "G5": {
+      "cold_boot_hardware": "not-run",
+      "preload_corruption": "not-run"
+    }
+  },
+  "hardware_oracle": {
+    "format": "lisp65-runtime-export-hardware-oracle-v1",
+    "preload_details": {
+      "build_id": 2,
+      "crc": 3,
+      "length": 1,
+      "ok": 0
+    },
+    "results": {
+      "error_nil_raw": 0,
+      "success_raw": 85
+    },
+    "states": {
+      "complete": 3,
+      "preload_error": 228
+    },
+    "symbols": {
+      "preload_detail": {
+        "address": 138,
+        "encoding": "u8",
+        "name": "lisp65_runtime_preload_detail",
+        "size": 1
+      },
+      "result": {
+        "address": 136,
+        "encoding": "obj16-le",
+        "name": "lisp65_runtime_result",
+        "size": 2
+      },
+      "state": {
+        "address": 135,
+        "encoding": "u8",
+        "name": "lisp65_runtime_state",
+        "size": 1
+      }
+    }
+  },
+  "profile": {
+    "build_id": 3142987063,
+    "file": "resolved-profile.txt",
+    "id": "runtime-export-v2-candidate-g5-mismatch",
+    "sha256": "bb562d379a65692c808069fdcb07e7672b1723ea2c15272b0c4dee869ec2c62d"
+  },
+  "provenance": {
+    "application_emitter": "workbench-lcc-fasl-v1",
+    "closed_at_pack": [
+      "workbench-emitter-provenance",
+      "runtime-export-ship-packer"
+    ],
+    "contract_sha256": "14eef8d66c1bced2ec5069fee0da3a58553cc767ec06dc7a6bbae69f94674d38",
+    "emission_receipt_sha256": "e4ea7c66281b64c1e7502448c194e4e8aa61d96e2bd41cc3646102c3ddad2028",
+    "open_gaps": [
+      "cold-boot-hardware"
+    ],
+    "python_differential_oracle": "reported-not-authoritative",
+    "reemission_receipt_sha256": "fa99a348a5eaf40d96e7a05f7c99f04c1e1d29391d135f8965fcf49663a8460e"
+  },
+  "runtime": {
+    "application": {
+      "descriptor": "runtime-app.json",
+      "entry_names": [
+        "runtime-step",
+        "runtime-main"
+      ],
+      "format": "lisp65-bytecode-p0-disk-lib-image-v1",
+      "image": "runtime-app.l65m",
+      "l65m_version": 1,
+      "library_closure": [],
+      "provides": [
+        "runtime-adventure"
+      ],
+      "requires": [
+        "core"
+      ]
+    },
+    "entry": {
+      "abi": "named-zero-argument-p0",
+      "arity": 0,
+      "name": "runtime-main"
+    },
+    "expected_result": "42",
+    "layout": "inline-boot-overlay",
+    "native_capabilities": [
+      "gc",
+      "native-apply",
+      "symbols",
+      "vm"
+    ],
+    "preload": {
+      "address": 327680,
+      "binding": {
+        "build_id": 3142987063,
+        "format": "lisp65-runtime-preload-binding-v1",
+        "trailer_length": 12,
+        "trailer_offset": 583
+      },
+      "code_blob_bytes": 153,
+      "crc16": 23816,
+      "crc16_algorithm": "crc-16-ccitt-false",
+      "length": 595,
+      "path": "runtime-preload.bin",
+      "payload_crc16": 53932,
+      "payload_length": 583,
+      "payload_sha256": "f0cd5b2108bf2f5b13f1339edc97a9213e429fcfcd5d3b3abecd5cb44be91aef",
+      "sha256": "1c8ed17b802514756121125f86abe9cd1ba2ca8786ffa3ddf308e60999706fb9"
+    },
+    "prg": {
+      "format": "mega65-prg",
+      "load_address": 8193,
+      "path": "runtime.prg"
+    }
+  },
+  "status": "candidate"
+}

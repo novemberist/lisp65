@@ -1,0 +1,124 @@
+{
+  "format": "lisp65-c2-cross-invariant-prelink-quick-pass-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "completed-five-row-paper-pass-two-open-no-product-link-authorized",
+  "scope": {
+    "rows": [
+      "B2",
+      "E1",
+      "C2",
+      "B5",
+      "D1"
+    ],
+    "paper_only": true,
+    "new_product_code": 0,
+    "new_product_links": 0,
+    "hardware_runs": 0,
+    "full_matrix_complete": false
+  },
+  "bindings": {
+    "matrix": {
+      "path": "docs/planning/c2.2-cross-invariant-matrix.md",
+      "bytes": 13148,
+      "sha256": "52e38ef62d1d02f0ace01bf3be1ffcbab72a74c67c30c9e23f6ab4ee2136e6d7"
+    },
+    "transient_handle_contract": {
+      "path": "config/c2-transient-handle-contract.json",
+      "bytes": 6136,
+      "sha256": "54fc7e230451b1dbce9f21e58539ed84d08cfef1841096e59cbb29ddc7d7a94b"
+    },
+    "transient_handle_probe": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-transient-handle-contract-probe-receipt.json",
+      "bytes": 9841,
+      "sha256": "d337afdd0ff5d0b1d382005d7427cf6ee33563378cc5dcc65828d828db023a37"
+    },
+    "nested_append_contract": {
+      "path": "config/c2-nested-append-unwind-contract.json",
+      "bytes": 9229,
+      "sha256": "d0bf8f6fa27cce6dcd621cebc9e17d5656e9eb60a5675515a6798d400b66988d"
+    },
+    "nested_append_probe": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-nested-append-unwind-contract-probe-receipt.json",
+      "bytes": 15025,
+      "sha256": "bd2a0ebbc3ac08c07108c238a33426bd65c0e6e9e33563d024e6a751b36a0381"
+    },
+    "hot_refill_contract": {
+      "path": "config/c2-hot-refill-single-source-contract.json",
+      "bytes": 2158,
+      "sha256": "04e6af568e4ab84a63e282b3a2ab24513c63b8fd66f6202e92f439f0421fc5ad"
+    },
+    "interrupt_source": {
+      "path": "src/interrupt.c",
+      "bytes": 4785,
+      "sha256": "81257cce3c1358a8cf4b2268ffc476d85cdd5c6bff077de43e2285c01b118ce3"
+    },
+    "hot_materializer_source": {
+      "path": "src/c2_hot_literal.c",
+      "bytes": 2502,
+      "sha256": "9b8fd536514030b9dda4a2ddd559c364f5ab2831a704154d33484238120c2b0d"
+    },
+    "vm_source": {
+      "path": "src/vm.c",
+      "bytes": 78563,
+      "sha256": "3ef56f65fc772bf0e027e7910d493050b603be5a91f5973dc21a52d3b3cbad33"
+    },
+    "c2_runtime_source": {
+      "path": "src/c2_product_runtime.c",
+      "bytes": 56975,
+      "sha256": "8a151bfc80dd37c29264f310f07f9adbd44155ae233a5b361c4582a4c4a0f84d"
+    },
+    "owned_irq_source": {
+      "path": "src/c2_kernal_window.s",
+      "bytes": 2644,
+      "sha256": "a6cc9e606742d07914d01f60a3a1e2cfe8110f480da87cec5ffc0c82425dc8c0"
+    },
+    "link32_structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link32-preinstall-island-guard-structural-receipt.json",
+      "bytes": 15456,
+      "sha256": "5843fea325faf2c63afc9c675de556cf72a8bb911555de0f375c98edf58ee2ab"
+    },
+    "link32_kernal_freedom_report": {
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/kernal-freedom-link.json",
+      "bytes": 5602,
+      "sha256": "e1f99cd971f65bff5fe99da1049e3c95d352d380516acf2994b3b6a81a78c2c4"
+    }
+  },
+  "rows": {
+    "B2": {
+      "status": "OPEN",
+      "finding": "RUN/STOP currently reaches the shared lisp_abort_jump, but C2J is not implemented and the contract does not name the break source.",
+      "disposition": "addendum+fixture in successor: owned-queue RUN/STOP restores C2J before overlay cleanup and longjmp at every active journal state"
+    },
+    "E1": {
+      "status": "EXCLUDED",
+      "finding": "The materializer is stateless, generation checks precede it, every vm_run entry unconditionally loads its first window, and restage invalidates C2 before boot-family entry.",
+      "disposition": "preserve unconditional-entry-load and stateless-materializer as structural gates"
+    },
+    "C2": {
+      "status": "OPEN",
+      "finding": "Link 32 records zero hardware runs; the old receipt-less Freezer prefilter belongs to another identity.",
+      "disposition": "next hardware presmoke: Freezer roundtrip, post-link E000 identity/map-generation verification, then one Lisp call"
+    },
+    "B5": {
+      "status": "PROVEN",
+      "finding": "The host cutpoint matrix restores C2J-bound state after journal, records and header publication and rejects invalid journal identity/range/CRC without guessing. Cold reset remains separate row C4.",
+      "disposition": "bind the same cutpoints to the product implementation"
+    },
+    "D1": {
+      "status": "PROVEN",
+      "finding": "The complete owned IRQ closure only acknowledges VIC state and updates named owned-window frame/diagnostic cells; Link-32 has no edge or target into C2 publication state.",
+      "disposition": "replay the existing KERNAL-freedom and owned-state mutation gates on the successor identity"
+    }
+  },
+  "summary": {
+    "proven": 2,
+    "excluded": 1,
+    "open": 2,
+    "open_rows": [
+      "B2",
+      "C2"
+    ]
+  },
+  "claim_limit": "Five-row citation pass only. It neither completes the full matrix nor authorizes a fixture, addendum implementation, product link, hardware result or promotion.",
+  "next_gate": "Review B2 and C2 dispositions. If accepted, both travel in the already-required successor implementation/presmoke; the full matrix remains due before the C2.2 acceptance chain."
+}

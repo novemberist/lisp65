@@ -1,0 +1,171 @@
+{
+  "bindings": {
+    "C2_product_runtime": {
+      "bytes": 159954,
+      "git_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+      "path": "src/c2_product_runtime.c",
+      "sha256": "be5805fd419bcf1c1e6b2ab9eb6382d842916ae86473540d1d56d3701c396d37"
+    },
+    "Link_92_profile": {
+      "bytes": 22860,
+      "git_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+      "path": "config/workbench.mk",
+      "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+    },
+    "bytecode_abi_ledger": {
+      "bytes": 10175,
+      "git_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "f85f472900059506cbed35d8320df38c1c0a2fb7fcd49d9434db1bdf2d971f23"
+    },
+    "commissioned_trace_source": {
+      "bytes": 2167,
+      "path": "lib/comfort-trace.lisp",
+      "sha256": "6142c39935295839208c99b876d86511340f497396cc8cd030d40fa4ae1f0273"
+    },
+    "delivered_compiler": {
+      "bytes": 36291,
+      "path": "build/post-promotion/v112/compiler-tier/c2-compiler-sources/lib/lcc.lisp",
+      "sha256": "3a4c53bc28f0b296c6010c849ba354c08e282ae34978c8a72697157424c97e90"
+    },
+    "eval_core": {
+      "bytes": 97933,
+      "git_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+      "path": "src/eval.c",
+      "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+    },
+    "generated_native_dispatch": {
+      "bytes": 6643,
+      "git_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+      "path": "src/v2_native_function_dispatch.h",
+      "sha256": "4c35aab59b0bf83fdcbc3b39d436a4a6b91dfeac2091ed636ee0103ef6809b8b"
+    },
+    "native_function_registry": {
+      "bytes": 13357,
+      "git_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+      "path": "config/v2-native-function-registry.json",
+      "sha256": "68260b81739971ec9c9a61862b95e94b8de3bee91598c7e2b63433c236ec0173"
+    },
+    "trace_host_attribution": {
+      "bytes": 24883,
+      "git_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d3-trace-host-attribution.json",
+      "sha256": "b49968f4ff9d6a46ce759feebc782cefab87ffddd31b0fbe6db0601e785d9fee"
+    },
+    "vm_core": {
+      "bytes": 103893,
+      "git_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+      "path": "src/vm.c",
+      "sha256": "750713ab41fcd41387db0f4e852ab748c3c294ee569b1043ebfd5aa6d2c3c215"
+    }
+  },
+  "claim_limit": "This proves only that the commissioned correctness contract cannot be represented as an inspect-only change on the delivered Link-92 ABI. It does not authorize a core/compiler change, a media rebuild, a device contact, or an unchanged-byte retry.",
+  "delivered_surface": {
+    "active_primitive_count": 69,
+    "delivered_compiler_semantics": "(function SYMBOL) -> PUSHLIT symbol",
+    "function_cell_getter_delivered": false,
+    "function_cell_getter_names_checked": [
+      "%function-cell",
+      "%symbol-function",
+      "function-cell",
+      "symbol-function"
+    ],
+    "nearby_capabilities": {
+      "21": "%disk-poke (not a getter)",
+      "36": "function-kind (kind only)",
+      "38": "lcc-install (install result only)",
+      "66": "%c2-control (session emit control only)",
+      "set-symbol-function": "writes cell; returns the supplied new value"
+    },
+    "treewalk_only_contrast": "(function SYMBOL) reads sym_function, but Link-92 strips treewalk"
+  },
+  "format": "lisp65-c2.3-v1.12-link92-r5-trace-fix-library-scope-v2",
+  "historical_authority_commit": "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f",
+  "indistinguishability": {
+    "conclusion": "no library program over the delivered observations can capture the exact prior function-cell value for both states",
+    "delivered_observations_equal": true,
+    "required_restoration_values_equal": false,
+    "states": [
+      {
+        "compiled_function_form": {
+          "symbol": "capitalize"
+        },
+        "function_kind": "bytecode",
+        "required_exact_capture": {
+          "kind": "BCODE",
+          "ordinal": 748
+        },
+        "set_symbol_function_result": {
+          "kind": "wrapper"
+        },
+        "state": "A"
+      },
+      {
+        "compiled_function_form": {
+          "symbol": "capitalize"
+        },
+        "function_kind": "bytecode",
+        "required_exact_capture": {
+          "kind": "BCODE",
+          "ordinal": 749
+        },
+        "set_symbol_function_result": {
+          "kind": "wrapper"
+        },
+        "state": "B"
+      }
+    ]
+  },
+  "mutation_count": 10,
+  "mutations_rejected": [
+    "invent-function-cell-getter",
+    "collapse-required-old-values",
+    "claim-observations-distinguish-old-bcode",
+    "expose-journal-old-cell",
+    "invent-atomic-library-transaction",
+    "authorize-inspect-source-change",
+    "authorize-core-scope-growth",
+    "authorize-recontact",
+    "replace-owner-decision-with-library-fix",
+    "recommend-silent-core-growth"
+  ],
+  "owner_options": [
+    {
+      "cost_class": "release-library-and-media-closure-only",
+      "effect": "ship who-calls and the two string utilities; remove the broken trace/untrace surface from both v1.4 media variants",
+      "id": "descope-trace-untrace-from-v1.4",
+      "recommended": true
+    },
+    {
+      "cost_class": "product-core-ABI-new-link-and-hardware-acceptance",
+      "effect": "add an explicit core ABI that captures the old function cell and atomically publishes/restores a persistent wrapper",
+      "id": "commission-atomic-trace-cell-capability",
+      "recommended": false
+    },
+    {
+      "cost_class": "release-delay",
+      "effect": "hold all v1.4 freight behind the larger capability block",
+      "id": "defer-v1.4-release",
+      "recommended": false
+    }
+  ],
+  "recorded_on": "2026-08-09",
+  "scope_disposition": {
+    "commissioned_library_fix": "not-representable-on-delivered-Link-92-ABI",
+    "compiler_or_core_changed": false,
+    "device_contact": false,
+    "inspect_source_changed": false,
+    "media_rebuilt": false,
+    "next_authority": "owner-descope-or-explicit-core-capability-decision",
+    "prebound_edge": "triggered",
+    "recontact_authorized": false
+  },
+  "status": "descope-required-missing-function-cell-capability",
+  "transaction_boundary": {
+    "atomic_library_install_and_cell_mutation_available": false,
+    "conclusion": "a persistent wrapper may be published, but inspect cannot both capture the exact old callable and atomically bind/restorable-state with the delivered transaction surface",
+    "library_setter": "set-symbol-function is outside that publication API and returns the supplied new value",
+    "old_cell_exposed_to_lisp": false,
+    "persistent_install": "C2 publication captures the old cell internally, journals it, publishes the new export, clears the journal, and returns the definition name (or main BCODE), not the old cell"
+  }
+}

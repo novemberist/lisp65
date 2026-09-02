@@ -1,0 +1,492 @@
+{
+  "authorities": {
+    "BRK_device_result": {
+      "bytes": 2702,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-irq-origin-contact-device-receipt.json",
+      "sha256": "6e0f5579fb3c42762627852ba69fd1a33e98470166e31b77cfc554e07cde4dc8"
+    },
+    "diagnostic_ELF": {
+      "bytes": 620936,
+      "path": "build/c2.3/defstruct-terminal-ingress-sister-link92/artifacts/diagnostic-terminal-ingress.elf",
+      "sha256": "73ebdc557926b2d16c73ab1f71094f60cd7f8be46d0aa233ed14cf0bc79ac192"
+    },
+    "diagnostic_sister": {
+      "bytes": 19897,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-terminal-ingress-sister-receipt.json",
+      "sha256": "8270c660532fbe48234347d029f51e8cd95c392de26011f12114c2fc051db57f"
+    },
+    "origin_desk": {
+      "bytes": 12182,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-irq-origin-desk-attribution-receipt.json",
+      "sha256": "aa493290606bcd7ec2274486f2c5333bef6fd933810a3cb22d327e23a97bb492"
+    },
+    "origin_preparation": {
+      "bytes": 3810,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-irq-origin-contact-preparation-receipt.json",
+      "sha256": "a905765f3d598d3a2e18760c85475bf65d93636ec0a537d77375ea0ad2245aaa"
+    },
+    "origin_record": {
+      "bytes": 65,
+      "path": "build/c2.3/defstruct-irq-origin-contact/device/origin-record.bin",
+      "sha256": "b39e8baeb78f368f4bd6786e54424f09ac48c48db2a95c267dec2c71757cd800"
+    },
+    "owner_commission": {
+      "authority": "git-blob",
+      "bytes": 53983,
+      "commit": "e93db4b1e2b6e98ee66cf002a58f9ccd6bb25f2a",
+      "path": "docs/planning/post-v1.4.0-direction-plan.md",
+      "sha256": "3c95afae4f7117c1a9bf7477347338418540f23f97573defd3df5ea7765c278c"
+    },
+    "stopped_registers": {
+      "bytes": 785,
+      "path": "build/c2.3/defstruct-irq-origin-contact/device/final-registers.json",
+      "sha256": "0747d9b89cb8e04271b60a689fad39122effe95fcf1edc5fc8a94183b8f1c513"
+    }
+  },
+  "claim_limit": "Host/ELF forensics only. It reconstructs the BRK frame, excludes a linked direct transfer to $BF71 and proves the current capture cannot name RTS, RTI, indirect-JMP or overwrite provenance. It specifies but does not authorize one read; no device, fix, link or product-byte claim follows.",
+  "desk_decision": {
+    "RTI_attributed": false,
+    "RTS_attributed": false,
+    "corrupted_edge": null,
+    "device_read_authorized": false,
+    "fix_authorized": false,
+    "indirect_jump_attributed": false,
+    "name_neighbor_overwrite_attributed": false,
+    "next": "exactly one stopped-state low-RAM row",
+    "reason": "the capture omitted every surviving older hardware-stack byte and live zero-page transfer state; BRK overwrote the immediate RTS/RTI slots"
+  },
+  "existing_capture": {
+    "candidate_stack_files": [],
+    "captured_Page_1_bytes": 0,
+    "captured_record_bytes": 65,
+    "captured_register_tuple": true,
+    "captured_zero_page_bytes": 0,
+    "conclusion": "no byte at or above $0195 is present; the enclosing legal frame and live indirect-transfer state cannot be reconstructed"
+  },
+  "format": "lisp65-c2.3-post-v1.4-defstruct-brk-stack-forensics-v1",
+  "name_buffer_hypothesis": {
+    "BRK_offset": "0x0155",
+    "bytes": 376,
+    "executable": false,
+    "hypothesis_status": "UNPROVED-CORRELATION-ONLY",
+    "legal_writer": {
+      "function": "intern",
+      "read_address_formation": "0x2E77..0x2E92 via zero page $04/$05",
+      "write_address_formation": "0x2FF8..0x3029 via zero page $06/$07"
+    },
+    "linked_direct_transfers_to_BF71": 0,
+    "object": "namelen4",
+    "packed_symbol_indices": [
+      682,
+      683
+    ],
+    "reason": "$BF71 is the address of packed length entries 682/683, but the capture has neither live nsym nor a stack/vector byte equal to $BF70/$BF71; no overwrite provenance is present",
+    "section": ".bss",
+    "start": "0xBE1C"
+  },
+  "recorded_on": "2026-08-10",
+  "required_read_row": {
+    "authorization": "specified-only; not authorized by this desk result",
+    "choreography": "no RUN, reset, stop, resume, screen read, I/O read or mapping change; one contiguous read from the already stopped state",
+    "decision_use": {
+      "RTI_chain": "test surviving P/PCL/PCH-shaped older frames; the immediate consumed frame itself remains overwritten",
+      "RTS_chain": "resolve surviving little-endian words as JSR return PCs and identify the innermost legal append/VM frame",
+      "indirect_jump": "bind live $14/$15 and relevant indexed-dispatch state against the linked indirect-site inventory",
+      "name_neighbor": "test live nsym and any surviving $70/$BF or $71/$BF word; absence keeps the neighbor-overwrite hypothesis unproved"
+    },
+    "device_actions": 0,
+    "hard_limit": "even this row cannot recover the immediate RTS/RTI bytes overwritten by BRK; it can name the enclosing corrupt edge or rule transfer classes down to a later purpose-built witness",
+    "name": "stopped-low-RAM-and-hardware-stack-forensics",
+    "precondition": {
+      "confirm_origin_record_sha256": "b39e8baeb78f368f4bd6786e54424f09ac48c48db2a95c267dec2c71757cd800",
+      "confirm_same_stopped_tuple_first": {
+        "MAPH": "0x8000",
+        "MAPL": "0x0000",
+        "PC": "0xb42c",
+        "SP": "0x018d",
+        "X": "0x8d"
+      },
+      "on_mismatch": "abort without a forensic claim or read"
+    },
+    "range": {
+      "bytes": 512,
+      "covers": "zero page $0000..$00FF and Page 1 $0100..$01FF",
+      "physical_address": "0x00000000"
+    },
+    "reads": 1,
+    "view": "physical Bank-0 low RAM, CPU-equivalent under the exact captured MAPH=$8000/MAPL=$0000 tuple",
+    "why_512_bytes_are_minimally_sufficient": [
+      "$0195..$01FF retains older legal JSR frames beneath the BRK frame",
+      "$0014/$0015 retains the resident unindexed indirect-JMP vector",
+      "$0059/$005A supplies live nsym for the namelen4-address correlation",
+      "$0089 supplies phase-owner state; $0002/$0003 supplies software SP"
+    ]
+  },
+  "stack_reconstruction": {
+    "handler_SP_after_A_X_Y_Z_pushes": "0x8D",
+    "immediate_RTI_case": {
+      "consumed_addresses": [
+        "0x0192",
+        "0x0193",
+        "0x0194"
+      ],
+      "post_escape_fate": "all three bytes overwritten by BRK P/PCL/PCH"
+    },
+    "immediate_RTS_case": {
+      "RTS_effect": "pop $BF70, increment to execution PC $BF71",
+      "consumed_addresses": [
+        "0x0193",
+        "0x0194"
+      ],
+      "post_escape_fate": "both bytes overwritten by BRK PCL/PCH",
+      "required_consumed_word": "0xBF70"
+    },
+    "indirect_jump_case": {
+      "hardware_stack_consumed": false,
+      "needed_state": "live zero-page/table vector and surviving caller frames"
+    },
+    "pre_BRK_SP": "0x94",
+    "reconstructed_frame": [
+      {
+        "address": "0x018E",
+        "meaning": "handler-saved Z"
+      },
+      {
+        "address": "0x018F",
+        "meaning": "handler-saved Y"
+      },
+      {
+        "address": "0x0190",
+        "meaning": "handler-saved X"
+      },
+      {
+        "address": "0x0191",
+        "meaning": "handler-saved A"
+      },
+      {
+        "address": "0x0192",
+        "meaning": "BRK-stacked P",
+        "value": "0x30"
+      },
+      {
+        "address": "0x0193",
+        "meaning": "BRK-stacked continuation low",
+        "value": "0x73"
+      },
+      {
+        "address": "0x0194",
+        "meaning": "BRK-stacked continuation high",
+        "value": "0xBF"
+      }
+    ],
+    "recoverability": "the immediate consumed RTS/RTI bytes are unrecoverable after BRK; older caller frames can still name the enclosing edge",
+    "surviving_older_stack_range": "0x0195..0x01FF"
+  },
+  "status": "EDGE-UNNAMED; ONE-LOW-RAM-ROW-SPECIFIED",
+  "terminal_transfer_inventory": {
+    "direct_return_spine": [
+      {
+        "legal_return_PC": "0x52BA",
+        "opcode": "jsr",
+        "operand": "$6aa0 <vm_callprim>",
+        "pc": "0x52B7",
+        "role": "VM dispatcher -> vm_callprim",
+        "stack_word_before_RTS": "0x52B9"
+      },
+      {
+        "legal_return_PC": "0x7902",
+        "opcode": "jsr",
+        "operand": "$24cb <c2_product_append_staged>",
+        "pc": "0x78FF",
+        "role": "vm_callprim -> persistent append",
+        "stack_word_before_RTS": "0x7901"
+      },
+      {
+        "legal_return_PC": "0x2518",
+        "opcode": "jsr",
+        "operand": "$e7e4 <c2_append_begin>",
+        "pc": "0x2515",
+        "role": "append wrapper -> c2_append_begin",
+        "stack_word_before_RTS": "0x2517"
+      },
+      {
+        "opcode": "jmp",
+        "operand": "$1870 <c2_append_plan_walk>",
+        "pc": "0xB5F1",
+        "role": "plan-walk facade tail transfer"
+      },
+      {
+        "legal_return_PC": "0x18A3",
+        "opcode": "jsr",
+        "operand": "$e09d <c2_overlay_call>",
+        "pc": "0x18A0",
+        "role": "one plan phase -> overlay call",
+        "stack_word_before_RTS": "0x18A2"
+      },
+      {
+        "opcode": "rts",
+        "operand": "",
+        "pc": "0x18B9",
+        "role": "successful plan-walk return"
+      },
+      {
+        "opcode": "rts",
+        "operand": "",
+        "pc": "0x18BE",
+        "role": "failed plan-walk return"
+      },
+      {
+        "opcode": "jmp",
+        "operand": "$b5ca <c2_facade_overlay_call_family>",
+        "pc": "0xE0B7",
+        "role": "overlay facade tail transfer"
+      },
+      {
+        "opcode": "jmp",
+        "operand": "$2473 <c2_facade_target_overlay_call_family>",
+        "pc": "0xB5CA",
+        "role": "overlay target tail transfer"
+      },
+      {
+        "legal_return_PC": "0x24A2",
+        "opcode": "jsr",
+        "operand": "$281f <vm_runtime_overlay_exec_family>",
+        "pc": "0x249F",
+        "role": "mapped overlay execution",
+        "stack_word_before_RTS": "0x24A1"
+      },
+      {
+        "opcode": "rts",
+        "operand": "",
+        "pc": "0x24CA",
+        "role": "overlay-call return"
+      },
+      {
+        "legal_return_PC": "0xE990",
+        "opcode": "jsr",
+        "operand": "$b5f1 <c2_facade_append_plan_walk>",
+        "pc": "0xE98D",
+        "role": "publish-plan walk",
+        "stack_word_before_RTS": "0xE98F"
+      },
+      {
+        "legal_return_PC": "0xE9A5",
+        "opcode": "jsr",
+        "operand": "$e09d <c2_overlay_call>",
+        "pc": "0xE9A2",
+        "role": "terminal overlay call 1",
+        "stack_word_before_RTS": "0xE9A4"
+      },
+      {
+        "legal_return_PC": "0xE9B5",
+        "opcode": "jsr",
+        "operand": "$e09d <c2_overlay_call>",
+        "pc": "0xE9B2",
+        "role": "terminal overlay call 2",
+        "stack_word_before_RTS": "0xE9B4"
+      },
+      {
+        "opcode": "bra",
+        "operand": "$e9cd <c2_append_begin+0x1e9>",
+        "pc": "0xE9BC",
+        "role": "phase-owner completion handoff"
+      },
+      {
+        "legal_return_PC": "0xE9C1",
+        "opcode": "jsr",
+        "operand": "$e9e5 <c2_append_run_rollback_plan>",
+        "pc": "0xE9BE",
+        "role": "rollback alternative",
+        "stack_word_before_RTS": "0xE9C0"
+      },
+      {
+        "opcode": "jmp",
+        "operand": "$b5f1 <c2_facade_append_plan_walk>",
+        "pc": "0xE9FF",
+        "role": "rollback-plan tail transfer"
+      },
+      {
+        "opcode": "rts",
+        "operand": "",
+        "pc": "0xE9E4",
+        "role": "c2_append_begin return"
+      },
+      {
+        "legal_return_PC": "0x251D",
+        "opcode": "jsr",
+        "operand": "$ffd4 <vm_runtime_overlay_transaction_end>",
+        "pc": "0x251A",
+        "role": "transaction-end handoff",
+        "stack_word_before_RTS": "0x251C"
+      },
+      {
+        "opcode": "rts",
+        "operand": "",
+        "pc": "0x253E",
+        "role": "append-wrapper return"
+      },
+      {
+        "opcode": "jmp",
+        "operand": "$749f <vm_callprim+0x9ff>",
+        "pc": "0x7902",
+        "role": "vm_callprim result normalization"
+      },
+      {
+        "opcode": "rts",
+        "operand": "",
+        "pc": "0x7BA9",
+        "role": "vm_callprim return"
+      }
+    ],
+    "direct_transfer_to_BF71": false,
+    "explicit_temporary_save_blocks": [
+      {
+        "claim": "balanced in the linked ordinary-return path",
+        "owner": "c2_append_plan_walk",
+        "pops": [
+          {
+            "opcode": "pla",
+            "operand": "",
+            "pc": "0x18A4"
+          },
+          {
+            "opcode": "pla",
+            "operand": "",
+            "pc": "0x18A7"
+          },
+          {
+            "opcode": "pla",
+            "operand": "",
+            "pc": "0x18AA"
+          },
+          {
+            "opcode": "pla",
+            "operand": "",
+            "pc": "0x18AD"
+          }
+        ],
+        "pushes": [
+          {
+            "opcode": "pha",
+            "operand": "",
+            "pc": "0x188C"
+          },
+          {
+            "opcode": "pha",
+            "operand": "",
+            "pc": "0x188F"
+          },
+          {
+            "opcode": "pha",
+            "operand": "",
+            "pc": "0x1892"
+          },
+          {
+            "opcode": "pha",
+            "operand": "",
+            "pc": "0x1895"
+          }
+        ],
+        "static_balance": 0
+      },
+      {
+        "claim": "balanced in the linked ordinary-return path",
+        "owner": "c2_product_append_staged",
+        "pops": [
+          {
+            "opcode": "plx",
+            "operand": "",
+            "pc": "0x2526"
+          },
+          {
+            "opcode": "plx",
+            "operand": "",
+            "pc": "0x2529"
+          },
+          {
+            "opcode": "plx",
+            "operand": "",
+            "pc": "0x252C"
+          }
+        ],
+        "pushes": [
+          {
+            "opcode": "phy",
+            "operand": "",
+            "pc": "0x24DC"
+          },
+          {
+            "opcode": "phy",
+            "operand": "",
+            "pc": "0x24DF"
+          },
+          {
+            "opcode": "phy",
+            "operand": "",
+            "pc": "0x24E2"
+          }
+        ],
+        "static_balance": 0
+      }
+    ],
+    "linked_indirect_JMP_sites": [
+      {
+        "operand": "($14)",
+        "pc": "0x23E6"
+      },
+      {
+        "operand": "($b62c,x)",
+        "pc": "0x47E8"
+      },
+      {
+        "operand": "($b6b0,x)",
+        "pc": "0x6568"
+      },
+      {
+        "operand": "($fd4c,x)",
+        "pc": "0x6AE4"
+      },
+      {
+        "operand": "($fdd6,x)",
+        "pc": "0x6AF3"
+      },
+      {
+        "operand": "($fdec,x)",
+        "pc": "0x7112"
+      },
+      {
+        "operand": "($fdf4,x)",
+        "pc": "0x8097"
+      },
+      {
+        "operand": "($fd2c,x)",
+        "pc": "0x8699"
+      },
+      {
+        "operand": "($b6de,x)",
+        "pc": "0x905C"
+      },
+      {
+        "operand": "($b6ea,x)",
+        "pc": "0x97B1"
+      },
+      {
+        "operand": "($b71c,x)",
+        "pc": "0xC6F0"
+      },
+      {
+        "operand": "($b700,x)",
+        "pc": "0xC3C7"
+      },
+      {
+        "operand": "($b708,x)",
+        "pc": "0xC39A"
+      },
+      {
+        "operand": "($b624,x)",
+        "pc": "0xC497"
+      }
+    ],
+    "ordinary_static_balance_result": "the enumerated append wrapper and plan-walk save blocks are balanced; this does not prove target-time stack integrity"
+  }
+}

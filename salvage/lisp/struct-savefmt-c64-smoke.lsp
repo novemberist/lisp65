@@ -1,0 +1,15 @@
+; SAVE-format LOAD smoke for generated DEFSTRUCT-light runtime code.
+; This is the C64-safe expanded form for a small POINT struct.
+
+(DE MAKEPOINT (X Y) (LIST (QUOTE POINT) X Y))
+(DE POINTX (P) (CADR P))
+(DE POINTY (P) (CADR (CDR P)))
+(DE POINTP (P) (AND (CONSP P) (EQ (CAR P) (QUOTE POINT))))
+(DE SETPOINTX (P V) (PROG NIL (RPLACA (CDR P) V) (RETURN P)))
+(DE COPYPOINT (P) (CONS (CAR P) (APPEND (CDR P) NIL)))
+(DE SX () (POINTX (MAKEPOINT 3 4)))
+(DE SY () (POINTY (MAKEPOINT 3 4)))
+(DE SP () (POINTP (MAKEPOINT 3 4)))
+(DE SC () (POINTX (COPYPOINT (MAKEPOINT 3 4))))
+(DE SM () (POINTX (SETPOINTX (COPYPOINT (MAKEPOINT 3 4)) 9)))
+(DE STRUCTOK () (LIST (SX) (SY) (SP) (SC) (SM)))

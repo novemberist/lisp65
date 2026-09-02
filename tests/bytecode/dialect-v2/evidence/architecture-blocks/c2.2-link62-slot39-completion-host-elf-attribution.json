@@ -1,0 +1,247 @@
+{
+  "answers": {
+    "classification": "evidence-model First Red; no product fix is justified yet",
+    "static_suspects": {
+      "missing_or_malformed_timeout_branch": "refuted",
+      "software_loop_in_Bank5_reader": "refuted",
+      "unbounded_poll_loop": "refuted"
+    },
+    "why_slot39_did_not_converge": "not decidable from the captured state: the landed C2J is valid and has seal 0x2801, but the producer seal used by the poll was not captured",
+    "why_timeout_did_not_fire": "the premise is not established: the linked timeout is present and total, only 58 external frames were bound without the poll start, and the same Slot 39 can be re-entered by rollback after a prior timeout"
+  },
+  "authority": {
+    "DMA_source": {
+      "bytes": 5446,
+      "path": "src/c2_platform_dma.c",
+      "sha256": "68ed902d1114e148c54c70d886fea519472f92064e9de104ad8703432ef6c465"
+    },
+    "IRQ_source": {
+      "bytes": 3925,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "634db3a6317d023363998b0f6dfdd6d173334a0cdb087e3c2442a98d8f968947"
+    },
+    "attribution_driver": {
+      "bytes": 22148,
+      "path": "tools/host-lisp/c2_link62_slot39_completion_attribution.py",
+      "sha256": "30c4a77e14e6e4533776435597004aaa5291f4a216da697dd316bb4cd4da239e"
+    },
+    "carrier_manifest": {
+      "bytes": 15932,
+      "path": "build/c2.2/substitution/link62-c1-freezer-cutpoints-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-link62-stage-bound.json",
+      "sha256": "e718748ed519714952d5edbe79cf41bf7237825b2c37462e5ce951545c4f7702"
+    },
+    "completion_contract": {
+      "bytes": 11521,
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "sha256": "f4e1646ec72271533116686a39e5c7be38f928c2cb8d299dc6642697f67efe7f"
+    },
+    "completion_gate": {
+      "bytes": 20722,
+      "path": "tools/host-lisp/c2_cpu_chip_write_completion_gate.py",
+      "sha256": "2fa9627bd32464786260d42ba161bd9426c61e9db5655f97f6982ec2a980e4af"
+    },
+    "diagnostic_donor_ELF": {
+      "bytes": 619644,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ecaef987c93f5ff10963d15a729a278fe7b4a13c072a0299ffd1752dcc11ae95"
+    },
+    "donor_generated_runtime": {
+      "bytes": 153856,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/generated-product-sources/c2_product_runtime.c",
+      "sha256": "eb11a79ea5e9dab98c573c47aee3b46400fb01e4060a0e15f1344d71c3046226"
+    },
+    "final_nonpromotable_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link62-c1-freezer-cutpoints-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-link62-stage-bound.bin",
+      "sha256": "f7ac2e34d8a8566e93c928c7bfa9aa7bc0379241ca01f6f7941694ba0faf2206"
+    },
+    "hardware_First_Red": {
+      "bytes": 7913,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link62-C1-Freezer-cutpoint3-prefreezer-hardware-first-red.json",
+      "sha256": "7c8309f790796c5b711e1d60fd818db038874ba0283ea3e458506556345645ab"
+    },
+    "product_ELF": {
+      "bytes": 619784,
+      "path": "build/c2.2/substitution/product-link-62-post-shelf-region1/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "afa2ec491648abed58a1c1a0c8fdd0fa42cc1d7ea236fd97b6f6b145808a1f21"
+    },
+    "product_generated_runtime": {
+      "bytes": 153856,
+      "path": "build/c2.2/substitution/product-link-62-post-shelf-region1/generated-product-sources/c2_product_runtime.c",
+      "sha256": "eb11a79ea5e9dab98c573c47aee3b46400fb01e4060a0e15f1344d71c3046226"
+    },
+    "runtime_source": {
+      "bytes": 154063,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "f20869a4935a27841c7c937e68e8e2b6bc4fe051d3bc147ac728e915857f985c"
+    }
+  },
+  "capture_address_correction": {
+    "classification": "additive evidence-metadata correction",
+    "cross_check": {
+      "index_4_slot": 39,
+      "index_5_lock_flags": 0,
+      "trace_bytes": "0600000027002563"
+    },
+    "derivation": "lisp65_c2_phase_scratch $c0c6 + install-slot offset 302 - capture index 4",
+    "derived_address": "0x0000c1f0",
+    "historical_address": "0x0000c1ee",
+    "historical_receipt_preserved": true,
+    "semantic_effect": "none: Slot 39 and unlocked-first-stamp remain the same"
+  },
+  "captures": {
+    "C2J": {
+      "address": "0x0005c640",
+      "bytes": 64,
+      "path": "build/c2.2/c1-freezer-hardware-link62-cutpoints3-4-NONPROMOTABLE/first-red-c2j.bin",
+      "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+    },
+    "frame_first": {
+      "address": "0x0000ff80",
+      "bytes": 8,
+      "path": "build/c2.2/c1-freezer-hardware-link62-cutpoints3-4-NONPROMOTABLE/first-red-frame-a.bin",
+      "sha256": "e90c391760691de4ffcc86fbc56f9cf640df72bbfa62bb9db7beed4d8ed2b8a2"
+    },
+    "frame_second": {
+      "address": "0x0000ff80",
+      "bytes": 8,
+      "path": "build/c2.2/c1-freezer-hardware-link62-cutpoints3-4-NONPROMOTABLE/first-red-frame-b.bin",
+      "sha256": "f4478c4d3e6533dd9cc8f552a4d43fe74ed62f9627b5af3798cf37f8746f84c1"
+    },
+    "phase_trace": {
+      "address": "0x0000c1f0",
+      "bytes": 8,
+      "path": "build/c2.2/c1-freezer-hardware-link62-cutpoints3-4-NONPROMOTABLE/first-red-trace.bin",
+      "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+    },
+    "zero_page": {
+      "address": "0x00000070",
+      "bytes": 48,
+      "path": "build/c2.2/c1-freezer-hardware-link62-cutpoints3-4-NONPROMOTABLE/first-red-zp-0070-009f.bin",
+      "sha256": "ac8b9e3190ca14fcf56af19cc7a921db7b5a7c8edb3e3a9be35a8e4ad9f9963d"
+    }
+  },
+  "checker_gap": {
+    "authorized_change_in_this_step": "none",
+    "finding": "the existing completion gate checks source tokens and a host model; it does not prove the linked target timeout path or bind runtime start/seal witnesses",
+    "product_semantics_finding": false
+  },
+  "claim_limit": "No product defect, product fix, WPLTO, new link, hardware replay, C1 closure, matrix-gate or acceptance-chain claim.",
+  "control_flow_qualification": {
+    "implication": "the capture is compatible with either the initial Slot-39 poll or a rollback Slot-39 poll entered after an earlier timeout already fired",
+    "lock_flags": 0,
+    "missing_runtime_witnesses": [
+      "current PC",
+      "poll start at $17/$1e",
+      "scratch C2J seal at $c195/$c196",
+      "completion mode/result bytes in c2_append_state.record"
+    ],
+    "phase_stamp_semantics": "first phase provenance, not a current-PC witness",
+    "rollback_plan": [
+      39,
+      41,
+      42,
+      43,
+      44,
+      45,
+      40,
+      39,
+      0
+    ],
+    "slot39_is_rollback_first_and_last": true
+  },
+  "format": "lisp65-c2.2-Link62-slot39-completion-host-ELF-attribution-v1",
+  "linked_slot39": {
+    "VMA": "0x0000c356",
+    "final_carrier_SHA256": "c2a382e9847ee505ac17dbe0044910b2947ceb02636ed7fa214d097f5522724e",
+    "final_carrier_occurrences": 1,
+    "final_carrier_offset": 55040,
+    "payload_bytes": 1526,
+    "rtov_busy": 1,
+    "runtime_loaded_bytes": 1532,
+    "section": ".lisp65_rt_c2append_header",
+    "unique_length_owner": 39
+  },
+  "poll_attribution": {
+    "Bank5_read_call": {
+      "DMA_submit": "one STA $d700 followed by RTS",
+      "call_VMA": "0x0000c7f6",
+      "software_poll_inside_reader": false,
+      "target": "c2_stream_c2d_read",
+      "target_VMA": "0x0000e691",
+      "target_bytes": 87
+    },
+    "VMA": "0x0000c6ff",
+    "bytes": 589,
+    "symbol": "c2_completion_poll",
+    "target_identity_call": {
+      "call_VMA": "0x0000c86f",
+      "captured_target_C2J": {
+        "computed_bookend_CRC16": "0x2801",
+        "format_CRC32": "0x0f6a0fc2",
+        "format_CRC32_valid": true
+      },
+      "missing_runtime_witness": {
+        "address": "0x0000c195",
+        "bytes": 2,
+        "effect": "the target is valid now, but the capture cannot prove that the poll compared it with 0x2801",
+        "name": "C2AW_C2J_SEAL"
+      },
+      "relocation_operand_VMA": "0x0000c870",
+      "target": "rtov_crc_mem"
+    }
+  },
+  "promotable": false,
+  "recommended_next_class_C_question": {
+    "action": "authorize one nonpromotable threshold-hold diagnostic, not a product change",
+    "decision_rule": "threshold hold reached proves the timeout arithmetic executed; seal mismatch attributes non-convergence. No hold redirects the next attribution to the exact current PC/callee.",
+    "post_link_patch": {
+      "VMA": "0x0000c8ca",
+      "after": "b0 fe",
+      "before": "b0 03",
+      "carrier_file_offset_opcode": 56436,
+      "carrier_file_offset_operand": 56437,
+      "effect": "self-loop only when the linked elapsed>=64 decision fires"
+    },
+    "required_captures": [
+      "PC at/near $c8ca",
+      "$17/$1e poll start",
+      "$ff83/$ff84 current frame",
+      "$c195/$c196 producer seal",
+      "C2J $05c640..$05c67f",
+      "completion mode/result bytes"
+    ]
+  },
+  "recorded_on": "2026-07-24",
+  "scope": {
+    "class": "bounded-host-ELF-attribution",
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "historical_receipts_modified": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "status": "FIRST RED: linked poll and timeout are bounded; current captures do not prove non-convergence or a missing timeout",
+  "timeout_attribution": {
+    "IRQ_verdict": {
+      "NMI_count": 0,
+      "poll_start_cells_written_by_IRQ_or_NMI": false,
+      "raster_clock_advanced": true
+    },
+    "contract_frames": 64,
+    "current_sample_VMA": "0x0000c8a2",
+    "decision_VMA": "0x0000c8b1",
+    "exhaustive_model_cases": 196608,
+    "external_samples": {
+      "delta": 58,
+      "first": "0x35c8",
+      "reason": "the only bound external delta is 58 (<64), and the poll's private start value at $17/$1e was not captured",
+      "second": "0x3602",
+      "threshold_crossed_from_poll_start": "not-proven"
+    },
+    "linked_sequence_verdict": "correct unsigned 16-bit modulo delta; exits false at elapsed >= 64 whenever control returns from the read/CRC body",
+    "start_sample_VMA": "0x0000c757",
+    "threshold_branch_VMA": "0x0000c8ca"
+  }
+}

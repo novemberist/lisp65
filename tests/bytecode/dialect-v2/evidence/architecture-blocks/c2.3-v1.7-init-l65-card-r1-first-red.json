@@ -1,0 +1,50 @@
+{
+  "format": "lisp65-c2-v17-init-l65-card-first-red-v1",
+  "status": "FIRST RED: LEGACY BANNER-FAILURE MNEMONIC PIN",
+  "card": "v1.7 native INIT.L65 implementation r1",
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "product_links": 0,
+    "media_builds": 0,
+    "device_contacts": 0
+  },
+  "observed": {
+    "consumer": "c2_lite_v6_bank2_target_stage_phase02b_wplto.source_gate",
+    "expected_mnemonics": [
+      "lisp65_error_render_code(vm_status_error_code(vm_status), NIL)",
+      "return"
+    ],
+    "candidate_semantics": "lisp_abort_code(vm_status_error_code(vm_status)) transfers the VM error to the installed top-level recovery before prompt publication",
+    "failed_checks": [
+      "banner_uses_single_numeric_error_truth",
+      "failed_banner_returns_before_prompt"
+    ],
+    "product_link_emitted": false
+  },
+  "classification": {
+    "family": "semantic-equivalence-not-mnemonic-identity",
+    "product_defect": false,
+    "mechanism_open": false
+  },
+  "replacement_disposition": {
+    "scope": "convert the real pre-link consumer from the historical render-and-return spelling to the error-transfer property",
+    "product_sources_change": false,
+    "required_mutations": [
+      "discarded-vm-status",
+      "removed-error-transfer",
+      "reintroduced-message-string-truth"
+    ]
+  },
+  "raw_evidence": {
+    "invocation": {
+      "path": "build/c2.3/v1.7-init-l65-card-r1-preflight/candidate-invocation.json",
+      "bytes": 882,
+      "sha256": "2c6546bda039bdf67db322de83b9234632f14bbcfba922cd107b3d20cd85e8fa"
+    },
+    "wplto_result": {
+      "path": "build/c2.3/v1.7-init-l65-card-r1/receipts/wplto-base-result.json",
+      "bytes": 4038,
+      "sha256": "14c4ae3bfedf50099e42b414b4967053063cf11788ff5a4abb9243e9ddc140a2"
+    }
+  }
+}

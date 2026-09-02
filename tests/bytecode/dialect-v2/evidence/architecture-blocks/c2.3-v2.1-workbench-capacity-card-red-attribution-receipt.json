@@ -1,0 +1,133 @@
+{
+  "authority": {
+    "ABI_report": {
+      "bytes": 180738,
+      "path": "build/c2.3/v2.1-workbench-capacity-card/wplto/c2-asm-leaf-real-abi-callers.json",
+      "sha256": "c3adb90f72dc1bddfd4a5d1c36ea61d8dd63941b1b88b5b9d513e04934c68394"
+    },
+    "candidate_ELF": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-workbench-capacity-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "d7b8968eb89d3c33403395f926f4e2e04008e07ebe2cb689a7ddd1724e427e4b"
+    },
+    "canonical_consumer": {
+      "bytes": 86356,
+      "path": "tools/host-lisp/c2_lite_canonical_product.py",
+      "sha256": "f2983048eb02a6dee37a5cbcc0fe10c38cb16e62c989710a1bc0db1cc7ca5048"
+    },
+    "capacity_domain": {
+      "bytes": 4325,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-workbench-capacity-domain-receipt.json",
+      "sha256": "c1881d18e5cafc309ba6bfb2a43479e6df37db776b80a6db9907a5569a208646"
+    },
+    "driver": {
+      "bytes": 10420,
+      "path": "tools/host-lisp/c2_v21_workbench_capacity_card_red_attribution.py",
+      "sha256": "3c4f7db83207476239def95b832a7e4784c80bf86e716bd5f894be0c3989308b"
+    },
+    "final_red": {
+      "bytes": 10013,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-workbench-capacity-card-final-red.json",
+      "sha256": "99929f84b58cb0aa8b09d49e058582b6f47ec61eacccc153d06ec292131a779f"
+    }
+  },
+  "authorized_work_result": {
+    "F1_correct_domain_reached_and_returned": true,
+    "product_link_artifacts_exist": true,
+    "workbench_candidate_bytes": 1851,
+    "workbench_capacity_bytes": 2730,
+    "workbench_headroom_bytes": 879
+  },
+  "card_disposition": {
+    "card_consumed": true,
+    "completion_allowed": false,
+    "device_allowed": false,
+    "media_allowed": false,
+    "owner_disposition_required": true,
+    "retry_authorized": false
+  },
+  "claim_limit": "Read-only Final-Red attribution. No expected-set conversion, replacement card, completion, media or device is authorized.",
+  "format": "lisp65-c2.3-v21-workbench-capacity-card-red-attribution-v1",
+  "mutations_rejected": [
+    "blame-F1-domain",
+    "hide-new-owner",
+    "invent-missing-owner",
+    "call-ABI-red",
+    "erase-callsite-delta",
+    "authorize-retry",
+    "allow-completion",
+    "allow-device"
+  ],
+  "new_final_red": {
+    "actual_callsite_count": 10,
+    "actual_inventory_source": "candidate ELF relocations",
+    "actual_owners": {
+      "c2_append_journal_validate_phase": 1,
+      "c2_append_journal_write_phase": 1,
+      "c2_completion_poll": 1,
+      "c2_phase02a_record_read": 1,
+      "vm_resident_island_install": 2,
+      "vm_runtime_overlay_catalog_verifier": 1,
+      "vm_runtime_overlay_exec_family": 2,
+      "vm_runtime_overlay_record_verifier": 1
+    },
+    "added_current_ELF_owners": {
+      "c2_phase02a_record_read": 1
+    },
+    "class": "CURRENT-ELF-INVENTORY-COMPARED-TO-HISTORICAL-EXPECTED-SET",
+    "expected_callsite_count": 9,
+    "expected_owners": {
+      "c2_append_journal_validate_phase": 1,
+      "c2_append_journal_write_phase": 1,
+      "c2_completion_poll": 1,
+      "vm_resident_island_install": 2,
+      "vm_runtime_overlay_catalog_verifier": 1,
+      "vm_runtime_overlay_exec_family": 2,
+      "vm_runtime_overlay_record_verifier": 1
+    },
+    "gate": "fresh_real_abi_gate",
+    "leaf_ABI_audit_status": "passed-all-assembler-leaf-abi-contracts",
+    "mechanism": "The gate correctly derived ten CRC callsites from the current ELF, including the phase-02a delivered-content verifier. It then compared that complete inventory with a nine-callsite historical expected dictionary that predates this legitimate candidate owner. The ABI audit itself is green.",
+    "missing_expected_owners": {},
+    "new_callsite": {
+      "call_address": 51574,
+      "length_high_writer": {
+        "address": 51570,
+        "opcode": "ldx",
+        "operand": "#$0",
+        "section": ".lisp65_rt_c2d_02a"
+      },
+      "length_low_writer": {
+        "address": 51560,
+        "opcode": "lda",
+        "operand": "#$20",
+        "section": ".lisp65_rt_c2d_02a"
+      },
+      "model": {
+        "edge": "JSR rtov_crc_mem",
+        "length_high": "X",
+        "length_low": "A",
+        "pointer_high": "__rc3",
+        "pointer_low": "__rc2"
+      },
+      "owner": "c2_phase02a_record_read",
+      "owner_section": ".lisp65_rt_c2d_02a",
+      "pointer_high_writer": {
+        "address": 51568,
+        "opcode": "stx",
+        "operand": "$5",
+        "section": ".lisp65_rt_c2d_02a"
+      },
+      "pointer_low_writer": {
+        "address": 51564,
+        "opcode": "stx",
+        "operand": "$4",
+        "section": ".lisp65_rt_c2d_02a"
+      },
+      "relocation_offset": 51575
+    },
+    "unclassified_C_called_functions": []
+  },
+  "recorded_on": "2026-08-14",
+  "status": "ATTRIBUTED FINAL RED: Real-ABI expected inventory omits current ELF caller"
+}

@@ -1,0 +1,94 @@
+{
+  "format": "lisp65-c2.2-link75-bundled-require-hardware-first-red-v1",
+  "recorded_on": "2026-07-28",
+  "status": "FIRST-RED-require-defstruct-VM_BADOPCODE",
+  "candidate": {
+    "link": 75,
+    "product_sha256": "b12377766c814aa3351578faeff87b3607ba376a9f924beb1612bbc4532b263b",
+    "elf_sha256": "b6b320f688387ba26af6bf58fa0a87a7576a131df9ee32a9b086243c8e2b7f3b",
+    "media_sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+  },
+  "device": {
+    "core_identity_hex": "6b4cb203",
+    "physical_devices": 1
+  },
+  "passed_before_first_red": [
+    {
+      "id": "boot-watch",
+      "form": "(list (+ 2 3) (function-kind (quote intern)) (function-kind (quote require)))",
+      "observed": "(5 primitive bytecode)"
+    },
+    {
+      "id": "intern-positive",
+      "form": "(intern \"abc\")",
+      "observed": "abc"
+    }
+  ],
+  "first_red": {
+    "id": "require-first",
+    "form": "(require (quote defstruct))",
+    "expected": "t",
+    "observed": "*** vm: bad bytecode",
+    "elapsed_class": "approximately 30 seconds",
+    "classification": "product-first-red-before-defstruct",
+    "meaning": [
+      "The product-bound carrier still exposes intern and require with the expected function kinds.",
+      "Direct Prim-68 execution remains green on the same fresh boot.",
+      "The first real require/defstruct library load fails before defstruct is evaluated.",
+      "No generated defstruct function was called.",
+      "The post-symname diagnostic identity was not deployed and the conditional DMA stage remains unbuilt."
+    ]
+  },
+  "evidence": {
+    "config": {
+      "path": "config/c2.2-link75-bundled-completion-session.json",
+      "bytes": 3880,
+      "sha256": "95578d3ec82599bcdadf684ace9ba8ccc16368e7654f70d744719c5620c36d3a"
+    },
+    "preparation": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-bundled-completion-preparation-receipt.json",
+      "bytes": 5758,
+      "sha256": "8c38cbab05ad29e382b3c55945969ab3af375042166366b484a9f74d8e26e357"
+    },
+    "deployment": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/product-phase-deployment.json",
+      "bytes": 8195,
+      "sha256": "c167e7de34a7cafe8d9284d23d24152511770dca513ab80a2f543b458648fd96"
+    },
+    "observations": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware/observed-product-rows.json",
+      "bytes": 1504,
+      "sha256": "a2edad3a14c353f9d2a0ba995ef0172a3b89db5af88eed290c60ea9a8b364471"
+    },
+    "first_red_screen_text": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware/row-require-first.txt",
+      "bytes": 2241,
+      "sha256": "77b4bd93cd1fdc8205b9b294722bf1f8807ec80c431443c302690e04c60904a4"
+    },
+    "first_red_screen_png": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware/row-require-first.png",
+      "bytes": 5122,
+      "sha256": "5486b3d4c4ac3d82b3ad728055a8c839776a64ed67cbf8fe99f76bf890a278c8"
+    },
+    "uploaded_media_readback": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware/uploaded-media-readback.d81",
+      "bytes": 819200,
+      "sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+    },
+    "device_core_identity": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware/device-core-id.bin",
+      "bytes": 4,
+      "sha256": "bd075eada684d364ddb275c939b000db0fddec2bd491a0f8628b280e9026cb53"
+    }
+  },
+  "execution_accounting": {
+    "device_appointments": 1,
+    "new_product_links": 0,
+    "rows_passed": 2,
+    "rows_failed": 1,
+    "rows_not_run": 9,
+    "diagnostic_deployments": 0
+  },
+  "next_gate": "Class-C attribution of the require-first BADOPCODE before any product correction, successor link, defstruct retry or parked DIRMISS diagnostic.",
+  "claim_limit": "This receipt records one Link-75 product First Red. It does not attribute the bad opcode, close require/defstruct, run the post-symname discriminator, authorize DMA measurement, or change any product byte."
+}

@@ -1,0 +1,111 @@
+{
+  "format": "lisp65-c2-lite-v6-bank2-target-stage-followup-wplto-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: both requested corrections work, but the target-coordinate pass makes phase 02a 131 bytes too large",
+  "scope": {
+    "whole_program_lto_runs": 1,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "promotable": false
+  },
+  "green_before_link": {
+    "source_contract_checks": 12,
+    "source_mutations_rejected": 9,
+    "mutations": [
+      "stage call removed",
+      "target bank changed",
+      "target CRC bypassed",
+      "cutpoint replayed",
+      "target cross-binding bypassed",
+      "static-plane close bypassed",
+      "banner status discarded",
+      "textual banner error truth reintroduced",
+      "banner failure return removed"
+    ]
+  },
+  "requested_corrections": {
+    "numeric_repl_status": {
+      "baseline_rodata_bytes": 947,
+      "first_red_rodata_bytes": 1160,
+      "followup_rodata_bytes": 947,
+      "recovered_bytes": 213,
+      "string_pool_bytes": 631,
+      "vm_status_switch_table_present": false,
+      "ordinary_bss_bytes": 1587,
+      "ordinary_bss_vma": "0xb9f7",
+      "bss_headroom_to_fixed_block_bytes": 86,
+      "result": "The second resident text truth is fully gone; BSS returns exactly to the Link-43 geometry."
+    },
+    "target_phase": {
+      "first_red_phase03b_bytes": 1847,
+      "followup_phase03b_bytes": 1379,
+      "delta_bytes": -468,
+      "slice_cap_bytes": 1792,
+      "headroom_bytes": 413,
+      "result": "Phase 03b now owns only copy and target-CRC convergence and fits comfortably."
+    },
+    "resident_text": {
+      "baseline_bytes": 37988,
+      "followup_bytes": 37991,
+      "delta_bytes": 3,
+      "headroom_to_handoff_bytes": 25,
+      "result": "The resident layout is positive again; the WPLTO stop is not a resident-wall failure."
+    }
+  },
+  "first_red": {
+    "gate": "C2 decoder phase 02a must not exceed the 1792-byte stack-safe slice window",
+    "baseline_phase02a_bytes": 1665,
+    "followup_phase02a_bytes": 1923,
+    "delta_bytes": 258,
+    "slice_cap_bytes": 1792,
+    "over_cap_bytes": 131,
+    "phase02b_bytes": 243,
+    "phase02b_headroom_bytes": 1549,
+    "interpretation": "The 258-byte target-coordinate pass is semantically correct but does not fit in phase 02a's former 127-byte headroom. Phase 02b is the same record phase, already closes its totals before publishing phase 3, and has 1549 bytes of measured headroom."
+  },
+  "recommended_class_c_cut": {
+    "placement": "Restore phase 02a to the proven Shelf/C2D record cross-binding and move only the target-coordinate and exact-34403-byte closure into phase 02b, before it clears the 0x2a marker and publishes phase 3.",
+    "why_not_new_slice": "Phase 02b is already the semantic close of the record phase and has ample measured room. Reusing it adds no slice, catalog record, transport, resident state or new cutpoint.",
+    "unchanged": [
+      "phase 03 source authentication",
+      "phase 03b copy and target-CRC convergence",
+      "numeric REPL status rendering and no-prompt failure",
+      "1792-byte cap, all floors and all anchors"
+    ],
+    "next_measurement": "One product-shaped WPLTO with the same nine source mutations plus the linked target-dataflow and Workbench-scratch fixture; no automatic retry."
+  },
+  "claim_limit": "No product link and no hardware run occurred. This prelink First Red does not consume a product line-1 First-Red slot or a completed latency attempt.",
+  "budgets": {
+    "product_line1_first_reds": "2/3 consumed; 1 remains",
+    "completed_latency_attempts": "0/2 consumed"
+  },
+  "rollback_line": {
+    "product": "Link 43",
+    "path": "build/c2.2/substitution/product-link-43-c2-lite-v6-export-symbol-domain/lisp65-c2-substitution-linked.prg",
+    "sha256": "9bbfb17707fe6e57bfd93c49db13f920fa48d0654227c19150aec4a34f1be43b",
+    "status": "untouched"
+  },
+  "evidence": [
+    {
+      "path": "build/c2-lite/v6-bank2-target-stage-followup-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.lto.o",
+      "bytes": 606320,
+      "sha256": "6db59c4ab8edb2a0d6c88693c707d8572660656f1b7959b2a69c572811b1c71e"
+    },
+    {
+      "path": "build/c2-lite/v6-bank2-target-stage-followup-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "bytes": 197154,
+      "sha256": "aec686f576890a643ac1e406d1604d3ddf8e36f947673ac3ead0d1b52b00788b"
+    },
+    {
+      "path": "build/c2-lite/v6-bank2-target-stage-followup-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.link.stderr.txt",
+      "bytes": 1933,
+      "sha256": "01ce5558ddb87f8d37c455142fdd734e2fec368dbcf2bb6a1a72e3cfaba3baaf"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank2-target-stage-followup-wplto-receipt.json",
+      "bytes": 12646,
+      "sha256": "5cef1b5c18b302370875cf58ba6ac756f9e3c38c234c29a24a88e30b8e7f141d"
+    }
+  ],
+  "review_question": "Authorize the phase-02b close placement as one final product-shaped WPLTO attempt, or choose another semantic home for the 258-byte target-coordinate pass. No product link or hardware run is currently permitted."
+}

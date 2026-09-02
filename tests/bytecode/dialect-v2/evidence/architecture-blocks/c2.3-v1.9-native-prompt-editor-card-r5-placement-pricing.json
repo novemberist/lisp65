@@ -1,0 +1,173 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "Block_A_receipt": {
+      "bytes": 239311,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-capture-client-card-r1-receipt.json",
+      "sha256": "7ea242566fc5201077c80c2f61c79d63337b22a0af453bc02befc4a662be887a"
+    },
+    "decision": {
+      "bytes": 1229,
+      "path": "config/c2-v190-native-prompt-editor-r5-pricing.json",
+      "sha256": "7984349e45e77027cd29a58d5144f61319f7c3e539c9af596b819f0669277bdc"
+    },
+    "r4_final_LTO": {
+      "bytes": 620920,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r4/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "e612049dffa7b680310aad4efa8a564e01d932cc3d67fa337dee5085b4bec6e3"
+    },
+    "r4_link_red_attribution": {
+      "bytes": 65663,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r4-link-red-attribution.json",
+      "sha256": "8891b7e515be0cf7e19481b458da5a65bb1ac0d6a0d97dcdba9e6872d7603887"
+    },
+    "r4_map": {
+      "bytes": 189693,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r4/wplto/resident-island-seed.prg.map",
+      "sha256": "785964eadd18ae1619a34c41ccd61f476079253dbfb778307297e1a8dce17c02"
+    },
+    "stack_ownership": {
+      "bytes": 15670,
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    }
+  },
+  "claim_limit": "Host-only selection price over r4 final-LTO map evidence. No r5 product or final capacity claim exists before a newly authorized final WPLTO/link measures the relation.",
+  "corrected_capacity_question": {
+    "current_text_reserve_bytes": -12,
+    "overlap_clearance_bytes": 12,
+    "permanent_text_floor_bytes": 32,
+    "reason": "clearing overlap alone would leave zero floor",
+    "required_capacity_recovery_bytes": 44
+  },
+  "dominated_routes": {
+    "move_scr_cursor": {
+      "E000_spendable_bytes": 3,
+      "Far_Service_free_bytes": 11,
+      "Product_Cold_free_bytes": 47,
+      "body_bytes": 51,
+      "service_time_proof": "absent and required",
+      "verdict": "does not fit and is not selectable"
+    },
+    "ordinary_body_relocation": {
+      "E000": {
+        "aggregate_free_bytes": 57,
+        "floor_bytes": 54,
+        "largest_contiguous_hole_bytes": 49,
+        "spendable_bytes": 3
+      },
+      "Far_Service": {
+        "established_stub_bytes": 9,
+        "free_bytes": 11,
+        "maximum_single_move_net_reclaim_bytes": 2
+      },
+      "Product_Cold": {
+        "established_stub_bytes": 9,
+        "free_bytes": 47,
+        "maximum_single_move_net_reclaim_bytes": 38
+      },
+      "verdict": "no established single-body move restores 44 bytes; multi-tenant dispatch is a new design, not this price"
+    },
+    "smaller_boundary": {
+      "instruction": "absolute JMP",
+      "reclaim_bytes": 0,
+      "verdict": "already minimum-sized",
+      "wrapper_bytes": 3
+    }
+  },
+  "format": "lisp65-c2-v190-native-prompt-editor-card-r4-v1-r5-placement-pricing-v1",
+  "next_decision": {
+    "WPLTO_runs": 1,
+    "authorized": false,
+    "kind": "owner r5 link decision",
+    "product_links": 1,
+    "recommended_word": "r5-Link frei"
+  },
+  "permanent_rule": {
+    "mutations_rejected": {
+      "fragment-price-as-final-capacity": "ordinary-text capacity was not final-linked",
+      "move-vma-without-lma": "mapped facade VMA/LMA lost the shared MAP domain",
+      "overlap-next-owner": "mapped facade overlaps the next fixed owner",
+      "pin-current-derived-address-across-text-growth": "mapped facade is not derived from final text plus its floor",
+      "restore-fixed-b3b0-facade": "mapped facade is not derived from final text plus its floor"
+    },
+    "owning_gate": "c2-v190-native-prompt-editor-r5-pricing-check",
+    "text_prices": "Text capacity is accepted only from the final linked candidate; isolated fragments and micro-prototypes are selection evidence, never capacity evidence."
+  },
+  "r5_obligations": [
+    "owner authorizes the fourth WPLTO/product link explicitly",
+    "facade VMA is derived from final text end plus the 32-byte floor",
+    "facade LMA follows the same shared MAP offset",
+    "98-byte facade stays inside the B3B0..B4A3 arena",
+    "final-linked text reserve is at least 32 bytes",
+    "all facade bodies and call edges are byte/CFG-equivalent",
+    "r4-to-r5 differences are fully attributed with zero remainder",
+    "both real force-include header consumers are positively proven",
+    "Scope and Acceptance run read-only over the frozen r5 pair"
+  ],
+  "recommended_candidate": {
+    "call_graph_delta": 0,
+    "current": {
+      "facade_bytes": 98,
+      "facade_lma": 209840,
+      "facade_vma": 46000,
+      "tail_owner": {
+        "VMA": 46243,
+        "source": "mapped_far_service.resident.end_exclusive"
+      },
+      "text_end": 46012
+    },
+    "freight_delta_bytes": 0,
+    "mechanism": "place the existing 98-byte facade at max(arena_start, final_text_end + 32) and derive LMA with the unchanged shared MAP offset",
+    "name": "derived mapped-facade slide",
+    "projected": {
+      "derived_lma": 209884,
+      "derived_vma": 46044,
+      "end_lma_exclusive": 209982,
+      "end_vma_exclusive": 46142,
+      "ordinary_text_reserve_bytes": 32,
+      "tail_reserve_bytes": 101,
+      "vma_and_lma_shift_bytes": 44
+    },
+    "resident_arenas_touched": [
+      "mapped-far-facade placement only"
+    ],
+    "service_time_delta": "zero by construction: identical absolute JSR/JMP forms and identical MAP enter/leave population; r5 must confirm bytes",
+    "why_unique": "it alone restores the standing text floor without spending E000, Far-Service or Product-Cold bytes and without adding a hot-path transport"
+  },
+  "recorded_on": "2026-08-29",
+  "relocation_safety": {
+    "ELF32_RELA_bytes": 12,
+    "checked_from_build": true,
+    "facade_owned_relocation_count": 22,
+    "facade_owned_relocation_section_bytes": 264,
+    "handoff_map": {
+      "LMA": 46243,
+      "VMA": 46243,
+      "bytes": 223,
+      "end_exclusive": 46466
+    },
+    "incoming_relocation_rows": [
+      "00000024  0002ab03 R_MOS_ADDR16           00000000   c2_abort_driver_facade + 0",
+      "00000004  0002e403 R_MOS_ADDR16           00000000   c2_rtov_retire_continuations_facade + 0",
+      "0000003e  0000d103 R_MOS_ADDR16           00000000   .lisp65_c2_mapped_far_facade.abort + 0",
+      "0000001a  0000d103 R_MOS_ADDR16           00000000   .lisp65_c2_mapped_far_facade.abort + 0",
+      "00000041  0000d103 R_MOS_ADDR16           00000000   .lisp65_c2_mapped_far_facade.abort + 0",
+      "00000041  0000d103 R_MOS_ADDR16           00000000   .lisp65_c2_mapped_far_facade.abort + 0",
+      "0000001f  00001304 R_MOS_ADDR16_LO        00000000   c2_retired_continuation_stub - 1",
+      "00000024  00001305 R_MOS_ADDR16_HI        00000000   c2_retired_continuation_stub - 1",
+      "00000044  00001304 R_MOS_ADDR16_LO        00000000   c2_retired_continuation_stub + 0",
+      "00000049  00001305 R_MOS_ADDR16_HI        00000000   c2_retired_continuation_stub + 0"
+    ],
+    "incoming_symbol_or_section_relocations": 10,
+    "materialized_source_count": 69,
+    "runtime_source_fixed_address_hits": []
+  },
+  "status": "PASS: ONE R5 PLACEMENT WINNER PRICED",
+  "unexplained_members": []
+}

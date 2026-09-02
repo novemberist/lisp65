@@ -1,0 +1,83 @@
+{
+  "choreography": {
+    "fresh_BASIC_first": true,
+    "one_form_per_submission": true,
+    "optional_library_media": "none",
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_uploaded_and_read_back_before_boot": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "Block-3 repaired display, matcher and blink on line editor and IDE"
+    ],
+    "excludes": [
+      "Comfort",
+      "v2.1 Comfort return",
+      "release",
+      "publish"
+    ]
+  },
+  "decision_table": {
+    "all-five-groups-green": "Block 3 hardware-accepted",
+    "claim-expansion": "forbidden during the device session",
+    "daily-use-blocker": "Block 3 descoped; repair round exhausted",
+    "rare-or-cosmetic": "Known Issue and v2.0 register row"
+  },
+  "format": "lisp65-c2-v200-block3-banner-repair-device-session-v1",
+  "media": {
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-block3-banner-repair-device-media/shared-system/lisp65-product.d81",
+      "remote_name": "V20B3R.D81",
+      "sha256": "adb018ea0ca438fc4ccb537d755bcefb71a4b75507b5873afeed6df7730256d1"
+    }
+  },
+  "recorded_on": "2026-09-01",
+  "rows": [
+    {
+      "actions": [
+        "boot to banner",
+        "wait for native prompt"
+      ],
+      "expect": "lisp65> and one active cursor visible on the same bottom editor row; no banner-only stall",
+      "id": "B3-0-display-repair"
+    },
+    {
+      "actions": [
+        "type and navigate across matching parentheses and quotes",
+        "move away and verify old highlight disappears",
+        "place delimiters inside strings/comments",
+        "type over-close"
+      ],
+      "expect": "one current match; no stale/string/comment/over-close false match",
+      "id": "B3-1-line-editor-matcher"
+    },
+    {
+      "actions": [
+        "repeat matcher cases in IDE",
+        "scroll one long line"
+      ],
+      "expect": "same matching semantics and no freeze",
+      "id": "B3-2-IDE-matcher"
+    },
+    {
+      "actions": [
+        "observe idle cursor on both surfaces",
+        "type during blink-off",
+        "place cursor on matched delimiter"
+      ],
+      "expect": "cursor blinks; typing restores visibility; blink does not erase match attribute",
+      "id": "B3-3-blink"
+    },
+    {
+      "actions": [
+        "type normally and rapidly on both surfaces",
+        "run final loaded-configuration D5 probe"
+      ],
+      "expect": "no perceptible regression; D5 at least 32 slots and 384 name bytes",
+      "id": "B3-4-responsiveness-D5"
+    }
+  ],
+  "status": "ready-owner-v2.0-block3-banner-repair-contact"
+}

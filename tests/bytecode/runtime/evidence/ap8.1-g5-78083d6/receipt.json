@@ -1,0 +1,121 @@
+{
+  "schema": "lisp65-runtime-g5-resolution-v1",
+  "id": "ap8.1-g5-78083d6",
+  "scope": "ap8.1-higher-order",
+  "gate": "G5",
+  "dry_run": false,
+  "result": "pass",
+  "completed_at": "2026-07-11",
+  "hardware": "MEGA65",
+  "ship": {
+    "manifest": "ship-manifest.json",
+    "manifest_sha256": "275723fb7259261c9606cee6a0dcc17c593a4cbf9c77f44b482d7cd031d5e211",
+    "manifest_format": "lisp65-workbench-ship-v5",
+    "manifest_status": "g2-verified-candidate",
+    "source_commit": "78083d6b79df189e97c617577f7b89d62d4a3219",
+    "source_tree": "9dd90518fdb9af768d341a118b356723f3561843",
+    "source_dirty": false
+  },
+  "execution": {
+    "primary_target": "make check-hardware",
+    "verified_harness": "scripts/hw-workbench-ux-smoke.sh",
+    "workbench_ux_result": "pass",
+    "higher_order_phases_result": "pass",
+    "full_check_hardware_exit_zero": false,
+    "note": "The verified Workbench UX harness, including all four higher-order phases, passed before the aggregate later encountered an Etherload no-response. This receipt does not attest the remaining matrix or claim an uninterrupted exit-zero check-hardware run."
+  },
+  "source_transport": {
+    "method": "materialize-exact-apostrophe-source-via-char-code-39-save-and-load",
+    "loads_per_state": 2,
+    "result_form": "x",
+    "allocation_note": "The source read by load contains the original apostrophe shorthand; explicit quote syntax is not used as a substitute."
+  },
+  "supporting_evidence": [
+    {
+      "file": "hw-workbench-overlay-stack-guard-verified-ship-manifest-receipt.json",
+      "sha256": "a301ca07ab3fa0d068fffd729edc9c99eb0ee67c6e8f4432eb5a10273c4fd4a7"
+    },
+    {
+      "file": "hw-workbench-overlay-stack-guard-verified-ship-staged.txt",
+      "sha256": "279233c62ddac336c3d49193ddbe8264e02189c615ba90ce17d7de481dfd241b"
+    },
+    {
+      "file": "hw-workbench-overlay-stack-guard-verified-ship-post-reset.txt",
+      "sha256": "a172977e737793e2c7d2e9daadc0ba3519ae92baa7b99f3cdf1b71895519f4b0"
+    }
+  ],
+  "cases": [
+    {
+      "name": "hw-higher-order-every-plusp-true",
+      "fixture": "h8e",
+      "expr": "(every (function plusp) '(1 2 3))",
+      "expect": "t",
+      "phases": [
+        {
+          "id": "higher-order-remount-every",
+          "state": "after-persistence-remount",
+          "order": 1,
+          "loads": 2,
+          "forms": {
+            "file": "hw-workbench-ux-higher-order-remount-every.forms",
+            "sha256": "8b1f8b306c712bde2835318b8a4ab71ce2031122e806a889a5986596fd847187"
+          },
+          "transcript": {
+            "file": "hw-workbench-ux-higher-order-remount-every.txt",
+            "sha256": "d7d519853f2517484f17b5fb9ad0be1dfd088036ee69611fdad2fd0dc8d2e207"
+          }
+        },
+        {
+          "id": "higher-order-idex-every",
+          "state": "after-long-ide-idex-search-repeat",
+          "order": 2,
+          "loads": 2,
+          "forms": {
+            "file": "hw-workbench-ux-higher-order-idex-every.forms",
+            "sha256": "8b1f8b306c712bde2835318b8a4ab71ce2031122e806a889a5986596fd847187"
+          },
+          "transcript": {
+            "file": "hw-workbench-ux-higher-order-idex-every.txt",
+            "sha256": "92461d8370cc435a8d6f5e643ac3f6e72650106951d778edd259ab1bb1105122"
+          }
+        }
+      ]
+    },
+    {
+      "name": "hw-higher-order-some-inline-lambda",
+      "fixture": "h8s",
+      "expr": "(some (function (lambda (x) (if (> x 2) x nil))) '(1 2 3))",
+      "expect": "3",
+      "phases": [
+        {
+          "id": "higher-order-remount-some",
+          "state": "after-persistence-remount",
+          "order": 2,
+          "loads": 2,
+          "forms": {
+            "file": "hw-workbench-ux-higher-order-remount-some.forms",
+            "sha256": "3efcda000324d437cb6c6e689a990d2055bfefb9156755d874b42ecf249e4079"
+          },
+          "transcript": {
+            "file": "hw-workbench-ux-higher-order-remount-some.txt",
+            "sha256": "407e23ee24aec699d909582b218027368366aec97e7b246aee57ea94a1af8d40"
+          }
+        },
+        {
+          "id": "higher-order-idex-some",
+          "state": "after-long-ide-idex-search-repeat",
+          "order": 1,
+          "loads": 2,
+          "forms": {
+            "file": "hw-workbench-ux-higher-order-idex-some.forms",
+            "sha256": "3efcda000324d437cb6c6e689a990d2055bfefb9156755d874b42ecf249e4079"
+          },
+          "transcript": {
+            "file": "hw-workbench-ux-higher-order-idex-some.txt",
+            "sha256": "cf76fbb946c04499c0f1f1a3e506aaf1851a9249297502e6d3f0e242d062bc41"
+          }
+        }
+      ]
+    }
+  ]
+}

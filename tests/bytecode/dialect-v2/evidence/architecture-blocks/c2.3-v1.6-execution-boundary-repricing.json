@@ -1,0 +1,189 @@
+{
+  "assembled_price": {
+    "classifier_bytes": 60,
+    "classifier_sha256": "d99493de5bd5e646aa9a8e8e8af6d719792842ec0b481a8511366fd9d8c8a604",
+    "cleanup_free_landing_bytes": 29,
+    "gross_ordinary_text_bytes": 89,
+    "landing_sha256": "46f27921c56beabc0f6b8d93051eb292b2fd11570f535d438a0e4ded02b2e4c6",
+    "new_E000_bytes": 0,
+    "new_far_service_bytes": 0,
+    "new_state_bytes": 0
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 444688,
+    "commit": "d168fc82f1a95d628a6ff9be071bca9244d5f3ff",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "62eedb024b4d2f7895f69a584222228f760706db2c30791f8e91c1d7dc427673"
+  },
+  "claim_limit": "Host-only assembled repricing. It proves fit and the implementation shape; it does not itself emit or qualify a product.",
+  "execution": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v1.6-execution-boundary-repricing-v1",
+  "inputs": {
+    "ELF": {
+      "bytes": 646988,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "02209a9ddda93b49bc3025f6b0caa9b2d88cb96b2504167b3ccc98d6f9ffba99"
+    },
+    "historical_price": {
+      "bytes": 7226,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-retired-window-carrier-inversion-study.json",
+      "sha256": "8f4066b6de8e79b70306d2d706fbf9e623529c75dbbe79d73da9e2c9266f40ff"
+    },
+    "membership": {
+      "bytes": 4671,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-boot-path-followup-result.json",
+      "sha256": "1b8f6f1eabf9eb66aa976c6b12b3de3437c3e67f0b56a74aa960c4d85bddba29"
+    }
+  },
+  "placement": {
+    "E000": {
+      "free_total_bytes": 57,
+      "holes": [
+        {
+          "bytes": 8,
+          "first": "0xfd24",
+          "last_exclusive": "0xfd2c"
+        },
+        {
+          "bytes": 49,
+          "first": "0xff4f",
+          "last_exclusive": "0xff80"
+        }
+      ],
+      "largest_contiguous_hole_bytes": 49
+    },
+    "E000_delta_bytes": 0,
+    "IRQ_change": "retarget existing three-byte JMP; zero section growth",
+    "far_service_delta_bytes": 0,
+    "far_service_free_bytes": 15,
+    "ordinary_after_free_bytes": 28,
+    "ordinary_before_free_bytes": 117,
+    "why_visible": "ordinary text is permanently visible; non-baseline MAP readers already exclude IRQs, and the transitive MAP gate remains an input",
+    "winner": "both classifier and cleanup-free longjmp adapter in ordinary .text"
+  },
+  "price_delta_from_historical": {
+    "classifier": "69 E000 -> 60 ordinary bytes",
+    "gross": "98 -> 89 bytes",
+    "landing": "29 ordinary bytes unchanged",
+    "reason": "subtract-and-range comparison saves nine classifier bytes; the existing same-size IRQ JMP is retargeted, so E000 grows by zero"
+  },
+  "recorded_on": "2026-08-23",
+  "semantics": {
+    "cases": [
+      {
+        "expected": "recover-to-prompt",
+        "name": "boot-holder-at-window-entry",
+        "observed": "recover-to-prompt"
+      },
+      {
+        "expected": "recover-to-prompt",
+        "name": "last-window-byte",
+        "observed": "recover-to-prompt"
+      },
+      {
+        "expected": "existing-fail-closed-policy",
+        "name": "below-window",
+        "observed": "existing-fail-closed-policy"
+      },
+      {
+        "expected": "existing-fail-closed-policy",
+        "name": "above-window",
+        "observed": "existing-fail-closed-policy"
+      },
+      {
+        "expected": "existing-fail-closed-policy",
+        "name": "hardware-irq",
+        "observed": "existing-fail-closed-policy"
+      },
+      {
+        "expected": "existing-fail-closed-policy",
+        "name": "live-window",
+        "observed": "existing-fail-closed-policy"
+      },
+      {
+        "expected": "existing-fail-closed-policy",
+        "name": "no-toplevel",
+        "observed": "existing-fail-closed-policy"
+      }
+    ],
+    "classifier": "B=1, retired state busy|loaded_len == 0, active toplevel, and stacked continuation-2 in candidate-derived [$c356,$ca91)",
+    "negative_domain": "hardware IRQs, live-window BRKs, out-of-range BRKs and no-toplevel states retain fail-closed behavior",
+    "recovery": "rewrite stacked continuation to an ordinary-text adapter; preserve an existing pending error or synthesize E3e, then enter the existing longjmp path directly without recursive cleanup"
+  },
+  "standing_walls": {
+    "candidate_derived_addresses": true,
+    "carrier_prevention_retained": true,
+    "final_ELF_required": true,
+    "recursive_cleanup_forbidden": true,
+    "transitive_MAP_gate": {
+      "mapped_roots": [
+        "c2_abort_driver",
+        "c2_mapped_far_physical_read_converged",
+        "c2_mapped_far_vm_code_load_converged",
+        "c2_rtov_retire_continuations",
+        "disk_chain_to_scratch_far",
+        "rtov_transaction_context_if_ready_far"
+      ],
+      "mapped_sections": [
+        ".lisp65_c2_mapped_diagnostic",
+        ".lisp65_c2_mapped_far_service"
+      ],
+      "status": "PASS: NO MAPPED BODY REACHES MAP ENTER/LEAVE",
+      "tenant_count": 6,
+      "tenants": [
+        "c2_abort_driver",
+        "c2_mapped_far_physical_read_converged",
+        "c2_mapped_far_vm_code_load_converged",
+        "c2_rtov_retire_continuations",
+        "disk_chain_to_scratch_far",
+        "rtov_transaction_context_if_ready_far"
+      ],
+      "violations": [],
+      "wrappers": [
+        {
+          "body_roots": [
+            "c2_abort_driver"
+          ],
+          "wrapper": "c2_abort_driver_facade"
+        },
+        {
+          "body_roots": [
+            "c2_mapped_far_physical_read_converged"
+          ],
+          "wrapper": "c2_physical_read_converged"
+        },
+        {
+          "body_roots": [
+            "c2_rtov_retire_continuations"
+          ],
+          "wrapper": "c2_rtov_retire_continuations_facade"
+        },
+        {
+          "body_roots": [
+            "disk_chain_to_scratch_far"
+          ],
+          "wrapper": "disk_chain_to_scratch"
+        },
+        {
+          "body_roots": [
+            "rtov_transaction_context_if_ready_far"
+          ],
+          "wrapper": "rtov_transaction_context_if_ready"
+        },
+        {
+          "body_roots": [
+            "c2_mapped_far_vm_code_load_converged"
+          ],
+          "wrapper": "vm_code_load_converged"
+        }
+      ]
+    }
+  },
+  "status": "PRICED: FITS ORDINARY TEXT WITH 28 BYTES FREE"
+}

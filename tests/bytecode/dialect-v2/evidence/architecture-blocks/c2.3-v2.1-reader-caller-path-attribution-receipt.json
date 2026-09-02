@@ -1,0 +1,535 @@
+{
+  "attribution": {
+    "bank4_MAP_reader_exonerated_for_this_failure": true,
+    "captured_symbol_name_evidence": "both independently persisted symbol-name scratch rows begin a000; the inserted SYMI710 is the one-byte $A0 atom",
+    "compiler_behavior": "correctly compiles the resulting five-element defun as one extra symbol expression plus the intended body",
+    "copy_boundary_exonerated_for_this_failure": true,
+    "device_contact_authorized": false,
+    "disk_staging_write_exonerated_for_this_failure": true,
+    "emitter_behavior": "correctly serializes the pre-existing 11-byte compiler payload into the exact 20-byte poison object",
+    "fix_authorized": false,
+    "historical_F018B_membership_for_these_poison_objects": false,
+    "mechanism": "PETSCII shifted-space $A0 is passed raw by the typed queue, accepted and stored by read_line, rendered as an invisible blank, then parsed as a one-byte symbol rather than whitespace",
+    "named_site": "src/repl.c:read_line PETSCII acceptance boundary",
+    "two_live_forms": [
+      "trace-probe source graph contains SYMI710 between args and body",
+      "test-probe source graph contains the same SYMI710 at the same position"
+    ]
+  },
+  "authority": {
+    "Bank4_probe": {
+      "bytes": 2326,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-bank4-map-probe-device-receipt.json",
+      "sha256": "7a3dcc84f463c93be3093c9654d55f3f071050538fbbda70b7f4f74926ba60c4"
+    },
+    "ELF": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "Link112_bank4": {
+      "bytes": 27648,
+      "path": "build/c2.3/v2.1-link112-d2-full-span-oracle-capture/physical-bank4.bin",
+      "sha256": "b5964478bca86d5d310d9394a0f55576c04c965c3da50facefc94e6410baad05"
+    },
+    "Link112_receipt": {
+      "bytes": 6936,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-link112-d2-probe-oracle-capture-receipt.json",
+      "sha256": "ec70621820cd5fe5f1a6b0e6830d2290b9ba9a581ccb11a1582f9ca6076554ef"
+    },
+    "Link113_bank4": {
+      "bytes": 27648,
+      "path": "build/c2.3/v2.1-link113-d2-root-reader-rescue/physical-bank4.bin",
+      "sha256": "291a4252898af0967de2c57f27b820c7636a0f261a0bc702995e6215f0f4713d"
+    },
+    "Link113_receipt": {
+      "bytes": 10336,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-link113-d2-bank4-root-reader-rescue-receipt.json",
+      "sha256": "8ac1cf46507dd0aecb6b2d70390f6b88f16be2b006ea78aaec8ef5a02987caad"
+    },
+    "checker": {
+      "bytes": 26641,
+      "path": "tools/host-lisp/c2_v21_reader_caller_path_attribution.py",
+      "sha256": "cab6edefe6ef271e54b5b7ffa6094bbbaddb987c55b310a979885e2ee9513b03"
+    },
+    "emitter": {
+      "bytes": 26806,
+      "path": "src/c2_session_emitter.c",
+      "sha256": "51f7bbeb80d1eb06383457236122888af2b0828cdccf062da031fa3e59cbf904"
+    },
+    "final_link": {
+      "bytes": 90060,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/configurator-parity-final-link.json",
+      "sha256": "0a08c80202dbf46de9565b3a62e15b37f63ec42fd6e84bf2116dd1526279f061"
+    },
+    "kernal": {
+      "bytes": 4076,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81"
+    },
+    "mem": {
+      "bytes": 49881,
+      "path": "src/mem.c",
+      "sha256": "eed1a86672a92efdfed914f03272708d2ee7a0ec7fa3950e91a640c9062faba0"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 165055,
+      "commit": "f1aabb5fa3c711e04135021142df5012d51de97a",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "8fc3ef1deaf931d0ff391d908f1ccdffe780983c5a5b39b9a315ef4072353833"
+    },
+    "reader": {
+      "bytes": 10451,
+      "path": "src/reader.c",
+      "sha256": "ca260a4f52fba17c9678fa6d37ee03bfdff85f344579eda378c71c03de027a86"
+    },
+    "repl": {
+      "bytes": 13504,
+      "path": "src/repl.c",
+      "sha256": "146ca95cd81c65b40b20252ca77b98356a7be37f47c2d147dc9d703418b71ee1"
+    },
+    "screen": {
+      "bytes": 9084,
+      "path": "src/screen.c",
+      "sha256": "1de7069d9803484073047ea7a0a488b66971db26a80b43a634a5ddb871f09078"
+    }
+  },
+  "capture_models": {
+    "Link112": {
+      "capture": "build/c2.3/v2.1-link112-d2-full-span-oracle-capture",
+      "compiler_records": [
+        {
+          "code_cell_physical": [
+            "0x00040d88",
+            "0x00040d80",
+            "0x00040d78",
+            "0x00040d70",
+            "0x00040d68",
+            "0x00040d60",
+            "0x00040d58",
+            "0x00040d50",
+            "0x00040d48",
+            "0x00040d40",
+            "0x00040d38"
+          ],
+          "code_cells": [
+            481,
+            480,
+            479,
+            478,
+            477,
+            476,
+            475,
+            474,
+            473,
+            472,
+            471
+          ],
+          "code_count": 11,
+          "emitter_model_hex": "b50100020b0001000006003d13013b0b01010205",
+          "emitter_model_matches_staged_poison": true,
+          "flags": 2,
+          "literal_cells": [
+            470
+          ],
+          "literal_symbol_index": 710,
+          "nargs": 1,
+          "nlocals": 0,
+          "payload_hex": "06003d13013b0b01010205",
+          "record_cells": [
+            490,
+            489,
+            488,
+            487,
+            482
+          ],
+          "record_root_cell": 490
+        },
+        {
+          "code_cell_physical": [
+            "0x00041368",
+            "0x00041360",
+            "0x00041358",
+            "0x00041350",
+            "0x00041348",
+            "0x00041340",
+            "0x00041338",
+            "0x00041330",
+            "0x00041328",
+            "0x00041320",
+            "0x00041318"
+          ],
+          "code_cells": [
+            669,
+            668,
+            667,
+            666,
+            665,
+            664,
+            663,
+            662,
+            661,
+            660,
+            659
+          ],
+          "code_count": 11,
+          "emitter_model_hex": "b50100020b0001000006003d13013b0b01010205",
+          "emitter_model_matches_staged_poison": true,
+          "flags": 2,
+          "literal_cells": [
+            657
+          ],
+          "literal_symbol_index": 710,
+          "nargs": 1,
+          "nlocals": 0,
+          "payload_hex": "06003d13013b0b01010205",
+          "record_cells": [
+            674,
+            673,
+            672,
+            671,
+            670
+          ],
+          "record_root_cell": 674
+        }
+      ],
+      "source_forms": [
+        {
+          "body": [
+            "SYMI:527 (+)",
+            "SYMI:709 (x)",
+            "FIX:1"
+          ],
+          "element_symbol_indices": [
+            181,
+            708,
+            null,
+            710,
+            null
+          ],
+          "inserted_position": "between parameter list and function body",
+          "inserted_symbol_index": 710,
+          "inserted_symbol_object": "0xe58c",
+          "name_symbol_index": 708,
+          "parameter_symbol_index": 709,
+          "root_cell": 1022,
+          "root_physical": "0x00041e70",
+          "spine_cells": [
+            1022,
+            1023,
+            1044,
+            1045,
+            1049
+          ],
+          "spine_physical": [
+            "0x00041e70",
+            "0x00041e78",
+            "0x00041f20",
+            "0x00041f28",
+            "0x00041f48"
+          ],
+          "top_level_element_count": 5
+        },
+        {
+          "body": [
+            "SYMI:527 (+)",
+            "SYMI:709 (x)",
+            "FIX:1"
+          ],
+          "element_symbol_indices": [
+            181,
+            711,
+            null,
+            710,
+            null
+          ],
+          "inserted_position": "between parameter list and function body",
+          "inserted_symbol_index": 710,
+          "inserted_symbol_object": "0xe58c",
+          "name_symbol_index": 711,
+          "parameter_symbol_index": 709,
+          "root_cell": 493,
+          "root_physical": "0x00040de8",
+          "spine_cells": [
+            493,
+            494,
+            496,
+            497,
+            501
+          ],
+          "spine_physical": [
+            "0x00040de8",
+            "0x00040df0",
+            "0x00040e00",
+            "0x00040e08",
+            "0x00040e28"
+          ],
+          "top_level_element_count": 5
+        }
+      ],
+      "staged_object": {
+        "bytes": 148,
+        "code_bytes": 20,
+        "code_hex": "b50100020b0001000006003d13013b0b01010205",
+        "code_offset": 64,
+        "physical": "0x00046a00",
+        "sha256": "a1029fc815207908304659dda52576334743e869101bb999d78cba61f35d0626"
+      }
+    },
+    "Link113": {
+      "capture": "build/c2.3/v2.1-link113-d2-root-reader-rescue",
+      "compiler_records": [
+        {
+          "code_cell_physical": [
+            "0x00041900",
+            "0x000418f8",
+            "0x000418f0",
+            "0x000418e8",
+            "0x000418e0",
+            "0x000418d8",
+            "0x000418d0",
+            "0x000418c8",
+            "0x000418c0",
+            "0x000418b8",
+            "0x000418b0"
+          ],
+          "code_cells": [
+            848,
+            847,
+            846,
+            845,
+            844,
+            843,
+            842,
+            841,
+            840,
+            839,
+            838
+          ],
+          "code_count": 11,
+          "emitter_model_hex": "b50100020b0001000006003d13013b0b01010205",
+          "emitter_model_matches_staged_poison": true,
+          "flags": 2,
+          "literal_cells": [
+            682
+          ],
+          "literal_symbol_index": 710,
+          "nargs": 1,
+          "nlocals": 0,
+          "payload_hex": "06003d13013b0b01010205",
+          "record_cells": [
+            853,
+            852,
+            851,
+            850,
+            849
+          ],
+          "record_root_cell": 853
+        }
+      ],
+      "source_forms": [
+        {
+          "body": [
+            "SYMI:527 (+)",
+            "SYMI:709 (x)",
+            "FIX:1"
+          ],
+          "element_symbol_indices": [
+            181,
+            708,
+            null,
+            710,
+            null
+          ],
+          "inserted_position": "between parameter list and function body",
+          "inserted_symbol_index": 710,
+          "inserted_symbol_object": "0xe58c",
+          "name_symbol_index": 708,
+          "parameter_symbol_index": 709,
+          "root_cell": 463,
+          "root_physical": "0x00040cf8",
+          "spine_cells": [
+            463,
+            464,
+            466,
+            467,
+            471
+          ],
+          "spine_physical": [
+            "0x00040cf8",
+            "0x00040d00",
+            "0x00040d10",
+            "0x00040d18",
+            "0x00040d38"
+          ],
+          "top_level_element_count": 5
+        }
+      ],
+      "staged_object": {
+        "bytes": 148,
+        "code_bytes": 20,
+        "code_hex": "b50100020b0001000006003d13013b0b01010205",
+        "code_offset": 64,
+        "physical": "0x00046a00",
+        "sha256": "40acc5f061b755f2a2ddda4b6cbd64ac3bba9eae1c6295493411d38b09d86fcd"
+      }
+    }
+  },
+  "claim_limit": "This desk attribution names the D2 poison mechanism and corrects the earlier F018B classification for these two objects. It does not authorize a REPL fix, product link, medium, device contact, resume, or D3-D5. The general completion status of unrelated EXT writes remains outside this claim.",
+  "emitted_paths": {
+    "heap_caller": {
+      "MAP_window_crossing_per_call": false,
+      "a_length": 2,
+      "b_length": 2,
+      "type_length": 1
+    },
+    "reader": {
+      "Bank4_probe": "256/256 exact raw reads; MAP/Z restored",
+      "address": "0x2277",
+      "bytes": 189
+    },
+    "staging_caller": {
+      "MAP_window_crossing_per_call": false,
+      "first_physical": "0x00046a00",
+      "last_physical": "0x00046a93",
+      "length_per_call": 1,
+      "operation": "148 separate one-byte ext_disk_get/ext_disk_put calls",
+      "page_crossing_per_call": false
+    },
+    "symbols": {
+      "alloc": {
+        "address": "0x378b",
+        "bytes": 281,
+        "sha256": "6c99377ca0a8441181f251b3b7c95f748ecd63d23da1b3290f68873cdda72050"
+      },
+      "c2_map_cpu_read": {
+        "address": "0x2277",
+        "bytes": 189,
+        "sha256": "781c7bb26f6e7707d7658d0b5630c45ed5754856d3a8c55835f51b1a0aece973"
+      },
+      "cons": {
+        "address": "0x6759",
+        "bytes": 232,
+        "sha256": "75dbdd3ea457fa72f8b9155e840f99e3d441841a75a6d0072f14d569fa1b7330"
+      },
+      "ext_disk_get": {
+        "address": "0x3677",
+        "bytes": 30,
+        "sha256": "8cdb1d84be39a383113a9c2fb385a864c0d1bbb8210af9ee76d15f8d69fc7fe1"
+      },
+      "ext_disk_put": {
+        "address": "0x3764",
+        "bytes": 39,
+        "sha256": "96645ac74bb17a94e18f0c9d36424bd4a03b98ed627be2243c9a56f5e5712ef6"
+      },
+      "ext_dma": {
+        "address": "0x3633",
+        "bytes": 68,
+        "sha256": "c0bae3c1b3a70ef580a8b0165f41fa818915261b054eb13e76c66496af6b18d9"
+      },
+      "ext_set_a": {
+        "address": "0x3600",
+        "bytes": 51,
+        "sha256": "6a4c5388137445232b91e7b556210a69321532ac59c4ea2ccdaf9dabe463b4ce"
+      },
+      "ext_set_b": {
+        "address": "0x398d",
+        "bytes": 51,
+        "sha256": "f20f2b4152b18df5b14c63511d845d16f67404ec8a8e08bb85a8585734bb22c9"
+      },
+      "ext_set_type": {
+        "address": "0x3f90",
+        "bytes": 46,
+        "sha256": "63d559fc36e39de7e6710dbeef10c144d6808947ff0b52973c6e7b92f7a21b48"
+      }
+    },
+    "write_side": {
+      "EXT_heap": "raw ext_dma writes through shared ext_stg1/ext_stg",
+      "disk_stage": "raw ext_dma writes through shared ext_stg1",
+      "ext_dma_exit": "D700 trigger followed immediately by RTS",
+      "general_write_completion_claim": "not decided by this attribution",
+      "this_failure": "not introduced by disk staging: both source form and exact compiler record pre-exist in EXT heap before serialization"
+    }
+  },
+  "execution_accounting": {
+    "WPLTO": 0,
+    "device_contacts": 0,
+    "device_resumes": 0,
+    "links": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2.3-v2.1-reader-caller-path-attribution-v1",
+  "input_seam": {
+    "accepted_by_filter": true,
+    "accepted_byte": "0xa0",
+    "compiler_control": {
+      "encoded_hex": "b50100020b0001901f06003d13013b0b01010205",
+      "flags": 2,
+      "install_name": "trace-probe",
+      "literal_count": 1,
+      "literals": [
+        "ghost-token"
+      ],
+      "nargs": 1,
+      "nlocals": 0,
+      "payload_hex": "06003d13013b0b01010205"
+    },
+    "compiler_control_payload_matches_capture": true,
+    "model_top_level_elements": 5,
+    "model_tree": [
+      {
+        "atom_ascii": "defun",
+        "atom_hex": "646566756e"
+      },
+      {
+        "atom_ascii": "trace-probe",
+        "atom_hex": "74726163652d70726f6265"
+      },
+      [
+        {
+          "atom_ascii": "x",
+          "atom_hex": "78"
+        }
+      ],
+      {
+        "atom_ascii": null,
+        "atom_hex": "a0"
+      },
+      [
+        {
+          "atom_ascii": "+",
+          "atom_hex": "2b"
+        },
+        {
+          "atom_ascii": "x",
+          "atom_hex": "78"
+        },
+        1
+      ]
+    ],
+    "queue_transport": "$D619 PETSCII byte is copied unchanged into event.code",
+    "reader_classification": "one-byte atom, not whitespace",
+    "rendering": "screen driver maps the unknown byte to visible blank 0x20",
+    "stealth_property": true,
+    "target_char_semantics": "unsigned; 0xa0 > ASCII space"
+  },
+  "mutations_rejected": [
+    "reject-A0-fact",
+    "make-A0-visible",
+    "parse-four-elements",
+    "change-compiler-payload",
+    "drop-link112-repeat",
+    "drop-link113-form",
+    "change-inserted-symbol",
+    "break-emitter-model",
+    "convict-bank4-MAP-reader",
+    "convict-boundary",
+    "convict-stage-write",
+    "retain-F018B-claim",
+    "silently-authorize-fix",
+    "silently-authorize-device"
+  ],
+  "recorded_on": "2026-08-17",
+  "status": "ATTRIBUTED: INVISIBLE-PETSCII-A0-INGRESS"
+}

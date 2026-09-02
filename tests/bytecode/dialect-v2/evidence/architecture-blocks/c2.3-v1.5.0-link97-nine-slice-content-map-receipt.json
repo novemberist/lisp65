@@ -1,0 +1,3034 @@
+{
+  "authorities": {
+    "checker_input_closure": {
+      "artifact_root": "elf.parent",
+      "module_global_OUT_reads": 0,
+      "rule": "A qualification stage reads only its supplied artifact set, never ambient or module-global output state.",
+      "status": "passed-explicit-ELF-artifact-set-only"
+    },
+    "checker_input_closure_mutations_rejected": [
+      "restore-module-global-OUT"
+    ],
+    "commission": "ece93d1a",
+    "content_map_tool": {
+      "bytes": 25108,
+      "path": "tools/host-lisp/c2_v150_link97_slice_content_map.py",
+      "sha256": "016528132d706cd5f392f4d780424c99d525dec85e7931316fed22d0c1fa446b"
+    },
+    "first_red": {
+      "bytes": 6679,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link97-post-link-qualification-replay-r2-first-red.json",
+      "sha256": "80aba85a4b637d30533de205011fdb2b4bbe6d2b4981b6566e2a973b910e936a"
+    },
+    "replacement_gate": {
+      "bytes": 22553,
+      "path": "tools/host-lisp/c2_lite_v6_boot_crc_abi_successor_link.py",
+      "sha256": "349bf9437e13c582565a88d1e88809d80338c531475debf9c76d633c564a85f3"
+    },
+    "transitions": {
+      "coresident_fusion_receipt": {
+        "bytes": 11203,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-coresident-diet-successor-gate-replay3-receipt.json",
+        "sha256": "411617ecd2b1def91a4708de1887b09a77e5d3037efdd6bf8a3395a28cc83406"
+      },
+      "coresident_fusion_source": {
+        "bytes": 28703,
+        "path": "tools/host-lisp/c2_lite_v6_coresident_diet_probe.py",
+        "sha256": "2a06c14b342323b5df574e434ec26b567839ad04028448d529cc4fe2fc13ab48"
+      },
+      "final_append_receipt": {
+        "bytes": 266890,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-hybrid-facade16-artifact-replay3-receipt.json",
+        "sha256": "c88e15934cf7ae70e860cd07da0e2992f7426da409d08c62fcb7fa66420a1735"
+      },
+      "phase11_receipt": {
+        "bytes": 18175,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-phase11-split-e000-analysis-receipt.json",
+        "sha256": "7030dd1d3b838dccc29e81985752decdbfe32457453dfe2c10d1161a42d368fe"
+      },
+      "phase11_semantic_boundary": {
+        "11a": "validate every immutable pair descriptor and backward-only child ordinal",
+        "11b": "resolve children, allocate pair, publish sole root, run GC checkpoint",
+        "added_handoff_bytes": 0,
+        "cross_boundary_pointers": 0,
+        "handoff": "existing context.reserved marker 0x11 only"
+      },
+      "proven_fusions": {
+        "crc_metadata": true,
+        "publication": true
+      },
+      "runtime_source": {
+        "bytes": 163560,
+        "path": "src/c2_product_runtime.c",
+        "sha256": "8d1ab8d0150fa2401094613372ebf57143027c612d4612a4479ecfe43e2c6b00"
+      },
+      "semantic_split_source": {
+        "bytes": 19780,
+        "path": "tools/host-lisp/c2_lite_v6_semantic_split_probe.py",
+        "sha256": "373f117ea7a986d950d070756bb97f53423f9eeaea9f1f77800f9b990f61c868"
+      }
+    }
+  },
+  "claim_limit": "Desk-only attribution of the nine Link-97 slice-wall names. No artifact completion, media, replay, card, device, Halt #1, release or publication claim.",
+  "content_map": {
+    ".lisp65_rt_c2append_capacity": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2append_reserve_persistent_bounds": [
+          "c2_append_reserve_persistent_bounds_phase"
+        ],
+        ".lisp65_rt_c2append_reserve_persistent_code": [
+          "c2_append_reserve_persistent_code_phase"
+        ],
+        ".lisp65_rt_c2append_reserve_transient_bounds": [
+          "c2_append_reserve_transient_bounds_phase"
+        ],
+        ".lisp65_rt_c2append_reserve_transient_code": [
+          "c2_append_reserve_transient_code_phase"
+        ],
+        ".lisp65_rt_c2append_roots_fronts": [
+          "c2_append_roots_phase",
+          "c2_append_fronts_phase",
+          "c2_append_roots_fronts_phase"
+        ]
+      },
+      "semantic_duties": [
+        "derive roots and current Bank-2/session fronts",
+        "bound transient and persistent directory/code reservations"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2append_roots_fronts",
+        ".lisp65_rt_c2append_reserve_transient_bounds",
+        ".lisp65_rt_c2append_reserve_transient_code",
+        ".lisp65_rt_c2append_reserve_persistent_bounds",
+        ".lisp65_rt_c2append_reserve_persistent_code"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_reserve_persistent_bounds": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 690,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_persistent_bounds_entry",
+                  "c2_append_reserve_persistent_bounds_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 11452,
+                "file_size": 690,
+                "name": "c2-append-reserve-persistent-bounds",
+                "record_crc16": 52958,
+                "sha256": "3367110744c932c151566987229b067f91d46331ef197a701d4ab71b72f3fdb1"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_persistent_code": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1416,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_persistent_code_entry",
+                  "c2_append_reserve_persistent_code_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 54915,
+                "file_size": 1416,
+                "name": "c2-append-reserve-persistent-code",
+                "record_crc16": 37841,
+                "sha256": "53cde48724f97d5191562ebe78bca960c45b5b01470cda871b557af1e31435c6"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_transient_bounds": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 986,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_transient_bounds_entry",
+                  "c2_append_reserve_transient_bounds_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 39772,
+                "file_size": 986,
+                "name": "c2-append-reserve-transient-bounds",
+                "record_crc16": 64427,
+                "sha256": "8702c6454a062cbf1a05481ed4b970935cdb57252e327ea9d057558441bdbd5f"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_transient_code": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1470,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_transient_code_entry",
+                  "c2_append_reserve_transient_code_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 40744,
+                "file_size": 1470,
+                "name": "c2-append-reserve-transient-code",
+                "record_crc16": 7940,
+                "sha256": "4e7c6695cdd6fea7fec93ded5fd18afa54bb06d9c96477845f64beef4ddd0d12"
+              }
+            },
+            ".lisp65_rt_c2append_roots_fronts": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1510,
+                "functions": [
+                  "__lisp65_rt_c2append_roots_fronts_entry",
+                  "c2_append_fronts_phase",
+                  "c2_append_roots_fronts_phase",
+                  "c2_append_roots_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 6941,
+                "file_size": 1510,
+                "name": "c2-append-roots-fronts",
+                "record_crc16": 19657,
+                "sha256": "701389b3c6b52e3532b3554882d0beeca39cf7ae7d7dea0630e101e5c1a07d29"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_reserve_persistent_bounds": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 690,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_persistent_bounds_entry",
+                  "c2_append_reserve_persistent_bounds_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 11452,
+                "file_size": 690,
+                "name": "c2-append-reserve-persistent-bounds",
+                "record_crc16": 56852,
+                "sha256": "3367110744c932c151566987229b067f91d46331ef197a701d4ab71b72f3fdb1"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_persistent_code": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1416,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_persistent_code_entry",
+                  "c2_append_reserve_persistent_code_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 54915,
+                "file_size": 1416,
+                "name": "c2-append-reserve-persistent-code",
+                "record_crc16": 33563,
+                "sha256": "53cde48724f97d5191562ebe78bca960c45b5b01470cda871b557af1e31435c6"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_transient_bounds": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 986,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_transient_bounds_entry",
+                  "c2_append_reserve_transient_bounds_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 39772,
+                "file_size": 986,
+                "name": "c2-append-reserve-transient-bounds",
+                "record_crc16": 60257,
+                "sha256": "8702c6454a062cbf1a05481ed4b970935cdb57252e327ea9d057558441bdbd5f"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_transient_code": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1470,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_transient_code_entry",
+                  "c2_append_reserve_transient_code_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 40744,
+                "file_size": 1470,
+                "name": "c2-append-reserve-transient-code",
+                "record_crc16": 4046,
+                "sha256": "4e7c6695cdd6fea7fec93ded5fd18afa54bb06d9c96477845f64beef4ddd0d12"
+              }
+            },
+            ".lisp65_rt_c2append_roots_fronts": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1510,
+                "functions": [
+                  "__lisp65_rt_c2append_roots_fronts_entry",
+                  "c2_append_fronts_phase",
+                  "c2_append_roots_fronts_phase",
+                  "c2_append_roots_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 6941,
+                "file_size": 1510,
+                "name": "c2-append-roots-fronts",
+                "record_crc16": 23555,
+                "sha256": "701389b3c6b52e3532b3554882d0beeca39cf7ae7d7dea0630e101e5c1a07d29"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_reserve_persistent_bounds": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 690,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_persistent_bounds_entry",
+                  "c2_append_reserve_persistent_bounds_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 11452,
+                "file_size": 690,
+                "name": "c2-append-reserve-persistent-bounds",
+                "record_crc16": 30875,
+                "sha256": "3367110744c932c151566987229b067f91d46331ef197a701d4ab71b72f3fdb1"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_persistent_code": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1416,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_persistent_code_entry",
+                  "c2_append_reserve_persistent_code_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 54915,
+                "file_size": 1416,
+                "name": "c2-append-reserve-persistent-code",
+                "record_crc16": 9620,
+                "sha256": "53cde48724f97d5191562ebe78bca960c45b5b01470cda871b557af1e31435c6"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_transient_bounds": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 986,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_transient_bounds_entry",
+                  "c2_append_reserve_transient_bounds_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 39772,
+                "file_size": 986,
+                "name": "c2-append-reserve-transient-bounds",
+                "record_crc16": 19950,
+                "sha256": "8702c6454a062cbf1a05481ed4b970935cdb57252e327ea9d057558441bdbd5f"
+              }
+            },
+            ".lisp65_rt_c2append_reserve_transient_code": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1470,
+                "functions": [
+                  "__lisp65_rt_c2append_reserve_transient_code_entry",
+                  "c2_append_reserve_transient_code_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 40744,
+                "file_size": 1470,
+                "name": "c2-append-reserve-transient-code",
+                "record_crc16": 43329,
+                "sha256": "4e7c6695cdd6fea7fec93ded5fd18afa54bb06d9c96477845f64beef4ddd0d12"
+              }
+            },
+            ".lisp65_rt_c2append_roots_fronts": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1510,
+                "functions": [
+                  "__lisp65_rt_c2append_roots_fronts_entry",
+                  "c2_append_fronts_phase",
+                  "c2_append_roots_fronts_phase",
+                  "c2_append_roots_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 6941,
+                "file_size": 1510,
+                "name": "c2-append-roots-fronts",
+                "record_crc16": 64140,
+                "sha256": "701389b3c6b52e3532b3554882d0beeca39cf7ae7d7dea0630e101e5c1a07d29"
+              }
+            }
+          }
+        }
+      }
+    },
+    ".lisp65_rt_c2append_crc": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2append_crc_metadata": [
+          "c2_stage_crc",
+          "c2_append_crc_metadata_phase"
+        ]
+      },
+      "semantic_duties": [
+        "calculate staged CRC-32 values",
+        "validate envelope, code, metadata and combined CRC fields"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2append_crc_metadata"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_crc_metadata": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2append_crc_metadata_entry",
+                  "c2_append_crc_metadata_phase",
+                  "c2_stage_crc"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 55280,
+                "file_size": 1655,
+                "name": "c2-append-crc-metadata",
+                "record_crc16": 54274,
+                "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_crc_metadata": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2append_crc_metadata_entry",
+                  "c2_append_crc_metadata_phase",
+                  "c2_stage_crc"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 55280,
+                "file_size": 1655,
+                "name": "c2-append-crc-metadata",
+                "record_crc16": 50376,
+                "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_crc_metadata": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2append_crc_metadata_entry",
+                  "c2_append_crc_metadata_phase",
+                  "c2_stage_crc"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 55280,
+                "file_size": 1655,
+                "name": "c2-append-crc-metadata",
+                "record_crc16": 25159,
+                "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+              }
+            }
+          }
+        }
+      }
+    },
+    ".lisp65_rt_c2append_metadata": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2append_crc_metadata": [
+          "c2_stage_crc",
+          "c2_append_crc_metadata_phase"
+        ]
+      },
+      "semantic_duties": [
+        "validate staged C2 metadata shape, counts and offsets",
+        "derive entry, literal and root counts for the append transaction"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2append_crc_metadata"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_crc_metadata": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2append_crc_metadata_entry",
+                  "c2_append_crc_metadata_phase",
+                  "c2_stage_crc"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 55280,
+                "file_size": 1655,
+                "name": "c2-append-crc-metadata",
+                "record_crc16": 54274,
+                "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_crc_metadata": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2append_crc_metadata_entry",
+                  "c2_append_crc_metadata_phase",
+                  "c2_stage_crc"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 55280,
+                "file_size": 1655,
+                "name": "c2-append-crc-metadata",
+                "record_crc16": 50376,
+                "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_crc_metadata": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2append_crc_metadata_entry",
+                  "c2_append_crc_metadata_phase",
+                  "c2_stage_crc"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 55280,
+                "file_size": 1655,
+                "name": "c2-append-crc-metadata",
+                "record_crc16": 25159,
+                "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+              }
+            }
+          }
+        }
+      }
+    },
+    ".lisp65_rt_c2append_publish_cells": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2append_publish_clear": [
+          "c2_append_publish_exports_phase"
+        ]
+      },
+      "semantic_duties": [
+        "journal prior function-cell values and publish new callable cells",
+        "clear publication state only after the publish-last boundary"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2append_publish_clear"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_publish_clear": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1295,
+                "functions": [
+                  "__lisp65_rt_c2append_publish_clear_entry",
+                  "c2_append_journal_clear_phase",
+                  "c2_append_publish_clear_phase",
+                  "c2_append_publish_exports_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 58029,
+                "file_size": 1295,
+                "name": "c2-append-publish-clear",
+                "record_crc16": 61759,
+                "sha256": "a8545c2798ad57d9e1dcc89574faedf1d0a699d87f29fb03614778de2dadbf2b"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_publish_clear": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1410,
+                "functions": [
+                  "__lisp65_rt_c2append_publish_clear_entry",
+                  "c2_append_journal_clear_phase",
+                  "c2_append_publish_clear_phase",
+                  "c2_append_publish_exports_phase",
+                  "c2tr_publish_clear_body"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 7002,
+                "file_size": 1410,
+                "name": "c2-append-publish-clear",
+                "record_crc16": 42310,
+                "sha256": "cc57c50030f5b73af901c4fb5d91d73b17467b3939e2cf88c7ca33881b4dbbc6"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_publish_clear": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1410,
+                "functions": [
+                  "__lisp65_rt_c2append_publish_clear_entry",
+                  "c2_append_journal_clear_phase",
+                  "c2_append_publish_clear_phase",
+                  "c2_append_publish_exports_phase",
+                  "c2tr_publish_clear_body"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 7002,
+                "file_size": 1410,
+                "name": "c2-append-publish-clear",
+                "record_crc16": 969,
+                "sha256": "cc57c50030f5b73af901c4fb5d91d73b17467b3939e2cf88c7ca33881b4dbbc6"
+              }
+            }
+          }
+        }
+      }
+    },
+    ".lisp65_rt_c2append_publish_names": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2append_publish_clear": [
+          "c2_append_publish_exports_phase"
+        ]
+      },
+      "semantic_duties": [
+        "validate and resolve every export name before publication",
+        "keep the publication plan free of partial callable state"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2append_publish_clear"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_publish_clear": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1295,
+                "functions": [
+                  "__lisp65_rt_c2append_publish_clear_entry",
+                  "c2_append_journal_clear_phase",
+                  "c2_append_publish_clear_phase",
+                  "c2_append_publish_exports_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 58029,
+                "file_size": 1295,
+                "name": "c2-append-publish-clear",
+                "record_crc16": 61759,
+                "sha256": "a8545c2798ad57d9e1dcc89574faedf1d0a699d87f29fb03614778de2dadbf2b"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_publish_clear": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1410,
+                "functions": [
+                  "__lisp65_rt_c2append_publish_clear_entry",
+                  "c2_append_journal_clear_phase",
+                  "c2_append_publish_clear_phase",
+                  "c2_append_publish_exports_phase",
+                  "c2tr_publish_clear_body"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 7002,
+                "file_size": 1410,
+                "name": "c2-append-publish-clear",
+                "record_crc16": 42310,
+                "sha256": "cc57c50030f5b73af901c4fb5d91d73b17467b3939e2cf88c7ca33881b4dbbc6"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_publish_clear": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1410,
+                "functions": [
+                  "__lisp65_rt_c2append_publish_clear_entry",
+                  "c2_append_journal_clear_phase",
+                  "c2_append_publish_clear_phase",
+                  "c2_append_publish_exports_phase",
+                  "c2tr_publish_clear_body"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 7002,
+                "file_size": 1410,
+                "name": "c2-append-publish-clear",
+                "record_crc16": 969,
+                "sha256": "cc57c50030f5b73af901c4fb5d91d73b17467b3939e2cf88c7ca33881b4dbbc6"
+              }
+            }
+          }
+        }
+      }
+    },
+    ".lisp65_rt_c2append_rollback": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2append_rollback_finalize": [
+          "c2_append_rollback_finalize_phase"
+        ],
+        ".lisp65_rt_c2append_rollback_unpublish": [
+          "c2_append_rollback_unpublish_phase"
+        ],
+        ".lisp65_rt_c2append_rollback_wipe_attic": [
+          "c2_append_rollback_wipe_attic_phase"
+        ],
+        ".lisp65_rt_c2append_rollback_wipe_chip": [
+          "c2_append_rollback_wipe_chip_phase"
+        ],
+        ".lisp65_rt_c2append_rollback_wipe_plane": [
+          "c2_append_rollback_wipe_plane_phase"
+        ]
+      },
+      "semantic_duties": [
+        "unpublish changed function cells",
+        "wipe staged C2D, chip-code and attic payloads",
+        "restore header/runtime state and finalize rollback"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2append_rollback_unpublish",
+        ".lisp65_rt_c2append_rollback_wipe_plane",
+        ".lisp65_rt_c2append_rollback_wipe_chip",
+        ".lisp65_rt_c2append_rollback_wipe_attic",
+        ".lisp65_rt_c2append_rollback_finalize"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_rollback_finalize": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 267,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_finalize_entry",
+                  "c2_append_rollback_finalize_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 49395,
+                "file_size": 267,
+                "name": "c2-append-rollback-finalize",
+                "record_crc16": 9371,
+                "sha256": "ad2b0d6eeba020cc6ea59b8983c70a8a3899bf0d76a08d0b2f86779d85b260e0"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_unpublish": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 758,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_unpublish_entry",
+                  "c2_append_restore_exports",
+                  "c2_append_rollback_unpublish_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 47116,
+                "file_size": 758,
+                "name": "c2-append-rollback-unpublish",
+                "record_crc16": 39253,
+                "sha256": "99522eaa8fb73447c24195127cc109aff55616dd3b5b940220a098c2b87940fc"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_attic": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 420,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_attic_entry",
+                  "c2_append_rollback_wipe_attic_phase",
+                  "c2_append_rollback_zero_attic"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 60535,
+                "file_size": 420,
+                "name": "c2-append-rollback-wipe-attic",
+                "record_crc16": 46285,
+                "sha256": "e4afa1a1374878686774562f91521070e5ca6d3fd5fb13ce8b4ae74a693bb6ee"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_chip": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 506,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_chip_entry",
+                  "c2_append_rollback_wipe_chip_phase",
+                  "c2_append_rollback_zero_chip_code"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 41266,
+                "file_size": 506,
+                "name": "c2-append-rollback-wipe-chip",
+                "record_crc16": 63123,
+                "sha256": "e13cc3be07968b4b11a4bded8a402384c0b186ffbe56fc018c025f0251156c3f"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_plane": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 954,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_plane_entry",
+                  "c2_append_rollback_wipe_plane_phase",
+                  "c2_append_rollback_zero_plane"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 360,
+                "file_size": 954,
+                "name": "c2-append-rollback-wipe-plane",
+                "record_crc16": 11951,
+                "sha256": "9f589f0c4907e86b8016cad67e5d317918dccad1b5cb61041e88ba345bd07f93"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_rollback_finalize": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 267,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_finalize_entry",
+                  "c2_append_rollback_finalize_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 36881,
+                "file_size": 267,
+                "name": "c2-append-rollback-finalize",
+                "record_crc16": 14866,
+                "sha256": "69248911c269df8eec37536d213015514cbdfde523e706c7a7106839f9804ebd"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_unpublish": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 758,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_unpublish_entry",
+                  "c2_append_restore_exports",
+                  "c2_append_rollback_unpublish_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 9478,
+                "file_size": 758,
+                "name": "c2-append-rollback-unpublish",
+                "record_crc16": 25546,
+                "sha256": "09976a0091b1d5151b0ed9ac0328ef4e3df2d5a72e2af6f4f07b16ff4f3ea66a"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_attic": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 420,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_attic_entry",
+                  "c2_append_rollback_wipe_attic_phase",
+                  "c2_append_rollback_zero_attic"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 48839,
+                "file_size": 420,
+                "name": "c2-append-rollback-wipe-attic",
+                "record_crc16": 58893,
+                "sha256": "1575d4736d61c7ef34368699a7847eb02d05d0664ce16cec9da60239627a3600"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_chip": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 506,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_chip_entry",
+                  "c2_append_rollback_wipe_chip_phase",
+                  "c2_append_rollback_zero_chip_code"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 41266,
+                "file_size": 506,
+                "name": "c2-append-rollback-wipe-chip",
+                "record_crc16": 58969,
+                "sha256": "e13cc3be07968b4b11a4bded8a402384c0b186ffbe56fc018c025f0251156c3f"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_plane": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 954,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_plane_entry",
+                  "c2_append_rollback_wipe_plane_phase",
+                  "c2_append_rollback_zero_plane"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 65445,
+                "file_size": 954,
+                "name": "c2-append-rollback-wipe-plane",
+                "record_crc16": 15823,
+                "sha256": "848e775f7ed0231dde0d7401afaa1bd0d9b3061f07a56cab4eaf67d7f8538eae"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_rollback_finalize": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 267,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_finalize_entry",
+                  "c2_append_rollback_finalize_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 36881,
+                "file_size": 267,
+                "name": "c2-append-rollback-finalize",
+                "record_crc16": 40093,
+                "sha256": "69248911c269df8eec37536d213015514cbdfde523e706c7a7106839f9804ebd"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_unpublish": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 758,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_unpublish_entry",
+                  "c2_append_restore_exports",
+                  "c2_append_rollback_unpublish_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 9478,
+                "file_size": 758,
+                "name": "c2-append-rollback-unpublish",
+                "record_crc16": 50501,
+                "sha256": "09976a0091b1d5151b0ed9ac0328ef4e3df2d5a72e2af6f4f07b16ff4f3ea66a"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_attic": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 420,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_attic_entry",
+                  "c2_append_rollback_wipe_attic_phase",
+                  "c2_append_rollback_zero_attic"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 48839,
+                "file_size": 420,
+                "name": "c2-append-rollback-wipe-attic",
+                "record_crc16": 16514,
+                "sha256": "1575d4736d61c7ef34368699a7847eb02d05d0664ce16cec9da60239627a3600"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_chip": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 506,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_chip_entry",
+                  "c2_append_rollback_wipe_chip_phase",
+                  "c2_append_rollback_zero_chip_code"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 41266,
+                "file_size": 506,
+                "name": "c2-append-rollback-wipe-chip",
+                "record_crc16": 16598,
+                "sha256": "e13cc3be07968b4b11a4bded8a402384c0b186ffbe56fc018c025f0251156c3f"
+              }
+            },
+            ".lisp65_rt_c2append_rollback_wipe_plane": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 954,
+                "functions": [
+                  "__lisp65_rt_c2append_rollback_wipe_plane_entry",
+                  "c2_append_rollback_wipe_plane_phase",
+                  "c2_append_rollback_zero_plane"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 65445,
+                "file_size": 954,
+                "name": "c2-append-rollback-wipe-plane",
+                "record_crc16": 39744,
+                "sha256": "848e775f7ed0231dde0d7401afaa1bd0d9b3061f07a56cab4eaf67d7f8538eae"
+              }
+            }
+          }
+        }
+      }
+    },
+    ".lisp65_rt_c2append_stage": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2append_stage_copy": [
+          "c2_append_stage_copy_phase"
+        ],
+        ".lisp65_rt_c2append_stage_plane": [
+          "c2_append_stage_plane_phase"
+        ]
+      },
+      "semantic_duties": [
+        "copy staged payload into its owned code/session destination",
+        "materialize the mutable C2D image, entry, resolution and root plane"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2append_stage_copy",
+        ".lisp65_rt_c2append_stage_plane"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_stage_copy": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1110,
+                "functions": [
+                  "__lisp65_rt_c2append_stage_copy_entry",
+                  "c2_append_stage_copy_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 28891,
+                "file_size": 1110,
+                "name": "c2-append-stage-copy",
+                "record_crc16": 57188,
+                "sha256": "19d4d07696339bcfd23fb5246f46b5684c0a7302396c543d3c1625bba6c4f8fb"
+              }
+            },
+            ".lisp65_rt_c2append_stage_plane": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1161,
+                "functions": [
+                  "__lisp65_rt_c2append_stage_plane_entry",
+                  "c2_append_stage_plane_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 60825,
+                "file_size": 1161,
+                "name": "c2-append-stage-plane",
+                "record_crc16": 18795,
+                "sha256": "b94eadfaa251555bafe48255013c4c091b370577d1a8fba3947dd10e181b3d77"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_stage_copy": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1110,
+                "functions": [
+                  "__lisp65_rt_c2append_stage_copy_entry",
+                  "c2_append_stage_copy_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 24248,
+                "file_size": 1110,
+                "name": "c2-append-stage-copy",
+                "record_crc16": 32977,
+                "sha256": "7ebf754b6f7d6710d011e2a72bf1ca9ef1fb02ba6a94811274b37cd349797953"
+              }
+            },
+            ".lisp65_rt_c2append_stage_plane": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1161,
+                "functions": [
+                  "__lisp65_rt_c2append_stage_plane_entry",
+                  "c2_append_stage_plane_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 56682,
+                "file_size": 1161,
+                "name": "c2-append-stage-plane",
+                "record_crc16": 36200,
+                "sha256": "0ae828d706895473fd7b541841d2601ef00f02a0b971e47486d8f347f1f4906f"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2append_stage_copy": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1110,
+                "functions": [
+                  "__lisp65_rt_c2append_stage_copy_entry",
+                  "c2_append_stage_copy_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 24248,
+                "file_size": 1110,
+                "name": "c2-append-stage-copy",
+                "record_crc16": 9822,
+                "sha256": "7ebf754b6f7d6710d011e2a72bf1ca9ef1fb02ba6a94811274b37cd349797953"
+              }
+            },
+            ".lisp65_rt_c2append_stage_plane": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1161,
+                "functions": [
+                  "__lisp65_rt_c2append_stage_plane_entry",
+                  "c2_append_stage_plane_phase"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 56682,
+                "file_size": 1161,
+                "name": "c2-append-stage-plane",
+                "record_crc16": 11239,
+                "sha256": "0ae828d706895473fd7b541841d2601ef00f02a0b971e47486d8f347f1f4906f"
+              }
+            }
+          }
+        }
+      }
+    },
+    ".lisp65_rt_c2d_05": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2d_05a": [
+          "c2_stream_phase_05a"
+        ],
+        ".lisp65_rt_c2d_05b": [
+          "c2_stream_phase_05b"
+        ]
+      },
+      "semantic_duties": [
+        "validate and decode the phase-05 descriptor stream",
+        "preserve the phase-05 handoff before later decoding"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2d_05a",
+        ".lisp65_rt_c2d_05b"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2d_05a": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1127,
+                "functions": [
+                  "__lisp65_rt_c2d_05a_entry",
+                  "c2_stream_phase_05a"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 8454,
+                "file_size": 1127,
+                "name": "c2-decode-05a",
+                "record_crc16": 23624,
+                "sha256": "bd4e85bda49b59181df026faffe466a4dca7dc5fbc46d658dbfaba00b20b91c3"
+              }
+            },
+            ".lisp65_rt_c2d_05b": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2d_05b_entry",
+                  "c2_stream_phase_05b"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 63692,
+                "file_size": 1655,
+                "name": "c2-decode-05b",
+                "record_crc16": 57562,
+                "sha256": "e5e02e57aa67318fdd98f7a9ebfd5543aa6d85e4217588dd7a638cc69f8b1b58"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2d_05a": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1127,
+                "functions": [
+                  "__lisp65_rt_c2d_05a_entry",
+                  "c2_stream_phase_05a"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 19343,
+                "file_size": 1127,
+                "name": "c2-decode-05a",
+                "record_crc16": 4716,
+                "sha256": "3f75c77ed977f615bcd3997c16892116cb00c2836bf8648aea223edcf6fa1924"
+              }
+            },
+            ".lisp65_rt_c2d_05b": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2d_05b_entry",
+                  "c2_stream_phase_05b"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 33154,
+                "file_size": 1655,
+                "name": "c2-decode-05b",
+                "record_crc16": 64659,
+                "sha256": "6aaa70d77b24032b7cc8d1060a17ee621eb4920d4ae9dadf5533ebb552f6c69b"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2d_05a": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1127,
+                "functions": [
+                  "__lisp65_rt_c2d_05a_entry",
+                  "c2_stream_phase_05a"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 19343,
+                "file_size": 1127,
+                "name": "c2-decode-05a",
+                "record_crc16": 46307,
+                "sha256": "3f75c77ed977f615bcd3997c16892116cb00c2836bf8648aea223edcf6fa1924"
+              }
+            },
+            ".lisp65_rt_c2d_05b": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1655,
+                "functions": [
+                  "__lisp65_rt_c2d_05b_entry",
+                  "c2_stream_phase_05b"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 33154,
+                "file_size": 1655,
+                "name": "c2-decode-05b",
+                "record_crc16": 23068,
+                "sha256": "6aaa70d77b24032b7cc8d1060a17ee621eb4920d4ae9dadf5533ebb552f6c69b"
+              }
+            }
+          }
+        }
+      }
+    },
+    ".lisp65_rt_c2d_11": {
+      "classification": "vocabulary-successor-content-present",
+      "required_functions": {
+        ".lisp65_rt_c2d_11a": [
+          "c2_stream_phase_11a"
+        ],
+        ".lisp65_rt_c2d_11b": [
+          "c2_stream_phase_11b"
+        ]
+      },
+      "semantic_duties": [
+        "validate immutable pair descriptors and backward child ordinals",
+        "resolve children, allocate pairs, publish roots and run the GC checkpoint"
+      ],
+      "successor_sections": [
+        ".lisp65_rt_c2d_11a",
+        ".lisp65_rt_c2d_11b"
+      ],
+      "worlds": {
+        "link95": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2d_11a": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 849,
+                "functions": [
+                  "__lisp65_rt_c2d_11a_entry",
+                  "c2_stream_phase_11a"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 8955,
+                "file_size": 849,
+                "name": "c2-decode-11a",
+                "record_crc16": 29860,
+                "sha256": "2b3926e57c4159835ff32e19940a0d2b712e0c2f2caf33e278eba0e7e463bb8d"
+              }
+            },
+            ".lisp65_rt_c2d_11b": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1666,
+                "functions": [
+                  "__lisp65_rt_c2d_11b_entry",
+                  "c2_stream_phase_11b"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 378,
+                "file_size": 1666,
+                "name": "c2-decode-11b",
+                "record_crc16": 65120,
+                "sha256": "7bcfdad9aa7d1fc39aa78e4bef0a5f261ba4eb53b07c95d45e0a0e6075603f16"
+              }
+            }
+          }
+        },
+        "link96": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2d_11a": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 849,
+                "functions": [
+                  "__lisp65_rt_c2d_11a_entry",
+                  "c2_stream_phase_11a"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 50838,
+                "file_size": 849,
+                "name": "c2-decode-11a",
+                "record_crc16": 62661,
+                "sha256": "82eb774f9202e39cf4cfac66f4235ff785e833c2e861e39a76f1d5d81b852ab7"
+              }
+            },
+            ".lisp65_rt_c2d_11b": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1666,
+                "functions": [
+                  "__lisp65_rt_c2d_11b_entry",
+                  "c2_stream_phase_11b"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 8928,
+                "file_size": 1666,
+                "name": "c2-decode-11b",
+                "record_crc16": 48281,
+                "sha256": "53200305375cb31f9e7a14f1dd233cacf1f634e102a56a9ffd42d6694e19de88"
+              }
+            }
+          }
+        },
+        "link97": {
+          "historical_section_in_ELF": false,
+          "historical_section_in_manifests": false,
+          "successors": {
+            ".lisp65_rt_c2d_11a": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 849,
+                "functions": [
+                  "__lisp65_rt_c2d_11a_entry",
+                  "c2_stream_phase_11a"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 50838,
+                "file_size": 849,
+                "name": "c2-decode-11a",
+                "record_crc16": 21066,
+                "sha256": "82eb774f9202e39cf4cfac66f4235ff785e833c2e861e39a76f1d5d81b852ab7"
+              }
+            },
+            ".lisp65_rt_c2d_11b": {
+              "ELF": {
+                "address": 50006,
+                "bytes": 1666,
+                "functions": [
+                  "__lisp65_rt_c2d_11b_entry",
+                  "c2_stream_phase_11b"
+                ]
+              },
+              "runtime_slice": {
+                "crc16": 8928,
+                "file_size": 1666,
+                "name": "c2-decode-11b",
+                "record_crc16": 6678,
+                "sha256": "53200305375cb31f9e7a14f1dd233cacf1f634e102a56a9ffd42d6694e19de88"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "decision": {
+    "card_or_replay_authorized": false,
+    "freight_cases": 0,
+    "mixed_result": false,
+    "replacement_gate_action": "resolve each absent historical identity to its explicit semantic successors; never require the pinned old name",
+    "vocabulary_cases": 9
+  },
+  "format": "lisp65-c2.3-v150-link97-nine-slice-content-map-v1",
+  "mutations_rejected": [
+    "pin-historical-name:.lisp65_rt_c2d_05",
+    "pin-historical-name:.lisp65_rt_c2d_11",
+    "pin-historical-name:.lisp65_rt_c2append_crc",
+    "pin-historical-name:.lisp65_rt_c2append_metadata",
+    "pin-historical-name:.lisp65_rt_c2append_capacity",
+    "pin-historical-name:.lisp65_rt_c2append_stage",
+    "pin-historical-name:.lisp65_rt_c2append_publish_names",
+    "pin-historical-name:.lisp65_rt_c2append_publish_cells",
+    "pin-historical-name:.lisp65_rt_c2append_rollback",
+    "drop-link97-successor",
+    "drop-required-function",
+    "change-session-order",
+    "claim-freight"
+  ],
+  "recorded_on": "2026-08-11",
+  "scope": {
+    "artifact_completions": 0,
+    "compiler_or_WPLTO_runs": 0,
+    "frozen_Link97_artifacts_modified": false,
+    "hardware_runs": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "status": "passed-nine-vocabulary-successors-zero-freight-gaps",
+  "world_identity": {
+    "ordered_boot_sections_equal": true,
+    "ordered_session_sections_equal": true,
+    "reference_world": "link96",
+    "worlds": {
+      "link95": {
+        "ELF": {
+          "bytes": 622568,
+          "path": "build/c2.3/packed-callee-closure-link95/final/lisp65-c2-substitution-linked.prg.elf",
+          "sha256": "44c2c02db3b72018d0f18878b4cfb37fc1f5e457e898713e37ee64468c060caa"
+        },
+        "content": {
+          ".lisp65_rt_c2append_capacity": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_reserve_persistent_bounds": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 690,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_persistent_bounds_entry",
+                    "c2_append_reserve_persistent_bounds_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 11452,
+                  "file_size": 690,
+                  "name": "c2-append-reserve-persistent-bounds",
+                  "record_crc16": 52958,
+                  "sha256": "3367110744c932c151566987229b067f91d46331ef197a701d4ab71b72f3fdb1"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_persistent_code": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1416,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_persistent_code_entry",
+                    "c2_append_reserve_persistent_code_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 54915,
+                  "file_size": 1416,
+                  "name": "c2-append-reserve-persistent-code",
+                  "record_crc16": 37841,
+                  "sha256": "53cde48724f97d5191562ebe78bca960c45b5b01470cda871b557af1e31435c6"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_transient_bounds": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 986,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_transient_bounds_entry",
+                    "c2_append_reserve_transient_bounds_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 39772,
+                  "file_size": 986,
+                  "name": "c2-append-reserve-transient-bounds",
+                  "record_crc16": 64427,
+                  "sha256": "8702c6454a062cbf1a05481ed4b970935cdb57252e327ea9d057558441bdbd5f"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_transient_code": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1470,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_transient_code_entry",
+                    "c2_append_reserve_transient_code_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 40744,
+                  "file_size": 1470,
+                  "name": "c2-append-reserve-transient-code",
+                  "record_crc16": 7940,
+                  "sha256": "4e7c6695cdd6fea7fec93ded5fd18afa54bb06d9c96477845f64beef4ddd0d12"
+                }
+              },
+              ".lisp65_rt_c2append_roots_fronts": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1510,
+                  "functions": [
+                    "__lisp65_rt_c2append_roots_fronts_entry",
+                    "c2_append_fronts_phase",
+                    "c2_append_roots_fronts_phase",
+                    "c2_append_roots_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 6941,
+                  "file_size": 1510,
+                  "name": "c2-append-roots-fronts",
+                  "record_crc16": 19657,
+                  "sha256": "701389b3c6b52e3532b3554882d0beeca39cf7ae7d7dea0630e101e5c1a07d29"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_crc": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_crc_metadata": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2append_crc_metadata_entry",
+                    "c2_append_crc_metadata_phase",
+                    "c2_stage_crc"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 55280,
+                  "file_size": 1655,
+                  "name": "c2-append-crc-metadata",
+                  "record_crc16": 54274,
+                  "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_metadata": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_crc_metadata": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2append_crc_metadata_entry",
+                    "c2_append_crc_metadata_phase",
+                    "c2_stage_crc"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 55280,
+                  "file_size": 1655,
+                  "name": "c2-append-crc-metadata",
+                  "record_crc16": 54274,
+                  "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_publish_cells": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_publish_clear": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1295,
+                  "functions": [
+                    "__lisp65_rt_c2append_publish_clear_entry",
+                    "c2_append_journal_clear_phase",
+                    "c2_append_publish_clear_phase",
+                    "c2_append_publish_exports_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 58029,
+                  "file_size": 1295,
+                  "name": "c2-append-publish-clear",
+                  "record_crc16": 61759,
+                  "sha256": "a8545c2798ad57d9e1dcc89574faedf1d0a699d87f29fb03614778de2dadbf2b"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_publish_names": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_publish_clear": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1295,
+                  "functions": [
+                    "__lisp65_rt_c2append_publish_clear_entry",
+                    "c2_append_journal_clear_phase",
+                    "c2_append_publish_clear_phase",
+                    "c2_append_publish_exports_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 58029,
+                  "file_size": 1295,
+                  "name": "c2-append-publish-clear",
+                  "record_crc16": 61759,
+                  "sha256": "a8545c2798ad57d9e1dcc89574faedf1d0a699d87f29fb03614778de2dadbf2b"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_rollback": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_rollback_finalize": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 267,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_finalize_entry",
+                    "c2_append_rollback_finalize_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 49395,
+                  "file_size": 267,
+                  "name": "c2-append-rollback-finalize",
+                  "record_crc16": 9371,
+                  "sha256": "ad2b0d6eeba020cc6ea59b8983c70a8a3899bf0d76a08d0b2f86779d85b260e0"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_unpublish": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 758,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_unpublish_entry",
+                    "c2_append_restore_exports",
+                    "c2_append_rollback_unpublish_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 47116,
+                  "file_size": 758,
+                  "name": "c2-append-rollback-unpublish",
+                  "record_crc16": 39253,
+                  "sha256": "99522eaa8fb73447c24195127cc109aff55616dd3b5b940220a098c2b87940fc"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_attic": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 420,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_attic_entry",
+                    "c2_append_rollback_wipe_attic_phase",
+                    "c2_append_rollback_zero_attic"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 60535,
+                  "file_size": 420,
+                  "name": "c2-append-rollback-wipe-attic",
+                  "record_crc16": 46285,
+                  "sha256": "e4afa1a1374878686774562f91521070e5ca6d3fd5fb13ce8b4ae74a693bb6ee"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_chip": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 506,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_chip_entry",
+                    "c2_append_rollback_wipe_chip_phase",
+                    "c2_append_rollback_zero_chip_code"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 41266,
+                  "file_size": 506,
+                  "name": "c2-append-rollback-wipe-chip",
+                  "record_crc16": 63123,
+                  "sha256": "e13cc3be07968b4b11a4bded8a402384c0b186ffbe56fc018c025f0251156c3f"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_plane": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 954,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_plane_entry",
+                    "c2_append_rollback_wipe_plane_phase",
+                    "c2_append_rollback_zero_plane"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 360,
+                  "file_size": 954,
+                  "name": "c2-append-rollback-wipe-plane",
+                  "record_crc16": 11951,
+                  "sha256": "9f589f0c4907e86b8016cad67e5d317918dccad1b5cb61041e88ba345bd07f93"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_stage": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_stage_copy": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1110,
+                  "functions": [
+                    "__lisp65_rt_c2append_stage_copy_entry",
+                    "c2_append_stage_copy_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 28891,
+                  "file_size": 1110,
+                  "name": "c2-append-stage-copy",
+                  "record_crc16": 57188,
+                  "sha256": "19d4d07696339bcfd23fb5246f46b5684c0a7302396c543d3c1625bba6c4f8fb"
+                }
+              },
+              ".lisp65_rt_c2append_stage_plane": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1161,
+                  "functions": [
+                    "__lisp65_rt_c2append_stage_plane_entry",
+                    "c2_append_stage_plane_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 60825,
+                  "file_size": 1161,
+                  "name": "c2-append-stage-plane",
+                  "record_crc16": 18795,
+                  "sha256": "b94eadfaa251555bafe48255013c4c091b370577d1a8fba3947dd10e181b3d77"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2d_05": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2d_05a": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1127,
+                  "functions": [
+                    "__lisp65_rt_c2d_05a_entry",
+                    "c2_stream_phase_05a"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 8454,
+                  "file_size": 1127,
+                  "name": "c2-decode-05a",
+                  "record_crc16": 23624,
+                  "sha256": "bd4e85bda49b59181df026faffe466a4dca7dc5fbc46d658dbfaba00b20b91c3"
+                }
+              },
+              ".lisp65_rt_c2d_05b": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2d_05b_entry",
+                    "c2_stream_phase_05b"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 63692,
+                  "file_size": 1655,
+                  "name": "c2-decode-05b",
+                  "record_crc16": 57562,
+                  "sha256": "e5e02e57aa67318fdd98f7a9ebfd5543aa6d85e4217588dd7a638cc69f8b1b58"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2d_11": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2d_11a": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 849,
+                  "functions": [
+                    "__lisp65_rt_c2d_11a_entry",
+                    "c2_stream_phase_11a"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 8955,
+                  "file_size": 849,
+                  "name": "c2-decode-11a",
+                  "record_crc16": 29860,
+                  "sha256": "2b3926e57c4159835ff32e19940a0d2b712e0c2f2caf33e278eba0e7e463bb8d"
+                }
+              },
+              ".lisp65_rt_c2d_11b": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1666,
+                  "functions": [
+                    "__lisp65_rt_c2d_11b_entry",
+                    "c2_stream_phase_11b"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 378,
+                  "file_size": 1666,
+                  "name": "c2-decode-11b",
+                  "record_crc16": 65120,
+                  "sha256": "7bcfdad9aa7d1fc39aa78e4bef0a5f261ba4eb53b07c95d45e0a0e6075603f16"
+                }
+              }
+            }
+          }
+        },
+        "manifests": {
+          "boot": {
+            "bytes": 11507,
+            "path": "build/c2.3/packed-callee-closure-link95/final/runtime-overlays-boot-final.json",
+            "sha256": "ba6b8c27e0b30b74cecf37c2e96681df64aa66a646dc2fb6c3ca407e1b8beb4f"
+          },
+          "session": {
+            "bytes": 44705,
+            "path": "build/c2.3/packed-callee-closure-link95/final/runtime-overlays-session-final.json",
+            "sha256": "4ddcd19920ad961be4bfe9dfc15957dc6e4b7e230e6b2b190d4902a5e58d6bb1"
+          }
+        },
+        "ordered_sections": {
+          "boot": [
+            ".lisp65_rt_rtov_catalog",
+            ".lisp65_rt_rtov_record",
+            ".lisp65_rt_c2d_00",
+            ".lisp65_rt_c2d_00b",
+            ".lisp65_rt_c2d_01",
+            ".lisp65_rt_c2d_02a",
+            ".lisp65_rt_c2d_02b",
+            ".lisp65_rt_c2d_03",
+            ".lisp65_rt_c2d_03b",
+            ".lisp65_rt_bank3_stage_session",
+            ".lisp65_rt_island_00",
+            ".lisp65_resident_island"
+          ],
+          "session": [
+            ".lisp65_rt_rtov_catalog",
+            ".lisp65_rt_rtov_record",
+            ".lisp65_rt_c2d_04",
+            ".lisp65_rt_c2d_05a",
+            ".lisp65_rt_c2d_05b",
+            ".lisp65_rt_c2d_06a",
+            ".lisp65_rt_c2d_06b",
+            ".lisp65_rt_c2d_07",
+            ".lisp65_rt_c2d_08",
+            ".lisp65_rt_c2d_09",
+            ".lisp65_rt_c2d_10",
+            ".lisp65_rt_c2d_11a",
+            ".lisp65_rt_c2d_11b",
+            ".lisp65_rt_c2d_12",
+            ".lisp65_rt_c2d_13",
+            ".lisp65_rt_c2emit_prepare",
+            ".lisp65_rt_c2emit_name",
+            ".lisp65_rt_c2emit_literal_prep",
+            ".lisp65_rt_c2emit_literal_atom",
+            ".lisp65_rt_c2emit_literal_append",
+            ".lisp65_rt_c2emit_code",
+            ".lisp65_rt_c2emit_final_meta",
+            ".lisp65_rt_c2emit_final_crc",
+            ".lisp65_rt_c2append_envelope",
+            ".lisp65_rt_c2append_crc_metadata",
+            ".lisp65_rt_c2append_roots_fronts",
+            ".lisp65_rt_c2append_reserve_transient_bounds",
+            ".lisp65_rt_c2append_reserve_transient_code",
+            ".lisp65_rt_c2append_reserve_persistent_bounds",
+            ".lisp65_rt_c2append_reserve_persistent_code",
+            ".lisp65_rt_c2append_journal_prepare",
+            ".lisp65_rt_c2append_journal_validate",
+            ".lisp65_rt_c2append_journal_reconstruct",
+            ".lisp65_rt_c2append_stage_copy",
+            ".lisp65_rt_c2append_stage_plane",
+            ".lisp65_rt_c2append_image",
+            ".lisp65_rt_c2append_entries",
+            ".lisp65_rt_c2append_publish_plan_scan",
+            ".lisp65_rt_c2append_publish_plan_resolve",
+            ".lisp65_rt_c2append_header",
+            ".lisp65_rt_c2append_publish_clear",
+            ".lisp65_rt_c2append_rollback_unpublish",
+            ".lisp65_rt_c2append_rollback_wipe_plane",
+            ".lisp65_rt_c2append_rollback_wipe_chip",
+            ".lisp65_rt_c2append_rollback_wipe_attic",
+            ".lisp65_rt_c2append_rollback_finalize",
+            ".lisp65_rt_c2append_abort_control",
+            ".lisp65_rt_l65e",
+            ".lisp65_rt_buffer_read",
+            ".lisp65_rt_buffer_write",
+            ".lisp65_rt_buffer_alloc",
+            ".lisp65_rt_intern_service"
+          ]
+        }
+      },
+      "link96": {
+        "ELF": {
+          "bytes": 622972,
+          "path": "build/c2.3/terminal-return-guard-link96/final/lisp65-c2-substitution-linked.prg.elf",
+          "sha256": "b4d31e811331e4f5b7edd4a2feb634e575c0635a0c404bf0a8d3a143ace7695a"
+        },
+        "content": {
+          ".lisp65_rt_c2append_capacity": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_reserve_persistent_bounds": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 690,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_persistent_bounds_entry",
+                    "c2_append_reserve_persistent_bounds_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 11452,
+                  "file_size": 690,
+                  "name": "c2-append-reserve-persistent-bounds",
+                  "record_crc16": 56852,
+                  "sha256": "3367110744c932c151566987229b067f91d46331ef197a701d4ab71b72f3fdb1"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_persistent_code": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1416,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_persistent_code_entry",
+                    "c2_append_reserve_persistent_code_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 54915,
+                  "file_size": 1416,
+                  "name": "c2-append-reserve-persistent-code",
+                  "record_crc16": 33563,
+                  "sha256": "53cde48724f97d5191562ebe78bca960c45b5b01470cda871b557af1e31435c6"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_transient_bounds": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 986,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_transient_bounds_entry",
+                    "c2_append_reserve_transient_bounds_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 39772,
+                  "file_size": 986,
+                  "name": "c2-append-reserve-transient-bounds",
+                  "record_crc16": 60257,
+                  "sha256": "8702c6454a062cbf1a05481ed4b970935cdb57252e327ea9d057558441bdbd5f"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_transient_code": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1470,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_transient_code_entry",
+                    "c2_append_reserve_transient_code_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 40744,
+                  "file_size": 1470,
+                  "name": "c2-append-reserve-transient-code",
+                  "record_crc16": 4046,
+                  "sha256": "4e7c6695cdd6fea7fec93ded5fd18afa54bb06d9c96477845f64beef4ddd0d12"
+                }
+              },
+              ".lisp65_rt_c2append_roots_fronts": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1510,
+                  "functions": [
+                    "__lisp65_rt_c2append_roots_fronts_entry",
+                    "c2_append_fronts_phase",
+                    "c2_append_roots_fronts_phase",
+                    "c2_append_roots_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 6941,
+                  "file_size": 1510,
+                  "name": "c2-append-roots-fronts",
+                  "record_crc16": 23555,
+                  "sha256": "701389b3c6b52e3532b3554882d0beeca39cf7ae7d7dea0630e101e5c1a07d29"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_crc": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_crc_metadata": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2append_crc_metadata_entry",
+                    "c2_append_crc_metadata_phase",
+                    "c2_stage_crc"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 55280,
+                  "file_size": 1655,
+                  "name": "c2-append-crc-metadata",
+                  "record_crc16": 50376,
+                  "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_metadata": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_crc_metadata": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2append_crc_metadata_entry",
+                    "c2_append_crc_metadata_phase",
+                    "c2_stage_crc"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 55280,
+                  "file_size": 1655,
+                  "name": "c2-append-crc-metadata",
+                  "record_crc16": 50376,
+                  "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_publish_cells": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_publish_clear": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1410,
+                  "functions": [
+                    "__lisp65_rt_c2append_publish_clear_entry",
+                    "c2_append_journal_clear_phase",
+                    "c2_append_publish_clear_phase",
+                    "c2_append_publish_exports_phase",
+                    "c2tr_publish_clear_body"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 7002,
+                  "file_size": 1410,
+                  "name": "c2-append-publish-clear",
+                  "record_crc16": 42310,
+                  "sha256": "cc57c50030f5b73af901c4fb5d91d73b17467b3939e2cf88c7ca33881b4dbbc6"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_publish_names": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_publish_clear": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1410,
+                  "functions": [
+                    "__lisp65_rt_c2append_publish_clear_entry",
+                    "c2_append_journal_clear_phase",
+                    "c2_append_publish_clear_phase",
+                    "c2_append_publish_exports_phase",
+                    "c2tr_publish_clear_body"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 7002,
+                  "file_size": 1410,
+                  "name": "c2-append-publish-clear",
+                  "record_crc16": 42310,
+                  "sha256": "cc57c50030f5b73af901c4fb5d91d73b17467b3939e2cf88c7ca33881b4dbbc6"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_rollback": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_rollback_finalize": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 267,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_finalize_entry",
+                    "c2_append_rollback_finalize_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 36881,
+                  "file_size": 267,
+                  "name": "c2-append-rollback-finalize",
+                  "record_crc16": 14866,
+                  "sha256": "69248911c269df8eec37536d213015514cbdfde523e706c7a7106839f9804ebd"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_unpublish": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 758,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_unpublish_entry",
+                    "c2_append_restore_exports",
+                    "c2_append_rollback_unpublish_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 9478,
+                  "file_size": 758,
+                  "name": "c2-append-rollback-unpublish",
+                  "record_crc16": 25546,
+                  "sha256": "09976a0091b1d5151b0ed9ac0328ef4e3df2d5a72e2af6f4f07b16ff4f3ea66a"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_attic": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 420,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_attic_entry",
+                    "c2_append_rollback_wipe_attic_phase",
+                    "c2_append_rollback_zero_attic"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 48839,
+                  "file_size": 420,
+                  "name": "c2-append-rollback-wipe-attic",
+                  "record_crc16": 58893,
+                  "sha256": "1575d4736d61c7ef34368699a7847eb02d05d0664ce16cec9da60239627a3600"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_chip": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 506,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_chip_entry",
+                    "c2_append_rollback_wipe_chip_phase",
+                    "c2_append_rollback_zero_chip_code"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 41266,
+                  "file_size": 506,
+                  "name": "c2-append-rollback-wipe-chip",
+                  "record_crc16": 58969,
+                  "sha256": "e13cc3be07968b4b11a4bded8a402384c0b186ffbe56fc018c025f0251156c3f"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_plane": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 954,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_plane_entry",
+                    "c2_append_rollback_wipe_plane_phase",
+                    "c2_append_rollback_zero_plane"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 65445,
+                  "file_size": 954,
+                  "name": "c2-append-rollback-wipe-plane",
+                  "record_crc16": 15823,
+                  "sha256": "848e775f7ed0231dde0d7401afaa1bd0d9b3061f07a56cab4eaf67d7f8538eae"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_stage": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_stage_copy": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1110,
+                  "functions": [
+                    "__lisp65_rt_c2append_stage_copy_entry",
+                    "c2_append_stage_copy_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 24248,
+                  "file_size": 1110,
+                  "name": "c2-append-stage-copy",
+                  "record_crc16": 32977,
+                  "sha256": "7ebf754b6f7d6710d011e2a72bf1ca9ef1fb02ba6a94811274b37cd349797953"
+                }
+              },
+              ".lisp65_rt_c2append_stage_plane": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1161,
+                  "functions": [
+                    "__lisp65_rt_c2append_stage_plane_entry",
+                    "c2_append_stage_plane_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 56682,
+                  "file_size": 1161,
+                  "name": "c2-append-stage-plane",
+                  "record_crc16": 36200,
+                  "sha256": "0ae828d706895473fd7b541841d2601ef00f02a0b971e47486d8f347f1f4906f"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2d_05": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2d_05a": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1127,
+                  "functions": [
+                    "__lisp65_rt_c2d_05a_entry",
+                    "c2_stream_phase_05a"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 19343,
+                  "file_size": 1127,
+                  "name": "c2-decode-05a",
+                  "record_crc16": 4716,
+                  "sha256": "3f75c77ed977f615bcd3997c16892116cb00c2836bf8648aea223edcf6fa1924"
+                }
+              },
+              ".lisp65_rt_c2d_05b": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2d_05b_entry",
+                    "c2_stream_phase_05b"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 33154,
+                  "file_size": 1655,
+                  "name": "c2-decode-05b",
+                  "record_crc16": 64659,
+                  "sha256": "6aaa70d77b24032b7cc8d1060a17ee621eb4920d4ae9dadf5533ebb552f6c69b"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2d_11": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2d_11a": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 849,
+                  "functions": [
+                    "__lisp65_rt_c2d_11a_entry",
+                    "c2_stream_phase_11a"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 50838,
+                  "file_size": 849,
+                  "name": "c2-decode-11a",
+                  "record_crc16": 62661,
+                  "sha256": "82eb774f9202e39cf4cfac66f4235ff785e833c2e861e39a76f1d5d81b852ab7"
+                }
+              },
+              ".lisp65_rt_c2d_11b": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1666,
+                  "functions": [
+                    "__lisp65_rt_c2d_11b_entry",
+                    "c2_stream_phase_11b"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 8928,
+                  "file_size": 1666,
+                  "name": "c2-decode-11b",
+                  "record_crc16": 48281,
+                  "sha256": "53200305375cb31f9e7a14f1dd233cacf1f634e102a56a9ffd42d6694e19de88"
+                }
+              }
+            }
+          }
+        },
+        "manifests": {
+          "boot": {
+            "bytes": 11506,
+            "path": "build/c2.3/terminal-return-guard-link96/final/runtime-overlays-boot-final.json",
+            "sha256": "206e419a9411e18f69ce2c0e4f3aa905d14d90fef5ea527fa9de3dcdb2281ccf"
+          },
+          "session": {
+            "bytes": 44705,
+            "path": "build/c2.3/terminal-return-guard-link96/final/runtime-overlays-session-final.json",
+            "sha256": "d187ab07aecbcef70586d3819b5622fbc8efeaa073422cf2d0330a705b41a6ee"
+          }
+        },
+        "ordered_sections": {
+          "boot": [
+            ".lisp65_rt_rtov_catalog",
+            ".lisp65_rt_rtov_record",
+            ".lisp65_rt_c2d_00",
+            ".lisp65_rt_c2d_00b",
+            ".lisp65_rt_c2d_01",
+            ".lisp65_rt_c2d_02a",
+            ".lisp65_rt_c2d_02b",
+            ".lisp65_rt_c2d_03",
+            ".lisp65_rt_c2d_03b",
+            ".lisp65_rt_bank3_stage_session",
+            ".lisp65_rt_island_00",
+            ".lisp65_resident_island"
+          ],
+          "session": [
+            ".lisp65_rt_rtov_catalog",
+            ".lisp65_rt_rtov_record",
+            ".lisp65_rt_c2d_04",
+            ".lisp65_rt_c2d_05a",
+            ".lisp65_rt_c2d_05b",
+            ".lisp65_rt_c2d_06a",
+            ".lisp65_rt_c2d_06b",
+            ".lisp65_rt_c2d_07",
+            ".lisp65_rt_c2d_08",
+            ".lisp65_rt_c2d_09",
+            ".lisp65_rt_c2d_10",
+            ".lisp65_rt_c2d_11a",
+            ".lisp65_rt_c2d_11b",
+            ".lisp65_rt_c2d_12",
+            ".lisp65_rt_c2d_13",
+            ".lisp65_rt_c2emit_prepare",
+            ".lisp65_rt_c2emit_name",
+            ".lisp65_rt_c2emit_literal_prep",
+            ".lisp65_rt_c2emit_literal_atom",
+            ".lisp65_rt_c2emit_literal_append",
+            ".lisp65_rt_c2emit_code",
+            ".lisp65_rt_c2emit_final_meta",
+            ".lisp65_rt_c2emit_final_crc",
+            ".lisp65_rt_c2append_envelope",
+            ".lisp65_rt_c2append_crc_metadata",
+            ".lisp65_rt_c2append_roots_fronts",
+            ".lisp65_rt_c2append_reserve_transient_bounds",
+            ".lisp65_rt_c2append_reserve_transient_code",
+            ".lisp65_rt_c2append_reserve_persistent_bounds",
+            ".lisp65_rt_c2append_reserve_persistent_code",
+            ".lisp65_rt_c2append_journal_prepare",
+            ".lisp65_rt_c2append_journal_validate",
+            ".lisp65_rt_c2append_journal_reconstruct",
+            ".lisp65_rt_c2append_stage_copy",
+            ".lisp65_rt_c2append_stage_plane",
+            ".lisp65_rt_c2append_image",
+            ".lisp65_rt_c2append_entries",
+            ".lisp65_rt_c2append_publish_plan_scan",
+            ".lisp65_rt_c2append_publish_plan_resolve",
+            ".lisp65_rt_c2append_header",
+            ".lisp65_rt_c2append_publish_clear",
+            ".lisp65_rt_c2append_rollback_unpublish",
+            ".lisp65_rt_c2append_rollback_wipe_plane",
+            ".lisp65_rt_c2append_rollback_wipe_chip",
+            ".lisp65_rt_c2append_rollback_wipe_attic",
+            ".lisp65_rt_c2append_rollback_finalize",
+            ".lisp65_rt_c2append_abort_control",
+            ".lisp65_rt_l65e",
+            ".lisp65_rt_buffer_read",
+            ".lisp65_rt_buffer_write",
+            ".lisp65_rt_buffer_alloc",
+            ".lisp65_rt_intern_service"
+          ]
+        }
+      },
+      "link97": {
+        "ELF": {
+          "bytes": 623428,
+          "path": "build/c2.3/v1.5.0-candidate-product-link97/wplto/lisp65-c2-substitution-linked.prg.elf",
+          "sha256": "104f6fc4217fa9d803bfb675cabf46c38deb246cad17502a51e9aadeba95c84c"
+        },
+        "content": {
+          ".lisp65_rt_c2append_capacity": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_reserve_persistent_bounds": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 690,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_persistent_bounds_entry",
+                    "c2_append_reserve_persistent_bounds_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 11452,
+                  "file_size": 690,
+                  "name": "c2-append-reserve-persistent-bounds",
+                  "record_crc16": 30875,
+                  "sha256": "3367110744c932c151566987229b067f91d46331ef197a701d4ab71b72f3fdb1"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_persistent_code": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1416,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_persistent_code_entry",
+                    "c2_append_reserve_persistent_code_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 54915,
+                  "file_size": 1416,
+                  "name": "c2-append-reserve-persistent-code",
+                  "record_crc16": 9620,
+                  "sha256": "53cde48724f97d5191562ebe78bca960c45b5b01470cda871b557af1e31435c6"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_transient_bounds": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 986,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_transient_bounds_entry",
+                    "c2_append_reserve_transient_bounds_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 39772,
+                  "file_size": 986,
+                  "name": "c2-append-reserve-transient-bounds",
+                  "record_crc16": 19950,
+                  "sha256": "8702c6454a062cbf1a05481ed4b970935cdb57252e327ea9d057558441bdbd5f"
+                }
+              },
+              ".lisp65_rt_c2append_reserve_transient_code": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1470,
+                  "functions": [
+                    "__lisp65_rt_c2append_reserve_transient_code_entry",
+                    "c2_append_reserve_transient_code_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 40744,
+                  "file_size": 1470,
+                  "name": "c2-append-reserve-transient-code",
+                  "record_crc16": 43329,
+                  "sha256": "4e7c6695cdd6fea7fec93ded5fd18afa54bb06d9c96477845f64beef4ddd0d12"
+                }
+              },
+              ".lisp65_rt_c2append_roots_fronts": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1510,
+                  "functions": [
+                    "__lisp65_rt_c2append_roots_fronts_entry",
+                    "c2_append_fronts_phase",
+                    "c2_append_roots_fronts_phase",
+                    "c2_append_roots_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 6941,
+                  "file_size": 1510,
+                  "name": "c2-append-roots-fronts",
+                  "record_crc16": 64140,
+                  "sha256": "701389b3c6b52e3532b3554882d0beeca39cf7ae7d7dea0630e101e5c1a07d29"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_crc": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_crc_metadata": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2append_crc_metadata_entry",
+                    "c2_append_crc_metadata_phase",
+                    "c2_stage_crc"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 55280,
+                  "file_size": 1655,
+                  "name": "c2-append-crc-metadata",
+                  "record_crc16": 25159,
+                  "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_metadata": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_crc_metadata": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2append_crc_metadata_entry",
+                    "c2_append_crc_metadata_phase",
+                    "c2_stage_crc"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 55280,
+                  "file_size": 1655,
+                  "name": "c2-append-crc-metadata",
+                  "record_crc16": 25159,
+                  "sha256": "3969e8a185fdb2b5cd4541372b4d36f0474aabf4d8efbfe24130a6f963d8de47"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_publish_cells": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_publish_clear": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1410,
+                  "functions": [
+                    "__lisp65_rt_c2append_publish_clear_entry",
+                    "c2_append_journal_clear_phase",
+                    "c2_append_publish_clear_phase",
+                    "c2_append_publish_exports_phase",
+                    "c2tr_publish_clear_body"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 7002,
+                  "file_size": 1410,
+                  "name": "c2-append-publish-clear",
+                  "record_crc16": 969,
+                  "sha256": "cc57c50030f5b73af901c4fb5d91d73b17467b3939e2cf88c7ca33881b4dbbc6"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_publish_names": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_publish_clear": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1410,
+                  "functions": [
+                    "__lisp65_rt_c2append_publish_clear_entry",
+                    "c2_append_journal_clear_phase",
+                    "c2_append_publish_clear_phase",
+                    "c2_append_publish_exports_phase",
+                    "c2tr_publish_clear_body"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 7002,
+                  "file_size": 1410,
+                  "name": "c2-append-publish-clear",
+                  "record_crc16": 969,
+                  "sha256": "cc57c50030f5b73af901c4fb5d91d73b17467b3939e2cf88c7ca33881b4dbbc6"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_rollback": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_rollback_finalize": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 267,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_finalize_entry",
+                    "c2_append_rollback_finalize_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 36881,
+                  "file_size": 267,
+                  "name": "c2-append-rollback-finalize",
+                  "record_crc16": 40093,
+                  "sha256": "69248911c269df8eec37536d213015514cbdfde523e706c7a7106839f9804ebd"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_unpublish": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 758,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_unpublish_entry",
+                    "c2_append_restore_exports",
+                    "c2_append_rollback_unpublish_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 9478,
+                  "file_size": 758,
+                  "name": "c2-append-rollback-unpublish",
+                  "record_crc16": 50501,
+                  "sha256": "09976a0091b1d5151b0ed9ac0328ef4e3df2d5a72e2af6f4f07b16ff4f3ea66a"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_attic": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 420,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_attic_entry",
+                    "c2_append_rollback_wipe_attic_phase",
+                    "c2_append_rollback_zero_attic"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 48839,
+                  "file_size": 420,
+                  "name": "c2-append-rollback-wipe-attic",
+                  "record_crc16": 16514,
+                  "sha256": "1575d4736d61c7ef34368699a7847eb02d05d0664ce16cec9da60239627a3600"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_chip": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 506,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_chip_entry",
+                    "c2_append_rollback_wipe_chip_phase",
+                    "c2_append_rollback_zero_chip_code"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 41266,
+                  "file_size": 506,
+                  "name": "c2-append-rollback-wipe-chip",
+                  "record_crc16": 16598,
+                  "sha256": "e13cc3be07968b4b11a4bded8a402384c0b186ffbe56fc018c025f0251156c3f"
+                }
+              },
+              ".lisp65_rt_c2append_rollback_wipe_plane": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 954,
+                  "functions": [
+                    "__lisp65_rt_c2append_rollback_wipe_plane_entry",
+                    "c2_append_rollback_wipe_plane_phase",
+                    "c2_append_rollback_zero_plane"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 65445,
+                  "file_size": 954,
+                  "name": "c2-append-rollback-wipe-plane",
+                  "record_crc16": 39744,
+                  "sha256": "848e775f7ed0231dde0d7401afaa1bd0d9b3061f07a56cab4eaf67d7f8538eae"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2append_stage": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2append_stage_copy": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1110,
+                  "functions": [
+                    "__lisp65_rt_c2append_stage_copy_entry",
+                    "c2_append_stage_copy_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 24248,
+                  "file_size": 1110,
+                  "name": "c2-append-stage-copy",
+                  "record_crc16": 9822,
+                  "sha256": "7ebf754b6f7d6710d011e2a72bf1ca9ef1fb02ba6a94811274b37cd349797953"
+                }
+              },
+              ".lisp65_rt_c2append_stage_plane": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1161,
+                  "functions": [
+                    "__lisp65_rt_c2append_stage_plane_entry",
+                    "c2_append_stage_plane_phase"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 56682,
+                  "file_size": 1161,
+                  "name": "c2-append-stage-plane",
+                  "record_crc16": 11239,
+                  "sha256": "0ae828d706895473fd7b541841d2601ef00f02a0b971e47486d8f347f1f4906f"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2d_05": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2d_05a": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1127,
+                  "functions": [
+                    "__lisp65_rt_c2d_05a_entry",
+                    "c2_stream_phase_05a"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 19343,
+                  "file_size": 1127,
+                  "name": "c2-decode-05a",
+                  "record_crc16": 46307,
+                  "sha256": "3f75c77ed977f615bcd3997c16892116cb00c2836bf8648aea223edcf6fa1924"
+                }
+              },
+              ".lisp65_rt_c2d_05b": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1655,
+                  "functions": [
+                    "__lisp65_rt_c2d_05b_entry",
+                    "c2_stream_phase_05b"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 33154,
+                  "file_size": 1655,
+                  "name": "c2-decode-05b",
+                  "record_crc16": 23068,
+                  "sha256": "6aaa70d77b24032b7cc8d1060a17ee621eb4920d4ae9dadf5533ebb552f6c69b"
+                }
+              }
+            }
+          },
+          ".lisp65_rt_c2d_11": {
+            "historical_section_in_ELF": false,
+            "historical_section_in_manifests": false,
+            "successors": {
+              ".lisp65_rt_c2d_11a": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 849,
+                  "functions": [
+                    "__lisp65_rt_c2d_11a_entry",
+                    "c2_stream_phase_11a"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 50838,
+                  "file_size": 849,
+                  "name": "c2-decode-11a",
+                  "record_crc16": 21066,
+                  "sha256": "82eb774f9202e39cf4cfac66f4235ff785e833c2e861e39a76f1d5d81b852ab7"
+                }
+              },
+              ".lisp65_rt_c2d_11b": {
+                "ELF": {
+                  "address": 50006,
+                  "bytes": 1666,
+                  "functions": [
+                    "__lisp65_rt_c2d_11b_entry",
+                    "c2_stream_phase_11b"
+                  ]
+                },
+                "runtime_slice": {
+                  "crc16": 8928,
+                  "file_size": 1666,
+                  "name": "c2-decode-11b",
+                  "record_crc16": 6678,
+                  "sha256": "53200305375cb31f9e7a14f1dd233cacf1f634e102a56a9ffd42d6694e19de88"
+                }
+              }
+            }
+          }
+        },
+        "manifests": {
+          "boot": {
+            "bytes": 11508,
+            "path": "build/c2.3/v1.5.0-candidate-product-link97/wplto/runtime-overlays-boot-final.json",
+            "sha256": "4befe92bed2726d7a23db7d4b1390d125b1b97a042b253fe06954e58340538ca"
+          },
+          "session": {
+            "bytes": 44707,
+            "path": "build/c2.3/v1.5.0-candidate-product-link97/wplto/runtime-overlays-session-final.json",
+            "sha256": "609cf9c49b52b61af8adb3930e26ce5b9a3ea7135649c55accd1387f1648b07f"
+          }
+        },
+        "ordered_sections": {
+          "boot": [
+            ".lisp65_rt_rtov_catalog",
+            ".lisp65_rt_rtov_record",
+            ".lisp65_rt_c2d_00",
+            ".lisp65_rt_c2d_00b",
+            ".lisp65_rt_c2d_01",
+            ".lisp65_rt_c2d_02a",
+            ".lisp65_rt_c2d_02b",
+            ".lisp65_rt_c2d_03",
+            ".lisp65_rt_c2d_03b",
+            ".lisp65_rt_bank3_stage_session",
+            ".lisp65_rt_island_00",
+            ".lisp65_resident_island"
+          ],
+          "session": [
+            ".lisp65_rt_rtov_catalog",
+            ".lisp65_rt_rtov_record",
+            ".lisp65_rt_c2d_04",
+            ".lisp65_rt_c2d_05a",
+            ".lisp65_rt_c2d_05b",
+            ".lisp65_rt_c2d_06a",
+            ".lisp65_rt_c2d_06b",
+            ".lisp65_rt_c2d_07",
+            ".lisp65_rt_c2d_08",
+            ".lisp65_rt_c2d_09",
+            ".lisp65_rt_c2d_10",
+            ".lisp65_rt_c2d_11a",
+            ".lisp65_rt_c2d_11b",
+            ".lisp65_rt_c2d_12",
+            ".lisp65_rt_c2d_13",
+            ".lisp65_rt_c2emit_prepare",
+            ".lisp65_rt_c2emit_name",
+            ".lisp65_rt_c2emit_literal_prep",
+            ".lisp65_rt_c2emit_literal_atom",
+            ".lisp65_rt_c2emit_literal_append",
+            ".lisp65_rt_c2emit_code",
+            ".lisp65_rt_c2emit_final_meta",
+            ".lisp65_rt_c2emit_final_crc",
+            ".lisp65_rt_c2append_envelope",
+            ".lisp65_rt_c2append_crc_metadata",
+            ".lisp65_rt_c2append_roots_fronts",
+            ".lisp65_rt_c2append_reserve_transient_bounds",
+            ".lisp65_rt_c2append_reserve_transient_code",
+            ".lisp65_rt_c2append_reserve_persistent_bounds",
+            ".lisp65_rt_c2append_reserve_persistent_code",
+            ".lisp65_rt_c2append_journal_prepare",
+            ".lisp65_rt_c2append_journal_validate",
+            ".lisp65_rt_c2append_journal_reconstruct",
+            ".lisp65_rt_c2append_stage_copy",
+            ".lisp65_rt_c2append_stage_plane",
+            ".lisp65_rt_c2append_image",
+            ".lisp65_rt_c2append_entries",
+            ".lisp65_rt_c2append_publish_plan_scan",
+            ".lisp65_rt_c2append_publish_plan_resolve",
+            ".lisp65_rt_c2append_header",
+            ".lisp65_rt_c2append_publish_clear",
+            ".lisp65_rt_c2append_rollback_unpublish",
+            ".lisp65_rt_c2append_rollback_wipe_plane",
+            ".lisp65_rt_c2append_rollback_wipe_chip",
+            ".lisp65_rt_c2append_rollback_wipe_attic",
+            ".lisp65_rt_c2append_rollback_finalize",
+            ".lisp65_rt_c2append_abort_control",
+            ".lisp65_rt_l65e",
+            ".lisp65_rt_buffer_read",
+            ".lisp65_rt_buffer_write",
+            ".lisp65_rt_buffer_alloc",
+            ".lisp65_rt_intern_service"
+          ]
+        }
+      }
+    }
+  }
+}

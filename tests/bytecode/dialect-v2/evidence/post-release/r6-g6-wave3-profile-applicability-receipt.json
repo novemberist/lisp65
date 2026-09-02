@@ -1,0 +1,49 @@
+{
+  "applicability": {
+    "physical_floppy_present": false,
+    "result": "not-applicable-no-physical-medium-in-SD-D81-configuration",
+    "stock_freezer_virtual_image_write_protect_control": false,
+    "synthetic_pass_attempted": false
+  },
+  "case_id": "product-medium-physical-write-protect",
+  "claim": "G6: 5/5 anwendbare Hardwaref\u00e4lle bestanden; execution=single-device; product-medium-physical-write-protect n/a: kein physisches Medium in der SD-D81-Konfiguration",
+  "format": "lisp65-r6-g6-profile-applicability-receipt-v1",
+  "hardware_profile": {
+    "id": "stock-core-sd-d81",
+    "path": "config/g6-hardware-profile.json",
+    "sha256": "b0ac45e42a024b07c3fa7ce074d6246f9c198b74bff0f6eca71e7a290a5f4a75"
+  },
+  "product_code_path_audit": {
+    "D68B_path": "opaque mounted-image transaction-token equality only; not a write-protect decision",
+    "coverage": "D68B token behavior remains covered by host phase fixtures and the applicable mid-write-media-swap-abort hardware case",
+    "dedicated_F011_write_protect_signal_paths": [],
+    "sources": [
+      {
+        "bytes": 2842,
+        "path": "src/f011_context.h",
+        "sha256": "9455c9907e56daea3a7eb5076ab28fdec0bebf748b6a52d83179698e838f63ce"
+      },
+      {
+        "bytes": 37012,
+        "path": "src/io.c",
+        "sha256": "a2f86c339c86114bfb76dd67d0dd6b66a7eae6f8844363225c0d916b2d493ab6"
+      },
+      {
+        "bytes": 23694,
+        "path": "lib/m65-disk.lisp",
+        "sha256": "87e7af96c84ffc100cdba109239b232cb26e5bf3a2fda9145eb2939d426b0a19"
+      }
+    ],
+    "statement": "no product code path reads or branches on a dedicated F011 write-protect signal"
+  },
+  "result": "profile-not-applicable",
+  "ship": {
+    "manifest_path": "build/r6/ship/manifest.json",
+    "manifest_sha256": "706dc97d3811dfa0d362522358a00b7c1dd30264f7409acccec3fce07d46150e",
+    "package_set_sha256": "77518fe589df2fca5480b3d0b85f0baab17faea5deb3291406b36b5e6e7f36b2",
+    "product_artifact_set_sha256": "048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024",
+    "product_d81_sha256": "26b81d3385b9ce82e740b0ceb66b0dd3fba82bfc3a63741cd8e753771a71302c"
+  },
+  "status": "not-applicable-profile-bound",
+  "version": 1
+}

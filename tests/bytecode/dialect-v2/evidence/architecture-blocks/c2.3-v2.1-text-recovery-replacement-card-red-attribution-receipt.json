@@ -1,0 +1,127 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1,
+    "replacement_cards_authorized": 1,
+    "replacement_cards_consumed": 1
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 628744,
+      "path": "build/c2.3/v2.1-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "2d1df75bf050d2c2e4be7def0600bb1eb29dce7226779b956dd5d5f9fd9e64f2"
+    },
+    "card_driver": {
+      "bytes": 28136,
+      "path": "tools/host-lisp/c2_v21_text_recovery_replacement_card.py",
+      "sha256": "f6fd43379cfc36c520a8ef4ecba8c3e98618d7e6e0e53aab10ad0677dcd3ced0"
+    },
+    "driver": {
+      "bytes": 13151,
+      "path": "tools/host-lisp/c2_v21_text_recovery_replacement_red_attribution.py",
+      "sha256": "bb5a84f5027517b17b03b1771289e44b228c6a4949382c93acc327cfaed73e61"
+    },
+    "final_red": {
+      "bytes": 15019,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-text-recovery-replacement-card-final-red.json",
+      "sha256": "113d1dbb186d16ac9057e815af819bc56d25955af3bd1f1f6edb8cf525a2d56b"
+    },
+    "predecessor_attribution": {
+      "bytes": 5814,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-text-recovery-card-red-attribution-receipt.json",
+      "sha256": "4f8b64e419411f7461c8cd5d8cb6a2521e16c05bf49a7ed2fbd5bd0655c12fdd"
+    },
+    "product_gate": {
+      "bytes": 337100,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+    }
+  },
+  "authorized_fixes": {
+    "candidate_completion": {
+      "address": "0xb98c",
+      "bytes": 40,
+      "final_overlay_families_built": 2,
+      "historical_0xb98a_consumed": false,
+      "section": ".lisp65_runtime_overlay_verifier_bindings",
+      "status": "GREEN"
+    },
+    "real_emitted_selector": {
+      "c2d": {
+        "call": "0xe326",
+        "emitted_bytes": "20ebb5aa",
+        "gap_bytes": 1,
+        "hardware_pushed_return": "0xe328",
+        "label": "0xe32a",
+        "label_minus": 2
+      },
+      "selector_operands_match": true,
+      "shelf": {
+        "call": "0xe84b",
+        "emitted_bytes": "20ebb58510",
+        "gap_bytes": 2,
+        "hardware_pushed_return": "0xe84d",
+        "label": "0xe850",
+        "label_minus": 3
+      },
+      "status": "GREEN"
+    }
+  },
+  "card_disposition": {
+    "completion_allowed": false,
+    "device_allowed": false,
+    "media_allowed": false,
+    "owner_disposition_required": true,
+    "replacement_card_consumed": true,
+    "retry_authorized": false
+  },
+  "claim_limit": "Read-only attribution of the consumed replacement card. Both authorized identity fixes and placement are green; no retry, media, device, D1-D5 or release claim is authorized.",
+  "format": "lisp65-c2.3-v2.1-text-recovery-replacement-red-attribution-v1",
+  "green_placement": {
+    "aggregate_bytes": 65423,
+    "aggregate_growth_bytes": 0,
+    "cold_helper_bytes": 63,
+    "cold_slice_bytes": 1246,
+    "packed_page_bytes": 1280,
+    "resident_reserve_bytes": 24
+  },
+  "mutations_rejected": [
+    "resurrect-b98a",
+    "hide-selector-match",
+    "erase-reserve",
+    "blame-geometry",
+    "blame-completion",
+    "blame-selector-runtime",
+    "erase-edge",
+    "authorize-retry",
+    "allow-media",
+    "claim-device"
+  ],
+  "new_final_red": {
+    "class": "EXPORTED-INTRA-FUNCTION-LABEL-SPLITS-CONTROL-FLOW-OWNERSHIP",
+    "completion_identity_implicated": false,
+    "labels": {
+      "c2_stream_c2d_read_return": {
+        "address": "0xe32a",
+        "binding": "Global",
+        "inside_function": "c2_stream_c2d_read",
+        "type": "None"
+      },
+      "c2_stream_shelf_read_return": {
+        "address": "0xe850",
+        "binding": "Global",
+        "inside_function": "c2_stream_shelf_read",
+        "type": "None"
+      }
+    },
+    "mechanism": "llvm-objdump starts named nodes at the exported labels; the ownership gate consequently assigns later basic blocks to a different node and rejects seven legal intra-function JMPs.",
+    "product_geometry_implicated": false,
+    "qualified_edge_violations": 7,
+    "reason": "inter-function-jmp-not-entry",
+    "selector_runtime_identity_implicated": false
+  },
+  "recorded_on": "2026-08-14",
+  "status": "ATTRIBUTED FINAL RED: exported intra-function labels split ownership"
+}

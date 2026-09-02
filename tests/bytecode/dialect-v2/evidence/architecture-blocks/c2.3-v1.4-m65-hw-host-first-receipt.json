@@ -1,0 +1,80 @@
+{
+  "artifact": {
+    "budget_bytes": 2048,
+    "cases_executed_per_lane": 13,
+    "code_bytes": 1768,
+    "headroom_bytes": 280,
+    "lanes": 2,
+    "memory_writes_observed": 161,
+    "objects": 30,
+    "screen_writes_observed": 11,
+    "status": "passed-source-and-emitted-artifact"
+  },
+  "claim_limit": "Host source/artifact semantics and one WPLTO capacity card until the bundled device session proves visible drawing, sprite motion and audible SID output.",
+  "format": "lisp65-c2-v14-m65-hw-host-first-receipt-v1",
+  "inputs": {
+    "base_suite": {
+      "bytes": 7647,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "sha256": "429e710e5afb0b3c7b7098d778a0b9a592c7ea6309122e9cde25bed18cf54959"
+    },
+    "contract": {
+      "bytes": 5920,
+      "path": "config/c2-m65-hw-contract.json",
+      "sha256": "3f9bbcd508bff79872bbcaa61b69b3069b73e74b3f09204862c95621a16f61b7"
+    },
+    "generator": {
+      "bytes": 1815,
+      "path": "tools/host-lisp/c2_m65_hw_registers.py",
+      "sha256": "caeb7a7e747648f1fa263d7b3eac125dd3c5c6206ca3d614867400de0423ded8"
+    },
+    "registers": {
+      "bytes": 1188,
+      "path": "lib/m65-hw-registers.lisp",
+      "sha256": "357eca295d89fb47a33ce7631934dc923348b9d869431d3b4ce063211aef6e62"
+    },
+    "runner": {
+      "bytes": 131292,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "14340a60d22c1b7605ad878f8999df61c7eac3dcb285503602ff9ea1f042ec80"
+    },
+    "source": {
+      "bytes": 9049,
+      "path": "lib/m65-hw.lisp",
+      "sha256": "4ebd0bba15cdf826291c88b9a67916a334a40b0b9cd3d75d271fe4100200567d"
+    },
+    "suite": {
+      "bytes": 7562,
+      "path": "tests/bytecode/libs/p0-stdlib-m65-hw-base.json",
+      "sha256": "02258f69e1c52f14cb00bc844cea5c1f7a315db9cebb529235563d47a0441a5a"
+    },
+    "vm": {
+      "bytes": 100151,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "126320a94168219b539efc3f6b15e6818671312417ed3056915b0f0b78ea44fd"
+    }
+  },
+  "mutations": {
+    "count": 10,
+    "expected": 10,
+    "rejected": {
+      "case-built-not-run": "rejected-by-static-contract",
+      "draw-admits-edge": "rejected-by-executed-source-or-artifact-lane",
+      "require-dependency": "rejected-by-static-contract",
+      "resident-byte": "rejected-by-static-contract",
+      "sid-control-not-last": "rejected-by-executed-source-or-artifact-lane",
+      "sprite-padding-nonzero": "rejected-by-executed-source-or-artifact-lane",
+      "sprite-x-msb-inverted": "rejected-by-executed-source-or-artifact-lane",
+      "vic-open-tailcall-restored": "rejected-by-static-contract",
+      "word-no-page-carry": "rejected-by-executed-source-or-artifact-lane",
+      "wrong-register": "rejected-by-I/O-trace"
+    }
+  },
+  "source_contract": {
+    "cases": 13,
+    "generated_inline_constants": 23,
+    "public_names": 15,
+    "status": "passed-synchronous-scope-source-contract"
+  },
+  "status": "passed"
+}

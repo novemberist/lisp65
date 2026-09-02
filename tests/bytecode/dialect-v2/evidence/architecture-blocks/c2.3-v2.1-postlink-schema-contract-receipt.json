@@ -1,0 +1,450 @@
+{
+  "authority": {
+    "attribution": {
+      "bytes": 5259,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-guard-invariant-card-red-attribution-receipt.json",
+      "sha256": "0055f25d1389f52b0ec42442aeb7c6699d6dd54241397a5981d0db237a96558c"
+    },
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 48931,
+      "commit": "fb760d1c5b5a4765a2fbcf12caf3dc2574720f70",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "e6f2b84f27ec7b37ca62d10633c907189cf6d976f7a8f9cb84173f0b89d85b9c"
+    },
+    "driver": {
+      "bytes": 14760,
+      "path": "tools/host-lisp/c2_v21_postlink_schema_contract.py",
+      "sha256": "f5c89eff178ed0fd0a90d27af40bba2c58af4981f786bbd175a01e55c4cfb1c8"
+    },
+    "final_red": {
+      "bytes": 8885,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-guard-invariant-card-final-red.json",
+      "sha256": "6fd90074b8dc373736a0f0882fa2135ed9dc8117d86328d65e6bb860b0152cef"
+    },
+    "frozen_ELF": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-guard-invariant-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "46d129f7e2011c3b8c5adf822f7a80d2917de65a672fa9996f97dc0cdce90647"
+    },
+    "frozen_map": {
+      "bytes": 181722,
+      "path": "build/c2.3/v2.1-guard-invariant-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "ea1107fd47154edaa881e49fe834ec146469461f0021cb2100a505456c3cf0c0"
+    }
+  },
+  "claim_limit": "Host-only real-consumer preflight; no card has run.",
+  "contract_gate": {
+    "WPLTO_runs": 0,
+    "product_links": 0,
+    "real_consumer_executions": {
+      "actual_producer_output": true,
+      "candidate_configuration": {
+        "family_stage_bindings": true
+      },
+      "completion_identity": {
+        "address": 47500,
+        "bytes": 40,
+        "historical_0xb98a_consumed": false,
+        "section": ".lisp65_runtime_overlay_verifier_bindings",
+        "status": "PASS: publish-last consumed candidate identity"
+      },
+      "consumer_count": 3,
+      "cpu_linked_transport": {
+        "call_seams": {
+          "c2d": "0xe2dd",
+          "shelf": "0xe79d"
+        },
+        "historical_worlds_changed": 0,
+        "mapped_window": "0x4000..0x5fff",
+        "reader": {
+          "address": "0x2277",
+          "bytes": 166,
+          "end_exclusive": "0x231d",
+          "section": ".text",
+          "section_end": "0xb398"
+        },
+        "status": "PASS: linked reader executes outside its mapped window"
+      },
+      "local_return_linked": {
+        "E000_delta_bytes": 0,
+        "cold_displacement": {
+          "aggregate_bytes": 65423,
+          "aggregate_growth_bytes": 0,
+          "bytes": 63,
+          "packed_page_bytes": 1280,
+          "section_bytes": 1246
+        },
+        "contracted_margins_used_as_freight": false,
+        "fixed_block_delta_bytes": 0,
+        "ordinary": {
+          "reserve_bytes": 24,
+          "text_end_exclusive": "0xb398"
+        },
+        "ownership": {
+          "audited_pre_main_chrout_edges": 1,
+          "direct_window_edges": 390,
+          "entry_edges": 208,
+          "executable_sections": [
+            ".lisp65_c2_kernal_window.c2_resident",
+            ".lisp65_c2_kernal_window.irq_handler",
+            ".lisp65_c2_kernal_window.map_switch_and_guards",
+            ".lisp65_c2_kernal_window.nmi_and_freezer_return",
+            ".lisp65_c2_kernal_window.post_startup_output_seam",
+            ".lisp65_c2_kernal_window.reopen_gap0",
+            ".lisp65_c2_kernal_window.reopen_gap1",
+            ".lisp65_c2_kernal_window.reopen_gap2",
+            ".lisp65_c2_kernal_window.typed_queue_driver"
+          ],
+          "ignored_absolute_or_weak_alias_count": 99,
+          "matrix": {
+            "absolute-weak-alias-disguised-exit": "rejected",
+            "inter-function-non-entry-offset": "rejected",
+            "jsr-to-internal-basic-block": "rejected",
+            "owned-state-or-data-target": "rejected",
+            "same-function-mid-instruction": "rejected",
+            "same-function-symbol-less-basic-block": "passed"
+          },
+          "model": "section-qualified-function-and-instruction-boundary-v1",
+          "owned_function_entries": {
+            "57344": "c2_kernal_event_poll",
+            "57400": "c2_kernal_irq_handler",
+            "57474": "c2_kernal_nmi_handler",
+            "57483": "c2_kernal_fail_closed",
+            "57497": "c2_kernal_output_cell",
+            "57501": "c2_overlay_call",
+            "57530": "c2_product_gc_mark_roots",
+            "58077": "c2_stream_c2d_read",
+            "58162": "c2_stream_product_image_read",
+            "59293": "c2_stream_shelf_read",
+            "59487": "c2_stream_c2d_write",
+            "59581": "c2_stream_name_value",
+            "60414": "c2_header_counts",
+            "60456": "c2_product_entry_record",
+            "61018": "c2_session_emit_reset",
+            "61065": "c2_session_emit_add",
+            "61570": "c2_session_emit_finalize",
+            "61656": "c2_append_begin",
+            "62169": "c2_append_run_rollback_plan",
+            "62198": "c2_product_entry_length",
+            "62302": "vm_arity_accepts",
+            "62358": "vm_logical_relative_target",
+            "62490": "vm_byte_args",
+            "62587": "c2_overlay_call_range",
+            "62640": "c2_decode_from",
+            "63188": "c2_product_physical_copy",
+            "63333": "c2_stream_product_string_record_any",
+            "63965": "c2_stream_product_string_record",
+            "64070": "c2_stream_product_canonical_name",
+            "64496": "c2_stream_gc_checkpoint",
+            "64687": "vm_runtime_overlay_transaction_begin",
+            "65160": "vm_c2d_byte",
+            "65249": "c2_abort_driver",
+            "65424": "c2_facade_target_c2_dma",
+            "65492": "vm_runtime_overlay_transaction_end"
+          },
+          "same_function_basic_block_jumps": 181,
+          "violations": []
+        },
+        "reader": {
+          "address": "0x2277",
+          "bytes": 166
+        },
+        "return_labels": {
+          "global_non_entries": 0,
+          "symbol_names_present": []
+        },
+        "selector": {
+          "address": "0x231d",
+          "bytes": 40,
+          "fixed_vector": "0xb5eb",
+          "identity_depends_on_global_return_label": false,
+          "real_call_identities": {
+            "c2d": {
+              "call": "0xe326",
+              "emitted_bytes": "20ebb5aa",
+              "entry": "0xe2dd",
+              "entry_offset": 75,
+              "function": "c2_stream_c2d_read",
+              "hardware_pushed_return": "0xe328",
+              "tail_bytes": "aa"
+            },
+            "selector_operands_match": true,
+            "shelf": {
+              "call": "0xe84b",
+              "emitted_bytes": "20ebb58510",
+              "entry": "0xe79d",
+              "entry_offset": 176,
+              "function": "c2_stream_shelf_read",
+              "hardware_pushed_return": "0xe84d",
+              "tail_bytes": "8510"
+            }
+          }
+        },
+        "status": "PASS: local non-entries and emitted identities linked"
+      }
+    },
+    "schema_consumers": [
+      {
+        "actual_producer_output": true,
+        "consumed_top_level_keys": [
+          "build"
+        ],
+        "consumer": "cpu-build-contract",
+        "consumer_source": {
+          "bytes": 13574,
+          "path": "tools/host-lisp/c2_v21_cpu_transport_card.py",
+          "sha256": "85ec2c51e7e7c6756ada5c5a8481d82c55d3b6b90a615ff479b818357fba6a1f"
+        },
+        "function": "linked_transport_gate",
+        "producer_artifact": {
+          "bytes": 1661,
+          "path": "config/c2-v21-cpu-transport-release-contract.json",
+          "sha256": "f634962a309c9ad5e53621ceb888c289750ee6dffb42f0e68232b7783f22e91b"
+        },
+        "producer_top_level_keys": [
+          "accepted_by",
+          "banner",
+          "build",
+          "device",
+          "format",
+          "freight",
+          "historical_worlds_immutable",
+          "release"
+        ],
+        "unknown_keys": [],
+        "variable": "contract"
+      },
+      {
+        "actual_producer_output": true,
+        "consumed_top_level_keys": [
+          "slices",
+          "storage"
+        ],
+        "consumer": "local-return-runtime-manifest",
+        "consumer_source": {
+          "bytes": 28167,
+          "path": "tools/host-lisp/c2_v21_local_return_identity_card.py",
+          "sha256": "f4af61571b1623e60ac4cf3fa7909129fc80bf58b4454a2c7ff7ee5253a2a5df"
+        },
+        "function": "linked_gate",
+        "producer_artifact": {
+          "bytes": 44707,
+          "path": "build/c2.3/v2.1-guard-invariant-card/wplto/runtime-overlays-session-final.json",
+          "sha256": "62d009b63096437d21598192f123b8e6648cec1fbffca7a72149bb466f48cb44"
+        },
+        "producer_top_level_keys": [
+          "abi",
+          "catalog",
+          "config_header",
+          "elf",
+          "lifetime_family",
+          "overflow_storage",
+          "policy",
+          "profile",
+          "profile_build_id",
+          "schema",
+          "slices",
+          "storage"
+        ],
+        "unknown_keys": [],
+        "variable": "manifest"
+      },
+      {
+        "actual_producer_output": true,
+        "consumed_top_level_keys": [
+          "control_flow_ownership"
+        ],
+        "consumer": "local-return-kernal-freedom",
+        "consumer_source": {
+          "bytes": 28167,
+          "path": "tools/host-lisp/c2_v21_local_return_identity_card.py",
+          "sha256": "f4af61571b1623e60ac4cf3fa7909129fc80bf58b4454a2c7ff7ee5253a2a5df"
+        },
+        "function": "linked_gate",
+        "producer_artifact": {
+          "bytes": 6420,
+          "path": "build/c2.3/v2.1-guard-invariant-card/wplto/kernal-freedom-link.json",
+          "sha256": "e788a533c1310612b45471e958823b8437822ef4496d56295f4575f6f682fddd"
+        },
+        "producer_top_level_keys": [
+          "capacity",
+          "control_flow_ownership",
+          "forbidden_edges",
+          "format",
+          "orphan_policy",
+          "owned_sections",
+          "source_census",
+          "status",
+          "window_artifact"
+        ],
+        "unknown_keys": [],
+        "variable": "kernal"
+      },
+      {
+        "actual_producer_output": true,
+        "consumed_top_level_keys": [
+          "address",
+          "bytes",
+          "expected_address",
+          "status"
+        ],
+        "consumer": "completion-publish-last",
+        "consumer_source": {
+          "bytes": 28349,
+          "path": "tools/host-lisp/c2_v21_text_recovery_replacement_card.py",
+          "sha256": "590148d7ca291a69fd41fa7838f795aa1d375a14a33c45298985a49d8da768cf"
+        },
+        "function": "completion_gate",
+        "producer_artifact": {
+          "bytes": 721,
+          "path": "build/c2.3/v2.1-guard-invariant-card/wplto/runtime-verifier-publish-last.json",
+          "sha256": "8ad5ce34e62ae5d8c7009338acd81e7e787a0332cca43c4589b36b6cf1e63833"
+        },
+        "producer_top_level_keys": [
+          "address",
+          "binding_sha256",
+          "bound_sha256",
+          "bytes",
+          "changed_bytes",
+          "changed_range_confined",
+          "expected_address",
+          "file_offset",
+          "format",
+          "pre_overlay_binding_sha256",
+          "section",
+          "status",
+          "tuple_order"
+        ],
+        "unknown_keys": [],
+        "variable": "report"
+      }
+    ],
+    "schema_unknown_key_count": 0,
+    "status": "PASS: wrappers and real post-link schemas conform",
+    "typed_path_wrappers": {
+      "WPLTO_runs": 0,
+      "producer_roles": [
+        "elf",
+        "generated_decoder",
+        "generated_phase02a",
+        "linker",
+        "lto",
+        "map",
+        "prg",
+        "publish_last",
+        "resolved_profile"
+      ],
+      "product_links": 0,
+      "status": "PASS: complete post-link chain executed against typed paths",
+      "wrapper_count": 3,
+      "wrappers_inner_to_outer": [
+        {
+          "executed_contract": {
+            "accessed_roles": [
+              "elf",
+              "map"
+            ],
+            "resolved_values": [
+              "/synthetic/producer/elf",
+              "/synthetic/producer/map"
+            ]
+          },
+          "execution_order": 0,
+          "source": {
+            "bytes": 13574,
+            "path": "tools/host-lisp/c2_v21_cpu_transport_card.py",
+            "sha256": "85ec2c51e7e7c6756ada5c5a8481d82c55d3b6b90a615ff479b818357fba6a1f"
+          },
+          "static_contract": {
+            "adapter": "postlink_artifacts",
+            "direct_producer_lookups": 0,
+            "producer_calls_adapter": true,
+            "roles": [
+              "elf",
+              "map"
+            ]
+          },
+          "wrapper": "cpu-transport"
+        },
+        {
+          "executed_contract": {
+            "accessed_roles": [
+              "elf"
+            ],
+            "resolved_values": [
+              "/synthetic/producer/elf"
+            ]
+          },
+          "execution_order": 1,
+          "source": {
+            "bytes": 28123,
+            "path": "tools/host-lisp/c2_v21_text_recovery_card.py",
+            "sha256": "4e3ead6879d7f0ec53c596ebc3cd73573eeed135dd382c54c91d7e61750fb902"
+          },
+          "static_contract": {
+            "adapter": "postlink_artifacts",
+            "direct_producer_lookups": 0,
+            "producer_calls_adapter": true,
+            "roles": [
+              "elf"
+            ]
+          },
+          "wrapper": "text-recovery"
+        },
+        {
+          "executed_contract": {
+            "accessed_roles": [
+              "elf"
+            ],
+            "resolved_values": [
+              "/synthetic/producer/elf"
+            ]
+          },
+          "execution_order": 2,
+          "source": {
+            "bytes": 28349,
+            "path": "tools/host-lisp/c2_v21_text_recovery_replacement_card.py",
+            "sha256": "590148d7ca291a69fd41fa7838f795aa1d375a14a33c45298985a49d8da768cf"
+          },
+          "static_contract": {
+            "adapter": "postlink_artifacts",
+            "direct_producer_lookups": 0,
+            "producer_calls_adapter": true,
+            "roles": [
+              "elf"
+            ]
+          },
+          "wrapper": "text-recovery-replacement"
+        }
+      ]
+    }
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-postlink-schema-contract-v1",
+  "mutations_rejected": {
+    "contract": [
+      "consumer-requests-unknown-control_flow",
+      "producer-drops-build",
+      "producer-drops-storage",
+      "producer-drops-control-flow-ownership",
+      "producer-drops-expected-address"
+    ],
+    "receipt": [
+      "hide-schema-consumer",
+      "accept-unknown-key",
+      "replace-actual-output-with-synthetic",
+      "skip-real-consumer",
+      "spend-card"
+    ]
+  },
+  "recorded_on": "2026-08-14",
+  "rule": "A card is a product experiment: typed paths and actual producer schemas both pass before WPLTO.",
+  "status": "HOST-GREEN: all real post-link consumer schemas conform"
+}

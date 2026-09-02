@@ -1,0 +1,113 @@
+{
+  "format": "lisp65-v11-restart-repl-self-restart-diagnosis-receipt-v2",
+  "version": 2,
+  "id": "v11-restart-repl-self-restart",
+  "status": "failed-pre-smoke-rolled-back-not-promoted",
+  "recorded_on": "2026-07-18",
+  "baseline": {
+    "source_commit": "d64faa87f218fcf83f52dec7726101191d43fbcf",
+    "product_artifact_set_sha256": "6c358e79baa55999f80d1ebcd45b57234e57af8bc80bc29042e0b93915ac18a5",
+    "vm_source_sha256": "f32db712203a011ceda5e39d8cff1cb13a2259b11263aa491dfdf6ab751a8036",
+    "workbench_prg_sha256": "59a90485b14270558399ed7f1b90c1f692caa01c572592077ec6e7c271ab7adc",
+    "workbench_elf_sha256": "17e78d4c201d612271145ccf46a0cd2821cb2295bc9fffd73c58cb3e67002a9e",
+    "build_id": 1937818298
+  },
+  "hardware_finding": {
+    "run": "build/r6/g6/run-20260718-wave2-01",
+    "case": "warm-reset-valid-catalog-fastpath",
+    "cycle_id": "g6-wave2-20260718-reset-01",
+    "observation": "restart-repl transferred to the stock MEGA65 platform reset vector and stopped at BASIC READY instead of returning to the Lisp65 banner and REPL",
+    "classification": "product-semantic-failure",
+    "receipt": "none; diagnosis stopped fail-closed before the physical warm-reset procedure",
+    "g6_status": "2/5 applicable cases passed for the historical baseline product set"
+  },
+  "root_cause": {
+    "implementation": "the device-only %c1-control action emitted jmp ($fffc)",
+    "contract_error": "the contract simultaneously required platform-reset entry and REPL return on stock hardware",
+    "gate_error": "the real-link gate proved the reset-vector instruction rather than the public outcome"
+  },
+  "direct_probe": {
+    "vm_source_sha256": "65c3ff0cd864279d69315deefe8175aa50e981e72f2d5e478011083e02f0f4a9",
+    "device_sequence": ["ldx #$ff", "txs", "jmp _start"],
+    "linked_sequence": "a2 ff 9a 4c 26 20 at vm_callprim; target $2026 <_start>",
+    "real_link": "passed",
+    "hardware_pre_smoke": "failed receipt-less; no fresh banner or prompt appeared",
+    "evidence_root": "build/hw/v11-restart-repl-prefast-smoke",
+    "classification": "static CRT shape did not establish a re-entrant product restart; live Bank 5 is not a pristine boot image"
+  },
+  "bounded_recovery_probe": {
+    "intent": "preserve the verified 16-KiB Bank-5 boot window in otherwise unused Fast RAM, restore it before entering _start, and avoid a new resident enhanced-DMA implementation",
+    "candidate_address": "0x00070000",
+    "platform_fact": "MEGA65 Fast RAM is 384 KiB at 0x00000000..0x0005ffff (Banks 0..5); Bank 7 is not populated",
+    "local_authority": [
+      "src/mem.c:592",
+      "docs/archive/pre-1.0/reference/mega65-hardware-deepdive-2026-07-10.md:55"
+    ],
+    "expected_image_sha256": "8432c7285098e6c483eeac2a1ec5dc13a28ec9ee8674e5eec5cc64f7a9b95448",
+    "bank7_readback_sha256": "2505d29fa8f2245b6e266e979c033562df9e1dbd21cba3d336b332665a2c9bd5",
+    "bank7_readback": "16023 zero bytes, both before and immediately after an m65 -@ load reported at $70000",
+    "evidence_root": "build/hw/v11-restart-repl-prefast-smoke/recovery-candidate/readback",
+    "result": "design invalid; no authoritative product execution and no receipt"
+  },
+  "capacity": {
+    "baseline": {
+      "bank_post_boot_reserve_bytes": 1861,
+      "bank_headroom_above_release_floor_bytes": 325,
+      "ext_post_load_headroom_bytes": 25484,
+      "fixed_overlay_bytes": 1669,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "resident_island_reserve_bytes": 120,
+      "installer_slice_headroom_bytes": 22,
+      "symbol_headroom": 319,
+      "namepool_headroom_bytes": 4884,
+      "directory_load_headroom": 177,
+      "directory_post_align_headroom": 176
+    },
+    "candidate": {
+      "bank_post_boot_reserve_bytes": 1858,
+      "bank_headroom_above_release_floor_bytes": 322,
+      "ext_post_load_headroom_bytes": 25484,
+      "fixed_overlay_bytes": 1669,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "resident_island_reserve_bytes": 120,
+      "installer_slice_headroom_bytes": 22,
+      "symbol_headroom": 319,
+      "namepool_headroom_bytes": 4884,
+      "directory_load_headroom": 177,
+      "directory_post_align_headroom": 176
+    },
+    "delta": {
+      "bank_post_boot_reserve_bytes": -3,
+      "bank_headroom_above_release_floor_bytes": -3,
+      "ext_post_load_headroom_bytes": 0,
+      "fixed_overlay_bytes": 0,
+      "runtime_overlay_bank_headroom_bytes": 0,
+      "runtime_overlay_max_slice_headroom_bytes": 0,
+      "resident_island_reserve_bytes": 0,
+      "installer_slice_headroom_bytes": 0,
+      "symbol_headroom": 0,
+      "namepool_headroom_bytes": 0,
+      "directory_load_headroom": 0,
+      "directory_post_align_headroom": 0
+    },
+    "attribution": "ldx immediate plus txs add exactly three resident bytes; the absolute jmp remains three bytes"
+  },
+  "required_permanent_gates": [
+    "source and real-link gates require the product-self-restart sequence and reject the platform-reset sequence",
+    "hardware invokes restart-repl twice and proves banner and REPL return both times without stack leakage",
+    "hardware proves valid Attic and shelf restaging and unchanged mounted media"
+  ],
+  "rollback": {
+    "product_sources": "src/vm.c, src/vm.h, src/vm_embed.c, src/vm_embed.h, scripts/r3-cold-stager-main.c, and lib/dialect-v2/eval-runtime.lisp match HEAD",
+    "resident_prg_bytes": 39500,
+    "resident_prg_sha256": "0ae3b4e8a488f9a42737a2423472b029ad30defec4ef3b82ef9b0d830b874710",
+    "linked_prg_sha256": "59a90485b14270558399ed7f1b90c1f692caa01c572592077ec6e7c271ab7adc",
+    "bank_post_boot_reserve_bytes": 1861,
+    "unbooked_debits": ["direct self-restart: 3 resident bytes", "Bank-7 recovery: 24 resident bytes and 426 stager bytes"]
+  },
+  "superseding_probe": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-restart-repl-attic-recovery-probe-receipt.json",
+  "next_design_boundary": "The later owner-authorized Attic-to-Bank-5 attempt also failed its only real link and was rolled back. Any next proposal is a separately reviewed design, not continuation or tuning of either attempt.",
+  "claim_limit": "This is diagnosis and rollback evidence only. It claims no working restart-repl device semantics, no capacity debit, no product promotion, and no G5/G6 receipt."
+}

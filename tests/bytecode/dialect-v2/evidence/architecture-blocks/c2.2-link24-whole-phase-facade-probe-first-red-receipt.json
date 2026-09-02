@@ -1,0 +1,108 @@
+{
+  "format": "lisp65-c2-link24-whole-phase-facade-capacity-probe-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "authorization": {
+    "scope": "one bounded whole-phase decoder plus shared E000 facade capacity probe",
+    "attempts_consumed": 1,
+    "further_tuning_authorized": false,
+    "link25_created": false,
+    "hardware_execution": "not-run"
+  },
+  "first_red": {
+    "stage": "resident-island seed link",
+    "gate": "1792-byte runtime-overlay slice cap",
+    "linker_diagnostics": [
+      "C2 decoder phase 02 exceeds its stack-safe window",
+      "C2 decoder phase 06 exceeds its stack-safe window"
+    ],
+    "product_prg_created": false,
+    "product_elf_created": false,
+    "downstream_gates": "not-run-by-first-red-rule"
+  },
+  "bindings": {
+    "failed_map": {
+      "path": "build/c2.2/substitution/link24-whole-phase-facade-probe/resident-island-seed.prg.map",
+      "sha256": "4f20c4a75c4fa9c31ba969ba939b59e61d2ffb120a1e96a374bae3d1baa6834e"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/link24-whole-phase-facade-probe/resolved-profile.txt",
+      "sha256": "e6f7f7d15c73c6c2abf885b63300eee6ee9d7c741cfa360d833be3b2aee8ffd6"
+    },
+    "orchestrator_sha256": "81759137bb2c1861aa0d8b8b0dba508f77c6c58b5d4245fcdfdc1fa401d3115f",
+    "product_runtime_sha256": "e4a3b1a103cd5ec2731508ff5a7a50bba3c04296c16649f5be3cae4e5c62160b",
+    "product_runtime_header_sha256": "f5957556f25fec7aef4307a927f85ce4e3e712329d067b7311b7b5afba79fa4f",
+    "decoder_v1_core_sha256": "65ba42f4d5e4209a7108bcc4724cf7f95d8b98e60b03566ea10320634c04f407",
+    "decoder_v2_core_sha256": "6f450d1fe9a7481bbad730083e6587c582f5e3d17a3ab2ccfc5480932060b884",
+    "decoder_header_sha256": "ef1972a35bad000a8e84179c4d43d742238c51c6d12721948db5e742132ba52d"
+  },
+  "semantic_preflight": {
+    "complete_decoder": "passed",
+    "format_negative_classes": "11/11",
+    "rollback_cutpoints": "16/16",
+    "proof_slices": "14/14",
+    "claim": "The proven logical phase bodies and their validation semantics were unchanged; only product helper residence and transport granularity changed."
+  },
+  "slice_capacity": {
+    "cap_bytes": 1792,
+    "phase_bytes": {
+      "00": 1363,
+      "00b": 1443,
+      "01": 1691,
+      "02": 1815,
+      "03": 1584,
+      "04": 1072,
+      "05": 1675,
+      "06": 1838,
+      "07": 1079,
+      "08": 1381,
+      "09": 1492,
+      "10": 1281,
+      "11": 1730,
+      "12": 1289,
+      "13": 1776
+    },
+    "overflow_bytes": {
+      "02": 23,
+      "06": 46
+    },
+    "fitting_phases": "13/15",
+    "tightest_fitting_phase": {
+      "phase": "13",
+      "headroom_bytes": 16
+    }
+  },
+  "provisional_e000_map_measurement": {
+    "claim_limit": "Linker-map geometry only; no ELF/window artifact or control-flow pass exists after the first red.",
+    "baseline_link24_live_bytes": 4775,
+    "baseline_link24_future_margin_bytes": 3417,
+    "probe_mapped_live_bytes": 6739,
+    "probe_mapped_future_margin_bytes": 1453,
+    "c2_resident_bytes": 6213,
+    "c2_resident_baseline_bytes": 4249,
+    "c2_resident_delta_bytes": 1964,
+    "shared_helper_symbol_bytes": {
+      "c2_stream_product_image_read": 652,
+      "c2_stream_product_string_record_any": 632,
+      "c2_stream_product_string_record": 105,
+      "c2_stream_product_canonical_name": 426,
+      "c2_stream_product_child_value": 532
+    },
+    "window_capacity_would_fit": true,
+    "window_control_flow_gate": "not-run"
+  },
+  "transport_projection": {
+    "link24_minimum_boot_transports": 21068,
+    "whole_phase_intended_boot_transports": 14,
+    "link24_observed_boot_seconds_approx": 720,
+    "linear_redundant_transport_component_seconds": 0.478,
+    "status": "not-realized-because-capacity-first-red",
+    "performance_claim": "not-run-not-passed"
+  },
+  "interpretation": {
+    "validated": "The latency diagnosis remains correct and thirteen whole phases already fit. The E000 helper facade itself has 1453 bytes of mapped margin.",
+    "not_validated": "The exact approved all-whole-phase cut does not fit the immutable 1792-byte slice contract: phase 02 misses by 23 bytes and phase 06 by 46 bytes.",
+    "process_result": "Stopped at the first linker red. No helper reshuffle, phase split, cap relaxation, second link, window repin or hardware action followed."
+  },
+  "claim_limit": "Failed owner-authorized non-product capacity probe only. It records exact map geometry and the first red; it creates no product identity, structural pass, hardware acceptance, promotion or release claim."
+}

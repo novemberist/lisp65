@@ -1,0 +1,252 @@
+{
+  "alias_probe": {
+    "additional_allocation_bytes": 0,
+    "address_identical": true,
+    "alias_symbol": "c2_symbol22_repl_buf",
+    "bytes": 192,
+    "local_symbol": "repl.buf",
+    "micro_ELF": {
+      "bytes": 5064,
+      "path": "build/phase0-symbol22-first-fault-pricing/repl-buffer-alias.prg.elf",
+      "sha256": "cc5a1ece188d3445bf0cfb2b7737e4315ae6d1d27e6dccdc0510498543a31b5b"
+    },
+    "total_bss_bytes": 192
+  },
+  "authority": {
+    "first_red_attribution": {
+      "bytes": 4621,
+      "path": "docs/planning/v1.7.0-block3-left-first-red-attribution.md",
+      "sha256": "5e63d450a8085ffadfd6879b2302a5fdffe55657dcd91604380d26f38833138f"
+    },
+    "phase0_plan": {
+      "authority": "git-blob",
+      "bytes": 7116,
+      "commit": "3606904fc64daf867d16a110fb679dc0f10f6c64",
+      "path": "docs/planning/v2.0.0-pre-plan.md",
+      "sha256": "5d5a06dacdcacbdb35799a1b0168eaedcdae3124d4375a16b0ef397fec5cf864"
+    },
+    "target_faithful_nonreproduction": {
+      "bytes": 2766,
+      "path": "docs/planning/v1.8.0-block1-symbol22-host-reproduction.md",
+      "sha256": "362c30710afd53791158990f679e01f0631d2a4f5082ac87f9a323341abb1ebd"
+    }
+  },
+  "candidate": {
+    "abort": {
+      "error": 34,
+      "tail_target": "lisp_abort_code"
+    },
+    "bytes": 57,
+    "commit": {
+      "committed": 165,
+      "initial": 0,
+      "subsequent_fault_overwrites": false,
+      "written_last": true
+    },
+    "gap_residual_bytes": 9,
+    "helper_bytes": 52,
+    "object": {
+      "bytes": 688,
+      "path": "build/phase0-symbol22-first-fault-pricing/symbol22-first-fault-latch.o",
+      "sha256": "94dd45e510fc2f215f0aa35b73b6f6c374a90a2f827da0b38f5c0cf1b20495b3"
+    },
+    "payload": {
+      "bytes": 34,
+      "copy_rule": "through first NUL or 34 bytes, whichever comes first",
+      "offset": 0,
+      "owner": "repl.buf"
+    },
+    "relocation_targets": [
+      "c2_symbol22_repl_buf",
+      "lisp65_symbol22_latch_state",
+      "lisp_abort_code"
+    ],
+    "section": ".lisp65_symbol22_first_fault_latch",
+    "state_bytes": 5,
+    "state_layout": [
+      "commit_tag",
+      "caller_JSR_return_low",
+      "caller_JSR_return_high",
+      "name_pointer_low",
+      "name_pointer_high"
+    ]
+  },
+  "claim_limit": "Host pricing of one bounded first-fault instrument. No product implementation, final-LTO byte claim, media, device contact, Comfort reopening, or Block-3 reopening.",
+  "format": "lisp65-c2.3-v200-symbol22-first-fault-pricing-v1",
+  "historical_question": {
+    "error": 34,
+    "exclusive_writer": "new_symbol()",
+    "host_replay": "positive control raises $22; complete 198-CALLPRIM mixed-world replay does not reproduce",
+    "missing_fact": "dynamic C name pointer and caller at first fault"
+  },
+  "implementation_card": {
+    "device_contact_authority": "owner only after product-card review",
+    "mandatory_final_ELF_gates": [
+      "candidate section fits wholly in the derived B582..B5C4 gap",
+      "the composed owner map admits no second claimant of that gap",
+      "all paths reaching the helper have one derived hardware-stack depth",
+      "the emitted helper offsets equal depth+3/depth+4",
+      "the dynamic name pointer is live in the emitted ABI pair at the helper edge",
+      "repl.buf alias is address-identical and allocates zero bytes",
+      "copy ends at first NUL or byte 34 and commit tag is written last",
+      "the packed PRG initializes the five state bytes to zero",
+      "the successful intern path is byte-identical to the predecessor ELF",
+      "the ordinary-text floor and every standing composition gate remain green"
+    ],
+    "product_WPLTO_authorized_by_pricing": false,
+    "projected_product_links": 1,
+    "required": true
+  },
+  "inputs": {
+    "pricing_driver": {
+      "bytes": 33649,
+      "path": "tools/host-lisp/c2_v200_symbol22_first_fault_pricing.py",
+      "sha256": "134e9fbaa1633be494dc5777b4fe3ec883c936d6818bf79776e02d317621caf9"
+    },
+    "repl_source": {
+      "bytes": 15496,
+      "path": "src/repl.c",
+      "sha256": "27718270843164838fdfc0e2fcccbd79713de814401fe9bbc5daa0880532896a"
+    },
+    "symbol_source": {
+      "bytes": 12213,
+      "path": "src/symbol.c",
+      "sha256": "ea62e535251a1d74b805755b323005ba85e796a25f9899c05e78c81d58d60efd"
+    },
+    "terminal_guard_source": {
+      "bytes": 168045,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "7e2e6eefa18a151795924189db9818c1db656c8d7105083e27d5c2e72e3dbdc3"
+    }
+  },
+  "instrument_law": {
+    "bound_atomic_origin": "packed tag byte is zero; tag A5 commits last",
+    "diagnostic_removal_default": true,
+    "failure_path": "capture then existing lisp_abort_code($22)",
+    "ordinary_text_floor_may_not_move": true,
+    "ordinary_text_projection_bytes": -2,
+    "read_choreography": "on recurrence, type nothing further; stop and read five latch bytes plus repl.buf[0..33], nsym and npool",
+    "retention_requires_owner_argument": true,
+    "successful_path_final_ELF_byte_identity": "mandatory-card-gate",
+    "successful_path_source_change": "none outside the existing $22 edge"
+  },
+  "instrument_model": {
+    "atomic_origin": "five zero bytes materialized in the packed image",
+    "commit_is_last_evidence_write": true,
+    "every_path_ends_at_error": 34,
+    "first_fault_payload_sha256": "98fe2ed74a9fa50896363a9cb9398cd628367f4a03bf8cbe7ea1674fc6b5815c",
+    "first_fault_state": [
+      165,
+      103,
+      69,
+      171,
+      137
+    ],
+    "second_fault_preserves_first": true,
+    "short_name_stops_at_NUL": true
+  },
+  "predecessor_abi": {
+    "fault_call": {
+      "address": 12804,
+      "predecessor": "lda #$22",
+      "target": "lisp_abort_code"
+    },
+    "hardware_stack": {
+      "all_reaching_depths": [
+        4
+      ],
+      "caller_return_high_offset_from_post_jsr_sp": 8,
+      "caller_return_low_offset_from_post_jsr_sp": 7,
+      "helper_return_bytes": 2,
+      "persistent_frame_bytes": 4
+    },
+    "intern": {
+      "address": 12522,
+      "bytes": 662,
+      "section": ".text"
+    },
+    "name_pointer": {
+      "argument_pair": [
+        "__rc2",
+        "__rc3"
+      ],
+      "clobbers_before_fault": [],
+      "consumed_by_failure_scan": true,
+      "retained_pair": [
+        "__rc20",
+        "__rc21"
+      ],
+      "setup_end_address": 12569
+    }
+  },
+  "recorded_on": "2026-08-31",
+  "rejected_candidate": {
+    "candidate": "__builtin_return_address(0)",
+    "compiler_exit": 1,
+    "output_sha256": "dd9e76be2a1c7138cc07e8713cda45711b389bebf3e17e003a5c8f92779a513e",
+    "reason": "MOS backend cannot legalize llvm.returnaddress",
+    "selected": false
+  },
+  "release_world": {
+    "ELF": {
+      "bytes": 635508,
+      "path": "build/c2.3/v1.9.0-release-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "37cb8eff54b5394aff3130c279979ad22441c2d929c75dafc48679e3ad4b190e"
+    },
+    "PRG": {
+      "bytes": 41564,
+      "path": "build/c2.3/v1.9.0-release-card-r1/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "fad7578736349f485fed2a49c9192e37e50bcfbd8b288c102cf8a799c4781347"
+    },
+    "conflict_rule": {
+      "active_in_release": false,
+      "historical_claimant": "LISP65_C2_TERMINAL_RETURN_GUARD",
+      "requirement": "the composed final ELF permits exactly one gap owner; retaining the latch requires future repricing"
+    },
+    "derived_gap": {
+      "active_owners": [],
+      "bytes": 66,
+      "end_exclusive": 46532,
+      "packed_initial_value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "start": 46466
+    },
+    "scratch": {
+      "npool": {
+        "address": 48666,
+        "bytes": 2
+      },
+      "nsym": {
+        "address": 90,
+        "bytes": 2
+      },
+      "repl.buf": {
+        "address": 48265,
+        "bytes": 192
+      },
+      "sym_name_scratch": {
+        "address": 49654,
+        "bytes": 34
+      }
+    }
+  },
+  "status": "PASS: FIRST-FAULT LATCH PRICED; PRODUCT CARD REQUIRED",
+  "verification": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "mutations_rejected": [
+      "section-overflows-derived-gap",
+      "caller-low-offset-is-guessed",
+      "name-pointer-pair-is-not-live",
+      "payload-captures-only-33-bytes",
+      "commit-precedes-payload",
+      "second-fault-overwrites-first",
+      "scratch-alias-allocates-state",
+      "builtin-return-address-selected",
+      "successful-path-byte-gate-removed",
+      "second-gap-owner-admitted"
+    ],
+    "product_links": 0,
+    "product_sources_changed": 0
+  }
+}

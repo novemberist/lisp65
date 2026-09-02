@@ -1,0 +1,270 @@
+{
+  "authority": {
+    "first_read": "owner authorized one raw-first stopped-state capture",
+    "followup_read": "owner authorized exactly five additional bytes from the same stopped CPU; no state transition"
+  },
+  "claim_limit": "This receipt proves the terminal cycle and excludes three source classes. It does not identify the first transfer into $8040 and authorizes no fix, build, medium, resume or additional device read.",
+  "contact_accounting": {
+    "CPU_left_stopped": true,
+    "followup_stops": 0,
+    "input_events": 0,
+    "resets": 0,
+    "resumes": 0,
+    "runs": 0,
+    "stops": 1
+  },
+  "excluded_sources": {
+    "808c_loop_operand_corruption": "refuted by live bytes 4c4180",
+    "__call_indir_immediate_source": {
+      "live_pointer": "0xc356",
+      "trampoline": "JMP ($0014)",
+      "why_excluded": "the two-cycle body changes neither $14 nor $15; an immediate __call_indir ingress would therefore still expose $8040"
+    },
+    "linked_direct_transfer": "no final-ELF JMP/JSR targets $8040",
+    "refill_seam": "trace origin and both trace slots are all zero"
+  },
+  "five_byte_discriminator": {
+    "decision": "the $808c operand is byte-correct; loop-back corruption is mechanically refuted",
+    "live_loop_back_808c": "4c 41 80 / JMP $8041",
+    "screen_pointer_0884": "0x2020"
+  },
+  "format": "lisp65-c2.3-v1.6-selector-bypass-blank-cycle-attribution-v1",
+  "inputs": {
+    "ELF": {
+      "bytes": 647776,
+      "path": "build/c2.3/v1.6-boot-refill-selector-bypass-domain-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bbb1547779ea2c9366fa5a29633aa07061a3607fa753043071df1780cc5ea3e4"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-boot-refill-selector-bypass-domain-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "3954884bc2e942f5da2f592be7b61a93613b5913c596db219bb3acc04bd1c19f"
+    },
+    "first": {
+      "bytes": 21180,
+      "path": "build/c2.3/v1.6-boot-refill-selector-bypass-domain-media/device-blank-first-red-20260824/capture.json",
+      "sha256": "29a197788244c46ad457b0e743769da9bda2b82dc923d42f36038dfdb7fb979f"
+    },
+    "first_driver": {
+      "bytes": 7473,
+      "path": "tools/host-lisp/c2_v160_selector_bypass_blank_first_red_capture.py",
+      "sha256": "fd907b4d3ad1dac55761e2296f5f992d57dc0244bf1be41fac0bacc0527e167d"
+    },
+    "followup": {
+      "bytes": 3336,
+      "path": "build/c2.3/v1.6-boot-refill-selector-bypass-domain-media/device-blank-followup-20260824/capture.json",
+      "sha256": "8691c6105e4edbf9bbaa2c312760e3f50d680c185b3ff460c0f128533bab5525"
+    },
+    "followup_driver": {
+      "bytes": 6276,
+      "path": "tools/host-lisp/c2_v160_selector_bypass_blank_followup_capture.py",
+      "sha256": "7c86bccf31f202ff0dc75a51f986a09d5d088fc15ed9f8591fc63c07f3bcc31c"
+    }
+  },
+  "linked_world": {
+    "direct_JMP_or_JSR_targets_to_8040": [],
+    "observed_ingress": "0x8040",
+    "observed_ingress_is_instruction_boundary": false,
+    "owner": "vm_native_call",
+    "valid_boundaries_around_ingress": [
+      "0x803f",
+      "0x8041"
+    ],
+    "valid_loop_target": "0x8041",
+    "x_zero_indirect_table_heads": [
+      {
+        "ELF_target": "0x4db9",
+        "base": "0xb634",
+        "section": ".rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0x6770",
+        "base": "0xb6b8",
+        "section": ".rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0x742e",
+        "base": "0xfd4c",
+        "section": ".lisp65_c2_kernal_window.profile_rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0x6a10",
+        "base": "0xfdd6",
+        "section": ".lisp65_c2_kernal_window.profile_rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0x70df",
+        "base": "0xfdec",
+        "section": ".lisp65_c2_kernal_window.profile_rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0x803d",
+        "base": "0xfdf4",
+        "section": ".lisp65_c2_kernal_window.profile_rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0x843d",
+        "base": "0xfd2c",
+        "section": ".lisp65_c2_kernal_window.profile_rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0x8dbd",
+        "base": "0xb6e6",
+        "section": ".rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0x9517",
+        "base": "0xb6f2",
+        "section": ".rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0xc7e5",
+        "base": "0xb71c",
+        "section": ".rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0xc43d",
+        "base": "0xb624",
+        "section": ".rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0xc39d",
+        "base": "0xb708",
+        "section": ".rodata",
+        "x": 0
+      },
+      {
+        "ELF_target": "0xc49a",
+        "base": "0xb62c",
+        "section": ".rodata",
+        "x": 0
+      }
+    ]
+  },
+  "observed_cycle": {
+    "classification": "real infinite control cycle, not a wait or render-only blank",
+    "edge_1": {
+      "address": "0x2020",
+      "bytes": "20 40 80",
+      "instruction": "JSR $8040",
+      "pushed_return": "0x2022"
+    },
+    "edge_2": {
+      "address": "0x8040",
+      "bytes": "22 84 08",
+      "instruction": "JSR ($0884)",
+      "pointer_bytes": "20 20",
+      "pushed_return": "0x8042",
+      "target": "0x2020"
+    },
+    "stack_page": {
+      "bytes": 256,
+      "meaning": "both JSR return pairs alternate across the complete hardware stack page; the original pre-cycle frames have been overwritten",
+      "pattern": "80 22 20 42",
+      "repetitions": 64
+    }
+  },
+  "open_mechanism": {
+    "first_ingress_classes": [
+      "a live jump-table head that differs from its final-ELF value",
+      "a corrupted RTS/RTI continuation",
+      "a live-mutated direct transfer outside the five-byte read"
+    ],
+    "if_state_was_powered_off": "reproduce deterministically and capture the same thirteen X=0 table heads; if all match, price a pre-wrap RTS/RTI/direct-transfer edge witness",
+    "next_minimal_live_discriminator_if_state_is_still_available": {
+      "meaning": "with preserved X=0, any $8040 head names the corrupt computed transfer; all thirteen heads matching ElfTruth exclude the entire static table-dispatch class",
+      "reads": [
+        {
+          "address": "0xb634",
+          "bytes": 2,
+          "expected": "0x4db9"
+        },
+        {
+          "address": "0xb6b8",
+          "bytes": 2,
+          "expected": "0x6770"
+        },
+        {
+          "address": "0xfd4c",
+          "bytes": 2,
+          "expected": "0x742e"
+        },
+        {
+          "address": "0xfdd6",
+          "bytes": 2,
+          "expected": "0x6a10"
+        },
+        {
+          "address": "0xfdec",
+          "bytes": 2,
+          "expected": "0x70df"
+        },
+        {
+          "address": "0xfdf4",
+          "bytes": 2,
+          "expected": "0x803d"
+        },
+        {
+          "address": "0xfd2c",
+          "bytes": 2,
+          "expected": "0x843d"
+        },
+        {
+          "address": "0xb6e6",
+          "bytes": 2,
+          "expected": "0x8dbd"
+        },
+        {
+          "address": "0xb6f2",
+          "bytes": 2,
+          "expected": "0x9517"
+        },
+        {
+          "address": "0xb71c",
+          "bytes": 2,
+          "expected": "0xc7e5"
+        },
+        {
+          "address": "0xb624",
+          "bytes": 2,
+          "expected": "0xc43d"
+        },
+        {
+          "address": "0xb708",
+          "bytes": 2,
+          "expected": "0xc39d"
+        },
+        {
+          "address": "0xb62c",
+          "bytes": 2,
+          "expected": "0xc49a"
+        }
+      ],
+      "total_bytes": 26
+    },
+    "why_original_state_cannot_name_the_predecessor": "the infinite cycle overwrote all 256 hardware-stack bytes before the stop"
+  },
+  "recorded_on": "2026-08-24",
+  "runtime_state": {
+    "MAP": "baseline 0x8000/0x0000",
+    "c2_phase_owner": 0,
+    "c2_ready": 1,
+    "lisp_toplevel_active": 1,
+    "rtov_busy": 0,
+    "rtov_loaded_len": 0,
+    "saved___rc18___rc19": "0xc356",
+    "vm_status": 0
+  },
+  "status": "ATTRIBUTED: DETERMINISTIC TWO-JSR CYCLE; FIRST INGRESS STILL OPEN"
+}

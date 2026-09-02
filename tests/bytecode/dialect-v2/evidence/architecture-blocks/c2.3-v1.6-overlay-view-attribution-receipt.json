@@ -1,0 +1,535 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 225630,
+    "commit": "93604f6429e44ed0397a753e69c68656226a7383",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "279a5f4d1123bf250b8c40996e10dfb25832e541895d500ecdfb3dc477dfd5ff"
+  },
+  "candidate_matrix": [
+    {
+      "because": "the full target CRC converges before the indirect call; a normal call also requires busy=1 and length=1687",
+      "candidate": "ordinary uninstalled or partial initial load",
+      "decisive_live_evidence": "mixed expected/zero bytes with busy=1 would reopen an in-flight mutation outside the verified contract",
+      "host_result": "excluded for every contract-respecting entry"
+    },
+    {
+      "because": "c2_journal_count is captured as zero and that journal owns export publication, not runtime-overlay target lifetime",
+      "candidate": "stale C2 append/export journal",
+      "decisive_live_evidence": "a nonzero journal count would identify a concurrent append, but cannot by itself authorize bytes at $c5b6",
+      "host_result": "excluded as the code-slice authority"
+    },
+    {
+      "because": "the only relocation to buf_from_string originates inside its own slice; the public entry has no direct relocation and is reached through manifest-derived RTOV_CALL after CRC",
+      "candidate": "call before commit or installation-contract bypass",
+      "decisive_live_evidence": "expected slice bytes with busy=0/length=0 would prove lifecycle-state corruption or a dynamic bypass",
+      "host_result": "no legitimate linked edge found"
+    },
+    {
+      "because": "none of all 52 authenticated session slices contains $00 at target offset $c5b6",
+      "candidate": "different valid session slice",
+      "decisive_live_evidence": "the full live neighborhood matching another session-slice SHA would contradict the manifest enumeration",
+      "host_result": "excluded for the observed zero"
+    },
+    {
+      "because": "boot slot 4 alone has $00 at the offset, but its surrounding bytes differ and family/family-generation were not captured",
+      "candidate": "stale boot slice c2-decode-01",
+      "decisive_live_evidence": "live neighborhood plus rtov_family/generation distinguishes this exact stale image from a wiped target",
+      "host_result": "possible byte collision, not established"
+    },
+    {
+      "because": "busy=0 and loaded_len=0 are the post-wipe state, while BRK occurred inside the retired VMA and at a non-boundary operand address",
+      "candidate": "stale control transfer after retirement/wipe or lifecycle-state clobber",
+      "decisive_live_evidence": "all-zero neighborhood selects post-wipe stale transfer; expected bytes select state clobber; a mixed neighborhood selects asynchronous overwrite/partial wipe",
+      "host_result": "leading residual class"
+    }
+  ],
+  "claim_limit": "Host-only attribution. No fix, card, link, medium, or device contact.",
+  "decision": "Host evidence excludes a normal incomplete install, C2 journal authority, a valid session-slice substitution and a linked direct bypass. It cannot choose between post-retirement stale control transfer, stale boot view, or lifecycle corruption without the specified live bytes.",
+  "format": "lisp65-c2.3-v1.6-overlay-view-attribution-v1",
+  "inputs": {
+    "ELF": {
+      "bytes": 632156,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a03f9fafc5629f913dcf213925d7f007fd91b353ab2229a6189080c37f604c9c"
+    },
+    "boot_image": {
+      "bytes": 19658,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/runtime-overlays-boot-final.bin",
+      "sha256": "62ef692cf99035597e6d703ede181e8f3c85043b8a2e1dd7f11595689cd7ffd3"
+    },
+    "boot_manifest": {
+      "bytes": 11513,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/runtime-overlays-boot-final.json",
+      "sha256": "d75a6d147a24278963c7b6b2ecf8a13621d141981c54ac1e0bd738d843f49d89"
+    },
+    "buffer_source": {
+      "bytes": 5825,
+      "path": "src/buffer_overlay.c",
+      "sha256": "2acc83152b15eb87c106f253a991b49763e6c8b8e53adc09035b15a45110e7f1"
+    },
+    "capture": {
+      "bytes": 18335,
+      "path": "build/c2.3/v1.6-items12-hybrid-owner-contact/hybrid-entry-first-red-stopped-state/capture.json",
+      "sha256": "73827d43bb82102b434bd81a92bc2ce216bf9c3c5b67cc85b3b9b29a89188992"
+    },
+    "interrupt_source": {
+      "bytes": 5402,
+      "path": "src/interrupt.c",
+      "sha256": "3daa9e790bbf95d9b1f15da688386b17831d7f9d0c95e61038399ea9d2105de0"
+    },
+    "memory_source": {
+      "bytes": 49881,
+      "path": "src/mem.c",
+      "sha256": "eed1a86672a92efdfed914f03272708d2ee7a0ec7fa3950e91a640c9062faba0"
+    },
+    "runtime_overlay_source": {
+      "bytes": 91725,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "8458a14d73d84fffdacb8c17fe7cb62b1ec7d64c10fd72462bcd3312b12b4597"
+    },
+    "session_image": {
+      "bytes": 65423,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/runtime-overlays-session-final.bin",
+      "sha256": "872c7af4150d5c1499c0383c7cebea8751ad2adb57194b0c57b98063e8630702"
+    },
+    "session_manifest": {
+      "bytes": 44707,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/runtime-overlays-session-final.json",
+      "sha256": "4fedc412960bed991d428818e33b3f5c5720596b41226bad4e8ace65469b401c"
+    },
+    "vm_source": {
+      "bytes": 104864,
+      "path": "src/vm.c",
+      "sha256": "c17349cccf193dd22aa1241d2563ad097da744c61df8364dd77396661e7fb7aa"
+    }
+  },
+  "owner_and_lifecycle": {
+    "active_call_invariant": "rtov_busy=1 and rtov_loaded_len=1687",
+    "captured_lifecycle": {
+      "c2_journal_count_at_0x2e": 0,
+      "rtov_busy_at_0x77": 0,
+      "rtov_island_state_at_0x78": 2,
+      "rtov_loaded_len_at_0x79": 0
+    },
+    "critical_contradiction": "the CPU took BRK at an address inside the slice while the slice lifecycle said inactive; moreover $c5b6 is the $02 operand of STA $02, not a legal instruction boundary in buf_from_string",
+    "entry_contract": [
+      "rtov_busy := 1",
+      "wipe prior target",
+      "authenticate catalog and slot-50 record",
+      "publish rtov_loaded_len := 1687",
+      "copy source $0003f700 to target $c356",
+      "converge full target CRC $74db",
+      "indirect call $c754",
+      "after return wipe 1687 bytes",
+      "rtov_busy := 0"
+    ],
+    "intended_symbol": "buf_from_string",
+    "only_static_call_to_owner": {
+      "relocation_offset": "0xc995",
+      "source_section": ".lisp65_rt_buffer_alloc"
+    },
+    "site": "0xc5b6",
+    "slice": "first-class-buffer-alloc",
+    "slice_bytes": 1687,
+    "slice_entry": "0xc754",
+    "slice_id": 50,
+    "slice_section": ".lisp65_rt_buffer_alloc",
+    "slice_vma": "0xc356",
+    "source_byte": "0x02",
+    "source_physical_site": "0x0003f960",
+    "source_record_hex": "3200060000f7970656c39706fe0301004a53287edb74c19f0003000000000000",
+    "source_record_physical": "0x00030660",
+    "symbol_range": "0xc5af..0xc6e7"
+  },
+  "powered_off_fallback": {
+    "assumption": "the owner said the device may be powered off; no access was attempted",
+    "claim": "one reproduction is sufficient only if it reaches the same B=1/$c5b8 signature",
+    "minimal_contact": [
+      "cold boot the bound product/library pair",
+      "repeat require/Comfort activation only",
+      "on the first red stop once and do not resume",
+      "persist tuple and all six ranges raw-first"
+    ]
+  },
+  "recorded_on": "2026-08-20",
+  "specified_not_executed_read": {
+    "decision_table": {
+      "all_zero_live_target": "retired/wiped target plus stale control transfer",
+      "boot_slot4_neighborhood": "stale boot-family view",
+      "durable_source_mismatch": "family staging/source corruption rather than target lifetime",
+      "expected_slot50_live_target": "lifecycle state was cleared or bypassed while bytes remained",
+      "mixed_target": "partial wipe/overwrite after a once-valid install"
+    },
+    "discipline": [
+      "confirm frozen media/ELF tuple first",
+      "read-only",
+      "no RUN",
+      "no resume",
+      "no reset",
+      "CPU remains stopped"
+    ],
+    "ranges": [
+      {
+        "physical": "0x0000c5a8..0x0000c5c0",
+        "purpose": "live target neighborhood"
+      },
+      {
+        "physical": "0x00000077..0x0000007a",
+        "purpose": "busy/island-state/loaded-length"
+      },
+      {
+        "physical": "0x0000bff7..0x0000bffa",
+        "purpose": "fault/family/family-generation"
+      },
+      {
+        "physical": "0x0000002e..0x0000002f",
+        "purpose": "C2 append journal count control"
+      },
+      {
+        "physical": "0x00030660..0x0003067f",
+        "purpose": "active-family slot-50 registry record"
+      },
+      {
+        "physical": "0x0003f958..0x0003f968",
+        "purpose": "durable slot-50 source around the site"
+      }
+    ]
+  },
+  "status": "NARROWED-LIVE-BYTES-REQUIRED",
+  "valid_images_at_site": {
+    "boot_zero": [
+      {
+        "byte": "0x00",
+        "id": 4,
+        "name": "c2-decode-01",
+        "neighborhood_hex": "f0034cb7c9a900a60ae0016aa60b",
+        "source_address": "0x08201b00"
+      }
+    ],
+    "session": [
+      {
+        "byte": "0xc7",
+        "id": 0,
+        "name": "catalog-verifier",
+        "neighborhood_hex": "c952f0034cf0c7a016b116a205c9",
+        "source_address": "0x00030700"
+      },
+      {
+        "byte": "0xc7",
+        "id": 1,
+        "name": "record-verifier",
+        "neighborhood_hex": "06aaf0034c63c7a5161869228504",
+        "source_address": "0x00030c00"
+      },
+      {
+        "byte": "0x03",
+        "id": 2,
+        "name": "c2-decode-04",
+        "neighborhood_hex": "026906850aa5036900850b18a50a",
+        "source_address": "0x00031200"
+      },
+      {
+        "byte": "0x02",
+        "id": 3,
+        "name": "c2-decode-05a",
+        "neighborhood_hex": "6506850b88b10265048504a009b1",
+        "source_address": "0x00031800"
+      },
+      {
+        "byte": "0x0b",
+        "id": 4,
+        "name": "c2-decode-05b",
+        "neighborhood_hex": "a5090aa60a860b260b0a260ba200",
+        "source_address": "0x00031d00"
+      },
+      {
+        "byte": "0x85",
+        "id": 5,
+        "name": "c2-decode-06a",
+        "neighborhood_hex": "8506a503690085078604a6088605",
+        "source_address": "0x00032400"
+      },
+      {
+        "byte": "0xa0",
+        "id": 6,
+        "name": "c2-decode-06b",
+        "neighborhood_hex": "260426052606a00db102186507a8",
+        "source_address": "0x00032a00"
+      },
+      {
+        "byte": "0x86",
+        "id": 7,
+        "name": "c2-decode-07",
+        "neighborhood_hex": "86198505a61e86086409a60a9820",
+        "source_address": "0x00032e00"
+      },
+      {
+        "byte": "0x69",
+        "id": 8,
+        "name": "c2-decode-08",
+        "neighborhood_hex": "691e8504a51769008505a01eb116",
+        "source_address": "0x00033300"
+      },
+      {
+        "byte": "0x91",
+        "id": 9,
+        "name": "c2-decode-09",
+        "neighborhood_hex": "020a48a505889102682605640426",
+        "source_address": "0x00033900"
+      },
+      {
+        "byte": "0x07",
+        "id": 10,
+        "name": "c2-decode-10",
+        "neighborhood_hex": "a40691168aa4079104a0015aa014",
+        "source_address": "0x00034000"
+      },
+      {
+        "byte": "0xc6",
+        "id": 11,
+        "name": "c2-decode-11a",
+        "neighborhood_hex": "c907f0034c07c618a502690faaa5",
+        "source_address": "0x00034600"
+      },
+      {
+        "byte": "0x86",
+        "id": 12,
+        "name": "c2-decode-11b",
+        "neighborhood_hex": "86048505a20886086409a60a9820",
+        "source_address": "0x00034a00"
+      },
+      {
+        "byte": "0x0c",
+        "id": 13,
+        "name": "c2-decode-12",
+        "neighborhood_hex": "02a9006900a00c9102a004b10a85",
+        "source_address": "0x00035100"
+      },
+      {
+        "byte": "0x6a",
+        "id": 15,
+        "name": "c2-emit-prepare",
+        "neighborhood_hex": "a88aa604e0016ac001d007c90090",
+        "source_address": "0x00035900"
+      },
+      {
+        "byte": "0x02",
+        "id": 16,
+        "name": "c2-emit-name",
+        "neighborhood_hex": "840498a0089102a6078a88910268",
+        "source_address": "0x00035f00"
+      },
+      {
+        "byte": "0x85",
+        "id": 17,
+        "name": "c2-emit-literal-prep",
+        "neighborhood_hex": "9106a504692a8506a50569008507",
+        "source_address": "0x00036300"
+      },
+      {
+        "byte": "0x03",
+        "id": 18,
+        "name": "c2-emit-literal-atom",
+        "neighborhood_hex": "20d3b5e41bf0034c53c6c51af003",
+        "source_address": "0x00036900"
+      },
+      {
+        "byte": "0x3b",
+        "id": 19,
+        "name": "c2-emit-literal-append",
+        "neighborhood_hex": "c4c040f0034c3bc4a902a2018ef3",
+        "source_address": "0x00037000"
+      },
+      {
+        "byte": "0x16",
+        "id": 20,
+        "name": "c2-emit-code",
+        "neighborhood_hex": "1769008505b116851aa001b10485",
+        "source_address": "0x00037300"
+      },
+      {
+        "byte": "0xa5",
+        "id": 21,
+        "name": "c2-emit-final-meta",
+        "neighborhood_hex": "aa982094a218a5166910a8a51769",
+        "source_address": "0x00037800"
+      },
+      {
+        "byte": "0x86",
+        "id": 22,
+        "name": "c2-emit-final-crc",
+        "neighborhood_hex": "6437a902a2358604a616206437a9",
+        "source_address": "0x00037e00"
+      },
+      {
+        "byte": "0x0b",
+        "id": 23,
+        "name": "c2-append-envelope",
+        "neighborhood_hex": "7736aaf0034c0bc9a91ea2012077",
+        "source_address": "0x00038300"
+      },
+      {
+        "byte": "0x01",
+        "id": 24,
+        "name": "c2-append-crc-metadata",
+        "neighborhood_hex": "06a407710ca201861c8505a60aa5",
+        "source_address": "0x00038900"
+      },
+      {
+        "byte": "0x69",
+        "id": 25,
+        "name": "c2-append-roots-fronts",
+        "neighborhood_hex": "69088506a50769008507b1048508",
+        "source_address": "0x00039000"
+      },
+      {
+        "byte": "0xa5",
+        "id": 26,
+        "name": "c2-append-reserve-transient-bounds",
+        "neighborhood_hex": "0f8e78c0a042a5149104a93f38e5",
+        "source_address": "0x00039600"
+      },
+      {
+        "byte": "0x06",
+        "id": 27,
+        "name": "c2-append-reserve-transient-code",
+        "neighborhood_hex": "850718a50b6506a00a9102a50a65",
+        "source_address": "0x00039a00"
+      },
+      {
+        "byte": "0x85",
+        "id": 28,
+        "name": "c2-append-reserve-persistent-bounds",
+        "neighborhood_hex": "a5056900a0528507a9009104a002",
+        "source_address": "0x0003a000"
+      },
+      {
+        "byte": "0x65",
+        "id": 29,
+        "name": "c2-append-reserve-persistent-code",
+        "neighborhood_hex": "0c850718a50b6506a0069102a50a",
+        "source_address": "0x0003a300"
+      },
+      {
+        "byte": "0x04",
+        "id": 30,
+        "name": "c2-append-journal-prepare",
+        "neighborhood_hex": "00100da604a504186900a5056908",
+        "source_address": "0x0003a900"
+      },
+      {
+        "byte": "0x04",
+        "id": 31,
+        "name": "c2-append-journal-validate",
+        "neighborhood_hex": "008505a001b104d00ba068b116c9",
+        "source_address": "0x0003b000"
+      },
+      {
+        "byte": "0x4c",
+        "id": 32,
+        "name": "c2-append-journal-reconstruct",
+        "neighborhood_hex": "8404e404f0034c7fc7a60f8e10c1",
+        "source_address": "0x0003b400"
+      },
+      {
+        "byte": "0x68",
+        "id": 33,
+        "name": "c2-append-stage-copy",
+        "neighborhood_hex": "5aa00991027a68e011800b488a5a",
+        "source_address": "0x0003b900"
+      },
+      {
+        "byte": "0x19",
+        "id": 34,
+        "name": "c2-append-stage-plane",
+        "neighborhood_hex": "5fe8a51a186519851aa51d6518aa",
+        "source_address": "0x0003be00"
+      },
+      {
+        "byte": "0x09",
+        "id": 35,
+        "name": "c2-append-image",
+        "neighborhood_hex": "17a60c86088509b116aaa001b108",
+        "source_address": "0x0003c300"
+      },
+      {
+        "byte": "0x86",
+        "id": 36,
+        "name": "c2-append-entries",
+        "neighborhood_hex": "006900ae8fc0860baaf0034c9bc8",
+        "source_address": "0x0003c600"
+      },
+      {
+        "byte": "0x7a",
+        "id": 37,
+        "name": "c2-append-publish-plan-scan",
+        "neighborhood_hex": "0918a00eb1027a690e850aa50569",
+        "source_address": "0x0003cd00"
+      },
+      {
+        "byte": "0x78",
+        "id": 38,
+        "name": "c2-append-publish-plan-resolve",
+        "neighborhood_hex": "a417aaf0214c78c4a51cf0034c8e",
+        "source_address": "0x0003d400"
+      },
+      {
+        "byte": "0x86",
+        "id": 39,
+        "name": "c2-append-header",
+        "neighborhood_hex": "05688606a6108607850ba60da50c",
+        "source_address": "0x0003d700"
+      },
+      {
+        "byte": "0x69",
+        "id": 40,
+        "name": "c2-append-publish-clear",
+        "neighborhood_hex": "4c6ac418a50269128518a5036900",
+        "source_address": "0x0003dd00"
+      },
+      {
+        "byte": "0x03",
+        "id": 41,
+        "name": "c2-append-rollback-unpublish",
+        "neighborhood_hex": "02a50369ff8503a616daa2048616",
+        "source_address": "0x0003e300"
+      },
+      {
+        "byte": "0x12",
+        "id": 42,
+        "name": "c2-append-rollback-wipe-plane",
+        "neighborhood_hex": "0000000000001200060000692306",
+        "source_address": "0x0005bd00"
+      },
+      {
+        "byte": "0x64",
+        "id": 47,
+        "name": "error-text-renderer",
+        "neighborhood_hex": "696e677265616465723a20756e63",
+        "source_address": "0x0003ea00"
+      },
+      {
+        "byte": "0xa0",
+        "id": 48,
+        "name": "first-class-buffer-read",
+        "neighborhood_hex": "806aa001b002a0008407a810034c",
+        "source_address": "0x0003ef00"
+      },
+      {
+        "byte": "0x84",
+        "id": 49,
+        "name": "first-class-buffer-write",
+        "neighborhood_hex": "8506a001b104840aaaa4048408a4",
+        "source_address": "0x0003f400"
+      },
+      {
+        "byte": "0x02",
+        "id": 50,
+        "name": "first-class-buffer-alloc",
+        "neighborhood_hex": "18a50269f88502a50369ff850368",
+        "source_address": "0x0003f700"
+      }
+    ]
+  }
+}

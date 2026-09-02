@@ -1,0 +1,317 @@
+{
+  "accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 507394,
+    "commit": "e356f513",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "691abf999f294008538094315c92817430e7d71cad4f66fb897e3fdad59d8b1e"
+  },
+  "decision": {
+    "branch": "gate-misclassification",
+    "card_may_resume_self_dispositionally": true,
+    "product_finding": false,
+    "successor_rule": "key every MAP-range edge by (section/domain,address)"
+  },
+  "format": "lisp65-c2-v160-map-domain-alias-attribution-v1",
+  "gate_inventory": [
+    {
+      "classification": "direct-address-only-affected",
+      "consumer": "shared graph root",
+      "evidence_tokens": [
+        "by_value: dict[int",
+        "matches = by_value.get(resolved"
+      ],
+      "path": "tools/host-lisp/c2_transitive_map_nesting_gate.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "7be62b96b93f067653301c2726754a00ad2ecb4f4152b26bb48e65f883898dca"
+    },
+    {
+      "classification": "downstream-affected-current-red",
+      "consumer": "current final gate",
+      "evidence_tokens": [
+        "NEST.linked_graph(elf)",
+        "graph[\"incoming\"].get(disk_body.name"
+      ],
+      "path": "tools/host-lisp/c2_v160_nested_map_swap.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "7a53a7d646bead51c4d443ad05689cbec27ba3ce8b07f2a2ac9f144c94c6050d"
+    },
+    {
+      "classification": "downstream-address-only",
+      "consumer": "nested-MAP price model",
+      "evidence_tokens": [
+        "NEST.linked_graph(ELF)",
+        "NEST.paths_to_map"
+      ],
+      "path": "tools/host-lisp/c2_v160_nested_map_repricing.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "a496932d704b968271852d8b2509de1ff47689a115fe3e931c5815d27da1c6f0"
+    },
+    {
+      "classification": "downstream-address-only",
+      "consumer": "execution-boundary final gate",
+      "evidence_tokens": [
+        "MAP_GATE.check(elf)"
+      ],
+      "path": "tools/host-lisp/c2_v160_execution_boundary_backstop.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "7ffc277a560463b34f1a30ac8dc86bea7d6a31e3f9b977de5ae53a0634b89d41"
+    },
+    {
+      "classification": "downstream-address-only",
+      "consumer": "execution-boundary price model",
+      "evidence_tokens": [
+        "MAP_GATE.check(ELF)"
+      ],
+      "path": "tools/host-lisp/c2_v160_execution_boundary_repricing.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "8cc183ff31716aa399d0724c470c1897c446eced8bf3880abb7b76aa0c8c041f"
+    },
+    {
+      "classification": "independent-address-only-affected",
+      "consumer": "R1 final call graph",
+      "evidence_tokens": [
+        "targets = [row.name for row in rows if row.value == address]"
+      ],
+      "path": "tools/host-lisp/c2_v160_abort_driver_relocation.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "a040f65dc93320e1ea536940a0582460c4b8aca3469c6fcb7b099aafa76c6810"
+    },
+    {
+      "classification": "independent-address-only-affected",
+      "consumer": "active-frame final gate",
+      "evidence_tokens": [
+        "identity[\"resolved_value\"] == target",
+        "row.value == identity[\"resolved_value\"]"
+      ],
+      "path": "tools/host-lisp/c2_v160_active_frame_liveness.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "e2356e57c36215a7fec9cc3d4ef0054aa74011ed67642084b9fc30f370f17a7a"
+    },
+    {
+      "classification": "latent-global-address-only",
+      "consumer": "retired-window classification graph",
+      "evidence_tokens": [
+        "by_value: dict[int",
+        "len(by_value.get(value, ())) != 1"
+      ],
+      "path": "tools/host-lisp/c2_v160_retired_window_release_classification.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "2fb3a87e88cde43b0a2b27adf77997a881334e202f8396cbe988b1ab2a2b47a4"
+    },
+    {
+      "classification": "latent-address-only-target-outside-map",
+      "consumer": "absolute-transfer scanner",
+      "evidence_tokens": [
+        "def absolute_transfers",
+        "raw.find(needle, start)"
+      ],
+      "path": "tools/host-lisp/c2_v160_boot_refill_selector_bypass.py",
+      "required_identity": "(section/mapping-domain, address)",
+      "source_commit": "07877cb1",
+      "source_sha256": "927c50cb1943f6846cd875d2d31e598a29d772836971ebbe196a4fae942c6094"
+    }
+  ],
+  "inputs": {
+    "ABI_exit_gate": {
+      "bytes": 239369,
+      "path": "build/c2.3/nested-map-swap-v1.6-boot-refill-selector-bypass-adapter-preflight-qualification/c2-asm-leaf-abi.json",
+      "sha256": "8c06a1a79f03f4f685dbc28b8d5c779b1e0817a92293f93d168f9938690f6ef2"
+    },
+    "Final_Red": {
+      "bytes": 2209,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-boot-refill-selector-bypass-adapter-card-final-red.json",
+      "sha256": "36d5c319ad2bf9e8d13e749ac981d0c03c5730db308c265c29846f86336ab16b"
+    },
+    "candidate_ELF": {
+      "bytes": 647776,
+      "path": "build/c2.3/v1.6-boot-refill-selector-bypass-adapter-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bff8318bfaafaa95137c07e92864d08f09e8b12b5b990e387acf4065ecf8d21c"
+    },
+    "nested_MAP_gate": {
+      "bytes": 2373623,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-boot-refill-selector-bypass-dual-capacity-card-receipt.json",
+      "sha256": "4ad30809e78c48e4fcfd4e0c3e87bd772bc979e9fdd6b0f5532accb16ba043c1"
+    },
+    "partial_receipt": {
+      "bytes": 1649468,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-boot-refill-selector-bypass-adapter-card-receipt.json",
+      "sha256": "4957f226cf4ff3f9517b93580580b0292d6c7d3fb8af15d5595df260147fd59e"
+    }
+  },
+  "legacy_vs_domain_identity": [
+    {
+      "domain_key": [
+        ".text",
+        32397
+      ],
+      "domain_selected_owner": "vm_native_call",
+      "legacy_key": 32397,
+      "legacy_selected_symbol": "disk_chain_to_scratch_far",
+      "site": 32259
+    },
+    {
+      "domain_key": [
+        ".text",
+        32397
+      ],
+      "domain_selected_owner": "vm_native_call",
+      "legacy_key": 32397,
+      "legacy_selected_symbol": "disk_chain_to_scratch_far",
+      "site": 32277
+    }
+  ],
+  "overlapping_domains": {
+    "ambiguous_numeric_target": 32397,
+    "baseline": {
+      "VMA": [
+        8227,
+        45982
+      ],
+      "section": ".text"
+    },
+    "mapped_low_block3": {
+      "diagnostic_VMA": [
+        32397,
+        32721
+      ],
+      "physical_window": [
+        172032,
+        180224
+      ],
+      "sections": [
+        ".lisp65_c2_mapped_far_service",
+        ".lisp65_c2_mapped_diagnostic"
+      ],
+      "service_VMA": [
+        30898,
+        32386
+      ]
+    }
+  },
+  "path_evidence": {
+    "domain_graph_edges": 683,
+    "every_exit_unmap": {
+      "ABI_status": "passed-all-assembler-leaf-abi-contracts",
+      "contractual_service_inner_exits": 8,
+      "nested_violations": []
+    },
+    "mapped_paths_to_vm_native_call": [],
+    "mapped_tenant_count": 7,
+    "mapped_tenants": [
+      ".lisp65_c2_mapped_diagnostic::disk_chain_to_scratch_far",
+      ".lisp65_c2_mapped_far_service::c2_abort_driver",
+      ".lisp65_c2_mapped_far_service::c2_mapped_far_physical_read_converged",
+      ".lisp65_c2_mapped_far_service::c2_mapped_far_vm_code_load_converged",
+      ".lisp65_c2_mapped_far_service::c2_rtov_retire_continuations",
+      ".lisp65_c2_mapped_far_service::c2_rtov_sanitize_saved_csrs",
+      ".lisp65_c2_mapped_far_service::rtov_transaction_context_if_ready_far"
+    ],
+    "verdict": "baseline mapping dominates both executable jump sites",
+    "vm_native_call_incoming": [
+      {
+        "address": 29278,
+        "opcode": "JSR",
+        "owner": "vm_callprim",
+        "resolved_address": 32055,
+        "source_identity": ".text::vm_callprim",
+        "source_section": ".text",
+        "target": "vm_native_call",
+        "target_identity": ".text::vm_native_call",
+        "target_section": ".text"
+      },
+      {
+        "address": 36176,
+        "opcode": "JSR",
+        "owner": "eval_vm_native_apply_checked",
+        "resolved_address": 32055,
+        "source_identity": ".text::eval_vm_native_apply_checked",
+        "source_section": ".text",
+        "target": "vm_native_call",
+        "target_identity": ".text::vm_native_call",
+        "target_section": ".text"
+      }
+    ]
+  },
+  "recorded_on": "2026-08-24",
+  "site_evidence": [
+    {
+      "opcode_address": 32259,
+      "operand_relocation": 32260,
+      "relocation_section": ".rela.text",
+      "source_section": ".text",
+      "target_addend": 24170,
+      "target_identity": {
+        "resolved_value": 32397,
+        "section": ".text",
+        "symbol": ".text",
+        "symbol_type": "Section"
+      },
+      "target_symbol": ".text",
+      "verdict": "instruction and target are baseline-domain",
+      "visible_bytes_by_domain": [
+        {
+          "bytes_at_site": "4c8d7e",
+          "is_JMP_to_7E8D": true,
+          "mapping_domain": "baseline",
+          "owner": "vm_native_call",
+          "section": ".text"
+        },
+        {
+          "bytes_at_site": "046489",
+          "is_JMP_to_7E8D": false,
+          "mapping_domain": "mapped-low-block3",
+          "owner": "c2_abort_driver",
+          "section": ".lisp65_c2_mapped_far_service"
+        }
+      ]
+    },
+    {
+      "opcode_address": 32277,
+      "operand_relocation": 32278,
+      "relocation_section": ".rela.text",
+      "source_section": ".text",
+      "target_addend": 24170,
+      "target_identity": {
+        "resolved_value": 32397,
+        "section": ".text",
+        "symbol": ".text",
+        "symbol_type": "Section"
+      },
+      "target_symbol": ".text",
+      "verdict": "instruction and target are baseline-domain",
+      "visible_bytes_by_domain": [
+        {
+          "bytes_at_site": "4c8d7e",
+          "is_JMP_to_7E8D": true,
+          "mapping_domain": "baseline",
+          "owner": "vm_native_call",
+          "section": ".text"
+        },
+        {
+          "bytes_at_site": "0180e6",
+          "is_JMP_to_7E8D": false,
+          "mapping_domain": "mapped-low-block3",
+          "owner": "c2_abort_driver",
+          "section": ".lisp65_c2_mapped_far_service"
+        }
+      ]
+    }
+  ],
+  "status": "ATTRIBUTED: BOTH VM-NATIVE JUMPS ARE BASELINE; GRAPH MISCLASSIFIED"
+}

@@ -1,0 +1,209 @@
+{
+  "authorities": {
+    "appointment": {
+      "bytes": 1922,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-launch-boundary-appointment-result.json",
+      "sha256": "3105a7ad0a289793be3589f92a00aadfea8943c81b5aa3ac8489026fe19da7b5"
+    },
+    "control_device": {
+      "bytes": 2429,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-launch-boundary-control-device-receipt.json",
+      "sha256": "fe5e918571fc984cfb91604ab4c0f5c4e2f0feed3acf2d32b2df72dbcb87436e"
+    },
+    "driver": {
+      "bytes": 20437,
+      "path": "tools/host-lisp/c2_v16_physical_delta_attribution.py",
+      "sha256": "54e9fc9265c08cc2e271356138166f0d22af4287ad5a19378f9a935bc52ea8fe"
+    },
+    "owner_commission": {
+      "bytes": 63636,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "dfebb42d03e7d8f657d7623a260c12e9f2da891ca30a29116e5fde30975b3abc"
+    },
+    "phase_C": {
+      "bytes": 18553,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-c-diagnostic-preparation-receipt.json",
+      "sha256": "199004b6f5b8f7f04493f119463d27e15cf87a0ecb27026958f594ac39c54439"
+    },
+    "physical_preparation": {
+      "bytes": 3774,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-physical-fallback-preparation-receipt.json",
+      "sha256": "79df91f95f6047f14606d3c68b8917830f89e5da57ae385f568bc4b3e9b60230"
+    },
+    "stopped_state": {
+      "bytes": 3120,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-launch-boundary-stopped-state-receipt.json",
+      "sha256": "5a11b82980778770f4b60c381d28bd14f8edbb1b68750a38fb7d3d897e1243b8"
+    }
+  },
+  "claim_limit": "Host/source/ELF and already-captured stopped-state attribution only. It rejects causal ownership by the diagnostic delta at the observed stage but does not claim the physical no-prompt symptom resolved, does not prove DMA liveness/completion, and authorizes no device contact, product/diagnostic fix, measured form, Link or R/A/I/G row.",
+  "decision": {
+    "F018B_completion_visibility_membership": "not-proved-and-not-reached-by-PC-witness",
+    "R_A_I_G_claimed": false,
+    "control_green_implication": "the common boot can complete; without matched progress timing it does not make a pre-delta stopped sample diagnostic-owned",
+    "hook_removal_hypothesis": "exonerated-through-observed-stage",
+    "named_mechanism": "the one-point stop sampled the shared 4096-job EXT-freelist bootstrap before the first diagnostic hook; it was promoted from progress state to delta-owned freeze without a progress/liveness witness",
+    "new_device_contact_authorized": false,
+    "physical_no-prompt_observation": "still-real-but-mechanism-unattributed",
+    "prior_delta_boundary_causality": "rejected",
+    "product_or_diagnostic_fix_authorized": false,
+    "record_or_witness_delta_hypothesis": "not-consumed-before-observed-stage",
+    "required_next_evidence_if_reopened": "matched control/physical early-boot progress counts or two time-separated CPU-side mem_init/DMA progress witnesses; one PC sample is insufficient"
+  },
+  "execution_witnesses": 10,
+  "facts": {
+    "identities": {
+      "control_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/control-link82.prg",
+        "sha256": "cef92b1dace70ae700402cb37e95b755d8be5625d168dd65c2ff319176247efe"
+      },
+      "entry_removal_restores_control_bytes": true,
+      "full_diagnostic_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+        "sha256": "d95bd77c3ea0ec6d091630895e59d31ad5f6df5896292c0f20a9aadbc9ac7936"
+      },
+      "full_diagnostic_to_physical_removal": [
+        {
+          "after": "a2448e30d0",
+          "before": "203fc0eaea",
+          "bytes": 5,
+          "start": "0x202c"
+        },
+        {
+          "after": "515253cccc54cccccc",
+          "before": "a2448e30d08e7ac060",
+          "bytes": 9,
+          "start": "0xc03f"
+        }
+      ],
+      "physical_hook_free_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-d2-physical-fallback/diagnostic-link82-physical.prg",
+        "sha256": "405549c882d18faf61949037cfcc2d0c2435d97b52a95ae4b94e2d6bd4251706"
+      },
+      "physical_vs_control": [
+        {
+          "after": "204ab4eaeaeaeaeaeaea",
+          "before": "aeddbfacdebf86048405",
+          "bytes": 10,
+          "start": "0x47c5"
+        },
+        {
+          "after": "2034b4eaea",
+          "before": "8617203b97",
+          "bytes": 5,
+          "start": "0x8eb7"
+        },
+        {
+          "after": "adf4c18d6bc0a2b38e6ac0a5898d6dc0e88e6cc0ad9bc18d6fc0e88e6ec0a9b28d69c0ad86ff8d72c0a2b78e71c0ad89ff8d74c0e88e73c0ad1ad08d76c0e88e75c0babd06018d78c0bd07018d79c0a9ba8d77c0a9b68d70c0a58f8d7cc0a2bc8e7bc0adf0b98d7ec0adf1b98d7fc0e88e7dc0a9bb8d7ac0789c1ad0a9028d20d04c31b48617a55b8d5cc0a9ad8d5bc0a9ac8d5ac0a55b4c3b97aeddbfacdebf86048405b20448ad4fc08d42c0ad50c08d43c0ad52c08d45c0ad53c08d46c0ad54c08d47c0ad56c08d49c0ad57c08d4ac0ad59c08d4cc0a9a38d41c0a9a48d44c0a9a58d48c0a9a68d4bc0a9a28d40c04cf7bf",
+          "before": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 243,
+          "start": "0xb3b0"
+        },
+        {
+          "after": "ade5bf8d4fc08d56c0ade6bf8d50c08d57c0a9a88d4ec0a9aa8d55c0add8bf8d52c0adb2b98d53c0adb3b98d54c0a9a98d51c0688d59c0a9ab8d58c0a9a78d4dc060eaeaeaeaea",
+          "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 71,
+          "start": "0xbff7"
+        },
+        {
+          "after": "515253cccc54cccccc55cccc56cc5758cccc59cccccc5acccc5bcc5c5dcc5ecccc5fcc60cccccc61cccc6263cc64cc65cc6667cc68cc69cc6acccc6b6ccc6dcccc",
+          "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 65,
+          "start": "0xc03f"
+        }
+      ],
+      "window_vs_control": [
+        {
+          "after": "4cb0b3eaeaeaeaeaeaeaeaeaeaea",
+          "before": "78a9008d1ad0a9028d20d04c96e0",
+          "bytes": 14,
+          "start": "0xe08b"
+        }
+      ]
+    },
+    "instrument_state": {
+      "entry_witness_exists_in_physical_identity": false,
+      "first_error_state": "0000",
+      "record_bytes": 65,
+      "record_matches_canonical_reset": true,
+      "record_non_reset_bytes": 0,
+      "refill_error_fail_closed_record_writes_observed": false
+    },
+    "placement": {
+      "caves_and_record_are_not_CRT_BSS_or_init_array_members": true,
+      "code0_gap": [
+        "0xb3b0",
+        "0xb4a3"
+      ],
+      "code1_starts_at_bss_end": "0xbff7",
+      "init_array_start_equals_end_at_code0": true,
+      "record_ends_at_first_fixed_bank0_state": "0xc080"
+    },
+    "source": {
+      "DMA_direction": "Bank-0 ext_stg -> Bank-4 EXT cell a-field",
+      "EXT_cells": 4096,
+      "bindings": {
+        "eval": {
+          "bytes": 97933,
+          "commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe",
+          "path": "src/eval.c",
+          "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+        },
+        "mem": {
+          "bytes": 48487,
+          "commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe",
+          "path": "src/mem.c",
+          "sha256": "b32dc707afe90074cfbd57bd4464b63d7b939bbead45fc35f02353836d555771"
+        },
+        "obj": {
+          "bytes": 7704,
+          "commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe",
+          "path": "src/obj.h",
+          "sha256": "b7ce64d76d6a22a3b3af777d01bbb76fc4257dd2fb7951ae72994d2676a94366"
+        },
+        "workbench": {
+          "bytes": 22860,
+          "commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe",
+          "path": "config/workbench.mk",
+          "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+        }
+      },
+      "boot_chain": "vm_workbench_boot_overlay_entry -> eval_init -> mem_init -> cell_set_a -> ext_set_a -> ext_dma",
+      "bytes_per_job": 2,
+      "hot_cells": 48,
+      "mem_init_EXT_write_jobs": 4096,
+      "source_commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe"
+    },
+    "stopped_PC": {
+      "D700_submit_offset": 64,
+      "PC": "0x32aa",
+      "X": "0xb9",
+      "X_matches_ext_stg_high_byte": true,
+      "bytes_before_submit": 29,
+      "completion_or_content_consumed_by_this_PC_witness": false,
+      "instruction": "STX $BC7F (ext_dl+7)",
+      "linked_bytes": "8e7fbc",
+      "submit_reached_by_this_PC_witness": false,
+      "symbol": "ext_dma",
+      "symbol_offset": 35,
+      "symbol_start": "0x3287"
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-D2-physical-delta-desk-attribution-v1",
+  "mutations_rejected": {
+    "authorize-device": "attribution/claim limit drift",
+    "authorize-fix": "attribution/claim limit drift",
+    "claim-DMA-class-member": "attribution/claim limit drift",
+    "claim-R-row": "attribution/claim limit drift",
+    "claim-delta-causality": "attribution/claim limit drift",
+    "claim-hook-removal-cause": "attribution/claim limit drift",
+    "claim-record-hook-reached": "diagnostic record reachability claim drift",
+    "claim-submit-reached": "stopped-PC claim boundary drift",
+    "erase-unresolved-no-prompt": "attribution/claim limit drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "ATTRIBUTED SHARED PRE-DELTA BOOTSTRAP SAMPLE; DELTA CAUSALITY REJECTED"
+}

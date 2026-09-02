@@ -1,0 +1,65 @@
+{
+  "authority": {
+    "D1_D5": {
+      "bytes": 8131,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-link116-name-freight-device-receipt.json",
+      "sha256": "1998291fc71e7de2e369b57c2fe8c9c481f385b189b4a1cf6ed3b5d027cf275a"
+    },
+    "boot_comparison": {
+      "bytes": 2818,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-boot-duration-device-receipt.json",
+      "sha256": "7747c4e9d6c95ba5e105080b9c449984a809eb7f433dd9bf5d3e550517036fa3"
+    },
+    "recorder": {
+      "bytes": 6425,
+      "path": "tools/host-lisp/c2_v150_halt1.py",
+      "sha256": "8bfc73079dcd0427e0de21cfb549a76374df769c6129394cc4a548929a678e09"
+    }
+  },
+  "claim_limit": "Halt #1 accepts the already qualified candidate and its measured 36-second cold-reset boot. It authorizes Phase E only; publication still requires Halt #2 and the owner's literal publish word.",
+  "format": "lisp65-c2.3-v1.5.0-halt-1-owner-decision-v1",
+  "halt_2": "closed-until-release-closure",
+  "mutations_rejected": [
+    "pull-snapshot",
+    "hide-boot",
+    "open-halt2",
+    "authorize-product-byte",
+    "close-phase-e"
+  ],
+  "next": "phase-E-documentation-assets-double-readback-then-halt-2",
+  "owner_decision": {
+    "owner_confirmed": true,
+    "pull_boot_snapshot_before_v1.5.0": false,
+    "release_notes_must_name_duration_and_reason": true,
+    "ship_measured_36_second_boot": true,
+    "word": "Ship"
+  },
+  "phase_E": "open",
+  "product_byte_changes_authorized": 0,
+  "recorded_on": "2026-08-18",
+  "snapshot_successor": {
+    "register": "docs/reference/parked-items-register.md",
+    "status": "deferred-post-v1.5.0"
+  },
+  "status": "PASS: HALT #1 OWNER ACCEPTED; PHASE E OPEN",
+  "table": {
+    "D1_D5": "green-19-physical-rows",
+    "boot_seconds": {
+      "delta": 5,
+      "v1.4.0": 31,
+      "v1.5.0": 36
+    },
+    "terminal_return_guard": "clean-four-empty-records-no-restore",
+    "user_headroom": {
+      "minimum": {
+        "namepool_bytes": 384,
+        "symbol_slots": 32
+      },
+      "observed": {
+        "namepool_bytes": 545,
+        "symbol_slots": 34
+      },
+      "status": "pass"
+    }
+  }
+}

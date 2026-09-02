@@ -1,0 +1,19 @@
+{
+  "format": "lisp65-c2.2-require-manifest-v1-host-probe-first-red-v1",
+  "recorded_on": "2026-07-27",
+  "status": "closed-class-A-host-oracle-specificity",
+  "run": 1,
+  "stopped_at": "manifest-empty-sources mutation",
+  "observed": "field-shape",
+  "expected": "empty-sources",
+  "cause": "The generic row-shape check required a value in every field and rejected (sources) before the field-specific nonempty-source rule could speak.",
+  "correction": "The structural layer now accepts a named zero-arity row; the field-specific arity and nonempty rules remain the sole authorities for whether that row is legal.",
+  "replay": "The same empty-sources mutation reaches and receives empty-sources; the complete host probe then passes.",
+  "impact": {
+    "contract_delta": 0,
+    "product_bytes": 0,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "generated_artifacts_claimed_before_replay": 0
+  }
+}

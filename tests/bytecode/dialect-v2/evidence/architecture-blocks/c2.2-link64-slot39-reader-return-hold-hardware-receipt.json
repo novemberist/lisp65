@@ -1,0 +1,269 @@
+{
+  "attribution": {
+    "disproved": [
+      "reader success followed by CRC/seal nonmatch or timeout",
+      "failure in the CRC comparison after a successful read",
+      "a static out-of-bounds request",
+      "a producer/target C2J seal divergence"
+    ],
+    "next_question": "why c2_stream_c2d_read returns zero for the exact accepted end-of-region Bank-5 request; inspect its runtime ownership/region validation and caller-visible return contract before any product fix",
+    "proven": [
+      "the exact nonpromotable carrier was uploaded byte-identically",
+      "the post-reader BNE success edge was replaced by its own self-loop without changing carrier size",
+      "bad bytecode and REPL return prove that the success edge was not taken: c2_stream_c2d_read returned zero",
+      "the linked arguments are Bank 5, offset $c640, length 64; $c640 + 64 equals the accepted region end $c680",
+      "rollback completed fail-closed, wiped Slot 39 completely, and preserved a usable REPL",
+      "the A3/PREPARED postmortem C2J remains byte-stable and matches producer seal $2801 while IRQ frames continue"
+    ]
+  },
+  "authority": {
+    "candidate_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-slot39-reader-return-hold-NONPROMOTABLE/runtime-overlays-session-link64-slot39-reader-return-hold.bin",
+      "sha256": "d974de2ef490b69dd484bed8f1984e677537908402f251b69758bb7a05625587"
+    },
+    "deployed_carrier_readback": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/deploy-readback-runtime-overlays-session-link64-slot39-reader-return-hold.bin",
+      "sha256": "d974de2ef490b69dd484bed8f1984e677537908402f251b69758bb7a05625587"
+    },
+    "deployment": {
+      "bytes": 4416,
+      "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/deployment.json",
+      "sha256": "84beb78ccfd52ebef5a9023a6f08c828cd75e903cd3cbe57b039fc95f5d2ba7a"
+    },
+    "diagnostic_patch": {
+      "bytes": 4661,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-reader-return-hold-nonpromotable-receipt.json",
+      "sha256": "62660572aa45bc39988cfb6f90436d66fc9f4ca410b9d7a0a7f7ae45fb20d59c"
+    },
+    "hardware_driver": {
+      "bytes": 5575,
+      "path": "scripts/c2-link64-slot39-reader-return-hold-hw.sh",
+      "sha256": "a71997958f8b7ce4fd310e099842433069dd83f07c7c01ab35963a8584da71b6"
+    },
+    "prior_host_ELF_attribution": {
+      "bytes": 6677,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-ACTIVE-false-host-ELF-attribution.json",
+      "sha256": "f6adb687be76893fa267bb8b7d5ba22db1f298400a19a869dd92bce667757e2c"
+    },
+    "receipt_driver": {
+      "bytes": 11296,
+      "path": "tools/host-lisp/c2_link64_slot39_reader_return_first_red.py",
+      "sha256": "ffc75d037fb96b2e9d163ee0e68dd22245bacdf872dbc6f8b29766551c78f666"
+    }
+  },
+  "claim_limit": "Bank-5 reader-return attribution only. C1 remains OPEN; no matrix-gate, acceptance-chain, promotion or release claim.",
+  "diagnostic_lifecycle": {
+    "eligible_for_promotion": false,
+    "identity": "d974de2ef490b69dd484bed8f1984e677537908402f251b69758bb7a05625587",
+    "state": "discarded-after-capture"
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "diagnostic_hardware_runs": 1,
+    "latency_attempts_consumed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-Link64-slot39-reader-return-hardware-first-red-v1",
+  "hardware_First_Red": {
+    "binary_discriminator": {
+      "answer": "c2_stream_c2d_read returned zero",
+      "nonzero_outcome": "self-loop/hang at $c82c",
+      "observed_outcome": "bad bytecode and REPL return",
+      "patched_instruction": "BNE $c82c",
+      "zero_outcome": "bad bytecode and REPL return"
+    },
+    "postmortem": {
+      "c2_ready": 0,
+      "completion_mode": "0xa3 (ROLLBACK)",
+      "frame_progressed_across_captures": true,
+      "journal_result": "2 (PREPARED)",
+      "producer_C2J_seal": "0x2801",
+      "runtime_slot39_fully_wiped": true,
+      "seal_matches": true,
+      "target_C2J_crc16": "0x2801"
+    },
+    "screen": {
+      "bytes": 3880,
+      "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/reader-return-screen.png",
+      "sha256": "89d662a044ab47763583165687ca5366e42787f64e7c7c5896f43db043fccc92"
+    },
+    "screen_status": "*** vm: bad bytecode",
+    "submitted_form": "(defun %c1e () (quote t))",
+    "usable_REPL_returned": true
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "stable_witnesses": {
+    "c2j": {
+      "byteidentical_across_three": true,
+      "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+    },
+    "completion-record": {
+      "byteidentical_across_three": true,
+      "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+    },
+    "runtime-slot39": {
+      "byteidentical_across_three": true,
+      "sha256": "103c1589c122f64eb66366106f64e7dbbb5b394c2773839e79efaed465a20529"
+    },
+    "runtime-zp": {
+      "byteidentical_across_three": true,
+      "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+    },
+    "trace": {
+      "byteidentical_across_three": true,
+      "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+    }
+  },
+  "status": "FIRST RED: linked Bank-5 reader returned zero",
+  "time_separated_postmortem_captures": [
+    {
+      "c2_ready": 0,
+      "captured_at_utc": "2026-07-26T12:44:56.767445Z",
+      "completion_mode": "0xa3",
+      "current_frame": "0x0b21",
+      "frame": {
+        "address": "0x0000ff83",
+        "bytes": 5,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-1/frame.bin",
+        "sha256": "ae9c81e63c274c3099f27a70e61e221f6fc89144a4a26cd110af751badef9169"
+      },
+      "index": 1,
+      "journal_result": 2,
+      "phase_trace": {
+        "address": "0x0000c1f0",
+        "bytes": 8,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-1/trace.bin",
+        "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+      },
+      "producer_seal": "0x2801",
+      "record": {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-1/completion-record.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      },
+      "runtime_ZP": {
+        "address": "0x00000070",
+        "bytes": 48,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-1/runtime-zp.bin",
+        "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+      },
+      "runtime_slot39": {
+        "address": "0x0000c356",
+        "bytes": 1509,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-1/runtime-slot39.bin",
+        "sha256": "103c1589c122f64eb66366106f64e7dbbb5b394c2773839e79efaed465a20529"
+      },
+      "runtime_slot39_fully_wiped": true,
+      "seal_matches": true,
+      "target_C2J": {
+        "address": "0x0005c640",
+        "bytes": 64,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-1/c2j.bin",
+        "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+      },
+      "target_C2J_crc16": "0x2801"
+    },
+    {
+      "c2_ready": 0,
+      "captured_at_utc": "2026-07-26T12:44:58.813644Z",
+      "completion_mode": "0xa3",
+      "current_frame": "0x0b86",
+      "frame": {
+        "address": "0x0000ff83",
+        "bytes": 5,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-2/frame.bin",
+        "sha256": "02f0defdc51437d8aad489a662831c4b7c8b9896fb74fe483a1ee8adbefb3d9e"
+      },
+      "index": 2,
+      "journal_result": 2,
+      "phase_trace": {
+        "address": "0x0000c1f0",
+        "bytes": 8,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-2/trace.bin",
+        "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+      },
+      "producer_seal": "0x2801",
+      "record": {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-2/completion-record.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      },
+      "runtime_ZP": {
+        "address": "0x00000070",
+        "bytes": 48,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-2/runtime-zp.bin",
+        "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+      },
+      "runtime_slot39": {
+        "address": "0x0000c356",
+        "bytes": 1509,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-2/runtime-slot39.bin",
+        "sha256": "103c1589c122f64eb66366106f64e7dbbb5b394c2773839e79efaed465a20529"
+      },
+      "runtime_slot39_fully_wiped": true,
+      "seal_matches": true,
+      "target_C2J": {
+        "address": "0x0005c640",
+        "bytes": 64,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-2/c2j.bin",
+        "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+      },
+      "target_C2J_crc16": "0x2801"
+    },
+    {
+      "c2_ready": 0,
+      "captured_at_utc": "2026-07-26T12:45:03.862135Z",
+      "completion_mode": "0xa3",
+      "current_frame": "0x0c7f",
+      "frame": {
+        "address": "0x0000ff83",
+        "bytes": 5,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-3/frame.bin",
+        "sha256": "836a80045021267ac24a84cafd8ec3335656f1aeb2eaaa1f530ff9358da6cfef"
+      },
+      "index": 3,
+      "journal_result": 2,
+      "phase_trace": {
+        "address": "0x0000c1f0",
+        "bytes": 8,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-3/trace.bin",
+        "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+      },
+      "producer_seal": "0x2801",
+      "record": {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-3/completion-record.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      },
+      "runtime_ZP": {
+        "address": "0x00000070",
+        "bytes": 48,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-3/runtime-zp.bin",
+        "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+      },
+      "runtime_slot39": {
+        "address": "0x0000c356",
+        "bytes": 1509,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-3/runtime-slot39.bin",
+        "sha256": "103c1589c122f64eb66366106f64e7dbbb5b394c2773839e79efaed465a20529"
+      },
+      "runtime_slot39_fully_wiped": true,
+      "seal_matches": true,
+      "target_C2J": {
+        "address": "0x0005c640",
+        "bytes": 64,
+        "path": "build/c2.2/hardware-link64-slot39-reader-return-hold-NONPROMOTABLE/capture-3/c2j.bin",
+        "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+      },
+      "target_C2J_crc16": "0x2801"
+    }
+  ]
+}

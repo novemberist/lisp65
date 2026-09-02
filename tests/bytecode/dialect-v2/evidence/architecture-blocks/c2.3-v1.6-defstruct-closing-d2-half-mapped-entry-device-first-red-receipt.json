@@ -1,0 +1,77 @@
+{
+  "authority": {
+    "contact_base_commit": "582f30cb",
+    "diagnostic_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+      "sha256_at_contact": "3c94bbfbf959ddc5ce13e6c8434f9d515671a760922f97fecf6dd223e94bf6ce"
+    },
+    "owner_disposition": "582f30cb"
+  },
+  "claim_limit": "One setup First Red before RETURN. It proves neither require nor defstruct, selects no R/A/I/G row, makes no product claim, and authorizes no additional contact.",
+  "date": "2026-08-05",
+  "device_contact": {
+    "contact_consumed": true,
+    "hardware_improvisation": false,
+    "output_directory": "build/c2.3/v1.6-defstruct-closing-session/d2-ram-entry-witness-mapped",
+    "retry_authorized": false
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-D2-half-mapped-entry-device-first-red-v1",
+  "preconditions": {
+    "diagnostic_preload_readbacks": {
+      "byteidentical": 7,
+      "expected": 7
+    },
+    "fresh_basic": {
+      "bytes": 4231,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-ram-entry-witness-mapped/fresh-basic.png",
+      "sha256": "dbe8a4460c8bbafa11b347e889bd19722019be9a2fc2a498e90d378f05d1c5fd"
+    },
+    "library_medium": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-ram-entry-witness-mapped/readback.d81",
+      "sha256": "871b90824924dacbe27f071d56b0b97488257da0c1a0b9e80f5d5eeae5f23380"
+    },
+    "transfer_log": {
+      "bytes": 2350,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-ram-entry-witness-mapped/upload.log",
+      "sha256": "ab673253863f6006a1206922166f0f39ab87024ee1e6b6ba3fee470fc2d5ada1"
+    }
+  },
+  "result": {
+    "R_A_I_G_row": null,
+    "defstruct_started": false,
+    "entry_RAM_stamp_read": false,
+    "measured_forms_started": 0,
+    "require_started": false,
+    "virtual_RETURN_submitted": false
+  },
+  "setup_first_red": {
+    "captured_line": "RUN:",
+    "capture_also_contains": [
+      "BREAK",
+      "BS MONITOR COMMANDS",
+      "PC $C802",
+      "XR $2F"
+    ],
+    "diagnostic_hook": {
+      "address": "$2028",
+      "after_only": "LDX #$2F; STX $00",
+      "before": "LDX #$3E; STX $01",
+      "target": "$C03F"
+    },
+    "desk_mechanism": "the first correction placed the far call after only the $00 half of the RAM-mapping pair; XR=$2F in the stopped monitor state corroborates that $00 executed while the displaced $01 store did not",
+    "launch_screen_png": {
+      "bytes": 6693,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-ram-entry-witness-mapped/launch-before-return.png",
+      "sha256": "d3acd6d62ab8ac3dabe9909ea7b9289ab8b0fa9d15ca29298002bb8efa168603"
+    },
+    "launch_screen_text": {
+      "bytes": 2253,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-ram-entry-witness-mapped/launch-before-return.txt",
+      "sha256": "b5150ea6eb93357854f6ec9d4dbdb7e5eccc000c5ed3aeee13de9296c67f68ce"
+    },
+    "status": "SETUP FIRST RED before RETURN submission"
+  },
+  "status": "FIRST RED: entry hook ran after only half of the RAM-mapping pair"
+}

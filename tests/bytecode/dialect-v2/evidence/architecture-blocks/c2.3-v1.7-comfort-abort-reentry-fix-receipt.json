@@ -1,0 +1,202 @@
+{
+  "authority": {
+    "attribution": {
+      "bytes": 4290,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-comfort-abort-reentry-attribution.json",
+      "sha256": "df395aad469ecc81777ecb6ed83e1d71f81271d7bb2a6c807b3deb29efb45b45"
+    }
+  },
+  "claim_limit": "Proves two-stage ordering and zero/nested journal recovery; hardware reentry remains a device acceptance claim.",
+  "final_elf": {
+    "call_targets": {
+      "c2_product_abort_cleanup": [
+        "c2_rtov_retire_continuations_facade",
+        "rtov_wipe"
+      ],
+      "c2_product_abort_recover": [
+        "c2_abort_driver_facade"
+      ],
+      "lisp_abort_symbol": [
+        "c2_product_abort_cleanup",
+        "longjmp"
+      ],
+      "repl": [
+        "setjmp",
+        "__lisp65_c2_mapped_product_cold_end",
+        "c2_product_abort_recover",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "lisp_abort_code",
+        "scr_cursor",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "kb_cursor_off",
+        "__lisp65_c2_mapped_product_cold_end",
+        "scr_cursor",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "kb_cursor_off",
+        "__lisp65_c2_mapped_product_cold_end",
+        "lisp65_hw_udivhi3",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "lisp_abort_code",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "lisp65_hw_mulhi3",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "vm_run_dir",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end",
+        "__lisp65_c2_mapped_product_cold_end"
+      ]
+    },
+    "elf": {
+      "bytes": 647588,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+    },
+    "status": "PASS: FINAL ELF CONSUMES TWO-STAGE LANDING"
+  },
+  "format": "lisp65-c2-v17-comfort-abort-reentry-fix-v1",
+  "models": {
+    "historical_order": {
+      "events": [
+        "sanitize",
+        "retire-wipe",
+        "transport-before-longjmp"
+      ],
+      "ready": 0,
+      "soft_sp": 51456,
+      "status": "ERR_STACK"
+    },
+    "nested_depth_three": {
+      "events": [
+        "sanitize",
+        "retire-wipe",
+        "longjmp-restore",
+        "journal-validate",
+        "journal-reconstruct",
+        "fronts",
+        "rollback-prepare",
+        "journal-write",
+        "rollback-plan",
+        "fronts",
+        "rollback-prepare",
+        "journal-write",
+        "rollback-plan",
+        "fronts",
+        "rollback-prepare",
+        "journal-write",
+        "rollback-plan",
+        "fronts",
+        "rollback-prepare",
+        "done"
+      ],
+      "journal_depth": 3,
+      "ready": 1,
+      "soft_sp": 53232,
+      "status": "OK"
+    },
+    "zero_depth": {
+      "events": [
+        "sanitize",
+        "retire-wipe",
+        "longjmp-restore",
+        "journal-validate",
+        "journal-reconstruct",
+        "fronts",
+        "rollback-prepare",
+        "done"
+      ],
+      "journal_depth": 0,
+      "ready": 1,
+      "soft_sp": 53232,
+      "status": "OK"
+    }
+  },
+  "mutations": [
+    {
+      "name": "transport-restored-to-pre-longjmp-half",
+      "rejected": "transported cleanup survived before longjmp"
+    },
+    {
+      "name": "post-longjmp-recovery-removed",
+      "rejected": "restored-stack recovery is not the first abort-landing work"
+    },
+    {
+      "name": "recovery-delayed-past-error-clear",
+      "rejected": "restored-stack recovery is not the first abort-landing work"
+    }
+  ],
+  "source_gate": {
+    "landing_order": [
+      "setjmp-restored",
+      "C2J-recover",
+      "render-original-error",
+      "clear-error"
+    ],
+    "post_longjmp": [
+      "C2J-validate",
+      "rollback-if-active"
+    ],
+    "pre_longjmp": [
+      "continuation-sanitize",
+      "overlay-retire-wipe"
+    ],
+    "status": "PASS: ABORT LANDING IS TWO STAGE"
+  },
+  "sources": {
+    "header": {
+      "bytes": 27313,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "9450aa3326139120379ddbc0be99f3ff02162a8cb548687d2d31547036142871"
+    },
+    "interrupt": {
+      "bytes": 6580,
+      "path": "src/interrupt.c",
+      "sha256": "8f68517539d3e62590abb42125909fdbc7fb13b737c495bd7542d7394bbfafec"
+    },
+    "repl": {
+      "bytes": 14544,
+      "path": "src/repl.c",
+      "sha256": "095c9aaa80b3c5da55887295a9ede634039971d72d31a6afcce6919e65bc08b9"
+    },
+    "runtime": {
+      "bytes": 165510,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "e3e8a99fade8baad445379b52f3b5363fef51153379267d817cbd37787ee2efa"
+    }
+  },
+  "status": "PASS: COMFORT ABORT REENTRY RECOVERS AFTER LONGJMP"
+}

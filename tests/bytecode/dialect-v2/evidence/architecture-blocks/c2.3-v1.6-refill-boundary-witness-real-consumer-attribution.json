@@ -1,0 +1,74 @@
+{
+  "format": "lisp65-c2-v160-refill-boundary-witness-real-consumer-attribution-v1",
+  "recorded_on": "2026-08-22",
+  "status": "PASS: REFILL WITNESS BOUND BUT NOT CONSUMED BY REAL SINGLE-LINK",
+  "decision": {
+    "class": "bound-not-consumed-at-real-compiler-projection",
+    "mechanism_fully_attributed": true,
+    "product_fault": false,
+    "pricing_refuted": false,
+    "card_consumed": true,
+    "retry_authorized": false
+  },
+  "bound_side": {
+    "source": "outer witness-card configure_module and persisted preflight",
+    "feature": "LISP65_C2_REFILL_BOUNDARY_WITNESS",
+    "source_member": "src/optional/c2_refill_boundary_witness.s",
+    "section": ".lisp65_c2_mapped_diagnostic",
+    "preflight_status": "PASS: V1.6 REFILL WITNESS ARMED 0/1",
+    "preflight_real_source_consumed": true,
+    "preflight_sha256": "1f52f5ca63bf3505c81a5802abd7fdbd91b82114a2fec45d5745db54d8e25e51"
+  },
+  "consumed_side": {
+    "source": "real resident-island seed compiler/link invocation",
+    "resolved_profile_sha256": "ec5a79787273d43a93b67ab5b968340f24b06d48ccb9532d8a84e8f5318f8dfd",
+    "resolved_profile_witness_feature_present": false,
+    "resolved_profile_witness_source_present": false,
+    "canonical_witness_object_present": false,
+    "diagnostic_section": {
+      "address": "0x7e8d",
+      "bytes": 0
+    },
+    "ordinary_installer": {
+      "symbol": "vm_runtime_overlay_install_island",
+      "address": "0xa8fe",
+      "bytes": 211,
+      "section": ".text.vm_runtime_overlay_install_island"
+    },
+    "expected_far_installer_symbol_present": false,
+    "expected_trace_reader_symbol_present": false,
+    "map_sha256": "0045947255369166e68d6b58e4d3cc8c98bf0ce84d50880e47c60312351e12b0",
+    "lto_object_sha256": "79884913c517ded8b1e69f528439a9c3ad41b719e8954bd0279acd501a1b232e",
+    "lto_object_mode": "0444",
+    "link_stderr_sha256": "78d9caf9202d38e4ef02f651bc614753ce3c60e91a820e7c065c59d8772101a9"
+  },
+  "mechanism": {
+    "outer_configuration": "configure_refill_boundary_witness mutates the live module feature/source registry",
+    "real_consumer": "the inherited card stack projects probe_definitions and source membership for single_link",
+    "fault": "the witness activation is not projected into the argument set consumed by the real single-link invocation",
+    "why_preflight_missed_it": "the preflight queried the live module registry before the inherited real caller projected its own compiler arguments",
+    "link_assertion": "SIZEOF(.lisp65_c2_mapped_diagnostic) > 0",
+    "assertion_result": "correctly rejected the empty diagnostic section"
+  },
+  "exonerations": {
+    "mapped_diagnostic_arena": "linker section and 371-byte capacity were present at 0x7e8d; no freight reached them",
+    "installer_price": "the emitted predecessor installer remains exactly 211 bytes",
+    "witness_source": "standalone source gate emitted the priced 9-byte stub and 205-byte trace reader",
+    "origin_and_wrap": "source gate passed with the bound atomic origin and two commit-last slots",
+    "product_and_device": "no final product artifact, media build, or device contact occurred"
+  },
+  "required_successor_shape": {
+    "rule": "a configured feature is proved only at the real compiler/link consumer, not in the producer registry",
+    "minimal_conversion": "project witness feature and source through the real single_link caller after all inherited configuration and before compiler argv/source-list materialization",
+    "permanent_preflight": "execute the real caller and require the actual resolved profile, compiler source list, and seed object inventory to contain the witness before a WPLTO card is issued",
+    "mutation": "a feature/source present only in the module registry but absent from the real invocation must fail pre-card",
+    "next": "fresh one-shot replacement card requires explicit authorization"
+  },
+  "attempt_accounting": {
+    "cards_consumed": 1,
+    "WPLTO_runs": 1,
+    "product_link_attempts": 1,
+    "media_builds": 0,
+    "device_contacts": 0
+  }
+}

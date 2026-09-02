@@ -1,0 +1,87 @@
+{
+  "authority": {
+    "driver": {
+      "bytes": 4469,
+      "path": "tools/host-lisp/c2_v13_bank2_read_line_wplto.py",
+      "sha256": "42ac6cc8565317aa323ca5c9b8b70f55a6fdf7d01b0964291c5bf1ef02089ebe"
+    },
+    "editor": {
+      "bytes": 36767,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2-v126-editor-allocation-gate-receipt.json",
+      "sha256": "bda8404d7e9a7f9464bfa7415f1dcb05c660095f3f8ad8669ba2952a5fb8cefc"
+    },
+    "execution_contract": {
+      "bytes": 28730,
+      "path": "config/c2-lite-execution-contract.json",
+      "sha256": "981a9454600bafd7517ae2e37a1d18f8b4760f5f16e004cbfaa08ffd6ad09462"
+    },
+    "ide_manifest": {
+      "bytes": 342211,
+      "path": "build/bytecode/dialect-v2/libs/ide.manifest.json",
+      "sha256": "3a2ae3728e7da6c0a697d2c33a9dfbfac1ca4eedce2277ed20530a6d8e62d0bb"
+    },
+    "input_wait": {
+      "bytes": 28087,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.3-ship-input-wait-host-first-receipt.json",
+      "sha256": "dae65dd8b59cc9b7b827cbc9de0164d59a67149234d3325288c7b1eb4a7a14d9"
+    },
+    "profile": {
+      "bytes": 5417,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "0a4347a91706adc1e3ae09b0588c6de2bc17045fd85c81d9758b5453e0657d2f"
+    },
+    "q": {
+      "bytes": 6055,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.3-q-host-first-receipt.json",
+      "sha256": "8339f473ab69df9ce525e710e8d6e10d85fea296b626eac8c7bb114b621d71d8"
+    },
+    "static_header": {
+      "bytes": 293,
+      "path": "src/c2_lite_static_plane.h",
+      "sha256": "596308ee0533eab931d99dc29a7adea7b79dc6483d5c1846f219f24cb186f2ef"
+    },
+    "stdlib_manifest": {
+      "bytes": 338811,
+      "path": "build/ship-builder/v13/input-wait-host-first/candidate/stdlib-p0.manifest.json",
+      "sha256": "c97d813e33f40d4d71f6fb2068da12f1fc10dbb63771cff1e047e8a11924dd6b"
+    }
+  },
+  "bank2_read_line_disposition": {
+    "lisp_allocation_max_cells_per_key": 4,
+    "native_del_leaf_linked": false,
+    "native_screen_driver_delta_bytes": 0,
+    "phase": "profile",
+    "reason": "read-line owns its last-row viewport entirely in Bank-2 Lisp; the pre-freight C screen driver is restored and the historical 105-byte leaf remains unlinked shelf evidence"
+  },
+  "claim_limit": "Linker-free profile binding only; no product link, hardware or release claim.",
+  "format": "lisp65-c2.3-v1.3-ship-joint-profile-v1",
+  "geometry": {
+    "bank2_headroom_bytes": 20022,
+    "bank2_sha256": "49658f5239abf867a29875a1464629f1885d3dab58102077fda5ba19af882589",
+    "bank2_static_code_bytes": 45514,
+    "delta": {
+      "bank2_code_bytes": 451,
+      "direct_entry_refs": 0,
+      "entries": 7,
+      "resolution_words": 16,
+      "roots": 0,
+      "stdlib_kind4_literal_nodes": 14
+    },
+    "direct_entry_refs": 710,
+    "entries": 757,
+    "product_build_id": "0x6b3bae84",
+    "resolutions": 2947,
+    "roots": 350
+  },
+  "host_gate_summaries": {
+    "editor": "c2-v126-editor-allocation: PASS keys=165 mutations=6",
+    "input_wait": "c2-ship-input-wait-gate: PASS cases=11x2 mutations=14 keys=266 max-cells/key=4 bank2=+451 resident=+0 native=+0",
+    "q": "c2-q-gate: PASS oracle=36x2 io=38 mutations=12 bank2=+1451 headroom=22600 resident=+0",
+    "q_post_profile": "c2-q-gate: PASS oracle=36x2 io=38 mutations=12 bank2=+1451 headroom=22600 resident=+0",
+    "surface": "v11-surface-delivery-parity: PASS bound_names=78 names=*,+,-,/,/=,1+,1-,<,<=,=,>,>=,append,apply,assoc,atom,boundp,car,cdr,cons,consp,count,edit,eq,eql,equal,eval,every,filter,find,funcall,function-kind,int->q,key-event,length,list,load-lib,load-libs,mapc,mapcar,member,minusp,mod,not,nth,nthcdr,null,numberp,plusp,position,q,q*,q+,q-,q->int,q->string,q/,random,random-seed,read-from-string,read-line,reduce,reverse,search,set,some,string-length,string-ref,stringp,symbol-name,symbol-value,symbolp,terpri,time,wait,write,write-char,zerop"
+  },
+  "next_gate": "one ordinary product-shaped WPLTO",
+  "recorded_on": "2026-08-01",
+  "status": "passed-v1.3-joint-linker-free-profile",
+  "target_linker_invocations": 0
+}

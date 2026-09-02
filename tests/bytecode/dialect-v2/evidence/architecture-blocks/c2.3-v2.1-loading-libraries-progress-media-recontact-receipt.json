@@ -1,0 +1,110 @@
+{
+  "claim_limit": "The ring measures successful logical reads over three consecutive 2048-frame intervals when four slots commit. A closing PC is contextual only; CPU remains stopped and D1-D5 remain closed.",
+  "comparison": {
+    "old_DMA_world": {
+      "counter": 18,
+      "observation_seconds": 118.23346033945272
+    },
+    "repaired_CPU_world": {
+      "counter": null,
+      "decision": "INSTRUMENT-RED"
+    }
+  },
+  "discipline": {
+    "CPU_left_stopped": true,
+    "D1_D5_executed": false,
+    "active_observations": 0,
+    "resumes": 0,
+    "same_stopped_session": true,
+    "stops": 1,
+    "target_sampler_only": true
+  },
+  "format": "lisp65-c2.3-v2.1-loading-progress-media-recontact-v1",
+  "inputs": {
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 61478,
+      "commit": "2a327257d769572beadbc335ceaaccf497699f0b",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "979b181cd619051e63f65823168bed0bcf9e97b3eca4f0f23e8d9d0fb58001e9"
+    },
+    "enumeration": {
+      "bytes": 16532,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-media-builder-closure-enumeration-receipt.json",
+      "sha256": "3b337ab29083777ee6f4fa06d590afc789530f8e3061bca06d611956c59d46d3"
+    },
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-loading-libraries-progress-media-recontact/contact/library-readback.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "product_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-loading-libraries-progress-media-recontact/contact/product-readback.d81",
+      "sha256": "e15e5f12deb4630da8a98bf3c249825b2831ca2817902ba42038b32f307822c6"
+    },
+    "raw_capture": {
+      "bytes": 3718,
+      "path": "build/c2.3/v2.1-loading-libraries-progress-media-recontact/contact/raw-capture.json",
+      "sha256": "0546c126566b30d91f985021e3edfa9276c33e279b81e7e5be2660af81706053"
+    },
+    "repair": {
+      "bytes": 8517,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-loading-libraries-progress-media-repair-receipt.json",
+      "sha256": "a8105660839906eb2b0ea9164b0cb3b7d414b0af28ddc3dee8c2ddf8032659f6"
+    },
+    "ring": {
+      "bytes": 21782,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-loading-libraries-progress-ring-receipt.json",
+      "sha256": "91468fd7990491e54f92f868dc8d3e3e85ddc6c428621c91d3ffb5878a9dabc7"
+    },
+    "session": {
+      "bytes": 1431,
+      "path": "config/c2-v21-loading-libraries-progress-media-recontact.json",
+      "sha256": "6b318020623bbda10ba3002206b957a7a71c1ca88d85a250217d41144c7e6d92"
+    }
+  },
+  "mutations": {
+    "count": 7,
+    "rejected": [
+      "add-resume",
+      "add-stop",
+      "allow-active-observation",
+      "invent-decision",
+      "invent-four-slots",
+      "open-D1-D5",
+      "rewrite-baseline"
+    ]
+  },
+  "progress_ring": {
+    "arm": "0x00",
+    "committed_slots": 0,
+    "decision": "INSTRUMENT-RED",
+    "final_frame": 23,
+    "reason": "ring-not-armed"
+  },
+  "recorded_on": "2026-08-15",
+  "status": "INSTRUMENT-MEDIA-RED; CPU-RATE-UNMEASURED",
+  "stopped_code_identity": {
+    "PC": "0x2ae1",
+    "interpretation": "stager fail hold; no product-rate claim",
+    "owner": "repaired-diagnostic-stager",
+    "section": ".text",
+    "symbol": "show_disk_error",
+    "symbol_offset": 20
+  },
+  "tuple": {
+    "A": "0x41",
+    "B": "0x00",
+    "MAPH": "0x8300",
+    "MAPL": "0xe000",
+    "PC": "0x2ae1",
+    "SP": "0x01eb",
+    "X": "0x1f",
+    "Y": "0x00",
+    "Z": "0x00",
+    "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a32414531203431203146203030203030203030203031454220383330302045303030202020202020202020303020202020203237202e2e452e2e495a43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c303737373241453120203830204644202020202042524120202024324145300d0a0d0a2e",
+    "row": "2AE1 41 1F 00 00 00 01EB 8300 E000         00     27 ..E..IZC ...P 15 -  00 - .....lh.",
+    "tail": "00     27 ..E..IZC ...P 15 -  00 - .....lh."
+  }
+}

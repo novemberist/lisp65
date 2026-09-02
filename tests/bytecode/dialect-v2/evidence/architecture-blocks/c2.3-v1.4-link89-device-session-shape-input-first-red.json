@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-device-session-shape-input-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HARNESS FIRST RED: one long quoted sprite-shape literal was not visibly transported",
+  "candidate_link": 89,
+  "hardware_contact": 2,
+  "product_started": true,
+  "completed_product_rows": [
+    "exact product D81 readback",
+    "exact Bank-2 readback",
+    "bounds rejection",
+    "post-error REPL recovery",
+    "three synchronous draw forms"
+  ],
+  "mechanism": "The verified-input helper could not establish the visible 63-character quoted string literal. On three attempts the active echo was (m65-sprite-shape 0 \"\") followed by spaces. The helper stopped before RETURN, so the sprite form was never submitted and no sprite or SID product claim was made.",
+  "observation": {
+    "product_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-shape-transport/D1-product-readback.d81",
+      "bytes": 819200,
+      "sha256": "cc3509b7a6df421bb749f85dcbb77bf75d704016c0cb702b011e20c5d3b54696"
+    },
+    "bank2_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-shape-transport/D1-bank2.bin",
+      "bytes": 47298,
+      "sha256": "eb45f07ed2edc179812c585399aef5ee9ceb0dbdd02f1126e086e357156f4c30"
+    },
+    "third_attempt_capture": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-shape-transport/d1-sprite-setup-1-input-attempt-3.png",
+      "bytes": 5192,
+      "sha256": "ad8819a1b5451e66a6c6650ce4fb45f4ed7e5ab47be61dca379e556589bd9826"
+    },
+    "third_attempt_text": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-shape-transport/d1-sprite-setup-1-input-attempt-3.txt",
+      "bytes": 2241,
+      "sha256": "5162ec0cca2fa62e7de24bd7e7f170d7e8b9092d5ecf6e3213aab1dfe05a98b4"
+    }
+  },
+  "disposition": "Preserve Link 89 and all product forms. Replace only the long transport with five short, individually acknowledged string-construction forms followed by the same m65-sprite-shape call. Repeat D1 from a cold reset.",
+  "claim_limit": "A verified-input transport failure after the listed partial D1 rows. It proves no sprite, SID, Ship-sample, trailing-library, release or promotion claim."
+}

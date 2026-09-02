@@ -1,0 +1,695 @@
+{
+  "authority": {
+    "F018B_contract": {
+      "bytes": 3267,
+      "path": "config/c2-f018b-content-safe-read-contract.json",
+      "sha256": "9d1cf8e90e5745fce519f623f08b4d4ce64845ac886a51468cd702ac01dcbd09"
+    },
+    "Link96_device_control": {
+      "bytes": 6668,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-device-receipt.json",
+      "sha256": "7545fac8c207accb207d7539b8fc4be2bd1bf65e9251817acd096562cc276199"
+    },
+    "capture_contract": {
+      "bytes": 3792,
+      "path": "config/c2-v20-building-heap-capture-row.json",
+      "sha256": "390d395d9bae1030a7a96823821df7ed55f834a1ccd8928b694d578f47b16e1c"
+    },
+    "current_card": {
+      "bytes": 10252,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-crc-carveout-card-receipt.json",
+      "sha256": "2de297347b5e4c8304c0a30e2b65d88be23869db834381759b6c3fef39d9e608"
+    },
+    "driver": {
+      "bytes": 23003,
+      "path": "tools/host-lisp/c2_v20_building_heap_attribution.py",
+      "sha256": "16f46b7ce4c2baf706dafa43f561392ee19dfab33a0f642c4875dab845a66b90"
+    },
+    "owner_commission": {
+      "bytes": 55009,
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "8c87d3ff0bbc80d34b4f78596a73a08edad0e6aedc9769a84961bfc9bba0feaf"
+    }
+  },
+  "claim_limit": "Host/source/ELF attribution only. BUILDING HEAP names a broad pre-phase00 interval, not a heap-loop mechanism. The host model is green; one row is specified but no contact is authorized.",
+  "disposition": {
+    "D2_D5_open": false,
+    "capture_row": {
+      "candidate_elf": "build/c2.3/v2.0-crc-carveout-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "claim_limit": "One future stopped-state row only. This file authorizes no device contact, product fix, D1 result or D2-D5 execution.",
+      "code_rule": "Bind the sampled PC to bytes in the captured CPU view before assigning a symbol.",
+      "data_rule": "Translate every logical data address through the captured mapping and read physical RAM; raw ROM-overlaid reads are inadmissible.",
+      "decision_rows": {
+        "ambiguous": "No product or heap-mechanism claim; return to owner with this single complete row.",
+        "boot-overlay-chain": "vm_boot_overlay_status is non-OK or the stack returns through vm_install_staged_boot_overlay; name the failing boot-overlay stage.",
+        "c2-prepare-or-decode": "boot overlay is OK and rtov state is healthy but c2_ready is clear; bind PC/stack to prepare, island install or pre-phase-00 decoder entry.",
+        "early-eval-or-ext-dma": "PC belongs to eval_init/cell_set_a/ext_set_a/ext_dma while boot/C2/rtov status remains pre-entry; name the exact early heap instruction or DMA job.",
+        "runtime-family-or-convergence": "rtov_fault/family or the convergence slots are non-clear; name the runtime-family, content-convergence or timeout status and its active descriptor.",
+        "wild-control-flow": "PC bytes are not owned executable product code or the stack chain exits every legal interval edge; classify control-flow corruption without inventing a source."
+      },
+      "format": "lisp65-c2-v20-building-heap-stopped-state-row-v1",
+      "observation": {
+        "precondition": "fresh D1 reaches BUILDING HEAP and then the red fail-closed frame",
+        "quiet_rule": "no monitor, screenshot, FTP or CPU stop before the red frame",
+        "read_session": "all tuple, code and data reads belong to that one stopped session",
+        "resume_count": 0,
+        "stop_count": 1
+      },
+      "physical_bank0_ranges": [
+        {
+          "address": "0x0100",
+          "bytes": 256,
+          "name": "hardware-stack"
+        },
+        {
+          "address": "0x003d",
+          "bytes": 16,
+          "name": "allocator-zp"
+        },
+        {
+          "address": "0x005f",
+          "bytes": 21,
+          "name": "vm-and-boot-zp"
+        },
+        {
+          "address": "0x0087",
+          "bytes": 9,
+          "name": "ownership-and-convergence-zp"
+        },
+        {
+          "address": "0xb9d3",
+          "bytes": 12,
+          "name": "ordinary-dma-list"
+        },
+        {
+          "address": "0xb9ee",
+          "bytes": 2,
+          "name": "gc-runs"
+        },
+        {
+          "address": "0xbfef",
+          "bytes": 2,
+          "name": "pending-error-pointer"
+        },
+        {
+          "address": "0xbff7",
+          "bytes": 4,
+          "name": "runtime-overlay-state"
+        },
+        {
+          "address": "0xc000",
+          "bytes": 66,
+          "name": "convergence-state"
+        },
+        {
+          "address": "0xc080",
+          "bytes": 50,
+          "name": "c2-runtime-state"
+        }
+      ],
+      "status": "host-specified-not-run",
+      "symbol_bindings": {
+        "alloc_high": [
+          "0x003d",
+          2
+        ],
+        "c2_committed_roots": [
+          "0xc080",
+          2
+        ],
+        "c2_decode_active": [
+          "0xc082",
+          2
+        ],
+        "c2_dma_list": [
+          "0xb9d3",
+          12
+        ],
+        "c2_dma_verify": [
+          "0xc018",
+          1
+        ],
+        "c2_dma_verify_done": [
+          "0x0087",
+          1
+        ],
+        "c2_dma_verify_list": [
+          "0xc000",
+          24
+        ],
+        "c2_edma_probe_done": [
+          "0x0088",
+          1
+        ],
+        "c2_edma_probe_jobs": [
+          "0xc019",
+          40
+        ],
+        "c2_edma_probe_value": [
+          "0xc041",
+          1
+        ],
+        "c2_pending_roots": [
+          "0x008a",
+          2
+        ],
+        "c2_phase_owner": [
+          "0x0089",
+          1
+        ],
+        "c2_ready": [
+          "0x008c",
+          1
+        ],
+        "c2_runtime": [
+          "0xc084",
+          46
+        ],
+        "freelist": [
+          "0x0041",
+          2
+        ],
+        "gc_badobj": [
+          "0x0043",
+          2
+        ],
+        "gc_frozen": [
+          "0x003f",
+          2
+        ],
+        "gc_rootsp": [
+          "0x0060",
+          2
+        ],
+        "gc_runs": [
+          "0xb9ee",
+          2
+        ],
+        "lisp_error_msg": [
+          "0xbfef",
+          2
+        ],
+        "mem_oom": [
+          "0x008f",
+          1
+        ],
+        "rtov_family": [
+          "0xbff8",
+          1
+        ],
+        "rtov_family_generation": [
+          "0xbff9",
+          2
+        ],
+        "rtov_fault": [
+          "0xbff7",
+          1
+        ],
+        "str_top": [
+          "0x004b",
+          2
+        ],
+        "vm_boot_overlay_status": [
+          "0x0072",
+          1
+        ],
+        "vm_status": [
+          "0x005f",
+          1
+        ]
+      },
+      "tuple_first": [
+        "PC",
+        "SP",
+        "A",
+        "X",
+        "Y",
+        "P",
+        "MAPH",
+        "MAPL",
+        "MB",
+        "CPU-port-ROMC-state"
+      ]
+    },
+    "capture_row_specified": true,
+    "host_mechanism_named": false,
+    "next_evidence": "one stopped-state row after the natural red frame",
+    "recontact_authorized": false,
+    "target_only_residue": [
+      "MEGA65 DMA completion/timing",
+      "runtime mapping visibility",
+      "boot-overlay/family target execution",
+      "wild control transfer"
+    ]
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "hardware_contacts": 0,
+    "host_compiles": 1,
+    "host_runs": 1,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v20-building-heap-attribution-v1",
+  "host_model": {
+    "F018B": {
+      "content_consumers": 11,
+      "postlink": {
+        "ELF": {
+          "bytes": 628852,
+          "path": "build/c2.3/v2.0-crc-carveout-card/final/lisp65-c2-substitution-linked.prg.elf",
+          "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+        },
+        "all_three_route_to_linked_convergence": true,
+        "base_submission_sites": [
+          {
+            "address": 13713,
+            "address_hex": "$3591",
+            "owner": "ext_dma",
+            "register": "$D700",
+            "section": ".text"
+          },
+          {
+            "address": 11397,
+            "address_hex": "$2C85",
+            "owner": "vm_runtime_overlay_exec_family",
+            "register": "$D705",
+            "section": ".text"
+          },
+          {
+            "address": 46462,
+            "address_hex": "$B57E",
+            "owner": "c2k_copy",
+            "register": "$D705",
+            "section": ".lisp65_c2_kernal_handoff"
+          },
+          {
+            "address": 65488,
+            "address_hex": "$FFD0",
+            "owner": "c2_facade_target_c2_dma",
+            "register": "$D700",
+            "section": ".lisp65_c2_kernal_window.reopen_gap2"
+          },
+          {
+            "address": 63330,
+            "address_hex": "$F762",
+            "owner": "c2_product_physical_copy",
+            "register": "$D705",
+            "section": ".lisp65_c2_kernal_window.c2_resident"
+          }
+        ],
+        "content_consuming_raw_sites": 3,
+        "convergence_submission_sites": [
+          {
+            "address": 31079,
+            "address_hex": "$7967",
+            "register": "$D700",
+            "section": ".lisp65_c2_mapped_far_service"
+          },
+          {
+            "address": 31174,
+            "address_hex": "$79C6",
+            "register": "$D700",
+            "section": ".lisp65_c2_mapped_far_service"
+          },
+          {
+            "address": 31447,
+            "address_hex": "$7AD7",
+            "register": "$D705",
+            "section": ".lisp65_c2_mapped_far_service"
+          },
+          {
+            "address": 31646,
+            "address_hex": "$7B9E",
+            "register": "$D705",
+            "section": ".lisp65_c2_mapped_far_service"
+          }
+        ],
+        "linked_oracle_entries": [
+          "c2_mapped_far_vm_code_load_converged",
+          "c2_mapped_far_physical_read_converged"
+        ],
+        "service_submission_counts": {
+          "$D700": 2,
+          "$D705": 2
+        }
+      },
+      "source_routes": {
+        "D700": true,
+        "D705": true,
+        "EXT": true
+      }
+    },
+    "completion": "while target fixture => 600",
+    "limits": "Host staged-copy semantics do not model MEGA65 DMA completion timing, mapping or the target overlay machine.",
+    "model": "exact current mem/eval/vm sources; HEAP=48, EXT=1024; checked staged EXT transport; content convergence compile define armed",
+    "result": "PASS-NO-HOST-REPRODUCTION",
+    "stats": {
+      "alloc_high": 284,
+      "dma_bytes": 41768,
+      "dma_faults": 0,
+      "dma_model": 1,
+      "dma_reads": 13688,
+      "dma_writes": 7774,
+      "final_free": 838,
+      "free_after": 979,
+      "free_before": 787,
+      "frozen": 107,
+      "marked": 32,
+      "mem_oom": 0,
+      "min_free_after": 979,
+      "reclaimed": 192,
+      "runs": 6
+    }
+  },
+  "mutations_rejected": [
+    "narrow-line-to-heap-loop",
+    "change-write-count",
+    "claim-mem-semantics-drift",
+    "hide-host-red",
+    "accept-dma-fault",
+    "drop-capture-row",
+    "claim-mechanism",
+    "authorize-contact",
+    "open-D2-D5",
+    "claim-device"
+  ],
+  "observed_first_red": {
+    "device_reads": 0,
+    "mechanism_claim": null,
+    "missing_STAGING_MEDIA_is_separate": true,
+    "owner_observation": "BUILDING HEAP then red frame; no REPL",
+    "stopped_state": "not captured"
+  },
+  "phase_binding": {
+    "ELF_cutpoints": {
+      "c2_decode_from": {
+        "address": "0xf4b1",
+        "bytes": 548,
+        "section": ".lisp65_c2_kernal_window.c2_resident"
+      },
+      "c2_kernal_fail_closed": {
+        "address": "0xe08b",
+        "bytes": 0,
+        "section": ".lisp65_c2_kernal_window.map_switch_and_guards"
+      },
+      "c2_stream_phase_00": {
+        "address": "0xc356",
+        "bytes": 1560,
+        "section": ".lisp65_rt_c2d_00"
+      },
+      "cell_set_a": {
+        "address": "0x34cf",
+        "bytes": 79,
+        "section": ".text"
+      },
+      "eval_init": {
+        "address": "0xc3fd",
+        "bytes": 1236,
+        "section": ".lisp65_workbench_overlay"
+      },
+      "ext_dma": {
+        "address": "0x3551",
+        "bytes": 68,
+        "section": ".text"
+      },
+      "ext_set_a": {
+        "address": "0x351e",
+        "bytes": 51,
+        "section": ".text"
+      },
+      "main": {
+        "address": "0xa423",
+        "bytes": 613,
+        "section": ".text"
+      },
+      "vm_install_staged_boot_overlay": {
+        "address": "0xa688",
+        "bytes": 467,
+        "section": ".text"
+      },
+      "vm_runtime_overlay_install_island": {
+        "address": "0xa85b",
+        "bytes": 211,
+        "section": ".text"
+      }
+    },
+    "bytes_per_EXT_write": 2,
+    "fail_closed_families": [
+      "mem/eval lisp_error_msg or mem_oom",
+      "boot-overlay chain status/CRC/entry/wipe",
+      "C2 prepare family selection and C2D header write",
+      "runtime-island family/stage/CRC/convergence/stack/wipe",
+      "pre-phase00 overlay dispatch"
+    ],
+    "logical_first_freelist_head": "0x0060",
+    "mem_init_EXT_writes": 1024,
+    "ordered_reachable_stages": [
+      "mem_init progress store",
+      "hot-BSS clear",
+      "freelist reset",
+      "root-stack canaries/reset",
+      "1024 EXT cell-a DMA writes",
+      "remaining eval_init primitive/symbol installation",
+      "vm_init",
+      "boot-overlay chain completion and wipe",
+      "C2 prepare/family select",
+      "runtime-island installation",
+      "c2_product_boot setup",
+      "c2_decode_from dispatch up to phase 00 entry"
+    ],
+    "source_bindings": {
+      "boot_overlay": {
+        "bytes": 17137,
+        "path": "src/vm_boot_overlay.c",
+        "sha256": "78572685b2810b483fea1c32f93e70218ec6e203b89993ac39b3b57408ed6916"
+      },
+      "decoder": {
+        "bytes": 38076,
+        "path": "build/c2.3/v2.0-crc-carveout-card/final/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "56af9971943bc263d7dbf84b06750aaca655ba05ab9e5f2a27af98aa72b8732e"
+      },
+      "eval": {
+        "bytes": 97933,
+        "path": "src/eval.c",
+        "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+      },
+      "main": {
+        "bytes": 9508,
+        "path": "src/main.c",
+        "sha256": "fd3aa5721306cbc8346e6070f780e0690bf4e859c38bba2c5388c8ddc184276d"
+      },
+      "mem": {
+        "bytes": 49375,
+        "path": "src/mem.c",
+        "sha256": "b85ec5ff9d8136cb8a29a0608c9ba2e38c754f70ffefa6f3925c0045a56cd1f9"
+      },
+      "progress": {
+        "bytes": 4346,
+        "path": "src/boot_progress.h",
+        "sha256": "80a04064650819158c59f9a5e25991578d28c6bb1ab7d1f86f9dc673efacee3e"
+      },
+      "runtime": {
+        "bytes": 163560,
+        "path": "src/c2_product_runtime.c",
+        "sha256": "8d1ab8d0150fa2401094613372ebf57143027c612d4612a4479ecfe43e2c6b00"
+      }
+    },
+    "visible_interval": {
+      "classification": "BROAD-PRE-PHASE00-BOOT-INTERVAL",
+      "closes": "first instruction-level action of c2_stream_phase_00",
+      "heap_loop_only_claim_valid": false,
+      "opens": "mem_init entry before freelist=NIL",
+      "screen_lines": [
+        "LISP65: BUILDING HEAP",
+        "LISP65: LOADING LIBRARIES"
+      ]
+    }
+  },
+  "recorded_on": "2026-08-12",
+  "status": "HOST-GREEN-NO-MECHANISM; ONE-STOPPED-STATE-ROW-SPECIFIED",
+  "world_diff": {
+    "candidate_world": {
+      "ELF": {
+        "bytes": 628852,
+        "path": "build/c2.3/v2.0-crc-carveout-card/final/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+      },
+      "PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.0-crc-carveout-card/final/lisp65-c2-substitution-linked.prg",
+        "sha256": "8ce3a6dd9137dd55adeeb6b6f5988d8bdd0b609959663414ed434a2f00ac1a9e"
+      },
+      "identity": "v2.0-current"
+    },
+    "canonical_source_delta": {
+      "all_other_shared_src_inputs_byteidentical": true,
+      "changed_profile_inputs": [
+        "src/c2_mapped_far_convergence.s",
+        "src/c2_mapped_far_service.s",
+        "src/mem.c"
+      ],
+      "mem_change": "progress-only after normalization",
+      "new_inputs": [
+        "mapped convergence service facade/body"
+      ]
+    },
+    "healthy_world": {
+      "ELF": {
+        "bytes": 622972,
+        "path": "build/c2.3/terminal-return-guard-link96/final/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "b4d31e811331e4f5b7edd4a2feb634e575c0635a0c404bf0a8d3a143ace7695a"
+      },
+      "device_authority": {
+        "bytes": 6668,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-device-receipt.json",
+        "sha256": "7545fac8c207accb207d7539b8fc4be2bd1bf65e9251817acd096562cc276199"
+      },
+      "identity": "Link96",
+      "physical_boot_and_REPL": true,
+      "point_result": "(point 3 4)"
+    },
+    "owned_state_layout": {
+      "Link96_sections": {
+        ".bss": {
+          "address": "0xb9c8",
+          "bytes": 1583,
+          "end_exclusive": "0xbff7"
+        },
+        ".data": {
+          "address": "0xb9b2",
+          "bytes": 22,
+          "end_exclusive": "0xb9c8"
+        },
+        ".lisp65_c2_fixed_bank0_hot_bss": {
+          "address": "0xc25d",
+          "bytes": 240,
+          "end_exclusive": "0xc34d"
+        },
+        ".noinit": {
+          "address": "0xc34d",
+          "bytes": 6,
+          "end_exclusive": "0xc353"
+        },
+        ".rodata": {
+          "address": "0xb61d",
+          "bytes": 877,
+          "end_exclusive": "0xb98a"
+        }
+      },
+      "Link96_symbols": {
+        "c2_committed_roots": {
+          "address": "0xc080",
+          "bytes": 2,
+          "section": ".lisp65_c2_fixed_bank0"
+        },
+        "c2_pending_roots": {
+          "address": "0x008a",
+          "bytes": 2,
+          "section": ".lisp65_c2_fixed_zp"
+        },
+        "c2_phase_owner": {
+          "address": "0x0089",
+          "bytes": 1,
+          "section": ".lisp65_c2_fixed_zp"
+        },
+        "c2_ready": {
+          "address": "0x008c",
+          "bytes": 1,
+          "section": ".lisp65_c2_fixed_zp"
+        },
+        "freelist": {
+          "address": "0x0043",
+          "bytes": 2,
+          "section": ".zp.bss"
+        },
+        "gc_rootsp": {
+          "address": "0x0062",
+          "bytes": 2,
+          "section": ".zp.bss"
+        },
+        "mem_oom": {
+          "address": "0x008f",
+          "bytes": 1,
+          "section": ".lisp65_c2_fixed_zp"
+        }
+      },
+      "VMA_contract_changed": true,
+      "current_sections": {
+        ".bss": {
+          "address": "0xb9ca",
+          "bytes": 1585,
+          "end_exclusive": "0xbffb"
+        },
+        ".data": {
+          "address": "0xb9b4",
+          "bytes": 22,
+          "end_exclusive": "0xb9ca"
+        },
+        ".lisp65_c2_convergence_state": {
+          "address": "0xc000",
+          "bytes": 66,
+          "end_exclusive": "0xc042"
+        },
+        ".lisp65_c2_fixed_bank0_hot_bss": {
+          "address": "0xc25d",
+          "bytes": 240,
+          "end_exclusive": "0xc34d"
+        },
+        ".lisp65_c2_mapped_far_service": {
+          "address": "0x78b2",
+          "bytes": 874,
+          "end_exclusive": "0x7c1c"
+        },
+        ".noinit": {
+          "address": "0xc34d",
+          "bytes": 0,
+          "end_exclusive": "0xc34d"
+        },
+        ".rodata": {
+          "address": "0xb61d",
+          "bytes": 879,
+          "end_exclusive": "0xb98c"
+        }
+      },
+      "current_symbols": {
+        "c2_committed_roots": {
+          "address": "0xc080",
+          "bytes": 2,
+          "section": ".lisp65_c2_fixed_bank0"
+        },
+        "c2_pending_roots": {
+          "address": "0x008a",
+          "bytes": 2,
+          "section": ".lisp65_c2_fixed_zp"
+        },
+        "c2_phase_owner": {
+          "address": "0x0089",
+          "bytes": 1,
+          "section": ".lisp65_c2_fixed_zp"
+        },
+        "c2_ready": {
+          "address": "0x008c",
+          "bytes": 1,
+          "section": ".lisp65_c2_fixed_zp"
+        },
+        "freelist": {
+          "address": "0x0041",
+          "bytes": 2,
+          "section": ".zp.bss"
+        },
+        "gc_rootsp": {
+          "address": "0x0060",
+          "bytes": 2,
+          "section": ".zp.bss"
+        },
+        "mem_oom": {
+          "address": "0x008f",
+          "bytes": 1,
+          "section": ".lisp65_c2_fixed_zp"
+        }
+      },
+      "mem_init_semantics_changed": false
+    }
+  }
+}

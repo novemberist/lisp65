@@ -1,0 +1,75 @@
+{
+  "authority": {
+    "commit": "726ed55b",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "546ff4b960d286f8468bcb09dcf1e7b1004c2bc841dc891d38ed18c813619e96"
+  },
+  "behavior": {
+    "decision_table": {
+      "all_equal_visible_differs": "edit/render semantic path",
+      "raw_above_seen": "queue drain between presence and code read",
+      "raw_below_physical": "before queue-present observation",
+      "seen_above_stored": "ring full or capture commit loss",
+      "stored_above_taken": "consumer backlog or take failure"
+    },
+    "full_ring": {"backlog": 107, "raw": 108, "seen": 108, "stored": 107, "taken": 0},
+    "loss_wall": {"backlog": 0, "raw": 94, "seen": 94, "stored": 94, "taken": 94},
+    "measurement_bound": "bound-zero activation; fewer than 256 events",
+    "run_stop": {"backlog": 0, "raw": 3, "seen": 3, "stored": 2, "taken": 2}
+  },
+  "claim_limit": "pre-link product-source gate; no WPLTO, media or device claim",
+  "format": "lisp65-c2.3-v1.6-input-bound-origin-instrument-v1",
+  "linked_shape": {
+    "E000_delta_bytes": 12,
+    "E000_surplus_over_floor_bytes": 3,
+    "counter_addresses": {
+      "C2K_INPUT_EVENTS_RAW": 48380,
+      "C2K_INPUT_EVENTS_SEEN": 48381,
+      "C2K_INPUT_EVENTS_STORED": 48382,
+      "C2K_INPUT_EVENTS_TAKEN": 48383
+    },
+    "counter_sites": {
+      "C2K_INPUT_EVENTS_RAW": {"opcode": "INC abs", "opcode_address": 13, "section": ".lisp65_c2_kernal_window.input_capture_main"},
+      "C2K_INPUT_EVENTS_SEEN": {"opcode": "INC abs", "opcode_address": 19, "section": ".lisp65_c2_kernal_window.input_capture_main"},
+      "C2K_INPUT_EVENTS_STORED": {"opcode": "INC abs", "opcode_address": 31, "section": ".lisp65_c2_kernal_window.input_capture_helper"},
+      "C2K_INPUT_EVENTS_TAKEN": {"opcode": "INC abs", "opcode_address": 63, "section": ".lisp65_c2_kernal_window.input_consumer"}
+    },
+    "physical_allocation_bytes": 112,
+    "ring_base": 48272,
+    "ring_index_values": 108,
+    "sections": {
+      ".lisp65_c2_kernal_window.input_capture_helper": 40,
+      ".lisp65_c2_kernal_window.input_capture_main": 28,
+      ".lisp65_c2_kernal_window.input_consumer": 70,
+      ".lisp65_c2_kernal_window.irq_handler": 74
+    },
+    "usable_events": 107
+  },
+  "linker_contract": {
+    "capture_helper_bytes": 40,
+    "consumer_maximum_bytes": 70,
+    "fixed_floor_bytes": 54,
+    "free_bytes_minimum": 57,
+    "source": "generated live linker script",
+    "surplus_watch_bytes": 3
+  },
+  "origin": {
+    "activation_sites": 1,
+    "atomicity": "IRQ capture remains disabled until final tail=0",
+    "closed_tail": "0xff",
+    "commit": "(poke 255 141 0)",
+    "phase": "Comfort activation",
+    "reset_order": [
+      "(poke 255 140 0)",
+      "(dotimes (counter 4 nil)",
+      "(poke 188 (+ 252 counter) 0))"
+    ]
+  },
+  "sources": {
+    "lib/repl-comfort.lisp": "6dc695e0ed31b05ea8c97d89b2aca4abd28cc18dda895aaed71e79eba3b8da8a",
+    "src/c2_kernal_window_equates.inc": "5740152f5cc289282dec576ce3074cb8b3268f1eb0f4ceb4a794aacbf73cb65a",
+    "src/optional/c2_kernal_input_capture.s": "eaa34ec7120dada63c9067e79e1fe42caa50abbaac308b742cffadca260e3a40",
+    "src/optional/c2_kernal_input_consumer.s": "0862de7f2ed5cee6463a36553e4d5cdc25bc040108bce15c6a4ae174cfcc3132"
+  },
+  "status": "HOST-GREEN: PRODUCT COUNTERS BOUNDED AND OWNED"
+}

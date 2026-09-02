@@ -1,0 +1,553 @@
+{
+  "authority": {
+    "baseline_first_red": {
+      "bytes": 9204,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-product-shaped-probe-receipt.json",
+      "sha256": "05007ac1b9f6ab43bb9095ed536728e15a73ca7cb0d91d90c9f918ff33cde913"
+    },
+    "root_surrogate_contract": {
+      "bytes": 7116,
+      "path": "config/c2-lite-execution-contract.json",
+      "sha256": "45f597f9160e478bfd6b236f4e5173aa01a3b8bbb3379a4d2abeedbea50ecaa5"
+    }
+  },
+  "autonomous_harness_corrections": [
+    {
+      "artifact": {
+        "bytes": 24920,
+        "path": "build/c2-lite/v6-phase11-split-e000-analysis-harness-first-red-entry-census/c2-phase11-split-host",
+        "sha256": "3a1d639266dd57da811d19f871df372303fce400eee35e3d4ea200dd792eef75"
+      },
+      "correction": "do not rebuild a historical C2D-v2 receipt from a moving v6 manifest",
+      "first_red": "historical c2_full_emission entry census versus live v6 composition",
+      "product_bytes": 0,
+      "product_links": 0,
+      "wplto_runs": 0
+    },
+    {
+      "artifact": {
+        "bytes": 24920,
+        "path": "build/c2-lite/v6-phase11-split-e000-analysis-harness-first-red-moving-v2-corpus/c2-phase11-split-host",
+        "sha256": "3a1d639266dd57da811d19f871df372303fce400eee35e3d4ea200dd792eef75"
+      },
+      "correction": "bind phase-11 parity to the original SHA-pinned 583-entry/168-pair corpus; the separate v6 gate owns the live 588-entry composition",
+      "first_red": "live v6 composition is not the immutable C2D-v2 decoder parity corpus",
+      "product_bytes": 0,
+      "product_links": 0,
+      "wplto_runs": 0
+    }
+  ],
+  "claim_limit": "The semantic split and objectwise residency diagnosis are proven by one nonpromotable WPLTO. No E000 evacuation, product link, hardware, latency, promotion or acceptance claim exists.",
+  "decision_result": {
+    "e000": "known-red: 1218 cold-alt + 546 hot-new - 1450 memo + 19 phase-split-driver = 333",
+    "implementation_not_authorized": true,
+    "phase11": "closed-green",
+    "sufficient_cold_surface_exists": true
+  },
+  "e000_baseline_attribution": {
+    "anchor_overhang": {
+      "bytes": 169,
+      "interpretation": "positional symptom of the oversized resident section, not a separate tenant debit",
+      "occupants": [
+        {
+          "address": 64727,
+          "end": 64813,
+          "object": "c2_session_emit_finalize",
+          "overlap_bytes": 37
+        },
+        {
+          "address": 64813,
+          "end": 64945,
+          "object": "vm_logical_relative_target",
+          "overlap_bytes": 132
+        }
+      ],
+      "resident_end_exclusive": 64945,
+      "session_state_base": 64776
+    },
+    "complete_c2_resident_inventory": [
+      {
+        "address": 57502,
+        "bytes": 382,
+        "object": "c2_append_begin",
+        "temperature": "cold-session-append-driver"
+      },
+      {
+        "address": 57884,
+        "bytes": 29,
+        "object": "c2_overlay_call",
+        "temperature": "retained-transport-seam"
+      },
+      {
+        "address": 57913,
+        "bytes": 47,
+        "object": "c2_overlay_call_range",
+        "temperature": "cold-session-append-driver"
+      },
+      {
+        "address": 57960,
+        "bytes": 456,
+        "object": "c2_decode_from",
+        "temperature": "cold-boot-and-append-driver"
+      },
+      {
+        "address": 58416,
+        "bytes": 209,
+        "object": "c2_stream_shelf_read",
+        "temperature": "cold-source-read-seam"
+      },
+      {
+        "address": 58625,
+        "bytes": 145,
+        "object": "c2_dma_copy",
+        "temperature": "retained-DMA-seam"
+      },
+      {
+        "address": 58770,
+        "bytes": 87,
+        "object": "c2_stream_c2d_read",
+        "temperature": "hot-shared-C2D-seam"
+      },
+      {
+        "address": 58857,
+        "bytes": 94,
+        "object": "c2_stream_c2d_write",
+        "temperature": "cold-publication-seam"
+      },
+      {
+        "address": 58951,
+        "bytes": 684,
+        "object": "c2_stream_product_image_read",
+        "temperature": "cold-decoder-helper"
+      },
+      {
+        "address": 59635,
+        "bytes": 632,
+        "object": "c2_stream_product_string_record_any",
+        "temperature": "cold-decoder-helper"
+      },
+      {
+        "address": 60267,
+        "bytes": 105,
+        "object": "c2_stream_product_string_record",
+        "temperature": "cold-decoder-helper"
+      },
+      {
+        "address": 60372,
+        "bytes": 426,
+        "object": "c2_stream_product_canonical_name",
+        "temperature": "cold-decoder-helper"
+      },
+      {
+        "address": 60798,
+        "bytes": 536,
+        "object": "c2_stream_product_child_value",
+        "temperature": "cold-phase11-helper"
+      },
+      {
+        "address": 61334,
+        "bytes": 833,
+        "object": "c2_stream_name_value",
+        "temperature": "cold-decoder-helper"
+      },
+      {
+        "address": 62167,
+        "bytes": 191,
+        "object": "c2_stream_gc_checkpoint",
+        "temperature": "cold-decode-GC-boundary"
+      },
+      {
+        "address": 62358,
+        "bytes": 442,
+        "object": "c2_product_entry_record",
+        "temperature": "hot-v6-lookup"
+      },
+      {
+        "address": 62800,
+        "bytes": 559,
+        "object": "c2_entry_records",
+        "temperature": "cold-append-publication-legacy-view"
+      },
+      {
+        "address": 63359,
+        "bytes": 123,
+        "object": "c2_source_read",
+        "temperature": "cold-stage-and-name-source-read"
+      },
+      {
+        "address": 63482,
+        "bytes": 104,
+        "object": "c2_product_entry_length",
+        "temperature": "hot-v6-entry-length-wrapper"
+      },
+      {
+        "address": 63586,
+        "bytes": 547,
+        "object": "c2_product_gc_mark_roots",
+        "temperature": "hot-GC-root-scan"
+      },
+      {
+        "address": 64133,
+        "bytes": 42,
+        "object": "c2_header_counts",
+        "temperature": "cold-session-emitter"
+      },
+      {
+        "address": 64175,
+        "bytes": 47,
+        "object": "c2_session_emit_reset",
+        "temperature": "cold-session-emitter"
+      },
+      {
+        "address": 64222,
+        "bytes": 505,
+        "object": "c2_session_emit_add",
+        "temperature": "cold-session-emitter"
+      },
+      {
+        "address": 64727,
+        "bytes": 86,
+        "object": "c2_session_emit_finalize",
+        "temperature": "cold-session-emitter"
+      },
+      {
+        "address": 64813,
+        "bytes": 132,
+        "object": "vm_logical_relative_target",
+        "temperature": "hot-VM-branch-helper"
+      }
+    ],
+    "equation": {
+      "current_surface_bytes": 1764,
+      "deficit_to_115_floor_bytes": 314,
+      "identity": "1218 + 546 - 1450 = 314",
+      "memo_gross_alt_surface_bytes": 1450,
+      "net_over_memo_bytes": 314,
+      "new_v6_bytes": 546,
+      "remaining_alt_bytes": 1218
+    },
+    "source": {
+      "bytes": 180167,
+      "path": "build/c2-lite/product-shaped-v6-probe/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "sha256": "8cd0c98600978050d4ebbabd39feb3b708c8e8f2b3bd5ed7d9d95120ede35255"
+    },
+    "temperature_result": {
+      "cold_alt_bytes": 1218,
+      "cold_alt_exceeds_floor_deficit_by_bytes": 904,
+      "floor_bytes": 115,
+      "floor_status": "fixed-not-discussed",
+      "hot_new_bytes": 546
+    },
+    "three_column_redesign_surface": [
+      {
+        "current_alt_bytes": 536,
+        "current_new_bytes": 0,
+        "disposition": "still resident; candidate for the split decoder family",
+        "memo_alt_bytes": 536,
+        "object": "c2_stream_product_child_value",
+        "temperature": "cold-phase11-helper"
+      },
+      {
+        "current_alt_bytes": 559,
+        "current_new_bytes": 0,
+        "disposition": "still resident; only sliced publish-name/cell consumers remain",
+        "memo_alt_bytes": 615,
+        "object": "c2_entry_records",
+        "temperature": "cold-append-publication-legacy-view"
+      },
+      {
+        "current_alt_bytes": 123,
+        "current_new_bytes": 0,
+        "disposition": "still resident; no C2-lite hot-refill consumer remains",
+        "memo_alt_bytes": 123,
+        "object": "c2_source_read",
+        "temperature": "cold-stage-and-name-source-read"
+      },
+      {
+        "current_alt_bytes": 0,
+        "current_new_bytes": 104,
+        "disposition": "old C2I walk retired; retain the v6 C2D wrapper",
+        "memo_alt_bytes": 176,
+        "object": "c2_product_entry_length",
+        "temperature": "hot-v6-entry-length-wrapper"
+      },
+      {
+        "current_alt_bytes": 0,
+        "current_new_bytes": 442,
+        "disposition": "new single v6 execution-record lookup; hot and retained",
+        "memo_alt_bytes": 0,
+        "object": "c2_product_entry_record",
+        "temperature": "hot-v6-lookup"
+      }
+    ]
+  },
+  "format": "lisp65-c2-lite-v6-phase11-split-e000-analysis-v1",
+  "implementation_bindings": [
+    {
+      "bytes": 26062,
+      "path": "scripts/c2-stream-v2-decoder.c",
+      "sha256": "a3fd04d84f96e77daa9df9bc6ab37af741355ef7f6807e2bc453a95870cce38a"
+    },
+    {
+      "bytes": 1918,
+      "path": "scripts/c2-stream-v2-decoder.h",
+      "sha256": "d6a7af38b2dab796d3c91835d4498987f9034d8ab184516416baaf3de4255c05"
+    },
+    {
+      "bytes": 64,
+      "path": "scripts/c2-stream-v2-phase-11a.c",
+      "sha256": "178f00aa156819966e591b8ed0ea69c0fd0b87ab2d265ba4c7e3941d8a5c05ab"
+    },
+    {
+      "bytes": 64,
+      "path": "scripts/c2-stream-v2-phase-11b.c",
+      "sha256": "142135a6a2d89de240a84ccd1c8b511a2ba93f5919e2b282324ec8862768e29b"
+    },
+    {
+      "bytes": 9634,
+      "path": "scripts/c2-stream-v2-host-main.c",
+      "sha256": "b7bf65792d4ebec158944b8421f8302d183386c6f93244739ecb3f26a5097af3"
+    },
+    {
+      "bytes": 1873,
+      "path": "scripts/c2-phase11-cutpoint-main.c",
+      "sha256": "70a7023abcf29e6dad071cf52734c2c823b071606209f4143113311d80793e75"
+    },
+    {
+      "bytes": 93890,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "477f2e8f700fe9de7608d62eca503b802eb2e34af5d3f4463c1659302c7d8b53"
+    },
+    {
+      "bytes": 10468,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "8bf70ce9ab79bb66031dd29358ec0277f400546a12784659b3e1fc3ac0b3eff4"
+    },
+    {
+      "bytes": 30403,
+      "path": "tools/host-lisp/c2_lite_v6_phase11_e000_probe.py",
+      "sha256": "bce2e918be5ef57e368beeabb206512cd5584f560d00c9e3cd5fbacd3260090d"
+    }
+  ],
+  "next_gate": "Class-C review of the cold-alt evacuation design; the 115-byte floor is fixed.",
+  "phase11_split": {
+    "cap_bytes": 1792,
+    "cap_changed": false,
+    "cutpoint_gate": {
+      "added_handoff_bytes": 0,
+      "binary": {
+        "bytes": 13200,
+        "path": "build/c2-lite/v6-phase11-split-e000-analysis/c2-phase11-cutpoint",
+        "sha256": "f545b08c9e5bcfe1dd7f1136e61fd1ce455c937fef4ba15b719c9f5fc57eb326"
+      },
+      "cross_boundary_pointers": 0,
+      "marker": "context.reserved=0x11",
+      "negative_fixtures": [
+        "skip-11a",
+        "replay-11a",
+        "wrong-marker",
+        "preexisting-error"
+      ],
+      "result": {
+        "bytes": 60,
+        "path": "build/c2-lite/v6-phase11-split-e000-analysis/phase11-cutpoint.stdout.txt",
+        "sha256": "42a97b8a5d556978d5f225c11bd3a668d62802e131c42096b74d5d5f61028cbb"
+      },
+      "status": "passed"
+    },
+    "host_semantics": {
+      "binary": {
+        "bytes": 24920,
+        "path": "build/c2-lite/v6-phase11-split-e000-analysis/c2-phase11-split-host",
+        "sha256": "3a1d639266dd57da811d19f871df372303fce400eee35e3d4ea200dd792eef75"
+      },
+      "descriptors": 2249,
+      "entries": 583,
+      "gc_checkpoints": 284,
+      "images": 6,
+      "immutable_inputs": {
+        "c2d": {
+          "bytes": 11048,
+          "path": "build/c2.1/streaming-decoder-v2/c2d-v2.bin",
+          "sha256": "a8495be33895530abbc1e039d254d728386eb45563fabd5b4487f0f27550f82f"
+        },
+        "shelf": {
+          "bytes": 69754,
+          "path": "build/c2.1/streaming-decoder-v2/shelf.bin",
+          "sha256": "df3050a092b27593124246d91c33c8db3994deb2e01f93a050353f3372e8287c"
+        }
+      },
+      "pairs": 168,
+      "result": {
+        "bytes": 140,
+        "path": "build/c2-lite/v6-phase11-split-e000-analysis/phase11-split-host.stdout.txt",
+        "sha256": "212f2ce4d5992ece73d766c0d6d5fb4ae0f2008169f9fec6b0ac6bf599333a42"
+      },
+      "roots": 284,
+      "status": "passed-real-six-image-v2-parity"
+    },
+    "semantic_boundary": {
+      "11a": "validate every immutable pair descriptor and backward-only child ordinal",
+      "11b": "resolve children, allocate pair, publish sole root, run GC checkpoint",
+      "added_handoff_bytes": 0,
+      "cross_boundary_pointers": 0,
+      "handoff": "existing context.reserved marker 0x11 only"
+    },
+    "wplto_bytes": {
+      "11a": 844,
+      "11b": 1740
+    },
+    "wplto_headroom_bytes": {
+      "11a": 948,
+      "11b": 52
+    }
+  },
+  "recorded_on": "2026-07-21",
+  "report": {
+    "bytes": 17957,
+    "path": "build/c2-lite/v6-phase11-split-e000-analysis/c2-lite-v6-phase11-e000-analysis.json",
+    "sha256": "06ecb50c7cdd0225ee5274dbd64832c97d8cdbdfb275abe3f3b15b9791377919"
+  },
+  "rollback_line": {
+    "product": "Link 35",
+    "status": "untouched"
+  },
+  "root_surrogate_permanent_gate": {
+    "collision_intersections": {
+      "bcode": 0,
+      "fixnum": 0,
+      "native_direct": 0,
+      "symi": 0
+    },
+    "format": "lisp65-c2d-v6-root-surrogate-gate-v1",
+    "high_bit_tag_rejection_witnesses": {
+      "bcode": 4096,
+      "negative_fixnum": 16384,
+      "symi": 4096
+    },
+    "negative_fixtures": [
+      "ordinal-1536",
+      "zero-surrogate",
+      "odd-surrogate",
+      "surrogate-above-root-plane",
+      "surrogate-high-bit",
+      "direct-as-root",
+      "root-as-direct",
+      "positive-even-direct-pointer-shape"
+    ],
+    "permanent_rule": "Every C2 probe imports and executes this complete-domain gate; new direct obj domains must be added to the obj.h-backed emitter.",
+    "root_capacity": 1536,
+    "root_surrogates": {
+      "count": 1536,
+      "maximum_hex": "0x0c00",
+      "minimum_hex": "0x0002",
+      "ordinal_0_hex": "0x0002",
+      "ordinal_1535_hex": "0x0c00",
+      "ordinal_1536": "rejected"
+    },
+    "source_truth": {
+      "compiler": "cc",
+      "domain_rows": {
+        "bcode": 4096,
+        "fixnum": 32768,
+        "native_direct": 16384,
+        "symi": 4096
+      },
+      "domain_unique_values": {
+        "bcode": 4096,
+        "fixnum": 32768,
+        "native_direct": 16384,
+        "symi": 4096
+      },
+      "emitted_rows": 57344,
+      "helper_source_sha256": "49b53691f0db9feb1d9feab369f7b77d428a51ce51f534ceacee0ea75a47d432",
+      "obj_h_sha256": "c780e3573fc4fa09c4b08ec7c5c80168afa74f1cc7e693e028e4c7066734c306"
+    },
+    "status": "pass"
+  },
+  "scope": {
+    "hardware_runs": 0,
+    "nonpromotable_product_shaped_wplto_attempts": 1,
+    "product_links": 0,
+    "product_source_change": "phase11-semantic-split-only",
+    "promotion": "not-authorized"
+  },
+  "split_wplto": {
+    "deficit_to_floor_bytes": 333,
+    "delta_from_baseline": {
+      "anchor_overhang": {
+        "baseline_bytes": 169,
+        "interpretation": "The authorized split grows only the cold decode driver. Its 19-byte positional effect adds to, but does not create a separate tenant debit.",
+        "occupants": [
+          {
+            "address": 64746,
+            "end": 64832,
+            "object": "c2_session_emit_finalize",
+            "overlap_bytes": 56
+          },
+          {
+            "address": 64832,
+            "end": 64964,
+            "object": "vm_logical_relative_target",
+            "overlap_bytes": 132
+          }
+        ],
+        "post_split_bytes": 188,
+        "split_driver_positional_delta_bytes": 19
+      },
+      "deficit_equation": "314 baseline + 19 split-driver = 333",
+      "e000_delta_bytes": 19,
+      "nonzero_sections": {
+        ".lisp65_c2_kernal_window.c2_resident": 19
+      },
+      "sections": {
+        ".lisp65_c2_kernal_window.c2_resident": 19,
+        ".lisp65_c2_kernal_window.event_poll": 0,
+        ".lisp65_c2_kernal_window.frame_source": 0,
+        ".lisp65_c2_kernal_window.irq_handler": 0,
+        ".lisp65_c2_kernal_window.map_switch_and_guards": 0,
+        ".lisp65_c2_kernal_window.nmi_and_freezer_return": 0,
+        ".lisp65_c2_kernal_window.post_startup_output_seam": 0,
+        ".lisp65_c2_kernal_window.profile_rodata": 0,
+        ".lisp65_c2_kernal_window.reopen_gap0": 0,
+        ".lisp65_c2_kernal_window.reopen_gap1": 0,
+        ".lisp65_c2_kernal_window.reopen_gap2": 0,
+        ".lisp65_c2_kernal_window.session_emitter_state": 0,
+        ".lisp65_c2_kernal_window.state": 0,
+        ".lisp65_c2_kernal_window.typed_queue_driver": 0,
+        ".lisp65_c2_vectors": 0
+      },
+      "symbols": [
+        {
+          "after_bytes": 475,
+          "before_bytes": 456,
+          "delta_bytes": 19,
+          "object": "c2_decode_from",
+          "temperature": "cold-boot-and-append-driver"
+        }
+      ]
+    },
+    "driver_failure": "link command failed before orphan-wrapper acceptance: exit=1",
+    "e000_use_bytes": 8410,
+    "final_product_artifact": "absent",
+    "lto_object": {
+      "bytes": 573068,
+      "path": "build/c2-lite/v6-phase11-split-e000-analysis/full-product-wplto/c2-lite-v6-full-seed.prg.lto.o",
+      "sha256": "6387b698f1a63291cbc714ee76e1d4c334640e4df3f3573f877a38526e0c8eaf"
+    },
+    "map": {
+      "bytes": 184449,
+      "path": "build/c2-lite/v6-phase11-split-e000-analysis/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "sha256": "73c4908a4204ad40ab7625ad44414286aa5ce242477bb58635cbed8f201396ea"
+    },
+    "phase11_cap_error_present": false,
+    "required_floor_bytes": 115,
+    "status": "expected-E000-red-after-authorized-phase-split",
+    "stderr": {
+      "bytes": 2173,
+      "path": "build/c2-lite/v6-phase11-split-e000-analysis/full-product-wplto/c2-lite-v6-full-seed.prg.link.stderr.txt",
+      "sha256": "65d61a4f3a1ec7d0c9562572c05e5b64a50f70e9c5780938112c671a17392af1"
+    }
+  },
+  "status": "phase11-split-green-e000-attribution-complete-product-link-not-run"
+}

@@ -1,0 +1,20 @@
+(defun %say-from (text index)
+  (if (< index (string-length text))
+      (progn
+        (write-char (string-ref text index))
+        (%say-from text (+ index 1)))
+      nil))
+
+(defun %say (text)
+  (%say-from text 0))
+
+(defun main ()
+  (progn
+    (wait 1)
+    (let ((name (read-line)))
+      (progn
+        (%say "Hello, ")
+        (%say name)
+        (write-char 33)
+        (write-char 10)
+        name))))

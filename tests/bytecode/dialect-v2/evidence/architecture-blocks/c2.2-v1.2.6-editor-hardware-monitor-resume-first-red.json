@@ -1,0 +1,31 @@
+{
+  "classification": "harness-first-red-before-first-product-instruction",
+  "evidence": {
+    "failed_resume_screen": {
+      "bytes": 4337,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/physical-sys-armed.png",
+      "sha256": "7855ee9238fd572e924875c38b1c2000a2a379d77c0e91bf2b239c0e7069c23a"
+    },
+    "recovery_BASIC": {
+      "bytes": 4225,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/no-autorun-recovery-basic.png",
+      "sha256": "548a6546cb53f0f4fbe8e9c99d246783f643a920c43b6f7206d158c09d1deedb"
+    }
+  },
+  "finding": {
+    "candidate_executed": false,
+    "mechanism_boundary": "Resuming the CPU after the halt/load/readback sequence without BASIC auto-RUN did not return to a clean BASIC prompt. The resulting screen contained startup fragments and no READY marker.",
+    "product_semantics_claimed": false,
+    "stuck_rule": "Two attributed USB monitor start variants survived; no third target start is authorized without review."
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-monitor-resume-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "remedy": {
+    "candidate_next_transport": "documented direct entry at 0x2023 via etherload --jump",
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0,
+    "status": "review-required-before-use"
+  },
+  "status": "closed-USB-monitor-resume-boundary-review-required"
+}

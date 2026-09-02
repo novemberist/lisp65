@@ -1,0 +1,406 @@
+{
+  "chain_coordinators": [
+    {
+      "commits_first_sector_last": true,
+      "delegates_tail": true,
+      "function": "%fasl-save-from-first",
+      "id": "c1-fasl-first-sector",
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "status": "pass"
+    }
+  ],
+  "claim_limit": "This receipt proves structural guards and the common host model. Hardware timing and F011 transport remain outside this gate.",
+  "criteria": {
+    "corrupt_link_clamp": "zero-byte file terminators and invalid/self links fail closed",
+    "fuel_or_cycle_bound": "every walker has length-derived fuel, a format-domain fuel, or a byte-ceiling bound",
+    "sector_accounting": "no 8-bit truncation for file-data chains; explicitly bounded counters for finite directory/descriptor domains"
+  },
+  "deviations": [],
+  "excluded_non_walkers": [
+    "M65D new-chain allocation and write recursion consume validated in-memory pair lists, not on-media link bytes",
+    "archived m65-disk-alloc*.lisp prototypes are not product inputs",
+    "host D81 parsers are independent witnesses, not device walkers"
+  ],
+  "format": "lisp65-1581-chain-walker-inventory-v1",
+  "scope": "all live 1581 on-media link walkers in product C and Lisp sources",
+  "shared_cases": [
+    {
+      "id": "greater-than-255-sectors",
+      "rule": "accept only the media-sized cold stager; bounded user APIs reject rather than truncate",
+      "sectors": 258,
+      "status": "pass"
+    },
+    {
+      "id": "link-byte-zero-in-final-sector",
+      "rule": "file-data walkers reject before reading payload byte 256; directory walkers use track zero as their format terminator",
+      "status": "pass",
+      "terminal_link": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "self-reference",
+      "link": "current-track/current-sector",
+      "rule": "reject immediately where identity is retained, otherwise terminate at the documented domain fuel without publishing a partial success",
+      "status": "pass"
+    }
+  ],
+  "shared_link_validators": [
+    {
+      "function": "disk_chain_count",
+      "id": "c-file-link-decoder",
+      "path": "src/io.c",
+      "self_reference": "reject",
+      "status": "pass",
+      "zero_tail": "reject"
+    },
+    {
+      "function": "%ide-disk-link-valid-p",
+      "id": "ide-file-link-decoder",
+      "path": "lib/ide-disk.lisp",
+      "self_reference": "reject",
+      "status": "pass",
+      "zero_tail": "reject"
+    },
+    {
+      "function": "%disk-directory-link-valid-p",
+      "id": "resident-directory-link-decoder",
+      "path": "lib/stdlib-load.lisp",
+      "self_reference": "reject",
+      "status": "pass",
+      "zero_tail": "reject"
+    },
+    {
+      "function": "%c1-slot-link-valid-p",
+      "id": "c1-file-link-decoder",
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "self_reference": "reject",
+      "status": "pass",
+      "zero_tail": "reject"
+    }
+  ],
+  "source_bindings": [
+    {
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "1a52be0551a83c03634b3635a2e4bdb68626896106ab702dae19c26c11c09755"
+    },
+    {
+      "path": "lib/ide-disk.lisp",
+      "sha256": "a0c8df7bb444d92eeeaac2596e91b81e9cc2b3ffc89200b8edd2bc81be1ca7a8"
+    },
+    {
+      "path": "lib/lcc-fasl.lisp",
+      "sha256": "02027a75c390ece61e25b80e89a4d198a9637c74a595245c0bf59f67c86116ad"
+    },
+    {
+      "path": "lib/m65-disk.lisp",
+      "sha256": "e5c83719427148213e3af6f792b90fb57bc4190ba33c0500131871675da53ecf"
+    },
+    {
+      "path": "lib/stdlib-load-lib.lisp",
+      "sha256": "69d0d11b0186d3453dcf4c3c89e53eeb8f9b7f5022739e0740402963eed0e393"
+    },
+    {
+      "path": "lib/stdlib-load.lisp",
+      "sha256": "162bc3dac8cba067f4d317c49326bb01c4b1fd5485149b4b7ea4d0bffb99556f"
+    },
+    {
+      "path": "scripts/r3-cold-stager-main.c",
+      "sha256": "92965737cd0a5f79f7af94e9ff86f6071faad7a1d00aba3993fcc60820ad40b9"
+    },
+    {
+      "path": "src/io.c",
+      "sha256": "a2f86c339c86114bfb76dd67d0dd6b66a7eae6f8844363225c0d916b2d493ab6"
+    }
+  ],
+  "status": "pass",
+  "walkers": [
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "scan_file",
+      "greater_than_255_sectors": "accept",
+      "id": "cold-stager-file",
+      "kind": "file-data",
+      "language": "c",
+      "path": "scripts/r3-cold-stager-main.c",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 3226,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "load_descriptor",
+      "greater_than_255_sectors": "reject",
+      "id": "cold-stager-descriptor",
+      "kind": "fixed-file-data",
+      "language": "c",
+      "path": "scripts/r3-cold-stager-main.c",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 4,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "find_file",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "cold-stager-directory",
+      "kind": "directory",
+      "language": "c",
+      "path": "scripts/r3-cold-stager-main.c",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 64,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "disk_chain_capacity",
+      "greater_than_255_sectors": "reject",
+      "id": "c-file-capacity",
+      "kind": "file-data",
+      "language": "c",
+      "path": "src/io.c",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 153,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "io_disk_save_impl",
+      "greater_than_255_sectors": "reject",
+      "id": "c-file-save",
+      "kind": "file-data",
+      "language": "c",
+      "path": "src/io.c",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 153,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "disk_chain_to_scratch",
+      "greater_than_255_sectors": "reject",
+      "id": "c-file-stage",
+      "kind": "file-data",
+      "language": "c",
+      "path": "src/io.c",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 153,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "disk_source_fetch",
+      "greater_than_255_sectors": "reject",
+      "id": "c-source-stream",
+      "kind": "coupled-file-data",
+      "language": "c",
+      "path": "src/io.c",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 153,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "disk_dir_find",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "c-directory",
+      "kind": "directory",
+      "language": "c",
+      "path": "src/io.c",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 64,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "%ide-disk-effective-count",
+      "greater_than_255_sectors": "reject",
+      "id": "ide-effective-count",
+      "kind": "file-data",
+      "language": "lisp",
+      "path": "lib/ide-disk.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 255,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "%ide-disk-read-chain",
+      "greater_than_255_sectors": "reject",
+      "id": "ide-read-chain",
+      "kind": "file-data",
+      "language": "lisp",
+      "path": "lib/ide-disk.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 255,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "%ide-disk-find",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "ide-directory",
+      "kind": "directory",
+      "language": "lisp",
+      "path": "lib/ide-disk.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 64,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "%ide-dir-scan-directory",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "ide-directory-list",
+      "kind": "directory",
+      "language": "lisp",
+      "path": "lib/ide-disk.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 64,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "%m65d-read-old-chain",
+      "greater_than_255_sectors": "reject",
+      "id": "m65d-old-chain",
+      "kind": "file-data",
+      "language": "lisp",
+      "path": "lib/m65-disk.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 33,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "%m65d-dir-scan",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "m65d-directory",
+      "kind": "directory",
+      "language": "lisp",
+      "path": "lib/m65-disk.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 40,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "%compile-slot-capacity",
+      "greater_than_255_sectors": "reject",
+      "id": "fasl-slot-capacity",
+      "kind": "file-data",
+      "language": "lisp",
+      "path": "lib/lcc-fasl.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 255,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "%compile-slot-find",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "fasl-slot-directory",
+      "kind": "directory",
+      "language": "lisp",
+      "path": "lib/lcc-fasl.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 64,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "%compile-slot-find",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "c1-fasl-slot-directory",
+      "kind": "directory",
+      "language": "lisp",
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 64,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "%compile-slot-capacity",
+      "greater_than_255_sectors": "reject",
+      "id": "c1-fasl-slot-capacity",
+      "kind": "file-data",
+      "language": "lisp",
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 255,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "%fasl-save-tail",
+      "greater_than_255_sectors": "reject",
+      "id": "c1-fasl-save-tail",
+      "kind": "file-data",
+      "language": "lisp",
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 255,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "reject",
+      "function": "%fasl-save-staged-v2",
+      "greater_than_255_sectors": "reject",
+      "id": "c1-fasl-save-entry",
+      "kind": "file-data-entry",
+      "language": "lisp",
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 255,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "%load-scan-directory",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "resident-load-directory",
+      "kind": "directory",
+      "language": "lisp",
+      "path": "lib/stdlib-load.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 64,
+      "self_reference": "reject",
+      "status": "pass"
+    },
+    {
+      "corrupt_zero_tail": "not-applicable",
+      "function": "%load-lib-scan-directory",
+      "greater_than_255_sectors": "not-applicable",
+      "id": "resident-load-lib-directory",
+      "kind": "directory",
+      "language": "lisp",
+      "path": "lib/stdlib-load-lib.lisp",
+      "sector_accounting": "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain",
+      "sector_limit": 64,
+      "self_reference": "reject",
+      "status": "pass"
+    }
+  ]
+}

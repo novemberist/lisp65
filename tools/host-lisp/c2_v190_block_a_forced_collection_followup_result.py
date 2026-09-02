@@ -17,6 +17,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 from elf_truth import ElfTruth  # noqa: E402
+from evidence_era import era_bind, era_blob  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -40,6 +41,7 @@ R7_ELF = ROOT / (
     "build/c2.3/v1.9-native-prompt-editor-display-repair-r7/wplto/"
     "lisp65-c2-substitution-linked.prg.elf")
 VM = ROOT / "src/vm.c"
+EVIDENCE_ERA = "d9575554"
 INTERRUPT = ROOT / "src/interrupt.c"
 READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 STATUS = "FIRST RED: FINAL R7 READ-LINE ARMS CAPTURE BUT CONSUMES PUBLIC QUEUE"
@@ -84,7 +86,7 @@ def section_bind(path: Path, header: str) -> dict[str, Any]:
 
 def source_chain() -> dict[str, Any]:
     source = R7_SOURCE.read_text(encoding="utf-8")
-    vm = VM.read_text(encoding="utf-8")
+    vm = era_blob(EVIDENCE_ERA, VM.relative_to(ROOT).as_posix()).decode()
     interrupt = INTERRUPT.read_text(encoding="utf-8")
     state = "(state (list head head head 0 0 0 columns row))"
     route = """(if (nthcdr 8 state)
@@ -111,7 +113,8 @@ def source_chain() -> dict[str, Any]:
         "private_ring_route": "key-event mode 2 -> c2_kernal_input_take",
         "private_ring_route_selected": False,
         "capture_armed": True,
-        "sources": {"editor": bind(R7_SOURCE), "vm": bind(VM),
+        "sources": {"editor": bind(R7_SOURCE),
+                    "vm": era_bind(EVIDENCE_ERA, VM),
                     "interrupt": bind(INTERRUPT)},
     }
 

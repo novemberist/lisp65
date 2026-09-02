@@ -1,0 +1,82 @@
+{
+  "BSS": {
+    "candidate_bytes": 1586,
+    "observed_validation_margin": 4,
+    "predecessor_bytes": 1585,
+    "required_validation_margin": 5
+  },
+  "alias_result": {
+    "aliases_are_zero_byte": true,
+    "identities": {
+      "c2_backstop_pending_code": {
+        "additional_allocated_bytes": 0,
+        "address": "0x0036",
+        "owner": "pending_code",
+        "owner_address": "0x0036",
+        "same_address": true
+      },
+      "c2_backstop_pending_symbol": {
+        "additional_allocated_bytes": 0,
+        "address": "0xb9e9",
+        "owner": "pending_symbol",
+        "owner_address": "0xb9e9",
+        "same_address": true
+      },
+      "c2_backstop_rtov_busy": {
+        "additional_allocated_bytes": 0,
+        "address": "0x0078",
+        "owner": "rtov_busy",
+        "owner_address": "0x0078",
+        "same_address": true
+      },
+      "c2_backstop_rtov_loaded_len": {
+        "additional_allocated_bytes": 0,
+        "address": "0x0079",
+        "owner": "rtov_loaded_len",
+        "owner_address": "0x0079",
+        "same_address": true
+      }
+    }
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1
+  },
+  "decision": {
+    "card_result": "red because a fifth, previously global int identity widened",
+    "narrow_successor_candidate": "make lisp_toplevel_active explicitly uint8_t in declaration and definition, then prove all C consumers and final ELF agree",
+    "successor_authorized": false,
+    "zero_byte_alias_hypothesis": "proved for all four authorized aliases"
+  },
+  "format": "lisp65-c2-v160-execution-boundary-alias-lto-attribution-v1",
+  "inputs": {
+    "alias_card_Final_Red": {
+      "bytes": 21004,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-execution-boundary-backstop-alias-card-final-red.json",
+      "sha256": "bd1f4b33f6effba51225e43a3f05285eb35c6cc6bc50a2c0a08823fb03466a44"
+    },
+    "alias_red_map": {
+      "bytes": 194188,
+      "path": "build/c2.3/v1.6-execution-boundary-backstop-alias-card/wplto/resident-island-seed.prg.map",
+      "sha256": "3c3f3c065a03bfb55367cae71da2a04cb9a081b1d8781d11604c80be195b7532"
+    },
+    "predecessor_map": {
+      "bytes": 191083,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/resident-island-seed.prg.map",
+      "sha256": "c27f3e7850a83a8e460a7888c371480941d6cbdb566c995d9c041e47dc158dbd"
+    }
+  },
+  "next": "review decision; the one authorized alias replacement is consumed",
+  "recorded_on": "2026-08-23",
+  "remaining_byte": {
+    "alias_candidate_emitted_bytes": 2,
+    "delta_bytes": 1,
+    "mechanism": "external assembler consumption prevents whole-program narrowing of the C int object",
+    "predecessor_emitted_bytes": 1,
+    "symbol": "lisp_toplevel_active"
+  },
+  "status": "ATTRIBUTED: EXTERNAL ASM USE RESTORES C INT WIDTH TO TWO BYTES"
+}

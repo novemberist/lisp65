@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-c2-product-link23-hardware-presmoke-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "attempt": {
+    "candidate": "link-23-ownership-before-overlay",
+    "stage": "receipt-less-hardware-presmoke-manual-step-1",
+    "acceptance_receipt_created": false,
+    "promotion_claim": "not-run"
+  },
+  "pinned_identity": {
+    "product_prg_sha256": "680f3215f472c539c21ef59d6ebf1cec59d7c5ce8e8c4260326bcc9320fe01a1",
+    "product_elf_sha256": "d32f9d85dd2e8b82afde787aed65e6b7deda8cd5fb24749268a5f22cd2d93c5c",
+    "kernal_window_sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0",
+    "preload_readbacks_before_first_launch": "6/6 byte-identical"
+  },
+  "hardware_observation": {
+    "screen": "stopped at BASIC READY. RUN: without a Lisp65 banner or prompt",
+    "processor_activity": "repeating PCs in the owned IRQ handler around $e028..$e041",
+    "first_red_rule": "stopped; no downstream hardware case was claimed"
+  },
+  "breakpoint_diagnosis": {
+    "map_operand": "0xc0",
+    "mapped_cpu_blocks": "$c000-$ffff to physical Bank 0",
+    "cpu_view_d019_and_d700": "matched physical Bank-0 RAM rather than VIC-IV and DMAgic I/O",
+    "irq_effect": "the raster IRQ source could not be acknowledged, producing an IRQ storm",
+    "core_source_result": "gs4510 MAP translation takes precedence over the I/O mapping for mapped blocks"
+  },
+  "root_cause": {
+    "class": "kernal-window-map-mask-also-hides-io",
+    "mechanism": "The $c0 MAP mask mapped both $c000-$dfff and $e000-$ffff. Mapping block 6 hid the $d000 I/O aperture required by the owned VIC, CIA and DMA paths.",
+    "why_ready_run_remained_visible": "The CPU was trapped in the unacknowledgeable raster IRQ before product screen ownership completed."
+  },
+  "required_fix_and_gate": {
+    "product_fix": "Use the $80 MAP mask so only $e000-$ffff is replaced and $d000 I/O remains visible.",
+    "permanent_gate": "Disassembly and mutations bind exactly the E000-only MAP sequence and reject C000-inclusive masks.",
+    "hardware_recheck": "A fresh candidate must restart the receipt-less pre-smoke at manual step 1; no Link-23 green is inherited."
+  },
+  "claim_limit": "Receipt-less hardware diagnosis of Link 23 only. It proves a first-red in MAP/I/O coexistence and no hardware acceptance, product promotion or release claim."
+}

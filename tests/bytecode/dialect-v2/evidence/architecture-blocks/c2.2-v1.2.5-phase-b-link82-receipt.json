@@ -1,0 +1,121 @@
+{
+  "bound_artifact_parity": {
+    "manifests": 6,
+    "mutations_rejected": 6,
+    "receipt": {
+      "bytes": 6159,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/receipts/bound-artifact-source-parity.json",
+      "sha256": "5596840c12691c8ec824d83a9145be95c33a852bb658e328ec50a39735c7e9f8"
+    },
+    "source_bindings": {
+      "bytes": 33959,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/receipts/bound-artifact-manifest-source-bindings.json",
+      "sha256": "5243b91eeebb46a1a63f27dd3072d04b482843c8111aefa4c2cb39a4f65534a5"
+    },
+    "status": "passed",
+    "carrier_cases": 60
+  },
+  "check_source": {
+    "command": "make -k check-source",
+    "execution_witness": {
+      "bound_product_parity": "passed",
+      "canary": "COMPLETE",
+      "equivalence_cases": 447,
+      "equivalence_lanes": 11
+    },
+    "status": "passed-no-exceptions"
+  },
+  "claim_limit": "Host/WPLTO product construction, complete source gates and bound-artifact parity only. Link 82 is not accepted, hardware-qualified or promoted by this receipt.",
+  "execution_accounting": {
+    "first_red_product_links": 0,
+    "hardware_runs": 0,
+    "pre_link_first_reds": 2,
+    "qualifying_WPLTO_closures": 1,
+    "qualifying_product_links": 1,
+    "note": "The two pre-link stops were execution-contract source binding and a historical random-admission checker applied outside its composition. Neither invoked the linker. Link 82 is the only linked v1.2.5 product. The later deterministic-gate artifact rebind invoked neither WPLTO nor the linker."
+  },
+  "format": "lisp65-c2.2-v1.2.5-phase-b-product-link-receipt-v1",
+  "freight": {
+    "Option_A_bank2_delta_bytes": 19,
+    "final_feature_gate": {
+      "bytes": 3516,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/receipts/v1.2.5-feature-gates.json",
+      "sha256": "c3f7ca0a8daaf148050efeaa28e3ab6bb75a0681e4dce8a618aff928bfeb76af"
+    },
+    "host_execution": {
+      "baseline": "t",
+      "mutations_rejected": 5,
+      "two_prior_appends": "t"
+    },
+    "resident_delta_bytes": 0
+  },
+  "plan": {
+    "bytes": 4879,
+    "path": "docs/planning/v1.2.5-release-plan.md",
+    "sha256": "72fa79f555f236c0209007fba5c94fec57fb7b2532ab4a739d2ba221e93b6a6c"
+  },
+  "qualifying_candidate": {
+    "bank2": {
+      "bytes": 43237,
+      "headroom_bytes": 22299,
+      "sha256": "55193531f424da0c85349cd08679963223715c1f571704ab314743fb5f3dc248"
+    },
+    "canonical_manifest": {
+      "bytes": 19666,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/canonical-product-manifest.json",
+      "sha256": "5c8f69d2675433d1e99ea69a4e70d8207de7175b5dcf0e43dd6300bb41e73efe"
+    },
+    "linked_elf": {
+      "bytes": 622552,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "3d9e4c4e7e8d0719223561c66578fb4b24058f32e42483642322a88c4884d8d6"
+    },
+    "media": {
+      "artifact_count": 19,
+      "artifact_set_sha256": "fa9cf0c2e97118af5f3ed52934e50387ff0d0a895499abc497987a2daaa1f56a",
+      "manifest": {
+        "bytes": 15646,
+        "path": "build/c2.2/v1.2.5-candidate-media/candidate-manifest.json",
+        "sha256": "0e1e686a8c05206905b7053eeeb340915aadaa78fca7115c4a00134202988030"
+      }
+    },
+    "product_build_id": "0x270030c3",
+    "release": "v1.2.5",
+    "resident_prg": {
+      "bytes": 41566,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "cef92b1dace70ae700402cb37e95b755d8be5625d168dd65c2ff319176247efe"
+    },
+    "resolved_profile": {
+      "bytes": 11980,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/final/resolved-profile.txt",
+      "sha256": "05679c60fcc6044d0944206a03b9b8f4a0bb13328353a3bed88d2395008e6fe6"
+    },
+    "static_plane": {
+      "direct_entry_refs": 656,
+      "entries": 725,
+      "resolutions": 2842,
+      "roots": 340
+    },
+    "walls": {
+      "bank0_text_headroom_bytes": 243,
+      "e000_headroom_bytes": 54,
+      "fixed_hot_block_headroom_bytes": 2,
+      "ordinary_bank0_bss_headroom_bytes": 137,
+      "resident_island_headroom_bytes": 50,
+      "session_family_headroom_bytes": 113
+    },
+    "link": 82
+  },
+  "recorded_on": "2026-07-31",
+  "source_only_rebind": {
+    "product_identity_delta_bytes": 0,
+    "receipt": {
+      "bytes": 2626,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.5-option-A-deterministic-gate-artifact-rebind-receipt.json",
+      "sha256": "ebfd16cf90856bdea2930c1cf63c27b5361db3da49591deca59e54b88ea33ae4"
+    },
+    "status": "passed-without-WPLTO-or-link"
+  },
+  "status": "passed-bound-Link82-and-check-source-device-acceptance-pending"
+}

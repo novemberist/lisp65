@@ -1,0 +1,153 @@
+{
+  "authorities": {
+    "c2-code-window-convergence-contract.json": {
+      "bytes": 1915,
+      "path": "config/c2-code-window-convergence-contract.json",
+      "sha256": "bb5a73cda4abecc09a4bccb166443482de1e13e158376b95bd5bf077964d6b07"
+    },
+    "c2_code_window_convergence_gate.py": {
+      "bytes": 16057,
+      "path": "tools/host-lisp/c2_code_window_convergence_gate.py",
+      "sha256": "807498a39273267d8d0f790ba64ad9489435f3dd8dafa0f78f309dae9908e5e1"
+    },
+    "c2_platform_dma.c": {
+      "bytes": 10853,
+      "path": "src/c2_platform_dma.c",
+      "sha256": "3dcb76e9072868c890513471d7d4e0c16f7803853968f91d4f52e7fb0b0ea8d6"
+    },
+    "c2_platform_dma.h": {
+      "bytes": 608,
+      "path": "src/c2_platform_dma.h",
+      "sha256": "941bc2020e710cd565e8a720182035ec90234227e6af18309c5443da27161777"
+    },
+    "c2_product_runtime.c": {
+      "bytes": 168045,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "7e2e6eefa18a151795924189db9818c1db656c8d7105083e27d5c2e72e3dbdc3"
+    },
+    "c2_product_substitution_link.py": {
+      "bytes": 434946,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "134046d00cceaace92ec1cf8ee2df5dfdec81f5c5023205264e0e8fe91675d62"
+    },
+    "main.c": {
+      "bytes": 8356,
+      "path": "products/runtime-core/main.c",
+      "sha256": "d1ff36fa28ff3270f7ac618fdffd659e924f459de982261a2dce1c775c7145aa"
+    },
+    "mem.c": {
+      "bytes": 49881,
+      "path": "src/mem.c",
+      "sha256": "eed1a86672a92efdfed914f03272708d2ee7a0ec7fa3950e91a640c9062faba0"
+    },
+    "ship-runtime-host-main.c": {
+      "bytes": 3780,
+      "path": "scripts/ship-runtime-host-main.c",
+      "sha256": "c7a43bb54cec3ee7164a4315023df679c82025a378c02af841e69b3b86b5262a"
+    },
+    "ship_builder.py": {
+      "bytes": 52116,
+      "path": "tools/host-lisp/ship_builder.py",
+      "sha256": "a336365edf466f6306af068e4b63c2eefe6bff19cca6e80c26307d1f72e9c777"
+    },
+    "ship_io.c": {
+      "bytes": 10278,
+      "path": "products/runtime-core/ship_io.c",
+      "sha256": "3cc81efd92e53edefe3dcab2c406a868be01995f023782706735518df0ebf209"
+    },
+    "ship_runtime_io.h": {
+      "bytes": 1340,
+      "path": "src/ship_runtime_io.h",
+      "sha256": "0d27be53554843dbb443c91786828d50ec13b28c16615f399e256fcca200b7e8"
+    },
+    "vm.c": {
+      "bytes": 105226,
+      "path": "src/vm.c",
+      "sha256": "401215f971f80e7d9e1920e739b07c3a37b63709a9fca368b79c1fc6e778bee2"
+    },
+    "vm.h": {
+      "bytes": 7524,
+      "path": "src/vm.h",
+      "sha256": "2075eae3a3acbd7b5689e35ed0a4aa2485fb27cb14edfb114d7398d76695e6d1"
+    },
+    "vm_embed.c": {
+      "bytes": 44844,
+      "path": "src/vm_embed.c",
+      "sha256": "6322ddde4d5f9be3d504b716a7bcfadf56bd32e7e3d144097d954748a9032b81"
+    }
+  },
+  "claim_limit": "The oracle proves destination content before consumption. It does not distinguish late delivery from target transfer malfunction.",
+  "execution_witness": 8,
+  "executions": {
+    "destination-already-source": {
+      "accepted": true,
+      "elapsed_frames": 0
+    },
+    "exact-edge-64": {
+      "accepted": true,
+      "elapsed_frames": 64
+    },
+    "first-difference-at-tail": {
+      "accepted": true,
+      "elapsed_frames": 9
+    },
+    "immediate": {
+      "accepted": true,
+      "elapsed_frames": 0
+    },
+    "nonconvergent": {
+      "accepted": false,
+      "elapsed_frames": 64
+    },
+    "one-byte": {
+      "accepted": true,
+      "elapsed_frames": 3
+    },
+    "primary-late-35": {
+      "accepted": true,
+      "elapsed_frames": 35
+    },
+    "uint16-wrap": {
+      "accepted": true,
+      "elapsed_frames": 35
+    }
+  },
+  "facts": {
+    "completion_metadata_consumed": false,
+    "d705_probe_descriptor_bytes": 40,
+    "d705_probe_descriptor_named_owner": true,
+    "descriptor_count": 3,
+    "fail_closed": "VM_BADOPCODE->RUNTIME_VM_ERROR",
+    "hardware_contacts": 0,
+    "host_target_define_count": 2,
+    "match_before_timeout": true,
+    "oracle": "source-derived-first-difference",
+    "per_consumer_convergence_loops": 0,
+    "primary_submissions": 1,
+    "product_link_built": false,
+    "refill_paths": 4,
+    "resident_destination_witness_bytes": 1,
+    "target_products": 2,
+    "timeout_frames": 64
+  },
+  "format": "lisp65-c2-code-window-content-convergence-gate-v1",
+  "mutations_rejected": {
+    "claim-hardware": "source gate overclaims hardware",
+    "claim-link": "source gate overclaims a product link",
+    "consume-metadata": "refill metadata consumed as content truth",
+    "drop-c2-product": "one target product silently lost convergence",
+    "drop-refill-path": "refill path coverage drift",
+    "host-only": "host/target build parity drift",
+    "metadata-oracle": "metadata accepted as content truth",
+    "not-fail-closed": "nonconvergence is no longer fail closed",
+    "per-consumer-loops": "per-consumer convergence infrastructure returned",
+    "shared-descriptor": "ordered source-probe chain or primary descriptor lost",
+    "silent-resubmit": "silent primary retry introduced",
+    "timeout": "timeout drift",
+    "timeout-first": "exact-edge convergence rejected",
+    "unowned-d705-descriptor": "D705 source-probe chain has no named owner",
+    "wide-resident-witness": "resident discriminator is no longer one byte"
+  },
+  "recorded_on": "2026-08-30",
+  "status": "PASS"
+}

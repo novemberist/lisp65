@@ -1,0 +1,177 @@
+{
+  "format": "lisp65-v11-repl-banner-block-receipt-v1",
+  "block_id": "1.1-D-repl-banner",
+  "status": "passed-product-promotion-authorized-hardware-visual-pending",
+  "recorded_on": "2026-07-16",
+  "source_parent_commit": "2b4fc40a4fab0f1a4991ad6732e0cad18a4cc3b9",
+  "promotion_commit": "commit-containing-this-receipt",
+  "authorization": {
+    "path": "config/v11-repl-banner-capacity-authorization.json",
+    "sha256": "afc9b2c885b54e4c4c905f7f347a488ee3384030820c7acee42bba019aa879a1",
+    "status": "owner-authorized-for-product-promotion"
+  },
+  "probe_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-repl-banner-probe-receipt.json",
+    "sha256": "bd18fb37a1cee0df493521682d7336df89eef485fa328abb28744f01569119c8"
+  },
+  "implementation": {
+    "launch_binding": {
+      "kind": "generated-directory-ordinal-seam",
+      "macro": "LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY",
+      "ordinal": 198,
+      "position": "after scr_init and before the first prompt",
+      "handwritten_ordinal": false
+    },
+    "persistent_internal_entries": [
+      {
+        "name": "%banner-run",
+        "ordinal": 197,
+        "code_bytes": 248
+      },
+      {
+        "name": "%repl-banner",
+        "ordinal": 198,
+        "code_bytes": 103
+      }
+    ],
+    "private_inline_helpers": [
+      "%banner-runs",
+      "%banner-subtitle"
+    ],
+    "public_or_exported_banner_names": [],
+    "directory_attribution": "The implementation adds two internal entries, not eight functions. Raw resident use rises from 208 to 210; mandatory align-to-eight rounds 210 to 216, so post-align headroom falls by eight. %banner-run is 248 bytes and cannot be inlined into the 103-byte entry without violating the 255-byte code-object gate.",
+    "repl_index_contract": "REPL cursor, floor, limit and status are uint8_t; preprocessing rejects REPL_BUF_MAX outside 2..255.",
+    "accepted_visible_contract": {
+      "coordinate_table_is_normative": true,
+      "visible_writes": 235,
+      "subtitle": "WORKBENCH - DIALECT V2",
+      "first_prompt_row": 9,
+      "hardware_screenshot_required_before_wave_seal": true
+    }
+  },
+  "source_hashes": {
+    "lib/repl-banner.lisp": "214806a30690ad120b9067d2881da0c87055348b593c57dea7cbc4b565e4254d",
+    "src/repl.c": "6214f7b7712661d08f07df0c62d0fe51a3eedbabccc974e8e3c67e429911ec75",
+    "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json": "a7a7c8fcbe30663cd570e21c07ae4518e21ccfc288be0d1e62297878d4025b67",
+    "tools/host-lisp/bytecode_p0_stdlib.py": "12d3a9bc0574cdc087e34e1636cd61731bdee8437ac24c7b24b2396b2d7f4acd",
+    "tools/host-lisp/v11_repl_banner_visual.py": "a8360e1a7259aa05a0575204a3d45103587ebf6b2967f68c57cccfac5ba59c6a",
+    "tools/host-lisp/repl_screen_check.py": "b0adc78fa4178199cf285ed04460e79508f2cb84ebbea0ff37c9f564c228a949",
+    "mk/workbench-service-inventory.mk": "5c994d976d6d5a150caf4287b2852ec11dbb228318aca7b0419815553106fc74",
+    "docs/planning/repl-banner-spec-1.1.md": "bd21c3cc330573d9a08644c865ca6a87d8241e6fe06bd4705bc03aa198c54e9a",
+    "docs/planning/repl-banner-spec-1.1.de.md": "016ccb612c1411c0fb7da96384163ae9ccb44ea7cd85aa17e4d463ee27f809b7"
+  },
+  "capacity_delta_scope": "authorized-repl-banner-plus-generated-launch-seam-plus-repl-byte-index-correction",
+  "capacity_delta": {
+    "dimensions": {
+      "bank": {
+        "baseline_post_boot_reserve_bytes": 1795,
+        "candidate_post_boot_reserve_bytes": 1876,
+        "release_target_bytes": 1536,
+        "candidate_margin_bytes": 340,
+        "delta_bytes": 81
+      },
+      "ext": {
+        "baseline_standard_composition_headroom_bytes": 25537,
+        "candidate_standard_composition_headroom_bytes": 25186,
+        "floor_bytes": 16384,
+        "candidate_margin_bytes": 8802,
+        "delta_bytes": -351
+      },
+      "symbols": {
+        "baseline_headroom": 391,
+        "candidate_headroom": 389,
+        "required_headroom": 32,
+        "delta": -2
+      },
+      "namepool": {
+        "baseline_headroom_bytes": 5668,
+        "candidate_headroom_bytes": 5643,
+        "required_headroom_bytes": 384,
+        "delta_bytes": -25
+      },
+      "directory": {
+        "baseline_resident_entries": 208,
+        "candidate_resident_entries": 210,
+        "raw_delta": 2,
+        "baseline_post_align_headroom": 176,
+        "candidate_post_align_headroom": 168,
+        "post_align_delta": -8
+      },
+      "overlay_vma": {
+        "baseline": "0xc354",
+        "candidate": "0xc304",
+        "ceiling": "0xc356",
+        "baseline_headroom_bytes": 2,
+        "candidate_headroom_bytes": 82,
+        "headroom_delta_bytes": 80
+      },
+      "boot_overlay": {
+        "baseline_bytes": 1669,
+        "candidate_bytes": 1669,
+        "size_delta_bytes": 0,
+        "baseline_sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0",
+        "candidate_sha256": "302507a2228d1bc7027884752c7d1208e255238b09429a285b12725f2e1c4136",
+        "byte_identical": false,
+        "attribution": "The overlay-owned source and size are unchanged; absolute relocations move with the separately attributed VMA change."
+      },
+      "resident_external_image": {
+        "baseline_code_bytes": 6076,
+        "candidate_code_bytes": 6427,
+        "code_delta_bytes": 351,
+        "baseline_metadata_bytes": 8314,
+        "candidate_metadata_bytes": 8690,
+        "metadata_delta_bytes": 376,
+        "baseline_total_bytes": 14390,
+        "candidate_total_bytes": 15117,
+        "total_delta_bytes": 727,
+        "accounting_note": "Only 351 code bytes persist after boot; banner metadata is reclaimed after installation."
+      }
+    }
+  },
+  "candidate_artifacts": {
+    "codemod_receipt_sha256": "2c355d7ac905058b7a7d4807db0974043e9b0f0627b0e2d50676d3ff4dbf3d20",
+    "generated_suite_sha256": "f4bb27d737e494314f21d9ca146eebc44e9a26103e74d6a495482e7bd10eab94",
+    "visual_oracle_sha256": "58d92e7538a7855c40ba7b292f38d32e0ec1136b973e36315b0b6e883b203554",
+    "manifest_sha256": "9779dc26466b1133cf8e1014063ab8fff66e5569a85f9b04ad506559a4059e93",
+    "external_image_sha256": "8cc5291a7b5e2eec55ee862e11b8f54829d043c78169c656c1e3750cc7216897",
+    "composition_budget_sha256": "fd8491ba0be2d523185af4f4702d7b33ec3769481618dcc96c85b6f02c525e43",
+    "resolved_profile_sha256": "90afc89eaddb830e097a9d59b56368126ecc5c17612ca2806279cdaca8363c42",
+    "footprint_audit_sha256": "4d349ae111899ab1d02ce78f7fc98bb64fb83338ee4ab3028c1902771d8be336",
+    "layout_sha256": "aa877e5bccc75354b5ba3f34eddb2452e851a7cc233eb7def59440ff08c44c1d",
+    "control_audit_sha256": "45e74b5b07557a13bf1ab64017112b83d45324127d6a83a213d67123c11f7504",
+    "linked_prg": {
+      "bytes": 44548,
+      "sha256": "3009353491b432d0a5e52d24ecfc7a16e9bdf7b02d9542320b0fa391247c958e"
+    },
+    "resident_prg": {
+      "bytes": 39487,
+      "sha256": "eb6c084891f65a8c2badf3b6bd5d7af830fee41ab57feb5b005ac65fdfee8301"
+    },
+    "boot_overlay": {
+      "bytes": 1669,
+      "sha256": "302507a2228d1bc7027884752c7d1208e255238b09429a285b12725f2e1c4136"
+    },
+    "runtime_overlays_manifest_sha256": "078e422b7b45da1b780a43252f321b97479ab3d67f1facd4748a4c27ca3c20e5",
+    "runtime_overlays_image_sha256": "91f12fe09c3c96fe674352c182678a92e939ca3812203ad3f7e2cc37188956ae"
+  },
+  "verification": {
+    "generated_v2_workbench_suite": "pass: 209 functions, 194 cases, 419 objects, 10613 code bytes, 29877 steps",
+    "embed_check": "pass: 210 objects, 268 literal nodes, 268 literal patches",
+    "visual_oracle": "pass: 235 writes, nine linefeeds, prompt row 9, 8109 steps",
+    "visual_oracle_negative_tests": "pass: five mutations rejected",
+    "screen_driver_smoke": "pass: all host cases",
+    "repl_session_regression": "pass: all host cases",
+    "screenshot_verifier_selftest": "pass: 19 cases including banner-prefix-pass",
+    "repl_byte_index_gate": "pass: REPL_BUF_MAX=255 accepted and 256 rejected during preprocessing",
+    "canonical_product_link": "pass",
+    "composition_budget": "pass",
+    "overlay_control_audit": "pass: 1669-byte overlay, one resident reference, 21 section pins",
+    "hardware_screenshot": "not-run-wave-seal-blocker"
+  },
+  "remaining_wave_seal_conditions": [
+    "capture and bind a real-hardware screenshot to the promoted product candidate",
+    "confirm the real rendering against the 235-write visual contract and calibrate the detector",
+    "complete the regular R4/R5/R6 repin and single-device wave G6"
+  ],
+  "claim_limit": "This receipt proves the authorized product-source implementation, permanent host visual gate, exact canonical link and capacity result. It does not accept the real-hardware appearance, seal Wave 1, or claim R4/R5/R6/G6 evidence."
+}

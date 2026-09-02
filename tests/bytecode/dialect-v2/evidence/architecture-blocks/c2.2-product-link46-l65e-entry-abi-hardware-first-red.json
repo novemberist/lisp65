@@ -1,0 +1,89 @@
+{
+  "format": "lisp65-c2-lite-v6-link46-l65e-entry-abi-hardware-first-red-v1",
+  "status": "first-red-l65e-entry-consumed-wrong-llvm-mos-argument-registers",
+  "date": "2026-07-22",
+  "candidate": {
+    "link": 46,
+    "product_path": "build/c2.2/substitution/product-link-46-c2-lite-v6-bcode-ordinal-renderer/lisp65-c2-substitution-linked.prg",
+    "product_sha256": "6d0d1b691bf0ffd81d333663e9d97e5d83588d08dbce745f86a530fa91079416",
+    "elf_path": "build/c2.2/substitution/product-link-46-c2-lite-v6-bcode-ordinal-renderer/lisp65-c2-substitution-linked.prg.elf",
+    "elf_sha256": "875cb48ad7564a69b754b6a4053b2b74a51f6ee9832873dbfe1bdbc3f95d2cc3",
+    "structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link46-c2-lite-v6-bcode-ordinal-renderer-structural-receipt.json",
+      "sha256": "040451a9993736f58fcf912cf600f8eeb24a8eef88f59cb540dde2f2fa05723e"
+    },
+    "deployment": {
+      "path": "build/c2.2/hardware-presmoke-link46-bcode-ordinal/deployment.json",
+      "sha256": "2ad49ebcafa9b67aded201a93e8446292f00739a2bbe0598fa652cad7e6a69a8"
+    }
+  },
+  "hardware_result": {
+    "form": "(list (peek 255 132) (peek 255 131) (peek 255 132))",
+    "observed": "***",
+    "expected": "*** vm: undefined function #xxx",
+    "first_deviation": true,
+    "screen": {
+      "png": {
+        "path": "build/c2.2/hardware-presmoke-link46-bcode-ordinal/first-red/after-bcode-render.png",
+        "sha256": "b37b0e9559563e3f388a95fce0bc2c78fbae190f266f1a0533f1d8e9976ca4c3"
+      },
+      "ansi": {
+        "path": "build/c2.2/hardware-presmoke-link46-bcode-ordinal/first-red/after-bcode-render.ansi.txt",
+        "sha256": "e0625e03c82ca03cc68a5472389703244c3d6665ee0ae039581d48feed107a98"
+      }
+    }
+  },
+  "read_only_post_error_state": {
+    "pending_code": 0,
+    "pending_detail": "0x0000",
+    "vm_status": 0,
+    "c2_ready": 0,
+    "interpretation": "The normal abort boundary returned, cleared the pending status/detail and left the failed transaction unpublished. The machine did not hang in L65E."
+  },
+  "linked_abi_finding": {
+    "actual_dispatcher_edge": {
+      "owner": "vm_runtime_overlay_exec_family",
+      "call_address": "0xade4",
+      "indirect_target_registers": "__rc18/__rc19",
+      "context_argument_registers": "__rc2/__rc3",
+      "evidence": "The final ELF loads the context low/high bytes into __rc2/__rc3 at 0xaddb..0xade2 and then calls __call_indir; __call_indir is the single JMP (__rc18)."
+    },
+    "broken_leaf_prologue": {
+      "entry": "0xc356",
+      "bytes": "85 04 86 05",
+      "meaning": "STA __rc2; STX __rc3",
+      "source": "src/l65e_bcode_ordinal.s:25",
+      "failure": "The leaf overwrites the valid context argument before its first read because it incorrectly declares the pointer argument to be A/X."
+    },
+    "historical_witness": {
+      "candidate": "Link 45",
+      "entry": "0xc362",
+      "behavior": "The compiler-generated C entry reads the context directly from __rc2/__rc3 and never copies A/X into them."
+    },
+    "gate_gap": "The Link-46 assembler-leaf inventory verified symbol/size and repeated the leaf's declared ABI, but did not prove the real dispatcher-to-leaf dataflow. Gate and leaf therefore shared the same false convention."
+  },
+  "non_authoritative_reproduction": {
+    "purpose": "CPU/ABI differential only; Xemu is not hardware acceptance evidence.",
+    "method": "A diagnostic shim calls the immutable Link-46 leaf at entry+4, skipping only the two context-destroying instructions. The table and all remaining renderer bytes are unchanged.",
+    "shim_sha256": "8fbaeb6ac844330f4bcf12f2c52054c1d6abc8a20129c0b97b5c59c047a54770",
+    "prg_sha256": "a7e7cdf878755ee5c3ecb344c1910c50cf714110439b793cddfa32e694f70deb",
+    "result": "vm: undefined function #fff",
+    "captured_bytes": 27,
+    "entry_status": 0,
+    "memory_dump_sha256": "be748f2c9ce9c92771fca4607002a9d57eb732b002d0422a45905d0c7616c867"
+  },
+  "recommended_class_c_cut": {
+    "product_change": "Delete only STA __rc2 and STX __rc3 at the L65E entry and correct its ABI comment; the entry then consumes the dispatcher-owned __rc2/__rc3 pointer exactly like the former C implementation.",
+    "expected_direct_delta_bytes": -4,
+    "gate_change": "Extend the assembler-leaf ABI gate to the actual vm_runtime_overlay_exec_family indirect callsite and reject either prologue write before the first context read. Pin mutations for low-byte overwrite, high-byte overwrite and A/X reintroduction.",
+    "verification": "Run the product-shaped WPLTO and all existing L65E/leaf/capacity gates; a new promotable product link and hardware rerun require separate Class-C authorization."
+  },
+  "accounting": {
+    "line1_boot": "passed",
+    "line1_product_first_red_budget": "unchanged-at-2/3",
+    "completed_latency_measurements": "0/2",
+    "new_product_links_during_diagnosis": 0,
+    "new_hardware_runs_during_diagnosis": 0
+  },
+  "claim_limit": "Hardware First Red, read-only final-ELF diagnosis and non-authoritative CPU/ABI differential only. No product source fix, new product link, promotion, acceptance or release is claimed."
+}

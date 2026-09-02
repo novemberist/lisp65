@@ -1,0 +1,165 @@
+{
+  "authority": {
+    "contract_gate": "c2-kernal-unmap-contract: PASS gross=8192 deficit=3639 replacement-categories=7 continuity-invariants=2 negative-cases=28 mutations-rejected=14 product-bytes=0",
+    "kernal_unmap_contract": {
+      "bytes": 46865,
+      "path": "config/c2-kernal-unmap-contract.json",
+      "sha256": "5ec63786ee822e763f8ba5e19c620f9eccd4b39d1d7ac14385ed74f4c5bba8d3"
+    },
+    "kernal_unmap_contract_document": {
+      "bytes": 45416,
+      "path": "docs/planning/c2.2-kernal-unmap-contract.md",
+      "sha256": "92ed161e58b653c14f5d3c3584faf9330cafd3af460f9dd4dd9da08fd910f71a"
+    },
+    "link35_product_rollback": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/lisp65-c2-substitution-linked.prg",
+      "sha256": "54c731559fdb72d5d1cb8478b9da7e78a422741e4e5267d64b07fe4c6f763a65"
+    },
+    "link35_structural_rollback": {
+      "bytes": 18828,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link35-dma-completion-first-status-pure-replay-receipt.json",
+      "sha256": "10bc82583a9b6f80c805a6770769792047e838e93e07d92a4735b673bd2fd13d"
+    },
+    "scope_memo": {
+      "bytes": 40399,
+      "path": "docs/planning/v1.2-scope-memo.md",
+      "sha256": "0b860edf0540b13307c7f3003a5efaa6ce3c13b0c3a54a6358a2cf7a8bf76674"
+    },
+    "terminal_driver": {
+      "bytes": 3328,
+      "path": "scripts/c2-crc-convergence-shared-driver-probe.s",
+      "sha256": "a00f24e859d2d07c53d7cec4edc7cef57bb6f3001eba96aa63db44c9eaea8b54"
+    },
+    "terminal_floor_wplto": {
+      "bytes": 3676,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-crc-convergence-terminal-floor-wplto-receipt.json",
+      "sha256": "115cf83ccee353163b952e90a9b7c794f677777dc0a3e2ced04447ad24e8b3c9"
+    }
+  },
+  "diagnostic": {
+    "first_red": "resident-island seed .text overlaps the fixed handoff by 8 bytes",
+    "linker_message": "link command failed before orphan-wrapper acceptance: exit=1",
+    "rodata_relation": "secondary consequence of the text overrun; ordinary rodata begins at 0xb625 instead of the green probe's 0xb61d",
+    "stage": "resident-island-seed-link",
+    "type": "RuntimeError",
+    "whole_program_comparison": {
+      "green_terminal_probe_text_bytes": 38014,
+      "link35_seed_text_bytes": 38007,
+      "link36_seed_text_bytes": 38024,
+      "link36_text_end_inclusive": "0xb4aa",
+      "link36_vs_green_probe_bytes": 10,
+      "overlap_at_handoff_bytes": 8,
+      "unchanged_handoff_start": "0xb4a3"
+    }
+  },
+  "evidence": {
+    "c2-kernal-window.generated.h": {
+      "bytes": 420,
+      "sha256": "bd66bd08f065add45708fc3943bdd9e6cc50d4dc44bed94de862899d008dbfc7"
+    },
+    "c2-substitution.ld": {
+      "bytes": 60424,
+      "sha256": "913c95ebe97d4b15578c440553bb0434ccc714d06b7e26d549b04e33a70d53d5"
+    },
+    "current-host-semantics/negative.stderr.txt": {
+      "bytes": 63,
+      "sha256": "368c942a57b31dfdd31243acb0cd285f3a7cd5061aec48e5476d422763412746"
+    },
+    "current-host-semantics/positive.stdout.txt": {
+      "bytes": 56,
+      "sha256": "1950759af820a5635fe35651f4190eb9dfc2106ae978c4192c68e4197f272481"
+    },
+    "current-host-semantics/v3-generic-outer-negative": {
+      "bytes": 116944,
+      "sha256": "190758538f2aca7f1eb27f17c9925e3c59879e1bb376efcf51e34d0567e62bf0"
+    },
+    "current-host-semantics/v3-positive": {
+      "bytes": 112824,
+      "sha256": "d254f4a38d29316d1f20a5840809384875af21a4e402619381b134864dd84fea"
+    },
+    "current-host-semantics/vm_runtime_overlay.generic-outer-negative.c": {
+      "bytes": 74037,
+      "sha256": "8e9ceded69b182e32fede9f9fdde9119442ef460e0bcb19c52ebbf35fef6b9b7"
+    },
+    "error-text-table.bin": {
+      "bytes": 772,
+      "sha256": "3117cae9c22d913ded014f29f7911801ffc70d2540c2ae65b41ead3cf6577655"
+    },
+    "error-text-table.h": {
+      "bytes": 11472,
+      "sha256": "50846f9f54f873b80afb08b7eab6db5853e22e0e53667b7e076cfd0737781491"
+    },
+    "fresh-v5-prelink-gates/c2-runtime.o": {
+      "bytes": 157784,
+      "sha256": "87535293160f96917bf434e0b09b9ae409419c166101deb54a4524aaae8edb5e"
+    },
+    "fresh-v5-prelink-gates/interrupt.o": {
+      "bytes": 5352,
+      "sha256": "7f2ad17c0047c8983d9ef8c78a20f1d87de0a3900835521bbcab1bf3cd7095f5"
+    },
+    "resident-island-seed.prg.link.stderr.txt": {
+      "bytes": 1735,
+      "sha256": "1a4535f6746c0cd10c20c8742b0fec509f95024c5bd7c08290cd5e72a605113a"
+    },
+    "resident-island-seed.prg.link.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "resident-island-seed.prg.lto.o": {
+      "bytes": 575704,
+      "sha256": "cc9691c96a3c9f68a309116bdc23732da9993ab9779f9026fd7bb8b345d2aae3"
+    },
+    "resident-island-seed.prg.map": {
+      "bytes": 183707,
+      "sha256": "a11f05f70aa07f95f99f731fdd9efeea8010bbc78b6e2890e97ddf6ff1efe5ba"
+    },
+    "resident-island.prepare.h": {
+      "bytes": 10249,
+      "sha256": "7bc2952d5d5c4d415c250718f3767ecc723a27b2a58ffa2b6fb24a1421949ae3"
+    },
+    "resolved-profile.txt": {
+      "bytes": 6724,
+      "sha256": "7ca1b974044e430d9063817a36f92668ad08244792a77e0a9bfa27b82fafa730"
+    },
+    "runtime-overlay.prepare-standard.h": {
+      "bytes": 1266,
+      "sha256": "e3986849a45703a32788e773f0353e5e06b38bf83c2ec86a9d93eab37a502d70"
+    },
+    "runtime-overlay.prepare.h": {
+      "bytes": 2267,
+      "sha256": "7e1fefa7b8491626e6f52e2e3cbbc1cb8c73d334bb8f25e7f5c5e78d30c57b15"
+    },
+    "stage-config.h": {
+      "bytes": 238,
+      "sha256": "25090d2e8e23a30ec50a07c71852b7f951d78232ec6ddfcc3e64779718337b48"
+    },
+    "v2-product-profile-parity.json": {
+      "bytes": 1762,
+      "sha256": "2d2b3ad38eb71ef493b077c67d15ff85210f69d5a1723b860a858f5bdb2cea2a"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "product_closure_links": 0
+  },
+  "format": "lisp65-c2-product-link36-first-red-v1",
+  "next_gate": "the terminal-floor self-destruction clause automatically selects C2-lite; no Link-36 retry, floor/anchor negotiation or hardware",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/lisp65-c2-substitution-linked.prg",
+    "sha256": "54c731559fdb72d5d1cb8478b9da7e78a422741e4e5267d64b07fe4c6f763a65",
+    "status": "untouched"
+  },
+  "terminal_floor_disposition": {
+    "contract_rule": "any successor resident or E000 demand below the terminal allocation automatically selects C2-lite without review, exception or owner escalation",
+    "hardware_runs": 0,
+    "link36_retry": "forbidden",
+    "product_closure_links": 0,
+    "selected_successor": "C2-lite",
+    "trigger": "8-byte resident text overlap after the one authorized product-shaped link attempt"
+  },
+  "status": "FIRST RED: terminal-floor Link 36 stopped"
+}

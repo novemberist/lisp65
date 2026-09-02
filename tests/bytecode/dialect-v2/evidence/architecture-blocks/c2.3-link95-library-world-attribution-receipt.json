@@ -1,0 +1,275 @@
+{
+  "attribution": {
+    "first_divergent_edge": "L65S header offset 22 product-build-id guard",
+    "mechanism": "The Link-95 media producer copied the Link-93 inspect library byte-for-byte. Its L65S header therefore carries product build identity 0x3b48650d, while the linked Link-95 envelope guard requires 0x14d980c3. The target rejects at c2_append_envelope_phase before any packed reference, publication, trace or ABI operation.",
+    "media_pair_rule": "A product D81 and a library D81 form one world identity. A release closure must reject every library whose L65S build id does not equal the mounted product C2D build id.",
+    "pre_registered_ordinal_suspect": "rejected"
+  },
+  "authority": {
+    "commission": "d11dbf56",
+    "first_red": {
+      "bytes": 3771,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-require-inspect-hardware-first-red.json",
+      "sha256": "eeb60c1a9cb2cc25b4bc5ee166aa3f64584b08389ac51167adc8c13809f17c14"
+    },
+    "gate": {
+      "bytes": 25768,
+      "path": "tools/host-lisp/c2_link95_library_world_attribution.py",
+      "sha256": "ecf3a0de7a1976541fe7cc32e91c657d79e6c847ad71b20799b23274029f1c7a"
+    },
+    "media_closure": {
+      "bytes": 4656,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-media-closure-receipt.json",
+      "sha256": "b221e927eea51f2ab56ae2016daefeaefffcc10d3c6d46289d9f4e625e3bd638"
+    },
+    "media_producer": {
+      "bytes": 14910,
+      "path": "tools/host-lisp/c2_link95_acceptance_media.py",
+      "sha256": "59e8e3d3dd09c17f6af7b5ded2e81f3635cb325a78c3d9e982628f2ffed4a8ad"
+    }
+  },
+  "claim_limits": {
+    "not_proved": [
+      "a rebuilt Link-95 library or media pair",
+      "a corrected hardware require row",
+      "trace, untrace or defstruct behavior",
+      "a new status-propagation claim beyond the bound first loader edge"
+    ],
+    "proved": [
+      "the exact delivered pair is cross-world",
+      "the first target rejection is the L65S product build identity",
+      "all other envelope/index predicates pass in a non-writing counterfactual",
+      "the inspect artifact contains no fixed product Directory/native ordinals",
+      "the Link-93 exact pair required inspect successfully on hardware"
+    ]
+  },
+  "execution_accounting": {
+    "counterfactual_artifacts_written": 0,
+    "hardware_contacts": 0,
+    "library_rebuilds": 0,
+    "media_rebuilds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-link95-library-world-attribution-v1",
+  "hardware_contrast": {
+    "Link93_exact_pair": {
+      "postcondition": {
+        "bytes": 2241,
+        "path": "build/c2.3/trace-core-abi-link93-r6/device-session-corrected/row-require-inspect.txt",
+        "sha256": "e3aabf62fe84fa4a712ade5051a3069cfde913eae2f0d7cc0846c9a900c5cc75"
+      },
+      "result": "require inspect -> t"
+    },
+    "Link95_cross_world_pair": {
+      "first_red": {
+        "bytes": 3771,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-require-inspect-hardware-first-red.json",
+        "sha256": "eeb60c1a9cb2cc25b4bc5ee166aa3f64584b08389ac51167adc8c13809f17c14"
+      },
+      "result": "require inspect -> VM_BADOPCODE -> usable REPL"
+    }
+  },
+  "library_world_binding": {
+    "counterfactual_only_in_memory": {
+      "artifact_written": false,
+      "changed_offsets": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "combined_crc32_unchanged": "0x2672809e",
+      "envelope": "passed",
+      "index": "passed",
+      "new_build_id": "0x14d980c3"
+    },
+    "decode_matrix": {
+      "Link93": "passed envelope and index",
+      "Link95_envelope": "extension product build identity",
+      "Link95_failed_predicates": [
+        "product_build_id"
+      ],
+      "Link95_index": "extension product build identity"
+    },
+    "delivered": {
+      "L65S_product_build_id": "0x3b48650d",
+      "index": {
+        "bytes": 80,
+        "path": "build/c2.3/packed-callee-link95-acceptance-media/trace-library/l65index",
+        "sha256": "c5df5fa3ff650ccab7f84483f7d03e3e9b93f9090f64051e75054d9db707fdbe"
+      },
+      "index_row": {
+        "artifact_bytes": 5668,
+        "bank2": 558,
+        "combined_crc32": 645038238,
+        "dependencies": [],
+        "entries": 13,
+        "execution_source": 2,
+        "images": 1,
+        "name": "inspect",
+        "resolutions": 409,
+        "roots": 211,
+        "scratch": 104,
+        "sector": 0,
+        "track": 39
+      },
+      "inspect": {
+        "bytes": 5668,
+        "path": "build/c2.3/packed-callee-link95-acceptance-media/trace-library/inspect.l65s",
+        "sha256": "c89c230fa647f8f90cf9c18845f7fe15d6eee9f9699227025f829c5c87416746"
+      },
+      "library_D81": {
+        "bytes": 819200,
+        "path": "build/c2.3/packed-callee-link95-acceptance-media/trace-library/lisp65-library.d81",
+        "sha256": "5e282937436e6d2656590490734d800fcd9fecb4b3a740a3ec39009cdeb5a1bd"
+      },
+      "product_D81": {
+        "bytes": 819200,
+        "path": "build/c2.3/packed-callee-link95-acceptance-media/shared-system/lisp65-product.d81",
+        "sha256": "b58d41997e8a2e78f8f79065029097b9bcb03d136cab202f01e2cc9b5c2f951d"
+      }
+    },
+    "packed_reference_binding": {
+      "descriptors": 409,
+      "entries": 13,
+      "fixed_product_reference_counts": {
+        "K_ENTRY": 0,
+        "K_EXPORT": 0,
+        "K_NATIVE": 0
+      },
+      "kind_counts": {
+        "0": 1,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 211,
+        "8": 197
+      },
+      "ordinal_subhypothesis": "rejected",
+      "reason": "The library carries no K_ENTRY, K_EXPORT or K_NATIVE descriptor; its product-world coupling is the L65S header build identity."
+    }
+  },
+  "linked_require_path": {
+    "ELF": {
+      "bytes": 622568,
+      "path": "build/c2.3/packed-callee-closure-link95/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "44c2c02db3b72018d0f18878b4cfb37fc1f5e457e898713e37ee64468c060caa"
+    },
+    "generated_runtime": {
+      "bytes": 159733,
+      "path": "build/c2.3/packed-callee-closure-link95/final/generated-product-sources/c2_product_runtime.c",
+      "sha256": "3efff32c790525df9c65f00f89dab0077c32d2221b19ebe4620d495a9bd3792f"
+    },
+    "ordered_first_edge": "%disk-load-lib stages inspect.l65s; c2_product_append_staged enters c2_append_envelope_phase; the offset-22 product-build-id predicate rejects before CRC, metadata, descriptors, publication or trace code.",
+    "symbols": {
+      "c2_append_begin": {
+        "VMA": "0xe7e4",
+        "bytes": 513,
+        "section": ".lisp65_c2_kernal_window.c2_resident"
+      },
+      "c2_append_envelope_phase": {
+        "VMA": "0xc356",
+        "bytes": 1478,
+        "section": ".lisp65_rt_c2append_envelope"
+      },
+      "c2_product_append_staged": {
+        "VMA": "0x24cb",
+        "bytes": 116,
+        "section": ".text"
+      },
+      "c2_product_install": {
+        "VMA": "0x253f",
+        "bytes": 620,
+        "section": ".text"
+      },
+      "vm_callprim": {
+        "VMA": "0x6aa0",
+        "bytes": 4746,
+        "section": ".text"
+      }
+    },
+    "visible_error_limit": "The exact first loader divergence is attributed. The surrounding transient install/rollback path exposes VM_BADOPCODE on hardware, but this desk gate does not claim a new inner status-propagation trace."
+  },
+  "mutations": {
+    "cases": [
+      "cross-world pair accepted",
+      "product build-id guard omitted",
+      "failed predicate widened beyond build id",
+      "counterfactual changed payload bytes",
+      "fixed ordinal coupling falsely claimed",
+      "Link-95 library falsely labeled Link-95-bound",
+      "Link-93 hardware control omitted",
+      "Link-95 First Red omitted",
+      "linked envelope symbol identity dimmed",
+      "fix or device claim smuggled into attribution"
+    ],
+    "passed": 10,
+    "total": 10
+  },
+  "next_step": "Owner/reviewer disposition of a Link-95-world library rebuild and a permanent media-pair identity closure; this attribution authorizes neither.",
+  "product_worlds": {
+    "Link93": {
+      "C2D": {
+        "artifact": {
+          "bytes": 33840,
+          "path": "build/c2.3/trace-core-abi-link93-r6/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "08c5f7b85cf9a236db8b94583afec8fe82088a5e6a203679dfcc5505dad7c719"
+        },
+        "catalog_crc32": 1438146589,
+        "entries": 748,
+        "generation": 1,
+        "images": 6,
+        "immutable_images": 6,
+        "product_build_id": 994600205,
+        "resolutions": 2913,
+        "roots": 350
+      },
+      "manifest": {
+        "artifact": {
+          "bytes": 523436,
+          "path": "build/c2.3/trace-core-abi-link93-r6/canonical-product-manifest.json",
+          "sha256": "84e90720ca2194aa0655efc8b5f804ffddccc9c6f63214b184e43e0ecd8d3e54"
+        },
+        "entries": 748,
+        "linked_elf_sha256": "8cd0d41196effa2d119e662bd6631554113112efe254b0fa9b5068ae44a93a63",
+        "product_build_id": "0x3b48650d",
+        "resolutions": 2913,
+        "roots": 350
+      }
+    },
+    "Link95": {
+      "C2D": {
+        "artifact": {
+          "bytes": 33840,
+          "path": "build/c2.3/packed-callee-closure-link95/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "de957fd0c7447b65782ac1b541b32b0724975e452d44974e2e3ad4df6b8c2dc2"
+        },
+        "catalog_crc32": 3419202646,
+        "entries": 753,
+        "generation": 1,
+        "images": 6,
+        "immutable_images": 6,
+        "product_build_id": 349798595,
+        "resolutions": 2920,
+        "roots": 350
+      },
+      "manifest": {
+        "artifact": {
+          "bytes": 20985,
+          "path": "build/c2.3/packed-callee-closure-link95/canonical-product-manifest.json",
+          "sha256": "9aa86cd4bbdc865a2ef16858737ce88f0b87a2ba7a74bef43661265af5f54ea5"
+        },
+        "entries": 753,
+        "linked_elf_sha256": "44c2c02db3b72018d0f18878b4cfb37fc1f5e457e898713e37ee64468c060caa",
+        "product_build_id": "0x14d980c3",
+        "resolutions": 2920,
+        "roots": 350
+      }
+    }
+  },
+  "recorded_on": "2026-08-10",
+  "status": "ATTRIBUTED: LINK93-BOUND-L65S-REJECTED-BY-LINK95-BUILD-ID-GUARD"
+}

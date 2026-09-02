@@ -1,0 +1,253 @@
+{
+  "authority": {
+    "addendum": {
+      "bytes": 10775,
+      "path": "docs/planning/c2-lite-execution-contract-addendum.md",
+      "sha256": "bbef457f081f26b82d51bd6b09ca34de29ec8b49e02cd69408079ff725b1b6af"
+    },
+    "contract": {
+      "bytes": 7116,
+      "path": "config/c2-lite-execution-contract.json",
+      "sha256": "45f597f9160e478bfd6b236f4e5173aa01a3b8bbb3379a4d2abeedbea50ecaa5"
+    },
+    "memo": {
+      "bytes": 40827,
+      "path": "docs/planning/v1.2-scope-memo.md",
+      "sha256": "3d6c1c28e92aaa266c5ed8abc9c4e688e30400343071a9fa80a251b3053ffe93"
+    }
+  },
+  "autonomous_harness_corrections": [
+    {
+      "artifact": {
+        "bytes": 337,
+        "path": "build/c2-lite/product-shaped-v6-probe-harness-parser-first-red/c2-lite-v6-wplto.stderr.txt",
+        "sha256": "6c415d6b0b5df0144535ecff453352f91ae4aa940d1106b693a5114c50b93226"
+      },
+      "class": "A",
+      "label": "duplicate-platform-memory-region",
+      "product_bytes": 0
+    },
+    {
+      "artifact": {
+        "bytes": 2306,
+        "path": "build/c2-lite/product-shaped-v6-probe-link36-profile-first-red/full-product-wplto/c2-lite-v6-full-seed.prg.link.stderr.txt",
+        "sha256": "848ea7361e7a9ecc99ca63f79127891580b8e266aae9f38e82dbdf0f84e50864"
+      },
+      "class": "A",
+      "label": "stale-link36-profile-and-floor",
+      "product_bytes": 0
+    },
+    {
+      "artifact": {
+        "bytes": 937,
+        "path": "build/c2-lite/product-shaped-v6-probe-record-profile-first-red/full-product-wplto/c2-lite-v6-full-seed.prg.link.stderr.txt",
+        "sha256": "930f057d11033687ae829429fc41498bc35526a85c3d205bed751d1219809f03"
+      },
+      "class": "A",
+      "label": "chip-record-profile-guard",
+      "product_bytes": 0
+    },
+    {
+      "artifact": {
+        "bytes": 1466,
+        "path": "build/c2-lite/product-shaped-v6-probe-record-helper-first-red/full-product-wplto/c2-lite-v6-full-seed.prg.link.stderr.txt",
+        "sha256": "315c626aab0c86aaf202c99069f34e5753ecf2f3c45d7379e26b77144c6c7514"
+      },
+      "class": "A",
+      "label": "retry-helper-preprocessor-scope",
+      "product_bytes": 0
+    }
+  ],
+  "claim_limit": "C2D-v6 host semantics and exact Bank-2/Bank-3 plane arithmetic are green. The complete product-shaped WPLTO is red; no product, hardware, performance, promotion or acceptance claim exists.",
+  "first_red_report": {
+    "bytes": 8981,
+    "path": "build/c2-lite/product-shaped-v6-probe/c2-lite-v6-product-shaped-first-red.json",
+    "sha256": "4b38ba3177531d1892d222f6f0c46d4b7b5fa2f0237882e0b0b40540283300ac"
+  },
+  "format": "lisp65-c2-lite-v6-product-shaped-wplto-first-red-v1",
+  "full_wplto_first_red": {
+    "diagnostics": [
+      "phase 11 is 1825 B: 33 B above the immutable 1792-B cap",
+      "E000 named tenants total 8391 B: raw overflow 199 B and 314 B short of the restored 115-B floor",
+      "the C2 resident section crosses the session-state anchor by 169 B"
+    ],
+    "lto_object": {
+      "bytes": 569512,
+      "path": "build/c2-lite/product-shaped-v6-probe/full-product-wplto/c2-lite-v6-full-seed.prg.lto.o",
+      "sha256": "dfb805583a648b65bbc0b1243e2eb3baee6a33ccf604c2948d21524fb17afe7e"
+    },
+    "map": {
+      "bytes": 180167,
+      "path": "build/c2-lite/product-shaped-v6-probe/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "sha256": "8cd0c98600978050d4ebbabd39feb3b708c8e8f2b3bd5ed7d9d95120ede35255"
+    },
+    "profile": {
+      "bytes": 7317,
+      "path": "build/c2-lite/product-shaped-v6-probe/full-product-wplto/resolved-profile.txt",
+      "sha256": "35f87b3398802add79a8a466bd1a2f0b4a91193eb3c4d87f92150275fd88652f"
+    },
+    "stderr": {
+      "bytes": 2231,
+      "path": "build/c2-lite/product-shaped-v6-probe/full-product-wplto/c2-lite-v6-full-seed.prg.link.stderr.txt",
+      "sha256": "13016f4ef23f97cf9068d58bca6c04194020765053c568fdf2ce1ef1d7cd9d77"
+    },
+    "walls": {
+      "bank0_text_headroom_bytes": 306,
+      "c2_resident_end_exclusive": 64945,
+      "c2_resident_overlap_bytes": 169,
+      "e000_capacity_bytes": 8192,
+      "e000_deficit_to_required_floor_bytes": 314,
+      "e000_raw_overflow_bytes": 199,
+      "e000_required_floor_bytes": 115,
+      "e000_use_bytes": 8391,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 144,
+      "phase11_bytes": 1825,
+      "phase11_cap_bytes": 1792,
+      "phase11_overflow_bytes": 33,
+      "resident_island_headroom_bytes": 170,
+      "session_emitter_state_base": 64776
+    }
+  },
+  "green_before_first_red": {
+    "bank2_static": {
+      "c2d_bytes": 33840,
+      "c2d_sha256": "6d0a9517d09502da1e2d0115c1d0c6f9e9c4f5edea2a08ebf1287026b0f33992",
+      "code_bytes": 34403,
+      "code_sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac",
+      "entries": 588,
+      "headroom_bytes": 31133,
+      "images": 6,
+      "resolutions": 2264,
+      "roots": 283
+    },
+    "bank3_lifetime_union": {
+      "bank1_untouched": true,
+      "boot": {
+        "bank": 3,
+        "bytes": 15605,
+        "generation": 1,
+        "headroom_bytes": 49931,
+        "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/runtime-overlays-boot-final.bin",
+        "sha256": "2703d1e868369c6e54d432e25f0548e9ab85df1a4994442b96e7096bf0ac541d"
+      },
+      "invalidation_before_overwrite": true,
+      "session": {
+        "bank": 3,
+        "bytes": 60062,
+        "generation": 2,
+        "headroom_bytes": 5474,
+        "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/runtime-overlays-session-final.bin",
+        "sha256": "43d0b27a23d5c7ba14d81a47e1f5e3cfa06fe754c5423ffbf0af191e35660e5b"
+      },
+      "simultaneously_callable": false,
+      "stale_boot_binding_rejected": true,
+      "status": "passed-lifetime-exclusive"
+    },
+    "host_semantics_receipt": {
+      "bytes": 9553,
+      "path": "build/c2-lite/product-shaped-v6-probe-seam-preflight-only/preliminary-receipt.json",
+      "sha256": "e5fd6c97cd24c416ea4c6898d2efa879d16607d021af8bb622d331f9a60134dc"
+    },
+    "nested": {
+      "low_and_high_edges_disjoint": true,
+      "persistent_descendant_handles_retained": 6,
+      "transient_handles_rolled_back": 6
+    },
+    "one_emitter": {
+      "dynamic_calls": 2,
+      "implementation": "tools/host-lisp/c2_full_emission.py::emit_image",
+      "implementation_sha256": "34a0c15088ef3ae458469883f196a2c9b1d204993845622784655f118b5bc666",
+      "legacy_emitter_calls": 0,
+      "static_and_dynamic_format": "C2I-v2 through one implementation",
+      "static_calls": 6
+    },
+    "permanent_root_surrogate_gate": {
+      "collision_intersections": {
+        "bcode": 0,
+        "fixnum": 0,
+        "native_direct": 0,
+        "symi": 0
+      },
+      "format": "lisp65-c2d-v6-root-surrogate-gate-v1",
+      "high_bit_tag_rejection_witnesses": {
+        "bcode": 4096,
+        "negative_fixnum": 16384,
+        "symi": 4096
+      },
+      "negative_fixtures": [
+        "ordinal-1536",
+        "zero-surrogate",
+        "odd-surrogate",
+        "surrogate-above-root-plane",
+        "surrogate-high-bit",
+        "direct-as-root",
+        "root-as-direct",
+        "positive-even-direct-pointer-shape"
+      ],
+      "permanent_rule": "Every C2 probe imports and executes this complete-domain gate; new direct obj domains must be added to the obj.h-backed emitter.",
+      "root_capacity": 1536,
+      "root_surrogates": {
+        "count": 1536,
+        "maximum_hex": "0x0c00",
+        "minimum_hex": "0x0002",
+        "ordinal_0_hex": "0x0002",
+        "ordinal_1535_hex": "0x0c00",
+        "ordinal_1536": "rejected"
+      },
+      "source_truth": {
+        "compiler": "cc",
+        "domain_rows": {
+          "bcode": 4096,
+          "fixnum": 32768,
+          "native_direct": 16384,
+          "symi": 4096
+        },
+        "domain_unique_values": {
+          "bcode": 4096,
+          "fixnum": 32768,
+          "native_direct": 16384,
+          "symi": 4096
+        },
+        "emitted_rows": 57344,
+        "helper_source_sha256": "49b53691f0db9feb1d9feab369f7b77d428a51ce51f534ceacee0ea75a47d432",
+        "obj_h_sha256": "c780e3573fc4fa09c4b08ec7c5c80168afa74f1cc7e693e028e4c7066734c306"
+      },
+      "status": "pass"
+    },
+    "rollback": {
+      "count": 8,
+      "cutpoints": [
+        "after-code-copy",
+        "after-resolutions",
+        "after-roots",
+        "after-image",
+        "after-entries",
+        "after-header",
+        "during-export-first",
+        "during-export-last"
+      ]
+    },
+    "stale_generation": {
+      "new_generation": 2,
+      "old_generation": 1,
+      "old_handles_rejected": 9,
+      "physical_bytes_retained": true
+    }
+  },
+  "next_gate": "Class-C review of phase-11 semantic split and E000 residency; no retry, product implementation, product link or hardware run.",
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "product": "Link 35",
+    "status": "untouched"
+  },
+  "scope": {
+    "hardware_runs": 0,
+    "non_lto_target_preflight_compiles": 1,
+    "product_links": 0,
+    "product_source_changes": 0,
+    "promotable_product_links": 0,
+    "valid_full_product_wplto_attempts": 1
+  },
+  "status": "FIRST RED: full product-shaped WPLTO capacity/layout"
+}

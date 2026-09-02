@@ -1,0 +1,337 @@
+{
+  "authorities": {
+    "ELF": {
+      "bytes": 623428,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "104f6fc4217fa9d803bfb675cabf46c38deb246cad17502a51e9aadeba95c84c"
+    },
+    "active_owner_ranges_rejected": 30,
+    "authority": {
+      "bytes": 14701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-boot-order-durable-witness-receipt.json",
+      "sha256": "5ec917daf1308ebab615b7fa73f0997b87abbe52d85ee0488ba41033b0d7cb8e"
+    },
+    "commission": {
+      "bytes": 72691,
+      "path": "docs/planning/post-v1.4.0-direction-plan.md",
+      "sha256": "0868997f94ec97f586350cecf8e7a95495a16d6247f1652f352964b613f94424"
+    },
+    "interval": {
+      "bytes": 66,
+      "end_exclusive": "0xb5c4",
+      "start": "0xb582"
+    },
+    "phase_scratch": {
+      "bytes": 996,
+      "path": "src/c2_phase_scratch.c",
+      "sha256": "7a0d81a91f85a2a852dfcabb8368623d6810081fa5c0d07a98f440a1efb9409f"
+    },
+    "product_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f7a9d536e65a7ab89bb2534678f8cdea08fce50d8500a126f452d1525e3c497e"
+    },
+    "runtime": {
+      "bytes": 163560,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "8d1ab8d0150fa2401094613372ebf57143027c612d4612a4479ecfe43e2c6b00"
+    }
+  },
+  "claim_limit": "Host/ELF proof of terminal return-state guarding and repair. No hardware success, defstruct completion, release or root-writer attribution is claimed.",
+  "cold_delivery": {
+    "bytes": 16,
+    "initial_record_tags": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+  },
+  "format": "lisp65-c2.3-terminal-ingress-return-guard-v1",
+  "mutation_count": 17,
+  "mutations_rejected": [
+    "skip-initial-owner-check",
+    "accept-unarmed-return",
+    "wrong-live-return-offset",
+    "swallow-low-mismatch",
+    "swallow-high-mismatch",
+    "swallow-owner-mismatch",
+    "silent-restore-no-live-log",
+    "silent-restore-no-shadow-log",
+    "tag-not-commit-last",
+    "skip-return-low-restore",
+    "skip-return-high-restore",
+    "skip-owner-restore",
+    "clean-result-changed",
+    "clean-record-written",
+    "clean-state-changed",
+    "shadow-inside-owned-facade",
+    "nonzero-cold-record-tag"
+  ],
+  "persistent_plan": {
+    "bytes": [
+      37,
+      38,
+      39,
+      40,
+      0
+    ],
+    "guarded_transfer_count": 4,
+    "symbol": "lisp65_c2_append_persistent_publish_plan"
+  },
+  "placement": {
+    "bytes": 16,
+    "end_exclusive": "0xb592",
+    "linked_gap": [
+      "0xb582",
+      "0xb5c4"
+    ],
+    "linked_owner_overlaps": 0,
+    "outside_C2J_and_C2D_planes": true,
+    "outside_G4_E000_FFFF": true,
+    "start": "0xb582"
+  },
+  "pricing": {
+    "clean_cycles_per_four-transfer_append": 392,
+    "clean_cycles_per_nine-append_defstruct": 3528,
+    "clean_cycles_per_transfer": 98,
+    "ordinary_state_bytes": 0,
+    "overlay_quantum_growth_bytes": 0,
+    "owner_free_shadow_bytes": 16,
+    "resident_bytes": 0
+  },
+  "recorded_on": "2026-08-11",
+  "return_state": {
+    "hardware_return_word": [
+      "stack+1",
+      "stack+2"
+    ],
+    "indirect_entry_vector": "consumed before phase ingress; not a return-state slot",
+    "phase_owner": "ZP 0x89",
+    "required_initial_owner": 2
+  },
+  "semantic_cases": [
+    {
+      "name": "clean-transparent",
+      "outcome": "clean",
+      "record": [
+        0,
+        0,
+        0
+      ],
+      "result": 7,
+      "return_state": [
+        228,
+        44,
+        2
+      ]
+    },
+    {
+      "name": "return-low",
+      "outcome": "restored",
+      "record": [
+        1,
+        177,
+        228
+      ],
+      "result": 9,
+      "return_state": [
+        228,
+        44,
+        2
+      ]
+    },
+    {
+      "name": "return-high",
+      "outcome": "restored",
+      "record": [
+        2,
+        121,
+        44
+      ],
+      "result": 9,
+      "return_state": [
+        228,
+        44,
+        2
+      ]
+    },
+    {
+      "name": "phase-owner",
+      "outcome": "restored",
+      "record": [
+        3,
+        87,
+        2
+      ],
+      "result": 9,
+      "return_state": [
+        228,
+        44,
+        2
+      ]
+    },
+    {
+      "name": "first-record-survives",
+      "outcome": "restored",
+      "record": [
+        2,
+        17,
+        34
+      ],
+      "result": 3,
+      "return_state": [
+        228,
+        44,
+        2
+      ]
+    },
+    {
+      "name": "unarmed",
+      "outcome": "fail-closed",
+      "record": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "invalid-arm",
+      "outcome": "fail-closed",
+      "record": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "invalid-owner",
+      "outcome": "fail-closed",
+      "record": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "status": "passed-terminal-return-shadow-restore-and-first-signature",
+  "wrappers": [
+    {
+      "arm": "0xb582",
+      "body": "c2tr_header_body",
+      "body_address": "0xc3e4",
+      "body_bytes": 857,
+      "bytes": 115,
+      "clean_path_cycles": 98,
+      "entry": "c2_append_header_phase",
+      "entry_address": "0xc371",
+      "first_mismatch_cycles": {
+        "phase_owner": 157,
+        "return_high": 149,
+        "return_low": 139
+      },
+      "record": {
+        "commit_order": "live,shadow,tag-last",
+        "live": "0xb587",
+        "shadow": "0xb588",
+        "tag": "0xb586"
+      },
+      "section": ".lisp65_rt_c2append_header",
+      "sha256": "6b046847a68edfbe789d7f247fe787ecc84015dfb8fad854cbefd5e564565a77",
+      "shadow": [
+        "0xb583",
+        "0xb584",
+        "0xb585"
+      ],
+      "transfer_id": 1
+    },
+    {
+      "arm": "0xb582",
+      "body": "c2tr_publish_plan_scan_body",
+      "body_address": "0xc3c9",
+      "body_bytes": 1671,
+      "bytes": 115,
+      "clean_path_cycles": 98,
+      "entry": "c2_append_publish_plan_scan_phase",
+      "entry_address": "0xc356",
+      "first_mismatch_cycles": {
+        "phase_owner": 157,
+        "return_high": 149,
+        "return_low": 139
+      },
+      "record": {
+        "commit_order": "live,shadow,tag-last",
+        "live": "0xb58a",
+        "shadow": "0xb58b",
+        "tag": "0xb589"
+      },
+      "section": ".lisp65_rt_c2append_publish_plan_scan",
+      "sha256": "babaadb75fa8e116c2c9a342093ca494afe5c28ab60975327cae1ada89a46365",
+      "shadow": [
+        "0xb583",
+        "0xb584",
+        "0xb585"
+      ],
+      "transfer_id": 2
+    },
+    {
+      "arm": "0xb582",
+      "body": "c2tr_publish_plan_resolve_body",
+      "body_address": "0xc3c9",
+      "body_bytes": 598,
+      "bytes": 115,
+      "clean_path_cycles": 98,
+      "entry": "c2_append_publish_plan_resolve_phase",
+      "entry_address": "0xc356",
+      "first_mismatch_cycles": {
+        "phase_owner": 157,
+        "return_high": 149,
+        "return_low": 139
+      },
+      "record": {
+        "commit_order": "live,shadow,tag-last",
+        "live": "0xb58d",
+        "shadow": "0xb58e",
+        "tag": "0xb58c"
+      },
+      "section": ".lisp65_rt_c2append_publish_plan_resolve",
+      "sha256": "c9e96be2398ff707888247ad15dffd2b958357b79e02ebc7b05a90043671ba44",
+      "shadow": [
+        "0xb583",
+        "0xb584",
+        "0xb585"
+      ],
+      "transfer_id": 3
+    },
+    {
+      "arm": "0xb582",
+      "body": "c2tr_publish_clear_body",
+      "body_address": "0xc3c9",
+      "body_bytes": 67,
+      "bytes": 115,
+      "clean_path_cycles": 98,
+      "entry": "c2_append_publish_clear_phase",
+      "entry_address": "0xc356",
+      "first_mismatch_cycles": {
+        "phase_owner": 157,
+        "return_high": 149,
+        "return_low": 139
+      },
+      "record": {
+        "commit_order": "live,shadow,tag-last",
+        "live": "0xb590",
+        "shadow": "0xb591",
+        "tag": "0xb58f"
+      },
+      "section": ".lisp65_rt_c2append_publish_clear",
+      "sha256": "6f85bd05705ee5eb1b4dc7423ee1d7930b999a3b222680662860b670a98abf55",
+      "shadow": [
+        "0xb583",
+        "0xb584",
+        "0xb585"
+      ],
+      "transfer_id": 4
+    }
+  ]
+}

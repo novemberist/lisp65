@@ -1,0 +1,246 @@
+{
+  "authority": {
+    "C2_root_walker_source": {
+      "bytes": 155694,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "9b1afffa93ffefb6eac10e1f99f3c6b7f0db572575b07b396d6ec321c354e94e"
+    },
+    "Link57": {
+      "bytes": 13835,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link57-keymap-nullary-latency-attempt2-hardware-presmoke.json",
+      "sha256": "90ae9126e9d771bc5435b8f5bd749be913db4de742b94252542630d54762e635"
+    },
+    "Link66": {
+      "bytes": 6856,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link66-bundled-hardware-measurements-receipt.json",
+      "sha256": "93396a7f6fe423837c9ae7e38380b6045853acdca9808e3950a8c617f9ac0d8e"
+    },
+    "collector_source": {
+      "bytes": 39367,
+      "path": "src/mem.c",
+      "sha256": "05aa427b3b655e8bd376ea18ce63b435334c8eda837d32a7a86c329c2ede7688"
+    },
+    "driver": {
+      "bytes": 19060,
+      "path": "tools/host-lisp/c2_phase_m_gc_envelope.py",
+      "sha256": "a7fe1ba266a88d1d8d55ce8627ca6b502e85dcdd532d6a43f42fcfc972db96a9"
+    },
+    "final_G5": {
+      "bytes": 13913,
+      "path": "build/c2.2/acceptance/g5/replay-v11-hybrid-dma/session-01/g5-hardware-receipt.json",
+      "sha256": "d317833ccd68d129493e824c1a89995b819ddc6464ce4f50534f1fb46cd8dbc0"
+    },
+    "final_G5_C2D": {
+      "bytes": 33840,
+      "path": "build/c2.2/acceptance/g5/replay-v11-hybrid-dma/session-01/g5/runstop/c2d-before.bin",
+      "sha256": "fe53bf701e6ce6f75b4423a5dffd42e72cbbfb7b08a3f6066e532fd351de0a08"
+    },
+    "final_G5_counters": {
+      "bytes": 439,
+      "path": "build/c2.2/acceptance/g5/replay-v11-hybrid-dma/session-01/g5/counters/after_gc_envelope.txt",
+      "sha256": "8c384bb995355410304fc5aa8928645a6ffbfcae5f5f7e57da56e8f007512932"
+    },
+    "workbench_geometry": {
+      "bytes": 22860,
+      "path": "config/workbench.mk",
+      "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+    }
+  },
+  "captured_geometry": {
+    "C2D_root_capacity": 1536,
+    "committed_C2D_roots_in_captured_plane": 283,
+    "external_cells": 1024,
+    "hot_cells": 48,
+    "hot_usable_cells": 47,
+    "mark_bitmap_bytes": 134,
+    "measurement_contract_root_scan": {
+      "blocks": 96,
+      "bytes": 3072,
+      "roots": 1536,
+      "roots_per_32_byte_block": 16,
+      "why_capacity_not_committed_count": "The accepted workload observes the high-edge pending-root contract during transient evaluation; its receipt binds 96 blocks. The quiescent captured header has 283 committed roots."
+    },
+    "shadow_root_capacity": 128,
+    "symbol_capacity": 752,
+    "symbols_at_G5_measurement": 480,
+    "total_cell_slots": 1072
+  },
+  "claim_limit": "Whole-envelope target observations plus source- and capture-derived operation counts only. No mark/root/sweep target time split, GC bottleneck claim, optimization choice, product edit, link, or new hardware result is claimed.",
+  "format": "lisp65-c2.2-phase-m2-gc-envelope-attribution-v1",
+  "halt_recommendation": {
+    "GC": "Do not commission a collector mechanism yet. First bind target phase deltas at the existing 17/18/19/20 seam in the final bundled device session; include symfn pointer count, ext_mark interval/pass count, arena copied bytes and dead-ext writes. Then choose one measured work term.",
+    "require_seam": "Commission a bounded host-first idempotence cut: preserve all first-load validation, but target at least 90% fewer VM instructions and Prim-67 reads on an already-loaded generation/identity. Keep it Bank-2-only; no resident capacity negotiation.",
+    "why": "M1 measures duplicated resolver work directly. M2 proves several large GC work terms but cannot assign target frames among them from existing evidence."
+  },
+  "hardware_runs": 0,
+  "hardware_truth": {
+    "observations": [
+      {
+        "collections": 2,
+        "contract_block_reads_total": 192,
+        "identity": "Link57",
+        "isolated_collection_frames": null,
+        "status": "informative-no-isolated-claim",
+        "workload_frames": 82
+      },
+      {
+        "collections": 1,
+        "contract_block_reads_total": 96,
+        "identity": "Link66",
+        "isolated_collection_frames": 88,
+        "status": "informative-no-limit",
+        "workload_frames": 88
+      },
+      {
+        "collections": 1,
+        "contract_block_reads_total": 96,
+        "identity": "final-G5",
+        "isolated_collection_frames": 89,
+        "status": "informative-no-limit",
+        "workload_frames": 89
+      }
+    ],
+    "premise_correction": {
+      "current_product_observation": "89 frames; one collection; 96 contract block reads",
+      "reason": "Link 57 measured an 82-frame workload envelope containing two collections and explicitly made no isolated frames-per-collection claim.",
+      "rejected": "82 frames per collection with 192 block reads"
+    }
+  },
+  "host_symbol_scan_gate": {
+    "authority": {
+      "bytes": 5441,
+      "path": "build/reports/workbench/gc-symbol-scan-timing.json",
+      "sha256": "ce722fc08e85e2f1ac62c6ff5b00837bbf08e44ce17f02996e989fc6c4497d74"
+    },
+    "r_squared": 0.9997503158588201,
+    "scope": "host-monotonic-timing-plus-exact-visit-counter;not-target-cycle-accurate",
+    "status": "passed-linear-work-term-only",
+    "target_timing_claim": false
+  },
+  "inherent_vs_addressable": {
+    "addressable_work_terms_not_yet_mechanisms": [
+      "480 separate two-byte symval reads, plus an unmeasured number of separate symfn reads",
+      "full 1071-slot arena mark scan and unconditional frozen-prefix copy",
+      "runtime-dependent repeated external-cell reads in the fixed-point trace",
+      "one two-byte write per dead allocated external cell during sweep"
+    ],
+    "geometry_bound_work": [
+      "47 hot slots per fixed-point pass and hot sweep",
+      "up to 128 live shadow-root slots",
+      "1536 high-edge C2D roots in 96 already-batched reads",
+      "480 symbol rows in the measured final-G5 state"
+    ],
+    "inherent_semantics": [
+      "mark every live shadow/C2D/symbol root",
+      "trace the live object graph",
+      "reclaim unreachable runtime cells",
+      "preserve or relocate live runtime string bytes"
+    ]
+  },
+  "operation_ledger": {
+    "DMA_lower_bound_for_measured_collection": {
+      "composition": {
+        "Bank5_2_byte_symval_reads": 480,
+        "C2D_32_byte_root_reads": 96
+      },
+      "interpretation": "The familiar 96 block reads are not total collector DMA. The current source and captured symbol count prove at least 576 DMA jobs before graph traversal, arena movement, or sweep writes.",
+      "jobs": 576,
+      "not_included": [
+        "pointer-valued symfn reads",
+        "external heap traversal reads",
+        "string-arena copies and external metadata reads/writes",
+        "external sweep writes",
+        "active export-journal roots"
+      ],
+      "payload_bytes": 4032
+    },
+    "entry_and_root_scan": {
+      "C2D_root_block_reads": 96,
+      "C2D_root_bytes": 3072,
+      "C2D_root_values_marked": 1536,
+      "classification": "Exact for the accepted high-edge workload contract. Reads are already amortized at sixteen obj values per DMA.",
+      "mark_bitmap_clear_bytes": 134,
+      "shadow_roots_marked": {
+        "actual": null,
+        "maximum": 128,
+        "minimum": 0
+      }
+    },
+    "fixed_point_trace": {
+      "classification": "Bounds and loop form are proven; live graph, interval and pass count were not captured.",
+      "external_interval_per_pass": "[ext_mark_lo, ext_mark_hi]",
+      "external_type_child_DMA_jobs": null,
+      "hot_slots_examined_per_pass": 47,
+      "passes": null
+    },
+    "string_arena_compaction": {
+      "classification": "The full mark-slot loop and mandatory frozen-prefix copy are source-proven; runtime byte volume was not captured.",
+      "external_cell_metadata_DMA_jobs": null,
+      "frozen_prefix_copy_bytes": null,
+      "live_runtime_string_copy_bytes": null,
+      "mark_slots_considered": 1071
+    },
+    "sweep": {
+      "classification": "Hot sweep width is exact. External high-water, frozen floor and dead-cell count were not captured.",
+      "external_allocated_interval": "(max(gc_frozen,47), alloc_high]",
+      "external_dead_cell_two_byte_writes": null,
+      "hot_slots_considered": 47
+    },
+    "symbol_root_scan": {
+      "classification": "The 480 symval jobs are source-forced and exact for the G5 symbol count. Function-cell jobs remain unmeasured.",
+      "minimum_symbol_DMA_payload_bytes": 960,
+      "symbols_visited": 480,
+      "symfn_two_byte_DMA_reads": {
+        "actual": null,
+        "condition": "only entries selected by the Bank-0 symfnptr bitmap",
+        "maximum": 480,
+        "minimum": 0
+      },
+      "symval_two_byte_DMA_reads": 480
+    }
+  },
+  "phase_time_attribution": {
+    "arena_compaction_seconds": null,
+    "existing_future_measurement_seam": "LA(17), LA(18), LA(19), LA(20)",
+    "fixed_point_seconds": null,
+    "mark_seconds": null,
+    "reason": "Accepted hardware receipts contain only whole-workload frame endpoints and collection counters. LA(17..20) source markers prove phase order but were not timestamped in those runs. Assigning the 88/89 frames to phases would be an invented measurement.",
+    "root_scan_seconds": null,
+    "sweep_seconds": null,
+    "symbol_scan_seconds": null
+  },
+  "product_delta_bytes": 0,
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-28",
+  "source_phase_model": {
+    "collector_phase_order": [
+      "Q/17 entry-and-mark-clear",
+      "shadow-plus-C2D-roots",
+      "R/18 roots-marked",
+      "symbol-roots",
+      "S/19 symbols-marked",
+      "fixed-point-hot-and-external-trace",
+      "string-arena-compaction",
+      "hot-and-allocated-external-sweep",
+      "T/20 sweep-finished"
+    ],
+    "compile_defines_bound": [
+      "WORKBENCH_HEAP_CELLS := 48",
+      "-DGC_ROOTS=128",
+      "-DEXT_CELLS=1024",
+      "-DLISP65_NURSERY_HYSTERESIS=192",
+      "-DLISP65_STRING_ARENA",
+      "-DLISP65_SYMVAL_EXT",
+      "-DLISP65_SYMFN_EXT",
+      "-DMAX_SYM=752"
+    ],
+    "phase_markers_present": [
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  "status": "passed-operation-attribution-phase-time-split-unmeasured"
+}

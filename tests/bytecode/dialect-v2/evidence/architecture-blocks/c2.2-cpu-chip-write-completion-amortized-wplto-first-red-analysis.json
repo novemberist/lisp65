@@ -1,0 +1,129 @@
+{
+  "format": "lisp65-c2-cpu-chip-write-completion-amortized-first-red-analysis-v1",
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: four-point minimal form is semantically green but does not close current product geometry",
+  "promotable": false,
+  "execution_accounting": {
+    "prelink_harness_replays_before_compiler": 2,
+    "whole_program_lto_closure_links": 1,
+    "completed_product_links": 0,
+    "hardware_runs": 0
+  },
+  "authority": {
+    "contract": "config/c2-cpu-chip-write-completion-contract.json",
+    "append_cutpoint_contract": "config/c2-append-cutpoint-contract.json",
+    "source_gate": "build/c2.2/cpu-chip-write-completion/amortized-source-gate-wplto-receipt.json",
+    "wplto_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cpu-chip-write-completion-amortized-replay2-wplto-receipt.json",
+    "failed_map": "build/c2.2/substitution/cpu-chip-write-completion-amortized-gate-replay2-wplto/resident-island-seed.prg.map",
+    "baseline_map": "build/c2.2/substitution/link59-c1-freezer-irq-episode-recovery-wplto/resident-island-seed.prg.map"
+  },
+  "semantic_result": {
+    "transaction_data_barriers": 2,
+    "journal_bookends": 2,
+    "converged_points": 4,
+    "private_completion_helpers_remaining": 0,
+    "mutations_rejected": 16,
+    "nonlocal_abort_uses_same_boundary_body": true,
+    "C1_status": "OPEN"
+  },
+  "session_sections": [
+    {
+      "name": "c2-append-abort-control",
+      "baseline_bytes": 188,
+      "probe_bytes": 267,
+      "raw_delta_bytes": 79,
+      "packed_delta_bytes": 256,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-header",
+      "baseline_bytes": 629,
+      "probe_bytes": 3236,
+      "raw_delta_bytes": 2607,
+      "packed_delta_bytes": 2560,
+      "slice_overhang_bytes": 1444,
+      "attribution": {
+        "c2_append_header_phase_bytes": 869,
+        "c2_completion_poll_bytes": 2367
+      }
+    },
+    {
+      "name": "c2-append-journal-prepare",
+      "baseline_bytes": 1768,
+      "probe_bytes": 1644,
+      "raw_delta_bytes": -124,
+      "packed_delta_bytes": 0,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-publish-clear",
+      "baseline_bytes": 1230,
+      "probe_bytes": 1295,
+      "raw_delta_bytes": 65,
+      "packed_delta_bytes": 256,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-rollback-finalize",
+      "baseline_bytes": 1692,
+      "probe_bytes": 2214,
+      "raw_delta_bytes": 522,
+      "packed_delta_bytes": 512,
+      "slice_overhang_bytes": 422
+    },
+    {
+      "name": "c2-append-rollback-unpublish",
+      "baseline_bytes": 753,
+      "probe_bytes": 758,
+      "raw_delta_bytes": 5,
+      "packed_delta_bytes": 0,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-stage-copy",
+      "baseline_bytes": 1351,
+      "probe_bytes": 1099,
+      "raw_delta_bytes": -252,
+      "packed_delta_bytes": -256,
+      "slice_overhang_bytes": 0
+    }
+  ],
+  "session_aggregate": {
+    "baseline_bytes": 65438,
+    "baseline_headroom_bytes": 98,
+    "raw_changed_section_delta_bytes": 2902,
+    "packed_delta_bytes": 3328,
+    "projected_bytes_before_catalog_change": 68766,
+    "overflow_bytes_before_catalog_change": 3230,
+    "finding": "The nine private copies are gone, but the field-by-field C2J identity predicate expanded inside the sole poll body and consumed 2367 bytes. Splitting alone cannot repair the aggregate; the identity representation must first become compact without weakening ACTIVE/CLEAR content identity."
+  },
+  "resident_walls": {
+    "bank0_text": {
+      "baseline_end_exclusive": "0xB47E",
+      "probe_end_exclusive": "0xB4B5",
+      "handoff_start": "0xB4A3",
+      "current_overlap_bytes": 18,
+      "required_noise_headroom_bytes": 32,
+      "required_recovery_bytes": 50
+    },
+    "e000": {
+      "baseline_c2_resident_bytes": 7174,
+      "probe_c2_resident_bytes": 7203,
+      "delta_bytes": 29,
+      "reopen_gap0_probe_range": "0xFCBE..0xFD3D",
+      "session_emitter_state_start": "0xFD22",
+      "overlap_bytes": 28,
+      "required_floor_bytes": 54
+    }
+  },
+  "authorized_split_result": {
+    "splits_required_by_measured_size": [
+      "shared completion identity/poll body: 1444 bytes over the slice cap",
+      "rollback-finalize: 422 bytes over the slice cap"
+    ],
+    "not_sufficient": "Those splits would add packaging and cannot close a 3230-byte aggregate overflow. A compact exact C2J identity handoff is required before useful split boundaries can be priced.",
+    "resident_issue_is_separate": "50 bytes of ordinary text recovery and 28 bytes of E000 recovery remain separate Fund-Waehrung; neither is authorized by the cold-slice split permission."
+  },
+  "first_red_action": "Stop before product link. Return the measured semantic/aggregate/resident numbers to Class-C review.",
+  "rollback_line": "Link 59 remains untouched."
+}

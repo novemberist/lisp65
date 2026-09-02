@@ -1,0 +1,150 @@
+{
+  "D5_delta": {
+    "claim": "107 free slots / 1467 free name bytes is release-terminal",
+    "device_session": {
+      "byteidentical_precedent": {
+        "npool": 8741,
+        "nsym": 645
+      },
+      "free": {
+        "namepool_bytes": 1467,
+        "symbol_slots": 107
+      },
+      "growth_from_common_baseline": {
+        "name_bytes": 21,
+        "symbols": 3
+      },
+      "observed": {
+        "npool": 8741,
+        "nsym": 645
+      },
+      "shape": "performance probe and final smokes"
+    },
+    "observed_minus_projection_free": {
+      "namepool_bytes": -19,
+      "symbol_slots": -2
+    },
+    "observed_minus_projection_used": {
+      "name_bytes": 19,
+      "symbols": 2
+    },
+    "projection_session": {
+      "free": {
+        "namepool_bytes": 1486,
+        "symbol_slots": 109
+      },
+      "growth_from_common_baseline": {
+        "name_bytes": 2,
+        "symbols": 1
+      },
+      "observed": {
+        "npool": 8722,
+        "nsym": 643
+      },
+      "shape": "forced collection; session name s"
+    },
+    "status": "ATTRIBUTED: SESSION NAME POPULATION; ZERO PRODUCT RESIDUAL",
+    "unexplained_product_name_bytes": 0,
+    "unexplained_product_symbols": 0
+  },
+  "authority": {
+    "common_pre_session_baseline": {
+      "bytes": 3083,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-symbol22-build-id-device-result-receipt.json",
+      "sha256": "946a0ca836de1e492b49dfc9b57e3efbe68eaa2f8e2b6d2bddc9e27cd4b5c667"
+    },
+    "current_session": {
+      "bytes": 5981,
+      "path": "config/c2-v200-release-strip-device-session.json",
+      "sha256": "f5ebc85e2560aa7965f23c8409ccc89d4aff8e8f5068ec68f671fdef1f6424b4"
+    },
+    "plan": {
+      "bytes": 2003,
+      "path": "docs/planning/v2.0.0-pre-plan.md",
+      "section": "## Independent review and pre-Ship attribution closure \u2014 2026-09-02",
+      "sha256": "c770b96c9a1e7f0c3df988cb30c5ca8ab04fdcc15efe27c9a8bb0d911c169169"
+    },
+    "reviewed_device_result": {
+      "bytes": 7457,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-release-strip-device-result-receipt.json",
+      "sha256": "5d4e0c95089cdc13e357e869a70fab4e32c4d4f3210e87373295103287dc69ac"
+    },
+    "stripped_product": {
+      "bytes": 2013910,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-release-strip-product-card-r1-receipt.json",
+      "sha256": "e81a1ce28c28e15f28a05eae7a480fc07565a592f687213b4ce6e1eba27a7fb4"
+    },
+    "v1_9_r7_performance_result": {
+      "bytes": 6980,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-blocks-ab-display-r7-device-result-receipt.json",
+      "sha256": "63389df8bdbae18261f1c4dfeae8c70c4a293158159ca13181232ed79785beae"
+    },
+    "v1_9_r7_performance_session": {
+      "bytes": 6111,
+      "path": "config/c2-v190-blocks-ab-display-r7-acceptance-session.json",
+      "sha256": "d3de951ade1c878784505316a654eb4928c8e667cd3b0bee6679c68df11c63e7"
+    },
+    "v1_9_r8_collection_D5": {
+      "bytes": 6302,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-r8-release-terminal-d5-receipt.json",
+      "sha256": "a5b4edbbde680482aa1b6692e99552130ec13e4530670fb752c9113d181dc297"
+    },
+    "v1_9_r8_collection_session": {
+      "bytes": 6035,
+      "path": "config/c2-v190-block-a-delivered-consumer-r8-session.json",
+      "sha256": "ef8589a3d7af0cd81eaaedbee3566e1a6132917dcabeea49fcd128270afd63f7"
+    }
+  },
+  "claim_limit": {
+    "accepts": [
+      "D5 floor 107/1467",
+      "losslessness at 138/138/138/138",
+      "both deltas attributed",
+      "cold-boot choreography permanent"
+    ],
+    "excludes": [
+      "identity of the two unmodeled physical key events",
+      "Ship",
+      "Publish"
+    ]
+  },
+  "cold_boot_choreography": {
+    "contract": {
+      "bytes": 1085,
+      "path": "config/release-device-cold-boot-choreography.json",
+      "sha256": "229b83fa066de2dbe5c120934e012177e58af00d2cb4aa0db5212b741ff0333e"
+    },
+    "incident_count": 3,
+    "mutations_rejected": [
+      "allow-stale-staged-copy",
+      "omit-full-medium-readback",
+      "accept-readback-SHA-mismatch",
+      "reuse-after-stopped-state-read"
+    ],
+    "status": "PERMANENT GATE ARMED"
+  },
+  "decision": {
+    "Publish": "CLOSED",
+    "Ship": "CLOSED-PENDING-RELEASE-CARD",
+    "hardware_acceptance": "INDEPENDENT-REVIEW-GREEN",
+    "release_card": "AUTHORIZED"
+  },
+  "event_delta": {
+    "classification": "two additional physical ingress events outside the modeled fixture count; every delivered stage conserves them",
+    "delta": 2,
+    "downstream_deltas_from_raw": {
+      "seen": 0,
+      "stored": 0,
+      "taken": 0
+    },
+    "exact_136_claim": false,
+    "fixture_projection": 136,
+    "losslessness_predicate": "raw=seen=stored=taken and nonzero",
+    "physical_raw_ingress": 138,
+    "status": "ATTRIBUTED: HAND-DRIVEN STIMULUS CARDINALITY",
+    "unexplained_capture_events": 0
+  },
+  "format": "lisp65-c2-v200-release-device-attributions-v1",
+  "recorded_on": "2026-09-02",
+  "status": "PASS: V2.0 DEVICE DELTAS ATTRIBUTED AND COLD-BOOT RULE ARMED"
+}

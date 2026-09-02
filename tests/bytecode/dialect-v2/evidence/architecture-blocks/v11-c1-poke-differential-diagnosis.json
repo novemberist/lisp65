@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-v11-c1-poke-differential-diagnosis-v1",
+  "version": 1,
+  "status": "harness-drift-fixed-product-directory-regression-refuted",
+  "recorded_on": "2026-07-16",
+  "scope": "Pre-promotion diagnosis of the v11-c1-gate-check failure 'function not in directory: poke'. No product implementation or product profile was changed by this fix.",
+  "initial_failure": {
+    "target": "v2-workbench-differential",
+    "exact_case": "workbench-repl-banner-return",
+    "source_suite": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+    "source_suite_sha256": "9a567b83a499451b6b1114ae058284eeb1664309ba1f45756289ba9ed86078fc",
+    "source_profile": null,
+    "diagnostic": "function not in directory: poke",
+    "reproduction": "All 190 other resolved source-baseline cases pass individually; only the newly added Wave-1 banner case fails when executed in the historical profile."
+  },
+  "product_path": {
+    "registry": "config/v2-native-function-registry.json",
+    "registry_sha256": "6f38436decf1be3d3d780bffa80daedec2405c3ba34142b7cd4d27ec4a7a3a05",
+    "poke": {
+      "prim_id": 62,
+      "classification": "public-all-views",
+      "callprim": true,
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    "cross_parity_receipt": "tests/bytecode/dialect-v2/evidence/capability-carrier/primitive-view-cross-parity.json",
+    "cross_parity_receipt_sha256": "dc1ed3d49642afb0cf52f42cb58a79953efdefde0c707e0ed569dffd51194a65",
+    "cross_parity_result": "passed; missing and unclassified sets are empty",
+    "candidate_suite": "build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json",
+    "candidate_suite_sha256": "52a3231feaf70e0b1c417f1af9360f5ff8ebec9c09343a58088c42f8455aea11",
+    "candidate_profile": "dialect-v2",
+    "candidate_banner_case": "passed with result nil",
+    "conclusion": "poke is correctly implemented and wired in the product profile; there is no product-directory regression."
+  },
+  "second_live_baseline_drift": {
+    "finding": "After excluding only the banner case, the mutable source baseline fails later because the source M65D suite already binds the generated dialect-v2 resident suite. IDE baseline composition then includes both historical and generated resident definitions and reports duplicate code object not.",
+    "m65d_source_suite": "tests/bytecode/libs/p0-m65d-lib.json",
+    "m65d_source_suite_sha256": "5967ecb692999363e0facf384d0fa61b0b5d23a6fe12473d1f910257ca967622",
+    "lesson": "A live source tree is not a stable historical observation baseline. Pruning one new case would repair the symptom but leave the baseline class mutable."
+  },
+  "structural_fix": {
+    "policy": "Consume the SHA-bound, post-filter observation receipt as the immutable baseline and enumerate the banner as the sole intentional addition. Live source-suite paths remain provenance only and are not re-executed as historical state.",
+    "baseline_contract": "config/v11-workbench-differential-baseline.json",
+    "baseline_contract_sha256": "241d6a70dfa99a2c0a991249286381387c6f063aaa0a54c50a563a65d563e9f4",
+    "observation_baseline": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-filter-workbench-differential-receipt.json",
+    "observation_baseline_sha256": "af378453d2f727d792699d12167480b30a81b2958a0f547391f202b36aa96068",
+    "differential_tool": "tools/host-lisp/v2_workbench_differential.py",
+    "differential_tool_sha256": "0d718b75f83d77531caa8a3cfa863e54231c9b43496efd3c859fc7a4fa3c84c0",
+    "result_receipt": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-artifact-differential-receipt.json",
+    "result_receipt_sha256": "f1cb4ffb2712c24b93e8b1dbc025f3986723633ea9dfa0b7587623341120032c",
+    "result": "passed: four artifacts, 357 cases, zero observation differences; banner is the one explicit addition"
+  },
+  "claim_limit": "This diagnosis proves that the reported poke failure came from executing new dialect-v2 banner code inside a mutable historical baseline and that the current product profile supplies poke in all declared views. It does not promote product bytes, authorize C1 capacity, prove hardware behavior, or claim G5/G6 acceptance."
+}

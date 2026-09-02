@@ -1,0 +1,184 @@
+{
+  "accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_cards": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 49338,
+    "commit": "3da72d96",
+    "path": "docs/planning/v1.7.0-pre-plan.md",
+    "sha256": "517c9118f83405cf79e7fdf635f4587f1c7a4a0dd1fbc62260f05b993cab6155"
+  },
+  "bank2_static_plane": {
+    "bytes": 52230,
+    "path": "build/c2.3/v1.7-ide-idle-blink-current-plane/v6-semantics/bank2-static-code.bin",
+    "sha256": "fab4a36efbd1c671b40aa1bc614ef023bb396b12b9c8f5963857427a1b67a7bd"
+  },
+  "claim_limit": "Host-only media preflight. No D81 was emitted and no hardware acceptance claim is made.",
+  "classification": {
+    "mechanism": "the final product qualifies the 52,230-byte static plane and mapped Bank-2 LMAs separately, but media must deliver both into overlapping physical bytes",
+    "product_defect_not_exonerated": true,
+    "required_disposition": "reprice or relocate one owner; never overlay one reviewed world while claiming Same-World",
+    "rule": "aggregate Bank-2 tail headroom is not deliverable capacity when another live owner begins inside that interval"
+  },
+  "collisions": [
+    {
+      "LMA_end_exclusive": 179842,
+      "LMA_start": 178354,
+      "VMA": 30898,
+      "different_bytes": 1471,
+      "first_difference": {
+        "mapped_section_byte": 173,
+        "physical_address": 178354,
+        "static_plane_byte": 0
+      },
+      "mapped_overlap_sha256": "e3df6b219b2cd9a68607532aae5315ba0c575c1cba73f3f496eb39bdb04a2837",
+      "mapped_sha256": "e3df6b219b2cd9a68607532aae5315ba0c575c1cba73f3f496eb39bdb04a2837",
+      "overlap_bytes": 1488,
+      "overlap_end_exclusive": 179842,
+      "overlap_start": 178354,
+      "section": ".lisp65_c2_mapped_far_service",
+      "section_bytes": 1488,
+      "static_overlap_sha256": "71e3fa851d5b68e48b951f38970fbd9112b24f8b0603982520b66b7c20811e0c",
+      "static_owner": "c2-v112-product-compiler-tier"
+    },
+    {
+      "LMA_end_exclusive": 180177,
+      "LMA_start": 179853,
+      "VMA": 32397,
+      "different_bytes": 321,
+      "first_difference": {
+        "mapped_section_byte": 72,
+        "physical_address": 179853,
+        "static_plane_byte": 29
+      },
+      "mapped_overlap_sha256": "a45876f05db31e432ecf20f988f6cee91db0addbe27a3812101afc4a8f19648a",
+      "mapped_sha256": "a45876f05db31e432ecf20f988f6cee91db0addbe27a3812101afc4a8f19648a",
+      "overlap_bytes": 324,
+      "overlap_end_exclusive": 180177,
+      "overlap_start": 179853,
+      "section": ".lisp65_c2_mapped_product_cold",
+      "section_bytes": 324,
+      "static_overlap_sha256": "0e90fe24d30dba206cc4465f01d57a46de4394d569d3a8972f83daf63e16cd53",
+      "static_owner": "c2-v112-product-compiler-tier"
+    }
+  ],
+  "format": "lisp65-c2-v17-block3-media-preflight-first-red-v1",
+  "legacy_media_materialization_counterfactual": {
+    "materialized_sha256": "5d7d8dfb66a1bf8a3bf776fb2e93e13dfbec69086401dac8ada19b3f1038f388",
+    "same_world": false,
+    "static_plane_sha256": "fab4a36efbd1c671b40aa1bc614ef023bb396b12b9c8f5963857427a1b67a7bd",
+    "would_overwrite_static_bytes": 1792
+  },
+  "mutation_gate": {
+    "current_candidate": "overlap-rejected",
+    "move_mapped_start_to_static_end": "non-overlap",
+    "shrink_static_end_to_first_mapped": "non-overlap"
+  },
+  "next": "review disposition of the cross-owner Bank-2 collision",
+  "physical_geometry": {
+    "bank2_end_exclusive": 196608,
+    "bank2_start": 131072,
+    "first_mapped_LMA": 178354,
+    "largest_contiguous_static_prefix_before_mapped_arena": 47282,
+    "nominal_tail_headroom_bytes": 13306,
+    "static_plane_end_exclusive": 183302,
+    "static_plane_overflow_into_mapped_arena_bytes": 4948
+  },
+  "plane_preflight": {
+    "bytes": 3110,
+    "path": "build/c2.3/v1.7-ide-idle-blink-current-plane/plane-preflight.json",
+    "sha256": "d07ebadc8624278ce5002c8e8d8c9373e1a60d7af9c7bb7e4c1bb47481d6cedc"
+  },
+  "recorded_on": "2026-08-26",
+  "reviewed_card": {
+    "bytes": 51376,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-ide-idle-blink-product-card-r8-receipt.json",
+    "sha256": "5e713a158714475018336813d34e72c0fbfdb8fc5179d69f4e7b945ec5862983"
+  },
+  "reviewed_pair": {
+    "ELF": {
+      "bytes": 647548,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r8/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "f4a30421bc091727c1e2db813a63a9944d9463339b403c7f0a3462c0c71133d4"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r8/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "6ba11de8f8b0d5b09c3b12981fe0f81ca93208c2af1f1a64a2bb729946cfa2d7"
+    }
+  },
+  "static_images": [
+    {
+      "bytes": 21246,
+      "end_exclusive": 152318,
+      "manifest": {
+        "bytes": 375109,
+        "path": "build/c2.3/v1.7-ide-idle-blink-current-plane/stdlib-p0.manifest.json",
+        "sha256": "91e095e5c4529068221b3805d512140c2099c197a85efb13bdd12997e17a237a"
+      },
+      "name": "stdlib-p0",
+      "start": 131072
+    },
+    {
+      "bytes": 15723,
+      "end_exclusive": 168041,
+      "manifest": {
+        "bytes": 367454,
+        "path": "build/c2.3/v1.7-ide-idle-blink-current-plane/ide.manifest.json",
+        "sha256": "e430118a89b8d9694ec0bd6a73ab2f0bbb352172a23fa1652a00cfeb27fe46d9"
+      },
+      "name": "ide",
+      "start": 152318
+    },
+    {
+      "bytes": 2940,
+      "end_exclusive": 170981,
+      "manifest": {
+        "bytes": 70276,
+        "path": "build/c2.3/v1.7-ide-idle-blink-current-plane/idex.manifest.json",
+        "sha256": "7ebcc129b34b15f4d5adbbbf1befd7318ac8a4ef792eacf2dea1522c08db4c61"
+      },
+      "name": "ide-extra",
+      "start": 168041
+    },
+    {
+      "bytes": 4083,
+      "end_exclusive": 175064,
+      "manifest": {
+        "bytes": 63972,
+        "path": "build/c2.3/v1.7-ide-idle-blink-current-plane/m65d.manifest.json",
+        "sha256": "31a0d6e390385b696dc1dfc942ac41af8d10b29364481b42141a2186cababf5a"
+      },
+      "name": "m65d",
+      "start": 170981
+    },
+    {
+      "bytes": 104,
+      "end_exclusive": 175168,
+      "manifest": {
+        "bytes": 8086,
+        "path": "build/bytecode/dialect-v2/libs/buffer.manifest.json",
+        "sha256": "62f4d5e42065b78a0cf83bcae9e4453569bfc99320685ff1563d129973608599"
+      },
+      "name": "buffer",
+      "start": 175064
+    },
+    {
+      "bytes": 8134,
+      "end_exclusive": 183302,
+      "manifest": {
+        "bytes": 213535,
+        "path": "build/post-promotion/v112/compiler/lcc.manifest.json",
+        "sha256": "b6727fa9a6700ea0b02accba7ec0e652064b1066902294d2a1af14fcab5bf00d"
+      },
+      "name": "c2-v112-product-compiler-tier",
+      "start": 175168
+    }
+  ],
+  "status": "FIRST RED: BLOCK3 STATIC PLANE OVERLAPS LIVE MAPPED BANK2 FREIGHT"
+}

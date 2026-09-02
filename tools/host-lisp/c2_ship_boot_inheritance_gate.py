@@ -12,7 +12,6 @@ from __future__ import annotations
 
 from copy import deepcopy
 from collections import Counter
-from datetime import date
 import hashlib
 import json
 from pathlib import Path
@@ -26,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HOST = ROOT / "tools/host-lisp"
 sys.path.insert(0, str(HOST))
 from elf_truth import ElfTruth  # noqa: E402
+from evidence_era import stable_recorded_on  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-ship-boot-inheritance-contract.json"
@@ -445,7 +445,7 @@ def main() -> int:
         target_object = inspect_target_irq()
         value = {
             "format": "lisp65-c2.3-v1.3-ship-boot-inheritance-gate-v3",
-            "recorded_on": date.today().isoformat(),
+            "recorded_on": stable_recorded_on(RECEIPT),
             "status": "passed-ship-owned-full-9bit-repeated-frame-clock",
             "promotable": False,
             "product_links": 0,

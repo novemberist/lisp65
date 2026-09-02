@@ -1,0 +1,580 @@
+{
+  "format": "lisp65-c2.3-v1.6-refill-irq-state-intersection-v1",
+  "recorded_on": "2026-08-22",
+  "status": "ATTRIBUTED: NO REGISTER-FORM IRQ/REFILL INTERSECTION",
+  "inputs": {
+    "candidate_ELF": {
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 632960,
+      "sha256": "347a2e6b4070a9f9e02c21216d59c5c18f66015373bbe93df14027eba0107c42"
+    },
+    "predecessor": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-refill-seam-attribution.json",
+      "bytes": 4792,
+      "sha256": "7694853a49025944cfff6dd2f61609726108451362cba93e1ddb06972e7c571c"
+    },
+    "ABI_and_every_exit_unmap_report": {
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/canonical-product/final/c2-asm-leaf-abi-dataflow-gate.json",
+      "bytes": 225666,
+      "sha256": "be8d8d0645736a03a6373c99907357d31fba584d89ff22f59089e6ad929a44b3"
+    },
+    "IRQ_source": {
+      "path": "src/optional/c2_kernal_input_capture.s",
+      "bytes": 2800,
+      "sha256": "eaa34ec7120dada63c9067e79e1fe42caa50abbaac308b742cffadca260e3a40"
+    },
+    "VM_source": {
+      "path": "src/vm.c",
+      "bytes": 104864,
+      "sha256": "c17349cccf193dd22aa1241d2563ad097da744c61df8364dd77396661e7fb7aa"
+    },
+    "MAP_reader_source": {
+      "path": "src/optional/c2_map_cpu_read.s",
+      "bytes": 6279,
+      "sha256": "23ac439dbae2655a20a3c858717aeb924ecba3d817ef6a83c43ffe166ee063ef"
+    },
+    "attribution_tool": {
+      "path": "tools/host-lisp/c2_v160_refill_irq_state_intersection.py",
+      "bytes": 12397,
+      "sha256": "16f2b032bc4cda096ff6fb1e8039fb99cb8256fa1878d5b39ad0965601ad9891"
+    }
+  },
+  "refill_state": {
+    "machine_state": [
+      "A",
+      "X",
+      "Y",
+      "Z",
+      "P",
+      "SP"
+    ],
+    "abi_zero_page": {
+      "start": 2,
+      "end_exclusive": 34,
+      "role": "__rc0..__rc31 and C activation scratch"
+    },
+    "dynamic_activation": "C frame addressed through __rc0/__rc1",
+    "vm_window_bookkeeping": [
+      {
+        "name": "vm_status",
+        "start": 95,
+        "bytes": 1,
+        "end_exclusive": 96
+      },
+      {
+        "name": "vm_codebuf",
+        "start": 49060,
+        "bytes": 56,
+        "end_exclusive": 49116
+      },
+      {
+        "name": "vm_buf_off",
+        "start": 47540,
+        "bytes": 2,
+        "end_exclusive": 47542
+      },
+      {
+        "name": "vm_buf_bank",
+        "start": 49116,
+        "bytes": 1,
+        "end_exclusive": 49117
+      },
+      {
+        "name": "vmr_hdrlen",
+        "start": 49117,
+        "bytes": 2,
+        "end_exclusive": 49119
+      },
+      {
+        "name": "vmr_littab",
+        "start": 49119,
+        "bytes": 2,
+        "end_exclusive": 49121
+      },
+      {
+        "name": "vmr_code",
+        "start": 49121,
+        "bytes": 2,
+        "end_exclusive": 49123
+      },
+      {
+        "name": "vmr_poff",
+        "start": 49123,
+        "bytes": 2,
+        "end_exclusive": 49125
+      },
+      {
+        "name": "vmr_plen",
+        "start": 49125,
+        "bytes": 2,
+        "end_exclusive": 49127
+      },
+      {
+        "name": "vmr_pwmax",
+        "start": 49127,
+        "bytes": 2,
+        "end_exclusive": 49129
+      },
+      {
+        "name": "vmr_win",
+        "start": 49129,
+        "bytes": 2,
+        "end_exclusive": 49131
+      },
+      {
+        "name": "vmr_winlen",
+        "start": 49131,
+        "bytes": 2,
+        "end_exclusive": 49133
+      },
+      {
+        "name": "vmr_streaming",
+        "start": 49133,
+        "bytes": 1,
+        "end_exclusive": 49134
+      }
+    ],
+    "destination": {
+      "owner": "vm_codebuf",
+      "seam_slice": "$bfc7..$bfdb ($45 refill, 21 bytes)"
+    },
+    "source": "candidate entry metadata plus immutable payload through c2_product_entry_read/c2_map_cpu_read",
+    "map_state": {
+      "changed": true,
+      "interruptible_while_changed": false,
+      "proof": "linked/source PHP; SEI; MAP...; baseline MAP; PLP"
+    }
+  },
+  "armed_irq_state": {
+    "linked_functions": [
+      "c2_kernal_irq_handler",
+      "c2_kernal_input_capture",
+      "c2_kernal_input_capture_commit"
+    ],
+    "handler_bytes": 74,
+    "persistent_write_addresses": [
+      "$BC90",
+      "$BC91",
+      "$BC92",
+      "$BC93",
+      "$BC94",
+      "$BC95",
+      "$BC96",
+      "$BC97",
+      "$BC98",
+      "$BC99",
+      "$BC9A",
+      "$BC9B",
+      "$BC9C",
+      "$BC9D",
+      "$BC9E",
+      "$BC9F",
+      "$BCA0",
+      "$BCA1",
+      "$BCA2",
+      "$BCA3",
+      "$BCA4",
+      "$BCA5",
+      "$BCA6",
+      "$BCA7",
+      "$BCA8",
+      "$BCA9",
+      "$BCAA",
+      "$BCAB",
+      "$BCAC",
+      "$BCAD",
+      "$BCAE",
+      "$BCAF",
+      "$BCB0",
+      "$BCB1",
+      "$BCB2",
+      "$BCB3",
+      "$BCB4",
+      "$BCB5",
+      "$BCB6",
+      "$BCB7",
+      "$BCB8",
+      "$BCB9",
+      "$BCBA",
+      "$BCBB",
+      "$BCBC",
+      "$BCBD",
+      "$BCBE",
+      "$BCBF",
+      "$BCC0",
+      "$BCC1",
+      "$BCC2",
+      "$BCC3",
+      "$BCC4",
+      "$BCC5",
+      "$BCC6",
+      "$BCC7",
+      "$BCC8",
+      "$BCC9",
+      "$BCCA",
+      "$BCCB",
+      "$BCCC",
+      "$BCCD",
+      "$BCCE",
+      "$BCCF",
+      "$BCD0",
+      "$BCD1",
+      "$BCD2",
+      "$BCD3",
+      "$BCD4",
+      "$BCD5",
+      "$BCD6",
+      "$BCD7",
+      "$BCD8",
+      "$BCD9",
+      "$BCDA",
+      "$BCDB",
+      "$BCDC",
+      "$BCDD",
+      "$BCDE",
+      "$BCDF",
+      "$BCE0",
+      "$BCE1",
+      "$BCE2",
+      "$BCE3",
+      "$BCE4",
+      "$BCE5",
+      "$BCE6",
+      "$BCE7",
+      "$BCE8",
+      "$BCE9",
+      "$BCEA",
+      "$BCEB",
+      "$BCEC",
+      "$BCED",
+      "$BCEE",
+      "$BCEF",
+      "$BCF0",
+      "$BCF1",
+      "$BCF2",
+      "$BCF3",
+      "$BCF4",
+      "$BCF5",
+      "$BCF6",
+      "$BCF7",
+      "$BCF8",
+      "$BCF9",
+      "$BCFA",
+      "$BCFB",
+      "$BCFC",
+      "$BCFD",
+      "$BCFE",
+      "$D019",
+      "$D619",
+      "$FF83",
+      "$FF84",
+      "$FF86",
+      "$FF89",
+      "$FF8A",
+      "$FF8B",
+      "$FF8C"
+    ],
+    "writes_by_function": {
+      "c2_kernal_irq_handler": [
+        {
+          "pc": 57413,
+          "mnemonic": "sta",
+          "operand": 53273,
+          "index": null,
+          "addresses": [
+            53273
+          ]
+        },
+        {
+          "pc": 57419,
+          "mnemonic": "inc",
+          "operand": 65411,
+          "index": null,
+          "addresses": [
+            65411
+          ]
+        },
+        {
+          "pc": 57424,
+          "mnemonic": "inc",
+          "operand": 65412,
+          "index": null,
+          "addresses": [
+            65412
+          ]
+        },
+        {
+          "pc": 57437,
+          "mnemonic": "inc",
+          "operand": 65419,
+          "index": null,
+          "addresses": [
+            65419
+          ]
+        },
+        {
+          "pc": 57440,
+          "mnemonic": "inc",
+          "operand": 65418,
+          "index": null,
+          "addresses": [
+            65418
+          ]
+        },
+        {
+          "pc": 57445,
+          "mnemonic": "stz",
+          "operand": 65419,
+          "index": null,
+          "addresses": [
+            65419
+          ]
+        },
+        {
+          "pc": 57458,
+          "mnemonic": "sta",
+          "operand": 65417,
+          "index": null,
+          "addresses": [
+            65417
+          ]
+        },
+        {
+          "pc": 57469,
+          "mnemonic": "inc",
+          "operand": 65414,
+          "index": null,
+          "addresses": [
+            65414
+          ]
+        }
+      ],
+      "c2_kernal_input_capture": [
+        {
+          "pc": 64776,
+          "mnemonic": "stz",
+          "operand": 65414,
+          "index": null,
+          "addresses": [
+            65414
+          ]
+        },
+        {
+          "pc": 64789,
+          "mnemonic": "inc",
+          "operand": 48380,
+          "index": null,
+          "addresses": [
+            48380
+          ]
+        },
+        {
+          "pc": 64795,
+          "mnemonic": "inc",
+          "operand": 48381,
+          "index": null,
+          "addresses": [
+            48381
+          ]
+        }
+      ],
+      "c2_kernal_input_capture_commit": [
+        {
+          "pc": 65271,
+          "mnemonic": "sta",
+          "operand": 48272,
+          "index": "y",
+          "addresses": [
+            48272,
+            48273,
+            48274,
+            48275,
+            48276,
+            48277,
+            48278,
+            48279,
+            48280,
+            48281,
+            48282,
+            48283,
+            48284,
+            48285,
+            48286,
+            48287,
+            48288,
+            48289,
+            48290,
+            48291,
+            48292,
+            48293,
+            48294,
+            48295,
+            48296,
+            48297,
+            48298,
+            48299,
+            48300,
+            48301,
+            48302,
+            48303,
+            48304,
+            48305,
+            48306,
+            48307,
+            48308,
+            48309,
+            48310,
+            48311,
+            48312,
+            48313,
+            48314,
+            48315,
+            48316,
+            48317,
+            48318,
+            48319,
+            48320,
+            48321,
+            48322,
+            48323,
+            48324,
+            48325,
+            48326,
+            48327,
+            48328,
+            48329,
+            48330,
+            48331,
+            48332,
+            48333,
+            48334,
+            48335,
+            48336,
+            48337,
+            48338,
+            48339,
+            48340,
+            48341,
+            48342,
+            48343,
+            48344,
+            48345,
+            48346,
+            48347,
+            48348,
+            48349,
+            48350,
+            48351,
+            48352,
+            48353,
+            48354,
+            48355,
+            48356,
+            48357,
+            48358,
+            48359,
+            48360,
+            48361,
+            48362,
+            48363,
+            48364,
+            48365,
+            48366,
+            48367,
+            48368,
+            48369,
+            48370,
+            48371,
+            48372,
+            48373,
+            48374,
+            48375,
+            48376,
+            48377,
+            48378,
+            48379
+          ]
+        },
+        {
+          "pc": 65274,
+          "mnemonic": "sta",
+          "operand": 54809,
+          "index": null,
+          "addresses": [
+            54809
+          ]
+        },
+        {
+          "pc": 65277,
+          "mnemonic": "stx",
+          "operand": 65420,
+          "index": null,
+          "addresses": [
+            65420
+          ]
+        },
+        {
+          "pc": 65280,
+          "mnemonic": "inc",
+          "operand": 48382,
+          "index": null,
+          "addresses": [
+            48382
+          ]
+        },
+        {
+          "pc": 65284,
+          "mnemonic": "sta",
+          "operand": 54809,
+          "index": null,
+          "addresses": [
+            54809
+          ]
+        }
+      ]
+    },
+    "machine_state": {
+      "transient": [
+        "A",
+        "X",
+        "Y",
+        "Z",
+        "P",
+        "SP"
+      ],
+      "restored": [
+        "A",
+        "X",
+        "Y",
+        "Z",
+        "P",
+        "SP"
+      ]
+    },
+    "map_state_changed": false,
+    "stack_protocol": "hardware IRQ frame plus balanced PHA/PHX/PHY/PHZ and the balanced capture JSR frame below interrupted SP"
+  },
+  "intersection": {
+    "persistent_addresses": [],
+    "machine_registers": [
+      "A",
+      "X",
+      "Y",
+      "Z",
+      "P",
+      "SP"
+    ],
+    "machine_register_verdict": "shared transiently, fully restored on every owned return",
+    "stack": "shared protocol, disjoint live frames and balanced return",
+    "map": "no interruptible overlap: reader masks IRQ for every non-baseline MAP",
+    "verdict": "EMPTY AFTER ABI, EVERY-EXIT-UNMAP AND BALANCED-STACK PROOFS"
+  },
+  "decision": {
+    "class": "NOT REGISTER-FORM IRQ CORRUPTION",
+    "reason": "the armed IRQ writes no LLVM-MOS ABI cell, no vm_codebuf byte, no VM window-bookkeeping cell and no MAP state; all shared CPU registers and stack frames are restored, while the mapped reader is interrupt-masked until baseline MAP is restored",
+    "save_restore_fix": "NOT SUPPORTED BY THE INTERSECTION",
+    "ownership_split_fix": "NOT SUPPORTED BY THE INTERSECTION",
+    "next_step": "a separately priced device witness must observe the real c2_product_entry_read return/refill boundary; this attribution does not authorise it"
+  },
+  "claim_boundary": "Host-only byte attribution. It excludes a register-, ABI-, MAP- or persistent-state collision with the armed IRQ; it does not explain the target-only failed refill and performs no link, product mutation, media build or device contact."
+}

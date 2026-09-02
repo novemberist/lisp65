@@ -1,0 +1,771 @@
+{
+  "R7_prerequisites": {
+    "G6_effect": "none",
+    "open": [
+      "public-manifest-role-paths",
+      "packed-on-source-commit-time"
+    ],
+    "path": "config/r7-release-prerequisites.json",
+    "sha256": "ba3d354ffbbf3050c3aa31474bb7e8160ed90bca043975bed99f7db518183c9e"
+  },
+  "cases": [
+    {
+      "artifact_bindings": [
+        {
+          "role": "work-d81",
+          "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3",
+          "ship_path": "media/lisp65-work.d81"
+        },
+        {
+          "role": "library-m65d",
+          "sha256": "d5acbef9eb2b8316031e816ff1ceb292f1bce48523ecc27be59cea8876f80539",
+          "ship_path": "components/m65d"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "arbitrary-user-media-save-remount-read",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "work-d81",
+        "library-m65d"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "linked-product-elf",
+          "sha256": "22a96475ae341fb96f7cdb8e7d10564b55b216411279fb5a73f23e473dd47fbe",
+          "ship_path": "proof/lisp65-workbench-product.elf"
+        },
+        {
+          "role": "workbench-prg",
+          "sha256": "130e4a0964e8b6368c8b3f0c62b49796597807eb256cda51488548dd29fa4e99",
+          "ship_path": "components/lisp65.prg"
+        },
+        {
+          "role": "attic-catalog",
+          "sha256": "d885207ea8dd1759702b29373ebdd3c1b164ce786ae28cf2f4b9a0ccb0524128",
+          "ship_path": "components/overlays.bin"
+        },
+        {
+          "role": "bank5-preload",
+          "sha256": "e017012fa00a6173499c0c900256a5f27504dcc6c0cfcb9fbad4ca1756de7306",
+          "ship_path": "components/bank5.bin"
+        },
+        {
+          "role": "resolved-profile",
+          "sha256": "e9ddf12296df73a5429c9d2047c2dfbd2e1db1af776accef0ccc9591447058ac",
+          "ship_path": "components/profile"
+        },
+        {
+          "role": "library-ide",
+          "sha256": "5366267f409451cd52de60fbd2b8431b93932753ab44b60297729b20f245515c",
+          "ship_path": "components/ide"
+        },
+        {
+          "role": "library-idex",
+          "sha256": "4b45bfe630110743869528731f32db57801abbf1ee49d12843af908e5e7f824e",
+          "ship_path": "components/idex"
+        },
+        {
+          "role": "library-m65d",
+          "sha256": "d5acbef9eb2b8316031e816ff1ceb292f1bce48523ecc27be59cea8876f80539",
+          "ship_path": "components/m65d"
+        },
+        {
+          "role": "cold-stager",
+          "sha256": "2c515c20501aae77a935408402de9ffb95496c67b91e3d5fad60e7f8a4da7a6f",
+          "ship_path": "components/autoboot.c65"
+        },
+        {
+          "role": "boot-descriptor",
+          "sha256": "5befff518523b2f77224f9b3476972d0a7e71ec014627f91130a69ccf94085af",
+          "ship_path": "components/boot.id"
+        },
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "work-d81",
+          "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3",
+          "ship_path": "media/lisp65-work.d81"
+        },
+        {
+          "role": "product-mount-descriptor",
+          "sha256": "d334974f8c51a8f19db90ff2e3ee069e3411b9c54b3680e0f3cc274bbabc5b19",
+          "ship_path": "media/lisp65-product.mount.json"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "artifact-preflight-exact-set",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "linked-product-elf",
+        "workbench-prg",
+        "attic-catalog",
+        "bank5-preload",
+        "resolved-profile",
+        "library-ide",
+        "library-idex",
+        "library-m65d",
+        "cold-stager",
+        "boot-descriptor",
+        "product-d81",
+        "work-d81",
+        "product-mount-descriptor"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "cold-stager",
+          "sha256": "2c515c20501aae77a935408402de9ffb95496c67b91e3d5fad60e7f8a4da7a6f",
+          "ship_path": "components/autoboot.c65"
+        },
+        {
+          "role": "boot-descriptor",
+          "sha256": "5befff518523b2f77224f9b3476972d0a7e71ec014627f91130a69ccf94085af",
+          "ship_path": "components/boot.id"
+        },
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "bank5-preload",
+          "sha256": "e017012fa00a6173499c0c900256a5f27504dcc6c0cfcb9fbad4ca1756de7306",
+          "ship_path": "components/bank5.bin"
+        },
+        {
+          "role": "attic-catalog",
+          "sha256": "d885207ea8dd1759702b29373ebdd3c1b164ce786ae28cf2f4b9a0ccb0524128",
+          "ship_path": "components/overlays.bin"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "catalog-crc-reject-restage",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "cold-stager",
+        "boot-descriptor",
+        "product-d81",
+        "bank5-preload",
+        "attic-catalog"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "cold-stager",
+          "sha256": "2c515c20501aae77a935408402de9ffb95496c67b91e3d5fad60e7f8a4da7a6f",
+          "ship_path": "components/autoboot.c65"
+        },
+        {
+          "role": "boot-descriptor",
+          "sha256": "5befff518523b2f77224f9b3476972d0a7e71ec014627f91130a69ccf94085af",
+          "ship_path": "components/boot.id"
+        },
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "bank5-preload",
+          "sha256": "e017012fa00a6173499c0c900256a5f27504dcc6c0cfcb9fbad4ca1756de7306",
+          "ship_path": "components/bank5.bin"
+        },
+        {
+          "role": "attic-catalog",
+          "sha256": "d885207ea8dd1759702b29373ebdd3c1b164ce786ae28cf2f4b9a0ccb0524128",
+          "ship_path": "components/overlays.bin"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "catalog-missing-restage",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "cold-stager",
+        "boot-descriptor",
+        "product-d81",
+        "bank5-preload",
+        "attic-catalog"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "cold-stager",
+          "sha256": "2c515c20501aae77a935408402de9ffb95496c67b91e3d5fad60e7f8a4da7a6f",
+          "ship_path": "components/autoboot.c65"
+        },
+        {
+          "role": "boot-descriptor",
+          "sha256": "5befff518523b2f77224f9b3476972d0a7e71ec014627f91130a69ccf94085af",
+          "ship_path": "components/boot.id"
+        },
+        {
+          "role": "workbench-prg",
+          "sha256": "130e4a0964e8b6368c8b3f0c62b49796597807eb256cda51488548dd29fa4e99",
+          "ship_path": "components/lisp65.prg"
+        },
+        {
+          "role": "bank5-preload",
+          "sha256": "e017012fa00a6173499c0c900256a5f27504dcc6c0cfcb9fbad4ca1756de7306",
+          "ship_path": "components/bank5.bin"
+        },
+        {
+          "role": "attic-catalog",
+          "sha256": "d885207ea8dd1759702b29373ebdd3c1b164ce786ae28cf2f4b9a0ccb0524128",
+          "ship_path": "components/overlays.bin"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "catalog-valid-stage-chain",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "cold-stager",
+        "boot-descriptor",
+        "workbench-prg",
+        "bank5-preload",
+        "attic-catalog"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "work-d81",
+          "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3",
+          "ship_path": "media/lisp65-work.d81"
+        },
+        {
+          "role": "library-ide",
+          "sha256": "5366267f409451cd52de60fbd2b8431b93932753ab44b60297729b20f245515c",
+          "ship_path": "components/ide"
+        },
+        {
+          "role": "library-idex",
+          "sha256": "4b45bfe630110743869528731f32db57801abbf1ee49d12843af908e5e7f824e",
+          "ship_path": "components/idex"
+        },
+        {
+          "role": "library-m65d",
+          "sha256": "d5acbef9eb2b8316031e816ff1ceb292f1bce48523ecc27be59cea8876f80539",
+          "ship_path": "components/m65d"
+        }
+      ],
+      "fidelity": "hardware-only",
+      "gate": "G6",
+      "id": "disk-swap-resident-composition",
+      "procedure": "composition-swap",
+      "required_evidence": [
+        "core-registers",
+        "pre-swap-transcript",
+        "post-swap-transcript",
+        "media-identity-transcript",
+        "screen"
+      ],
+      "required_roles": [
+        "product-d81",
+        "work-d81",
+        "library-ide",
+        "library-idex",
+        "library-m65d"
+      ],
+      "status": "ready-not-run",
+      "target": "operator-assisted-hardware",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "library-m65d",
+          "sha256": "d5acbef9eb2b8316031e816ff1ceb292f1bce48523ecc27be59cea8876f80539",
+          "ship_path": "components/m65d"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "drive9-rejected",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "library-m65d"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "work-d81",
+          "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3",
+          "ship_path": "media/lisp65-work.d81"
+        },
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "library-m65d",
+          "sha256": "d5acbef9eb2b8316031e816ff1ceb292f1bce48523ecc27be59cea8876f80539",
+          "ship_path": "components/m65d"
+        }
+      ],
+      "fidelity": "hardware-only",
+      "gate": "G6",
+      "id": "mid-write-media-swap-abort",
+      "procedure": "mid-write-swap",
+      "required_evidence": [
+        "core-registers",
+        "user-media-a-identity",
+        "user-media-b-identity",
+        "pre-write-disk",
+        "write-transcript",
+        "abort-transcript",
+        "post-remount-transcript",
+        "post-write-disk",
+        "disk-oracle"
+      ],
+      "required_roles": [
+        "work-d81",
+        "product-d81",
+        "library-m65d"
+      ],
+      "status": "ready-not-run",
+      "target": "operator-assisted-hardware",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "cold-stager",
+          "sha256": "2c515c20501aae77a935408402de9ffb95496c67b91e3d5fad60e7f8a4da7a6f",
+          "ship_path": "components/autoboot.c65"
+        },
+        {
+          "role": "boot-descriptor",
+          "sha256": "5befff518523b2f77224f9b3476972d0a7e71ec014627f91130a69ccf94085af",
+          "ship_path": "components/boot.id"
+        },
+        {
+          "role": "workbench-prg",
+          "sha256": "130e4a0964e8b6368c8b3f0c62b49796597807eb256cda51488548dd29fa4e99",
+          "ship_path": "components/lisp65.prg"
+        },
+        {
+          "role": "bank5-preload",
+          "sha256": "e017012fa00a6173499c0c900256a5f27504dcc6c0cfcb9fbad4ca1756de7306",
+          "ship_path": "components/bank5.bin"
+        },
+        {
+          "role": "attic-catalog",
+          "sha256": "d885207ea8dd1759702b29373ebdd3c1b164ce786ae28cf2f4b9a0ccb0524128",
+          "ship_path": "components/overlays.bin"
+        }
+      ],
+      "fidelity": "hardware-only",
+      "gate": "G6",
+      "id": "power-cycle-autoboot-restage-repl",
+      "procedure": "cold-power-autoboot",
+      "required_evidence": [
+        "core-registers",
+        "screen",
+        "bank5-readback",
+        "bank5-oracle",
+        "attic-readback",
+        "hyppo-status",
+        "device-discovery"
+      ],
+      "required_roles": [
+        "product-d81",
+        "cold-stager",
+        "boot-descriptor",
+        "workbench-prg",
+        "bank5-preload",
+        "attic-catalog"
+      ],
+      "status": "ready-not-run",
+      "target": "operator-assisted-hardware",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "library-m65d",
+          "sha256": "d5acbef9eb2b8316031e816ff1ceb292f1bce48523ecc27be59cea8876f80539",
+          "ship_path": "components/m65d"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "product-media-identity-write-reject",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "product-d81",
+        "library-m65d"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "product-mount-descriptor",
+          "sha256": "d334974f8c51a8f19db90ff2e3ee069e3411b9c54b3680e0f3cc274bbabc5b19",
+          "ship_path": "media/lisp65-product.mount.json"
+        }
+      ],
+      "fidelity": "hardware-only",
+      "gate": "G6",
+      "id": "product-medium-physical-write-protect",
+      "procedure": "physical-write-protect",
+      "required_evidence": [
+        "core-registers",
+        "pre-write-disk",
+        "raw-write-transcript",
+        "post-write-disk",
+        "full-media-oracle"
+      ],
+      "required_roles": [
+        "product-d81",
+        "product-mount-descriptor"
+      ],
+      "status": "ready-not-run",
+      "target": "operator-assisted-hardware",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "linked-product-elf",
+          "sha256": "22a96475ae341fb96f7cdb8e7d10564b55b216411279fb5a73f23e473dd47fbe",
+          "ship_path": "proof/lisp65-workbench-product.elf"
+        },
+        {
+          "role": "workbench-prg",
+          "sha256": "130e4a0964e8b6368c8b3f0c62b49796597807eb256cda51488548dd29fa4e99",
+          "ship_path": "components/lisp65.prg"
+        },
+        {
+          "role": "bank5-preload",
+          "sha256": "e017012fa00a6173499c0c900256a5f27504dcc6c0cfcb9fbad4ca1756de7306",
+          "ship_path": "components/bank5.bin"
+        },
+        {
+          "role": "attic-catalog",
+          "sha256": "d885207ea8dd1759702b29373ebdd3c1b164ce786ae28cf2f4b9a0ccb0524128",
+          "ship_path": "components/overlays.bin"
+        },
+        {
+          "role": "resolved-profile",
+          "sha256": "e9ddf12296df73a5429c9d2047c2dfbd2e1db1af776accef0ccc9591447058ac",
+          "ship_path": "components/profile"
+        },
+        {
+          "role": "cold-stager",
+          "sha256": "2c515c20501aae77a935408402de9ffb95496c67b91e3d5fad60e7f8a4da7a6f",
+          "ship_path": "components/autoboot.c65"
+        },
+        {
+          "role": "boot-descriptor",
+          "sha256": "5befff518523b2f77224f9b3476972d0a7e71ec014627f91130a69ccf94085af",
+          "ship_path": "components/boot.id"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "product-prg-byte-identity",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "linked-product-elf",
+        "workbench-prg",
+        "bank5-preload",
+        "attic-catalog",
+        "resolved-profile",
+        "cold-stager",
+        "boot-descriptor"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "cold-stager",
+          "sha256": "2c515c20501aae77a935408402de9ffb95496c67b91e3d5fad60e7f8a4da7a6f",
+          "ship_path": "components/autoboot.c65"
+        },
+        {
+          "role": "boot-descriptor",
+          "sha256": "5befff518523b2f77224f9b3476972d0a7e71ec014627f91130a69ccf94085af",
+          "ship_path": "components/boot.id"
+        },
+        {
+          "role": "workbench-prg",
+          "sha256": "130e4a0964e8b6368c8b3f0c62b49796597807eb256cda51488548dd29fa4e99",
+          "ship_path": "components/lisp65.prg"
+        },
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        }
+      ],
+      "fidelity": "emulator-valid",
+      "gate": "G3",
+      "id": "stager-entry-chain-control",
+      "procedure": "sealed-pass",
+      "required_evidence": [
+        "sealed-g3-receipt"
+      ],
+      "required_roles": [
+        "cold-stager",
+        "boot-descriptor",
+        "workbench-prg",
+        "product-d81"
+      ],
+      "status": "sealed-pass",
+      "target": "sealed-r4-g3",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "product-d81",
+          "sha256": "556c52feab07bd8a43ab1ea76a6e6718b62d71c7f62ceaf523aaac5c22b4761c",
+          "ship_path": "media/lisp65-product.d81"
+        },
+        {
+          "role": "cold-stager",
+          "sha256": "2c515c20501aae77a935408402de9ffb95496c67b91e3d5fad60e7f8a4da7a6f",
+          "ship_path": "components/autoboot.c65"
+        },
+        {
+          "role": "boot-descriptor",
+          "sha256": "5befff518523b2f77224f9b3476972d0a7e71ec014627f91130a69ccf94085af",
+          "ship_path": "components/boot.id"
+        },
+        {
+          "role": "workbench-prg",
+          "sha256": "130e4a0964e8b6368c8b3f0c62b49796597807eb256cda51488548dd29fa4e99",
+          "ship_path": "components/lisp65.prg"
+        },
+        {
+          "role": "bank5-preload",
+          "sha256": "e017012fa00a6173499c0c900256a5f27504dcc6c0cfcb9fbad4ca1756de7306",
+          "ship_path": "components/bank5.bin"
+        },
+        {
+          "role": "attic-catalog",
+          "sha256": "d885207ea8dd1759702b29373ebdd3c1b164ce786ae28cf2f4b9a0ccb0524128",
+          "ship_path": "components/overlays.bin"
+        }
+      ],
+      "fidelity": "hardware-only",
+      "gate": "G6",
+      "id": "warm-reset-valid-catalog-fastpath",
+      "procedure": "warm-reset-fastpath",
+      "required_evidence": [
+        "core-registers",
+        "pre-reset-bank5",
+        "pre-reset-attic",
+        "post-reset-bank5",
+        "post-reset-attic",
+        "screen"
+      ],
+      "required_roles": [
+        "product-d81",
+        "cold-stager",
+        "boot-descriptor",
+        "workbench-prg",
+        "bank5-preload",
+        "attic-catalog"
+      ],
+      "status": "ready-not-run",
+      "target": "operator-assisted-hardware",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    },
+    {
+      "artifact_bindings": [
+        {
+          "role": "work-d81",
+          "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3",
+          "ship_path": "media/lisp65-work.d81"
+        },
+        {
+          "role": "library-ide",
+          "sha256": "5366267f409451cd52de60fbd2b8431b93932753ab44b60297729b20f245515c",
+          "ship_path": "components/ide"
+        },
+        {
+          "role": "library-m65d",
+          "sha256": "d5acbef9eb2b8316031e816ff1ceb292f1bce48523ecc27be59cea8876f80539",
+          "ship_path": "components/m65d"
+        }
+      ],
+      "fidelity": "hardware-only",
+      "gate": "G6",
+      "id": "work-media-save-remount-read",
+      "procedure": "work-persistence",
+      "required_evidence": [
+        "core-registers",
+        "pre-write-disk",
+        "bufsel-precondition",
+        "persistence-transcript",
+        "bufsel-postcondition",
+        "post-write-disk",
+        "disk-oracle"
+      ],
+      "required_roles": [
+        "work-d81",
+        "library-ide",
+        "library-m65d"
+      ],
+      "status": "ready-not-run",
+      "target": "operator-assisted-hardware",
+      "verifier": "tools/host-lisp/r6_g6.py"
+    }
+  ],
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "G5": "passed-for-product-artifact-set",
+    "G6": "not-run",
+    "hardware_boot_cases": "not-run(6/6)",
+    "release": "not-release-capable"
+  },
+  "contract": {
+    "path": "config/r6-g6-harness.json",
+    "sha256": "1a9991461727a2581fa466e3ad9892f716d2bcfd514ed0f88417a68bedd42e59"
+  },
+  "counts": {
+    "G6_ready_not_run": 6,
+    "sealed_G3_pass": 9,
+    "total": 15
+  },
+  "environment": {
+    "case_verifier": {
+      "bytes": 48592,
+      "path": "tools/host-lisp/r6_g6.py",
+      "sha256": "e9b4a0a02e7e7c9f340ee344597d54b603e80964d5a56fdf777b0424ef515143"
+    },
+    "m65": {
+      "bytes": 282120,
+      "path": "tools/m65tools/m65",
+      "sha256": "2feeaa69bdcd52ee61644212673b05df41bcaa93b0a515133e5947a5f47e3097"
+    },
+    "machine": {
+      "core": "bind-on-first-passed-case",
+      "device": "/dev/ttyUSB1",
+      "serial": "TE0000B18447"
+    },
+    "mega65_ftp": {
+      "bytes": 734720,
+      "path": "tools/m65tools/mega65_ftp",
+      "sha256": "d39a7fe880d3037a1b57ecfc84aed14fd7f931e6fe05d57392cce5ab2cac17c4"
+    },
+    "repl_runner": {
+      "bytes": 12540,
+      "path": "scripts/hw-jtag-repl.sh",
+      "sha256": "f5862239ba72075a0a5d0e9092f073ccecbd0518720160315475183497fc4efd"
+    },
+    "repl_verifier": {
+      "bytes": 13625,
+      "path": "tools/host-lisp/repl_screen_check.py",
+      "sha256": "259c387a06cbe9e7a8ebc3b553657fc852cec0660646f8a0911d043045ea7807"
+    }
+  },
+  "format": "lisp65-r6-g6-static-preflight-v1",
+  "id": "r6-g6-static-preflight",
+  "measured_on": "2026-07-14",
+  "result": "passed",
+  "sealed_evidence": {
+    "G3": {
+      "path": "evidence/g3-emulator-receipt.json",
+      "sha256": "b2548b7ae08ced884eb6d7f7b8b2c8304206444835e5b659bfcf97dfb903206c"
+    },
+    "G5": "passed-14-of-14",
+    "R4_archive_sha256": "b7ad593754cd2254cfa1a7d1af76dc34d4bf36af060e2ec81ff86ee57d440537",
+    "R5_archive_sha256": "cc114451458693a9e7dfe5b2c939cabba9bafc8c8871b0ec29bdc3b6249f4d37"
+  },
+  "ship": {
+    "manifest_sha256": "51aeb45803d3bd14c8106de997bc2ae4ed0df72a97d2023b352136d9623427e9",
+    "offline_verifier": "passed",
+    "package_set_sha256": "4443e07dbfc3235956b68d307ac1304dbca30169ddb2861bb4139232c631dafe",
+    "path": "build/r6/ship",
+    "product_artifact_set_sha256": "7e76134374c78d8080f8e310cc8ea595046dde08fa5714379d330c3e8afc7250"
+  },
+  "source_commit": "6dfbf1e3acf9e96bad5e2848e85404cef2af5e7a",
+  "status": "passed-hardware-not-run",
+  "version": 1
+}

@@ -1,0 +1,134 @@
+{
+  "format": "lisp65-c2-lite-boot-crc-abi-wplto-capacity-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: ABI leaf is size-neutral but WPLTO text wall moved",
+  "scope": {
+    "whole_program_lto_probes": 1,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "promotable": false,
+    "latency_attempts_consumed": "0/2"
+  },
+  "correction": {
+    "source": {
+      "path": "src/c2_boot_chain_commit.s",
+      "sha256": "d9d70bd437fc2bea2a6ea9fecb81672cb18c09a1e0f54ff1eeee2fb022cc9cb4"
+    },
+    "callee": "ov_crc16(const uint8_t *p, uint16_t n)",
+    "pointer_binding": "__rc2/__rc3",
+    "length_binding": "A/X",
+    "corrected_immediate_or_relocation_operands": 6,
+    "instruction_width_delta_bytes": 0,
+    "vm_boot_overlay_chain_commit": {
+      "before_bytes": 138,
+      "after_bytes": 138,
+      "delta_bytes": 0,
+      "before_address": 8815,
+      "after_address": 8815
+    }
+  },
+  "permanent_abi_gate": {
+    "path": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+    "sha256": "c544e4bba6807b231e7d15f9c1ca21b207c828c1b18dad03fcbdce073c4b48ce",
+    "leaf_inventory": [
+      "rtov_crc_mem",
+      "rtov_dma_submit_wait",
+      "vm_boot_overlay_chain_commit",
+      "vm_bank3_boot_stage_entry"
+    ],
+    "negative_mutations": 10,
+    "mutation_classes": [
+      "source leaf size/type/section citizenship",
+      "pointer/length swap",
+      "pointer low-byte drift",
+      "pointer high-byte drift",
+      "length low-byte drift",
+      "length high-byte drift",
+      "wrong zero-page destination"
+    ],
+    "linked_gate": {
+      "path": "build/c2-lite/v6-bank3-boot-crc-abi-wplto-replay2/c2-asm-leaf-abi-dataflow-gate.json",
+      "bytes": 3786,
+      "sha256": "dceab86a310342c887338894e2310024a4543fceb7a3caf41d0cf351c3d4e81f",
+      "status": "passed"
+    }
+  },
+  "workbench_crc_end_to_end": {
+    "payload_bytes": 1731,
+    "payload_crc16": 16306,
+    "payload_crc16_hex": "0x3fb2",
+    "linked_leaf_executed_instructions": 133713,
+    "status": "passed-linked-leaf-equals-current-descriptor-emitter",
+    "gate": {
+      "path": "build/c2-lite/v6-bank3-boot-crc-abi-wplto-replay2/c2-crc-asm-leaf-workbench-gate.json",
+      "bytes": 1323,
+      "sha256": "2207a8eb584540525a74345289f5d4d466b8cf884621f209739fee29bf992599"
+    }
+  },
+  "wplto_capacity": {
+    "nonzero_section_deltas": {
+      ".text": 10
+    },
+    "all_other_section_deltas_bytes": 0,
+    "leaf_size_deltas": {
+      "rtov_crc_mem": 0,
+      "vm_boot_overlay_chain_commit": 0,
+      "vm_bank3_boot_stage_entry": 0,
+      "ov_crc16": 0
+    },
+    "leaf_address_observation": {
+      "ov_crc16_before": 42675,
+      "ov_crc16_after": 42685,
+      "interpretation": "Whole-program LTO allocation movement outside the corrected non-LTO leaf; not attributable as ABI-fix code size."
+    },
+    "walls_before": {
+      "bank0_text_headroom_bytes": 11,
+      "ordinary_bank0_bss_headroom_bytes": 86,
+      "fixed_hot_block_headroom_bytes": 33,
+      "resident_island_headroom_bytes": 170,
+      "e000_headroom_bytes": 501
+    },
+    "walls_after": {
+      "bank0_text_headroom_bytes": 1,
+      "ordinary_bank0_bss_headroom_bytes": 86,
+      "fixed_hot_block_headroom_bytes": 33,
+      "resident_island_headroom_bytes": 170,
+      "e000_headroom_bytes": 501
+    },
+    "runtime_slices": {
+      "count": 59,
+      "cap_bytes": 1792,
+      "largest_bytes": 1766,
+      "minimum_headroom_bytes": 26
+    },
+    "classification": "Real WPLTO capacity movement despite an exact zero-byte correction leaf; not eligible for autonomous Class-A replay."
+  },
+  "artifacts": {
+    "baseline_product": {
+      "path": "build/c2.2/substitution/c2-lite-v6-bank3-stage-artifact-candidate-replay5/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "62f556dfcdeec59783cc2adec16afc3ccb5f618a24b17898c1162f81c1c1b954",
+      "status": "untouched"
+    },
+    "baseline_elf": {
+      "path": "build/c2.2/substitution/c2-lite-v6-bank3-stage-artifact-candidate-replay5/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "dceb9505a8d74efae3af4b4e3583c06f3c085ddbc7f80e0426980a83d21351e2"
+    },
+    "measurement_prg": {
+      "path": "build/c2-lite/v6-bank3-boot-crc-abi-wplto-replay2/full-product-wplto/c2-lite-v6-full-seed.prg",
+      "bytes": 41542,
+      "sha256": "dba1f5c4e5492f718b1267efa041415269314296cefa8a73f0b39fa037cadd18"
+    },
+    "measurement_elf": {
+      "path": "build/c2-lite/v6-bank3-boot-crc-abi-wplto-replay2/full-product-wplto/c2-lite-v6-full-seed.prg.elf",
+      "bytes": 597864,
+      "sha256": "bab1a8e3021343a619b356e985155ddf2ba134677603a594a8f9a4d35d319248"
+    },
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank3-boot-crc-abi-wplto-replay2-receipt.json",
+      "sha256": "d7113a7a4219f5bbd6ea9c7edd9bf65e2acf447e3b31709b890b819225a80e39"
+    }
+  },
+  "claim_limit": "The six operand corrections themselves are exact zero-byte changes and the ABI/CRC gates pass. The same one-shot WPLTO nevertheless moved total .text by 10 bytes and reduced the bound text headroom from 11 to 1 byte. No retry, product link, hardware run or capacity acceptance is claimed.",
+  "next_gate": "Class-C decision on the measured 1-byte text headroom before any replay or successor product link."
+}

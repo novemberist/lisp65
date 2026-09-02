@@ -1,0 +1,25 @@
+{
+  "format": "lisp65-release-device-cold-boot-choreography-v1",
+  "qualifying_cold_boot": {
+    "fresh_machine_state": "power-cycle or an explicitly bound equivalent cold reset",
+    "restore_bound_medium_before_each_boot": true,
+    "read_back_entire_medium_before_each_boot": true,
+    "required_readback_identity": "SHA-256 byte-identical to the session-bound D81",
+    "reuse_previously_staged_remote_copy": false,
+    "stopped_state_read_invalidates_staging_for_next_boot": true
+  },
+  "failure_policy": {
+    "missing_fresh_restore": "non-qualifying",
+    "missing_readback": "non-qualifying",
+    "readback_mismatch": "stop before boot",
+    "reuse_after_stopped_state_read": "non-qualifying",
+    "preserve_incident_as_evidence": true
+  },
+  "standing_rule": "Every qualifying cold boot freshly restores and rereads its bound D81; a previously staged copy is never reused as qualification evidence.",
+  "mutations_that_must_fail": [
+    "allow-stale-staged-copy",
+    "omit-full-medium-readback",
+    "accept-readback-SHA-mismatch",
+    "reuse-after-stopped-state-read"
+  ]
+}

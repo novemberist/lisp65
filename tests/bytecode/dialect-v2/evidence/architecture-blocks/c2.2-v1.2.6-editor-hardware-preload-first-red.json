@@ -1,0 +1,36 @@
+{
+  "classification": "harness-first-red-before-first-product-instruction",
+  "evidence": {
+    "recovery_basic": {
+      "bytes": 4228,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/recovery-basic.png",
+      "sha256": "0a85fd28aa53b74e434a416bc297790507e5819123c5bb02a2fa74c1b42d7d1c"
+    },
+    "same_address_control_read": {
+      "bytes": 3286,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/recovery-bootstage-address-02.bin",
+      "sha256": "f09c517e1bc68177ab60634edf6df439c6f12e37a8e3de0ac357553575be9de7"
+    }
+  },
+  "finding": {
+    "address_specific_failure": false,
+    "candidate_executed": false,
+    "candidate_product_loaded_while_halted": true,
+    "command": "m65 --memsave 0x00058500:0x000591d6=preload-c2-two-record-boot-stage.bin",
+    "mechanism_boundary": "The second immediate upload/readback monitor sequence stopped returning while the CPU was deliberately halted. After a cold recovery, the exact same 3286-byte address read completed in under one second.",
+    "observed_timeout_seconds": 60,
+    "product_semantics_claimed": false,
+    "screen_interpretation": "black is the expected CPU-halted transfer state, not a product fail-closed frame"
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-preload-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "remedy": {
+    "diagnostic_readback_cascade_on_transport_timeout": "removed",
+    "monitor_settle_gap_seconds": 0.75,
+    "product_bytes_changed": 0,
+    "product_links_added": 0,
+    "retry_shape": "repeat the one commissioned semantic session from a fresh cold state; do not change candidate identity or any measurement row"
+  },
+  "receipt_hygiene": "The session output directory is intentionally reused by the corrected attempt. Ephemeral first-attempt paths are therefore not cited; only the uniquely named recovery and same-address control artifacts are immutable evidence.",
+  "status": "closed-transient-monitor-command-sequencing-before-product-run"
+}

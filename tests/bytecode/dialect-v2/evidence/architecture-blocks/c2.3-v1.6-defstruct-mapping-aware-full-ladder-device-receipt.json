@@ -1,0 +1,394 @@
+{
+  "authorities": {
+    "driver": {
+      "bytes": 20280,
+      "path": "tools/host-lisp/c2_v16_full_ladder_contact.py",
+      "sha256": "fae22310c9969d4108dbef1318417f58225fa99f86bc28d2462966e444d3e457"
+    },
+    "preparation": {
+      "bytes": 4264,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mapping-aware-full-ladder-preparation-receipt.json",
+      "sha256": "11d3101ae7495f38bb04b4bee367d8cd047be1d3fcb470a698fc3786bb2d3454"
+    },
+    "runner": {
+      "bytes": 4299,
+      "path": "scripts/c2-v16-defstruct-full-ladder-hw.sh",
+      "sha256": "017b25178de8e573ddc1f43f734efa2fcf51b036bd89b41227c7b3e525c0abae"
+    }
+  },
+  "claim_limit": "One physical launch ladder under the mapping-aware protocol. No pre-prompt form, product fix, Link or R/A/I/G result is claimed; the CPU remains stopped after the final ladder sample.",
+  "device": "/dev/ttyUSB1",
+  "first_observation": {
+    "ansi": {
+      "bytes": 71566,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-mapping-aware-full-ladder-appointment/boot-ladder-first-observation.ansi.txt",
+      "sha256": "9c1efaee9bb0195f5991388be0be9b700dd353a59b2a46bbad0f497910e81cae"
+    },
+    "png": {
+      "bytes": 2536,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-mapping-aware-full-ladder-appointment/boot-ladder-first-observation.png",
+      "sha256": "39c73c4ae21538ed196460cde81e89088a36c35e1ed02f43796d296c918c7f05"
+    },
+    "text": {
+      "bytes": 2253,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-mapping-aware-full-ladder-appointment/boot-ladder-first-observation.txt",
+      "sha256": "6a8611e2d1be7e214f39522affbdb54e7294a353d29eca2ab20b53cdceaeb408"
+    },
+    "visible_prompt": false
+  },
+  "format": "lisp65-c2.3-v1.6-mapping-aware-full-ladder-device-v1",
+  "quiet": {
+    "early_monitor_accesses": 0,
+    "observed_seconds": 27.653065870006685,
+    "required_seconds": 27.653
+  },
+  "recorded_on": "2026-08-05",
+  "result": {
+    "CPU_left_stopped": true,
+    "R_A_I_G": null,
+    "classification": "TEMPORAL-PROGRESS-WITHOUT-VISIBLE-PROMPT",
+    "measured_forms_run": 0
+  },
+  "samples": [
+    {
+      "EXT_occupancy": 0,
+      "GC_context": "34067dec010001010102",
+      "PC": "0x3b19",
+      "alloc_high": 0,
+      "boot_witness": "0x44",
+      "captured_at_utc": "2026-08-05T19:22:50Z",
+      "code_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "ff01201b32a515f00ca5902987f00620",
+          "ROMC-repaired-diagnostic-PRG": "a518c505f0034c7c3ac40490034c833a"
+        },
+        "logical_address": "0x3b19",
+        "matches": [
+          "ROMC-repaired-diagnostic-PRG"
+        ],
+        "observed": "a518c505f0034c7c3ac40490034c833a",
+        "selected_owner": "ROMC-repaired-diagnostic-PRG",
+        "symbol_interpretation_allowed": true,
+        "unique": true
+      },
+      "code_read": [
+        {
+          "command": "m07773b19",
+          "logical": "0x3b19",
+          "raw_hex": "6d30373737336231390d0a3a30373737334231393a41353138433530354630303334433743334143343034393030333443383333410d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        }
+      ],
+      "freelist_head": "0x0000",
+      "gc_frozen": 0,
+      "gc_runs": 0,
+      "mapping": {
+        "MAPH": "0x8000",
+        "MAPL": "0x0000",
+        "bank0_data_translation": "logical low16 -> physical 0x0000xxxx",
+        "map_selected_8k_blocks": [
+          "0xe000-0xffff"
+        ],
+        "raw_tail": "8516    00     20 ..E..... ...P 15 -  00 - ..c..lhc"
+      },
+      "physical_data_reads": {
+        "alloc_high": [
+          {
+            "command": "m00000039",
+            "logical_address": "0x0039",
+            "physical_RAM_address": "0x00000039",
+            "raw_hex": "6d30303030303033390d0a3a30303030303033393a30303030303030303030303030323533303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "boot_witness": [
+          {
+            "command": "m0000b5c3",
+            "logical_address": "0xb5c3",
+            "physical_RAM_address": "0x0000b5c3",
+            "raw_hex": "6d30303030623563330d0a3a30303030423543333a34343443423741313443393046463443373332343443314443323443313332340d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "freelist": [
+          {
+            "command": "m0000003d",
+            "logical_address": "0x003d",
+            "physical_RAM_address": "0x0000003d",
+            "raw_hex": "6d30303030303033640d0a3a30303030303033443a30303030303235333030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_context": [
+          {
+            "command": "m00000016",
+            "logical_address": "0x0016",
+            "physical_RAM_address": "0x00000016",
+            "raw_hex": "6d30303030303031360d0a3a30303030303031363a33343036374445433031303030313031303130323031323533363230383034340d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_frozen": [
+          {
+            "command": "m0000003b",
+            "logical_address": "0x003b",
+            "physical_RAM_address": "0x0000003b",
+            "raw_hex": "6d30303030303033620d0a3a30303030303033423a30303030303030303032353330303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_runs": [
+          {
+            "command": "m0000b9f0",
+            "logical_address": "0xb9f0",
+            "physical_RAM_address": "0x0000b9f0",
+            "raw_hex": "6d30303030623966300d0a3a30303030423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ]
+      },
+      "registers": {
+        "A": "0x34",
+        "B": "0x00",
+        "MAPH": "0x8000",
+        "MAPL": "0x0000",
+        "PC": "0x3b19",
+        "SP": "0x010f",
+        "X": "0x00",
+        "Y": "0x08",
+        "Z": "0x00",
+        "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a33423139203334203030203038203030203030203031304620383030302030303030203835313620202020303020202020203230202e2e452e2e2e2e2e202e2e2e50203135202d20203030202d202e2e632e2e6c68630d0a2c30373737334231392020413520313820202020204c44412020202431380d0a0d0a2e",
+        "row": "3B19 34 00 08 00 00 010F 8000 0000 8516    00     20 ..E..... ...P 15 -  00 - ..c..lhc",
+        "tail": "8516    00     20 ..E..... ...P 15 -  00 - ..c..lhc"
+      },
+      "sample": 1
+    },
+    {
+      "EXT_occupancy": 0,
+      "GC_context": "3406f8ec010001010102",
+      "PC": "0x3b0d",
+      "alloc_high": 0,
+      "boot_witness": "0x44",
+      "captured_at_utc": "2026-08-05T19:23:00Z",
+      "code_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "20395220a239205b5ca92c8dff01201b",
+          "ROMC-repaired-diagnostic-PRG": "8406a44486048405a4068516a518c505"
+        },
+        "logical_address": "0x3b0d",
+        "matches": [
+          "ROMC-repaired-diagnostic-PRG"
+        ],
+        "observed": "8406a44486048405a4068516a518c505",
+        "selected_owner": "ROMC-repaired-diagnostic-PRG",
+        "symbol_interpretation_allowed": true,
+        "unique": true
+      },
+      "code_read": [
+        {
+          "command": "m07773b0d",
+          "logical": "0x3b0d",
+          "raw_hex": "6d30373737336230640d0a3a30373737334230443a38343036413434343836303438343035413430363835313641353138433530350d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        }
+      ],
+      "freelist_head": "0x0000",
+      "gc_frozen": 0,
+      "gc_runs": 0,
+      "mapping": {
+        "MAPH": "0x8000",
+        "MAPL": "0x0000",
+        "bank0_data_translation": "logical low16 -> physical 0x0000xxxx",
+        "map_selected_8k_blocks": [
+          "0xe000-0xffff"
+        ],
+        "raw_tail": "A643    00     22 ..E...Z. ...P 15 -  00 - ..c..lhc"
+      },
+      "physical_data_reads": {
+        "alloc_high": [
+          {
+            "command": "m00000039",
+            "logical_address": "0x0039",
+            "physical_RAM_address": "0x00000039",
+            "raw_hex": "6d30303030303033390d0a3a30303030303033393a30303030303030303030303030323533303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "boot_witness": [
+          {
+            "command": "m0000b5c3",
+            "logical_address": "0xb5c3",
+            "physical_RAM_address": "0x0000b5c3",
+            "raw_hex": "6d30303030623563330d0a3a30303030423543333a34343443423741313443393046463443373332343443314443323443313332340d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "freelist": [
+          {
+            "command": "m0000003d",
+            "logical_address": "0x003d",
+            "physical_RAM_address": "0x0000003d",
+            "raw_hex": "6d30303030303033640d0a3a30303030303033443a30303030303235333030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_context": [
+          {
+            "command": "m00000016",
+            "logical_address": "0x0016",
+            "physical_RAM_address": "0x00000016",
+            "raw_hex": "6d30303030303031360d0a3a30303030303031363a33343036463845433031303030313031303130323031323533363230383034340d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_frozen": [
+          {
+            "command": "m0000003b",
+            "logical_address": "0x003b",
+            "physical_RAM_address": "0x0000003b",
+            "raw_hex": "6d30303030303033620d0a3a30303030303033423a30303030303030303032353330303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_runs": [
+          {
+            "command": "m0000b9f0",
+            "logical_address": "0xb9f0",
+            "physical_RAM_address": "0x0000b9f0",
+            "raw_hex": "6d30303030623966300d0a3a30303030423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ]
+      },
+      "registers": {
+        "A": "0x34",
+        "B": "0x00",
+        "MAPH": "0x8000",
+        "MAPL": "0x0000",
+        "PC": "0x3b0d",
+        "SP": "0x010f",
+        "X": "0x00",
+        "Y": "0xf5",
+        "Z": "0x00",
+        "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a33423044203334203030204635203030203030203031304620383030302030303030204136343320202020303020202020203232202e2e452e2e2e5a2e202e2e2e50203135202d20203030202d202e2e632e2e6c68630d0a2c30373737334230442020383420303620202020205354592020202430360d0a0d0a2e",
+        "row": "3B0D 34 00 F5 00 00 010F 8000 0000 A643    00     22 ..E...Z. ...P 15 -  00 - ..c..lhc",
+        "tail": "A643    00     22 ..E...Z. ...P 15 -  00 - ..c..lhc"
+      },
+      "sample": 2
+    },
+    {
+      "EXT_occupancy": 0,
+      "GC_context": "340675ec010001010102",
+      "PC": "0x3a8e",
+      "alloc_high": 0,
+      "boot_witness": "0x44",
+      "captured_at_utc": "2026-08-05T19:23:10Z",
+      "code_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "209b2220675fa92c203952861520506a",
+          "ROMC-repaired-diagnostic-PRG": "85056604a9f21865048504a9bb650585"
+        },
+        "logical_address": "0x3a8e",
+        "matches": [
+          "ROMC-repaired-diagnostic-PRG"
+        ],
+        "observed": "85056604a9f21865048504a9bb650585",
+        "selected_owner": "ROMC-repaired-diagnostic-PRG",
+        "symbol_interpretation_allowed": true,
+        "unique": true
+      },
+      "code_read": [
+        {
+          "command": "m07773a8e",
+          "logical": "0x3a8e",
+          "raw_hex": "6d30373737336138650d0a3a30373737334138453a38353035363630344139463231383635303438353034413942423635303538350d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        }
+      ],
+      "freelist_head": "0x0000",
+      "gc_frozen": 0,
+      "gc_runs": 0,
+      "mapping": {
+        "MAPH": "0x8000",
+        "MAPL": "0x0000",
+        "bank0_data_translation": "logical low16 -> physical 0x0000xxxx",
+        "map_selected_8k_blocks": [
+          "0xe000-0xffff"
+        ],
+        "raw_tail": "00     21 ..E....C ...P 15 -  00 - ..c..lhc"
+      },
+      "physical_data_reads": {
+        "alloc_high": [
+          {
+            "command": "m00000039",
+            "logical_address": "0x0039",
+            "physical_RAM_address": "0x00000039",
+            "raw_hex": "6d30303030303033390d0a3a30303030303033393a30303030303030303030303030323533303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "boot_witness": [
+          {
+            "command": "m0000b5c3",
+            "logical_address": "0xb5c3",
+            "physical_RAM_address": "0x0000b5c3",
+            "raw_hex": "6d30303030623563330d0a3a30303030423543333a34343443423741313443393046463443373332343443314443323443313332340d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "freelist": [
+          {
+            "command": "m0000003d",
+            "logical_address": "0x003d",
+            "physical_RAM_address": "0x0000003d",
+            "raw_hex": "6d30303030303033640d0a3a30303030303033443a30303030303235333030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_context": [
+          {
+            "command": "m00000016",
+            "logical_address": "0x0016",
+            "physical_RAM_address": "0x00000016",
+            "raw_hex": "6d30303030303031360d0a3a30303030303031363a33343036373545433031303030313031303130323031323533363230383034340d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_frozen": [
+          {
+            "command": "m0000003b",
+            "logical_address": "0x003b",
+            "physical_RAM_address": "0x0000003b",
+            "raw_hex": "6d30303030303033620d0a3a30303030303033423a30303030303030303032353330303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ],
+        "gc_runs": [
+          {
+            "command": "m0000b9f0",
+            "logical_address": "0xb9f0",
+            "physical_RAM_address": "0x0000b9f0",
+            "raw_hex": "6d30303030623966300d0a3a30303030423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+            "view": "physical-bank0-RAM-underlay"
+          }
+        ]
+      },
+      "registers": {
+        "A": "0x0e",
+        "B": "0x00",
+        "MAPH": "0x8000",
+        "MAPL": "0x0000",
+        "PC": "0x3a8e",
+        "SP": "0x010f",
+        "X": "0x00",
+        "Y": "0xe4",
+        "Z": "0x00",
+        "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a33413845203045203030204534203030203030203031304620383030302030303030202020202020202020303020202020203231202e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e632e2e6c68630d0a2c30373737334138452020383520303520202020205354412020202430350d0a0d0a2e",
+        "row": "3A8E 0E 00 E4 00 00 010F 8000 0000         00     21 ..E....C ...P 15 -  00 - ..c..lhc",
+        "tail": "00     21 ..E....C ...P 15 -  00 - ..c..lhc"
+      },
+      "sample": 3
+    }
+  ],
+  "status": "TEMPORAL-PROGRESS-WITHOUT-VISIBLE-PROMPT"
+}

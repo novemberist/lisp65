@@ -1,0 +1,490 @@
+{
+  "blink": {
+    "hardware_attribute": {
+      "colour_window_bytes": 1024,
+      "core_capability_present": true,
+      "covers_line_editor_last_row": false,
+      "delivered_profile_enables_attr_bit": false,
+      "line_editor_cursor_offset_at_80x25": 1920,
+      "real_writer_preserves_blink_bit": false,
+      "reason": "the core implements blink, but the selected product neither owns ATTR enable nor preserves bit 4; its safe CPU colour window also ends before the line editor's last row",
+      "viable": false
+    },
+    "software_idle_phase": {
+      "compiled": {
+        "cases": [
+          {
+            "class": "idle",
+            "io_witness": {
+              "memory_read_sequence": 1
+            },
+            "name": "line-idle-no-toggle",
+            "result": "nil",
+            "runtime_allocations": 1,
+            "steps": 42,
+            "surface": "line-editor"
+          },
+          {
+            "class": "toggle",
+            "io_witness": {
+              "memory_read_sequence": 1,
+              "screen_put_char": 1
+            },
+            "name": "line-idle-toggle",
+            "result": "nil",
+            "runtime_allocations": 1,
+            "steps": 61,
+            "surface": "line-editor"
+          },
+          {
+            "class": "wrap-toggle",
+            "io_witness": {
+              "memory_read_sequence": 1,
+              "screen_put_char": 1
+            },
+            "name": "ide-idle-toggle",
+            "result": "nil",
+            "runtime_allocations": 1,
+            "steps": 60,
+            "surface": "ide"
+          },
+          {
+            "class": "handoff",
+            "io_witness": {
+              "memory_read_sequence": 1,
+              "screen_put_char": 1
+            },
+            "name": "dispatch-forces-visible",
+            "result": "nil",
+            "runtime_allocations": 1,
+            "steps": 52,
+            "surface": "both"
+          }
+        ],
+        "compiled_bundle_bytes": 224,
+        "compiled_objects": 5,
+        "function_bytes": {
+          "%cursor-blink": 114
+        },
+        "functions": [
+          "%cursor-blink"
+        ],
+        "maximum_object_bytes": 114,
+        "runtime_call_targets": [
+          "<product-callprim>"
+        ],
+        "total_function_bytes": 114
+      },
+      "dispatch_handoff": "cursor is forced visible before a key is dispatched",
+      "frame_counter": "C2K_FRAME_LO at 0xff83 in the selected final ELF",
+      "half_period_frames": 32,
+      "new_input_owner": false,
+      "new_primitive": false,
+      "new_timer_owner": false,
+      "resident_bytes": 0,
+      "selected": true,
+      "state": "one mutable (last-frame . visible-phase) pair per active surface",
+      "surface_changes": {
+        "ide": "existing poll-key becomes the idle source as well as the burst-drain source; no second queue reader",
+        "line-editor": "blocking key-event becomes a nonblocking wait loop; the same public input owner is retained"
+      }
+    }
+  },
+  "claim_limit": {
+    "accepts": [
+      "host-only pricing",
+      "compiled matcher prototype",
+      "compiled software blink kernel",
+      "capacity arithmetic"
+    ],
+    "excludes": [
+      "implementation",
+      "product/library source change",
+      "WPLTO",
+      "product link",
+      "media",
+      "device acceptance",
+      "native C fallback matcher",
+      "parked Comfort acceptance"
+    ]
+  },
+  "decision": {
+    "blink": "software idle phase on the existing frame counter",
+    "implementation_cards": [
+      "shared scanner and paint ownership",
+      "line-editor idle blink",
+      "IDE idle blink"
+    ],
+    "matcher": "shared lexical matcher, delimiter-triggered and idle-chunked on every pass",
+    "owner_decision_required": false,
+    "reason": "both selected forms are Bank-2 only and introduce neither resident bytes, a primitive, an input owner nor a timer owner",
+    "review_touchpoint_required": true
+  },
+  "delivery_world": {
+    "free_after_selected_named_entries": {
+      "namepool_bytes": 1289,
+      "symbol_slots": 94
+    },
+    "free_before": {
+      "namepool_bytes": 1413,
+      "symbol_slots": 105
+    },
+    "margin_after_selected_named_entries": {
+      "namepool_bytes": 905,
+      "symbol_slots": 62
+    },
+    "measurement": "device D5, Comfort absent; no projection bias applied",
+    "minimum_free": {
+      "namepool_bytes": 384,
+      "symbol_slots": 32
+    }
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2-v17-editing-surface-polish-pricing-receipt-v1",
+  "inputs": [
+    {
+      "bytes": 2350,
+      "path": "config/c2-v17-editing-surface-polish-pricing-contract.json",
+      "sha256": "4c92600f0ff845f76eb6921ecebad62f6ff5e83f1c2c889b6a23f45cb3ecbf7b"
+    },
+    {
+      "bytes": 4959,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-item1-d5-result-receipt.json",
+      "sha256": "edf07205aa3857d831976873f2da2956ecad010cdd77a672e3f95e4f5da5d2dd"
+    },
+    {
+      "bytes": 805,
+      "path": "lib/sexp-depth.lisp",
+      "sha256": "419e490b9a55b81bf5815236f5b9b75db544f9c230ae9cd67412fb82e7101ce7"
+    },
+    {
+      "bytes": 7451,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "8f905e4c1a630ab274c9df795d1a5766d5f9d9766313aa69bee0770e7dc1430d"
+    },
+    {
+      "bytes": 47409,
+      "path": "lib/ide-ui.lisp",
+      "sha256": "e5569bf3668135d674809b2eb4d4cd9341936c98edc5c55b55dc36cf1628d7d4"
+    },
+    {
+      "bytes": 29434,
+      "path": "lib/ide-buffer.lisp",
+      "sha256": "2c09a922eeaa11f31137b29dcc26ff17363b682ef873cd0fc30b00db5bc65bde"
+    },
+    {
+      "bytes": 9084,
+      "path": "src/screen.c",
+      "sha256": "1de7069d9803484073047ea7a0a488b66971db26a80b43a634a5ddb871f09078"
+    },
+    {
+      "bytes": 9508,
+      "path": "src/main.c",
+      "sha256": "fd3aa5721306cbc8346e6070f780e0690bf4e859c38bba2c5388c8ddc184276d"
+    },
+    {
+      "bytes": 295819,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/viciv.vhdl",
+      "sha256": "8bc1db6e5e0e85fe1c1b777e899816362c6e0b06f9f49ee7fa8502b7b13b4ca2"
+    },
+    {
+      "bytes": 646192,
+      "path": "build/c2.3/v1.6-item1-only-candidate-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "82bc474e61a0ba4691abe52c3f0c8fcf6e26335f533df2d59ddd3ab2f3eba489"
+    },
+    {
+      "bytes": 6001,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "sha256": "14feb4ba787a9d61d25ea8fafa243f2edf60d3495e78ca758a4a8bc067a862aa"
+    },
+    {
+      "bytes": 61196,
+      "path": "build/bytecode/dialect-v2/suites/p0-ide-core-lib.json",
+      "sha256": "dbf39de93dc447cc0c833bc3692c7ddfb39e531120bf18b35ba42beb3a5b94d8"
+    },
+    {
+      "bytes": 13313,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-input-service-time-pricing-receipt.json",
+      "sha256": "a39696a9b87a79181b19d764a83a5b6cee202e1e998f3c63a1fb8b4bb7b3b15a"
+    }
+  ],
+  "matcher": {
+    "capacity_after_selected_block3_names": {
+      "namepool_bytes": 1289,
+      "symbol_slots": 94
+    },
+    "compiled": {
+      "cases": [
+        {
+          "class": "matched",
+          "name": "line-open-match",
+          "result": "6",
+          "runtime_allocations": 0,
+          "steps": 694,
+          "surface": "line-editor"
+        },
+        {
+          "class": "matched",
+          "name": "line-close-match",
+          "result": "0",
+          "runtime_allocations": 0,
+          "steps": 1251,
+          "surface": "line-editor"
+        },
+        {
+          "class": "long-unmatched",
+          "name": "line-unmatched-250",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 27726,
+          "surface": "line-editor"
+        },
+        {
+          "class": "bounded-chunk",
+          "name": "idle-list-scan-chunk-three",
+          "result": "4",
+          "runtime_allocations": 0,
+          "steps": 268,
+          "surface": "shared-idle"
+        },
+        {
+          "class": "bounded-chunk",
+          "name": "idle-list-open-chunk-three",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 344,
+          "surface": "shared-idle"
+        },
+        {
+          "class": "bounded-chunk",
+          "name": "idle-list-close-chunk-three",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 348,
+          "surface": "shared-idle"
+        },
+        {
+          "class": "bounded-chunk",
+          "name": "idle-string-scan-chunk-three",
+          "result": "0",
+          "runtime_allocations": 0,
+          "steps": 272,
+          "surface": "shared-idle"
+        },
+        {
+          "class": "bounded-chunk",
+          "name": "idle-string-open-chunk-three",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 347,
+          "surface": "shared-idle"
+        },
+        {
+          "class": "bounded-chunk",
+          "name": "idle-string-close-chunk-three",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 351,
+          "surface": "shared-idle"
+        },
+        {
+          "class": "string",
+          "name": "line-string-hidden",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 219,
+          "surface": "line-editor"
+        },
+        {
+          "class": "comment",
+          "name": "line-comment-hidden",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 215,
+          "surface": "line-editor"
+        },
+        {
+          "class": "quote",
+          "name": "line-quote-open",
+          "result": "5",
+          "runtime_allocations": 0,
+          "steps": 553,
+          "surface": "line-editor"
+        },
+        {
+          "class": "quote",
+          "name": "line-quote-close",
+          "result": "0",
+          "runtime_allocations": 0,
+          "steps": 909,
+          "surface": "line-editor"
+        },
+        {
+          "class": "string",
+          "name": "line-escaped-quote-hidden",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 288,
+          "surface": "line-editor"
+        },
+        {
+          "class": "ordinary-key-bypass",
+          "name": "ide-ordinary-key-bypass",
+          "result": "nil",
+          "runtime_allocations": 0,
+          "steps": 18,
+          "surface": "ide"
+        },
+        {
+          "class": "matched",
+          "name": "ide-close-match-79",
+          "result": "38",
+          "runtime_allocations": 0,
+          "steps": 7921,
+          "surface": "ide"
+        }
+      ],
+      "compiled_bundle_bytes": 1225,
+      "compiled_objects": 24,
+      "function_bytes": {
+        "%sexp-close": 151,
+        "%sexp-code": 22,
+        "%sexp-match": 235,
+        "%sexp-open": 155,
+        "%sexp-rest": 18,
+        "%sexp-scan": 79,
+        "%sexp-step": 145
+      },
+      "functions": [
+        "%sexp-code",
+        "%sexp-rest",
+        "%sexp-step",
+        "%sexp-scan",
+        "%sexp-open",
+        "%sexp-close",
+        "%sexp-match"
+      ],
+      "maximum_object_bytes": 235,
+      "runtime_call_targets": [
+        "%sexp-close",
+        "%sexp-code",
+        "%sexp-open",
+        "%sexp-rest",
+        "%sexp-scan",
+        "%sexp-step",
+        "nthcdr"
+      ],
+      "total_function_bytes": 805
+    },
+    "highlight_state_cells_per_surface": 2,
+    "ide_delimiter_key_allocations": 0,
+    "idle_schedule": {
+      "codes_per_chunk": 3,
+      "full_250_code_chunks_per_pass": 84,
+      "full_79_code_chunks_per_pass": 27,
+      "historical_frame_equivalent": 0.482625,
+      "input_poll_between_every_chunk": true,
+      "maximum_frame_equivalent": 0.5,
+      "measured_chunk_steps": 351,
+      "measured_pass_cases": [
+        {
+          "name": "idle-list-scan-chunk-three",
+          "steps": 268
+        },
+        {
+          "name": "idle-list-open-chunk-three",
+          "steps": 344
+        },
+        {
+          "name": "idle-list-close-chunk-three",
+          "steps": 348
+        },
+        {
+          "name": "idle-string-scan-chunk-three",
+          "steps": 272
+        },
+        {
+          "name": "idle-string-open-chunk-three",
+          "steps": 347
+        },
+        {
+          "name": "idle-string-close-chunk-three",
+          "steps": 351
+        }
+      ],
+      "measured_worst_case": "idle-string-close-chunk-three",
+      "worst_two_pass_250_code_match_chunks": 168,
+      "worst_two_pass_79_code_match_chunks": 54
+    },
+    "note": "paint ownership and stale-highlight clearing are implementation gates; the scanner returns only a partner index",
+    "ordinary_key_scans": 0,
+    "rejected_form": {
+      "long_line_steps": 27726,
+      "name": "synchronous full scan on delimiter dispatch",
+      "ordinary_line_key_equivalents": 93.669,
+      "reason": "would visibly stall the accepted line-editor input path"
+    },
+    "selected_form": "single lexical engine over lists or packed strings; every forward, opening and closing pass advances only in three-code idle chunks",
+    "selected_named_entries": [
+      "%sexp-code",
+      "%sexp-rest",
+      "%sexp-step",
+      "%sexp-scan",
+      "%sexp-open",
+      "%sexp-close",
+      "%sexp-match",
+      "%sexp-paint",
+      "%cursor-blink",
+      "%rl-idle",
+      "%ide-idle"
+    ],
+    "selected_named_entries_count": 11,
+    "selected_namepool_bytes": 124,
+    "surface_adapters": {
+      "ide": "scan the already materialized packed line through string-ref; zero adapter allocations",
+      "line-editor": "native sentinel-chain code list; zero allocations",
+      "parked-comfort": "same code-list seam; compatibility only"
+    }
+  },
+  "permanent_gates": [
+    "matcher lexical parity includes escaped quotes, strings and comments",
+    "ordinary non-delimiter keys do not run the scanner",
+    "every matcher pass yields after at most three code units",
+    "unmatched or moved-away input clears prior highlight",
+    "the composed framebuffer owns cursor and pair paint together",
+    "software blink polls only while idle and forces visible before dispatch",
+    "each surface has one input owner and the existing frame counter remains the sole timer owner",
+    "hardware blink cannot be claimed from core capability without delivered ATTR enable, bit-4 preservation and all-row reach",
+    "D5 measures the final loaded Block-3 configuration"
+  ],
+  "recorded_on": "2026-08-25",
+  "service_baseline": {
+    "conversion": {
+      "historical_cycles_per_vm_instruction": 1100,
+      "target_cycles_per_frame": 800000,
+      "usage": "chunk bound only; not a current device timing claim",
+      "vm_steps_per_frame": 727.2727272727273
+    },
+    "ide": {
+      "authority": "build/bytecode/dialect-v2/suites/p0-ide-core-lib.json",
+      "claim_limit": "VM and GC time figures combine host counts with historical target constants. Native screen I/O is excluded; this is a cost projection, not a target timing measurement.",
+      "keys": 80,
+      "maximum_steps_per_key": 6569,
+      "mean_allocations_per_key": 38.275,
+      "mean_steps_per_key": 1476.9,
+      "median_steps_per_key": 1412.0
+    },
+    "line_editor": {
+      "authority": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "empty_line_steps": 3954,
+      "incremental_steps_per_ordinary_character": 296.0,
+      "three_character_echo_steps": 4842
+    }
+  },
+  "status": "PRICED: shared matcher plus software idle blink selected"
+}

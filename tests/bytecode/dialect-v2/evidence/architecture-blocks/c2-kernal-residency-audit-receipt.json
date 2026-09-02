@@ -1,0 +1,116 @@
+{
+  "active_kernal_vectors": {
+    "ffd2": {
+      "count": 1,
+      "disassembly": [
+        "2047: 20 d2 ff     \tjsr\t$ffd2 <__lisp65_rt_boot_00_end+0x356e>"
+      ],
+      "name": "CHROUT",
+      "owner": "llvm-mos CRT startup before main"
+    },
+    "ffe4": {
+      "count": 4,
+      "disassembly": [
+        "6469: 20 e4 ff     \tjsr\t$ffe4 <__lisp65_rt_boot_00_end+0x3580>",
+        "a75b: 20 e4 ff     \tjsr\t$ffe4 <__lisp65_rt_boot_00_end+0x3580>",
+        "aba9: 20 e4 ff     \tjsr\t$ffe4 <__lisp65_rt_boot_00_end+0x3580>",
+        "abb1: 20 e4 ff     \tjsr\t$ffe4 <__lisp65_rt_boot_00_end+0x3580>"
+      ],
+      "name": "GETIN",
+      "owner": "REPL plus three VM key-event/read paths"
+    }
+  },
+  "bindings": {
+    "contract": {
+      "bytes": 1898,
+      "path": "config/c2-kernal-residency-audit.json",
+      "sha256": "88653a4e0223dd2ecb224d684b4b0293d8738a4803d33db1dc5d447abce4502e"
+    },
+    "interrupt": {
+      "bytes": 3747,
+      "path": "src/interrupt.c",
+      "sha256": "46993dbea8417c577e9fa24f87206929bd689f7217d9528ffc1767ae7aa73980"
+    },
+    "io": {
+      "bytes": 37012,
+      "path": "src/io.c",
+      "sha256": "a2f86c339c86114bfb76dd67d0dd6b66a7eae6f8844363225c0d916b2d493ab6"
+    },
+    "product_elf": {
+      "bytes": 133804,
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+      "sha256": "31d3f3548b1a08463009b04f1cf453b207ed0da6428a0d6989b3149dff1295e6"
+    },
+    "reference": {
+      "bytes": 5243367,
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220"
+    },
+    "repl": {
+      "bytes": 12578,
+      "path": "src/repl.c",
+      "sha256": "7baa367e3391244dfb1db8611930a05a9c6ec73838546505ea4ef104150ba538"
+    },
+    "verifier": {
+      "bytes": 9348,
+      "path": "tools/host-lisp/c2_kernal_residency_audit.py",
+      "sha256": "1376521046c9eb0ddd72d923342938549612b9b278ce0d35aae7479e3a5802f6"
+    },
+    "vm": {
+      "bytes": 72162,
+      "path": "src/vm.c",
+      "sha256": "ebc114e38e40b49ea6dc061a1f1ac0813e3af791ef5143a4491f26524149358f"
+    },
+    "workbench_profile": {
+      "bytes": 22835,
+      "path": "config/workbench.mk",
+      "sha256": "35b0c48239f1435673c3ee4df4ec4eacf4c4d49c89339071b05ba00d58bd4b94"
+    }
+  },
+  "claim_limit": "This receipt inventories the current Workbench ELF and binds official memory/keyboard reference facts. It does not authorize KERNAL unmapping, claim an IRQ replacement, or change product bytes.",
+  "decision": "KERNAL unmapping is a viable C2.1 address-space candidate, not a current implementation authorization. The natural cut is typed-event input plus owned interrupt state plus post-boot unmap in one separately reviewed block.",
+  "exact_relief": {
+    "attic_bytes": 0,
+    "bank0_bytes": 0,
+    "bytes": 8192,
+    "cpu_window": "0xe000..0xffff",
+    "currency": "16-bit CPU address space",
+    "ext_bytes": 0
+  },
+  "format": "lisp65-c2-kernal-residency-audit-receipt-v1",
+  "not_owned_today": {
+    "irq_handler": "platform KERNAL",
+    "keyboard_event_source": "KERNAL GETIN",
+    "nmi_handler": "platform KERNAL/Freezer contract",
+    "run_stop_state": "KERNAL IRQ-maintained STKEY $91"
+  },
+  "owned_without_kernal": {
+    "latency_probe_reads_direct_hardware_register": "$D7FA",
+    "mega65_disk_io": true,
+    "screen_after_startup": true
+  },
+  "passive_dependencies": [
+    {
+      "binding": {
+        "bytes": 3747,
+        "path": "src/interrupt.c",
+        "sha256": "46993dbea8417c577e9fa24f87206929bd689f7217d9528ffc1767ae7aa73980"
+      },
+      "meaning": "RUN/STOP abort consumes KERNAL-IRQ-maintained STKEY",
+      "needle": "*(volatile unsigned char *)0x91 == 0x7F",
+      "source": "src/interrupt.c"
+    }
+  ],
+  "recorded_on": "2026-07-19",
+  "required_before_unmap": [
+    "typed $D60A/$D619 event-queue driver replaces every GETIN path",
+    "RUN/STOP abort is re-sourced from the typed event or matrix path",
+    "owned IRQ and NMI vectors remain reachable while ROM is unmapped",
+    "frame/timing source is shown independent of KERNAL service",
+    "Freezer return restores or re-establishes the C2 map fail-closed",
+    "cold boot and platform reset retain their existing firmware path",
+    "one real-link capacity receipt proves the unmap funds the intended C2 slice"
+  ],
+  "status": "passed-read-only-input-to-c2.1-layout-decision",
+  "version": 1
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "lisp65-v11-event-driver-bank0-probe-v1",
+  "status": "passed-not-authorized",
+  "baseline": {
+    "commit": "471435024d86b1f535bfb4116551f37f307ca1f0",
+    "product_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "post_boot_reserve": 1868,
+    "boot_stack_gap": 1647,
+    "overlay_bytes": 1669,
+    "resident_prg_bytes": 39493,
+    "symbols_used": 632,
+    "namepool_used": 8048,
+    "ext_headroom": 16385,
+    "directory_headroom": 32
+  },
+  "probe": {
+    "temporary_worktree": "/tmp/lisp65-v11-event-probe",
+    "source_diff_sha256": "f248a5718d57a66b392b25e6778f48b67fac1a7b8af1ae72c25f3fca31bbac71",
+    "implementation_shape": [
+      "read queue-present/modifier byte from $D60A",
+      "read PETSCII event byte from $D619 and dequeue exactly once",
+      "normalize shift, ctrl, cbm and alt into the existing symbol-list format",
+      "use the same queue path for blocking and nonblocking key-event"
+    ],
+    "post_boot_reserve": 1806,
+    "boot_stack_gap": 1517,
+    "overlay_bytes": 1737,
+    "resident_prg_bytes": 39547,
+    "symbols_used": 635,
+    "namepool_used": 8061,
+    "ext_headroom": 16385,
+    "directory_headroom": 32,
+    "elf_sha256": "4d53707639ec2159ac6833018801ac0768a0e8f115dcea954dd5e57359986226",
+    "overlay_sha256": "8c8239a729849ca57690fe085f215f21b7702608556283895cac9a0527feda92",
+    "resident_prg_sha256": "0070b940c560e5b00cae3cf9964aa9b097908c63d98acddede2cf4592ce72e98"
+  },
+  "capacity_delta": {
+    "bank0_reserve_bytes": -62,
+    "boot_overlay_bytes": 68,
+    "boot_stack_gap_bytes": -130,
+    "resident_prg_bytes": 54,
+    "ext_bytes": 0,
+    "symbols": -3,
+    "namepool_bytes": -13,
+    "directory_entries": 0
+  },
+  "post_probe_headroom": {
+    "bank0_above_1536_target": 270,
+    "ext_above_16384_floor": 1,
+    "symbols": 117,
+    "namepool_bytes": 2147,
+    "directory_entries": 32
+  },
+  "gates": {
+    "real_product_link": "pass",
+    "workbench_overlay_footprint_audit": "pass",
+    "workbench_library_composition": "pass"
+  },
+  "claim_limit": "Capacity probe only. It does not authorize 1.1-L and does not prove event semantics on hardware or Xemu."
+}

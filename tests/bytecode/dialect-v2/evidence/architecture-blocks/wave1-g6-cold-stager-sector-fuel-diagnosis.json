@@ -1,0 +1,70 @@
+{
+  "format": "lisp65-wave1-g6-cold-stager-sector-fuel-diagnosis-v1",
+  "status": "product-defect-confirmed-fix-in-progress",
+  "date": "2026-07-17",
+  "failed_case": {
+    "id": "power-cycle-autoboot-restage-repl",
+    "cycle_id": "g6-wave1-20260717-cold-01",
+    "product_artifact_set_sha256": "05c136a430dcc23a8a4c4fe1cdebfbbc05717efe4f86e3d6324e5b2233d3f5dd",
+    "ship_manifest_sha256": "3835bd4f844a373979df4bf2fb0a42e72a973bddd254e7b335ee383e299f8533",
+    "observed_screen": "L65SYS DISK ERROR - CHECK MEDIA",
+    "receipt_policy": "no-case-receipt-emitted-G6-remains-0-of-5-applicable",
+    "diagnostic_directory": "build/r6/g6/run-20260717-wave1-01/diagnostics/cold-disk-error-01"
+  },
+  "hardware_observations": {
+    "bank5": {
+      "bytes": 17047,
+      "expected_sha256": "f4af34c36ca0f4ebcc049a411a28aa2d6174354dca686107fa2ebf68efa86c6b",
+      "readback_sha256": "f4af34c36ca0f4ebcc049a411a28aa2d6174354dca686107fa2ebf68efa86c6b",
+      "result": "exact"
+    },
+    "attic_catalog": {
+      "bytes": 65472,
+      "logical_sectors": 258,
+      "expected_sha256": "a2ffbfa2887576649ef312040fc4511ca0d47b8b14a14dcfb408be391b0326ac",
+      "readback_sha256": "4eabd62c0ba77728ccbdd5cc623c6dd3b40893bf43b3ad4664bd61facd1a4363",
+      "exact_prefix_bytes": 64770,
+      "first_mismatch_zero_based": 64770,
+      "interpretation": "exactly-255-times-254-payload-bytes-were-staged"
+    },
+    "attic_library_shelf": {
+      "bytes": 65042,
+      "logical_sectors": 257,
+      "expected_sha256": "042c95f9eab0d8f9259f1ba67547051c252fb21ffc7977a4d9a4857c060617cf",
+      "readback_sha256": "41b6000731ea259eb64b29561036ee9a963550726ecc1074b4e63368cca6c5f9",
+      "result": "not-staged"
+    },
+    "product_prg": {
+      "bytes": 39456,
+      "expected_sha256": "3621d175cfa65cde578c618ae96b60f9f97c5afee1564e669044f62572b63a51",
+      "readback_sha256": "2c099f0523978d1c072f6b6a1e815a2c2c7646fd9c74618cab6a98388bec1ff1",
+      "result": "not-chained"
+    },
+    "screen_png_sha256": "2423669489acba8baddcb455a3c013bdd302f9035885c871a966fef338c8684f"
+  },
+  "root_cause": {
+    "source": "scripts/r3-cold-stager-main.c",
+    "function": "scan_file",
+    "defect": "uint8_t fuel initialized to 255 capped every file-chain scan at 255 logical sectors",
+    "why_G3_missed_it": "the emulator-valid stager trace proves choreography and branch order but does not execute the real F011 sector chain",
+    "why_prior_hardware_missed_it": "earlier boot cases did not prove an empty cold state for the new greater-than-255-sector Wave-1 artifacts"
+  },
+  "repair_contract": {
+    "stager": "derive uint16_t fuel as ceil(expected_length/254) under an explicit media-size cap",
+    "permanent_gate": "both overlays.bin and shelf.bin must remain explicit greater-than-255-sector product cases",
+    "family_closure": "inventory every live C and Lisp 1581 chain walker against 16-bit-or-domain-bounded accounting, corrupt-zero-tail rejection, and fuel-or-cycle termination",
+    "shared_cases": [
+      "greater-than-255-sectors",
+      "link-byte-zero-in-final-sector",
+      "self-reference"
+    ]
+  },
+  "exit_criteria": [
+    "real product link with complete capacity_delta",
+    "chain-walker inventory receipt has zero deviations",
+    "varied fresh-clone double build",
+    "fresh R3/R4/R5/R6 identities",
+    "fresh full G5 and all profile-applicable G6 hardware cases"
+  ],
+  "claim_limit": "This document diagnoses a receipt-less failed G6 attempt. It is not a case PASS, a promotion receipt, or reusable hardware evidence."
+}

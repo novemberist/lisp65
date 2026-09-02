@@ -1,0 +1,32 @@
+{
+  "authoritative_disposition": {
+    "captured_bytes": "13001300",
+    "captured_context": "0x0013",
+    "expected_latch_context": "0x8201",
+    "lookup_identity": "not captured",
+    "raw_word_19": "unmarked VM header-work provenance only; it is not a vm_run_dir lookup",
+    "site_1": "silent"
+  },
+  "corrected_field": "lookup",
+  "correction": "The original report correctly classified site_hit=false but then incorrectly decoded the unmarked scratch word as persistent ordinal 19/cons. A lookup is meaningful only when vmr_poff equals the exact site marker 0x8201.",
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2-lite-v6-vm-run-dir-latch-cycle1-interpretation-correction-v1",
+  "original_receipt": {
+    "bytes": 2625,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-vm-run-dir-latch-hardware-cycle1-receipt.json",
+    "sha256": "be10f1c955cff18e50de1b7c92bd01d0f48b440e5d2f408ea7be2ebb4e2648bb"
+  },
+  "raw_capture": {
+    "bytes": 4,
+    "path": "build/c2.2/hardware-link44-vm-run-dir-latch-cycle1/latch-bfc3-bfc6.bin",
+    "sha256": "8a0c463585cc5063373752da7d9a9f77e1d1b7d13f8e270bc659a8d99f2f2ee1"
+  },
+  "recorded_on": "2026-07-22",
+  "status": "corrected-site1-silent-no-lookup-identity",
+  "supersedes_interpretation_only": true
+}

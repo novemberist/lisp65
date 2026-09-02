@@ -1,0 +1,32 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: fresh clone lacked explicit real-compiler L65M oracle construction",
+  "source_commit": "49566a7f254558e9f35f1bc41397e5d7a8b108f1",
+  "axis": "fresh-clone-seed-23-pago-pago-2002",
+  "failed_step": "c2_lite_canonical_product.py build",
+  "diagnostic": "real compiler L65M oracle is absent",
+  "cause": "The canonical wrapper generated the C2 compiler tier but inherited build/equivalence/fasl-test.bin from the live workspace. A detached clone has no build directory.",
+  "correction": "Run the existing deterministic fasl-emit-check target before the C2D-v6 dynamic-emission oracle consumes its output.",
+  "failed_driver": {
+    "path": "tools/host-lisp/c2_lite_canonical_product.py",
+    "bytes": 24265,
+    "sha256": "73353426d6613af3f6cb1b0e07f38e97057a94ecd6123f3744eed6fe5d4d9daa"
+  },
+  "execution_accounting": {
+    "fresh_clones_started": 1,
+    "product_links_completed": 0,
+    "media_packages": 0,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

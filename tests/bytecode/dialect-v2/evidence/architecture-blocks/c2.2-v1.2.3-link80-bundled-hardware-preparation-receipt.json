@@ -1,0 +1,199 @@
+{
+  "candidate": {
+    "ELF": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "687134067263173763a6777859d3e2404cb44ba2fb483f30ddab87df7e5afede"
+    },
+    "link": 80,
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "5130971b4cb66fe226fec9b37b8cc974056b3541c1824431d78ec0c2074bb659"
+    },
+    "product_build_id": "0x7356f9e6",
+    "release": "v1.2.3",
+    "session_profile_build_id": "0x09198927"
+  },
+  "claim_limit": "Preparation only. The two diagnostic identities are nonpromotable and no target result is claimed.",
+  "deployment": {
+    "bytes": 17793,
+    "path": "build/post-promotion/v1.2.3/link80-bundled-session/deployment.json",
+    "sha256": "1da649293debee8a0cf6d076e4fd0be0f1b30ab376d7243c0f0f594f0a9b4440"
+  },
+  "diagnostics": {
+    "dirmiss": {
+      "binding": {
+        "bytes": 40,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/post-symname-hold-verifier-bindings.bin",
+        "sha256": "dc99c76e18ee039ce438ca01964ed944c3baba7f418f1233d8fe11975ef009ce"
+      },
+      "mutations_rejected": [
+        "stale-payload-crc",
+        "stale-record-crc",
+        "stale-directory-crc",
+        "stale-header-crc",
+        "restored-opcode-with-derived-identities",
+        "stale-product-session-binding"
+      ],
+      "patch": {
+        "after": "80fe",
+        "before": "a300",
+        "new": {
+          "directory": 51244,
+          "family": 24636,
+          "header": 54987,
+          "payload": 6755,
+          "record": 2752
+        },
+        "old": {
+          "directory": 44195,
+          "header": 32852,
+          "payload": 4814,
+          "record": 31046
+        },
+        "product_binding_file_offset": 39345,
+        "record_offset": 1536,
+        "runtime_address": 50290,
+        "session_file_offset": 60188,
+        "slot": 47
+      },
+      "product": {
+        "address": "0x00002001",
+        "bytes": 41566,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/post-symname-hold-NONPROMOTABLE.prg",
+        "sha256": "b2d4a9d7cf05f7558cee3b0bc9b2eec83c10006086b3ac2657689b573646699a"
+      },
+      "session": {
+        "address": "0x08000000",
+        "bytes": 65423,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/post-symname-hold-NONPROMOTABLE.session.bin",
+        "sha256": "2e33c7730b38b0428e6b59dad37abfdbf8755c0aeeda8518a0843c1c7d43d6d9"
+      }
+    },
+    "gc": {
+      "identity": {
+        "address": "0x00002001",
+        "bytes": 41566,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/gc-oom-entry-hold-NONPROMOTABLE.prg",
+        "sha256": "37f24f486e0e26ae53096164677f2a8f739c670963b5fc33786305fd0bddf38d"
+      },
+      "patch": {
+        "PRG_file_offset": 7875,
+        "after": "80fe",
+        "before": "a201",
+        "runtime_address": 16066,
+        "size_delta": 0
+      }
+    }
+  },
+  "execution_accounting": {
+    "diagnostic_product_size_delta": 0,
+    "hardware_runs": 0,
+    "new_product_links": 0
+  },
+  "execution_witness": {
+    "cases": [
+      "Link80-ELF-witnesses",
+      "GC-hold-edge",
+      "DIRMISS-derived-session-identity",
+      "DIRMISS-mutation-stale-payload-crc",
+      "DIRMISS-mutation-stale-record-crc",
+      "DIRMISS-mutation-stale-directory-crc",
+      "DIRMISS-mutation-stale-header-crc",
+      "DIRMISS-mutation-restored-opcode-with-derived-identities",
+      "DIRMISS-mutation-stale-product-session-binding"
+    ],
+    "executed_cases": 9,
+    "expected_cases": 9
+  },
+  "format": "lisp65-c2.2-v1.2.3-link80-hardware-preparation-v1",
+  "harness_authority": {
+    "config": {
+      "bytes": 7071,
+      "path": "config/c2.2-v1.2.3-link80-bundled-hardware-session.json",
+      "sha256": "5584f6263615b7857ceeedb526559d607d649a3890c87b6977a588d3f8af2ca8"
+    },
+    "driver": {
+      "bytes": 51219,
+      "path": "tools/host-lisp/c2_v123_link80_hardware_bundle.py",
+      "sha256": "4431d984471f7091f184c49db11cc260956f4f9a28539ec935630d8c5e76e900"
+    },
+    "hardware_actions": 0,
+    "hardware_script": {
+      "bytes": 11211,
+      "path": "scripts/c2-v123-link80-hardware-bundle.sh",
+      "sha256": "529c9a0d60c7652e3e47a3c8226a414ae331baf751b187315f6d0922043c0c10"
+    },
+    "product_or_diagnostic_byte_delta": 0,
+    "reason": "host dry-run action and explicit no-unverified-form-retry wording were added before hardware; diagnostic bytes unchanged"
+  },
+  "host_dry_run": {
+    "executed_forms": 24,
+    "expected_forms": 24,
+    "log": {
+      "bytes": 34158,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/host-dry-run.log",
+      "sha256": "b36d3657fe41bd075c5515d28b67d6a17228d9e0549511c73a4242ce52109cb2"
+    },
+    "status": "passed"
+  },
+  "media_rebind": {
+    "D81": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/require-defstruct-link78-bound.d81",
+      "sha256": "779713f4ce3723072ad649683463791d9bc82777a13daa4b5d85e38428ad5b22"
+    },
+    "D81_changed_bytes": 8,
+    "L65I": "byte-identical-to-predecessor-media",
+    "code_and_C2I": "byte-identical-to-predecessor-media",
+    "defstruct": {
+      "bytes": 2659,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/defstruct.l65s",
+      "sha256": "bc982e1cee8d67bdbba7f509c66b1601f9ee345771e05ca627957249c5a0fbd1"
+    },
+    "envelope_changed_offsets": {
+      "defstruct": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "place": [
+        22,
+        23,
+        24,
+        25
+      ]
+    },
+    "index": {
+      "bytes": 128,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/l65index",
+      "sha256": "10c651d6065a16ae882d04f40aa97fe0cc467213f6ed6d390f43db3fcb94a8bf"
+    },
+    "index_mutations_rejected": 32,
+    "place": {
+      "bytes": 1925,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/place.l65s",
+      "sha256": "404f80302fe09a0380b71d96b021a3edaf9e04023f7bd9db773a5c8048c263a4"
+    },
+    "product_build_id": "0x7356f9e6",
+    "record_identity": "SESS",
+    "source_media": {
+      "bytes": 819200,
+      "path": "build/post-release/link78-dirmiss-renderer/d1-d2-bundled-session/library-media/require-defstruct-link78-bound.d81",
+      "sha256": "241122c07bf0b3bd5f3ebe7098c1a8b039c0aa442544cde6c943aed193b30f82"
+    }
+  },
+  "recorded_on": "2026-07-30",
+  "session_shape": {
+    "controlled_deployments": 3,
+    "feature_rows_before_gc": true,
+    "maximum_form_characters": 65,
+    "physical_sessions": 1,
+    "product_rows": 21,
+    "require_measurement": "frame snapshots around two real (require 'place) calls; GC LA(17..20) are not misclaimed as require markers"
+  },
+  "status": "passed-ready-one-session-hardware-not-run"
+}

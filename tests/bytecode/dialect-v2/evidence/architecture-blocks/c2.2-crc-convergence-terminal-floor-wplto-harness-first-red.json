@@ -1,0 +1,18 @@
+{
+  "format": "lisp65-c2-terminal-floor-wplto-harness-first-red-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: harness recursion before compiler or linker execution",
+  "class": "A",
+  "cause": "The probe temporarily rebound the canonical linker-script producer to its own wrapper, so preparation recursed before emitting a linker script.",
+  "correction": "The probe writes its derived linker script directly; compile_link consumes that file and no producer rebinding is needed.",
+  "product_bytes": 0,
+  "whole_program_lto_seed_runs": 0,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "preserved_artifact": {
+    "path": "build/c2.2/substitution/crc-convergence-terminal-floor-wplto-harness-first-red/v2-product-profile-parity.json",
+    "bytes": 1762,
+    "sha256": "2d2b3ad38eb71ef493b077c67d15ff85210f69d5a1723b860a858f5bdb2cea2a"
+  },
+  "disposition": "Class-A correction; the commissioned single WPLTO run remains unused."
+}

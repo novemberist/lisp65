@@ -1,0 +1,22 @@
+{
+  "classification": "Class-A promotion-archive closure correction",
+  "failure": {
+    "archive_sha256": "c94dd872542f599b2024ab9eb24880834015094af428248b50a4440ee0c074a3",
+    "diagnostic": "unclosed mutable JSON binding: config/block-bank-delta-policy.json",
+    "stage": "R4 isolated archive verification",
+    "status": "FIRST RED: mandatory capacity policy was embedded as a root but not traversed as a JSON closure"
+  },
+  "fix": {
+    "rule": "Every mandatory capacity-policy root and bound authorization is both embedded and recursively followed. The caller-provided product closure remains unchanged.",
+    "scope": "promotion archive composition only"
+  },
+  "format": "lisp65-c2-lite-r4-capacity-policy-closure-first-red-v1",
+  "product_delta_bytes": 0,
+  "recorded_on": "2026-07-26",
+  "scope": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes": 0
+  }
+}

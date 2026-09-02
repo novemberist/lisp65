@@ -1,0 +1,277 @@
+{
+  "authority": {
+    "bank2": {
+      "bytes": 34748,
+      "path": "build/post-promotion/f1/v6-semantics/bank2-static-code.bin",
+      "sha256": "d38760dd58643c9b943b527435d6afb25ab580dc5dcb7ff30685dda2cfbf2334"
+    },
+    "contract": {
+      "bytes": 3267,
+      "path": "config/c2-top-level-published-value-call-contract.json",
+      "sha256": "b101c21dcd45d1f8ba5ee26d52e020612fe66da63c37f2d5c23e1f21b038c874"
+    },
+    "contract_note": {
+      "bytes": 3193,
+      "path": "docs/planning/c2.2-f1-published-value-direct-call-contract.md",
+      "sha256": "6c45ad823ec01efa8e46515388c05b60981c7b2ceed76db20c7b8c39769e4542"
+    },
+    "driver": {
+      "bytes": 16714,
+      "path": "tools/host-lisp/c2_f1_published_value_call_wplto.py",
+      "sha256": "d02ee9a8d4a04b1ccda4004f02fac297646865822b6adf39ddecab6b79b8e15b"
+    },
+    "linked_elf": {
+      "bytes": 619096,
+      "path": "build/post-promotion/f1/product-shaped/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "d2a019c2fa02c038edf29033022abc2efbe00caf51421c0e5a04e81af0a09d0c"
+    },
+    "profile": {
+      "bytes": 1851,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "1bfc49296d257c1c874f4fb8f89bfaba54587775c05f3659f00ce74980d71a14"
+    },
+    "source": {
+      "bytes": 5735,
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "e43d8c6c97170aaeba5e4c1762bcacfc1d8cb44834f627752eae4df17cd8b72a"
+    },
+    "source_gate": {
+      "bytes": 14920,
+      "path": "tools/host-lisp/c2_top_level_published_value_call_gate.py",
+      "sha256": "f99a482bfd89b7137fcb00d5d8c353fd5ef9677fbe42295c0a7e0bccd3fa5673"
+    },
+    "static_header": {
+      "bytes": 293,
+      "path": "src/c2_lite_static_plane.h",
+      "sha256": "9329b38ba06f44c2742ca1eb3724bf5cad2ad1fa2d2904538395af13674bb138"
+    },
+    "substitution": {
+      "bytes": 2239,
+      "path": "build/post-promotion/f1/product/substitution-artifacts.json",
+      "sha256": "97ad4d4adbe1898d2c90d1c181bee8f342166c4f3453879eab7b4b9151d626ec"
+    }
+  },
+  "capacity": {
+    "append_records": 24,
+    "pack_quantum_bytes": 256,
+    "publish_clear_bytes": 1295,
+    "publish_clear_headroom_bytes": 497,
+    "region1_rollback_sequence": [
+      "c2-append-rollback-unpublish",
+      "c2-append-rollback-wipe-plane",
+      "c2-append-rollback-wipe-chip",
+      "c2-append-rollback-wipe-attic",
+      "c2-append-rollback-finalize"
+    ],
+    "retired_sections_present": {
+      ".lisp65_rt_c2append_journal_clear": false,
+      ".lisp65_rt_c2append_publish_exports": false
+    },
+    "session_catalog_records": 51,
+    "session_family_bytes": 64926,
+    "session_family_headroom_bytes": 610,
+    "slice_cap_bytes": 1792,
+    "status": "passed-current-v4-two-region-session-aggregate"
+  },
+  "execution_gate": {
+    "direct": [
+      {
+        "case": "nullary",
+        "compiler_calls": 0,
+        "dispatch": "funcall",
+        "install_calls": 0,
+        "result": "t",
+        "source": "(%f1-zero)"
+      },
+      {
+        "case": "fixed-fixnums",
+        "compiler_calls": 0,
+        "dispatch": "apply",
+        "install_calls": 0,
+        "result": "(7 . 8)",
+        "source": "(%f1-fixed 7 8)"
+      },
+      {
+        "case": "fixed-quotes",
+        "compiler_calls": 0,
+        "dispatch": "apply",
+        "install_calls": 0,
+        "result": "(alpha 1 2)",
+        "source": "(%f1-fixed 'alpha '(1 2))"
+      },
+      {
+        "case": "optional-missing",
+        "compiler_calls": 0,
+        "dispatch": "apply",
+        "install_calls": 0,
+        "result": "(7)",
+        "source": "(%f1-optional 7)"
+      },
+      {
+        "case": "optional-present",
+        "compiler_calls": 0,
+        "dispatch": "apply",
+        "install_calls": 0,
+        "result": "(7 . 8)",
+        "source": "(%f1-optional 7 8)"
+      },
+      {
+        "case": "rest",
+        "compiler_calls": 0,
+        "dispatch": "apply",
+        "install_calls": 0,
+        "result": "(7 8 9)",
+        "source": "(%f1-rest 7 8 9)"
+      }
+    ],
+    "equivalence": [
+      {
+        "byteidentical_object": true,
+        "case": "fixed-fixnums",
+        "compiled_result": "(7 . 8)",
+        "direct_result": "(7 . 8)"
+      },
+      {
+        "byteidentical_object": true,
+        "case": "fixed-quotes",
+        "compiled_result": "(alpha 1 2)",
+        "direct_result": "(alpha 1 2)"
+      },
+      {
+        "byteidentical_object": true,
+        "case": "optional",
+        "compiled_result": "(7)",
+        "direct_result": "(7)"
+      },
+      {
+        "byteidentical_object": true,
+        "case": "rest",
+        "compiled_result": "(7 8 9)",
+        "direct_result": "(7 8 9)"
+      }
+    ],
+    "fallback": [
+      {
+        "case": "variable",
+        "first_compiler_call_index": 8,
+        "source": "(%f1-fixed x 8)"
+      },
+      {
+        "case": "nested",
+        "first_compiler_call_index": 8,
+        "source": "(%f1-fixed (%f1-nested) 8)"
+      },
+      {
+        "case": "compound",
+        "first_compiler_call_index": 8,
+        "source": "(%f1-fixed (if t 7 8) 9)"
+      },
+      {
+        "case": "primitive",
+        "first_compiler_call_index": 3,
+        "source": "(screen-size)"
+      },
+      {
+        "case": "macro",
+        "first_compiler_call_index": 3,
+        "source": "(%f1-macro 7)"
+      },
+      {
+        "case": "undefined",
+        "first_compiler_call_index": 3,
+        "source": "(%f1-undefined 7)"
+      },
+      {
+        "case": "atom",
+        "first_compiler_call_index": 1,
+        "source": "7"
+      }
+    ],
+    "fixture_count": 18,
+    "status": "passed-executable-direct-fallback-and-equivalence-suites",
+    "wrong_arity": {
+      "compiler_calls": 0,
+      "status": "passed-VM-ArityError-without-wrapper"
+    }
+  },
+  "format": "lisp65-c2-f1-published-value-call-WPLTO-v1",
+  "freight": {
+    "bank2_delta_bytes": 206,
+    "bank2_static_code_baseline_bytes": 34542,
+    "bank2_static_code_candidate_bytes": 34748,
+    "entries_baseline": 590,
+    "entries_candidate": 596,
+    "linked_bank0_text_attribution": "identity-driven Whole-Program-LTO movement; no native source or feature define changed",
+    "linked_bank0_text_delta_bytes": 3,
+    "native_source_delta_bytes": 0,
+    "resolutions_baseline": 2273,
+    "resolutions_candidate": 2283,
+    "roots_baseline": 283,
+    "roots_candidate": 283
+  },
+  "hardware_runs": 0,
+  "promotable": false,
+  "qualification_history": {
+    "final_qualification": "read-only over the existing third WPLTO ELF/map; no additional compiler or linker run",
+    "postlink_reader_first_red": "the link consumed F1 identity but the historical postlink reader restored v1.2.0 before comparison",
+    "postlink_writer_first_red": "historical successor restored the v1.2.0 product identity before single_link",
+    "prelink_wrapper_first_red": "historical semantic replay restored the v1.2.0 static manifest tuple; no product link ran"
+  },
+  "recorded_on": "2026-07-27",
+  "source_gate": {
+    "arity_authority": "CodeObject-header-vm_arity_accepts",
+    "direct_argument_domain": [
+      "fixnum",
+      "string",
+      "nil",
+      "t",
+      "exact unary quote"
+    ],
+    "direct_operator": "published-bytecode",
+    "fallback_preserved": true,
+    "mutations_rejected": 10,
+    "new_resident_state_bytes": 0,
+    "status": "passed-exact-published-value-call-source-contract"
+  },
+  "static_plane_gate": {
+    "IDE_code_bytes": 11718,
+    "bank2_headroom_bytes": 30788,
+    "decoder_consumers": 2,
+    "entries": 596,
+    "images": 6,
+    "mutations_rejected": [
+      "wrong-profile-length",
+      "wrong-contract-length",
+      "wrong-header-length",
+      "decoder-private-literal",
+      "wrong-emitted-length",
+      "wrong-code-identity"
+    ],
+    "private_decoder_lengths": 0,
+    "static_code_bytes": 34748,
+    "status": "passed-canonical-L-full-static-plane-to-target-dataflow"
+  },
+  "status": "passed-F1-product-shaped-WPLTO-all-walls-green",
+  "walls": {
+    "bank0_text_headroom_bytes": 131,
+    "e000_headroom_bytes": 151,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 161,
+    "resident_island_headroom_bytes": 181
+  },
+  "wplto": {
+    "internal": {
+      "bytes": 432078,
+      "path": "build/post-promotion/f1/product-shaped/receipts/wplto-internal.json",
+      "sha256": "fd9be7fd2fe82d5f0e8c40a1d2b8d49db8d55c9325179cca4f242a4f08c1a157"
+    },
+    "new_compiler_runs": 0,
+    "new_linker_runs": 0,
+    "qualification": {
+      "bytes": 29475,
+      "path": "build/post-promotion/f1/product-shaped/receipts/wplto-qualification.json",
+      "sha256": "4f9a2503fdba64565ead29b16c950fea81118db7420c2c55eda7a68c7006af17"
+    },
+    "status": "passed-read-only-qualification-of-existing-F1-WPLTO"
+  }
+}

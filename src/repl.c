@@ -217,7 +217,17 @@ static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
 #endif
 
 void repl(void) {
-    static char buf[BUF_MAX];
+    static char buf[BUF_MAX]
+#ifdef LISP65_V200_SYMBOL22_FIRST_FAULT
+        __attribute__((used))
+#endif
+        ;
+#if defined(__mos__) && defined(LISP65_V200_SYMBOL22_FIRST_FAULT)
+    /* Zero-allocation public identity for the latch payload.  The alias and
+     * repl.buf are required to resolve to one address in the final ELF. */
+    __asm__(".globl c2_symbol22_repl_buf\n"
+            ".set c2_symbol22_repl_buf, repl.buf\n");
+#endif
     int aborted = 0;
 
 #ifdef LISP65_COMPILE_REPL

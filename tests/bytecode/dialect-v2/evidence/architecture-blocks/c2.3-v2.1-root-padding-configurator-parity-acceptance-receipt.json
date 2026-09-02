@@ -1,0 +1,866 @@
+{
+  "acceptance": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 4,
+          "candidate_max_end_exclusive": 45996,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 251,
+          "candidate_max_end_exclusive": 32146,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-plus-freight-boundaries-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_boundaries": {
+        "__lisp65_c2_mapped_far_service_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 32146
+        },
+        "__lisp65_c2_mapped_far_service_load_end": {
+          "operation": "section-lma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 179602
+        },
+        "__lisp65_workbench_overlay_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_workbench_overlay",
+          "value": 51857
+        }
+      },
+      "derived_freight_sha256": "efd781284e3a9126561dff6790101ad6b2b921c578348d59984d03c14286b9ed",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 25,
+      "fixed_projection_sha256": "2ebfe0002a9f196c374ebaeab5f063ce248b437348c28dc63d3bca6881ea7146",
+      "freight_derived_boundary_symbols": 3,
+      "mapped_far_service_capacity": {
+        "candidate_headroom_bytes": 251,
+        "candidate_max_end_exclusive": 32146,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      }
+    },
+    "delivered_bytes": {
+      "reason": "the two CRC operands are intentionally not final before Completion; post-Completion value/identity validation is mandatory",
+      "status": "DEFERRED-UNTIL-PUBLISH-LAST-COMPLETION"
+    },
+    "far_payload": {
+      "LMA_end_exclusive": "0x0002bd92",
+      "LMA_start": "0x0002b8b2",
+      "VMA": "0x78b2",
+      "arena_capacity_bytes": 1499,
+      "candidate_derived_bytes": 1248,
+      "candidate_derived_cpu_end_exclusive": 32146,
+      "candidate_headroom_bytes": 251,
+      "fixed_size_expectation": false,
+      "section": ".lisp65_c2_mapped_far_service",
+      "sha256": "1b0f53d624bc108876ab2f8d4c99bb8dcbb9f887625652af7a222e6dc6422bad",
+      "size_source": "emitted-candidate-section-and-symbol-extents",
+      "status": "passed-candidate-derived-far-payload-extent-identity"
+    },
+    "linked_MAP_tuple": {
+      "VMA": "0xB3C2",
+      "block1_unchanged": true,
+      "bytes": "48da5aa940a282a000a3805ceaa3007afa6860",
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "far_service": {
+        "arena_capacity_bytes": 1499,
+        "arena_end_exclusive": 32397,
+        "candidate_derived_bytes": 1248,
+        "candidate_derived_end_exclusive": 32146,
+        "candidate_headroom_bytes": 251,
+        "fixed_size_expectation": false,
+        "section": ".lisp65_c2_mapped_far_service",
+        "size_source": "emitted-candidate-section-table",
+        "start": 30898
+      },
+      "first_descriptor_store": {
+        "bytes": "a9048d00c0",
+        "candidate_offset": "0x3A",
+        "derivation": "unique-emitted-instruction-sequence",
+        "effect": "STA $C000 <= $04",
+        "occurrences": 1,
+        "physical_PC": "0x0002B8EC"
+      },
+      "service_entry": {
+        "candidate_VMA": "0x7A31",
+        "candidate_physical": "0x2BA31",
+        "derivation": "ELF-symbol-plus-decoded-MAP-tuple",
+        "symbol": "c2_mapped_far_vm_code_load_converged"
+      },
+      "service_entry_physical": "0x2BA31",
+      "status": "passed-primary-semantics-candidate-derived-tuple",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "low_resident_LMA_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    },
+    "pid": 1674610,
+    "source_authoritative_oracle": {
+      "VMA": "0xc356",
+      "bytes": 1671,
+      "c2d_crc16": [
+        "0xe27e",
+        "0x8cc6",
+        "0x74d8",
+        "0x277a",
+        "0x9866",
+        "0xe9dc"
+      ],
+      "capacity": 1792,
+      "delivery_inputs": [
+        {
+          "bytes": 93681,
+          "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+          "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+        },
+        {
+          "bytes": 33840,
+          "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+        }
+      ],
+      "generated_decoder": {
+        "bytes": 41551,
+        "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+      },
+      "generated_owner": {
+        "bytes": 548,
+        "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+      },
+      "oracle_offset": 0,
+      "records_per_image": 6,
+      "reserve": 121,
+      "section": ".lisp65_rt_c2d_02a",
+      "shelf_crc16": [
+        "0xce26",
+        "0x46f5",
+        "0xfccb",
+        "0xbc88",
+        "0xf871",
+        "0xe3f7"
+      ],
+      "status": "passed-linked-delivery-bound-CRC-oracle",
+      "timeout_frames": 64
+    },
+    "status": "PASS"
+  },
+  "authority": {
+    "driver": {
+      "bytes": 21523,
+      "path": "tools/host-lisp/c2_v21_root_padding_configurator_parity_acceptance.py",
+      "sha256": "c5cb8544b65f97327b8be26ba00dba697074268702e585ed5d1aca7c53837362"
+    },
+    "final_link": {
+      "bytes": 90060,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-root-padding-configurator-parity-replacement-receipt.json",
+      "sha256": "0a08c80202dbf46de9565b3a62e15b37f63ec42fd6e84bf2116dd1526279f061"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 141187,
+      "commit": "7d49bb5d4f7ab0c280f89ba76c47b5ab31ccecaa",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "ef1136128cb5dae952d78dc831bfadb2b10ffe1cf6b9de00a57d51ee88b7f91d"
+    }
+  },
+  "claim_limit": "Read-only qualification of the four configurator-parity finals; no WPLTO, link, Completion, media or device action.",
+  "compiler_input_consumption": {
+    "compiler_receipt": {
+      "bytes": 1391,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.compiler-input-consumption.json",
+      "sha256": "e2efd8b4860860c336f2452828117e4ca1b9bb8009d0f1de8f6c0923936dc63b"
+    },
+    "link_receipt": {
+      "bytes": 90060,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-root-padding-configurator-parity-replacement-receipt.json",
+      "sha256": "0a08c80202dbf46de9565b3a62e15b37f63ec42fd6e84bf2116dd1526279f061"
+    },
+    "result": {
+      "actual_force_include_flags": [
+        "-include",
+        "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+        "-include",
+        "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.compiler-input-assert.h"
+      ],
+      "bound_header": {
+        "bytes": 293,
+        "path": "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+        "sha256": "f58bc7a13282e468489945363306918e84d7fcc17c8fa064bd300fa223fb0e37"
+      },
+      "compile_time_assertion": {
+        "bytes": 232,
+        "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.compiler-input-assert.h",
+        "sha256": "d4962cf8ef0a11be96afa0079796013493984c51c93c5025fa45b06910a97656"
+      },
+      "consumed_value": 46043,
+      "consumer": "c2_product_substitution_link.compile_link",
+      "force_include_order": [
+        "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+        "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.compiler-input-assert.h"
+      ],
+      "format": "lisp65-real-compiler-input-consumption-v1",
+      "historical_same_basename_accepted": false,
+      "macro": "LISP65_C2_LITE_STATIC_CODE_BYTES",
+      "status": "passed-bound-candidate-header-consumed",
+      "target": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg"
+    }
+  },
+  "execution_accounting": {
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "final_product_links": 0,
+    "media_builds": 0,
+    "new_WPLTO_card_runs": 0,
+    "new_materializations": 0,
+    "qualification_runs": 1
+  },
+  "final_artifacts_after": {
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d966884a7a3244b23003501e6ed9289a7df21bb1de6edea990649f12201dd043"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 619772,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "8d34e7e9453439e15fc596bb992b7a9ba356db5d8042bd87f8ea993028564d90"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 198179,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "e955cc2c5245a5ee41b19386d490e254ca3057f9f806a395de24c024ccb30b90"
+    }
+  },
+  "final_artifacts_before": {
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d966884a7a3244b23003501e6ed9289a7df21bb1de6edea990649f12201dd043"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 619772,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "8d34e7e9453439e15fc596bb992b7a9ba356db5d8042bd87f8ea993028564d90"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 198179,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "e955cc2c5245a5ee41b19386d490e254ca3057f9f806a395de24c024ccb30b90"
+    }
+  },
+  "format": "lisp65-c2.3-v2.1-configurator-parity-acceptance-v1",
+  "linked_ABI": {
+    "receipt": {
+      "bytes": 193999,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/configurator-parity-acceptance/c2-asm-leaf-abi.json",
+      "sha256": "366d1489ed7d1b524ef16e895f41503c5b0f994d120b7d68e576ad2ba8d350f5"
+    },
+    "status": "PASS",
+    "witness": "c2-asm-leaf-abi-gate: passed-all-assembler-leaf-abi-contracts"
+  },
+  "linked_product": {
+    "CPU_reader": {
+      "address": "0x2277",
+      "bytes": 189,
+      "progress_bytes": "adaec0c90d9002a929c90ab00469308002e9098d3a0b"
+    },
+    "C_reachable_ASM_closure": {
+      "authority": "linked-ELF-relocation-closure-and-disassembly",
+      "checked_functions": [
+        "c2_append_journal_prepare_phase",
+        "c2_append_plan_walk",
+        "c2_completion_mode_length",
+        "c2_kernal_event_poll",
+        "c2_map_cpu_read",
+        "c2_map_cpu_selector",
+        "l65e_emit_bcode_ordinal",
+        "lisp65_ash_tagged",
+        "lisp65_error_overlay_entry",
+        "lisp65_f011_mount_token_op",
+        "lisp65_f011_scratch_buffer",
+        "lisp65_mod_adjust_tagged",
+        "rtov_crc_mem",
+        "vm_bank3_boot_stage_entry",
+        "vm_boot_overlay_chain_commit",
+        "vm_c2d_byte"
+      ],
+      "reachable_contractual_service_functions": [],
+      "transitive_functions": [
+        "c2_append_journal_prepare_phase",
+        "c2_append_plan_walk",
+        "c2_completion_mode_length",
+        "c2_kernal_event_poll",
+        "c2_map_cpu_read",
+        "c2_map_cpu_selector",
+        "l65e_emit_bcode_ordinal",
+        "lisp65_ash_tagged",
+        "lisp65_error_overlay_entry",
+        "lisp65_f011_mount_token_op",
+        "lisp65_f011_scratch_buffer",
+        "lisp65_mod_adjust_tagged",
+        "rtov_crc_mem",
+        "vm_bank3_boot_stage_entry",
+        "vm_boot_overlay_chain_commit",
+        "vm_c2d_byte"
+      ],
+      "unpreserved_callee_saved_writers": []
+    },
+    "MAP_tuple": {
+      "VMA": "0xB3C2",
+      "block1_unchanged": true,
+      "bytes": "48da5aa940a282a000a3805ceaa3007afa6860",
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "far_service": {
+        "arena_capacity_bytes": 1499,
+        "arena_end_exclusive": 32397,
+        "candidate_derived_bytes": 1248,
+        "candidate_derived_end_exclusive": 32146,
+        "candidate_headroom_bytes": 251,
+        "fixed_size_expectation": false,
+        "section": ".lisp65_c2_mapped_far_service",
+        "size_source": "emitted-candidate-section-table",
+        "start": 30898
+      },
+      "first_descriptor_store": {
+        "bytes": "a9048d00c0",
+        "candidate_offset": "0x3A",
+        "derivation": "unique-emitted-instruction-sequence",
+        "effect": "STA $C000 <= $04",
+        "occurrences": 1,
+        "physical_PC": "0x0002B8EC"
+      },
+      "service_entry": {
+        "candidate_VMA": "0x7A31",
+        "candidate_physical": "0x2BA31",
+        "derivation": "ELF-symbol-plus-decoded-MAP-tuple",
+        "symbol": "c2_mapped_far_vm_code_load_converged"
+      },
+      "service_entry_physical": "0x2BA31",
+      "status": "passed-primary-semantics-candidate-derived-tuple",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "contractual_service_exits": {
+      "authority": "linked-ELF-disassembly",
+      "contractual_functions": [
+        "c2_mapped_far_vm_code_load_converged",
+        "c2_mapped_far_physical_read_converged"
+      ],
+      "far_body_callee_saved_writes": [
+        "__rc16",
+        "__rc17",
+        "__rc18",
+        "__rc19",
+        "__rc20",
+        "__rc21",
+        "__rc22",
+        "__rc23",
+        "__rc24",
+        "__rc25",
+        "__rc26",
+        "__rc27",
+        "__rc28",
+        "__rc29",
+        "__rc30",
+        "__rc31"
+      ],
+      "inner_exits": 8,
+      "public_wrappers": 2,
+      "restore_depth": 16,
+      "restored": [
+        "__rc31",
+        "__rc30",
+        "__rc29",
+        "__rc28",
+        "__rc27",
+        "__rc26",
+        "__rc25",
+        "__rc24",
+        "__rc23",
+        "__rc22",
+        "__rc21",
+        "__rc20",
+        "__rc19",
+        "__rc18",
+        "__rc17",
+        "__rc16"
+      ],
+      "save_depth": 16,
+      "saved": [
+        "__rc16",
+        "__rc17",
+        "__rc18",
+        "__rc19",
+        "__rc20",
+        "__rc21",
+        "__rc22",
+        "__rc23",
+        "__rc24",
+        "__rc25",
+        "__rc26",
+        "__rc27",
+        "__rc28",
+        "__rc29",
+        "__rc30",
+        "__rc31"
+      ]
+    },
+    "facade_padding": {
+      "bytes": 19,
+      "executed": false,
+      "facade_bytes": 98
+    },
+    "mapped_far": {
+      "bytes": 1248,
+      "headroom_bytes": 251
+    },
+    "ordinary_text": {
+      "candidate_headroom_bytes": 4,
+      "end_exclusive": "0xb3ac",
+      "headroom_source": "emitted-candidate-section-table"
+    },
+    "static_header_consumed_bytes": 46043,
+    "status": "PASS: emitted configurator-parity product accepted",
+    "wrappers": {
+      "execution_delta_from_Link112_bytes": -22,
+      "mapped_facade": {
+        "bytes": 27
+      },
+      "ordinary": {
+        "bytes": 35
+      }
+    }
+  },
+  "linked_product_mutations_rejected": [
+    "restore-DMA-wrapper",
+    "restore-old-price",
+    "pin-one-byte-reserve",
+    "shrink-padding",
+    "lose-service",
+    "lose-callee-save",
+    "restore-ambient-header"
+  ],
+  "next": "Completion, same-world media, poison-regression D2",
+  "owner_scope": {
+    "gate": {
+      "authority": "persisted-semantic-preflight-consumed-by-final-link",
+      "historical_bodies_selected": 0,
+      "identities": {
+        "corrected_trampoline": "src/optional/c2_mapped_far_service_v2.s",
+        "facade_padding": "src/optional/c2_mapped_far_facade_padding.s",
+        "full_span_reader": "src/optional/c2_mapped_far_convergence_full_span.s"
+      },
+      "real_global_inventory": {
+        "authorized_successors": {
+          "c2_map_cpu_read": {
+            "policy": "ASM->ASM: physical source A/X/__rc2/__rc3; destination __rc4/__rc5; length __rc6/__rc7; result A; only caller-clobbered __rc2..__rc15; unmap on every exit",
+            "source": "src/optional/c2_map_cpu_read.s"
+          },
+          "c2_map_cpu_selector": {
+            "policy": "fixed-facade->ASM: classify hardware return identity, restore hardware stack, tail to c2_map_cpu_read or historical runtime overlay; no callee-saved imaginary-register clobber",
+            "source": "src/optional/c2_map_cpu_read.s"
+          }
+        },
+        "classified_functions": [
+          "c2_append_journal_prepare_phase",
+          "c2_append_plan_walk",
+          "c2_completion_mode_length",
+          "c2_kernal_event_poll",
+          "c2_map_cpu_read",
+          "c2_map_cpu_selector",
+          "c2_mapped_far_enter",
+          "c2_mapped_far_leave",
+          "c2_mapped_far_physical_read_converged",
+          "c2_mapped_far_vm_code_load_converged",
+          "c2_physical_read_converged",
+          "l65e_emit_bcode_ordinal",
+          "lisp65_ash_tagged",
+          "lisp65_error_overlay_entry",
+          "lisp65_f011_mount_token_op",
+          "lisp65_f011_scratch_buffer",
+          "lisp65_hw_divhi3",
+          "lisp65_hw_modhi3",
+          "lisp65_hw_mulhi3",
+          "lisp65_hw_udivhi3",
+          "lisp65_hw_udivmodhi4",
+          "lisp65_hw_umodhi3",
+          "lisp65_mod_adjust_tagged",
+          "rtov_crc_mem",
+          "rtov_dma_submit_wait",
+          "scr_backspace",
+          "vm_bank3_boot_stage_entry",
+          "vm_boot_overlay_chain_commit",
+          "vm_c2d_byte",
+          "vm_code_load_converged",
+          "vm_l65m_batch_repeat"
+        ],
+        "declared_functions": 31,
+        "duplicate-successor-in-global-asm-domain": "rejected",
+        "expectation": "rule-classified-candidate-inventory",
+        "historical_count_expectations": 0,
+        "status": "passed-real-global-assembler-inventory",
+        "unclassified_functions": []
+      },
+      "status": "PASS: consumed inputs carry one owner and one body",
+      "successor_counts": {
+        "corrected_trampoline": 1,
+        "facade_padding": 1,
+        "full_span_reader": 1
+      },
+      "translation_units": 66
+    },
+    "pid": 1674609,
+    "status": "PASS"
+  },
+  "preflight_authorities": {
+    "BUILDING_HEAP_mem_unbind": {
+      "command": "/usr/bin/python3 /home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_v20_building_heap_mem_source_unbind_20260816.py check",
+      "status": "PASS",
+      "witness": "BUILDING-HEAP mem-source unbind: PASS action=check mutations=7"
+    },
+    "Link96_loud_rebind": {
+      "command": "/usr/bin/python3 /home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_terminal_return_guard_media.py check",
+      "status": "PASS",
+      "witness": "Link-96 guarded media check: PASS mutations=16"
+    },
+    "explicit_facade_padding": {
+      "command": "/usr/bin/python3 /home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_v21_facade_padding_linker_producer_rebind_20260817.py check",
+      "status": "PASS",
+      "witness": "facade-padding producer rebind: CHECK PASS facade=98 pad=19 mutations=6"
+    },
+    "full_span_immutable_service": {
+      "bytes": 1248,
+      "semantic_boundary": "unchanged immutable boot spans only",
+      "source": {
+        "bytes": 12929,
+        "path": "src/optional/c2_mapped_far_convergence_full_span.s",
+        "sha256": "f79e9aa068e58c2b405387fcb58c323149b05747bb784fcbf1b108435cd58eab"
+      },
+      "status": "PASS"
+    },
+    "postlink_schema_contract": {
+      "command": "/usr/bin/python3 /home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_v21_postlink_schema_contract.py check",
+      "status": "PASS",
+      "witness": "2.1 post-link schemas: CHECK PASS unknown=0 actual-output=yes"
+    },
+    "postlink_wrapper_contract": {
+      "command": "/usr/bin/python3 /home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_v21_postlink_wrapper_contract.py check",
+      "status": "PASS",
+      "witness": "2.1 post-link wrapper contract: CHECK PASS wrappers=3 roles=9"
+    },
+    "root_fix": {
+      "command": "/usr/bin/python3 /home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_v21_probe_oracle_root_fix.py check",
+      "status": "PASS",
+      "witness": "probe-oracle root fix: PASS action=check readers=9 partial=6 mutations=16"
+    }
+  },
+  "processes": {
+    "acceptance": {
+      "output": "",
+      "status": "PASS"
+    },
+    "parent": 1674551,
+    "scope": {
+      "output": "",
+      "status": "PASS"
+    }
+  },
+  "recorded_on": "2026-08-17",
+  "status": "PASS: configurator-parity finals accepted read-only",
+  "structural_absence": {
+    "born_derived": {
+      "historical_caller_count_acceptance_pin": false,
+      "mutable_caller_count": 9,
+      "mutable_callers": [
+        {
+          "function": "ext_a",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "ext_b",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "ext_disk_get",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "ext_type",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "str_read_byte",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "nameoff_get",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "c2_dma_read_or_abort"
+        },
+        {
+          "function": "sym_function",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "c2_dma_read_or_abort"
+        },
+        {
+          "function": "sym_value",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "c2_dma_read_or_abort"
+        },
+        {
+          "function": "sympool_read",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "c2_dma_read_or_abort"
+        }
+      ],
+      "new_wrapper_callers_automatically_enumerated": true
+    },
+    "candidate_ELF": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "derivation": "successor ELF function bodies plus semantic content registry",
+    "immutable_CRC_authority": {
+      "c2k_copy": {
+        "bytes": 5933,
+        "path": "src/c2_kernal_runtime.c",
+        "sha256": "7264b2cb879a4d7842e4b8dd83efd0de3914a0b347d2fb4d0d3521129e871180"
+      },
+      "vm_runtime_overlay_exec_family": {
+        "bytes": 91725,
+        "path": "src/vm_runtime_overlay.c",
+        "sha256": "8458a14d73d84fffdacb8c17fe7cb62b1ec7d64c10fd72462bcd3312b12b4597"
+      }
+    },
+    "physical_DMA_content_entry_callers": [],
+    "registered_surfaces": [
+      {
+        "classification": "mutable-content-rerouted-to-MAP-CPU",
+        "owner": "c2_facade_target_c2_dma"
+      },
+      {
+        "classification": "no-linked-content-entry",
+        "owner": "c2_product_physical_copy"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "owner": "c2k_copy"
+      },
+      {
+        "classification": "mutable-content-rerouted-to-MAP-CPU",
+        "owner": "ext_dma"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "owner": "vm_runtime_overlay_exec_family"
+      }
+    ],
+    "status": "PASS: no unsafe content-consuming DMA read in linked image",
+    "unsafe_content_DMA_count": 0,
+    "unsafe_content_DMA_surfaces": [],
+    "wrappers": {
+      "c2_dma_read_or_abort": {
+        "DMA_submission_edges": 0,
+        "linked_caller_count": 4,
+        "linked_callers": [
+          {
+            "function": "nameoff_get",
+            "section": ".text"
+          },
+          {
+            "function": "sym_function",
+            "section": ".text"
+          },
+          {
+            "function": "sym_value",
+            "section": ".text"
+          },
+          {
+            "function": "sympool_read",
+            "section": ".text"
+          }
+        ],
+        "transport": "MAP-CPU"
+      },
+      "ext_dma_read_or_abort": {
+        "DMA_submission_edges": 0,
+        "linked_caller_count": 5,
+        "linked_callers": [
+          {
+            "function": "ext_a",
+            "section": ".text"
+          },
+          {
+            "function": "ext_b",
+            "section": ".text"
+          },
+          {
+            "function": "ext_disk_get",
+            "section": ".text"
+          },
+          {
+            "function": "ext_type",
+            "section": ".text"
+          },
+          {
+            "function": "str_read_byte",
+            "section": ".text"
+          }
+        ],
+        "transport": "MAP-CPU"
+      }
+    }
+  },
+  "structural_absence_mutations_rejected": [
+    "reroute-one-reader-to-DMA",
+    "restore-wrapper-DMA-edge",
+    "revive-physical-content-entry",
+    "lose-immutable-CRC-class",
+    "pin-historical-caller-count",
+    "hide-unsafe-surface"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "format": "lisp65-c2-lite-v6-link48-append-final-hybrid-wplto-first-red-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: final-ELF append-plan C-to-assembler ABI mismatch",
+  "promotable": false,
+  "diagnostic": {
+    "gate": "ELF-derived assembler-leaf ABI dataflow",
+    "message": "canonical plan pointer is not established directly in A/X",
+    "classification": "product ABI mismatch; not a capacity or placement failure",
+    "observed_callers": {
+      "stage_plan": {
+        "plan": "lisp65_c2_append_stage_plan",
+        "plan_low_high": "loaded through X and stored in __rc2/__rc3",
+        "context_low_high": "stored in __rc4/__rc5",
+        "call": "JSR c2_append_plan_walk"
+      },
+      "rollback_plan": {
+        "plan": "lisp65_c2_append_rollback_plan",
+        "plan_low_high": "loaded through X and stored in __rc2/__rc3",
+        "context_low_high": "stored in __rc4/__rc5",
+        "call": "JSR c2_append_plan_walk"
+      }
+    },
+    "leaf_contract": {
+      "plan_low_high": "A/X",
+      "context_low_high": "__rc2/__rc3",
+      "effect": "the final C callers and the non-LTO leaf disagree; hardware execution would consume the wrong plan/context"
+    }
+  },
+  "hybrid_scope_cut": {
+    "selection": "numeric-early-errors",
+    "source_attribution_bytes": 81,
+    "linked_renderer_bytes": 120,
+    "resident_sentences_present": 0,
+    "preserved_numeric_codes": ["E2e", "E2f", "E3d", "E3e"],
+    "status": "passed against the immutable failed-WPLTO ELF"
+  },
+  "observed_final_elf_walls_before_the_ABI_stop": {
+    "bank0_text_headroom_bytes": 37,
+    "required_bank0_text_noise_headroom_bytes": 32,
+    "ordinary_bank0_bss_headroom_bytes": 221,
+    "fixed_hot_block_contract_headroom_bytes": 33,
+    "resident_island_headroom_bytes": 9,
+    "e000_live_bytes": 8138,
+    "e000_headroom_bytes": 54,
+    "required_e000_floor_bytes": 54,
+    "session_aggregate": "not freshly qualified; the ABI gate stopped before the aggregate gate"
+  },
+  "evidence": {
+    "internal_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-hybrid-wplto-class-a-replay-internal.json",
+      "bytes": 36477,
+      "sha256": "b25872f5e4c2c1f8177472417985266cad430d6d3e2cae9d2555d34c222739f7"
+    },
+    "outer_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-hybrid-wplto-class-a-replay-receipt.json",
+      "bytes": 1431,
+      "sha256": "e5fcd99782052bf8c5e66bf91811ebfcc7de4eb3ccd752f2416ded287a936257"
+    },
+    "failed_wplto_elf": {
+      "path": "build/c2.2/substitution/link48-append-final-hybrid-wplto-class-a-replay/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 609516,
+      "sha256": "616c4b1b43e6b8bc645bf9ed220cba245e0001f2e8101dd61120470ccaeb5b2d"
+    },
+    "failed_wplto_map": {
+      "path": "build/c2.2/substitution/link48-append-final-hybrid-wplto-class-a-replay/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 202565,
+      "sha256": "385ef345faf975fd9b0eb6188dfc0f7242a8951a1d19c31f5fbfd179def3c7f0"
+    },
+    "nonpromotable_product_shaped_prg": {
+      "path": "build/c2.2/substitution/link48-append-final-hybrid-wplto-class-a-replay/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "c6f968a900893573d9eec9e13b367deb1247b37d60c19c58f72b11c251ef657e"
+    },
+    "rollback_product": {
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6",
+      "status": "untouched"
+    }
+  },
+  "execution_accounting": {
+    "authorized_whole_program_lto_runs": 1,
+    "whole_program_lto_runs_consumed": 1,
+    "product_closure_links": 1,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "line1_product_first_red_budget": "2/3 unchanged",
+    "latency_measurement_attempts": "0/2 unchanged"
+  },
+  "next_gate": "Class-C review of the product ABI mismatch; no retry, product link or hardware run is authorized."
+}

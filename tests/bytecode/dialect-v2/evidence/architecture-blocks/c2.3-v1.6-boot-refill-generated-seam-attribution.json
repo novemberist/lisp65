@@ -1,0 +1,203 @@
+{
+  "claim_limit": "Host-only attribution over the consumed final ELF and generated source. No product build, media build, or device contact.",
+  "decision": {
+    "class": "generated-successor-overrides-authored-source-fix",
+    "exact_replacement": "c2_product_entry_read",
+    "exact_writer": "c2_lite_v6_product_probe.generate_sources",
+    "pre_card_gate": "inspect the emitted candidate function, not the authored function that the producer replaces",
+    "product_fix_location": "generated producer template",
+    "required_transport": "MAP CPU with returned failure propagated"
+  },
+  "evidence": {
+    "candidate_generated_runtime": {
+      "bytes": 165199,
+      "path": "build/c2.3/v1.6-boot-refill-map-cpu-replacement-card/wplto/generated-product-sources/c2_product_runtime.c",
+      "sha256": "d298792d93a5016a72f835c0f0595b9378e598495bc7801f46ca8e8713a89d2a"
+    },
+    "final_ELF": {
+      "bytes": 646992,
+      "path": "build/c2.3/v1.6-boot-refill-map-cpu-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "0e6f69bac7476dd848f93ca773bc12417aa95aadcd4155fe7434956559ca1820"
+    },
+    "first_Final_Red": {
+      "bytes": 1386,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-boot-refill-map-cpu-card-final-red.json",
+      "sha256": "44ad36b5872561c6af13fb7e8038ab45518415d642e0579b6071225d6e45854f"
+    },
+    "generator": {
+      "bytes": 84204,
+      "path": "tools/host-lisp/c2_lite_v6_product_probe.py",
+      "sha256": "b9134a9bd183c30bb0bd1007833f28dab67dcd84e8b384a750e3a350da5e0515"
+    },
+    "replacement_Final_Red": {
+      "bytes": 1621,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-boot-refill-map-cpu-replacement-card-final-red.json",
+      "sha256": "3768c70dfbe650e383f2efa342d0640a586901976d5d74c9e22c5c8cd6583ee1"
+    },
+    "resolved_profile": {
+      "bytes": 13702,
+      "path": "build/c2.3/v1.6-boot-refill-map-cpu-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "9818d42aa4ace4ae10c53a99033acf5ae99a5643e95ce129e6b2fd9627c583ee"
+    }
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2-v160-boot-refill-generated-seam-attribution-v1",
+  "hop_proof": {
+    "MAP_CPU_feature_reached_real_profile": true,
+    "authored_common_source_seam_fixed": true,
+    "final_ELF": {
+      "ELF": {
+        "bytes": 646992,
+        "path": "build/c2.3/v1.6-boot-refill-map-cpu-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "0e6f69bac7476dd848f93ca773bc12417aa95aadcd4155fe7434956559ca1820"
+      },
+      "classified_raw_read_callers": [
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_boot_family_impl",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "ov_bank_crc16",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "vm_boot_overlay_chain_prepare",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_session_family_impl",
+          "section": ".lisp65_rt_bank3_stage_session",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_session_overflow",
+          "section": ".lisp65_rt_bank3_stage_session",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_phase02a_record_read",
+          "section": ".lisp65_rt_c2d_02a",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_stream_phase_03b",
+          "section": ".lisp65_rt_c2d_03b",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "unchecked-content-DMA-read",
+          "function": "c2_product_entry_read",
+          "section": ".text",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "rtov_read",
+          "section": ".text",
+          "sink": "c2_facade_vm_code_load"
+        }
+      ],
+      "instrument": {
+        "neutral": true,
+        "present": true,
+        "product_entry_edges": 0,
+        "raw_DMA_edges": 0,
+        "raw_read_edges": 0
+      },
+      "linked_MAP_CPU_callers": [
+        {
+          "function": "c2_dma_read_or_abort",
+          "section": ".lisp65_c2_mapped_far_facade"
+        },
+        {
+          "function": "c2_map_cpu_selector",
+          "section": ".text"
+        },
+        {
+          "function": "ext_dma_read_or_abort",
+          "section": ".text"
+        }
+      ],
+      "linked_raw_read_callers": [
+        {
+          "function": "c2_lite_stage_boot_family_impl",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "ov_bank_crc16",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "vm_boot_overlay_chain_prepare",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "c2_lite_stage_session_family_impl",
+          "section": ".lisp65_rt_bank3_stage_session"
+        },
+        {
+          "function": "c2_lite_stage_session_overflow",
+          "section": ".lisp65_rt_bank3_stage_session"
+        },
+        {
+          "function": "c2_phase02a_record_read",
+          "section": ".lisp65_rt_c2d_02a"
+        },
+        {
+          "function": "c2_stream_phase_03b",
+          "section": ".lisp65_rt_c2d_03b"
+        },
+        {
+          "function": "c2_product_entry_read",
+          "section": ".text"
+        },
+        {
+          "function": "rtov_read",
+          "section": ".text"
+        }
+      ],
+      "product_entry": {
+        "MAP_CPU_edges": 0,
+        "raw_DMA_edges": 0,
+        "raw_read_edges": 1,
+        "section": ".text"
+      },
+      "unsafe_content_DMA_count": 1,
+      "unsafe_content_DMA_surfaces": [
+        {
+          "classification": "unchecked-content-DMA-read",
+          "function": "c2_product_entry_read",
+          "section": ".text",
+          "sink": "c2_facade_vm_code_load"
+        }
+      ]
+    },
+    "generated_product_entry_is_raw_pass_through": true,
+    "generator_replaces_product_entry_read": true
+  },
+  "qualification_red": {
+    "claim": "separate qualification-mechanics Red; the frozen evidence cannot identify its failed conjunct without a retry",
+    "expected_and_observed_persisted": false,
+    "reported": "real configurator projection drift",
+    "required_repair": "future projection drift reports persist the named conjunct and both values before any new card runs"
+  },
+  "recorded_on": "2026-08-23",
+  "status": "ATTRIBUTED: GENERATOR REINTRODUCES RAW BOOT REFILL",
+  "successor_authorized": false
+}

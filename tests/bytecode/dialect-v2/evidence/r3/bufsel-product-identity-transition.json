@@ -1,0 +1,50 @@
+{
+  "format": "lisp65-r3-product-identity-transition-v1",
+  "id": "r3-f011-bufsel-context-repin",
+  "status": "accepted",
+  "decided_on": "2026-07-13",
+  "historical_r2_identity": {
+    "product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "banked_headroom_bytes": 269,
+    "treatment": "immutable-historical-promotion-not-amended"
+  },
+  "r3_baseline_identity": {
+    "product_sha256": "d1fd7402879409c25217afbfc076ae7e6e94fa8bcbb76b938abe01918a9c8a99",
+    "artifact_set_sha256": "65f83148f9f713f8e05fcaf424391d67fac1f567afbe917d21e9e0c9f1d14b20",
+    "banked_headroom_bytes": 313,
+    "reproducibility_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/canonical-product-reproducibility-receipt.json",
+      "sha256": "b81fc4b833232e9cefdb67edd8fb905167fb61c0cc28ccd644009be2a216f68f"
+    }
+  },
+  "bank_delta": {
+    "baseline_product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "candidate_product_sha256": "d1fd7402879409c25217afbfc076ae7e6e94fa8bcbb76b938abe01918a9c8a99",
+    "baseline_banked_headroom_bytes": 269,
+    "candidate_banked_headroom_bytes": 313,
+    "delta_bytes": 44,
+    "authorization": null
+  },
+  "historical_evidence": {
+    "g5_product_set_sha256": "20760405e10f024c9d0922885093f812d2aa929a097e48095ed669227c7f8ae0",
+    "treatment": "immutable-historical-promotion-not-amended"
+  },
+  "cause": {
+    "classification": "incomplete-per-transaction-f011-register-context",
+    "hardware_trigger": "freezer-media-swap-left-d689-bufsel-selecting-sd-buffer",
+    "observed_result": "write-readback-verify-rejected-stale-sector-with-status-7-and-medium-remained-byte-identical",
+    "correction": [
+      "every-f011-transaction-establishes-complete-register-context",
+      "bufsel-forced-to-fdc-buffer-before-every-f011-transaction",
+      "permanent-d689-80-precondition-matrix-case",
+      "closed-audit-of-all-disk-path-register-assumptions"
+    ],
+    "capacity": {
+      "bank_delta_bytes_from-r2-baseline": 44,
+      "boot_overlay_delta_bytes": 0,
+      "banked_headroom_bytes": 313
+    },
+    "reproducibility": "two-varied-fresh-clone-builds-byte-identical"
+  },
+  "release_effect": "none"
+}

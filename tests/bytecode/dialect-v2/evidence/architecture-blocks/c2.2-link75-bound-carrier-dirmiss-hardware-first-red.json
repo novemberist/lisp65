@@ -1,0 +1,91 @@
+{
+  "format": "lisp65-c2.2-link75-bound-carrier-dirmiss-hardware-first-red-v1",
+  "recorded_on": "2026-07-28",
+  "status": "FIRST-RED-DIRMISS-full-symbol-rendering-independent-of-stale-carrier",
+  "candidate": {
+    "link": 75,
+    "product_sha256": "b12377766c814aa3351578faeff87b3607ba376a9f924beb1612bbc4532b263b",
+    "elf_sha256": "b6b320f688387ba26af6bf58fa0a87a7576a131df9ee32a9b086243c8e2b7f3b",
+    "media_sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+  },
+  "device": {
+    "core_identity_hex": "6b4cb203",
+    "physical_devices": 1
+  },
+  "passed_before_first_red": [
+    {
+      "id": "boot-watch",
+      "form": "(list (+ 2 3) (function-kind (quote intern)) (function-kind (quote require)))",
+      "observed": "(5 primitive bytecode)"
+    },
+    {
+      "id": "define-is",
+      "form": "(defun %is (n) (if (> n 0) (progn (intern \"abc\") (%is (- n 1))) t))",
+      "observed": "%is"
+    },
+    {
+      "id": "call-is",
+      "form": "(%is 1)",
+      "observed": "t"
+    },
+    {
+      "id": "intern-positive",
+      "form": "(intern \"abc\")",
+      "observed": "abc"
+    }
+  ],
+  "first_red": {
+    "id": "dirmiss-full-symbol",
+    "form": "(intern-renderer-missing)",
+    "expected": "*** undefined function: intern-renderer-missing",
+    "observed": "*** undefined function:      i",
+    "classification": "independent-user-visible-DIRMISS-detail-failure",
+    "meaning": [
+      "The regenerated product-bound compiler carrier executes Prim 68 correctly on hardware.",
+      "The truncated-name symptom reproduces with the corrected carrier and a different complete symbol name.",
+      "Therefore the DIRMISS detail defect is independent of the stale compiler carrier.",
+      "The require/defstruct rows were not started."
+    ]
+  },
+  "evidence": {
+    "deployment": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/hardware-session/deployment.json",
+      "bytes": 8260,
+      "sha256": "d1a0b61caf03e88fa6fd401a5ce12259a37a6bb83ed5df53cfdf1c513f1219d3"
+    },
+    "observations": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/hardware-session/observed-rows.json",
+      "bytes": 1883,
+      "sha256": "48639b5076568f6dca1a149eaffec5aca89cfc7575fff254dc60fbfc6c0fe61b"
+    },
+    "first_red_screen_text": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/hardware-session/row-dirmiss-full-symbol.txt",
+      "bytes": 2241,
+      "sha256": "653bb77dbd68a87b4a46545c7da4b6ed574ccaa738b2b661ed54d969245da6a6"
+    },
+    "first_red_screen_png": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/hardware-session/row-dirmiss-full-symbol.png",
+      "bytes": 6172,
+      "sha256": "eefb4bacb85cf0e8b14fb360bc29740c4a08de37414b434aa3812688bc997ab1"
+    },
+    "uploaded_media_readback": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/hardware-session/uploaded-media-readback.d81",
+      "bytes": 819200,
+      "sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+    },
+    "device_core_identity": {
+      "path": "build/post-promotion/link75-bound-compiler-carrier/hardware-session/device-core-id.bin",
+      "bytes": 4,
+      "sha256": "bd075eada684d364ddb275c939b000db0fddec2bd491a0f8628b280e9026cb53"
+    }
+  },
+  "execution_accounting": {
+    "hardware_sessions": 1,
+    "product_links": 0,
+    "product_bytes_changed": 0,
+    "rows_passed": 4,
+    "rows_not_run": 11
+  },
+  "next_gate": "Class-C review of the DIRMISS detail lifetime/identity path before any product correction; require/defstruct remains queued behind the correction.",
+  "claim_limit": "This receipt closes only the stale-carrier cause for Prim-68 execution and records the independent DIRMISS First Red. It does not close DIRMISS, require/defstruct, or the Link-72 red-frame observation."
+}

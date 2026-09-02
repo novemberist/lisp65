@@ -1,0 +1,164 @@
+{
+  "claim_limit": "Non-promotable ROMC-repaired diagnostic appointment preparation. No product byte, measured form, device result or R/A/I/G row is claimed.",
+  "execution_witnesses": [
+    "ROMC is cleared from low RAM before the entry hook",
+    "the owner supplies RUN and both Lisp forms physically",
+    "the boot witness is not read before the post-session set",
+    "canonical record reset plus A1 arm occurs only after visible require=t",
+    "the first device access follows the full 180-second quiet floor",
+    "all live low-RAM reads use 0x0777 CPU view and retain MAPH/MAPL",
+    "stopped-PC bytes obtain a unique owner before symbol interpretation",
+    "far C2J/C2D/Bank-2 bytes are labelled backing-plane oracles",
+    "the CPU remains stopped after the one post-event stop"
+  ],
+  "facts": {
+    "authorities": {
+      "deployment": {
+        "bytes": 8500,
+        "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/deployment.json",
+        "sha256": "b8505368b08bc9d62258454a6d3d6774e07a98c2167ee65de40aa6d773da5eed"
+      },
+      "driver": {
+        "bytes": 25223,
+        "path": "tools/host-lisp/c2_v16_romc_repaired_d2_appointment.py",
+        "sha256": "cf505d2b71909e25aa1b9825b6c7f4f47f55d78eccf3f73c27c13c4e19ec7245"
+      },
+      "phase_B": {
+        "bytes": 35761,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-b-guard-partition-receipt.json",
+        "sha256": "83a8328a7dc3e4c395ff42b368f79aaed8d258076efebada021736afce96428a"
+      },
+      "phase_C": {
+        "bytes": 18553,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-c-diagnostic-preparation-receipt.json",
+        "sha256": "199004b6f5b8f7f04493f119463d27e15cf87a0ecb27026958f594ac39c54439"
+      },
+      "repair": {
+        "bytes": 11331,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-bootstrap-romc-repair-receipt.json",
+        "sha256": "59664c1447e6f1087024fa8c514e826e8e3ca55c0b94dfc1fdea12083e090f1a"
+      },
+      "runner": {
+        "bytes": 5168,
+        "path": "scripts/c2-v16-defstruct-romc-repaired-d2-hw.sh",
+        "sha256": "a081e928dd7c68af14ad25e663acdcea1454cfd9ab417887b78ec009912d53bd"
+      }
+    },
+    "choreography": {
+      "actions": [
+        "stage",
+        "arm",
+        "capture"
+      ],
+      "first_device_access_after_quiet_floor": true,
+      "one_stop": true,
+      "owner_input": [
+        "RUN",
+        "(require 'defstruct)",
+        "(defstruct point x y)"
+      ],
+      "quiet_seconds": 180.0,
+      "record_handoff": "canonical-reset-plus-A1-with-no-mid-session-read",
+      "virtual_key_events": 0
+    },
+    "classification": {
+      "precedence": [
+        "R",
+        "A",
+        "G",
+        "I"
+      ],
+      "rows": [
+        "R",
+        "A",
+        "I",
+        "G"
+      ],
+      "widening_allowed": false
+    },
+    "identity": {
+      "ROMC_clear": {
+        "address": "0x202c",
+        "bytes": "a2448e30d0"
+      },
+      "diagnostic_ELF": {
+        "bytes": 620700,
+        "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-link82-romc-safe.elf",
+        "sha256": "f35da58a7be356244415ca4b99b7cbb6311669026e53de5b02e868e8b8ff2142"
+      },
+      "diagnostic_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-link82-romc-safe.prg",
+        "sha256": "0a8a9d147477dac6368bde4c8db3dd0c677ef08aec066a0917b44a3ca356cccd"
+      },
+      "diagnostic_window": {
+        "bytes": 8192,
+        "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-window.bin",
+        "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+      },
+      "entry_hook": {
+        "address": "0x2031",
+        "post_state": "0x2035",
+        "routine": "0xc03f",
+        "stamp": "0xb5c3=0x44"
+      },
+      "product_bytes_changed": 0,
+      "promotable": false
+    },
+    "owner_authority": {
+      "bytes": 106866,
+      "path": "git:7de4cc6ffbf280dd5979c688fdb890c6573f07b1:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "a892e2b9d7f7fe6a0bdeb4f603baac396eb88f5572fd51519c901d1e5c084005"
+    },
+    "read_set": {
+      "CPU_left_stopped": true,
+      "CPU_view": [
+        "PC/code-owner",
+        "record-x3",
+        "phase-scratch",
+        "phase-owner",
+        "mem-oom",
+        "gc-runs"
+      ],
+      "MAPH_MAPL_retained": true,
+      "backing_plane_note": "far backing planes have no 16-bit CPU-view alias; their physical bytes are source/state oracles, never used to symbolize the stopped PC",
+      "backing_plane_oracles": [
+        "C2J",
+        "C2D-reset-domain",
+        "Bank-2-source"
+      ],
+      "code_owner_before_symbol_interpretation": true
+    },
+    "record": {
+      "address": "0xc03f",
+      "arm": {
+        "bytes": 1,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/record-arm.bin",
+        "sha256": "8a8950f7623663222542c9469c73be3c4c81bbdf019e2c577590a61f2ce9a157"
+      },
+      "bytes": 65,
+      "fields": 29,
+      "reset": {
+        "bytes": 65,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/record-reset.bin",
+        "sha256": "eb866d9a2d1568db0745311b0ef91c8ba65bcee45a8ac2603679804c8ca2a9b3"
+      }
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-romc-repaired-bundled-preparation-v1",
+  "mutations_rejected": {
+    "discard-MAPH-MAPL": "read/classification boundary drift",
+    "early-device-access": "quiet choreography drift",
+    "move-hook-before-ROMC": "identity boundary drift",
+    "promote-diagnostic": "identity boundary drift",
+    "read-boot-witness-mid-session": "quiet choreography drift",
+    "resume-after-capture": "read/classification boundary drift",
+    "second-stop": "quiet choreography drift",
+    "shorten-quiet-window": "quiet choreography drift",
+    "symbolize-before-owner": "read/classification boundary drift",
+    "virtual-input": "quiet choreography drift",
+    "widen-row": "read/classification boundary drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "HOST-GREEN; BUNDLED PHYSICAL APPOINTMENT PREPARED"
+}

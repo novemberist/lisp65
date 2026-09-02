@@ -1,0 +1,158 @@
+{
+  "format": "lisp65-c2-lite-v6-link48-append-cutpoint-wplto-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: approved semantics pass, first product-shaped WPLTO exceeds both resident text and E000 placement",
+  "classification": "Class C capacity and placement review required",
+  "baseline": {
+    "link": 48,
+    "product_sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6",
+    "lto_object": {
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg.lto.o",
+      "bytes": 606944,
+      "sha256": "968927a6bcf2facaed9c6562d5730cd882304c4a0fc8e8197d312c4d683b6970"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 203536,
+      "sha256": "283685ba1916ef7fbde56784019f12d828242c0b79b972c4ef01acdf8a68a0a8"
+    }
+  },
+  "probe": {
+    "promotable": false,
+    "lto_object": {
+      "path": "build/c2.2/substitution/link48-append-cutpoint-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 609084,
+      "sha256": "68150a8caf839e45e536137f91d0f87a79f059406377b7ffd568e892ab25e038"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/link48-append-cutpoint-wplto/resident-island-seed.prg.map",
+      "bytes": 188671,
+      "sha256": "ae98ed27e4d265173704f64ddbe3d6dcd6b2b46e0234b8ef60546e69ce1d9a6a"
+    },
+    "sealed_first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-cutpoint-wplto-receipt.json",
+      "bytes": 916,
+      "sha256": "3c6cab4f98a7baf4283cbd8515b5e67cd92f7c61f90f52165190349f599066a1"
+    }
+  },
+  "passed_before_linker_stop": {
+    "phase_plan_source_gate": "forward [31,35,36,37,38], rollback [43,44,30]",
+    "range_inventory": "descending fails closed; recovery-only slots 32/33/34 absent from the forward plan",
+    "cutpoint_fixture": "all five forward failure points restore journal and suffix to the pre-append model",
+    "exact_119_byte_fixture": "emit/append/publish/install/call oracle returns T",
+    "badopcode_detail": "two existing phase-scratch bytes, first failure wins",
+    "renderer": "host and non-LTO MOS smoke pass; BADOPCODE BCODE accepted and BADOPCODE SYMI rejected"
+  },
+  "measured_walls": {
+    "bank0_text": {
+      "baseline_bytes": 37999,
+      "baseline_headroom_bytes": 17,
+      "probe_bytes": 38250,
+      "delta_bytes": 251,
+      "probe_headroom_bytes": -234,
+      "handoff_anchor": "0xb4a3"
+    },
+    "e000_c2_resident": {
+      "baseline_bytes": 7108,
+      "probe_bytes": 7272,
+      "delta_bytes": 164,
+      "baseline_headroom_bytes": 136,
+      "projected_probe_headroom_bytes": -28,
+      "required_floor_bytes": 115,
+      "floor_shortfall_bytes": 143,
+      "first_collision": "reopen_gap0 at 0xfd06 overlaps session_emitter_state at 0xfd08"
+    },
+    "ordinary_bss": {
+      "baseline_bytes": 1587,
+      "probe_bytes": 1587,
+      "delta_bytes": 0,
+      "baseline_vma": "0xb9f7",
+      "probe_vma": "0xbae5",
+      "note": "The BSS failure is a predecessor-layout consequence, not new state."
+    },
+    "fixed_bank0": {
+      "baseline_bytes": 408,
+      "probe_bytes": 408,
+      "delta_bytes": 0
+    },
+    "l65e_overlay": {
+      "baseline_bytes": 1137,
+      "probe_bytes": 1145,
+      "delta_bytes": 8,
+      "cap_bytes": 1320,
+      "probe_headroom_bytes": 175
+    },
+    "abort_control_overlay": {
+      "baseline_bytes": 139,
+      "probe_bytes": 164,
+      "delta_bytes": 25
+    }
+  },
+  "whole_program_attribution": {
+    "bank0_text_delta_bytes": 251,
+    "symbols": [
+      {
+        "symbol": "c2_facade_target_overlay_call_family",
+        "baseline_bytes": 88,
+        "probe_bytes": 207,
+        "delta_bytes": 119,
+        "reason": "first-failure capture was placed in the generic overlay facade"
+      },
+      {
+        "symbol": "c2_product_install",
+        "baseline_bytes": 556,
+        "probe_bytes": 644,
+        "delta_bytes": 88,
+        "reason": "append-failure detail extraction and return"
+      },
+      {
+        "symbol": "vm_check_status",
+        "baseline_bytes": 76,
+        "probe_bytes": 130,
+        "delta_bytes": 54,
+        "reason": "second BCODE-owning error code in the terminal detail union"
+      },
+      {
+        "symbol": "other Bank-0 LTO movement",
+        "delta_bytes": -10,
+        "reason": "net movement across vm_run_inner, vm_callprim, eval_v2_workbench_service, vm_key_event and vm_fixbinop"
+      }
+    ],
+    "e000_delta_bytes": 164,
+    "e000_symbols": [
+      {
+        "symbol": "c2_append_run_stage_plan",
+        "baseline_bytes": 0,
+        "probe_bytes": 98,
+        "delta_bytes": 98
+      },
+      {
+        "symbol": "c2_append_run_rollback_plan",
+        "baseline_bytes": 0,
+        "probe_bytes": 60,
+        "delta_bytes": 60
+      },
+      {
+        "symbol": "c2_overlay_call_range",
+        "baseline_bytes": 47,
+        "probe_bytes": 53,
+        "delta_bytes": 6,
+        "reason": "explicit descending-range rejection"
+      }
+    ]
+  },
+  "diagnosis": {
+    "primary_hardware_root_cause": "The old forward numeric range 31..38 executed recovery-only journal_validate, journal_reconstruct and rollback_prepare before stage_copy. This exactly explains the captured staged=1, committed=1, ACTIVE-C2J state.",
+    "independent_rollback_root_cause": "The old descending 43..30 request executed no rollback phase and returned success.",
+    "capacity_root_cause": "The literal implementation materializes both plans as separate E000 call chains and captures detail inside the generic resident facade. The semantics are green; their first placement is not.",
+    "not_a_bss_growth": true
+  },
+  "review_boundary": {
+    "product_links": 0,
+    "hardware_runs": 0,
+    "link48_rollback_line": "untouched",
+    "line1_product_first_reds": "2/3 unchanged",
+    "completed_latency_measurements": "0/2 unchanged",
+    "required_next_decision": "Choose a compact plan representation and a colder/specialized capture boundary; no retry, floor change, anchor change or product link is authorized by this diagnosis."
+  }
+}

@@ -1,0 +1,403 @@
+{
+  "F1": {
+    "execution": {
+      "direct": [
+        {
+          "case": "nullary",
+          "compiler_calls": 0,
+          "dispatch": "funcall",
+          "install_calls": 0,
+          "result": "t",
+          "source": "(%f1-zero)"
+        },
+        {
+          "case": "fixed-fixnums",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(7 . 8)",
+          "source": "(%f1-fixed 7 8)"
+        },
+        {
+          "case": "fixed-quotes",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(alpha 1 2)",
+          "source": "(%f1-fixed 'alpha '(1 2))"
+        },
+        {
+          "case": "optional-missing",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(7)",
+          "source": "(%f1-optional 7)"
+        },
+        {
+          "case": "optional-present",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(7 . 8)",
+          "source": "(%f1-optional 7 8)"
+        },
+        {
+          "case": "rest",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(7 8 9)",
+          "source": "(%f1-rest 7 8 9)"
+        }
+      ],
+      "equivalence": [
+        {
+          "byteidentical_object": true,
+          "case": "fixed-fixnums",
+          "compiled_result": "(7 . 8)",
+          "direct_result": "(7 . 8)"
+        },
+        {
+          "byteidentical_object": true,
+          "case": "fixed-quotes",
+          "compiled_result": "(alpha 1 2)",
+          "direct_result": "(alpha 1 2)"
+        },
+        {
+          "byteidentical_object": true,
+          "case": "optional",
+          "compiled_result": "(7)",
+          "direct_result": "(7)"
+        },
+        {
+          "byteidentical_object": true,
+          "case": "rest",
+          "compiled_result": "(7 8 9)",
+          "direct_result": "(7 8 9)"
+        }
+      ],
+      "fallback": [
+        {
+          "case": "variable",
+          "first_compiler_call_index": 8,
+          "source": "(%f1-fixed x 8)"
+        },
+        {
+          "case": "nested",
+          "first_compiler_call_index": 8,
+          "source": "(%f1-fixed (%f1-nested) 8)"
+        },
+        {
+          "case": "compound",
+          "first_compiler_call_index": 8,
+          "source": "(%f1-fixed (if t 7 8) 9)"
+        },
+        {
+          "case": "primitive",
+          "first_compiler_call_index": 3,
+          "source": "(screen-size)"
+        },
+        {
+          "case": "macro",
+          "first_compiler_call_index": 3,
+          "source": "(%f1-macro 7)"
+        },
+        {
+          "case": "undefined",
+          "first_compiler_call_index": 3,
+          "source": "(%f1-undefined 7)"
+        },
+        {
+          "case": "atom",
+          "first_compiler_call_index": 1,
+          "source": "7"
+        }
+      ],
+      "fixture_count": 18,
+      "status": "passed-executable-direct-fallback-and-equivalence-suites",
+      "wrong_arity": {
+        "compiler_calls": 0,
+        "status": "passed-VM-ArityError-without-wrapper"
+      }
+    },
+    "source": {
+      "arity_authority": "CodeObject-header-vm_arity_accepts",
+      "direct_argument_domain": [
+        "fixnum",
+        "string",
+        "nil",
+        "t",
+        "exact unary quote"
+      ],
+      "direct_operator": "published-bytecode",
+      "fallback_preserved": true,
+      "mutations_rejected": 10,
+      "new_resident_state_bytes": 0,
+      "status": "passed-exact-published-value-call-source-contract"
+    }
+  },
+  "F2": {
+    "execution": {
+      "dialect_v1_reserved_count": 4,
+      "dialect_v2_active_count": 4,
+      "negative_count": 8,
+      "negative_observations": [
+        {
+          "case": "count-high",
+          "status": "TypeError"
+        },
+        {
+          "case": "count-low",
+          "status": "TypeError"
+        },
+        {
+          "case": "overflow-high",
+          "status": "TypeError"
+        },
+        {
+          "case": "overflow-low",
+          "status": "TypeError"
+        },
+        {
+          "case": "wrong-type-left",
+          "status": "TypeError"
+        },
+        {
+          "case": "wrong-type-right",
+          "status": "TypeError"
+        },
+        {
+          "case": "wrong-arity-low",
+          "status": "ArityError"
+        },
+        {
+          "case": "wrong-arity-high",
+          "status": "ArityError"
+        }
+      ],
+      "positive_count": 28,
+      "positive_observations": [
+        {
+          "case": "logand",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "logand",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "logior",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "logior",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "logxor",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "logxor",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-left",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "ash-left",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-right",
+          "result": -42,
+          "route": "direct"
+        },
+        {
+          "case": "ash-right",
+          "result": -42,
+          "route": "funcall"
+        },
+        {
+          "case": "logand-negative",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "logand-negative",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "logior-negative",
+          "result": -43,
+          "route": "direct"
+        },
+        {
+          "case": "logior-negative",
+          "result": -43,
+          "route": "funcall"
+        },
+        {
+          "case": "logxor-negative",
+          "result": -44,
+          "route": "direct"
+        },
+        {
+          "case": "logxor-negative",
+          "result": -44,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-left-low-bound",
+          "result": -16384,
+          "route": "direct"
+        },
+        {
+          "case": "ash-left-low-bound",
+          "result": -16384,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-left-high-bound",
+          "result": 16382,
+          "route": "direct"
+        },
+        {
+          "case": "ash-left-high-bound",
+          "result": 16382,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-count-low-bound",
+          "result": -1,
+          "route": "direct"
+        },
+        {
+          "case": "ash-count-low-bound",
+          "result": -1,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-count-high-bound",
+          "result": -16384,
+          "route": "direct"
+        },
+        {
+          "case": "ash-count-high-bound",
+          "result": -16384,
+          "route": "funcall"
+        },
+        {
+          "case": "logand",
+          "result": 42,
+          "route": "apply"
+        },
+        {
+          "case": "logior",
+          "result": 42,
+          "route": "apply"
+        },
+        {
+          "case": "logxor",
+          "result": 42,
+          "route": "apply"
+        },
+        {
+          "case": "ash",
+          "result": 42,
+          "route": "apply"
+        }
+      ],
+      "status": "passed-direct-funcall-apply-and-negative-fixtures"
+    },
+    "source": {
+      "dialect_v1": "reserved",
+      "dialect_v2": "active",
+      "mutations_rejected": 16,
+      "opcodes": {
+        "20": "LOGAND",
+        "21": "LOGIOR",
+        "22": "LOGXOR",
+        "23": "ASH"
+      },
+      "prim_ids_added": 0,
+      "resident_state_bytes": 0,
+      "status": "passed-all-eight-ABI-and-source-views"
+    }
+  },
+  "F3": {
+    "first_red": {
+      "bytes": 2660,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-f3-state-error-first-red-receipt.json",
+      "sha256": "7b2cba50081d1892e2b2ca701f812b8b15c0fbf8f27bf82ce10181d5d64eb913"
+    },
+    "status": "parked-not-in-S1"
+  },
+  "authority": {
+    "F1_contract": {
+      "bytes": 3267,
+      "path": "config/c2-top-level-published-value-call-contract.json",
+      "sha256": "b101c21dcd45d1f8ba5ee26d52e020612fe66da63c37f2d5c23e1f21b038c874"
+    },
+    "F2_contract": {
+      "bytes": 2990,
+      "path": "config/c2-bitops-contract.json",
+      "sha256": "11992f041403236b87c6d4040c901668513c9596f2eb12b5a4cc0b67e86e9ae0"
+    },
+    "contract": {
+      "bytes": 5039,
+      "path": "config/c2.2-s1-freight-session.json",
+      "sha256": "f4b7ad2a1ba281bf6e9123aa5f8374a75a2b81a6204eb4711575989e325e2024"
+    },
+    "gate": {
+      "bytes": 9526,
+      "path": "tools/host-lisp/c2_f4_s1_freight_session_gate.py",
+      "sha256": "db48510ef80dcd387ecff041b40d6375473d20d33a4628188e9e403f2536d35f"
+    },
+    "note": {
+      "bytes": 2635,
+      "path": "docs/planning/c2.2-f4-s1-freight-session.md",
+      "sha256": "868e0b3d0d271e36532088d0c118404cd4432e752329b1d7ebcfcdadd80e38db"
+    }
+  },
+  "claim_limit": "Host preparation and executable semantic fixtures only. No product link, hardware timing, hardware result, acceptance or promotion is claimed.",
+  "format": "lisp65-c2.2-f4-s1-preparation-receipt-v1",
+  "hardware_runs": 0,
+  "next_binding": "Product and ELF remain bound to Link 67. Attempt 1 is a harness First Red with zero accepted product rows. Attempt 2 is explicitly authorized for autonomous execution.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "session_gate": {
+    "F3": "parked-not-loaded",
+    "claim_rows": [
+      "f1-nary-cold",
+      "f1-nary-warm",
+      "f2-bitops-positive"
+    ],
+    "first_red_rows": 12,
+    "mutations_rejected": 10,
+    "parsed_form_count": 11,
+    "regression_rows": [
+      "boot-watch",
+      "nullary-cold-regression",
+      "nullary-warm-regression",
+      "post-error-repl",
+      "idle-freezer-roundtrip",
+      "post-freezer-repl"
+    ],
+    "row_count": 12,
+    "status": "passed-one-session-row-contract-and-F3-exclusion"
+  },
+  "status": "passed-S1-attempt2-authorized-Link67-bound-hardware-not-run"
+}

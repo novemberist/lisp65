@@ -1,0 +1,96 @@
+{
+  "bindings": {
+    "config": {
+      "bytes": 1084,
+      "path": "config/c2-ship-builder-v1-link86-queue-discriminator.json",
+      "sha256": "101b7d058a96f7a3601d223a412f2c77c5b3d07ec267090b240f3487a8418b08"
+    },
+    "driver": {
+      "bytes": 6795,
+      "path": "tools/host-lisp/c2_v13_link86_queue_discriminator_close.py",
+      "sha256": "306a2f08234c0309cd3bffe540e3c1f569ee10a88d7e4166006015cdc434983e"
+    },
+    "image": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link86-final-5a7c0d18/interactive.d81",
+      "sha256": "c9194a714f16e43181ab43b3b1fa1c138e1a74def3311e6d86dc35ffc8cf6c16"
+    },
+    "package_readback": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link86-queue-discriminator/run/package-readback.d81",
+      "sha256": "c9194a714f16e43181ab43b3b1fa1c138e1a74def3311e6d86dc35ffc8cf6c16"
+    },
+    "prior_attribution": {
+      "bytes": 7357,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link86-ship-output-input-host-elf-attribution-receipt.json",
+      "sha256": "f729a69fc196bdbd6fa7ee8c63e4ee0fce7c1d370d83d907ea2ba0628ef479d0"
+    },
+    "queue_code": {
+      "address": "0x0000d619",
+      "bytes": 1,
+      "path": "build/ship-builder/v13/link86-queue-discriminator/run/d619.bin",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "queue_state": {
+      "address": "0x0000d60a",
+      "bytes": 1,
+      "path": "build/ship-builder/v13/link86-queue-discriminator/run/d60a.bin",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "queue_summary": {
+      "bytes": 30,
+      "path": "build/ship-builder/v13/link86-queue-discriminator/run/queue.json",
+      "sha256": "32f8702cb1313f3115fada819755aed86c87cd1b8b1c650adc333f0b7650b9e3"
+    },
+    "session": {
+      "bytes": 3859,
+      "path": "scripts/c2-v13-link86-queue-discriminator-hw.sh",
+      "sha256": "d2a584798fb99ccfd4f2cf51e6db834ea5b9e8d300c24761416ffd7b4b8ca8d2"
+    },
+    "state_before_key": {
+      "address": "0x00000085",
+      "bytes": 1,
+      "path": "build/ship-builder/v13/link86-queue-discriminator/run/state-before-human.bin",
+      "sha256": "dbc1b4c900ffe48d575b5da5c638040125f65db0fe3e24494b76ea986457d986"
+    }
+  },
+  "candidate_link": 86,
+  "claim_limit": "One unchanged-image physical-key contact and two non-consuming one-byte reads. The receipt applies the pre-registered empty-queue outcome; it does not infer a new mechanism, authorize a fix, alter product bytes or create a link.",
+  "contact": {
+    "cold_reset": true,
+    "count": 1,
+    "exact_unchanged_image": true,
+    "operator_visible_effect": "none; screen remained blank blue",
+    "physical_key": "A",
+    "post_key_reads": 2,
+    "post_key_screen_captures": 0,
+    "runtime_state_before_key": 2,
+    "virtual_keys": 0
+  },
+  "decision": {
+    "additional_hardware_authorized": false,
+    "product_bytes_changed": 0,
+    "product_fix_authorized": false,
+    "product_links_created": 0,
+    "v1.3_status": "closed-pending-owner-review"
+  },
+  "format": "lisp65-c2.3-v1.3-link86-physical-key-queue-discriminator-v1",
+  "preregistered_interpretation": {
+    "not_claimed": [
+      "a Ship direct-queue fix",
+      "a KERNAL GETIN consumer defect",
+      "a keyboard-scan mechanism below the empty queue",
+      "read-line correctness or failure"
+    ],
+    "result": "The physical key was not pending in the hardware queue at capture time. The proposed mechanism 'queue contains the key but inherited KERNAL GETIN never consumes it' is refuted. The divergence is below the queue observation and returns to owner review with these two bytes as ground truth.",
+    "selected": "queue-empty"
+  },
+  "readback": {
+    "D60A": "0x00",
+    "D619": "0x00",
+    "dequeue_writes": 0,
+    "queue_present": false
+  },
+  "recorded_on": "2026-08-02",
+  "status": "DEVICE-DISCRIMINATOR-QUEUE-EMPTY"
+}

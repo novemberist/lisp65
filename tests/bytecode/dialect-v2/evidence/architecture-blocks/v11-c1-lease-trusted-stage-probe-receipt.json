@@ -1,0 +1,201 @@
+{
+  "format": "lisp65-v11-c1-lease-trusted-stage-probe-receipt-v1",
+  "version": 1,
+  "status": "correctness-passed-performance-reopened-promotion-and-capacity-suspended",
+  "recorded_on": "2026-07-16",
+  "recording_base_commit": "350166c77208b5b6f598eedef20a799784bce703",
+  "block_id": "1.1-C1-lease-and-identity-bound-validation-fastpath",
+  "baseline": {
+    "diagnostic_product": "build/products/workbench/c1-phase-probe-10",
+    "resident_prg_sha256": "3959d0da78332391d271870d4a2b87c3b31143fa3a930401d3d728119b93b5da",
+    "preload_sha256": "c74cd5f2fc01f847973d765644dee5025e598487029441c7ac237474f9e20c85",
+    "runtime_overlays_sha256": "0475d85cdd40bbebeb34e3fa575d6094bc80bade5cccadd464f9f73a5950f8af",
+    "footprint_audit_sha256": "908e750ef7919fd4aa06b00903506022f03d00dd84c06def9bc8b32c94067f66",
+    "resolved_profile_sha256": "dd989f8b5ec5dd121d702f7af99ab4abc014031e22e543d6057db56911784a72"
+  },
+  "candidate": {
+    "diagnostic_product": "build/products/workbench/c1-phase-probe-11",
+    "resident_prg": {
+      "bytes": 39561,
+      "sha256": "9a11fab4aee751c304a144cf682b5d510468a0a855dd2cf1fa9e198d42b5be15"
+    },
+    "preload": {
+      "bytes": 17047,
+      "sha256": "e8b0680045632d37f177d89a4838d749e99ad2244bbeb26c16443526f967081b"
+    },
+    "runtime_overlays": {
+      "bytes": 65472,
+      "sha256": "afda9e3c80ccb1b1681f656c231a013195a2127f9b3f563907d7533025e0a7bb"
+    },
+    "shelf": {
+      "bytes": 65042,
+      "sha256": "042c95f9eab0d8f9259f1ba67547051c252fb21ffc7977a4d9a4857c060617cf"
+    },
+    "footprint_audit_sha256": "22acc4b8f44ca3f54566b0ea167d744bc6e2b65ad7e89d760e4fb1e369d6397e",
+    "runtime_manifest_sha256": "fbcc7462fcb599bc1cf06c77e8436142ce9a5c52d007ea321d3b3ca42313b600",
+    "resolved_profile_sha256": "428cf816fa69321a16e2b51bfabc96afb0f7ab446604e235dc9e7faaf1cb9746"
+  },
+  "capacity_delta": {
+    "scope": "probe-11 against the owner-authorized corrected C1 probe-10 baseline",
+    "dimensions": {
+      "bank": {
+        "baseline_resident_prg_bytes": 39539,
+        "candidate_resident_prg_bytes": 39561,
+        "delta_bytes": -22,
+        "baseline_headroom_over_1536_bytes": 288,
+        "candidate_headroom_over_1536_bytes": 266
+      },
+      "ext": {
+        "delta_bytes": 0,
+        "reason": "the compiler container and standard Workbench preload lengths are unchanged"
+      },
+      "symbols": {
+        "delta": 0
+      },
+      "namepool": {
+        "delta_bytes": 0
+      },
+      "directory": {
+        "delta": 0
+      },
+      "boot_overlay": {
+        "baseline_bytes": 1669,
+        "candidate_bytes": 1669,
+        "delta_bytes": 0
+      },
+      "overlay_vma": {
+        "baseline": "0xc338",
+        "candidate_fixed": "0xc356",
+        "ceiling": "0xc356",
+        "baseline_headroom_bytes": 30,
+        "candidate_headroom_bytes": 0,
+        "delta_bytes": -30,
+        "rejected_probe": "0xc352 linked the final image but changed the resident-island installer between bootstrap and final; it was completely reverted"
+      },
+      "runtime_overlay_bank": {
+        "baseline_bytes": 64192,
+        "candidate_bytes": 65472,
+        "delta_bytes": 1280,
+        "hard_limit_bytes": 65536,
+        "candidate_margin_bytes": 64,
+        "attribution": "trusted-plan growth in validation phases 00 and 03 plus alignment propagation increases the packed bank by five 256-byte pages; all 44 individual slices remain at or below 1792 bytes"
+      }
+    }
+  },
+  "implementation": {
+    "lease": "A successful expression retains the exact C1 compiler tier. Any persistent foreign allocation must retire the tier first; a later expression may reload it.",
+    "trusted_stage": "The generated plan is derived from a complete native L65M validation of the exact LCC container. The device fastpath is armed only after the SHA-bound shelf record passes catalog identity, record CRC, declared length, and exact copy; commit remains CRC-bound.",
+    "fallback": "An untagged source takes the complete validator path. A shelf identity or CRC failure stops before trust is granted; plan or capacity mismatches fail closed.",
+    "single_source": "The fast plan, exact container length, CRC16, format fields, entry counts, offsets, and capacity ceilings are generated from the same validator report and LCC manifest.",
+    "fixed_vma": "Seed, bootstrap, and final links use one explicit 0xc356 execution ABI. This replaces three LTO-dependent addresses and leaves bootstrap/final verifier bindings byte-identical."
+  },
+  "host_verification": {
+    "full_validator": "PASS phases=21 iterations=2837 app-loads=21 crc-runs=126",
+    "fastpath": "PASS exact-plan=28 no-source-reads=yes fallbacks=2 capacity-rejections=6 commit-crc-bound",
+    "lease": "PASS reuse=yes transient=yes retire-before-persistent=yes nil-retires=yes mutation-fail-closed=yes",
+    "runtime_transport": "PASS reusable+batch+45 fail-closed cases",
+    "shelf": "PASS libraries=5 negative_cases=7 exact_copy=yes",
+    "native_cross_parity": "PASS active=61 public=39 restricted=38 cases=207 engines=4 evaluations=828",
+    "three_pass_binding": "PASS resident-island bootstrap/final byte-identical and runtime-overlay bootstrap/final verifier binding exact",
+    "real_link": "PASS post_boot_reserve=1802 boot_stack_gap=1573 runtime_stack_gap=3252"
+  },
+  "hardware": {
+    "claim": "Diagnostic physical-MEGA65 timing and lifetime evidence for the exact candidate artifacts above; not G5 evidence.",
+    "owner_bar": {
+      "v1_0_1_load_lib_baseline_seconds": 6.0,
+      "maximum_ratio": 1.15,
+      "maximum_load_lib_seconds": 6.9,
+      "single_form": "no perceptible regression",
+      "single_form_status": "partially passed then reopened on 2026-07-16: 260 ms versus 200 ms remains accepted for definitions-free warm sequences, but the previously unmeasured definition-to-first-call cycle is 95 frames or 1900 ms and awaits a separate owner decision"
+    },
+    "samples": [
+      {
+        "id": "cold-expression",
+        "form": "(+ 20 22)",
+        "result": "42",
+        "device_submit_to_verified_result_seconds": 3,
+        "external_harness_seconds": 4.484,
+        "receipt": "build/hw/v11-c1-phase/c1-phase-11-receipt-cold.json",
+        "receipt_sha256": "c8951925750a69658755bcb894c538b2601e2c1927bba5b608bfa0251ee67293",
+        "timing_sha256": "aac5083d27f2912fab7308744007f8efd9c82d7720adc4d8218a28eeeed83283"
+      },
+      {
+        "id": "warm-expression",
+        "form": "(+ 20 22)",
+        "result": "42",
+        "device_submit_to_verified_result_seconds": 2,
+        "external_harness_seconds": 3.116,
+        "receipt": "build/hw/v11-c1-phase/c1-phase-11-receipt-warm.json",
+        "receipt_sha256": "c36957e759bab91b24d26c078d91c2ac06303e2acf017126726ef117208530e9",
+        "timing_sha256": "4a1c2efaff66a035798b82207dc6f7efd3e2adbc3e609b3b59c17503e788a215"
+      },
+      {
+        "id": "load-ide-and-retire-in-same-form",
+        "form": "(progn (load-lib \"ide\") (function-kind (quote %c1-compile)))",
+        "result": "nil",
+        "device_submit_to_verified_result_seconds": 6,
+        "external_harness_seconds": 9.436,
+        "bar_status": "pass-6.0-is-within-6.9",
+        "receipt": "build/hw/v11-c1-phase/c1-phase-11-receipt-load-ide-retire.json",
+        "receipt_sha256": "3ac94e8331f03e1083803fa527e50c3698738898f36eb25adc877cf762fb3954",
+        "timing_sha256": "f23385386f8fcf3534e8da1df9a6d4da401b2f10ec49e835a7b74f86b572a96a"
+      },
+      {
+        "id": "reload-after-foreign-allocation",
+        "form": "(+ 20 22)",
+        "result": "42",
+        "device_submit_to_verified_result_seconds": 3,
+        "external_harness_seconds": 4.485,
+        "receipt": "build/hw/v11-c1-phase/c1-phase-11-receipt-reload.json",
+        "receipt_sha256": "d95d9767b44d3065a053e6f882567b4519dda3020ce6ee7b913399509188e089",
+        "timing_sha256": "27758a5988ff7e6c341367094154225dfa025e6cebd8a46f4f2d4acd6792f856"
+      }
+    ],
+    "frame_followup": {
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-interactive-path-options-probe-receipt.json",
+      "warm_nested_entry_milliseconds": 260,
+      "direct_resident_equivalent_milliseconds": 200,
+      "delta_milliseconds": 60,
+      "delta_percent": 30,
+      "definition_call_reopening_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-definition-call-reopening-probe-receipt.json",
+      "definition_call_reopening_receipt_sha256": "c224f4000d78b096e7d31bb1548831fa5aa7fedc9f005c1d18b7aeb564868925",
+      "definition_call_frames": 95,
+      "definition_call_milliseconds": 1900,
+      "interpretation": "The 260-ms measurement covers only a definitions-free warm nested entry. It cannot supersede the separate 95-frame definition-to-first-call measurement. The load-lib half remains passed; the interactive half is reopened."
+    },
+    "bounded_identity_restore": {
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-identity-restore-capacity-probe-receipt.json",
+      "receipt_sha256": "eaa7f48cb9678a5abff29660df3c4c2270d92d289ea3227bea1a1f7e2d22d527",
+      "result": "capacity-red-rolled-back-owner-decision-required"
+    },
+    "result": "load-lib-bar-met; definitions-free-warm-path-owner-accepted; definition-call-cycle-red; bounded-restore-capacity-red; owner-exception-or-rollback-decision-required; combined-performance-bar-not-passed; lease-lifecycle-passed"
+  },
+  "source_bindings": {
+    "config/workbench.mk": "866288a67765ac622c1a4bd6e616273d894b746c3e020645dee1769eee8ff100",
+    "mk/workbench.mk": "ecb5c269ca0a7217c6e3277b4696e07802aabc279c8edd6d652a01a3b14f02a3",
+    "scripts/lisp65-mega65-workbench-overlay.ld": "66381c5be504066932db7862485e1da3f0da38ebfd45356d1c7e417ebf7b20e7",
+    "scripts/l65m-transport-ops-main.c": "17f9aa4ab49e4c22c0363cae2ddcba00a4a7709c0e7ead8cbfb422c2b9e9f1ca",
+    "src/attic_library_shelf.c": "183ae882c35ac32d171f349f4d36b07b8b04024ec23d60bb23c068d41e01ec8b",
+    "src/l65m_validate.c": "a67743edf3b942410137d1c8489a890dad988d378fa12da1ca3287ef1f7f47a6",
+    "src/l65m_commit_overlay.c": "014b64e71b3870289d6d5aba05006ef53da4906b7feafa59154a963691ba96ca",
+    "src/vm_embed.c": "8477785a2eb245891bc8010af8cb08a25c8dba4900f428b86d0806b6e68704de",
+    "src/vm_runtime_overlay.c": "16a229991eb33c18f624f067a083c029fef5e4be149cc79289ea977b27058107",
+    "tools/host-lisp/v11_c1_compiler_contract.py": "7fdc1e73cf3769b67aed39d2047ce854d70a49f85e85e2fb7849495380089950",
+    "tools/host-lisp/resident_island.py": "c65cafebcb7aceec9cc185bab759707649ff2f3cc96eeeaee1eca699cfc1ae35",
+    "tools/host-lisp/v11_c1_lease_codemod.py": "f08e4b6982a628be8e5908961d14a5e9a11cd15c4562d76b6ce130187b3a26f3",
+    "scripts/hw-c1-phase-probe.py": "945fd29bbbf70547161922d78ddaf89244e2b9207fd5a0065e03e9d6a47d6fd8"
+  },
+  "promotion_gate": {
+    "capacity_authorization": "suspended on 2026-07-16 after the definition-call measurement reopened performance; the bounded restore then failed capacity; see config/v11-c1-lease-trusted-stage-capacity-authorization.json",
+    "measured_deltas_whose_authorization_is_suspended": [
+      "bank-headroom-288-to-266",
+      "overlay-vma-headroom-30-to-0",
+      "runtime-overlay-bank-64192-to-65472-with-64-byte-margin"
+    ],
+    "decision_basis": "The 260-ms owner acceptance remains scoped to definitions-free warm sequences. The exact owner developer cycle measures 1900 ms for the first call after a definition, and the one bounded identity-restore attempt is capacity-red. Promotion and the measured capacity deltas remain suspended pending the owner's dated-exception-or-C1-rollback decision.",
+    "overlay_freeze": "zero bytes remain; no further overlay debit is authorized without simultaneous structural relief",
+    "runtime_overlay_bank_freeze": "64 bytes remain and the runtime-overlay bank is effectively frozen",
+    "wave_3": "1.1-L remains blocked until a measured structural overlay plan supplies its required 68 bytes"
+  },
+  "claim_limit": "This receipt proves the lease lifecycle, exact identity-bound preflight fastpath, full-validation fallback, final three-pass link, measured capacity, and diagnostic hardware observations. The 6-second load-lib sample meets its 6.9-second limit and the 260-ms path remains accepted only for definitions-free warm sequences. The bound definition-to-first-call cycle measures 1900 ms, and its one bounded restore attempt is capacity-red. The combined performance bar, capacity authorization and promotion are suspended; this receipt does not promote product bytes, preserve the stopped G5 run, or claim R4/R5/R6/G6 acceptance."
+}

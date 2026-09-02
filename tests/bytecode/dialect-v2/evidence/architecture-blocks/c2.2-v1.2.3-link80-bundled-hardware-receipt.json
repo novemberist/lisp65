@@ -1,0 +1,518 @@
+{
+  "DIRMISS": {
+    "answer": {
+      "outcome": "scratch-correct-after-symname",
+      "scratch_correct_after_symname": true
+    },
+    "captures": [
+      {
+        "index": 1,
+        "live_patch": "80fe",
+        "matches_expected": true,
+        "scratch_hex": "696e7465726e2d72656e64657265722d6d697373696e670000000000000000000000",
+        "scratch_name": "intern-renderer-missing"
+      },
+      {
+        "index": 2,
+        "live_patch": "80fe",
+        "matches_expected": true,
+        "scratch_hex": "696e7465726e2d72656e64657265722d6d697373696e670000000000000000000000",
+        "scratch_name": "intern-renderer-missing"
+      },
+      {
+        "index": 3,
+        "live_patch": "80fe",
+        "matches_expected": true,
+        "scratch_hex": "696e7465726e2d72656e64657265722d6d697373696e670000000000000000000000",
+        "scratch_name": "intern-renderer-missing"
+      }
+    ],
+    "diagnostic_lifecycle": {
+      "eligible_for_promotion": false,
+      "product": {
+        "address": "0x00002001",
+        "bytes": 41566,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/post-symname-hold-NONPROMOTABLE.prg",
+        "sha256": "b2d4a9d7cf05f7558cee3b0bc9b2eec83c10006086b3ac2657689b573646699a"
+      },
+      "session": {
+        "address": "0x08000000",
+        "bytes": 65423,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/post-symname-hold-NONPROMOTABLE.session.bin",
+        "sha256": "2e33c7730b38b0428e6b59dad37abfdbf8755c0aeeda8518a0843c1c7d43d6d9"
+      },
+      "state": "discarded-after-capture"
+    },
+    "format": "lisp65-c2.2-v1.2.3-link80-post-symname-hardware-v1",
+    "promotable": false,
+    "recorded_on": "2026-07-30",
+    "registers": {
+      "A": "0xd1",
+      "B": "0x00",
+      "PC": "0xc472",
+      "SP": "0x01d7",
+      "X": "0x8f",
+      "Y": "0x00",
+      "Z": "0x00"
+    },
+    "status": "scratch-correct-after-symname"
+  },
+  "GC": {
+    "answer": {
+      "cells_actually_returned_to_freelist": null,
+      "classification": "oom-not-reproduced",
+      "marked_cells": null
+    },
+    "diagnostic_lifecycle": {
+      "eligible_for_promotion": false,
+      "identity": {
+        "address": "0x00002001",
+        "bytes": 41566,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/gc-oom-entry-hold-NONPROMOTABLE.prg",
+        "sha256": "37f24f486e0e26ae53096164677f2a8f739c670963b5fc33786305fd0bddf38d"
+      },
+      "state": "discard-after-session"
+    },
+    "format": "lisp65-c2.2-v1.2.3-link80-gc-two-number-hardware-v1",
+    "observation": {
+      "alloc_oom_hold_reached": false,
+      "image": {
+        "bytes": 4490,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/gc-workload.png",
+        "sha256": "9b6b84ec37a91eb27799453260ca8bee2c1d4be12d3714fdc14d01f97c740eb1"
+      },
+      "result": "600",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/gc-workload.txt",
+        "sha256": "d917bc318de4726054d2a21ef9009eb71f36b033a231e03b2d6cc672c21cb919"
+      }
+    },
+    "promotable": false,
+    "recorded_on": "2026-07-30",
+    "status": "completed-oom-not-reproduced"
+  },
+  "authority": {
+    "config": {
+      "bytes": 7071,
+      "path": "config/c2.2-v1.2.3-link80-bundled-hardware-session.json",
+      "sha256": "5584f6263615b7857ceeedb526559d607d649a3890c87b6977a588d3f8af2ca8"
+    },
+    "deployment": {
+      "bytes": 17793,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/deployment.json",
+      "sha256": "1da649293debee8a0cf6d076e4fd0be0f1b30ab376d7243c0f0f594f0a9b4440"
+    },
+    "observations": {
+      "bytes": 11807,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/observations.json",
+      "sha256": "0929cb06dccbed6a9e3776293099e350b79dc2ff5dfbc49cccffa52b938530aa"
+    },
+    "preparation": {
+      "bytes": 6924,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.3-link80-bundled-hardware-preparation-receipt.json",
+      "sha256": "2923078493c02e5265357b296175ec896618156e52e1488a3727c73a35062054"
+    }
+  },
+  "candidate": {
+    "ELF": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "687134067263173763a6777859d3e2404cb44ba2fb483f30ddab87df7e5afede"
+    },
+    "link": 80,
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "5130971b4cb66fe226fec9b37b8cc974056b3541c1824431d78ec0c2074bb659"
+    },
+    "product_build_id": "0x7356f9e6",
+    "release": "v1.2.3",
+    "session_profile_build_id": "0x09198927"
+  },
+  "claim_limit": "Claims only the listed Link-80 product rows and the two bounded diagnostic observations from this physical session.",
+  "device": {
+    "controlled_deployments": 3,
+    "core_id": {
+      "bytes": 4,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/device-core-id.bin",
+      "sha256": "bd075eada684d364ddb275c939b000db0fddec2bd491a0f8628b280e9026cb53"
+    },
+    "physical_sessions": 1
+  },
+  "execution_accounting": {
+    "diagnostic_identities_promotable": 0,
+    "physical_device_sessions": 1,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-v1.2.3-link80-bundled-hardware-v1",
+  "product_rows": [
+    {
+      "group": "regression",
+      "id": "boot-repl",
+      "image": {
+        "bytes": 3474,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-boot-repl.png",
+        "sha256": "114103cf24d2f591ffab676edb0b3758f09ee57219c2fb956de24c3474929507"
+      },
+      "result": "3",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-boot-repl.txt",
+        "sha256": "77f04370628b083fa233b07ddca7ae52c9f59059dc3d8076e9ac5dd8a94866fc"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "while",
+      "id": "while-smoke",
+      "image": {
+        "bytes": 4103,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-while-smoke.png",
+        "sha256": "40dca7a89193b7c014f90fa7b7f3b67a97c5a8ecc0f2de72613cb4eb95cd909d"
+      },
+      "result": "6",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-while-smoke.txt",
+        "sha256": "6c56b4ea87d644dcc9bdfc1960087158a5125c8c5a22ec65d061085bf712ef6d"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "random",
+      "id": "random-state-width",
+      "image": {
+        "bytes": 4840,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-state-width.png",
+        "sha256": "e027f168a2040f9ff4f465eb2ce0deb3491e41468e7198e1335aeb74d395112b"
+      },
+      "result": "55",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-state-width.txt",
+        "sha256": "5b15663ccdd492def1f86758638f40800613a0ccb66b125e54736caa0fd12443"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "random",
+      "id": "random-rejection-path",
+      "image": {
+        "bytes": 5365,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-rejection-path.png",
+        "sha256": "d936e718c5ea7ff63234c9cfcf142e65bc5a92e8b696e7eb2b26069f7cdf9815"
+      },
+      "result": "179",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-rejection-path.txt",
+        "sha256": "6d7971dbb03a5afd24016932c8b01e98b809f8d00a7ed14f7aebcca7935e0449"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "random",
+      "id": "random-helper",
+      "image": {
+        "bytes": 5899,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-helper.png",
+        "sha256": "18abbe4792b6bc857986dd78e7939ca399ae14a25a93ed5051018f37726f6353"
+      },
+      "result": "%r",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-helper.txt",
+        "sha256": "b639731fbcf79a25920df6a9687108cae549f5421f69fd3a596d74f61d3a9886"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "random",
+      "id": "random-seed-store",
+      "image": {
+        "bytes": 6632,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-seed-store.png",
+        "sha256": "b8d082d2877eb4e909d40df5fc00489cbec752e7d6fbef95c3a4bf4aeb282e8a"
+      },
+      "result": "t",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-seed-store.txt",
+        "sha256": "4990700d44ba3f1c4b5b9b2bb6fded8089bbc91e08da7263df956afbfee1fc11"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "random",
+      "id": "random-seed-reproducible",
+      "image": {
+        "bytes": 7377,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-seed-reproducible.png",
+        "sha256": "95b29bd9277c6c169e3afc59667e14f728dee2e37c56f2bb0f8ff552d933629c"
+      },
+      "result": "t",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-seed-reproducible.txt",
+        "sha256": "0ea0c12aec47491b6696a96ea77faf3506d5aa3d788ec61eddef6bc3721d2b6b"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "random",
+      "id": "random-range",
+      "image": {
+        "bytes": 7884,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-range.png",
+        "sha256": "53f42f93d3efd1e0fd76758dc3330c7e40318c6affd303daa3c34e7bea83bca2"
+      },
+      "result": "t",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-random-range.txt",
+        "sha256": "af152f8cd1289f52807a465c8f9087fecae95c8db373955e70d74d31727eba60"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "require-fastpath",
+      "id": "frame-helper",
+      "image": {
+        "bytes": 8384,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-frame-helper.png",
+        "sha256": "8c2c305200f89cb6a18282eb7996b9740c4c0cbf2f676b5629ed22939e4b39a0"
+      },
+      "result": "%f",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-frame-helper.txt",
+        "sha256": "aeb61788b2b578aac2cde557d9df0ad7a052f2d3eaa90870ff3e9b1b9ddedf70"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "require-fastpath",
+      "id": "require-frame-helper",
+      "image": {
+        "bytes": 9039,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-require-frame-helper.png",
+        "sha256": "c6f24c0f1a4ff0812866e101d178de46bf26a5520e354852e1b029a605be6bf6"
+      },
+      "result": "%q",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-require-frame-helper.txt",
+        "sha256": "45edb68f5504b4327834ee83609846d1ebe40827c673cc7ee1973b67cd91e207"
+      },
+      "status": "passed"
+    },
+    {
+      "detail": "custom result was absent or malformed (runner_status=0)",
+      "group": "require-fastpath",
+      "id": "require-first",
+      "image": {
+        "bytes": 9508,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-require-first.png",
+        "sha256": "3889d5f56a43972987cdbfdb27c68e8090afccc386496e7decf2fe1509f1b00f"
+      },
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-require-first.txt",
+        "sha256": "e5ed29874193a3a286c9285eac59f3a9c28bf126c77e48cd441f8a318da5f2af"
+      },
+      "status": "row-local-first-red"
+    },
+    {
+      "detail": "one or more declared dependencies did not pass",
+      "group": "require-fastpath",
+      "id": "require-repeat",
+      "status": "skipped-dependent"
+    },
+    {
+      "group": "interrupt-ownership",
+      "id": "irq-mask-low",
+      "image": {
+        "bytes": 9924,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-irq-mask-low.png",
+        "sha256": "1c956c70a54f96dc847c8632c50e9eb297b531c75317afa340690f37174acdd2"
+      },
+      "result": "(0 0)",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-irq-mask-low.txt",
+        "sha256": "95c48bd0bf7ca669cb64fb295e132a362a88c6db64853c36502d694e7d920b80"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "interrupt-ownership",
+      "id": "irq-mask-high",
+      "image": {
+        "bytes": 10100,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-irq-mask-high.png",
+        "sha256": "a7bdf64265518b20a322006a986ddadda5b569fbe8a9995186c17ffb0889d2f5"
+      },
+      "result": "0",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-irq-mask-high.txt",
+        "sha256": "169f51462bd8a9e350b75cd1d3a158a9663eca371a23ba3945027c4164bf8e69"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "fx-premise",
+      "id": "math-helper",
+      "image": {
+        "bytes": 10055,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-helper.png",
+        "sha256": "15989204ac29259fb617e523d0daf0a7c82adf375222d2ee1e2ae734be685e57"
+      },
+      "result": "%m",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-helper.txt",
+        "sha256": "c6c6c49759de07bf5ebb53c07b6de804a8bc02cefa458db6f6c04e9ba4dba052"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "fx-premise",
+      "id": "math-clear",
+      "image": {
+        "bytes": 9781,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-clear.png",
+        "sha256": "43e90d7b32105565db591006e4e4e70e27a0ee348abda7982b621d85d3d7c959"
+      },
+      "result": "nil",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-clear.txt",
+        "sha256": "c7dc9184a0ba85e8d9bcb42d61c21c96c1331448770fa961e5380907df05981a"
+      },
+      "status": "passed"
+    },
+    {
+      "detail": "custom result was absent or malformed (runner_status=0)",
+      "group": "fx-premise",
+      "id": "math-product-low",
+      "image": {
+        "bytes": 9869,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-product-low.png",
+        "sha256": "1f1e12a435d04c6a3c9611c1ac56bb0b9a395bb0a7f1a17249b7f726b22c41de"
+      },
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-product-low.txt",
+        "sha256": "c818f80db5d576286c21b04b3f59617b3e9d25136616c1cea5262e257e45afef"
+      },
+      "status": "row-local-first-red"
+    },
+    {
+      "detail": "one or more declared dependencies did not pass",
+      "group": "fx-premise",
+      "id": "math-product-high",
+      "status": "skipped-dependent"
+    },
+    {
+      "detail": "one or more declared dependencies did not pass",
+      "group": "fx-premise",
+      "id": "math-clear-after",
+      "status": "skipped-dependent"
+    },
+    {
+      "group": "run-stop",
+      "id": "while-run-stop",
+      "image": {
+        "bytes": 9344,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-while-run-stop.png",
+        "sha256": "91c6fefc7bd75d551e18fdcf5ec797b70205ba4f25619d9c948380a9f14b8106"
+      },
+      "result": "*** stopped (run/stop)",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-while-run-stop.txt",
+        "sha256": "2a45c24125a3ae5d955e0b83e4f7eefc549babde59e9a90322c43f10017110c0"
+      },
+      "status": "passed"
+    },
+    {
+      "group": "regression",
+      "id": "post-run-stop-repl",
+      "image": {
+        "bytes": 8749,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-post-run-stop-repl.png",
+        "sha256": "ffb22f01e1b42d6d41edc7d8f80f87eff8b7c2369653f896bb603bb1f3afdfc4"
+      },
+      "result": "3",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-post-run-stop-repl.txt",
+        "sha256": "ba171f01e3bddd2faa046030fa699f6a8aba94bf0a269fffbab10678a981e279"
+      },
+      "status": "passed"
+    }
+  ],
+  "recorded_on": "2026-07-30",
+  "require_fastpath": {
+    "LA_17_20_not_used": true,
+    "first_frames": null,
+    "method": "live high-low-high frame snapshots around real require",
+    "repeat_frames": null
+  },
+  "row_local_first_reds": [
+    {
+      "detail": "custom result was absent or malformed (runner_status=0)",
+      "group": "require-fastpath",
+      "id": "require-first",
+      "image": {
+        "bytes": 9508,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-require-first.png",
+        "sha256": "3889d5f56a43972987cdbfdb27c68e8090afccc386496e7decf2fe1509f1b00f"
+      },
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-require-first.txt",
+        "sha256": "e5ed29874193a3a286c9285eac59f3a9c28bf126c77e48cd441f8a318da5f2af"
+      },
+      "status": "row-local-first-red"
+    },
+    {
+      "detail": "one or more declared dependencies did not pass",
+      "group": "require-fastpath",
+      "id": "require-repeat",
+      "status": "skipped-dependent"
+    },
+    {
+      "detail": "custom result was absent or malformed (runner_status=0)",
+      "group": "fx-premise",
+      "id": "math-product-low",
+      "image": {
+        "bytes": 9869,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-product-low.png",
+        "sha256": "1f1e12a435d04c6a3c9611c1ac56bb0b9a395bb0a7f1a17249b7f726b22c41de"
+      },
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-product-low.txt",
+        "sha256": "c818f80db5d576286c21b04b3f59617b3e9d25136616c1cea5262e257e45afef"
+      },
+      "status": "row-local-first-red"
+    },
+    {
+      "detail": "one or more declared dependencies did not pass",
+      "group": "fx-premise",
+      "id": "math-product-high",
+      "status": "skipped-dependent"
+    },
+    {
+      "detail": "one or more declared dependencies did not pass",
+      "group": "fx-premise",
+      "id": "math-clear-after",
+      "status": "skipped-dependent"
+    }
+  ],
+  "status": "completed-with-row-local-first-reds"
+}

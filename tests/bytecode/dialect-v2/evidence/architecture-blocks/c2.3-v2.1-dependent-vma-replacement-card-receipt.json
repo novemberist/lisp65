@@ -1,0 +1,799 @@
+{
+  "acceptance": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "candidate_lma_order_sha256": "ca9e277c780ff51d60a1426ccab86e95f8b76e7d1639a0a3d8a805ae60e3657e",
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 24,
+          "candidate_max_end_exclusive": 45976,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 625,
+          "candidate_max_end_exclusive": 31772,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-invariants-plus-derived-vmas-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_freight_sha256": "3c9484a8822d03779db468ffb6eb85af9c068f2f7b236de5d224e1ae32ca51d7",
+      "derived_vma_order_sha256": "86173f419915bef751c5663be20b6928a23934b5e3b7f7e8d497b14764e1b9df",
+      "derived_vma_projection_sha256": "6846c2d4a9b62ce418e487d3cb6d06fda667756a27060f90a3977e24fc3f0b72",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 27,
+      "fixed_projection_sha256": "d40021000355a89478697dc681a92f36a0f7cde16ed18a6b3e8d5a1e5e3c0209"
+    },
+    "delivered_bytes": {
+      "candidate_elf": {
+        "bytes": 628660,
+        "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "b6cf8f6a0289344eeb5f76467b8018de126ed15617f1be7b3e736647c8e1521e"
+      },
+      "completed_resident_prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "3635f87bb4898329c81f566e8b0650c2d8edccc0a836681ca316eb6321727b9d"
+      },
+      "identity_bytes": 290,
+      "identity_mismatches": 0,
+      "load_address": "0x2001",
+      "new_staging_roles": 0,
+      "publish_last": {
+        "addresses": [
+          46324,
+          46330
+        ],
+        "bytes": 2,
+        "independent_crc16": "0xe562",
+        "independent_window_bytes": 8192,
+        "independent_window_sha256": "8bdd0258510d2eec0d34ad1b3f717cded60a5abc6ecbc8b80ea33e7cc68bc9a8",
+        "observed_values": [
+          229,
+          98
+        ],
+        "producer_report": {
+          "bytes": 1547,
+          "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/kernal-window-publish-last.json",
+          "sha256": "fefcb325cf6c470d1fde83dfc2dead283ae1ecdaa47651efc8f1783e95517f57"
+        },
+        "values_correct": true
+      },
+      "sections": [
+        {
+          "bytes": 223,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb4a3",
+          "lma_equals_vma": true,
+          "publish_last_values": [
+            {
+              "address": 46324,
+              "correct": true,
+              "expected": 229,
+              "observed": 229
+            },
+            {
+              "address": 46330,
+              "correct": true,
+              "expected": 98,
+              "observed": 98
+            }
+          ],
+          "resident_prg_offset": 38052,
+          "section": ".lisp65_c2_kernal_handoff",
+          "vma": "0xb4a3"
+        },
+        {
+          "bytes": 48,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5c4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38341,
+          "section": ".lisp65_c2_host_facade",
+          "vma": "0xb5c4"
+        },
+        {
+          "bytes": 11,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5f4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38389,
+          "section": ".lisp65_c2_kernal_io_reveal",
+          "vma": "0xb5f4"
+        },
+        {
+          "bytes": 10,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5ff",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38400,
+          "section": ".lisp65_c2_kernal_map_switch",
+          "vma": "0xb5ff"
+        }
+      ],
+      "status": "passed-identity-plus-independent-CRC-value"
+    },
+    "delivery_mutations_rejected": [
+      "drop-section",
+      "rewrite-LMA",
+      "grow-carveout",
+      "widen-carveout-bytes",
+      "replace-independent-CRC",
+      "accept-wrong-high",
+      "accept-wrong-low",
+      "hide-identity-mismatch",
+      "replace-oracle-window",
+      "add-staging-role"
+    ],
+    "dependent_vma_authority": {
+      "candidate_mutations": 7,
+      "derived_vmas": 2,
+      "fixed_vmas": 101,
+      "golden": {
+        "bytes": 30406,
+        "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-dependent-vma-invariants-v4.json",
+        "sha256": "28190ae2e5c3f02b229a3cea257ef3ca5b98f76ac19b35ef77f1f48dc318f1f3"
+      },
+      "golden_mutations": 10,
+      "later_acceptance": {
+        "authority": "git-blob",
+        "bytes": 58398,
+        "commit": "62c3aef6efd14ea0fd956b5ddb3f0345351b2366",
+        "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+        "sha256": "9393863c5143b2982d4638478a9bebb2ddf479af9aa7e9a638e325f7b0b6090d"
+      },
+      "receipt": {
+        "bytes": 12801,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-dependent-vma-invariant-golden-review-receipt.json",
+        "sha256": "9df3f7a6370fd93c01a805e991b1656a17502b6f2f00ef8ca88b093bc5a1d5bb"
+      }
+    },
+    "far_payload": {
+      "LMA_end_exclusive": "0x0002bc1c",
+      "LMA_start": "0x0002b8b2",
+      "VMA": "0x78b2",
+      "bytes": 874,
+      "section": ".lisp65_c2_mapped_far_service",
+      "sha256": "2e948761a4c7f012687a6ad4519ae10d52ee87e14a10f8025837078f0c69c096",
+      "status": "passed-linked-far-payload-extent-identity"
+    },
+    "linked_MAP_mutations_rejected": [
+      "old-A",
+      "old-X",
+      "old-machine-code",
+      "wrong-offset",
+      "wrong-block",
+      "wrong-entry",
+      "mapped-block1",
+      "skip-descriptor-store"
+    ],
+    "linked_MAP_tuple": {
+      "VMA": "0xB3C2",
+      "block1_unchanged": true,
+      "bytes": "48da5aa940a282a000a3805ceaa3007afa6860",
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "first_descriptor_store": {
+        "bytes": "a9048d00c0",
+        "effect": "STA $C000 <= $04",
+        "physical_PC": "0x02B8E4"
+      },
+      "service_entry_physical": "0x02B9DC",
+      "status": "passed-primary-semantics-linked-tuple",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "low_resident_LMA_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    },
+    "source_authoritative_oracle": {
+      "VMA": "0xc356",
+      "bytes": 1671,
+      "c2d_crc16": [
+        "0xe27e",
+        "0x8cc6",
+        "0x74d8",
+        "0x277a",
+        "0x9866",
+        "0xe9dc"
+      ],
+      "capacity": 1792,
+      "delivery_inputs": [
+        {
+          "bytes": 93681,
+          "path": "build/c2.3/v2.1-dependent-vma-replacement-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+          "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+        },
+        {
+          "bytes": 33840,
+          "path": "build/c2.3/v2.1-dependent-vma-replacement-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+        }
+      ],
+      "generated_decoder": {
+        "bytes": 41551,
+        "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+      },
+      "generated_owner": {
+        "bytes": 548,
+        "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+      },
+      "oracle_offset": 0,
+      "records_per_image": 6,
+      "reserve": 121,
+      "section": ".lisp65_rt_c2d_02a",
+      "shelf_crc16": [
+        "0xce26",
+        "0x46f5",
+        "0xfccb",
+        "0xbc88",
+        "0xf871",
+        "0xe3f7"
+      ],
+      "status": "passed-linked-delivery-bound-CRC-oracle",
+      "timeout_frames": 64
+    }
+  },
+  "artifacts_after": {
+    "elf": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b6cf8f6a0289344eeb5f76467b8018de126ed15617f1be7b3e736647c8e1521e"
+    },
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69977,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/c2-substitution.ld",
+      "sha256": "6cfeb54b8a04dabc70fff638a4d43cab0f304d163a9124e7a02699ae7c5a8a58"
+    },
+    "lto": {
+      "bytes": 619872,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "701b36b466258ce7c9afbdc418c7cb37e5fcbfe9d2b56ba8631dc30db8b7cc09"
+    },
+    "map": {
+      "bytes": 187521,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "a4e52a8234b631266d46e40368c0af840a8ebb981d67fdebbe8359dd774a0cd6"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "3635f87bb4898329c81f566e8b0650c2d8edccc0a836681ca316eb6321727b9d"
+    },
+    "publish_last": {
+      "bytes": 1547,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/kernal-window-publish-last.json",
+      "sha256": "fefcb325cf6c470d1fde83dfc2dead283ae1ecdaa47651efc8f1783e95517f57"
+    },
+    "real_abi_report": {
+      "bytes": 180745,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/c2-asm-leaf-real-abi-callers.json",
+      "sha256": "92f709ea09129581b2a296a06f3d88a53cec7889813f50a7e14d0c99b0574e3a"
+    },
+    "resolved_profile": {
+      "bytes": 12656,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "6995ea3e5adf113c4ea68fdffd980a8ef25b1e6b0c328f6da4866653f5c226f9"
+    },
+    "seed_lto": {
+      "bytes": 619872,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "f81a3f7ffd9c526c3756e2419ebffcce01c90767b05e89712f6b7982c554957e"
+    }
+  },
+  "artifacts_before": {
+    "elf": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b6cf8f6a0289344eeb5f76467b8018de126ed15617f1be7b3e736647c8e1521e"
+    },
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69977,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/c2-substitution.ld",
+      "sha256": "6cfeb54b8a04dabc70fff638a4d43cab0f304d163a9124e7a02699ae7c5a8a58"
+    },
+    "lto": {
+      "bytes": 619872,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "701b36b466258ce7c9afbdc418c7cb37e5fcbfe9d2b56ba8631dc30db8b7cc09"
+    },
+    "map": {
+      "bytes": 187521,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "a4e52a8234b631266d46e40368c0af840a8ebb981d67fdebbe8359dd774a0cd6"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "3635f87bb4898329c81f566e8b0650c2d8edccc0a836681ca316eb6321727b9d"
+    },
+    "publish_last": {
+      "bytes": 1547,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/kernal-window-publish-last.json",
+      "sha256": "fefcb325cf6c470d1fde83dfc2dead283ae1ecdaa47651efc8f1783e95517f57"
+    },
+    "real_abi_report": {
+      "bytes": 180745,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/c2-asm-leaf-real-abi-callers.json",
+      "sha256": "92f709ea09129581b2a296a06f3d88a53cec7889813f50a7e14d0c99b0574e3a"
+    },
+    "resolved_profile": {
+      "bytes": 12656,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "6995ea3e5adf113c4ea68fdffd980a8ef25b1e6b0c328f6da4866653f5c226f9"
+    },
+    "seed_lto": {
+      "bytes": 619872,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-card/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "f81a3f7ffd9c526c3756e2419ebffcce01c90767b05e89712f6b7982c554957e"
+    }
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 1
+  },
+  "authority": {
+    "driver": {
+      "bytes": 19866,
+      "path": "tools/host-lisp/c2_v21_dependent_vma_replacement_card.py",
+      "sha256": "f2d634d30be8fbbcc8af5dc5f8a9ec6fba107bd8ca16080877bd0ee85cd2b56d"
+    },
+    "golden": {
+      "bytes": 30406,
+      "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-dependent-vma-invariants-v4.json",
+      "sha256": "28190ae2e5c3f02b229a3cea257ef3ca5b98f76ac19b35ef77f1f48dc318f1f3"
+    },
+    "owner_acceptance": {
+      "authority": "git-blob",
+      "bytes": 58398,
+      "commit": "62c3aef6efd14ea0fd956b5ddb3f0345351b2366",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "9393863c5143b2982d4638478a9bebb2ddf479af9aa7e9a638e325f7b0b6090d"
+    },
+    "predecessor": {
+      "bytes": 4400,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-postlink-schema-replacement-card-final-red.json",
+      "sha256": "d13ba8d827a7a0aaf48ccdc2eb1ea11206eeee5acaef62425eff80e41037aa50"
+    },
+    "preflight": {
+      "bytes": 4084,
+      "path": "build/c2.3/v2.1-dependent-vma-replacement-preflight/preflight.json",
+      "sha256": "6a07fc1466d49ee9865604fbb3ecb7aef427b00b788be7efd0627453aa639e8c"
+    },
+    "review": {
+      "bytes": 12801,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-dependent-vma-invariant-golden-review-receipt.json",
+      "sha256": "9df3f7a6370fd93c01a805e991b1656a17502b6f2f00ef8ca88b093bc5a1d5bb"
+    }
+  },
+  "claim_limit": "One product card; Completion, media and device have not run.",
+  "completion_identity": {
+    "address": 47500,
+    "bytes": 40,
+    "historical_0xb98a_consumed": false,
+    "section": ".lisp65_runtime_overlay_verifier_bindings",
+    "status": "PASS: publish-last consumed candidate identity"
+  },
+  "dependent_vma_comparison": {
+    "allocatable_sections": 103,
+    "candidate_lma_order_sha256": "ca9e277c780ff51d60a1426ccab86e95f8b76e7d1639a0a3d8a805ae60e3657e",
+    "capacity_arenas": 11,
+    "capacity_measurements": [
+      {
+        "candidate_headroom_bytes": 0,
+        "candidate_max_end_exclusive": 8215,
+        "end_exclusive": 8215,
+        "id": "basic-header",
+        "start": 8193
+      },
+      {
+        "candidate_headroom_bytes": 0,
+        "candidate_max_end_exclusive": 144,
+        "end_exclusive": 144,
+        "id": "ordinary-zero-page",
+        "start": 34
+      },
+      {
+        "candidate_headroom_bytes": 24,
+        "candidate_max_end_exclusive": 45976,
+        "end_exclusive": 46000,
+        "id": "ordinary-text",
+        "start": 8227
+      },
+      {
+        "candidate_headroom_bytes": 625,
+        "candidate_max_end_exclusive": 31772,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      },
+      {
+        "candidate_headroom_bytes": 5,
+        "candidate_max_end_exclusive": 49147,
+        "end_exclusive": 49152,
+        "id": "low-resident-and-ordinary-chain",
+        "start": 46000
+      },
+      {
+        "candidate_headroom_bytes": 7,
+        "candidate_max_end_exclusive": 49997,
+        "end_exclusive": 50004,
+        "id": "owned-bank0-state",
+        "start": 49152
+      },
+      {
+        "candidate_headroom_bytes": 879,
+        "candidate_max_end_exclusive": 51857,
+        "end_exclusive": 52736,
+        "id": "workbench-boot-overlay",
+        "start": 50006
+      },
+      {
+        "candidate_headroom_bytes": 6,
+        "candidate_max_end_exclusive": 51792,
+        "end_exclusive": 51798,
+        "id": "runtime-overlay-slices",
+        "start": 50006
+      },
+      {
+        "candidate_headroom_bytes": 50,
+        "candidate_max_end_exclusive": 8142,
+        "end_exclusive": 8192,
+        "id": "resident-island",
+        "start": 6144
+      },
+      {
+        "candidate_headroom_bytes": 16,
+        "candidate_max_end_exclusive": 65520,
+        "end_exclusive": 65536,
+        "id": "kernal-window",
+        "start": 57344
+      },
+      {
+        "candidate_headroom_bytes": 0,
+        "candidate_max_end_exclusive": 65536,
+        "end_exclusive": 65536,
+        "id": "kernal-vectors",
+        "start": 65530
+      }
+    ],
+    "comparison": "dependent-address-invariants-plus-derived-vmas-exact",
+    "dependent_fixed_vmas": 101,
+    "dependent_free_derived_vmas": 2,
+    "derived_freight_sha256": "3c9484a8822d03779db468ffb6eb85af9c068f2f7b236de5d224e1ae32ca51d7",
+    "derived_vma_order_sha256": "86173f419915bef751c5663be20b6928a23934b5e3b7f7e8d497b14764e1b9df",
+    "derived_vma_projection_sha256": "6846c2d4a9b62ce418e487d3cb6d06fda667756a27060f90a3977e24fc3f0b72",
+    "derived_vmas": {
+      ".lisp65_c2_kernal_window.reopen_gap0": {
+        "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+        "predecessor_end": 64687,
+        "vma": 64687
+      },
+      ".lisp65_c2_kernal_window.reopen_gap1": {
+        "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+        "predecessor_end": 65160,
+        "vma": 65160
+      }
+    },
+    "fixed_boundary_symbols": 27,
+    "fixed_projection_sha256": "d40021000355a89478697dc681a92f36a0f7cde16ed18a6b3e8d5a1e5e3c0209"
+  },
+  "format": "lisp65-c2.3-v21-dependent-vma-replacement-card-v1",
+  "local_return": {
+    "E000_delta_bytes": 0,
+    "cold_displacement": {
+      "aggregate_bytes": 65423,
+      "aggregate_growth_bytes": 0,
+      "bytes": 63,
+      "packed_page_bytes": 1280,
+      "section_bytes": 1246
+    },
+    "contracted_margins_used_as_freight": false,
+    "fixed_block_delta_bytes": 0,
+    "ordinary": {
+      "reserve_bytes": 24,
+      "text_end_exclusive": "0xb398"
+    },
+    "ownership": {
+      "audited_pre_main_chrout_edges": 1,
+      "direct_window_edges": 390,
+      "entry_edges": 208,
+      "executable_sections": [
+        ".lisp65_c2_kernal_window.c2_resident",
+        ".lisp65_c2_kernal_window.irq_handler",
+        ".lisp65_c2_kernal_window.map_switch_and_guards",
+        ".lisp65_c2_kernal_window.nmi_and_freezer_return",
+        ".lisp65_c2_kernal_window.post_startup_output_seam",
+        ".lisp65_c2_kernal_window.reopen_gap0",
+        ".lisp65_c2_kernal_window.reopen_gap1",
+        ".lisp65_c2_kernal_window.reopen_gap2",
+        ".lisp65_c2_kernal_window.typed_queue_driver"
+      ],
+      "ignored_absolute_or_weak_alias_count": 99,
+      "matrix": {
+        "absolute-weak-alias-disguised-exit": "rejected",
+        "inter-function-non-entry-offset": "rejected",
+        "jsr-to-internal-basic-block": "rejected",
+        "owned-state-or-data-target": "rejected",
+        "same-function-mid-instruction": "rejected",
+        "same-function-symbol-less-basic-block": "passed"
+      },
+      "model": "section-qualified-function-and-instruction-boundary-v1",
+      "owned_function_entries": {
+        "57344": "c2_kernal_event_poll",
+        "57400": "c2_kernal_irq_handler",
+        "57474": "c2_kernal_nmi_handler",
+        "57483": "c2_kernal_fail_closed",
+        "57497": "c2_kernal_output_cell",
+        "57501": "c2_overlay_call",
+        "57530": "c2_product_gc_mark_roots",
+        "58077": "c2_stream_c2d_read",
+        "58162": "c2_stream_product_image_read",
+        "59293": "c2_stream_shelf_read",
+        "59487": "c2_stream_c2d_write",
+        "59581": "c2_stream_name_value",
+        "60414": "c2_header_counts",
+        "60456": "c2_product_entry_record",
+        "61018": "c2_session_emit_reset",
+        "61065": "c2_session_emit_add",
+        "61570": "c2_session_emit_finalize",
+        "61656": "c2_append_begin",
+        "62169": "c2_append_run_rollback_plan",
+        "62198": "c2_product_entry_length",
+        "62302": "vm_arity_accepts",
+        "62358": "vm_logical_relative_target",
+        "62490": "vm_byte_args",
+        "62587": "c2_overlay_call_range",
+        "62640": "c2_decode_from",
+        "63188": "c2_product_physical_copy",
+        "63333": "c2_stream_product_string_record_any",
+        "63965": "c2_stream_product_string_record",
+        "64070": "c2_stream_product_canonical_name",
+        "64496": "c2_stream_gc_checkpoint",
+        "64687": "vm_runtime_overlay_transaction_begin",
+        "65160": "vm_c2d_byte",
+        "65249": "c2_abort_driver",
+        "65424": "c2_facade_target_c2_dma",
+        "65492": "vm_runtime_overlay_transaction_end"
+      },
+      "same_function_basic_block_jumps": 181,
+      "violations": []
+    },
+    "reader": {
+      "address": "0x2277",
+      "bytes": 166
+    },
+    "return_labels": {
+      "global_non_entries": 0,
+      "symbol_names_present": []
+    },
+    "selector": {
+      "address": "0x231d",
+      "bytes": 40,
+      "fixed_vector": "0xb5eb",
+      "identity_depends_on_global_return_label": false,
+      "real_call_identities": {
+        "c2d": {
+          "call": "0xe326",
+          "emitted_bytes": "20ebb5aa",
+          "entry": "0xe2dd",
+          "entry_offset": 75,
+          "function": "c2_stream_c2d_read",
+          "hardware_pushed_return": "0xe328",
+          "tail_bytes": "aa"
+        },
+        "selector_operands_match": true,
+        "shelf": {
+          "call": "0xe84b",
+          "emitted_bytes": "20ebb58510",
+          "entry": "0xe79d",
+          "entry_offset": 176,
+          "function": "c2_stream_shelf_read",
+          "hardware_pushed_return": "0xe84d",
+          "tail_bytes": "8510"
+        }
+      }
+    },
+    "status": "PASS: local non-entries and emitted identities linked"
+  },
+  "mutations_rejected": {
+    "golden": {
+      "candidate": {
+        "derived-section-absent": "candidate fixed-plus-derived section closure drift",
+        "gap0-breaks-predecessor-end": "candidate derived VMA violates predecessor end: .lisp65_c2_kernal_window.reopen_gap0",
+        "gap0-predecessor-size-unfollowed": "candidate derived VMA violates predecessor end: .lisp65_c2_kernal_window.reopen_gap0",
+        "gap1-breaks-predecessor-end": "candidate derived VMA violates predecessor end: .lisp65_c2_kernal_window.reopen_gap1",
+        "gap2-anchor-moved": "candidate dependent-address invariants differ from Golden",
+        "other-fixed-vma-moved": "candidate dependent-address invariants differ from Golden",
+        "uncontracted-section-added": "candidate fixed-plus-derived section closure drift"
+      },
+      "golden": {
+        "capacity-wall-moved": "inherited capacity arena authority drift",
+        "criterion-dimmed": "dependent-address policy or authority drift",
+        "dependency-authority-changed": "dependent-address policy or authority drift",
+        "dependent-anchor-demoted": "dependent fixed-VMA closure drift",
+        "dependent-free-address-promoted": "dependent fixed-VMA closure drift",
+        "derived-order-source-reverted": "VMA/LMA order derivation partition drift",
+        "derived-predecessor-changed": "derived predecessor relation drift: .lisp65_c2_kernal_window.reopen_gap0",
+        "derived-relation-dimmed": "derived predecessor relation drift: .lisp65_c2_kernal_window.reopen_gap0",
+        "derived-vma-frozen": "derived VMA contains a frozen address or loses metadata",
+        "fixed-boundary-moved": "fixed boundary closure drift"
+      }
+    },
+    "preflight": [
+      "authorize-two-cards",
+      "restore-v3-operator",
+      "dim-review",
+      "skip-real-schema",
+      "skip-ambient-sweep",
+      "spend-card-in-preflight"
+    ]
+  },
+  "next": "Completion and same-world media closure, then D1 and D2-D5",
+  "owner_scope": {
+    "historical_body_selected": false,
+    "real_global_inventory": {
+      "declared_functions": 29,
+      "duplicate-successor-in-global-asm-domain": "rejected",
+      "status": "passed-real-global-assembler-inventory"
+    },
+    "relapse_mutation": "duplicate successor in global src/*.s domain rejected",
+    "selected_owner": "mapped-far-content-convergence",
+    "selected_successor_copies": 1,
+    "status": "PASS: one name, one owner, one body per inventory"
+  },
+  "process_isolation": {
+    "acceptance": 64262,
+    "all_distinct": true,
+    "owner_scope": 64261,
+    "parent": 63031,
+    "producer": 63317
+  },
+  "recorded_on": "2026-08-15",
+  "status": "PASS: sole dependent-VMA replacement card green",
+  "transport": {
+    "call_seams": {
+      "c2d": "0xe2dd",
+      "shelf": "0xe79d"
+    },
+    "historical_worlds_changed": 0,
+    "mapped_window": "0x4000..0x5fff",
+    "reader": {
+      "address": "0x2277",
+      "bytes": 166,
+      "end_exclusive": "0x231d",
+      "section": ".text",
+      "section_end": "0xb398"
+    },
+    "status": "PASS: linked reader executes outside its mapped window"
+  }
+}

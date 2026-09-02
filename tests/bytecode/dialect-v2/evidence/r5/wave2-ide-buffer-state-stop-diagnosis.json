@@ -1,0 +1,57 @@
+{
+  "format": "lisp65-r5-wave2-harness-stop-diagnosis-v1",
+  "version": 1,
+  "recorded_on": "2026-07-18",
+  "status": "diagnosed-harness-private-state-name-drift-no-case-receipt",
+  "source_commit": "00de00f4366e629f695a8d6f75084901aac1b346",
+  "candidate": {
+    "product_artifact_set_sha256": "6c358e79baa55999f80d1ebcd45b57234e57af8bc80bc29042e0b93915ac18a5",
+    "build_id": "d60fc5dd",
+    "candidate_manifest_sha256": "591277d46f2cee691c0a7c504c19ca8486a82e41c6176219cb645bef20ab1290",
+    "test_closure_set_sha256": "eca47a3172bd6245d3c53bf8c1103f912857a7f5d38873eadee4105bbbe4504a"
+  },
+  "trigger": {
+    "gate": "G5",
+    "run_id": "r5-run-20260718-wave2-01",
+    "case": "workbench-ux/ux-complete",
+    "phase": "persistence-create",
+    "expected": "(t nil bytecode)",
+    "observed": "(nil \"buffer missing\" nil)",
+    "case_receipt": "not-emitted",
+    "raw_transcript": {
+      "path": "build/r5-global-g5/evidence/r5-run-20260718-wave2-01/workbench-ux-complete/r5-g5-ux-persistence-create.txt",
+      "sha256": "5ad450707b61a54e1e3c449d8bbbdf8ec3caa87b5dea89c1f44bcdbc4fef45ef"
+    }
+  },
+  "diagnosis": {
+    "classification": "harness-private-state-name-drift-after-authorized-16-name-harvest",
+    "root": "The product moved private Buffer state to the ide-buffers value cell under Lisp-2, but the R5 hardware helper still wrote and read the revoked *ide-buffers* symbol.",
+    "product_behavior": "save-buffer-to correctly reported buffer missing because the product-visible ide-buffers value cell was empty",
+    "decisive_control": {
+      "forms": [
+        "(set-symbol-value (quote ide-buffers) nil)",
+        "(set-symbol-value (quote ide-buffers) (list (cons \"ap6src\" (ide-make-buffer \"ap6src\" (list \"(defun ap6-persisted () 611)\")))))",
+        "(list (save-buffer-to \"ap6src\" \"ap6src\") (ide-error) (function-kind (quote m65d-save)))"
+      ],
+      "observed": "(t nil bytecode)",
+      "transcript": {
+        "path": "build/r5-global-g5/diagnostics/wave2-ide-buffer-state/ide-buffer-state.txt",
+        "sha256": "b43dca7fceeecd513557ca06d35ef12ed3ca5b5d0766adc3a9dbc510b291cb68"
+      }
+    },
+    "conclusion": "The R4 product is correct; the R5 test helper alone retained the revoked private-state spelling."
+  },
+  "structural_fix": {
+    "harness": "Every R5 Buffer helper and reset now uses the ide-buffers value cell.",
+    "gate": "The Wave-2 policy-name implementation gate rejects any *ide-buffers* occurrence in the hardware UX harness and requires the current value-cell seam.",
+    "negative_property": "A future stale private-state spelling fails before hardware execution.",
+    "product_artifact_effect": "none",
+    "required_repin": "R5 test closure and static preflight only"
+  },
+  "gate_effect": {
+    "g5": "2/14 passed before this receipt-less stop",
+    "passed_receipts": "remain valid after offline re-verification against the new harness-only closure",
+    "r4": "historical-and-still-valid",
+    "claim": "diagnosis only; no ux-complete pass and no product acceptance"
+  }
+}

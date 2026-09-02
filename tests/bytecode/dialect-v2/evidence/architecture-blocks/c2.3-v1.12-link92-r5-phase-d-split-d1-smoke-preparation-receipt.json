@@ -1,0 +1,120 @@
+{
+  "bindings": {
+    "candidate_media": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/shared-system/lisp65-product.d81",
+      "sha256": "ed4e5c7281913e351550f10533a585c2516a7a0a4214a66cf93cf35252aee306"
+    },
+    "config": {
+      "bytes": 2311,
+      "path": "config/c2-v112-link92-phase-d-d1-smokes.json",
+      "sha256": "23e0855849b6ee5bc94c296a7ed4470af3ed52ef6a85cfb51fa1f54c72bcf871"
+    },
+    "first_red_authority": {
+      "bytes": 3861,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d1-time-oracle-first-red.json",
+      "sha256": "e7e0f7c03a665a6081021cac3ccb9d7353735a85e8c2dceab15518638597eb01"
+    },
+    "initial_preparation": {
+      "bytes": 2847,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d1-smoke-preparation-receipt.json",
+      "sha256": "de0fba4615f587e280f8a6138d6a16d7eda30b0a20cefe39278d3a0f4ab65367"
+    },
+    "launch_authority": {
+      "bytes": 3363,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-split-d1-boot-device-receipt.json",
+      "sha256": "a8d98f736657af18fdfd27d6e814cf394f16f16d67dad9e6c93cb1294fb7b627"
+    },
+    "q_and_time_form_authority": {
+      "bytes": 3780,
+      "path": "config/c2-v14-link89-device-session.json",
+      "sha256": "7fabf65a053b692e133364474abb6cac27c572d50f3e10e3fc449735b7eee174"
+    },
+    "runner": {
+      "bytes": 3794,
+      "path": "scripts/c2-v112-link92-phase-d-d1-smokes-hw.sh",
+      "sha256": "76f7f6603b6afd8d50202d0a19d4ea3ecf3fc97603e44d398dbbcbd2b8515d6d"
+    },
+    "split_inheritance_first_red": {
+      "bytes": 1188,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-split-d1-smoke-inheritance-first-red.json",
+      "sha256": "69e8034dd6ad2eff229459793144c0ff755b177b30809335fda8623905d7a62b"
+    },
+    "string_authority": {
+      "bytes": 37138,
+      "path": "tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json",
+      "sha256": "dd581d7c7cc3df82f650a7fa5dec1fde0fa8d68977b4ecb4804877d0365f5c3d"
+    },
+    "structural_time_repair": {
+      "bytes": 3879,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d1-smoke-structural-repair-receipt.json",
+      "sha256": "11bfffe5fc81f46a64c8d3521b5d1298991eab7fec08395a726d55dcd6643d4a"
+    },
+    "time_semantic_authority": {
+      "bytes": 2198,
+      "path": "config/c2-time-contract.json",
+      "sha256": "e73d5156d6683151c094b90daa14078500c38834d71be8a7fd23aac2c19201cd"
+    }
+  },
+  "claim_limit": "The three D1 q/time/string smokes only, against the already-green live Link-92-r5 REPL. No D3, D2, selector, Halt, Phase E or release claim.",
+  "execution_accounting": {
+    "D1_smokes": 0,
+    "D2_rows": 0,
+    "D3_rows": 0,
+    "hardware_contacts": 0
+  },
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-d1-smoke-preparation-v1",
+  "mutation_count": 24,
+  "mutations_rejected": [
+    "row-order-swapped",
+    "q-form-drift",
+    "q-result-dimmed",
+    "time-form-drift",
+    "time-exact-frame-value-pinned",
+    "time-result-dimmed",
+    "time-negative-frame-admitted",
+    "string-form-drift",
+    "string-result-dimmed",
+    "verified-input-removed",
+    "multi-form-submission",
+    "result-postcondition-removed",
+    "exact-frame-pin-admitted",
+    "premature-result-look",
+    "D3-crossing",
+    "D2-crossing",
+    "prior-q-session-reused",
+    "source-verified-input-removed",
+    "source-expect-removed",
+    "source-result-gate-removed",
+    "source-D3-crossing",
+    "source-time-exact-frame-pinned",
+    "source-time-structural-check-removed",
+    "source-fresh-q-row-removed"
+  ],
+  "recorded_on": "2026-08-08",
+  "rows": [
+    {
+      "authority": "config/c2-v14-link89-device-session.json:D3.q_form/q_expected",
+      "expect": "\"-3.0\"",
+      "form": "(q->string(q*(q 1 64)(q -2 0)))",
+      "id": "q"
+    },
+    {
+      "authority": "config/c2-time-contract.json:public_surface",
+      "form": "(time(+ 1 2))",
+      "id": "time",
+      "oracle": {
+        "kind": "nonnegative-frame-count-plus-exact-result",
+        "minimum_frames": 0,
+        "result": "3"
+      }
+    },
+    {
+      "authority": "tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json:string-trim",
+      "expect": "\"hi\"",
+      "form": "(string-trim \" -\" \" --hi- \")",
+      "id": "strings"
+    }
+  ],
+  "status": "passed-split-restart-three-bound-d1-smokes-ready-on-green-live-repl"
+}

@@ -1,0 +1,112 @@
+{
+  "bindings": {
+    "preparation": {
+      "bytes": 3879,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d1-smoke-structural-repair-receipt.json",
+      "sha256": "11bfffe5fc81f46a64c8d3521b5d1298991eab7fec08395a726d55dcd6643d4a"
+    },
+    "starting_context_screen": {
+      "bytes": 4134,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-resume-context.png",
+      "sha256": "9df05e737258e775dd83cf5b50b94da6b0385b87b5615e827055979972da12f2"
+    },
+    "starting_context_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-resume-context.txt",
+      "sha256": "af625e44c2ea5f051b35904c9f9be518ab2eed9e866a0bdf2040c1c55f11cd30"
+    }
+  },
+  "claim_limit": "The three D1 q/time/string smokes only, against the already-green live Link-92-r5 REPL. No D3, D2, selector, Halt, Phase E or release claim.",
+  "disposition": {
+    "D1": "green",
+    "D2": "not_started",
+    "D3": "not_started",
+    "next": "D3 comfort and physical editor row"
+  },
+  "execution_accounting": {
+    "D1_smoke_contacts_total": 2,
+    "D1_smokes": 3,
+    "D2_rows": 0,
+    "D3_rows": 0,
+    "additional_links": 0,
+    "hardware_contacts_this_repetition": 1,
+    "media_rebuilds": 0,
+    "product_rebuilds": 0
+  },
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-d1-smoke-device-v1",
+  "recorded_on": "2026-08-07",
+  "rows": [
+    {
+      "expect": "\"-3.0\"",
+      "form": "(q->string(q*(q 1 64)(q -2 0)))",
+      "id": "q",
+      "input_echo": {
+        "bytes": 2241,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-q-input-attempt-1.txt",
+        "sha256": "07c0e6120226a6cd7a93cde50559e5d7338b552740253b4f84ef4faa9d1a4029"
+      },
+      "result_screen": {
+        "bytes": 3769,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-q.png",
+        "sha256": "d9a5ec00bd1b30467294c6e7fef8b08d21097f44dfd0ba02503bbad34ea13e97"
+      },
+      "result_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-q.txt",
+        "sha256": "85da69d2406ef8b2077a0dcbe196e54cc3ad399212d7b679be0aafa22929f365"
+      },
+      "status": "passed"
+    },
+    {
+      "form": "(time(+ 1 2))",
+      "id": "time",
+      "input_echo": {
+        "bytes": 2241,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-time-structural-input-attempt-1.txt",
+        "sha256": "442a78e911e9dcb0af566aa36db19987954fc77905e696607364c97d03bd2fa9"
+      },
+      "observed": {
+        "frames": 0,
+        "result": "3"
+      },
+      "oracle": {
+        "kind": "nonnegative-frame-count-plus-exact-result",
+        "minimum_frames": 0,
+        "result": "3"
+      },
+      "result_screen": {
+        "bytes": 4490,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-time-structural.png",
+        "sha256": "8844779cdd0f0ff990fd52da4355bfc2c179b6b6d0c0be34c2c16e386d91189b"
+      },
+      "result_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-time-structural.txt",
+        "sha256": "f5dbe02fd905a3fa74d99a940f24adc48ea98ddd132d889bf3e5da8daf8e1c28"
+      },
+      "status": "passed-structural"
+    },
+    {
+      "expect": "\"hi\"",
+      "form": "(string-trim \" -\" \" --hi- \")",
+      "id": "strings",
+      "input_echo": {
+        "bytes": 2241,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-strings-input-attempt-1.txt",
+        "sha256": "edc8ca61414ad0db6ea74d8cf3b25dbe66de08d86ad95276e6f4164e6a6883db"
+      },
+      "result_screen": {
+        "bytes": 4904,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-strings.png",
+        "sha256": "97f2b66e31c935ea3c742395f7c537f723fb972a118c8528aa3b0d79dc53cdbf"
+      },
+      "result_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-strings.txt",
+        "sha256": "ca773f58a5939e10762562f1514ea4a747881965ff5fbe7d72d45d630d75722d"
+      },
+      "status": "passed"
+    }
+  ],
+  "status": "passed-link92-d1-q-time-string-smokes"
+}

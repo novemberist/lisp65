@@ -1,0 +1,104 @@
+{
+  "format": "lisp65-v2-capability-carrier-g5-failure-v1",
+  "status": "failed",
+  "gate": "G5",
+  "profile": "dialect-v2-capability-carrier",
+  "source_commit": "4a11f2185a42b31b32c1101d5b12d60173d3f9c4",
+  "build_id": 2581576524,
+  "candidate_manifest": {
+    "path": "build/cp5-g5-restart/candidate.json",
+    "sha256": "d925558814d17eb6a46a827b1cc4d9c1520783f2a4eded714efb36f6fbd48776",
+    "verified": true,
+    "shippable": false
+  },
+  "hardware_plan": {
+    "path": "build/cp5-g5-restart/hardware-plan.json",
+    "sha256": "94fb730b4369a402f7d93bd0143c0e70c96912acdfc43740681d8da8f1c9f8f5",
+    "case_count": 14,
+    "evidence_reuse": "none"
+  },
+  "hardware_package": {
+    "path": "build/cp5-g5-restart/workbench-hw-package/manifest.json",
+    "sha256": "66f799424b21d4852d5f5fe90b65b782b53a25c5b4b99d8df75c84046147479d",
+    "shippable": false,
+    "release_authorization": "none",
+    "g5_claim": "none"
+  },
+  "completed_before_failure": [
+    "workbench-ux/overlay-stack-guard",
+    "workbench-ux/stdlib-runtime"
+  ],
+  "matrix_case": {
+    "id": "workbench-ux/ux-complete",
+    "target": "hw-workbench-ux-smoke",
+    "expected": "pass",
+    "observed": "lazy-m65d-load-fails-after-ide-and-idex-at-symbol-capacity"
+  },
+  "repaired_path_confirmation": {
+    "previous_failure": "first-persistence-create-via-boundp-designator",
+    "observed": "passed",
+    "create_form_result": "(t nil bytecode)",
+    "additional_passed_phases": [
+      "persistence-read",
+      "persistence-second-create",
+      "persistence-replace",
+      "persistence-remount",
+      "higher-order-persistence-before-reset",
+      "reset-reload-read"
+    ],
+    "conclusion": "the-generated-designator-dispatch-fix-is-confirmed-on-hardware"
+  },
+  "failure": {
+    "phase": "higher-order-idex-some",
+    "form": "(save-buffer-to \"h8s\" \"h8s\")",
+    "expected": "t",
+    "observed": "nil",
+    "ide_error": "persistence unavailable",
+    "follow_on": "m65d-save-remains-unbound-and-load-of-h8s-returns-nil"
+  },
+  "diagnostics": [
+    {
+      "context": "failed-restored-session-after-ide-then-idex",
+      "form": "(list (function-kind (quote m65d-save)) (symbol-count) (symbol-max) (load-lib \"m65d\") (function-kind (quote m65d-save)) (ide-error))",
+      "observed": "(nil 682 720 nil nil \"persistence unavailable\")",
+      "result": "m65d-cannot-register-with-38-symbol-slots-free"
+    },
+    {
+      "context": "fresh-redeploy-control-ide-then-m65d-then-idex",
+      "form": "(list (load-lib \"ide\") (load-lib \"m65d\") (load-lib \"idex\") (function-kind (quote m65d-save)) (symbol-count) (symbol-max))",
+      "observed": "(t t nil bytecode 685 720)",
+      "result": "reversing-the-last-two-libraries-only-moves-the-third-load-failure-to-idex"
+    }
+  ],
+  "diagnosis": {
+    "kind": "workbench-library-composition-symbol-capacity",
+    "root": "the-product-does-not-guarantee-enough-symbol-headroom-for-ide-idex-and-m65d-after-the-ux-session-has-interned-four-additional-symbols",
+    "load_order_effect": "ide-then-idex-leaves-m65d-unavailable-at-682-of-720; ide-then-m65d-leaves-idex-unavailable-at-685-of-720",
+    "why_the_earlier_phase_passed": "before-reset-ide-and-idex-reported-678-of-720-and-the-first-lazy-m65d-load-still-fit",
+    "carrier_cut_result": "not-the-trigger",
+    "media_and_transport_result": "not-the-trigger",
+    "required_fix_scope": "a-product-level-construction-or-capacity-decision-not-a-g5-harness-reordering"
+  },
+  "raw_artifacts": [
+    {"path": "build/cp5-g5-restart/evidence/01-overlay-stack-guard/cp5-g5-restart-overlay-stack-guard-ship-manifest-receipt.json", "sha256": "e453f1278c43632177ce9de2805ce4e16aa021c7264e506cae40510103a30341"},
+    {"path": "build/cp5-g5-restart/evidence/01-overlay-stack-guard/cp5-g5-restart-overlay-stack-guard-arith-42.txt", "sha256": "783fb45963df788a8ce3039ee4761c2ade808947081659d9ede18d486362f3a9"},
+    {"path": "build/cp5-g5-restart/evidence/01-overlay-stack-guard/cp5-g5-restart-overlay-stack-guard-reader-recovery.txt", "sha256": "85c4a9f3ed02f0c23986266d0016a0c28aea3f6c53c938aa776da1cd2ad5b9a5"},
+    {"path": "build/cp5-g5-restart/evidence/02-stdlib-runtime/target.log", "sha256": "a90cee041597067eb6a41ebdab08a453a951b5c5fdeca05314e4d27889c137f8"},
+    {"path": "build/cp5-g5-restart/evidence/03-ux-complete/cp5-g5-restart-ux-persistence-create.txt", "sha256": "2daecca37e3c8e5342ed3ba9c9cf4122a2ece5f5868ccddfe794c2fdcd08a1f4"},
+    {"path": "build/cp5-g5-restart/evidence/03-ux-complete/cp5-g5-restart-ux-higher-order-remount-some.txt", "sha256": "407e23ee24aec699d909582b218027368366aec97e7b246aee57ea94a1af8d40"},
+    {"path": "build/cp5-g5-restart/evidence/03-ux-complete/cp5-g5-restart-ux-higher-order-idex-some.txt", "sha256": "72d3077e17c39f3cd7f5d295f05fd1e516d83226136df6e7fc19f19a099549d0"},
+    {"path": "build/cp5-g5-restart/evidence/03-ux-diagnostic/cp5-g5-restart-ux-save-failure-diag.txt", "sha256": "bd58fdb4c5d958fc6cb19d2ea525ce297bef60c8526e74a8e5b58b784a42fe63"},
+    {"path": "build/cp5-g5-restart/evidence/03-ux-diagnostic/cp5-g5-restart-ux-m65d-loss-diag.txt", "sha256": "b865e5e37d4cb57f33f30a56443710e5f6cb831271738f0b72a91fc89a18ee02"},
+    {"path": "build/cp5-g5-restart/evidence/03-ux-diagnostic/cp5-g5-restart-ux-load-order-control.txt", "sha256": "5802405e3b015373c519a417ca5afa6a71607e1fa065eb1c9000bcdfd4722c5d"}
+  ],
+  "gate_effect": {
+    "checkpoint_4": "closed-and-hardware-confirmed",
+    "checkpoint_5": "blocked",
+    "g5_pass": false,
+    "completed_matrix_cases": 2,
+    "total_matrix_cases": 14,
+    "remaining_639_bytes": "still-banked",
+    "further_matrix_cases": "not-run-after-first-new-semantic-failure",
+    "restart_requirement": "new-binary-and-complete-g5-from-the-beginning-after-an-authorized-fix"
+  }
+}

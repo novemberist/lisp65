@@ -1,0 +1,75 @@
+{
+  "choreography": {
+    "fresh_BASIC_first": true,
+    "one_form_per_submission": true,
+    "optional_library_media": "none",
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_uploaded_and_read_back_before_boot": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "Block-3 matcher and blink on line editor and IDE"
+    ],
+    "excludes": [
+      "Comfort",
+      "v2.1 Comfort return",
+      "release",
+      "publish"
+    ]
+  },
+  "decision_table": {
+    "all-four-groups-green": "Block 3 hardware-accepted",
+    "claim-expansion": "forbidden during the device session",
+    "daily-use-blocker": "at most one repair round; otherwise descope the affected Block-3 freight",
+    "rare-or-cosmetic": "Known Issue and v2.0 register row"
+  },
+  "format": "lisp65-c2-v200-block3-return-device-session-v1",
+  "media": {
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-block3-return-device-media/shared-system/lisp65-product.d81",
+      "remote_name": "V20B3P.D81",
+      "sha256": "d9975d7c2d98540ea56c7d1ddf48bd0b224ba2c1f2fd311bd9e9dd548eec635d"
+    }
+  },
+  "recorded_on": "2026-09-01",
+  "rows": [
+    {
+      "actions": [
+        "type and navigate across matching parentheses and quotes",
+        "move away and verify the old highlight disappears",
+        "place delimiters inside strings/comments",
+        "type one over-close delimiter"
+      ],
+      "expect": "exactly one current match; no stale match; string/comment delimiters and over-close remain unmarked",
+      "id": "B3-1-line-editor-matcher"
+    },
+    {
+      "actions": [
+        "repeat the same matcher cases in IDE",
+        "scroll one long line"
+      ],
+      "expect": "same matching semantics and no freeze",
+      "id": "B3-2-IDE-matcher"
+    },
+    {
+      "actions": [
+        "observe the idle cursor in line editor and IDE",
+        "type during blink-off",
+        "place cursor on a matched delimiter"
+      ],
+      "expect": "cursor blinks; typing restores visibility immediately; blink does not erase the match attribute",
+      "id": "B3-3-blink"
+    },
+    {
+      "actions": [
+        "type normally and rapidly on both surfaces",
+        "run the final loaded-configuration D5 probe"
+      ],
+      "expect": "no perceptible typing regression; D5 at least 32 free slots and 384 name bytes",
+      "id": "B3-4-responsiveness-D5"
+    }
+  ],
+  "status": "ready-owner-v2.0-block3-contact"
+}

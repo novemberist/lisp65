@@ -1,0 +1,129 @@
+{
+  "artifacts": {
+    "ELF": {
+      "bytes": 622568,
+      "path": "build/c2.3/packed-callee-closure-link95/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "44c2c02db3b72018d0f18878b4cfb37fc1f5e457e898713e37ee64468c060caa"
+    },
+    "bank2": {
+      "bytes": 45939,
+      "path": "build/c2.3/packed-callee-closure-link95/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+      "sha256": "dc02b18be46f96f2b4e72d6502d4c193ee0dcbee4ee0abf4ca1ebd27f1b7a16d"
+    },
+    "completion": {
+      "bytes": 6052,
+      "path": "build/c2.3/packed-callee-closure-link95/receipts/artifact-completion.json",
+      "sha256": "dad6523125e90869f6e5d8bd8bdde3d15288c44f95a9e23d10c8bda0ef085422"
+    },
+    "internal": {
+      "bytes": 761059,
+      "path": "build/c2.3/packed-callee-closure-link95/receipts/wplto-internal.json",
+      "sha256": "de3e2936e0bd79732a4e7cf099092e2d46808fe23147d1b8628813f423ce3656"
+    },
+    "manifest": {
+      "bytes": 20985,
+      "path": "build/c2.3/packed-callee-closure-link95/canonical-product-manifest.json",
+      "sha256": "9aa86cd4bbdc865a2ef16858737ce88f0b87a2ba7a74bef43661265af5f54ea5"
+    },
+    "map": {
+      "bytes": 176536,
+      "path": "build/c2.3/packed-callee-closure-link95/final/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "dea3fa9b0c0d16a4bff845f47179015fe6923b9dee7417a135da4721060dd79b"
+    },
+    "product": {
+      "bytes": 41566,
+      "path": "build/c2.3/packed-callee-closure-link95/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "3403e400dc0e17c572d25c354f6b0c2c64733728e67c03e7867176987027e383"
+    },
+    "profile": {
+      "bytes": 12014,
+      "path": "build/c2.3/packed-callee-closure-link95/final/resolved-profile.txt",
+      "sha256": "ab50df4f9ebd4856d8fad26c1d80ea1e340fd43e2595ddf32f6ea58cc1e225ad"
+    }
+  },
+  "attempt_accounting": {
+    "hardware_runs": 0,
+    "product_cards_authorized": 1,
+    "product_cards_consumed": 1,
+    "product_closure_links": 1
+  },
+  "claim_limit": "One commissioned Link-95 card after the full packed-callee host closure; no media, hardware, release, or public-surface claim.",
+  "format": "lisp65-c2.3-link95-product-card-v1",
+  "geometry": {
+    "bank2_headroom_bytes": 19597,
+    "bank2_static_code_bytes": 45939,
+    "resident_delta_bytes": 0,
+    "session_capacity": {
+      "append_records": 24,
+      "pack_quantum_bytes": 256,
+      "publish_clear_bytes": 1295,
+      "publish_clear_headroom_bytes": 497,
+      "region1_rollback_sequence": [
+        "c2-append-rollback-unpublish",
+        "c2-append-rollback-wipe-plane",
+        "c2-append-rollback-wipe-chip",
+        "c2-append-rollback-wipe-attic",
+        "c2-append-rollback-finalize"
+      ],
+      "retired_sections_present": {
+        ".lisp65_rt_c2append_journal_clear": false,
+        ".lisp65_rt_c2append_publish_exports": false
+      },
+      "session_catalog_records": 52,
+      "session_family_bytes": 65423,
+      "session_family_headroom_bytes": 113,
+      "session_service_bytes": 399,
+      "session_service_records": 1,
+      "slice_cap_bytes": 1792,
+      "status": "passed-current-v4-two-region-session-aggregate"
+    },
+    "walls": {
+      "bank0_text_headroom_bytes": 354,
+      "e000_headroom_bytes": 54,
+      "fixed_hot_block_headroom_bytes": 2,
+      "ordinary_bank0_bss_headroom_bytes": 137,
+      "resident_island_headroom_bytes": 50
+    }
+  },
+  "hardware_handoff": {
+    "bundled_defstruct_sister": true,
+    "status": "media-pending",
+    "trace_forms": [
+      "(require (quote inspect))",
+      "(defun trace-probe (x) (+ x 1))",
+      "(trace trace-probe)",
+      "(trace-probe 4)",
+      "(untrace trace-probe)",
+      "(trace-probe 4)"
+    ]
+  },
+  "recorded_on": "2026-08-10",
+  "source": {
+    "contract": {
+      "bytes": 2476,
+      "path": "config/c2-top-level-macro-publication.json",
+      "sha256": "ad64f2bd6f47d71d9b053313be7d8c69c9bad7ed95e3e298fdbb0d495539b091"
+    },
+    "driver": {
+      "bytes": 25664,
+      "path": "tools/host-lisp/c2_link95_product_card.py",
+      "sha256": "98c7c0f0b8d09798d47d84274dbaabe570cf35683457e003652e4a7bf855cbb0"
+    },
+    "first_red": {
+      "bytes": 15519,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-packed-symbolic-callee-closure-first-red.json",
+      "sha256": "61b539f44d187be8880408e4bdb661777f94b989d57b26104f9424d5f057d624"
+    },
+    "host_closure": {
+      "bytes": 16540,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-packed-symbolic-callee-closure-receipt.json",
+      "sha256": "82f8a54a98575c25d2e982e984b7bbc7db147b088b0fa490a012a9c74245c57b"
+    },
+    "preflight": {
+      "bytes": 2862,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-product-preflight-receipt.json",
+      "sha256": "78c7ca2db3ccf87c5e8db55f22e11a8e9c3407c75918796bde6ad7eabbb70292"
+    }
+  },
+  "status": "LINK95-HOST-PRODUCT-GREEN; MEDIA-AND-HARDWARE-PENDING"
+}

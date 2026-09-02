@@ -1,0 +1,102 @@
+{
+  "candidate_manifest": {
+    "bytes": 19667,
+    "path": "build/c2.2/v1.2.5-candidate-product-link82/canonical-product-manifest.json",
+    "sha256": "ed94957a40d11afc14af19db50e6bce32cd66255b907060b1a075e4b0360d4bd"
+  },
+  "candidate_media_manifest": {
+    "bytes": 15646,
+    "path": "build/c2.2/v1.2.5-candidate-media/candidate-manifest.json",
+    "sha256": "44065ec5efa8754f5ae50a57012a3e9c6ec73fc57eef6e262cbda7ea4885ccc8"
+  },
+  "claim_limit": "Artifact-side proof rebinding only. Product bytes, ELF, resolved profile, WPLTO map and hardware are unchanged.",
+  "driver": {
+    "bytes": 9397,
+    "path": "tools/host-lisp/c2_v125_gate_artifact_rebind.py",
+    "sha256": "6d7a11e2665035f2981002728521c0c1c6334ab70d03b6cfd9d1387eb3418acd"
+  },
+  "execution_accounting": {
+    "WPLTO_reruns": 0,
+    "hardware_runs": 0,
+    "product_links": 0
+  },
+  "feature_gates": {
+    "bytes": 3517,
+    "path": "build/c2.2/v1.2.5-candidate-product-link82/receipts/v1.2.5-feature-gates.json",
+    "sha256": "5939d1dcfc2e020631b982c97461b94facc55a0af79f1cb0075db03980a6dec7"
+  },
+  "format": "lisp65-c2.2-v1.2.5-option-A-gate-artifact-rebind-v2",
+  "identity_after": {
+    "linked_elf_sha256": "3d9e4c4e7e8d0719223561c66578fb4b24058f32e42483642322a88c4884d8d6",
+    "resident_prg_sha256": "cef92b1dace70ae700402cb37e95b755d8be5625d168dd65c2ff319176247efe",
+    "resolved_profile_sha256": "05679c60fcc6044d0944206a03b9b8f4a0bb13328353a3bed88d2395008e6fe6"
+  },
+  "identity_before": {
+    "linked_elf_sha256": "3d9e4c4e7e8d0719223561c66578fb4b24058f32e42483642322a88c4884d8d6",
+    "resident_prg_sha256": "cef92b1dace70ae700402cb37e95b755d8be5625d168dd65c2ff319176247efe",
+    "resolved_profile_sha256": "05679c60fcc6044d0944206a03b9b8f4a0bb13328353a3bed88d2395008e6fe6"
+  },
+  "predecessor_fastpath": {
+    "bytes": 5881,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-idempotence-fastpath-receipt.json",
+    "sha256": "4a64d28ff0a40de6eee1a7ea6ba1baaf9924a73bb3b7b22751666fd1f8af2c1e"
+  },
+  "predecessor_gate": {
+    "bytes": 11015,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-prior-append-option-A-host-gate-receipt.json",
+    "sha256": "62b5d8905bc2095b2dc69b532c33b9f9d40615590e3497dfe3b493aa7e72fa6b"
+  },
+  "predecessor_rebind_history": [
+    {
+      "WPLTO_reruns": 0,
+      "predecessor_gate": {
+        "bytes": 9440,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-prior-append-option-A-host-gate-receipt.json",
+        "sha256": "1edd33d2f1257337e45095383d34a1dc420470ec28919bf9700d98bb3ac19c4c"
+      },
+      "product_identity_delta_bytes": 0,
+      "product_links": 0,
+      "reason": "The host gate used wall-clock date.today() in an otherwise deterministic receipt. Its date now comes from the fixed acceptance contract.",
+      "successor_gate": {
+        "bytes": 9440,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-prior-append-option-A-host-gate-receipt.json",
+        "sha256": "889871fedd84abd52ff92aed8fa66740f6113bb4d6748e8f51d3362c48c81d32"
+      },
+      "two_consecutive_successor_receipts": "byte-identical-sha256-889871fedd84abd52ff92aed8fa66740f6113bb4d6748e8f51d3362c48c81d32"
+    },
+    {
+      "WPLTO_reruns": 0,
+      "predecessor_gate": {
+        "bytes": 9440,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-prior-append-option-A-host-gate-receipt.json",
+        "sha256": "889871fedd84abd52ff92aed8fa66740f6113bb4d6748e8f51d3362c48c81d32"
+      },
+      "product_identity_delta_bytes": 0,
+      "product_links": 0,
+      "reason": "Fresh-clone qualification found that the permanent host gate consumed ignored v1.2.4 acceptance, phase-M and phase-V builds. The successor rebuilds its target-shaped plane, package medium and current C2 compiler carrier solely from tracked sources.",
+      "successor_gate": {
+        "bytes": 11015,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-prior-append-option-A-host-gate-receipt.json",
+        "sha256": "62b5d8905bc2095b2dc69b532c33b9f9d40615590e3497dfe3b493aa7e72fa6b"
+      },
+      "two_consecutive_successor_receipts": "byte-identical-sha256-62b5d8905bc2095b2dc69b532c33b9f9d40615590e3497dfe3b493aa7e72fa6b"
+    }
+  ],
+  "recorded_on": "2026-07-31",
+  "status": "passed-deterministic-gate-rebind-without-WPLTO-or-link",
+  "successor_WPLTO": {
+    "bytes": 15636,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.5-require-option-A-wplto-receipt.json",
+    "sha256": "a1c20f5345b67fe98abff531b224fc8c2a73c7c8749c5443940c77b17b58f9b9"
+  },
+  "successor_fastpath": {
+    "bytes": 8227,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-idempotence-fastpath-receipt.json",
+    "sha256": "c038e514d66c86bea7b4bad9fcf6e157ce92145f379a8cc9192a60b690159046"
+  },
+  "successor_gate": {
+    "bytes": 11015,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-prior-append-option-A-host-gate-receipt.json",
+    "sha256": "62b5d8905bc2095b2dc69b532c33b9f9d40615590e3497dfe3b493aa7e72fa6b"
+  }
+}

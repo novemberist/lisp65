@@ -1,0 +1,85 @@
+{
+  "contract": {
+    "capture_armed": "lisp_poll performs zero D60A/D619 reads or acks",
+    "capture_closed": "historic queue drain remains available",
+    "run_stop": "matrix-pending latch remains evaluator abort authority"
+  },
+  "current_candidate_reproof": {
+    "ELF": {
+      "bytes": 647776,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "93201ddea4dbbd58f6905bc93abcd49cc92b4905baffedb873743016826e4945"
+    },
+    "authority": {
+      "bytes": 20186,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-recovery-sanitization-adapter-qualification-resume.json",
+      "sha256": "e16dac5255da5b305b86391afc7d36829f6a3fe9a2e49734c2830309a0978b75"
+    },
+    "linked_single_owner": {
+      "armed_state": "0xFF8D",
+      "consumers": [
+        {
+          "armed_state_before": true,
+          "call_address": "0x48bc",
+          "matrix_before": true,
+          "owner": "vm_run_inner"
+        },
+        {
+          "armed_state_before": false,
+          "call_address": "0x81b9",
+          "matrix_before": false,
+          "owner": "lisp_input_event"
+        }
+      ],
+      "dominated_calls": 1,
+      "matrix_pending": "0xFF8A",
+      "mutations": {
+        "blanket_requirement": "rejected",
+        "unguarded_evaluator_edge": "rejected"
+      },
+      "queue_poll_calls": 2,
+      "rule": "only evaluator drain requires capture domination; public key-event remains legitimate"
+    }
+  },
+  "format": "lisp65-c2-v160-queue-single-owner-gate-v1",
+  "inputs": {
+    "attribution": {
+      "bytes": 2490,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-second-queue-consumer-attribution.json",
+      "sha256": "9608b0b2ccdeacf5348e73e81e59c5a5cf1f297678ce9d429b9506fece6ce0af"
+    },
+    "source": {
+      "bytes": 6580,
+      "path": "src/interrupt.c",
+      "sha256": "8f68517539d3e62590abb42125909fdbc7fb13b737c495bd7542d7394bbfafec"
+    }
+  },
+  "model": {
+    "armed_ordinary": {
+      "armed": true,
+      "break_pending": false,
+      "queue_acks": 0,
+      "queue_present": true,
+      "queue_reads": 0,
+      "run_stop_abort": false
+    },
+    "armed_run_stop": {
+      "armed": true,
+      "break_pending": true,
+      "queue_acks": 0,
+      "queue_present": true,
+      "queue_reads": 0,
+      "run_stop_abort": true
+    },
+    "closed_ordinary": {
+      "armed": false,
+      "break_pending": false,
+      "queue_acks": 1,
+      "queue_present": true,
+      "queue_reads": 1,
+      "run_stop_abort": false
+    }
+  },
+  "recorded_on": "2026-08-21",
+  "status": "PASS: ARMED CAPTURE IS SOLE HARDWARE QUEUE OWNER"
+}

@@ -1,0 +1,161 @@
+{
+  "bindings": {
+    "artifact_disassembly": {
+      "bytes": 28969,
+      "path": "build/post-promotion/v14/parity-toy-link90-artifact/stdlib-p0.disasm.txt",
+      "sha256": "b55b74b85a54f8ca533641620ed771ee168ca4979536179ebdede8df5c8a567c"
+    },
+    "artifact_ext": {
+      "bytes": 4713,
+      "path": "build/post-promotion/v14/parity-toy-link90-artifact/stdlib-p0.ext.bin",
+      "sha256": "01c9ea9d5bb8b76416a2adb3f5c9dc89ff50451c1a43bb02ad254bcf176aaec4"
+    },
+    "artifact_manifest": {
+      "bytes": 42989,
+      "path": "build/post-promotion/v14/parity-toy-link90-artifact/stdlib-p0.manifest.json",
+      "sha256": "0b7a18928b0c961d2dfb5f1dd87a4d590586679f262ed690113805cff52d6308"
+    },
+    "candidate_image": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.d81",
+      "sha256": "640d115e01d238413821ab9cf5b59056abf553e96e27cf0c64d8db75ef8a2bde"
+    },
+    "contact_8": {
+      "bytes": 3939,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link90-opcode-view-witness-device-receipt.json",
+      "sha256": "7d56b518f659e2b78a5c9c584b616c72f050e202f905e5e7dd168183f43faab1"
+    },
+    "driver": {
+      "bytes": 19712,
+      "path": "tools/host-lisp/c2_v14_link90_refill_fix_form_attribution.py",
+      "sha256": "1948dc3e6b5f4c953d9c9ce9cad89140dcf975de2dabbca5672dcb02d949abaa"
+    },
+    "opcode_view_config": {
+      "bytes": 2122,
+      "path": "config/c2-v14-link90-opcode-view-witness.json",
+      "sha256": "173ae0cd49798044cec16c44039180c268b2f5ddea108fb948fdb1caf55dd104"
+    },
+    "owner_review": {
+      "bytes": 41186,
+      "path": "docs/planning/1.4-parity-pilot-work-plan.md",
+      "sha256": "7b96708e3ba648109a2cded30043f5fa2c954f3b55270eb393a6f1f95a5cf04e"
+    },
+    "runtime_elf": {
+      "bytes": 40116,
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.runtime.elf",
+      "sha256": "dcb415da6379d0fc68185a4a486ab07a72442524bbefbca0fc7b3cffda8e841f"
+    },
+    "ship_receipt": {
+      "bytes": 3361,
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.receipt.json",
+      "sha256": "4f28fc396c72f51c34268b1c94c7c9eb1350e5c5164931cb573755f93b1d40cf"
+    },
+    "vm": {
+      "bytes": 103740,
+      "path": "src/vm.c",
+      "sha256": "7564389ff6fb1c5c447d53907903a443569f275b9e8fa4b32b2716bc2cbf3791"
+    },
+    "vm_embed": {
+      "bytes": 39463,
+      "path": "src/vm_embed.c",
+      "sha256": "9884803c8087cde76c29b4504cc4bd51f8e29f121ebfd5d69aef29e116c51791"
+    }
+  },
+  "candidate_link": 90,
+  "facts": {
+    "artifact": {
+      "bank": 5,
+      "code_buffer_bytes": 56,
+      "header_bytes": 21,
+      "initial_payload_byte": "0x0b",
+      "initial_source": "5:0x06f6",
+      "object": "m65-sprite-shape",
+      "object_bytes": 140,
+      "object_offset": "0x06e1",
+      "payload_bytes": 119,
+      "payload_window_bytes": 35,
+      "refill_bytes": 35,
+      "refill_cursor": "0x0024",
+      "refill_destination": "0:0x8a1e",
+      "refill_payload_byte": "0x3b",
+      "refill_relative": "0x0039",
+      "refill_source": "5:0x071a"
+    },
+    "device_observation": {
+      "capture_width": "one-opcode-byte",
+      "cursor": "0x0024",
+      "expected_byte": "0x3b",
+      "fetched_byte": "0x0b",
+      "fetched_byte_is_initial_destination_byte": true,
+      "owner": "5:0x06e1",
+      "window_base": "0x0024"
+    },
+    "fix_form_attribution": {
+      "DMA_engine_consumed_descriptor_exactly": "not-measured",
+      "claim_limit": "the one-byte device capture cannot distinguish late delivery from engine-side descriptor misexecution; the ELF eliminates only software-side missing-submit and wrong-offset forms",
+      "coverage": "every streamed execution refill path before opcode consumption",
+      "delivery_eventually_lands": "not-measured",
+      "family": "L10-DMA-visibility-contract-class; distinct-D700-transport",
+      "independent_oracle": "compare complete destination window bytes with the authoritative source; never use submit return or refill metadata",
+      "missing_software_submit": "eliminated",
+      "required_fix_form": "content-defined-streamed-window-convergence",
+      "selected": "D700-submission-is-treated-as-content-completion",
+      "wrong_software_source_offset": "eliminated"
+    },
+    "linked_path": {
+      "destination_readback_before_dispatch": false,
+      "independent_content_oracle": false,
+      "job_bytes_for_observed_refill": [
+        0,
+        35,
+        0,
+        26,
+        7,
+        5,
+        30,
+        138,
+        0,
+        0,
+        0,
+        0
+      ],
+      "job_list": "0x0076+12",
+      "next_consumer": "opcode fetch at 0x3bf1",
+      "refill_call": "0x3bdc -> vm_code_load@0x720a",
+      "return_immediately_after_submit": true,
+      "runtime_elf_sha256": "dcb415da6379d0fc68185a4a486ab07a72442524bbefbca0fc7b3cffda8e841f",
+      "software_destination_equation": "0x8a09 + 0x0015 = 0x8a1e",
+      "software_source_equation": "0x06e1 + 0x0015 + 0x0024 = 0x071a",
+      "transport": "normal-F018B-D700",
+      "unconditional_D700_submit_before_return": true
+    },
+    "scope": {
+      "hardware_contacts": 0,
+      "host_elf_only": true,
+      "link_91_built": false,
+      "product_candidate_bytes_changed": 0,
+      "product_fixes": 0,
+      "product_links": 0
+    }
+  },
+  "format": "lisp65-c2.3-v1.4-link90-refill-fix-form-host-elf-attribution-v1",
+  "recorded_on": "2026-08-04",
+  "status": "ATTRIBUTED-D700-SUBMISSION-ACCEPTED-AS-CONTENT-COMPLETION",
+  "verification": {
+    "executions": 1,
+    "mutation_results": {
+      "claim-eventual-delivery": "target timing or engine behavior was overclaimed",
+      "claim-identical-L10-transport": "DMA visibility family boundary drift",
+      "claim-link91": "attribution scope drift",
+      "claim-product-fix": "attribution scope drift",
+      "drop-submit": "linked completion boundary drift",
+      "erase-stale-byte-identity": "stale initial payload identity drift",
+      "invent-content-oracle": "linked completion boundary drift",
+      "invent-readback": "linked completion boundary drift",
+      "move-destination": "emitted object/refill geometry drift",
+      "move-source-offset": "emitted object/refill geometry drift",
+      "select-wrong-offset": "fix-form classification drift"
+    },
+    "mutations_rejected": 11
+  }
+}

@@ -1,0 +1,315 @@
+{
+  "authority": {
+    "candidate_execution_contract": {
+      "bytes": 28730,
+      "path": "build/c2.3/v2.0-ownership-recharter-inputs/c2-lite-execution-contract.json",
+      "sha256": "ac2a36881b5b7441e5e0202b77af7c36ff3941feef6187fc0981e7b9f5dc9310"
+    },
+    "candidate_preflight": {
+      "bytes": 6419,
+      "path": "build/c2.3/v2.0-ownership-recharter-preflight/preflight.json",
+      "sha256": "839b62a68974bf583c1c4473219b51a9269faa9cde9042bc0c289ad0cc702ecb"
+    },
+    "full_map_ownership_contract": {
+      "bytes": 10635,
+      "path": "config/c2-full-map-ownership-contract.json",
+      "sha256": "6bf412202fc7b2b6b04780da8766056a2c785026a5425376c5402601a76c751c"
+    },
+    "gate": {
+      "bytes": 31738,
+      "path": "tools/host-lisp/c2_v20_invariant_golden.py",
+      "sha256": "0229a46a1bb2a0e06d4ce6c1eda4aca9a284ff5e8e79d585449d70acd42472ba"
+    },
+    "legacy_golden_review": {
+      "bytes": 3546,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-golden-layout-inversion-review-receipt.json",
+      "sha256": "21d41aa05e0c114a7c97c5133d6184d6b1509cb08508e0ec3cadeaa206d724ca"
+    },
+    "legacy_snapshot_golden": {
+      "bytes": 26436,
+      "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-owned-layout-v1.json",
+      "sha256": "65a13501c36db615f356bb7f992dcbb1c6a6f932fcf1968bf34646f9cbc7b4f7"
+    },
+    "owner_disposition": {
+      "bytes": 6630,
+      "git_commit": "99002732f32794552a7e5b3c3359388fdda28486",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "fc6a338ac6dfb03704d2a64e55442d123fc724853b153143f0a1fa73297714db"
+    },
+    "source_world_elf": {
+      "bytes": 642420,
+      "path": "build/post-promotion/v18/full-map-ownership-repair-wplto/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "64e269eaf820cdd1ee5f1eb35da32c404793bb4b2104be8290fa7483450c7fc4"
+    },
+    "terminal_2.0_first_red": {
+      "bytes": 48819,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-ownership-recharter-card-final-red.json",
+      "sha256": "b22d37047264ce9168714c3287a40386734ad09619f1ca6797cd181b24f3dc94"
+    },
+    "v1.5_plus_convergence_elf": {
+      "bytes": 643260,
+      "path": "build/c2.3/v2.0-ownership-recharter-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "1b8f75fce3bfcc619ec67d59bb196db5ea196e29f16a8c30b905b1a4f20b4e9b"
+    }
+  },
+  "card_lock": {
+    "card_authorized_by_this_receipt": false,
+    "review_accepted": false,
+    "wplto_allowed": false
+  },
+  "claim": "Host-only split of the reviewed layout snapshot into one SHA-bound freight-independent geometry authority and candidate-derived validated freight facts; no WPLTO, card, product, device, v1.5, release or parity claim.",
+  "execution_witness": {
+    "cards_consumed": 0,
+    "derived_freight_validations": 2,
+    "device_contacts": 0,
+    "elf_layout_extractions": 6,
+    "fresh_wplto": 0,
+    "invariant_comparisons": 2,
+    "mutations": 15,
+    "product_compiles": 0
+  },
+  "format": "lisp65-c2.3-v20-invariant-golden-review-v1",
+  "invariant_golden": {
+    "bytes": 32150,
+    "capacity_arenas": 11,
+    "fixed_boundary_symbols": 27,
+    "frozen_overlay_end_fields": 0,
+    "frozen_section_lma_fields": 0,
+    "frozen_section_size_fields": 0,
+    "load_order_entries": 89,
+    "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-owned-invariants-v2.json",
+    "section_invariants": 103,
+    "sha256": "ed12b83b4913923eb4ed3a1977008d70edc7f1c8d4f1da9a13f007a69d390e0d"
+  },
+  "mutations_rejected": {
+    "candidate-derived-overlay-end-lies": "derived overlay_end disagrees with candidate section extent",
+    "candidate-fixed-boundary-moved": "candidate invariant geometry differs from reviewed golden",
+    "candidate-load-order-crossed": "candidate load order differs from invariant golden",
+    "candidate-runtime-capacity-overflow": "section end escaped capacity arena: .lisp65_rt_c2d_00",
+    "candidate-vma-moved": "candidate invariant geometry differs from reviewed golden",
+    "capacity-wall-shrunk": "mutated fixed authority differs from SHA-bound golden",
+    "derived-overlay-rule-dimmed": "derived overlay-end rule drift",
+    "fixed-boundary-moved": "mutated fixed authority differs from SHA-bound golden",
+    "format-changed": "invariant golden format drift",
+    "invariant-demoted-to-derived": "section invariant contains a snapshot field or loses an invariant",
+    "load-order-swapped": "mutated fixed authority differs from SHA-bound golden",
+    "section-inventory-deleted": "capacity arenas do not own the complete section inventory",
+    "snapshot-lma-promoted-to-invariant": "section invariant contains a snapshot field or loses an invariant",
+    "snapshot-overlay-end-promoted-to-invariant": "fixed/derived boundary partition drift",
+    "snapshot-size-promoted-to-invariant": "section invariant contains a snapshot field or loses an invariant"
+  },
+  "recorded_on": "2026-08-12",
+  "review_question": "Accept the SHA-bound invariant golden once.  Only a later reviewer acceptance may unlock the exactly-one-card edge.",
+  "status": "PASS: awaiting one-time reviewer invariant-golden review",
+  "two_natures": {
+    "candidate_derived": [
+      "all section sizes",
+      "all numeric section LMAs",
+      "__lisp65_workbench_overlay_end"
+    ],
+    "fixed": [
+      "section identity/VMA/alignment/type/flags",
+      "27 freight-independent boundary symbols",
+      "11 capacity arenas",
+      "89-entry load ordering invariant"
+    ],
+    "observed_freight_delta": {
+      "derived_boundary_deltas": [
+        "__lisp65_workbench_overlay_end"
+      ],
+      "fixed_boundary_deltas": 0,
+      "fixed_vma_deltas": 0,
+      "section_lma_deltas": 64,
+      "section_size_deltas": 9,
+      "section_size_names": [
+        ".lisp65_rt_c2append_header",
+        ".lisp65_rt_c2append_publish_clear",
+        ".lisp65_rt_c2append_publish_plan_resolve",
+        ".lisp65_rt_c2append_publish_plan_scan",
+        ".lisp65_rt_c2d_00",
+        ".lisp65_rt_c2d_03b",
+        ".lisp65_rt_c2emit_final_crc",
+        ".lisp65_workbench_overlay",
+        ".text"
+      ]
+    },
+    "source_world": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 29,
+          "candidate_max_end_exclusive": 45971,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 625,
+          "candidate_max_end_exclusive": 31772,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 996,
+          "candidate_max_end_exclusive": 51740,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 21,
+          "candidate_max_end_exclusive": 51777,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "invariants-exact-derived-freight-validated",
+      "derived_boundary_symbols": 1,
+      "derived_freight_sha256": "a344bcd30c31f954d4f0af2f9ac62766d4afc1d1960ca8691e7e8404a5994635",
+      "fixed_boundary_symbols": 27,
+      "invariant_projection_sha256": "f75326245a7e15448174056eefd49cbec20a88a84b3394289521a75067f15603",
+      "load_order_entries": 89
+    },
+    "v1.5_plus_convergence_world": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 140,
+          "candidate_max_end_exclusive": 45860,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 625,
+          "candidate_max_end_exclusive": 31772,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "invariants-exact-derived-freight-validated",
+      "derived_boundary_symbols": 1,
+      "derived_freight_sha256": "b91affef58029dd3aa2a055cbbb4dc9d9ccc7aad1fdb3b58e9abc0ea6d2ffab5",
+      "fixed_boundary_symbols": 27,
+      "invariant_projection_sha256": "f75326245a7e15448174056eefd49cbec20a88a84b3394289521a75067f15603",
+      "load_order_entries": 89
+    }
+  }
+}

@@ -17,6 +17,12 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
+HOST = ROOT / "tools/host-lisp"
+if str(HOST) not in sys.path:
+    sys.path.insert(0, str(HOST))
+
+import evidence_era as ERA  # noqa: E402
+
 RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/post-release/"
     "v160-post-release-housekeeping-receipt.json")
@@ -32,6 +38,7 @@ DOCUMENT_INDEX = ROOT / "config/document-index.json"
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 ITEM1 = ARCH / "c2.3-v1.6-item1-only-candidate-r1-receipt.json"
 D5 = ARCH / "c2.3-v1.6-item1-d5-result-receipt.json"
+SEAL_ERA = "66f2563594166708f1965f59bea2048a33f43ec3"
 
 
 class HousekeepingError(RuntimeError):
@@ -144,6 +151,33 @@ def document_classes() -> dict[str, str]:
     return {row["path"]: row["class"] for row in value["documents"]}
 
 
+def planning_era_authority() -> dict[str, Any]:
+    preplan_name = PREPLAN.relative_to(ROOT).as_posix()
+    index_name = DOCUMENT_INDEX.relative_to(ROOT).as_posix()
+    sealed_preplan = ERA.era_blob(SEAL_ERA, preplan_name).decode("utf-8")
+    sealed_index = json.loads(ERA.era_blob(SEAL_ERA, index_name))
+    sealed_classes = {
+        row["path"]: row["class"] for row in sealed_index["documents"]}
+    require("Status: **inventory only — not commissioned**" in sealed_preplan
+            and "sealed `(repl)` fault file" in sealed_preplan
+            and sealed_classes.get(preplan_name) == "current",
+            "sealed v1.7 pre-plan commission boundary drift")
+
+    live_preplan = PREPLAN.read_text(encoding="utf-8")
+    live_classes = document_classes()
+    require("Status: **inventory only — not commissioned**" not in live_preplan
+            and "Status: **historical — sealed after v1.7.0 publication**"
+                in live_preplan
+            and live_classes.get(preplan_name) == "historical",
+            "sealed/live planning eras collapsed")
+    return {
+        "seal_commit": SEAL_ERA,
+        "sealed_preplan_class": sealed_classes[preplan_name],
+        "live_preplan_class": live_classes[preplan_name],
+        "anti_mixing_mutations": 2,
+    }
+
+
 def validate(value: dict[str, Any]) -> dict[str, Any]:
     require(value.get("format") == "lisp65-v160-post-release-housekeeping-v1",
             "housekeeping receipt format drift")
@@ -184,10 +218,7 @@ def validate(value: dict[str, Any]) -> dict[str, Any]:
             and "Posten 2 moved intact" in plan
             and "v1.7" in plan,
             "v1.6 freight plan is not sealed")
-    preplan = PREPLAN.read_text(encoding="utf-8")
-    require("Status: **inventory only — not commissioned**" in preplan
-            and "sealed `(repl)` fault file" in preplan,
-            "v1.7 pre-plan commission boundary drift")
+    planning_era = planning_era_authority()
     register = REGISTER.read_text(encoding="utf-8")
     for token in ("DELIVERED in v1.6.0: REPL cursor navigation",
                   "v1.7 Comfort freight set",
@@ -198,8 +229,6 @@ def validate(value: dict[str, Any]) -> dict[str, Any]:
     classes = document_classes()
     require(classes.get(str(PLAN.relative_to(ROOT))) == "historical",
             "sealed v1.6 plan is not historical")
-    require(classes.get(str(PREPLAN.relative_to(ROOT))) == "current",
-            "v1.7 pre-plan is not current")
     require(classes.get(str(REPORT.relative_to(ROOT))) == "current",
             "2.4 report is not indexed")
 
@@ -213,7 +242,8 @@ def validate(value: dict[str, Any]) -> dict[str, Any]:
             "evidence hygiene receipt drift")
     return {"rules": len(RULES),
             "first_reds": len(value["historical_first_reds"]),
-            "evidence_json": evidence["json_receipts"]}
+            "evidence_json": evidence["json_receipts"],
+            "planning_era": planning_era}
 
 
 def selftest(value: dict[str, Any]) -> None:
@@ -243,7 +273,10 @@ def selftest(value: dict[str, Any]) -> None:
             raise HousekeepingError(f"housekeeping mutation survived: {name}")
     require(cases == [name for name, _ in mutants],
             "housekeeping mutation set drift")
-    print("v1.6 post-release housekeeping: SELFTEST PASS mutations=5")
+    planning = planning_era_authority()
+    require(planning["anti_mixing_mutations"] == 2,
+            "planning-era mutation count drift")
+    print("v1.6 post-release housekeeping: SELFTEST PASS mutations=7")
 
 
 def main() -> int:

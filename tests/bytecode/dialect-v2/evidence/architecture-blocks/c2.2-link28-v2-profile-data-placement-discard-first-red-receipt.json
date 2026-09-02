@@ -1,0 +1,129 @@
+{
+  "format": "lisp65-c2-link28-v2-profile-data-placement-discard-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-explicit-discard-still-classified-as-orphan-product-link-28-blocked",
+  "authorization_accounting": {
+    "authorized_discard_placement_probes": 1,
+    "completed_discard_placement_probes": 1,
+    "resident_island_seed_links": 1,
+    "product_closure_links": 0,
+    "link_28_product_candidates": 0,
+    "warning_wrapper_fallback_attempts": 0,
+    "additional_retry_or_tuning_links": 0
+  },
+  "inputs": {
+    "tool": "tools/host-lisp/c2_product_substitution_link.py",
+    "tool_sha256": "120dec885991128de65375259c7e696884288b138b70dcedc90e717412b1452d",
+    "contract": "config/c2-kernal-unmap-contract.json",
+    "contract_sha256": "64069775fa5b3751801e75cd64e8b63e72dbf2cc6366392597ba60216e8f0d63",
+    "contract_document": "docs/planning/c2.2-kernal-unmap-contract.md",
+    "contract_document_sha256": "fa1d1e640e4f72ebd9c63a7ecded0fb949b874bfe8364b3347c87c424d14cd82",
+    "generated_linker_sha256": "330ea5e0057d8935a79c74414df9aec0b57452b355e59b8fb26d70925e81a89d",
+    "failed_map_sha256": "6cfb8001924c7a4334a351e767f60d9e4c391cb9e3724a33fb55ef1487a66726",
+    "diagnostic_record_sha256": "0eb4e784052b700d58a0c84ac59f1f95b9f06689490b8366cbfc479b5be7939f"
+  },
+  "authorized_mechanism": {
+    "lto_object_option": "--lto-obj-path=<target>.lto.o",
+    "final_section_fate": "/DISCARD/ : { *(.llvm_sympart) }",
+    "orphan_policy": "--orphan-handling=error",
+    "relocation_policy": "--emit-relocs remains mandatory",
+    "model_matrix": {
+      "valid-saved-input-discarded-final": "passed",
+      "missing-lto-sympart": "rejected",
+      "alloc-lto-sympart": "rejected",
+      "retained-final-sympart": "rejected",
+      "missing-final-relocations": "rejected"
+    }
+  },
+  "first_red": {
+    "stage": "lld orphan classification before final ELF emission",
+    "gate": "orphan-handling=error",
+    "section": ".llvm_sympart",
+    "linker_error": "v2-profile-data-placement-seed.prg.lto.o:(.llvm_sympart) is being placed in '.llvm_sympart'",
+    "important_observation": "The generated script names .llvm_sympart in /DISCARD/ and the saved LTO object exists. Pinned lld nevertheless emits the same hard orphan-classification error before producing the final ELF.",
+    "conclusion": "For this pinned lld/LTO pipeline, an exact script-level /DISCARD/ does not precede or satisfy orphan classification for the saved LTO partition section. The clean native-hard-error approach is disproved."
+  },
+  "saved_lto_evidence": {
+    "path": "build/c2.2/substitution/link28-v2-profile-data-placement-probe-v3/v2-profile-data-placement-seed.prg.lto.o",
+    "bytes": 510584,
+    "sha256": "a08604a37eae6f305fc8bd5a9b1546c4abfca1d154757ea4dc1f9ed69bec2ae0",
+    "mode": "0444",
+    "llvm_sympart": {
+      "type": "SHT_LLVM_SYMPART",
+      "address": "0x0000",
+      "bytes": 15,
+      "alignment": 1,
+      "flags": [],
+      "classification": "present, non-ALLOC LTO partition bookkeeping"
+    },
+    "binding": "The object is SHA-bound here and duplicated in the immutable evidence archive; it is evidence, not build litter."
+  },
+  "failed_map_observations_not_passed_gates": {
+    "explicit_e000_predecessor_chain": {
+      "typed_queue_driver": "0xe000",
+      "frame_source": "0xe01f",
+      "irq_handler": "0xe028",
+      "nmi_and_freezer_return": "0xe055",
+      "map_switch_and_guards": "0xe05e",
+      "post_startup_output_seam": "0xe06c",
+      "event_poll": "0xe070",
+      "c2_resident": "0xe09e",
+      "session_emitter_state": "0xfbb8",
+      "status": "map geometry matches the prior corrected chain; no post-link gate claim"
+    },
+    "profile_data": {
+      "address": "0xfd12",
+      "bytes": 342,
+      "end_exclusive": "0xfe68",
+      "component_bytes": [32, 164, 146]
+    },
+    "ordinary_bank0": {
+      ".rodata_bytes": 800,
+      ".bss_start": "0xb94a",
+      ".bss_bytes": 1827,
+      ".bss_end_exclusive": "0xc06d",
+      "fixed_c2_start": "0xc080",
+      "headroom_bytes": 19,
+      "growth_policy": "full; contingency only, not resident growth budget"
+    },
+    "e000": {
+      "prior_passed_margin_bytes": 728,
+      "new_profile_data_bytes": 342,
+      "projected_post_cut_margin_bytes": 386,
+      "growth_policy": "closed to new tenants",
+      "qualification": "projection only because lld emitted no final ELF"
+    },
+    "retained_relocation_sections_visible_in_failed_map": true,
+    "profile_data_relocation_output_bytes": 2052
+  },
+  "gate_status": {
+    "saved_lto_object_presence_and_classification": "observed-and-sha-bound",
+    "explicit_discard": "present-but-did-not-satisfy-lld-orphan-classification",
+    "final_elf": "absent",
+    "final_relocation_retention": "not-reached-not-passed",
+    "profile_data_reference_gate": "not-reached-not-passed",
+    "pre_ownership": "not-reached-not-passed",
+    "runtime_slice_capacity": "not-reached-not-passed",
+    "fixed_facade": "not-reached-not-passed",
+    "kernal_freedom": "not-reached-not-passed",
+    "identity": "not-reached-not-passed",
+    "hardware": "not-run"
+  },
+  "immutable_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-v2-profile-data-placement-discard-first-red-20260720/root",
+    "files": 13,
+    "total_file_bytes": 763506,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "4a438802879626ee323e3c13e96bf2f00c8c1ff9deeb4f436c2b04e8eb0d8d7d",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "decision": {
+    "explicit_e000_vma_chain": "retained-pending-successful-final-link",
+    "script_level_discard_under_native_hard_orphan_policy": "disproved",
+    "warning_wrapper_fallback": "not-authorized-not-run",
+    "additional_placement_probe": "not-authorized-not-run",
+    "link_28": "blocked-not-run"
+  },
+  "claim_limit": "This receipt proves the single authorized /DISCARD/ placement probe stopped at pinned lld's hard orphan classifier and binds the resulting LTO intermediate as immutable evidence. It does not prove final relocation retention, the profile-data reference property, the 19-byte Bank-0 or 386-byte E000 currencies, any structural closure, hardware acceptance, promotion or release claim."
+}

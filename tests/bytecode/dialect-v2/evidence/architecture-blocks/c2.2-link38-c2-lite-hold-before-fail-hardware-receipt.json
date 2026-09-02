@@ -1,0 +1,163 @@
+{
+  "answer": "The machine stopped on the first 1,135-byte Boot catalog edge, not the later installer edge assumed before the run. All three held $C356 prefixes are byteidentical to Bank 3 and host-CRC to 0x399d. The target Leaf returned 0x2c14 because its handwritten ABI consumes pointer in A/X and length in __rc2/__rc3, while the linked caller supplies length in A/X and pointer in __rc2/__rc3. Transport is exonerated; the CRC Leaf ABI is structurally reversed at this call edge.",
+  "authorization": {
+    "bytes": 3843,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link38-c2-lite-hold-before-fail-instrumentation-receipt.json",
+    "sha256": "9b4190eac83a49e7746b1f6f169c68823a5b4d22554f0328d20d459bc87a5e81"
+  },
+  "claim_limit": "One non-promotable diagnostic hardware run. It is not a product presmoke, latency attempt, promotion or acceptance result.",
+  "deployment": {
+    "bytes": 3869,
+    "path": "build/c2.2/link38-c2-lite-hold-before-fail-hardware/deployment.json",
+    "sha256": "09d56df394d4143d4910dd387da9ec01d60a89e045cd1dcf0d3f7a3a1aea6595"
+  },
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link38-c2-lite-hold-before-fail-NONPROMOTABLE/lisp65-link38-hold-before-fail-NONPROMOTABLE.prg",
+    "sha256": "bc67a875a68541cde21a5e03987a2bbc022830fb02e7fcca15be74ac35e9b7a7"
+  },
+  "disposition": "The diagnostic identity is isolated, read-only, and permanently excluded from candidate and promotion artifact sets.",
+  "execution_accounting": {
+    "changed_bytes": 1,
+    "compiler_runs": 0,
+    "diagnostic_instruction_patches": 1,
+    "hardware_runs": 1,
+    "instruction_span_bytes": 2,
+    "latency_attempts_consumed": "0/2",
+    "linker_runs": 0,
+    "read_only_post_stop_captures": 6
+  },
+  "format": "lisp65-c2-link38-hold-before-fail-hardware-v1",
+  "link38_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-38-c2-lite-v6-boot-crc-abi-replay/lisp65-c2-substitution-linked.prg",
+    "sha256": "61f406b57eeb2e258e941be432e8f6cea797c0623f421f09cc56e91f6f1419a2",
+    "status": "untouched"
+  },
+  "next_gate": "Class C: correct the CRC Leaf ABI and its data-flow gate",
+  "observations": {
+    "bank0": {
+      "bytes": 65536,
+      "path": "build/c2.2/link38-c2-lite-hold-before-fail-hardware/held-bank0-0000-ffff.bin",
+      "sha256": "43352c11356278f7a5848948dcebf6327c460b1b8334c8e070c5cb7f58e8a3d4"
+    },
+    "captures_byteidentical": true,
+    "chip_bank3_boot": {
+      "bytes": 16210,
+      "matches_deployed": true,
+      "path": "build/c2.2/link38-c2-lite-hold-before-fail-hardware/held-chip-bank3-boot.bin",
+      "sha256": "1745b7c6e996eadf6ebfac19fb3c533088e47f1e631b886c2323d7fedd13864c"
+    },
+    "classification": "transport-exact-crc-leaf-abi-reversed",
+    "crc_abi_witness": {
+      "abi_match": false,
+      "caller_address": "0xad81",
+      "caller_semantics": "length from rtov_loaded_len enters A/X; $C356 enters __rc2/__rc3 before JSR rtov_crc_mem",
+      "caller_sequence_hex": "a57ba67ca0568404a0c38405202d22",
+      "host_crc_over_exact_target": "0x399d",
+      "leaf_address": "0x222d",
+      "leaf_semantics": "A/X is stored as pointer __rc4/__rc5; __rc2/__rc3 is consumed as length",
+      "leaf_sequence_hex": "85068607a9ff85088509",
+      "on_device_return_crc": "0x2c14"
+    },
+    "e000": {
+      "bytes": 8192,
+      "path": "build/c2.2/link38-c2-lite-hold-before-fail-hardware/held-e000-ffff.bin",
+      "sha256": "c85c224297b7ace34bf0e30488f2d77f9021f03a5f686448fa8f8e28845f21ea"
+    },
+    "expected": {
+      "bytes": 1135,
+      "crc16": "0x399d",
+      "destination": "0xc356",
+      "entry_offset": "0x0199",
+      "sha256": "00260e925503407449e4e7de02b2051c0df656ee0892f3e3095923a3c0d99437",
+      "source_offset": "0x0200"
+    },
+    "held_state": {
+      "busy": 1,
+      "family": 1,
+      "fault": 0,
+      "island_state": 1,
+      "loaded_len": 1135,
+      "ready": 1
+    },
+    "held_target_captures": [
+      {
+        "bytes": 1287,
+        "capture": 1,
+        "captured_bytes": 1287,
+        "evaluated_prefix_bytes": 1135,
+        "evaluated_prefix_crc16": "0x399d",
+        "matches_expected": true,
+        "nonmatching_bytes": 0,
+        "path": "build/c2.2/link38-c2-lite-hold-before-fail-hardware/held-target-1.bin",
+        "sha256": "e29d682ed21bff03faf1aae54012a069c5c15a3ddd1e820d2a58040b83e16e6c"
+      },
+      {
+        "bytes": 1287,
+        "capture": 2,
+        "captured_bytes": 1287,
+        "evaluated_prefix_bytes": 1135,
+        "evaluated_prefix_crc16": "0x399d",
+        "matches_expected": true,
+        "nonmatching_bytes": 0,
+        "path": "build/c2.2/link38-c2-lite-hold-before-fail-hardware/held-target-2.bin",
+        "sha256": "e29d682ed21bff03faf1aae54012a069c5c15a3ddd1e820d2a58040b83e16e6c"
+      },
+      {
+        "bytes": 1287,
+        "capture": 3,
+        "captured_bytes": 1287,
+        "evaluated_prefix_bytes": 1135,
+        "evaluated_prefix_crc16": "0x399d",
+        "matches_expected": true,
+        "nonmatching_bytes": 0,
+        "path": "build/c2.2/link38-c2-lite-hold-before-fail-hardware/held-target-3.bin",
+        "sha256": "e29d682ed21bff03faf1aae54012a069c5c15a3ddd1e820d2a58040b83e16e6c"
+      }
+    ],
+    "pre_run_hypothesis_falsified": {
+      "assumed_bytes": 1287,
+      "assumed_crc16": "0xa8ea",
+      "assumed_edge": "installer payload",
+      "assumed_source_offset": "0x3300",
+      "observed_first_edge": "Boot catalog payload"
+    },
+    "verifier_binding": {
+      "address": "0xb9cd",
+      "entry_off": "0x0199",
+      "file_len": 1135,
+      "file_off": "0x0200",
+      "payload_crc": "0x399d",
+      "raw_hex": "00026f0499019d39"
+    }
+  },
+  "patch_gate": {
+    "after_instruction_hex": "80fe",
+    "after_semantics": "BRA $AE23, self-loop before rtov_fail and wipe",
+    "before_instruction_hex": "80f6",
+    "before_semantics": "BRA $AE1B, then call rtov_fail and wipe",
+    "changed_bytes": 1,
+    "changed_cpu_addresses": [
+      "0xae24"
+    ],
+    "changed_file_offsets": [
+      "0x8e25"
+    ],
+    "file_size_delta_bytes": 0,
+    "instruction_address": "0xae23",
+    "instruction_file_offset": "0x8e24",
+    "instruction_span_bytes": 2,
+    "load_address": "0x2001",
+    "mutations": {
+      "extra-byte": "rejected",
+      "old-operand": "rejected",
+      "wrong-opcode": "rejected"
+    },
+    "precision_note": "The authorized patch spans one two-byte instruction. The opcode remains 0x80; exactly its one-byte relative operand changes.",
+    "status": "passed-exact-self-loop-instruction-patch"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "answered-link38-bank3-island-edge"
+}

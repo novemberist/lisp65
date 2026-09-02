@@ -1,0 +1,356 @@
+{
+  "authority": {
+    "Final_Red": {
+      "bytes": 3862,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-abi-fix-replacement-card-final-red.json",
+      "sha256": "80535721bd5586e6da106ef9df2a8067c3369f0b71afa5864c51a1d868344665"
+    },
+    "candidate_ELF": {
+      "bytes": 629736,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "19e52617cb9235f2337094197d8affc4565af4da481a3b628abb47a659b55f93"
+    },
+    "dependency_attribution": {
+      "bytes": 8881,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-service-end-dependency-attribution-receipt.json",
+      "sha256": "0f7522afeff5e7d04a9e850dbeea990f8baf3febadccc2a2209a2e2a9bc04bde"
+    },
+    "driver": {
+      "bytes": 20327,
+      "path": "tools/host-lisp/c2_v21_phase9_freight_boundary_golden.py",
+      "sha256": "f00a8f0f1bcf529c1df9dc25cfd70380dba85411ac0afbab4eb46c0f775fc325"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 99637,
+      "commit": "b1dd037914f0e45fed9797dca02fa8133e655d87",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "be5910773b7c8429285aa6e16c7bf433c48470e56abb7f7fe9129efd8286a91d"
+    },
+    "predecessor_golden": {
+      "bytes": 30406,
+      "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-dependent-vma-invariants-v4.json",
+      "sha256": "28190ae2e5c3f02b229a3cea257ef3ca5b98f76ac19b35ef77f1f48dc318f1f3"
+    },
+    "predecessor_review": {
+      "bytes": 12801,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-dependent-vma-invariant-golden-review-receipt.json",
+      "sha256": "9df3f7a6370fd93c01a805e991b1656a17502b6f2f00ef8ca88b093bc5a1d5bb"
+    },
+    "reference_ELF": {
+      "bytes": 628684,
+      "path": "build/c2.3/v2.1-map-mask-fix-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "2091df026ad760ed5931d0290999aaf425ec3a0daa2ed6c96ce8f02e321162ba"
+    }
+  },
+  "claim": "One-time host review of v5: 101 fixed VMAs, 25 fixed boundaries, three freight-derived boundaries and 11 fixed capacity arenas.",
+  "execution_witness": {
+    "WPLTO_runs": 0,
+    "candidate_mutations": 5,
+    "cards_consumed": 0,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "golden_mutations": 7,
+    "media_builds": 0,
+    "product_links": 0,
+    "world_layout_extractions": 2
+  },
+  "format": "lisp65-c2.3-v2.1-phase9-freight-boundary-golden-review-v1",
+  "golden": {
+    "bytes": 30771,
+    "capacity_arenas": 11,
+    "dependent_fixed_vmas": 101,
+    "dependent_free_derived_vmas": 2,
+    "fixed_boundary_symbols": 25,
+    "freight_derived_boundary_symbols": 3,
+    "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-freight-boundary-invariants-v5.json",
+    "sha256": "7d7ff4578fdd5f019e0d6b6e16d4d142015149e8149655c45393d6fb36289c95"
+  },
+  "mutations_rejected": {
+    "candidate": {
+      "cpu-end-does-not-follow-freight": "candidate derived boundary disagrees with extent: __lisp65_c2_mapped_far_service_end",
+      "load-end-does-not-follow-freight": "candidate derived boundary disagrees with extent: __lisp65_c2_mapped_far_service_load_end",
+      "service-exceeds-capacity": "candidate derived boundary disagrees with extent: __lisp65_c2_mapped_far_service_end",
+      "service-load-start-moved": "candidate derived boundary disagrees with extent: __lisp65_c2_mapped_far_service_load_end",
+      "service-start-anchor-moved": "candidate dependent-address invariants differ from v5 Golden"
+    },
+    "golden": {
+      "capacity-wall-moved": "freight-boundary Golden artifact drift",
+      "cpu-end-derivation-dimmed": "freight-boundary Golden artifact drift",
+      "cpu-end-repromoted": "freight-boundary Golden artifact drift",
+      "dependency-authority-path-lost": "freight-boundary Golden loses reviewed dependency provenance",
+      "dependent-start-demoted": "freight-boundary Golden artifact drift",
+      "load-end-derivation-dimmed": "freight-boundary Golden artifact drift",
+      "load-end-repromoted": "freight-boundary Golden artifact drift"
+    }
+  },
+  "permanent_policy": {
+    "capacity": "mapped-far service must fit 1499-byte arena",
+    "fixed": "addresses with independent dependents",
+    "freight_derived": "end values that follow candidate extents"
+  },
+  "recorded_on": "2026-08-16",
+  "review": {
+    "artifact_only_replay_authorized": true,
+    "new_card_authorized": false,
+    "review_accepted": true
+  },
+  "status": "PASS: freight-boundary Golden reviewed and accepted",
+  "world_probe": {
+    "authorized_delta_bytes": 212,
+    "candidate_1086_bytes": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 1,
+          "candidate_max_end_exclusive": 45999,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 413,
+          "candidate_max_end_exclusive": 31984,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-plus-freight-boundaries-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_boundaries": {
+        "__lisp65_c2_mapped_far_service_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 31984
+        },
+        "__lisp65_c2_mapped_far_service_load_end": {
+          "operation": "section-lma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 179440
+        },
+        "__lisp65_workbench_overlay_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_workbench_overlay",
+          "value": 51857
+        }
+      },
+      "derived_freight_sha256": "6841ceb5c8965caf7642871779b254a458f3b595018c4d80847492499e3748c8",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 25,
+      "fixed_projection_sha256": "2ebfe0002a9f196c374ebaeab5f063ce248b437348c28dc63d3bca6881ea7146",
+      "freight_derived_boundary_symbols": 3,
+      "mapped_far_service_capacity": {
+        "candidate_headroom_bytes": 413,
+        "candidate_max_end_exclusive": 31984,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      }
+    },
+    "different_valid_freight_boundaries": true,
+    "reference_874_bytes": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 1,
+          "candidate_max_end_exclusive": 45999,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 625,
+          "candidate_max_end_exclusive": 31772,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-plus-freight-boundaries-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_boundaries": {
+        "__lisp65_c2_mapped_far_service_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 31772
+        },
+        "__lisp65_c2_mapped_far_service_load_end": {
+          "operation": "section-lma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 179228
+        },
+        "__lisp65_workbench_overlay_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_workbench_overlay",
+          "value": 51857
+        }
+      },
+      "derived_freight_sha256": "138b642d7c8122924fce07d1ebb566ff1cee3f2b02625cfd9289bf161219c511",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 25,
+      "fixed_projection_sha256": "2ebfe0002a9f196c374ebaeab5f063ce248b437348c28dc63d3bca6881ea7146",
+      "freight_derived_boundary_symbols": 3,
+      "mapped_far_service_capacity": {
+        "candidate_headroom_bytes": 625,
+        "candidate_max_end_exclusive": 31772,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      }
+    },
+    "shared_fixed_projection": true
+  }
+}

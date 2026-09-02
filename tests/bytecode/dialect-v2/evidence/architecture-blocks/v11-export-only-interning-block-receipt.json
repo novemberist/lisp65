@@ -1,0 +1,131 @@
+{
+  "format": "lisp65-v11-architecture-block-receipt-v1",
+  "block_id": "1.1-B-export-only-interning",
+  "status": "passed-not-promoted",
+  "recorded_on": "2026-07-15",
+  "source_commit": "b888c8b1aff07c271db14e9311abee90088c4428",
+  "baseline": {
+    "tag": "v1.0.1",
+    "commit": "471435024d86b1f535bfb4116551f37f307ca1f0",
+    "product_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "measurement": {
+      "path": "docs/planning/measurements/v1.1-prewave-measurements.json",
+      "sha256": "b45a4926a916a5a748493c5b4885ef9eea03a08b62e29b0dad723e03725da40c"
+    }
+  },
+  "implementation": {
+    "rule": "Only exports and explicitly retained cross-container symbols are interned; library-private functions remain anonymous.",
+    "private_state": "Nine private value symbols reuse value cells of already public function symbols under Lisp-2.",
+    "private_names_expected": 45,
+    "private_names_still_interned": [],
+    "policy_review_names_expected": 17,
+    "policy_review_names_missing": [],
+    "policy_review_classification": "public-until-revoked",
+    "inline_directory_offsets": [
+      "%ide-m65d-message",
+      "%m65d-dir-target-ok-p",
+      "%m65d-remount-work"
+    ]
+  },
+  "library_artifacts": [
+    {
+      "id": "ide",
+      "baseline_bytes": 28101,
+      "candidate_bytes": 27904,
+      "delta_bytes": -197,
+      "code_bytes": 12094,
+      "entries": 149,
+      "sha256": "20b6d9df6a12d902b0504bd00e511f9ecd6e3dbfc61f7a0e147ca02a8b66a6c7",
+      "manifest_sha256": "1cc35bfd04d65ceed5407aa0480b8c8d13b336e1856e34fb869c424c9b4504a4"
+    },
+    {
+      "id": "idex",
+      "baseline_bytes": 7694,
+      "candidate_bytes": 7694,
+      "delta_bytes": 0,
+      "code_bytes": 3096,
+      "entries": 32,
+      "sha256": "266dc774ca5b0bfde4543a3527c46ec809d48fe9ddf2b74df2070f9a6c99af1d",
+      "manifest_sha256": "7650baaf09299606f02a44bf3881341c915eb15835b09046d4f42071aa67aaaf"
+    },
+    {
+      "id": "m65d",
+      "baseline_bytes": 7217,
+      "candidate_bytes": 6447,
+      "delta_bytes": -770,
+      "code_bytes": 4013,
+      "entries": 38,
+      "sha256": "01bef9581f8a240048f8da7032c53f30bccfac2159dbd8ae483388bd6aec81bd",
+      "manifest_sha256": "cc86255feddabeecf878ffc030abde72765521c0f6233d6b82aa659c7b073f64"
+    }
+  ],
+  "capacity_delta_scope": "workbench-library-composition",
+  "capacity_delta": {
+    "baseline_identity_sha256": "891096faec5d64356e79f9e19202f70f444906f61e0380f918303e5a16185251",
+    "candidate_identity_sha256": "d66a8f7690a4b2837e1d3a864d69d9063db4aaaa1369e450f24684b8b81e402e",
+    "dimensions": {
+      "bank": {
+        "baseline": 332,
+        "candidate": 332,
+        "delta": 0,
+        "authorization": null
+      },
+      "ext": {
+        "baseline": 16385,
+        "candidate": 16410,
+        "delta": 25,
+        "authorization": null
+      },
+      "symbols": {
+        "baseline": 120,
+        "candidate": 165,
+        "delta": 45,
+        "authorization": null
+      },
+      "namepool": {
+        "baseline": 2160,
+        "candidate": 2902,
+        "delta": 742,
+        "authorization": null
+      },
+      "directory": {
+        "baseline": 32,
+        "candidate": 32,
+        "delta": 0,
+        "authorization": null
+      }
+    }
+  },
+  "real_link": {
+    "footprint_audit_sha256": "3f8b89322b03e8640688b79daf722c09200307e214222a8396efe0ced54a2b7d",
+    "post_boot_reserve": 1868,
+    "reserve_target": 1536,
+    "bank_margin": 332,
+    "resident_prg": {
+      "bytes": 39493,
+      "sha256": "f3e199ebb2abae12fae62230ec5f107a90a1f31086cd5a80227eede381044183",
+      "baseline_identical": true
+    },
+    "boot_overlay": {
+      "bytes": 1669,
+      "sha256": "735f6fb7155689c5eb58760af663d8e10cbc4bb00781548eff425cfb38a93ff1",
+      "baseline_identical": true
+    }
+  },
+  "verification": {
+    "composition_budget": {
+      "sha256": "d66a8f7690a4b2837e1d3a864d69d9063db4aaaa1369e450f24684b8b81e402e",
+      "status": "pass"
+    },
+    "differential": {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-artifact-differential-receipt.json",
+      "sha256": "10b389343446657bea1ca249a50aaed768ca4be2659b116f73617329227529fa",
+      "artifacts": 4,
+      "cases": 353,
+      "differences": 0
+    },
+    "codemod_selftest_cases": 21,
+    "codemod_receipt_sha256": "c682b9199ee70992725d4d1c485423e7cdc6b3c73f8945d44e5cbe4f1d2bdcac"
+  },
+  "claim_limit": "This receipt proves the 1.1-B implementation and capacity result. It does not promote a new product set or claim hardware evidence for changed library artifacts."
+}

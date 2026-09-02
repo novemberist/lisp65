@@ -1,0 +1,170 @@
+{
+  "authorities": {
+    "approved_addenda": {
+      "bytes": 14097,
+      "path": "config/c2-cross-invariant-c2.2-open-addenda.json",
+      "sha256": "73aa314bc1a8f9dceaa3e0ce144262335dd197503ea11afca2356d5b67671777"
+    },
+    "core_cpu": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "core_freeze": {
+      "bytes": 35868,
+      "path": "build/upstream-verification/mega65-core/src/hyppo/freeze.asm",
+      "sha256": "fd5f4cbd7c2c594388895293007055050e6c73a00fb6d423ff45b47bb51b58cd"
+    },
+    "core_task": {
+      "bytes": 10441,
+      "path": "build/upstream-verification/mega65-core/src/hyppo/task.asm",
+      "sha256": "07497c4738023639300c7119e178c9a6233830026a017636fa840020472c9894"
+    },
+    "core_unfreeze": {
+      "bytes": 20472,
+      "path": "build/upstream-verification/mega65-core/src/hyppo/syspart.asm",
+      "sha256": "b436f778ab9232f81ccd78b3cb45dbda3181c838b113387b1b7844946c57bf74"
+    },
+    "handoff_source": {
+      "bytes": 4979,
+      "path": "src/c2_kernal_runtime.c",
+      "sha256": "fe7f0e1c178fbd257d6de3f7861eaa904beeea99ff42985dde9efe1414fc3f6d"
+    },
+    "line_review_receipt": {
+      "bytes": 10329,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cross-invariant-b3-c3-d3-e5-contract-review-receipt.json",
+      "sha256": "1d3e203390460efb08a8d479b0dc753a742afb6ff5346c78c2446dfa5a7708c8"
+    },
+    "link57_elf": {
+      "bytes": 612152,
+      "path": "build/c2.2/substitution/product-link-57-keymap-nullary-fast-path2/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "306ba2aca61bbd2b924f3b52fd03fbbd9db95330f9c81e1190329abc147bf950"
+    },
+    "link57_structural_receipt": {
+      "bytes": 527681,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link57-keymap-nullary-fast-path2-structural-receipt.json",
+      "sha256": "6632a7d00ea3bfaef294924ea618e0af70e34b75da929de05b2e7c451ce26059"
+    },
+    "window_source": {
+      "bytes": 3562,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "f4c8bdf95677c23957c1500d11a7d02d7ccf9e1d0f5bfa481b96965f9c15b4cd"
+    }
+  },
+  "claim_limit": "Proves the H0-H3 owner/continuation model, product source ordering, guest-NMI closure and Freezer/NMI distinction. C3 remains OPEN until every deterministically reachable H1/H2/H3 hardware cutpoint is green on the successor identity. No acceptance or promotion is claimed.",
+  "continuation_cardinality": {
+    "H0": 1,
+    "H1": 1,
+    "H2": 1,
+    "H3": 1
+  },
+  "execution": {
+    "hardware_runs": 0,
+    "host_owner_tuples": 4,
+    "mutations": 6,
+    "product_links": 0,
+    "whole_program_lto_runs": 0
+  },
+  "forbidden_evaluator_edges_H0_H2": 0,
+  "format": "lisp65-c2.2-matrix-c3-handoff-freezer-host-fixture-v1",
+  "hardware_plan": {
+    "bytes": 2776,
+    "path": "build/c2.2/matrix-c3-handoff-freezer/hardware-cutpoint-plan.json",
+    "sha256": "912d60efd610822d9a7978a229753c8b413aa5b46c46e02948984d2b6227bfc7"
+  },
+  "mutations": {
+    "accept-vector-before-target": "rejected",
+    "accept-wrong-map-generation": "rejected",
+    "publish-product-owned-at-H1": "rejected",
+    "resume-evaluator-from-H2": "rejected",
+    "route-Freezer-through-guest-NMI": "rejected",
+    "treat-SEI-as-NMI-mask": "rejected"
+  },
+  "owner_matrix": [
+    {
+      "id": "H0",
+      "interval": "firmware-owned before SEI",
+      "map_owner": "firmware",
+      "nmi_owner": "firmware",
+      "only_legal_continuation": "resume the exact frozen firmware-owned instruction; later C2 ownership begins from its first check",
+      "published_state": "firmware-owned",
+      "vector_owner": "firmware"
+    },
+    {
+      "id": "H1",
+      "interval": "replacement-armed after SEI and before MAP commit",
+      "map_owner": "firmware",
+      "nmi_owner": "firmware",
+      "only_legal_continuation": "resume the exact handoff instruction; no product vector, evaluator or session path is reachable; the remaining handoff checks run fresh",
+      "published_state": "replacement-armed",
+      "vector_owner": "firmware"
+    },
+    {
+      "id": "H2",
+      "interval": "handoff-closed after MAP commit and before product-owned publication",
+      "map_owner": "C2",
+      "nmi_owner": "C2",
+      "only_legal_continuation": "resume only inside the handoff closure and complete map, vector, abort and frame validation before product-owned publication; any owner/identity mismatch fails closed",
+      "published_state": "handoff-closed",
+      "vector_owner": "C2"
+    },
+    {
+      "id": "H3",
+      "interval": "product-owned steady state",
+      "map_owner": "C2",
+      "nmi_owner": "C2",
+      "only_legal_continuation": "the identity-specific Freezer return proof validates map generation, vectors, E000 and both Chip planes before the fixture permits ordinary evaluator work",
+      "published_state": "product-owned",
+      "vector_owner": "C2"
+    }
+  ],
+  "platform_distinction": {
+    "SEI_masks_guest_NMI": false,
+    "classification_equal": false,
+    "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+    "freezer": "hypervisor-trap-0x42-at-instruction-boundary",
+    "guest_nmi": "independent-CPU-vector-source",
+    "restore_before_resume": true
+  },
+  "recorded_on": "2026-07-23",
+  "row": "C3",
+  "source_gate": {
+    "H1": {
+      "begin": "SEI+LDZ",
+      "end": "MAP commit",
+      "product_state_published": false
+    },
+    "H2": {
+      "begin": "MAP commit",
+      "end": "C2K_STATE_PRODUCT publication",
+      "product_state_published": false
+    },
+    "H3": {
+      "begin": "C2K_STATE_PRODUCT publication",
+      "owned_irq_enable": "after-publication"
+    },
+    "handoff_sequence": [
+      "__asm__ volatile(\"sei\\n\\tldz #0\"",
+      "c2_kernal_reveal_io();",
+      "VIC_D01A = 0u;",
+      "c2k_copy(",
+      "c2_kernal_map_window();",
+      "if (c2k_crc16(",
+      "C2K_MAP_GENERATION = 1u;",
+      "C2K_STATE = C2K_STATE_PRODUCT;",
+      "VIC_D01A = 0x01u;",
+      "__asm__ volatile(\"cli\""
+    ],
+    "nmi": {
+      "A": "PHA/PLA preserved",
+      "Lisp_edges": 0,
+      "P_PC": "hardware frame restored by RTI",
+      "X_Y_Z": "not touched",
+      "acknowledgement": "CIA2 ICR read",
+      "allocation_edges": 0
+    },
+    "status": "passed"
+  },
+  "status": "passed-host-owner-matrix-awaiting-hardware-cutpoints",
+  "value_string": "C3=host-green owners=4/4 continuations=1-each freezer!=guest-NMI mutations=6/6 hardware=H1/H2/H3-pending acceptance=blocked"
+}

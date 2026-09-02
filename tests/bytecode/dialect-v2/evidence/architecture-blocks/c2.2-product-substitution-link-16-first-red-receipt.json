@@ -1,0 +1,143 @@
+{
+  "format": "lisp65-c2-product-substitution-link-16-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "status": "first-red",
+  "attempt": {
+    "name": "sixteenth-substitution-link",
+    "command_mode": "--prepare-smoke",
+    "first_red_stage": "fixed-host-facade-smoke-gate",
+    "second_attempt_performed": false
+  },
+  "confirmed_link_16_gate_fix": {
+    "pre_ownership_gate": "passed",
+    "format": "lisp65-c2-pre-ownership-closure-v2",
+    "node_identity": "section-and-vma",
+    "boot_roots_resolved": 9,
+    "boot_sections_scanned": 9,
+    "ordinary_closure_functions": 39,
+    "session_code_edges": 0,
+    "session_state_operands": 0,
+    "session_cons_vector_edges": 0,
+    "negative_matrix": {
+      "same_vma_section_identity": "passed",
+      "boot_edge_to_session_code": "rejected",
+      "boot_operand_to_session_state": "rejected",
+      "boot_edge_to_c2e_cons_vector": "rejected"
+    },
+    "boot_source": "BOOT_SLICE_SPECS, shared with runtime-family packing",
+    "historical_negative_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-link-15-first-red-receipt.json"
+  },
+  "product_delta_for_gate_fix": {
+    "product_source_bytes": 0,
+    "linker_script_bytes": 0,
+    "resolved_profile_changed": false,
+    "link_15_resolved_profile_sha256": "6946de0ad874976b60bc40195852c391296c68af2835d83d6031c5fc386b996b",
+    "link_16_resolved_profile_sha256": "6946de0ad874976b60bc40195852c391296c68af2835d83d6031c5fc386b996b",
+    "link_15_smoke_size_bytes": 41502,
+    "link_16_smoke_size_bytes": 41502,
+    "capacity_delta_bytes": 0,
+    "identity_limit": "The two fresh LTO smoke binaries are not byte-identical despite identical resolved profiles and sizes. The final identity gate was not reached, so no cross-link identity claim is made."
+  },
+  "first_red": {
+    "class": "owned-window-direct-low-call-bypasses-fixed-facade",
+    "section": ".lisp65_c2_kernal_window.session_emitter_code",
+    "caller": "c2_facade_target_c2e_cons",
+    "caller_start": "0xe09e",
+    "instruction_address": "0xe0b8",
+    "instruction": "jsr $233f",
+    "target": {
+      "address": "0x233f",
+      "symbol": "cell_type",
+      "bytes": 67,
+      "domain": "moving ordinary Bank-0 text"
+    },
+    "gate_message": "fixed facade red: E000 code bypasses the fixed vectors [{'section': '.lisp65_c2_kernal_window.session_emitter_code', 'target': '0x233f', 'instruction': 'jsr\\t$233f'}]",
+    "meaning": "The Link-14 relocation made the 40-byte session-cons predicate owned-window code but left its out-of-line cell_type dependency in moving Bank 0. The pre-ownership lifetime is sound; the cross-domain address contract is not."
+  },
+  "layout_at_stop": {
+    "ordinary_text": {
+      "start": "0x2023",
+      "bytes": 37978,
+      "end_exclusive": "0xb47d",
+      "gap_before_handoff_bytes": 4
+    },
+    "handoff_start": "0xb481",
+    "kb_cursor_off": {
+      "start": "0xc218",
+      "bytes": 5
+    },
+    "fixed_bank0_headroom_bytes": 313,
+    "session_emitter_code": {
+      "start": "0xe09e",
+      "bytes": 40
+    },
+    "session_emitter_state": {
+      "start": "0xf15f",
+      "bytes": 346
+    }
+  },
+  "artifact_boundary": {
+    "resident_island_seed_emitted": true,
+    "runtime_overlay_bootstrap_emitted": true,
+    "boot_runtime_family_packed": true,
+    "session_runtime_family_packed": true,
+    "smoke_binary_emitted": true,
+    "smoke_binary_is_product_candidate": false,
+    "final_product_candidate_emitted": false,
+    "pre_ownership_gate": "passed",
+    "fixed_host_facade_gate": "first-red",
+    "identity_gate": "not-run",
+    "capacity_gate": "not-run",
+    "one_truth_gate": "not-run",
+    "kernal_freedom_gate": "not-run"
+  },
+  "evidence": {
+    "smoke_binary": {
+      "path": "build/c2.2/substitution/product-link-16/lisp65-c2-reslice-smoke.prg",
+      "sha256": "338b0629953fae17215cf53fd5e8a50b8f4efa0429fedf539f7ae7d070815988"
+    },
+    "smoke_elf": {
+      "path": "build/c2.2/substitution/product-link-16/lisp65-c2-reslice-smoke.prg.elf",
+      "sha256": "522d246eda613b9321f0a9d37b20e270a3df3b92bc55fefe6ab25b6b1ce23f17"
+    },
+    "smoke_map": {
+      "path": "build/c2.2/substitution/product-link-16/lisp65-c2-reslice-smoke.prg.map",
+      "sha256": "03f403329abbbe5edc764d5c56b2c0f033a8db6dc1d6a9456c83155d8628b1e2"
+    },
+    "pre_ownership_report": {
+      "path": "build/c2.2/substitution/product-link-16/pre-ownership-closure-smoke.json",
+      "sha256": "731b12ac15cf2f2d114189e6c317d313edb52812228fca7a9da0ed30331fd351"
+    },
+    "generated_linker_script": {
+      "path": "build/c2.2/substitution/product-link-16/c2-substitution.ld",
+      "sha256": "4b7c917499838360713ad2f4ca3a054b9be4a416aaadeffe27296563ba00383b"
+    }
+  },
+  "static_inputs": {
+    "session_emitter_source_sha256": "77a046053d4b455893767cfb0b7a7a4eb6c8c2684f8a70995308aa21b2b0c6af",
+    "link_driver_sha256": "c039d8a9fe73c9ff6766c59cf4a22addb866673fbba231c0edecb2a8355f51c0",
+    "contract_sha256_before_first_red_status_update": "cfa3fd178234c12fa452cf48f4ab3a185177bc211ad71797e2f2bac3b5eee17e",
+    "contract_document_sha256": "6d76b28138792e7a0b5f1a97226e3495a447a2f0ad5f7f9e149ca35a3e338ea5",
+    "driver_selftest": "passed",
+    "gate_preflight_against_link_15_smoke": "passed",
+    "json_python_and_whitespace_gates": "passed before the authorized link"
+  },
+  "recommended_next_layout": {
+    "option": "return only c2_facade_target_c2e_cons to explicit fixed Bank-0 code while retaining its 346-byte state in the owned window",
+    "placement": {
+      "kb_cursor_off": "0xc218..0xc21c (5 bytes, unchanged)",
+      "c2e_cons_target": "0xc21d..0xc244 (40 bytes)",
+      "fixed_code_end_exclusive": "0xc245",
+      "headroom_to_runtime_overlay_bytes": 273
+    },
+    "reason": "The existing c2_facade_c2e_cons vector already gives the predicate one stable publication address. Returning its implementation to explicit low code removes the forbidden edge without adding another facade vector, exposing private cell_type, or duplicating its 67-byte logic.",
+    "rejected_without_separate_review": [
+      "add a thirteenth facade vector by exporting or wrapping private inline cell_type",
+      "duplicate cell_type logic in the E000 window",
+      "allow a direct E000-to-moving-Bank-0 edge",
+      "weaken the fixed-facade gate"
+    ],
+    "authorization": "The 40-byte fixed-code debit, 313-to-273-byte headroom repin and any fresh substitution link require review."
+  },
+  "claim_limit": "Receipt-less diagnostic first-red only. It proves the corrected section-qualified pre-ownership gate and one forbidden E000-to-Bank-0 edge; it proves no fixed-facade closure, final product identity, capacity, one-truth, KERNAL freedom, hardware behavior or promotion claim."
+}

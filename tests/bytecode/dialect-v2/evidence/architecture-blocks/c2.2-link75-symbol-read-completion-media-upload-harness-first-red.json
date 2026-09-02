@@ -1,0 +1,31 @@
+{
+  "claim_limit": "FTP harness context only; no media or product result.",
+  "classification": "hardware-tool-context-not-product",
+  "correction": "Reset/load the canonical PRG first, then repeat the same D81 put/get and byte comparison before the full canonical deploy.",
+  "evidence": {
+    "DMA": {
+      "bytes": 4885,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-symbol-read-completion-hardware-receipt.json",
+      "sha256": "0dfbe174b953dbb90618c037cb32298f9eeeee06f21962a4317fe34a18a2907c"
+    },
+    "empty_log": {
+      "bytes": 0,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware-symbol-read-session-v2/media-upload.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "session": {
+      "bytes": 3918,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware-symbol-read-session-v2/session-state.json",
+      "sha256": "74ecf7cd8519624bcebd872a15ffba17adabbcd612dcbe695b3c0762c456216d"
+    }
+  },
+  "execution_accounting": {
+    "media_uploads_completed": 0,
+    "product_byte_changes": 0,
+    "product_links": 0
+  },
+  "finding": "mega65_ftp installed its fast-access routine while the target was stopped in the SEI diagnostic hold, then produced no byte of log or readback before the bound 360-second timeout.",
+  "format": "lisp65-c2.2-link75-media-upload-harness-first-red-v1",
+  "recorded_on": "2026-07-28",
+  "status": "FIRST-RED-FTP-no-progress-from-stopped-diagnostic"
+}

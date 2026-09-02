@@ -1,0 +1,56 @@
+{
+  "claim_limit": "Read-only attribution of the single authorized non-product WPLTO probe. No product link, hardware execution, capacity authorization or retry is claimed.",
+  "diagnosis": {
+    "baseline_bank0_text_headroom_bytes": 32,
+    "baseline_rtov_crc_mem_bytes": 41,
+    "failed_probe_rtov_crc_mem_bytes": 166,
+    "function_growth_bytes": 125,
+    "handoff_start": "0xb4a3",
+    "failed_text_end_exclusive": "0xb4f6",
+    "resident_overflow_bytes": 82,
+    "root_cause": "The explicit inline-assembly byte-decrement source shape forced WPLTO memory operands and expanded rtov_crc_mem from 41 to 166 bytes. The concrete correction form is capacity-invalid even though the intended two-byte semantics are valid.",
+    "status": "FIRST RED: target-stable inline-DEC source form exceeds the Bank-0 text corridor"
+  },
+  "evidence": {
+    "attempted_source": {
+      "path": "src/vm_runtime_overlay.c",
+      "sha256_at_probe": "35d08ba99526c6a56976d496f4a9acf1c43f2b6c59faafa6508f1a40cdb0733b"
+    },
+    "failed_lto_object": {
+      "bytes": 569084,
+      "path": "build/c2.2/substitution/link33-crc-codegen-correction-wplto/l65r-v2-boot-family-seed.prg.lto.o",
+      "sha256": "ba3a01a5abb12b14071ef8fbf8a150044080455e050620c2a3625b6d7d79e8f9"
+    },
+    "failed_map": {
+      "bytes": 184023,
+      "path": "build/c2.2/substitution/link33-crc-codegen-correction-wplto/l65r-v2-boot-family-seed.prg.map",
+      "sha256": "095ef281fb23c86af10cc3ed30e034160778f70c2021d7fe293152422ad285d9"
+    },
+    "linker_stderr": {
+      "bytes": 1535,
+      "path": "build/c2.2/substitution/link33-crc-codegen-correction-wplto/l65r-v2-boot-family-seed.prg.link.stderr.txt",
+      "sha256": "a7c175fe8a8b7e50f7fb788c2e9cf9a4acfe6bc1872de74cf2a8af28e4a6d0bb"
+    },
+    "probe_receipt": {
+      "bytes": 7572,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-crc-codegen-correction-wplto-probe-receipt.json",
+      "sha256": "b7c4e572f3d9e0fac90ae596390cc46a1cb0f07f9eef70ae15a128b5905d8af2"
+    },
+    "rollback_product": {
+      "mode": "0444",
+      "path": "build/c2.2/substitution/product-link-33-handoff-reanchor-final/lisp65-c2-substitution-linked.prg",
+      "sha256": "5f44b65a1a67530a9c3c8b687d7be597422978ae749f56101f42bdcebaf50044",
+      "status": "untouched"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "product_candidates": 0,
+    "product_closure_links": 0,
+    "successful_probe_prgs": 0,
+    "wplto_probe_attempts": 1
+  },
+  "format": "lisp65-c2-crc-codegen-correction-capacity-first-red-v1",
+  "next_gate": "Review a compact target-stable implementation; no second WPLTO probe or product link is authorized.",
+  "recorded_on": "2026-07-21"
+}

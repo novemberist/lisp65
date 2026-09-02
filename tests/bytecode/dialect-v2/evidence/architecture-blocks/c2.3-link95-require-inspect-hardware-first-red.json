@@ -1,0 +1,91 @@
+{
+  "format": "lisp65-c2.3-link95-require-inspect-hardware-first-red-v1",
+  "recorded_on": "2026-08-10",
+  "status": "FIRST RED: physical require inspect returned VM_BADOPCODE before every trace row",
+  "authority": {
+    "git_commit": "f20656f6255b80aebadc9075c19ef6f943ddf809",
+    "media_closure": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-media-closure-receipt.json",
+      "status": "LINK95-HOST-AND-MEDIA-GREEN; HARDWARE-PENDING"
+    },
+    "session_contract": {
+      "path": "config/c2-packed-callee-link95-device-session.json",
+      "sha256": "cf005fdea238c227bb66d9df46ff6b0185479fd30008872446928ca2e965cd4e"
+    },
+    "session_runner": {
+      "path": "scripts/c2-packed-callee-link95-hw.sh",
+      "sha256": "d8bd19d3c8f96d0d04d3d16378c7bd86ae42c2e4fdc5a2a3977f73c56f67f3bc"
+    }
+  },
+  "staging": {
+    "fresh_BASIC": "passed",
+    "FTP_lifetimes_before_product_boot": 1,
+    "FTP_after_product_boot": 0,
+    "product_D81_readback": {
+      "path": "build/c2.3/packed-callee-link95-device-session/product-readback.d81",
+      "bytes": 819200,
+      "sha256": "b58d41997e8a2e78f8f79065029097b9bcb03d136cab202f01e2cc9b5c2f951d"
+    },
+    "library_D81_readback": {
+      "path": "build/c2.3/packed-callee-link95-device-session/library-readback.d81",
+      "bytes": 819200,
+      "sha256": "5e282937436e6d2656590490734d800fcd9fecb4b3a740a3ec39009cdeb5a1bd"
+    },
+    "product_boot": {
+      "banner": "WORKBENCH 1.4.0",
+      "prompt": "lisp65>",
+      "screen_png_sha256": "3b2bfcf852228d3cf933e208ca1b7fa770e5225628188ff5b5c269a9e8f85bfd",
+      "screen_text_sha256": "ba6797106016eca8e28e37e590345ba63ee6abc92b90102fd2f7b990326ed75d"
+    },
+    "library_mount": "physical Freezer mount on drive 8 followed by F3; post-return banner and prompt passed"
+  },
+  "row": {
+    "id": "require-inspect",
+    "input": "physical owner keyboard",
+    "form": "(require (quote inspect))",
+    "quiet_floor_seconds": 180,
+    "observed": "*** vm: bad bytecode",
+    "returned_to_prompt": true,
+    "postcondition": {
+      "screen_png": {
+        "path": "build/c2.3/packed-callee-link95-device-session/row-require-inspect.png",
+        "bytes": 3782,
+        "sha256": "0da53da55f4844adba1b069079d60e2ffc00bb19c2a5dcfb37fa3d4637278336"
+      },
+      "screen_text": {
+        "path": "build/c2.3/packed-callee-link95-device-session/row-require-inspect.txt",
+        "bytes": 2241,
+        "sha256": "be76584b902a048201484e3fd89f5f1c9f9b301b682f6fefb4f715813713ac98"
+      }
+    }
+  },
+  "session_disposition": {
+    "trace_rows_executed": 0,
+    "trace_rows_not_executed": [
+      "define-probe",
+      "install-trace",
+      "traced-call",
+      "remove-trace",
+      "restored-call"
+    ],
+    "defstruct_sister_executed": false,
+    "trailing_peeks_executed": false,
+    "device_improvisation": false
+  },
+  "claims": {
+    "proved": [
+      "the SHA-bound Link-95 product and trace-library media reached a healthy Workbench prompt",
+      "the first physical require-inspect row returned VM_BADOPCODE and then a usable REPL",
+      "the failure precedes every trace installation, traced call, untrace, and defstruct measurement"
+    ],
+    "not_proved": [
+      "the inner VM_BADOPCODE mechanism",
+      "a trace function-cell ABI defect",
+      "a packed-callee publication defect",
+      "a defstruct result",
+      "a release or public-surface claim"
+    ]
+  },
+  "next_step": "host/ELF-first attribution of the delivered require-inspect compile/install path; no repeat hardware contact or product fix before the inner failing edge is named",
+  "claim_limit": "One physical Link-95 row only. The error is a target product-path First Red, but its inner mechanism is not attributed by this screen-level observation."
+}

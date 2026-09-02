@@ -1,0 +1,67 @@
+{
+  "authorities": {
+    "device_first_red": {
+      "bytes": 3574,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-closing-d2-arm-order-device-first-red-receipt.json",
+      "sha256": "b31c9a45a5ed26b97aef581ee136184e54c3bc9ecca6bc934be1326ffb66e1bf"
+    },
+    "diagnostic_ELF": {
+      "bytes": 620648,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.elf",
+      "sha256": "fdb8de75a95027f9fdd0813fbe9a2d47a2d36f63ae1b1f7cd0ba661700608d96"
+    },
+    "diagnostic_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+      "sha256": "405549c882d18faf61949037cfcc2d0c2435d97b52a95ae4b94e2d6bd4251706"
+    },
+    "driver": {
+      "bytes": 9503,
+      "path": "tools/host-lisp/c2_v16_d2_transport_attribution.py",
+      "sha256": "5bea775206ede9462c10da67bbee081719139e95e913fe23b292fbf3b5a588b0"
+    },
+    "owner_commission": {
+      "bytes": 44122,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "e000c558fe2d52cf932dd5a23ce30b527efcddb17abb339b8876c97499e506ef"
+    }
+  },
+  "claim_limit": "Desk/ELF attribution only. The result names the failed harness boundary, not which low-level monitor command discarded or failed to install the breakpoint. No new device contact, product byte, require, defstruct, R/A/I/G row, fix or rerun is claimed.",
+  "execution_witnesses": 6,
+  "facts": {
+    "linked_truth": {
+      "PC_after_entry_and_first_diagnostic_delta": true,
+      "PRG_and_ELF_bytes_agree": true,
+      "entry_PC": "0x2023",
+      "entry_post_instruction_PC": "0x2024",
+      "first_diagnostic_delta": "0x47c5",
+      "instruction": "LDA $05",
+      "linked_bytes": "a505",
+      "observed_PC": "0x754a",
+      "section": ".text",
+      "symbol": "vm_callprim",
+      "symbol_bytes": 4853,
+      "symbol_offset": 2730,
+      "symbol_start": "0x6aa0"
+    },
+    "transport_decision": {
+      "BASIC_command_consumed": true,
+      "Stage_2_device_discriminator_required": false,
+      "decision": "breakpoint-loss-not-RETURN-loss",
+      "entry_breakpoint_effective_at_crossing": false,
+      "named_mechanism": "monitor entry breakpoint was not effective through the virtual-matrix start sequence",
+      "virtual_RETURN_arrival": "proved-by-execution-beyond-_start"
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-D2-transport-desk-attribution-v1",
+  "mutations_rejected": {
+    "change-linked-opcode": "stopped-PC linkage drift",
+    "claim-effective-breakpoint": "transport decision drift",
+    "claim-return-loss": "transport decision drift",
+    "move-PC-outside-symbol": "stopped-PC linkage drift",
+    "put-PC-before-entry": "stopped-PC linkage drift"
+  },
+  "next_gate": "No virtual D2 rerun until its closure rejects this exact breakpoint-retention failure and uses a witness that survives the chosen launch transport; physical RETURN remains an owner fallback.",
+  "recorded_on": "2026-08-05",
+  "status": "attributed-breakpoint-loss-not-RETURN-loss"
+}

@@ -1,0 +1,25 @@
+{
+  "bound_first_red": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link33-handoff-reanchor-preflight-first-red-receipt.json",
+    "sha256": "260d317a2af7b235ec170d432724db5d229c9d524afa2932ed7c94809bd18874"
+  },
+  "diagnosis": {
+    "cause": "The successor Link-33 wrapper called the historical profile-binding prerequisite, which correctly describes the pre-L65R-v2, pre-Handoff-reanchor profile (9 defines, facade 0xb5cc), then compared it to the current canonical profile (10 defines, facade 0xb5ee).",
+    "current_authority": "The green wall-pin WPLTO replay already emitted a successor profile pin in which canonical and probe profile both equal SHA 6226b60c...; its successor section-inventory pin is likewise current.",
+    "product_finding": "none",
+    "status": "historical-receipt-used-as-current-authority"
+  },
+  "format": "lisp65-c2-product-link33-handoff-reanchor-preflight-diagnosis-v1",
+  "proposed_bounded_continuation": {
+    "correction": "Keep the old profile/inventory receipts SHA-bound as history, but replace their current-parity role in the successor driver with the green WPLTO successor-profile and successor-section-inventory pins.",
+    "current_profile_pin_sha256": "377afbeb6288ecf2bcf2db09b4ae3fa1d7ba6df7ad16d5be2e6de27360d6a3be",
+    "current_section_inventory_pin_sha256": "f9ab8bffefaad67f52e73b72579d2a3f1b0e8550ecfa23b78fcbbf0d21496a64",
+    "requested_execution": "one fresh Link-33 attempt with full gates and first-red discipline",
+    "still_forbidden": [
+      "hardware run before a green structural Link 33",
+      "rewriting historical receipts",
+      "inheriting structural green"
+    ]
+  },
+  "recorded_on": "2026-07-21"
+}

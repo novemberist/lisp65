@@ -1,0 +1,113 @@
+{
+  "attribution": {
+    "E000": {
+      "B3_D3_queue_irq_seam_net": 6,
+      "E5_append_begin": 10
+    },
+    "E000_delta_bytes": 16,
+    "ordinary_text": {
+      "D3_main_selector": 5,
+      "E5_product_install": 27
+    },
+    "ordinary_text_delta_bytes": 32,
+    "pack_neutral": {
+      "E5_L65E_table_delta": 29,
+      "E5_transient_reserve_delta": 6,
+      "L65E_total_delta_bytes": 61
+    }
+  },
+  "authority": {
+    "attempt_receipt": {
+      "bytes": 9198,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link58-matrix-addenda-wplto-replay3-receipt.json",
+      "sha256": "3c24a26917f6803ecfce7497728a07d2396640fcff6e1598d9946f016d35cf18"
+    },
+    "baseline_LTO_object": {
+      "bytes": 610280,
+      "path": "build/c2.2/substitution/link57-l-full-keymap-current-product-wplto2/resident-island-seed.prg.lto.o",
+      "sha256": "c5a380d4ef4264bc103b60e3c12202bc4bce8b139403d23bcfcc5336837f113c"
+    },
+    "baseline_map": {
+      "bytes": 195803,
+      "path": "build/c2.2/substitution/link57-l-full-keymap-current-product-wplto2/resident-island-seed.prg.map",
+      "sha256": "4d79ab354ce47f31329612959832ff2819cc4f4d6abc7f7110107fb7305e6df3"
+    },
+    "current_LTO_object": {
+      "bytes": 610064,
+      "path": "build/c2.2/substitution/link58-matrix-addenda-wplto-replay3/resident-island-seed.prg.lto.o",
+      "sha256": "3843732bbab11242205489ebd091e696dc9fcb63b508bf91356a2acce4a9daaf"
+    },
+    "current_map": {
+      "bytes": 191134,
+      "path": "build/c2.2/substitution/link58-matrix-addenda-wplto-replay3/resident-island-seed.prg.map",
+      "sha256": "84890cf65fe3e6e8678c3d15291661ba09ad174983824054669e95133182892d"
+    },
+    "driver": {
+      "bytes": 8562,
+      "path": "tools/host-lisp/c2_matrix_addenda_wplto_first_red.py",
+      "sha256": "94d286af61abc6720a7243e3e567d50496f8e373d6076c69123ff2e1cf4e7d4f"
+    },
+    "internal_receipt": {
+      "bytes": 20109,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link58-matrix-addenda-wplto-replay3-internal-structural.json",
+      "sha256": "85c67656b61ce4ac2d9710afd793b4d21ed8737ef2e70346786fd4926749b3be"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "prelink_class_A_replays": 3,
+    "promotable_product_links": 0,
+    "successful_product_closure_links": 0,
+    "whole_program_LTO_attempts": 1
+  },
+  "format": "lisp65-c2.2-matrix-addenda-WPLTO-first-red-v1",
+  "gates_before_capacity_red": {
+    "B3_D3": "host green; hardware pending",
+    "C3": "host owner matrix green; H1/H2/H3 pending",
+    "E5": "host+MOS green; hardware depth-five pending"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-23",
+  "rollback_line": "Link 57 remains untouched",
+  "status": "FIRST RED: two bound resident walls exceeded",
+  "stop_rule": "Class-C product-capacity question: stop before successor link and all C1/B3/C3/D3/E5 hardware cutpoints",
+  "walls": {
+    "E000": {
+      "baseline_headroom_bytes": 58,
+      "deficit_bytes": 12,
+      "measured_headroom_bytes": 42,
+      "overlap": {
+        "bytes": 12,
+        "reopen_gap0": "$fcae..$fd2d",
+        "session_emitter_state": "$fd22..$fd2b"
+      },
+      "required_floor_bytes": 54,
+      "verdict": "red"
+    },
+    "bank0_text": {
+      "baseline_headroom_bytes": 38,
+      "deficit_bytes": 26,
+      "measured_headroom_bytes": 6,
+      "required_noise_headroom_bytes": 32,
+      "verdict": "red"
+    },
+    "fixed_hot_block": {
+      "headroom_bytes": 33,
+      "verdict": "green"
+    },
+    "ordinary_BSS": {
+      "headroom_bytes": 213,
+      "verdict": "green"
+    },
+    "resident_island": {
+      "headroom_bytes": 5,
+      "verdict": "green"
+    },
+    "session_family": {
+      "bytes": 65438,
+      "headroom_bytes": 98,
+      "reason": "E5 grew 971->977 and L65E 1143->1204; both remain inside their existing 256-byte pack quanta",
+      "verdict": "green"
+    }
+  }
+}

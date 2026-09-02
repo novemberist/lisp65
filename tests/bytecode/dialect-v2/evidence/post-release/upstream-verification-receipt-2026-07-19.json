@@ -1,0 +1,97 @@
+{
+  "bindings": {
+    "drafts": {
+      "bytes": 14200,
+      "path": "docs/upstream-issue-drafts.md",
+      "sha256": "44fd87d693ccc973410ddade43bd0faaf3e1a4d6431922e83b90d6f7fde03b71"
+    },
+    "findings": {
+      "bytes": 8738,
+      "path": "docs/upstream-findings.md",
+      "sha256": "3d8eeca4a2d7cb2fbf837666895de5f8810d429d9aad34414d409dcff6810acc"
+    },
+    "report": {
+      "bytes": 7735,
+      "path": "docs/upstream-verification-2026-07-19.md",
+      "sha256": "042fb491fedf6ed23d6a07597bb881eae361f21f1ad800c8e4b603f34b0c9c0d"
+    },
+    "scroll_repro": {
+      "bytes": 681,
+      "path": "tools/upstream-repros/mega65_kernal_scroll.c",
+      "sha256": "8ebf535c6dadfbd85b7a50e59c87b61267e4fb505896c586457878b30094618d"
+    },
+    "shift_repro": {
+      "bytes": 1018,
+      "path": "tools/upstream-repros/variable_shift_mask.c",
+      "sha256": "4cfd7bd7d6800cd10c911654a7bbb6f67a9cbd5bbe9123b046a60aaff28c6059"
+    },
+    "verifier": {
+      "bytes": 10993,
+      "path": "tools/host-lisp/upstream_verification.py",
+      "sha256": "c4dcb40a34bc6c7c019aef3f45cf3a607ef149543259fd6c12f02de85334cc6e"
+    }
+  },
+  "claim_limit": "This receipt proves source/toolchain re-verification only. It does not claim a current-core hardware result, file an issue, or change product bytes.",
+  "core": {
+    "existing_issue_674": "open-checked-2026-07-19",
+    "existing_issue_729": "open-checked-2026-07-19",
+    "historical_hardware_core": "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6",
+    "result": "current-source-consistent-current-core-hardware-not-run"
+  },
+  "format": "lisp65-upstream-verification-receipt-v1",
+  "hardware_holds": [
+    "L3 current-toolchain scroll smoke",
+    "C3 current-core flat-access smoke"
+  ],
+  "issues_filed": 0,
+  "l1": {
+    "result": "reduced-claim-not-reproduced-do-not-file",
+    "runs": {
+      "current": {
+        "cycles": 3162,
+        "exit": 0
+      },
+      "pinned": {
+        "cycles": 3162,
+        "exit": 0
+      }
+    }
+  },
+  "l3": {
+    "prg": {
+      "bytes": 294,
+      "path": "build/upstream-verification/receipt-20260719/mega65-kernal-scroll-current.prg",
+      "sha256": "d439a7bb775ed160af6fc8274ed8a8a24bc783b8326f8c9afeb106fc12f8ab2f"
+    },
+    "result": "current-binary-built-hardware-not-run"
+  },
+  "recorded_on": "2026-07-19",
+  "status": "passed-with-explicit-hardware-holds",
+  "toolchains": {
+    "current_compiler": "8be0546128a55e78c63ca571d466aa72a782cd36",
+    "current_compiler_link_closure": "repository-pinned-sdk",
+    "pinned_compiler": "c798c31416f72b395c658b5502d281a162387ab1"
+  },
+  "upstream_blobs": {
+    "mega65_core_dos": "582b6b4fd30ed8059c60c8db9aed08a84fbe9d6d",
+    "mega65_core_freeze": "44bea4c9b32f7bc06743c031d2374065ab8982cf",
+    "mega65_core_sdcardio": "d7e52668e0e5b90280e45900904e7d4d06a3ba2f",
+    "xemu_configdb": "d49d9c229d1058b912eb62451bd6b14f3b183e7f",
+    "xemu_hypervisor": "64dafc14669ba448b2840fa19e76d20656cfcf74",
+    "xemu_input_devices": "b30be1cf30679064688af32d0e1cab372221cc06",
+    "xemu_sdcard": "10b87f9b3afbad52af57dfbafc63aef1b167cc1c"
+  },
+  "upstream_heads": {
+    "llvm_mos": "8be0546128a55e78c63ca571d466aa72a782cd36",
+    "llvm_mos_sdk": "d0b137e5fd443fda1f70bf98ecd739cc131e18f9",
+    "mega65_core": "a9158930665763c592d004c895d52eff4a9eefc3",
+    "mega65_user_guide": "2d0c444a7f086fcc6c4aed9bbaf5ccc17a19ef60",
+    "xemu": "40dfef0d1d5f56be2469492715c12bdb32c75b67"
+  },
+  "version": 1,
+  "xemu": {
+    "f011_sd_buffer_model": "explicitly-incomplete-sd-only-workaround",
+    "freezer": "not-enabled",
+    "typed_event_queue": "implemented"
+  }
+}

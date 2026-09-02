@@ -1,0 +1,126 @@
+{
+  "authorities": {
+    "Bank_2": {
+      "bytes": 65536,
+      "path": "build/c2.3/defstruct-consumed-span-closing/device/bank2-source.bin",
+      "sha256": "c8036f2ef7713f7f06dfd7e471953c15d5d1b59f8d158b82e948d5e1377e141c"
+    },
+    "C2D": {
+      "bytes": 50816,
+      "path": "build/c2.3/defstruct-consumed-span-closing/device/c2d-reset-domain.bin",
+      "sha256": "67de7e15bf2923c70d4f5292b06f5bb0b5d138c6cce35be8d6ab175251766f13"
+    },
+    "preparation": {
+      "bytes": 9652,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-consumed-span-preparation-receipt.json",
+      "sha256": "a752cfcdeccf342cd30cba801c1b871623a76a08f21a957b4ccd76f5d827fcc8"
+    },
+    "registers": {
+      "bytes": 785,
+      "path": "build/c2.3/defstruct-consumed-span-closing/device/final-registers.json",
+      "sha256": "f22c858a88067a7e35d0e0d4e80e33a8115485def676c2862c5875dc0dfae526"
+    },
+    "span_capture": {
+      "bytes": 66,
+      "path": "build/c2.3/defstruct-consumed-span-closing/device/consumed-spans.bin",
+      "sha256": "050777c14264808733ad2cbbd8a81cc5bb9380338d5a0e23176815f0360d67cb"
+    },
+    "terminal_ring": {
+      "bytes": 65,
+      "path": "build/c2.3/defstruct-consumed-span-closing/device/terminal-ring.bin",
+      "sha256": "27cd03c57dfa0c6cdafbe62b5c3e52e772d43de69e7dfead6e1586325591053e"
+    }
+  },
+  "claim_limit": "Closing evidence row. It decides only stale consumed-window bytes versus local terminal-ingress corruption and routes the fix choice to the owner.",
+  "decision": {
+    "attribution_closed": true,
+    "classification": "ALL-CONSUMED-SPANS-BYTE-EXACT; STALENESS-REFUTED; LOCAL-TERMINAL-INGRESS-CORRUPTION",
+    "further_evidence_rows": 0,
+    "next": "structural terminal-ingress stack/vector defense commission",
+    "owner_decision_required": true
+  },
+  "format": "lisp65-c2.3-post-v1.4-defstruct-consumed-span-result-v1",
+  "raw_capture": {
+    "span_record_hex": "a10190021d0003003e0204cdcdcdcdcda201b8020a0010000c0d3538030101023e01040b38033305cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+    "terminal_ring_hex": "a1a2a31d00a4019002a51d00a63ea7a80a00a901b802aa0a00ab0c5c5dcc5ecccc5fcc60cccccc61cccc6263cc64cc65cc6667cc68cc69cc6acccc6b6ccc6dcccc"
+  },
+  "recorded_on": "2026-08-10",
+  "source_oracles": [
+    {
+      "captured_C2D_entry_hex": "050346962d006e090100",
+      "captured_object_hex": "b50203022000030000000000000b3a023902340c3c00020b3a03390335340b3a0439043535340b3c01013e0204",
+      "captured_object_sha256": "42bed936b5584b9ae8506bc0e1a7ed005073d4047c8403aff6a3fea698aac492",
+      "code_length": 45,
+      "code_offset": 38470,
+      "consumed_bytes": 3,
+      "generation": 1,
+      "image_slot": 5,
+      "literal_count": 3,
+      "name": "previous-fill",
+      "object_header_bytes": 13,
+      "object_payload_bytes": 32,
+      "object_sha256": "42bed936b5584b9ae8506bc0e1a7ed005073d4047c8403aff6a3fea698aac492",
+      "owner_bank": 1,
+      "owner_ordinal": 656,
+      "resolution_base": 2414,
+      "source_hex": "3e0204",
+      "source_sha256": "d71162f601354671afea40281e7f63294d26f8aad7c69935747bf731f9799433",
+      "window_base": 29
+    },
+    {
+      "captured_C2D_entry_hex": "0502cea025000f0a0100",
+      "captured_object_hex": "b50400021a0002000000000d1d120b0c0d343c00030c0d3538030101023e01040b38033305",
+      "captured_object_sha256": "ea05387f6be2e967537506f46c03e1689169edabca54593016097d905a37738a",
+      "code_length": 37,
+      "code_offset": 41166,
+      "consumed_bytes": 16,
+      "generation": 1,
+      "image_slot": 5,
+      "literal_count": 2,
+      "name": "last-fill",
+      "object_header_bytes": 11,
+      "object_payload_bytes": 26,
+      "object_sha256": "ea05387f6be2e967537506f46c03e1689169edabca54593016097d905a37738a",
+      "owner_bank": 1,
+      "owner_ordinal": 696,
+      "resolution_base": 2575,
+      "source_hex": "0c0d3538030101023e01040b38033305",
+      "source_sha256": "53454bd47d7a80832625c5157963104c0bc1f69f7cea7e87912925831456f647",
+      "window_base": 10
+    }
+  ],
+  "spans": [
+    {
+      "actual_hex": "3e0204",
+      "consumed_bytes": 3,
+      "first_difference": null,
+      "name": "previous-fill",
+      "owner_bank": 1,
+      "owner_ordinal": 656,
+      "source_hex": "3e0204",
+      "state": "committed",
+      "tag": 161,
+      "window_base": 29
+    },
+    {
+      "actual_hex": "0c0d3538030101023e01040b38033305",
+      "consumed_bytes": 16,
+      "first_difference": null,
+      "name": "last-fill",
+      "owner_bank": 1,
+      "owner_ordinal": 696,
+      "source_hex": "0c0d3538030101023e01040b38033305",
+      "state": "committed",
+      "tag": 162,
+      "window_base": 10
+    }
+  ],
+  "stale_span_count": 0,
+  "status": "ALL-CONSUMED-SPANS-BYTE-EXACT; STALENESS-REFUTED; LOCAL-TERMINAL-INGRESS-CORRUPTION",
+  "tuple": {
+    "MAPH": "0x8000",
+    "MAPL": "0x0000",
+    "PC": "0xb3b9",
+    "SP": "0x018d"
+  }
+}

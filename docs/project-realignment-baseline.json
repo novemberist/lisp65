@@ -1,0 +1,66 @@
+{
+  "schema": "lisp65-project-realignment-baseline-v1",
+  "recorded_on": "2026-07-09",
+  "source": {
+    "commit": "398d9341273a3c5d06afd441631334305f865b9f",
+    "tree": "fc8a298394aaf9aee763a343f9b954bb92fd98be"
+  },
+  "gates": [
+    {
+      "command": "make check",
+      "status": "pass",
+      "scope": "baseline commit",
+      "notes": "Hardware targets executed as dry-runs; no physical MEGA65 run."
+    },
+    {
+      "command": "make bytecode-p0-stdlib-check",
+      "status": "pass",
+      "scope": "AP0 suite-classification cleanup",
+      "metrics": {
+        "suites": 13,
+        "functions": 3137,
+        "cases": 1897
+      }
+    },
+    {
+      "command": "make bytecode-p0-ide-lib-check",
+      "status": "pass",
+      "scope": "AP0 suite-classification cleanup",
+      "metrics": {
+        "suites": 1,
+        "functions": 219,
+        "cases": 119
+      }
+    },
+    {
+      "command": "make workbench-persistence-gate",
+      "status": "pass",
+      "scope": "AP0 suite-classification cleanup",
+      "notes": "Includes a hardware deploy dry-run, not a physical hardware test."
+    }
+  ],
+  "known_open": [
+    {
+      "id": "AP1-native-reader-rootstack",
+      "severity": "critical",
+      "owner": "AP1",
+      "status": "resolved-host-pending-hardware",
+      "exit_criterion": "Native reader rejects excessive nesting without rootstack or C-stack memory errors under ASan/UBSan and in the product profile."
+    },
+    {
+      "id": "AP0-product-compiler-warning",
+      "severity": "medium",
+      "owner": "AP4",
+      "status": "resolved",
+      "evidence": "src/vm.c:64: vm_buf_win set but not used",
+      "exit_criterion": "The Workbench product build completes without compiler warnings."
+    },
+    {
+      "id": "AP0-physical-hardware-baseline",
+      "severity": "medium",
+      "owner": "release-gate",
+      "status": "not-run",
+      "exit_criterion": "The defined Workbench acceptance matrix passes on a physical MEGA65 and records its environment."
+    }
+  ]
+}

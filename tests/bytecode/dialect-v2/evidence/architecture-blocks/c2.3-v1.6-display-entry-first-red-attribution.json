@@ -1,0 +1,100 @@
+{
+  "claim_limit": "Excludes the proposed mixed-identity/helper hypotheses and narrows the First Red to the caller return/refill seam. It does not choose between refill failure and operand-stack loss, authorize a fix, link, medium, or another device contact.",
+  "decisions": {
+    "helper_failure": "EXCLUDED: a non-OK helper return exits before BUF_ENSURE_MINE; the captured globals are the reparsed %repl-step caller",
+    "mixed_library_identity": "EXCLUDED: one symbol and one BCODE directory per function",
+    "remaining_split": [
+      "caller payload refill at logical PC $45 returned failure; WIN_ENSURE records $45/21 before it calls vm_object_load",
+      "caller payload refill completed, then the operand-stack result was lost before DROP at $45 or the later DROP at $52"
+    ],
+    "stale_or_corrupt_payload_source": "EXCLUDED for all 179 captured bytes, including the complete $45..$59 band"
+  },
+  "device_result": {
+    "VM_window": {
+      "code_pointer": "0xbfc7",
+      "payload_length": 220,
+      "payload_offset": 35,
+      "payload_window_capacity": 21,
+      "streaming": 1,
+      "window_length": 21,
+      "window_start": 69
+    },
+    "live_payload": {
+      "bytes_compared": 179,
+      "differences": 0,
+      "physical_start": "0x00046b4d",
+      "source": "%repl-step payload"
+    },
+    "pending_error": {
+      "code": 43,
+      "name": "VM_BAD_BYTECODE"
+    },
+    "runtime_identities": {
+      "%read-line-loop": {
+        "directory": 760,
+        "function_cell": "0xc5f0",
+        "symbol_index": 370
+      },
+      "%repl-step": {
+        "directory": 765,
+        "function_cell": "0xc5fa",
+        "symbol_index": 646
+      },
+      "%rl-screen-tail": {
+        "directory": 762,
+        "function_cell": "0xc5f4",
+        "symbol_index": 638
+      }
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-display-entry-first-red-attribution-v1",
+  "inputs": {
+    "VM_source": {
+      "bytes": 104864,
+      "path": "src/vm.c",
+      "sha256": "c17349cccf193dd22aa1241d2563ad097da744c61df8364dd77396661e7fb7aa"
+    },
+    "attribution_tool": {
+      "bytes": 11195,
+      "path": "tools/host-lisp/c2_v160_display_entry_first_red_attribution.py",
+      "sha256": "db7f696e4869009884f6a701b2ae730135a38092f5696370778e0f2ce68fcf59"
+    },
+    "candidate_ELF": {
+      "bytes": 632960,
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "347a2e6b4070a9f9e02c21216d59c5c18f66015373bbe93df14027eba0107c42"
+    },
+    "capture": {
+      "bytes": 956955,
+      "path": "build/c2.3/v1.6-display-ownership-device-contact/display-entry-first-red-stopped-state/capture.json",
+      "sha256": "ecf9b07715c366354d79b814b3490b0845c4b32eae30958d5a6812392e56d85b"
+    },
+    "comfort_blob": {
+      "bytes": 739,
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/library-inputs/repl-comfort.blob.bin",
+      "sha256": "1d5c294c5d5c09b809e543a356e2da32c28883e3278ee12416d890fde34f5514"
+    },
+    "comfort_manifest": {
+      "bytes": 16558,
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/library-inputs/repl-comfort.manifest.json",
+      "sha256": "4e7b1b8e7b2247f9d8145db76ea1774228c3b09c936c89db0c8cb0325de5d63b"
+    },
+    "v16core_manifest": {
+      "bytes": 23445,
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/library-inputs/v16core.manifest.json",
+      "sha256": "771dc24700b5e41f5c017ce9bf196b6ac900305e6140fc4ad9dc08f8eecf61d3"
+    }
+  },
+  "instrument_gap": {
+    "missing_range": "vm_codebuf $bfa4..$bfdb",
+    "self_correction": "$45/21 is an attempted-window witness, not a completion witness; no operand-stack mechanism is claimed",
+    "why_decisive": "source bytes plus requested window cannot distinguish a failed read from a completed read; the destination buffer can"
+  },
+  "next_step": {
+    "fixture_rule": "a streamed caller with 14 literals, 21-byte payload window and a nested CALL immediately before a refill must be a permanent gate",
+    "kind": "host-first attribution/instrument specification; no fix authorized",
+    "required_observation": "bind refill success/failure and the post-CALL operand depth at logical PC $45 in the same final-world path"
+  },
+  "recorded_on": "2026-08-22",
+  "status": "ATTRIBUTED TO CALLER RETURN/REFILL SEAM; MECHANISM SPLIT OPEN"
+}

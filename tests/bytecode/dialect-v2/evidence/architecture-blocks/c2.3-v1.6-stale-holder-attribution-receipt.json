@@ -1,0 +1,142 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 232201,
+    "commit": "a6f0038bec6005d1436204742cd48a83b21425d8",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "1df7283acd2c6043d6709f67bcc8cbf16f757b4d80f5b45d7051eedeffc9f458"
+  },
+  "claim_limit": "No product change, card, link, medium, or device contact.",
+  "decision": {
+    "claim_correction": "the frozen stack does not contain the commissioned pre-wipe return witness; claiming one would misclassify the BRK frame",
+    "named_holder": null,
+    "selected": "retirement/liveness violation remains the mechanism class",
+    "why_not_named": "the only in-window word in evidence is the post-transfer BRK continuation; the dynamic heap/continuation stores needed to distinguish the residual holders were not read"
+  },
+  "format": "lisp65-c2.3-v1.6-stale-holder-attribution-v1",
+  "holder_enumeration": [
+    {
+      "class": "native stack return addresses",
+      "evidence": "six exact JSR frames decoded; no adjacent post-frame word lies in the window",
+      "result": "excluded in captured bytes"
+    },
+    {
+      "class": "linked/published static cells",
+      "evidence": "one relocation to buf_from_string, internal to its own slice; zero relocations to the public entry",
+      "result": "no static bypass"
+    },
+    {
+      "class": "hardware vectors",
+      "evidence": "terminal vector entered resident $e038; stacked B=1 identifies BRK, not a vector to the window",
+      "result": "excluded as holder of $c5b6"
+    },
+    {
+      "class": "setjmp continuation record at $bd47",
+      "evidence": "setjmp is called at $aa5e and its legal resume is $aa61, outside the window; live 19-byte record was not in the authorized ranges",
+      "result": "not captured; statically bounded"
+    },
+    {
+      "class": "RTOV cached direct target/context",
+      "evidence": "__rc18/__rc19=$c356; rtov_call_context=$cf9b; neither is $c5b6",
+      "result": "captured target is slice base, not fault site"
+    },
+    {
+      "class": "heap/VM continuation or dynamically published cell",
+      "evidence": "authorized row contains Bank 0/ZP/stack, input ring and fixed state, not heap or VM continuation storage",
+      "result": "not captured"
+    }
+  ],
+  "inputs": {
+    "ELF": {
+      "bytes": 632156,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a03f9fafc5629f913dcf213925d7f007fd91b353ab2229a6189080c37f604c9c"
+    },
+    "capture": {
+      "bytes": 18335,
+      "path": "build/c2.3/v1.6-items12-hybrid-owner-contact/hybrid-entry-first-red-stopped-state/capture.json",
+      "sha256": "73827d43bb82102b434bd81a92bc2ce216bf9c3c5b67cc85b3b9b29a89188992"
+    },
+    "device_result": {
+      "bytes": 2373,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-overlay-view-device-result-receipt.json",
+      "sha256": "0a8951d1e08ac609cd293e43dc9895566f8df66809eee6e291b967491d24487c"
+    }
+  },
+  "mechanism_boundary": "Host-only evidence names the retirement path and excludes native-stack, static-link, vector, setjmp and captured RTOV-cache holders, but cannot distinguish an uncaptured VM/heap continuation from a dynamic publication. No fix may be derived from this receipt.",
+  "recorded_on": "2026-08-20",
+  "retirement_path": {
+    "captured_lifecycle": "busy=0, loaded_len=0, target all zero",
+    "error_path_at_stop": [
+      "vm_check_status observes VM_TYPE",
+      "lisp_abort_code / lisp_abort_symbol",
+      "c2_product_abort_cleanup",
+      "vm_runtime_overlay_abort_cleanup -> rtov_wipe"
+    ],
+    "normal_slice_exit": [
+      "indirect call through __call_indir",
+      "store entry result",
+      "rtov_wipe at $2dd9",
+      "clear rtov_busy at $2ddf"
+    ],
+    "violated_rule": "no control target in a runtime-overlay VMA may remain usable after rtov_wipe retires that generation"
+  },
+  "stack_main_witness": {
+    "BRK_continuation": "0xc5b8",
+    "BRK_opcode": "0xc5b6",
+    "conclusion": "the captured native stack proves the abort/wipe chain but contains no defensible pre-retirement return address into $c356..$ca91",
+    "decoded_jsr_chain_inner_to_outer": [
+      {
+        "callee": "c2_product_abort_cleanup",
+        "caller": "lisp_abort_symbol",
+        "raw_jsr_return": "0x2e8e",
+        "resume": "0x2e8f",
+        "stack_address": "0x01cf"
+      },
+      {
+        "callee": "lisp_abort_code",
+        "caller": "vm_check_status",
+        "raw_jsr_return": "0x8f24",
+        "resume": "0x8f25",
+        "stack_address": "0x01d1"
+      },
+      {
+        "callee": "vm_check_status",
+        "caller": "eval_vm_native_apply_checked",
+        "raw_jsr_return": "0x8ff5",
+        "resume": "0x8ff6",
+        "stack_address": "0x01d5"
+      },
+      {
+        "callee": "eval_vm_native_apply_checked",
+        "caller": "eval",
+        "raw_jsr_return": "0xa1d7",
+        "resume": "0xa1d8",
+        "stack_address": "0x01db"
+      },
+      {
+        "callee": "eval",
+        "caller": "repl",
+        "raw_jsr_return": "0xac04",
+        "resume": "0xac05",
+        "stack_address": "0x01df"
+      },
+      {
+        "callee": "repl",
+        "caller": "main",
+        "raw_jsr_return": "0xa70b",
+        "resume": "0xa70c",
+        "stack_address": "0x01e5"
+      }
+    ],
+    "error_carrier": {
+      "pending_code": "0x26 (VM type error)",
+      "vm_status": "0x03 (VM_TYPE)"
+    },
+    "important_distinction": "$c5b8 belongs to the BRK frame created after the stale transfer; it is not a pre-wipe return holder",
+    "pre_BRK_adjacent_words_in_window": [],
+    "saved_frame_hex": "00c7000032b8c5",
+    "stacked_P": "0x32"
+  },
+  "status": "NARROWED-DYNAMIC-HOLDER-NOT-CAPTURED"
+}

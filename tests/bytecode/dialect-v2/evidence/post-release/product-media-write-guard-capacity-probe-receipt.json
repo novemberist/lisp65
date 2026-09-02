@@ -1,0 +1,124 @@
+{
+  "format": "lisp65-product-media-write-guard-capacity-probe-v1",
+  "version": 1,
+  "id": "v1.0.1-native-fasl-product-media-write-guard",
+  "status": "rejected-not-promoted",
+  "measured_on": "2026-07-15",
+  "baseline": {
+    "release_tag": "v1.0.0",
+    "release_commit": "589729471b39ef218397663480905a36fd03dd16",
+    "product_artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "linked_product_elf": {
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+      "bytes": 120268,
+      "sha256": "aaeadc4a72c18796dc4c6fa9d9849306120c94c74f199504460f485ce600b755"
+    },
+    "resident_product": {
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-resident.prg",
+      "bytes": 39493,
+      "sha256": "f3e199ebb2abae12fae62230ec5f107a90a1f31086cd5a80227eede381044183"
+    },
+    "resolved_profile": {
+      "path": "build/products/workbench/overlay-stack-guard/resolved-profile.txt",
+      "bytes": 9426,
+      "sha256": "95876650317788ae2ccf073643849bbfe7b8c1a838c49f4ec3e530c97cb9b481"
+    },
+    "footprint_audit": {
+      "path": "build/products/workbench/overlay-stack-guard/footprint-audit.json",
+      "bytes": 615,
+      "sha256": "3f8b89322b03e8640688b79daf722c09200307e214222a8396efe0ced54a2b7d"
+    }
+  },
+  "probe": {
+    "implementation": "native guard below every two-argument sector write; read T40/S0 and require exact sealed 1581 name, ID 65, structure bytes and L65B marker",
+    "compact_candidate_source_sha256": {
+      "src/io.c": "eaf48d4378c993350336ae15374d45ee2ac234d81473eb9f525a087fc7e75c1c",
+      "src/product_media_guard.h": "182da86886bfa3487847cace79b686060878ed6e01d05d91ab8c0804feecd798",
+      "scripts/product-media-guard-main.c": "147df427403d793e08b548039d2aac6878b0f43ec92ed7c6e41ac9b57cacc3e0"
+    },
+    "host_identity_oracle": {
+      "result": "pass",
+      "cases": 10,
+      "mutations_rejected": 9
+    },
+    "real_product_link": {
+      "result": "rejected-by-hard-runtime-overlay-vma-gate",
+      "baseline_runtime_overlay_start": 49932,
+      "baseline_runtime_overlay_start_hex": "0xc30c",
+      "candidate_runtime_overlay_start": 50190,
+      "candidate_runtime_overlay_start_hex": "0xc40e",
+      "runtime_overlay_max_vma": 50006,
+      "runtime_overlay_max_vma_hex": "0xc356",
+      "available_bytes": 74,
+      "candidate_delta_bytes": 258,
+      "gate_overrun_bytes": 184,
+      "baseline_post_boot_reserve_bytes": 1868,
+      "candidate_post_boot_reserve_projected_bytes": 1610,
+      "post_boot_reserve_target_bytes": 1536,
+      "candidate_projected_target_margin_bytes": 74,
+      "projection_note": "The hard linker assertion rejected the candidate before the final footprint audit; reserve follows the measured 258-byte overlay-start displacement with unchanged overlay size."
+    },
+    "bank_attribution_bytes": {
+      "product_media_classifier": 177,
+      "guarded_writer_growth": 56,
+      "canonical_product_name_data": 16,
+      "layout_and_lto_remainder": 9,
+      "sum": 258
+    },
+    "runtime_cost": "one additional T40/S0 F011 read for each two-argument physical sector write"
+  },
+  "capacity_delta": {
+    "bank": {
+      "baseline_margin_over_1536_bytes": 332,
+      "candidate_projected_margin_over_1536_bytes": 74,
+      "delta_bytes": -258,
+      "hard_vma_gate": "failed-by-184-bytes"
+    },
+    "ext": {
+      "baseline_headroom_bytes": 16385,
+      "candidate_probe_headroom_bytes": 16385,
+      "delta_bytes": 0
+    },
+    "symbols": {
+      "baseline_free": 120,
+      "candidate_probe_free": 120,
+      "delta": 0
+    },
+    "namepool": {
+      "baseline_free_bytes": 2160,
+      "candidate_probe_free_bytes": 2160,
+      "delta_bytes": 0
+    },
+    "directory": {
+      "baseline_free_entries": 32,
+      "candidate_probe_free_entries": 32,
+      "delta_entries": 0
+    },
+    "boot_overlay_delta_bytes": 0
+  },
+  "mount_token_cache_assessment": {
+    "status": "reviewed-rejected-without-redundant-link-variant",
+    "native_token": "exact five-byte D68B-D68F hypervisor-mounted-image token only",
+    "m65d_identity": "canonical name plus exact ID plus fresh Lisp latch generation; not present in the native token",
+    "compile_path": "compile-string uses the two-argument %disk-write-sector directly for every fixed-slot sector and bypasses the M65D transaction latch",
+    "capture_boundary": "native capture reads D68B-D68F only; it neither reads nor owns a classified T40/S0 header, and the fixed-slot caller has arbitrary target-sector scratch at capture time",
+    "size_effect": "classifying once instead of once per sector reduces I/O frequency but does not remove the single 177-byte resident classifier; a cache also needs validity, product flag and invalidation logic",
+    "trust_boundary": "accepting a caller-supplied product bit would let the bypassing path assert its own authorization; making M65D classification authoritative requires a new primitive/bytecode transaction seam and belongs to the 1.1-M structural repair",
+    "rejection_reason": "The proposed cached bit has no trusted classified value at the native two-argument capture boundary and cannot eliminate the resident classifier that caused the capacity failure."
+  },
+  "rollback": {
+    "probe_product_sources_removed": true,
+    "canonical_rebuild": "pass",
+    "linked_product_elf_byteidentical_to_baseline": true,
+    "resident_product_byteidentical_to_baseline": true,
+    "resolved_profile_byteidentical_to_baseline": true,
+    "footprint_audit_byteidentical_to_baseline": true
+  },
+  "source_bindings_after_rollback": {
+    "src/io.c": "fbea8a2de11ee32f1b795e1e4b06383f7a5f9252a84f9ab697a5e45237025d5b",
+    "src/f011_guarded_write.s": "9de9a2479d434b08bf9e08a6438797e18bdeb2c983561acb89cf4b1c4b6d2fb7",
+    "lib/dialect-v2/eval-runtime.lisp": "b379bc3c4027d88e6a45c16c6120b37778341eafdb2f0b1d6477d2502a84e8bb",
+    "lib/m65-disk.lisp": "a542a2341b8ed06da49715f69ee3bc056b624d52afab8729d65193dfd8516a2e"
+  },
+  "decision": "No debit requested and no product promotion. The v1.0.1 native guard is structurally deferred to 1.1-M unless the owner separately authorizes a different release scope."
+}

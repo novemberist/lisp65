@@ -1,0 +1,63 @@
+{
+  "format": "lisp65-r3-canonical-product-rebuild-drift-v1",
+  "id": "r3-pre-probe-r2-product-rebuild-drift",
+  "status": "stopped-before-probe-promotion",
+  "detected_on": "2026-07-13",
+  "trigger": "make r3-stager-probe-check",
+  "expected_baseline": {
+    "source_commit": "4c947e8e4117a78ef1f8778fecf75560fb41709b",
+    "product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "report": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-product-link-report.json",
+      "sha256": "367c8ad6f0308e5c6e8c2b7ab8ff325f010ded63ab9acc84dbaf1e1ea01cc8fc"
+    },
+    "artifacts": [
+      {"id": "product-elf", "bytes": 119576, "sha256": "0519ca5e6dbd9813036ff307d351fb999c808c0cc2806ba6b8e68dc20b5e245b"},
+      {"id": "resident-prg", "bytes": 39564, "sha256": "fa22cdccb8a74cb3ff6e74180efcef26c64da14384b14128584a906370d9e50b"},
+      {"id": "runtime-overlays", "bytes": 54617, "sha256": "66a039d97e2238e4ea46ebcf36becdc5a5905ed97e8a74a72e2aa1cab5cb8fd0"},
+      {"id": "stdlib-preload", "bytes": 39575, "sha256": "013770308e8080d7eb42d7cf2a921d570457676d53e16c0b09022f192dfb6848"},
+      {"id": "resolved-profile", "bytes": 8699, "sha256": "e43c448a55d24f3fbbe060433ba1e5d6ac9dbbbfa3aed375c5ecc213b8442cba"}
+    ]
+  },
+  "fresh_canonical_rebuild": {
+    "source_commit": "99634e79f33d7a4d425721caecc18f13f19193fc",
+    "command": "make workbench-overlay-stack-guard",
+    "product_sha256": "da4c72a2254a98b4efa44442330e8cc1d5bdf5c8a5dd348391b8641c0892b827",
+    "artifacts": [
+      {"id": "product-elf", "bytes": 119576, "sha256": "59f00ad3b0b041023f12d5bf8a5b70a660faa0b43bdc730c90436afb2cd4de07"},
+      {"id": "resident-prg", "bytes": 39564, "sha256": "abe28f85bc70611ef1b95df582ecf4d4bee9d1d5ebe2fb84b0dc9705ebad84c1"},
+      {"id": "runtime-overlays", "bytes": 54617, "sha256": "d67c5b59dae5db94bb13fa5fbe1e57f017243f0cc155932d37b3004a04b91877"},
+      {"id": "stdlib-preload", "bytes": 39575, "sha256": "8d0da954b30142d6054c8969d3dde0f16058f619e9e5c8fd290da6087c8094d5"},
+      {"id": "resolved-profile", "bytes": 8699, "sha256": "48cfce19b877a38a614cf18217965984ad512ccfdf7da1e165bea60e9edae6b8"}
+    ],
+    "metrics": {
+      "overlay_vma": "0xc34a",
+      "post_boot_reserve_bytes": 1805,
+      "banked_headroom_bytes": 269,
+      "boot_stack_gap_bytes": 1585,
+      "runtime_stack_gap_bytes": 3255,
+      "resident_file_end": 47755
+    }
+  },
+  "invariants": {
+    "artifact_byte_lengths": "exact",
+    "link_metrics": "exact",
+    "bank_delta_bytes": 0,
+    "ide_sha256": "8046b970370cda4786db19c1c04b5c56f770e4077e599c1fe1604b84639ddfa2",
+    "idex_sha256": "0082bb8f3977beed1001fa88e05617b93731dfedb863a1268e849942b7d457f6",
+    "m65d_sha256": "d294d260b8613f5eb4efc9ca970ae8b5631eaa942876916ffe1ca94007b2c897",
+    "relevant_product_source_diff_lines_since_4c947e8": 0
+  },
+  "classification": {
+    "scope": "pre-existing-canonical-product-rebuild-identity",
+    "attributable_to_r3_stager": false,
+    "budget_or_layout_regression": false,
+    "requires_identity_decision": true
+  },
+  "claims": {
+    "launcher_probe_promoted": false,
+    "G3": "not-run",
+    "G6": "not-run",
+    "release_effect": "none"
+  }
+}

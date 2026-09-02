@@ -1,0 +1,152 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 528137,
+    "commit": "0ad6cc4e9cffc074f1343255dd9f788abdf4b13f",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "88a40e4dc34b139cad6f5c1fcf5db074243e73d5bcbac65814ca7a2d1855b001"
+  },
+  "claim_boundary": "This attribution answers patchability only. It authorizes no toolchain install, core edit/build, bitstream production/load, flash operation or device contact.",
+  "decision": {
+    "complete_witness_by_bitstream_patching": false,
+    "fallback": "not priced; remains weaker statistical evidence only",
+    "next_owner_question": "whether to install/use the Vivado core toolchain for one volatile diagnostic core with synthesis, implementation and timing proof",
+    "question_1_answer": "NO",
+    "reason": "BRAM-init patching can change contents only. The required PC=$8041 AND decode-state=$13/$14 predicate is absent from the configured monitor and requires new RTL/LUT/interconnect. The bound build also exposes no supported post-implementation monitor-BRAM patch path for the independent one-byte edit.",
+    "rom_byte_alone_sufficient": false,
+    "route_1": "CLOSED",
+    "synthesis_unavoidable": true
+  },
+  "execution_lock": {
+    "bitstreams_loaded": 0,
+    "bitstreams_written": 0,
+    "core_builds": 0,
+    "core_sources_changed": 0,
+    "device_contacts": 0,
+    "toolchains_installed": 0
+  },
+  "facts": {
+    "available_core_utilities": {
+      "bit2mcs": "bitstream packaging/conversion; no logic or BRAM editor",
+      "bitinfo": "bitstream packet inspector; no writer",
+      "hotpatch": "64-KiB target CPU memory-context translator; not FPGA configuration",
+      "mempacker_v": "binary-to-Verilog generator before synthesis"
+    },
+    "monitor_byte": {
+      "change": "CMP #3 -> CMP #4",
+      "shape": "one BRAM-init content byte; size-neutral",
+      "standalone_supported_patch_route": false,
+      "why": "the bound tree emits the initial contents into generated Verilog before synthesis and ships neither .mmi/.bmm mapping metadata nor an updatemem/data2mem-class target"
+    },
+    "monitor_content_pipeline": [
+      "src/monitor/monitor.a65",
+      "bin/monitor.m65 (Ophis)",
+      "src/verilog/monitor_mem.v (mempacker_v HDL generation)",
+      "Vivado synth/implementation/write_bitstream"
+    ],
+    "runtime_patch_route": {
+      "freezer_MONITOR_M65": "separate SD-card Freezer utility, not bin/monitor.m65 and not a loader for monitor-private BRAM",
+      "present": false,
+      "why": "monitor-private writes decode only $0000-$01ff; monitor code begins at $f200 and the $f000-$ffff decode is read-only"
+    },
+    "stock_breakpoint": {
+      "cpu_state_available": true,
+      "cpu_state_role": "history/recent-state recording only",
+      "existing_hooks": "trace-control bits provide address break, flag break, watch and history; they are independent triggers, not a PC AND decode-state predicate",
+      "predicate": "monitor_break_addr == monitor_pc && monitor_break_en",
+      "state_qualification_configurable": false
+    },
+    "tracked_patch_metadata": [],
+    "tracked_patch_tools": []
+  },
+  "format": "lisp65-c2.3-v1.6-first-event-bitstream-patch-attribution-v1",
+  "inputs": {
+    "core": {
+      "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+      "repository": "MEGA65/mega65-core",
+      "sources": {
+        "Makefile": {
+          "authority": "git-blob",
+          "bytes": 59962,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "Makefile",
+          "sha256": "67c44ef756d305596ded3e210cfefe917e2ea610818388debad3e5c72e372fe3"
+        },
+        "bit2mcs": {
+          "authority": "git-blob",
+          "bytes": 1861,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "src/tools/bit2mcs.c",
+          "sha256": "d9c677c5888117e1ea97d6cf0d56c50935bbdbeb499dff98f386288a8f1a0fd0"
+        },
+        "bitinfo": {
+          "authority": "git-blob",
+          "bytes": 7162,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "src/tools/bitinfo.c",
+          "sha256": "83c43fceaac45af83b65c7fe1950011ff3519be7a9d9368d437a26493c84f63b"
+        },
+        "hotpatch": {
+          "authority": "git-blob",
+          "bytes": 11930,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "src/tools/hotpatch/hotpatch.c",
+          "sha256": "2763b1b545bacb33842622dc8b774e53d29542a2afe2a8383eb5eaf2d53c0c8b"
+        },
+        "mempacker": {
+          "authority": "git-blob",
+          "bytes": 2920,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "src/tools/mempacker/mempacker_v.c",
+          "sha256": "994e274e583283b3fe61efb7e591c2f4fb218d41cab5761f31f25a4609f7d442"
+        },
+        "monitor_bus": {
+          "authority": "git-blob",
+          "bytes": 2069,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "src/verilog/monitor_bus.v",
+          "sha256": "d1457c778bfe660c8a7ffc122cbe55d920a51a5177e678e5ffd14819665db3d1"
+        },
+        "monitor_control": {
+          "authority": "git-blob",
+          "bytes": 19902,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "src/verilog/monitor_ctrl.v",
+          "sha256": "19e1ef426eaae96dc2cdfa13327ef14c3c8620514137309103ba408c31fcb11c"
+        },
+        "monitor_source": {
+          "authority": "git-blob",
+          "bytes": 60075,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "src/monitor/monitor.a65",
+          "sha256": "d7fd09c2a43332a9967310d3043f72de99eb2cf26c89d539f3df5ec6e39208bc"
+        },
+        "monitor_top": {
+          "authority": "git-blob",
+          "bytes": 10068,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "src/verilog/monitor_top.v",
+          "sha256": "c9879c01fe64672d584956209ef69b25552544ce854f09ae1f927b19828efcc2"
+        },
+        "r6_implementation": {
+          "authority": "git-blob",
+          "bytes": 480,
+          "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+          "path": "vivado/mega65r6_impl.tcl",
+          "sha256": "68d547ee08f080974c176f8c683ba5b54379efe82802df36f9053c0c27391014"
+        }
+      }
+    }
+  },
+  "mutations_rejected": [
+    "invent-bram-patch-route",
+    "invent-runtime-loader",
+    "invent-state-hook",
+    "claim-content-is-complete",
+    "claim-no-synthesis",
+    "spend-core-build",
+    "spend-contact"
+  ],
+  "recorded_on": "2026-08-24",
+  "status": "DECIDED: COMPLETE WITNESS REQUIRES SYNTHESIS"
+}

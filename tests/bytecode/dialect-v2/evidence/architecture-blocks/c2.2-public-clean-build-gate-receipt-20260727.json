@@ -1,0 +1,163 @@
+{
+  "artifact_count": 19,
+  "artifact_set_sha256": "37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d",
+  "artifacts": [
+    {
+      "bytes": 432,
+      "name": "boot.id",
+      "role": "boot-descriptor",
+      "sha256": "746b7797b75e7154f6e80d1e06cc69324cb62167c1cc28568c2fedc7f2652783"
+    },
+    {
+      "bytes": 34542,
+      "name": "bank2-static-code.bin",
+      "role": "c2-bank2-static-code-plane",
+      "sha256": "cbb8f59b3cf3f2dc44b8ad7e9edb7158b2fe2406d6322e95daa9b0d33c0e2890"
+    },
+    {
+      "bytes": 19271,
+      "name": "runtime-overlays-boot-final.bin",
+      "role": "c2-boot-family",
+      "sha256": "e81f34eb1fda08e2bdfe1cb8a682ab58be6ee212605608a878558145adbc7452"
+    },
+    {
+      "bytes": 8192,
+      "name": "c2-product-kernal-window.bin",
+      "role": "c2-kernal-window",
+      "sha256": "6570bafa0347cece847242bec797cea8b4cb34f876a5563ae3193bfccd6f8eec"
+    },
+    {
+      "bytes": 71194,
+      "name": "product-shelf-v4-direct.bin",
+      "role": "c2-product-shelf",
+      "sha256": "862436fc4ce2623f2f06b006ff7cc11f8442893744acf237efe5afae38101763"
+    },
+    {
+      "bytes": 41566,
+      "name": "lisp65-c2-substitution-linked.prg",
+      "role": "c2-resident-prg",
+      "sha256": "200ea93554b9a9d006ec4dd0aecea33396e08be224a1467add4fc08daec3cb8f"
+    },
+    {
+      "bytes": 64926,
+      "name": "runtime-overlays-session-final.bin",
+      "role": "c2-session-family-region-0",
+      "sha256": "56242efca18e4623b692ccb2145a8b62dc31be7c6155ee95482f10ecf282a877"
+    },
+    {
+      "bytes": 1956,
+      "name": "runtime-overlays-session-final-region1.bin",
+      "role": "c2-session-family-region-1",
+      "sha256": "40f56cf17b8ec2b489b1132b9213f36a311ed4f77ca83c666d8b8d9f0be0c067"
+    },
+    {
+      "bytes": 3264,
+      "name": "bootstage.bin",
+      "role": "c2-two-record-boot-stage",
+      "sha256": "ef63f5f865bb2a2b94d77fcdeb2acac0a82ff6bfcc8cc8ebba15c0373e79278a"
+    },
+    {
+      "bytes": 33840,
+      "name": "initial.c2d-v6.bin",
+      "role": "c2d-v6-code-plane",
+      "sha256": "672c260c530b61aff12f35864b2fd3a3adf250da78bf32aad5ab649e2022f1bf"
+    },
+    {
+      "bytes": 5911,
+      "name": "autoboot.c65",
+      "role": "cold-stager",
+      "sha256": "e2ef3cb175e90da4253abcaff9e174e0069f71c35253ae9ad594e0ade3cff128"
+    },
+    {
+      "bytes": 28430,
+      "name": "ide.ext.bin",
+      "role": "library-ide",
+      "sha256": "4b613ef6aaf858eb8e6ed4f16c770793328598049f894d35c659feb2aeff77dd"
+    },
+    {
+      "bytes": 7380,
+      "name": "idex.ext.bin",
+      "role": "library-idex",
+      "sha256": "60fff3f1e9e9ae394a47639ef5582fcd0eae9e0669cc48348e47d4be18ac7a80"
+    },
+    {
+      "bytes": 6573,
+      "name": "m65d.ext.bin",
+      "role": "library-m65d",
+      "sha256": "a7040d0545ccf01cc70f9bf2397436d7cd0371601cb04404171889b43f9f8b9c"
+    },
+    {
+      "bytes": 619096,
+      "name": "lisp65-c2-substitution-linked.prg.elf",
+      "role": "linked-product-elf",
+      "sha256": "e1bfc9e3a83abdc957bc6075b1c18f54456d5c31ea6ac6ebc36b0203878724a8"
+    },
+    {
+      "bytes": 819200,
+      "name": "lisp65-product.d81",
+      "role": "product-d81",
+      "sha256": "b1bb8d3fcbeb082fbf622b95287ae3afc6bc73e433c4279f8fd19f75ede5074e"
+    },
+    {
+      "bytes": 645,
+      "name": "lisp65-product.mount.json",
+      "role": "product-mount-descriptor",
+      "sha256": "2032899e41934bf4f33970f70cc27c1b1ac8f90e00f80f699a41ca854feab47b"
+    },
+    {
+      "bytes": 11114,
+      "name": "resolved-profile.txt",
+      "role": "resolved-profile",
+      "sha256": "c88b44ebe07806ffb1a75d3f302509839d12805ad07f549408223e6a5b1d7c59"
+    },
+    {
+      "bytes": 819200,
+      "name": "lisp65-work.d81",
+      "role": "work-d81",
+      "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3"
+    }
+  ],
+  "builds": [
+    {
+      "artifact_set_sha256": "37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d",
+      "clone": "fresh-no-local-detached-public-checkout",
+      "command": "make --no-print-directory workbench-product",
+      "environment": {
+        "PYTHONHASHSEED": "23",
+        "SOURCE_DATE_EPOCH": "1009843200",
+        "TZ": "Pacific/Pago_Pago"
+      },
+      "id": "public-clean-a",
+      "log_lines": 65,
+      "manifest_sha256": "2e8d0533b14fc4ecd07bd18a2e021053648ba6bfd6629202433fd1703683ebf3",
+      "product_build_id": "0f511db1",
+      "profile_build_id": "c88b44eb"
+    },
+    {
+      "artifact_set_sha256": "37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d",
+      "clone": "fresh-no-local-detached-public-checkout",
+      "command": "make --no-print-directory workbench-product",
+      "environment": {
+        "PYTHONHASHSEED": "987654329",
+        "SOURCE_DATE_EPOCH": "1956528000",
+        "TZ": "Pacific/Kiritimati"
+      },
+      "id": "public-clean-b",
+      "log_lines": 65,
+      "manifest_sha256": "0985bcd82f9d2293c9744775c54f1c9f07fad4555ab54a68af315219df969f17",
+      "product_build_id": "0f511db1",
+      "profile_build_id": "c88b44eb"
+    }
+  ],
+  "entry_point": "make workbench-product",
+  "format": "lisp65-c2-lite-public-clean-build-receipt-v1",
+  "measured_on": "2026-07-27",
+  "private_evidence_inputs": 0,
+  "product_build_id": "0f511db1",
+  "profile_build_id": "c88b44eb",
+  "result": "two-varied-fresh-public-clones-reproduce-the-sealed-role-set",
+  "source_commit": "f5eb9ebd2df7a0acc3d85f8dce5de54c9cf86526",
+  "source_repository_role": "curated-public-source-snapshot",
+  "status": "passed",
+  "version": 1
+}

@@ -1,0 +1,80 @@
+{
+  "format": "lisp65-c2-product-substitution-link-6-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "attempt": {
+    "authorization": "Sixth complete substitution link after separating the PRG, runtime-slice and E000 load-image domains and splitting decoder phase 00; stop on first red",
+    "command": "python3 tools/host-lisp/c2_product_substitution_link.py --out build/c2.2/substitution/product-link-6 --prepare-smoke",
+    "pipeline_stage_reached": "resident-island seed linker-script parse",
+    "status": "failed-not-promoted",
+    "first_red_policy": "honored",
+    "automatic_further_attempt_allowed": false,
+    "product_prg_emitted": false,
+    "product_elf_emitted": false,
+    "runtime_family_images_emitted": 0,
+    "one_truth_gate": "not-reached",
+    "kernal_freedom_gate": "not-reached",
+    "substitution_balance": "not-claimable",
+    "hardware": "not-run"
+  },
+  "first_red": {
+    "gate": "linker-script declaration order",
+    "diagnostic": "memory region not defined: c2_runtime_load at the runtime OVERLAY AT(ORIGIN(c2_runtime_load)) expression",
+    "finding": "The generated linker script emits the runtime-overlay SECTIONS command before the appended MEMORY command that declares c2_runtime_load. ld.lld resolves MEMORY-region names in declaration order and therefore rejects the script before section placement begins.",
+    "scope": "Generator composition order only. No section was placed, so this attempt neither confirms nor refutes the independent load-domain geometry, the phase-00 split sizes, any capacity projection, or either structural closure gate.",
+    "next_action": "Return for review. The bounded correction is to emit the three MEMORY declarations before the inherited overlay script while leaving the low-resident and E000 SECTIONS commands after their insertion targets; do not relink without renewed authorization."
+  },
+  "generated_inputs": {
+    "linker": {
+      "path": "build/c2.2/substitution/product-link-6/c2-substitution.ld",
+      "bytes": 39479,
+      "sha256": "554bb811f508be8ffe14cc1d56171563c3d7861fbf4aa996fab5d9396ab98785"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-6/resolved-profile.txt",
+      "bytes": 3939,
+      "sha256": "bf221bcf3d14f512ebe40855dc27cc811f3c1a2dc05021082a10e9f877d13a6e"
+    }
+  },
+  "implementation_inputs": {
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "aa0ba10ff70b3fddaa5071042c6659d5eadcab9a087ae4287895598eb39c36cc"
+    },
+    "decoder": {
+      "path": "scripts/c2-stream-decoder.c",
+      "sha256": "7b71c8a6cb5b29ccdbde6a211ce8662d19d5b64c0a72faf2ee15105d195ad75c"
+    },
+    "phase_00b_wrapper": {
+      "path": "scripts/c2-stream-phase-00b.c",
+      "sha256": "51f13be0111906cab8684eefc99512fe8165354dcfa0fe6759466dc4384198b5"
+    },
+    "product_runtime": {
+      "path": "src/c2_product_runtime.c",
+      "sha256": "4ec8cc863aa4856d1917f8f834cd750852539342c2b2f7d332954ac2bd486e7d"
+    },
+    "product_runtime_header": {
+      "path": "src/c2_product_runtime.h",
+      "sha256": "783aea6e9f369160fda1fcebd3f23d0741b4168942a931923aef5d9f4d4fdb51"
+    },
+    "lifetime_contract": {
+      "path": "config/c2-runtime-slice-lifetime-substitution-contract.json",
+      "sha256": "82953c56c3d4e4d56d9e9d3e96f2c03808dd316f1d6cf4411fe1abf3e30a1a13"
+    }
+  },
+  "unreached_measurements": {
+    "independent_load_domain_link_assertions": "not-evaluated",
+    "decoder_phase_00_bytes": "not-linked",
+    "decoder_phase_00b_bytes": "not-linked",
+    "runtime_slice_limit_bytes": 1792,
+    "runtime_slice_limit_relaxed": false,
+    "e000_relocated_c2_resident_bytes": "not-linked",
+    "capacity_delta": "not-claimable"
+  },
+  "preserved_constraints": {
+    "interactive_compilation_present_in_sources": true,
+    "legacy_l65m_path_reintroduced": false,
+    "single_c2_emitter_decoder_rule_preserved_in_sources": true,
+    "product_bytes_promoted": false,
+    "no_tuning_after_first_red": true
+  }
+}

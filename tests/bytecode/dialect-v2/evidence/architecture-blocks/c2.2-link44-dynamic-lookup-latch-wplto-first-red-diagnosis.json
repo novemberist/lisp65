@@ -1,0 +1,128 @@
+{
+  "format": "lisp65-c2-lite-v6-link44-dynamic-lookup-latch-wplto-first-red-v1",
+  "recorded_on": "2026-07-22",
+  "status": "first-red-class-b-capacity-review-required",
+  "promotable": false,
+  "scope": {
+    "requested": "four-byte first-VM_DIRMISS lookup/site/family latch, numeric render seam, product-shaped WPLTO before one nonpromotable diagnostic link",
+    "completed": "source and mutation gates plus one product-shaped WPLTO seed-link attempt",
+    "not_run": [
+      "nonpromotable diagnostic link",
+      "hardware"
+    ]
+  },
+  "source_contract": {
+    "state_storage": [
+      "vmr_hdrlen (2 existing bytes)",
+      "vmr_poff (2 existing bytes)"
+    ],
+    "new_bss_bytes": 0,
+    "lookup_sites": 4,
+    "source_mutations_rejected": 8,
+    "new_user_visible_string_bytes": 0,
+    "helper_placement": ".lisp65_resident_island"
+  },
+  "measured_attribution": {
+    "text": {
+      "link44_seed_bytes": 37991,
+      "diagnostic_seed_bytes": 38172,
+      "delta_bytes": 181,
+      "link44_seed_gap_before_handoff_bytes": 25,
+      "diagnostic_overlap_into_handoff_bytes": 156
+    },
+    "text_function_deltas": {
+      "vm_check_status": {
+        "before_bytes": 15,
+        "after_bytes": 82,
+        "delta_bytes": 67,
+        "role": "SYMI lookup passed to the existing numeric undefined-function renderer"
+      },
+      "vm_run_inner": {
+        "before_bytes": 7983,
+        "after_bytes": 8041,
+        "delta_bytes": 58,
+        "role": "closure, CALL and TAILCALL latch sites"
+      },
+      "vm_run_dir": {
+        "before_bytes": 137,
+        "after_bytes": 193,
+        "delta_bytes": 56,
+        "role": "direct BCODE/directory-entry latch site"
+      }
+    },
+    "resident_island": {
+      "link44_bytes": 1618,
+      "diagnostic_bytes": 1649,
+      "delta_bytes": 31,
+      "diagnostic_functions": {
+        "vm_dirmiss_latch": 17,
+        "vm_dirmiss_latched_lookup": 7,
+        "vm_dirmiss_latched_context": 7
+      },
+      "capacity_result": "fits locally; not the First Red"
+    },
+    "ordinary_bss": {
+      "link44_bytes": 1587,
+      "diagnostic_bytes": 1587,
+      "delta_bytes": 0,
+      "link44_vma": "0xb9f7",
+      "diagnostic_vma": "0xba93",
+      "position_shift_bytes": 156,
+      "fixed_block_overlap_bytes": 70,
+      "cause": "positional cascade from the text/handoff collision, not new state"
+    },
+    "secondary_linker_failures": [
+      "ordinary Bank-0 BSS overlaps the fixed C2 block",
+      "noinit is displaced into the fixed runtime-overlay VMA",
+      "rodata predecessor/VMA/LMA relation drifts",
+      "workbench-overlay/heap-floor assertions cascade red"
+    ]
+  },
+  "conclusion": {
+    "primary_first_red": "The complete four-site plus named-symbol diagnostic costs 181 resident text bytes against a 25-byte seed-link gap; it is not a capacity-neutral Class-B diagnostic.",
+    "product_semantics": "not measured and not changed in any promotable identity",
+    "rollback": "Link 44 remains byteidentical and authoritative",
+    "required_next_step": "Class-C review of a narrower diagnostic form or an explicitly authorized diagnostic-only placement change; no retry is implied."
+  },
+  "execution_accounting": {
+    "whole_program_lto_seed_attempts": 1,
+    "completed_product_links": 0,
+    "hardware_runs": 0,
+    "class_b_cycles_consumed": 0,
+    "line1_product_first_red_budget": "2/3 unchanged",
+    "latency_measurements": "0/2 unchanged"
+  },
+  "evidence": {
+    "link44_seed_map": {
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/resident-island-seed.prg.map",
+      "bytes": 200702,
+      "sha256": "f6ad06f08d3ab7b9019c26afcec07e8e198c7fba695b4dd5fde7eb021c6d49e6"
+    },
+    "diagnostic_seed_map": {
+      "path": "build/c2.2/substitution/link44-dynamic-lookup-latch-wplto/resident-island-seed.prg.map",
+      "bytes": 191361,
+      "sha256": "6f94a56e4d0d15c54d24f8df5b506b8220c510fb37c63c4a396702e7d6814c3e"
+    },
+    "diagnostic_lto_object": {
+      "path": "build/c2.2/substitution/link44-dynamic-lookup-latch-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 608900,
+      "sha256": "314a58e931b1028a2cef35fc12bdd5737cfcecd1f765b0732e1c610afa7ba30a"
+    },
+    "internal_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-dynamic-lookup-latch-wplto-internal-structural.json",
+      "bytes": 19536,
+      "sha256": "f01f406c93d41e5f12b337b20b5287dffb73afe72b7027c404c5f731a9d1b3c9"
+    },
+    "class_b_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-dynamic-lookup-latch-wplto-receipt.json",
+      "bytes": 886,
+      "sha256": "13ffb6dd36869b8030c3306ea3f7b7f2e28004e7d2e4236d90e1c99bf0938e5b"
+    },
+    "link44_product": {
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926"
+    }
+  },
+  "next_gate": "stop for Class-C review; no diagnostic link and no hardware"
+}

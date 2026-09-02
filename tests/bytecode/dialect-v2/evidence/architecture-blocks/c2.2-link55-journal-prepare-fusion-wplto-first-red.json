@@ -1,0 +1,90 @@
+{
+  "format": "lisp65-c2-link55-journal-prepare-fusion-wplto-first-red-v1",
+  "recorded_on": "2026-07-23",
+  "status": "first-red-journal-prepare-co-resident-slice-exceeds-1792-byte-cap",
+  "promotable": false,
+  "authorized_question": "one co-residence fusion recovering exactly one 256-byte Session-family pack quantum",
+  "class_a_preflight": {
+    "status": "corrected-and-replayed-before-WPLTO",
+    "cause": "final consolidation gate retained the pre-fusion slot sequence",
+    "product_bytes": 0,
+    "compiler_or_linker_runs": 0,
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link55-append-suffix-fusion-wplto-receipt.json",
+      "bytes": 4184,
+      "sha256": "3eb54375ffc5a6d5197e33eced2199d6f09131c02e2ef9c29129f1c1ff49c31a"
+    }
+  },
+  "measured_first_red": {
+    "section": ".lisp65_rt_c2append_journal_prepare",
+    "slice_cap_bytes": 1792,
+    "actual_bytes": 1815,
+    "over_cap_bytes": 23,
+    "components": {
+      "c2_append_journal_prepare_phase": 105,
+      "c2_append_journal_write_phase": 856,
+      "c2_append_rollback_prepare_phase": 854,
+      "sum_bytes": 1815
+    },
+    "packed_bytes_if_permitted": 2048,
+    "required_pack_recovery_bytes": 256,
+    "actual_pack_recovery_bytes": 0,
+    "session_family_qualification": "not_reached",
+    "other_walls_qualification": "not_claimed"
+  },
+  "selection_record": {
+    "logical_driver_order": [
+      "rollback_prepare",
+      "journal_write"
+    ],
+    "preselection_historical_bytes": [
+      888,
+      891
+    ],
+    "historical_sum_bytes": 1779,
+    "historical_headroom_for_selector_bytes": 13,
+    "measured_body_sum_bytes": 1710,
+    "measured_selector_bytes": 105,
+    "transition_storage": "existing C2J result byte: NONE -> PREPARED -> ACTIVE",
+    "new_state_bytes": 0,
+    "new_pointers": 0,
+    "cutpoint_fixture": "normal, rollback, skip and replay passed before WPLTO"
+  },
+  "evidence": {
+    "map": {
+      "path": "build/c2.2/substitution/link55-append-suffix-fusion-wplto-replay/resident-island-seed.prg.map",
+      "bytes": 194109,
+      "sha256": "a98af4aaa8cca830fdbeeeadb11f4ed8fc07c0daf2b8559b467b16dced20d212"
+    },
+    "lto_intermediate": {
+      "path": "build/c2.2/substitution/link55-append-suffix-fusion-wplto-replay/resident-island-seed.prg.lto.o",
+      "bytes": 610748,
+      "sha256": "9d6850e49f666d01200a1730fab211af0f4955287c100eed98b7c1700e2cd9d0"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/link55-append-suffix-fusion-wplto-replay/resolved-profile.txt",
+      "bytes": 11300,
+      "sha256": "52ad6712ae5fe219bc7f62569e4abebff7288993cf18ee71980e50510a406146"
+    },
+    "wplto_wrapper_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link55-append-suffix-fusion-wplto-replay-receipt.json",
+      "bytes": 4697,
+      "sha256": "e373aca9ba1abf86e31a3c876d975524c4572c5f343efeeb4c15c3a1a91ac10a"
+    }
+  },
+  "execution_accounting": {
+    "whole_program_lto_closure_attempts": 1,
+    "promotable_product_links": 0,
+    "hardware_runs": 0
+  },
+  "rollback_line": {
+    "path": "build/c2.2/substitution/product-link-54-c2-lite-v6-phase06a-cutpoint/lisp65-c2-substitution-linked.prg",
+    "sha256": "4cfc797f4ac4fac6cc4fea363ea684ea0dc8c7b395372ebc8bbfe2072fedef07",
+    "status": "untouched"
+  },
+  "counters": {
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  },
+  "next_gate": "Class-C review: the selected fusion needs at least 23 bytes less selector/body code or a different proven one-quantum pair"
+}

@@ -1,0 +1,70 @@
+{
+  "claim_limit": "Names the holder and the required liveness-contract form. It authorizes no fix card, link, medium, or further device contact.",
+  "contact": {
+    "CPU_left_stopped": true,
+    "bytes": 15007,
+    "device_contacts": 1,
+    "reads": 6,
+    "resumes": 0,
+    "runs_after_stop": 0,
+    "stops": 1
+  },
+  "excluded_holders": {
+    "evaluator_holders": "no aligned RTOV-window value",
+    "gc_rootstack": "live prefix empty (gc_rootsp=0)",
+    "symfn": {
+      "classification": "all 90 are even $c000..$dffe BCODE immediates",
+      "raw_values_in_numeric_window": 90,
+      "typed_pointer_targets": 0
+    },
+    "symval": "no typed pointer into the RTOV window",
+    "vm_upvals": "NIL"
+  },
+  "format": "lisp65-c2.3-v1.6-stale-holder-broadened-result-v1",
+  "inputs": {
+    "ELF": {
+      "bytes": 632156,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a03f9fafc5629f913dcf213925d7f007fd91b353ab2229a6189080c37f604c9c"
+    },
+    "capture": {
+      "bytes": 336211,
+      "path": "build/c2.3/v1.6-items12-hybrid-owner-contact/stale-holder-broadened-stopped-state/capture.json",
+      "sha256": "69b42d51b3d7eaf920f564471d7515d6de7fa09058aa036dc0371548bbc65776"
+    },
+    "read_spec": {
+      "bytes": 6480,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-primary-vm-type-attribution-receipt.json",
+      "sha256": "14e030a718a327474102e2ac652cf92c25298996f473b4a24d44b83afcfeeb4d"
+    }
+  },
+  "liveness_contract_form": {
+    "minimal_mechanism": "sanitize every pointer-aligned saved-CSR pair in the active lisp_toplevel jmp_buf against the retiring VMA before wipe; then longjmp cannot resurrect a callable RTOV address",
+    "required_gates": [
+      "all seven saved CSR pairs checked",
+      "mutation per pair restores a window pointer and fails",
+      "abort at every RTOV exit leaves no restored in-window pair",
+      "ordinary setjmp/longjmp ABI state outside RTOV is byte-preserved",
+      "deterministic old reproduction no longer reaches the BRK frame"
+    ],
+    "rule": "Before retiring an RTOV generation, every continuation snapshot that may be restored afterward must contain no pointer into that generation."
+  },
+  "named_holder": {
+    "ABI_identity": "saved __rc18/__rc19",
+    "address": "0xbd4c..0xbd4d",
+    "causal_chain": [
+      "setjmp snapshots $c356 in the top-level continuation",
+      "VM_TYPE abort runs RTOV wipe",
+      "longjmp restores the pre-retirement $c356 snapshot",
+      "indirect control can re-enter the retired window"
+    ],
+    "consumer": "__call_indir is JMP ($14), i.e. __rc18/__rc19",
+    "longjmp_restore": "emitted longjmp restores offsets 6/5 to __rc19/__rc18",
+    "owner": "lisp_toplevel.csrs[0..1]",
+    "setjmp_save": "emitted setjmp stores __rc18 then __rc19 at jmp_buf offsets 5/6",
+    "target": "defprim / first byte of retired RTOV window",
+    "value": "0xc356"
+  },
+  "recorded_on": "2026-08-20",
+  "status": "ATTRIBUTED: LISP_TOPLEVEL SAVED CSR HOLDS RETIRED RTOV ENTRY"
+}

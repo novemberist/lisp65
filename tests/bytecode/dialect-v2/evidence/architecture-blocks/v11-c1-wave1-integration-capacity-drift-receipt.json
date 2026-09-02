@@ -1,0 +1,127 @@
+{
+  "format": "lisp65-v11-c1-wave1-integration-capacity-drift-receipt-v1",
+  "version": 1,
+  "status": "owner-capacity-review-required-promotion-blocked",
+  "recorded_on": "2026-07-16",
+  "scope": "Real final-profile link after the dated C1 latency exception and the poke differential repair, compared byte-for-byte and dimension-for-dimension with the last sealed Wave-1 R4 product candidate. This receipt records an unreported EXT debit; it authorizes no promotion.",
+  "baseline": {
+    "product_artifact_set_sha256": "91fcad2d6c42abc30a27f4bc2a9cfa65a8bbd85ec74d4a57bd1898ace1314c67",
+    "archive": "tests/bytecode/dialect-v2/evidence/promotions/r4-product-candidate-a870bd0.tar.gz",
+    "archive_sha256": "7e27a7cac7098a797dd76f792a037e016a2efb102bc37d980dc6017851c1e2ce",
+    "resident_manifest_sha256": "115654b80ae057baac471754dc7fa302d70b4c8f16ea0b0986d0e680f0f6a0b6",
+    "composition_report_sha256": "2a0e12104b40eba62751c668e7987caa8d91b3675ed14d4db63183d62ba35333",
+    "resident_prg_sha256": "0d2c1220a4606e11f3c45fcf17157e7999be282024c829d0488ed29d6fabad29",
+    "boot_overlay_sha256": "9283691c320dab148eca89c13959eb0c0fcb9f342d03955edd591ae97bf052fb",
+    "runtime_overlay_bank_sha256": "ade16907e81fa624ec9f894a1ed86db7597fbafb64af3efc07fd09bd85de9ea0"
+  },
+  "candidate": {
+    "recording_base_commit": "350166c77208b5b6f598eedef20a799784bce703",
+    "resident_manifest": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+    "resident_manifest_sha256": "c0ad16b412db2944174d82ac4ce39538eee652c3693e79afc5b8898641a5aad2",
+    "composition_report": "build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+    "composition_report_sha256": "ec588c63cd5bb48634c9579f2d94a3c3b8b1cbe6d1fd4a24cdda322011b4f6b5",
+    "resident_prg_sha256": "e9146ed564a18c1a2c91112ab92ca2b331b963bad66330cabcd3f8273600aa74",
+    "boot_overlay_sha256": "8c81d3d1f065c15f1bd1631ee15f69afad3a05f6e3724688fac05543ee7e0de5",
+    "runtime_overlay_bank_sha256": "162a5a53a174f92420b48dcb39251f4104c4eafc5d3aa6a3f63fc82c8699b92d",
+    "footprint_audit_sha256": "22acc4b8f44ca3f54566b0ea167d744bc6e2b65ad7e89d760e4fb1e369d6397e",
+    "layout_sha256": "61fb7d35d9b210d86fb7dea412a78df784e0ab33069cc9e58ed12d67ac2277d4",
+    "runtime_overlay_manifest_sha256": "7b8a42d55ea158f71f7c4d14e7f715dc687ef5a9050bf53feef83e7f8c90707b"
+  },
+  "capacity_delta": {
+    "bank": {
+      "baseline_post_boot_reserve_bytes": 1873,
+      "candidate_post_boot_reserve_bytes": 1802,
+      "release_target_bytes": 1536,
+      "candidate_margin_over_target_bytes": 266,
+      "delta_bytes": -71,
+      "authorization_closure": "already authorized as -49 B correctness plus -22 B lease/trusted-stage"
+    },
+    "ext": {
+      "baseline_standard_composition_headroom_bytes": 25161,
+      "candidate_standard_composition_headroom_bytes": 25073,
+      "floor_bytes": 16384,
+      "candidate_margin_bytes": 8689,
+      "delta_bytes": -88,
+      "authorization_closure": "missing; owner review required"
+    },
+    "symbols": {
+      "baseline_runtime_headroom": 297,
+      "candidate_runtime_headroom": 298,
+      "delta": 1
+    },
+    "namepool": {
+      "baseline_runtime_headroom_bytes": 4594,
+      "candidate_runtime_headroom_bytes": 4602,
+      "delta_bytes": 8
+    },
+    "directory": {
+      "baseline_post_align_headroom": 168,
+      "candidate_post_align_headroom": 168,
+      "delta": 0
+    },
+    "boot_overlay": {
+      "baseline_bytes": 1669,
+      "candidate_bytes": 1669,
+      "delta_bytes": 0,
+      "byte_identical": false,
+      "reason": "The already authorized VMA and resident-code changes alter absolute relocations; the regular R4 repin is required."
+    },
+    "overlay_vma": {
+      "baseline_headroom_bytes": 80,
+      "candidate_headroom_bytes": 0,
+      "delta_bytes": -80,
+      "authorization_closure": "already authorized as -50 B correctness plus -30 B lease/trusted-stage"
+    },
+    "runtime_overlay_bank": {
+      "baseline_bytes": 63906,
+      "correctness_baseline_bytes": 64192,
+      "candidate_bytes": 65472,
+      "hard_limit_bytes": 65536,
+      "candidate_margin_bytes": 64,
+      "total_delta_bytes": 1566,
+      "lease_trusted_stage_delta_bytes": 1280,
+      "note": "The final candidate is within the hard limit and matches the owner-reviewed 64-byte residual margin."
+    }
+  },
+  "ext_attribution": {
+    "baseline_resident_code_bytes": 6452,
+    "candidate_resident_code_bytes": 6540,
+    "delta_bytes": 88,
+    "source_rows": [
+      {
+        "source": "lib/dialect-v2/eval-runtime.lisp",
+        "baseline_code_bytes": 1225,
+        "candidate_code_bytes": 1306,
+        "delta_bytes": 81,
+        "reason": "C1 lease reuse and mandatory retirement before persistent installation, plus the resident %buffer-read predicate replacing the optional shelf-level bufferp dependency."
+      },
+      {
+        "source": "lib/stdlib-load-lib.lisp",
+        "baseline_code_bytes": 413,
+        "candidate_code_bytes": 420,
+        "delta_bytes": 7,
+        "reason": "The foreign-library path retires an active compiler lease immediately before the ordinary loader may append persistent code."
+      }
+    ],
+    "sum_check": "81 + 7 = 88",
+    "symbol_namepool_gain": "Replacing the nonresident bufferp literal with the already resident %buffer-read primitive removes one net runtime symbol and eight name-pool bytes after the corrected retained-state accounting."
+  },
+  "gate_observation": {
+    "command": "make v11-c1-gate-check",
+    "passed_before_stop": [
+      "native primitive registry: 828/828",
+      "C1 entry-seam generator",
+      "C1 latency exception selftest",
+      "Workbench artifact differential: 357 cases, zero differences",
+      "real final-profile product link and fixed overlay audit"
+    ],
+    "stopped_at": "C1 resident code drift",
+    "classification": "capacity-accounting stop; no product regression and no permission to repin the undisclosed EXT delta"
+  },
+  "required_decision": {
+    "recommended": "Authorize the release-critical 88-byte EXT debit and repin post-composition EXT headroom to 25073 bytes (8689 bytes above the floor).",
+    "alternative": "Reject the debit and reopen the already hardware-proven C1 correctness/lease design for a measured reclaim; promotion remains blocked.",
+    "after_authorization": "Teach the integrated C1 gate the complete post-C1 authorization chain, regenerate its block receipt, then resume the regular R4/R5/R6 repin."
+  },
+  "claim_limit": "This receipt exposes and closes the arithmetic of an omitted capacity dimension. It does not authorize the 88-byte EXT debit, relabel the dated latency exception as a performance pass, promote product bytes, preserve the stopped G5 run, or claim R4/R5/R6/G6 acceptance."
+}

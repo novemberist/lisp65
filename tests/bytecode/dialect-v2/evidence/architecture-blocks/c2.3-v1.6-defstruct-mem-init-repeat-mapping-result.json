@@ -1,0 +1,78 @@
+{
+  "authorities": {
+    "device": {
+      "bytes": 18346,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-repeat-device-receipt.json",
+      "sha256": "83c0bd56681ff3db0ca1f6fbd588eb797d68e795258b65c77d9d3542ef17de72"
+    },
+    "mapping_first_red": {
+      "bytes": 1215,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-repeat-mapping-first-red.json",
+      "sha256": "c7ab06cedf8d115b23f5e045bad27fae50b4ff2562230d37c3ccdf45e1b98c79"
+    },
+    "recovery_driver": {
+      "bytes": 11827,
+      "path": "git:f32431ad95045a3299b89591053c10673896c2cf:tools/host-lisp/c2_v16_mem_init_repeat_mapping_recovery.py",
+      "sha256": "8bc93a05846f1bbde3346a52242606f0c3fc46448c277b217acb67e5c6465197"
+    },
+    "recovery_preparation": {
+      "bytes": 2996,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-repeat-mapping-recovery-preparation.json",
+      "sha256": "3ecef5ff2c9a6c0f0377cac6b41ee8793d5cda5d64a48e38c29ccd031bf7de1d"
+    }
+  },
+  "claim_limit": "The repeat proves complete reset-domain/C2J preconditions and one unclassified stopped contact. Untouched physical tags do not answer mem_init while their write-time mapping is unbound. No product fault, R/A/I/G result or new contact is claimed.",
+  "facts": {
+    "contact": {
+      "additional_RUNs_monitor_entries_or_stops": 0,
+      "physical_RUNs": 1,
+      "same_stop_recovery": true,
+      "stops": 1
+    },
+    "disposition": {
+      "R_A_I_G": null,
+      "classification": "FIRST-RED-UNCLASSIFIED-NO-OVERCLAIM",
+      "new_contact_authorized": false,
+      "next_required": "desk-bind the write-time mapping/visibility of the $B582 witness hooks before any further device action",
+      "product_fault": null
+    },
+    "mem_init_witness": {
+      "after_reached": false,
+      "before_reached": false,
+      "binary_answer": null,
+      "raw": "d1ccccccccd2cccccccc"
+    },
+    "preconditions": {
+      "C2J_CLEAR_at_stop": true,
+      "C2J_CLEAR_before_RUN": true,
+      "boot_entry_witness": "0x44",
+      "full_target_readback": true,
+      "reset_domain_bytes": 50816
+    },
+    "stop_boundary": {
+      "B_block_selected": true,
+      "MAPH": "0xb300",
+      "MAPL": "0xe300",
+      "PC": "0xe160",
+      "code_owner": "unresolved",
+      "mapped_B_MB_claim": null,
+      "underlay_runtime_values_promoted": false
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-mem-init-repeat-mapping-result-v1",
+  "mutations_rejected": {
+    "mutation-01": "result contact accounting drift",
+    "mutation-02": "result precondition drift",
+    "mutation-03": "result precondition drift",
+    "mutation-04": "mem_init result overclaim",
+    "mutation-05": "mem_init result overclaim",
+    "mutation-06": "stop-boundary claim drift",
+    "mutation-07": "stop-boundary claim drift",
+    "mutation-08": "stop-boundary claim drift",
+    "mutation-09": "result disposition drift",
+    "mutation-10": "result disposition drift",
+    "mutation-11": "result disposition drift"
+  },
+  "recorded_on": "2026-08-06",
+  "status": "CONTACT CLOSED UNCLASSIFIED; WRITE-TIME MAPPING DESK BINDING REQUIRED"
+}

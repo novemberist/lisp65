@@ -1,0 +1,113 @@
+{
+  "format": "lisp65-post-capture-planning-capacity-probe-v1",
+  "version": 1,
+  "id": "post-capture-planning-read-status-classification",
+  "status": "passed-not-promoted",
+  "measured_on": "2026-07-15",
+  "baseline": {
+    "product_artifact_set_sha256": "1051d7820fa7d8add7f1ce7f59874068343134562a08f66f80e0c2d256adf289",
+    "archive": {
+      "path": "tests/bytecode/dialect-v2/evidence/promotions/r4-product-candidate-18d8c56.tar.gz",
+      "bytes": 156555257,
+      "sha256": "af85e2d7cd932176bdfc2786782babaf42cf9b3636f21a026412044089168426"
+    },
+    "m65d_manifest_member": {
+      "path": "payload/build/bytecode/dialect-v2/libs/m65d.manifest.json",
+      "bytes": 51285,
+      "sha256": "49a4893e108595895922d7ffaabc803c98b7f2c9e49f9ee1151593d3445b4570"
+    },
+    "composition_member": {
+      "path": "payload/build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+      "bytes": 2898,
+      "sha256": "04ecbb249185da3c7dd0481ac31ca380840e9e028a293a89d092b398fccfee91"
+    },
+    "footprint_member": {
+      "path": "payload/build/products/workbench/overlay-stack-guard/footprint-audit.json",
+      "bytes": 615,
+      "sha256": "b62c1ccd3f7feda2d8a6a4ca2c8e7985ce1f8d94da46dbbcd2a05aeda38b3804"
+    },
+    "product_elf_member": {
+      "path": "payload/build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+      "bytes": 120168,
+      "sha256": "3eb924c602efbedce64dcbe8adf1c23425ccca2d8451e4579938f2c981bf9ad9"
+    }
+  },
+  "candidate_probe": {
+    "product_elf": {
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+      "bytes": 120268,
+      "sha256": "aaeadc4a72c18796dc4c6fa9d9849306120c94c74f199504460f485ce600b755"
+    },
+    "m65d_manifest": {
+      "path": "build/bytecode/dialect-v2/libs/m65d.manifest.json",
+      "bytes": 50944,
+      "sha256": "3bb715b1a91275ef6ab7bb6529724f27ea3f6d2d31924ad04242dc341459b6f9"
+    },
+    "composition_report": {
+      "path": "build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+      "bytes": 2898,
+      "sha256": "e4a1a823eb1686ab7c63457252a177e7375b39a2b22580ba11f1017f181e83f5"
+    },
+    "footprint_report": {
+      "path": "build/products/workbench/overlay-stack-guard/footprint-audit.json",
+      "bytes": 615,
+      "sha256": "3f8b89322b03e8640688b79daf722c09200307e214222a8396efe0ced54a2b7d"
+    }
+  },
+  "capacity_delta_from_sealed_candidate": {
+    "bank": {
+      "before_post_boot_reserve_bytes": 1917,
+      "after_post_boot_reserve_bytes": 1868,
+      "release_target_bytes": 1536,
+      "before_margin_bytes": 381,
+      "after_margin_bytes": 332,
+      "delta_bytes": -49,
+      "attribution": {
+        "io_disk_transaction_classify_status_bytes": 27,
+        "vm_callprim_bytes": 14,
+        "layout_bytes": 8,
+        "sum_bytes": 49
+      }
+    },
+    "ext": {
+      "before_post_headroom_bytes": 16384,
+      "after_post_headroom_bytes": 16388,
+      "release_floor_bytes": 16384,
+      "before_margin_bytes": 0,
+      "after_margin_bytes": 4,
+      "delta_bytes": 4,
+      "floor_status": "held-with-4-byte-margin",
+      "origin": {
+        "mechanism": "two-boundp-designator-calls-lowered-to-direct-native-calls",
+        "m65d_code_bytes_before": 4024,
+        "m65d_code_bytes_after": 4020,
+        "m65d_code_delta_bytes": -4,
+        "m65d_metadata_bytes_before": 3230,
+        "m65d_metadata_bytes_after": 3190,
+        "m65d_metadata_delta_bytes": -40,
+        "post_headroom_rule": "per-library-metadata-is-reclaimed-after-commit-so-only-the-4-byte-code-reduction-increases-post-headroom",
+        "removed_library_symbol": "boundp",
+        "composition_symbol_headroom_delta": 0,
+        "composition_symbol_reason": "boundp-remains-in-the-resident-composition-union"
+      }
+    },
+    "symbols": {
+      "before_headroom": 120,
+      "after_headroom": 120,
+      "delta": 0
+    },
+    "namepool": {
+      "before_headroom_bytes": 2160,
+      "after_headroom_bytes": 2160,
+      "delta_bytes": 0
+    },
+    "directory": {
+      "before_headroom_entries": 32,
+      "after_headroom_entries": 32,
+      "delta_entries": 0
+    },
+    "boot_overlay_delta_bytes": 0
+  },
+  "decision": "owner-authorized-option-1-on-2026-07-15-subject-to-this-explicit-ext-proof",
+  "result": "bank-debit-49-authorized-ext-floor-held-and-margin-origin-attributed"
+}

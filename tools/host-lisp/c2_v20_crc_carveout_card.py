@@ -44,10 +44,18 @@ FORMAT = "lisp65-c2.3-v20-crc-carveout-card-v1"
 HIGH = PRODUCT.KERNAL_CRC_BINDING_HIGH_ADDRESS
 LOW = PRODUCT.KERNAL_CRC_BINDING_LOW_ADDRESS
 CARVEOUT = (HIGH, LOW)
+PUBLISH_LAST_ROOT: Path | None = None
 
 
 class CarveoutCardError(RuntimeError):
     pass
+
+
+def configure_publish_last_root(root: Path) -> None:
+    global PUBLISH_LAST_ROOT
+    require(PUBLISH_LAST_ROOT is None or PUBLISH_LAST_ROOT == root,
+            "publish-last output root configured twice")
+    PUBLISH_LAST_ROOT = root
 
 
 def require(value: bool, message: str) -> None:
@@ -409,7 +417,9 @@ def delivered_bytes_gate(elf: Path, completed_prg: Path) -> dict[str, Any]:
                                 section.address, section.address + len(linked)) else require(
                                     completed == linked,
                                     f"non-carveout section identity drift: {row['section']}")
-    report = load(WPLTO_REPORT := BUILD / "wplto/kernal-window-publish-last.json")
+    report_root = BUILD / "wplto" if PUBLISH_LAST_ROOT is None \
+        else PUBLISH_LAST_ROOT
+    report = load(WPLTO_REPORT := report_root / "kernal-window-publish-last.json")
     require(
         report.get("declared_mutation_domain_bytes") == 2
         and [entry.get("address") for entry in report.get("binding_operands", [])]

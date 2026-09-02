@@ -1,0 +1,75 @@
+{
+  "candidate": "v1.2.1-acceptance-sealed-not-promoted",
+  "disposition": {
+    "convicted_fix": "delete sta __rc2 / stx __rc3 after jsr symname",
+    "hardware_or_dma_followup_required": false,
+    "next_eligible_release": "v1.2.2",
+    "v1.2.1": "known issue; no product delta after acceptance seal"
+  },
+  "evidence": {
+    "captured_registers": {
+      "A": "0xd1",
+      "PC": "0xc472",
+      "X": "0x8f"
+    },
+    "convicted_edge": {
+      "call": "0xc46f",
+      "return": "0xc472",
+      "stores": [
+        "sta __rc2",
+        "stx __rc3"
+      ]
+    },
+    "correct_pointer": "0xc1f6",
+    "incidental_pointer_written_by_renderer": "0x8fd1",
+    "mechanism": "symname returns the correct $C1F6 pointer in __rc2/__rc3; the L65E consumer overwrites it with incidental A/X=$8FD1 before reading the name",
+    "scratch_correct_after_symname": true,
+    "symname_return_abi": "__rc2/__rc3"
+  },
+  "format": "lisp65-v1.2.1-dirmiss-renderer-attribution-v1",
+  "inputs": {
+    "elf": {
+      "bytes": 622588,
+      "path": "build/c2.2/v1.2.1-acceptance/r6/ship/proof/product/lisp65-c2-lite-product.elf",
+      "sha256": "23ae6a7b9765b5fb7bb1d81ba8b97aa1de4d69c8988379609ed2ce98d6d831e3"
+    },
+    "hardware_post_symname": {
+      "bytes": 1913,
+      "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/dirmiss-post-symname-receipt.json",
+      "sha256": "4e4116ee3c37aa79a7ed69b960cf1722aa84f20f5876ecd22fb37f9c3bc8a9dd"
+    },
+    "release_plan": {
+      "bytes": 5022,
+      "path": "docs/planning/v1.2.1-release-plan.md",
+      "sha256": "435c16f2bcbd5585bd826ec3eeb44b51947c575ed1742b6bcfbe8a40803d33c5"
+    },
+    "renderer_source": {
+      "bytes": 4864,
+      "path": "src/l65e_bcode_ordinal.s",
+      "sha256": "388b443ef4f070c6104d91775d8d721ae13a6a7784d09a6504736ecb7e4acdd8"
+    },
+    "symbol_source": {
+      "bytes": 12142,
+      "path": "src/symbol.c",
+      "sha256": "df5f4836fc0c19df37d9baaaae2bd1d5985d2c467221e7453be4de6448177b2d"
+    }
+  },
+  "linked_symbols": {
+    "lisp65_error_overlay_entry": "0xc356",
+    "sym_name_scratch": "0xc1f6",
+    "symname": "0x92f9"
+  },
+  "mutations": {
+    "attempted": 5,
+    "names": [
+      "source-overwrite-deleted",
+      "linked-return-low-byte-drift",
+      "linked-renderer-store-drift",
+      "post-symname-scratch-not-proven",
+      "captured-registers-alias-correct-pointer"
+    ],
+    "rejected": 5
+  },
+  "scope": "host-static-attribution-no-product-change",
+  "status": "passed-renderer-pointer-abi-overwrite-attributed"
+}

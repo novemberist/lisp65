@@ -1,0 +1,56 @@
+{
+  "format": "lisp65-c2-product-substitution-link-12-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "status": "first-red",
+  "attempt": {
+    "name": "twelfth-substitution-link",
+    "first_red_stage": "resident-island-seed-compile",
+    "command_mode": "--prepare-smoke",
+    "second_attempt_performed": false
+  },
+  "diagnosis": {
+    "class": "public-declaration-address-space-divergence",
+    "compiler_message": "redefinition of 'mem_oom' with a different type: address_space(1) uint8_t vs uint8_t",
+    "definition": {
+      "path": "src/mem.c",
+      "sha256": "ff902c400e80ae88af52feea370d85f7e02d258704d3953505271d84f812b519",
+      "type": "fixed zero-page uint8_t",
+      "intended_address": "0x008f"
+    },
+    "declaration": {
+      "path": "src/mem.h",
+      "sha256": "a6df5d6d1077da757c5dfe5cc7867e00e3fd0229e09666f4aceca06fbbeb751c",
+      "type": "ordinary uint8_t"
+    },
+    "meaning": "llvm-mos correctly rejected two declarations of one object in different address-space domains. The fixed-state contract must be visible at the public declaration, not only at the storage definition."
+  },
+  "artifact_boundary": {
+    "seed_link_completed": false,
+    "product_bytes_emitted": 0,
+    "product_candidate_emitted": false,
+    "identity_gate": "not-run",
+    "capacity_gate": "not-run",
+    "one_truth_gate": "not-run",
+    "kernal_freedom_gate": "not-run",
+    "fixed_host_facade_gate": "not-run"
+  },
+  "static_inputs": {
+    "fixed_layout_header_sha256": "badb78a0c4d5ae1694e0bb544dd959413a1541af76f9217a0a31d7024aeee794",
+    "link_driver_sha256": "5647d78c0c73405e98e9e869ad659fea29947f8e39956744fc02b2fe8a00d152",
+    "contract_sha256_before_first_red_status_update": "a5ee2cf20ed9c9a0c918b95097b18a82ef103d0ceecf25cd9855e93db9c8aacf",
+    "harness_selftest": "passed",
+    "json_and_whitespace_gates": "passed"
+  },
+  "recommended_next_change": {
+    "scope": "declaration-only contract correction",
+    "steps": [
+      "separate the zero-page type qualifier from the fixed-section definition attribute",
+      "apply the product-conditional zero-page qualifier to the extern mem_oom declaration in mem.h",
+      "retain the fixed section attribute only on the definition in mem.c",
+      "add a compile-negative mutation proving that removing the qualifier is rejected"
+    ],
+    "capacity_expectation": "zero bytes; declaration typing only",
+    "authorization": "a fresh link attempt requires review despite the zero-byte expectation"
+  },
+  "claim_limit": "Receipt-less diagnostic first-red only. It proves no product link, fixed-facade identity, capacity, one-truth, KERNAL freedom, hardware behavior or promotion claim."
+}

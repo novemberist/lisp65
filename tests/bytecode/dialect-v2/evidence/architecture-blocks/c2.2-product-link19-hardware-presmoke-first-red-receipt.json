@@ -1,0 +1,66 @@
+{
+  "format": "lisp65-c2-product-link19-hardware-presmoke-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "attempt": {
+    "candidate": "link-19",
+    "stage": "receipt-less-hardware-presmoke-manual-step-1",
+    "acceptance_receipt_created": false,
+    "promotion_claim": "not-run"
+  },
+  "pinned_identity": {
+    "product_prg_sha256": "1fb99ddbbc7fe011efc6b28c7c4e61adf7ced4258d2e9939ececbaaad526517e",
+    "product_elf_sha256": "4eb98e1f05ac889b43f58a0899da5da09d7b29a0fbe858be9d22b15f4bd85bf1",
+    "kernal_window_sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0",
+    "kernal_window_crc16_ccitt_false": "0xf2ed",
+    "preload_readbacks_before_first_launch": "6/6 byte-identical",
+    "second_exact_deployment": "same product and all six pinned preloads"
+  },
+  "hardware_observation": {
+    "first_launch": "completely black screen",
+    "second_launch_after_power_cycle": "completely black screen",
+    "first_manual_presmoke_step": "failed before a banner or usable REPL",
+    "first_red_rule": "stopped; no downstream hardware case was claimed"
+  },
+  "preserved_failure_state": {
+    "physical_low_memory": {
+      "pending_code_at_0x0034": "0x25 (LISP65_ERR_STDLIB_PROFILED_PRELOAD)",
+      "c2_ready_at_0x008c": "0x01",
+      "boot_overlay_status_at_0x006f": "0x00"
+    },
+    "interpretation": "The C2 image decode and export publication completed; the sole following failure return is the KERNAL-window ownership CRC check."
+  },
+  "breakpoint_diagnosis": {
+    "method": "fresh exact deployment with a hardware breakpoint after c2k_copy and before c2k_crc16; raw serial-monitor physical reads",
+    "stopped_pc": "0xb5d0 (c2_kernal_map_window entry, immediately after c2k_copy)",
+    "z_register": "0x06",
+    "dma_descriptor_address": "0x0000b5dd",
+    "dma_descriptor_hex": "0b8087810685010606062006e00f06e006060606",
+    "expected_dma_descriptor_hex": "0b8087810085010000002000e00f00e000000000",
+    "all_expected_zero_fields_became": "0x06",
+    "physical_target_before_map": {
+      "range": "0x0000e000..0x0000ffff",
+      "sha256": "50dc47500606cf5f53dfe746d62ca7d75fb08669506a98fe869e9df612d79b9a",
+      "content": "8192 zero bytes"
+    },
+    "attic_source_after_failure": {
+      "range": "0x087fe000..0x087fffff",
+      "bytes": 8192,
+      "sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0",
+      "result": "still byte-identical to the pin"
+    }
+  },
+  "root_cause": {
+    "class": "firmware-to-compiler-abi-boundary-missing-z-normalization",
+    "mechanism": "On the 45GS02, llvm-mos emits STZ for C zero stores and relies on its Z==0 ABI invariant. Firmware-owned execution returned with Z==0x06. c2_kernal_take_ownership began with SEI but did not normalize Z before generated zero stores, so IRQ controls and every zero field in the Enhanced-DMA descriptor received 0x06.",
+    "why_the_crc_failed": "The corrupted descriptor did not copy the pinned Attic window to physical bank-0 $e000; the mapped-window CRC correctly rejected publication.",
+    "why_the_screen_was_black": "The failure occurs after interrupts are masked and before product ownership is published; main records error 37 and returns without a usable display path."
+  },
+  "required_fix_and_gate": {
+    "product_fix": "Normalize Z to zero immediately after SEI at the firmware-to-C ownership boundary, before any compiler-generated store.",
+    "fixed_block_payment": "Replace the two explicit LDA #0 / STA DMA trigger-register writes with two STZ writes under the newly bound Z==0 invariant; expected handoff-section delta is zero bytes.",
+    "permanent_gate": "Disassembly requires SEI; LDZ #0 as the first ownership instructions and rejects missing, late or nonzero normalization; it also binds both size-payment STZ instructions.",
+    "hardware_recheck": "Fresh candidate must execute the same pre-smoke, then the complete C2.2 hardware and acceptance chain; no Link-19 green is inherited."
+  },
+  "claim_limit": "Receipt-less hardware diagnosis of Link 19 only. It proves a first-red at the firmware-to-C Z-register ABI boundary and no hardware acceptance, product promotion or release claim."
+}

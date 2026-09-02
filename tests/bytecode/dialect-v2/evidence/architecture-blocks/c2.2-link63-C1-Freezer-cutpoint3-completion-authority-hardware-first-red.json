@@ -1,0 +1,182 @@
+{
+  "authority": {
+    "completion_contract": {
+      "bytes": 12258,
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "sha256": "e524d5c3eff5288a4189fdfb603f83adf36bff6b55727e20cb1370ee4c950ce3"
+    },
+    "deployment": {
+      "bytes": 9690,
+      "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/deployment.json",
+      "sha256": "0351f237e7f0b758ab93a7c6cf8a4e7b50d67587d4bf494a23ad36120b3a0196"
+    },
+    "linked_ELF": {
+      "bytes": 619508,
+      "path": "build/c2.2/substitution/product-link-63-canonical-completion-length/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "76a6b299b1297fe0ac523196118668c6c54941edaa6a5cf3af34b9b891b20114"
+    },
+    "linked_gate_result": {
+      "bytes": 1921,
+      "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/elf-gate-current.json",
+      "sha256": "a2cb245b66fd01b82b770f965d56d56f15bb2dbc447dd4702f79c640bf4594f0"
+    },
+    "linked_poll_disassembly": {
+      "bytes": 28865,
+      "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/c2_completion_poll-disassembly.txt",
+      "sha256": "eec6a40362f421b017d1ed32ec69f1055b3cb5b8bc6cf039fc579c76d54c3176"
+    },
+    "product": {
+      "bytes": 41566,
+      "path": "build/c2.2/substitution/product-link-63-canonical-completion-length/lisp65-c2-substitution-linked.prg",
+      "sha256": "46f93f1bd890761af55fd1170349e841d3f8c906edff2f59ef12a96f40362fe6"
+    },
+    "product_structural_receipt": {
+      "bytes": 11716,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link63-canonical-completion-length-structural-receipt.json",
+      "sha256": "4d095ce1b6736814fc9ca89a74203e42280c1ceb8c8168bd743e56f392456e1c"
+    },
+    "prior_root_cause": {
+      "bytes": 5954,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link62-slot39-threshold-length-liveness-replay-receipt.json",
+      "sha256": "96184252f54e9cafae30b6fa6f3f16758e94e223008c52b6f6b8ae09452fa199"
+    }
+  },
+  "claim_limit": "Hardware First Red and root-cause/gate-gap attribution only; no Cutpoint-3 or Cutpoint-4 result, C1 closure, matrix-gate, acceptance-chain, promotion or release claim.",
+  "execution_accounting": {
+    "C1_cutpoints_completed_in_this_appointment": 0,
+    "compiler_runs_after_Link63": 0,
+    "freezer_roundtrips": 0,
+    "latency_attempts_consumed": 0,
+    "new_product_links": 0,
+    "product_bytes_changed": 0,
+    "read_only_liveness_captures": 3
+  },
+  "finding": {
+    "classification": "product completion-authority defect plus linked-gate model gap",
+    "current_completion_mode": "0xa3 rollback re-entry",
+    "current_journal_result": 2,
+    "expected_call_length": "0x0040",
+    "expected_call_length_proof": "Every linked C2J callsite loads X #$40 and clears __rc6 before JSR c2_completion_poll.",
+    "false_authority": {
+      "address": "0x0000c197",
+      "field": "c2_append_state.record[27]",
+      "observed_value": "0xfc",
+      "value_byteidentical_across_three_captures": true
+    },
+    "gate_gap": "The linked gate proves that the implementation reloads twice from $c197 and that retry edges return to the first reload. It does not prove that $c197 remains the canonical length authority across the nested reader and the surrounding phase/rollback lifetime.",
+    "root_cause": "The Link-63 correction moved retry length from volatile call scratch to reused transaction record storage, then treated that storage as canonical. On hardware the record byte is $fc, outside the admitted 1..64 range. Reloading therefore faithfully consumes a corrupted/non-authoritative value; Slot 39 cannot complete and Cutpoint 3 is never reached.",
+    "why_the_prior_fix_did_not_close_the_class": "It changed where the value was reloaded from, but did not establish ownership and lifetime for the new source. The scratch-clobber mutation covered registers, not clobber of the chosen record byte itself."
+  },
+  "format": "lisp65-c2.2-Link63-C1-Freezer-cutpoint3-completion-authority-hardware-first-red-v1",
+  "hardware_observation": {
+    "C2J": {
+      "CRC16_seal": "0x2801",
+      "format_CRC32": "0x0f6a0fc2",
+      "format_CRC32_valid": true,
+      "magic": "C2J",
+      "state": "ACTIVE"
+    },
+    "cutpoint_control": {
+      "bytes_hex": "0300",
+      "command": 3,
+      "reached": 0
+    },
+    "frame_samples": [
+      "0x529e",
+      "0x52f0",
+      "0x5340"
+    ],
+    "frame_progress_deltas": [
+      82,
+      80
+    ],
+    "operator_freezer_action": "none",
+    "READY": 1,
+    "slot_trace": {
+      "byteidentical_across_three_captures": true,
+      "lock_flags": 0,
+      "slot": 39
+    },
+    "verdict": "CPU/frame clock alive; definition transaction ACTIVE; held Cutpoint 3 not reached"
+  },
+  "read_only_captures": {
+    "completion_record": [
+      {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/completion-1.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      },
+      {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/completion-2.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      },
+      {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/completion-3.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      }
+    ],
+    "frame": [
+      {
+        "address": "0x0000ff83",
+        "bytes": 8,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/frame-1.bin",
+        "sha256": "7d3014810633f5a486b6ef7bb6c4513c63750a39914f6c54af55c69fb982c5f0"
+      },
+      {
+        "address": "0x0000ff83",
+        "bytes": 8,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/frame-2.bin",
+        "sha256": "981cef5920b7b44712845ab3fdddd7ac5381fe7c90c99677446f1021c5b9e5d4"
+      },
+      {
+        "address": "0x0000ff83",
+        "bytes": 8,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/frame-3.bin",
+        "sha256": "5fea8e8c32f6127832d9d940e3fe664481a709ceda7e22611bd999d3d288e7e8"
+      }
+    ],
+    "journal": {
+      "address": "0x0005c640",
+      "bytes": 64,
+      "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/submit-first-red-c2j.bin",
+      "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+    },
+    "trace": [
+      {
+        "address": "0x0000c1f0",
+        "bytes": 16,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/trace-1.bin",
+        "sha256": "749b1678918105182917e5c845acb0d44555c84105dadb46b24d263e48146924"
+      },
+      {
+        "address": "0x0000c1f0",
+        "bytes": 16,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/trace-2.bin",
+        "sha256": "749b1678918105182917e5c845acb0d44555c84105dadb46b24d263e48146924"
+      },
+      {
+        "address": "0x0000c1f0",
+        "bytes": 16,
+        "path": "build/c2.2/c1-freezer-hardware-link63-cutpoints3-4-NONPROMOTABLE/cutpoint-3/liveness/trace-3.bin",
+        "sha256": "749b1678918105182917e5c845acb0d44555c84105dadb46b24d263e48146924"
+      }
+    ]
+  },
+  "recorded_on": "2026-07-24",
+  "required_product_decision": {
+    "class": "C",
+    "implemented_here": false,
+    "minimum_gate_correction": "Prove both ownership/lifetime of the chosen authority and linked consumption by poison, DMA length, comparison and every retry. Mutating the authority after the nested read must become a permanent rejected fixture.",
+    "minimum_product_property": "Each attempt must derive or reload length from an authority that cannot be written by any nested callee or phase reuse for the entire completion lifetime; the 64-frame timeout must remain reachable under deliberate nested-call clobber.",
+    "options_not_selected_here": [
+      "derive the admitted length from completion mode at every attempt",
+      "allocate a lifetime-disjoint producer-owned byte and prove its closure"
+    ]
+  },
+  "status": "FIRST RED: Link63 record-owned retry length is not a stable authority"
+}

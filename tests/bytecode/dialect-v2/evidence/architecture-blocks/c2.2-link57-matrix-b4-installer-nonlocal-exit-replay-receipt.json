@@ -1,0 +1,271 @@
+{
+  "authorities": {
+    "accepted_matrix_review": {
+      "bytes": 45164,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cross-invariant-full-matrix-link57-review-receipt.json",
+      "sha256": "62b5c3cdffa71861f48de6e6619ee40b7ea94ba144ae2653d77a39603e24e8f8"
+    },
+    "link57_elf": {
+      "bytes": 612152,
+      "path": "build/c2.2/substitution/product-link-57-keymap-nullary-fast-path2/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "306ba2aca61bbd2b924f3b52fd03fbbd9db95330f9c81e1190329abc147bf950"
+    },
+    "link57_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-57-keymap-nullary-fast-path2/lisp65-c2-substitution-linked.prg",
+      "sha256": "7d568ceb7edab95a237ff3079fcf689768373a9ea48a5a43f355f6275ddc5df8"
+    },
+    "link57_structural_receipt": {
+      "bytes": 527681,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link57-keymap-nullary-fast-path2-structural-receipt.json",
+      "sha256": "6632a7d00ea3bfaef294924ea618e0af70e34b75da929de05b2e7c451ce26059"
+    },
+    "permanent_gate_source": {
+      "bytes": 51602,
+      "path": "tools/host-lisp/c2_preinstall_island_guard.py",
+      "sha256": "4f9cc3831ec8005fd1c05620f9332e499559e44b87816950003eaeaae4daf725"
+    }
+  },
+  "claim_limit": "Closes B4 for the exact Link-57 identity and permanently extends the installer closure gate. It does not close any other matrix row, start the acceptance chain, promote a product or make a hardware claim.",
+  "disposition_result": "PROVEN",
+  "execution": {
+    "artifact_mode": "pure-read-only-replay",
+    "capacity_effect_bytes": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-matrix-b4-installer-nonlocal-replay-v1",
+  "linked_replay": {
+    "direct_call_edge_count": 60,
+    "forbidden_classes": [
+      "poll",
+      "abort",
+      "longjmp",
+      "c2j-abort-cleanup"
+    ],
+    "installer_root": {
+      "address": 44807,
+      "section": ".text"
+    },
+    "non_local_exit_edges": [],
+    "pre_READY_zero_wipes": [
+      {
+        "addend": 0,
+        "call_address": 44874,
+        "call_target": "__memset",
+        "fill": 0,
+        "fill_dataflow": {
+          "bounded_instruction_count": 2,
+          "dominator": {
+            "address": 44871,
+            "mnemonic": "ldx",
+            "operand": "#$0"
+          },
+          "transfer": {
+            "address": 44873,
+            "mnemonic": "txa",
+            "operand": ""
+          },
+          "transparent_instructions": [],
+          "value": 0
+        },
+        "length": 2048,
+        "pair_complete": true,
+        "relocations": [
+          {
+            "addend": 0,
+            "offset": 44860,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 44807,
+              "bytes": 211,
+              "end_exclusive": 45018,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_LO"
+          },
+          {
+            "addend": 0,
+            "offset": 44864,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 44807,
+              "bytes": 211,
+              "end_exclusive": 45018,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_HI"
+          }
+        ],
+        "source": "vm_runtime_overlay_install_island",
+        "target_address": 6144,
+        "target_symbol": "__lisp65_resident_island_start"
+      },
+      {
+        "addend": 0,
+        "call_address": 44926,
+        "call_target": "__memset",
+        "fill": 0,
+        "fill_dataflow": {
+          "bounded_instruction_count": 3,
+          "dominator": {
+            "address": 44921,
+            "mnemonic": "ldx",
+            "operand": "#$0"
+          },
+          "transfer": {
+            "address": 44925,
+            "mnemonic": "txa",
+            "operand": ""
+          },
+          "transparent_instructions": [
+            {
+              "address": 44923,
+              "mnemonic": "sta",
+              "operand": "$16"
+            }
+          ],
+          "value": 0
+        },
+        "length": 2048,
+        "pair_complete": true,
+        "relocations": [
+          {
+            "addend": 0,
+            "offset": 44910,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 44807,
+              "bytes": 211,
+              "end_exclusive": 45018,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_LO"
+          },
+          {
+            "addend": 0,
+            "offset": 44914,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 44807,
+              "bytes": 211,
+              "end_exclusive": 45018,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_HI"
+          }
+        ],
+        "source": "vm_runtime_overlay_install_island",
+        "target_address": 6144,
+        "target_symbol": "__lisp65_resident_island_start"
+      },
+      {
+        "addend": 0,
+        "call_address": 44961,
+        "call_target": "__memset",
+        "fill": 0,
+        "fill_dataflow": {
+          "bounded_instruction_count": 3,
+          "dominator": {
+            "address": 44956,
+            "mnemonic": "ldx",
+            "operand": "#$0"
+          },
+          "transfer": {
+            "address": 44960,
+            "mnemonic": "txa",
+            "operand": ""
+          },
+          "transparent_instructions": [
+            {
+              "address": 44958,
+              "mnemonic": "sta",
+              "operand": "$16"
+            }
+          ],
+          "value": 0
+        },
+        "length": 2048,
+        "pair_complete": true,
+        "relocations": [
+          {
+            "addend": 0,
+            "offset": 44945,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 44807,
+              "bytes": 211,
+              "end_exclusive": 45018,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_LO"
+          },
+          {
+            "addend": 0,
+            "offset": 44949,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 44807,
+              "bytes": 211,
+              "end_exclusive": 45018,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_HI"
+          }
+        ],
+        "source": "vm_runtime_overlay_install_island",
+        "target_address": 6144,
+        "target_symbol": "__lisp65_resident_island_start"
+      }
+    ],
+    "reachable_function_count": 13,
+    "reachable_functions": [
+      "__call_indir",
+      "__memset",
+      "c2_facade_c2_dma",
+      "c2_facade_target_c2_dma",
+      "c2_facade_vm_code_load",
+      "rtov_crc_mem",
+      "rtov_fail",
+      "rtov_read",
+      "rtov_transaction_context_if_ready",
+      "rtov_wipe",
+      "vm_code_load",
+      "vm_runtime_overlay_exec_family",
+      "vm_runtime_overlay_install_island"
+    ],
+    "ready_publication": "unchanged-and-fail-closed",
+    "status_returning_failure": "retained"
+  },
+  "mutations": {
+    "abort-edge": "rejected",
+    "c2j-abort-cleanup-edge": "rejected",
+    "clean-status-returning-failure": "passed",
+    "longjmp-edge": "rejected",
+    "poll-edge": "rejected"
+  },
+  "recorded_on": "2026-07-23",
+  "row": "B4",
+  "status": "passed-link57-installer-zero-non-local-exit-edges",
+  "value_string": "B4=PROVEN link57=exact installer-closure=13 nonlocal-exits=0 mutations=4/4 wipe=retained ready=false-on-error product-delta=0 hardware=0 acceptance=blocked"
+}

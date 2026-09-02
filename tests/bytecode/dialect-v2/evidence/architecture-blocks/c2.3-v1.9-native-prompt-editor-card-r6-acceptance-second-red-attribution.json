@@ -1,0 +1,77 @@
+{
+  "candidate_proof": {
+    "BSS": {
+      "bytes": 1584,
+      "end": 49146,
+      "margin_bytes": 6,
+      "vma": 47562
+    },
+    "facade": {
+      "derived_vma": 46044,
+      "next_owner_reserve_bytes": 101,
+      "text_reserve_bytes": 32,
+      "vma": 46044
+    },
+    "normalized_fixed_members": [
+      ".text.capacity_end",
+      ".lisp65_c2_mapped_far_facade.vma",
+      "__bss_end",
+      "__bss_size",
+      "__lisp65_resident_island_end"
+    ],
+    "resident_island": {
+      "bytes": 1737,
+      "end": 7881,
+      "vma": 6144
+    },
+    "sealed_golden_unchanged": true,
+    "status": "passed-candidate-derived-fixed-successors"
+  },
+  "expected": {
+    "sealed_ordinary_text_capacity_end": 46000
+  },
+  "first_red": {
+    "bytes": 1186,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r6-acceptance-second-red.json",
+    "sha256": "d5a1f3cdcb4287c4fca87e940102d2ac24c185d6e98e3c1d6846531e38e3a4c4"
+  },
+  "format": "lisp65-c2-v190-native-prompt-editor-card-r6-v1-acceptance-second-red-attribution-v1",
+  "frozen_pair": {
+    "ELF": {
+      "bytes": 635492,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r6/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "f0ba5a4506f1d3fc85e2e13fd6db53a2bb8f93a62a7edf7560c8d7d1263d7d7f"
+    },
+    "PRG": {
+      "bytes": 41564,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r6/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "3b16887b3699b5d861682b590ed24d600231cdda2598705f97b8600ad10de6b6"
+    }
+  },
+  "mechanism": {
+    "candidate_world": "text end $b3bc, derived facade $b3dc",
+    "consumer": "v5 ordinary-text capacity arena",
+    "conversion": "independently prove text/facade/next-owner relation; normalize only .text capacity in sealed comparison view",
+    "stored_world": "fixed end $b3b0"
+  },
+  "mutations_rejected": [
+    "text-growth-without-facade-follow",
+    "facade-unexplained-shift",
+    "next-owner-overlap"
+  ],
+  "observed": {
+    "candidate_text_end": 46012,
+    "derived_facade_VMA": 46044,
+    "ordinary_reserve_bytes": 32
+  },
+  "predecessor_attribution": {
+    "bytes": 2551,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r6-acceptance-first-red-attribution.json",
+    "sha256": "b57e23fca5b3c0dc9b2ceecd35a44e1900233223f1b1a603e8cbac9c7077ebec"
+  },
+  "product_defect": false,
+  "recorded_on": "2026-08-29",
+  "resume_right": "continue read-only Acceptance over the same pair; 0/0",
+  "sealed_golden_modified": false,
+  "status": "ATTRIBUTED: ORDINARY CAPACITY IS DERIVED FACADE PREDECESSOR"
+}

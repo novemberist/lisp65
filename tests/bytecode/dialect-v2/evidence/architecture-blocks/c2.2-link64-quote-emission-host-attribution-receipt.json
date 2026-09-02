@@ -1,0 +1,270 @@
+{
+  "authority": {
+    "fixture": {
+      "bytes": 564,
+      "path": "tests/equivalence/quote-emission-parity.json",
+      "sha256": "5dc8bd4d5ee798ad67303c1a5594e2dc7489f483a79ca8ea72611b6f85bc0586"
+    },
+    "gate": {
+      "bytes": 14566,
+      "path": "tools/host-lisp/quote_emission_parity.py",
+      "sha256": "177ade380715aa05830228b704ffff5cdf427825e66cb8cb4d581402ba08582c"
+    },
+    "hardware_first_red": {
+      "bytes": 8034,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-C1-cutpoint3-long-quote-hardware-first-red.json",
+      "sha256": "f9b8e819a7637e5a123c0b74abf4250c8c51ea0323365515ff34f43886a6d95d"
+    },
+    "lcc_host_binary": {
+      "bytes": 117560,
+      "path": "build/equivalence/equivalence-check",
+      "sha256": "2bb25866720a59de723343972c17fc9eeec00a66ab1b4ee64b51eaa9c16f4b91"
+    },
+    "lcc_oracle": {
+      "bytes": 14572,
+      "path": "scripts/lcc-oracle.py",
+      "sha256": "be96c54dbfddedeb38ed30468a2e4c5c604b039a8bc8bef92d899bf1a4510b4a"
+    },
+    "lcc_source": {
+      "bytes": 34673,
+      "path": "lib/lcc.lisp",
+      "sha256": "a246593450d38dc78b5337bc422af06259d43220366948bdfef84298fdc8b910"
+    },
+    "native_reader": {
+      "bytes": 144088,
+      "path": "build/reader-conformance-host",
+      "sha256": "e40312193937d1875e728e7cbd2786ac5648f69736653fa500003db3897f3b4a"
+    },
+    "product_emitter": {
+      "bytes": 26781,
+      "path": "src/c2_session_emitter.c",
+      "sha256": "b9376f3c3bfac1d6e9ce008a1d6c9c374a0ed2172472f98106dc832755f395cd"
+    },
+    "product_evaluator": {
+      "bytes": 95622,
+      "path": "src/eval.c",
+      "sha256": "3b30f4446836620c9cc4515d6cc93457dac10af45927ec99a4510b1265eed676"
+    },
+    "product_installer": {
+      "bytes": 154978,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "195e21b9f4af0571941c6c8db2af0ab4fc114d5cf2c09e089dea7f23a04b738c"
+    },
+    "python_compiler": {
+      "bytes": 47002,
+      "path": "tools/host-lisp/bytecode_p0_compiler.py",
+      "sha256": "f41d7d7aed5ee4a4bcb0c34256144d101a167b92c340d29d8ce43d2dac6efbe6"
+    },
+    "result": {
+      "bytes": 9001,
+      "path": "build/equivalence/quote-emission-parity.json",
+      "sha256": "dec9f9bff399148a64db182a4622dcdbe41f2ac74625e2b8c534fafd0ce9b766"
+    }
+  },
+  "cases": [
+    {
+      "explicit_source": "(defun %quote-parity-t () (quote t))",
+      "lcc_fnlist_sha256": "ad3bea6dc50a7f250fd080f103e62e101110c23c87ecb318564a33864e997938",
+      "lcc_functions": [
+        {
+          "flags": 0,
+          "literals": [],
+          "nargs": 0,
+          "nlocals": 0,
+          "payload": [
+            44,
+            5
+          ],
+          "payload_hex": "2c05"
+        }
+      ],
+      "lcc_raw": "((0 0 0 nil (44 5)))",
+      "mutations": {
+        "export-flags": "rejected",
+        "export-name": "rejected",
+        "payload-byte": "rejected",
+        "reader-normal-form": "rejected"
+      },
+      "name": "true",
+      "product_emitter_input_sha256": "764d6b6c233e38d2bf7f2b1375d00624d35645422e7b90ce76f6e05456ae4675",
+      "python_emission_sha256": "ed28ff5c0fb14603095a44ae1958c2bdfb7ac7548ea0d1d75fbcb5441f0b1012",
+      "reader_consumed_bytes": {
+        "explicit": 36,
+        "sugar": 29
+      },
+      "reader_normal_form": "(DEFUN %QUOTE-PARITY-T NIL (QUOTE T))",
+      "sugar_source": "(defun %quote-parity-t () 't)"
+    },
+    {
+      "explicit_source": "(defun %quote-parity-nil () (quote nil))",
+      "lcc_fnlist_sha256": "92154a8b3d696340e499b35ab942d42d5603903d05f7411e278556451da274de",
+      "lcc_functions": [
+        {
+          "flags": 0,
+          "literals": [],
+          "nargs": 0,
+          "nlocals": 0,
+          "payload": [
+            43,
+            5
+          ],
+          "payload_hex": "2b05"
+        }
+      ],
+      "lcc_raw": "((0 0 0 nil (43 5)))",
+      "mutations": {
+        "export-flags": "rejected",
+        "export-name": "rejected",
+        "payload-byte": "rejected",
+        "reader-normal-form": "rejected"
+      },
+      "name": "nil",
+      "product_emitter_input_sha256": "41c14473a243b54409597b362dbb13c2dbd8f0c3e1b09c17245e658d98038f6c",
+      "python_emission_sha256": "69b5b9d33e22c594363388600a14a344f1b210d0f2d84d94197541d0e47ef321",
+      "reader_consumed_bytes": {
+        "explicit": 40,
+        "sugar": 33
+      },
+      "reader_normal_form": "(DEFUN %QUOTE-PARITY-NIL NIL (QUOTE NIL))",
+      "sugar_source": "(defun %quote-parity-nil () 'nil)"
+    },
+    {
+      "explicit_source": "(defun %quote-parity-symbol () (quote alpha))",
+      "lcc_fnlist_sha256": "fc0434b504b147aa80dfc8b96ca872f2ae350ec84c447ed1f53ff920649b687c",
+      "lcc_functions": [
+        {
+          "flags": 0,
+          "literals": [
+            "alpha"
+          ],
+          "nargs": 0,
+          "nlocals": 0,
+          "payload": [
+            6,
+            0,
+            5
+          ],
+          "payload_hex": "060005"
+        }
+      ],
+      "lcc_raw": "((0 0 0 (alpha) (6 0 5)))",
+      "mutations": {
+        "export-flags": "rejected",
+        "export-name": "rejected",
+        "payload-byte": "rejected",
+        "reader-normal-form": "rejected"
+      },
+      "name": "symbol",
+      "product_emitter_input_sha256": "2319a5856af4384eaa4b850fca86fc139b71abd48cabcdf4a4575538beacb177",
+      "python_emission_sha256": "46cf1144feeb704ce361913ec090ac98541dd9dd378a764f1d21548194cf259d",
+      "reader_consumed_bytes": {
+        "explicit": 45,
+        "sugar": 38
+      },
+      "reader_normal_form": "(DEFUN %QUOTE-PARITY-SYMBOL NIL (QUOTE ALPHA))",
+      "sugar_source": "(defun %quote-parity-symbol () 'alpha)"
+    },
+    {
+      "explicit_source": "(defun %quote-parity-fixnum () (quote 7))",
+      "lcc_fnlist_sha256": "d232c45ff99e6e425539b639bd95a665e356ccec9631d6860e4622424d551114",
+      "lcc_functions": [
+        {
+          "flags": 0,
+          "literals": [],
+          "nargs": 0,
+          "nlocals": 0,
+          "payload": [
+            1,
+            7,
+            5
+          ],
+          "payload_hex": "010705"
+        }
+      ],
+      "lcc_raw": "((0 0 0 nil (1 7 5)))",
+      "mutations": {
+        "export-flags": "rejected",
+        "export-name": "rejected",
+        "payload-byte": "rejected",
+        "reader-normal-form": "rejected"
+      },
+      "name": "fixnum",
+      "product_emitter_input_sha256": "f3546ab54905e4793fab4d8ea172f0a7a343d9ba7a6a06be854a106bf20de198",
+      "python_emission_sha256": "6205e28e61034431ba027f20f3bc86c6b24dca964e355df4c8942352df243a98",
+      "reader_consumed_bytes": {
+        "explicit": 41,
+        "sugar": 34
+      },
+      "reader_normal_form": "(DEFUN %QUOTE-PARITY-FIXNUM NIL (QUOTE 7))",
+      "sugar_source": "(defun %quote-parity-fixnum () '7)"
+    },
+    {
+      "explicit_source": "(defun %quote-parity-list () (quote (alpha 7)))",
+      "lcc_fnlist_sha256": "0ca88441e3028d08f630fea79e6729168f6f9c4b47c1550776760650b6886702",
+      "lcc_functions": [
+        {
+          "flags": 0,
+          "literals": [
+            [
+              "alpha",
+              7
+            ]
+          ],
+          "nargs": 0,
+          "nlocals": 0,
+          "payload": [
+            6,
+            0,
+            5
+          ],
+          "payload_hex": "060005"
+        }
+      ],
+      "lcc_raw": "((0 0 0 ((alpha 7)) (6 0 5)))",
+      "mutations": {
+        "export-flags": "rejected",
+        "export-name": "rejected",
+        "payload-byte": "rejected",
+        "reader-normal-form": "rejected"
+      },
+      "name": "list",
+      "product_emitter_input_sha256": "cd8d0019ed54faa3ff8a4b7f5a22fd11aa5c7839c05a2faae10460dde90fd058",
+      "python_emission_sha256": "98a6f7ac243f9914f30de415519d7297adad3d252ae738fcfed733ae740d7d1c",
+      "reader_consumed_bytes": {
+        "explicit": 47,
+        "sugar": 40
+      },
+      "reader_normal_form": "(DEFUN %QUOTE-PARITY-LIST NIL (QUOTE (ALPHA 7)))",
+      "sugar_source": "(defun %quote-parity-list () '(alpha 7))"
+    }
+  ],
+  "conclusion": "The current host path has no semantic or byte-emission difference between apostrophe sugar and explicit QUOTE. The Link-64 hardware First Red cannot be attributed to source spelling at reader, literal-lowering, special-form, or product emitter-input boundaries.",
+  "first_divergent_stage": null,
+  "format": "lisp65-quote-emission-parity-result-v1",
+  "product_emitter_closure": {
+    "emitter_boundary_is_fnlist_name_flags": true,
+    "emitter_has_no_source_spelling_parameter": true,
+    "evaluator_passes_fnlist": true,
+    "installer_accepts_fnlist": true,
+    "installer_calls_single_session_emitter": true
+  },
+  "recorded_on": "2026-07-25",
+  "scope": {
+    "hardware_runs": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "promotable": false,
+    "target_compiler_runs": 0,
+    "wplto_runs": 0
+  },
+  "status": "passed-no-host-emission-divergence",
+  "summary": {
+    "cases": 5,
+    "literal_lowering": "byte-identical LCC fnlist/literals/payload",
+    "mutations_rejected": 20,
+    "product_emitter_boundary": "byte-identical fnlist/export-name/flags",
+    "reader": "byte-identical canonical object rendering",
+    "special_form_dispatch": "byte-identical opcode emission",
+    "stage_equalities": 20
+  }
+}

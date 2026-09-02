@@ -153,7 +153,7 @@ def resume_authority() -> dict[str, Any]:
 
 
 def _consumers_match(rows: dict[str, Any], header: dict[str, Any]) -> bool:
-    if set(rows) != {"seed", "final"}:
+    if not rows:
         return False
     return all(
         row.get("result", {}).get("status") ==

@@ -1,0 +1,47 @@
+{
+  "accepted_closing_plan": {
+    "bytes": 6727,
+    "commit": "e9024b5c494d570fb9701cd5f5d14a840ae3f92c",
+    "path": "docs/planning/1.11-compiler-locality-work-plan.md",
+    "sha256": "aadc1f2431699fd1df2cd35c85b9b926ae52bfb02644d0afc0edab2a8d58b4c0"
+  },
+  "claim_limit": "Authority-binding repair only. No compiler, freight, product, device, link, surface, timing-upper-bound or release claim is added.",
+  "current_driver": {
+    "bytes": 39332,
+    "path": "tools/host-lisp/c2_v111_compiler_locality.py",
+    "sha256": "40a664bfcfbb0b5f918c14a8a2d87b9787eea8a1e10096e591f4d6662539428d"
+  },
+  "format": "lisp65-c2.3-v1.11-release-promotion-rebind-v1",
+  "gate_wiring_projection": {
+    "check_source_dependency": "check-source: c2-v111-compiler-locality-check",
+    "check_target": "c2-v111-compiler-locality-check",
+    "path": "mk/gates.mk",
+    "selftest_target": "c2-v111-compiler-locality-selftest",
+    "semantic_projection": [
+      "c2-v111-compiler-locality-selftest:",
+      "python3 tools/host-lisp/c2_v111_compiler_locality.py selftest",
+      "c2-v111-compiler-locality-check: c2-v111-compiler-locality-selftest",
+      "python3 tools/host-lisp/c2_v111_compiler_locality.py check",
+      "check-source: c2-v111-compiler-locality-check"
+    ]
+  },
+  "historical_payload_rewritten_silently": false,
+  "historical_receipt": {
+    "bytes": 16305,
+    "commit": "f2096e5b2554827fcec4e3cc0caa3ac990bd76d2",
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.11-compiler-locality-receipt.json",
+    "sha256": "b8d176f64927e5b39c7b09ec0095c7ce6a3c0b4f74110434bf0fb119bdbf7cf8"
+  },
+  "reason": "The reviewer appended the accepted closing disposition and the v1.4 release block added unrelated gate rows. Replace mutable whole-file bindings with the accepted-plan commit and an exact semantic wiring projection; do not rewrite any 1.11 workload or claim.",
+  "recorded_on": "2026-08-07",
+  "semantic_invariants": {
+    "external_image_delta_bytes": -336,
+    "full_sequence_seconds": 677,
+    "mutations": 29,
+    "post_require_seconds": 179,
+    "resident_delta_bytes": 0,
+    "vm_instructions": 32409,
+    "window_events": 5242
+  },
+  "status": "passed-loud-dated-release-promotion-rebind"
+}

@@ -1,0 +1,111 @@
+{
+  "authorities": {
+    "contact_driver": {
+      "bytes": 35260,
+      "path": "tools/host-lisp/c2_v16_corrected_view_contact.py",
+      "sha256": "1b602456e34e48d010c0cd87057f4966b9405e1658766735eaea7ef21372ee9a"
+    },
+    "control_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/control-link82.prg",
+      "sha256": "cef92b1dace70ae700402cb37e95b755d8be5625d168dd65c2ff319176247efe"
+    },
+    "control_device": {
+      "bytes": 2429,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-launch-boundary-control-device-receipt.json",
+      "sha256": "fe5e918571fc984cfb91604ab4c0f5c4e2f0feed3acf2d32b2df72dbcb87436e"
+    },
+    "control_runner": {
+      "bytes": 4028,
+      "path": "scripts/c2-v16-defstruct-launch-boundary-control.sh",
+      "sha256": "228d5de7dc892b74cbec6026b42bf2df9317cb0aeaeb8da12ce489a3746c0420"
+    },
+    "diagnostic_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-corrected-view-quiet-appointment/diagnostic-link82-corrected-view-b5c3.prg",
+      "sha256": "347ecdd0aa9d8dda70a20177b9c77409264b1102ecfd01b23ba1ab3b7c27ab59"
+    },
+    "diagnostic_runner": {
+      "bytes": 4481,
+      "path": "scripts/c2-v16-defstruct-corrected-view-hw.sh",
+      "sha256": "ca94e7f66bc96ba240b0d6ea565a0809e0253b346a2e81aaeb4e90f3e4e9b70b"
+    },
+    "driver": {
+      "bytes": 13432,
+      "path": "tools/host-lisp/c2_v16_physical_run_handover_desk.py",
+      "sha256": "fc9c6855e6509c2d3a5e48c455692b23b1fc71328a2bf3556e3addbd221e4091"
+    },
+    "quiet_result": {
+      "bytes": 5334,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-corrected-view-quiet-result-receipt.json",
+      "sha256": "b2dc562176498d8d7ae43964e64c67c53072607e9d13112f686493b125670b7e"
+    }
+  },
+  "claim_limit": "Host/artifact-only narrowing. The first executable diagnostic delta is at $202C and remained uncompleted; the prelaunch monitor crossing is the only unpaired post-READY pre-owner runner action. It is not yet causal. No contact, form, product claim, F018B membership or R/A/I/G row is authorized.",
+  "facts": {
+    "choreography_diff": {
+      "both_install_PRG_with_m65_H": true,
+      "control_post_READY_monitor_crossing": false,
+      "diagnostic_crossing_sequence": [
+        "monitor-sync",
+        "t1",
+        "CPU-view reads",
+        "t0"
+      ],
+      "diagnostic_post_READY_pre_owner_monitor_crossing": true,
+      "only_unpaired_post_READY_pre_owner_action": "diagnostic prelaunch monitor crossing"
+    },
+    "decision": {
+      "F018B_membership_claim": false,
+      "R_A_I_G_claim": false,
+      "causal_mechanism_proved": false,
+      "cheapest_discriminator": "control-shaped diagnostic launch with no prelaunch monitor crossing",
+      "leading_setup_hypothesis": "prelaunch monitor crossing changes or retains launch-visible state",
+      "measured_forms_run": 0,
+      "named_boundary": "post-READY pre-owner launch choreography before $202c",
+      "new_contact_authorized": false,
+      "product_hang_claim": false
+    },
+    "identity": {
+      "BASIC_program_identical_through": "0x2022",
+      "bootstrap_prefix_identical": "0x2023..0x202b",
+      "control_at_202c": "a2448e30d0",
+      "diagnostic_at_202c": "203fc0eaea",
+      "diagnostic_witness_routine_at_c03f": "a2448e30d08ec3b560",
+      "first_executable_delta": "0x202c",
+      "load_address": "0x2001",
+      "witness_store": "STX $B5C3"
+    },
+    "reachability": {
+      "entry_witness_after_quiet": [
+        "0xd7",
+        "0xd7",
+        "0xd7"
+      ],
+      "first_diagnostic_delta_completed": false,
+      "later_diagnostic_delta_causal_claim": false
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-D2-physical-RUN-handover-desk-v1",
+  "mutations_rejected": {
+    "authorize-contact": "handover decision boundary drift",
+    "claim-F018B": "handover decision boundary drift",
+    "claim-R-A-I-G": "handover decision boundary drift",
+    "claim-causal-mechanism": "handover decision boundary drift",
+    "claim-first-delta-completed": "handover reachability boundary drift",
+    "claim-later-delta-cause": "handover reachability boundary drift",
+    "claim-product-hang": "handover decision boundary drift",
+    "erase-BASIC-identity": "handover identity boundary drift",
+    "erase-bootstrap-identity": "handover identity boundary drift",
+    "erase-crossing-sequence": "handover choreography comparison drift",
+    "erase-diagnostic-crossing": "handover choreography comparison drift",
+    "erase-shared-installer": "handover choreography comparison drift",
+    "erase-witness-store": "handover identity boundary drift",
+    "invent-control-crossing": "handover choreography comparison drift",
+    "invent-entry-stamp": "handover reachability boundary drift",
+    "invent-form": "handover decision boundary drift",
+    "move-first-delta": "handover identity boundary drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "BOUNDARY NAMED; PRELAUNCH MONITOR CROSSING LEADS"
+}

@@ -1,0 +1,311 @@
+{
+  "alternatives": {
+    "ethernet_instruction_stream": {
+      "verdict": "REJECTED",
+      "why": "the bound core compiles the packet-emission arm behind literal false; its buffering path can also assert ethernet_cpu_arrest and therefore cannot carry a neutrality claim"
+    },
+    "product_target_patch": {
+      "reason": "a trap at the non-boundary $8040 preserves the stack but the source of an RTS/RTI or non-linking direct JMP is not encoded there",
+      "verdict": "REJECTED: DOES NOT CAPTURE SOURCE PC"
+    },
+    "product_transfer_instrumentation": {
+      "reason": "instrumenting the not-yet-known RTS/RTI/direct-transfer population changes timing before the event and recreates a hand-list problem",
+      "verdict": "REJECTED: FAILS NEUTRALITY"
+    },
+    "stock_address_only_breakpoint": {
+      "reason": "the valid BRA at $803F advances PC through $8041 while reading its operand at $8040; only a decode-state-qualified match denotes execution beginning at $8040",
+      "verdict": "REJECTED: FALSE POSITIVE"
+    },
+    "stock_serial_history": {
+      "reason": "the event entry can occupy any of 1024 circular slots while the stock command exposes only 768",
+      "verdict": "REJECTED: INCOMPLETE"
+    }
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 522803,
+    "commit": "2b4aa0294036a9a5e9c180182369eaca7649aba2",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "b230255650582189450c90fcefa2de09c5cf2d7ce97a2553d3f4771577fb2944"
+  },
+  "capacity": {
+    "after": {
+      "far_service_free_bytes": 11,
+      "mapped_diagnostic_free_bytes": 47,
+      "ordinary_text_free_bytes": 18
+    },
+    "before": {
+      "far_service_free_bytes": 11,
+      "mapped_diagnostic_free_bytes": 47,
+      "ordinary_text_free_bytes": 18
+    },
+    "candidate_derived": true,
+    "domain": "monitor-private BRAM/ROM, outside every product mapping domain",
+    "winner_product_deltas": {
+      "far_service_bytes": 0,
+      "mapped_diagnostic_bytes": 0,
+      "ordinary_text_bytes": 0,
+      "resident_state_bytes": 0,
+      "scratch_bytes": 0
+    }
+  },
+  "claim_limit": "Pricing only. No core source, product, link, bitstream, medium or device was changed. The receipt authorizes neither diagnostic-core materialization nor contact.",
+  "contact_choreography_after_separate_authorization": [
+    "load the diagnostic bitstream volatile-only; do not flash it",
+    "hold the target CPU before candidate launch; clear stale break/history state",
+    "set b8041; issue tl as the atomic origin-and-resume edge",
+    "reproduce once; never resume after the hardware breakpoint fires",
+    "read all 1024 history rows, registers and eight bytes above recorded first-event SP",
+    "decode the unique target row at uS $13/$14 and PC $8041, then bind its prior decode row plus both raw and decoded views",
+    "clear breakpoint and restore the stock core after the read"
+  ],
+  "decode_model": {
+    "all_classified": true,
+    "cases": [
+      {
+        "expected": "RTS/RTI",
+        "name": "RTS",
+        "observed": {
+          "event_sp": 420,
+          "source_opcode": 96,
+          "source_pc": 27152,
+          "transfer_kind": "RTS/RTI"
+        },
+        "opcode": 96,
+        "source_pc": 27152,
+        "sp": 420,
+        "state": 19,
+        "wrap": false
+      },
+      {
+        "expected": "RTS/RTI",
+        "name": "RTI-6502",
+        "observed": {
+          "event_sp": 448,
+          "source_opcode": 64,
+          "source_pc": 51173,
+          "transfer_kind": "RTS/RTI"
+        },
+        "opcode": 64,
+        "source_pc": 51173,
+        "sp": 448,
+        "state": 20,
+        "wrap": false
+      },
+      {
+        "expected": "direct",
+        "name": "JMP-absolute",
+        "observed": {
+          "event_sp": 408,
+          "source_opcode": 76,
+          "source_pc": 29742,
+          "transfer_kind": "direct"
+        },
+        "opcode": 76,
+        "source_pc": 29742,
+        "sp": 408,
+        "state": 19,
+        "wrap": false
+      },
+      {
+        "expected": "direct",
+        "name": "JSR-fast-dispatch",
+        "observed": {
+          "event_sp": 382,
+          "source_opcode": 32,
+          "source_pc": 38167,
+          "transfer_kind": "direct"
+        },
+        "opcode": 32,
+        "source_pc": 38167,
+        "sp": 382,
+        "state": 19,
+        "wrap": true
+      }
+    ],
+    "decode_states": [
+      19,
+      20
+    ],
+    "instruction_fetch_state": 18,
+    "source_rule": "prior decode PC minus one; opcode from that row's read byte",
+    "target_decode_pc": 32833,
+    "valid_operand_fetch_rejected": {
+      "pc": 32833,
+      "reason": "PC alone matches, but Cycle2 is not decode state $13/$14",
+      "state": 21
+    }
+  },
+  "execution_lock": {
+    "WPLTO_runs": 0,
+    "bitstreams_loaded": 0,
+    "core_builds": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "monitor_sources_changed": 0,
+    "product_links": 0,
+    "product_sources_changed": 0
+  },
+  "format": "lisp65-c2.3-v1.6-selector-blank-first-event-latch-pricing-v1",
+  "implementation_readiness": {
+    "core_Ophis_present": false,
+    "no_product_card_required": true,
+    "ready_now": false,
+    "reason": "the winner needs both the one-byte monitor-ROM aperture repair and the decode-state-qualified RTL comparator. The workspace has neither Vivado/updatemem nor a complete core build toolchain, so the diagnostic core cannot be synthesized or timing-qualified under this pricing turn",
+    "required_next_authority": "authorize one host-only diagnostic-core materialization/provenance step, then separately authorize the single volatile-load reproduction contact",
+    "updatemem_present": false,
+    "vivado_present": false
+  },
+  "inputs": {
+    "ELF": {
+      "bytes": 647776,
+      "path": "build/c2.3/v1.6-boot-refill-selector-bypass-domain-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bbb1547779ea2c9366fa5a29633aa07061a3607fa753043071df1780cc5ea3e4"
+    },
+    "core": {
+      "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+      "repository": "MEGA65/mega65-core",
+      "sources": {
+        "ethernet.vhdl": {
+          "bytes": 86913,
+          "path": "build/upstream-verification/mega65-core/src/vhdl/ethernet.vhdl",
+          "sha256": "169058dc90b40358b4c6a4aa758a3a7ce7854fa864e0cfa34bededcee2b66d1b"
+        },
+        "gs4510.vhdl": {
+          "bytes": 517477,
+          "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+          "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+        },
+        "monitor.a65": {
+          "bytes": 60075,
+          "path": "build/upstream-verification/mega65-core/src/monitor/monitor.a65",
+          "sha256": "d7fd09c2a43332a9967310d3043f72de99eb2cf26c89d539f3df5ec6e39208bc"
+        },
+        "monitor_ctrl.v": {
+          "bytes": 19902,
+          "path": "build/upstream-verification/mega65-core/src/verilog/monitor_ctrl.v",
+          "sha256": "19e1ef426eaae96dc2cdfa13327ef14c3c8620514137309103ba408c31fcb11c"
+        },
+        "monitor_top.v": {
+          "bytes": 10068,
+          "path": "build/upstream-verification/mega65-core/src/verilog/monitor_top.v",
+          "sha256": "c9879c01fe64672d584956209ef69b25552544ce854f09ae1f927b19828efcc2"
+        }
+      }
+    },
+    "table_attribution": {
+      "bytes": 4055,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-selector-bypass-blank-table-heads-attribution.json",
+      "sha256": "28c0da72113becb0060029c7d75302a3f0dbac861785f2838439d6739dd21dba"
+    }
+  },
+  "mutations_rejected": [
+    "accept-stock-75-percent",
+    "spend-product-byte",
+    "erase-stack-field",
+    "assert-neutrality",
+    "claim-ready",
+    "drop-state-qualifier",
+    "spend-contact"
+  ],
+  "neutrality": {
+    "pre_event_cycle_delta": 0,
+    "pre_event_product_writes": 0,
+    "proof": [
+      "history writes only monitor-private dual-port BRAM",
+      "continuous history leaves target CPU in free-run and IRQ policy unchanged",
+      "the breakpoint comparator changes trace state only after the $8040 opcode has been fetched and decode PC has become $8041",
+      "the one-byte aperture change executes only in the stopped monitor reader",
+      "no Ethernet stream or cpu_arrest path participates"
+    ],
+    "proved": true
+  },
+  "open_classes": [
+    "a corrupted RTS/RTI continuation before stack overwrite",
+    "a live-mutated direct transfer outside the authorized reads"
+  ],
+  "origin": {
+    "atomic_publication_edge": "the final tl control-register write",
+    "bound_zero": "with target CPU held before launch: clear breakpoint/history, set b8041, then tl resets history index and publishes continuous recording together with free-run",
+    "first_event_rule": "select the unique uS $13/$14 row at PC $8041, then walk backward modulo the circular history to the prior decode row",
+    "wrap": "$000..$3FE are 1023 circular history slots; $3FF is the current-state slot; the successor exposes the complete $000..$3FF aperture"
+  },
+  "recorded_on": "2026-08-24",
+  "removal_default": {
+    "action": "reload the stock a915893 bitstream; no product or medium changes exist",
+    "decision": "REMOVE AFTER ATTRIBUTION",
+    "product_removal_bytes": 0
+  },
+  "source_facts": {
+    "captured_fields": [
+      "current PC",
+      "CPU state plus read byte",
+      "SP",
+      "opcode",
+      "arg1",
+      "arg2",
+      "P/A/X/Y/Z/B",
+      "MAPL",
+      "MAPH"
+    ],
+    "ethernet_stream": {
+      "verdict": "REJECTED",
+      "why": "the bound core compiles the packet-emission arm behind literal false; its buffering path can also assert ethernet_cpu_arrest and therefore cannot carry a neutrality claim"
+    },
+    "history_cadence": "one row per target-CPU clock while history-write is armed; the writer is not gated by monitor_instruction_strobe",
+    "history_storage": "1024 entries x 24 bytes in monitor-private dual-port BRAM: $000..$3FE circular microcycle history plus $3FF current-state slot",
+    "source_decode_rule": "walk backward from the unique target decode row (uS $13/$14, PC $8041) to the prior uS $13/$14 row; its current PC minus one is the source PC and its CPU-state low byte is the fetched source opcode",
+    "stock_breakpoint": "address-only hardware PC comparator; insufficient here because the valid BRA at $803F also reaches PC $8041 while fetching its $8040 operand",
+    "stock_read_aperture": {
+      "cause": "CMP high-byte,#3 rejects $300..$3FF",
+      "coverage_percent": 75.0,
+      "first": 0,
+      "last": 767,
+      "physical_entries": 1024,
+      "readable_entries": 768
+    },
+    "successor_breakpoint": "arm $8041 and qualify the existing comparator with CPU state $13/$14; that selects opcode decode after the $8040 fetch, rejects the valid operand fetch, and also catches fast-dispatch transfers",
+    "successor_read_aperture": {
+      "change": "CMP high-byte,#4",
+      "coverage_percent": 100.0,
+      "first": 0,
+      "last": 1023,
+      "physical_entries": 1024,
+      "readable_entries": 1024
+    }
+  },
+  "status": "PRICED: COMPLETE ZERO-PRODUCT-BYTE WINNER; DIAGNOSTIC CORE REQUIRED",
+  "stock_core_verdict": "REJECTED: 75% read aperture and address-only breakpoint cannot prove a one-contact first-event claim",
+  "winner": {
+    "captures": [
+      "source PC",
+      "transfer kind",
+      "SP",
+      "eight preserved stack-top bytes"
+    ],
+    "diagnostic_rtl_change": "qualify the existing PC comparator with decode state $13/$14",
+    "diagnostic_rtl_price_limit": "no new register, BRAM, product cycle or product byte; final LUT/timing acceptance remains a diagnostic-core synthesis gate",
+    "diagnostic_rtl_state_bits_delta": 0,
+    "domain": "monitor-private control/BRAM; no product VMA or mapping alias",
+    "emitted_aperture_proof": {
+      "bytes_after": 5,
+      "bytes_before": 5,
+      "changed_byte_count": 1,
+      "changed_offsets": [
+        1
+      ],
+      "code_size_delta_bytes": 0,
+      "meaning": "CMP #3 -> CMP #4; branch and instruction geometry unchanged",
+      "stock_hex": "c9 03 b3 fe ff",
+      "successor_hex": "c9 04 b3 fe ff"
+    },
+    "mechanism": "arm the hardware breakpoint at $8041, qualify it with decode state $13/$14, and record continuous microcycle history; expose all 1024 already-recorded slots by changing the stopped-state reader bound from #3 to #4",
+    "monitor_changed_byte_count": 1,
+    "monitor_code_size_delta_bytes": 0,
+    "name": "volatile diagnostic-core serial-history aperture repair",
+    "product_bytes": 0,
+    "product_state_bytes": 0,
+    "scratch_bytes": 0,
+    "why_complete": "the unique decode row at PC $8041 proves that the opcode at $8040 was fetched, including under fast dispatch. Walking backward to the prior decode row yields source PC as PC-1 and source opcode from the CPU-state read byte; that opcode distinguishes RTS/RTI from direct transfer. The target-decode row preserves first-event SP. Any later downward pushes do not overwrite the eight bytes above that recorded SP."
+  }
+}

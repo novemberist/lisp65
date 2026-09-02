@@ -1,0 +1,180 @@
+{
+  "format": "lisp65-c2-product-substitution-link-10-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "attempt": {
+    "authorization": "Apply the collision-checked one-way underscore-to-hyphen projection only at the public L65R slice-name boundary, then run the tenth complete substitution link once under first-red",
+    "command": "python3 tools/host-lisp/c2_product_substitution_link.py --out build/c2.2/substitution/product-link-10 --prepare-smoke",
+    "pipeline_stage_reached": "fully bound smoke-link KERNAL-window identity check",
+    "status": "failed-not-promoted",
+    "first_red_policy": "honored",
+    "automatic_further_attempt_allowed": false,
+    "successful_intermediate_links": [
+      "resident-island seed",
+      "runtime-overlay bootstrap",
+      "fully bound runtime-family smoke link"
+    ],
+    "final_from_prepared_run": false,
+    "final_product_prg_emitted": false,
+    "final_product_elf_emitted": false,
+    "runtime_family_images_emitted": {
+      "boot": 1,
+      "session": 1
+    },
+    "one_truth_gate": "not-reached",
+    "kernal_freedom_gate": "not-reached",
+    "substitution_balance": "not-claimable",
+    "hardware": "not-run"
+  },
+  "authorized_projection_result": {
+    "status": "passed-before-first-red",
+    "rule": "Public L65R slice labels project '_' to '-'; C sections, symbols, slot IDs and entry points remain in the internal C grammar",
+    "projection_direction": "internal-to-public-only",
+    "reverse_projection_exists": false,
+    "collision_policy": "hard-error",
+    "collision_mutation": "literal_prep plus literal-prep",
+    "collision_mutation_rejected": true,
+    "selftest": "PASS unique-slices=51 boot=9 session=44",
+    "public_slice_names_with_underscore": 0
+  },
+  "successful_runtime_families": {
+    "boot": {
+      "image": {
+        "path": "build/c2.2/substitution/product-link-10/runtime-overlays-boot-bootstrap.bin",
+        "bytes": 12271,
+        "sha256": "f7c5564ae5b56ff5fe5a52a68363693e01200d313e21a1a5ce104a45585731f6"
+      },
+      "manifest": {
+        "path": "build/c2.2/substitution/product-link-10/runtime-overlays-boot-bootstrap.json",
+        "bytes": 7845,
+        "sha256": "349c3ff0e32c4d645c41df0dcb128a3b37ae68e1c04017d28d1e9b177bedbeb2"
+      },
+      "slice_count": 9,
+      "maximum_slice_bytes": 1691,
+      "unchanged_slice_limit_bytes": 1792,
+      "slice_headroom_bytes": 101
+    },
+    "session": {
+      "image": {
+        "path": "build/c2.2/substitution/product-link-10/runtime-overlays-session-bootstrap.bin",
+        "bytes": 58019,
+        "sha256": "98f102d6855e0fdbf960180d0e5807866638b421d0085e256e1e4d98809e7133"
+      },
+      "manifest": {
+        "path": "build/c2.2/substitution/product-link-10/runtime-overlays-session-bootstrap.json",
+        "bytes": 32838,
+        "sha256": "dade509541bbd4205729cd5bd4d4d4623bc3bb85f042c638530a9ab024c8e788"
+      },
+      "slice_count": 44,
+      "maximum_slice_bytes": 1732,
+      "unchanged_slice_limit_bytes": 1792,
+      "slice_headroom_bytes": 60
+    }
+  },
+  "first_red": {
+    "gate": "bound KERNAL-window byte identity",
+    "diagnostic": "RuntimeError: C2 KERNAL window drift after its binding link",
+    "bound_window": {
+      "path": "build/c2.2/substitution/product-link-10/c2-product-kernal-window.bin",
+      "bytes": 8192,
+      "sha256": "53341cd4f2af78c60822257c63b87b2a31256786ceb5cf756c9b9efae661115f"
+    },
+    "fully_bound_smoke_window": {
+      "path": "build/c2.2/substitution/product-link-10/c2-product-kernal-window.tmp.bin",
+      "bytes": 8192,
+      "sha256": "11b58b36e4e60c4d7867f4354aacd09dd9d5e26d289ed5d5ae304251a80852b9"
+    },
+    "differing_bytes": 132,
+    "finding": "The window was bound from the seed closure before the real runtime-family header existed. Binding that header shortened the low .text section by two bytes, moving all subsequent low-resident data and code by two bytes. The fixed-address C2 resident window contains absolute operands that refer to those low-resident objects, so 132 operand bytes changed even though every E000-window section retained the same VMA and size.",
+    "classification": "KERNAL-window identity binding-point defect; not a public-name projection, slice-capacity or load-domain failure",
+    "next_action": "Return for review. The measured bounded candidate is to bind the KERNAL-window identity at the first closure that already carries both fully bound runtime-family manifests, then require one fixed-width identity-header closure link to reproduce those bytes. If that closure is not byte-stable, the cross-domain references require a fixed facade rather than another ordering adjustment. No relink is authorized by this receipt."
+  },
+  "identity_drift_attribution": {
+    "window_layout": {
+      "seed_and_smoke_vmas_identical": true,
+      "seed_and_smoke_section_sizes_identical": true,
+      "typed_queue_driver": {"vma": "0xe000", "bytes": 31, "differing_bytes": 0},
+      "frame_source": {"vma": "0xe01f", "bytes": 9, "differing_bytes": 0},
+      "irq_handler": {"vma": "0xe028", "bytes": 45, "differing_bytes": 0},
+      "nmi_and_freezer_return": {"vma": "0xe055", "bytes": 9, "differing_bytes": 0},
+      "map_switch_and_guards": {"vma": "0xe05e", "bytes": 14, "differing_bytes": 0},
+      "post_startup_output_seam": {"vma": "0xe06c", "bytes": 4, "differing_bytes": 0},
+      "c2_resident": {"vma": "0xe070", "bytes": 4294, "differing_bytes": 132},
+      "state": {"vma": "0xff80", "bytes": 16, "differing_bytes": 0},
+      "vectors": {"vma": "0xfffa", "bytes": 6, "differing_bytes": 0}
+    },
+    "low_layout": {
+      "seed_text_bytes": 37982,
+      "smoke_text_bytes": 37980,
+      "delta_bytes": -2,
+      "seed_handoff_vma": "0xb481",
+      "smoke_handoff_vma": "0xb47f",
+      "all_compared_low_symbols_shifted_by_bytes": -2
+    },
+    "binary_relation": {
+      "all_132_differences_are_single_bytes": true,
+      "for_every_difference_seed_byte_minus_smoke_byte_modulo_256": 2,
+      "disassembly_named_low_targets": [
+        "c2_edma_job",
+        "c2_decode_active",
+        "c2_runtime",
+        "c2e",
+        "lisp65_c2_phase_scratch",
+        "vm_runtime_overlay_select_family"
+      ]
+    },
+    "claim_limit": "Read-only attribution of a red link. It proves why the two window images differ; it does not prove that the proposed binding-point correction will converge."
+  },
+  "diagnostic_artifacts": {
+    "seed_prg": {
+      "path": "build/c2.2/substitution/product-link-10/resident-island-seed.prg",
+      "bytes": 39078,
+      "sha256": "63fe55765dfcc9a27316d69a4d10a82d6173c28f4897d3902c7bab60f538fac0"
+    },
+    "seed_elf": {
+      "path": "build/c2.2/substitution/product-link-10/resident-island-seed.prg.elf",
+      "bytes": 140228,
+      "sha256": "34cac1933b7d5d45d1b25e9d30db370e67b4cbc5514f56154da2ec4781fda671"
+    },
+    "smoke_prg": {
+      "path": "build/c2.2/substitution/product-link-10/lisp65-c2-reslice-smoke.prg",
+      "bytes": 39076,
+      "sha256": "0bbf1b025aed0fbbbce8816ff8235c181a05a35c6b10fc3751be0fb0c7980f22"
+    },
+    "smoke_elf": {
+      "path": "build/c2.2/substitution/product-link-10/lisp65-c2-reslice-smoke.prg.elf",
+      "bytes": 139088,
+      "sha256": "accec3eb2e4c84b54f87c228676ffadb4cb1fc4211f47b36f19199922a35a9c7"
+    },
+    "linker": {
+      "path": "build/c2.2/substitution/product-link-10/c2-substitution.ld",
+      "bytes": 40026,
+      "sha256": "2660170cfe3894bad45a1d83e96ade36cb867081aa9bef9aede76a55c5f5e7dc"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-10/resolved-profile.txt",
+      "bytes": 3939,
+      "sha256": "68929f0c3e9c0f7694d5e6cc0dab4cf89e50415d92df69d769a4ff32fca565e4"
+    },
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "bytes": 54397,
+      "sha256": "161457273961424930bbffa893bca4f95d3b3200ac7334a7c95a80a7a83dcdaa"
+    }
+  },
+  "static_verification": {
+    "python_compile": "passed",
+    "projection_selftest": "passed",
+    "git_diff_check": "passed"
+  },
+  "preserved_constraints": {
+    "runtime_slice_limit_bytes": 1792,
+    "runtime_slice_limit_relaxed": false,
+    "orphan_handling": "error",
+    "orphan_allowlist_wildcards": 0,
+    "interactive_compilation_present_in_sources": true,
+    "legacy_l65m_path_reintroduced": false,
+    "single_c2_emitter_decoder_rule_preserved_in_sources": true,
+    "product_bytes_promoted": false,
+    "no_relink_after_first_red": true
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 958,
+      "path": "config/c2-v17-init-l65-r4-resume-contract.json",
+      "sha256": "a025abc46c6f0a0202b5952472115f7120e7ecb33d23168fb40754d5be121e6b"
+    },
+    "r4_first_red": {
+      "bytes": 4230,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-init-l65-card-r4-first-red.json",
+      "sha256": "395695d908a9f55b98c3c627966248f3d49ec92c73a0e7ab4846c97608eef35f"
+    }
+  },
+  "claim_limit": "Final-gate Resume only; no WPLTO, link, card, media or device.",
+  "execution": {
+    "device_contacts": 0,
+    "media_builds": 0,
+    "new_WPLTO_runs": 0,
+    "new_cards_consumed": 0,
+    "new_product_links": 0,
+    "qualification_resumes": 1
+  },
+  "final_card_receipt": {
+    "bytes": 66450,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-init-l65-card-r4-receipt.json",
+    "sha256": "b81b05ec6b502a1643aadc1f75d7b6f746dfd4197972331de19888b79d221a58"
+  },
+  "format": "lisp65-c2-v17-init-l65-r4-qualification-resume-v1",
+  "frozen_pair_after": {
+    "ELF": {
+      "bytes": 647280,
+      "path": "build/c2.3/v1.7-init-l65-card-r4/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "4ae360b0ff583505d0c584c7c20a269526b8145f9406f1ef0752433099a021b9"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-init-l65-card-r4/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f2ea6e12333ff036067a21ec04c32b26cda66b004e16df2814e3b5fbaa1813b7"
+    }
+  },
+  "frozen_pair_before": {
+    "ELF": {
+      "bytes": 647280,
+      "path": "build/c2.3/v1.7-init-l65-card-r4/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "4ae360b0ff583505d0c584c7c20a269526b8145f9406f1ef0752433099a021b9"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-init-l65-card-r4/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f2ea6e12333ff036067a21ec04c32b26cda66b004e16df2814e3b5fbaa1813b7"
+    }
+  },
+  "rebuild_mutations_rejected": [
+    "resume-rebuilds-WPLTO",
+    "resume-relinks-product",
+    "resume-consumes-card"
+  ],
+  "recorded_on": "2026-08-27",
+  "semantic_CFG": {
+    "artifact_authority": "final ELF plus resolved compiler profile",
+    "final_repl_control_flow": {
+      "authority": "ElfTruth symbol values plus numeric decoded CFG edges",
+      "claims": {
+        "hook_after_installed_recovery_and_ready_screen": true,
+        "hook_before_normal_prompt": true,
+        "vm_error_reaches_numeric_abort": true
+      },
+      "normal_ready_hook_prompt_path": [
+        "0xa9ec",
+        "0xac76",
+        "0xac78",
+        "0xac89",
+        "0xaa60"
+      ],
+      "resolved_call_sites": {
+        "emit_str": [
+          "0xaa0e",
+          "0xaa60"
+        ],
+        "lisp_abort_code": [
+          "0xaa6d",
+          "0xabe3",
+          "0xac98"
+        ],
+        "scr_init": [
+          "0xac78"
+        ],
+        "setjmp": [
+          "0xa9ec"
+        ],
+        "vm_run_dir": [
+          "0xac89"
+        ],
+        "vm_status_error_code": [
+          "0xac95"
+        ]
+      },
+      "symbols": {
+        "emit_str": "0x9746",
+        "lisp_abort_code": "0x2fa1",
+        "lisp_toplevel_active": "0x0052",
+        "repl": "0xa9d7",
+        "scr_init": "0xa960",
+        "setjmp": "0x2473",
+        "vm_run_dir": "0x44b8",
+        "vm_status_error_code": "0x975a"
+      },
+      "vm_error_abort_path": [
+        "0xa9ec",
+        "0xac76",
+        "0xac78",
+        "0xac89",
+        "0xac95",
+        "0xac98"
+      ]
+    },
+    "load_open_abort_emitted": true,
+    "mutations_rejected": [
+      "hook-before-ready-world",
+      "missing-screen-ready-edge",
+      "return-from-repl-instead-of-abort"
+    ],
+    "real_compiler_inputs": {
+      "src/compile_repl.c": "48b79dfa7036f92d4500616da836b02b7567f00e8c77fff966fea75ffaf362da",
+      "src/repl.c": "18817bfdf4097352ce76e6e7524a4da82313ce704b4df3c4b1a4cf0591fe46c2",
+      "src/vm.c": "401215f971f80e7d9e1920e739b07c3a37b63709a9fca368b79c1fc6e778bee2"
+    },
+    "rendered_label_equivalence": "PASS: numeric target unchanged"
+  },
+  "status": "PASS: INIT.L65 R4 FINAL GATE RESUMED READ-ONLY"
+}

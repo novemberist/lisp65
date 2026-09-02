@@ -1,0 +1,116 @@
+{
+  "authorities": {
+    "boot_header": {
+      "bytes": 3272,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/source/src/vm_boot_overlay.h",
+      "sha256": "f054c93b72424c911f18a5b19cb8b466f786a4b9fb074c68284d8f70d79cec04"
+    },
+    "boot_source": {
+      "bytes": 17137,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/source/src/vm_boot_overlay.c",
+      "sha256": "78572685b2810b483fea1c32f93e70218ec6e203b89993ac39b3b57408ed6916"
+    },
+    "device": {
+      "bytes": 18346,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-repeat-device-receipt.json",
+      "sha256": "83c0bd56681ff3db0ca1f6fbd588eb797d68e795258b65c77d9d3542ef17de72"
+    },
+    "diagnostic_ELF": {
+      "bytes": 620924,
+      "path": "build/c2.3/v1.6-defstruct-mem-init-before-after/artifacts/diagnostic-mem-init-before-after.elf",
+      "sha256": "b68b4aab6819e4a6af078fd9fbbaf7ae021908536e9a3cd71c0f631639d5a9ac"
+    },
+    "driver": {
+      "bytes": 11544,
+      "path": "tools/host-lisp/c2_v16_mem_init_preoverlay_status_partition.py",
+      "sha256": "15b7022b652655e16a5ed56f49fec8ca03ed001f29630e2baabbed5ffa58f34a"
+    },
+    "mapping_result": {
+      "bytes": 3207,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-repeat-mapping-result.json",
+      "sha256": "5c53501e24e1c5821786b9951140d7df31855f2168aad1a6a053560f816b2b34"
+    },
+    "write_view": {
+      "bytes": 4597,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-witness-write-view-desk-attribution-receipt.json",
+      "sha256": "0a1ce877ba217cdd0b1e303d78c8dbe301070e1d7797773257eb21e0225f766c"
+    }
+  },
+  "claim_limit": "Desk-only partition for the retained stopped state. No read, RUN, monitor entry, stop, resume, measured form, mem_init result, R/A/I/G row or product fault is authorized or claimed.",
+  "facts": {
+    "authorization": {
+      "measured_form_authorized": false,
+      "new_launch_authorized": false,
+      "new_stop_authorized": false,
+      "owner_decision_required": true,
+      "same_stop_read_authorized": false
+    },
+    "claim_limit": {
+      "R_A_I_G": null,
+      "device_actions": 0,
+      "mem_init_answer": null,
+      "product_bytes": 0,
+      "product_fault": null
+    },
+    "decision_table": {
+      "other": "UNCLASSIFIED-FIRST-RED",
+      "started=0": "PRE-INSTALLER-BOUNDARY",
+      "started=1,status=0-or-10": "IDENTITY-OR-STATUS-CONTRADICTION-FIRST-RED",
+      "started=1,status=1..8": "INSTALLER-OR-STAGER-PRE-ENTRY-BOUNDARY",
+      "started=1,status=9": "ENTRY-RUN-BOUNDARY-BEFORE-CAPTURE-COMMIT",
+      "status=11": "REENTRY-FAIL-CLOSED"
+    },
+    "read_plan": {
+      "CPU_resume": false,
+      "additional_RUNs": 0,
+      "additional_monitor_entries": 0,
+      "additional_stops": 0,
+      "first": "re-read full register row and require exact retained tuple",
+      "health_row": {
+        "bytes": 4,
+        "fields": [
+          "c2_ready",
+          "reserved-8d",
+          "reserved-8e",
+          "mem_oom"
+        ],
+        "physical_address": "0x0000008c"
+      },
+      "status_pair": {
+        "bytes": 2,
+        "fields": [
+          "vm_boot_overlay_status",
+          "ov_started"
+        ],
+        "physical_address": "0x00000074"
+      },
+      "visibility": "MAPL block-0 unselected and B=0"
+    },
+    "retained_stop": {
+      "B": "0x00",
+      "CPU_already_stopped": true,
+      "MAPH": "0xb300",
+      "MAPL": "0xe300",
+      "PC": "0xe160",
+      "SP": "0x01ee",
+      "same_stop_required": true
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-mem-init-preoverlay-status-partition-v1",
+  "mutations_rejected": {
+    "mutation-01": "retained-stop claim drift",
+    "mutation-02": "retained-stop claim drift",
+    "mutation-03": "salvage read plan drift",
+    "mutation-04": "salvage read plan drift",
+    "mutation-05": "salvage read plan drift",
+    "mutation-06": "salvage read plan drift",
+    "mutation-07": "status decision table drift",
+    "mutation-08": "salvage authorization overclaim",
+    "mutation-09": "salvage authorization overclaim",
+    "mutation-10": "salvage authorization overclaim",
+    "mutation-11": "claim-limit drift",
+    "mutation-12": "claim-limit drift"
+  },
+  "recorded_on": "2026-08-06",
+  "status": "HOST-GREEN; OWNER DECISION REQUIRED FOR SAME-STOP READ"
+}

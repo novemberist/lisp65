@@ -1,0 +1,113 @@
+{
+  "format": "lisp65-c2-product-substitution-link-18-replay-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "passed-structural",
+  "replay": {
+    "command_mode": "--replay-link-18",
+    "new_product_links": 0,
+    "source_first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-link-18-first-red-receipt.json",
+    "source_first_red_receipt_sha256": "1ad8481a424f62f29c10828e510dfac9d8042b1f817d3154ffaa426b98f3a075",
+    "source_evidence_entries_verified": 15,
+    "source_artifact_sha_drift": 0
+  },
+  "control_flow_ownership": {
+    "model": "section-qualified-function-and-instruction-boundary-v1",
+    "direct_window_edges": 275,
+    "owned_entry_edges": 161,
+    "same_function_symbol_less_jumps": 113,
+    "audited_pre_main_chrout_edges": 1,
+    "ignored_absolute_or_weak_aliases": 95,
+    "violations": 0,
+    "positive_matrix": {
+      "same-function-symbol-less-basic-block": "passed"
+    },
+    "negative_matrix": {
+      "same-function-mid-instruction": "rejected",
+      "owned-state-or-data-target": "rejected",
+      "inter-function-non-entry-offset": "rejected",
+      "jsr-to-internal-basic-block": "rejected",
+      "absolute-weak-alias-disguised-exit": "rejected"
+    }
+  },
+  "structural_gates": {
+    "identity": "passed",
+    "pre_ownership": "passed",
+    "fixed_host_facade": "passed",
+    "runtime_family_total_identity": "passed",
+    "mutated_payload_negative": "rejected",
+    "one_truth": "passed",
+    "kernal_freedom": "passed",
+    "capacity": "passed",
+    "substitution_balance": "passed"
+  },
+  "capacity": {
+    "cpu_e000_window": {
+      "gross_bytes": 8192,
+      "live_bytes": 4775,
+      "actual_future_margin_bytes": 3417,
+      "fixed_resident_deficit_bytes": 3639,
+      "relocated_c2_resident_bytes": 4595,
+      "replacement_resident_bytes": 482,
+      "contract_future_margin_bytes": 4071
+    },
+    "runtime_overlay_bank": {
+      "retired_l65m_bytes": 36744,
+      "boot_image_bytes": 12273,
+      "boot_headroom_bytes": 53263,
+      "session_image_bytes": 58270,
+      "session_headroom_bytes": 7266,
+      "families_are_lifetime_exclusive": true
+    },
+    "bank5_mutable_plane": {
+      "used_bytes": 33840,
+      "headroom_bytes": 31696
+    },
+    "bank0_comparison": {
+      "retired_directory_projection_bytes": 697,
+      "new_facade_and_state_bytes": 818,
+      "comparison_net_debit_bytes": 121,
+      "fixed_bank0_headroom_bytes": 273
+    },
+    "publish_last_binding": {
+      "retired_embedded_tuple_bytes": 32,
+      "non_lto_table_bytes": 32,
+      "net_resident_bytes": 0
+    }
+  },
+  "product_identity": {
+    "path": "build/c2.2/substitution/product-link-18/lisp65-c2-substitution-linked.prg",
+    "bytes": 41542,
+    "sha256": "b2566200e0441148d97138253bc77071ac95d881595ea469a063e15f20bc1ead"
+  },
+  "reports": {
+    "kernal_freedom": {
+      "path": "build/c2.2/substitution/product-link-18/kernal-freedom-link.json",
+      "sha256": "1b87b6e4ad26ecb01a9d258730e9e5f447c134bab35baa9411a19f10eedbed5e"
+    },
+    "substitution_balance": {
+      "path": "build/c2.2/substitution/product-link-18/substitution-balance.json",
+      "sha256": "2ecfd223f5fab64126bd5322b48dbd24afd84452d4056762af1be0cb5227c4d4"
+    },
+    "final_structural_link": {
+      "path": "build/c2.2/substitution/product-link-18/eighteenth-substitution-link.json",
+      "sha256": "8df78a79117ac537100802ea589ad92431244cc87f563eb53b14bded5120920b"
+    },
+    "gate_replay": {
+      "path": "build/c2.2/substitution/product-link-18/link-18-gate-replay.json",
+      "sha256": "6a64ce1bc8d51d94a66e41bf13f50721e155ae484a481f11eb6d3e66e4642d91"
+    }
+  },
+  "static_inputs": {
+    "qualified_gate_driver_sha256": "6589b06892737b34165f05ad25fff18f13024cb62646d706582a8a39a299cc36",
+    "contract_sha256_before_replay_status_update": "3dd2d661579bedfd4961922f89abcf2ec725b5670897da0e330eefdfcc437909",
+    "contract_document_sha256_before_replay_addendum": "6b072a62681fe7c854c17f6ed9ae45606db05f0a49cf87f8fffb3bb89d223904",
+    "driver_selftest": "passed",
+    "new_product_link_invocations": 0
+  },
+  "remaining_claims": {
+    "hardware": "not-run",
+    "promotion": "not-run",
+    "release": "not-run"
+  },
+  "claim_limit": "SHA-bound artifact-only structural closure of Link 18. No new product link occurred. Hardware acceptance, promotion and release remain not-run."
+}

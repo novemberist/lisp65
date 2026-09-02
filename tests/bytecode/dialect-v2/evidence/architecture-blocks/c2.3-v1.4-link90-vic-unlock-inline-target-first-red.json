@@ -1,0 +1,72 @@
+{
+  "format": "lisp65-c2.3-v1.4-link90-vic-unlock-inline-target-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "PRODUCT FIRST RED: private-inline VIC unlock did not clear VM_TYPEERROR",
+  "candidate_link": 90,
+  "input": {
+    "virtual_characters": 0,
+    "physical_characters": 0,
+    "method": "autonomous Ship image boot"
+  },
+  "preflight": {
+    "profile_id": "0x293611ce",
+    "bank2_static_bytes": 47282,
+    "bank2_sha256": "f09a167b31e5a78dfd02195a3d49e5af0e26bb1b3343a14b986ca8f538edf846",
+    "wplto_status": "passed-v1.4-link90-vic-unlock-one-product-shaped-WPLTO",
+    "m65_gate": "PASS public=15 cases=13x2 mutations=10 bank2=1768/2048 headroom=280 resident=+0"
+  },
+  "observation": {
+    "uploaded_image": {
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.d81",
+      "bytes": 819200,
+      "sha256": "640d115e01d238413821ab9cf5b59056abf553e96e27cf0c64d8db75ef8a2bde"
+    },
+    "device_readback": {
+      "path": "build/post-promotion/v14/link90-parity-toy-close/run/readback.d81",
+      "bytes": 819200,
+      "sha256": "640d115e01d238413821ab9cf5b59056abf553e96e27cf0c64d8db75ef8a2bde",
+      "byteidentical_to_uploaded_image": true
+    },
+    "runtime": {
+      "path": "build/post-promotion/v14/link90-parity-toy-close/run/runtime-first-red.bin",
+      "bytes": 16,
+      "sha256": "f00b4fdf08045320c1acc9d442ed6ba6e0c8cec6ffa5b30ab310ca58028d6575",
+      "hex": "e30000000103000f38015040ff800000",
+      "decoded": {
+        "runtime_state": "RUNTIME_VM_ERROR=$E3",
+        "runtime_result": "NIL",
+        "vm_status": "VM_TYPEERROR=3"
+      },
+      "byteidentical_to_link89_ship_probe": true
+    },
+    "screen": {
+      "path": "build/post-promotion/v14/link90-parity-toy-close/run/terminal-first-red.png",
+      "bytes": 2665,
+      "sha256": "c571cadc0b17afa44ecbfa9165ac7b60a8e5bd601a8648d65d92c8a94bec20b8",
+      "visible": "two panel lines, no sprite",
+      "byteidentical_to_link89_terminal_screen": true
+    }
+  },
+  "correction": {
+    "superseded_claim": "The standalone %m65-vic-open helper/TAILCALL edge owns the target-only VM_TYPEERROR.",
+    "corrected_claim": "The raw $47/$53 fixture is target-green and the standalone helper edge is absent from the successor artifact, but the genuine parity-toy still fails with byteidentical target state. Therefore the helper/TAILCALL edge is not causal and the prior attribution was too strong.",
+    "facts_that_remain_valid": [
+      "the raw $47/$53 pair completes on target",
+      "the Link-89 failure occurs before any post-%m65-vic-open witness",
+      "the Link-90 artifact private-inlines both writes and removes the standalone object",
+      "the source/artifact gate rejects restoration of the standalone edge"
+    ],
+    "facts_not_proved": [
+      "that target execution reached the first live pointer-register read",
+      "that the target rejection is caused by the pointer-table geometry",
+      "that private inlining changes the target failure"
+    ]
+  },
+  "disposition": "Stop before physical input, SID claim, another fix or another link. Return the byteidentical Link-89/Link-90 target state and the failed causal attribution for owner review.",
+  "bindings": {
+    "attribution": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link89-vic-unlock-tailcall-attribution.json",
+    "preparation": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link90-parity-toy-device-preparation-receipt.json",
+    "wplto": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link90-vic-unlock-wplto-receipt.json"
+  },
+  "claim_limit": "A byteidentical target VM_TYPEERROR after the private-inline correction. No new causal mechanism or fixed-target graphics/SID claim."
+}

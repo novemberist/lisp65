@@ -1,0 +1,52 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: nonzero-seed correction did not bind repeatable full-LTO output",
+  "source_commit": "d16c5106a43ff75fb179bb2029a0586644bb2960",
+  "failed_step": "complete 19-role varied-clone comparison after compilation-directory normalization",
+  "diagnostic": "profile_build_id was identical but product_build_id, linked ELF and ten derived media roles diverged",
+  "observed": {
+    "profile_build_id": "4e996d0b",
+    "first": {
+      "artifact_set_sha256_prefix": "85c077",
+      "product_build_id": "aef3efec",
+      "resident_prg_sha256_prefix": "d2c9a785"
+    },
+    "second": {
+      "artifact_set_sha256_prefix": "4cf2bf",
+      "product_build_id": "45f43471",
+      "resident_prg_sha256_prefix": "377b4a26"
+    },
+    "differing_media_roles": 10
+  },
+  "rejected_hypothesis": {
+    "checkout_paths": "excluded: all canonical C bitcode inputs and the combined module were byte-identical after compilation-directory normalization",
+    "outer_environment": "excluded: a third manual build under independently varied hash seed, epoch and timezone was byte-identical",
+    "manual_repeatability": "three retained manual canonical builds produced the same linked ELF and resident PRG",
+    "hypothesis": "the canonical profile requested -rng-seed=0; LLVM treats zero as its distinguished unseeded spelling",
+    "test": "bind LISP65_LTO_RNG_SEED=1 at both compile and full-LTO backend",
+    "result": "rejected: the next varied fresh-clone run retained the identical ten-role divergence"
+  },
+  "disposition": "Restore the established zero-valued seed. The failed nonzero experiment is not a product authority and makes no product claim; attribution continues at the remaining checkout-qualified final-link paths.",
+  "failed_link_driver": {
+    "path": "tools/host-lisp/c2_product_substitution_link.py",
+    "bytes": 287605,
+    "sha256": "77e04b776ff028b9dbc252745dddf0bb9f6a5f7402b5ab4788deb777711cf15e"
+  },
+  "execution_accounting": {
+    "fresh_clones_started": 2,
+    "canonical_product_links_completed": 2,
+    "media_role_sets_completed": 2,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

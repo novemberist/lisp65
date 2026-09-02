@@ -1,0 +1,159 @@
+{
+  "authorities": {
+    "configuration": {
+      "bytes": 1437,
+      "path": "config/c2-v16-defstruct-phase-c-diagnostic.json",
+      "sha256": "9566f47e00a5d085a9d999bbb1171579e814238174e06db1002f02fb67f5a70b"
+    },
+    "deployment": {
+      "bytes": 8053,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/deployment.json",
+      "sha256": "2f4196ac4771457fc72ddb1e6538c37ed924046d7dca7ed46011fac03dbc7669"
+    },
+    "device_observation": {
+      "bytes": 3105,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-progress-witness-device-receipt.json",
+      "sha256": "a44f628002977bd1a14377cec733139a09b37b5fcbc3845a18453ae0eadbba90"
+    },
+    "diagnostic_ELF": {
+      "bytes": 620700,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.elf",
+      "sha256": "fb8d9b51a0b9f88d08c6bb22debf686576677ce595b55b296c2e7afdbac66ffd"
+    },
+    "diagnostic_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+      "sha256": "d95bd77c3ea0ec6d091630895e59d31ad5f6df5896292c0f20a9aadbc9ac7936"
+    },
+    "driver": {
+      "bytes": 19686,
+      "path": "tools/host-lisp/c2_v16_boot_progress_result.py",
+      "sha256": "b67f6cb4eafda339b26f61d6507ccafd4a0a7cb63e2a3e3735e6efafcf5e71cb"
+    },
+    "kernal_ownership_contract": {
+      "bytes": 60606,
+      "path": "config/c2-kernal-unmap-contract.json",
+      "sha256": "15470c96b74c3c6a933faf829eafb589f9b2382dcc4739d471c2f6e9150bdbd7"
+    },
+    "owner_commission": {
+      "bytes": 67401,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "565079dcd6cceccadf7070ac5f11748bdd9b1130518822b0c1ea0ef6dda81cdf"
+    },
+    "preparation": {
+      "bytes": 4194,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-progress-witness-preparation-receipt.json",
+      "sha256": "28c52cf8abf40201f8a44eada4ab2b9a67de6ae661976de9cef4dc34a3812a59"
+    }
+  },
+  "claim_limit": "Desk classification of the consumed progress-witness row only. No product hang, F018B membership, entry non-execution, measured form, R/A/I/G result, fix, link, retry, reset or CPU resume is claimed.",
+  "decision": {
+    "F018B_membership_claim": false,
+    "R_A_I_G_claim": false,
+    "earlier_ext_dma_freeze_reproduced": false,
+    "entry_witness_disposition": "$C07A is contradicted as a durable post-entry witness for this sampling horizon; overwrite/view/lifetime must be attributed before reuse",
+    "freelist_loop_liveness_answered": false,
+    "later_root_scan_progress_claim": false,
+    "later_root_scan_progress_observation": "PC2=PC3=$E1BF while X changed $08->$05 over five seconds",
+    "new_device_contact_authorized": false,
+    "pre_bound_row": "other / FIRST-RED-UNCLASSIFIED-NO-OVERCLAIM",
+    "product_hang_claim": false,
+    "required_owner_review": "the authorized three-row table did not cover post-bootstrap execution with a reset-valued entry byte; choose a witness whose lifetime covers the intended sampling horizon before any new contact",
+    "why_freelist_oracle_is_out_of_scope": "all samples are already in c2_product_gc_mark_roots; a zero freelist is legal after later allocation consumes the completed bootstrap list",
+    "why_not_progress_claim": "X was neither pre-registered as monotonic nor sampled at a proved instruction boundary; it is an observation, not the appointment oracle"
+  },
+  "execution_witnesses": [
+    "all three PCs resolve inside the sized Link-82 c2_product_gc_mark_roots symbol",
+    "the linked gc_collect edge calls c2_product_gc_mark_roots at $398F",
+    "none of the three PCs lies in any pre-bound EXT-freelist bootstrap interval",
+    "all three $C07A reads retain the reset byte instead of the bound entry stamp",
+    "the later two register packets share PC $E1BF but change X from $08 to $05",
+    "the device receipt leaves the CPU stopped and records zero measured forms"
+  ],
+  "facts": {
+    "ELF_binding": {
+      "bytes": 547,
+      "first_sample_instruction": "$E18D: LDX $19",
+      "gc_collect_call_edge": "$398F: JSR $E0BA",
+      "later_PC_note": "$E1BF lies inside the two-byte LDY $1F encoding at $E1BE; the monitor PC is not promoted to an instruction-boundary claim",
+      "ownership_contract": "vm_logical_relative_target and c2_product_gc_mark_roots live in the owned E000 code region and are unreachable before c2_kernal_take_ownership",
+      "sample_offsets": [
+        "0xd3",
+        "0x105",
+        "0x105"
+      ],
+      "section": ".lisp65_c2_kernal_window.c2_resident",
+      "start": "0xe0ba",
+      "symbol": "c2_product_gc_mark_roots"
+    },
+    "device_observation": {
+      "CPU_left_stopped": true,
+      "PCs": [
+        "0xe18d",
+        "0xe1bf",
+        "0xe1bf"
+      ],
+      "R_A_I_G_claimed": false,
+      "X_values": [
+        "0x00",
+        "0x08",
+        "0x05"
+      ],
+      "boot_witness_values": [
+        "0x6b",
+        "0x6b",
+        "0x6b"
+      ],
+      "freelist_heads": [
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ],
+      "freelist_jobs_completed": [
+        0,
+        0,
+        0
+      ],
+      "measured_forms_run": 0
+    },
+    "entry_witness_contradiction": {
+      "durable_entry_claim_supported": false,
+      "entry_non_execution_claim_supported": false,
+      "expected": "0x44",
+      "hook": "$202C: JSR $C03F",
+      "observed": "0x6b in all three samples",
+      "reason": "the sampled PCs are in a contractually post-ownership routine, so reset-valued $C07A cannot by itself prove that _start was not reached",
+      "routine": "$C03F: replay displaced bytes; $C044: STX $C07A; RTS"
+    },
+    "source_bindings": {
+      "mem": {
+        "bytes": 48487,
+        "commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe",
+        "path": "src/mem.c",
+        "sha256": "b32dc707afe90074cfbd57bd4464b63d7b939bbead45fc35f02353836d555771"
+      },
+      "runtime": {
+        "bytes": 155694,
+        "commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe",
+        "path": "src/c2_product_runtime.c",
+        "sha256": "9b1afffa93ffefb6eac10e1f99f3c6b7f0db572575b07b396d6ec321c354e94e"
+      },
+      "source_commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe"
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-D2-progress-witness-desk-first-red-v1",
+  "recorded_on": "2026-08-05",
+  "rejected_mutations": [
+    "move-PC-outside-root-scan",
+    "claim-freelist-stall",
+    "claim-slow-freelist-progress",
+    "claim-durable-entry-stamp",
+    "claim-entry-never-ran",
+    "promote-X-to-preregistered-oracle",
+    "claim-product-hang",
+    "claim-F018B-member",
+    "claim-R-A-I-G",
+    "claim-device-retry-authorized"
+  ],
+  "status": "DESK-FIRST-RED-PREBOUND-TABLE-INCOMPLETE"
+}

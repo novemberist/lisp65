@@ -1,0 +1,1514 @@
+{
+  "abi_ledger": "config/bytecode-abi-ledger.json",
+  "abi_ledger_sha256": "f0aa23f6100289361a3b88ef9375cb81c3903a8d20c0afb4ec9ac8d944b3c560",
+  "abi_profile": "dialect-v2",
+  "artifacts": [
+    {
+      "blob_sha256": "721c33bfb7a1901e710643abe5df2a154e95a4027a7e69c1af7999457dd69d4a",
+      "candidate_suite": "build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json",
+      "candidate_suite_sha256": "1790635187bde541d9569d5d59de63c517672e9a2b8734b476fabbe378d5d6ef",
+      "cases": 193,
+      "id": "resident",
+      "manifest": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+      "manifest_sha256": "516f5c6052c310c4a536bc3544d51c79e44e5f83b074a32320714250e39d1ccd",
+      "observations": [
+        {
+          "name": "list-rest",
+          "result": "(1 2 3)"
+        },
+        {
+          "name": "list-empty",
+          "result": "nil"
+        },
+        {
+          "name": "named-consp-true",
+          "result": "t"
+        },
+        {
+          "name": "named-consp-false",
+          "result": "nil"
+        },
+        {
+          "name": "named-atom-cons-false",
+          "result": "nil"
+        },
+        {
+          "name": "named-atom-symbol-true",
+          "result": "t"
+        },
+        {
+          "name": "named-null-nil-true",
+          "result": "t"
+        },
+        {
+          "name": "named-null-symbol-false",
+          "result": "nil"
+        },
+        {
+          "name": "named-div-binary",
+          "result": "42"
+        },
+        {
+          "name": "named-plus-variadic",
+          "result": "10"
+        },
+        {
+          "name": "named-minus-unary",
+          "result": "-5"
+        },
+        {
+          "name": "named-less-chain",
+          "result": "t"
+        },
+        {
+          "name": "named-string-length",
+          "result": "4"
+        },
+        {
+          "name": "screen-bulk-p-fallback",
+          "result": "nil"
+        },
+        {
+          "name": "equal-nested-true",
+          "result": "t"
+        },
+        {
+          "name": "equal-nested-false",
+          "result": "nil"
+        },
+        {
+          "name": "length-list",
+          "result": "3"
+        },
+        {
+          "name": "nth-list",
+          "result": "5"
+        },
+        {
+          "name": "reverse-list",
+          "result": "(3 2 1)"
+        },
+        {
+          "name": "member-symbol",
+          "result": "(b c)"
+        },
+        {
+          "name": "assoc-symbol",
+          "result": "(b 2)"
+        },
+        {
+          "name": "assq-symbol",
+          "result": "(b 2)"
+        },
+        {
+          "name": "remove-symbol",
+          "result": "(b c)"
+        },
+        {
+          "name": "position-symbol",
+          "result": "2"
+        },
+        {
+          "name": "copy-list",
+          "result": "(a b c)"
+        },
+        {
+          "name": "count-symbol",
+          "result": "2"
+        },
+        {
+          "name": "distinct-true",
+          "result": "t"
+        },
+        {
+          "name": "distinct-false",
+          "result": "nil"
+        },
+        {
+          "name": "append2-list",
+          "result": "(1 2 3 4)"
+        },
+        {
+          "name": "not-eql-true",
+          "result": "t"
+        },
+        {
+          "name": "not-eql-false",
+          "result": "nil"
+        },
+        {
+          "name": "append-rest",
+          "result": "(1 2 3 4 5)"
+        },
+        {
+          "name": "append-dotted-tail",
+          "result": "(a b . c)"
+        },
+        {
+          "name": "case-key-tests-two",
+          "result": "(or (eql g (quote a)) (eql g (quote b)))"
+        },
+        {
+          "name": "case-key-test-otherwise",
+          "result": "t"
+        },
+        {
+          "name": "case-key-test-list",
+          "result": "(or (eql g (quote a)) (eql g (quote b)))"
+        },
+        {
+          "name": "case-clauses",
+          "result": "(((or (eql g (quote a)) (eql g (quote b))) 1) (t 2))"
+        },
+        {
+          "name": "list-star-from",
+          "result": "(1 2 3 4)"
+        },
+        {
+          "name": "list-star-rest",
+          "result": "(1 2 3 4)"
+        },
+        {
+          "name": "take-prefix",
+          "result": "(a b)"
+        },
+        {
+          "name": "butlast-default",
+          "result": "(a b)"
+        },
+        {
+          "name": "butlast-count",
+          "result": "(a b)"
+        },
+        {
+          "name": "any-null-true",
+          "result": "t"
+        },
+        {
+          "name": "any-null-false",
+          "result": "nil"
+        },
+        {
+          "name": "cars",
+          "result": "(1 2)"
+        },
+        {
+          "name": "cdrs",
+          "result": "((a) (b))"
+        },
+        {
+          "name": "mapc-identity",
+          "result": "(1 2 3)"
+        },
+        {
+          "name": "mapc-internal",
+          "result": "nil"
+        },
+        {
+          "name": "let-vars",
+          "result": "(x y)"
+        },
+        {
+          "name": "let-vals",
+          "result": "(1 nil)"
+        },
+        {
+          "name": "binding-var",
+          "result": "i"
+        },
+        {
+          "name": "binding-init",
+          "result": "0"
+        },
+        {
+          "name": "binding-step-explicit",
+          "result": "(1+ i)"
+        },
+        {
+          "name": "binding-step-default",
+          "result": "i"
+        },
+        {
+          "name": "optional-third-hit",
+          "result": "done"
+        },
+        {
+          "name": "optional-third-miss",
+          "result": "nil"
+        },
+        {
+          "name": "if-without-else-false",
+          "result": "nil"
+        },
+        {
+          "name": "quasiquote-splice",
+          "result": "(a 2 3 4)"
+        },
+        {
+          "name": "when-true",
+          "result": "42"
+        },
+        {
+          "name": "when-false",
+          "result": "nil"
+        },
+        {
+          "name": "unless-true",
+          "result": "nil"
+        },
+        {
+          "name": "unless-false",
+          "result": "7"
+        },
+        {
+          "name": "let-star-chain",
+          "result": "2"
+        },
+        {
+          "name": "case-list-hit",
+          "result": "2"
+        },
+        {
+          "name": "case-atom-hit",
+          "result": "9"
+        },
+        {
+          "name": "case-default",
+          "result": "3"
+        },
+        {
+          "name": "mapcar-two-lists",
+          "result": "(11 22 33)"
+        },
+        {
+          "name": "mapcar-inline-lambda",
+          "result": "(2 3 4)"
+        },
+        {
+          "name": "mapcan-list",
+          "result": "(1 2 3)"
+        },
+        {
+          "name": "mapcan-inline-lambda",
+          "result": "(1 2 3 4)"
+        },
+        {
+          "name": "mapcan-bare-lambda",
+          "result": "(1 2 3 4)"
+        },
+        {
+          "name": "remove-if-numberp",
+          "result": "(a b)"
+        },
+        {
+          "name": "remove-if-inline-lambda",
+          "result": "(b c)"
+        },
+        {
+          "name": "remove-if-bare-lambda",
+          "result": "(1 2)"
+        },
+        {
+          "name": "remove-if-not-numberp",
+          "result": "(1 2)"
+        },
+        {
+          "name": "remove-if-not-bare-lambda",
+          "result": "(3 4)"
+        },
+        {
+          "name": "find-if-numberp",
+          "result": "3"
+        },
+        {
+          "name": "find-if-bare-lambda",
+          "result": "3"
+        },
+        {
+          "name": "position-if-numberp",
+          "result": "2"
+        },
+        {
+          "name": "position-if-bare-lambda",
+          "result": "2"
+        },
+        {
+          "name": "count-if-numberp",
+          "result": "2"
+        },
+        {
+          "name": "count-if-inline-lambda",
+          "result": "2"
+        },
+        {
+          "name": "count-if-bare-lambda",
+          "result": "2"
+        },
+        {
+          "name": "max-from",
+          "result": "5"
+        },
+        {
+          "name": "max-rest",
+          "result": "5"
+        },
+        {
+          "name": "min-from",
+          "result": "3"
+        },
+        {
+          "name": "min-rest",
+          "result": "3"
+        },
+        {
+          "name": "abs-negative",
+          "result": "7"
+        },
+        {
+          "name": "signum-positive",
+          "result": "1"
+        },
+        {
+          "name": "evenp-negative",
+          "result": "t"
+        },
+        {
+          "name": "oddp-negative",
+          "result": "t"
+        },
+        {
+          "name": "integerp-number",
+          "result": "t"
+        },
+        {
+          "name": "integerp-symbol",
+          "result": "nil"
+        },
+        {
+          "name": "nonnegativep-zero",
+          "result": "t"
+        },
+        {
+          "name": "nonpositivep-zero",
+          "result": "t"
+        },
+        {
+          "name": "clamp-low",
+          "result": "1"
+        },
+        {
+          "name": "clamp-high",
+          "result": "5"
+        },
+        {
+          "name": "clamp-inside",
+          "result": "3"
+        },
+        {
+          "name": "reduce-plus",
+          "result": "10"
+        },
+        {
+          "name": "reduce-inline-lambda",
+          "result": "10"
+        },
+        {
+          "name": "reduce-empty",
+          "result": "nil"
+        },
+        {
+          "name": "every-plusp-true",
+          "result": "t"
+        },
+        {
+          "name": "every-plusp-false",
+          "result": "nil"
+        },
+        {
+          "name": "every-bare-lambda",
+          "result": "t"
+        },
+        {
+          "name": "some-identity",
+          "result": "2"
+        },
+        {
+          "name": "some-inline-lambda",
+          "result": "3"
+        },
+        {
+          "name": "some-bare-lambda",
+          "result": "3"
+        },
+        {
+          "name": "getf-hit",
+          "result": "2"
+        },
+        {
+          "name": "getf-default",
+          "result": "99"
+        },
+        {
+          "name": "getf-rest-hit",
+          "result": "1"
+        },
+        {
+          "name": "getf-rest-default",
+          "result": "99"
+        },
+        {
+          "name": "remf-head",
+          "result": "(b 2)"
+        },
+        {
+          "name": "remf-middle",
+          "result": "(a 1 c 3)"
+        },
+        {
+          "name": "remf-miss",
+          "result": "(a 1 b 2)"
+        },
+        {
+          "name": "char-list-equal",
+          "result": "t"
+        },
+        {
+          "name": "string-equal",
+          "result": "t"
+        },
+        {
+          "name": "string-not-equal",
+          "result": "t"
+        },
+        {
+          "name": "string-less",
+          "result": "t"
+        },
+        {
+          "name": "string-greater",
+          "result": "t"
+        },
+        {
+          "name": "string-less-equal-equal",
+          "result": "t"
+        },
+        {
+          "name": "string-greater-equal-false",
+          "result": "nil"
+        },
+        {
+          "name": "string-equal-case-fold",
+          "result": "t"
+        },
+        {
+          "name": "string-prefix",
+          "result": "t"
+        },
+        {
+          "name": "string-suffix",
+          "result": "t"
+        },
+        {
+          "name": "string-search-hit",
+          "result": "1"
+        },
+        {
+          "name": "string-search-miss",
+          "result": "nil"
+        },
+        {
+          "name": "string-contains",
+          "result": "t"
+        },
+        {
+          "name": "string-trim",
+          "result": "\"hi\""
+        },
+        {
+          "name": "string-literal-self",
+          "result": "\"ABC\""
+        },
+        {
+          "name": "string-length-literal",
+          "result": "4"
+        },
+        {
+          "name": "string-append",
+          "result": "\"ABC\""
+        },
+        {
+          "name": "string-append-literals",
+          "result": "\"ABC\""
+        },
+        {
+          "name": "subseq-list",
+          "result": "(66 67)"
+        },
+        {
+          "name": "substring-end",
+          "result": "\"BC\""
+        },
+        {
+          "name": "substring-default-end",
+          "result": "\"BCD\""
+        },
+        {
+          "name": "char-upcase",
+          "result": "90"
+        },
+        {
+          "name": "char-downcase",
+          "result": "97"
+        },
+        {
+          "name": "char-ref",
+          "result": "66"
+        },
+        {
+          "name": "char-to-string",
+          "result": "\"Z\""
+        },
+        {
+          "name": "string-upcase",
+          "result": "\"ABZ\""
+        },
+        {
+          "name": "string-downcase",
+          "result": "\"abz\""
+        },
+        {
+          "name": "quasiquote-string-literal",
+          "result": "(\"a\" \"bc\")"
+        },
+        {
+          "name": "dotted-pair-literal",
+          "result": "(a . b)"
+        },
+        {
+          "name": "dotted-list-cdr",
+          "result": "(2 . 3)"
+        },
+        {
+          "name": "dotted-list-cddr",
+          "result": "3"
+        },
+        {
+          "name": "quasiquote-dotted-tail-symbol",
+          "result": "(a . b)"
+        },
+        {
+          "name": "quasiquote-dotted-tail-list",
+          "result": "(a 1 2)"
+        },
+        {
+          "name": "quasiquote-dotted-splice",
+          "result": "(a 1 2 . z)"
+        },
+        {
+          "name": "nthcdr-zero",
+          "result": "(a b c)"
+        },
+        {
+          "name": "nthcdr-past-end",
+          "result": "nil"
+        },
+        {
+          "name": "last-single",
+          "result": "(only)"
+        },
+        {
+          "name": "member-miss",
+          "result": "nil"
+        },
+        {
+          "name": "assoc-miss",
+          "result": "nil"
+        },
+        {
+          "name": "remove-miss",
+          "result": "(a b c)"
+        },
+        {
+          "name": "find-hit",
+          "result": "b"
+        },
+        {
+          "name": "position-miss",
+          "result": "nil"
+        },
+        {
+          "name": "mapcar-three-lists",
+          "result": "(111 222)"
+        },
+        {
+          "name": "mapcan-two-lists-lambda",
+          "result": "(11 22)"
+        },
+        {
+          "name": "reduce-multiply",
+          "result": "24"
+        },
+        {
+          "name": "write-string-return",
+          "result": "\"out\""
+        },
+        {
+          "name": "terpri-return",
+          "result": "nil"
+        },
+        {
+          "name": "princ-string-return",
+          "result": "\"raw\""
+        },
+        {
+          "name": "prin1-symbol-return",
+          "result": "abc"
+        },
+        {
+          "name": "write-symbol-return",
+          "result": "abc"
+        },
+        {
+          "name": "print-number-return",
+          "result": "7"
+        },
+        {
+          "name": "write-line-return",
+          "result": "\"line\""
+        },
+        {
+          "name": "dotimes-accumulator-loop",
+          "result": "(4 3 2 1 0)"
+        },
+        {
+          "name": "dotimes-result-var-is-count",
+          "result": "3"
+        },
+        {
+          "name": "dolist-sum-loop",
+          "result": "6"
+        },
+        {
+          "name": "dolist-result-var-is-nil",
+          "result": "nil"
+        },
+        {
+          "name": "predicates",
+          "result": "42"
+        },
+        {
+          "name": "fasl-load-missing",
+          "result": "nil"
+        },
+        {
+          "name": "fasl-load-non-string",
+          "result": "nil"
+        },
+        {
+          "name": "dev-core-load-lib-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "dev-core-load-libs-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "dev-core-edit-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "dev-core-ide-unloaded",
+          "result": "nil"
+        },
+        {
+          "name": "dev-core-load-lib-testlib",
+          "result": "t"
+        },
+        {
+          "name": "dev-core-load-lib-registry-after-testlib",
+          "result": "t"
+        },
+        {
+          "name": "dev-core-load-lib-missing",
+          "result": "nil"
+        },
+        {
+          "name": "dev-core-load-libs-empty",
+          "result": "t"
+        },
+        {
+          "name": "workbench-mod-remainder-bytecode",
+          "result": "(bytecode bytecode)"
+        },
+        {
+          "name": "workbench-mod-remainder-funcall",
+          "result": "(1 2)"
+        },
+        {
+          "name": "workbench-compile-string-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "workbench-compile-error-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "workbench-compile-string-bad-source",
+          "result": "nil"
+        },
+        {
+          "name": "workbench-compile-string-bad-source-error",
+          "result": "\"bad source\""
+        },
+        {
+          "name": "workbench-compile-string-missing-slot",
+          "result": "nil"
+        },
+        {
+          "name": "workbench-compile-string-missing-slot-error",
+          "result": "\"slot missing\""
+        },
+        {
+          "name": "workbench-compile-slot-capacity-host",
+          "result": "254"
+        },
+        {
+          "name": "v11-filter-apply",
+          "result": "(2 3)"
+        },
+        {
+          "name": "v11-filter-direct",
+          "result": "(2 3)"
+        },
+        {
+          "name": "v11-filter-funcall",
+          "result": "(2 3)"
+        }
+      ],
+      "source_suite": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+      "source_suite_sha256": "b7a5d5fb791bec4e7d32256261ec6202961cc75fce93de4c4a9631b870188575"
+    },
+    {
+      "blob_sha256": "09b2181d25ab13c17225f2876e2ab4aea3b255e2f18ed247ac492a68460de4c1",
+      "candidate_suite": "build/bytecode/dialect-v2/suites/p0-ide-core-lib.json",
+      "candidate_suite_sha256": "62d712bf1b0f79b1531708b6904e78aa88f71c90cabaecd84387a3186fade3e8",
+      "cases": 120,
+      "id": "ide",
+      "manifest": "build/bytecode/dialect-v2/libs/ide.manifest.json",
+      "manifest_sha256": "f0f1f29cc15198999406daac22937575dcce587a27574abbe2f1f3c8119197ad",
+      "observations": [
+        {
+          "name": "ide-event-command-self-insert",
+          "result": "self-insert"
+        },
+        {
+          "name": "ide-event-command-cx-save",
+          "result": "1001"
+        },
+        {
+          "name": "ide-event-command-cx-write",
+          "result": "1004"
+        },
+        {
+          "name": "ide-event-command-cx-find",
+          "result": "1002"
+        },
+        {
+          "name": "ide-event-command-cx-switch-buffer",
+          "result": "1006"
+        },
+        {
+          "name": "ide-event-command-delete-forward",
+          "result": "delete-forward"
+        },
+        {
+          "name": "ide-event-command-cx-directory-prefix-wins",
+          "result": "1007"
+        },
+        {
+          "name": "ide-event-command-cx-next-buffer",
+          "result": "1009"
+        },
+        {
+          "name": "ide-event-command-cx-previous-buffer",
+          "result": "1010"
+        },
+        {
+          "name": "ide-event-command-ctrl-f-move-right",
+          "result": "move-right"
+        },
+        {
+          "name": "ide-event-command-ctrl-b-move-left",
+          "result": "move-left"
+        },
+        {
+          "name": "ide-event-command-ctrl-n-move-down",
+          "result": "1003"
+        },
+        {
+          "name": "ide-event-command-ctrl-p-move-up",
+          "result": "move-up"
+        },
+        {
+          "name": "ide-event-command-ctrl-j-newline",
+          "result": "newline"
+        },
+        {
+          "name": "ide-event-command-ctrl-a-line-start",
+          "result": "line-start"
+        },
+        {
+          "name": "ide-event-command-ctrl-e-line-end",
+          "result": "line-end"
+        },
+        {
+          "name": "ide-event-command-ctrl-s-search",
+          "result": "1011"
+        },
+        {
+          "name": "ide-event-command-ctrl-l-goto-line",
+          "result": "1012"
+        },
+        {
+          "name": "ide-event-command-cx-directory",
+          "result": "1007"
+        },
+        {
+          "name": "ide-event-command-cx-compile-load",
+          "result": "1008"
+        },
+        {
+          "name": "ide-event-command-cx-x-execute-command",
+          "result": "1013"
+        },
+        {
+          "name": "ide-step-cx-cs-saves-current-buffer",
+          "result": "\"saved\""
+        },
+        {
+          "name": "ide-step-cx-cf-starts-minibuffer",
+          "result": "1005"
+        },
+        {
+          "name": "ide-step-cx-cf-shows-default",
+          "result": "\"Find file: [testlib]\""
+        },
+        {
+          "name": "ide-step-minibuffer-types-character",
+          "result": "\"d\""
+        },
+        {
+          "name": "ide-step-minibuffer-tab-cycles-files",
+          "result": "\"Find file: TESTLIB\""
+        },
+        {
+          "name": "ide-step-minibuffer-tab-advances-after-candidate",
+          "result": "\"Find file: WORK\""
+        },
+        {
+          "name": "ide-step-minibuffer-tab-filters-files",
+          "result": "\"Find file: DEMO\""
+        },
+        {
+          "name": "ide-step-minibuffer-tab-does-not-reach-fasl-slots",
+          "result": "\"Find file: DEMO\""
+        },
+        {
+          "name": "ide-step-minibuffer-tab-loads-file",
+          "result": "(\"alpha\" \"beta\")"
+        },
+        {
+          "name": "ide-step-minibuffer-cj-submits",
+          "result": "(\"alpha\" \"beta\")"
+        },
+        {
+          "name": "ide-step-minibuffer-cu-clears-input",
+          "result": "\"Find file: [scratch]\""
+        },
+        {
+          "name": "ide-step-minibuffer-del-backspaces-input",
+          "result": "\"d\""
+        },
+        {
+          "name": "ide-step-minibuffer-cp-recalls-action-history",
+          "result": "\"Find file: demo\""
+        },
+        {
+          "name": "ide-step-minibuffer-history-is-action-specific",
+          "result": "\"Compile+load: [fasl0]\""
+        },
+        {
+          "name": "ide-step-minibuffer-cn-clears-recalled-history",
+          "result": "\"Find file: [demo]\""
+        },
+        {
+          "name": "ide-step-minibuffer-cg-cancels",
+          "result": "(\"cancelled\" nil)"
+        },
+        {
+          "name": "ide-step-minibuffer-esc-cancels",
+          "result": "(\"cancelled\" nil)"
+        },
+        {
+          "name": "ide-step-cx-cf-return-loads-current-file",
+          "result": "(\"alpha\" \"beta\")"
+        },
+        {
+          "name": "ide-step-cx-cf-return-reports-missing-file",
+          "result": "(\"source missing\" \"source missing\")"
+        },
+        {
+          "name": "ide-step-cx-cf-loads-typed-file",
+          "result": "(\"(defun demo-numbers-run () 42)\")"
+        },
+        {
+          "name": "ide-step-cx-cf-rejects-fasl-slot",
+          "result": "(\"not source\" \"scratch\" \"not source\")"
+        },
+        {
+          "name": "ide-step-cx-cw-writes-typed-file",
+          "result": "(\"saved\" \"work\")"
+        },
+        {
+          "name": "ide-step-cx-cw-rejects-fasl-slot",
+          "result": "(\"not source\" \"scratch\" \"not source\")"
+        },
+        {
+          "name": "ide-step-cx-cw-tab-does-not-reach-fasl-slots",
+          "result": "\"Write file: DEMO\""
+        },
+        {
+          "name": "ide-step-cx-b-shows-next-buffer-default",
+          "result": "\"Buffer: [a]\""
+        },
+        {
+          "name": "ide-step-cx-b-return-switches-default",
+          "result": "(\"a\" \"switched\")"
+        },
+        {
+          "name": "ide-step-cx-b-tab-cycles-buffers",
+          "result": "\"Buffer: b\""
+        },
+        {
+          "name": "ide-step-cx-cn-cycles-through-stable-buffer-list",
+          "result": "(\"b\" \"a\")"
+        },
+        {
+          "name": "ide-step-cx-cn-wraps-to-first-buffer",
+          "result": "(\"c\" \"switched\")"
+        },
+        {
+          "name": "ide-step-cx-cp-wraps-to-previous-buffer",
+          "result": "(\"a\" \"switched\")"
+        },
+        {
+          "name": "ide-step-delete-forward-removes-char",
+          "result": "((\"ac\") (0 . 1))"
+        },
+        {
+          "name": "ide-step-delete-forward-joins-lines",
+          "result": "((\"abcd\") (0 . 2))"
+        },
+        {
+          "name": "ide-step-delete-forward-eof-noop",
+          "result": "((\"ab\") (0 . 2))"
+        },
+        {
+          "name": "ide-step-cx-d-opens-directory-buffer",
+          "result": "(\"*directory*\" (\"TESTLIB\" \"WORK\" \"DEMO\") \"sources\")"
+        },
+        {
+          "name": "ide-step-directory-return-opens-current-entry",
+          "result": "(\"TESTLIB\" (\"alpha\" \"beta\") \"loaded\")"
+        },
+        {
+          "name": "ide-step-directory-return-rejects-fasl-slot",
+          "result": "(\"*directory*\" \"not source\" \"not source\")"
+        },
+        {
+          "name": "ide-step-cx-ck-shows-compile-default",
+          "result": "\"Compile+load: [fasl0]\""
+        },
+        {
+          "name": "ide-step-cx-ck-tab-filters-target-slots",
+          "result": "\"Compile+load: FASL2\""
+        },
+        {
+          "name": "ide-step-cx-ck-return-reports-missing-slot",
+          "result": "(\"slot missing\" \"slot missing\")"
+        },
+        {
+          "name": "ide-insert-char-at-column-200",
+          "result": "201"
+        },
+        {
+          "name": "ide-insert-char-eol-cache-materializes-line",
+          "result": "(\"hello!\")"
+        },
+        {
+          "name": "ide-insert-char-eol-cache-tracks-length",
+          "result": "6"
+        },
+        {
+          "name": "ide-delete-backward-eol-cache-materializes-line",
+          "result": "(\"hello\")"
+        },
+        {
+          "name": "ide-delete-backward-eol-cache-tracks-length",
+          "result": "5"
+        },
+        {
+          "name": "ide-delete-forward-char",
+          "result": "(\"ac\")"
+        },
+        {
+          "name": "ide-delete-forward-joins-lines",
+          "result": "(\"abcd\")"
+        },
+        {
+          "name": "ide-step-ctrl-j-splits-line",
+          "result": "(\"ab\" \"cd\")"
+        },
+        {
+          "name": "ide-step-ctrl-a-moves-to-line-start",
+          "result": "(0 . 0)"
+        },
+        {
+          "name": "ide-step-ctrl-e-moves-to-line-end",
+          "result": "(0 . 4)"
+        },
+        {
+          "name": "ide-step-ctrl-l-goes-to-line",
+          "result": "((1 . 0) \"moved\")"
+        },
+        {
+          "name": "ide-step-ctrl-l-clamps-to-last-line",
+          "result": "((2 . 0) \"moved\")"
+        },
+        {
+          "name": "ide-visible-frame-lines-truncates",
+          "result": "(\"abc\" \"-- \")"
+        },
+        {
+          "name": "ide-budget-string-uses-symbol-cap",
+          "result": "t"
+        },
+        {
+          "name": "ide-status-line-adds-budget",
+          "result": "t"
+        },
+        {
+          "name": "ide-buffer-flush-cache-materializes-lines",
+          "result": "(\"a\")"
+        },
+        {
+          "name": "ide-store-buffer-global-lines",
+          "result": "(\"z\")"
+        },
+        {
+          "name": "ide-buffers-alist-lines",
+          "result": "(\"z\")"
+        },
+        {
+          "name": "ide-store-buffer-resumes-lines",
+          "result": "(\"z\")"
+        },
+        {
+          "name": "ide-persist-state-resumes-buffer-lines",
+          "result": "(\"a\")"
+        },
+        {
+          "name": "ide-persist-state-replaces-front-buffer",
+          "result": "1"
+        },
+        {
+          "name": "ide-render-long-line-truncates-left",
+          "result": "\"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqr\""
+        },
+        {
+          "name": "ide-dirty-lines-first-render",
+          "result": "(0 1 2)"
+        },
+        {
+          "name": "ide-dirty-lines-cursor-rows",
+          "result": "(0 1)"
+        },
+        {
+          "name": "ide-render-cache-size-valid",
+          "result": "(\"a\" \"--\")"
+        },
+        {
+          "name": "ide-render-cache-size-invalid",
+          "result": "nil"
+        },
+        {
+          "name": "ide-delta-render-helpers",
+          "result": "t"
+        },
+        {
+          "name": "ide-disk-buffer-source-len",
+          "result": "4"
+        },
+        {
+          "name": "ide-disk-save-buffer-to-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "ide-disk-load-file-to-buffer-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "ide-disk-streams-multisector-lines",
+          "result": "(232 (\"abcdefghijklmnopqrst\" \"boundary-Z\" \"\" \"c  \" \"tail\"))"
+        },
+        {
+          "name": "ide-disk-streams-empty-file",
+          "result": "(\"\")"
+        },
+        {
+          "name": "ide-disk-dir-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "ide-disk-error-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "ide-disk-compile-error-message-default",
+          "result": "\"compile failed\""
+        },
+        {
+          "name": "ide-disk-compile-error-message-detail",
+          "result": "\"too large\""
+        },
+        {
+          "name": "ide-disk-dir-host-list",
+          "result": "(\"IDE\" \"TESTLIB\" \"WORK\" \"DEMO\" \"FASL2\")"
+        },
+        {
+          "name": "ide-disk-compile-buffer-to-lib-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "ide-disk-compile-file-to-lib-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "ide-disk-eval-buffer-bytecode",
+          "result": "bytecode"
+        },
+        {
+          "name": "ide-disk-eval-buffer-missing-error",
+          "result": "\"buffer missing\""
+        },
+        {
+          "name": "ide-disk-load-file-to-buffer-host-dir",
+          "result": "\"src\""
+        },
+        {
+          "name": "ide-disk-load-file-to-buffer-host-content",
+          "result": "(\"alpha\" \"beta\")"
+        },
+        {
+          "name": "ide-disk-load-file-to-buffer-missing",
+          "result": "nil"
+        },
+        {
+          "name": "ide-disk-load-file-to-buffer-error",
+          "result": "\"source missing\""
+        },
+        {
+          "name": "ide-disk-load-file-to-buffer-rejects-fasl-slot",
+          "result": "nil"
+        },
+        {
+          "name": "ide-disk-source-filter-reserves-m65d",
+          "result": "(nil t)"
+        },
+        {
+          "name": "ide-disk-load-file-to-buffer-rejects-fasl-error",
+          "result": "\"not source\""
+        },
+        {
+          "name": "ide-disk-save-buffer-to-roundtrip",
+          "result": "(\"alpha\" \"beta\")"
+        },
+        {
+          "name": "ide-disk-workbench-load-edit-save-flow",
+          "result": "(\" (defun demo-numbers-run () 42)\")"
+        },
+        {
+          "name": "ide-disk-save-buffer-to-rejects-fasl-slot",
+          "result": "nil"
+        },
+        {
+          "name": "ide-disk-save-buffer-to-rejects-fasl-error",
+          "result": "\"not source\""
+        },
+        {
+          "name": "ide-disk-compile-buffer-to-lib-missing-slot-error",
+          "result": "\"slot missing\""
+        },
+        {
+          "name": "ide-disk-compile-file-to-lib-missing",
+          "result": "nil"
+        },
+        {
+          "name": "ide-disk-compile-file-to-lib-missing-error",
+          "result": "\"source missing\""
+        },
+        {
+          "name": "ide-disk-compile-file-to-lib-rejects-source-slot",
+          "result": "nil"
+        },
+        {
+          "name": "ide-disk-compile-file-to-lib-rejects-source-error",
+          "result": "\"not fasl\""
+        },
+        {
+          "name": "ide-disk-save-buffer-to-new-slot",
+          "result": "t"
+        },
+        {
+          "name": "ide-disk-persistence-status-messages",
+          "result": "(\"bad name\" \"duplicate name\" \"too large\" \"no space\" \"directory full\" \"disk invalid\" \"write/verify failed\" \"remount required\" \"saved; old space leaked\" \"product media is read-only\" \"persistence failed\" \"medium changed during write; check both disks\")"
+        },
+        {
+          "name": "ide-core-kill-line-and-yank",
+          "result": "((\"abc\") (0 . 3))"
+        }
+      ],
+      "source_suite": "tests/bytecode/libs/p0-ide-core-lib.json",
+      "source_suite_sha256": "f4496370d0c98bc71ed011e6386ca62351019b2b6e92faffce081c0803f0557d"
+    },
+    {
+      "blob_sha256": "d1813f4679c9ae2587b8fe46c2da2042db104753be76138378953450d0bf1025",
+      "candidate_suite": "build/bytecode/dialect-v2/suites/p0-ide-extra-lib.json",
+      "candidate_suite_sha256": "d9fca09df126ce87829624f1913f6b39cd70f17a01ba267333a7baeb0fc2dc71",
+      "cases": 5,
+      "id": "idex",
+      "manifest": "build/bytecode/dialect-v2/libs/idex.manifest.json",
+      "manifest_sha256": "ca9b41d25e8b8258d9996406f5849fc91b84d6f8100cf1dc7b67b844ac48e5a5",
+      "observations": [
+        {
+          "name": "ide-extra-hook-overrides-core",
+          "result": "bytecode"
+        },
+        {
+          "name": "ide-extra-word-right",
+          "result": "(0 . 3)"
+        },
+        {
+          "name": "ide-extra-page-down",
+          "result": "(2 . 0)"
+        },
+        {
+          "name": "ide-extra-mx",
+          "result": "\"M-x [find-file]\""
+        },
+        {
+          "name": "ide-extra-search",
+          "result": "((1 . 0) \"found\")"
+        }
+      ],
+      "source_suite": "tests/bytecode/libs/p0-ide-extra-lib.json",
+      "source_suite_sha256": "df13a5f576b8de6a754cccd1569c3dcd5b4bb486df2364010da8ce9313ee20d7"
+    },
+    {
+      "blob_sha256": "204ba17e2d7213eaae3143e5a8f19815f0707774a98899a1230745302702b60b",
+      "candidate_suite": "build/bytecode/dialect-v2/suites/p0-m65d-lib.json",
+      "candidate_suite_sha256": "a2c20c2a440edc631c825b1f32fe54946ad93e40fb1fea1bd9b3be3b9831f8fb",
+      "cases": 38,
+      "id": "m65d",
+      "manifest": "build/bytecode/dialect-v2/libs/m65d.manifest.json",
+      "manifest_sha256": "f7afe2d7a7b7083a82554c6b971b1459c4ada5e84305fe81a17a9307611677de",
+      "observations": [
+        {
+          "name": "m65d-status-default",
+          "result": "0"
+        },
+        {
+          "name": "m65d-terminal-media-change-outranks-postcommit-warning",
+          "result": "12"
+        },
+        {
+          "name": "m65d-save-bad-empty-name",
+          "result": "1"
+        },
+        {
+          "name": "m65d-save-bad-name-character",
+          "result": "1"
+        },
+        {
+          "name": "m65d-save-bad-backslash",
+          "result": "1"
+        },
+        {
+          "name": "m65d-save-source-type",
+          "result": "3"
+        },
+        {
+          "name": "m65d-save-empty-source",
+          "result": "3"
+        },
+        {
+          "name": "m65d-save-latched",
+          "result": "8"
+        },
+        {
+          "name": "m65d-product-media-read-only",
+          "result": "10"
+        },
+        {
+          "name": "m65d-product-header-without-boot-signature-is-user-media",
+          "result": "0"
+        },
+        {
+          "name": "m65d-arbitrary-user-media-roundtrip",
+          "result": "(0 0 0 (0 10 114 111 117 110 100 116 114 105 112) 0)"
+        },
+        {
+          "name": "m65d-different-user-media-latches-before-write",
+          "result": "(12 t)"
+        },
+        {
+          "name": "m65d-generation-change-latches-before-write",
+          "result": "(12 t)"
+        },
+        {
+          "name": "m65d-media-change-during-planning-read-terminal",
+          "result": "12"
+        },
+        {
+          "name": "m65d-planning-read-failure-with-stable-token-stays-invalid",
+          "result": "6"
+        },
+        {
+          "name": "m65d-claim-read-invalid-latches",
+          "result": "8"
+        },
+        {
+          "name": "m65d-remount-invalid-keeps-latch",
+          "result": "8"
+        },
+        {
+          "name": "m65d-remount-invalid-entry-keeps-latch",
+          "result": "8"
+        },
+        {
+          "name": "m65d-directory-recheck-invalid-is-read-status",
+          "result": "(6 t)"
+        },
+        {
+          "name": "m65d-status-tracks-last-result",
+          "result": "1"
+        },
+        {
+          "name": "m65d-remount-clears-latch",
+          "result": "3"
+        },
+        {
+          "name": "m65d-save-new-success",
+          "result": "0"
+        },
+        {
+          "name": "m65d-blank-d81-create-external",
+          "result": "0"
+        },
+        {
+          "name": "m65d-blank-d81-create-replace-external",
+          "result": "(0 0)"
+        },
+        {
+          "name": "m65d-blank-d81-multisector-create-external",
+          "result": "0"
+        },
+        {
+          "name": "m65d-blank-d81-multisector-replace-external",
+          "result": "(0 0)"
+        },
+        {
+          "name": "m65d-media-change-before-data-write-terminal",
+          "result": "(12 t)"
+        },
+        {
+          "name": "m65d-media-change-before-bam-write-terminal",
+          "result": "(12 t)"
+        },
+        {
+          "name": "m65d-media-change-before-directory-write-terminal",
+          "result": "(12 t)"
+        },
+        {
+          "name": "m65d-residual-window-data-boundary",
+          "result": "12"
+        },
+        {
+          "name": "m65d-residual-window-bam-boundary",
+          "result": "12"
+        },
+        {
+          "name": "m65d-residual-window-directory-boundary",
+          "result": "12"
+        },
+        {
+          "name": "m65d-save-new-duplicate",
+          "result": "2"
+        },
+        {
+          "name": "m65d-save-rejects-duplicate-directory-name",
+          "result": "6"
+        },
+        {
+          "name": "m65d-save-new-directory-full",
+          "result": "5"
+        },
+        {
+          "name": "m65d-save-replace-success",
+          "result": "0"
+        },
+        {
+          "name": "m65d-block-count-empty",
+          "result": "1"
+        },
+        {
+          "name": "m65d-block-count-max",
+          "result": "33"
+        }
+      ],
+      "source_suite": "tests/bytecode/libs/p0-m65d-lib.json",
+      "source_suite_sha256": "de58209b4fae180cae805d093820d7a0d2ef476a2071789f74ee0878f08b9ec6"
+    }
+  ],
+  "closure": "config/v2-workbench-artifact-closure.json",
+  "closure_sha256": "14063936184dd194964f69899801558ab0d287e5ff62cc2f942571d2bf77d610",
+  "codemod_receipt": "build/bytecode/dialect-v2/codemod-receipt.json",
+  "codemod_receipt_sha256": "436c8eefe975a2d521bcbea21acc605e39bfe80ea6855f5ea36e03a7aebfe59d",
+  "format": "lisp65-v2-workbench-artifact-differential-v1",
+  "intentional_additions": {
+    "resident": [
+      {
+        "name": "v11-filter-apply",
+        "result": "(2 3)"
+      },
+      {
+        "name": "v11-filter-direct",
+        "result": "(2 3)"
+      },
+      {
+        "name": "v11-filter-funcall",
+        "result": "(2 3)"
+      }
+    ]
+  },
+  "intentional_additions_contract": "config/v11-filter-product-cases.json",
+  "intentional_additions_contract_sha256": "31be7f3e4bcdf3adb6d4e0437815807bec67df6710605304ea5159d8b003862f",
+  "profile": "v2-capability-candidate",
+  "status": "passed",
+  "summary": {
+    "artifacts": 4,
+    "cases": 356,
+    "observation_differences": 0
+  },
+  "version": 1
+}

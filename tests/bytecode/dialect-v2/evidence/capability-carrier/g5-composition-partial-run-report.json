@@ -1,0 +1,121 @@
+{
+  "format": "lisp65-v2-capability-carrier-g5-partial-run-v1",
+  "status": "blocked",
+  "gate": "G5",
+  "g5_claim": "none",
+  "profile": "dialect-v2-capability-carrier",
+  "source_commit": "6c1fa1c403bb411149b22c3b64616f346aacb6f7",
+  "build_id": 1591625565,
+  "candidate_manifest": {
+    "path": "build/cp5-g5-composition/candidate.json",
+    "sha256": "1676d7eb539b50b69142ac1b1102ab23951be66ab9b2e6b62994120997df9b5c",
+    "verified": true,
+    "shippable": false
+  },
+  "hardware_plan": {
+    "path": "build/cp5-g5-composition/hardware-plan.json",
+    "sha256": "6ca183737cb4f272c896e02d0e48fed16aa65c239d21da3f912faebfc853b814",
+    "case_count": 14,
+    "evidence_reuse": "none"
+  },
+  "hardware_package": {
+    "path": "build/cp5-g5-composition/workbench-hw-package/manifest.json",
+    "sha256": "69654a68221f97dec6811af5a842f7f17e41c1730c4de080203b3070d9740ac3",
+    "shippable": false,
+    "release_authorization": "none",
+    "g5_claim": "none"
+  },
+  "matrix_progress": {
+    "observed_pass_cases": 10,
+    "total_cases": 14,
+    "receipt_verified_cases": 0,
+    "not_run_cases": [
+      "runtime-export/bitflip",
+      "runtime-export/build-id-mismatch",
+      "runtime-export/clean",
+      "runtime-export/truncated"
+    ],
+    "verifier_status": "all-three-domains-unbound-by-contract"
+  },
+  "workbench_observations": [
+    {"id": "workbench-ux/overlay-stack-guard", "observed": "pass", "key_result": "prg-bank5-attic-readback-reset-remount-load-ide"},
+    {"id": "workbench-ux/stdlib-runtime", "observed": "target-exit-0", "key_result": "deploy-path-only-no-independent-semantic-oracle"},
+    {"id": "workbench-ux/ux-complete", "observed": "pass", "key_result": "persistence-and-ide-idex-m65d-coexistence-including-some-every-and-mx-eval-buffer"},
+    {"id": "workbench-persistence/bam-read", "observed": "pass", "key_result": "(t 0 255 0 39)"},
+    {"id": "workbench-persistence/bam-alloc", "observed": "pass", "key_result": "exact-two-byte-bam-diff"},
+    {"id": "workbench-persistence/chain-write", "observed": "pass", "key_result": "737"},
+    {"id": "workbench-persistence/dir-write", "observed": "pass", "key_result": "767"},
+    {"id": "workbench-persistence/save-new", "observed": "pass-after-presemantic-transport-retry", "key_result": "797"},
+    {"id": "workbench-persistence/save-new-scan", "observed": "pass", "key_result": "reserved-sector-skipped-and-797"},
+    {"id": "workbench-persistence/save-new-var", "observed": "pass", "key_result": "three-sector-variable-chain-and-907"}
+  ],
+  "transport_incident": {
+    "case": "workbench-persistence/save-new",
+    "first_attempt": "etherload-no-response-before-prg-send",
+    "semantic_execution": false,
+    "remote_throwaway_upload": true,
+    "test_image_content_mutation": false,
+    "candidate_restore": "passed-immediately",
+    "retry_policy": "one-fresh-throwaway-d81-one-new-remote-name-separate-evidence-directory",
+    "second_attempt": "passed"
+  },
+  "runtime_binding_blocker": {
+    "kind": "hardware-plan-target-does-not-consume-sealed-runtime-artifact",
+    "sealed_candidate": {
+      "format": "lisp65-v2-runtime-core-proof-candidate-v1",
+      "profile": "dialect-v2-runtime-core-proof",
+      "prg_path": "build/products/runtime-core-v2-proof/candidate/runtime.prg",
+      "prg_sha256": "eeb0985bdf0a52cd0d7f2fdff8484f65eeb90a7c507d6c63075a6cb8cf924ef9",
+      "preload_sha256": "7ae89db340c6121194178945167faffbbba39fa97b2059b5b6ecca0a06613409",
+      "hardware_g5_claim": "none"
+    },
+    "resolved_plan_target": {
+      "format": "lisp65-runtime-export-ship-v2",
+      "profile": "runtime-export-v2-candidate",
+      "prg_path": "build/products/runtime-export/candidate/runtime.prg",
+      "prg_sha256": "04719b37e575aaf2f3bee39a6b8431818ae8d33cd594316a9266866db318b8e4",
+      "preload_sha256": "fbfcf35b1d5f3178692ebc0290721d1792113249fa0763c2a52c10ddf22920ad"
+    },
+    "contract_status": "verifier-skeleton",
+    "receipt_verification": "blocked-until-verifiers-bound",
+    "physical_power_cycles_attempted": 0,
+    "reason_for_stop": "running-the-four-existing-targets-would-produce-evidence-for-a-different-binary-and-profile"
+  },
+  "evidence_trees": [
+    {"directory": "01-overlay-stack-guard", "files": 51, "bytes": 1157264, "sha256": "12fb09b2d46afe948411886e9c0002ca004db92214bb9dc9a946c13f57578558"},
+    {"directory": "02-stdlib-runtime", "files": 1, "bytes": 3188, "sha256": "c39c243543ff85276398da7f433d8d7dfe5a978127f57f4b6ab90f25d3e0fb29"},
+    {"directory": "03-ux-complete", "files": 1225, "bytes": 33000903, "sha256": "86672875b8da9831ea51af4bdb03dadc91f9d3ea9f50ddc99b74030e8ed8cc58"},
+    {"directory": "04-bam-read", "files": 21, "bytes": 465065, "sha256": "cfea5e0e504e89f2393c7c8f706bdeb682f7a18516d6ae9736f0a54e7efe714c"},
+    {"directory": "05-bam-alloc", "files": 5, "bytes": 1711335, "sha256": "0a238fea06bb7a74b6325c3d843f8c1e45c09c90ce11bda955f73f9f5b960b35"},
+    {"directory": "06-chain-write", "files": 17, "bytes": 2019554, "sha256": "263fcceaeba7e7b1d0e46f6242a2f1001b3f094e2d81de5958f1b9d6557283ec"},
+    {"directory": "07-dir-write", "files": 17, "bytes": 2019244, "sha256": "1e9439d219ac926a3dce3b93691b853095973c90c94305823948e2c7016bbf65"},
+    {"directory": "08-save-new", "files": 18, "bytes": 2837754, "sha256": "e5a964aea638b5b563ccb02de4ab75e532a453d85d6f70a91e51e81f132fa9d8"},
+    {"directory": "09-save-new-scan", "files": 17, "bytes": 2018522, "sha256": "a4ee0658f3b8b651a9eecf6cef8381048e7d2368da7d3a82f9e1dc71dabcb6d9"},
+    {"directory": "10-save-new-var", "files": 17, "bytes": 2018557, "sha256": "3c8966be97f6834c2529af78a98b75efe4cfe8165b8b176c1bf4bec5532616e7"}
+  ],
+  "raw_artifacts": [
+    {"path": "build/cp5-g5-composition/evidence/01-overlay-stack-guard/cp5-g5-composition-overlay-stack-guard-ship-manifest-receipt.json", "sha256": "937181e9a7d1c3d1c6a8e67120248eea227b00a0a73f4fcb6517ec579ee2fe26"},
+    {"path": "build/cp5-g5-composition/evidence/01-overlay-stack-guard/cp5-g5-composition-overlay-stack-guard-arith-42.txt", "sha256": "783fb45963df788a8ce3039ee4761c2ade808947081659d9ede18d486362f3a9"},
+    {"path": "build/cp5-g5-composition/evidence/01-overlay-stack-guard/cp5-g5-composition-overlay-stack-guard-reader-recovery.txt", "sha256": "85c4a9f3ed02f0c23986266d0016a0c28aea3f6c53c938aa776da1cd2ad5b9a5"},
+    {"path": "build/cp5-g5-composition/evidence/02-stdlib-runtime/target.log", "sha256": "5aad1a30a127f865ed9f181b4004360fe8f62ef10b98a3da37b57287c34a224a"},
+    {"path": "build/cp5-g5-composition/evidence/03-ux-complete/cp5-g5-composition-ux-persistence-create.txt", "sha256": "cfd28eaf5996b5560ac7cb9b43dd6dc7ddcacb01fa64123bd02ea00d216bbcff"},
+    {"path": "build/cp5-g5-composition/evidence/03-ux-complete/cp5-g5-composition-ux-higher-order-idex-some.txt", "sha256": "cf76fbb946c04499c0f1f1a3e506aaf1851a9249297502e6d3f0e242d062bc41"},
+    {"path": "build/cp5-g5-composition/evidence/03-ux-complete/cp5-g5-composition-ux-higher-order-idex-every.txt", "sha256": "92461d8370cc435a8d6f5e643ac3f6e72650106951d778edd259ab1bb1105122"},
+    {"path": "build/cp5-g5-composition/evidence/03-ux-complete/cp5-g5-composition-ux-mx-eval-buffer.txt", "sha256": "b216c753b71118102d9412b68980095cc92e31fd075c7d831dc517447e010346"},
+    {"path": "build/cp5-g5-composition/evidence/04-bam-read/cp5-g5-composition-bam-read-bam-sector-2.txt", "sha256": "1d23e6c54de0a1597bd18f366a28772fad71b8969275175c6e53ace19ea4d37b"},
+    {"path": "build/cp5-g5-composition/evidence/05-bam-alloc/after.d81", "sha256": "0639fd69e862a5d8f1c41cbe1f3e9f754d41b747914b1ecae1206c5a86c08333"},
+    {"path": "build/cp5-g5-composition/evidence/06-chain-write/cp5-g5-composition-chain-write-run-chain.txt", "sha256": "656b9aaf8a8feb831d17dfeb41a7be597549732581bf9223ef8b85cd559a9cb7"},
+    {"path": "build/cp5-g5-composition/evidence/07-dir-write/cp5-g5-composition-dir-write-run-dir.txt", "sha256": "8cf9122ca857f564a7a57a800d6f6acac41c88a8647865afbbc3ebdda057c143"},
+    {"path": "build/cp5-g5-composition/evidence/08-save-new/attempt-2/cp5-g5-composition-save-new-attempt-2-run-save-new.txt", "sha256": "db60f81e9ca170967752b56a8e81f9a35c469823768470959f3c2ed2beb3893f"},
+    {"path": "build/cp5-g5-composition/evidence/09-save-new-scan/cp5-g5-composition-save-new-scan-run-save-new.txt", "sha256": "febe12d0e60d90d92c20903c7ca0a062966e8dda7550387491251796320dafd9"},
+    {"path": "build/cp5-g5-composition/evidence/10-save-new-var/cp5-g5-composition-save-new-var-run-save-new.txt", "sha256": "747fad0a322adafc04713435462e7a267c68ee8c2a142d0afe8ccf36938f3911"}
+  ],
+  "gate_effect": {
+    "checkpoint_4": "closed-and-hardware-confirmed",
+    "checkpoint_5": "blocked",
+    "g5_pass": false,
+    "remaining_555_bytes": "still-banked",
+    "workbench_observations_reusable_after_contract_change": false,
+    "required_restart": "bind-verifiers-and-v2-runtime-hardware-package-then-build-a-new-candidate-and-run-all-14-cases-from-the-beginning"
+  }
+}

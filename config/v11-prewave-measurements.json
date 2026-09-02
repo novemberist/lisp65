@@ -1,0 +1,41 @@
+{
+  "schema": "lisp65-v11-prewave-measurement-contract-v1",
+  "baseline": {
+    "commit": "471435024d86b1f535bfb4116551f37f307ca1f0",
+    "product_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "tag": "v1.0.1"
+  },
+  "capacity": {
+    "bank0_headroom_above_target": 332,
+    "ext_floor": 16384,
+    "ext_headroom": 16385,
+    "free_symbols": 120,
+    "free_namepool_bytes": 2160,
+    "free_directory_entries": 32
+  },
+  "inputs": {
+    "composition_budget": "build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+    "resident_manifest": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+    "disk_manifests": [
+      "build/bytecode/dialect-v2/libs/ide.manifest.json",
+      "build/bytecode/dialect-v2/libs/idex.manifest.json",
+      "build/bytecode/dialect-v2/libs/m65d.manifest.json"
+    ],
+    "banner_spec": "docs/planning/repl-banner-spec-1.1.md",
+    "vm_source": "src/vm.c",
+    "vm_embed_source": "src/vm_embed.c",
+    "event_driver_probe_receipt": "docs/planning/measurements/v1.1-event-driver-bank0-probe.json"
+  },
+  "undo_model": {
+    "baseline_commit": "471435024d86b1f535bfb4116551f37f307ca1f0",
+    "commit_count": 20,
+    "paths": ["lib/ide-*.lisp", "lib/m65-disk.lisp"],
+    "transaction_header_bytes": 6,
+    "hunk_header_bytes": 12
+  },
+  "xemu": {
+    "upstream_url": "https://github.com/lgblgblgb/xemu.git",
+    "audited_commit": "40dfef0d1d5f56be2469492715c12bdb32c75b67",
+    "source_file": "targets/mega65/input_devices.c"
+  }
+}

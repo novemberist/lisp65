@@ -4,12 +4,13 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from datetime import date
 import hashlib
 import json
 from pathlib import Path
 import tempfile
 from typing import Any
+
+from evidence_era import stable_recorded_on
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -334,7 +335,7 @@ def main() -> int:
                 "execution witness count drift")
         receipt = {
             "format": "lisp65-c2-code-window-content-convergence-gate-v1",
-            "recorded_on": date.today().isoformat(),
+            "recorded_on": stable_recorded_on(RECEIPT),
             "status": "PASS",
             "authorities": {path.name: bind(path) for path in (
                 CONTRACT, VM, VM_H, EMBED, SHIP_IO, SHIP_H, SHIP_MAIN,

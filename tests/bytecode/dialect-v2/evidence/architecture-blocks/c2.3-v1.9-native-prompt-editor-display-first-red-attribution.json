@@ -1,0 +1,39 @@
+{
+  "format": "lisp65-c2-v190-native-prompt-editor-display-first-red-attribution-v1",
+  "recorded_on": "2026-08-29",
+  "status": "ATTRIBUTED: TWO POSITIONING MODELS SPLIT PROMPT AND CURSOR",
+  "device_capture": {
+    "method": "one owner-authorized read-only stopped-state capture; no resume and no input",
+    "low_0000_1fff_sha256": "59220bc48f3f214b23f9e92d2dcc4dad63aa578e75eca2526af83fc7cbdda21a",
+    "screen_png_sha256": "39c73c4ae21538ed196460cde81e89088a36c35e1ed02f43796d296c918c7f05",
+    "screen_text_sha256": "bac7001ed754ffb0f9bc1f2d2116e5693b3812118f7465aa4c7d245721d98fbc"
+  },
+  "persisted_state": {
+    "screen_row_0x55": 9,
+    "screen_base_0x56_0x57": 2048,
+    "columns_0x58": 80,
+    "rows_0x59": 25,
+    "sequential_cursor_row_0x5a": 9,
+    "sequential_cursor_column_0x5b": 33,
+    "prompt": {"address": 2793, "row": 9, "column": 25, "text": "lisp65> "},
+    "editor_cursor": {"address": 3976, "row": 24, "column": 8, "cell": 160}
+  },
+  "writer_consumer_chain": {
+    "prompt_writer": "%native-prompt -> %rl-screen-tail row=-2 -> write-char $13 plus 24 write-char $11",
+    "prompt_consumer": "LISP65_SCREEN_DRIVER write-char -> scr_putc",
+    "consumer_semantics": "scr_putc recognizes newline/carriage-return only; $13/$11 become spaces and advance one column each",
+    "editor_writer": "%rl-render -> screen-put-char on direct row 24 cells with native origin 8",
+    "observed_result": "25 positioning bytes advance the sequential cursor to column 25 on row 9; the prompt ends at column 33 while the editor cursor is row 24 column 8"
+  },
+  "false_green": {
+    "checker": "c2_v160_display_ownership.FrameVM.sequential",
+    "expected_by_checker": "$13 is HOME and $11 is cursor-down",
+    "delivered_driver": "$13/$11 are rendered blank cells",
+    "cause": "the host fixture modeled KERNAL mnemonics rather than delivered screen-driver semantics"
+  },
+  "product_defect": true,
+  "class": "single framebuffer with two positioning models",
+  "permanent_rule": "A surface has exactly one positioning model; control codes are positioning only when the delivered driver interprets them as positioning.",
+  "device_claims_accepted_before_stop": [],
+  "session_rows_remaining": "all Block-A and Block-B acceptance rows"
+}

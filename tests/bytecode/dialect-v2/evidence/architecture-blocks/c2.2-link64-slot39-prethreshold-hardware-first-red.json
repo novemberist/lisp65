@@ -1,0 +1,149 @@
+{
+  "attribution": {
+    "disproved": [
+      "a product-versus-donor mode/length-call divergence",
+      "a timeout-path failure as the first observable cause",
+      "a postmortem C2J producer/target seal divergence"
+    ],
+    "next_minimal_witness": "hold at the first Slot-39 entry before its precondition and poll decisions; capture completion mode, journal result, producer seal and target C2J before cleanup can replace them",
+    "not_proven": [
+      "which entry invocation (ACTIVE, publish, or rollback) first returned failure",
+      "that the postmortem rollback record equals the record at the first failing Slot-39 entry",
+      "that immutable Link64 product code reproduces this nonpromotable-carrier failure"
+    ],
+    "proven": [
+      "the exact patched carrier was uploaded byte-identically",
+      "the C1 donor carries all four semantic completion roles; ACTIVE and ROLLBACK are split into two linked call sites",
+      "the definition entered Session slot 39 and returned bad bytecode to a usable REPL",
+      "the patched 64-frame timeout branch was not reached",
+      "the postmortem rollback record is PREPARED and its producer seal matches the complete target C2J"
+    ]
+  },
+  "authority": {
+    "deployed_carrier_readback": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/deploy-readback-runtime-overlays-session-link64-slot39-threshold-hold.bin",
+      "sha256": "04813fe4e1c42d8954d3601cc9a91432f7ff24c0bbe628c83adeeaef32a3b338"
+    },
+    "deployment": {
+      "bytes": 4688,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/deployment.json",
+      "sha256": "326ffbbcb6f8a6ccae51aee155f60fd96eb12b6a6916f3e1961795992d603d66"
+    },
+    "diagnostic_patch": {
+      "bytes": 6203,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-threshold-hold-nonpromotable-receipt.json",
+      "sha256": "8f94ebd8c3f0204b359771c9546e4cfbe733e4c57753e8be39ef0559668faa17"
+    },
+    "instrumented_donor_completion_role_replay": {
+      "bytes": 5287,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-c1-donor-completion-phase-context-replay-receipt.json",
+      "sha256": "497815ebde1f1d85968c78db47d6c334a44e22b2be089ec197c9832411f2d7a7"
+    },
+    "patched_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-slot39-threshold-hold-NONPROMOTABLE/runtime-overlays-session-link64-slot39-threshold-hold.bin",
+      "sha256": "04813fe4e1c42d8954d3601cc9a91432f7ff24c0bbe628c83adeeaef32a3b338"
+    },
+    "prior_Link64_First_Red": {
+      "bytes": 8034,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-C1-cutpoint3-long-quote-hardware-first-red.json",
+      "sha256": "f9b8e819a7637e5a123c0b74abf4250c8c51ea0323365515ff34f43886a6d95d"
+    },
+    "product_completion_role_replay": {
+      "bytes": 5089,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-completion-phase-context-replay-receipt.json",
+      "sha256": "eaa41df00a1a7e55af1427bba64ee1e30cea3a8ee4a0d10da0cd658f1e9af315"
+    },
+    "receipt_driver": {
+      "bytes": 9513,
+      "path": "tools/host-lisp/c2_link64_slot39_prethreshold_first_red.py",
+      "sha256": "1fa5c5f196da1d980a88bdaceb1a2b2f1d57b6c2d30b1c379e11466aafa645fa"
+    }
+  },
+  "captures": {
+    "capture_summary": {
+      "bytes": 1787,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/summary.json",
+      "sha256": "9dc5d4b9d76a0f98db042f51fda4699821d54b5ce3a3f312cd8c7f21b8de0792"
+    },
+    "completion_record": {
+      "address": "0x0000c17c",
+      "bytes": 32,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/completion-record.bin",
+      "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+    },
+    "frame": {
+      "address": "0x0000ff83",
+      "bytes": 5,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/frame.bin",
+      "sha256": "92dcff0061be9d01dc877996b9d4a4e20ca5d1f8f80fc39b6b94380bce75633c"
+    },
+    "poll_state": {
+      "address": "0x00000017",
+      "bytes": 16,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/poll-state.bin",
+      "sha256": "1c5516b05fedea7bfeefb92a019756864bfafc5a2d747122df9e032bd77accbb"
+    },
+    "post_failure_runtime_window": {
+      "address": "0x0000c356",
+      "bytes": 1509,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/runtime-window.bin",
+      "sha256": "103c1589c122f64eb66366106f64e7dbbb5b394c2773839e79efaed465a20529"
+    },
+    "runtime_ZP": {
+      "address": "0x00000070",
+      "bytes": 48,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/runtime-zp.bin",
+      "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+    },
+    "screen": {
+      "bytes": 2241,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/screen.txt",
+      "sha256": "4c3b57db8a791efaa0d07d481d2c88292e3046e38c978de63e7ae089374b3a30"
+    },
+    "target_C2J": {
+      "address": "0x0005c640",
+      "bytes": 64,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/c2j.bin",
+      "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+    },
+    "trace": {
+      "address": "0x0000c1f0",
+      "bytes": 8,
+      "path": "build/c2.2/hardware-link64-slot39-threshold-hold-NONPROMOTABLE/early-first-red/trace.bin",
+      "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+    }
+  },
+  "claim_limit": "Nonpromotable diagnostic attribution only. C1 remains OPEN; no matrix-gate, acceptance-chain, promotion or release claim.",
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "diagnostic_hardware_executions": 1,
+    "latency_attempts_consumed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-Link64-slot39-prethreshold-hardware-first-red-v1",
+  "hardware_First_Red": {
+    "c2_ready_after_error": 0,
+    "last_session_slot": 39,
+    "postmortem": {
+      "C2J_byteidentical_to_prior_First_Red": true,
+      "completion_mode": "0xa3 (rollback)",
+      "current_frame": "0x0e60",
+      "journal_result": "2 (PREPARED)",
+      "producer_C2J_seal": "0x2801",
+      "seal_matches": true,
+      "target_C2J_seal": "0x2801"
+    },
+    "screen_status": "*** vm: bad bytecode",
+    "submitted_form": "(defun %c1e () (quote t))",
+    "threshold_frames": 64,
+    "threshold_hold_reached": false,
+    "usable_REPL_returned": true
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: Slot-39 returned bad bytecode before the 64-frame threshold hold"
+}

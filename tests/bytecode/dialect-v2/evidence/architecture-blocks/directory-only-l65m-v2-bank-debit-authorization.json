@@ -1,0 +1,39 @@
+{
+  "format": "lisp65-bank-debit-authorization-v1",
+  "id": "directory-only-l65m-v2-166-byte-debit",
+  "status": "authorized",
+  "authorized_on": "2026-07-13",
+  "timing": "pre-authorized",
+  "scope": "directory-only-l65m-v2-exact-measured-product-artifact-set-only",
+  "baseline": {
+    "product_sha256": "9d8e4d0ec8886c66dbe59383d32f010b1e99706c6e8f23b0b70b15af5968aa1f",
+    "post_boot_reserve_bytes": 1971,
+    "banked_headroom_bytes": 435,
+    "overlay_vma": "0xc2a4"
+  },
+  "candidate": {
+    "product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "post_boot_reserve_bytes": 1805,
+    "banked_headroom_bytes": 269,
+    "overlay_vma": "0xc34a"
+  },
+  "authorized_debit_bytes": 166,
+  "attribution": {
+    "resident_text_bytes": 163,
+    "resident_rodata_bytes": 2,
+    "resident_bss_bytes": 1,
+    "classification": "release-critical-r2-l65m-v2-format-loader-validator-and-bcode-designator-support",
+    "projection_ceiling_bytes": 96,
+    "projection_deviation_bytes": 70
+  },
+  "evidence": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-product-link-report.json",
+    "sha256": "367c8ad6f0308e5c6e8c2b7ab8ff325f010ded63ab9acc84dbaf1e1ea01cc8fc"
+  },
+  "decision": {
+    "accepted_bank_bytes": 269,
+    "reclaim_required": false,
+    "candidate_scope": "exact-product-sha-only",
+    "precedent": "none-future-debits-still-require-exact-prior-authorization"
+  }
+}

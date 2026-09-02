@@ -1,0 +1,316 @@
+{
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "latency_attempts_consumed": 0,
+    "promotable_product_links": 0,
+    "whole_program_lto_closure_links": 1
+  },
+  "format": "lisp65-c2-top-level-frame-attribution-wplto-boundary-v1",
+  "inherited_first_red": {
+    "authority": {
+      "L_full_product_profile": {
+        "bytes": 1454,
+        "path": "config/c2-l-full-product-profile.json",
+        "sha256": "6cdc6480bccc8238b6a979bbe23dd65aa026823390a1a5587b3982d93ad05364"
+      },
+      "current_product_artifacts": {
+        "bytes": 21321,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link57-l-full-keymap-bytecode-product-artifacts-receipt.json",
+        "sha256": "f908f42696502b6317eac44b9c71b6a3fe7fdf6688cea472da2ac5bd7ece2aca"
+      },
+      "current_product_identity": {
+        "bytes": 2364,
+        "path": "build/c2.2/substitution/link57-l-full-keymap-bytecode-artifacts/product/substitution-artifacts.json",
+        "sha256": "27cb00351cd647d477858ed09e28e2aaaf75885805bd8c6a1b0cf9a2372c2427"
+      },
+      "driver": {
+        "bytes": 7539,
+        "path": "tools/host-lisp/c2_link57_l_full_keymap_current_product_wplto.py",
+        "sha256": "f8bf29eafbef73fcebea7eab8fe365c15ec78e19b704496c492aa44e010c80de"
+      },
+      "incomplete_old_plane_WPLTO": {
+        "bytes": 9023,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link57-l-full-keymap-wplto-replay-receipt.json",
+        "sha256": "5ed9787e17f4aaedcbaa53601cb1e51c7f3a0649ef07728b7b81832c820945f6"
+      },
+      "keymap_end_to_end_gate": {
+        "bytes": 14599,
+        "path": "tools/host-lisp/c2_l_full_keymap_end_to_end_gate.py",
+        "result": {
+          "canonical_binding_source": "config/v11-l-lite-keymap.json#modifier_bindings",
+          "compiled_source_manifest": "tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json",
+          "consumer_raw_88_action": 1110,
+          "mutations_rejected": 10,
+          "negative_cases": [
+            {
+              "id": "cspace-no-control",
+              "linked_action": null,
+              "lisp_event": [
+                "key",
+                255,
+                []
+              ],
+              "queue_tuple": [
+                255,
+                0
+              ]
+            },
+            {
+              "id": "cspace-wrong-meta",
+              "linked_action": null,
+              "lisp_event": [
+                "key",
+                255,
+                [
+                  "meta"
+                ]
+              ],
+              "queue_tuple": [
+                255,
+                16
+              ]
+            },
+            {
+              "id": "mx-no-meta",
+              "linked_action": 1110,
+              "lisp_event": [
+                "key",
+                120,
+                []
+              ],
+              "queue_tuple": [
+                88,
+                0
+              ]
+            },
+            {
+              "id": "mx-wrong-control",
+              "linked_action": 1110,
+              "lisp_event": [
+                "key",
+                120,
+                [
+                  "control"
+                ]
+              ],
+              "queue_tuple": [
+                88,
+                4
+              ]
+            },
+            {
+              "id": "mx-raw-consumer-domain",
+              "linked_action": 1013,
+              "lisp_event": [
+                "key",
+                120,
+                [
+                  "meta"
+                ]
+              ],
+              "queue_tuple": [
+                88,
+                16
+              ]
+            }
+          ],
+          "oracle": "ide-ui-eval-oracle: PASS=95 FAIL=0",
+          "positive_cases": [
+            {
+              "id": "control-space",
+              "linked_action": 1115,
+              "lisp_event": [
+                "key",
+                255,
+                [
+                  "control"
+                ]
+              ],
+              "queue_tuple": [
+                255,
+                4
+              ]
+            },
+            {
+              "id": "meta-x",
+              "linked_action": 1013,
+              "lisp_event": [
+                "key",
+                120,
+                [
+                  "meta"
+                ]
+              ],
+              "queue_tuple": [
+                88,
+                16
+              ]
+            }
+          ],
+          "status": "passed-queue-tuple-to-compiled-product-action"
+        },
+        "sha256": "13944ca2b51e0e1c250beeed2a3ff739d8c7477c679e9fb847a449ac9df89334"
+      },
+      "link56_latency_attempt_1_of_2": {
+        "bytes": 1784,
+        "path": "build/c2.2/hardware-presmoke-link56-selector-tail-z/latency/result.json",
+        "sha256": "800b96bfee2066749e9895dd56a3ca74f32bdcb26d43c3c65e97f7725c042939"
+      },
+      "link56_rollback_product": {
+        "bytes": 41542,
+        "path": "build/c2.2/substitution/product-link-56-selector-tail-z/lisp65-c2-substitution-linked.prg",
+        "sha256": "723579250e692112d4208ae56c0eede15f422858b3f99cc9cd2af1639599d93d",
+        "status": "untouched"
+      },
+      "static_plane_gate": {
+        "bytes": 6515,
+        "path": "tools/host-lisp/c2_l_full_static_plane_gate.py",
+        "result": {
+          "IDE_code_bytes": 11718,
+          "bank2_headroom_bytes": 31027,
+          "decoder_consumers": 2,
+          "entries": 590,
+          "images": 6,
+          "mutations_rejected": 6,
+          "private_decoder_lengths": 0,
+          "static_code_bytes": 34509,
+          "status": "passed-canonical-L-full-static-plane-to-target-dataflow"
+        },
+        "sha256": "c1aa81b7a0e349ebcb24096ba02083e445898bbbad40a52322b890696b1fd952"
+      },
+      "static_plane_header": {
+        "bytes": 293,
+        "path": "src/c2_lite_static_plane.h",
+        "sha256": "7b6ca737283db0ff28e54c3eba751e080fb0e85cde87e96a966ded5c73ff54cb"
+      }
+    },
+    "base_receipt": null,
+    "error": "historical post-WPLTO qualification checker red",
+    "execution_accounting": {
+      "hardware_runs": 0,
+      "promotable_product_links": 0,
+      "whole_program_lto_closure_links": 1
+    },
+    "format": "lisp65-c2-link57-l-full-keymap-current-product-first-red-v1",
+    "internal_receipt": {
+      "bytes": 400358,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link57-top-level-frame-attribution-wplto3-internal.json",
+      "sha256": "eb1679040ca5e16085d0f4ab9fde259bc7665d3de99f21d7719f707da66a1176"
+    },
+    "next_gate": "Class-A read-only replay against the immutable current-plane WPLTO artifacts",
+    "promotable": false,
+    "recorded_on": "2026-07-23",
+    "status": "FIRST RED: historical checker stopped current-product L-full keymap WPLTO"
+  },
+  "next_gate": "Class-A read-only qualification of the immutable diagnostic ELF",
+  "promotable": false,
+  "recorded_on": "2026-07-23",
+  "source_gate": {
+    "frame_low_address": "0xff83",
+    "installer_trace_span": [
+      302,
+      304
+    ],
+    "latency_attempts_consumed": 0,
+    "mutations_rejected": 8,
+    "new_bss_bytes": 0,
+    "scratch_result_span": [
+      287,
+      302
+    ],
+    "stations": [
+      {
+        "id": "emit_final_crc",
+        "index": 0,
+        "source": "emitter",
+        "symbol": "c2_session_emit_final_crc_phase"
+      },
+      {
+        "id": "append_envelope",
+        "index": 1,
+        "source": "runtime",
+        "symbol": "c2_append_envelope_phase"
+      },
+      {
+        "id": "reserve_transient_bounds",
+        "index": 2,
+        "source": "runtime",
+        "symbol": "c2_append_reserve_transient_bounds_phase"
+      },
+      {
+        "id": "stage_copy",
+        "index": 3,
+        "source": "runtime",
+        "symbol": "c2_append_stage_copy_phase"
+      },
+      {
+        "id": "stage_plane",
+        "index": 4,
+        "source": "runtime",
+        "symbol": "c2_append_stage_plane_phase"
+      },
+      {
+        "id": "decode_04",
+        "index": 5,
+        "source": "decoder",
+        "symbol": "c2_stream_phase_04"
+      },
+      {
+        "id": "decode_06a",
+        "index": 6,
+        "source": "decoder",
+        "symbol": "c2_stream_phase_06a"
+      },
+      {
+        "id": "decode_09",
+        "index": 7,
+        "source": "decoder_v2",
+        "symbol": "c2_stream_phase_09"
+      },
+      {
+        "id": "decode_12",
+        "index": 8,
+        "source": "decoder_v2",
+        "symbol": "c2_stream_phase_12"
+      },
+      {
+        "id": "append_header",
+        "index": 9,
+        "source": "runtime",
+        "symbol": "c2_append_header_phase"
+      },
+      {
+        "id": "inner_vm",
+        "index": 10,
+        "source": "runtime",
+        "symbol": "c2_product_install"
+      },
+      {
+        "id": "rollback_prepare",
+        "index": 11,
+        "source": "runtime",
+        "symbol": "c2_append_rollback_prepare_phase"
+      },
+      {
+        "id": "rollback_unpublish",
+        "index": 12,
+        "source": "runtime",
+        "symbol": "c2_append_rollback_unpublish_phase"
+      },
+      {
+        "id": "rollback_finalize",
+        "index": 13,
+        "source": "runtime",
+        "symbol": "c2_append_rollback_finalize_phase"
+      },
+      {
+        "id": "journal_clear",
+        "index": 14,
+        "source": "runtime",
+        "symbol": "c2_append_journal_clear_phase"
+      }
+    ],
+    "status": "passed-nonpromotable-source-and-lifetime-contract"
+  },
+  "status": "WPLTO complete; inherited exact-wall checker red; read-only diagnostic qualification required"
+}

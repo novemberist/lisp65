@@ -1,0 +1,296 @@
+{
+  "authorities": {
+    "accepted_direct_plane": {
+      "bytes": 9300,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-repl-direct-expression-receipt.json",
+      "sha256": "afedf0ebb041a1ff3891df405d00d3def92b73e7e01f7598aec5e4e3eb0bdc28"
+    },
+    "banner": {
+      "bytes": 1644,
+      "path": "lib/repl-banner.lisp",
+      "sha256": "a8e64202ac925b9b0d3e59cd4967122ef54c8bb62297750b66e0332401cb30c1"
+    },
+    "contract": {
+      "bytes": 2360,
+      "path": "config/c2-startup-require-experience-contract.json",
+      "sha256": "ca953e72bf18cfb4ae9cddbac5acb58ac00f365528814f9fabbf9b1a9b3e295f"
+    },
+    "decoder": {
+      "bytes": 40886,
+      "path": "scripts/c2-stream-decoder.c",
+      "sha256": "a07805d9abc29fc8cd0447bc6ec61bb17321bc51797b81aa689f53b90075a824"
+    },
+    "driver": {
+      "bytes": 33609,
+      "path": "tools/host-lisp/c2_startup_require_experience_gate.py",
+      "sha256": "8794ddcc3d3b0e19bd2fbb8454f0340cddb5241daa302ce7fe867261f4206e82"
+    },
+    "header": {
+      "bytes": 4346,
+      "path": "src/boot_progress.h",
+      "sha256": "80a04064650819158c59f9a5e25991578d28c6bb1ab7d1f86f9dc673efacee3e"
+    },
+    "memory": {
+      "bytes": 49375,
+      "path": "src/mem.c",
+      "sha256": "b85ec5ff9d8136cb8a29a0608c9ba2e38c754f70ffefa6f3925c0045a56cd1f9"
+    },
+    "plan": {
+      "bytes": 9241,
+      "path": "docs/planning/startup-require-experience-work-plan.md",
+      "sha256": "53a3d44883d0bbcd3539d6b93b64b3b420678d6648aa67a84fbf845e6aca0995"
+    },
+    "repl": {
+      "bytes": 13504,
+      "path": "src/repl.c",
+      "sha256": "146ca95cd81c65b40b20252ca77b98356a7be37f47c2d147dc9d703418b71ee1"
+    },
+    "require_baseline": {
+      "bytes": 13165,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-phase-m1-require-latency-measurement-receipt.json",
+      "sha256": "11068e07e177a74f7bd110c2abd937124c075323b8b1e3328b442e78c1abf241"
+    },
+    "require_source": {
+      "bytes": 32854,
+      "path": "lib/stdlib-require.lisp",
+      "sha256": "0fc0bfe95595db61e3ed454dbf303581e16ccfa3e579cb37c445f06ceef571ff"
+    },
+    "stager": {
+      "bytes": 40754,
+      "path": "scripts/r3-cold-stager-main.c",
+      "sha256": "045d6f27f9b727c383dba681dad2218ac8ff0761bb1e53819d667afc08cc9ebb"
+    }
+  },
+  "baseline_ledger": {
+    "boot": {
+      "cold_boot_upper_bound_seconds": 27.653,
+      "release_acceptance_window_seconds": 45
+    },
+    "first_phase_instructions": {
+      "control": 10,
+      "load_publish": 20763,
+      "parse": 105974,
+      "resolve": 10018
+    },
+    "interpretation": "historical target wall and exact VM/read counts remain consumers; liveness adds no revised timing claim",
+    "repeat_phase_instructions": {
+      "control": 10,
+      "load_publish": 14329,
+      "parse": 105974,
+      "resolve": 14475
+    },
+    "require": {
+      "first_prim67_reads": 399,
+      "first_seconds": 12,
+      "first_vm_instructions": 136765,
+      "repeat_prim67_reads": 384,
+      "repeat_seconds": 9,
+      "repeat_vm_instructions": 134788
+    }
+  },
+  "boot_target_price": {
+    "baseline_sections": {
+      ".comment": 105,
+      ".lisp65_boot": 1,
+      ".lisp65_rt_c2d_00": 1,
+      ".llvm_addrsig": 0,
+      ".note.GNU-stack": 0,
+      ".strtab": 148,
+      ".symtab": 96,
+      ".text": 0,
+      ".text.stager": 1
+    },
+    "candidate_sections": {
+      ".comment": 105,
+      ".lisp65_boot": 117,
+      ".lisp65_rt_c2d_00": 134,
+      ".llvm_addrsig": 0,
+      ".note.GNU-stack": 0,
+      ".rela.lisp65_boot": 48,
+      ".rela.lisp65_rt_c2d_00": 72,
+      ".rela.text.stager": 72,
+      ".strtab": 182,
+      ".symtab": 144,
+      ".text": 0,
+      ".text.stager": 117
+    },
+    "claim_limit": "exact target compilation of owner-shaped macro expansions; not a product link or target wall-time measurement",
+    "compiler": {
+      "bytes": 78628536,
+      "path": "tools/llvm-mos/bin/clang-23",
+      "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+    },
+    "delta_bytes": {
+      "disposable_boot_overlay": 116,
+      "resident": 0,
+      "separate_stager": 116,
+      "transported_decoder_slice": 133
+    },
+    "elf_reader": {
+      "bytes": 6329848,
+      "path": "tools/llvm-mos/bin/llvm-readobj",
+      "sha256": "10ecb9758875bfeaaff8f0ee78c7a3b907c39e15b62c00e70683863ae887a88b"
+    }
+  },
+  "effect": {
+    "boot": "three product-owned progress lines precede media, heap and library work; existing banner plus prompt is terminal",
+    "require": "intent is visible before fast-path, parser, resolver or persistent loader work; ordinary REPL result remains terminal",
+    "timing": "27.653-second and 45-second consumers unchanged"
+  },
+  "format": "lisp65-c2.3-startup-require-experience-v1",
+  "gate_wiring": [
+    "c2-startup-require-experience-selftest:",
+    "python3 tools/host-lisp/c2_startup_require_experience_gate.py selftest",
+    "c2-startup-require-experience-check:",
+    "python3 tools/host-lisp/c2_startup_require_experience_gate.py check",
+    "check-source: c2-startup-require-experience-check"
+  ],
+  "recorded_on": "2026-08-11",
+  "require_artifact_price": {
+    "accepted_direct_plane": {
+      "code_bytes": 17206,
+      "directory_bytes": 2751,
+      "external_bytes": 40340,
+      "objects": 393
+    },
+    "candidate_blob_sha256": "af37e49569f2053d24c33041cb9036a0b0bd9977d90f79c0e61285f643283c6c",
+    "candidate_external_sha256": "536c17c7c79fdcbdb31759b621ab3052650264d6a7c788143151d40dfa7e2289",
+    "candidate_plane": {
+      "code_bytes": 17238,
+      "directory_bytes": 2751,
+      "external_bytes": 40450,
+      "objects": 393
+    },
+    "claim_limit": "isolated full-stdlib artifact rebuild against the accepted direct-expression plane; no product link or release geometry claim",
+    "delta": {
+      "code_bytes": 32,
+      "directory_bytes": 0,
+      "external_bytes": 110,
+      "mutable_state_bytes": 0,
+      "objects": 0,
+      "resident_bytes": 0
+    }
+  },
+  "require_execution": {
+    "cases": 3,
+    "fast": {
+      "argument": "inspect",
+      "events": [
+        {
+          "arguments": [
+            "loading "
+          ],
+          "callee": "write-string"
+        },
+        {
+          "arguments": [
+            "inspect"
+          ],
+          "callee": "write-string"
+        },
+        {
+          "arguments": [
+            "..."
+          ],
+          "callee": "write-string"
+        },
+        {
+          "arguments": [],
+          "callee": "terpri"
+        },
+        {
+          "arguments": [
+            "inspect"
+          ],
+          "callee": "%require-fast-loaded-p"
+        }
+      ],
+      "fast_loaded": true,
+      "instructions": 30,
+      "result": "t"
+    },
+    "non_symbol": {
+      "argument": "#fixnum",
+      "events": [],
+      "fast_loaded": false,
+      "instructions": 5,
+      "result": "nil"
+    },
+    "rendered_intent": "loading inspect...\n",
+    "slow": {
+      "argument": "inspect",
+      "events": [
+        {
+          "arguments": [
+            "loading "
+          ],
+          "callee": "write-string"
+        },
+        {
+          "arguments": [
+            "inspect"
+          ],
+          "callee": "write-string"
+        },
+        {
+          "arguments": [
+            "..."
+          ],
+          "callee": "write-string"
+        },
+        {
+          "arguments": [],
+          "callee": "terpri"
+        },
+        {
+          "arguments": [
+            "inspect"
+          ],
+          "callee": "%require-fast-loaded-p"
+        },
+        {
+          "arguments": [],
+          "callee": "%l65i-parse"
+        },
+        {
+          "arguments": [
+            "inspect",
+            "1"
+          ],
+          "callee": "%require-resolve"
+        }
+      ],
+      "fast_loaded": false,
+      "instructions": 39,
+      "result": "t"
+    }
+  },
+  "scope": {
+    "device_contacts": 0,
+    "product_links": 0,
+    "release_claim": false,
+    "resident_bytes_delta": 0
+  },
+  "source_gate": {
+    "candidate_require": {
+      "bytes": 33154,
+      "historical_source_unchanged": true,
+      "producer": "candidate_require_source",
+      "sha256": "794598bfd95fe91c7d20f5695e4fff8398753eedb57b4b20eebe45240d908bec"
+    },
+    "messages": {
+      "heap": "LISP65: BUILDING HEAP",
+      "libraries": "LISP65: LOADING LIBRARIES",
+      "stager": "LISP65: STAGING MEDIA"
+    },
+    "mutations_rejected": 20,
+    "orders": {
+      "heap_before_construction": true,
+      "libraries_before_c2d_read": true,
+      "require_intent_before_fast_parse_resolve": true,
+      "stager_before_io": true
+    },
+    "terminal_life_sign_reused": true
+  },
+  "status": "PASSED-BOOT-LIVENESS-AND-REQUIRE-INTENT-HOST-GATES"
+}

@@ -1,0 +1,624 @@
+{
+  "F1": {
+    "execution_gate": {
+      "direct": [
+        {
+          "case": "nullary",
+          "compiler_calls": 0,
+          "dispatch": "funcall",
+          "install_calls": 0,
+          "result": "t",
+          "source": "(%f1-zero)"
+        },
+        {
+          "case": "fixed-fixnums",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(7 . 8)",
+          "source": "(%f1-fixed 7 8)"
+        },
+        {
+          "case": "fixed-quotes",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(alpha 1 2)",
+          "source": "(%f1-fixed 'alpha '(1 2))"
+        },
+        {
+          "case": "optional-missing",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(7)",
+          "source": "(%f1-optional 7)"
+        },
+        {
+          "case": "optional-present",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(7 . 8)",
+          "source": "(%f1-optional 7 8)"
+        },
+        {
+          "case": "rest",
+          "compiler_calls": 0,
+          "dispatch": "apply",
+          "install_calls": 0,
+          "result": "(7 8 9)",
+          "source": "(%f1-rest 7 8 9)"
+        }
+      ],
+      "equivalence": [
+        {
+          "byteidentical_object": true,
+          "case": "fixed-fixnums",
+          "compiled_result": "(7 . 8)",
+          "direct_result": "(7 . 8)"
+        },
+        {
+          "byteidentical_object": true,
+          "case": "fixed-quotes",
+          "compiled_result": "(alpha 1 2)",
+          "direct_result": "(alpha 1 2)"
+        },
+        {
+          "byteidentical_object": true,
+          "case": "optional",
+          "compiled_result": "(7)",
+          "direct_result": "(7)"
+        },
+        {
+          "byteidentical_object": true,
+          "case": "rest",
+          "compiled_result": "(7 8 9)",
+          "direct_result": "(7 8 9)"
+        }
+      ],
+      "fallback": [
+        {
+          "case": "variable",
+          "first_compiler_call_index": 8,
+          "source": "(%f1-fixed x 8)"
+        },
+        {
+          "case": "nested",
+          "first_compiler_call_index": 8,
+          "source": "(%f1-fixed (%f1-nested) 8)"
+        },
+        {
+          "case": "compound",
+          "first_compiler_call_index": 8,
+          "source": "(%f1-fixed (if t 7 8) 9)"
+        },
+        {
+          "case": "primitive",
+          "first_compiler_call_index": 3,
+          "source": "(screen-size)"
+        },
+        {
+          "case": "macro",
+          "first_compiler_call_index": 3,
+          "source": "(%f1-macro 7)"
+        },
+        {
+          "case": "undefined",
+          "first_compiler_call_index": 3,
+          "source": "(%f1-undefined 7)"
+        },
+        {
+          "case": "atom",
+          "first_compiler_call_index": 1,
+          "source": "7"
+        }
+      ],
+      "fixture_count": 18,
+      "status": "passed-executable-direct-fallback-and-equivalence-suites",
+      "wrong_arity": {
+        "compiler_calls": 0,
+        "status": "passed-VM-ArityError-without-wrapper"
+      }
+    },
+    "source_gate": {
+      "arity_authority": "CodeObject-header-vm_arity_accepts",
+      "direct_argument_domain": [
+        "fixnum",
+        "string",
+        "nil",
+        "t",
+        "exact unary quote"
+      ],
+      "direct_operator": "published-bytecode",
+      "fallback_preserved": true,
+      "mutations_rejected": 10,
+      "new_resident_state_bytes": 0,
+      "status": "passed-exact-published-value-call-source-contract"
+    }
+  },
+  "F2": {
+    "emission_gate": {
+      "bank2_static_code_bytes": 34990,
+      "bindings": {
+        "bank2": {
+          "bytes": 34990,
+          "path": "build/post-promotion/f2/v6-semantics/bank2-static-code.bin",
+          "sha256": "dfeb6740d122f3a0a3971e8bb885a5a76ea861c8137386b8a7bcad1640f771e2"
+        },
+        "lcc": {
+          "bytes": 220262,
+          "path": "build/post-promotion/f2/lcc.manifest.json",
+          "sha256": "db132d051f63afef609ea5e2f274b7a1b1089d3eed7f6d5b9ea54429ef944a60"
+        },
+        "product": {
+          "bytes": 2240,
+          "path": "build/post-promotion/f2/product/substitution-artifacts.json",
+          "sha256": "ce7e64b739e81e8f734839a01f9d72d924b636dd5ef108456e72f61f6fa0195c"
+        },
+        "stdlib": {
+          "bytes": 185126,
+          "path": "build/post-promotion/f2/stdlib-p0.manifest.json",
+          "sha256": "6e596b9942bd3e336cc00cb4d624b8dc0975a9551bb3b22b90a62686738eb5e2"
+        }
+      },
+      "entries": 602,
+      "images": 6,
+      "lcc_code_bytes": 7569,
+      "product_build_id": "0x864a4d53",
+      "resolutions": 2299,
+      "roots": 283,
+      "shelf_bytes": 72236,
+      "status": "passed-F1-plus-F2-single-emitter-geometry",
+      "stdlib_code_bytes": 8576
+    },
+    "execution_gate": {
+      "dialect_v1_reserved_count": 4,
+      "dialect_v2_active_count": 4,
+      "negative_count": 8,
+      "negative_observations": [
+        {
+          "case": "count-high",
+          "status": "TypeError"
+        },
+        {
+          "case": "count-low",
+          "status": "TypeError"
+        },
+        {
+          "case": "overflow-high",
+          "status": "TypeError"
+        },
+        {
+          "case": "overflow-low",
+          "status": "TypeError"
+        },
+        {
+          "case": "wrong-type-left",
+          "status": "TypeError"
+        },
+        {
+          "case": "wrong-type-right",
+          "status": "TypeError"
+        },
+        {
+          "case": "wrong-arity-low",
+          "status": "ArityError"
+        },
+        {
+          "case": "wrong-arity-high",
+          "status": "ArityError"
+        }
+      ],
+      "positive_count": 28,
+      "positive_observations": [
+        {
+          "case": "logand",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "logand",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "logior",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "logior",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "logxor",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "logxor",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-left",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "ash-left",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-right",
+          "result": -42,
+          "route": "direct"
+        },
+        {
+          "case": "ash-right",
+          "result": -42,
+          "route": "funcall"
+        },
+        {
+          "case": "logand-negative",
+          "result": 42,
+          "route": "direct"
+        },
+        {
+          "case": "logand-negative",
+          "result": 42,
+          "route": "funcall"
+        },
+        {
+          "case": "logior-negative",
+          "result": -43,
+          "route": "direct"
+        },
+        {
+          "case": "logior-negative",
+          "result": -43,
+          "route": "funcall"
+        },
+        {
+          "case": "logxor-negative",
+          "result": -44,
+          "route": "direct"
+        },
+        {
+          "case": "logxor-negative",
+          "result": -44,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-left-low-bound",
+          "result": -16384,
+          "route": "direct"
+        },
+        {
+          "case": "ash-left-low-bound",
+          "result": -16384,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-left-high-bound",
+          "result": 16382,
+          "route": "direct"
+        },
+        {
+          "case": "ash-left-high-bound",
+          "result": 16382,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-count-low-bound",
+          "result": -1,
+          "route": "direct"
+        },
+        {
+          "case": "ash-count-low-bound",
+          "result": -1,
+          "route": "funcall"
+        },
+        {
+          "case": "ash-count-high-bound",
+          "result": -16384,
+          "route": "direct"
+        },
+        {
+          "case": "ash-count-high-bound",
+          "result": -16384,
+          "route": "funcall"
+        },
+        {
+          "case": "logand",
+          "result": 42,
+          "route": "apply"
+        },
+        {
+          "case": "logior",
+          "result": 42,
+          "route": "apply"
+        },
+        {
+          "case": "logxor",
+          "result": 42,
+          "route": "apply"
+        },
+        {
+          "case": "ash",
+          "result": 42,
+          "route": "apply"
+        }
+      ],
+      "status": "passed-direct-funcall-apply-and-negative-fixtures"
+    },
+    "source_gate": {
+      "dialect_v1": "reserved",
+      "dialect_v2": "active",
+      "mutations_rejected": 16,
+      "opcodes": {
+        "20": "LOGAND",
+        "21": "LOGIOR",
+        "22": "LOGXOR",
+        "23": "ASH"
+      },
+      "prim_ids_added": 0,
+      "resident_state_bytes": 0,
+      "status": "passed-all-eight-ABI-and-source-views"
+    }
+  },
+  "authority": {
+    "ABI_ledger": {
+      "bytes": 10076,
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "5331c2f78643ed4caa104088ab734da4add5c7e85dc1ff233f6b68e46139aa4c"
+    },
+    "F1_contract": {
+      "bytes": 3267,
+      "path": "config/c2-top-level-published-value-call-contract.json",
+      "sha256": "b101c21dcd45d1f8ba5ee26d52e020612fe66da63c37f2d5c23e1f21b038c874"
+    },
+    "F2_contract": {
+      "bytes": 2990,
+      "path": "config/c2-bitops-contract.json",
+      "sha256": "11992f041403236b87c6d4040c901668513c9596f2eb12b5a4cc0b67e86e9ae0"
+    },
+    "F2_contract_note": {
+      "bytes": 2680,
+      "path": "docs/planning/c2.2-f2-bitops-contract.md",
+      "sha256": "c76dae8863408bcd0df3932717623d9cff13ed65eb5fba6cce809d5c6da906f4"
+    },
+    "Python_compiler": {
+      "bytes": 47304,
+      "path": "tools/host-lisp/bytecode_p0_compiler.py",
+      "sha256": "3b40d1aa369a9d956d329f139d10d33078da557b69804ca6f8679bdcf0e29b26"
+    },
+    "Python_model": {
+      "bytes": 86549,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "973272093db5e60e71f3a29c2a18f229e029422d7688a8fa3d393a652b50b43b"
+    },
+    "VM_header": {
+      "bytes": 6949,
+      "path": "src/vm.h",
+      "sha256": "49f390e8fa714c89030ea4f551e7985bdfc214229a34ca4674cfd7df1166675f"
+    },
+    "VM_source": {
+      "bytes": 81530,
+      "path": "src/vm.c",
+      "sha256": "bfea77857871c4d4cb585297b2739c2e9f37a878ebead1972f9951096358827a"
+    },
+    "gate": {
+      "bytes": 14409,
+      "path": "tools/host-lisp/c2_bitops_gate.py",
+      "sha256": "1ab37cbe38a35d5c8ca2dff7d69d60d0e8d9f642d660bfe18ae4b684176ef4d1"
+    },
+    "linked_ELF": {
+      "bytes": 619904,
+      "path": "build/post-promotion/f2/product-shaped/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "efa0d2440e2eddbb25889b4eee69f75c0a2e802e26bc642233ce7ae70d032572"
+    },
+    "linked_map": {
+      "bytes": 173821,
+      "path": "build/post-promotion/f2/product-shaped/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "2906125454d3e0af74acbe0419762ea9a4a0f489841610cbd2518f4502d573f6"
+    },
+    "live_ABI": {
+      "bytes": 2451,
+      "path": "docs/contracts/bytecode-abi.md",
+      "sha256": "b7b7e5d96e5c48a6f4c968de891745abd2b2706230d7ea9f536b0dde75006bb0"
+    },
+    "profile": {
+      "bytes": 2192,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "d9cf2f9f3c50d2bce871dff1b9513212c9ef9f8ea1cf7a39a38de0cde14ad63f"
+    },
+    "public_wrappers": {
+      "bytes": 6035,
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "366556a743e78fba8c232eea935f2dfd64057e87533833156d47afa2b75b1159"
+    },
+    "static_header": {
+      "bytes": 293,
+      "path": "src/c2_lite_static_plane.h",
+      "sha256": "c27e1dfdf782917ea199093e0ad36900139a0834843af10072b73596c8d44bbd"
+    },
+    "v2_LCC": {
+      "bytes": 11663,
+      "path": "lib/dialect-v2/lcc-profile.lisp",
+      "sha256": "e9e840e10337a43139b3679066e4949b5ad83733bb2dbc5238fe1e9f76d48ea5"
+    }
+  },
+  "capacity": {
+    "append_records": 24,
+    "pack_quantum_bytes": 256,
+    "publish_clear_bytes": 1295,
+    "publish_clear_headroom_bytes": 497,
+    "region1_rollback_sequence": [
+      "c2-append-rollback-unpublish",
+      "c2-append-rollback-wipe-plane",
+      "c2-append-rollback-wipe-chip",
+      "c2-append-rollback-wipe-attic",
+      "c2-append-rollback-finalize"
+    ],
+    "retired_sections_present": {
+      ".lisp65_rt_c2append_journal_clear": false,
+      ".lisp65_rt_c2append_publish_exports": false
+    },
+    "session_catalog_records": 51,
+    "session_family_bytes": 64926,
+    "session_family_headroom_bytes": 610,
+    "slice_cap_bytes": 1792,
+    "status": "passed-current-v4-two-region-session-aggregate"
+  },
+  "format": "lisp65-c2-f2-bitops-WPLTO-v1",
+  "freight": {
+    "bank2_delta_bytes": 242,
+    "bank2_static_code_F1_bytes": 34748,
+    "bank2_static_code_F2_bytes": 34990,
+    "entries_delta": 6,
+    "lcc_delta_bytes": 198,
+    "resident_state_delta_bytes": 0,
+    "resolutions_delta": 16,
+    "roots_delta": 0,
+    "stdlib_delta_bytes": 44
+  },
+  "hardware_runs": 0,
+  "promotable": false,
+  "qualification_mode": "read-only-existing-WPLTO-artifacts",
+  "recorded_on": "2026-07-27",
+  "static_plane_gate": {
+    "IDE_code_bytes": 11718,
+    "bank2_headroom_bytes": 30546,
+    "decoder_consumers": 2,
+    "entries": 602,
+    "images": 6,
+    "mutations_rejected": [
+      "wrong-profile-length",
+      "wrong-contract-length",
+      "wrong-header-length",
+      "decoder-private-literal",
+      "wrong-emitted-length",
+      "wrong-code-identity"
+    ],
+    "private_decoder_lengths": 0,
+    "static_code_bytes": 34990,
+    "status": "passed-canonical-L-full-static-plane-to-target-dataflow"
+  },
+  "status": "passed-F1-plus-F2-product-shaped-WPLTO",
+  "walls": {
+    "bank0_text_headroom_bytes": 90,
+    "e000_headroom_bytes": 151,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 69
+  },
+  "wplto": {
+    "historical_checker_boundary": {
+      "captured_driver_log": {
+        "bytes": 1328,
+        "path": "build/post-promotion/f2/product-shaped/receipts/wplto-historical-driver.log",
+        "sha256": "7d293653cb388425fa51c49d84f8839e76a7be79461f8a53615909a6118f65b1"
+      },
+      "classification": "qualification-model-only-not-a-product-or-link-red",
+      "current_replacement_gates": {
+        "assembler_leaf_ABI": {
+          "callsite_count": 9,
+          "unclassified_C_called_functions": []
+        },
+        "capacity": {
+          "append_records": 24,
+          "pack_quantum_bytes": 256,
+          "publish_clear_bytes": 1295,
+          "publish_clear_headroom_bytes": 497,
+          "region1_rollback_sequence": [
+            "c2-append-rollback-unpublish",
+            "c2-append-rollback-wipe-plane",
+            "c2-append-rollback-wipe-chip",
+            "c2-append-rollback-wipe-attic",
+            "c2-append-rollback-finalize"
+          ],
+          "retired_sections_present": {
+            ".lisp65_rt_c2append_journal_clear": false,
+            ".lisp65_rt_c2append_publish_exports": false
+          },
+          "session_catalog_records": 51,
+          "session_family_bytes": 64926,
+          "session_family_headroom_bytes": 610,
+          "slice_cap_bytes": 1792,
+          "status": "passed-current-v4-two-region-session-aggregate"
+        },
+        "historical_maps_replaced": [
+          "BADOPCODE retirement WPLTO crossed a bound wall or gate",
+          "Link-53 first-fault WPLTO qualification red",
+          "Link-54 phase-06a cutpoint WPLTO qualification red",
+          "Link-55 append geometry WPLTO qualification red",
+          "Link-55 append suffix/read-domain WPLTO qualification red",
+          "Link-55 cold append source-domain WPLTO qualification red",
+          "Link-55 one-quantum fusion qualification red",
+          "install-phase WPLTO crossed a bound wall or linked gate",
+          "selector tail-Z WPLTO qualification red"
+        ],
+        "pre_publish_identity": {
+          "elf": {
+            "bytes": 619904,
+            "path": "build/post-promotion/f2/product-shaped/wplto/lisp65-c2-substitution-linked.prg.elf",
+            "role": "elf",
+            "sha256": "efa0d2440e2eddbb25889b4eee69f75c0a2e802e26bc642233ce7ae70d032572"
+          },
+          "map": {
+            "bytes": 173821,
+            "path": "build/post-promotion/f2/product-shaped/wplto/lisp65-c2-substitution-linked.prg.map",
+            "role": "map",
+            "sha256": "2906125454d3e0af74acbe0419762ea9a4a0f489841610cbd2518f4502d573f6"
+          },
+          "product": {
+            "bytes": 41566,
+            "path": "build/post-promotion/f2/product-shaped/wplto/lisp65-c2-substitution-linked.prg",
+            "role": "product",
+            "sha256": "0d047baf09b0b308552c6e929c015d0d8b55e9cc6d17ae4155d1391556feceba"
+          }
+        },
+        "pre_publish_session_regions": {
+          "region_0": {
+            "bytes": 64926,
+            "path": "build/post-promotion/f2/product-shaped/wplto/runtime-overlays-session-final.bin",
+            "sha256": "d53daa367b6439ce0bc37c13227432bf86b6e95557b7352d60bf6caeb3cdb426"
+          },
+          "region_1": {
+            "bytes": 1956,
+            "path": "build/post-promotion/f2/product-shaped/wplto/runtime-overlays-session-final-region1.bin",
+            "sha256": "25db7e2cd0c02c15db8f10b29fc1827b1bd367f25c9217c44600106bbb1f58d5"
+          }
+        },
+        "sealed_role_check": "deferred-to-post-publish-public-clean-build-gate",
+        "status": "passed-current-v4-pre-publish-WPLTO-closure",
+        "walls": {
+          "bank0_text_headroom_bytes": 90,
+          "e000_headroom_bytes": 151,
+          "fixed_hot_block_headroom_bytes": 2,
+          "ordinary_bank0_bss_headroom_bytes": 137,
+          "resident_island_headroom_bytes": 69
+        }
+      },
+      "raw_error": "historical post-WPLTO qualification checker red",
+      "raw_status": "FIRST RED: historical checker stopped current-product L-full keymap WPLTO"
+    },
+    "historical_profile_label": "0xb94e retained only inside the sealed legacy profile text",
+    "linked_gate": {
+      "bytes": 17164,
+      "path": "build/post-promotion/f2/product-shaped/receipts/single-submit-linked-gates.json",
+      "sha256": "cb2793c68cec0fcc4d13011b50958dc4c19e680fb30701263b0a374a4d52c2e6"
+    },
+    "publish_last_authority": "0xb98a",
+    "qualification": {
+      "bytes": 29475,
+      "path": "build/post-promotion/f2/product-shaped/receipts/wplto-qualification.json",
+      "sha256": "69152fbd31cec95c9210d47e04337ee8b6a9ab676e0a3d7025452255d7a70165"
+    },
+    "status": "passed-one-current-WPLTO-closure-at-typed-historical-qualification-boundary"
+  }
+}

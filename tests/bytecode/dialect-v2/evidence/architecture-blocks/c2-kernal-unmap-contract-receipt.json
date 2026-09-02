@@ -1,0 +1,145 @@
+{
+  "format": "lisp65-c2-kernal-unmap-contract-receipt-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "passed-contract-bounded-probe-authorized-link-not-authorized",
+  "claim_limit": "This receipt binds the owner-commissioned contract and its negative gate. It does not implement or prove KERNAL unmapping, change product bytes, repin capacity, pass a Freezer case or authorize the fifth substitution link.",
+  "decision": {
+    "block_shape": "typed event queue plus RUN/STOP source plus owned IRQ/NMI and frame source plus Freezer return plus post-startup output seam plus post-boot KERNAL unmap",
+    "next_authorized_step": "one bounded isolated non-product proof target",
+    "next_review_hold": "category-complete capacity, continuity, structural link and generated L-full probe receipt",
+    "real_product_link": "not-authorized",
+    "first_red_policy": "mandatory; no capacity floor, slice cap or claim softening"
+  },
+  "bindings": {
+    "contract": {
+      "path": "config/c2-kernal-unmap-contract.json",
+      "bytes": 8766,
+      "sha256": "a7f09bc11d5aafb646c659131030a5ab027619c463698ff5463bf031ff6ac16d"
+    },
+    "contract_document": {
+      "path": "docs/planning/c2.2-kernal-unmap-contract.md",
+      "bytes": 9476,
+      "sha256": "a2e7e6126e7d9eccba5c768b023e1b23a75b4ad150e5719700bfb3fb082b06c7"
+    },
+    "contract_gate": {
+      "path": "tools/host-lisp/c2_kernal_unmap_contract_gate.py",
+      "bytes": 11406,
+      "sha256": "0add4aabfbb241b81a8df85afccbd707a0b5437d5916fbb8c94d9139187ec7db"
+    },
+    "gate_wiring": {
+      "path": "mk/gates.mk",
+      "bytes": 18895,
+      "sha256": "666b7cb8aed2b1327a7a0cd4d172b21e86272df06a181e13d89ff96c88a1e852"
+    },
+    "scope_memo": {
+      "path": "docs/planning/v1.2-scope-memo.md",
+      "bytes": 31700,
+      "sha256": "a85496782bb5141f2790d18257abf48d96c87f62157925e5510a7f0db9c306c6"
+    },
+    "residency_audit_document": {
+      "path": "docs/planning/c2.0-kernal-residency-audit.md",
+      "bytes": 2919,
+      "sha256": "62df357c0e14d57a965d2f26a946e578894c12cc087546b3cb15d72bb2f7f14b"
+    },
+    "residency_audit_contract": {
+      "path": "config/c2-kernal-residency-audit.json",
+      "bytes": 1898,
+      "sha256": "88653a4e0223dd2ecb224d684b4b0293d8738a4803d33db1dc5d447abce4502e"
+    },
+    "fourth_substitution_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-lifetime-first-red-receipt.json",
+      "bytes": 6085,
+      "sha256": "727a1f44d11fc8db9c6c78cd4092f138ff635b09a88eec856665ad96d710c1a8"
+    },
+    "hardware_reference": {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "bytes": 5243367,
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220"
+    },
+    "keymap_single_source": {
+      "path": "config/v11-l-lite-keymap.json",
+      "bytes": 9039,
+      "sha256": "fd5616d330a461c0ef5790995bf73a8a656b8f9ba871ac461ca64664dd3d6284"
+    },
+    "keymap_generator": {
+      "path": "tools/host-lisp/v11_l_lite_keymap.py",
+      "bytes": 18445,
+      "sha256": "3a65a16a8bb03d03c954052bb6741ac47dfc0b9131d9335f9c1bf8cd26a0f646"
+    }
+  },
+  "reference_verification": {
+    "pdf_sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+    "printed_to_pdf_pages": {
+      "map_and_kernal": [[9, 23], [10, 24], [11, 25]],
+      "vic_raster_irq": [[50, 64], [51, 65]],
+      "typed_event_queue": [[102, 116], [103, 117], [104, 118]]
+    },
+    "visual_inspection": "rendered PDF pages 23, 64 and 116 inspected; extracted text cross-checked on all bound pages",
+    "bound_registers": ["0xd012", "0xd019", "0xd01a", "0xd60a", "0xd619"],
+    "map_fact": "MAP overrides legacy banking for selected 8-KiB slabs"
+  },
+  "net_capacity_contract": {
+    "gross_cpu_window_bytes": 8192,
+    "fixed_resident_deficit_bytes": 3639,
+    "gross_upper_bound_before_replacements_bytes": 4553,
+    "replacement_category_count": 7,
+    "replacement_resident_bytes": "probe-pending",
+    "future_margin_bytes": "probe-pending",
+    "pass_equation": "future_margin_bytes = 8192 - 3639 - replacement_resident_bytes; future_margin_bytes > 0",
+    "claim": "The scope memo's approximately 4.5 KiB is explicitly an upper bound, not net headroom."
+  },
+  "continuity_contract": {
+    "invariants": 2,
+    "run_stop_floor": "one authoritative source at every transition; pending abort survives the masked handoff",
+    "frame_floor": "one authoritative advancing source at every transition; no hidden clock discontinuity",
+    "publication_order": "target bytes and mapping before vector publication"
+  },
+  "structural_gate_contract": {
+    "owned_window_section": ".lisp65_c2_kernal_window",
+    "owned_vector_section": ".lisp65_c2_vectors",
+    "forbidden_services": ["0xffd2 CHROUT", "0xffe4 GETIN"],
+    "forbidden_retired_state": ["0x0091 STKEY"],
+    "rule_count": 5,
+    "execution_test_substitution_allowed": false
+  },
+  "l_full_inheritance": {
+    "event": "(key code modifiers) captured atomically from one queue head",
+    "required_physical_bindings": ["Control-Space -> set-mark", "Meta-x -> execute-command"],
+    "generated_consumers": 5,
+    "hardware_sample_required_before_documentation": true,
+    "run_stop": "evaluation abort only; idle no-op; no editor binding"
+  },
+  "freezer": {
+    "fidelity": "hardware-only",
+    "xemu_safety_pass_allowed": false,
+    "receiptless_prechain_smoke_steps": 6
+  },
+  "gate_result": {
+    "command": "make c2-kernal-unmap-contract-check",
+    "offline_receipt_command": "make c2-kernal-unmap-contract-receipt-check",
+    "status": "passed",
+    "gross_bytes": 8192,
+    "deficit_bytes": 3639,
+    "replacement_categories": 7,
+    "continuity_invariants": 2,
+    "negative_cases": 25,
+    "mutations_rejected": 13,
+    "product_bytes": 0
+  },
+  "workspace_boundary": {
+    "files_added_or_changed_by_this_contract_block": [
+      "config/c2-kernal-unmap-contract.json",
+      "config/document-index.json",
+      "docs/planning/README.md",
+      "docs/planning/c2.2-kernal-unmap-contract.md",
+      "docs/planning/v1.2-scope-memo.md",
+      "mk/gates.mk",
+      "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2-kernal-unmap-contract-receipt.json",
+      "tools/host-lisp/c2_kernal_unmap_contract_gate.py"
+    ],
+    "product_source_files_changed_by_this_contract_block": [],
+    "product_artifacts_emitted_by_this_contract_block": 0,
+    "preexisting_dirty_c2_implementation": "preserved unpromoted and excluded from this contract claim"
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 8466,
+      "path": "config/c2-two-region-session-store-contract.json",
+      "sha256": "bb9fa3c697ce2ce94ceb73dcba53cf2068ff6779cfbed39026fb8606ebba50ad"
+    },
+    "emitter": {
+      "bytes": 100507,
+      "path": "tools/host-lisp/runtime_overlay_bank.py",
+      "sha256": "90a2cf777d30a677901c2fbaa58c2f8e356823a213c3c12e5ec68447bc498f53"
+    },
+    "gate": {
+      "bytes": 22551,
+      "path": "tools/host-lisp/c2_l65r_v4_two_region_gate.py",
+      "sha256": "bfbb4cd49185c6c3c448f698010ca5370211863440fba34ccab27e159e260bb6"
+    },
+    "product_link": {
+      "bytes": 281659,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "73106429f8f3d716737752882e27836bc13fc961bb3e9755dd34100c5e8ff7cd"
+    },
+    "target_decoder": {
+      "bytes": 91215,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "e1c8ba3cc829b481ec0f461b2e735498450ba39f1aea84a0ea42cd3b33b323d9"
+    }
+  },
+  "canonical_fixture": {
+    "header_bytes": 32,
+    "main_image_bytes": 273,
+    "overflow_image_bytes": 23,
+    "record_bytes": 32,
+    "record_crc_nonzero": true,
+    "record_regions": [
+      0,
+      1
+    ],
+    "record_source_addresses": [
+      134217984,
+      376064
+    ]
+  },
+  "format": "lisp65-c2-l65r-v4-two-region-contract-receipt-v1",
+  "mutation_count": 13,
+  "mutations": {
+    "main-as-overflow": "source-address",
+    "overflow-as-main": "source-address",
+    "overflow-capacity": "bank-overflow",
+    "overflow-truncated": "overflow-binding",
+    "region-without-record-crc": "record-crc",
+    "source-reserved-byte": "bad-region",
+    "unknown-region": "bad-region",
+    "v3-as-v4": "bad-version",
+    "v4-as-v3": "bad-version",
+    "wrong-source-bank": "source-address",
+    "wrong-source-low": "source-address",
+    "wrong-source-megabyte": "source-address",
+    "zero-record-crc": "record-crc-zero"
+  },
+  "recorded_on": "2026-07-24",
+  "stage_source_authority": {
+    "hot_record_verifier_region_dispatch": "absent",
+    "hot_record_verifier_source_bounds_reconstruction": "absent",
+    "mutations": {
+      "emitter-source-comparison-removed": "rejected",
+      "family-published-before-target-crc": "rejected",
+      "manifest-crc-not-consumed": "rejected",
+      "record-crc-binding-moved": "rejected",
+      "runtime-region-dispatch-restored": "rejected",
+      "session-overflow-proof-removed": "rejected"
+    },
+    "publication_order": "emitter-bounds -> record-CRC -> final-manifest-binding -> target-family-CRC -> region1-target-CRC -> VERIFIED",
+    "status": "passed-emitter-bound-record-and-target-stage-composite-proof"
+  },
+  "status": "passed-strict-v4-two-region-format-and-mutations",
+  "strict_asymmetry": {
+    "accepted_versions": [
+      4
+    ],
+    "dual_decoder": false,
+    "one_emitter": true
+  },
+  "v4_installer_frame_seal": {
+    "asan": "passed",
+    "fixture": {
+      "bytes": 16366,
+      "path": "scripts/c2-l65r-v2-product-main.c",
+      "sha256": "8f78cc391c326a4133b9279d6324cd932aa50c893d9d6d67acabb4de5fb9f914"
+    },
+    "negative_binary": {
+      "bytes": 121208,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-product-link61-v4-frame-seal-format-and-stage-gate/v4-old-order-negative",
+      "sha256": "49791780804061a57ec2a9eb9822ae742c6f36c6619a381ead4c400aec67160e"
+    },
+    "negative_source": {
+      "bytes": 91215,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-product-link61-v4-frame-seal-format-and-stage-gate/vm_runtime_overlay.seal-before-transform.c",
+      "sha256": "97766161b5479aa6ca44bccae7e7cf4988242d74bd2477dcd8a4540b1bb08a48"
+    },
+    "negative_stderr": {
+      "bytes": 623,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-product-link61-v4-frame-seal-format-and-stage-gate/negative.stderr.txt",
+      "sha256": "83ebca71ec16cd23ec2eba0b4a50cc7b871eb45dc6a6e8307b7bef8d43216d5d"
+    },
+    "old_order_mutation": "reproduced-binding-red-before-READY",
+    "positive_binary": {
+      "bytes": 121184,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-product-link61-v4-frame-seal-format-and-stage-gate/v4-final-frame-positive",
+      "sha256": "b1db7b8d9d9b57c2e2c5aae6726b9d479cae7a7a5a60361a1d7de5860f060362"
+    },
+    "positive_cases": 14,
+    "positive_stdout": {
+      "bytes": 86,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-product-link61-v4-frame-seal-format-and-stage-gate/positive.stdout.txt",
+      "sha256": "bdec5f5025d67ad5c76346d05adf3b181b1023e5f077b90d6cda150e5e0aa46a"
+    },
+    "sealed_representation": "final-v4-absolute-source-frame",
+    "status": "passed-verifier-transform-seal-installer-through-path",
+    "ubsan": "passed"
+  }
+}

@@ -1,0 +1,4657 @@
+{
+  "answer": {
+    "coalesced_allocations_per_key": 47.625,
+    "coalesced_steady_state_collections_per_key": 0.248046875,
+    "distribution": "fast-with-large-periodic-pauses, not uniformly slow: ordinary VM work is bounded, while temporary redisplay allocations cross the 192-allocation nursery threshold repeatedly; coalescing reduces but does not remove crossings",
+    "dominant_mechanism": "redisplay allocation churn induces target collections; the 89-frame collection envelope dominates the historical VM-step projection",
+    "reopening_condition": "met: the host accounting confirms periodic GC pauses as a credible dropped-input mechanism; reopen the parked gc/room/error instrument lane with room first",
+    "serial_allocations_per_key": 169.2625,
+    "serial_steady_state_collections_per_key": 0.8815755208333333
+  },
+  "bound_constants": {
+    "extended_cells": 1024,
+    "historical_cycles_per_vm_instruction": 1100,
+    "hot_cells": 48,
+    "nursery_allocation_threshold": 192,
+    "target_collection_frames": 89,
+    "target_cpu_hz": 40000000,
+    "target_frame_microseconds": 20000
+  },
+  "claim_limit": "Dynamic instruction and allocation counts are exact for the generated product IDE composition in the host P0 VM. Collection placement is derived from the product's 192-allocation nursery rule for every incoming phase. The host does not execute target DMA, screen timing, or GC phase timing; 89 frames is an external accepted whole-collection observation.",
+  "execution_witness": {
+    "keys_per_schedule": 80,
+    "nursery_phases_per_schedule": 192,
+    "positive": true,
+    "schedules": 2,
+    "total_keys": 160
+  },
+  "format": "lisp65-v1.2.5-editor-input-latency-host-accounting-v1",
+  "inputs": {
+    "collector": {
+      "bytes": 48487,
+      "path": "src/mem.c",
+      "sha256": "b32dc707afe90074cfbd57bd4464b63d7b939bbead45fc35f02353836d555771"
+    },
+    "dynamic_runner": {
+      "bytes": 24829,
+      "path": "tools/host-lisp/ide_bytecode_dynamic_report.py",
+      "sha256": "3db76e746ed447359bbe4ad47410cbe0cb9af12375bfa7c24312ab7cacd4e436"
+    },
+    "editor_buffer": {
+      "bytes": 28606,
+      "path": "lib/ide-buffer.lisp",
+      "sha256": "345ac2308ac75c6b5a7493f3c186370578c6466f14d7b7fb58b32842dfe9cf11"
+    },
+    "editor_keymap": {
+      "bytes": 2849,
+      "path": "lib/ide-keymap-generated.lisp",
+      "sha256": "f5c02fafec33e75159799faeaba1cfaba6418d3c4d93c20880c62a0b47eda929"
+    },
+    "editor_syntax": {
+      "bytes": 3237,
+      "path": "lib/ide-syntax.lisp",
+      "sha256": "6b1ace4d307b5443a4eb563bfa3c4b3fecc9ec60acdbc14b8ef364f39b11c7f6"
+    },
+    "editor_ui": {
+      "bytes": 37869,
+      "path": "lib/ide-ui.lisp",
+      "sha256": "f4c9ef348c1bd7e29f79b0e0bf153ccdb43aeab7fc03391ee6e341e1638f07ef"
+    },
+    "generated_product_ide_suite": {
+      "bytes": 59643,
+      "path": "build/bytecode/dialect-v2/suites/p0-ide-core-lib.json",
+      "sha256": "9cb8c0a00eb7063050346fa8b3ced1766eaf73777abeaea6b4b098496c218a39"
+    },
+    "measurement_tool": {
+      "bytes": 21942,
+      "path": "tools/host-lisp/c2_v125_editor_latency_accounting.py",
+      "sha256": "e51214abdae7883f76a3050fdbc3d47088bec641d3539472e3eec7a85adeec6e"
+    },
+    "owner_report": {
+      "bytes": 4991,
+      "path": "docs/planning/editor-input-latency-owner-report-2026-07-30.md",
+      "sha256": "50df0aa17d57a59475e46b09a4adc6bb30f6324977bf7b645397f52a0a1e36ed"
+    },
+    "p0_vm": {
+      "bytes": 88857,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "18290568c7217f1597505664f6bfdcab8d55e31a3f7d5254a9eea612af7f8389"
+    },
+    "released_product_receipt": {
+      "bytes": 5515,
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/v125-public-publication-receipt-20260731.json",
+      "sha256": "841c78220bec70593b8e9448aaec03329c471c32530cf46825aeb8d5da35e7ec"
+    },
+    "target_gc_authority": {
+      "bytes": 9011,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.2-g2-gc-work-attribution-receipt.json",
+      "sha256": "eb1975ffb25142649a3bf8b258bde587aad660c994b14a8b78494ee16c3691ff"
+    },
+    "workbench_geometry": {
+      "bytes": 22860,
+      "path": "config/workbench.mk",
+      "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+    }
+  },
+  "measurements": {
+    "coalesced_ten_keys_per_render": {
+      "allocations": {
+        "event": {
+          "count": 80,
+          "maximum": 3,
+          "mean": 3.0,
+          "median": 3.0,
+          "minimum": 3,
+          "sum": 240
+        },
+        "render_charged_to_batch_terminal_key": {
+          "count": 80,
+          "maximum": 361,
+          "mean": 16.4125,
+          "median": 0.0,
+          "minimum": 0,
+          "sum": 1313
+        },
+        "step": {
+          "count": 80,
+          "maximum": 361,
+          "mean": 28.2125,
+          "median": 24.0,
+          "minimum": 24,
+          "sum": 2257
+        },
+        "total_charged_to_key": {
+          "count": 80,
+          "maximum": 388,
+          "mean": 47.625,
+          "median": 27.0,
+          "minimum": 27,
+          "sum": 3810
+        },
+        "types": {
+          "cons": 3798,
+          "str": 12
+        }
+      },
+      "batch_size": 10,
+      "bounded_time_projection": {
+        "claim_limit": "VM and GC time figures combine host counts with historical target constants. Native screen I/O is excluded; this is a cost projection, not a target timing measurement.",
+        "collection_frames": 89,
+        "collection_microseconds": 1780000,
+        "historical_vm_instruction_microseconds": 27.5,
+        "mean_render_microseconds_excluding_native_io_and_gc": 7221.156249999999,
+        "mean_step_microseconds_excluding_native_io_and_gc": 25900.875,
+        "mean_vm_microseconds_per_key_excluding_native_io_and_gc": 33122.03125,
+        "steady_state_projected_collection_frames_per_key": 22.076171875,
+        "steady_state_projected_collection_microseconds_per_key": 441523.4375
+      },
+      "call_depth": {
+        "render_maximum": 83,
+        "step_maximum": 89
+      },
+      "dynamic_instructions": {
+        "render_charged_to_batch_terminal_key": {
+          "count": 80,
+          "maximum": 8778,
+          "mean": 262.5875,
+          "median": 0.0,
+          "minimum": 0,
+          "sum": 21007
+        },
+        "step": {
+          "count": 80,
+          "maximum": 2705,
+          "mean": 941.85,
+          "median": 920.0,
+          "minimum": 912,
+          "sum": 75348
+        },
+        "total_charged_to_key": {
+          "count": 80,
+          "maximum": 9690,
+          "mean": 1204.4375,
+          "median": 920.0,
+          "minimum": 912,
+          "sum": 96355
+        }
+      },
+      "keys": 80,
+      "per_key": [
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 1,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 0,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 912
+        },
+        {
+          "character_code": 100,
+          "column_before_wrap_model": 2,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 1,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 3,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 2,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 102,
+          "column_before_wrap_model": 4,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 3,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 117,
+          "column_before_wrap_model": 5,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 4,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 110,
+          "column_before_wrap_model": 6,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 5,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 7,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 6,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 8,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 7,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 100,
+          "column_before_wrap_model": 9,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 8,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 105,
+          "column_before_wrap_model": 10,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 9,
+          "render_allocation_types": {
+            "cons": 45,
+            "str": 1
+          },
+          "render_allocations": 46,
+          "render_instructions": 1177,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 86,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 73,
+          "total_instructions": 2097
+        },
+        {
+          "character_code": 116,
+          "column_before_wrap_model": 11,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 10,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 912
+        },
+        {
+          "character_code": 111,
+          "column_before_wrap_model": 12,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 11,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 114,
+          "column_before_wrap_model": 13,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 12,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 45,
+          "column_before_wrap_model": 14,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 13,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 108,
+          "column_before_wrap_model": 15,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 14,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 97,
+          "column_before_wrap_model": 16,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 15,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 116,
+          "column_before_wrap_model": 17,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 16,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 18,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 17,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 110,
+          "column_before_wrap_model": 19,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 18,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 99,
+          "column_before_wrap_model": 20,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 19,
+          "render_allocation_types": {
+            "cons": 75,
+            "str": 1
+          },
+          "render_allocations": 76,
+          "render_instructions": 1367,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 106,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 103,
+          "total_instructions": 2287
+        },
+        {
+          "character_code": 121,
+          "column_before_wrap_model": 21,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 20,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 912
+        },
+        {
+          "character_code": 45,
+          "column_before_wrap_model": 22,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 21,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 115,
+          "column_before_wrap_model": 23,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 22,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 97,
+          "column_before_wrap_model": 24,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 23,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 109,
+          "column_before_wrap_model": 25,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 24,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 112,
+          "column_before_wrap_model": 26,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 25,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 108,
+          "column_before_wrap_model": 27,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 26,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 28,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 27,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 29,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 28,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 30,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 29,
+          "render_allocation_types": {
+            "cons": 105,
+            "str": 1
+          },
+          "render_allocations": 106,
+          "render_instructions": 1557,
+          "render_max_call_depth": 35,
+          "render_symfn_resolutions": 126,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 133,
+          "total_instructions": 2477
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 31,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 30,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 919,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 27,
+          "total_instructions": 919
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 32,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 31,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 33,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 32,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 34,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 33,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 119,
+          "column_before_wrap_model": 35,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 34,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 104,
+          "column_before_wrap_model": 36,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 35,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 105,
+          "column_before_wrap_model": 37,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 36,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 108,
+          "column_before_wrap_model": 38,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 37,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 39,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 38,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 40,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 39,
+          "render_allocation_types": {
+            "cons": 135,
+            "str": 1
+          },
+          "render_allocations": 136,
+          "render_instructions": 1747,
+          "render_max_call_depth": 45,
+          "render_symfn_resolutions": 146,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 163,
+          "total_instructions": 2667
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 41,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 40,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 912
+        },
+        {
+          "character_code": 60,
+          "column_before_wrap_model": 42,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 41,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 43,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 42,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 44,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 43,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 927,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 27,
+          "total_instructions": 927
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 45,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 44,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 49,
+          "column_before_wrap_model": 46,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 45,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 48,
+          "column_before_wrap_model": 47,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 46,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 48,
+          "column_before_wrap_model": 48,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 47,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 49,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 48,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 50,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 49,
+          "render_allocation_types": {
+            "cons": 165,
+            "str": 1
+          },
+          "render_allocations": 166,
+          "render_instructions": 1937,
+          "render_max_call_depth": 55,
+          "render_symfn_resolutions": 166,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 193,
+          "total_instructions": 2857
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 51,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 50,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 912
+        },
+        {
+          "character_code": 115,
+          "column_before_wrap_model": 52,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 51,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 53,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 52,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 116,
+          "column_before_wrap_model": 54,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 53,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 113,
+          "column_before_wrap_model": 55,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 54,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 56,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 55,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 57,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 56,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 927,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 27,
+          "total_instructions": 927
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 58,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 57,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 59,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 58,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 43,
+          "column_before_wrap_model": 60,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 59,
+          "render_allocation_types": {
+            "cons": 195,
+            "str": 1
+          },
+          "render_allocations": 196,
+          "render_instructions": 2127,
+          "render_max_call_depth": 65,
+          "render_symfn_resolutions": 186,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 223,
+          "total_instructions": 3047
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 61,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 60,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 912
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 62,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 61,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 927,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 27,
+          "total_instructions": 927
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 63,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 62,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 49,
+          "column_before_wrap_model": 64,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 63,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 65,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 64,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 66,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 65,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 67,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 66,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 68,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 67,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 69,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 68,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 927,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 27,
+          "total_instructions": 927
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 70,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 69,
+          "render_allocation_types": {
+            "cons": 225,
+            "str": 1
+          },
+          "render_allocations": 226,
+          "render_instructions": 2317,
+          "render_max_call_depth": 75,
+          "render_symfn_resolutions": 206,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 253,
+          "total_instructions": 3237
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 71,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 70,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 912
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 72,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 71,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 73,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 72,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 100,
+          "column_before_wrap_model": 74,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 73,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 105,
+          "column_before_wrap_model": 75,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 74,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 116,
+          "column_before_wrap_model": 76,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 75,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 111,
+          "column_before_wrap_model": 77,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 76,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 114,
+          "column_before_wrap_model": 78,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 77,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 920,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 27,
+          "total_instructions": 920
+        },
+        {
+          "character_code": 45,
+          "column_before_wrap_model": 79,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 78,
+          "render_allocation_types": {},
+          "render_allocations": 0,
+          "render_instructions": 0,
+          "render_max_call_depth": 0,
+          "render_symfn_resolutions": 0,
+          "rendered_after_key": false,
+          "step_allocation_types": {
+            "cons": 359,
+            "str": 2
+          },
+          "step_allocations": 361,
+          "step_instructions": 2705,
+          "step_max_call_depth": 89,
+          "step_symfn_resolutions": 271,
+          "total_allocations": 364,
+          "total_instructions": 2705
+        },
+        {
+          "character_code": 108,
+          "column_before_wrap_model": 1,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 79,
+          "render_allocation_types": {
+            "cons": 358,
+            "str": 3
+          },
+          "render_allocations": 361,
+          "render_instructions": 8778,
+          "render_max_call_depth": 83,
+          "render_symfn_resolutions": 623,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 388,
+          "total_instructions": 9690
+        }
+      ],
+      "renders": 8,
+      "target_nursery_collection_model": {
+        "incoming_phases_exhaustively_checked": 192,
+        "keys_with_at_least_one_collection": {
+          "count": 192,
+          "maximum": 18,
+          "mean": 17.4375,
+          "median": 17.0,
+          "minimum": 16,
+          "sum": 3348
+        },
+        "maximum_collections_on_one_key": {
+          "count": 192,
+          "maximum": 3,
+          "mean": 2.0208333333333335,
+          "median": 2.0,
+          "minimum": 2,
+          "sum": 388
+        },
+        "normalized_phase_zero": {
+          "keys_with_at_least_one_collection": 17,
+          "per_key": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2
+          ],
+          "per_key_distribution": {
+            "0": 63,
+            "1": 15,
+            "2": 2
+          },
+          "total_collections": 19
+        },
+        "steady_state_collections_per_key": 0.248046875,
+        "total_collections": {
+          "count": 192,
+          "maximum": 20,
+          "mean": 19.838541666666668,
+          "median": 20.0,
+          "minimum": 19,
+          "sum": 3809
+        }
+      }
+    },
+    "serial_render_every_key": {
+      "allocations": {
+        "event": {
+          "count": 80,
+          "maximum": 3,
+          "mean": 3.0,
+          "median": 3.0,
+          "minimum": 3,
+          "sum": 240
+        },
+        "render_charged_to_batch_terminal_key": {
+          "count": 80,
+          "maximum": 358,
+          "mean": 138.05,
+          "median": 137.5,
+          "minimum": 19,
+          "sum": 11044
+        },
+        "step": {
+          "count": 80,
+          "maximum": 361,
+          "mean": 28.2125,
+          "median": 24.0,
+          "minimum": 24,
+          "sum": 2257
+        },
+        "total_charged_to_key": {
+          "count": 80,
+          "maximum": 722,
+          "mean": 169.2625,
+          "median": 164.5,
+          "minimum": 46,
+          "sum": 13541
+        },
+        "types": {
+          "cons": 13455,
+          "str": 86
+        }
+      },
+      "batch_size": 1,
+      "bounded_time_projection": {
+        "claim_limit": "VM and GC time figures combine host counts with historical target constants. Native screen I/O is excluded; this is a cost projection, not a target timing measurement.",
+        "collection_frames": 89,
+        "collection_microseconds": 1780000,
+        "historical_vm_instruction_microseconds": 27.5,
+        "mean_render_microseconds_excluding_native_io_and_gc": 49260.40625,
+        "mean_step_microseconds_excluding_native_io_and_gc": 25708.375,
+        "mean_vm_microseconds_per_key_excluding_native_io_and_gc": 74968.78125,
+        "steady_state_projected_collection_frames_per_key": 78.46022135416666,
+        "steady_state_projected_collection_microseconds_per_key": 1569204.4270833333
+      },
+      "call_depth": {
+        "render_maximum": 84,
+        "step_maximum": 89
+      },
+      "dynamic_instructions": {
+        "render_charged_to_batch_terminal_key": {
+          "count": 80,
+          "maximum": 8769,
+          "mean": 1791.2875,
+          "median": 1693.5,
+          "minimum": 943,
+          "sum": 143303
+        },
+        "step": {
+          "count": 80,
+          "maximum": 2705,
+          "mean": 934.85,
+          "median": 912.0,
+          "minimum": 912,
+          "sum": 74788
+        },
+        "total_charged_to_key": {
+          "count": 80,
+          "maximum": 11474,
+          "mean": 2726.1375,
+          "median": 2605.5,
+          "minimum": 1855,
+          "sum": 218091
+        }
+      },
+      "keys": 80,
+      "per_key": [
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 1,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 0,
+          "render_allocation_types": {
+            "cons": 18,
+            "str": 1
+          },
+          "render_allocations": 19,
+          "render_instructions": 943,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 68,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 46,
+          "total_instructions": 1855
+        },
+        {
+          "character_code": 100,
+          "column_before_wrap_model": 2,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 1,
+          "render_allocation_types": {
+            "cons": 21,
+            "str": 1
+          },
+          "render_allocations": 22,
+          "render_instructions": 962,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 70,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 49,
+          "total_instructions": 1874
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 3,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 2,
+          "render_allocation_types": {
+            "cons": 24,
+            "str": 1
+          },
+          "render_allocations": 25,
+          "render_instructions": 981,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 72,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 52,
+          "total_instructions": 1893
+        },
+        {
+          "character_code": 102,
+          "column_before_wrap_model": 4,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 3,
+          "render_allocation_types": {
+            "cons": 27,
+            "str": 1
+          },
+          "render_allocations": 28,
+          "render_instructions": 1000,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 74,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 55,
+          "total_instructions": 1912
+        },
+        {
+          "character_code": 117,
+          "column_before_wrap_model": 5,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 4,
+          "render_allocation_types": {
+            "cons": 30,
+            "str": 1
+          },
+          "render_allocations": 31,
+          "render_instructions": 1019,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 76,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 58,
+          "total_instructions": 1931
+        },
+        {
+          "character_code": 110,
+          "column_before_wrap_model": 6,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 5,
+          "render_allocation_types": {
+            "cons": 33,
+            "str": 1
+          },
+          "render_allocations": 34,
+          "render_instructions": 1038,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 78,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 61,
+          "total_instructions": 1950
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 7,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 6,
+          "render_allocation_types": {
+            "cons": 36,
+            "str": 1
+          },
+          "render_allocations": 37,
+          "render_instructions": 1057,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 80,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 64,
+          "total_instructions": 1969
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 8,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 7,
+          "render_allocation_types": {
+            "cons": 39,
+            "str": 1
+          },
+          "render_allocations": 40,
+          "render_instructions": 1076,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 82,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 67,
+          "total_instructions": 1988
+        },
+        {
+          "character_code": 100,
+          "column_before_wrap_model": 9,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 8,
+          "render_allocation_types": {
+            "cons": 42,
+            "str": 1
+          },
+          "render_allocations": 43,
+          "render_instructions": 1095,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 84,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 70,
+          "total_instructions": 2007
+        },
+        {
+          "character_code": 105,
+          "column_before_wrap_model": 10,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 9,
+          "render_allocation_types": {
+            "cons": 45,
+            "str": 1
+          },
+          "render_allocations": 46,
+          "render_instructions": 1114,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 86,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 73,
+          "total_instructions": 2026
+        },
+        {
+          "character_code": 116,
+          "column_before_wrap_model": 11,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 10,
+          "render_allocation_types": {
+            "cons": 48,
+            "str": 1
+          },
+          "render_allocations": 49,
+          "render_instructions": 1133,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 88,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 76,
+          "total_instructions": 2045
+        },
+        {
+          "character_code": 111,
+          "column_before_wrap_model": 12,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 11,
+          "render_allocation_types": {
+            "cons": 51,
+            "str": 1
+          },
+          "render_allocations": 52,
+          "render_instructions": 1152,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 90,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 79,
+          "total_instructions": 2064
+        },
+        {
+          "character_code": 114,
+          "column_before_wrap_model": 13,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 12,
+          "render_allocation_types": {
+            "cons": 54,
+            "str": 1
+          },
+          "render_allocations": 55,
+          "render_instructions": 1171,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 92,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 82,
+          "total_instructions": 2083
+        },
+        {
+          "character_code": 45,
+          "column_before_wrap_model": 14,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 13,
+          "render_allocation_types": {
+            "cons": 57,
+            "str": 1
+          },
+          "render_allocations": 58,
+          "render_instructions": 1190,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 94,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 85,
+          "total_instructions": 2102
+        },
+        {
+          "character_code": 108,
+          "column_before_wrap_model": 15,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 14,
+          "render_allocation_types": {
+            "cons": 60,
+            "str": 1
+          },
+          "render_allocations": 61,
+          "render_instructions": 1209,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 96,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 88,
+          "total_instructions": 2121
+        },
+        {
+          "character_code": 97,
+          "column_before_wrap_model": 16,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 15,
+          "render_allocation_types": {
+            "cons": 63,
+            "str": 1
+          },
+          "render_allocations": 64,
+          "render_instructions": 1228,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 98,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 91,
+          "total_instructions": 2140
+        },
+        {
+          "character_code": 116,
+          "column_before_wrap_model": 17,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 16,
+          "render_allocation_types": {
+            "cons": 66,
+            "str": 1
+          },
+          "render_allocations": 67,
+          "render_instructions": 1247,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 100,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 94,
+          "total_instructions": 2159
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 18,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 17,
+          "render_allocation_types": {
+            "cons": 69,
+            "str": 1
+          },
+          "render_allocations": 70,
+          "render_instructions": 1266,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 102,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 97,
+          "total_instructions": 2178
+        },
+        {
+          "character_code": 110,
+          "column_before_wrap_model": 19,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 18,
+          "render_allocation_types": {
+            "cons": 72,
+            "str": 1
+          },
+          "render_allocations": 73,
+          "render_instructions": 1285,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 104,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 100,
+          "total_instructions": 2197
+        },
+        {
+          "character_code": 99,
+          "column_before_wrap_model": 20,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 19,
+          "render_allocation_types": {
+            "cons": 75,
+            "str": 1
+          },
+          "render_allocations": 76,
+          "render_instructions": 1304,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 106,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 103,
+          "total_instructions": 2216
+        },
+        {
+          "character_code": 121,
+          "column_before_wrap_model": 21,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 20,
+          "render_allocation_types": {
+            "cons": 78,
+            "str": 1
+          },
+          "render_allocations": 79,
+          "render_instructions": 1323,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 108,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 106,
+          "total_instructions": 2235
+        },
+        {
+          "character_code": 45,
+          "column_before_wrap_model": 22,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 21,
+          "render_allocation_types": {
+            "cons": 81,
+            "str": 1
+          },
+          "render_allocations": 82,
+          "render_instructions": 1342,
+          "render_max_call_depth": 27,
+          "render_symfn_resolutions": 110,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 109,
+          "total_instructions": 2254
+        },
+        {
+          "character_code": 115,
+          "column_before_wrap_model": 23,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 22,
+          "render_allocation_types": {
+            "cons": 84,
+            "str": 1
+          },
+          "render_allocations": 85,
+          "render_instructions": 1361,
+          "render_max_call_depth": 28,
+          "render_symfn_resolutions": 112,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 112,
+          "total_instructions": 2273
+        },
+        {
+          "character_code": 97,
+          "column_before_wrap_model": 24,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 23,
+          "render_allocation_types": {
+            "cons": 87,
+            "str": 1
+          },
+          "render_allocations": 88,
+          "render_instructions": 1380,
+          "render_max_call_depth": 29,
+          "render_symfn_resolutions": 114,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 115,
+          "total_instructions": 2292
+        },
+        {
+          "character_code": 109,
+          "column_before_wrap_model": 25,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 24,
+          "render_allocation_types": {
+            "cons": 90,
+            "str": 1
+          },
+          "render_allocations": 91,
+          "render_instructions": 1399,
+          "render_max_call_depth": 30,
+          "render_symfn_resolutions": 116,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 118,
+          "total_instructions": 2311
+        },
+        {
+          "character_code": 112,
+          "column_before_wrap_model": 26,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 25,
+          "render_allocation_types": {
+            "cons": 93,
+            "str": 1
+          },
+          "render_allocations": 94,
+          "render_instructions": 1418,
+          "render_max_call_depth": 31,
+          "render_symfn_resolutions": 118,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 121,
+          "total_instructions": 2330
+        },
+        {
+          "character_code": 108,
+          "column_before_wrap_model": 27,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 26,
+          "render_allocation_types": {
+            "cons": 96,
+            "str": 1
+          },
+          "render_allocations": 97,
+          "render_instructions": 1437,
+          "render_max_call_depth": 32,
+          "render_symfn_resolutions": 120,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 124,
+          "total_instructions": 2349
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 28,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 27,
+          "render_allocation_types": {
+            "cons": 99,
+            "str": 1
+          },
+          "render_allocations": 100,
+          "render_instructions": 1456,
+          "render_max_call_depth": 33,
+          "render_symfn_resolutions": 122,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 127,
+          "total_instructions": 2368
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 29,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 28,
+          "render_allocation_types": {
+            "cons": 102,
+            "str": 1
+          },
+          "render_allocations": 103,
+          "render_instructions": 1475,
+          "render_max_call_depth": 34,
+          "render_symfn_resolutions": 124,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 130,
+          "total_instructions": 2387
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 30,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 29,
+          "render_allocation_types": {
+            "cons": 105,
+            "str": 1
+          },
+          "render_allocations": 106,
+          "render_instructions": 1494,
+          "render_max_call_depth": 35,
+          "render_symfn_resolutions": 126,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 133,
+          "total_instructions": 2406
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 31,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 30,
+          "render_allocation_types": {
+            "cons": 108,
+            "str": 1
+          },
+          "render_allocations": 109,
+          "render_instructions": 1513,
+          "render_max_call_depth": 36,
+          "render_symfn_resolutions": 128,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 919,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 136,
+          "total_instructions": 2432
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 32,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 31,
+          "render_allocation_types": {
+            "cons": 111,
+            "str": 1
+          },
+          "render_allocations": 112,
+          "render_instructions": 1532,
+          "render_max_call_depth": 37,
+          "render_symfn_resolutions": 130,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 139,
+          "total_instructions": 2444
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 33,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 32,
+          "render_allocation_types": {
+            "cons": 114,
+            "str": 1
+          },
+          "render_allocations": 115,
+          "render_instructions": 1551,
+          "render_max_call_depth": 38,
+          "render_symfn_resolutions": 132,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 142,
+          "total_instructions": 2463
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 34,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 33,
+          "render_allocation_types": {
+            "cons": 117,
+            "str": 1
+          },
+          "render_allocations": 118,
+          "render_instructions": 1570,
+          "render_max_call_depth": 39,
+          "render_symfn_resolutions": 134,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 145,
+          "total_instructions": 2482
+        },
+        {
+          "character_code": 119,
+          "column_before_wrap_model": 35,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 34,
+          "render_allocation_types": {
+            "cons": 120,
+            "str": 1
+          },
+          "render_allocations": 121,
+          "render_instructions": 1589,
+          "render_max_call_depth": 40,
+          "render_symfn_resolutions": 136,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 148,
+          "total_instructions": 2501
+        },
+        {
+          "character_code": 104,
+          "column_before_wrap_model": 36,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 35,
+          "render_allocation_types": {
+            "cons": 123,
+            "str": 1
+          },
+          "render_allocations": 124,
+          "render_instructions": 1608,
+          "render_max_call_depth": 41,
+          "render_symfn_resolutions": 138,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 151,
+          "total_instructions": 2520
+        },
+        {
+          "character_code": 105,
+          "column_before_wrap_model": 37,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 36,
+          "render_allocation_types": {
+            "cons": 126,
+            "str": 1
+          },
+          "render_allocations": 127,
+          "render_instructions": 1627,
+          "render_max_call_depth": 42,
+          "render_symfn_resolutions": 140,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 154,
+          "total_instructions": 2539
+        },
+        {
+          "character_code": 108,
+          "column_before_wrap_model": 38,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 37,
+          "render_allocation_types": {
+            "cons": 129,
+            "str": 1
+          },
+          "render_allocations": 130,
+          "render_instructions": 1646,
+          "render_max_call_depth": 43,
+          "render_symfn_resolutions": 142,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 157,
+          "total_instructions": 2558
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 39,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 38,
+          "render_allocation_types": {
+            "cons": 132,
+            "str": 1
+          },
+          "render_allocations": 133,
+          "render_instructions": 1665,
+          "render_max_call_depth": 44,
+          "render_symfn_resolutions": 144,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 160,
+          "total_instructions": 2577
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 40,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 39,
+          "render_allocation_types": {
+            "cons": 135,
+            "str": 1
+          },
+          "render_allocations": 136,
+          "render_instructions": 1684,
+          "render_max_call_depth": 45,
+          "render_symfn_resolutions": 146,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 163,
+          "total_instructions": 2596
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 41,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 40,
+          "render_allocation_types": {
+            "cons": 138,
+            "str": 1
+          },
+          "render_allocations": 139,
+          "render_instructions": 1703,
+          "render_max_call_depth": 46,
+          "render_symfn_resolutions": 148,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 166,
+          "total_instructions": 2615
+        },
+        {
+          "character_code": 60,
+          "column_before_wrap_model": 42,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 41,
+          "render_allocation_types": {
+            "cons": 141,
+            "str": 1
+          },
+          "render_allocations": 142,
+          "render_instructions": 1722,
+          "render_max_call_depth": 47,
+          "render_symfn_resolutions": 150,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 169,
+          "total_instructions": 2634
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 43,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 42,
+          "render_allocation_types": {
+            "cons": 144,
+            "str": 1
+          },
+          "render_allocations": 145,
+          "render_instructions": 1741,
+          "render_max_call_depth": 48,
+          "render_symfn_resolutions": 152,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 172,
+          "total_instructions": 2653
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 44,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 43,
+          "render_allocation_types": {
+            "cons": 147,
+            "str": 1
+          },
+          "render_allocations": 148,
+          "render_instructions": 1760,
+          "render_max_call_depth": 49,
+          "render_symfn_resolutions": 154,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 919,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 175,
+          "total_instructions": 2679
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 45,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 44,
+          "render_allocation_types": {
+            "cons": 150,
+            "str": 1
+          },
+          "render_allocations": 151,
+          "render_instructions": 1779,
+          "render_max_call_depth": 50,
+          "render_symfn_resolutions": 156,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 178,
+          "total_instructions": 2691
+        },
+        {
+          "character_code": 49,
+          "column_before_wrap_model": 46,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 45,
+          "render_allocation_types": {
+            "cons": 153,
+            "str": 1
+          },
+          "render_allocations": 154,
+          "render_instructions": 1798,
+          "render_max_call_depth": 51,
+          "render_symfn_resolutions": 158,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 181,
+          "total_instructions": 2710
+        },
+        {
+          "character_code": 48,
+          "column_before_wrap_model": 47,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 46,
+          "render_allocation_types": {
+            "cons": 156,
+            "str": 1
+          },
+          "render_allocations": 157,
+          "render_instructions": 1817,
+          "render_max_call_depth": 52,
+          "render_symfn_resolutions": 160,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 184,
+          "total_instructions": 2729
+        },
+        {
+          "character_code": 48,
+          "column_before_wrap_model": 48,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 47,
+          "render_allocation_types": {
+            "cons": 159,
+            "str": 1
+          },
+          "render_allocations": 160,
+          "render_instructions": 1836,
+          "render_max_call_depth": 53,
+          "render_symfn_resolutions": 162,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 187,
+          "total_instructions": 2748
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 49,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 48,
+          "render_allocation_types": {
+            "cons": 162,
+            "str": 1
+          },
+          "render_allocations": 163,
+          "render_instructions": 1855,
+          "render_max_call_depth": 54,
+          "render_symfn_resolutions": 164,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 190,
+          "total_instructions": 2767
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 50,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 49,
+          "render_allocation_types": {
+            "cons": 165,
+            "str": 1
+          },
+          "render_allocations": 166,
+          "render_instructions": 1874,
+          "render_max_call_depth": 55,
+          "render_symfn_resolutions": 166,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 193,
+          "total_instructions": 2786
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 51,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 50,
+          "render_allocation_types": {
+            "cons": 168,
+            "str": 1
+          },
+          "render_allocations": 169,
+          "render_instructions": 1893,
+          "render_max_call_depth": 56,
+          "render_symfn_resolutions": 168,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 196,
+          "total_instructions": 2805
+        },
+        {
+          "character_code": 115,
+          "column_before_wrap_model": 52,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 51,
+          "render_allocation_types": {
+            "cons": 171,
+            "str": 1
+          },
+          "render_allocations": 172,
+          "render_instructions": 1912,
+          "render_max_call_depth": 57,
+          "render_symfn_resolutions": 170,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 199,
+          "total_instructions": 2824
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 53,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 52,
+          "render_allocation_types": {
+            "cons": 174,
+            "str": 1
+          },
+          "render_allocations": 175,
+          "render_instructions": 1931,
+          "render_max_call_depth": 58,
+          "render_symfn_resolutions": 172,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 202,
+          "total_instructions": 2843
+        },
+        {
+          "character_code": 116,
+          "column_before_wrap_model": 54,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 53,
+          "render_allocation_types": {
+            "cons": 177,
+            "str": 1
+          },
+          "render_allocations": 178,
+          "render_instructions": 1950,
+          "render_max_call_depth": 59,
+          "render_symfn_resolutions": 174,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 205,
+          "total_instructions": 2862
+        },
+        {
+          "character_code": 113,
+          "column_before_wrap_model": 55,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 54,
+          "render_allocation_types": {
+            "cons": 180,
+            "str": 1
+          },
+          "render_allocations": 181,
+          "render_instructions": 1969,
+          "render_max_call_depth": 60,
+          "render_symfn_resolutions": 176,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 208,
+          "total_instructions": 2881
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 56,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 55,
+          "render_allocation_types": {
+            "cons": 183,
+            "str": 1
+          },
+          "render_allocations": 184,
+          "render_instructions": 1988,
+          "render_max_call_depth": 61,
+          "render_symfn_resolutions": 178,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 211,
+          "total_instructions": 2900
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 57,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 56,
+          "render_allocation_types": {
+            "cons": 186,
+            "str": 1
+          },
+          "render_allocations": 187,
+          "render_instructions": 2007,
+          "render_max_call_depth": 62,
+          "render_symfn_resolutions": 180,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 919,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 214,
+          "total_instructions": 2926
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 58,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 57,
+          "render_allocation_types": {
+            "cons": 189,
+            "str": 1
+          },
+          "render_allocations": 190,
+          "render_instructions": 2026,
+          "render_max_call_depth": 63,
+          "render_symfn_resolutions": 182,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 217,
+          "total_instructions": 2938
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 59,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 58,
+          "render_allocation_types": {
+            "cons": 192,
+            "str": 1
+          },
+          "render_allocations": 193,
+          "render_instructions": 2045,
+          "render_max_call_depth": 64,
+          "render_symfn_resolutions": 184,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 220,
+          "total_instructions": 2957
+        },
+        {
+          "character_code": 43,
+          "column_before_wrap_model": 60,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 59,
+          "render_allocation_types": {
+            "cons": 195,
+            "str": 1
+          },
+          "render_allocations": 196,
+          "render_instructions": 2064,
+          "render_max_call_depth": 65,
+          "render_symfn_resolutions": 186,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 223,
+          "total_instructions": 2976
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 61,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 60,
+          "render_allocation_types": {
+            "cons": 198,
+            "str": 1
+          },
+          "render_allocations": 199,
+          "render_instructions": 2083,
+          "render_max_call_depth": 66,
+          "render_symfn_resolutions": 188,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 226,
+          "total_instructions": 2995
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 62,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 61,
+          "render_allocation_types": {
+            "cons": 201,
+            "str": 1
+          },
+          "render_allocations": 202,
+          "render_instructions": 2102,
+          "render_max_call_depth": 67,
+          "render_symfn_resolutions": 190,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 919,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 229,
+          "total_instructions": 3021
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 63,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 62,
+          "render_allocation_types": {
+            "cons": 204,
+            "str": 1
+          },
+          "render_allocations": 205,
+          "render_instructions": 2121,
+          "render_max_call_depth": 68,
+          "render_symfn_resolutions": 192,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 232,
+          "total_instructions": 3033
+        },
+        {
+          "character_code": 49,
+          "column_before_wrap_model": 64,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 63,
+          "render_allocation_types": {
+            "cons": 207,
+            "str": 1
+          },
+          "render_allocations": 208,
+          "render_instructions": 2140,
+          "render_max_call_depth": 69,
+          "render_symfn_resolutions": 194,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 235,
+          "total_instructions": 3052
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 65,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 64,
+          "render_allocation_types": {
+            "cons": 210,
+            "str": 1
+          },
+          "render_allocations": 211,
+          "render_instructions": 2159,
+          "render_max_call_depth": 70,
+          "render_symfn_resolutions": 196,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 238,
+          "total_instructions": 3071
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 66,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 65,
+          "render_allocation_types": {
+            "cons": 213,
+            "str": 1
+          },
+          "render_allocations": 214,
+          "render_instructions": 2178,
+          "render_max_call_depth": 71,
+          "render_symfn_resolutions": 198,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 241,
+          "total_instructions": 3090
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 67,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 66,
+          "render_allocation_types": {
+            "cons": 216,
+            "str": 1
+          },
+          "render_allocations": 217,
+          "render_instructions": 2197,
+          "render_max_call_depth": 72,
+          "render_symfn_resolutions": 200,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 244,
+          "total_instructions": 3109
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 68,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 67,
+          "render_allocation_types": {
+            "cons": 219,
+            "str": 1
+          },
+          "render_allocations": 220,
+          "render_instructions": 2216,
+          "render_max_call_depth": 73,
+          "render_symfn_resolutions": 202,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 247,
+          "total_instructions": 3128
+        },
+        {
+          "character_code": 120,
+          "column_before_wrap_model": 69,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 68,
+          "render_allocation_types": {
+            "cons": 222,
+            "str": 1
+          },
+          "render_allocations": 223,
+          "render_instructions": 2235,
+          "render_max_call_depth": 74,
+          "render_symfn_resolutions": 204,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 919,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 74,
+          "total_allocations": 250,
+          "total_instructions": 3154
+        },
+        {
+          "character_code": 41,
+          "column_before_wrap_model": 70,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 69,
+          "render_allocation_types": {
+            "cons": 225,
+            "str": 1
+          },
+          "render_allocations": 226,
+          "render_instructions": 2254,
+          "render_max_call_depth": 75,
+          "render_symfn_resolutions": 206,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 253,
+          "total_instructions": 3166
+        },
+        {
+          "character_code": 32,
+          "column_before_wrap_model": 71,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 70,
+          "render_allocation_types": {
+            "cons": 228,
+            "str": 1
+          },
+          "render_allocations": 229,
+          "render_instructions": 2273,
+          "render_max_call_depth": 76,
+          "render_symfn_resolutions": 208,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 256,
+          "total_instructions": 3185
+        },
+        {
+          "character_code": 40,
+          "column_before_wrap_model": 72,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 71,
+          "render_allocation_types": {
+            "cons": 231,
+            "str": 1
+          },
+          "render_allocations": 232,
+          "render_instructions": 2292,
+          "render_max_call_depth": 77,
+          "render_symfn_resolutions": 210,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 259,
+          "total_instructions": 3204
+        },
+        {
+          "character_code": 101,
+          "column_before_wrap_model": 73,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 72,
+          "render_allocation_types": {
+            "cons": 234,
+            "str": 1
+          },
+          "render_allocations": 235,
+          "render_instructions": 2311,
+          "render_max_call_depth": 78,
+          "render_symfn_resolutions": 212,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 262,
+          "total_instructions": 3223
+        },
+        {
+          "character_code": 100,
+          "column_before_wrap_model": 74,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 73,
+          "render_allocation_types": {
+            "cons": 237,
+            "str": 1
+          },
+          "render_allocations": 238,
+          "render_instructions": 2330,
+          "render_max_call_depth": 79,
+          "render_symfn_resolutions": 214,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 265,
+          "total_instructions": 3242
+        },
+        {
+          "character_code": 105,
+          "column_before_wrap_model": 75,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 74,
+          "render_allocation_types": {
+            "cons": 240,
+            "str": 1
+          },
+          "render_allocations": 241,
+          "render_instructions": 2349,
+          "render_max_call_depth": 80,
+          "render_symfn_resolutions": 216,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 268,
+          "total_instructions": 3261
+        },
+        {
+          "character_code": 116,
+          "column_before_wrap_model": 76,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 75,
+          "render_allocation_types": {
+            "cons": 243,
+            "str": 1
+          },
+          "render_allocations": 244,
+          "render_instructions": 2368,
+          "render_max_call_depth": 81,
+          "render_symfn_resolutions": 218,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 271,
+          "total_instructions": 3280
+        },
+        {
+          "character_code": 111,
+          "column_before_wrap_model": 77,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 76,
+          "render_allocation_types": {
+            "cons": 246,
+            "str": 1
+          },
+          "render_allocations": 247,
+          "render_instructions": 2387,
+          "render_max_call_depth": 82,
+          "render_symfn_resolutions": 220,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 274,
+          "total_instructions": 3299
+        },
+        {
+          "character_code": 114,
+          "column_before_wrap_model": 78,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 77,
+          "render_allocation_types": {
+            "cons": 249,
+            "str": 1
+          },
+          "render_allocations": 250,
+          "render_instructions": 2406,
+          "render_max_call_depth": 83,
+          "render_symfn_resolutions": 222,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 277,
+          "total_instructions": 3318
+        },
+        {
+          "character_code": 45,
+          "column_before_wrap_model": 79,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 78,
+          "render_allocation_types": {
+            "cons": 355,
+            "str": 3
+          },
+          "render_allocations": 358,
+          "render_instructions": 8769,
+          "render_max_call_depth": 84,
+          "render_symfn_resolutions": 622,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 359,
+            "str": 2
+          },
+          "step_allocations": 361,
+          "step_instructions": 2705,
+          "step_max_call_depth": 89,
+          "step_symfn_resolutions": 271,
+          "total_allocations": 722,
+          "total_instructions": 11474
+        },
+        {
+          "character_code": 108,
+          "column_before_wrap_model": 1,
+          "event_allocation_types": {
+            "cons": 3
+          },
+          "event_allocations": 3,
+          "index": 79,
+          "render_allocation_types": {
+            "cons": 192,
+            "str": 3
+          },
+          "render_allocations": 195,
+          "render_instructions": 3923,
+          "render_max_call_depth": 58,
+          "render_symfn_resolutions": 324,
+          "rendered_after_key": true,
+          "step_allocation_types": {
+            "cons": 24
+          },
+          "step_allocations": 24,
+          "step_instructions": 912,
+          "step_max_call_depth": 28,
+          "step_symfn_resolutions": 73,
+          "total_allocations": 222,
+          "total_instructions": 4835
+        }
+      ],
+      "renders": 80,
+      "target_nursery_collection_model": {
+        "incoming_phases_exhaustively_checked": 192,
+        "keys_with_at_least_one_collection": {
+          "count": 192,
+          "maximum": 62,
+          "mean": 61.109375,
+          "median": 61.0,
+          "minimum": 61,
+          "sum": 11733
+        },
+        "maximum_collections_on_one_key": {
+          "count": 192,
+          "maximum": 4,
+          "mean": 3.7604166666666665,
+          "median": 4.0,
+          "minimum": 3,
+          "sum": 722
+        },
+        "normalized_phase_zero": {
+          "keys_with_at_least_one_collection": 61,
+          "per_key": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            2,
+            1,
+            4,
+            1
+          ],
+          "per_key_distribution": {
+            "0": 19,
+            "1": 54,
+            "2": 6,
+            "4": 1
+          },
+          "total_collections": 70
+        },
+        "steady_state_collections_per_key": 0.8815755208333333,
+        "total_collections": {
+          "count": 192,
+          "maximum": 71,
+          "mean": 70.52083333333333,
+          "median": 71.0,
+          "minimum": 70,
+          "sum": 13540
+        }
+      }
+    }
+  },
+  "priced_levers": [
+    {
+      "evidence": "render allocations rise with cursor column; the serial route's allocation mean and GC projection quantify the direct lever",
+      "lever": "remove per-render typed-line materialization",
+      "priority": 1,
+      "product_shape": "Bank-2/IDE-library change"
+    },
+    {
+      "evidence": "ten-key batches lower allocations and projected collections per key, but pauses remain batch-clustered",
+      "lever": "retain and strengthen render coalescing",
+      "priority": 2,
+      "product_shape": "existing Lisp orchestration"
+    },
+    {
+      "evidence": "89 frames dominate the projection, but the dominant collector phase remains unattributed on target",
+      "lever": "instrument GC with room before collector changes",
+      "priority": 3,
+      "product_shape": "parked cold overlay instrument"
+    },
+    {
+      "evidence": "step/render instruction counts price the residual non-GC floor; it is secondary to the collection envelope",
+      "lever": "reduce VM dispatch/call depth",
+      "priority": 4,
+      "product_shape": "future bytecode/compiler work"
+    }
+  ],
+  "recorded_on": "2026-07-31",
+  "scope": {
+    "hardware_contacts": 0,
+    "product_bytes_changed": 0,
+    "product_links_created": 0,
+    "target_timing_claimed": false
+  },
+  "status": "passed-host-attribution",
+  "workload": {
+    "characters": 80,
+    "coalesced_route": "ten ide-step calls followed by one ide-render, matching the KERNAL buffer capacity and %ide-drain-pending policy",
+    "serial_route": "one ide-step plus one ide-render per key",
+    "sha256": "6fa0f90823cb3d09e5ac80878cdbebaed612cf9fbf9aea010334d2ce91c52125",
+    "text": "(defun editor-latency-sample (x) (while (< x 100) (setq x (+ x 1))) x) (editor-l",
+    "warmup": "cold render plus one unmeasured printable edit/render; accounting begins with a modified warm buffer"
+  }
+}

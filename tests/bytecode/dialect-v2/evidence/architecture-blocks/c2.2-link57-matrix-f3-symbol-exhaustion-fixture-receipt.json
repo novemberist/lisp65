@@ -1,0 +1,208 @@
+{
+  "authorities": {
+    "accepted_matrix_review": {
+      "bytes": 45164,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cross-invariant-full-matrix-link57-review-receipt.json",
+      "sha256": "62b5c3cdffa71861f48de6e6619ee40b7ea94ba144ae2653d77a39603e24e8f8"
+    },
+    "append_runtime": {
+      "bytes": 140704,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "f47d730cf0895665b39eeed15fec0f12e16b7085bd4174db1ddb108a609311e2"
+    },
+    "error_codes": {
+      "bytes": 3357,
+      "path": "src/error_codes.h",
+      "sha256": "2ed328439daf27b31db0470615c29d8d6ebebec2f88bc6bb49fcc429dc45e0a8"
+    },
+    "error_texts": {
+      "bytes": 18779,
+      "path": "config/error-texts.json",
+      "sha256": "7dfe843a416311a827d52a172b3da7a5abf5ec7921e6cd36c81cf25475c6053e"
+    },
+    "fixture_source": {
+      "bytes": 6218,
+      "path": "scripts/c2-f3-symbol-exhaustion-main.c",
+      "sha256": "3d7556e87c00dea79701b5c2a58adef44ea0e805c970b46ca53040b7dcffcf24"
+    },
+    "link57_elf": {
+      "bytes": 612152,
+      "path": "build/c2.2/substitution/product-link-57-keymap-nullary-fast-path2/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "306ba2aca61bbd2b924f3b52fd03fbbd9db95330f9c81e1190329abc147bf950"
+    },
+    "link57_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-57-keymap-nullary-fast-path2/lisp65-c2-substitution-linked.prg",
+      "sha256": "7d568ceb7edab95a237ff3079fcf689768373a9ea48a5a43f355f6275ddc5df8"
+    },
+    "link57_structural_receipt": {
+      "bytes": 527681,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link57-keymap-nullary-fast-path2-structural-receipt.json",
+      "sha256": "6632a7d00ea3bfaef294924ea618e0af70e34b75da929de05b2e7c451ce26059"
+    },
+    "product_profile": {
+      "bytes": 22860,
+      "path": "config/workbench.mk",
+      "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+    },
+    "symbol_allocator": {
+      "bytes": 12142,
+      "path": "src/symbol.c",
+      "sha256": "df5f4836fc0c19df37d9baaaae2bd1d5985d2c467221e7453be4de6448177b2d"
+    }
+  },
+  "cases": [
+    {
+      "append": "persistent",
+      "c2d_byte_identical": true,
+      "c2j_byte_identical": true,
+      "error_code": 34,
+      "export_cells_byte_identical": true,
+      "pool_after": 4512,
+      "pool_before": 4512,
+      "pool_capacity": 10208,
+      "resource": "symbol-slots",
+      "symbol_capacity": 752,
+      "symbols_after": 752,
+      "symbols_before": 752
+    },
+    {
+      "append": "transient",
+      "c2d_byte_identical": true,
+      "c2j_byte_identical": true,
+      "error_code": 34,
+      "export_cells_byte_identical": true,
+      "pool_after": 4512,
+      "pool_before": 4512,
+      "pool_capacity": 10208,
+      "resource": "symbol-slots",
+      "symbol_capacity": 752,
+      "symbols_after": 752,
+      "symbols_before": 752
+    },
+    {
+      "append": "persistent",
+      "c2d_byte_identical": true,
+      "c2j_byte_identical": true,
+      "error_code": 34,
+      "export_cells_byte_identical": true,
+      "pool_after": 10208,
+      "pool_before": 10208,
+      "pool_capacity": 10208,
+      "resource": "name-pool",
+      "symbol_capacity": 752,
+      "symbols_after": 638,
+      "symbols_before": 638
+    },
+    {
+      "append": "transient",
+      "c2d_byte_identical": true,
+      "c2j_byte_identical": true,
+      "error_code": 34,
+      "export_cells_byte_identical": true,
+      "pool_after": 10208,
+      "pool_before": 10208,
+      "pool_capacity": 10208,
+      "resource": "name-pool",
+      "symbol_capacity": 752,
+      "symbols_after": 638,
+      "symbols_before": 638
+    }
+  ],
+  "claim_limit": "Closes F3 for the exact Link-57 source/artifact identity by composing the real exact-capacity symbol allocator, four ASAN/UBSAN append-seam fixtures, and the permanent linked append rollback gate. It does not close another matrix row, start the acceptance chain, promote a product or make a hardware claim.",
+  "disposition_result": "PROVEN",
+  "execution": {
+    "capacity_effect_bytes": 0,
+    "hardware_runs": 0,
+    "host_fixture_builds": 1,
+    "host_fixture_runs": 4,
+    "product_bytes_changed": 0,
+    "product_compiler_runs": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-matrix-f3-symbol-exhaustion-fixture-v1",
+  "host_fixture": {
+    "binary": {
+      "bytes": 42912,
+      "path": "build/c2.2/matrix-f3-symbol-exhaustion/c2-f3-symbol-exhaustion-host",
+      "sha256": "2b3782af39ea08f1b721ebf7c15092bd4964883bef1e8899a79458e177923032"
+    },
+    "case_artifact": {
+      "bytes": 1411,
+      "path": "build/c2.2/matrix-f3-symbol-exhaustion/cases.json",
+      "sha256": "6c1e2a59fa8a00af036b1b8ea632ffe3e312f13adf5047b58eb5520ffcd4affc"
+    },
+    "compiler_command": [
+      "cc",
+      "-std=c11",
+      "-O1",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-DMAX_SYM=752",
+      "-DNAMEPOOL=10208",
+      "-DLISP65_NUMERIC_ERRORS",
+      "-DLISP65_NAMEOFF_EXT",
+      "-DLISP65_SYMVAL_EXT",
+      "-DLISP65_SYMFN_EXT",
+      "-DLISP65_SYMPOOL_EXT",
+      "-Isrc",
+      "scripts/c2-f3-symbol-exhaustion-main.c",
+      "src/symbol.c",
+      "-Wl,--gc-sections",
+      "-o",
+      "build/c2.2/matrix-f3-symbol-exhaustion/c2-f3-symbol-exhaustion-host"
+    ],
+    "sanitizers": [
+      "ASAN",
+      "UBSAN"
+    ]
+  },
+  "permanent_append_gate": {
+    "linked_status": "passed-linked-cutpoint-citizenship",
+    "persistent_plan_bytes": [
+      37,
+      38,
+      39,
+      40,
+      0
+    ],
+    "resolve_slot": 38,
+    "rollback_plan": [
+      41,
+      42,
+      40
+    ],
+    "source_status": "passed-append-cutpoint-contract"
+  },
+  "physical_capacities": {
+    "independence": {
+      "pool_case_symbol_slots_used": 638,
+      "slot_case_pool_bytes_used": 4512
+    },
+    "name_pool_bytes": 10208,
+    "symbol_slots": 752
+  },
+  "product_dataflow": {
+    "capacity_checks_before_first_copy": true,
+    "error_identity": "LISP65_ERR_TOO_MANY_SYMBOLS",
+    "failure_route": "one c2_append_run_rollback_plan",
+    "mutations": {
+      "namepool-capacity-check-removed": "rejected",
+      "publish-name-bypasses-real-intern": "rejected",
+      "symbol-capacity-check-removed": "rejected",
+      "wrong-error-identity": "rejected"
+    },
+    "persistent_cutpoint": "c2_append_publish_plan_resolve_phase/name-kind-8",
+    "status": "passed-real-allocator-to-append-rollback-seam",
+    "transient_cutpoint": "c2_decode_from/name-resolution while C2J active"
+  },
+  "recorded_on": "2026-07-23",
+  "row": "F3",
+  "status": "passed-four-append-seam-resource-exhaustion-cases",
+  "value_string": "F3=PROVEN link57=exact cases=4/4 symbol-slots=752@pool4512 name-pool=10208@symbols638 error=TOO_MANY_SYMBOLS c2d=c2j=exports=byte-identical product-delta=0 hardware=0 acceptance=blocked"
+}

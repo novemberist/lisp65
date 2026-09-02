@@ -1,0 +1,121 @@
+{
+  "format": "lisp65-c2-badopcode-retirement-wplto-capacity-first-red-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: BADOPCODE retirement restores semantics but misses Bank-0 text noise reserve",
+  "promotable": false,
+  "authority": {
+    "retirement_contract": {
+      "path": "config/c2-vm-badopcode-detail-contract.json",
+      "sha256": "fbd073314fdf666e687ca2d44550ecea0e8868b387f0ca5c8dfb2b88fc5dc86e"
+    },
+    "hold_recipe_contract": {
+      "path": "config/c2-badopcode-hold-shelf-recipe.json",
+      "sha256": "6792aa3adcd039f7d4f6dd9997f7357d601caea552fdb501e29857ffec6d0878"
+    },
+    "post_link_checker_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-retirement-wplto-internal-structural.json",
+      "sha256": "e2c479dbd13aa741bdbfb9dc71ccee7af28f6b3a03e12d6308341867574ba697"
+    },
+    "wplto_first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-retirement-wplto-receipt.json",
+      "sha256": "15bb4dbbce4ff30b2c8c7eb297427178fa7db2ed686fac1a976f45e3c10a4391"
+    },
+    "prepared_hold_shelf": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-hold-shelf-recipe-receipt.json",
+      "sha256": "201fa752bce17ac9d8ee1e9b120ed2781dc81d85f13257376fd798dbe55bbb4e"
+    }
+  },
+  "immutable_product_shaped_truth": {
+    "product": {
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "6f852ac11f9624e7abf6ebc27b9be0994bffeb2551b49fe739876d298a1469ba"
+    },
+    "elf": {
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "3b8f2ce4a593e7f55f2011d355bbe17032949c487043e2495480c1433ad7cce1"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "22a85bdd59cf1358308b8d3043b918d001005e195d6fc1c57e662f367db0789f"
+    },
+    "mode": "0444"
+  },
+  "class_a_checker_corrections": [
+    {
+      "old_model": "historical Link-50 L65E split 307/64 and total 1145",
+      "actual_model": "retirement WPLTO L65E split 301/68 and total 1143",
+      "invariant": "sized entry and BCODE leaf, no Fixnum leaf, total <= 1320",
+      "product_bytes_changed": 0
+    },
+    {
+      "old_model": "template vm_status zero-page address 0x5b embedded in shelf locator",
+      "actual_model": "derive vm_status from the candidate ELF; WPLTO address is 0x5d",
+      "product_bytes_changed": 0
+    }
+  ],
+  "fresh_read_only_measurement": {
+    "walls": {
+      "bank0_text_headroom_bytes": 26,
+      "ordinary_bank0_bss_headroom_bytes": 213,
+      "fixed_hot_block_headroom_bytes": 33,
+      "resident_island_headroom_bytes": 5,
+      "e000_headroom_bytes": 58
+    },
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98,
+    "required": {
+      "bank0_text_noise_reserve_bytes": 32,
+      "e000_floor_bytes": 54,
+      "session_family_limit_bytes": 65536
+    },
+    "only_red": {
+      "currency": "bank0_text_headroom_bytes",
+      "measured": 26,
+      "required": 32,
+      "shortfall_bytes": 6
+    }
+  },
+  "attribution_against_link50": {
+    "link50_text_headroom_bytes": 37,
+    "retirement_wplto_text_headroom_bytes": 26,
+    "delta_bytes": -11,
+    "sole_measured_symbol_delta": {
+      "symbol": "c2_product_install",
+      "link50_bytes": 570,
+      "retirement_wplto_bytes": 581,
+      "delta_bytes": 11,
+      "source": "two `if (vm_status != VM_OK) return result;` inner-status-precedence checks retained at rollback and final transaction failure"
+    },
+    "unchanged_hot_symbol": {
+      "symbol": "vm_run_inner",
+      "link50_bytes": 7934,
+      "retirement_wplto_bytes": 7934
+    }
+  },
+  "gates": {
+    "badopcode_detail": "retired; status-only",
+    "dirmiss_detail": "preserved SYMI and BCODE",
+    "l65e_slice": "1143/1320, green",
+    "hold_shelf": "rebased against actual ELF, zero capacity bytes",
+    "all_non_text_walls": "green"
+  },
+  "execution_accounting": {
+    "whole_program_lto_closure_links": 1,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "class_a_read_only_replays": 3,
+    "class_a_replay_compiler_runs": 0,
+    "class_a_replay_linker_runs": 0
+  },
+  "rollback_line": {
+    "link": 50,
+    "product_sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "status": "untouched"
+  },
+  "counters": {
+    "class_b_diagnostic_cycles": "3/3 closed",
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  },
+  "next_gate": "Class-C decision required; product Link 51 is blocked"
+}

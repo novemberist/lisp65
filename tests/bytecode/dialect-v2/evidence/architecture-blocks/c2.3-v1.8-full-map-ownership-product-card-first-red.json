@@ -1,0 +1,153 @@
+{
+  "artifacts": {
+    "generated_linker": {
+      "bytes": 69243,
+      "path": "build/post-promotion/v18/full-map-ownership-wplto/wplto/c2-substitution.ld",
+      "sha256": "a979c9209296a9169d42424595978bcf0a482da2339afd33a2885b85a2302d1c"
+    },
+    "link_stderr": {
+      "bytes": 155,
+      "path": "build/post-promotion/v18/full-map-ownership-wplto/wplto/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "20f47889467e459d3ee7d1b3a0cda5c5251cf013ee4079f03393d646ab0e9827"
+    },
+    "map": {
+      "bytes": 182707,
+      "path": "build/post-promotion/v18/full-map-ownership-wplto/wplto/resident-island-seed.prg.map",
+      "sha256": "9aac052d5674d0409176782b3a6ba9ba0f677d096e63e7f76fa576890fab8517"
+    },
+    "seed_elf": {
+      "bytes": 642420,
+      "path": "build/post-promotion/v18/full-map-ownership-wplto/wplto/resident-island-seed.prg.elf",
+      "sha256": "1494ad17230268e52bf6894377278553ebcb096e6987a3e82db8a82fd6926a26"
+    },
+    "seed_lto": {
+      "bytes": 619828,
+      "path": "build/post-promotion/v18/full-map-ownership-wplto/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "a6ef4794dd830b2b7efbf01b60de440bf299f06e20b3976c6c152d083c4a3865"
+    },
+    "seed_prg": {
+      "bytes": 41566,
+      "path": "build/post-promotion/v18/full-map-ownership-wplto/wplto/resident-island-seed.prg",
+      "sha256": "b21686f650c09d81d5094bb76adedfb08baa4978e865dd9eb5b95d9d70e86950"
+    }
+  },
+  "authority": {
+    "contract": {
+      "bytes": 9414,
+      "path": "config/c2-full-map-ownership-contract.json",
+      "sha256": "4df07308d81a6ee0bad334cf3cbb89ae78d7dd55988381f178c829196ceafd1f"
+    },
+    "driver_at_card": {
+      "bytes": 23435,
+      "commit": "5077859b",
+      "path": "tools/host-lisp/c2_v18_full_map_wplto.py",
+      "sha256": "d6a137b1d15074f1ae2d78a7f6a7115da02a3a195d2dd1509cbaab84695b11e8"
+    },
+    "final_section_inventory_pin": {
+      "bytes": 3953,
+      "path": "config/c2-final-section-inventory-pin.txt",
+      "sha256": "3e644eb6f892e31baca3167b040ad3a5f60f148f1d3b2dae523ddb26da0bd6a3"
+    },
+    "phase_c": {
+      "bytes": 8069,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.8-full-map-phase-c-gate-receipt.json",
+      "sha256": "9e8a2eaaed877e8207a29beac5cc938ba0542f5446febd41a9a7f2e2c19ef750"
+    },
+    "preflight": {
+      "bytes": 2472,
+      "path": "build/post-promotion/v18/full-map-ownership-preflight/preflight.json",
+      "sha256": "5ae15dc66c33c313500ef4706fb2ae35869b0e7b9ed4ab2ca5be663b471ae61e"
+    }
+  },
+  "capacity_observation": {
+    "capacity_deficit_bytes": 0,
+    "far_service": {
+      "capacity_bytes": 1499,
+      "demand_bytes": 874,
+      "headroom_bytes": 625,
+      "lma": "0x02b8b2",
+      "vma": "0x78b2"
+    },
+    "mapped_facade": {
+      "capacity_bytes": 243,
+      "demand_bytes": 98,
+      "headroom_bytes": 145,
+      "vma": "0xb3b0"
+    },
+    "ordinary_chain": {
+      "bss": "0xb9ca..0xbffb (1585 bytes)",
+      "data": "0xb9b4..0xb9ca (22 bytes; LMA equals VMA)",
+      "end_exclusive": "0xbffb",
+      "margin_before_convergence_bytes": 5,
+      "margin_is_freight_budget": false,
+      "rodata": "0xb61d..0xb98c (879 bytes)",
+      "verifier_bindings": "0xb98c..0xb9b4 (40 bytes)"
+    },
+    "ordinary_noinit": {
+      "bytes": 0,
+      "vma": "0xc34d"
+    },
+    "runtime_overlay": {
+      "capacity_bytes": 1792,
+      "largest_live_tenant_bytes": 1771,
+      "largest_live_tenant_headroom_bytes": 21,
+      "note": "The seed ELF corrects the Phase-B 1734-byte observation: simultaneous-live capacity is governed by the 1771-byte c2append-entries tenant. It still fits."
+    },
+    "static_stack": {
+      "capacity_bytes": 12,
+      "demand_bytes": 6,
+      "headroom_bytes": 6,
+      "vma": "0xc074"
+    }
+  },
+  "claim_limit": "Exact terminal First Red from the sole Phase-D WPLTO. The successful seed link proves placement facts but not a green product card, downstream reconstruction, Link 91, hardware, product identity or release readiness. No retry, address negotiation, narrower claim or hidden device tail is authorized.",
+  "classification": {
+    "capacity_red": false,
+    "compiler_or_linker_failure": false,
+    "description": "The compiler and seed link completed. The post-link final-section inventory authority rejected five owned allocatable outputs and their two relocation outputs because Phase C did not extend that independent gate's expected set.",
+    "phase_c_closure_gap": true,
+    "product_semantics_failure": false,
+    "terminal_card_red": true,
+    "tool_or_acceptance_authority_red": true
+  },
+  "error": "final section inventory red: ['section-count', 'section-name-set']; missing=[]; additional=['.lisp65_c2_convergence_zp', '.lisp65_c2_mapped_far_facade', '.lisp65_c2_mapped_far_service', '.lisp65_c2_convergence_state', '.lisp65_c2_static_stack', '.rela.lisp65_c2_mapped_far_facade', '.rela.lisp65_c2_mapped_far_service']",
+  "failure_stage": "post-link-final-section-inventory-gate",
+  "format": "lisp65-c2.3-v1.8-full-map-WPLTO-first-red-v2",
+  "inventory_observation": {
+    "actual_sections": 190,
+    "additional_owned_allocatable_outputs": [
+      ".lisp65_c2_convergence_zp",
+      ".lisp65_c2_mapped_far_facade",
+      ".lisp65_c2_mapped_far_service",
+      ".lisp65_c2_convergence_state",
+      ".lisp65_c2_static_stack"
+    ],
+    "additional_relocation_outputs": [
+      ".rela.lisp65_c2_mapped_far_facade",
+      ".rela.lisp65_c2_mapped_far_service"
+    ],
+    "expected_sections": 183,
+    "missing_sections": [],
+    "unknown_product_sections": [],
+    "violations": [
+      "section-count",
+      "section-name-set"
+    ]
+  },
+  "recorded_on": "2026-08-04",
+  "run_counts": {
+    "compiler_invocations": 1,
+    "hardware_runs": 0,
+    "product_links": 0,
+    "seed_links_completed": 1,
+    "wplto_probes_consumed": 1
+  },
+  "status": "FIRST RED: sole v1.8 product card stopped after successful seed link",
+  "transaction": {
+    "link_91_started": false,
+    "promotable": false,
+    "retry_authorized": false,
+    "seed_elf_exists": true,
+    "sole_card_consumed": true
+  }
+}

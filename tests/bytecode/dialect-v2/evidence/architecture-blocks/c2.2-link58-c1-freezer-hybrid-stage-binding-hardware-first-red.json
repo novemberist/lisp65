@@ -1,0 +1,71 @@
+{
+  "captures": {
+    "bank0": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-NONPROMOTABLE/boot-bank0.bin",
+      "sha256": "be2119ae808b25f79501f6ec082438cd6aa063b7fc832db5836c58398e9fcc5c"
+    },
+    "bank2": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-NONPROMOTABLE/boot-bank2.bin",
+      "sha256": "ceabda728319f08d33a7ff08ed9477f507d49f19edc3764db0d5cacfa3a9f40a"
+    },
+    "bank3": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-NONPROMOTABLE/boot-bank3.bin",
+      "sha256": "c039b86aedc7ba5625e2178acbe61a7ad81abe41fa4b024628c60fec96276583"
+    },
+    "bank5": {
+      "bytes": 50816,
+      "path": "build/c2.2/c1-freezer-hardware-link58-NONPROMOTABLE/boot-bank5.bin",
+      "sha256": "49e7252228b3cd9d4550456bd013fcebfd749104be9f1076d626788fe7c7bf35"
+    },
+    "screen": {
+      "bytes": 2650,
+      "path": "build/c2.2/c1-freezer-hardware-link58-NONPROMOTABLE/boot-first-red.png",
+      "sha256": "a9af842668b79a39225ae3a80f2e53621267354f97af647516b8aea49020df7f"
+    },
+    "screen_text": {
+      "bytes": 71129,
+      "path": "build/c2.2/c1-freezer-hardware-link58-NONPROMOTABLE/boot-first-red.ansi.txt",
+      "sha256": "f15d7ff44ef70de40f8c6ccbe8a1484c60b801448092c4559dd2c24ef6c03851"
+    },
+    "session_readback": {
+      "bytes": 65438,
+      "path": "build/c2.2/c1-freezer-hardware-link58-NONPROMOTABLE/deploy-readback-runtime-overlays-session-c1-freezer.bin",
+      "sha256": "dfb6e09b9114475481b254b27ddd099e4ae50812067b431d298e4f97d85ddd85"
+    }
+  },
+  "claim_limit": "Harness First Red only. No product defect, C1 result, promotion, acceptance-chain result or release claim.",
+  "diagnosis": {
+    "cause": "The artifact-only carrier replaced four overlay payloads but retained Link 58's immutable resident whole-family stage binding. The product correctly rejected the new outer CRC before Session publication.",
+    "diagnostic_session_crc16": "0x02fb",
+    "diagnostic_session_size": 65438,
+    "link58_expected_session_crc16": "0xd387",
+    "link58_expected_session_size": 65438
+  },
+  "diagnostic_carrier": {
+    "bytes": 65438,
+    "path": "build/c2.2/substitution/link58-c1-freezer-hybrid-carrier-NONPROMOTABLE/runtime-overlays-session-c1-freezer.bin",
+    "sha256": "dfb6e09b9114475481b254b27ddd099e4ae50812067b431d298e4f97d85ddd85"
+  },
+  "format": "lisp65-c2.2-C1-Freezer-stage-binding-first-red-v1",
+  "hardware": {
+    "C1_cutpoints_reached": 0,
+    "boots": 1,
+    "c2_ready": 0,
+    "latency_attempts_consumed": 0,
+    "rtov_family": 0,
+    "rtov_fault": 23,
+    "rtov_fault_name": "VM_RUNTIME_OVERLAY_ERR_FAMILY_STAGE",
+    "screen": "E3e runtime family staging failed; redeploy"
+  },
+  "next_gate": "Class-A stage-binding replay, then separate authorization for a new qualified C1 hardware run",
+  "product": {
+    "bytes": 41563,
+    "path": "build/c2.2/substitution/product-link-58-matrix-addenda-fixed-block/lisp65-c2-substitution-linked.prg",
+    "sha256": "4bab8371aa54060bef4ab9493e12dd6afd230baeb83a11f07daccdaa05000e6f"
+  },
+  "promotable": false,
+  "status": "first-red-harness-stage-binding-no-C1-cutpoint-reached"
+}

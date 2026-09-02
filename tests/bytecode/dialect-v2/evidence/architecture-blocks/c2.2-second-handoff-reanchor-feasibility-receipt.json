@@ -1,0 +1,191 @@
+{
+  "authority": {
+    "product_source": {
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "52a483c2bd91fb01efdb3911eed7b0e916aa8d389a282d8aedc8dc9dc599b9ec"
+    },
+    "temperature_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v3-crc-convergence-temperature-wplto-first-red.json",
+      "sha256": "a218021dbd901a7b8bb66e9d99a93701c5e4aabc1406f6ed5853ced30821b51f"
+    },
+    "temperature_map": {
+      "path": "build/c2.2/substitution/l65r-v3-crc-convergence-temperature-wplto/resident-island-seed.prg.map",
+      "sha256": "efd1edeb6ca6b4ab2c6790731990f64ec152c59c660843b0ecb8fb1d9c42c428"
+    }
+  },
+  "claim_limit": "Paper-only map arithmetic. No source cut, compiler, linker, product identity or hardware execution.",
+  "decision": {
+    "next_gate": "Class-C review with the 107-byte positional shortfall",
+    "owner_precondition": "failed",
+    "reason": "The required 0xb592 anchor would end ordinary BSS at 0xc0eb, 107 bytes inside the fixed 0xc080 block. Even discarding the 32-byte reserve leaves a 75-byte collision.",
+    "source_cuts": "not authorized after failed feasibility precondition"
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes": 0
+  },
+  "favorable_assumptions": {
+    "all_other_section_sizes": "held at the measured temperature-map values",
+    "cold_helper_removed_from_resident_text_bytes": 38,
+    "island_split_resident_delta_bytes": 0,
+    "standing_lto_noise_reserve_bytes": 32
+  },
+  "fixed_points": {
+    "fixed_bank0": "0xc080",
+    "fixed_code": "0xc218",
+    "movement": "forbidden and not modeled",
+    "runtime_overlay_vma": "0xc356"
+  },
+  "format": "lisp65-c2-second-handoff-reanchor-feasibility-v1",
+  "maximum_absorbable_layout": [
+    {
+      "bytes": 289,
+      "end_exclusive": "0xb648",
+      "name": "handoff",
+      "start": "0xb527"
+    },
+    {
+      "bytes": 45,
+      "end_exclusive": "0xb675",
+      "name": "facade",
+      "start": "0xb648"
+    },
+    {
+      "bytes": 11,
+      "end_exclusive": "0xb680",
+      "name": "io_reveal",
+      "start": "0xb675"
+    },
+    {
+      "bytes": 10,
+      "end_exclusive": "0xb68a",
+      "name": "map_switch",
+      "start": "0xb680"
+    },
+    {
+      "bytes": 20,
+      "end_exclusive": "0xb69e",
+      "name": "kernal_state",
+      "start": "0xb68a"
+    },
+    {
+      "bytes": 864,
+      "end_exclusive": "0xb9fe",
+      "name": "rodata",
+      "start": "0xb69e"
+    },
+    {
+      "bytes": 32,
+      "end_exclusive": "0xba1e",
+      "name": "verifier_bindings",
+      "start": "0xb9fe"
+    },
+    {
+      "bytes": 42,
+      "end_exclusive": "0xba48",
+      "name": "data",
+      "start": "0xba1e"
+    },
+    {
+      "bytes": 1592,
+      "end_exclusive": "0xc080",
+      "name": "bss",
+      "start": "0xba48"
+    }
+  ],
+  "pocket": {
+    "current_anchor": "0xb4a3",
+    "downstream_bytes_handoff_through_bss": 2905,
+    "maximum_absorbable_shift_bytes": 132,
+    "maximum_anchor_without_moving_c080": "0xb527",
+    "required_shift_bytes": 239,
+    "shortfall_even_with_zero_reserve": 75,
+    "shortfall_with_32_byte_reserve": 107
+  },
+  "recorded_on": "2026-07-21",
+  "repin_inventory_if_reauthorized_after_new_capacity_decision": {
+    "active_file_count": 12,
+    "active_files": [
+      "config/c2-handoff-reanchor-authorization.json",
+      "config/c2-kernal-unmap-contract.json",
+      "docs/planning/c2.2-kernal-unmap-contract.md",
+      "docs/planning/c2.2-link33-coordinated-residency-plan.md",
+      "tools/host-lisp/c2_crc_asm_leaf_successor_link.py",
+      "tools/host-lisp/c2_crc_asm_leaf_wplto_probe.py",
+      "tools/host-lisp/c2_crc_asm_leaf_wplto_replay.py",
+      "tools/host-lisp/c2_crc_codegen_correction_wplto_probe.py",
+      "tools/host-lisp/c2_handoff_reanchor_feasibility.py",
+      "tools/host-lisp/c2_handoff_reanchor_wplto_probe.py",
+      "tools/host-lisp/c2_link33_handoff_reanchor_product_link.py",
+      "tools/host-lisp/c2_product_substitution_link.py"
+    ],
+    "facade_vectors": 15,
+    "historical_receipts": "immutable; never repinned",
+    "publish_last_domains": 3
+  },
+  "required_layout": [
+    {
+      "bytes": 289,
+      "end_exclusive": "0xb6b3",
+      "name": "handoff",
+      "start": "0xb592"
+    },
+    {
+      "bytes": 45,
+      "end_exclusive": "0xb6e0",
+      "name": "facade",
+      "start": "0xb6b3"
+    },
+    {
+      "bytes": 11,
+      "end_exclusive": "0xb6eb",
+      "name": "io_reveal",
+      "start": "0xb6e0"
+    },
+    {
+      "bytes": 10,
+      "end_exclusive": "0xb6f5",
+      "name": "map_switch",
+      "start": "0xb6eb"
+    },
+    {
+      "bytes": 20,
+      "end_exclusive": "0xb709",
+      "name": "kernal_state",
+      "start": "0xb6f5"
+    },
+    {
+      "bytes": 864,
+      "end_exclusive": "0xba69",
+      "name": "rodata",
+      "start": "0xb709"
+    },
+    {
+      "bytes": 32,
+      "end_exclusive": "0xba89",
+      "name": "verifier_bindings",
+      "start": "0xba69"
+    },
+    {
+      "bytes": 42,
+      "end_exclusive": "0xbab3",
+      "name": "data",
+      "start": "0xba89"
+    },
+    {
+      "bytes": 1592,
+      "end_exclusive": "0xc0eb",
+      "name": "bss",
+      "start": "0xbab3"
+    }
+  ],
+  "status": "not-feasible-current-pocket",
+  "text": {
+    "measured_bytes": 38261,
+    "projected_after_cold_move_bytes": 38223,
+    "projected_end_exclusive": "0xb572",
+    "required_handoff_with_reserve": "0xb592"
+  }
+}

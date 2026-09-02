@@ -1,0 +1,160 @@
+{
+  "format": "lisp65-c2-two-region-E000-S1-final-WPLTO-map-first-red-analysis-v1",
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: fixed Bank-0 leaf grew by three bytes; E000 exact-section assertions retain pre-union geometry",
+  "promotable": false,
+  "authority": {
+    "final_map_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-e000-s1-final-wplto2-receipt.json",
+      "bytes": 4772,
+      "sha256": "f7962479f2d700e90bfc5c104242c5f53434c0dec92feecf06628b0166980116"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/two-region-session-store-e000-s1-final-wplto2/resident-island-seed.prg.map",
+      "bytes": 200239,
+      "sha256": "add6791b7eb2d8da433a8bf64918aede023c5d637ae4321ca2d6fc5f601d06b0"
+    },
+    "LTO_object": {
+      "path": "build/c2.2/substitution/two-region-session-store-e000-s1-final-wplto2/resident-island-seed.prg.lto.o",
+      "bytes": 616496,
+      "sha256": "98e16ec1006c7f6bdf59214cdbf5123e1fe4c43c3c7ee74e6e17a6d621476538"
+    },
+    "linker_diagnostics": {
+      "path": "build/c2.2/substitution/two-region-session-store-e000-s1-final-wplto2/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 2925,
+      "sha256": "23926dfcf95786e205d565d17df273fcbe85a7480048f93259e3ae91921f3f31"
+    },
+    "tuple_feature_lifetime_gate": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-e000-s1-tuple-feature-lifetime-gate.json",
+      "bytes": 2644,
+      "sha256": "88e009e23437b8de509d44a0054d37187b2b983b8894af6f642ddd6bd98d682b"
+    },
+    "comparison_map": {
+      "path": "build/c2.2/substitution/two-region-session-store-source-plan-union-wplto/resident-island-seed.prg.map",
+      "bytes": 201992,
+      "sha256": "78b6272ff4ab9f01e9833772d9773018007ce183ac49ca399a110a972b27e0e2"
+    }
+  },
+  "feature_lifetime_correction": {
+    "narrow_profile_tuple_bytes": 0,
+    "live_transaction_profile_tuple_bytes": 5,
+    "current_product_semantic_delta": 0,
+    "source_mutations_rejected": 4,
+    "status": "passed"
+  },
+  "actual_WPLTO_map": {
+    "bank0_text": {
+      "start": "0x2023",
+      "bytes": 37882,
+      "end_exclusive": "0xb41d",
+      "handoff": "0xb4a3",
+      "headroom_bytes": 134,
+      "required_headroom_bytes": 32,
+      "status": "positive"
+    },
+    "ordinary_bank0_bss": {
+      "start": "0xb9b0",
+      "bytes": 1583,
+      "end_exclusive": "0xbfdf",
+      "fixed_state_start": "0xc080",
+      "headroom_bytes": 161,
+      "status": "positive"
+    },
+    "fixed_bank0_code": {
+      "start": "0xc218",
+      "expected_bytes": 66,
+      "actual_bytes": 69,
+      "end_exclusive": "0xc25d",
+      "hot_bss_start": "0xc25a",
+      "headroom_bytes": -3,
+      "status": "red"
+    },
+    "resident_island": {
+      "start": "0x1800",
+      "bytes": 1605,
+      "capacity_bytes": 2048,
+      "headroom_bytes": 443,
+      "status": "positive"
+    },
+    "E000": {
+      "occupied_bytes_by_floor_formula": 8041,
+      "capacity_bytes": 8192,
+      "headroom_bytes": 151,
+      "required_floor_bytes": 54,
+      "status": "capacity-positive-exact-section-pins-red"
+    },
+    "record_verifier_slice": {
+      "start": "0xc356",
+      "bytes": 1330,
+      "slice_cap_bytes": 1792,
+      "headroom_bytes": 462,
+      "status": "positive"
+    },
+    "session_regions": {
+      "status": "unreached-because-final-linker-assertions-fired",
+      "claim": "none"
+    }
+  },
+  "red_1_fixed_block": {
+    "symbol": "rtov_fail",
+    "address": "0xc245",
+    "comparison_bytes": 21,
+    "actual_bytes": 24,
+    "delta_bytes": 3,
+    "physical_effect": "the fixed code ends at 0xc25d and overlaps the fixed 240-byte hot heap beginning at 0xc25a by exactly three bytes",
+    "instruction_attribution": {
+      "comparison": "rtov_fault was selected into zero page, so STA/LDA/STA were two-byte instructions",
+      "actual": "Whole-Program allocation placed rtov_fault at ordinary BSS address 0xbfdb, so the same three accesses became three-byte absolute instructions",
+      "cause": "whole-program zero-page allocation changed after the E000-S1/product-profile closure; no rtov_fail source or semantic branch was added"
+    },
+    "classification": "real product placement failure; not a stale gate and not authorized for autonomous correction"
+  },
+  "red_2_E000_exact_geometry": {
+    "authorized_union_state": {
+      "session_emitter_state_section_bytes": 0,
+      "reason": "the ten-byte session emitter state is life-unioned with c2e_work_state"
+    },
+    "stale_linker_expectations": [
+      "SIZEOF(.lisp65_c2_kernal_window.session_emitter_state) == 10",
+      "session-emitter state end must equal profile-rodata start"
+    ],
+    "actual_geometry": {
+      "session_emitter_state_anchor": "0xfd22",
+      "session_emitter_state_bytes": 0,
+      "profile_rodata_start": "0xfd2c",
+      "profile_rodata_bytes": 342,
+      "reopen_gap0_start": "0xfcbe",
+      "reopen_gap0_bytes": 89,
+      "reopen_gap0_end_exclusive": "0xfd17"
+    },
+    "E000_S1_effect": {
+      "comparison_gap0_bytes": 128,
+      "actual_gap0_bytes": 89,
+      "gap0_relief_bytes": 39,
+      "comparison_gap1_bytes": 241,
+      "actual_gap1_bytes": 162,
+      "gap1_relief_bytes": 79,
+      "total_E000_relief_bytes": 118,
+      "comparison_floor_bytes": 33,
+      "actual_floor_bytes": 151
+    },
+    "classification": "stale exact-section assertions after the already-authorized lifetime union; the E000 floor itself passes by 97 bytes"
+  },
+  "execution_accounting": {
+    "final_map_driver_attempts": 1,
+    "whole_program_LTO_closure_links": 1,
+    "automatic_retries": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0
+  },
+  "blocked": [
+    "E000 exact-section assertion replay",
+    "region-0/region-1 packing qualification",
+    "Link 60",
+    "C1 Freezer cutpoints 3 and 4",
+    "matrix gate",
+    "R4/R5/R6/G5/G6"
+  ],
+  "next_gate": "Class-C placement decision for the three-byte rtov_fail/hot-heap collision; stale E000 assertions can then follow the authorized union in the same fresh WPLTO",
+  "claim_limit": "Actual WPLTO map and First-Red attribution only. No green final map, product identity, hardware, C1, matrix or acceptance-chain claim."
+}

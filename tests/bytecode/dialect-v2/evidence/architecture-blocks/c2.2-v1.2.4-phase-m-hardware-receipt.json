@@ -1,0 +1,262 @@
+{
+  "M1_math_register_semantics": {
+    "division": {
+      "expected": "(0 0 0 128 0 0 0 0)",
+      "form": "(progn(%d)(%e 0))",
+      "screen_png": {
+        "bytes": 9330,
+        "path": "build/post-promotion/v124/phase-m/m1-division-atomic.png",
+        "sha256": "b4413dc42c991fc718eb12cccaec3e6a9b773bbf17e4f80df0e8c1b5a3c872db"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v124/phase-m/m1-division-atomic.txt",
+        "sha256": "7ce64128cf6baef3526e481a83627181fd3d56aa33a895a786b86d32f9a53688"
+      }
+    },
+    "division_fraction_u32_le": "00000080",
+    "division_quotient_u32_le": "00000000",
+    "harness_first_red": {
+      "contract": {
+        "bytes": 4101,
+        "path": "config/c2-fx-contract.json",
+        "sha256": "bd65f05c176481918e2c80d503ceb98b6530cbd3b3789926bbed0b4801ae0b57"
+      },
+      "first_red_png": {
+        "bytes": 5310,
+        "path": "build/post-promotion/v124/phase-m/m1-first-red-trigger-order/row-m1-mul-low.png",
+        "sha256": "454b4acc8d6d69f11a0882cd123f075418f71f90af7124f49504ffcef4559bfa"
+      },
+      "first_red_text": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v124/phase-m/m1-first-red-trigger-order/row-m1-mul-low.txt",
+        "sha256": "6dfa4e4c6c46aebeeca61d88b01c4c77d1afd0872c7d9efae831f17e9da82ccc"
+      },
+      "mechanism": "The original script returned to the REPL between input writes and result reads. Screen/result work may reuse the shared math unit, so the later read was not the measured transaction. The corrected row writes all eight inputs and reads all eight outputs in one Lisp evaluation.",
+      "observed": "(0 0 0 0)",
+      "physical_session_restarted": false,
+      "product_bytes_changed": 0,
+      "status": "closed-measurement-transaction-split"
+    },
+    "product": {
+      "expected": "(0 0 0 64 0 0 0 0)",
+      "form": "(progn(%i)(%o 0))",
+      "screen_png": {
+        "bytes": 9097,
+        "path": "build/post-promotion/v124/phase-m/m1-product-atomic.png",
+        "sha256": "343683c95e9a1c880b3dffce31e593001bef8d67db239ff60fdb241d8a0fec08"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v124/phase-m/m1-product-atomic.txt",
+        "sha256": "097a9381f0f6130175702b0a73ab76c2ebe8f14748494153967581c062e36a5b"
+      }
+    },
+    "product_u64_le": "0000004000000000",
+    "rounding_bit": "$D76B bit 7 set on exact half",
+    "status": "passed-after-atomic-harness-correction"
+  },
+  "M2_L10": {
+    "captures": [
+      {
+        "artifact": {
+          "bytes": 1156,
+          "path": "build/post-promotion/v124/phase-m/l10-capture-1.bin",
+          "sha256": "226d2231778979fac2499e4defaf0784795d17b0d6f23b91c65de5ed9d078f78"
+        },
+        "capture": 1,
+        "crc16": "0x1490",
+        "elapsed_after_launch_ms": 2,
+        "matches_expected": false,
+        "nonmatching_bytes": 1132
+      },
+      {
+        "artifact": {
+          "bytes": 1156,
+          "path": "build/post-promotion/v124/phase-m/l10-capture-2.bin",
+          "sha256": "0927d78ea21c2737cd7d32a4266c164b596fcae364da45a6cbeace5cd768a42b"
+        },
+        "capture": 2,
+        "crc16": "0xe856",
+        "elapsed_after_launch_ms": 714,
+        "matches_expected": true,
+        "nonmatching_bytes": 0
+      },
+      {
+        "artifact": {
+          "bytes": 1156,
+          "path": "build/post-promotion/v124/phase-m/l10-capture-3.bin",
+          "sha256": "0927d78ea21c2737cd7d32a4266c164b596fcae364da45a6cbeace5cd768a42b"
+        },
+        "capture": 3,
+        "crc16": "0xe856",
+        "elapsed_after_launch_ms": 2414,
+        "matches_expected": true,
+        "nonmatching_bytes": 0
+      }
+    ],
+    "expected_crc16": "0xe856",
+    "status": "reproduced-delayed-convergence"
+  },
+  "M3_fx": {
+    "rows": [
+      {
+        "expected": "\"-3.0\"",
+        "form": "(fx->string(fx*(fx 1 64)(fx -2 0)))",
+        "id": "m3-multiply",
+        "screen_png": {
+          "bytes": 3806,
+          "path": "build/post-promotion/v124/phase-m/row-m3-multiply.png",
+          "sha256": "4b6a46e207d9be93bcbb37d707937e175c4c7b47fc6616d3bef16536aaf71dc7"
+        },
+        "screen_text": {
+          "bytes": 2241,
+          "path": "build/post-promotion/v124/phase-m/row-m3-multiply.txt",
+          "sha256": "978a6bef9bca889c16cf16e16437c17b5d77672372dd16c98f4457db5b7d071d"
+        }
+      },
+      {
+        "expected": "\"0.3359375\"",
+        "form": "(fx->string(fx/(fx 1 0)(fx 3 0)))",
+        "id": "m3-divide",
+        "screen_png": {
+          "bytes": 4418,
+          "path": "build/post-promotion/v124/phase-m/row-m3-divide.png",
+          "sha256": "f0f9511d070abde9c6cc0f24dd8cb5801b392d0638c6907887e8a35ec12c70f8"
+        },
+        "screen_text": {
+          "bytes": 2241,
+          "path": "build/post-promotion/v124/phase-m/row-m3-divide.txt",
+          "sha256": "9af2a6fa61f5d6ebe1aff9d7962500ca9b94d427437d1ae9a2abb2c196b926c1"
+        }
+      },
+      {
+        "expected": "\"0.0078125\"",
+        "form": "(fx->string(fx/(fx 0 1)(fx 2 0)))",
+        "id": "m3-half-away",
+        "screen_png": {
+          "bytes": 4999,
+          "path": "build/post-promotion/v124/phase-m/row-m3-half-away.png",
+          "sha256": "4d5ca56bc772114d853ad42a9c7ad057465219a8f422ee4fbbae2985dd6a192b"
+        },
+        "screen_text": {
+          "bytes": 2241,
+          "path": "build/post-promotion/v124/phase-m/row-m3-half-away.txt",
+          "sha256": "d7a03a341c96759d55a96ec2710059fbb2cbbb9ab4c62f250b159639f31a6ccb"
+        }
+      }
+    ],
+    "status": "passed-target-multiply-divide-rounding-smoke"
+  },
+  "M4_time": {
+    "accepted_hz": [
+      48,
+      52
+    ],
+    "counter_after": 3104,
+    "counter_before": 2896,
+    "counter_delta": 208,
+    "elapsed_seconds": 4.002604922,
+    "frames_per_second": 51.96615805290813,
+    "nominal_hz": 50,
+    "status": "passed-50Hz-calibration"
+  },
+  "M5_peek_map": {
+    "artifacts": {
+      "c2d_header": {
+        "address": "0x00050000",
+        "bytes": 48,
+        "path": "build/post-promotion/v124/phase-m/m5-c2d-header.bin",
+        "sha256": "386a884a77eecbe7a51bf1f652ecb0943bdcc6529c6cc409bed89afff7649360"
+      },
+      "place_row": {
+        "address": "0x000500f0",
+        "bytes": 32,
+        "path": "build/post-promotion/v124/phase-m/m5-place-row.bin",
+        "sha256": "8b570d47819a45ac4714ff8b0086fe8728efc79769dd646545e2160661b13d58"
+      },
+      "trace": {
+        "address": "0x0000c1f4",
+        "bytes": 2,
+        "path": "build/post-promotion/v124/phase-m/m5-trace.bin",
+        "sha256": "76158c0049cf2df95572abdf69560252785150440468a696d7658d6ae800310c"
+      }
+    },
+    "c2d_image_count": 7,
+    "place_crc32": "0x485a1ce2",
+    "place_generation": 1,
+    "require": {
+      "expected": "t",
+      "form": "(require(quote place))",
+      "screen_png": {
+        "bytes": 5361,
+        "path": "build/post-promotion/v124/phase-m/row-m5-require-place.png",
+        "sha256": "1b9e871413604985395afaaf989ed2b8e4cf23fdf7922248cf84eb57b38fe250"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v124/phase-m/row-m5-require-place.txt",
+        "sha256": "497226a9e7be8941075af81106d6297518a5e5d2e03c384699d5a08c9030f5e3"
+      }
+    },
+    "status": "captured-after-green-require",
+    "trace_hex": "2781"
+  },
+  "authority": {
+    "closure_driver": {
+      "bytes": 8665,
+      "path": "tools/host-lisp/c2_v124_phase_m_close.py",
+      "sha256": "28358ee7c630b6f89b9fc1de6ee2e776761cdfffbe8590979916067d55364140"
+    },
+    "deployment": {
+      "bytes": 6702,
+      "path": "build/post-promotion/v124/phase-m/deployment.json",
+      "sha256": "341b6f590e961d764caa4bc6209db2ced8ba666df1e946657a107461b362117c"
+    },
+    "preparation": {
+      "bytes": 2633,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-phase-m-preparation-receipt.json",
+      "sha256": "36298f4626181e4955be687bd68d3fb10a1dc473d46a36e1b64c0d1c7ab5043b"
+    },
+    "prepared_driver": {
+      "bytes": 19751,
+      "path": "tools/host-lisp/c2_v124_phase_m.py",
+      "sha256": "2f1d92a033dc332484a7c30aaec85df196faf22344d328405c6a8b6f0f777f9e"
+    },
+    "session_config": {
+      "bytes": 3238,
+      "path": "config/c2.2-v1.2.4-phase-m-session.json",
+      "sha256": "421d921bda0da2b7cb4aa1eed2c9e9af7290ff1e9b41116009a22985da167112"
+    }
+  },
+  "claim_limit": "One non-promotable Phase-M hardware session. M1/M3/M4 are target measurements; M2 reuses the isolated Link-35 diagnostic identity on the recorded current core; M5 is a read-only snapshot. No successor product link or release claim is made.",
+  "device": {
+    "core_register_artifact": {
+      "address": "0x0ffd3632",
+      "bytes": 4,
+      "path": "build/post-promotion/v124/phase-m/device-core-id.bin",
+      "sha256": "bd075eada684d364ddb275c939b000db0fddec2bd491a0f8628b280e9026cb53"
+    },
+    "core_register_bytes": "6b4cb203"
+  },
+  "execution_accounting": {
+    "controlled_deployments": 3,
+    "physical_device_sessions": 1,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "promotable_candidates": 0
+  },
+  "format": "lisp65-c2.2-v1.2.4-phase-m-hardware-v2",
+  "recorded_on": "2026-07-30",
+  "status": "passed-one-bundled-session-with-M1-harness-correction",
+  "transport": {
+    "candidate_media_byteidentical": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v124/phase-m/uploaded-media-second.d81",
+      "sha256": "7285c14b413f1863f6c11ae21ae9fc98a24002c99ce0bf7b555dca9d88e15c50"
+    },
+    "candidate_preload_roles_byteidentical": 7,
+    "cold_start_BASIC_gates": 3,
+    "ftp_progress_guard_seconds": 120
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "format": "lisp65-c2-lite-v6-roots-fronts-link41-profile-first-red-diagnosis-v1",
+  "date": "2026-07-22",
+  "status": "FIRST RED: product link stopped before candidate emission",
+  "classification": "product-profile-selection-drift",
+  "authorized_shape": "Link-40 real-ABI E000 evacuation plus roots/fronts co-residency",
+  "observed_shape": "roots/fronts co-residency without the Link-40 E000 evacuation feature",
+  "root_cause": {
+    "missing_feature": "LISP65_C2_LITE_VM_ARITY_E000",
+    "effect": "vm_arity_accepts returned from the owned E000 window to ordinary Bank-0 text",
+    "missing_feature_bytes": 56,
+    "other_lto_size_drift_bytes": 10,
+    "total_text_delta_against_green_wplto_bytes": 66
+  },
+  "capacity": {
+    "handoff_anchor": "0xb4a3",
+    "green_wplto_text_start": "0x2023",
+    "green_wplto_text_bytes": 37978,
+    "green_wplto_text_end_exclusive": "0xb47d",
+    "green_wplto_headroom_bytes": 38,
+    "failed_link_text_start": "0x2023",
+    "failed_link_text_bytes": 38044,
+    "failed_link_text_end_exclusive": "0xb4bf",
+    "failed_link_overlap_bytes": 28
+  },
+  "function_size_attribution": {
+    "vm_arity_accepts": {"green_wplto_bytes": 0, "failed_link_bytes": 56, "delta_bytes": 56},
+    "vm_callprim": {"green_wplto_bytes": 5140, "failed_link_bytes": 5142, "delta_bytes": 2},
+    "vm_fixbinop": {"green_wplto_bytes": 305, "failed_link_bytes": 307, "delta_bytes": 2},
+    "vm_key_event": {"green_wplto_bytes": 394, "failed_link_bytes": 392, "delta_bytes": -2},
+    "vm_run_inner": {"green_wplto_bytes": 7975, "failed_link_bytes": 7983, "delta_bytes": 8}
+  },
+  "first_red_discipline": {
+    "compiler_runs": 1,
+    "product_link_attempts": 1,
+    "completed_product_links": 0,
+    "product_candidates_emitted": 0,
+    "hardware_runs": 0,
+    "link40_rollback_line_modified": false,
+    "automatic_retry": false
+  },
+  "recommended_narrow_correction": {
+    "action": "make the successor driver consume the complete current Link-40 profile before adding the roots/fronts feature",
+    "required_feature": "LISP65_C2_LITE_VM_ARITY_E000",
+    "expected_model": "the same feature set already measured by the green roots/fronts WPLTO authority",
+    "new_product_link_required": true,
+    "authorization": "class-c-review-required"
+  },
+  "artifact_bindings": {
+    "green_wplto_map": {
+      "path": "build/c2-lite/v6-link40-roots-fronts-coresident-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "sha256": "a760dbf1bcda358b22fe5dc1c74dea33319ecc4c002fc8a7f1369ce01a77263a"
+    },
+    "green_wplto_profile": {
+      "path": "build/c2-lite/v6-link40-roots-fronts-coresident-wplto/full-product-wplto/resolved-profile.txt",
+      "sha256": "36cdd29cb2ee089fe7dfc4883cb80e077e62bbdbc7d394ef0da1fb80c71519b8"
+    },
+    "failed_link_map": {
+      "path": "build/c2.2/substitution/product-link-41-c2-lite-v6-roots-fronts-coresident-replay2/resident-island-seed.prg.map",
+      "sha256": "b2c9220cb9f570458aff652d9038e5b956b41b97012701fa2382ad2b0cf1df2a"
+    },
+    "failed_link_profile": {
+      "path": "build/c2.2/substitution/product-link-41-c2-lite-v6-roots-fronts-coresident-replay2/resolved-profile.txt",
+      "sha256": "65ab2d8a2b9747fc25681555ab5faa67caca6f1089a3f1b5d04dd0226c3ac644"
+    },
+    "failed_link_stderr": {
+      "path": "build/c2.2/substitution/product-link-41-c2-lite-v6-roots-fronts-coresident-replay2/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "48ee66b00b6c3d38a28f790839ad27ca083597b9a4c09079a711427c00fecb99"
+    },
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link41-c2-lite-v6-roots-fronts-coresident-replay2-structural-receipt.json",
+      "sha256": "576e034476b52fa9919444d81a9049cdf0b48162bd9bd9e05afdef3ef5be66dc"
+    }
+  },
+  "claim_limit": "Host WPLTO/link-map diagnosis only. No corrected product link, product identity, hardware behavior, performance, promotion, or acceptance is claimed."
+}

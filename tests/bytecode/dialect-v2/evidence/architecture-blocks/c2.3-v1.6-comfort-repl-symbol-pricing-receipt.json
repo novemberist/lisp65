@@ -1,0 +1,287 @@
+{
+  "authority": {
+    "checker": {
+      "bytes": 26890,
+      "path": "tools/host-lisp/c2_v160_comfort_repl_symbol_pricing.py",
+      "sha256": "a08c9c7e8d72c66d0c76f46d74a837b19f87562f022ece02fb1cdde722056e90"
+    },
+    "contract": {
+      "bytes": 4867,
+      "path": "config/c2-v160-comfort-repl-symbol-pricing-contract.json",
+      "sha256": "7cd363e9dbccb12ddc28c4fbe8e72fe1a56c83cb40108556c2959aa2c559fe92"
+    },
+    "cursor_manifest": {
+      "bytes": 355395,
+      "path": "build/c2.3/v1.6-repl-cursor-navigation/candidate/stdlib-p0.manifest.json",
+      "sha256": "9cccf46ea480f2d78c4a735000bf44809df42847157d86e6c9667bf16b954a11"
+    },
+    "cursor_receipt": {
+      "bytes": 4947,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-repl-cursor-navigation-host-first-receipt.json",
+      "sha256": "e4ee1667fed1bf59556eaa32885379cb27fec849862be19db3aef2b31e5ae5be"
+    },
+    "cursor_source": {
+      "bytes": 6489,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "f2d01133dac20ca0505721d2d644f18270e58ccd6a2e54883fca79a92fea90ce"
+    },
+    "cursor_suite": {
+      "bytes": 5520,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "sha256": "7e45182f5679b797bff90f5643043b955d48ef15741d403bbece84af8683d23c"
+    },
+    "design": {
+      "bytes": 43256,
+      "path": "docs/planning/extension-libraries-design.md",
+      "sha256": "512a5800db071f0eee6c8c5dec063c61775bd99274beb3e5d49aa0c2d0fe525e"
+    },
+    "hardware_predecessor": {
+      "bytes": 8131,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-link116-name-freight-device-receipt.json",
+      "sha256": "1998291fc71e7de2e369b57c2fe8c9c481f385b189b4a1cf6ed3b5d027cf275a"
+    },
+    "headroom_contract": {
+      "bytes": 1461,
+      "path": "config/release-user-headroom-contract.json",
+      "sha256": "6c19f11a8f3ccbc3a66c082771900df2d622f6f24c5c045b960f4d0ca479d68f"
+    },
+    "implementation_successor": {
+      "bytes": 2336,
+      "path": "config/c2-v160-comfort-repl-implementation-contract.json",
+      "sha256": "9814a8b5f8c556b8e90187360cbee07dc6f69ac3fc498bd397a8fdfa2539b11a"
+    },
+    "list_source": {
+      "bytes": 2513,
+      "path": "lib/stdlib-lists.lisp",
+      "sha256": "919fa42b00733e0001d7a2f0aa31c1918d3fe3deefac8c0289e4996898f26f4b"
+    },
+    "native_repl": {
+      "bytes": 13866,
+      "path": "src/repl.c",
+      "sha256": "d3d7ef514615c4975f7994b48d3705e68706815e84019b05eecd776fc449effd"
+    },
+    "owner_bias_correction": {
+      "bytes": 11171,
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "65ff9a9a3a9af3924e8a0c53d4c117e25db6818d55ca37e847ff16f9e08bb232"
+    },
+    "owner_condition": {
+      "bytes": 8007,
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "8c8bd71036569d3be9921414106b3df5f78260408ae9371144e5f40a71f33fa9"
+    },
+    "profile": {
+      "bytes": 22860,
+      "path": "config/workbench.mk",
+      "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+    }
+  },
+  "decision": "do not raise MAX_SYM or rename the public surface; reclaim %rl-dispatch, %rl-put and %take first; apply the measured bias before the floor; then confirm the standing repl-comfort/repl pair at the device D5 row",
+  "format": "lisp65-c2-v160-comfort-repl-symbol-pricing-receipt-v2",
+  "hardware_runs": 0,
+  "mutations_rejected": {
+    "claim-hardware": "pricing wall drift",
+    "collapse-public-surface-without-owner": "minimal Comfort activation identity drift",
+    "drop-NUL-cost": "priced decision table drift",
+    "erase-name-bias": "D5 baseline/floor/bias authority drift",
+    "erase-slot-bias": "D5 baseline/floor/bias authority drift",
+    "hide-helper-repricing": "minimal Comfort activation identity drift",
+    "hide-resident-cost": "priced decision table drift",
+    "invent-third-helper-caller": "third helper contract drift",
+    "invent-zero-symbol-entry": "priced decision table drift",
+    "lower-required-projection": "D5 baseline/floor/bias authority drift",
+    "lower-symbol-floor": "D5 baseline/floor/bias authority drift",
+    "reclaim-only-two": "reclamation candidate drift",
+    "select-MAX-SYM": "priced decision table drift",
+    "select-one-name-without-owner": "priced decision table drift",
+    "skip-device-D5": "pricing wall drift"
+  },
+  "next": "historical pricing remains sealed; live implementation owns its repriced gate",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-08-18",
+  "result": {
+    "activation": {
+      "library_designator_equals_public_entry": false,
+      "new_canonical_names": [
+        "repl",
+        "repl-comfort"
+      ],
+      "reason": "native C REPL owns a direct static read_line call",
+      "zero_symbol_form_viable": false
+    },
+    "baseline_projected_free": {
+      "namepool_bytes": 562,
+      "symbol_slots": 32
+    },
+    "calibration": {
+      "measured_projection_bias": {
+        "namepool_bytes": -4,
+        "symbol_slots": -1
+      },
+      "required_projected_free": {
+        "namepool_bytes": 388,
+        "symbol_slots": 33
+      },
+      "v15_hardware_observed_free": {
+        "namepool_bytes": 545,
+        "symbol_slots": 34
+      },
+      "v15_host_projected_free": {
+        "namepool_bytes": 549,
+        "symbol_slots": 35
+      }
+    },
+    "current_union": {
+      "comfort_surface_absent": true,
+      "manifests": [
+        {
+          "bytes": 355395,
+          "canonical_names": 432,
+          "path": "build/c2.3/v1.6-repl-cursor-navigation/candidate/stdlib-p0.manifest.json",
+          "sha256": "9cccf46ea480f2d78c4a735000bf44809df42847157d86e6c9667bf16b954a11"
+        }
+      ],
+      "session_names_checked": [
+        "copy-point",
+        "defstruct",
+        "inspect",
+        "make-point",
+        "point",
+        "point-p",
+        "point-set-x",
+        "point-set-y",
+        "point-with-x",
+        "point-with-y",
+        "point-x",
+        "point-y",
+        "string-extra",
+        "trace-probe",
+        "v15-ceremony-probe",
+        "v15-perf-probe",
+        "x",
+        "y"
+      ],
+      "shipped_library_sources": [
+        {
+          "bytes": 3388,
+          "path": "lib/comfort-who-calls-generated.lisp",
+          "sha256": "a920c3c5f2f2ef2fb302c667253b0864d291de7205d5d707cd31f3f24bd37c98"
+        },
+        {
+          "bytes": 4181,
+          "path": "lib/inspect-trace.lisp",
+          "sha256": "f002158f002f81f59cd8b40f7c4bf4419a14cf64c9cc8c344be632221fa3faad"
+        },
+        {
+          "bytes": 964,
+          "path": "lib/comfort-strings.lisp",
+          "sha256": "cf9a2eb3a4e649a633bd03c067bdf73842d38cceeedfd68f02019fed2a078124"
+        },
+        {
+          "bytes": 5717,
+          "path": "lib/stdlib-places.lisp",
+          "sha256": "605aba9cada3f5979b6b491c40ffa496c0e396f0d2fbe69df6c9faa40db3379a"
+        },
+        {
+          "bytes": 5612,
+          "path": "lib/defstruct.lisp",
+          "sha256": "11c9ef05dc1acc58e2ac62002667e434c3c7fda2a0bb8681de86c2635cc8fcaa"
+        }
+      ]
+    },
+    "options": {
+      "one_name_owner_variant": {
+        "namepool_bytes": 584,
+        "symbol_slots": 34
+      },
+      "one_name_owner_variant_bias_adjusted": {
+        "namepool_bytes": 580,
+        "symbol_slots": 33
+      },
+      "raise_MAX_SYM_by_3": {
+        "bank5_table_delta_bytes": 18,
+        "resulting_symbol_slots": 33,
+        "selected": false,
+        "structural_bank0_array_delta_bytes": 4
+      },
+      "raise_MAX_SYM_by_4_for_one_measured_slot_margin": {
+        "bank5_table_delta_bytes": 24,
+        "resulting_symbol_slots": 34,
+        "selected": false,
+        "structural_bank0_array_delta_bytes": 4
+      },
+      "standing_surface_without_reclamation": {
+        "namepool_bytes": 544,
+        "symbol_slots": 30
+      },
+      "standing_surface_without_reclamation_bias_adjusted": {
+        "namepool_bytes": 540,
+        "symbol_slots": 29
+      },
+      "three_helpers_bias_adjusted": {
+        "namepool_bytes": 567,
+        "symbol_slots": 32
+      },
+      "three_helpers_reclaimed_then_standing_surface": {
+        "namepool_bytes": 571,
+        "symbol_slots": 33
+      },
+      "two_helpers_bias_adjusted": {
+        "namepool_bytes": 561,
+        "symbol_slots": 31
+      },
+      "two_helpers_reclaimed_then_standing_surface": {
+        "namepool_bytes": 565,
+        "symbol_slots": 32
+      }
+    },
+    "release_minimum_free": {
+      "namepool_bytes": 384,
+      "symbol_slots": 32
+    },
+    "selected": {
+      "bias_adjusted_free_after_comfort": {
+        "namepool_bytes": 567,
+        "symbol_slots": 32
+      },
+      "bias_adjusted_margin_above_release_minimum": {
+        "namepool_bytes": 183,
+        "symbol_slots": 0
+      },
+      "comfort_new_namepool_bytes": 18,
+      "comfort_new_symbol_slots": 2,
+      "implementation_wall": "eliminate both single-use cursor helpers with cursor equivalence and allocation gates unchanged; private-inline %take through the real suite; any named Comfort helper triggers capacity repricing",
+      "projected_free_after_comfort": {
+        "namepool_bytes": 571,
+        "symbol_slots": 33
+      },
+      "reclaim": [
+        "%rl-dispatch",
+        "%rl-put",
+        "%take"
+      ],
+      "reclaimed_namepool_bytes": 27,
+      "reclaimed_symbol_slots": 3,
+      "third_helper_real_suite_proof": {
+        "cases": 248,
+        "functions_after": 392,
+        "helper_entry_absent": true,
+        "only_caller_preserved": "butlast",
+        "private_inline_functions_after": 5,
+        "status": "PASS: real compiler and complete suite"
+      }
+    },
+    "successor": {
+      "historical_comfort_source_absent": true,
+      "live_implementation_contract": {
+        "bytes": 2336,
+        "path": "config/c2-v160-comfort-repl-implementation-contract.json",
+        "sha256": "9814a8b5f8c556b8e90187360cbee07dc6f69ac3fc498bd397a8fdfa2539b11a"
+      },
+      "pricing_acceptance_commit": "cac1ee30",
+      "status": "authorized implementation follows accepted pricing"
+    }
+  },
+  "status": "PASS: BIAS-ADJUSTED-COMFORT-SYMBOL-PRICE-RECLAMATION-REQUIRED"
+}

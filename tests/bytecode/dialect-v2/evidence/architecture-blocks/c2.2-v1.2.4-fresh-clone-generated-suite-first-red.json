@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-c2.2-v1.2.4-fresh-clone-first-red-v1",
+  "recorded_on": "2026-07-30",
+  "status": "closed-after-canonical-producer-target-attribution",
+  "observed": "The first detached clone stopped before the product builder because p0-stdlib-require-resolver.json extends build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json and that generated suite did not yet exist.",
+  "mechanism": "The local work tree inherited the suite from an earlier fasl-emit-check. The v1.2.4 fresh-clone command invoked the freight gates before materializing that generated input, so the local build had an accidental second truth.",
+  "correction_attempts": [
+    {
+      "target": "fasl-emit-check",
+      "result": "insufficient; validates the FASL emitter but does not materialize the dialect-v2 Workbench suite"
+    },
+    {
+      "target": "v2-workbench-codemod",
+      "result": "accepted; this is the canonical producer and creates the required suite with SHA-256 5651dd88a55854b4ec883ba9e5004bc1b7adcb5ff04a856f501918afd2fd4734 in an isolated fresh checkout"
+    }
+  ],
+  "correction": "The fresh-clone build commands now run v2-workbench-codemod before the unchanged Link-81 product driver. The generated file is not replaced by a hand-maintained copy.",
+  "execution_accounting": {
+    "clone_attempts_started": 2,
+    "clone_axes_completed": 0,
+    "candidate_products_built": 0,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "claim_limit": "Fresh-clone build-order attribution only. Link 81 and its bound product driver are unchanged; the two-clone reproducibility proof must run again from zero."
+}

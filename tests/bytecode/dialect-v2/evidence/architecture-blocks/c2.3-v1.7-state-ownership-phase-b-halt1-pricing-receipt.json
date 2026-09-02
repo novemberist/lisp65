@@ -1,0 +1,695 @@
+{
+  "arena_skeleton": {
+    "compiler_static_stack": {
+      "capacity_bytes": 12,
+      "end_exclusive": "0xc080",
+      "observed_demand_bytes": 6,
+      "start": "0xc074"
+    },
+    "convergence_state": {
+      "capacity_bytes": 66,
+      "demand_bytes": 66,
+      "end_exclusive": "0xc042",
+      "start": "0xc000"
+    },
+    "deliberate_bank0_gaps": [
+      {
+        "bytes": 50,
+        "end_exclusive": "0xc074",
+        "start": "0xc042"
+      },
+      {
+        "bytes": 6,
+        "end_exclusive": "0xc080",
+        "start": "0xc07a"
+      },
+      {
+        "bytes": 7,
+        "end_exclusive": "0xc354",
+        "start": "0xc34d"
+      }
+    ],
+    "fixed_c2_bank0_including_code": {
+      "capacity_bytes": 717,
+      "demand_bytes": 717,
+      "end_exclusive": "0xc34d",
+      "start": "0xc080"
+    },
+    "mapped_far": {
+      "bank2_headroom_after_owner_bytes": 16755,
+      "cpu_start": "0x78b2",
+      "identity_delta_bytes": -66,
+      "observed_product_LTO_payload_bytes": 1433,
+      "owner_capacity_bytes": 1499,
+      "owner_cpu_end_exclusive": "0x7e8d",
+      "owner_physical_end_exclusive": "0x0002be8d",
+      "physical_start": "0x0002b8b2"
+    },
+    "ordinary_bank0_state": {
+      "capacity_bytes": 1592,
+      "demand_bytes": 1585,
+      "end_exclusive": "0xc000",
+      "headroom_bytes": 7,
+      "start": "0xb9c8"
+    },
+    "overlay_floor": "0xc354",
+    "zero_page": {
+      "capacity_end_exclusive": "0x90",
+      "convergence_bytes": 2,
+      "convergence_gap_end_exclusive": "0x89",
+      "convergence_gap_start": "0x87",
+      "fixed_bytes": 7,
+      "fixed_end_exclusive": "0x90",
+      "fixed_start": "0x89",
+      "ordinary_bytes": 101,
+      "ordinary_end_exclusive": "0x87",
+      "ordinary_start": "0x22"
+    }
+  },
+  "authorities": {
+    "contract": {
+      "bytes": 6364,
+      "path": "config/c2-state-ownership-contract.json",
+      "sha256": "e618a4c5a4ad01cbf471a85a729199aa4dce2290f3ae7d3435de17f184a69cbb"
+    },
+    "phase_A": {
+      "bytes": 34296,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-state-ownership-phase-a-inventory-receipt.json",
+      "sha256": "36ca85eff18c8f8b59a33ee4b69f3026303a90a26ae2d16217d323b5842ab9b5"
+    },
+    "plan": {
+      "bytes": 11679,
+      "path": "docs/planning/1.7-state-ownership-work-plan.md",
+      "sha256": "5e60e33ed44b346b5da3fb0c1cf1f7de4916e9391de50bc137812155eca204da"
+    },
+    "tool": {
+      "bytes": 16068,
+      "path": "tools/host-lisp/c2_v17_state_ownership_phase_b.py",
+      "sha256": "ed6ffe8e7af25003ac8dce30f86dd3cac0a20561c66ddbef56e3f04fb4b48833"
+    },
+    "v15_First_Red": {
+      "bytes": 5701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-stack-overlay-mapped-far-service-wplto-first-red.json",
+      "sha256": "8da206be7e95422dffdf0b53f3b68acd08c0d6033e8cc42559606ac646bd84f6"
+    },
+    "v15_contract": {
+      "bytes": 15638,
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "a84415a4a2dfc9283f6389a160db3a39a084f8e86bb9339d09e649e3a51c9b9c"
+    }
+  },
+  "candidate_rows": [
+    {
+      "bank0_state": "fits 1585/1592",
+      "far_body": "red: 1433-byte whole-product LTO payload remains optimizer-owned against exact 1499-byte identity",
+      "id": "owned-arenas-plus-isolated-far-load-current-lto",
+      "status": "rejected-current-output-repin",
+      "zero_page": "fits by routing convergence scratch to 0x87..0x89"
+    },
+    {
+      "bank0_state": "fits 1585/1592",
+      "far_body": "red: a 66-byte tail makes section extent 1499 without making emitted code identity optimizer-independent",
+      "id": "owned-arenas-plus-66-byte-far-tail",
+      "status": "rejected-padding",
+      "zero_page": "fits by routing convergence scratch to 0x87..0x89"
+    },
+    {
+      "bank0_state": "fits 1585/1592",
+      "far_body": "geometrically priceable, but obtains identity by a separate compiler/frozen object boundary",
+      "id": "owned-arenas-plus-frozen-or-nonlto-far-object",
+      "status": "rejected-partition",
+      "zero_page": "fits by routing convergence scratch to 0x87..0x89"
+    }
+  ],
+  "claim": "State ownership and structural pricing only; no source annotation, product build, WPLTO, link identity, hardware, semantic or release claim.",
+  "decision": {
+    "fits": 0,
+    "no_fourth_row": true,
+    "priced": 3,
+    "recommendation": "Park at Halt 1 unless the owner explicitly commissions a semantic implementation owner for the far body (for example a separately proved assembly implementation). That is not an ownership-only Phase-C step and was not smuggled in as a fourth row."
+  },
+  "execution_witness": {
+    "candidate_rows_priced": 3,
+    "micro_stack_cases": 5,
+    "negative_mutations": 7,
+    "state_families": 7,
+    "state_inputs_owned_once": 72
+  },
+  "format": "lisp65-c2.3-v1.7-state-ownership-phase-b-pricing-v1",
+  "input_ownership": [
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 12,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.c2_dma_list",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.cs_idx",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.disk_source_len",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.disk_source_pos",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.eval.k_lccrun",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 12,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.ext_dl",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.ext_stg",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.ext_stg1",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 9,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.f011_guard@canonical-asm-object",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.gc_runs",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.gensym.tag",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.k_bytecode",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.k_other",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.lisp_error_msg",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 19,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.lisp_toplevel",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 134,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.marks",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 512,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.markstack",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 376,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.namelen4",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.npool",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.pending_symbol",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rd_sc",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rd_sf",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rd_sn",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 192,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.repl.buf",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rtov_batch_crc",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rtov_batch_entry",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rtov_call_result",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rtov_family",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rtov_family_generation",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.rtov_fault",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.str_stg1",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 94,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.symbnd",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 94,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.symfnptr",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_buf_bank",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 56,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_codebuf",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_k_control",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_run_inner.poll_",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_upvals",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_workbench_error_symbols.0",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_workbench_error_symbols.10",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_workbench_error_symbols.2",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_workbench_error_symbols.3",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_workbench_error_symbols.5",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_workbench_error_symbols.7",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vm_workbench_error_symbols.8",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_code",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_hdrlen",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_littab",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_plen",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_poff",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_pwmax",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 1,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_streaming",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_win",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "ordinary-bank0-state-arena",
+      "bytes": 2,
+      "family": "ordinary-bank0-bss",
+      "input": ".bss.vmr_winlen",
+      "semantic_owner": "workbench-runtime-state"
+    },
+    {
+      "arena": "convergence-state-arena",
+      "bytes": 24,
+      "family": "convergence-bank0-state",
+      "input": ".lisp65_c2_convergence_state.d700_jobs",
+      "semantic_owner": "code-window-convergence"
+    },
+    {
+      "arena": "convergence-state-arena",
+      "bytes": 1,
+      "family": "convergence-bank0-state",
+      "input": ".lisp65_c2_convergence_state.d700_value",
+      "semantic_owner": "code-window-convergence"
+    },
+    {
+      "arena": "convergence-state-arena",
+      "bytes": 40,
+      "family": "convergence-bank0-state",
+      "input": ".lisp65_c2_convergence_state.d705_jobs",
+      "semantic_owner": "code-window-convergence"
+    },
+    {
+      "arena": "convergence-state-arena",
+      "bytes": 1,
+      "family": "convergence-bank0-state",
+      "input": ".lisp65_c2_convergence_state.d705_value",
+      "semantic_owner": "code-window-convergence"
+    },
+    {
+      "arena": "convergence-zero-page-gap",
+      "bytes": 1,
+      "family": "convergence-zero-page",
+      "input": ".lisp65_c2_convergence_zp.d700_done",
+      "semantic_owner": "code-window-convergence"
+    },
+    {
+      "arena": "convergence-zero-page-gap",
+      "bytes": 1,
+      "family": "convergence-zero-page",
+      "input": ".lisp65_c2_convergence_zp.d705_done",
+      "semantic_owner": "code-window-convergence"
+    },
+    {
+      "arena": "fixed-c2-bank0-arena",
+      "bytes": 2,
+      "family": "fixed-c2-bank0-state",
+      "input": ".lisp65_c2_fixed_bank0.committed_roots",
+      "semantic_owner": "c2-fixed-bank0"
+    },
+    {
+      "arena": "fixed-c2-bank0-arena",
+      "bytes": 2,
+      "family": "fixed-c2-bank0-state",
+      "input": ".lisp65_c2_fixed_bank0.decode_active",
+      "semantic_owner": "c2-fixed-bank0"
+    },
+    {
+      "arena": "fixed-c2-bank0-arena",
+      "bytes": 20,
+      "family": "fixed-c2-bank0-state",
+      "input": ".lisp65_c2_fixed_bank0.edma_job",
+      "semantic_owner": "c2-fixed-bank0"
+    },
+    {
+      "arena": "fixed-c2-bank0-arena",
+      "bytes": 304,
+      "family": "fixed-c2-bank0-state",
+      "input": ".lisp65_c2_fixed_bank0.phase_scratch",
+      "semantic_owner": "c2-fixed-bank0"
+    },
+    {
+      "arena": "fixed-c2-bank0-arena",
+      "bytes": 46,
+      "family": "fixed-c2-bank0-state",
+      "input": ".lisp65_c2_fixed_bank0.runtime",
+      "semantic_owner": "c2-fixed-bank0"
+    },
+    {
+      "arena": "fixed-c2-bank0-arena",
+      "bytes": 34,
+      "family": "fixed-c2-bank0-state",
+      "input": ".lisp65_c2_fixed_bank0.sym_name_scratch",
+      "semantic_owner": "c2-fixed-bank0"
+    },
+    {
+      "arena": "fixed-c2-bank0-arena",
+      "bytes": 240,
+      "family": "fixed-c2-bank0-state",
+      "input": ".lisp65_c2_fixed_bank0_hot_bss.heap",
+      "semantic_owner": "c2-fixed-bank0"
+    },
+    {
+      "arena": "mapped-far-code-owner",
+      "bytes": 1433,
+      "family": "mapped-far-service-body",
+      "input": ".lisp65_c2_mapped_far_service",
+      "semantic_owner": "mapped-bank2-far-service"
+    },
+    {
+      "arena": "compiler-static-stack-arena",
+      "bytes": 6,
+      "family": "compiler-static-stack",
+      "input": ".noinit..Lstatic_stack",
+      "semantic_owner": "llvm-mos-static-stack"
+    },
+    {
+      "arena": "ordinary-zero-page-arena",
+      "bytes": 77,
+      "family": "ordinary-zero-page",
+      "input": ".zp.bss",
+      "semantic_owner": "workbench-zero-page-state"
+    },
+    {
+      "arena": "ordinary-zero-page-arena",
+      "bytes": 12,
+      "family": "ordinary-zero-page",
+      "input": ".zp.data",
+      "semantic_owner": "workbench-zero-page-state"
+    },
+    {
+      "arena": "ordinary-zero-page-arena",
+      "bytes": 12,
+      "family": "ordinary-zero-page",
+      "input": ".zp.noinit",
+      "semantic_owner": "workbench-zero-page-state"
+    }
+  ],
+  "micro_fixture": {
+    "stack_cases": [
+      {
+        "far_owner_capacity_bytes": 1499,
+        "far_payload_bytes": 1433,
+        "overlay_floor": "0xc354",
+        "stack_bytes": 3,
+        "status": "passed"
+      },
+      {
+        "far_owner_capacity_bytes": 1499,
+        "far_payload_bytes": 1433,
+        "overlay_floor": "0xc354",
+        "stack_bytes": 4,
+        "status": "passed"
+      },
+      {
+        "far_owner_capacity_bytes": 1499,
+        "far_payload_bytes": 1433,
+        "overlay_floor": "0xc354",
+        "stack_bytes": 6,
+        "status": "passed"
+      },
+      {
+        "far_owner_capacity_bytes": 1499,
+        "far_payload_bytes": 1433,
+        "overlay_floor": "0xc354",
+        "stack_bytes": 12,
+        "status": "passed"
+      },
+      {
+        "stack_bytes": 13,
+        "status": "rejected"
+      }
+    ],
+    "twelve_byte_fixture": {
+      "elf_bytes": 3616,
+      "elf_sha256": "2e11973ba137e5669036d2c12a5fe8c119f86080285b332c62929d294042062c",
+      "far_lma": "0x0002b8b2",
+      "linker_sha256": "de44b801aed66988b2ff95f55b9289ef93fb1095eabeadb2066d752ba69843af"
+    }
+  },
+  "reading": {
+    "far_body": "The micro ELF proves VMA/LMA and 1433/1499 capacity, but not exact optimizer-independent code identity.",
+    "not_priced": "A separately proved assembly implementation would be a new semantic implementation owner, not an ownership-only Phase-C step; adding it would be an owner charter extension and a fourth row.",
+    "state_and_zp": "One geometric skeleton fits: 1585/1592 Bank-0 bytes and the exact 0x87..0x89 ZP gap.",
+    "why_zero_fit": "Each cheap far-body closure is explicitly forbidden: current-output repin, padding, or compiler/frozen-object partition."
+  },
+  "recorded_on": "2026-08-04",
+  "status": "halt1-zero-of-three-structural-rows-fit"
+}

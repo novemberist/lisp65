@@ -1,0 +1,207 @@
+{
+  "authority": {
+    "base_deployment": {
+      "bytes": 5623,
+      "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/deployment.json",
+      "sha256": "3813add9a074769d1bcb4fa6e77ce2b55f9b2de3685dfa261ea94f476af2cf40"
+    },
+    "driver": {
+      "bytes": 41632,
+      "path": "tools/host-lisp/c2_phase_v_link77_gc_bundle.py",
+      "sha256": "858d1cfe0661531497fb9e5d0505553ac20225d5ba636477ffd30e442076ad0b"
+    },
+    "hardware_script": {
+      "bytes": 6953,
+      "path": "scripts/c2-phase-v-link77-gc-bundle-hw.sh",
+      "sha256": "aadfd5e32fd177b18f07629f23ec4cc453c447367ff907a0b995eb0f12a560ec"
+    },
+    "host_EXT_DMA_lane": {
+      "bytes": 5749,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link77-gc-ext-dma-host-lane-receipt.json",
+      "sha256": "cfd35cf18f1c3fab5b29a953b94b6bb6e024e5875e69b9d4d8847532a9aeb76b"
+    },
+    "prior_hardware_First_Red": {
+      "bytes": 7105,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link77-phase-v-bundled-hardware-receipt.json",
+      "sha256": "e9b3d9a9af51458976bf4c6b343bad3792fa5a2d5ff8e3608cd99dfb828be7e3"
+    }
+  },
+  "claim_limit": "Preparation only. Both diagnostic identities are nonpromotable; no target GC, random, RUN/STOP, IRQ or DIRMISS claim exists yet.",
+  "deployment": {
+    "bytes": 22232,
+    "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/deployment.json",
+    "sha256": "45e9c845a869f4fb4fda8352c4f1c81b06d9adedeb479a58df884a563632ec89"
+  },
+  "dirmiss": {
+    "binding": {
+      "bytes": 40,
+      "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/post-symname-hold-verifier-bindings.bin",
+      "sha256": "e1b270a85965817473ef729a9c10897007c3f5c5c14a0f68b80cae496930871e"
+    },
+    "mutations_rejected": [
+      "stale-payload-crc",
+      "stale-record-crc",
+      "stale-directory-crc",
+      "stale-header-crc",
+      "restored-opcode-with-stale-derived-identity",
+      "stale-product-session-binding"
+    ],
+    "patch": {
+      "after": "80fe",
+      "before": "8504",
+      "runtime_address": "0xc472",
+      "session_file_offset": 60188,
+      "size_delta": 0,
+      "slot": 47
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/post-symname-hold-NONPROMOTABLE.prg",
+      "sha256": "253cc835e8b644ff899d2f67d67066ec56b2ad8a7cdd2bb3741fdf6b8af4995c"
+    },
+    "session": {
+      "address": "0x08000000",
+      "bytes": 65423,
+      "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/post-symname-hold-NONPROMOTABLE.session.bin",
+      "sha256": "726e9628c42541746ee60bd9a97ac41131654335f7cfaf92bc2550bb43dee589"
+    }
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "diagnostic_product_size_delta": 0,
+    "hardware_runs": 0,
+    "product_links": 0
+  },
+  "execution_witness": {
+    "cases": [
+      "gc-linked-hold-edge",
+      "dirmiss-derived-session-identity",
+      "dirmiss-mutation-stale-payload-crc",
+      "dirmiss-mutation-stale-record-crc",
+      "dirmiss-mutation-stale-directory-crc",
+      "dirmiss-mutation-stale-header-crc",
+      "dirmiss-mutation-restored-opcode-with-stale-derived-identity",
+      "dirmiss-mutation-stale-product-session-binding"
+    ],
+    "executed_cases": 8,
+    "expected_cases": 8,
+    "positive": true
+  },
+  "format": "lisp65-c2.2-link77-gc-bundle-preparation-v1",
+  "gc_discriminator": {
+    "ELF_feasibility": {
+      "alloc_oom_bytes": "a2 01 86 8f 60",
+      "hold_ordering": "entry before mem_oom store; marks and freelist are the just-failed collection",
+      "symbols": {
+        "alloc_high": {
+          "address": "0x003b",
+          "bytes": 2,
+          "section": ".zp.bss"
+        },
+        "alloc_oom": {
+          "address": "0x3ec2",
+          "bytes": 5,
+          "section": ".text"
+        },
+        "freelist": {
+          "address": "0x003f",
+          "bytes": 2,
+          "section": ".zp.bss"
+        },
+        "gc_frozen": {
+          "address": "0x003d",
+          "bytes": 2,
+          "section": ".zp.bss"
+        },
+        "gc_rootsp": {
+          "address": "0x005e",
+          "bytes": 2,
+          "section": ".zp.bss"
+        },
+        "gc_runs": {
+          "address": "0xb9ee",
+          "bytes": 2,
+          "section": ".bss"
+        },
+        "heap": {
+          "address": "0xc25d",
+          "bytes": 240,
+          "section": ".lisp65_c2_fixed_bank0_hot_bss"
+        },
+        "marks": {
+          "address": "0xbbf0",
+          "bytes": 134,
+          "section": ".bss"
+        },
+        "mem_oom": {
+          "address": "0x008f",
+          "bytes": 1,
+          "section": ".lisp65_c2_fixed_zp"
+        }
+      }
+    },
+    "capture": {
+      "extended_heap": [
+        262144,
+        8192
+      ],
+      "freelist": [
+        63,
+        2
+      ],
+      "hot_heap": [
+        49757,
+        240
+      ],
+      "marks": [
+        48112,
+        134
+      ],
+      "time_separated": [
+        0,
+        1,
+        5
+      ],
+      "watermarks": [
+        59,
+        4
+      ]
+    },
+    "identity": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/gc-oom-entry-hold-NONPROMOTABLE.prg",
+      "sha256": "e6f851e4cf96628c8e6374f3f944a37fcf9cb1068dcb4bb44d123d92c81f304f"
+    },
+    "patch": {
+      "PRG_file_offset": 7875,
+      "after": "80fe",
+      "before": "a201",
+      "ordering": "before mem_oom=1; after failing GC",
+      "runtime_address": "0x3ec2",
+      "size_delta": 0,
+      "symbol": "alloc_oom"
+    }
+  },
+  "product_identity": {
+    "ELF": {
+      "bytes": 622588,
+      "path": "build/post-promotion/link77-random-while/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ede88619d0e9711b8d5144495ca84f0414ee38352f882df8aadf5372504e9889"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link77-random-while/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "9e8999c0de31e306ee957f4912b7fa0baa52c55d58dfe8a933b1c02462e1faa3"
+    }
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-29",
+  "status": "passed-ready-one-bundled-session-hardware-not-run",
+  "tool_authority_rebind": {
+    "product_or_diagnostic_byte_delta": 0,
+    "reason": "dependency-scoped row recording and positive witness were added after the byteidentical diagnostic artifacts were prepared"
+  }
+}

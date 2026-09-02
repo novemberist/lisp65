@@ -1,0 +1,145 @@
+{
+  "bounded_next_probe": {
+    "authorization": "not requested by this diagnosis; product work remains stopped",
+    "goal": "Validate the immutable session-family catalog once at the append transaction boundary, bind the resulting trust state to family plus generation, and retain per-record bounds plus per-payload CRC and wipe for every executed slice.",
+    "must_not_do": [
+      "remove payload CRC or wipe checks",
+      "trust across a family/generation change",
+      "weaken the 1,792-byte slice cap",
+      "claim the 15/16- or 10-frame target before hardware measurement"
+    ],
+    "name": "generation-bound transaction authentication amortization",
+    "required_gates": [
+      "catalog, directory, build-id and generation mutation fail before any target executes",
+      "record/payload mutation still fails at the target boundary",
+      "abort, rollback and family switch invalidate transaction trust",
+      "all capacity walls, especially 19-byte ordinary BSS and closed $e000, are reported",
+      "one capacity/placement probe before any successor product link"
+    ]
+  },
+  "claim_limit": "This immutable diagnosis binds one receipt-less Link-30 hardware first red and the exact static path that explains it. It is not hardware acceptance, promotion, capacity authorization or permission to implement the proposed follow-up.",
+  "format": "lisp65-c2-product-link30-hot-refill-hardware-first-red-diagnosis-v1",
+  "hardware_observation": {
+    "boot_to_repl": {
+      "claim_limit": "The stable owned-counter read happened after prompt polling, verified virtual typing and evaluation. It is an upper bound, not an exact banner-to-prompt duration.",
+      "limit_frames": 1500,
+      "result": "(3 159 3)",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link30-hot-refill/latency/diagnostics/after-input-timeout.txt",
+        "sha256": "6319c13955a92053f4cd45de0909c6ed9260f5ac80b02d2cff3addb0e8da23ed"
+      },
+      "upper_bound_frames": 927,
+      "upper_bound_milliseconds": 18540
+    },
+    "correctness": "passed for both measured calls",
+    "definition_first_call": {
+      "elapsed_frames": 131,
+      "end_frame": 164,
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%c2h)))))(list r a(peek 215 250))))",
+      "limit_frames": 16,
+      "nominal_milliseconds": 2620,
+      "result": "(t 33 164)",
+      "setup": "(defun %c2h()(quote t))",
+      "start_frame": 33,
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link30-hot-refill/latency/definition_first_call.txt",
+        "sha256": "32636bcc2e7c653378cad65d17df2ea7084606fee65e8274fec615a50005ed15"
+      }
+    },
+    "latency": "first red; both limits exceeded and no warm speedup",
+    "warm_second_call": {
+      "elapsed_frames": 131,
+      "end_frame": 250,
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%c2h)))))(list r a(peek 215 250))))",
+      "limit_frames": 10,
+      "nominal_milliseconds": 2620,
+      "result": "(t 119 250)",
+      "start_frame": 119,
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link30-hot-refill/latency/warm_second_call.txt",
+        "sha256": "3ffaf479c83ee713412bc512ff33a4fe3fead27ad57996d0c32adf11628b9f0d"
+      }
+    }
+  },
+  "recorded_on": "2026-07-20",
+  "root_cause": {
+    "predecessor_hypothesis_resolution": "Link 29 named the 27-call append path as a real secondary floor that could not be isolated while phase 13 also dominated the static banner. Link 30 removes phase 13 and measures that floor directly at 131 frames.",
+    "primary": "Every top-level eval still creates a transient C2I-v2 session image. Its emitter, append, suffix decode, publication and rollback traverse 27 separately authenticated runtime-overlay slices. Each call reloads and revalidates the unchanged catalog and record verifiers, scans the unchanged 36-record directory, validates the target payload and wipes both verifier and target bytes. The immutable family proof is therefore recomputed 27 times per expression.",
+    "why_cold_equals_warm": "The target function is defined once, but each measured eval of its call is itself newly compiled, appended, executed and rolled back. The direct hot materializer removes phase-13 authentication from VM refill; it does not amortize the transient session-append transaction that encloses every top-level form."
+  },
+  "scope": {
+    "candidate_product_sha256": "1eba43ca05b2d7996071ca2445d3501f8caa9aad999ca1a1c6de818f302d1d18",
+    "deployment": {
+      "bytes": 2737,
+      "path": "build/c2.2/hardware-presmoke-link30-hot-refill/deployment.json",
+      "sha256": "60476c7bf8c4499a2595cbe51948ba9f28cb81add6e5d03e42abe77321c75c4a"
+    },
+    "new_product_links_after_first_red": 0,
+    "predecessor_latency_diagnosis": {
+      "bytes": 14137,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link29-latency-hardware-first-red-diagnosis.json",
+      "sha256": "6a3ffae28828cc56c1bcf62453b1d72489c1fa83b63453a09d4981c3e6b85d5c"
+    },
+    "presmoke_result": {
+      "bytes": 1783,
+      "path": "build/c2.2/hardware-presmoke-link30-hot-refill/latency/result.json",
+      "sha256": "722e6f5a8f27d911d6060bed522478c9c61794a75ad8d20c2e4607b24a5d11f1"
+    },
+    "product_source_changes_after_first_red": 0,
+    "remaining_hardware_cases": "not-run",
+    "structural_receipt": {
+      "bytes": 12064,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link30-hot-refill-structural-receipt.json",
+      "sha256": "e0211015bb33fcd795cbd76edeea73143d1db6c069c1de965a62125e8108f022"
+    }
+  },
+  "static_attribution": {
+    "fixed_path": {
+      "direct_shared_materializer": "present in the exact product closure",
+      "measured_change_from_link29_manual_observation": "approximately 5 seconds per form to 2.62 seconds per form",
+      "old_phase13_transport_per_literal_refill": "removed"
+    },
+    "remaining_transient_append_path": {
+      "authenticated_overlay_calls": 27,
+      "catalog_directory_bytes_per_call": 1152,
+      "minimum_cpu_byte_visits_crc_plus_wipe": 329769,
+      "minimum_crc_input_bytes": 131235,
+      "minimum_wipe_bytes_each_for_memset_and_verify": 99267,
+      "schedule": [
+        "c2-emit-prepare",
+        "c2-emit-name",
+        "c2-emit-literal-append",
+        "c2-emit-code",
+        "c2-emit-final-meta",
+        "c2-emit-final-crc",
+        "c2-append-envelope",
+        "c2-append-crc",
+        "c2-append-metadata",
+        "c2-append-capacity",
+        "c2-append-stage",
+        "c2-append-image",
+        "c2-append-entries",
+        "c2-decode-04",
+        "c2-decode-05",
+        "c2-decode-06a",
+        "c2-decode-06b",
+        "c2-decode-07",
+        "c2-decode-08",
+        "c2-decode-09",
+        "c2-decode-10",
+        "c2-decode-11",
+        "c2-decode-12",
+        "c2-append-header",
+        "c2-append-publish-names",
+        "c2-append-publish-cells",
+        "c2-append-rollback"
+      ],
+      "target_payload_bytes": 32496,
+      "verifier_payload_bytes_per_call": 2473
+    }
+  },
+  "status": "first-red-receipt-less-hardware-presmoke-stopped"
+}

@@ -1,0 +1,81 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "further_rounds_authorized": false,
+    "repair_round": 1,
+    "rule": "at most one fix round, else feature descope",
+    "session": {
+      "bytes": 3644,
+      "path": "config/c2-v17-block3-r10-acceptance-session.json",
+      "sha256": "67c542cfd7c87633640da6f347a5e410622bb5b2960aa294c16a51b428b35cc8"
+    }
+  },
+  "candidate_header": {
+    "banner_ordinal": 247,
+    "bytes": 3305,
+    "path": "build/c2.3/v1.7-ide-idle-blink-current-plane/stdlib-p0.h",
+    "sha256": "391a1ef8b3eaeb5cde95d70771e0148ba4842b037feba2737b45c5c249ab4280"
+  },
+  "candidate_inventory": {
+    "manifest": {
+      "bytes": 375109,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-preflight-r10/setup-owned/static-plane/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "91e095e5c4529068221b3805d512140c2099c197a85efb13bdd12997e17a237a"
+    },
+    "rows": [
+      {
+        "arity": 2,
+        "bytes": 32,
+        "name": "%load-lib-loaded-p",
+        "ordinal": 239
+      },
+      {
+        "arity": 0,
+        "bytes": 145,
+        "name": "%repl-banner",
+        "ordinal": 247
+      }
+    ]
+  },
+  "classification": "known-bound-not-consumed compiler-header family",
+  "consumed_historical_header": {
+    "banner_ordinal": 239,
+    "bytes": 3325,
+    "path": "build/c2.2/substitution/stdlib-p0.h",
+    "sha256": "28b6b213ecece353700ab305a408e7a2295696495c383c021ff7c5451282e56e"
+  },
+  "format": "lisp65-c2-v17-block3-banner-ordinal-repair-v1-attribution",
+  "frozen_hardware_pair": {
+    "ELF": {
+      "bytes": 647940,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r10/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a5c5af3784ca7202258457fbe0a843911108400374b552a92091876f422bbd60"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r10/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "a7a06b5e2cdfff0078dd56d715525d698c249a101890a624ae141e275096a862"
+    }
+  },
+  "mechanism": "repl.c emitted ordinal 239 from the historical substitution stdlib header; candidate ordinal 239 is %load-lib-loaded-p and rejects the nullary banner call",
+  "product_freight_exonerated": true,
+  "real_consumer": {
+    "emitted_call": {
+      "call_address": 44022,
+      "load_address": 44008,
+      "ordinal": 239
+    },
+    "source": {
+      "bytes": 14544,
+      "path": "src/repl.c",
+      "sha256": "095c9aaa80b3c5da55887295a9ede634039971d72d31a6afcce6919e65bc08b9"
+    }
+  },
+  "recorded_on": "2026-08-26",
+  "repair": "force the candidate-generated stdlib header at both real compile_link consumers and prove the final caller operand",
+  "status": "PASS: EARLY BOOT ARITY RED ATTRIBUTED TO STALE BANNER ORDINAL"
+}

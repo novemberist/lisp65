@@ -1,0 +1,76 @@
+{
+  "format": "lisp65-c2.3-ship-builder-v1-host-receipt",
+  "date": "2026-07-31",
+  "source_commit": "30c31383e5df42054f7708a82e687e9241b440ed",
+  "status": "passed",
+  "claim": "The public Ship-v1 path builds three complete standalone D81 images, executes every entry through the product runtime on the host, verifies every media member, and reproduces the minimal image byte-for-byte from two independent fresh checkouts.",
+  "claim_limit": "This receipt proves host construction, closure, modeled execution, media layout, and reproducibility. It does not claim that Xemu or physical MEGA65 boot completed; those are separate evidence rows.",
+  "authorities": {
+    "contract": {
+      "path": "docs/contracts/ship-builder-v1.md",
+      "sha256": "1f0453649a3263c7b52a532b0b5cc804044effa6214c57ea4abf2013da649ef5"
+    },
+    "configuration": {
+      "path": "config/ship-builder-v1.json",
+      "sha256": "e0944593a974fd5033c32b70e289cff712f005ce1266f2d5f0140cb4f245fd03"
+    },
+    "library_catalog": {
+      "path": "config/ship-library-catalog-v1.json",
+      "sha256": "cd1297cac48a411a0252aa39c2e553db0f652b162ef12032cf6353b7aa36b8fc"
+    },
+    "builder": {
+      "path": "tools/host-lisp/ship_builder.py",
+      "sha256": "5411104ed99696cf555b50855cd4afb047e5e4c76390b95755b8cfb259b80f66"
+    },
+    "stager": {
+      "path": "scripts/r3-cold-stager-main.c",
+      "sha256": "c5442ef0b69befa5e7f3a268caa9747c5977e273b67821f9214afa895f59d2ef"
+    },
+    "runtime": {
+      "path": "products/runtime-core/main.c",
+      "sha256": "9a91fa7211d94ce0d867031e54313e0c579ee7840660e24d88150dc5063b3ebe"
+    }
+  },
+  "fleet": {
+    "receipt_sha256": "6ffb26bc27803d66544c27079289c77bb2cdb80092b0b59e63df8865f636e315",
+    "samples": 3,
+    "host_executions": 3,
+    "media_members_verified": 27,
+    "rows": [
+      {
+        "name": "hello",
+        "image_sha256": "6b2435b420f84d6992bfa7a9019484235ff36887f912c090fba5b6b6885478a7",
+        "result": "0x0055",
+        "closure_functions": 1,
+        "runtime_elf_sha256": "47a512a16b7bd157b38059992bc84f6a7385a80fa3b9c8c8350bb46f65f572fd"
+      },
+      {
+        "name": "random-fx",
+        "image_sha256": "cca45cc4148d4b80b67b023afbc7a7d4b79c5dd3077636c94374732444cf8cd8",
+        "result": "0x0167",
+        "closure_functions": 33,
+        "eligible_library_functions": 80,
+        "omitted_library_functions": 48,
+        "runtime_elf_sha256": "aad3e0e134ba169a4ca80794ae52657a543310e34072c446828c151aca8e966b"
+      },
+      {
+        "name": "long-runner",
+        "image_sha256": "101049128097662ccb1b1b1264ca8e0deeb2326a9df2c5c2dfc188f293b1f3c7",
+        "result": "0x5dc1",
+        "closure_functions": 1,
+        "runtime_elf_sha256": "714dd4bcd2642c41fc522b876b351cbf8239faba9d335c5fbb6a7552863738bf"
+      }
+    ]
+  },
+  "reproducibility": {
+    "receipt_sha256": "6e5e8db811807823abe3363804f3b0b6e013612f27232b806bb0446b00b40de6",
+    "fresh_checkouts": 2,
+    "executions": 2,
+    "comparison_sha256": "6b2435b420f84d6992bfa7a9019484235ff36887f912c090fba5b6b6885478a7",
+    "status": "passed-byte-identical"
+  },
+  "execution_witness": {
+    "cases": 5,
+    "description": "three fleet entry executions plus two independent fresh-checkout builds"
+  }
+}

@@ -1,0 +1,265 @@
+{
+  "authorities": {
+    "attribution": {
+      "bytes": 8596,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-residual-launch-boundary-attribution-receipt.json",
+      "sha256": "09d819de2d7631d33a0b3d21d0e2aaeec9777cc89efd388835f39b99c279f830"
+    },
+    "configuration": {
+      "bytes": 1482,
+      "path": "config/c2-v16-defstruct-bootstrap-romc-repair.json",
+      "sha256": "a1e68a0542ca66587bf47c9eceb5abf6f5ab20fe9ee07a5be7ae26a2fc24fa50"
+    },
+    "deployment": {
+      "bytes": 8500,
+      "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/deployment.json",
+      "sha256": "b8505368b08bc9d62258454a6d3d6774e07a98c2167ee65de40aa6d773da5eed"
+    },
+    "driver": {
+      "bytes": 28978,
+      "path": "tools/host-lisp/c2_v16_bootstrap_romc_repair.py",
+      "sha256": "ede129b66623ea03db6b58e369b46b9b9055e6350810ac5d661d154d38055bc4"
+    },
+    "owner_commission": {
+      "bytes": 103717,
+      "path": "git:f558af6367ce281ed53c49243322759864a151ee:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "11c29d4e8c3791ee22a514bc81e10c8f4728a3e8d622801c3e140306d73a7d32"
+    },
+    "phase_C_driver": {
+      "bytes": 54571,
+      "path": "tools/host-lisp/c2_v16_defstruct_phase_c.py",
+      "sha256": "04c54833356fe62fc5a51026a3ee6d02034eb0ec886e7f2fac88a6768dbbbfa0"
+    },
+    "phase_C_receipt": {
+      "bytes": 18553,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-c-diagnostic-preparation-receipt.json",
+      "sha256": "199004b6f5b8f7f04493f119463d27e15cf87a0ecb27026958f594ac39c54439"
+    },
+    "repaired_ELF": {
+      "bytes": 620700,
+      "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-link82-romc-safe.elf",
+      "sha256": "f35da58a7be356244415ca4b99b7cbb6311669026e53de5b02e868e8b8ff2142"
+    },
+    "repaired_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-link82-romc-safe.prg",
+      "sha256": "0a8a9d147477dac6368bde4c8db3dd0c677ef08aec066a0917b44a3ca356cccd"
+    },
+    "repaired_boot_record": {
+      "bytes": 65,
+      "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/record-boot-romc-safe.bin",
+      "sha256": "d686e95c3b3d3c24faa741057b69447dd20841df885d8b4fe525758363a37cc9"
+    },
+    "repaired_window": {
+      "bytes": 8192,
+      "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-window.bin",
+      "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+    },
+    "source_control_ELF": {
+      "bytes": 622552,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/control-link82.elf",
+      "sha256": "3d9e4c4e7e8d0719223561c66578fb4b24058f32e42483642322a88c4884d8d6"
+    },
+    "source_control_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/control-link82.prg",
+      "sha256": "cef92b1dace70ae700402cb37e95b755d8be5625d168dd65c2ff319176247efe"
+    },
+    "source_diagnostic_ELF": {
+      "bytes": 620700,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.elf",
+      "sha256": "fb8d9b51a0b9f88d08c6bb22debf686576677ce595b55b296c2e7afdbac66ffd"
+    },
+    "source_diagnostic_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-corrected-view-quiet-appointment/diagnostic-link82-corrected-view-b5c3.prg",
+      "sha256": "347ecdd0aa9d8dda70a20177b9c77409264b1102ecfd01b23ba1ab3b7c27ab59"
+    }
+  },
+  "claim_limit": "Repairs only the non-promotable v1.6 diagnostic bootstrap: ROMC is cleared from low RAM before the $C03F transfer. The linked-image gate enforces the general visibility rule and rejects the historical hidden-callee shape. No product byte, Link, WPLTO, hardware contact, measured form or R/A/I/G result is claimed.",
+  "facts": {
+    "decision": {
+      "host_green": true,
+      "next_owner_question": "authorize physical launch proof before the D2 measured form"
+    },
+    "general_visibility_gate": {
+      "bootstrap_extent": [
+        "0x2023",
+        "0x2035"
+      ],
+      "hidden_callee_error": "bootstrap transfer targets hidden C000 region at $202C",
+      "hidden_callee_mutation_rejected": true,
+      "rule": "no bootstrap transfer may target a region whose CPU visibility depends on mapping state not yet established",
+      "source": "linked .text plus independent inherited-D030 contract",
+      "transfers": [
+        {
+          "CPU_visible": true,
+          "D030_at_transfer": "0x44",
+          "at": "0x2031",
+          "mapping_dependency": "ROMC",
+          "opcode": "JSR",
+          "target": "0xc03f"
+        }
+      ]
+    },
+    "identity": {
+      "PRG_ELF_bootstrap_byteidentical": true,
+      "PRG_ELF_record_byteidentical": true,
+      "bootstrap_semantic_equivalence": {
+        "all_other_end_state_equal": true,
+        "control_end": {
+          "A": 0,
+          "B5C3": 215,
+          "D030": 68,
+          "N": false,
+          "PC": "0x2035",
+          "SP": 255,
+          "X": 68,
+          "Z": true,
+          "steps": 4,
+          "zp02": 0
+        },
+        "only_added_side_effect": "$B5C3=$44",
+        "repaired_end": {
+          "A": 0,
+          "B5C3": 68,
+          "D030": 68,
+          "N": false,
+          "PC": "0x2035",
+          "SP": 255,
+          "X": 68,
+          "Z": true,
+          "steps": 8,
+          "zp02": 0
+        }
+      },
+      "canonical_record_reset_before_measured_form": true,
+      "control_PRG_delta_ranges": [
+        {
+          "after": "203fc0ea",
+          "before": "a9008502",
+          "bytes": 4,
+          "start": "0x2031"
+        },
+        {
+          "after": "204ab4eaeaeaeaeaeaea",
+          "before": "aeddbfacdebf86048405",
+          "bytes": 10,
+          "start": "0x47c5"
+        },
+        {
+          "after": "2034b4eaea",
+          "before": "8617203b97",
+          "bytes": 5,
+          "start": "0x8eb7"
+        },
+        {
+          "after": "adf4c18d6bc0a2b38e6ac0a5898d6dc0e88e6cc0ad9bc18d6fc0e88e6ec0a9b28d69c0ad86ff8d72c0a2b78e71c0ad89ff8d74c0e88e73c0ad1ad08d76c0e88e75c0babd06018d78c0bd07018d79c0a9ba8d77c0a9b68d70c0a58f8d7cc0a2bc8e7bc0adf0b98d7ec0adf1b98d7fc0e88e7dc0a9bb8d7ac0789c1ad0a9028d20d04c31b48617a55b8d5cc0a9ad8d5bc0a9ac8d5ac0a55b4c3b97aeddbfacdebf86048405b20448ad4fc08d42c0ad50c08d43c0ad52c08d45c0ad53c08d46c0ad54c08d47c0ad56c08d49c0ad57c08d4ac0ad59c08d4cc0a9a38d41c0a9a48d44c0a9a58d48c0a9a68d4bc0a9a28d40c04cf7bf",
+          "before": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 243,
+          "start": "0xb3b0"
+        },
+        {
+          "after": "ade5bf8d4fc08d56c0ade6bf8d50c08d57c0a9a88d4ec0a9aa8d55c0add8bf8d52c0adb2b98d53c0adb3b98d54c0a9a98d51c0688d59c0a9ab8d58c0a9a78d4dc060eaeaeaeaea",
+          "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 71,
+          "start": "0xbff7"
+        },
+        {
+          "after": "a9",
+          "before": "00",
+          "bytes": 1,
+          "start": "0xc03f"
+        },
+        {
+          "after": "85028ec3b560cc55cccc56cc5758cccc59cccccc5acccc5bcc5c5dcc5ecccc5fcc60cccccc61cccc6263cc64cc65cc6667cc68cc69cc6acccc6b6ccc6dcccc",
+          "before": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 63,
+          "start": "0xc041"
+        }
+      ],
+      "control_byteidentical_outside_enumerated_delta": true,
+      "diagnostic_window_byteidentical": true,
+      "phase_C_execution_witnesses_rerun": 7,
+      "phase_C_mutations_rerun": 26,
+      "phase_C_selftest_sha256": "f862f9442d72c13fb4a2e23220990b5a3ef7089e9ec3205ae45e952cc762e281",
+      "repair_only_delta_ranges": [
+        {
+          "after": "a2448e30d0203fc0ea",
+          "before": "203fc0eaeaa9008502",
+          "bytes": 9,
+          "start": "0x202c"
+        },
+        {
+          "after": "a90085028ec3b560cc",
+          "before": "a2448e30d08ec3b560",
+          "bytes": 9,
+          "start": "0xc03f"
+        }
+      ]
+    },
+    "repair": {
+      "hook": {
+        "address": "0x2031",
+        "bytes": "203fc0ea",
+        "target": "0xc03f"
+      },
+      "mapping_clear": {
+        "address": "0x202c",
+        "bytes": "a2448e30d0",
+        "executes_from": "low-RAM"
+      },
+      "mapping_clear_precedes_transfer": true,
+      "mechanism_repaired": "bootstrap-hook-target-hidden-by-inherited-ROMC",
+      "routine": {
+        "address": "0xc03f",
+        "bytes": "a90085028ec3b560",
+        "replays": "a9008502",
+        "witness": "STX $B5C3"
+      },
+      "target_CPU_visible_at_transfer": true
+    },
+    "scope": {
+      "CPU_remains_stopped": true,
+      "WPLTO_runs": 0,
+      "contact_authorized": false,
+      "diagnostic_promotable": false,
+      "hardware_contacts": 0,
+      "measured_forms_run": 0,
+      "product_candidate_bytes_changed": 0,
+      "product_links": 0
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-bootstrap-romc-repair-result-v1",
+  "mutations_rejected": {
+    "authorize-contact": "repair scope drift",
+    "break-bootstrap-equivalence": "diagnostic identity/equivalence drift",
+    "change-hook-target": "ROMC repair semantics drift",
+    "change-window": "diagnostic identity/equivalence drift",
+    "claim-WPLTO": "repair scope drift",
+    "claim-contact": "repair scope drift",
+    "claim-form": "repair scope drift",
+    "claim-hidden-target-visible": "ROMC repair semantics drift",
+    "claim-link": "repair scope drift",
+    "claim-product-byte": "repair scope drift",
+    "drop-PRG-ELF-bootstrap": "diagnostic identity/equivalence drift",
+    "drop-PRG-ELF-record": "diagnostic identity/equivalence drift",
+    "drop-control-equivalence": "diagnostic identity/equivalence drift",
+    "drop-hidden-callee-mutation": "general bootstrap visibility gate drift",
+    "drop-mutation": "diagnostic identity/equivalence drift",
+    "drop-witness": "diagnostic identity/equivalence drift",
+    "hidden-callee-linked-image": "bootstrap transfer targets hidden C000 region at $202C",
+    "make-promotable": "repair scope drift",
+    "mark-transfer-hidden": "general bootstrap visibility gate drift",
+    "move-clear-behind-transfer": "ROMC repair semantics drift",
+    "move-clear-to-C000": "ROMC repair semantics drift",
+    "partial-record-reset": "diagnostic identity/equivalence drift",
+    "red-repair": "repair is not host-green",
+    "restore-old-hook": "ROMC repair semantics drift",
+    "resume-CPU": "repair scope drift",
+    "source-expectation-from-image": "general bootstrap visibility gate drift",
+    "wrong-D030-at-transfer": "general bootstrap visibility gate drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "HOST-GREEN DIAGNOSTIC-ONLY ROMC BOOTSTRAP REPAIR"
+}

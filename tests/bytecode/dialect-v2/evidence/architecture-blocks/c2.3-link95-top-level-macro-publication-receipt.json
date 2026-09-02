@@ -1,0 +1,208 @@
+{
+  "actual_lcc_execution": {
+    "abstract_model": false,
+    "case_count": 8,
+    "cases": [
+      {
+        "form": "(lcc-run (quote (define-one generated-one)))",
+        "id": "macro-generated-defun",
+        "observed": "generated-one"
+      },
+      {
+        "form": "(lcc-run (quote (generated-one)))",
+        "id": "macro-generated-defun-call",
+        "observed": "41"
+      },
+      {
+        "form": "(lcc-run (quote (define-op add-one)))",
+        "id": "macro-generated-defmacro",
+        "observed": "add-one"
+      },
+      {
+        "form": "(lcc-run (quote (add-one 8)))",
+        "id": "macro-generated-defmacro-call",
+        "observed": "9"
+      },
+      {
+        "form": "(lcc-run (quote (chain-a chained-one)))",
+        "id": "nested-outer-macro-chain",
+        "observed": "chained-one"
+      },
+      {
+        "form": "(lcc-run (quote (chained-one)))",
+        "id": "nested-outer-macro-chain-call",
+        "observed": "17"
+      },
+      {
+        "form": "(lcc-run (quote (define-and-call generated-two 23)))",
+        "id": "macro-generated-top-level-progn",
+        "observed": "23"
+      },
+      {
+        "form": "(lcc-run (quote (pass-expression (+ 2 3))))",
+        "id": "macro-remains-expression",
+        "observed": "5"
+      }
+    ],
+    "lane": "compiled call of the real lcc-run through the LCC VM engine"
+  },
+  "authorities": {
+    "Link93_product_baseline": {
+      "bytes": 7288,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-trace-core-abi-link93-receipt.json",
+      "sha256": "9b60005d3bec53bb2891ca1ce85c278a41a69ba7b733976fd2db4f38aec5a05b"
+    },
+    "actual_lcc_binary": {
+      "bytes": 136232,
+      "path": "build/equivalence/dialect-v2-equivalence-check",
+      "sha256": "3f22703022a71c57a2fd58ac188da5284ee85016bd3503f4ed38a1e4befdd2fe"
+    },
+    "contract": {
+      "bytes": 2476,
+      "path": "config/c2-top-level-macro-publication.json",
+      "sha256": "ad64f2bd6f47d71d9b053313be7d8c69c9bad7ed95e3e298fdbb0d495539b091"
+    },
+    "current_sources": {
+      "compiler": {
+        "bytes": 36291,
+        "path": "lib/lcc.lisp",
+        "sha256": "e657f80c387d623c0a51d628dfae89d8cfa35cb44290c0ca32df3c34153785b2"
+      },
+      "locality": {
+        "bytes": 2165,
+        "path": "lib/dialect-v2/lcc-locality.lisp",
+        "sha256": "9ab2e42eeb4ee36b13e388f44057385019f34e4b5308cef6997a5461206f6546"
+      },
+      "prelude": {
+        "bytes": 1370,
+        "path": "lib/dialect-v2/prelude-control.lisp",
+        "sha256": "ce304a05c1d43fe5cecb1fe418be24769da1fb2d6b41cb5075469ec8a6024256"
+      },
+      "product_runtime": {
+        "bytes": 7047,
+        "path": "lib/dialect-v2/eval-runtime.lisp",
+        "sha256": "0250155f1cf3a6ff5fcaaf748534b270065c4d32123ca14e92bcb2e142874797"
+      },
+      "profile": {
+        "bytes": 11827,
+        "path": "lib/dialect-v2/lcc-profile.lisp",
+        "sha256": "cfbea3d1749f99b04b66c3c2c9af047610edc465a47c5214426d46d8ddcc610f"
+      }
+    },
+    "driver": {
+      "bytes": 19979,
+      "path": "tools/host-lisp/c2_top_level_macro_redispatch.py",
+      "sha256": "ca790e8d4e5ee56dfac95da7a7f621a0faf4926a87b53434094a525af2963e8a"
+    },
+    "owner_commission": {
+      "bytes": 22971,
+      "commit": "eb732707880271b642f3f009299b4216f8700d15",
+      "path": "docs/planning/post-v1.4.0-direction-plan.md",
+      "sha256": "dc3ce0ee0d305df601b766f5df80155accc383a8c909cc8b3907e8cc0c48247e"
+    },
+    "product_runtime_candidate": {
+      "base": {
+        "bytes": 7047,
+        "path": "lib/dialect-v2/eval-runtime.lisp",
+        "sha256": "0250155f1cf3a6ff5fcaaf748534b270065c4d32123ca14e92bcb2e142874797"
+      },
+      "bytes": 7198,
+      "sha256": "1d68809e3dfd5194a4873582f5a1a1da82baaffaf56049386a7502b7412a1616",
+      "transform": "replace-private-call-and-append-product-helper"
+    }
+  },
+  "claim_limit": "This receipt proves the host carrier, product-runtime source ordering, and the product-owned predicate source. The packed-product callee closure is proved separately. It does not claim a linked Link-95 product or device result.",
+  "first_red": {
+    "actual_lcc_rows": [
+      {
+        "form": "(lcc-run (quote (define-one generated-one)))",
+        "id": "macro-generated-defun",
+        "observed": "!error:undefined-public-name"
+      },
+      {
+        "form": "(lcc-run (quote (generated-one)))",
+        "id": "macro-generated-defun-call",
+        "observed": "!error:undefined-public-name"
+      },
+      {
+        "form": "(lcc-run (quote (define-op add-one)))",
+        "id": "macro-generated-defmacro",
+        "observed": "!error:undefined-public-name"
+      },
+      {
+        "form": "(lcc-run (quote (add-one 8)))",
+        "id": "macro-generated-defmacro-call",
+        "observed": "!error:undefined-public-name"
+      },
+      {
+        "form": "(lcc-run (quote (chain-a chained-one)))",
+        "id": "nested-outer-macro-chain",
+        "observed": "!error:undefined-public-name"
+      },
+      {
+        "form": "(lcc-run (quote (chained-one)))",
+        "id": "nested-outer-macro-chain-call",
+        "observed": "!error:undefined-public-name"
+      },
+      {
+        "form": "(lcc-run (quote (define-and-call generated-two 23)))",
+        "id": "macro-generated-top-level-progn",
+        "observed": "!error:undefined-public-name"
+      },
+      {
+        "form": "(lcc-run (quote (pass-expression (+ 2 3))))",
+        "id": "macro-remains-expression",
+        "observed": "5"
+      }
+    ],
+    "authority_commit": "d532562e6b27b96cb24baed1ac7754a89740e4c8",
+    "compiler": {
+      "bytes": 36291,
+      "commit": "d532562e6b27b96cb24baed1ac7754a89740e4c8",
+      "path": "lib/lcc.lisp",
+      "sha256": "e657f80c387d623c0a51d628dfae89d8cfa35cb44290c0ca32df3c34153785b2"
+    },
+    "mechanism": "the original form was classified before outer macro expansion; a generated definition was compiled as an ordinary expression",
+    "product_runtime": {
+      "bytes": 6035,
+      "commit": "d532562e6b27b96cb24baed1ac7754a89740e4c8",
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "366556a743e78fba8c232eea935f2dfd64057e87533833156d47afa2b75b1159"
+    }
+  },
+  "format": "lisp65-c2.3-link95-top-level-macro-publication-receipt-v1",
+  "freight": {
+    "Link93_bank2_headroom_bytes": 19742,
+    "Link93_bank2_static_code_bytes": 45794,
+    "baseline": {
+      "encoded_code_object_bytes": 891,
+      "objects": 21
+    },
+    "candidate": {
+      "encoded_code_object_bytes": 1099,
+      "objects": 27
+    },
+    "delta": {
+      "encoded_code_object_bytes": 208,
+      "objects": 6
+    },
+    "maximum_delta_bytes": 256,
+    "method": "strict dialect-v2 P0 CodeObject compilation of the complete eval runtime",
+    "priced_Link95_bank2_headroom_bytes": 19534,
+    "resident_delta_bytes": 0
+  },
+  "mutations_rejected": 8,
+  "recorded_on": "2026-08-09",
+  "scope": "Link 95 outer-macro redispatch with a product-published predicate",
+  "source_contract": {
+    "compiler_carrier_byteidentical_to_commission": true,
+    "compiler_private_macro_predicate_absent": true,
+    "expression_fallback": "transient-lcc-install-name-t",
+    "outer_macro_expansion": "recursive-macroexpand-1-before-classification",
+    "product_owned_macro_predicate": "%c2-top-level-macro-p",
+    "product_runtime_fragments": 10,
+    "resident_delta_bytes": 0,
+    "top_level_progn": "recursive-lcc-run-redispatch"
+  },
+  "status": "HOST-GREEN; ACTUAL-LCC-REDISPATCH-AND-PUBLISHED-HELPER-PROVED"
+}

@@ -1,0 +1,84 @@
+{
+  "format": "lisp65-c2.2-link76-require-fastpath-irq-ownership-WPLTO-first-red-v1",
+  "recorded_on": "2026-07-28",
+  "status": "first-red-fixed-handoff-capacity",
+  "promotable": false,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "first_red": {
+    "stage": "resident-island seed link before the product-shaped WPLTO artifact",
+    "section": ".lisp65_c2_kernal_handoff",
+    "section_start": "0xb4a3",
+    "exclusive_ceiling": "0xb5c4",
+    "capacity_bytes": 289,
+    "predecessor_bytes": 289,
+    "candidate_bytes": 331,
+    "deficit_bytes": 42,
+    "linker_end_exclusive": "0xb5ee",
+    "overlapped_pinned_section": ".lisp65_c2_host_facade"
+  },
+  "attribution": {
+    "c2_kernal_take_ownership_predecessor_bytes": 84,
+    "c2_kernal_take_ownership_candidate_bytes": 126,
+    "growth_bytes": 42,
+    "c2k_copy_bytes": 97,
+    "c2k_crc16_bytes": 108,
+    "unchanged_helpers": [
+      "c2k_copy",
+      "c2k_crc16"
+    ],
+    "cause": "The three accepted foreign-source masks plus their effectiveness readback are materialized inside the already exact-fit handoff function."
+  },
+  "gates_before_linker_stop": {
+    "require_fastpath_source_and_measurement": "passed",
+    "interrupt_ownership_source_contract": "passed-14-of-14-mutations",
+    "static_plane": {
+      "bank2_static_code_bytes": 40746,
+      "entries": 682,
+      "resolutions": 2711,
+      "roots": 340,
+      "direct_entry_refs": 643
+    },
+    "linked_geometry_and_final_ELF": "not-reached"
+  },
+  "class_c_direction_for_review": {
+    "operation": "Move the boot-only c2k_crc16 body out of the pinned handoff section into ordinary resident text; keep the accepted masking and readback unchanged.",
+    "temperature": "cold, used only by c2_kernal_take_ownership before owned IRQ publication",
+    "edge_profile": "single direct caller, no fixed-domain operand, no E000 dependency",
+    "projected_handoff_bytes": 223,
+    "projected_handoff_headroom_bytes": 66,
+    "predecessor_ordinary_text_headroom_bytes": 351,
+    "relocated_bytes": 108,
+    "projected_ordinary_text_headroom_before_fresh_link_noise_bytes": 243,
+    "required_fresh_gates": [
+      "handoff geometry",
+      "pre-ownership closure",
+      "profile-data references",
+      "KERNAL freedom",
+      "strict interrupt ownership final-ELF dataflow",
+      "all WPLTO walls"
+    ],
+    "not_authorized_by_this_receipt": [
+      "second WPLTO attempt",
+      "handoff or facade reanchor",
+      "product link",
+      "hardware run"
+    ]
+  },
+  "evidence": {
+    "candidate_map": {
+      "path": "build/post-promotion/link76-require-fastpath-irq-ownership/product-shaped-probe/wplto/resident-island-seed.prg.map",
+      "sha256": "f3615d54faf265c5d28ec90df5e1a8b23123c1c6e80b1ecb45d8e8d871580bb6"
+    },
+    "linker_stderr": {
+      "path": "build/post-promotion/link76-require-fastpath-irq-ownership/product-shaped-probe/wplto/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "70967f8edbbcc4f38dc64e8b945ef1f9c8bc32ae0882296992ba74622974120e"
+    },
+    "predecessor_wplto": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-bound-compiler-carrier-wplto-receipt.json",
+    "source": {
+      "path": "src/c2_kernal_runtime.c",
+      "sha256": "8ba41c50d053ef4e43afe329c379c6a8a50b759a03aa0ec1099cc4f1ed50afa6"
+    }
+  },
+  "claim_limit": "This receipt attributes the first linker red and projects one relocation from measured symbol sizes. It does not claim a green WPLTO, a product link, or hardware behavior."
+}

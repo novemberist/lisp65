@@ -1,0 +1,211 @@
+{
+  "authority": {
+    "artifact_replay": {
+      "bytes": 6043,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-relocation-inventory-artifact-replay-receipt.json",
+      "sha256": "db959ce43d02fa46de853d93160b1a3caf8bc30c2a009c5a693ade0c557724b8"
+    },
+    "candidate_ELF": {
+      "bytes": 630804,
+      "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/wplto/resident-island-seed.prg.elf",
+      "sha256": "164fc75cab6743509ef991b6f3b30912730096a6847369f7674c53481a1b9f49"
+    },
+    "content_sweep": {
+      "bytes": 7320,
+      "path": "config/c2-dma-content-consumption-sweep.json",
+      "sha256": "28810a9d3f904b399819c8aa4cfe5e59838f6fc4baa1e2b9d13a2b148285c8bd"
+    },
+    "driver": {
+      "bytes": 13385,
+      "path": "tools/host-lisp/c2_v21_dma_content_structural_absence.py",
+      "sha256": "b96b58eb84374fb8adc6587a8d58a978ba9756c0f1411176b151d386476f1c02"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 122123,
+      "commit": "20a5f4ec6d9dfa1ec54d2cd90c60ecfd238720fe",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "d85284629c5c0de21ff996d593ded78675fe18620d5c8d7ea129ce2107308efb"
+    },
+    "root_fix": {
+      "bytes": 7063,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-probe-oracle-root-fix-receipt.json",
+      "sha256": "7d77e1456227d54b700b38510012b5aa797d638ff6c2ae11e06a7ede255ab654"
+    }
+  },
+  "claim_limit": "Read-only linked-image permanence gate. It changes no product artifact and authorizes no device action by itself.",
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-dma-content-structural-absence-v1",
+  "linked_model": {
+    "born_derived": {
+      "historical_caller_count_acceptance_pin": false,
+      "mutable_caller_count": 9,
+      "mutable_callers": [
+        {
+          "function": "ext_a",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "ext_b",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "ext_disk_get",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "ext_type",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "str_read_byte",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "ext_dma_read_or_abort"
+        },
+        {
+          "function": "nameoff_get",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "c2_dma_read_or_abort"
+        },
+        {
+          "function": "sym_function",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "c2_dma_read_or_abort"
+        },
+        {
+          "function": "sym_value",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "c2_dma_read_or_abort"
+        },
+        {
+          "function": "sympool_read",
+          "section": ".text",
+          "transport": "MAP-CPU",
+          "wrapper": "c2_dma_read_or_abort"
+        }
+      ],
+      "new_wrapper_callers_automatically_enumerated": true
+    },
+    "derivation": "ELF function bodies plus semantic content-surface registry",
+    "immutable_CRC_authority": {
+      "c2k_copy": {
+        "bytes": 5933,
+        "path": "src/c2_kernal_runtime.c",
+        "sha256": "7264b2cb879a4d7842e4b8dd83efd0de3914a0b347d2fb4d0d3521129e871180"
+      },
+      "vm_runtime_overlay_exec_family": {
+        "bytes": 91725,
+        "path": "src/vm_runtime_overlay.c",
+        "sha256": "8458a14d73d84fffdacb8c17fe7cb62b1ec7d64c10fd72462bcd3312b12b4597"
+      }
+    },
+    "physical_DMA_content_entry_callers": [],
+    "registered_surfaces": [
+      {
+        "classification": "mutable-content-rerouted-to-MAP-CPU",
+        "owner": "c2_facade_target_c2_dma"
+      },
+      {
+        "classification": "no-linked-content-entry",
+        "owner": "c2_product_physical_copy"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "owner": "c2k_copy"
+      },
+      {
+        "classification": "mutable-content-rerouted-to-MAP-CPU",
+        "owner": "ext_dma"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "owner": "vm_runtime_overlay_exec_family"
+      }
+    ],
+    "status": "PASS: no unsafe content-consuming DMA read in linked image",
+    "unsafe_content_DMA_count": 0,
+    "unsafe_content_DMA_surfaces": [],
+    "wrappers": {
+      "c2_dma_read_or_abort": {
+        "DMA_submission_edges": 0,
+        "linked_caller_count": 4,
+        "linked_callers": [
+          {
+            "function": "nameoff_get",
+            "section": ".text"
+          },
+          {
+            "function": "sym_function",
+            "section": ".text"
+          },
+          {
+            "function": "sym_value",
+            "section": ".text"
+          },
+          {
+            "function": "sympool_read",
+            "section": ".text"
+          }
+        ],
+        "transport": "MAP-CPU"
+      },
+      "ext_dma_read_or_abort": {
+        "DMA_submission_edges": 0,
+        "linked_caller_count": 5,
+        "linked_callers": [
+          {
+            "function": "ext_a",
+            "section": ".text"
+          },
+          {
+            "function": "ext_b",
+            "section": ".text"
+          },
+          {
+            "function": "ext_disk_get",
+            "section": ".text"
+          },
+          {
+            "function": "ext_type",
+            "section": ".text"
+          },
+          {
+            "function": "str_read_byte",
+            "section": ".text"
+          }
+        ],
+        "transport": "MAP-CPU"
+      }
+    }
+  },
+  "mutations_rejected": [
+    "reroute-one-reader-to-DMA",
+    "restore-wrapper-DMA-edge",
+    "revive-physical-content-entry",
+    "lose-immutable-CRC-class",
+    "pin-historical-caller-count",
+    "hide-unsafe-surface"
+  ],
+  "next": "Completion and same-world media, then poison-regression D2",
+  "recorded_on": "2026-08-16",
+  "status": "PASS: LINKED-IMAGE CONTENT-DMA ABSENCE"
+}

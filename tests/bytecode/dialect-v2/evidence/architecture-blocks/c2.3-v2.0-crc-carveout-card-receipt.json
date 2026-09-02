@@ -1,0 +1,300 @@
+{
+  "acceptance": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "candidate_lma_order_entries": 89,
+      "candidate_lma_order_sha256": "ca9e277c780ff51d60a1426ccab86e95f8b76e7d1639a0a3d8a805ae60e3657e",
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 140,
+          "candidate_max_end_exclusive": 45860,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 625,
+          "candidate_max_end_exclusive": 31772,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "VMA-invariants-exact-candidate-freight-validated",
+      "derived_freight_sha256": "9a6935b15b9e0ef8bc57e421fa8ce98012e38638752d188102b8bf83b8254012",
+      "derived_vma_order_entries": 103,
+      "derived_vma_order_sha256": "86173f419915bef751c5663be20b6928a23934b5e3b7f7e8d497b14764e1b9df",
+      "fixed_boundary_symbols": 27,
+      "invariant_projection_sha256": "f75326245a7e15448174056eefd49cbec20a88a84b3394289521a75067f15603"
+    },
+    "candidate_derived_validation": true,
+    "delivered_bytes": {
+      "candidate_elf": {
+        "bytes": 628852,
+        "path": "build/c2.3/v2.0-crc-carveout-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+      },
+      "completed_resident_prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.0-crc-carveout-card/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "b64780ecdb9006b0ada992fb113ba713c26347358e3e709e5f05bbafdfbbd56a"
+      },
+      "identity_bytes": 290,
+      "identity_mismatches": 0,
+      "load_address": "0x2001",
+      "new_staging_roles": 0,
+      "publish_last": {
+        "addresses": [
+          46324,
+          46330
+        ],
+        "bytes": 2,
+        "independent_crc16": "0xa83f",
+        "independent_window_bytes": 8192,
+        "independent_window_sha256": "12f55b7e2d3b1702ac08a74e33becaecd570a0ce9931a14411a2497601ee7f53",
+        "observed_values": [
+          168,
+          63
+        ],
+        "producer_report": {
+          "bytes": 1534,
+          "path": "build/c2.3/v2.0-crc-carveout-card/wplto/kernal-window-publish-last.json",
+          "sha256": "f39616e20012d82ba084b61d95ce11cc74f077544a83390b01a644d1b15e1a89"
+        },
+        "values_correct": true
+      },
+      "sections": [
+        {
+          "bytes": 223,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb4a3",
+          "lma_equals_vma": true,
+          "publish_last_values": [
+            {
+              "address": 46324,
+              "correct": true,
+              "expected": 168,
+              "observed": 168
+            },
+            {
+              "address": 46330,
+              "correct": true,
+              "expected": 63,
+              "observed": 63
+            }
+          ],
+          "resident_prg_offset": 38052,
+          "section": ".lisp65_c2_kernal_handoff",
+          "vma": "0xb4a3"
+        },
+        {
+          "bytes": 48,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5c4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38341,
+          "section": ".lisp65_c2_host_facade",
+          "vma": "0xb5c4"
+        },
+        {
+          "bytes": 11,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5f4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38389,
+          "section": ".lisp65_c2_kernal_io_reveal",
+          "vma": "0xb5f4"
+        },
+        {
+          "bytes": 10,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5ff",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38400,
+          "section": ".lisp65_c2_kernal_map_switch",
+          "vma": "0xb5ff"
+        }
+      ],
+      "status": "passed-identity-plus-independent-CRC-value"
+    },
+    "delivery_mutations_rejected": [
+      "drop-section",
+      "rewrite-LMA",
+      "grow-carveout",
+      "widen-carveout-bytes",
+      "replace-independent-CRC",
+      "accept-wrong-high",
+      "accept-wrong-low",
+      "hide-identity-mismatch",
+      "replace-oracle-window",
+      "add-staging-role"
+    ],
+    "delivery_operations": 1,
+    "fixed_comparison_operations": 1,
+    "historical_qualifiers": 0,
+    "low_resident_linker_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    }
+  },
+  "artifacts": {
+    "elf": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+    },
+    "linker": {
+      "bytes": 69977,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/c2-substitution.ld",
+      "sha256": "6cfeb54b8a04dabc70fff638a4d43cab0f304d163a9124e7a02699ae7c5a8a58"
+    },
+    "lto": {
+      "bytes": 620832,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "da233403b338fc7f66fd07c24e1bf20ff8a30d523954ef52f5d932ee59f9d070"
+    },
+    "map": {
+      "bytes": 179172,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "80b626ddb5ec10c901d3098a8de2ccad80f4109b9cf307233f4b118738f6c76b"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "b64780ecdb9006b0ada992fb113ba713c26347358e3e709e5f05bbafdfbbd56a"
+    }
+  },
+  "attempt_accounting": {
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "product_link_attempts": 1,
+    "wplto_runs": 1
+  },
+  "authority": {
+    "VMA_golden": {
+      "bytes": 29428,
+      "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-owned-vma-invariants-v3.json",
+      "sha256": "3b7d35e34f1199b03e58eeb9be3da7e45aaeb87b67a652c32751761df1398dfa"
+    },
+    "driver": {
+      "bytes": 28517,
+      "path": "tools/host-lisp/c2_v20_crc_carveout_card.py",
+      "sha256": "df71fa9fda5fbdcbe0e3e958eaefb1f01b6aa29d125be046cb6e8fb6a6235caa"
+    },
+    "invocation": {
+      "bytes": 797,
+      "path": "build/c2.3/v2.0-crc-carveout-card-preflight/card-invocation.json",
+      "sha256": "1db621780071f2e238bc924033cff181f1304bf380a1d0fe4aa9ce8ba0758268"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 26255,
+      "commit": "2483d118e2f352e754da325b4de883891d2afd14",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "b0d3c048b890f89eba53dc75ac73bbf9996eeec6117b87f4cd8ba5e38f129766"
+    },
+    "preflight": {
+      "bytes": 3448,
+      "path": "build/c2.3/v2.0-crc-carveout-card-preflight/preflight.json",
+      "sha256": "c859f83b8809bb9456ac67599f4ad5712d280bb804b844bab35f7f8856e5060c"
+    }
+  },
+  "claim_limit": "One host-only card. No media, device, release, publication or parity claim.",
+  "format": "lisp65-c2.3-v20-crc-carveout-card-v1",
+  "narrow_margins_are_not_budgets": {
+    "bank0_state": 7,
+    "ordinary_chain": 5,
+    "runtime_overlay": 6
+  },
+  "next_gate": "Regenerate current-world media closure and loudly retire the Link-97 closure before the D1-D5 session.",
+  "producer": {
+    "historical_return_nonauthoritative": 2,
+    "log": {
+      "bytes": 288,
+      "path": "build/c2.3/v2.0-crc-carveout-card/receipts/v20-producer.log",
+      "sha256": "e594ef05dac226d9a466443e294594c4f7adddee6037b43bf2377feb8dd9e796"
+    },
+    "mechanical_completion_only": true,
+    "resolved_profile": {
+      "bytes": 12223,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/resolved-profile.txt",
+      "sha256": "db5a7e0fed69cd46635c13a3eff44d90829ef6de0b2e5d3c2a557f4fd428d1a9"
+    }
+  },
+  "recorded_on": "2026-08-12",
+  "status": "PASS: VMA geometry, LMA reset and CRC-aware delivery exact"
+}

@@ -1,0 +1,177 @@
+{
+  "bindings": {
+    "builder": {
+      "bytes": 50586,
+      "path": "tools/host-lisp/ship_builder.py",
+      "sha256": "8b6ac7edb2e8a8558780335137a6a03e046aeb27db4521b082afdfc4b5435c6e"
+    },
+    "capture_correction": {
+      "bytes": 8045,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link86-queue-capture-view-host-elf-attribution-receipt.json",
+      "sha256": "c929d4235bcbe042b43a957ad87376a2da89a188bd08a4759713eec2febb6c37"
+    },
+    "compiler_wrapper": {
+      "bytes": 223,
+      "path": "scripts/c2-v13-link86-queue-cpu-witness-cc.sh",
+      "sha256": "5a4483a5da335c44038ee710c3e977708cdf9fe26cfa36f492d4c9ed9b090687"
+    },
+    "config": {
+      "bytes": 1793,
+      "path": "config/c2-ship-builder-v1-link86-queue-cpu-witness.json",
+      "sha256": "4c1abf0746e49c9ca8a9332129c7fde5368426368248684ed64c22b80e0ee80e"
+    },
+    "driver": {
+      "bytes": 13680,
+      "path": "tools/host-lisp/c2_v13_link86_queue_cpu_witness.py",
+      "sha256": "4e08e0de506d6a0d44cae50efdc188b20df721b21dc54d8261f7c9a025d79ad1"
+    },
+    "owner_review": {
+      "bytes": 48501,
+      "path": "docs/planning/1.3-link84-closing-first-red-review.md",
+      "sha256": "8e962c5547e04eab90c7d7f10e3df21360605fdebe0a1dcfe7a21ad820db51ba"
+    },
+    "source": {
+      "bytes": 6905,
+      "path": "products/runtime-core/ship_io.c",
+      "sha256": "47552eb7ccfba88dd1d20bbefd0dd2a893516ab3c22e266dcbcd431f15bfa2b4"
+    }
+  },
+  "candidate_link": 86,
+  "claim_limit": "Non-promotable diagnostic identity only. One CPU-side D60A/D619 sampler, no queue write, zero changed bytes in the Link-86 product candidate, zero product links and no hardware result yet.",
+  "diagnostic": {
+    "build_output": "ship-builder build: PASS image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/ship-builder/v13/link86-queue-cpu-witness/interactive.d81 sha256=0415fa9483ac65373cf4ea0a41d9298b1136137ca2009e6885e8d34ba884a387",
+    "image": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link86-queue-cpu-witness/interactive.d81",
+      "sha256": "0415fa9483ac65373cf4ea0a41d9298b1136137ca2009e6885e8d34ba884a387"
+    },
+    "io_accesses": [
+      {
+        "address": "0xd60a",
+        "direction": "read",
+        "instruction": "ldx",
+        "pc": "0x7373",
+        "section": ".text"
+      },
+      {
+        "address": "0xd619",
+        "direction": "read",
+        "instruction": "ldy",
+        "pc": "0x7376",
+        "section": ".text"
+      }
+    ],
+    "runtime_elf": {
+      "bytes": 39944,
+      "path": "build/ship-builder/v13/link86-queue-cpu-witness/interactive.runtime.elf",
+      "sha256": "8237795b3f4493dec091414a59d9ff5b3e4a4c5f57526a2afc0b487d6221e0e0"
+    },
+    "runtime_state": {
+      "address": "0x0085",
+      "bytes": 1,
+      "name": "lisp65_runtime_state",
+      "section": ".zp.bss"
+    },
+    "source_commit": "f7bf73c8ee2e219b7b5c195bf3179c6c5f35c7f0",
+    "verify_output": "ship-builder verify: PASS members=9 sha256=0415fa9483ac65373cf4ea0a41d9298b1136137ca2009e6885e8d34ba884a387",
+    "witnesses": [
+      {
+        "address": "0x8b46",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_samples",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b47",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_last_state",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b48",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_last_code",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b49",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_latched",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b4a",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_latched_state",
+        "section": ".bss"
+      },
+      {
+        "address": "0x8b4b",
+        "bytes": 1,
+        "name": "lisp65_ship_queue_diag_latched_code",
+        "section": ".bss"
+      }
+    ]
+  },
+  "facts": {
+    "contact": {
+      "physical_keys": 1,
+      "post_key_screen_captures": 0,
+      "virtual_keys": 0
+    },
+    "identity": {
+      "diagnostic_images": 1,
+      "product_candidate_bytes_changed": 0,
+      "promotable": false
+    },
+    "sampler": {
+      "call_sites": [
+        "frame-peek",
+        "getin"
+      ],
+      "cpu_reads": [
+        "0xd60a",
+        "0xd619"
+      ],
+      "io_writes": [],
+      "latches_first_present_event": true,
+      "ordinary_ram_witnesses": 6
+    }
+  },
+  "format": "lisp65-c2.3-v1.3-link86-queue-cpu-witness-preparation-v1",
+  "interpretation": {
+    "invalid": "samples=0, pre-key latch nonzero, or inconsistent latch/state: harness First Red; no product claim",
+    "queue_empty": "samples>0 and latched=0 after the physical key: queue also empty in CPU I/O view; production/configuration below owns the failure",
+    "queue_present": "latched=1 and latched_state bit 7 set: CPU saw the physical key in the hardware queue before GETIN; consumer path owns the failure"
+  },
+  "recorded_on": "2026-08-03",
+  "reference_candidate": {
+    "image": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link86-final-5a7c0d18/interactive.d81",
+      "sha256": "c9194a714f16e43181ab43b3b1fa1c138e1a74def3311e6d86dc35ffc8cf6c16"
+    },
+    "runtime_elf": {
+      "bytes": 39536,
+      "path": "build/ship-builder/v13/link86-final-5a7c0d18/interactive.runtime.elf",
+      "sha256": "6a256512378142ece82ca6405cbf01a60f7c01f2312a84b9eb4f37969d26a0b4"
+    },
+    "unchanged_after_build": true
+  },
+  "status": "PREPARED-NON-PROMOTABLE-CPU-IO-WITNESS",
+  "verification": {
+    "executions": 1,
+    "mutation_count": 9,
+    "mutations_rejected": {
+      "add-dequeue-write": "CPU sampler semantics drift",
+      "add-screen-capture": "contact budget drift",
+      "add-virtual-key": "contact budget drift",
+      "claim-product-delta": "diagnostic identity boundary drift",
+      "drop-d60a-read": "CPU sampler semantics drift",
+      "drop-d619-read": "CPU sampler semantics drift",
+      "drop-frame-peek-site": "CPU sampler semantics drift",
+      "make-promotable": "diagnostic identity boundary drift",
+      "remove-first-event-latch": "CPU sampler semantics drift"
+    }
+  }
+}

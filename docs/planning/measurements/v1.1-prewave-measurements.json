@@ -1,0 +1,675 @@
+{
+  "baseline": {
+    "commit": "471435024d86b1f535bfb4116551f37f307ca1f0",
+    "product_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "tag": "v1.0.1"
+  },
+  "input_sha256": {
+    "build/bytecode/dialect-v2/libs/ide.manifest.json": "daa20ac3752d042e89fc6d9be2efc09cfecf99c862006fe445cad3ffbb3c7388",
+    "build/bytecode/dialect-v2/libs/idex.manifest.json": "722097c07a8830b0414468b20ae441b26ca7bf32b147d859db501f4bf46156ce",
+    "build/bytecode/dialect-v2/libs/m65d.manifest.json": "89a812a1dccd5ade06bd6fbaac2f6ee4a3a352d6915dd7a1a215c7ba84c8aced",
+    "build/bytecode/dialect-v2/workbench-library-composition-budget.json": "891096faec5d64356e79f9e19202f70f444906f61e0380f918303e5a16185251",
+    "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json": "53e8fc60239ba7c694a3b3621c1250c4c89fe1ea1680a3cb57e999467dfaebba",
+    "config/v11-prewave-measurements.json": "123b2fa91a290fae6cf56fb7e8982bfd77e8877209dc91fe76fb3b7b14ac7d4c",
+    "docs/planning/measurements/v1.1-event-driver-bank0-probe.json": "31ace602f540caa68a2c4dd3bb8aa42119e537bc3ec3849437d705b9b494e167",
+    "docs/planning/repl-banner-spec-1.1.md": "a96824377e037c821eaee78292d65340cb1e69239997a1dc6900641e4d39bfc4",
+    "src/vm.c": "9d8de3ca693aa94902c8abf2c83c8f6b7fad187a6a3a410e3bb1c34fb30acc90",
+    "src/vm_embed.c": "08483f305eab05a0b10f524d07d9b8fd7247ba7e9e3044f132206e808d73b009"
+  },
+  "measurements": {
+    "1_banner_ext": {
+      "answer": true,
+      "banner_estimate_bytes": [
+        150,
+        200
+      ],
+      "current_ext_headroom": 16385,
+      "decision": "1.1-D remains blocked until 1.1-C creates structural EXT relief",
+      "ext_floor": 16384,
+      "reason": "The banner is compiled into the resident standard-library code blob; vm_ext_code_initial is resident blob length and disk code appends to it.",
+      "spendable_margin": 1
+    },
+    "2_shelf_eligibility": {
+      "current_vm_code_addressing": "8-bit bank plus 16-bit offset; no Attic execution address",
+      "decision": "1.1-A may stage all three disk containers and remove their disk dependency, but recovers exactly 0 post-load EXT bytes by itself. 1.1-C must add an extended code-address path or deresidentize a self-contained resident tier.",
+      "disk_library_source_shelf": [
+        {
+          "code_bytes": 12109,
+          "container_bytes": 28101,
+          "direct_attic_execution_potential_ext_recovery": 12109,
+          "library": "ide",
+          "metadata_bytes": 15988,
+          "source_only_shelf_post_load_ext_recovery": 0
+        },
+        {
+          "code_bytes": 3096,
+          "container_bytes": 7694,
+          "direct_attic_execution_potential_ext_recovery": 3096,
+          "library": "ide-extra",
+          "metadata_bytes": 4594,
+          "source_only_shelf_post_load_ext_recovery": 0
+        },
+        {
+          "code_bytes": 4023,
+          "container_bytes": 7217,
+          "direct_attic_execution_potential_ext_recovery": 4023,
+          "library": "m65d",
+          "metadata_bytes": 3190,
+          "source_only_shelf_post_load_ext_recovery": 0
+        }
+      ],
+      "disk_library_totals": {
+        "code_bytes": 19228,
+        "container_bytes": 43012,
+        "direct_attic_execution_potential_ext_recovery": 19228,
+        "metadata_bytes": 23772,
+        "source_only_post_load_ext_recovery": 0
+      },
+      "resident_compiler_tier_candidate": {
+        "eligibility": "candidate-after-dependency-cut-and-direct-Attic-execution",
+        "exact_code_bytes": 9573,
+        "sources": [
+          "lcc-fasl.lisp",
+          "lcc-profile.lisp",
+          "lcc.lisp"
+        ]
+      },
+      "resident_source_attribution": [
+        {
+          "code_bytes": 946,
+          "source": "build/bytecode/dialect-v2/sources/lib/prelude-m1.lisp"
+        },
+        {
+          "code_bytes": 193,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-bytecode-bridges.lisp"
+        },
+        {
+          "code_bytes": 519,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-einsuite-bridges.lisp"
+        },
+        {
+          "code_bytes": 9,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-screen-fallback.lisp"
+        },
+        {
+          "code_bytes": 143,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-output.lisp"
+        },
+        {
+          "code_bytes": 62,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-control.lisp"
+        },
+        {
+          "code_bytes": 596,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-lists.lisp"
+        },
+        {
+          "code_bytes": 158,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-sequences.lisp"
+        },
+        {
+          "code_bytes": 229,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-math.lisp"
+        },
+        {
+          "code_bytes": 124,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-plists.lisp"
+        },
+        {
+          "code_bytes": 920,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-strings.lisp"
+        },
+        {
+          "code_bytes": 5040,
+          "source": "build/bytecode/dialect-v2/sources/lib/lcc.lisp"
+        },
+        {
+          "code_bytes": 396,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-load.lisp"
+        },
+        {
+          "code_bytes": 2136,
+          "source": "build/bytecode/dialect-v2/sources/lib/lcc-fasl.lisp"
+        },
+        {
+          "code_bytes": 387,
+          "source": "build/bytecode/dialect-v2/sources/lib/stdlib-load-lib.lisp"
+        },
+        {
+          "code_bytes": 52,
+          "source": "build/bytecode/dialect-v2/sources/lib/ide-launch.lisp"
+        },
+        {
+          "code_bytes": 896,
+          "source": "build/bytecode/dialect-v2/sources/lib/dialect-v2/eval-runtime.lisp"
+        },
+        {
+          "code_bytes": 2397,
+          "source": "build/bytecode/dialect-v2/sources/lib/dialect-v2/lcc-profile.lisp"
+        }
+      ]
+    },
+    "3_export_only_interning": {
+      "baseline_new_namepool_bytes": 2830,
+      "baseline_new_symbols": 174,
+      "claim_limit": "The proven-private line is the implementation floor. The maximum also requires an owner/API classification of every policy-review name.",
+      "maximum_candidate_recovery": {
+        "namepool_bytes": 933,
+        "symbols": 62
+      },
+      "policy_review_candidates": {
+        "namepool_bytes": 191,
+        "names": [
+          "*ide-buffers*",
+          "bytecode",
+          "compile-load",
+          "delete-backward",
+          "delete-forward",
+          "find-file",
+          "goto-line",
+          "line-end",
+          "line-start",
+          "lisp-mode",
+          "move-left",
+          "move-right",
+          "move-up",
+          "newline",
+          "self-insert",
+          "switch-buffer",
+          "write-file"
+        ],
+        "projected_max_free_namepool_bytes": 3093,
+        "projected_max_free_symbols": 182,
+        "symbols": 17
+      },
+      "proven_private_recovery": {
+        "namepool_bytes": 742,
+        "names": [
+          "%ide-error",
+          "%ide-hint",
+          "%ide-mini",
+          "%ide-prefix",
+          "%ide-stcache",
+          "%loop",
+          "%m65d-bam-change",
+          "%m65d-bam-find",
+          "%m65d-bam-header-ok-p",
+          "%m65d-bam-validate-tracks",
+          "%m65d-before-write",
+          "%m65d-bit-free-p",
+          "%m65d-bitmap-off",
+          "%m65d-blocks-for",
+          "%m65d-chain-state",
+          "%m65d-check-old-half",
+          "%m65d-claim-new",
+          "%m65d-clear",
+          "%m65d-commit-dir",
+          "%m65d-copy",
+          "%m65d-count-free",
+          "%m65d-dir-entries",
+          "%m65d-dir-fill",
+          "%m65d-dir-scan",
+          "%m65d-dir-target-ok-p",
+          "%m65d-dir-write-name",
+          "%m65d-entry-valid-p",
+          "%m65d-latch",
+          "%m65d-mask",
+          "%m65d-media-detail",
+          "%m65d-media-kind",
+          "%m65d-name-chars-ok-p",
+          "%m65d-old-validated",
+          "%m65d-pair-member-p",
+          "%m65d-read-old-chain",
+          "%m65d-release-half",
+          "%m65d-remount-work",
+          "%m65d-run",
+          "%m65d-run-authorized",
+          "%m65d-run-record",
+          "%m65d-set",
+          "%m65d-status",
+          "%m65d-txn-generation",
+          "%m65d-write-chain",
+          "%m65d-write-plan"
+        ],
+        "projected_free_namepool_bytes": 2902,
+        "projected_free_symbols": 165,
+        "symbols": 45
+      },
+      "required_global": {
+        "count": 112,
+        "namepool_bytes": 1897,
+        "names": [
+          "%ide-buffer-with-lines-point",
+          "%ide-char-drop",
+          "%ide-char-take-into",
+          "%ide-dispatch-command",
+          "%ide-line-at",
+          "%ide-lines-replace",
+          "%ide-lines-replace-range",
+          "%ide-mini-history",
+          "%ide-mini-start",
+          "%ide-state-with-buffer",
+          "%ide-state-with-message",
+          "%ide-x",
+          "*ide-kill-ring*",
+          "backward-kill-word",
+          "buffer-end",
+          "buffer-start",
+          "compile-buffer-to-lib",
+          "compile-file-to-lib",
+          "copy-region-as-kill",
+          "dir",
+          "eval-buffer",
+          "exchange-point-and-mark",
+          "execute-command",
+          "ide-apply-command",
+          "ide-backward-kill-word",
+          "ide-blank-lines",
+          "ide-buffer-display-name",
+          "ide-buffer-end",
+          "ide-buffer-file-name",
+          "ide-buffer-lines",
+          "ide-buffer-locals",
+          "ide-buffer-mark",
+          "ide-buffer-name",
+          "ide-buffer-point",
+          "ide-buffer-start",
+          "ide-buffers",
+          "ide-command-names",
+          "ide-copy-region-as-kill",
+          "ide-current-line",
+          "ide-cursor-row",
+          "ide-delete-backward-char",
+          "ide-delete-forward-char",
+          "ide-dirty-line-indices",
+          "ide-error",
+          "ide-event-code",
+          "ide-event-command",
+          "ide-exchange-point-and-mark",
+          "ide-insert-char",
+          "ide-kill-line",
+          "ide-kill-region",
+          "ide-kill-word",
+          "ide-line-at",
+          "ide-line-count",
+          "ide-make-buffer",
+          "ide-make-state",
+          "ide-move-down",
+          "ide-move-left",
+          "ide-move-line-relative",
+          "ide-move-right",
+          "ide-move-up",
+          "ide-move-word-left",
+          "ide-move-word-right",
+          "ide-page-down",
+          "ide-page-up",
+          "ide-point-column",
+          "ide-point-line",
+          "ide-printable-code-p",
+          "ide-region-lines-from",
+          "ide-region-text",
+          "ide-render",
+          "ide-render-cursor-from",
+          "ide-render-line-at",
+          "ide-set-mark",
+          "ide-set-point",
+          "ide-split-line",
+          "ide-split-line-indented",
+          "ide-state-buffer",
+          "ide-state-message",
+          "ide-state-render-columns",
+          "ide-state-render-cursor-row",
+          "ide-state-render-lines",
+          "ide-state-render-lines-for-size",
+          "ide-state-render-rows",
+          "ide-state-row-offset",
+          "ide-status-line",
+          "ide-step",
+          "ide-string-append",
+          "ide-string-delete-before",
+          "ide-string-insert-code",
+          "ide-string-prefix",
+          "ide-string-suffix",
+          "ide-visible-frame-lines-from",
+          "ide-visible-line",
+          "ide-yank",
+          "kill-line",
+          "kill-region",
+          "kill-word",
+          "load-file-to-buffer",
+          "m65d-remount",
+          "m65d-save",
+          "m65d-save-new",
+          "m65d-status",
+          "mini",
+          "motion",
+          "move-word-left",
+          "move-word-right",
+          "page-down",
+          "page-up",
+          "save-buffer-to",
+          "search-next",
+          "set-mark",
+          "yank"
+        ]
+      }
+    },
+    "4_metadata_format": {
+      "decision": "separate-sha-bound-shelf-index",
+      "gate": "index SHA in staging receipt; every indexed container SHA must match before load",
+      "minimum_index_fields": [
+        "schema",
+        "product_set_sha256",
+        "container_role",
+        "container_sha256",
+        "attic_address",
+        "container_bytes",
+        "requires",
+        "provides",
+        "export_policy_sha256",
+        "help_metadata_sha256"
+      ],
+      "reason": [
+        "L65M remains the per-container executable format and needs no version change.",
+        "A shelf index binds multiple containers, locations, roles and metadata SHAs.",
+        "Host-rich help/diagnostic data can evolve without growing the device decoder."
+      ]
+    },
+    "5_undo_cost": {
+      "decision": "delta records; snapshots are not viable as the default 1.1 undo representation",
+      "model": {
+        "baseline_commit": "471435024d86b1f535bfb4116551f37f307ca1f0",
+        "commit_count": 20,
+        "delta": "added+deleted UTF-8 payload plus configured transaction/hunk indices",
+        "excludes": "allocator, Lisp-object and redo-chain overhead; this is a comparative lower-bound model",
+        "hunk_header_bytes": 12,
+        "paths": [
+          "lib/ide-*.lisp",
+          "lib/m65-disk.lisp"
+        ],
+        "snapshot": "complete pre-edit UTF-8 file payload",
+        "transaction_header_bytes": 6,
+        "unit": "one real repository commit touching IDE/M65D Lisp sources"
+      },
+      "sessions": [
+        {
+          "commit": "1e01a4e4de12172a7a639b611d65f182f427f708",
+          "delta_payload_and_index_bytes": 964,
+          "files": [
+            "lib/m65-disk.lisp"
+          ],
+          "hunks": 2,
+          "snapshot_payload_bytes": 22600
+        },
+        {
+          "commit": "ab9c00ba76d985df1caba0bcebb3136ef0b66601",
+          "delta_payload_and_index_bytes": 650,
+          "files": [
+            "lib/m65-disk.lisp"
+          ],
+          "hunks": 3,
+          "snapshot_payload_bytes": 22318
+        },
+        {
+          "commit": "fc87ef0e04173ea46fbb09730a086d7ae0fc710f",
+          "delta_payload_and_index_bytes": 5666,
+          "files": [
+            "lib/ide-disk.lisp",
+            "lib/m65-disk.lisp"
+          ],
+          "hunks": 19,
+          "snapshot_payload_bytes": 42392
+        },
+        {
+          "commit": "bad48679d26e1816b8d44973431cfe49f55bf38a",
+          "delta_payload_and_index_bytes": 462,
+          "files": [
+            "lib/ide-disk.lisp"
+          ],
+          "hunks": 4,
+          "snapshot_payload_bytes": 20902
+        },
+        {
+          "commit": "488ccfc01907ff96417772ff43a36be6215df033",
+          "delta_payload_and_index_bytes": 363,
+          "files": [
+            "lib/m65-disk.lisp"
+          ],
+          "hunks": 1,
+          "snapshot_payload_bytes": 21281
+        },
+        {
+          "commit": "1576cdd0faf6879686e804231bcf96c1cd0d563e",
+          "delta_payload_and_index_bytes": 8121,
+          "files": [
+            "lib/ide-disk.lisp",
+            "lib/m65-disk.lisp"
+          ],
+          "hunks": 27,
+          "snapshot_payload_bytes": 40356
+        },
+        {
+          "commit": "3c0da518ad4654b2e14db352019cfeece42d805c",
+          "delta_payload_and_index_bytes": 7227,
+          "files": [
+            "lib/ide-disk.lisp",
+            "lib/m65-disk.lisp"
+          ],
+          "hunks": 13,
+          "snapshot_payload_bytes": 38051
+        },
+        {
+          "commit": "ae2d3cd228cd1b2b08cf6fc1064df3ec5a4a63af",
+          "delta_payload_and_index_bytes": 515,
+          "files": [
+            "lib/ide-disk.lisp"
+          ],
+          "hunks": 1,
+          "snapshot_payload_bytes": 21092
+        },
+        {
+          "commit": "8f534220bd157f0091c8d950bc6881b6b55dab37",
+          "delta_payload_and_index_bytes": 2675,
+          "files": [
+            "lib/ide-disk.lisp"
+          ],
+          "hunks": 6,
+          "snapshot_payload_bytes": 20295
+        },
+        {
+          "commit": "6075e6395988724f6add2b842647e49da7dbbb09",
+          "delta_payload_and_index_bytes": 22396,
+          "files": [
+            "lib/ide-disk.lisp",
+            "lib/m65-disk.lisp"
+          ],
+          "hunks": 10,
+          "snapshot_payload_bytes": 21517
+        },
+        {
+          "commit": "2d4095459bbee10aead4598fd09c67f74821f4f4",
+          "delta_payload_and_index_bytes": 4398,
+          "files": [
+            "lib/ide-disk.lisp",
+            "lib/ide-extra.lisp",
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 13,
+          "snapshot_payload_bytes": 62820
+        },
+        {
+          "commit": "398d9341273a3c5d06afd441631334305f865b9f",
+          "delta_payload_and_index_bytes": 6429,
+          "files": [
+            "lib/ide-disk.lisp",
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 10,
+          "snapshot_payload_bytes": 61337
+        },
+        {
+          "commit": "17c52c2ee86dcea8a257ac3c346a778ce0368fb6",
+          "delta_payload_and_index_bytes": 253,
+          "files": [
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 2,
+          "snapshot_payload_bytes": 41159
+        },
+        {
+          "commit": "38652759d3fca41f021450af88178006be54c609",
+          "delta_payload_and_index_bytes": 157,
+          "files": [
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 2,
+          "snapshot_payload_bytes": 41124
+        },
+        {
+          "commit": "1a8bf9cb7fdcd0b2e1b5dc594042113b2ba42eda",
+          "delta_payload_and_index_bytes": 1472,
+          "files": [
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 4,
+          "snapshot_payload_bytes": 41032
+        },
+        {
+          "commit": "0fada76b75a29598d270278c3a4ff262bfb07a39",
+          "delta_payload_and_index_bytes": 14330,
+          "files": [
+            "lib/ide-buffer.lisp",
+            "lib/ide-disk.lisp",
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 17,
+          "snapshot_payload_bytes": 83497
+        },
+        {
+          "commit": "12c6065d8a91bbfb6d2e03fcc62785640138b421",
+          "delta_payload_and_index_bytes": 15041,
+          "files": [
+            "lib/ide-buffer.lisp",
+            "lib/ide-disk.lisp",
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 14,
+          "snapshot_payload_bytes": 75836
+        },
+        {
+          "commit": "f6a09c66b1f2296b6f678b59a890b3f65356fec4",
+          "delta_payload_and_index_bytes": 5506,
+          "files": [
+            "lib/ide-buffer.lisp",
+            "lib/ide-disk.lisp",
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 8,
+          "snapshot_payload_bytes": 71642
+        },
+        {
+          "commit": "6e69f7e0c50733acbefb79922ce2c5a73b344276",
+          "delta_payload_and_index_bytes": 2089,
+          "files": [
+            "lib/ide-buffer.lisp",
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 4,
+          "snapshot_payload_bytes": 51705
+        },
+        {
+          "commit": "365c50b74c06c9569e9a329f6e3f077d64ef3442",
+          "delta_payload_and_index_bytes": 2020,
+          "files": [
+            "lib/ide-buffer.lisp",
+            "lib/ide-ui.lisp"
+          ],
+          "hunks": 4,
+          "snapshot_payload_bytes": 49983
+        }
+      ],
+      "totals": {
+        "delta_bytes": 100734,
+        "delta_percent_of_snapshot": 11.84,
+        "session_count": 20,
+        "snapshot_bytes": 850939,
+        "snapshot_to_delta_ratio": 8.45
+      }
+    },
+    "6_xemu_event_queue": {
+      "claim_limit": "Source audit proves the typed queue exists in the exact locally installed Xemu commit. Binding fidelity still needs injected-key differential fixtures; real hardware remains the arbiter.",
+      "commit": "40dfef0d1d5f56be2469492715c12bdb32c75b67",
+      "covered_registers": {
+        "$D60A": "queued modifier byte, queue-present bit, flush/dequeue controls",
+        "$D619": "queued PETSCII byte"
+      },
+      "queue_depth": 5,
+      "source_file": "targets/mega65/input_devices.c",
+      "source_sha256": "abac7ee3eac3be380635c56b9d17c848b2334e1e7e65a1e742ea6f3b6907b81d",
+      "status": "emulated-in-audited-build",
+      "upstream_finding_required": false,
+      "upstream_url": "https://github.com/lgblgblgb/xemu.git"
+    },
+    "7_event_driver_bank0": {
+      "baseline": {
+        "boot_stack_gap": 1647,
+        "commit": "471435024d86b1f535bfb4116551f37f307ca1f0",
+        "directory_headroom": 32,
+        "ext_headroom": 16385,
+        "namepool_used": 8048,
+        "overlay_bytes": 1669,
+        "post_boot_reserve": 1868,
+        "product_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+        "resident_prg_bytes": 39493,
+        "symbols_used": 632
+      },
+      "capacity_delta": {
+        "bank0_reserve_bytes": -62,
+        "boot_overlay_bytes": 68,
+        "boot_stack_gap_bytes": -130,
+        "directory_entries": 0,
+        "ext_bytes": 0,
+        "namepool_bytes": -13,
+        "resident_prg_bytes": 54,
+        "symbols": -3
+      },
+      "claim_limit": "Capacity probe only. It does not authorize 1.1-L and does not prove event semantics on hardware or Xemu.",
+      "gates": {
+        "real_product_link": "pass",
+        "workbench_library_composition": "pass",
+        "workbench_overlay_footprint_audit": "pass"
+      },
+      "post_probe_headroom": {
+        "bank0_above_1536_target": 270,
+        "directory_entries": 32,
+        "ext_above_16384_floor": 1,
+        "namepool_bytes": 2147,
+        "symbols": 117
+      },
+      "probe": {
+        "boot_stack_gap": 1517,
+        "directory_headroom": 32,
+        "elf_sha256": "4d53707639ec2159ac6833018801ac0768a0e8f115dcea954dd5e57359986226",
+        "ext_headroom": 16385,
+        "implementation_shape": [
+          "read queue-present/modifier byte from $D60A",
+          "read PETSCII event byte from $D619 and dequeue exactly once",
+          "normalize shift, ctrl, cbm and alt into the existing symbol-list format",
+          "use the same queue path for blocking and nonblocking key-event"
+        ],
+        "namepool_used": 8061,
+        "overlay_bytes": 1737,
+        "overlay_sha256": "8c8239a729849ca57690fe085f215f21b7702608556283895cac9a0527feda92",
+        "post_boot_reserve": 1806,
+        "resident_prg_bytes": 39547,
+        "resident_prg_sha256": "0070b940c560e5b00cae3cf9964aa9b097908c63d98acddede2cf4592ce72e98",
+        "source_diff_sha256": "f248a5718d57a66b392b25e6778f48b67fac1a7b8af1ae72c25f3fca31bbac71",
+        "symbols_used": 635,
+        "temporary_worktree": "/tmp/lisp65-v11-event-probe"
+      },
+      "schema": "lisp65-v11-event-driver-bank0-probe-v1",
+      "status": "passed-not-authorized"
+    }
+  },
+  "schema": "lisp65-v11-prewave-measurement-report-v1"
+}

@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-device-session-return-ingress-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HARNESS FIRST RED: verified text was never submitted and the input ingress stopped accepting virtual or physical RETURN",
+  "candidate_link": 89,
+  "hardware_contact": 4,
+  "product_started": true,
+  "completed_product_rows": [
+    "exact product D81 readback",
+    "exact Bank-2 readback",
+    "bounds rejection",
+    "post-error REPL recovery",
+    "three synchronous draw forms",
+    "seven literal-free sprite-string construction forms"
+  ],
+  "mechanism": "The verified-input helper observed the exact active form (m65-sprite-shape 0 s), but m65 returned success without delivering RETURN. Both the explicit ~M route and the empty -T route left the screen byte-identical. A synchronized register/stack capture placed the CPU in c2_kernal_event_poll returning to lisp_input_event with vm_status=OK and gc_rootsp=0; the sprite slot remained wholly unchanged. One later physical RETURN also left the active line and slot byte-identical. The sprite call never began; the REPL input ingress was wedged before submission.",
+  "observation": {
+    "product_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-return-ingress/D1-product-readback.d81",
+      "bytes": 819200,
+      "sha256": "cc3509b7a6df421bb749f85dcbb77bf75d704016c0cb702b011e20c5d3b54696"
+    },
+    "bank2_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-return-ingress/D1-bank2.bin",
+      "bytes": 47298,
+      "sha256": "eb45f07ed2edc179812c585399aef5ee9ceb0dbdd02f1126e086e357156f4c30"
+    },
+    "verified_active_input": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-return-ingress/d1-sprite-setup-8-input-attempt-1.png",
+      "bytes": 8203,
+      "sha256": "129c76f4831d61c84f312aebfd0bff6ada123167b81f2b59934fabdbb8b12ec9"
+    },
+    "after_physical_return": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-return-ingress/d1-sprite-setup-8-after-physical-return.png",
+      "bytes": 7939,
+      "sha256": "f9cee910b7776a78d767e8d294d0cb9209995136d28436fc6963f9880af59ec7"
+    },
+    "shape_slot_after_physical_return": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-return-ingress/d1-shape-slot-after-physical-return.bin",
+      "address": "0x000017c0",
+      "bytes": 64,
+      "sha256": "7b50cbe254dd39fa61a532e2a5083b3bc538410a20febbbc20bb6922cacf6639"
+    },
+    "synchronized_cpu": {
+      "pc_samples": ["0xe006", "0xe017", "0xe009", "0xe004"],
+      "stack_return": "0x82a0 inside lisp_input_event",
+      "vm_status": 0,
+      "gc_rootsp": 0,
+      "last_vm_buffer_owner": "bank 1 offset 0x0185, m65-byte-write code object",
+      "interpretation": "idle input wait with stale last-code owner, not an executing sprite call"
+    }
+  },
+  "disposition": "Cold-reset the invalid input state. Reduce the setup transport before the unchanged sprite call and retain exact post-form result checks. Product and Link-89 bytes remain unchanged.",
+  "claim_limit": "A submission/input-ingress failure after the listed partial D1 rows. It proves no failure in m65-sprite-shape, VIC/SID hardware, the Ship sample, trailing D3 rows, release or promotion."
+}

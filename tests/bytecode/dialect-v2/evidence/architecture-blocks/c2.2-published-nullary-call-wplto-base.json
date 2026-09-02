@@ -1,0 +1,272 @@
+{
+  "authority": {
+    "L_full_product_profile": {
+      "bytes": 1641,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "25f782bce9d031f61ed16ae42ca52cff4a6ff08b798d5fc134bca3dc94d16328"
+    },
+    "current_product_identity": {
+      "bytes": 2376,
+      "path": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/product/substitution-artifacts.json",
+      "sha256": "9687c46735e8abd7bed696ade1cbc46f2fc8553f708b308b9106016686d6fc71"
+    },
+    "driver": {
+      "bytes": 8799,
+      "path": "tools/host-lisp/c2_published_nullary_call_wplto.py",
+      "sha256": "45ea7bab5a82a9836d61bcd4e0316903cd8bd7f0582688b88b86004a8c1be3ad"
+    },
+    "hardware_frame_attribution": {
+      "bytes": 2938,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link57-top-level-frame-attribution-hardware-receipt.json",
+      "sha256": "b4bf579f325a3976b58ba51219981403e40aaa6eb0674f3e1cbc10c8d9ee6ce3"
+    },
+    "keymap_end_to_end_gate": {
+      "bytes": 14599,
+      "path": "tools/host-lisp/c2_l_full_keymap_end_to_end_gate.py",
+      "result": {
+        "canonical_binding_source": "config/v11-l-lite-keymap.json#modifier_bindings",
+        "compiled_source_manifest": "tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json",
+        "consumer_raw_88_action": 1110,
+        "mutations_rejected": 10,
+        "negative_cases": [
+          {
+            "id": "cspace-no-control",
+            "linked_action": null,
+            "lisp_event": [
+              "key",
+              255,
+              []
+            ],
+            "queue_tuple": [
+              255,
+              0
+            ]
+          },
+          {
+            "id": "cspace-wrong-meta",
+            "linked_action": null,
+            "lisp_event": [
+              "key",
+              255,
+              [
+                "meta"
+              ]
+            ],
+            "queue_tuple": [
+              255,
+              16
+            ]
+          },
+          {
+            "id": "mx-no-meta",
+            "linked_action": 1110,
+            "lisp_event": [
+              "key",
+              120,
+              []
+            ],
+            "queue_tuple": [
+              88,
+              0
+            ]
+          },
+          {
+            "id": "mx-wrong-control",
+            "linked_action": 1110,
+            "lisp_event": [
+              "key",
+              120,
+              [
+                "control"
+              ]
+            ],
+            "queue_tuple": [
+              88,
+              4
+            ]
+          },
+          {
+            "id": "mx-raw-consumer-domain",
+            "linked_action": 1013,
+            "lisp_event": [
+              "key",
+              120,
+              [
+                "meta"
+              ]
+            ],
+            "queue_tuple": [
+              88,
+              16
+            ]
+          }
+        ],
+        "oracle": "ide-ui-eval-oracle: PASS=95 FAIL=0",
+        "positive_cases": [
+          {
+            "id": "control-space",
+            "linked_action": 1115,
+            "lisp_event": [
+              "key",
+              255,
+              [
+                "control"
+              ]
+            ],
+            "queue_tuple": [
+              255,
+              4
+            ]
+          },
+          {
+            "id": "meta-x",
+            "linked_action": 1013,
+            "lisp_event": [
+              "key",
+              120,
+              [
+                "meta"
+              ]
+            ],
+            "queue_tuple": [
+              88,
+              16
+            ]
+          }
+        ],
+        "status": "passed-queue-tuple-to-compiled-product-action"
+      },
+      "sha256": "13944ca2b51e0e1c250beeed2a3ff739d8c7477c679e9fb847a449ac9df89334"
+    },
+    "latency_attempt_1_of_2": {
+      "bytes": 1784,
+      "path": "build/c2.2/hardware-presmoke-link56-selector-tail-z/latency/result.json",
+      "sha256": "800b96bfee2066749e9895dd56a3ca74f32bdcb26d43c3c65e97f7725c042939"
+    },
+    "link56_rollback_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-56-selector-tail-z/lisp65-c2-substitution-linked.prg",
+      "sha256": "723579250e692112d4208ae56c0eede15f422858b3f99cc9cd2af1639599d93d",
+      "status": "untouched"
+    },
+    "published_nullary_call_gate": {
+      "bytes": 10092,
+      "execution_result": {
+        "direct": {
+          "call_targets": [
+            "function-kind",
+            "funcall",
+            "%published-target"
+          ],
+          "compiler_calls": 0,
+          "install_calls": 0,
+          "result": "t"
+        },
+        "fallbacks": [
+          {
+            "case": "one_argument_bytecode",
+            "first_compiler_call_index": 0,
+            "result": "passed-through-historical-compiler-edge"
+          },
+          {
+            "case": "nullary_primitive",
+            "first_compiler_call_index": 1,
+            "result": "passed-through-historical-compiler-edge"
+          },
+          {
+            "case": "nullary_macro",
+            "first_compiler_call_index": 1,
+            "result": "passed-through-historical-compiler-edge"
+          },
+          {
+            "case": "nullary_undefined",
+            "first_compiler_call_index": 1,
+            "result": "passed-through-historical-compiler-edge"
+          }
+        ],
+        "fixtures": 5,
+        "status": "passed-executable-p0-direct-and-fallback-fixtures"
+      },
+      "path": "tools/host-lisp/c2_top_level_published_nullary_call_gate.py",
+      "sha256": "f5ef3e25939d769b9a464ab0b5a979c5d1f4bc22380a069725b3582b69435ca8",
+      "source_result": {
+        "direct_action": "funcall canonical operator binding",
+        "direct_kind": "bytecode",
+        "direct_shape": "proper singleton list",
+        "fallback_preserved": true,
+        "mutations_rejected": 7,
+        "new_resident_state_bytes": 0,
+        "status": "passed-exact-published-nullary-source-contract"
+      }
+    },
+    "published_nullary_product_artifacts": {
+      "bytes": 22216,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-published-nullary-call-bytecode-product-artifacts-receipt.json",
+      "sha256": "86882c7573f884968ec431bda5ff2da04af565a2e6b27f617c963b9c795a4fe7"
+    },
+    "resolved_product_features": {
+      "frame_attribution_diagnostic_absent": true,
+      "values": [
+        "LISP65_C2_DIRECT_HOT_REFILL",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+        "LISP65_C2_TRANSACTION_AUTH",
+        "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+        "LISP65_C2_NESTED_APPEND_V5",
+        "LISP65_C2_RESIDENCY_TRIAGE",
+        "LISP65_C2_E000_REOPEN",
+        "LISP65_C2_BSS_TRIAGE",
+        "LISP65_RUNTIME_OVERLAY_FORMAT_V3",
+        "LISP65_C2_PHASE11_SPLIT",
+        "LISP65_C2_LITE_COLD_EVICTION",
+        "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+        "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+        "LISP65_C2_LITE_BANK3_STAGING",
+        "LISP65_C2_LITE_BANK2_STAGING",
+        "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+        "LISP65_C2_LITE_VM_ARITY_E000",
+        "LISP65_C2_LITE_CHIP_RAM",
+        "LISP65_C2_APPEND_PLAN_FACADE",
+        "LISP65_C2_NUMERIC_EARLY_ERRORS",
+        "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT",
+        "LISP65_C2_LITE_V6_JOURNAL_PREPARE_CORESIDENT"
+      ]
+    },
+    "static_plane_gate": {
+      "bytes": 6649,
+      "path": "tools/host-lisp/c2_l_full_static_plane_gate.py",
+      "result": {
+        "IDE_code_bytes": 11718,
+        "bank2_headroom_bytes": 30994,
+        "decoder_consumers": 2,
+        "entries": 590,
+        "images": 6,
+        "mutations_rejected": 6,
+        "private_decoder_lengths": 0,
+        "static_code_bytes": 34542,
+        "status": "passed-canonical-L-full-static-plane-to-target-dataflow"
+      },
+      "sha256": "39df56e883f72401eb4d2f9e0134a438e48640ca70837d2b6bc0d27dac08a61c"
+    },
+    "static_plane_header": {
+      "bytes": 293,
+      "path": "src/c2_lite_static_plane.h",
+      "sha256": "e209d5ba772ee50c004733acf315583410fcb49f9d5289bf84c86ab01cc7f042"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "whole_program_lto_closure_links": 1
+  },
+  "format": "lisp65-c2-badopcode-retirement-wplto-first-red-v1",
+  "internal_receipt": {
+    "bytes": 28463,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-published-nullary-call-wplto-internal.json",
+    "sha256": "5f5e8d0e752d53d3d0dc2f2285218a54ea92ef37c1d7f311b14e486e6cfded87"
+  },
+  "next_gate": "stop; return measured red to Class-C review",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: BADOPCODE retirement WPLTO stopped"
+}

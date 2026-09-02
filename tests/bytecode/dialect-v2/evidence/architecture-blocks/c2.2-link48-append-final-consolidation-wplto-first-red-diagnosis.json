@@ -1,0 +1,125 @@
+{
+  "claim_limit": "Failed WPLTO seed-link map and LTO-object measurements only. No final ELF, product candidate, hardware result, or gate green is claimed.",
+  "consolidation_results": {
+    "badopcode_detail": "retired",
+    "dirmiss_detail": "preserved in full",
+    "physical_fusion": {
+      "former_records": [
+        "publish_exports",
+        "journal_clear"
+      ],
+      "new_record": "publish_clear",
+      "section_bytes": 1220,
+      "section_headroom_bytes": 572,
+      "slice_cap_bytes": 1792
+    },
+    "rollback_setup": "one shared E000 seam"
+  },
+  "decision_boundary": {
+    "accepted_geometry_if_contracts_are_relaxed": {
+      "bank0_text_headroom_bytes": 8,
+      "e000_floor_bytes": 54
+    },
+    "preserve_current_contracts_requires_scope_reduction": {
+      "bank0_text_bytes_for_32_byte_noise_reserve": 24,
+      "e000_bytes_for_115_byte_floor": 61,
+      "note": "The two deficits are in different currencies and are not added into one fungible byte total."
+    },
+    "rule": "No further consolidation or placement cycle. Return the measured floor-or-scope choice to Alex."
+  },
+  "evidence": {
+    "failed_lto_object": {
+      "bytes": 608000,
+      "path": "build/c2.2/substitution/link48-append-final-consolidation-wplto-gate-replay/resident-island-seed.prg.lto.o",
+      "sha256": "b2f184c964c82cee7f896b58f00a13fce690021bca43dfcbc5a9b20dd0855f05"
+    },
+    "failed_map": {
+      "bytes": 200053,
+      "path": "build/c2.2/substitution/link48-append-final-consolidation-wplto-gate-replay/resident-island-seed.prg.map",
+      "sha256": "7d596c691a7768c7808281d881432528cc4b5c89f1441a5470d539e7d1466636"
+    },
+    "internal_receipt": {
+      "bytes": 30804,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-consolidation-wplto-gate-replay-internal.json",
+      "sha256": "52a996e508ce1840936a09e33d0fb84a924f28ad98dec4f5c5c740abd2089b1c"
+    },
+    "link48_rollback_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg",
+      "sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6",
+      "status": "untouched"
+    },
+    "public_receipt": {
+      "bytes": 2312,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-consolidation-wplto-gate-replay-receipt.json",
+      "sha256": "728ec704445bd966e9027ea9d65e338f974d6f47c8eb357236e4dda7e39f6473"
+    }
+  },
+  "execution_accounting": {
+    "actual_wplto_seed_link_attempts": 1,
+    "hardware_runs": 0,
+    "latency_measurement_attempts": "0/2 unchanged",
+    "line1_product_first_red_budget": "2/3 unchanged",
+    "preflight_checker_model_attempts_with_compiler_or_linker": 0,
+    "promotable_product_links": 0
+  },
+  "format": "lisp65-c2-lite-v6-link48-append-final-consolidation-wplto-first-red-diagnosis-v1",
+  "linker_first_red": {
+    "e000_floor": {
+      "capacity_bytes": 8192,
+      "deficit_to_contract_bytes": 61,
+      "observed_headroom_bytes": 54,
+      "observed_live_bytes": 8138,
+      "required_floor_bytes": 115,
+      "required_max_live_bytes": 8077
+    },
+    "gap0_overlap": {
+      "overlap_bytes": 26,
+      "reopen_gap0": {
+        "bytes": 128,
+        "end_exclusive": "0xfd22",
+        "range_inclusive": "0xfca2..0xfd21",
+        "start": "0xfca2"
+      },
+      "session_emitter_state": {
+        "bytes": 10,
+        "range_inclusive": "0xfd08..0xfd11",
+        "start": "0xfd08"
+      }
+    },
+    "messages": [
+      "C2 reopening gap0 overlaps session-emitter state",
+      "C2 final E000 floor below 115 bytes"
+    ]
+  },
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: final consolidation missed the simultaneous three-currency hard close",
+  "walls_and_aggregate_from_failed_map": {
+    "bank0_text": {
+      "end_exclusive": "0xb49b",
+      "handoff_anchor": "0xb4a3",
+      "headroom_bytes": 8,
+      "required_noise_headroom_bytes": 32,
+      "shortfall_bytes": 24,
+      "size_bytes": 38008,
+      "start": "0x2023"
+    },
+    "fixed_hot_block_headroom_bytes": 33,
+    "ordinary_bank0_bss_headroom_bytes": 72,
+    "resident_island_headroom_bytes": 9,
+    "session_aggregate": {
+      "all_slices_at_or_below_1792": true,
+      "catalog_records": 49,
+      "ceiling_bytes": 65536,
+      "headroom_bytes": 98,
+      "largest_slice": {
+        "bytes": 1766,
+        "headroom_bytes": 26,
+        "section": ".lisp65_rt_c2append_entries"
+      },
+      "packed_bytes": 65438,
+      "raw_payload_bytes": 57608,
+      "status": "closed"
+    }
+  }
+}

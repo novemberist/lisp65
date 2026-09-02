@@ -1,0 +1,101 @@
+{
+  "format": "lisp65-c2.3-v1.6-items12-input-first-red-device-v1",
+  "recorded_on": "2026-08-19",
+  "status": "FIRST RED: raw PETSCII case bypass and synchronous consumer latency",
+  "authority": {
+    "owner_authorization": {
+      "authority": "git-blob",
+      "commit": "c65089ad72598b57f75d6ce5c55cee52ab55726a",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "bytes": 160211,
+      "sha256": "ea3135145bc850b0ee91435baafcf03fa6e96b63e3a028b91180ff891048a40b"
+    },
+    "candidate_ELF": {
+      "path": "build/c2.3/v1.6-items12-device-preparation/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 631860,
+      "sha256": "4b2dfa0e7a33968863ec73f2162894ee1f644bd7ccbe6d9e745def7f376fb711"
+    },
+    "product_readback_sha256": "025e1721b63a914213fb563e068d8784104182aa87059d26101cfe015bb765b5",
+    "library_readback_sha256": "487d21131ed283de48d796ab191d6f41c906f127747761252be681119270a8f0",
+    "raw_capture": {
+      "path": "build/c2.3/v1.6-items12-device-contact/input-first-red-stopped-state/capture.json",
+      "bytes": 23895,
+      "sha256": "d2d75411584bfa4f52827ba119c15a60c685a43be4e7146ce54c29af73446bfe"
+    },
+    "capture_driver": {
+      "path": "tools/host-lisp/c2_v160_items12_input_first_red_capture.py",
+      "bytes": 5957,
+      "sha256": "9c58e9074a57537e60aa0033f2506a0dd84fc96e05ac062cce71bc128f28c94e"
+    }
+  },
+  "discipline": {
+    "stops": 1,
+    "resumes": 0,
+    "runs": 0,
+    "resets": 0,
+    "further_input": 0,
+    "tuple_before_memory": true,
+    "raw_first": true,
+    "CPU_left_stopped": true
+  },
+  "owner_observation": {
+    "shift_lock": "off",
+    "letter_rendering": "only uppercase letters",
+    "responsiveness": "substantially worse than the preceding candidate; after a few letters almost no visible response"
+  },
+  "uppercase_attribution": {
+    "public_key_event": "normalizes raw PETSCII $41..$5a to lowercase ASCII and $c1..$da to uppercase ASCII",
+    "raw_consumer": "passes every raw code unchanged except $a0 to $20",
+    "fixture_gap": "target fixtures inject already-normalized ASCII rather than raw PETSCII",
+    "classification": "semantic-boundary bypass",
+    "required_shape": "one PETSCII normalization authority consumed by public key-event and raw-ring paths; raw-PETSCII fixtures"
+  },
+  "stopped_state": {
+    "tuple": {
+      "PC": "0x4737",
+      "PC_symbol": "vm_run_inner+0x2ba",
+      "A": "0x4f",
+      "X": "0xc6",
+      "Y": "0x01",
+      "Z": "0x00",
+      "B": "0x00",
+      "SP": "0x017c",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000"
+    },
+    "input_ring": {
+      "head_address": "0xff8c",
+      "tail_address": "0xff8d",
+      "head": 39,
+      "tail": 39,
+      "occupancy": 0,
+      "physical_slots": 112,
+      "pending_bytes_hex": "",
+      "captured_prefix_hex": "534447464732373737373737374648474848464845454545454556565656565344464557525745"
+    },
+    "runtime": {
+      "gc_frozen": 0,
+      "gc_runs": 3,
+      "freelist_head": "0x0778",
+      "gc_rootsp": 54,
+      "vm_status": 0,
+      "reader_status": 0,
+      "reader_error_code": 0,
+      "mem_oom": 0,
+      "break_pending": 0
+    }
+  },
+  "latency_classification": {
+    "persistent_ring_backlog": false,
+    "ring_full": false,
+    "mapped_view_fault": false,
+    "active_or_stalled_collection": false,
+    "oom_or_error_path": false,
+    "permanent_control_loop": false,
+    "selected": "synchronous bytecode consumer/edit/render service latency",
+    "evidence": "the capture owner drained every committed ring byte and was executing the ordinary VM with clean runtime state when stopped",
+    "remaining_price_question": "native scalar dequeue versus batch drain/edit/render, each measured as a real consumer service rate rather than VM-step or allocation proxy"
+  },
+  "metadata_note": "The reused raw-first engine wrote its historical captured_on label 2026-08-15 into the raw packet. The git-bound authorization, device contact and this sealing receipt are dated 2026-08-19; the stale label is non-authoritative and the raw packet remains unmodified.",
+  "claim_limit": "One owner-authorized stopped-state sample proves no persistent ring backlog, active GC, mapping fault or runtime error at the observation point. It does not reconstruct an unobserved transient maximum occupancy, count physical keypresses that never reached hardware, or claim an exact wall-clock service rate. No product fix, card, medium, resume or further device contact is authorized."
+}

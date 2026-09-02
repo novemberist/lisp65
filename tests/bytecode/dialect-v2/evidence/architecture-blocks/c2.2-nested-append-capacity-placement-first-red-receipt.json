@@ -1,0 +1,241 @@
+{
+  "bindings": {
+    "contract": {
+      "bytes": 9229,
+      "path": "config/c2-nested-append-unwind-contract.json",
+      "sha256": "d0bf8f6fa27cce6dcd621cebc9e17d5656e9eb60a5675515a6798d400b66988d"
+    },
+    "contract_probe_receipt": {
+      "bytes": 15025,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-nested-append-unwind-contract-probe-receipt.json",
+      "sha256": "bd2a0ebbc3ac08c07108c238a33426bd65c0e6e9e33563d024e6a751b36a0381"
+    },
+    "initial_c2d_v3": {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/initial.c2d-v3.bin",
+      "sha256": "0a0ddf0168028bae27e7cd6fdc687fe8ca3a3f4940cdf70dae844c0bd5c1c185"
+    },
+    "link32_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+      "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a"
+    },
+    "link32_session_manifest": {
+      "bytes": 27300,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/runtime-overlays-session-final.json",
+      "sha256": "c1cf2f8f5fbfa38e71b4123a1eecd44b20bba0e31556e562f885034acfb24db8"
+    },
+    "link32_structural_receipt": {
+      "bytes": 15456,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link32-preinstall-island-guard-structural-receipt.json",
+      "sha256": "5843fea325faf2c63afc9c675de556cf72a8bb911555de0f375c98edf58ee2ab"
+    },
+    "sizing_source": {
+      "bytes": 19632,
+      "path": "scripts/c2-nested-append-capacity-main.c",
+      "sha256": "5dd50e12f61b7c5e4b87c8aede7ab1bed89c3adcc7c1198c7efb2d137ab88e89"
+    },
+    "target_compiler": {
+      "bytes": 78628536,
+      "path": "tools/llvm-mos/bin/mos-mega65-clang",
+      "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+    },
+    "target_object": {
+      "bytes": 39344,
+      "path": "build/c2.2/nested-append-capacity-placement-probe-locator/c2-nested-append-capacity-main.o",
+      "sha256": "de0743b5012dfbea7d5175dc7c4645e905438e4e2b90c7eac3c3a85f82867284"
+    }
+  },
+  "capacity_and_placement": {
+    "bank0_text": {
+      "central_abort_call_delta_bytes": 3,
+      "install_rewrite_delta_bytes": -9,
+      "link32_headroom_bytes": 10,
+      "projected_headroom_bytes": 16,
+      "status": "fits-target-object-projection"
+    },
+    "bank5_session_plane": {
+      "c2d_bytes": 33840,
+      "journal_offset": 50752,
+      "ordinary_c_bss_delta_bytes": 0,
+      "raw_headroom_after_fixed_journal_bytes": 16912,
+      "region_bytes": 50816,
+      "status": "fits-fixed-contract-location",
+      "unwind_journal_bytes": 64
+    },
+    "cpu_e000_window": {
+      "direct_inline_lookup_delta_bytes": 290,
+      "link32_future_margin_bytes": 386,
+      "policy": "closed-to-new-tenants",
+      "raw_margin_after_split_bytes": 260,
+      "required_delta_bytes": 0,
+      "split_resident_lookup_delta_bytes": 126,
+      "status": "FIRST RED: split resident lookup still changes closed E000",
+      "tail_slice_bytes": 480
+    },
+    "ordinary_bank0_bss": {
+      "link32_headroom_bytes": 19,
+      "projected_delta_bytes": 0,
+      "projected_headroom_bytes": 19,
+      "status": "unchanged"
+    },
+    "resident_island": {
+      "abort_facade_bytes": 13,
+      "link32_headroom_bytes": 109,
+      "projected_headroom_bytes": 96,
+      "status": "fits-target-object-projection"
+    },
+    "runtime_overlay_session_bank": {
+      "added_slices": [
+        {
+          "bytes": 480,
+          "headroom_under_1792": 1312,
+          "name": "c2-transient-tail-lookup",
+          "projected_file_offset": 49152
+        },
+        {
+          "bytes": 709,
+          "headroom_under_1792": 1083,
+          "name": "c2-longjmp-abort-cleanup",
+          "projected_file_offset": 49664
+        }
+      ],
+      "existing_publish_remove_control": {
+        "append_header_headroom_before_bytes": 1359,
+        "append_rollback_headroom_before_bytes": 491,
+        "placement": "fold one copy into append-header and one into rollback",
+        "projected_new_storage_bytes": 0,
+        "reason": "both additions remain inside their current 256-byte quanta",
+        "target_object_bytes_per_copy": 18
+      },
+      "link32_bytes": 49054,
+      "link32_headroom_bytes": 16482,
+      "projected_headroom_bytes": 15163,
+      "projected_storage_bytes": 50373,
+      "projected_storage_delta_bytes": 1319,
+      "slice_count_after": 38,
+      "slice_count_before": 36,
+      "status": "fits-target-object-projection"
+    }
+  },
+  "claim_limit": "One product-shaped target-object sizing probe. It proves the first placement red and prices the four named seams; it is not a product implementation, LTO capacity authorization, product link, hardware result, latency claim or promotion.",
+  "compiler": {
+    "command": [
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/mos-mega65-clang",
+      "-Oz",
+      "-Wall",
+      "-Wextra",
+      "-fno-lto",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-c",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/scripts/c2-nested-append-capacity-main.c",
+      "-o",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/nested-append-capacity-placement-probe-locator/c2-nested-append-capacity-main.o"
+    ],
+    "lookup_calibration": {
+      "difference_bytes": 6,
+      "link32_lto_symbol_bytes": 648,
+      "target_object_baseline_bytes": 642
+    },
+    "mode": "llvm-mos target relocatable, -Oz, no LTO",
+    "reason": "Separate named sections preserve each seam for measurement; the Link-32 entry-record baseline calibrates the target-object result to the real LTO link."
+  },
+  "costs": {
+    "gc_high_tail": {
+      "active_transient_blocks_per_collection": 96,
+      "additional_blocks_per_collection": 78,
+      "additional_mark_inputs_per_collection": 1253,
+      "claim": "transport count only; no latency acceptance",
+      "control_bytes_per_publish_or_remove_copy": 18,
+      "exact_interval_alternative": {
+        "placement": "does not fit Island and cannot be transported while an overlay is busy",
+        "target_object_bytes": 784
+      },
+      "holes_rule": "inactive high plane is zero by publish/remove invariant",
+      "link32_blocks_per_collection": 18,
+      "link32_persistent_root_count": 283,
+      "new_walker_bytes": 0,
+      "root_value_read_width_bytes": 32,
+      "selected_capacity_variant": "reuse-current-B2-span-walker"
+    },
+    "longjmp_abort_cleanup": {
+      "bank0_callsite_projection_bytes": 3,
+      "dead_c_stack_pointers": 0,
+      "journal_bytes": 64,
+      "journal_read_width_bytes": 32,
+      "journal_reads": 2,
+      "resident_island_facade_bytes": 13,
+      "transported_cleanup_slice_bytes": 709
+    },
+    "serial_transaction_boundaries": {
+      "decomposed_control_bytes": 231,
+      "full_install_baseline_bytes": 436,
+      "full_install_delta_bytes": -9,
+      "full_install_v4_bytes": 427,
+      "placement": "rewrite existing Bank-0 install function; no new resident function",
+      "transaction_active_during_execute": false
+    },
+    "transient_directory_lookup": {
+      "direct_inline": {
+        "baseline_bytes": 642,
+        "candidate_bytes": 932,
+        "delta_bytes": 290
+      },
+      "persistent_path_change": "one range branch; original two reads unchanged",
+      "persistent_path_dma_reads_added": 0,
+      "split": {
+        "resident_candidate_bytes": 768,
+        "resident_delta_bytes": 126,
+        "tail_slice_bytes": 480,
+        "tail_validation": "active image interval locates the slot; the resident directory-to-slot reverse edge must match; at most four 32-byte image records",
+        "wider_four_pointer_split_rejected": {
+          "reason": "the locator context is both smaller and equally bidirectional",
+          "resident_delta_bytes": 143,
+          "tail_slice_bytes": 1064
+        }
+      }
+    }
+  },
+  "first_red": {
+    "gate": "cpu-e000-delta-exactly-zero",
+    "not_attempted": [
+      "product source implementation",
+      "resident seed link",
+      "product closure link",
+      "hardware",
+      "latency acceptance"
+    ],
+    "observed_smallest_measured_split_delta_bytes": 126,
+    "why_it_stops": "The smallest measured transported-tail design still grows the resident entry-record branch. Raw contingency remains, but the owner-authorized window policy is exact zero and closed to new tenants."
+  },
+  "format": "lisp65-c2-nested-append-capacity-placement-first-red-v2",
+  "next_gate": "Stop for review. No implementation or product link is authorized; the E000 resident branch needs an explicit triage decision first.",
+  "recorded_on": "2026-07-20",
+  "scope": {
+    "hardware_execution": "prohibited",
+    "performance_claim": "none",
+    "product_closure_links": 0,
+    "product_source_files_changed_by_probe": 0,
+    "resident_island_seed_links": 0,
+    "target_objects_compiled": 1
+  },
+  "status": "first-red-e000-product-unchanged",
+  "triage_inputs_not_authorization": [
+    {
+      "cost_preserved": "Tail locator remains a 480-byte Session slice",
+      "id": "e000-in-place-reclaim",
+      "requirement": "recover at least 126 bytes inside the existing entry-record closure"
+    },
+    {
+      "id": "directory-handle-contract-change",
+      "requirement": "remove the resident low/high branch by changing transient handle translation",
+      "warning": "format/VM ABI question; not a capacity tweak"
+    },
+    {
+      "id": "authorize-contingency-use",
+      "raw_result": "260 bytes would remain",
+      "warning": "currently forbidden by the explicit zero-delta/closed-window contract"
+    }
+  ]
+}

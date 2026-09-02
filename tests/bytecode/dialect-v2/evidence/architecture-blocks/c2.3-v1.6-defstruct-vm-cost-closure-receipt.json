@@ -1,0 +1,98 @@
+{
+  "accounting": {
+    "hardware_runs": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "authorities": {
+    "driver": {
+      "bytes": 14105,
+      "path": "tools/host-lisp/c2_v16_defstruct_vm_cost_closure.py",
+      "sha256": "c616783b9b0f23dc8618a083ecfeda269a9ed985c574d3c18a6963c709569fdb"
+    },
+    "historical_VM_projection": {
+      "bytes": 140857,
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/v125-editor-input-latency-host-accounting-receipt.json",
+      "sha256": "7169325fb9b5919f8d9bf255104cd70b06ba5d63df751965368be4a2e1871ebc"
+    },
+    "owner_commission": {
+      "bytes": 173214,
+      "commit": "b8820ecadb875b0b581c9df9fd621c45c99bf75e",
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "2da681e35336a8157943db56cc9110d1eb5c8f610aaf23da87c2bb94afa096c6"
+    },
+    "patience_First_Red": {
+      "bytes": 6366,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-patience-result-first-red-receipt.json",
+      "sha256": "0432bdd59823a4a57fa631be3e921918fb57da7bbab75ed2e41ae0ae321e565c"
+    },
+    "prior_duration_price": {
+      "bytes": 4625,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-duration-pricing-receipt.json",
+      "sha256": "526b46b99819ecef3601ee4009a0445de5846a03c794f690c7bd5f7c141e6983"
+    },
+    "require_target_wall_and_host_counts": {
+      "bytes": 13165,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-phase-m1-require-latency-measurement-receipt.json",
+      "sha256": "11068e07e177a74f7bd110c2abd937124c075323b8b1e3328b442e78c1abf241"
+    }
+  },
+  "claim_limit": "This closes the named ordinary-VM pricing omission. It does not turn historical projection constants or require-wide amortization into a current per-op target measurement; it does not model target GC/native tails, prove a completion upper bound, prove life or a loop, authorize a longer wait, change product bytes, or consume hardware.",
+  "completed_structural_price_lane": {
+    "append_frames": 882,
+    "base_frames": 27281,
+    "exact_seconds": "787.474031818",
+    "hours_scale": false,
+    "margin_frames": 13641,
+    "margin_rule": "50 percent, rounded upward in frames",
+    "operational_floor_minutes": "13.133333",
+    "operational_floor_seconds": 788,
+    "ordinary_VM_frames": 286,
+    "total_frames": 40922,
+    "window_frames": 26113
+  },
+  "decision": {
+    "completed_price_floor_seconds": 788,
+    "hours_scale_product_finding": false,
+    "longer_patience_contact_authorized_by_price": false,
+    "observed_beyond_completed_price_floor_seconds": 207,
+    "observed_incomplete_after_at_least_seconds": 995,
+    "price_explains_patience_red": false,
+    "reason": "The missing ordinary VM term adds only about 5.49 seconds before margin. The completed price remains minutes-scale and is not a mathematical completion bound; the 995-second non-completion must be separated into live progress versus a loop by an independent witness, not by another guessed wait.",
+    "required_next_instrument": "independent product-side progress witness"
+  },
+  "exact_workload": {
+    "initial_windows": 12310,
+    "persistent_appends": 9,
+    "refills": 13803,
+    "vm_instructions": 199573
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-vm-cost-closure-v1",
+  "independent_whole_wall_amortization": {
+    "first_require": {
+      "microseconds_per_instruction_amortized": "87.741746792",
+      "scaled_defstruct_seconds": "17.510883633",
+      "seconds": 12,
+      "vm_instructions": 136765
+    },
+    "idempotent_repeat": {
+      "microseconds_per_instruction_amortized": "66.771522687",
+      "scaled_defstruct_seconds": "13.325793097",
+      "seconds": 9,
+      "vm_instructions": 134788
+    },
+    "rule": "independent cross-check only; never additive with the structural lane because measured require wall time already includes dispatch, window, refill and native work"
+  },
+  "ordinary_VM_cost_term": {
+    "authority_kind": "historical target projection",
+    "historical_cycles_per_instruction": 1100,
+    "instruction_frames_charged_ceil": 286,
+    "instruction_frames_exact": "285.203656680",
+    "instruction_seconds": "5.488257500",
+    "microseconds_per_instruction": "27.500000000",
+    "not_claimed": "current target timing measurement",
+    "target_cpu_hz": 40000000
+  },
+  "recorded_on": "2026-08-06",
+  "status": "VM-COST-TERM-CLOSED; NO-COMPLETION-UPPER-BOUND"
+}

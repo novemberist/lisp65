@@ -44,6 +44,7 @@ FUNCTIONS = [
     "%cursor-blink", "%rl-start", "%rl-kind", "%rl-scan", "%rl-close",
     "%rl-open", "%rl-idle", "%rl-clear", "%rl-paint", "%rl-poll",
 ]
+SUCCESSOR_FUNCTIONS = [*FUNCTIONS[:-1], "%rl-wait", FUNCTIONS[-1]]
 PASS_ADAPTERS = {
     "%rl-scan": "%sexp-scan",
     "%rl-close": "%sexp-close",
@@ -119,12 +120,14 @@ def line_suite(source_override: Path | None = None) -> dict[str, Any]:
     return suite
 
 
-def compile_product(source_override: Path | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
+def compile_product(source_override: Path | None = None, *,
+                    successor: bool = False) -> tuple[dict[str, Any], dict[str, Any]]:
     suite = line_suite(source_override)
     code = P0._compile_suite(suite, include_cases=False)[2]
-    missing = sorted(set(FUNCTIONS) - set(code))
+    population = SUCCESSOR_FUNCTIONS if successor else FUNCTIONS
+    missing = sorted(set(population) - set(code))
     require(not missing, f"card-2 objects absent from product profile: {missing}")
-    sizes = {name: len(code[name].encode()) for name in FUNCTIONS}
+    sizes = {name: len(code[name].encode()) for name in population}
     return suite, {"function_bytes": sizes, "total_function_bytes": sum(sizes.values()),
                    "maximum_object_bytes": max(sizes.values())}
 
@@ -171,7 +174,8 @@ TRACE_CASES = [
                 "(idle (list blink 0 0 0 0 nil 0 0 "
                 "(cons 0 0) (cons 0 0) 't)) "
                 "(state (list head head head 0 1 0 80 24 nil nil idle))) "
-                "(%cursor-blink state nil))",
+                "(%cursor-blink (car (cdr state)) (car (nthcdr 3 state)) "
+                "(car (nthcdr 5 state)) (car (nthcdr 7 state)) idle nil))",
         "expect": "nil", "memory_read_sequences": {"0xff83": [32]},
     },
     {
@@ -181,7 +185,8 @@ TRACE_CASES = [
                 "(idle (list blink 0 0 0 0 nil 0 0 "
                 "(cons 0 0) (cons 0 0) nil)) "
                 "(state (list head head head 0 1 0 80 24 nil nil idle))) "
-                "(%cursor-blink state 't))",
+                "(%cursor-blink (car (cdr state)) (car (nthcdr 3 state)) "
+                "(car (nthcdr 5 state)) (car (nthcdr 7 state)) idle 't))",
         "expect": "nil", "memory_read_sequences": {"0xff83": [0]},
     },
 ]
@@ -490,13 +495,16 @@ def check_sealed_successor() -> tuple[dict[str, Any], dict[str, Any]]:
     source = SOURCE.read_text(encoding="utf-8")
     calls = calls_by_function(source)
     require("%frame-low" in forms(source)
-            and calls["%cursor-blink"].count("%frame-low") == 1
+            and calls["%cursor-blink"].count("%frame-low") == 2
             and "peek" not in calls["%cursor-blink"]
-            and calls["%rl-poll"].count("key-event") == 2,
+            and calls["%rl-poll"].count("key-event") == 2
+            and calls["%rl-poll"].count("%rl-wait") == 1
+            and calls["%rl-wait"].count("%cursor-blink") == 1,
             "live card-3 successor weakened card-2 timer/input ownership")
     observations = trace_observations()
-    compiled = compile_product()[1]
-    require(compiled["function_bytes"]["%cursor-blink"] == 180
+    compiled = compile_product(successor=True)[1]
+    require(compiled["function_bytes"]["%cursor-blink"] < 255
+            and compiled["function_bytes"]["%rl-wait"] < 255
             and compiled["maximum_object_bytes"] < 255,
             "live card-3 successor crossed card-2 object ceiling")
     return value, {"observations": observations, "emission": compiled}

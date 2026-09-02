@@ -1,0 +1,102 @@
+{
+  "format": "lisp65-v2-fasl-save-deresidentization-report-v1",
+  "version": 1,
+  "id": "fasl-save-to-bytecode",
+  "status": "implemented-relaxed-diagnostic-only",
+  "source_commit": "b0d6b07fbb1613153a0970402508efae98c362ba",
+  "source_bindings": [
+    {"path": "config/bytecode-abi-ledger.json", "sha256": "b5d98dc62f07064f704bbc0f172f35270cfa6b5f4484e5933da77264b12e530d"},
+    {"path": "config/v2-workbench-artifact-closure.json", "sha256": "bdef4cab9d965e9c7a366f92406c7c0e860f7d5082db267c9066f8a90256fff0"},
+    {"path": "config/workbench-native-service-registry.json", "sha256": "6ae38d6fad2610d277733cb005cbe4bea3eac416b82faa4bdce773276447f52c"},
+    {"path": "lib/dialect-v2/eval-runtime.lisp", "sha256": "b379bc3c4027d88e6a45c16c6120b37778341eafdb2f0b1d6477d2502a84e8bb"},
+    {"path": "lib/dialect-v2/lcc-profile.lisp", "sha256": "202a3a810593b1131300f57e3c77dd48a49d19321b3be225b40791a6b8dcc582"},
+    {"path": "src/compile.c", "sha256": "88aaf60e91750ada241058cfa7c2f214f6fbf256164dad33a23388475f00d26f"},
+    {"path": "src/eval.c", "sha256": "b7b732fd04616207716161ae5c672a33979ee02e35a44cdcf4ceab0638975a30"}
+  ],
+  "abi": {
+    "profile": "dialect-v2",
+    "retired_prim_id": 34,
+    "canonical_name": "%save-staged",
+    "decoder_name_retained": true,
+    "new_emission": "forbidden",
+    "runtime_result": "bad-primitive",
+    "reuse": "forbidden",
+    "v1_effect": "none"
+  },
+  "bytecode": {
+    "manifest_sha256": "26032226493e1075dae318f8e6ea985456ec89bdf2ca0491de0fbab658746f00",
+    "objects": [
+      {"name": "%compile-slot-capacity", "code_bytes": 88},
+      {"name": "compile-string", "code_bytes": 175},
+      {"name": "%fasl-save-sector", "code_bytes": 64},
+      {"name": "%fasl-save-tail", "code_bytes": 127},
+      {"name": "%fasl-commit-first", "code_bytes": 58},
+      {"name": "%fasl-save-staged-v2", "code_bytes": 171}
+    ],
+    "callprim_34_calls": 0,
+    "new_runtime_slots": 0,
+    "permanent_island_bytes": 0
+  },
+  "link_measurement": {
+    "metric": "same-head-real-mos-lto-icf-relaxed-link",
+    "baseline": {
+      "elf_sha256": "6b565d11dea47613b8c04e021aaa9b4744c0a29d246fb60290e2171cf7a5a331",
+      "elf_bytes": 120140,
+      "bss_end": "0xcc26",
+      "heap_start": "0xcc26",
+      "runtime_overlay_vma": "0xcc28"
+    },
+    "candidate": {
+      "elf_sha256": "4ea8f1169988c1e83335ed0b3ba104d0f9a50bdf54a47201ba5bc1a07b292322",
+      "elf_bytes": 119340,
+      "bss_end": "0xc9ce",
+      "heap_start": "0xc9ce",
+      "runtime_overlay_vma": "0xc9d0"
+    },
+    "net_reclaim_bytes": {
+      "bss": 600,
+      "heap": 600,
+      "runtime_overlay_vma": 600
+    },
+    "remaining_gap_bytes": {
+      "runtime_overlay_vma": 1658,
+      "post_boot_reserve": 1400
+    },
+    "platform_linker_restored": true
+  },
+  "persistence_acceptance": {
+    "boundary_lengths": [0, 1, 3, 4, 253, 254, 255, 256, 599, 600],
+    "fault_cases": 5,
+    "chain_fuel": 255,
+    "commit_protocol": "invalidate-first-prefix-write-tail-commit-first-sector-last",
+    "successful_reload": "exact-bytes-and-l65m-valid",
+    "reload_validator": "l65m-contract-v4",
+    "reload_after_interrupted_write": "reject-invalid-prefix",
+    "unchanged_regions": ["bam", "directory", "neighbor-slots", "guard-file"],
+    "successful_chain_ops": {
+      "disk_reads": "2*N+1",
+      "disk_writes": "N+1",
+      "first_sector_writes": 2
+    },
+    "workbench_d81_selftests": "passed-fault-bam-chain-directory-and-save-new-matrix"
+  },
+  "service_inventory": {
+    "sha256": "47989f6f7935069a3012746982ebcd33d651d33c4b06493f68f5fdd82e5e2062",
+    "classified_targets": 28,
+    "unresolved_calls": 0,
+    "unresolved_targets": 0,
+    "tombstone_callprim_calls": 0
+  },
+  "latency": {
+    "structural_host_receipt": "disk-io-dominates-bytecode-coordinator",
+    "hardware_measurement": "blocked-until-workbench-v2-links-and-full-g5",
+    "hardware_claim": "none"
+  },
+  "policy": {
+    "promotion": false,
+    "shippable": false,
+    "release_authorization": "none",
+    "hardware_g5_claim": "none",
+    "installer_abi_change_included": false
+  }
+}

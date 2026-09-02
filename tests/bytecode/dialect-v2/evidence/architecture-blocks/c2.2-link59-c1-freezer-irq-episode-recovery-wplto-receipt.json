@@ -1,0 +1,196 @@
+{
+  "authority": {
+    "canonical_t_contract": {
+      "bytes": 5097,
+      "path": "config/c2-vm-badopcode-detail-contract.json",
+      "sha256": "071883783c0375b7b043cdebd568f6eaa787aec5e11b3da711fe074ff7e2dc0e"
+    },
+    "driver": {
+      "bytes": 8849,
+      "path": "tools/host-lisp/c2_c1_freezer_irq_episode_recovery_wplto.py",
+      "sha256": "44e362ff979a5b9f5b7d75d7ce8ea1d2f39c8d79360963249776dc68919eceae"
+    },
+    "episode_source_gate": {
+      "bytes": 2118,
+      "path": "build/c2.2/c1-freezer-irq-episode/recovery-source-gate-receipt.json",
+      "sha256": "db7e68b16f2668c7adacbdaf4527ecb29be045b316f8027ec9218205b2736d07"
+    },
+    "first_red": {
+      "bytes": 4328,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link59-c1-freezer-irq-episode-wplto-first-red.json",
+      "sha256": "0b21178de485a8bfbd89979fa220d8f34d9c0feedf4e660ac45b97e5e6ed745a"
+    },
+    "raw_WPLTO": {
+      "bytes": 16162,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link59-c1-freezer-irq-episode-recovery-wplto-raw-receipt.json",
+      "sha256": "52e029be18b1947c55f75d435de5d057cfa6379e71139af7384a39489dc6e167"
+    },
+    "read_only_replay": {
+      "bytes": 297232,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link59-c1-freezer-irq-episode-recovery-wplto-replay3-receipt.json",
+      "sha256": "da6c44f3dca8b1f97d9459dd18e02637260fd12ff9d5d939d056676d6ef94a15"
+    }
+  },
+  "canonical_t_recovery": {
+    "after_bank0_text_headroom_bytes": 37,
+    "before_bank0_text_headroom_bytes": 25,
+    "linked_gate": {
+      "linked": {
+        "address": 94,
+        "bytes": 2,
+        "installer_relocations": 2,
+        "installer_resolved_bytes": [
+          0,
+          1
+        ],
+        "private_facade_intern_relocations": 0,
+        "section": ".zp.bss",
+        "symbol": "lisp_t"
+      },
+      "non_C2_profiles": "private vm_t bootstrap retained",
+      "product_vm_t_symbols": 0,
+      "source": {
+        "authority": "vm_init publishes eval_init:lisp_t",
+        "installer_consumers": 1,
+        "new_storage_bytes": 0,
+        "private_intern_edges": 0
+      },
+      "source_mutations_rejected": [
+        "drop-dirmiss-bcode",
+        "drop-dirmiss-symi",
+        "overwrite-inner-status",
+        "remove-canonical-t-consumption",
+        "replace-canonical-t-with-NIL",
+        "restore-constructor",
+        "restore-install-stage",
+        "restore-nonauthoritative-error-result",
+        "restore-private-static-t-cache",
+        "restore-private-t-interning",
+        "restore-product-private-vm-t-cache",
+        "restore-renderer-leaf",
+        "restore-terminal-fixnum"
+      ]
+    },
+    "name": "retire product-private vm_t identity derivation",
+    "private_BSS_cells_retired_bytes": 2,
+    "reason": "vm_init and eval_init derived the same interned t twice; the C2 product now publishes vm_init's result directly as the existing canonical lisp_t object",
+    "recovered_bank0_text_bytes": 12
+  },
+  "capacity": {
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98
+  },
+  "claim_limit": "No product link, hardware C1 closure or matrix-gate claim.",
+  "episode_contract": {
+    "contract": {
+      "episode_fields": 5,
+      "kernal_contract": "config/c2-kernal-unmap-contract.json",
+      "matrix_contract": "config/c2-cross-invariant-c2.2-open-addenda.json"
+    },
+    "diagnosis": {
+      "link58_counterexample": "cutpoint2 0->1; cutpoint3 1->2",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link58-C1-Freezer-source-less-IRQ-episode-diagnosis.json",
+      "sha256": "53ccd7fbb68ca919196f04e3e67c67a812057bf6db35217ec4c7c38e13be6f8b"
+    },
+    "fixtures": {
+      "arbitrary_repeat_fixture": {
+        "events": [
+          "source-less",
+          "raster",
+          "source-less",
+          "raster",
+          "source-less"
+        ],
+        "final_latch": 1,
+        "outcomes": [
+          "continue",
+          "continue",
+          "continue",
+          "continue",
+          "continue"
+        ],
+        "status": "PROVEN"
+      },
+      "double_freezer_fixture": {
+        "events": [
+          "source-less",
+          "raster",
+          "source-less"
+        ],
+        "outcomes": [
+          "continue",
+          "continue",
+          "continue"
+        ],
+        "status": "PROVEN"
+      },
+      "double_sourceless_fixture": {
+        "events": [
+          "source-less",
+          "source-less"
+        ],
+        "final_latch": 1,
+        "outcomes": [
+          "continue",
+          "fail-closed"
+        ],
+        "status": "PROVEN"
+      }
+    },
+    "mutations": {
+      "rejected": 8,
+      "semantic_mutations_pinned": [
+        "no-raster-rearm",
+        "source-less-self-rearm",
+        "accept-second-source-less",
+        "reject-first-source-less"
+      ],
+      "source_mutations_rejected": [
+        "owned-raster-reset-removed",
+        "owned-raster-reset-reversed",
+        "cross-section-conditional-restored",
+        "source-less-self-reset"
+      ],
+      "total": 8
+    },
+    "schema": "lisp65.c2.c1-freezer-irq-episode-gate.v1",
+    "source": {
+      "first_source_less_accept": true,
+      "owned_raster_reset": true,
+      "path": "src/c2_kernal_window.s",
+      "second_consecutive_source_less_fail_closed": true,
+      "session_counter_residue": 0,
+      "sha256": "634db3a6317d023363998b0f6dfdd6d173334a0cdb087e3c2442a98d8f968947"
+    },
+    "status": "proven"
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "read_only_gate_replays": 1,
+    "whole_program_LTO_closure_links": 1
+  },
+  "format": "lisp65-c2-link59-c1-freezer-irq-episode-recovery-WPLTO-v1",
+  "linked_irq": {
+    "absolute_fail_closed_jump": "JMP 0xe089 at 0xe078",
+    "episode_rearm": "STZ $FF86 at 0xe046",
+    "fail_closed": "0xe089",
+    "irq_handler": "0xe038",
+    "local_condition": "BEQ 0xe07b at 0xe076",
+    "nmi_handler": "0xe080",
+    "owned_raster_ack": "A from AND #$01; no redundant reload",
+    "source_less_path": "0xe06b",
+    "wrong_RTI_target_references": 0
+  },
+  "next_gate": "owner-authorized Link 59 product link",
+  "promotable": false,
+  "recorded_on": "2026-07-23",
+  "status": "passed-episode-branch-and-canonical-t-recovery-WPLTO",
+  "walls": {
+    "bank0_text_headroom_bytes": 37,
+    "e000_headroom_bytes": 55,
+    "fixed_hot_block_headroom_bytes": 4,
+    "ordinary_bank0_bss_headroom_bytes": 215,
+    "resident_island_headroom_bytes": 5
+  }
+}

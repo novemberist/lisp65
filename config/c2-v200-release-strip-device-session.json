@@ -1,0 +1,184 @@
+{
+  "choreography": {
+    "D5_and_performance_before_valid_INIT_reboot": true,
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_BASIC_first": true,
+    "initial_medium": "V20STRP.D81",
+    "one_form_per_submission": true,
+    "optional_library_media": "none",
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "valid_INIT_medium_is_final_cold_boot": "V20SINI.D81"
+  },
+  "claim_scope": {
+    "accepts": [
+      "Tier-1 domain discipline over 62 corrected cells",
+      "v1.9-identical native editor responsiveness",
+      "lossless delivered input across forced collection",
+      "stripped v2.0 boot, INIT.L65 and A0 regression"
+    ],
+    "excludes": [
+      "Comfort",
+      "Matcher/Blink",
+      "Tier 2",
+      "release",
+      "Ship",
+      "Publish"
+    ]
+  },
+  "decision_table": {
+    "all-four-groups-green": "stripped v2.0 hardware acceptance complete",
+    "claim-expansion": "forbidden during device session",
+    "daily-use-blocker": "stop; no claim or release advancement",
+    "rare-or-cosmetic": "Known Issue and v2.0 register row"
+  },
+  "format": "lisp65-c2-v200-release-strip-device-session-v1",
+  "media": {
+    "absent_INIT": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-release-strip-device-media/shared-system/lisp65-product.d81",
+      "remote_name": "V20STRP.D81",
+      "sha256": "7b043c689bcd2a862f1117c1bcb8e957c8b193ec6b25530cc5b28f31d1df620c"
+    },
+    "valid_INIT": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-release-strip-device-media/lisp65-product-init-valid.d81",
+      "remote_name": "V20SINI.D81",
+      "sha256": "619f4bfc258d74037fb6f74c74bc3ef14ce91b1efa80bb446943b1eacfa7758c"
+    }
+  },
+  "recorded_on": "2026-09-02",
+  "rows": [
+    {
+      "actions": [
+        "submit (car 1)",
+        "submit (length \"abc\")"
+      ],
+      "expect": [
+        "nil (documented v2.0 inconsistency)",
+        "vm type error followed by one live prompt; hint text is not claimed"
+      ],
+      "id": "S20-1-documented-domain-behavior",
+      "medium": "V20STRP.D81"
+    },
+    {
+      "actions": [
+        "confirm ordinary and rapid typing feel like v1.9",
+        "submit the collection controller and wait for its blank nested row",
+        "six times type the 32-character pattern; after each pass delete four counted groups of eight until blank",
+        "use ordinary pace for passes 1-2 and fast pace for passes 3-6",
+        "type abcdefg, press Return and touch no further key",
+        "stop once while wait is active and read BCFC..BCFF raw-first"
+      ],
+      "collection": {
+        "controller": "(progn (setq s (read-line)) (print (string-length s)) (wait 16383))",
+        "delete_events_per_pass": 32,
+        "event_arithmetic": {
+          "counter_width_bits": 8,
+          "delete": 192,
+          "expected_each_modulo_256": 136,
+          "physical": 392,
+          "printable": 199,
+          "return": 1,
+          "wraps": 1
+        },
+        "final_text": "abcdefg",
+        "heap_cells_per_printable": 1,
+        "numeric_oracle": 7,
+        "nursery_cells": 192,
+        "pace": {
+          "passes_1_to_2": "ordinary",
+          "passes_3_to_6": "fast"
+        },
+        "passes": 6,
+        "pattern": "01234567012345670123456701234567",
+        "printable_insertions": 199,
+        "proof": "199 * 1 > 192; at least one collection while Capture is armed"
+      },
+      "expect": [
+        "single-key feel is like v1.9",
+        "every token is exact and deletion 32 empties each pass",
+        "visible numeric oracle is 7",
+        "raw=seen=stored=taken=136 (88 hex), all nonzero"
+      ],
+      "id": "S20-2-v1.9-input-and-forced-collection",
+      "medium": "V20STRP.D81"
+    },
+    {
+      "actions": [
+        "on the initial absent-INIT boot confirm banner and a live native lisp65> without optional libraries",
+        "submit (>= nil 32) and observe recovery to exactly one prompt practically immediately",
+        "after rows S20-1, S20-2 and S20-4 cold-boot the valid-INIT medium",
+        "observe exactly one line containing 17 before the banner",
+        "at lisp65> submit (init-proof)"
+      ],
+      "expect": [
+        "absent INIT.L65 is silent and free",
+        "A0 recovery has no red frame and is practically immediate",
+        "valid INIT executes before the first banner exactly once",
+        "init-proof returns 17 and INIT is not retried"
+      ],
+      "id": "S20-3-boot-INIT-A0",
+      "media": [
+        "V20STRP.D81",
+        "V20SINI.D81"
+      ]
+    },
+    {
+      "D5": {
+        "minimum_free_name_bytes": 384,
+        "minimum_free_symbol_slots": 32,
+        "projection_only": {
+          "free_name_bytes": 1486,
+          "free_symbol_slots": 109
+        }
+      },
+      "actions": [
+        "define (defun v20-perf-probe (x) (+ x 1))",
+        "run the four bound time forms",
+        "read final D5 counters before the valid-INIT reboot"
+      ],
+      "expect": [
+        "each performance form is at most two frames",
+        "D5 is at least 32 slots and 384 name bytes"
+      ],
+      "id": "S20-4-release-terminal-D5-and-performance",
+      "medium": "V20STRP.D81",
+      "performance_forms": [
+        {
+          "form": "(time (car (cdr (list 1 2))))",
+          "max_frames": 2,
+          "value": "2"
+        },
+        {
+          "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+          "max_frames": 2,
+          "value": "(9 2)"
+        },
+        {
+          "form": "(time (string-ref \"abc\" 1))",
+          "max_frames": 2,
+          "value": "98"
+        },
+        {
+          "form": "(time (v20-perf-probe 41))",
+          "max_frames": 2,
+          "value": "42"
+        }
+      ]
+    }
+  ],
+  "status": "ready-owner-v2.0-stripped-final-contact",
+  "stopped_read": {
+    "input_counters": {
+      "address": "0xBCFC",
+      "bytes": 4,
+      "layout": [
+        "raw",
+        "seen",
+        "stored",
+        "taken"
+      ]
+    }
+  }
+}

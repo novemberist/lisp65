@@ -1,0 +1,118 @@
+{
+  "artifacts": {
+    "baseline_manifest": {
+      "bytes": 332281,
+      "path": "build/ship-builder/v13/input-wait-host-first/base/stdlib-p0.manifest.json",
+      "sha256": "7fcf575fbe5ed2e12c788959afb1f4bd6cee2e7e149a5f800c655e2ce068e3a3"
+    },
+    "candidate_manifest": {
+      "bytes": 337280,
+      "path": "build/ship-builder/v13/input-wait-host-first/candidate/stdlib-p0.manifest.json",
+      "sha256": "4276fe6085d26f3d07c6ca75eb1e85a9e26180bb302738a586adb0234e90b146"
+    },
+    "cases_per_lane": 11,
+    "delta": {
+      "bank2_code_bytes": 255,
+      "directory_bytes": 35,
+      "objects": 5,
+      "resident_bytes": 0,
+      "resolution_words": 13
+    },
+    "execution_lanes": 2,
+    "limit_observations": {
+      "bytes": 34873,
+      "path": "build/ship-builder/v13/input-wait-host-first/limit-observations.json",
+      "sha256": "eb791ebc8d6b94a9b4bf78a7cbf9d80d5a8efba89cd09f5ff203e95eeb6c3f96"
+    },
+    "observations": {
+      "bytes": 29860,
+      "path": "build/ship-builder/v13/input-wait-host-first/candidate/observations.json",
+      "sha256": "2b902431085e6fa738a570758e193407951ce541d0b498870886a964c8d04917"
+    }
+  },
+  "authority": {
+    "base_suite": {
+      "bytes": 1189,
+      "path": "tests/bytecode/libs/p0-stdlib-time-base.json",
+      "sha256": "fbe934d11a4a3d1c5c9f4abec9f0466b5a39621c480fb2fbc5f569278df0ebb5"
+    },
+    "contract": {
+      "bytes": 3266,
+      "path": "config/c2-ship-input-wait-contract.json",
+      "sha256": "13e7c998e918f0edcba81f331a1cc6e458f18a7d2bfde2c988c4e02ad3a75589"
+    },
+    "gate": {
+      "bytes": 13408,
+      "path": "tools/host-lisp/c2_ship_input_wait_gate.py",
+      "sha256": "cf6366c59019d12de03546125fb92e5536eee89207c293b15243a070cbe984a8"
+    },
+    "p0_vm": {
+      "bytes": 92121,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "d23bed5538d271a69111dcbaed45ca88c3169c74e234a60635f3167796d62ab0"
+    },
+    "read_line": {
+      "bytes": 1087,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "32d87e7c8e57544fe798b1451700c9fdc2c919c39177614fb0de76c6d0e79f9d"
+    },
+    "screen_driver": {
+      "bytes": 9182,
+      "path": "src/screen.c",
+      "sha256": "c6dbb0aad11ae3294a5a249a009511aa7cb5b86e591ecad19bf9f5a586c67081"
+    },
+    "stdlib_runner": {
+      "bytes": 126501,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "88acbbe45c2e6d96b7ce185f1752ea0359b8d154c65c013dd06bd7b307523240"
+    },
+    "suite": {
+      "bytes": 2749,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "sha256": "ff7a13874f16adef61706c45b88120a72a37f676b5bca1e7c9943de7c12baa81"
+    },
+    "target_vm": {
+      "bytes": 84783,
+      "path": "src/vm.c",
+      "sha256": "91683fa85d714d54443f44c5d0201804fdb96ba59a382ccda58e7e98d6d6b43d"
+    },
+    "wait": {
+      "bytes": 426,
+      "path": "lib/stdlib-wait.lisp",
+      "sha256": "99228eb2a178360e242ca4627c6b1f4fa0e3922633f5393f98a83b885b67e0a8"
+    }
+  },
+  "format": "lisp65-c2.2-v1.3-ship-input-wait-host-first-v1",
+  "hardware_runs": 0,
+  "mutations_rejected": {
+    "case-not-executed": "input/wait suite drift",
+    "length-251": "read-line seam drift: (< length 250)",
+    "missing-echo": "read-line seam drift: (write-char code)",
+    "native-primitive": "input/wait placement drift",
+    "nonblocking-input": "read-line seam drift: (event (key-event 1))",
+    "resident-byte": "input/wait placement drift",
+    "screen-del-seam": "screen-driver DEL echo seam drift",
+    "wait-poll-removed": "target RUN/STOP polling seam drift",
+    "wrong-delete": "read-line seam drift: (= code 20)",
+    "wrong-limit": "wait clock/boundary drift",
+    "wrong-reader": "wait clock/boundary drift",
+    "wrong-return": "read-line seam drift: (= code 13)"
+  },
+  "next_gate": "Joint S-C2/C2-4/S-C3 WPLTO card before extended Halt #1.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-08-01",
+  "source_contract": {
+    "existing_public_primitive": "key-event",
+    "maximum_characters": 250,
+    "maximum_frames": 16383,
+    "native_primitive_delta": 0,
+    "public_functions": [
+      "read-line",
+      "wait"
+    ],
+    "resident_delta_bytes": 0,
+    "status": "passed-source-contract"
+  },
+  "status": "passed-source-artifact-capacity-and-execution"
+}

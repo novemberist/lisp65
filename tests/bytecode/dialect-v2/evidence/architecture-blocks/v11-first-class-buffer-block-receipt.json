@@ -1,0 +1,277 @@
+{
+  "format": "lisp65-v11-architecture-block-receipt-v1",
+  "block_id": "1.1-E-first-class-buffer",
+  "status": "passed-not-promoted",
+  "recorded_on": "2026-07-15",
+  "source_commit": "50f6420425d0d9fb30f41f620a7815c04402fbc4",
+  "baseline": {
+    "block": "1.1-A-attic-library-shelf-plus-1.1-B-export-only-interning",
+    "post_boot_reserve_bytes": 1819,
+    "bank_margin_over_1536_bytes": 283,
+    "standard_composition_ext_headroom_bytes": 16384,
+    "standard_composition_symbol_headroom": 165,
+    "standard_composition_namepool_headroom_bytes": 2902,
+    "standard_composition_directory_post_align_headroom": 32,
+    "overlay_base": "0xc33c",
+    "resident_prg_bytes": 39542,
+    "resident_prg_sha256": "a5312d51f3f4d47cd30d87d38488238d7ca945fd6ff775759de4e393ce4150bf",
+    "resident_island_payload_bytes": 1485,
+    "resident_island_annex_bytes": 260,
+    "resident_island_installer_bytes": 1746,
+    "runtime_overlay_slices": 40,
+    "shelf_format": "L65S-v1",
+    "shelf_bytes": 42173,
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-attic-library-shelf-block-receipt.json",
+      "sha256": "31077db6cdf7ba6cea3579bee4dd5a430e4f09949f9d973d92d96e11e4287ff9"
+    },
+    "capacity_authorization": {
+      "path": "config/v11-attic-library-shelf-capacity-authorization.json",
+      "sha256": "73283879729f78d95093e24be81c5bda98c777498faff10739866238416e6de9"
+    },
+    "c1_decision": {
+      "path": "config/v11-c1-architecture-decision.json",
+      "sha256": "e2400e6ea88ccfc47a1c6f633608f82ff41883e8a9a179e1bb7f9341e305e459"
+    }
+  },
+  "implementation": {
+    "object_model": "T_BUF=7 stable heap handle with fixed byte length and compacted string-arena offset",
+    "gc_contract": "marked buffers are arena leaves; compaction relocates their contiguous bytes and updates the stable handle",
+    "oom_contract": "allocation publishes no buffer and returns VM_HEAPOOM after capacity remains unavailable following collection",
+    "ownership_transfer": "buffer-to-string changes the same allocation from T_BUF to T_STR only after construction; every alias then observes an immutable string",
+    "index_base": 0,
+    "public_library": "buffer",
+    "public_api": [
+      "bufferp",
+      "make-buffer",
+      "buffer-length",
+      "buffer-ref",
+      "buffer-set!",
+      "buffer->string",
+      "string->buffer"
+    ],
+    "private_prim_ids": [
+      {"id": 63, "name": "%buffer-read"},
+      {"id": 64, "name": "%buffer-write"},
+      {"id": 65, "name": "%buffer-alloc"}
+    ],
+    "primitive_visibility": "CALLPRIM-only; apply, function-kind and compile-REPL are explicitly restricted by the native-function registry",
+    "native_layout": {
+      "resident_facade": "46-byte vm_buffer_call in the resident island",
+      "operation_storage": "three profile-bound reusable Bank-3 runtime-overlay slices",
+      "execution_window": "the established Bank-0 runtime-overlay VMA",
+      "ext_bytes": 0,
+      "reason": "the complete checked operations do not fit the remaining resident Bank-0 margin; the compact synchronous facade preserves fail-closed transport"
+    },
+    "shelf": {
+      "format": "L65S-v2",
+      "version_policy": "strict; v1 is rejected by the v2 decoder",
+      "record_count": 4,
+      "payload_offset": 160,
+      "reason_for_format_bump": "the v1 header plus three 32-byte descriptors exactly occupied its 128-byte payload prefix; the optional buffer container requires a fourth descriptor",
+      "lifetime": "reset-persistent-power-volatile-product-bound; no persistent v1 compatibility claim"
+    }
+  },
+  "capacity_delta_scope": "1.1-E-on-authorized-1.1-A-plus-1.1-B-baseline",
+  "capacity_delta": {
+    "dimensions": {
+      "bank": {
+        "baseline_post_boot_reserve_bytes": 1819,
+        "candidate_post_boot_reserve_bytes": 1799,
+        "release_target_bytes": 1536,
+        "baseline_margin_bytes": 283,
+        "candidate_margin_bytes": 263,
+        "delta_bytes": -20,
+        "authorization": {
+          "path": "config/v11-first-class-buffer-capacity-authorization.json",
+          "sha256": "be35a03ca24e3c4360120f883173470c9929e19513daaab5ea6fea97802e42d0",
+          "status": "owner-authorized"
+        },
+        "attribution": {
+          "heap_kind_and_gc_relocation_bytes": 3,
+          "vm_callprim_route_and_identity_bytes": 17,
+          "sum_bytes": 20,
+          "marginal_probe": {
+            "baseline_resident_bytes": 39542,
+            "core_only_resident_bytes": 39545,
+            "candidate_resident_bytes": 39562
+          }
+        }
+      },
+      "ext": {
+        "baseline_standard_composition_headroom_bytes": 16384,
+        "candidate_standard_composition_headroom_bytes": 16384,
+        "floor_bytes": 16384,
+        "delta_bytes": 0,
+        "margin_bytes": 0,
+        "authorization": null
+      },
+      "symbols": {
+        "baseline_standard_composition_headroom": 165,
+        "candidate_standard_composition_headroom": 165,
+        "delta": 0,
+        "authorization": null
+      },
+      "namepool": {
+        "baseline_standard_composition_headroom_bytes": 2902,
+        "candidate_standard_composition_headroom_bytes": 2902,
+        "delta_bytes": 0,
+        "authorization": null
+      },
+      "directory": {
+        "baseline_standard_composition_post_align_headroom": 32,
+        "candidate_standard_composition_post_align_headroom": 32,
+        "delta": 0,
+        "authorization": null
+      },
+      "overlay_vma": {
+        "baseline": "0xc33c",
+        "candidate": "0xc350",
+        "delta_bytes": 20,
+        "ceiling": "0xc356",
+        "remaining_bytes": 6
+      },
+      "resident_island": {
+        "baseline_payload_bytes": 1485,
+        "candidate_payload_bytes": 1531,
+        "delta_bytes": 46,
+        "annex_bytes": 260,
+        "alignment_bytes": 1,
+        "capacity_bytes": 2048,
+        "remaining_bytes": 256,
+        "attribution": "vm_buffer_call synchronous transport facade"
+      },
+      "resident_island_installer": {
+        "baseline_bytes": 1746,
+        "candidate_bytes": 1792,
+        "delta_bytes": 46,
+        "limit_bytes": 1792,
+        "remaining_bytes": 0
+      },
+      "boot_overlay": {
+        "baseline_bytes": 1669,
+        "candidate_bytes": 1669,
+        "delta_bytes": 0
+      }
+    },
+    "optional_buffer_composition": {
+      "scope": "IDE-plus-IDEX-plus-M65D-plus-buffer; this is session consumption, not resident EXT expenditure",
+      "directory_load_headroom": 25,
+      "directory_post_align_headroom": 24,
+      "ext_post_headroom_bytes": 16280,
+      "buffer_session_code_bytes": 104,
+      "symbol_headroom": 158,
+      "namepool_headroom_bytes": 2815
+    }
+  },
+  "real_link": {
+    "profile_build_id": "d1b8491d",
+    "resolved_profile_sha256": "d1b8491d597a65592455670cc79942583392b327c9e6a921163d37a21bf3d330",
+    "footprint_audit_sha256": "9ce702576852ba2d48b7c2f6ba1ac027f958b1a042499dce3b51d365c222272f",
+    "control_audit_sha256": "a9798fcecb1a08771a04a46c5a279bebbda2814316dcd9101fcece85f340a4e2",
+    "resident_prg": {
+      "bytes": 39562,
+      "sha256": "691b00cb63ec5208363942b3544bee8c8876fdc40ceb1cd947a48a59aa366c19"
+    },
+    "boot_overlay": {
+      "bytes": 1669,
+      "sha256": "693dd5a1bce2dec857acf3f28e110278d00711fc9963357a358b2a698afdde92"
+    },
+    "runtime_overlay": {
+      "image_bytes": 61687,
+      "image_sha256": "900d4bbdd1e81d80850f40e15e23ccc79e0012f601f509c8c73a54b78f3bc88b",
+      "manifest_sha256": "f80df60651e17be7ce1c034a2d8748c1f1ce8f8c52ff8ca016afe542d2fc5dae",
+      "slice_count": 43,
+      "slices": [
+        {"id": 37, "name": "resident-island-installer", "bytes": 1792, "limit": 1792, "margin": 0, "sha256": "899df513c25d4c17483f8d344fba25a402e139a8c9fb248673710de8a573934b"},
+        {"id": 38, "name": "attic-library-shelf", "bytes": 1754, "limit": 1792, "margin": 38, "sha256": "11be9376ba2bbfc83b05569a64b7ce73d4131f1fde80634a216bb79da3ffeb50"},
+        {"id": 39, "name": "attic-library-name", "bytes": 1096, "limit": 1792, "margin": 696, "sha256": "7cbe0e063cc733fc99d9af6ca58f79cc8425df7ffca46de09d631beec9a50936"},
+        {"id": 40, "name": "first-class-buffer-read", "bytes": 1166, "limit": 1792, "margin": 626, "sha256": "3834d0f557783e61274beb146676ea5ade2270771bbe23149c466c358b8740e9"},
+        {"id": 41, "name": "first-class-buffer-write", "bytes": 680, "limit": 1792, "margin": 1112, "sha256": "3028f6c99c374021fd7264d1e8c432a9113b5b5347b14ab9fd4e3fe5c290998b"},
+        {"id": 42, "name": "first-class-buffer-alloc", "bytes": 1271, "limit": 1792, "margin": 521, "sha256": "e6501fe112cf144a49ac70250a7537940ba2c360ae2937423ba9ae9335f55073"}
+      ]
+    }
+  },
+  "shelf_artifacts": {
+    "shelf": {
+      "bytes": 42496,
+      "sha256": "d91a64b0f1d69caa74a192a18df381a6d035b81ed17ce1426c7757840649a4fa",
+      "manifest_sha256": "b501fe9ba507e35c304d0a2e0fc3b032ea0dd93c8b95aa020d7e1e6f62a8ac8e",
+      "baseline_bytes": 42173,
+      "delta_bytes": 323,
+      "delta_attribution": "32-byte fourth descriptor plus 290-byte buffer container plus one alignment byte"
+    },
+    "buffer_container": {
+      "bytes": 290,
+      "code_bytes": 104,
+      "metadata_bytes": 182,
+      "sha256": "184a86125cc96c59906a183d9c35c673665e7dc19ef7c08441cef8f89d8c4ad0",
+      "manifest_sha256": "9835d5c9de827d24e5df0cce35dec535cd927f2ed9ea0d9de661b547a04adb8d",
+      "functions": 7,
+      "cases": 6
+    }
+  },
+  "verification": {
+    "memory_and_gc_smoke": "pass",
+    "product_c_carrier_checks": 17,
+    "independent_observation_mutations_rejected": 3,
+    "public_p0_cases": 6,
+    "native_function_cross_parity": {
+      "status": "pass",
+      "active_prim_ids": 60,
+      "routes": 3,
+      "engines": 4,
+      "evaluations": 828,
+      "missing_or_unclassified": 0
+    },
+    "abi_ledger": {
+      "status": "pass",
+      "prim_ids": 66,
+      "staging_pending": 0
+    },
+    "shelf": {
+      "status": "pass",
+      "libraries": 4,
+      "negative_cases": 7,
+      "generator_mutations_rejected": 3,
+      "exact_copy": true
+    },
+    "standard_composition_report_sha256": "075d9613cc6b3b2dcd7768467a08160c8def54dd72e1da51802e9c5463a75021",
+    "optional_buffer_composition_report_sha256": "fa5fe7aa18dc6bec88a78c5e57e7953f2418175ed01b9761b005aab299e44c49",
+    "canonical_stack_guard_link": "pass",
+    "source_syntax": {
+      "status": "pass",
+      "files": 285
+    },
+    "hardware": "not-run"
+  },
+  "review_status": "accepted-by-owner-on-2026-07-15",
+  "review_points": [
+    {
+      "id": "native-residency-refinement",
+      "status": "accepted-by-owner",
+      "detail": "The plan literally requested resident native primitives. The measured candidate keeps only the 46-byte transport facade resident and stores the checked operations in reusable Bank-3 runtime-overlay slices that execute in the established Bank-0 VMA. This is EXT-neutral and link-safe, but it is a deliberate refinement of the stated layout."
+    },
+    {
+      "id": "per-call-overlay-cost",
+      "status": "carried-into-mandatory-C1-gate",
+      "detail": "No performance claim is made for byte-at-a-time buffer-set! calls. C1 must not route every emitted compiler byte through a fresh overlay transport without a measured or batched seam."
+    },
+    {
+      "id": "buffer-printer-syntax",
+      "status": "withdrawal-accepted-with-wave-seal-documentation-duty",
+      "detail": "A dedicated opaque printer representation was probed and rejected by the pinned overlay-VMA gate. No bytes from that probe remain. The existing generic diagnostic output is not claimed as stable; accept the limitation explicitly or fund it after C1 creates structural headroom."
+    },
+    {
+      "id": "shelf-format-version",
+      "status": "accepted-pre-wave-seal-only",
+      "detail": "Adding the fourth shelf record requires L65S-v2 with a 160-byte payload prefix. The format is reset-persistent, power-volatile and product-bound; the decoder rejects v1 rather than creating a tolerant format gray zone."
+    }
+  ],
+  "promotion_blockers": [
+    "perform the regular product and evidence repin only after acceptance",
+    "include the first-class-buffer hardware case in the bound wave-1 acceptance",
+    "document the generic non-readable buffer print behavior in the language reference before wave seal"
+  ],
+  "claim_limit": "This receipt proves the 1.1-E host semantics, ABI parity, shelf packaging, standard-composition EXT neutrality and exact real-link capacity result at source commit 50f6420. It does not promote a product set, claim hardware evidence, promise a stable buffer printer syntax, or prove that byte-at-a-time overlay calls are suitable for the C1 compiler hot path."
+}

@@ -1,0 +1,129 @@
+{
+  "artifact_set_sha256": "07d350ab97630eeb92cd3da24b4270f554b43bb1a5676a72257cec63db212b21",
+  "builds": [
+    {
+      "artifact_set_sha256": "07d350ab97630eeb92cd3da24b4270f554b43bb1a5676a72257cec63db212b21",
+      "clone": "fresh-no-local-detached",
+      "command": "make -s workbench-overlay-stack-guard",
+      "environment": {
+        "PYTHONHASHSEED": "1",
+        "SOURCE_DATE_EPOCH": "946684800",
+        "TZ": "Pacific/Pago_Pago",
+        "calendar_date": "1999-12-31"
+      },
+      "id": "fresh-clone-seed-1-pago-pago-2000",
+      "metrics": {
+        "banked_headroom_bytes": 371,
+        "boot_stack_gap_bytes": 1573,
+        "overlay_vma": "0xc356",
+        "post_boot_reserve_bytes": 1907,
+        "resident_file_end": 47645,
+        "runtime_stack_gap_bytes": 3357
+      },
+      "product_sha256": "6e78378584073ea3f421e6c4f1fee3e155aaa096d2441e3534b8bb5c90014461"
+    },
+    {
+      "artifact_set_sha256": "07d350ab97630eeb92cd3da24b4270f554b43bb1a5676a72257cec63db212b21",
+      "clone": "fresh-no-local-detached",
+      "command": "make -s workbench-overlay-stack-guard",
+      "environment": {
+        "PYTHONHASHSEED": "987654321",
+        "SOURCE_DATE_EPOCH": "1893456000",
+        "TZ": "Pacific/Kiritimati",
+        "calendar_date": "2030-01-01"
+      },
+      "id": "fresh-clone-seed-987654321-kiritimati-2030",
+      "metrics": {
+        "banked_headroom_bytes": 371,
+        "boot_stack_gap_bytes": 1573,
+        "overlay_vma": "0xc356",
+        "post_boot_reserve_bytes": 1907,
+        "resident_file_end": 47645,
+        "runtime_stack_gap_bytes": 3357
+      },
+      "product_sha256": "6e78378584073ea3f421e6c4f1fee3e155aaa096d2441e3534b8bb5c90014461"
+    }
+  ],
+  "format": "lisp65-workbench-product-reproducibility-v1",
+  "generator": {
+    "bytes": 19152,
+    "path": "tools/host-lisp/workbench_product_reproducibility.py",
+    "sha256": "06af893378f3b31c15ca5ca6013c1d2a8367bb262030b6ddb510dbf4a388771d"
+  },
+  "id": "canonical-workbench-varied-double-build",
+  "measured_on": "2026-07-19",
+  "metrics": {
+    "banked_headroom_bytes": 371,
+    "boot_stack_gap_bytes": 1573,
+    "overlay_vma": "0xc356",
+    "post_boot_reserve_bytes": 1907,
+    "resident_file_end": 47645,
+    "runtime_stack_gap_bytes": 3357
+  },
+  "product_artifacts": [
+    {
+      "bytes": 133804,
+      "id": "product-elf",
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+      "sha256": "31d3f3548b1a08463009b04f1cf453b207ed0da6428a0d6989b3149dff1295e6"
+    },
+    {
+      "bytes": 39454,
+      "id": "resident-prg",
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-resident.prg",
+      "sha256": "437643616ab967e3697a075192191338b76a1eecf207e02bf51493a8bed6fab6"
+    },
+    {
+      "bytes": 65472,
+      "id": "runtime-overlays",
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-mvp-workbench.overlays.bin",
+      "sha256": "cb70be811e7a183c9ee6d9450034c891ea7f2eb46674ffe160307351f45e6d6b"
+    },
+    {
+      "bytes": 16023,
+      "id": "stdlib-preload",
+      "path": "build/products/workbench/overlay-stack-guard/stdlib-with-overlay.ext.bin",
+      "sha256": "8189148bec97effcfa11cf9bc134f7fe962dc5579069a0db0effc26a9ff4f28f"
+    },
+    {
+      "bytes": 10111,
+      "id": "resolved-profile",
+      "path": "build/products/workbench/overlay-stack-guard/resolved-profile.txt",
+      "sha256": "7bd72e26bf7200862dd3ee003d6f26925fb522d82da9b3d73c60fbeb1c95f8cb"
+    },
+    {
+      "bytes": 28140,
+      "id": "library-ide",
+      "path": "build/bytecode/dialect-v2/libs/ide.ext.bin",
+      "sha256": "941d32637cda2687ff75f16247c4e86cb08cda95cb93f33e3035adcbf16a7dd6"
+    },
+    {
+      "bytes": 7380,
+      "id": "library-idex",
+      "path": "build/bytecode/dialect-v2/libs/idex.ext.bin",
+      "sha256": "4cd2644e9af98685092b133cf64b8abf09e4405b3b980766100c3ed3b5a167ed"
+    },
+    {
+      "bytes": 6573,
+      "id": "library-m65d",
+      "path": "build/bytecode/dialect-v2/libs/m65d.ext.bin",
+      "sha256": "97696f8b4daf704027c9bbfb8acfcc9a6c11bc8ed64bef924e84e88fa6077770"
+    }
+  ],
+  "product_sha256": "6e78378584073ea3f421e6c4f1fee3e155aaa096d2441e3534b8bb5c90014461",
+  "result": "byte-identical-across-varied-environments",
+  "source_commit": "5dfda326b9a07d1fffaa6e6ee67aa38d673c2bd6",
+  "status": "passed",
+  "toolchain": {
+    "bytes": 78628536,
+    "path": "tools/llvm-mos/bin/clang-23",
+    "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+  },
+  "variation_axes": [
+    "fresh-clone",
+    "PYTHONHASHSEED",
+    "SOURCE_DATE_EPOCH",
+    "timezone-and-calendar-date"
+  ],
+  "version": 1
+}

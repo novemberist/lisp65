@@ -1,0 +1,93 @@
+{
+  "answer": {
+    "consecutive_nohit_episodes": 2,
+    "remaining_cycle_3_question": "combine the four bounds-edge holds with a hold on the caller's reader-zero exit, separating bounds rejection, other zero return, and later poll failure",
+    "runtime_bounds_rejection_observed": false
+  },
+  "authority": {
+    "capture_driver": {
+      "bytes": 2224,
+      "path": "scripts/c2-link64-c2d-reader-bounds-hold-cycle2-capture.sh",
+      "sha256": "ecae0e242791572ff090f0ba197fb81d67fc7d3a6f43a8dbaa47c4483dddaa7a"
+    },
+    "cycle_1_nohit": {
+      "bytes": 4452,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-c2d-reader-bounds-nohit-hardware-receipt.json",
+      "sha256": "e215fba135956baca649027721b6992e8472511d802858d245a3da2cf4bf1d04"
+    },
+    "cycle_2_deployment": {
+      "bytes": 6739,
+      "path": "build/c2.2/hardware-link64-c2d-reader-bounds-hold-cycle2-NONPROMOTABLE/deployment.json",
+      "sha256": "68e5e8a0939d53e4002fe222270da6bb36c5fc97cd426b52ab5381feed738a3d"
+    },
+    "evaluator": {
+      "bytes": 7572,
+      "path": "tools/host-lisp/c2_link64_c2d_reader_bounds_nohit_cycle2.py",
+      "sha256": "7b434f280825e45a8ae53b9c36da794618ec49314c2691c0ed297a4818ec8419"
+    },
+    "patched_reader": {
+      "address": "0x0000e691",
+      "bytes": 87,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/c2-stream-c2d-read-bounds-holds.bin",
+      "sha256": "b9e59c74ee7ba3d988bdf67f5efc4e49ffbbd37ecc59884ae2038d9a87fe5675"
+    }
+  },
+  "claim_limit": "Second no-hit episode only. C1 and the intermittent reader-zero cause remain OPEN.",
+  "diagnostic_lifecycle": {
+    "eligible_for_promotion": false,
+    "state": "discarded-after-no-hit"
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "diagnostic_hardware_runs": 1,
+    "latency_attempts_consumed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-Link64-c2d-reader-bounds-nohit-hardware-v2",
+  "postmortem": {
+    "c2_ready": 0,
+    "completion_mode": "0xa3 (ROLLBACK)",
+    "frames_progressed": true,
+    "journal_result": "2 (PREPARED)",
+    "last_slot": 39,
+    "producer_C2J_seal": "0x2801",
+    "seal_matches": true,
+    "slot39_fully_wiped": true,
+    "target_C2J_crc16": "0x2801"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "stable_witnesses": {
+    "byteidentical_across_three": true,
+    "c2j_sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225",
+    "completion-record_sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf",
+    "reader-code_sha256": "b9e59c74ee7ba3d988bdf67f5efc4e49ffbbd37ecc59884ae2038d9a87fe5675",
+    "runtime-slot39_sha256": "103c1589c122f64eb66366106f64e7dbbb5b394c2773839e79efaed465a20529",
+    "runtime-zp_sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47",
+    "trace_sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+  },
+  "status": "NO HIT cycle 2: no C2D-reader bounds rejection",
+  "time_separated_captures": [
+    {
+      "captured_at_utc": "2026-07-26T13:12:23.547962629Z",
+      "current_frame": "0x18d2",
+      "index": 1,
+      "reader_holds_still_installed": true,
+      "slot39_fully_wiped": true
+    },
+    {
+      "captured_at_utc": "2026-07-26T13:12:25.766975391Z",
+      "current_frame": "0x193c",
+      "index": 2,
+      "reader_holds_still_installed": true,
+      "slot39_fully_wiped": true
+    },
+    {
+      "captured_at_utc": "2026-07-26T13:12:30.986684484Z",
+      "current_frame": "0x1a3b",
+      "index": 3,
+      "reader_holds_still_installed": true,
+      "slot39_fully_wiped": true
+    }
+  ]
+}

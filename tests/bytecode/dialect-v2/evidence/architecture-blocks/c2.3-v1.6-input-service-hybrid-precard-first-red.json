@@ -1,0 +1,49 @@
+{
+  "format": "lisp65-c2-v160-input-service-hybrid-precard-first-red-v1",
+  "recorded_on": "2026-08-19",
+  "status": "PRE-CARD FIRST RED: HYBRID REQUIRES ONE RECLAIMED SYMBOL SLOT",
+  "authority_commit": "2713cb03",
+  "classification": {
+    "class": "capacity-price-changed-before-card",
+    "mechanism": "%rl-put must retain a callable entry because adaptive batching adds a self-edge",
+    "product_semantics_red": false,
+    "card_authorization_consumed": false
+  },
+  "host_candidate": {
+    "native_consumer_bytes": 67,
+    "native_consumer_ceiling_bytes": 70,
+    "frames_per_character": 0.775,
+    "service_events_per_frame": 1.291,
+    "margin_percent": 29.1,
+    "required_margin_percent": 25.0,
+    "raw_petscii_parity": "256/256",
+    "bytecode_objects": {
+      "%rl-render": 104,
+      "%rl-put": 252,
+      "%read-line-loop": 240
+    }
+  },
+  "capacity_first_red": {
+    "accepted_device_free_slots_before": 32,
+    "accepted_device_namepool_bytes_before": 572,
+    "restored_private_entries": ["%rl-put"],
+    "name_bytes_including_nul": 8,
+    "projected_device_free_slots_after": 31,
+    "release_minimum_slots": 32,
+    "projected_device_namepool_bytes_after": 564,
+    "release_minimum_namepool_bytes": 384,
+    "projected_namepool_margin_bytes": 180
+  },
+  "rejected_forms": [
+    {"form": "local-while", "reason": "rel8 back-edge -157 is out of range"},
+    {"form": "split-dirty-flush", "reason": "%read-line-loop emits 298 bytes (>255)"}
+  ],
+  "attempt_accounting": {
+    "cards_consumed": 0,
+    "WPLTO_runs": 0,
+    "product_links": 0,
+    "media_builds": 0,
+    "device_contacts": 0
+  },
+  "next": "review-priced symbol recovery before the released card may be invoked"
+}

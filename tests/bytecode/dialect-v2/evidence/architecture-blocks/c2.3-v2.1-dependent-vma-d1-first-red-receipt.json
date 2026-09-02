@@ -1,0 +1,88 @@
+{
+  "authority": {
+    "media": {
+      "bytes": 8948,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-dependent-vma-media-receipt.json",
+      "sha256": "5de03dc6f5f59adc5b213e626952635f1d99b27efe322b2505a4acc3ae72ece8"
+    },
+    "preparation": {
+      "bytes": 2146,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-dependent-vma-d1-preparation-receipt.json",
+      "sha256": "014bce40ee40a4f6cef595047cf7f99858d499847f0e813e9bda83767f628283"
+    },
+    "runner": {
+      "bytes": 4498,
+      "path": "scripts/c2-v21-dependent-vma-d1-hw.sh",
+      "sha256": "f60e885198f058078200ed3b9d45c6538dc762b3797ac439fa8f79264c70fe77"
+    },
+    "summary": {
+      "bytes": 12770,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-dependent-vma-completion-media-receipt.json",
+      "sha256": "7b4a3129d2732cb990bcd4656452b1de35080c7043a8f6df8004b6ba22b52e4e"
+    }
+  },
+  "claim_limit": "The fixed 45-second D1 postcondition was absent while all three liveness lines remained visible. The capture may have crossed an active loading phase; it proves neither a hang nor a loop, and authorizes no additional device access.",
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "additional_device_accesses": 0,
+    "forms": 0,
+    "hardware_contacts": 1,
+    "post_boot_captures": 1,
+    "product_links": 0,
+    "resumes": 0,
+    "stops": 0
+  },
+  "format": "lisp65-c2.3-v2.1-dependent-vma-d1-first-red-v1",
+  "next": "owner disposition of the Link-107 D1 fixed-time First Red",
+  "recorded_on": "2026-08-15",
+  "single_postcondition_capture": {
+    "access_free_seconds": 45,
+    "fail_closed_red_frame_in_capture": false,
+    "image": {
+      "bytes": 4999,
+      "path": "build/c2.3/v2.1-dependent-vma-d1/product-boot.png",
+      "sha256": "f153abd09cde610a9316052bb4d136cbd87825ebc0a5c0880bbf73ca0f2dd117"
+    },
+    "last_visible_phase": "LISP65: LOADING LIBRARIES",
+    "terminal_banner": false,
+    "terminal_prompt": false,
+    "text": {
+      "bytes": 2253,
+      "path": "build/c2.3/v2.1-dependent-vma-d1/product-boot.txt",
+      "sha256": "ef7ec260bf9e0c87aedea4b1596a46a9d616cd0b9c00e1a6e6e256c2104dc966"
+    },
+    "visible_liveness": [
+      "LISP65: STAGING MEDIA",
+      "LISP65: BUILDING HEAP",
+      "LISP65: LOADING LIBRARIES"
+    ]
+  },
+  "status": "D1-FIRST-RED-LOADING-LIBRARIES-AT-45S; NO-LIVE-OR-LOOP-CLAIM",
+  "transport": {
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-dependent-vma-d1/library-readback.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "library_source": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-dependent-vma-media-base/library/lisp65-library.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "product_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-dependent-vma-d1/product-readback.d81",
+      "sha256": "279ea48c8a4a46baa06f2e12b8558868eee4fe93bdad93fc49cf7f0add3e8546"
+    },
+    "product_source": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-dependent-vma-media/shared-system/lisp65-product.d81",
+      "sha256": "279ea48c8a4a46baa06f2e12b8558868eee4fe93bdad93fc49cf7f0add3e8546"
+    },
+    "result": "byteidentical-both-media"
+  },
+  "unlock": {
+    "D1": false,
+    "D2_D5": false
+  }
+}

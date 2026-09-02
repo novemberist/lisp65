@@ -1,0 +1,116 @@
+{
+  "format": "lisp65-c2-lite-v6-link48-append-final-hybrid-abi-wplto-facade-first-red-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: append-plan ABI fixed; fixed-facade gate rejected two direct E000-to-Island edges",
+  "promotable": false,
+  "classification": "product control-flow contract violation; not an ABI, capacity, placement, or gate-model failure",
+  "abi_result": {
+    "status": "passed-all-assembler-leaf-abi-contracts",
+    "walker": "c2_append_plan_walk",
+    "walker_vma": "0x1800",
+    "walker_bytes": 79,
+    "caller_count": 2,
+    "caller_edges": [
+      {
+        "owner": "c2_append_begin",
+        "section": ".lisp65_c2_kernal_window.c2_resident",
+        "instruction_vma": "0xe19c",
+        "opcode": "JSR",
+        "plan": "lisp65_c2_append_stage_plan",
+        "plan_abi": "__rc2/__rc3",
+        "context_abi": "__rc4/__rc5"
+      },
+      {
+        "owner": "c2_append_run_rollback_plan",
+        "section": ".lisp65_c2_kernal_window.c2_resident",
+        "instruction_vma": "0xe2b7",
+        "opcode": "terminal JMP",
+        "plan": "lisp65_c2_append_rollback_plan",
+        "plan_abi": "__rc2/__rc3",
+        "context_abi": "__rc4/__rc5"
+      }
+    ],
+    "mutations": 28,
+    "gate": {
+      "path": "build/c2.2/substitution/link48-append-final-hybrid-abi-wplto/c2-asm-leaf-abi-dataflow-gate.json",
+      "bytes": 27575,
+      "sha256": "8f4a49fed5001bfb8c2b9a30d5ec0a5e6cedfcb3c99c091dc50fe4555ca4ba67"
+    }
+  },
+  "first_red": {
+    "gate": "fixed host facade",
+    "message": "E000 code bypasses the fixed vectors",
+    "violations": [
+      {
+        "section": ".lisp65_c2_kernal_window.c2_resident",
+        "target": "0x1800",
+        "instruction": "jsr $1800"
+      },
+      {
+        "section": ".lisp65_c2_kernal_window.c2_resident",
+        "target": "0x1800",
+        "instruction": "jmp $1800"
+      }
+    ],
+    "reason": "Every owned-window exit below 0xe000 must traverse one pinned facade vector; the Island is fixed but is still outside the owned window."
+  },
+  "observed_final_elf_before_the_facade_stop": {
+    "bank0_text_headroom_bytes": 37,
+    "required_bank0_text_noise_headroom_bytes": 32,
+    "ordinary_bank0_bss_headroom_bytes": 221,
+    "fixed_hot_block_contract_headroom_bytes": 33,
+    "resident_island_headroom_bytes": 9,
+    "e000_headroom_bytes": 54,
+    "required_e000_floor_bytes": 54,
+    "session_aggregate": "not freshly qualified; fixed-facade gate stopped first"
+  },
+  "facade_geometry": {
+    "current_vector_count": 15,
+    "current_range": "0xb5c4..0xb5f0",
+    "next_address": "0xb5f1",
+    "next_address_current_owner": ".lisp65_c2_kernal_io_reveal",
+    "note": "The current C2-lite geometry has fifteen, not sixteen, vectors. A plan-walker seam would therefore be the sixteenth vector and would require a contractual repin of the following low-resident chain; no such change is authorized by this receipt."
+  },
+  "evidence": {
+    "internal_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-hybrid-abi-wplto-internal.json",
+      "bytes": 38480,
+      "sha256": "9c3c4c7d4e8866a4f624869579b8c2d4db50cfea2f57c4b39182b31af026541d"
+    },
+    "outer_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-hybrid-abi-wplto-receipt.json",
+      "bytes": 1420,
+      "sha256": "8298c9a7b82f6eca4f8f6311ca80a71a6012d504d3bed4e2b530d6bfcc6a3fe4"
+    },
+    "failed_wplto_elf": {
+      "path": "build/c2.2/substitution/link48-append-final-hybrid-abi-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 609544,
+      "sha256": "2287cb05d0046730a728c324761fe034506a248905a3cd268bb293d40caf8d3e"
+    },
+    "failed_wplto_map": {
+      "path": "build/c2.2/substitution/link48-append-final-hybrid-abi-wplto/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 197070,
+      "sha256": "e8f9637912e70483d064d1788bec843c9e8b43f407d4dd29b3e9ac694a954273"
+    },
+    "nonpromotable_product_shaped_prg": {
+      "path": "build/c2.2/substitution/link48-append-final-hybrid-abi-wplto/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "aaf70455dc2621d5b3fbf51fe3ee770980166ab13ecaa9435ed0683679b57132"
+    },
+    "rollback_product": {
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6",
+      "status": "untouched"
+    }
+  },
+  "execution_accounting": {
+    "authorized_fresh_wplto_runs": 1,
+    "fresh_wplto_runs_consumed": 1,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "line1_product_first_red_budget": "2/3 unchanged",
+    "latency_measurement_attempts": "0/2 unchanged"
+  },
+  "next_gate": "Class-C decision on the facade seam or a different residence; no product link, replay, or hardware run is authorized."
+}

@@ -1,0 +1,54 @@
+{
+  "format": "lisp65-c2-v2-product-profile-parity-gate-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "passed",
+  "truth_source": {
+    "path": "Makefile",
+    "sha256": "e51bfe7d930871aff95a19e5380f3bfbcd058d874ee9100c2dd129038d0dcbac",
+    "variable": "V2_CAPABILITY_CARRIER_G5_V2_DEFINES"
+  },
+  "canonical_profile": [
+    "LISP65_DIALECT_V2",
+    "LISP65_V2_CARRIER_CUT",
+    "LISP65_VM_NATIVE_APPLY",
+    "LISP65_V2_NATIVE_CAPABILITIES",
+    "LISP65_V2_NATIVE_STRING_CODECS",
+    "LISP65_V2_SERVICE_REGISTRY_CLOSED",
+    "LISP65_V2_WORKBENCH_SERVICES",
+    "LISP65_V2_TREE_PRIMITIVE_VIEW"
+  ],
+  "consumer": {
+    "path": "tools/host-lisp/c2_product_substitution_link.py",
+    "sha256": "6cef929fb546c9a31a2ef29a2236ed67d3fe79c6a9c9eab0509b3485cca01a8f",
+    "actual_profile_count": 8,
+    "missing": [],
+    "extra": [],
+    "duplicate": []
+  },
+  "gate": {
+    "implementation": "tools/host-lisp/c2_product_profile_parity.py",
+    "implementation_sha256": "614409c36a9aad6bae842eaea1808a99e30dd30b16c13c895b5c5383a16540f3",
+    "make_binding": "mk/gates.mk",
+    "make_binding_sha256": "d69d49f1dc64562225d3ba8d7425616e8d956630a92206de3b95037e4d4333ab",
+    "permanent_target": "c2-product-profile-parity-check",
+    "check_source_bound": true,
+    "bidirectional": true
+  },
+  "mutation_matrix": {
+    "exact_bundle": "passed",
+    "single_define_removals_rejected": 8,
+    "single_define_removals_total": 8,
+    "undeclared_v2_define_rejected": true,
+    "duplicate_define_rejected": true
+  },
+  "commands": [
+    "python3 tools/host-lisp/c2_product_profile_parity.py --selftest",
+    "python3 tools/host-lisp/c2_product_substitution_link.py --selftest",
+    "make c2-product-profile-parity-check"
+  ],
+  "product_links": 0,
+  "hardware_execution": "not-run-not-claimed",
+  "capacity": "not-measured-not-claimed",
+  "promotion": "not-authorized",
+  "claim_limit": "This receipt proves exact bidirectional equality between the canonical eight-switch Dialect-v2 product profile and the C2 compile closure, including eight missing-switch mutations, one overbreadth mutation and one duplicate mutation. It does not prove product capacity, placement, hardware behavior, promotion or release readiness."
+}

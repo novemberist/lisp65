@@ -1,0 +1,172 @@
+{
+  "capacity": {
+    "actual_future_margin_bytes": 386,
+    "actual_live_window_bytes": 7806,
+    "complete_profile_immutable_data_bytes": 342,
+    "contract_future_margin_bytes": 4063,
+    "fixed_resident_deficit_bytes": 3639,
+    "gross_window_bytes": 8192,
+    "growth_policy": "closed-to-new-tenants-after-the-complete-v2-profile-data-cut; remaining bytes are contingency reserve for existing occupants",
+    "ordinary_bank0_bss": {
+      "address": 47434,
+      "bytes": 1827,
+      "end_exclusive": 49261,
+      "fixed_c2_start": 49280,
+      "growth_policy": "full-no-new-resident-growth-budget",
+      "headroom_bytes": 19
+    },
+    "relocated_c2_resident_bytes": 7284,
+    "replacement_categories": {
+      "alignment_and_vectors": 22,
+      "frame_source": 9,
+      "irq_handler": 45,
+      "map_switch_and_guards": 324,
+      "nmi_and_freezer_return": 9,
+      "post_startup_output_seam": 4,
+      "typed_queue_driver": 77
+    },
+    "replacement_resident_bytes": 490
+  },
+  "control_flow_ownership": {
+    "audited_pre_main_chrout_edges": 1,
+    "direct_window_edges": 319,
+    "entry_edges": 159,
+    "executable_sections": [
+      ".lisp65_c2_kernal_window.c2_resident",
+      ".lisp65_c2_kernal_window.event_poll",
+      ".lisp65_c2_kernal_window.frame_source",
+      ".lisp65_c2_kernal_window.irq_handler",
+      ".lisp65_c2_kernal_window.map_switch_and_guards",
+      ".lisp65_c2_kernal_window.nmi_and_freezer_return",
+      ".lisp65_c2_kernal_window.post_startup_output_seam",
+      ".lisp65_c2_kernal_window.typed_queue_driver"
+    ],
+    "ignored_absolute_or_weak_alias_count": 95,
+    "matrix": {
+      "absolute-weak-alias-disguised-exit": "rejected",
+      "inter-function-non-entry-offset": "rejected",
+      "jsr-to-internal-basic-block": "rejected",
+      "owned-state-or-data-target": "rejected",
+      "same-function-mid-instruction": "rejected",
+      "same-function-symbol-less-basic-block": "passed"
+    },
+    "model": "section-qualified-function-and-instruction-boundary-v1",
+    "owned_function_entries": {
+      "57344": "c2_kernal_window_poll",
+      "57375": "c2_kernal_frame_tick",
+      "57384": "c2_kernal_irq_handler",
+      "57429": "c2_kernal_nmi_handler",
+      "57438": "c2_kernal_fail_closed",
+      "57452": "c2_kernal_output_cell",
+      "57456": "c2_kernal_event_poll",
+      "57502": "c2_stream_shelf_read",
+      "57711": "c2_dma_copy",
+      "57856": "c2_stream_c2d_read",
+      "57943": "c2_stream_c2d_write",
+      "58037": "c2_stream_product_image_read",
+      "58689": "c2_stream_product_string_record_any",
+      "59321": "c2_stream_product_string_record",
+      "59426": "c2_stream_product_canonical_name",
+      "59852": "c2_stream_product_child_value",
+      "60384": "c2_stream_name_value",
+      "61217": "c2_stream_gc_checkpoint",
+      "61343": "c2_product_entry_length",
+      "61519": "c2_entry_records",
+      "62167": "c2_source_read",
+      "62281": "c2_overlay_call",
+      "62310": "c2_product_gc_mark_roots",
+      "62857": "c2_decode_from",
+      "63313": "c2_header_counts",
+      "63355": "c2_append_begin",
+      "63670": "c2_session_emit_reset",
+      "63717": "c2_session_emit_add",
+      "64222": "c2_session_emit_finalize",
+      "64308": "vm_logical_relative_target"
+    },
+    "same_function_basic_block_jumps": 159,
+    "violations": []
+  },
+  "forbidden_edges": {
+    "audited_pre_main_chrout": 1,
+    "getin": 0,
+    "stkey": 0,
+    "unowned_window_targets": 0
+  },
+  "format": "lisp65-c2-kernal-freedom-link-v2",
+  "orphan_policy": {
+    "all_other_orphans": "hard-error-by-wrapper",
+    "error_callsites_required": true,
+    "exact_non_alloc_allowlist": [
+      ".comment",
+      ".symtab",
+      ".strtab",
+      ".shstrtab",
+      ".lisp65_error_callsites"
+    ],
+    "final_section_inventory_pin": "config/c2-final-section-inventory-pin.txt",
+    "lto_partition_exception": ".llvm_sympart from exact target LTO object",
+    "mode": "warn-with-exact-single-lto-exception-and-total-inventory",
+    "retained_relocation_symbol_partition_required": true
+  },
+  "owned_sections": {
+    ".lisp65_c2_kernal_window.c2_resident": {
+      "address": 57502,
+      "bytes": 6938
+    },
+    ".lisp65_c2_kernal_window.event_poll": {
+      "address": 57456,
+      "bytes": 46
+    },
+    ".lisp65_c2_kernal_window.frame_source": {
+      "address": 57375,
+      "bytes": 9
+    },
+    ".lisp65_c2_kernal_window.irq_handler": {
+      "address": 57384,
+      "bytes": 45
+    },
+    ".lisp65_c2_kernal_window.map_switch_and_guards": {
+      "address": 57438,
+      "bytes": 14
+    },
+    ".lisp65_c2_kernal_window.nmi_and_freezer_return": {
+      "address": 57429,
+      "bytes": 9
+    },
+    ".lisp65_c2_kernal_window.post_startup_output_seam": {
+      "address": 57452,
+      "bytes": 4
+    },
+    ".lisp65_c2_kernal_window.profile_rodata": {
+      "address": 64786,
+      "bytes": 342
+    },
+    ".lisp65_c2_kernal_window.session_emitter_state": {
+      "address": 64440,
+      "bytes": 346
+    },
+    ".lisp65_c2_kernal_window.state": {
+      "address": 65408,
+      "bytes": 16
+    },
+    ".lisp65_c2_kernal_window.typed_queue_driver": {
+      "address": 57344,
+      "bytes": 31
+    },
+    ".lisp65_c2_vectors": {
+      "address": 65530,
+      "bytes": 6
+    }
+  },
+  "source_census": {
+    "abort_sources": 1,
+    "frame_owners": 1,
+    "typed_input_paths": 1
+  },
+  "status": "passed",
+  "window_artifact": {
+    "bytes": 8192,
+    "path": "build/c2.2/substitution/product-link-28/c2-product-kernal-window.bin",
+    "sha256": "2406ebb832aa05c8a694084935941735e8f16db01bd5a078033a46265de426dd"
+  }
+}

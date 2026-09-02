@@ -1,0 +1,88 @@
+{
+  "authority": {
+    "makefile": {
+      "bytes": 224223,
+      "path": "Makefile",
+      "sha256": "75cef2786f24a41b146a12420a304e7fc69f0b009dd825542576cbec916171ac"
+    },
+    "release_plan": {
+      "bytes": 5022,
+      "path": "docs/planning/v1.2.1-release-plan.md",
+      "sha256": "435c16f2bcbd5585bd826ec3eeb44b51947c575ed1742b6bcfbe8a40803d33c5"
+    },
+    "verifier": {
+      "bytes": 11177,
+      "path": "tools/host-lisp/c2_v121_phase_c_close.py",
+      "sha256": "1e24da66bec4d45595d6e64dff3e005c2aab60664fc3f8796de054db5c6b63ec"
+    }
+  },
+  "claim_limit": "Phase-C host/paper closure only. No product byte, acceptance artifact, promotion, tag, public push or release claim is created or changed.",
+  "format": "lisp65-v1.2.1-phase-c-closure-v1",
+  "mutations": {
+    "attempted": 5,
+    "names": [
+      "codec-guard-removed",
+      "matrix-zero-executions",
+      "native-codec-compile-flag-removed",
+      "L11-heading-removed",
+      "L11-receipt-hash-drift"
+    ],
+    "rejected": 5
+  },
+  "rows": {
+    "C1_dirmiss": {
+      "hardware_followup": "none",
+      "mechanism": "L65E overwrites symname pointer return in __rc2/__rc3 with incidental A/X",
+      "receipt": {
+        "bytes": 2531,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.1-dirmiss-renderer-attribution-receipt.json",
+        "sha256": "60b74cb92ee1fec1916b0906fdabd90066c0eb23cba61fc51a4ca2f69f707845"
+      },
+      "status": "closed-attributed-fix-parked-v1.2.2"
+    },
+    "C2_upstream_L11": {
+      "bundle": {
+        "bytes": 21493,
+        "path": "docs/upstream-owner-bundle-2026-07-27.md",
+        "sha256": "19478731889fce9a85d7be4afd1b5c3e2992295ae54b505ca1bc6ca86bd5799f"
+      },
+      "source_gate": {
+        "bytes": 3313,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-interrupt-ownership-source-gate-receipt.json",
+        "sha256": "b0d48d7b471817eca4175f640da5846dafb68abf39b58869069257f231e2ef1e"
+      },
+      "status": "owner-paste-ready-no-upstream-action-taken",
+      "tested_core": "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6"
+    },
+    "C3_document_index": {
+      "documents": 226,
+      "index": {
+        "bytes": 25494,
+        "path": "config/document-index.json",
+        "sha256": "a723ccd9731c4e615c4d891fa4dea631bf9cc736dcdaf87bfc3f3bd2515cf230"
+      },
+      "status": "passed-complete-tracked-inventory"
+    },
+    "C3_vm_string_arg_p": {
+      "engines": 4,
+      "entries": 40,
+      "evaluations": 844,
+      "profile": "LISP65_V2_NATIVE_STRING_CODECS without LISP65_INTERN_SESSION_SERVICE",
+      "repair_commit": "3585ae60788d8cfa4299f3056d5ff7d49b234aca",
+      "routes": 3,
+      "runner_document": {
+        "bytes": 9069,
+        "path": "docs/planning/c2-product-session-host-runner.md",
+        "sha256": "1c36a807561a7066a47daa0314aabf2178886bab55e0385a7e823ff62e82c7d9"
+      },
+      "source": {
+        "bytes": 83869,
+        "path": "src/vm.c",
+        "sha256": "e357a571a9297f8cf13923f844f829a658c9e86006a7852e00bbc4660d78c4b6"
+      },
+      "status": "closed-compiled-and-executed"
+    }
+  },
+  "scope": "paper-host-housekeeping-no-product-delta",
+  "status": "passed-autonomous-phase-c-closed"
+}

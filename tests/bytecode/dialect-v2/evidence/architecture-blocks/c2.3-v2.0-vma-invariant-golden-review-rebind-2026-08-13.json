@@ -1,0 +1,78 @@
+{
+  "authority": {
+    "historical_review_receipt": {
+      "bytes": 15082,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-vma-invariant-golden-review-receipt.json",
+      "sha256": "edd2649efc865adfdc0c6f65ba5065f933c34e66ee0d797fef2872f81de2834e"
+    },
+    "live_reconstructed_review": {
+      "bytes": 15082,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-vma-invariant-golden-review-receipt.json",
+      "sha256": "7ab28cc2571adbd0cf78715643e0a2dfda497afa6ddf9c917a4b8bbc9268346c"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 60364,
+      "commit": "6c5d0cb1137d1e9cdeb82c4af04837f1b5295538",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "1c1bf837ff61a38d63e9b35a1f3bf53f6d295738b1fe6f0267648963e5d4d7f8"
+    },
+    "rebind_driver": {
+      "bytes": 10056,
+      "path": "tools/host-lisp/c2_v20_vma_golden_review_rebind.py",
+      "sha256": "cb0157ee291225726f3261f61c2601ace07ad12046e3962db6161eb91f6ed8db"
+    }
+  },
+  "change": {
+    "closer_gate": {
+      "after": {
+        "bytes": 331908,
+        "path": "tools/host-lisp/c2_product_substitution_link.py",
+        "sha256": "77194a61522f0cf800985382dc12c33fcc0ec2eb2962d1d0fae1cd886f256015"
+      },
+      "before": {
+        "bytes": 330871,
+        "path": "tools/host-lisp/c2_product_substitution_link.py",
+        "sha256": "2df283182551d70a0acaf6e7a98af595034ab33b29b870bc40420b0ed7930231"
+      }
+    },
+    "fields": [
+      "authority.closer_gate",
+      "authority.invariant_gate"
+    ],
+    "invariant_gate": {
+      "after": {
+        "bytes": 27474,
+        "path": "tools/host-lisp/c2_v20_vma_invariant_golden.py",
+        "sha256": "217c528132cbefb8f23803f6e3e8c9ccbd4cbba520d374928aaad9c422f79524"
+      },
+      "before": {
+        "bytes": 26631,
+        "path": "tools/host-lisp/c2_v20_vma_invariant_golden.py",
+        "sha256": "0f28f49e98b29da309abeefbf8b7f01e2be9002bab0554b40f0c8247b7300bb5"
+      }
+    }
+  },
+  "claim_limit": "This rebind updates only the live closer-gate authority of the already reviewed VMA golden. It authorizes no card, build, completion, media, device, D2-D5, release or parity action.",
+  "format": "lisp65-c2.3-v20-vma-golden-review-rebind-v1",
+  "mutations_rejected": [
+    "erase-loud-status",
+    "move-golden",
+    "move-world-probe",
+    "move-closer-proof",
+    "claim-product-change",
+    "hide-gate-rebind"
+  ],
+  "recorded_on": "2026-08-13",
+  "semantic_preservation": {
+    "all_other_fields_equal": true,
+    "cards_consumed": 0,
+    "closer_crc_proof_equal": true,
+    "device_contacts": 0,
+    "golden_sha256": "3b7d35e34f1199b03e58eeb9be3da7e45aaeb87b67a652c32751761df1398dfa",
+    "product_artifacts_changed": false,
+    "world_probe_equal": true,
+    "wplto_runs": 0
+  },
+  "status": "PASS: loud semantic-preserving live-authority rebind"
+}

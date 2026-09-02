@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-h-f2-first-red-byte-attribution-v1",
+  "version": 1,
+  "recorded_on": "2026-07-30",
+  "question": "The H-F2 First Red was classified as 'source/build-identity change, not a hidden compiler or carrier-byte change'. That classification was reviewed as PLAUSIBLE, not CONFIRMED, because no byte-level comparison of the changed roles existed. This receipt is that comparison.",
+  "method": {
+    "sealed_source": "public release asset lisp65-1.2.2.tar.gz (560,042 bytes, sha256 542c12cc533e98a90c299e793b75bb2c62962e3e6e453c394081625aaa5a0254), downloaded with owner authorization 2026-07-30; role SHAs matched the published lisp65-1.2.2-manifest.json before comparison",
+    "candidate_source": "build/c2.2/v1.2.2-candidate-product/final at head eefa1d1d",
+    "comparison": "full byte-wise diff of the two roles the First Red named; equal sizes required and observed"
+  },
+  "prg": {
+    "role": "c2-resident-prg",
+    "bytes": 41566,
+    "sealed_sha256": "89acf38139f8ded53c3cbc148ae45d8b46958afcddd5756ad5f4123418792679",
+    "candidate_sha256": "24936eb16b54e8d2950859c27e0723c73c03f217d8ca7dc6182475af55a89fda",
+    "differing_bytes": 16,
+    "regions": 10,
+    "attribution": [
+      "4 bytes at 0x87cb/0x87d5/0x87df/0x87e9: the four profile_build_id bytes as instruction immediates, 438dea37 -> ac22da1f (little-endian byte order)",
+      "12 bytes at 0x9991..0x99b3: checksum values inside the catalog table that follows the 'lisp65> ' prompt string; the two 16-bit pairs appear twice each, and the surrounding structure (lengths, offsets, opcodes) is byte-identical"
+    ]
+  },
+  "elf": {
+    "role": "linked-product-elf",
+    "bytes": 622560,
+    "sealed_sha256": "d2b56421e1328335f70638bb3a0d4e5c284a0655da4e82aeea146f493044ead1",
+    "candidate_sha256": "dbc501c4769f3c9270c67a59c3d66c6fd6fdc515060fe5dd5afd4fc7a4ecc577",
+    "differing_bytes": 26,
+    "regions": 22,
+    "attribution": [
+      "20 bytes: the same four profile_build_id immediates at five section/overlay copies (0x937d.., 0xb2c4.., 0xb3ae.., 0xb877.., 0x1bb5a..)",
+      "4 bytes at 0x1b83a: profile_build_id stored as one little-endian u32",
+      "2 bytes at 0x1b840: a 16-bit check value six bytes behind that stored id"
+    ]
+  },
+  "identity_chain": "resolved-profile.txt binds input_sha256 for every generated product source; a comment-only source change moves the profile bytes, profile_build_id is the profile SHA prefix (438dea37 sealed, ac22da1f candidate; both verified against their profiles), and every differing product byte is either that id or a check value over a structure containing it",
+  "verdict": "CONFIRMED",
+  "verdict_detail": "Every one of the 42 differing bytes across both roles is the bound product identity or a checksum over it. No opcode, no table shape, no code or data beyond identity changed. The First Red classification stands; the published v1.2.2 seal is unreachable for the post-translation candidate by construction, exactly as the raw-source binding contract intends.",
+  "claim_limit": "Byte attribution of one role pair only. No acceptance, promotion or release claim; H-F2 remains not green."
+}

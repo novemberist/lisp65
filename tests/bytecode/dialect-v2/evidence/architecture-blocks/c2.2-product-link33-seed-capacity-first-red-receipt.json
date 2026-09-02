@@ -1,0 +1,116 @@
+{
+  "format": "lisp65-c2-product-link33-seed-capacity-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "FIRST RED: whole-program LTO seed violates four resident placement walls; final product link not run",
+  "execution_accounting": {
+    "fresh_nonproduct_target_compiles": 2,
+    "resident_island_seed_link_attempts": 1,
+    "successful_resident_island_seed_links": 0,
+    "product_closure_links": 0,
+    "hardware_runs": 0
+  },
+  "direct_entry_rebind": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-hot-refill-direct-entry-contract-receipt.json",
+    "receipt_sha256": "492fea599840dddadfe00421eb3f88fa2c72ab678e5e160344a7ea83595e0973",
+    "direct_entry_references": 637,
+    "fixnum_decodable_published_values": 0,
+    "target_negative_classes": 4,
+    "status": "passed-before-link"
+  },
+  "fresh_prelink_replay": {
+    "append_slices": "20/20 under 1792 bytes",
+    "overlay_closure": "20/20, no forbidden edge",
+    "b2_run_stop_cutpoints": "18/18",
+    "status": "passed-before-link"
+  },
+  "first_red": {
+    "stage": "resident-island seed link",
+    "linker_exit": 1,
+    "walls": {
+      "bank0_text": {
+        "link32_bytes": 37972,
+        "link33_seed_bytes": 38252,
+        "delta_bytes": 280,
+        "link32_headroom_bytes": 10,
+        "link33_seed_headroom_bytes": -270,
+        "largest_attributed_deltas": {
+          "c2_abort_driver": 257,
+          "c2_product_abort_cleanup": 65,
+          "main": 178,
+          "c2_product_install": -181,
+          "vm_runtime_overlay_abort_cleanup": -31
+        }
+      },
+      "bank0_ordinary_bss": {
+        "link32_bytes": 1827,
+        "link33_seed_bytes": 1827,
+        "data_size_delta_bytes": 0,
+        "placement_shift_bytes": 284,
+        "link32_headroom_bytes": 19,
+        "link33_seed_headroom_bytes": -265,
+        "finding": "The prelink 13-byte static-stack projection was not the controlling whole-program effect. BSS contents stayed byte-identical in size, but resident text growth shifted the entire ordinary-BSS range across the fixed C2 state boundary."
+      },
+      "resident_island_plus_annex": {
+        "link32_island_bytes": 1679,
+        "link33_seed_island_bytes": 2016,
+        "island_delta_bytes": 337,
+        "annex_bytes_both": 260,
+        "link32_headroom_bytes": 109,
+        "link33_seed_headroom_bytes": -228,
+        "attribution": {
+          "c2_product_handle_normalize_new_bytes": 182,
+          "c2_stream_product_materialize_entry_growth_bytes": 155
+        }
+      },
+      "e000_fixed_data_chain": {
+        "link32_c2_resident_bytes": 6938,
+        "link33_seed_c2_resident_bytes": 7129,
+        "c2_resident_delta_bytes": 191,
+        "link32_total_window_margin_bytes": 386,
+        "link33_projected_total_window_margin_bytes": 195,
+        "placement_failure": "The unchanged 346-byte session-emitter state moved from 0xfbb8 to 0xfc77 and overlapped fixed profile rodata at 0xfd12 by 191 bytes.",
+        "largest_attributed_deltas": {
+          "c2_append_begin": 67,
+          "c2_stream_gc_checkpoint": 65,
+          "c2_overlay_call_range": 47,
+          "c2_stream_product_image_read": 32,
+          "c2_entry_records": -33
+        }
+      }
+    }
+  },
+  "evidence": {
+    "lto_object": {
+      "path": "build/c2.2/substitution/product-link-33-nested-append-v5/resident-island-seed.prg.lto.o",
+      "bytes": 562868,
+      "sha256": "fa1db0543a50fcf688955dd8d46de8bd086f1d25bce290a8a708a862eb733d85"
+    },
+    "link_map": {
+      "path": "build/c2.2/substitution/product-link-33-nested-append-v5/resident-island-seed.prg.map",
+      "bytes": 176815,
+      "sha256": "398199574a3b12943da37b8ad26b0abd9856c66510c59af698ab06109c7bba35"
+    },
+    "link_stderr": {
+      "path": "build/c2.2/substitution/product-link-33-nested-append-v5/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 2803,
+      "sha256": "4dd9b279a9ccf9f5f9f010f1c7d2dad6fef2066a178615c8fb9ee95b5ac992c5"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-33-nested-append-v5/resolved-profile.txt",
+      "bytes": 6005,
+      "sha256": "1d364ebd5ad510843d5481b9dbf53a30933bacf2112e8e9e4849490d0b021765"
+    },
+    "linker_script": {
+      "path": "build/c2.2/substitution/product-link-33-nested-append-v5/c2-substitution.ld",
+      "bytes": 53156,
+      "sha256": "7075d50b5f47944f7695c2164b457b6c1bee4ca538f5eff736e71c97bad3ac5a"
+    }
+  },
+  "rollback_identity": {
+    "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+    "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "modified": false
+  },
+  "claim_limit": "This is a failed Whole-Program-LTO seed-link measurement. It does not claim a Link-33 product identity, packed runtime-bank capacity, post-link binding, hardware behavior, latency, Freezer identity, promotion, or C2.2 acceptance.",
+  "next_gate": "Review the four-wall placement result before any new capacity or layout probe. No further link is authorized."
+}

@@ -1,0 +1,68 @@
+{
+  "format": "lisp65-v2-capability-carrier-g5-failure-v1",
+  "status": "failed",
+  "gate": "G5",
+  "profile": "dialect-v2-capability-carrier",
+  "source_commit": "3f7e0010f063a2055724350b4da7b853bce8c1cc",
+  "build_id": 2099849580,
+  "candidate_manifest": {
+    "path": "build/cp5-g5/candidate.json",
+    "sha256": "4354b6f20781c44cb8dbbe12fed16748040a8f56d164ed6dd6fea95a1cc048ee",
+    "verified": true,
+    "shippable": false
+  },
+  "matrix_case": {
+    "id": "workbench-ux/ux-complete",
+    "target": "hw-workbench-ux-smoke",
+    "expected": "pass",
+    "observed": "vm-type-error-during-first-persistence-create"
+  },
+  "passed_before_failure": [
+    "overlay-arith-42",
+    "overlay-load-ide",
+    "overlay-compile-kind-bytecode",
+    "overlay-vm-bridges",
+    "overlay-gc-allocation",
+    "overlay-reader-recovery",
+    "ux-core-arith",
+    "ux-core-load-ide",
+    "ux-core-compile-kind-bytecode"
+  ],
+  "failure": {
+    "form": "(list (save-buffer-to \"ap6src\" \"ap6src\") (ide-error) (function-kind (quote m65d-save)))",
+    "expected": "(t nil bytecode)",
+    "observed": "*** vm: type error",
+    "first_failing_public_path": "save-buffer-to -> %ide-cow-save -> m65d-save"
+  },
+  "diagnostics": [
+    {"form": "(%string-codes \"ap6src\")", "observed": "(97 112 54 115 114 99)", "result": "passed"},
+    {"form": "(function-kind (quote m65d-save))", "observed": "bytecode", "result": "passed"},
+    {"form": "(m65d-status)", "observed": "*** vm: type error", "result": "failed"},
+    {"form": "(m65d-save \"x\" \"x\")", "observed": "*** vm: type error", "result": "failed"},
+    {"form": "(m65d-remount)", "observed": "*** vm: type error", "result": "failed"},
+    {"form": "(boundp (quote zzz))", "observed": "*** vm: undefined function", "result": "failed"},
+    {"form": "(funcall (function boundp) (quote zzz))", "observed": "*** vm: type error", "result": "failed"}
+  ],
+  "diagnosis": {
+    "kind": "cp4-dynamic-native-service-closure-miss",
+    "root": "boundp-is-a-treewalk-primitive-but-is-absent-from-vm_apply_primitive-after-the-v2-carrier-cut",
+    "m65d_trigger": "m65d-status-and-latch-checks-call-boundp-through-funcall",
+    "why_cp4_inventory_missed_it": "the-zero-miss-inventory-classified-static-op-call-and-callprim-sites-but-not-native-function-designators-stored-as-literals",
+    "string_codec_result": "not-the-trigger"
+  },
+  "raw_artifacts": [
+    {"path": "build/cp5-g5/evidence/workbench-overlay/cp5-g5-overlay-reader-recovery.txt", "sha256": "85c4a9f3ed02f0c23986266d0016a0c28aea3f6c53c938aa776da1cd2ad5b9a5"},
+    {"path": "build/cp5-g5/evidence/workbench-ux/cp5-g5-ux-diag-boundp-direct.txt", "sha256": "772199b6196ec503b9e0acd1a942fa6cbab1e1d1d2124cfd58d9f4475d09f814"},
+    {"path": "build/cp5-g5/evidence/workbench-ux/cp5-g5-ux-diag-boundp-funcall.txt", "sha256": "818faeafce30a4ee11c14523065a1e0077e9b65014cede275672dd973d5ad9ca"},
+    {"path": "build/cp5-g5/evidence/workbench-ux/cp5-g5-ux-diag-codec.txt", "sha256": "e14008bc7580349713ec26110216dfb0f0ceeef2a6e01a9474e1402892772824"},
+    {"path": "build/cp5-g5/evidence/workbench-ux/cp5-g5-ux-diag-m65d.txt", "sha256": "366a8e5cbbe59c070db44734a881f623c5d163d687ba8b560036f5efc3404396"},
+    {"path": "build/cp5-g5/evidence/workbench-ux/cp5-g5-ux-diag-remount.txt", "sha256": "94a6181f7e86168c8968e779dfa23ad20e274bb980f69a8b8d1558b8f52ba0c3"},
+    {"path": "build/cp5-g5/evidence/workbench-ux/cp5-g5-ux-persistence-create.txt", "sha256": "6efb96c769d61bff217537cd0fef3de3936ce51e2ad0a94b8547f1f3445ac5d4"}
+  ],
+  "gate_effect": {
+    "checkpoint_5": "blocked",
+    "g5_pass": false,
+    "remaining_861_bytes": "still-banked",
+    "further_matrix_cases": "not-run-after-first-semantic-failure"
+  }
+}

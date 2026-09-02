@@ -1,0 +1,115 @@
+{
+  "format": "lisp65-c2-v160-comfort-input-fidelity-placement-first-red-v1",
+  "recorded_on": "2026-08-18",
+  "status": "FIRST RED: AUTHORIZED 69-BYTE CAPTURE DOES NOT FIT THE DELIVERED C2 WINDOW",
+  "authority": {
+    "owner_release": {
+      "commit": "fd29bae948c3026369ead007943001cc6679993e",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "git_blob": "bb1e373431f4364d1be7557d8ddfb7bfeb5f4ffd",
+      "bytes": 25713,
+      "sha256": "ffceef16a3b0959012d663ed3efd6e2189cd172850b417c6acd040a176c0936b"
+    },
+    "pricing_contract": {
+      "path": "config/c2-v160-comfort-input-fidelity-pricing-contract.json",
+      "bytes": 2229,
+      "sha256": "d316315ebcd8a537738b318c5c4b8c5a311c8ff4bad3c4e47d9a26983f000a60"
+    },
+    "pricing_report": {
+      "path": "docs/planning/v1.6.0-comfort-input-fidelity-pricing-report.md",
+      "bytes": 6198,
+      "sha256": "46cff64b98821f374ec85f5c17838ffa7efb126932c3e6c53c389f23083f7536"
+    },
+    "pricing_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-comfort-input-fidelity-pricing-receipt.json",
+      "bytes": 8114,
+      "sha256": "319e0e5d24baaa327bcf25fb5aad57f0b50fac81cb48be7388f4f2c2d734b6b1"
+    },
+    "candidate_elf": {
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 630792,
+      "sha256": "4f899d1e0c9bcc89d14c9d13c5384e6a843c4093ba9d1029b321820a11bf4942"
+    },
+    "candidate_map": {
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 192886,
+      "sha256": "9be3773c67acdc4edfdd49c66f9d248de7e6747eb891bbed691e6119164c9e29"
+    }
+  },
+  "pricing_claim": {
+    "capture_bytes": 69,
+    "claimed_free_bytes_before": 606,
+    "claimed_free_bytes_after": 537,
+    "claimed_range": [
+      "0xfd22",
+      "0xff80"
+    ]
+  },
+  "linked_image_truth": {
+    "arena": [
+      "0xe000",
+      "0xff80"
+    ],
+    "arena_bytes": 8064,
+    "allocated_union_bytes": 8003,
+    "free_bytes_total": 61,
+    "free_intervals": [
+      {
+        "range": [
+          "0xfd08",
+          "0xfd2c"
+        ],
+        "bytes": 36
+      },
+      {
+        "range": [
+          "0xff67",
+          "0xff80"
+        ],
+        "bytes": 25
+      }
+    ],
+    "allocated_sections": [
+      {"name": ".lisp65_c2_kernal_window.typed_queue_driver", "range": ["0xe000", "0xe038"], "bytes": 56},
+      {"name": ".lisp65_c2_kernal_window.irq_handler", "range": ["0xe038", "0xe082"], "bytes": 74},
+      {"name": ".lisp65_c2_kernal_window.nmi_and_freezer_return", "range": ["0xe082", "0xe08b"], "bytes": 9},
+      {"name": ".lisp65_c2_kernal_window.map_switch_and_guards", "range": ["0xe08b", "0xe099"], "bytes": 14},
+      {"name": ".lisp65_c2_kernal_window.post_startup_output_seam", "range": ["0xe099", "0xe09d"], "bytes": 4},
+      {"name": ".lisp65_c2_kernal_window.c2_resident", "range": ["0xe09d", "0xfcaf"], "bytes": 7186},
+      {"name": ".lisp65_c2_kernal_window.reopen_gap0", "range": ["0xfcaf", "0xfd08"], "bytes": 89},
+      {"name": ".lisp65_c2_kernal_window.profile_rodata", "range": ["0xfd2c", "0xfe88"], "bytes": 348},
+      {"name": ".lisp65_c2_kernal_window.reopen_gap1", "range": ["0xfe88", "0xff67"], "bytes": 223}
+    ]
+  },
+  "mechanism": {
+    "classification": "pricing used an address interval as free capacity without subtracting its delivered tenants",
+    "claimed_range_arithmetic": {
+      "range_bytes": 606,
+      "profile_rodata_bytes": 348,
+      "reopen_gap1_bytes": 223,
+      "actually_free_bytes": 35
+    },
+    "whole_arena_arithmetic": {
+      "free_bytes": 61,
+      "capture_bytes": 69,
+      "aggregate_deficit_bytes": 8,
+      "largest_contiguous_hole_bytes": 36,
+      "queue_drain_bytes": 52,
+      "queue_drain_contiguous_deficit_bytes": 16
+    },
+    "why_pricing_passed": "the pricing gate asserted the literal 606-byte contract value and compared 69 <= 606, but never enumerated the candidate ELF's allocated C2-window sections"
+  },
+  "disposition_boundary": {
+    "product_sources_changed": false,
+    "product_links_run": 0,
+    "device_contacts": 0,
+    "authorized_resident_delta_implemented": false,
+    "required_next_decision": "reprice a placement that reclaims or relocates at least eight aggregate C2 bytes and supplies a contiguous home for the 52-byte drain, or redesign the capture below the real 61-byte aggregate ceiling; the accepted ordinary-text, state, lifetime, ABI and losslessness walls remain unchanged"
+  },
+  "reproduction": {
+    "section_command": "llvm-readelf -SW <candidate ELF>",
+    "rule": "take the union of every non-empty SHF_ALLOC section intersecting [0xe000,0xff80), then complement that union inside the arena",
+    "result": "free=[0xfd08,0xfd2c) 36 bytes + [0xff67,0xff80) 25 bytes = 61 bytes"
+  },
+  "claim_limit": "Host/ELF placement attribution only. It proves that the released 69-byte placement price cannot be realized in the bound candidate without a new placement or code-price decision; it does not reject the loss model or the hybrid architecture."
+}

@@ -1,0 +1,122 @@
+{
+  "addendum": {
+    "bytes": 6417,
+    "path": "docs/planning/c2.2-destructive-restage-addendum.md",
+    "sha256": "78d8682837f60e23d5b58d1d50c74146225af5199b0a841ccc32b54e61f1e542"
+  },
+  "artifacts": {
+    "active-predecessor-c2j.bin": {
+      "bytes": 64,
+      "path": "build/c2.2/destructive-restage-link57/active-predecessor-c2j.bin",
+      "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+    },
+    "bank5-destructive-50816.bin": {
+      "bytes": 50816,
+      "path": "build/c2.2/destructive-restage-link57/bank5-destructive-50816.bin",
+      "sha256": "bf992f6dadfc20d3a30ce2911fa1f006700e1a73b07c3fcba2121fb7e2e2854d"
+    },
+    "bank5-repair-50816.bin": {
+      "bytes": 50816,
+      "path": "build/c2.2/destructive-restage-link57/bank5-repair-50816.bin",
+      "sha256": "0980082a8d30fb136d992bf31193f1f5a78927c8465efcbbc358d081f120c0ea"
+    },
+    "poison-bank2-prefix.bin": {
+      "bytes": 256,
+      "path": "build/c2.2/destructive-restage-link57/poison-bank2-prefix.bin",
+      "sha256": "bf5b7ad2fd7f8898ae68db77397bf47bbec38baded0e83f4b9ec036fb46adbf4"
+    },
+    "poison-bank3-prefix.bin": {
+      "bytes": 256,
+      "path": "build/c2.2/destructive-restage-link57/poison-bank3-prefix.bin",
+      "sha256": "0c27c78277c89493873259a643430b8fc933053054f25bd371de469f999c77fc"
+    },
+    "stale-c2-ready.bin": {
+      "bytes": 1,
+      "path": "build/c2.2/destructive-restage-link57/stale-c2-ready.bin",
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    "stale-rtov-family-generation.bin": {
+      "bytes": 2,
+      "path": "build/c2.2/destructive-restage-link57/stale-rtov-family-generation.bin",
+      "sha256": "47dc540c94ceb704a23875c11273e16bb0b8a87aed84de911f2133568115f254"
+    },
+    "stale-rtov-family.bin": {
+      "bytes": 1,
+      "path": "build/c2.2/destructive-restage-link57/stale-rtov-family.bin",
+      "sha256": "dbc1b4c900ffe48d575b5da5c638040125f65db0fe3e24494b76ea986457d986"
+    },
+    "stale-rtov-island-state.bin": {
+      "bytes": 1,
+      "path": "build/c2.2/destructive-restage-link57/stale-rtov-island-state.bin",
+      "sha256": "dbc1b4c900ffe48d575b5da5c638040125f65db0fe3e24494b76ea986457d986"
+    },
+    "stale-session-attic-sentinel.bin": {
+      "bytes": 64,
+      "path": "build/c2.2/destructive-restage-link57/stale-session-attic-sentinel.bin",
+      "sha256": "3ecbd5500d201be0b1817608801abb296082f04bb8f9b3c1c6677eb3a3370f88"
+    },
+    "zero-c2j.bin": {
+      "bytes": 64,
+      "path": "build/c2.2/destructive-restage-link57/zero-c2j.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    }
+  },
+  "contract": {
+    "bytes": 5408,
+    "path": "config/c2-destructive-restage-contract.json",
+    "sha256": "2f8ec854f4a6ec7104c7eb8deddc8127ffc61a19ffc32463cf259a5f4ab2ef47"
+  },
+  "execution_accounting": {
+    "acceptance_claim": "none",
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "promotion_claim": "none"
+  },
+  "fixture": {
+    "bytes": 10035,
+    "path": "build/c2.2/destructive-restage-link57/fixture.json",
+    "sha256": "df6a684db268aed25f3e0d0731e4368f060b2e06fed2068cdf684e82d6d4f84a"
+  },
+  "format": "lisp65-c2-destructive-restage-contract-probe-v1",
+  "mutations": {
+    "bootstrap-scratch-overlaps-active-c2d": "rejected",
+    "bootstrap-scratch-overlaps-c2j": "rejected",
+    "destructive-generation-not-torn": "rejected",
+    "destructive-journal-wrong-CRC": "rejected",
+    "destructive-journal-wrong-magic": "rejected",
+    "different-product-identity": "rejected",
+    "observation-symbol-c2-runtime-missing": "rejected",
+    "repair-canonical-prefix-bitflip": "rejected",
+    "repair-nonzero-C2J": "rejected",
+    "repair-nonzero-inactive-suffix": "rejected",
+    "repair-short-prefix-only": "rejected",
+    "reset-domain-shortened": "rejected",
+    "short-preload-gap-hidden": "rejected"
+  },
+  "next_gate": "one same-identity operator-assisted hardware run containing the fail-closed destructive branch and the full repair branch",
+  "ordinary_presmoke_gap": {
+    "finding": "the ordinary receipt-less pre-smoke uploads only the canonical prefix; C4 uses and requires the complete reset image so a surviving predecessor C2J cannot escape restage",
+    "ordinary_c2d_upload_bytes": 33840,
+    "required_cold_reset_domain_bytes": 50816,
+    "unstaged_survivor_bytes": 16976
+  },
+  "product_identity": {
+    "link": 57,
+    "sha256": "7d568ceb7edab95a237ff3079fcf689768373a9ea48a5a43f355f6275ddc5df8"
+  },
+  "recorded_on": "2026-07-23",
+  "row": "C4",
+  "source_truth": {
+    "authenticated_bootstrap_scratch_after-reset": "[34048,37333)",
+    "c2j": "[50752,50816)-zero-before-ready-and-first-append",
+    "canonical_prefix": "[0,33840)",
+    "repair_span": "[0,50816)",
+    "reset_survival": "Bank5-and-Attic-survive; Bank2/3-destroyed",
+    "session_attic": "survives-physically-but-no-active-record-reaches-it",
+    "zero_suffix_at-reset-write": "[33840,50816)"
+  },
+  "status": "passed-contract-and-host-fixture-hardware-not-run",
+  "value_string": "C4-contract=PASS mutations=13/13 reset-span=50816 prefix=33840 boot-scratch=3285 c2j=64zero stale-attic=unreachable link57=same hardware=not-run acceptance=blocked"
+}

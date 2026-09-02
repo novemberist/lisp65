@@ -97,6 +97,29 @@ def atomic_json(path: Path, value: dict[str, Any]) -> None:
     temporary.replace(path)
 
 
+def preserve_sealed_receipt(path: Path, value: dict[str, Any]) -> None:
+    """Keep the sealed Q receipt when only manifest provenance has advanced."""
+    if not path.is_file():
+        atomic_json(path, value)
+        return
+    sealed = load(path)
+    normalized = copy.deepcopy(value)
+    for world in ("baseline", "candidate"):
+        current = value["artifacts"][world]["manifest"]
+        historical = sealed["artifacts"][world]["manifest"]
+        require(
+            {key: current.get(key) for key in ("path", "bytes")}
+            == {key: historical.get(key) for key in ("path", "bytes")},
+            f"sealed Q {world} manifest path/size drift",
+        )
+        normalized["artifacts"][world]["manifest"] = historical
+    require(normalized["authority"]["gate"]["path"]
+            == sealed["authority"]["gate"]["path"],
+            "historical Q gate identity drift")
+    normalized["authority"]["gate"] = sealed["authority"]["gate"]
+    require(normalized == sealed, "historical Q receipt semantic drift")
+
+
 def _defun_block(source: str, name: str) -> str:
     anchor = f"(defun {name} "
     start = source.find(anchor)
@@ -640,7 +663,10 @@ def main(*, public_build: bool = False) -> int:
                 "successors": ["time", "require-option-A", "ship-v1.3"],
                 "product_build_id": load(PROFILE)["product_build_id"],
             }
-        atomic_json(receipt, value)
+        if public_build:
+            atomic_json(receipt, value)
+        else:
+            preserve_sealed_receipt(receipt, value)
         delta = artifacts["delta"]
         projected = artifacts["projected_post_Link80"]
         print(

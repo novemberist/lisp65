@@ -1,0 +1,572 @@
+{
+  "acceptance": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 45994,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 117,
+          "candidate_max_end_exclusive": 32280,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-plus-freight-boundaries-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_boundaries": {
+        "__lisp65_c2_mapped_far_service_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 32280
+        },
+        "__lisp65_c2_mapped_far_service_load_end": {
+          "operation": "section-lma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 179736
+        },
+        "__lisp65_workbench_overlay_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_workbench_overlay",
+          "value": 51857
+        }
+      },
+      "derived_freight_sha256": "671074bfc084e6ffb3ea0df21e87e837ead36a95f87658af35ad6c102fd0e503",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 25,
+      "fixed_projection_sha256": "2ebfe0002a9f196c374ebaeab5f063ce248b437348c28dc63d3bca6881ea7146",
+      "freight_derived_boundary_symbols": 3,
+      "mapped_far_service_capacity": {
+        "candidate_headroom_bytes": 117,
+        "candidate_max_end_exclusive": 32280,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      }
+    },
+    "VMA_golden_authority": {
+      "accepted_freight_boundary_v5": {
+        "bytes": 12879,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-freight-boundary-golden-review-receipt.json",
+        "sha256": "156060eed418224a66a1e30d6a1574aa7ea979834062e5cde09651c151f0bfe8"
+      },
+      "historical_dependent_vma_v4": {
+        "candidate_mutations": 7,
+        "derived_vmas": 2,
+        "fixed_vmas": 101,
+        "golden": {
+          "bytes": 30406,
+          "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-dependent-vma-invariants-v4.json",
+          "sha256": "28190ae2e5c3f02b229a3cea257ef3ca5b98f76ac19b35ef77f1f48dc318f1f3"
+        },
+        "golden_mutations": 10,
+        "later_acceptance": {
+          "authority": "git-blob",
+          "bytes": 58398,
+          "commit": "62c3aef6efd14ea0fd956b5ddb3f0345351b2366",
+          "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+          "sha256": "9393863c5143b2982d4638478a9bebb2ddf479af9aa7e9a638e325f7b0b6090d"
+        },
+        "receipt": {
+          "bytes": 12801,
+          "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-dependent-vma-invariant-golden-review-receipt.json",
+          "sha256": "9df3f7a6370fd93c01a805e991b1656a17502b6f2f00ef8ca88b093bc5a1d5bb"
+        }
+      },
+      "mode": "read-only-additive-successor-authority"
+    },
+    "VMA_golden_derived_shape": {
+      "allocatable_sections_derived": 103,
+      "dependent_fixed_vmas_derived": 101,
+      "dependent_free_derived_vmas_derived": 2,
+      "fixed_boundary_symbols_derived": 25,
+      "partition_complete": true
+    },
+    "additive_card_freight": {
+      "candidate_sections": 105,
+      "freight_rows": [
+        {
+          "membership_authority": "card-build-configuration",
+          "name": ".lisp65_c2_kernal_window.input_capture_helper",
+          "placement_proof": {
+            "gate": "candidate-predecessor-end",
+            "predecessor": ".lisp65_c2_kernal_window.reopen_gap1",
+            "relation": "section-vma-equals-predecessor-vma-plus-bytes",
+            "status": "passed"
+          }
+        },
+        {
+          "membership_authority": "card-build-configuration",
+          "name": ".lisp65_c2_kernal_window.input_capture_main",
+          "placement_proof": {
+            "gate": "candidate-predecessor-end",
+            "predecessor": ".lisp65_c2_kernal_window.reopen_gap0",
+            "relation": "section-vma-equals-predecessor-vma-plus-bytes",
+            "status": "passed"
+          }
+        }
+      ],
+      "golden_sections": 103,
+      "placement_gate": {
+        "gate": "candidate-predecessor-end",
+        "proof_rows": [
+          {
+            "membership_authority": "card-build-configuration",
+            "name": ".lisp65_c2_kernal_window.input_capture_helper",
+            "placement_proof": {
+              "gate": "candidate-predecessor-end",
+              "predecessor": ".lisp65_c2_kernal_window.reopen_gap1",
+              "relation": "section-vma-equals-predecessor-vma-plus-bytes",
+              "status": "passed"
+            }
+          },
+          {
+            "membership_authority": "card-build-configuration",
+            "name": ".lisp65_c2_kernal_window.input_capture_main",
+            "placement_proof": {
+              "gate": "candidate-predecessor-end",
+              "predecessor": ".lisp65_c2_kernal_window.reopen_gap0",
+              "relation": "section-vma-equals-predecessor-vma-plus-bytes",
+              "status": "passed"
+            }
+          }
+        ],
+        "status": "passed"
+      },
+      "registered_sections": [
+        ".lisp65_c2_kernal_window.input_capture_helper",
+        ".lisp65_c2_kernal_window.input_capture_main"
+      ]
+    },
+    "delivered_bytes": {
+      "candidate_elf": {
+        "bytes": 631860,
+        "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "4b2dfa0e7a33968863ec73f2162894ee1f644bd7ccbe6d9e745def7f376fb711"
+      },
+      "completed_resident_prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "d287ad76f6bd98e0cbb354f3a3cde9cca5a6c4714c6c2f79ce4da03c7b43bb60"
+      },
+      "identity_bytes": 290,
+      "identity_mismatches": 0,
+      "load_address": "0x2001",
+      "new_staging_roles": 0,
+      "publish_last": {
+        "addresses": [
+          46324,
+          46330
+        ],
+        "bytes": 2,
+        "independent_crc16": "0x2e17",
+        "independent_window_bytes": 8192,
+        "independent_window_sha256": "c166f718ef9f44b914e77f4dc82ad12b4b55b252cd03c1392920c12957e0a379",
+        "observed_values": [
+          46,
+          23
+        ],
+        "producer_report": {
+          "bytes": 1560,
+          "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/kernal-window-publish-last.json",
+          "sha256": "d8ad3b1d7365bafbca2f13458b07dc8979f8eb3c9f95d9e0e5b947bc6ccb69f4"
+        },
+        "values_correct": true
+      },
+      "sections": [
+        {
+          "bytes": 223,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb4a3",
+          "lma_equals_vma": true,
+          "publish_last_values": [
+            {
+              "address": 46324,
+              "correct": true,
+              "expected": 46,
+              "observed": 46
+            },
+            {
+              "address": 46330,
+              "correct": true,
+              "expected": 23,
+              "observed": 23
+            }
+          ],
+          "resident_prg_offset": 38052,
+          "section": ".lisp65_c2_kernal_handoff",
+          "vma": "0xb4a3"
+        },
+        {
+          "bytes": 48,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5c4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38341,
+          "section": ".lisp65_c2_host_facade",
+          "vma": "0xb5c4"
+        },
+        {
+          "bytes": 11,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5f4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38389,
+          "section": ".lisp65_c2_kernal_io_reveal",
+          "vma": "0xb5f4"
+        },
+        {
+          "bytes": 10,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5ff",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38400,
+          "section": ".lisp65_c2_kernal_map_switch",
+          "vma": "0xb5ff"
+        }
+      ],
+      "status": "passed-identity-plus-independent-CRC-value"
+    },
+    "delivery_mutations_rejected": [
+      "drop-section",
+      "rewrite-LMA",
+      "grow-carveout",
+      "widen-carveout-bytes",
+      "replace-independent-CRC",
+      "accept-wrong-high",
+      "accept-wrong-low",
+      "hide-identity-mismatch",
+      "replace-oracle-window",
+      "add-staging-role"
+    ],
+    "dependent_vma_authority": {
+      "candidate_mutations": 7,
+      "derived_vmas": 2,
+      "fixed_vmas": 101,
+      "golden": {
+        "bytes": 30406,
+        "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-dependent-vma-invariants-v4.json",
+        "sha256": "28190ae2e5c3f02b229a3cea257ef3ca5b98f76ac19b35ef77f1f48dc318f1f3"
+      },
+      "golden_mutations": 10,
+      "later_acceptance": {
+        "authority": "git-blob",
+        "bytes": 58398,
+        "commit": "62c3aef6efd14ea0fd956b5ddb3f0345351b2366",
+        "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+        "sha256": "9393863c5143b2982d4638478a9bebb2ddf479af9aa7e9a638e325f7b0b6090d"
+      },
+      "receipt": {
+        "bytes": 12801,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-dependent-vma-invariant-golden-review-receipt.json",
+        "sha256": "9df3f7a6370fd93c01a805e991b1656a17502b6f2f00ef8ca88b093bc5a1d5bb"
+      }
+    },
+    "dependent_vma_derived_shape": {
+      "allocatable_sections_derived": 103,
+      "dependent_fixed_vmas_derived": 101,
+      "dependent_free_derived_vmas_derived": 2,
+      "fixed_boundary_symbols_derived": 25,
+      "partition_complete": true
+    },
+    "far_payload": {
+      "LMA_end_exclusive": "0x0002be18",
+      "LMA_start": "0x0002b8b2",
+      "VMA": "0x78b2",
+      "arena_capacity_bytes": 1499,
+      "candidate_derived_bytes": 1382,
+      "candidate_derived_cpu_end_exclusive": 32280,
+      "candidate_headroom_bytes": 117,
+      "fixed_size_expectation": false,
+      "section": ".lisp65_c2_mapped_far_service",
+      "sha256": "394549b9006a0a2071a98d3534a3465c3c633d49bb3184548a21a476d6469617",
+      "size_source": "emitted-candidate-section-and-symbol-extents",
+      "status": "passed-candidate-derived-far-payload-extent-identity"
+    },
+    "freight_boundary_v5_authority": {
+      "bytes": 12879,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-freight-boundary-golden-review-receipt.json",
+      "sha256": "156060eed418224a66a1e30d6a1574aa7ea979834062e5cde09651c151f0bfe8"
+    },
+    "linked_MAP_mutations_rejected": [
+      "restore-19-byte-pin",
+      "restore-body-opcode-pin",
+      "restore-store-opcode-pin"
+    ],
+    "linked_MAP_tuple": {
+      "VMA": "0xb3cb",
+      "block1_unchanged": true,
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "emitted_bytes_derived": 19,
+      "far_service": {
+        "arena_capacity_bytes": 1499,
+        "arena_end_exclusive": 32397,
+        "candidate_derived_bytes": 1382,
+        "candidate_derived_end_exclusive": 32280,
+        "candidate_headroom_bytes": 117,
+        "fixed_size_expectation": false,
+        "section": ".lisp65_c2_mapped_far_service",
+        "start": 30898
+      },
+      "first_descriptor_store": {
+        "derivation": "decoded emitted instruction effects",
+        "logical_PC": "0x78ee",
+        "occurrences": 1,
+        "physical_PC": "0x0002b8ee",
+        "target": "0xc000",
+        "value": 4
+      },
+      "opcode_identity_required": false,
+      "service_entry": {
+        "candidate_VMA": "0x7a31",
+        "candidate_physical": "0x2ba31",
+        "symbol": "c2_mapped_far_vm_code_load_converged"
+      },
+      "service_entry_physical": "0x2ba31",
+      "state_transition": {
+        "map_operations": [
+          {
+            "A": 64,
+            "X": 130,
+            "Y": 0,
+            "Z": 128
+          }
+        ],
+        "modeled_instruction_bytes": 19,
+        "return_registers": {
+          "A": "A0",
+          "X": "X0",
+          "Y": "Y0",
+          "Z": 0
+        },
+        "returned": true,
+        "stack_balanced": true
+      },
+      "status": "passed-emitted-state-transition-MAP-semantics",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "low_resident_LMA_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    },
+    "pid": 2260569,
+    "source_authoritative_oracle": {
+      "VMA": "0xc356",
+      "bytes": 1671,
+      "c2d_crc16": [
+        "0xe27e",
+        "0x8cc6",
+        "0x74d8",
+        "0x277a",
+        "0x9866",
+        "0xe9dc"
+      ],
+      "capacity": 1792,
+      "delivery_inputs": [
+        {
+          "bytes": 93681,
+          "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+          "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+        },
+        {
+          "bytes": 33840,
+          "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+        }
+      ],
+      "generated_decoder": {
+        "bytes": 41551,
+        "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+      },
+      "generated_owner": {
+        "bytes": 548,
+        "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+      },
+      "oracle_offset": 0,
+      "records_per_image_derived": 6,
+      "reserve": 121,
+      "section": ".lisp65_rt_c2d_02a",
+      "shelf_crc16": [
+        "0xce26",
+        "0x46f5",
+        "0xfccb",
+        "0xbc88",
+        "0xf871",
+        "0xe3f7"
+      ],
+      "status": "passed-candidate-header-derived-CRC-oracle",
+      "timeout_frames": 64
+    },
+    "status": "PASS"
+  },
+  "authority": {
+    "acceptance_result": {
+      "bytes": 16380,
+      "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/artifact-acceptance.json",
+      "sha256": "cf29bdf2284a8091a3b87801f97a592479986b6477bbbff00b1b3871d6ee6488"
+    },
+    "driver": {
+      "bytes": 10178,
+      "path": "tools/host-lisp/c2_v160_input_fidelity_acceptance_resume.py",
+      "sha256": "301e87fe75abcc8ded9e82673aaada591ec4c177fed2068041448cf02155a6c9"
+    },
+    "preflight": {
+      "bytes": 9651,
+      "path": "build/c2.3/v1.6-input-fidelity-acceptance-resume/preflight.json",
+      "sha256": "61f5d1489bb0f30b939a91eb21d4a0574dee64e46bd930627bbc9e83acefb88d"
+    },
+    "review": {
+      "authority": "git-blob",
+      "bytes": 128563,
+      "commit": "61f77bcef0573b8ca1c3600d04cb465e2fe4e8ca",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "4eee35440b996890c0abd62c35c883f2a5b27d09ef7d656e7056a753ceba0ff9"
+    }
+  },
+  "device_path_open": true,
+  "execution_witness": {
+    "WPLTO_runs": 0,
+    "acceptance_resumes": 1,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "output": "Link-109 semantic closure: CHECK PASS history=unchanged inputs=10 Link-109 semantic closure: CHECK PASS history=unchanged inputs=10",
+    "product_links": 0
+  },
+  "format": "lisp65-c2-v160-input-fidelity-additive-acceptance-resume-v1",
+  "frozen_pair_after": {
+    "ELF": {
+      "bytes": 631860,
+      "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "4b2dfa0e7a33968863ec73f2162894ee1f644bd7ccbe6d9e745def7f376fb711"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d287ad76f6bd98e0cbb354f3a3cde9cca5a6c4714c6c2f79ce4da03c7b43bb60"
+    }
+  },
+  "frozen_pair_before": {
+    "ELF": {
+      "bytes": 631860,
+      "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "4b2dfa0e7a33968863ec73f2162894ee1f644bd7ccbe6d9e745def7f376fb711"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-input-fidelity-membership-real-consumer-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d287ad76f6bd98e0cbb354f3a3cde9cca5a6c4714c6c2f79ce4da03c7b43bb60"
+    }
+  },
+  "input_fidelity_seam_closed": true,
+  "next": "owner device acceptance of v1.6 items 1 and 2",
+  "recorded_on": "2026-08-19",
+  "status": "PASS: INPUT-FIDELITY SEAM CLOSED; DEVICE PATH OPEN"
+}

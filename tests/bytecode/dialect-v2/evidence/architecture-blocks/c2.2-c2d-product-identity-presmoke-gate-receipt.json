@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-c2d-product-identity-presmoke-gate-receipt-v1",
+  "recorded_on": "2026-07-22",
+  "status": "passed-class-a-host-gate-current-deployment-rejected",
+  "scope": "presmoke host verifier only",
+  "implementation": {
+    "path": "tools/host-lisp/c2_product_hw_presmoke.py",
+    "sha256": "acab8806720940ccd9534842ea00f4403f4a0005e79608d40fc6d5dd4b8ca954"
+  },
+  "authority": {
+    "resolved_profile_key": "c2_artifacts_sha256",
+    "artifact_manifest": "build/c2.2/substitution/substitution-artifacts.json",
+    "manifest_sha256": "e204a6c28234ac2b80e4e2324e27cafd919677992fcbc18ca0adcc297bf8c512",
+    "field": "product_build_id_u32",
+    "expected": "0x69496476"
+  },
+  "checks": [
+    "resolved profile binds exactly one C2 artifact authority SHA",
+    "authority build-id integer and hexadecimal forms agree",
+    "deployment C2D has a supported 48-byte v3/v5/v6 header",
+    "C2D header bytes 44..47 equal the canonical product build identity"
+  ],
+  "mutations": {
+    "supported_v6_header_with_0x69496476": "accepted by parser selftest",
+    "same_header_mutated_to_0x79616f27": "distinguished by parser selftest",
+    "actual_link40_deployment": "rejected before deployment with exact expected and actual identities"
+  },
+  "actual_replay": {
+    "command_result": "C2D/product build identity mismatch: c2d=0x79616f27 product=0x69496476",
+    "exit_status": 1
+  },
+  "execution_accounting": {
+    "product_bytes_changed": 0,
+    "capacity_delta_bytes": 0,
+    "compiler_runs": 0,
+    "product_links": 0,
+    "hardware_runs": 0
+  },
+  "claim_limit": "Class-A correction of a host deployment gate. It rejects the known incompatible Link-40 deployment but does not choose or emit a corrected C2D product identity."
+}

@@ -1,0 +1,705 @@
+{
+  "artifact_model_replay": {
+    "bank3_lifetime_model": {
+      "bank1_untouched": true,
+      "boot": {
+        "bank": 3,
+        "bytes": 15605,
+        "generation": 1,
+        "headroom_bytes": 49931,
+        "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/runtime-overlays-boot-final.bin",
+        "sha256": "2703d1e868369c6e54d432e25f0548e9ab85df1a4994442b96e7096bf0ac541d"
+      },
+      "invalidation_before_overwrite": true,
+      "session": {
+        "bank": 3,
+        "bytes": 60062,
+        "generation": 2,
+        "headroom_bytes": 5474,
+        "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/runtime-overlays-session-final.bin",
+        "sha256": "43d0b27a23d5c7ba14d81a47e1f5e3cfa06fe754c5423ffbf0af191e35660e5b"
+      },
+      "simultaneously_callable": false,
+      "stale_boot_binding_rejected": true,
+      "status": "passed-lifetime-exclusive"
+    },
+    "c2d_v6_host_semantics": {
+      "artifacts": {
+        "c2d": {
+          "bytes": 33840,
+          "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/artifact-only-v6-host-replay/initial.c2d-v6.bin",
+          "sha256": "6d0a9517d09502da1e2d0115c1d0c6f9e9c4f5edea2a08ebf1287026b0f33992"
+        },
+        "code": {
+          "bytes": 34403,
+          "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/artifact-only-v6-host-replay/bank2-static-code.bin",
+          "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+        }
+      },
+      "dynamic": {
+        "code": {
+          "bytes": 84,
+          "sha256": "4af73b51d5cc56bd534f674bbc0406d63af180af99b4f09cbe404ff865f8ba8d"
+        },
+        "input": {
+          "bytes": 300,
+          "path": "build/equivalence/fasl-test.bin",
+          "sha256": "3a8b0d4bd4a39ac3819d36289bc5d42eceb5bde81fd6cc882174a3403a21b39f"
+        },
+        "manifest": {
+          "bytes": 2703,
+          "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/artifact-only-v6-host-replay/c2-lite-dynamic.manifest.json",
+          "sha256": "3f9d0d88f4435b1a51c45614bda95472a79de66638a894c51f35a6a420cb74e3"
+        },
+        "metadata": {
+          "bytes": 218,
+          "sha256": "240b50eb6edabd67a25478716d54b1681326ac12bd51fae4772b0410b07ce64f"
+        },
+        "repeat_byte_identical": true
+      },
+      "negative_fixtures": [
+        "ordinal-1536",
+        "zero-surrogate",
+        "odd-surrogate",
+        "surrogate-above-root-plane",
+        "surrogate-high-bit",
+        "direct-as-root",
+        "root-as-direct",
+        "positive-even-direct-pointer-shape",
+        "v6-rejects-v5",
+        "v5-rejects-v6",
+        "zero-entry-length",
+        "bank2-range-wrap"
+      ],
+      "nested": {
+        "low_and_high_edges_disjoint": true,
+        "persistent_descendant_handles_retained": 6,
+        "transient_handles_rolled_back": 6
+      },
+      "one_emitter": {
+        "dynamic_calls": 2,
+        "implementation": "tools/host-lisp/c2_full_emission.py::emit_image",
+        "implementation_sha256": "34a0c15088ef3ae458469883f196a2c9b1d204993845622784655f118b5bc666",
+        "legacy_emitter_calls": 0,
+        "static_and_dynamic_format": "C2I-v2 through one implementation",
+        "static_calls": 6
+      },
+      "permanent_root_surrogate_gate": {
+        "collision_intersections": {
+          "bcode": 0,
+          "fixnum": 0,
+          "native_direct": 0,
+          "symi": 0
+        },
+        "format": "lisp65-c2d-v6-root-surrogate-gate-v1",
+        "high_bit_tag_rejection_witnesses": {
+          "bcode": 4096,
+          "negative_fixnum": 16384,
+          "symi": 4096
+        },
+        "negative_fixtures": [
+          "ordinal-1536",
+          "zero-surrogate",
+          "odd-surrogate",
+          "surrogate-above-root-plane",
+          "surrogate-high-bit",
+          "direct-as-root",
+          "root-as-direct",
+          "positive-even-direct-pointer-shape"
+        ],
+        "permanent_rule": "Every C2 probe imports and executes this complete-domain gate; new direct obj domains must be added to the obj.h-backed emitter.",
+        "root_capacity": 1536,
+        "root_surrogates": {
+          "count": 1536,
+          "maximum_hex": "0x0c00",
+          "minimum_hex": "0x0002",
+          "ordinal_0_hex": "0x0002",
+          "ordinal_1535_hex": "0x0c00",
+          "ordinal_1536": "rejected"
+        },
+        "source_truth": {
+          "compiler": "cc",
+          "domain_rows": {
+            "bcode": 4096,
+            "fixnum": 32768,
+            "native_direct": 16384,
+            "symi": 4096
+          },
+          "domain_unique_values": {
+            "bcode": 4096,
+            "fixnum": 32768,
+            "native_direct": 16384,
+            "symi": 4096
+          },
+          "emitted_rows": 57344,
+          "helper_source_sha256": "49b53691f0db9feb1d9feab369f7b77d428a51ce51f534ceacee0ea75a47d432",
+          "obj_h_sha256": "c780e3573fc4fa09c4b08ec7c5c80168afa74f1cc7e693e028e4c7066734c306"
+        },
+        "status": "pass"
+      },
+      "rollback": {
+        "count": 8,
+        "cutpoints": [
+          "after-code-copy",
+          "after-resolutions",
+          "after-roots",
+          "after-image",
+          "after-entries",
+          "after-header",
+          "during-export-first",
+          "during-export-last"
+        ]
+      },
+      "stale_generation": {
+        "new_generation": 2,
+        "old_generation": 1,
+        "old_handles_rejected": 9,
+        "physical_bytes_retained": true
+      },
+      "static_bank2": {
+        "c2d_bytes": 33840,
+        "c2d_sha256": "6d0a9517d09502da1e2d0115c1d0c6f9e9c4f5edea2a08ebf1287026b0f33992",
+        "code_bytes": 34403,
+        "code_sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac",
+        "entries": 588,
+        "headroom_bytes": 31133,
+        "images": 6,
+        "resolutions": 2264,
+        "roots": 283
+      },
+      "static_decoder": {
+        "entries_checked": 588,
+        "resolutions_checked": 2264,
+        "roots_checked": 283
+      },
+      "status": "passed"
+    },
+    "stage_before_publish_and_one_emitter": {
+      "evidence_mode": "model replay with the exact SHA-bound host emitter from the consumed Link-37 prelink; no compiler invocation",
+      "maximum_plan_protocol": {
+        "available_bytes": 16912,
+        "forward_compaction": {
+          "read_stride_bytes": 8,
+          "rows_proved": 2048,
+          "unread_rows_overwritten": 0,
+          "write_stride_bytes": 4
+        },
+        "headroom_bytes": 528,
+        "maximum_plan_bytes": 16384,
+        "maximum_rows": 2048,
+        "negative_matrix": {
+          "failure-before-cells-keeps-journal-empty": true,
+          "failure-during-cells-restores-old-functions": true,
+          "name-length-over-available": true,
+          "non-pointer-symbol": true,
+          "ordinal-middle-tag-bits": true,
+          "ordinal-over-entry-cap": true,
+          "plan-count-over-entry-cap": true,
+          "plan-tail-crosses-c2j": true,
+          "zero-name-length": true
+        },
+        "plan_base": 33840,
+        "rollback": {
+          "persistent_difference_after_rollback": 0,
+          "published_before_injected_failure": 19,
+          "restored_cells": 19
+        },
+        "status": "passed",
+        "unwind_base": 50752
+      },
+      "one_emitter": {
+        "dynamic_calls": 2,
+        "implementation": "tools/host-lisp/c2_full_emission.py::emit_image",
+        "implementation_sha256": "34a0c15088ef3ae458469883f196a2c9b1d204993845622784655f118b5bc666",
+        "legacy_emitter_calls": 0,
+        "static_and_dynamic_format": "C2I-v2 through one implementation",
+        "static_calls": 6
+      },
+      "publication": {
+        "captured_rows": 19,
+        "cold_source_reads": 19,
+        "events": [
+          "cold-plan-complete",
+          "header-published",
+          "exports-published",
+          "READY"
+        ],
+        "forced_post_ready_source_read_rejected": true,
+        "post_plan_source_reads": 0,
+        "status": "passed"
+      },
+      "source_contract": {
+        "checks": {
+          "caps_unchanged": true,
+          "class_c_authority": true,
+          "crc_helper_section_follows_fusion": true,
+          "crc_precedes_metadata": true,
+          "fused_entries_do_not_call_overlays": true,
+          "no_format_or_bank_change": true,
+          "publication_has_two_ordered_halves": true,
+          "serial_driver_uses_one_publication_entry": true,
+          "slot_abi_complete": true
+        },
+        "product_handoff_added_bytes": 0,
+        "product_handoff_added_pointers": 0,
+        "status": "passed"
+      },
+      "status": "passed"
+    },
+    "status": "passed-artifact-only-model-replay"
+  },
+  "authority": {
+    "artifact_resume_driver": {
+      "bytes": 19708,
+      "path": "tools/host-lisp/c2_lite_v6_link37_artifact_resume.py",
+      "sha256": "ade3eaa1fe3d71c02a78c96f85b86cb72912eff4dba9cd05656574955e0b20ab"
+    },
+    "c2_lite_addendum": {
+      "bytes": 17422,
+      "path": "docs/planning/c2-lite-execution-contract-addendum.md",
+      "sha256": "c87513ab17d604e79fee857a6408d469ab1cca372e3abde9eb32b867c8f9e401"
+    },
+    "c2_lite_contract": {
+      "bytes": 13160,
+      "path": "config/c2-lite-execution-contract.json",
+      "sha256": "ceec2611b7c29e0df72d5738fdc2f7218db7323613aa80bce64c919121946b41"
+    },
+    "class_a_family_contract_disposition": {
+      "bytes": 1043,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link37-c2-lite-v6-family-contract-gate-diagnosis.json",
+      "sha256": "c3fab52034c8e209b948a01ba371508376f8cef64ec51696cded0a10194c5556"
+    },
+    "geometry_gate_source": {
+      "bytes": 5248,
+      "path": "tools/host-lisp/c2_lite_v6_publish_last_geometry.py",
+      "sha256": "2ab7f843ef614d18ccee40d56a21dfab41c6bdb4bd022268915db182b5f14d2d"
+    },
+    "source_first_red": {
+      "bytes": 17603,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link37-c2-lite-v6-successor2-structural-receipt.json",
+      "sha256": "17041cbf12de60f21f2d4bc9e612c4017c7b8f5d859f685cf4b9f7b7455fe9ab"
+    },
+    "successor_replay_driver": {
+      "bytes": 3121,
+      "path": "tools/host-lisp/c2_lite_v6_link37_artifact_resume2.py",
+      "sha256": "6d6e54e26c70ca1da347e99bf603a9e8fe9cd64171574acb655a6aef31577c55"
+    }
+  },
+  "claim_limit": "First complete C2-lite product candidate and full structural, capacity, replacement and publish-last closure only. Hardware, boot, latency, refill timing, GC cost, Freezer identity, nested eval, promotion and acceptance remain not-run.",
+  "completion_mode": "artifact-only continuation after profile-specific verifier geometry re-pin; no compiler or linker",
+  "direct_entry_gate": {
+    "fixnum_decodable": 0,
+    "generated_phase_sources_byte_identical": 2,
+    "negative_classes": 4,
+    "receipt": {
+      "bytes": 4911,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-direct-entry-contract-receipt.json",
+      "sha256": "2777b476653d668cce6df6cf03a6722e84968a255995299db52133d2159cfdf2"
+    },
+    "references": 637,
+    "status": "passed-637-of-637-fixnum-values-zero"
+  },
+  "evidence_file_count": 112,
+  "execution_accounting": {
+    "artifact_resume_compiler_runs": 0,
+    "artifact_resume_linker_runs": 0,
+    "artifact_resume_product_closure_links": 0,
+    "hardware_runs": 0,
+    "runtime_family_pack_runs": 2,
+    "source_product_closure_links": 1
+  },
+  "format": "lisp65-c2-lite-product-link37-artifact-resume-v1",
+  "fresh_c2_lite_replacement_gates": {
+    "capacity": {
+      "fused_section_bytes": {
+        "crc_metadata": 1638,
+        "publish_exports": 973
+      },
+      "fused_section_headroom": {
+        "crc_metadata_to_cap": 154,
+        "publish_exports_to_quantum_ceiling": 51
+      },
+      "pack_quantum_bytes": 256,
+      "removed_catalog_records": 2,
+      "retired_sections_present": {
+        ".lisp65_rt_c2append_crc": false,
+        ".lisp65_rt_c2append_metadata": false,
+        ".lisp65_rt_c2append_publish_cells": false,
+        ".lisp65_rt_c2append_publish_names": false
+      },
+      "session_catalog_records_after": 51,
+      "session_catalog_records_before": 53,
+      "session_family_bytes": 65438,
+      "session_family_headroom_bytes": 98,
+      "session_raw_payload_bytes": 57577,
+      "slice_cap_bytes": 1792,
+      "status": "passed"
+    },
+    "chip_bank_ownership": {
+      "bank1": "untouched",
+      "bank2": {
+        "code_bytes": 34403,
+        "headroom_bytes": 31133,
+        "persistent_transient_edges_disjoint": true
+      },
+      "bank3": {
+        "boot": {
+          "bytes": 15442,
+          "headroom_bytes": 50094,
+          "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/runtime-overlays-boot-final.bin",
+          "sha256": "1b2a2545c758096b296667e9fc652cbdde66676c7d441a70465c69c21bd9523e"
+        },
+        "session": {
+          "bytes": 65438,
+          "headroom_bytes": 98,
+          "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/runtime-overlays-session-final.bin",
+          "sha256": "4f4e25bcf72c4329799961d0e3871b3f17f6955caa4908f943f02653a7a9c3a4"
+        }
+      },
+      "boot_session_simultaneously_callable": false,
+      "status": "passed"
+    },
+    "no_runtime_attic": {
+      "bank2_loader_callsites": 1,
+      "bank3_loader_callsites": 1,
+      "checks": {
+        "hot_entry_has_no_shelf_or_dma_read": true,
+        "hot_entry_uses_bank2": true,
+        "hot_literal_has_no_shelf_read": true,
+        "native_refill_has_no_attic_completion_path": true,
+        "native_refill_uses_bank3": true,
+        "retired_runtime_retry_defines_absent": true
+      },
+      "forbidden_control_or_data_edges": [],
+      "hot_symbols": [
+        "c2_product_entry_read",
+        "c2_stream_product_materialize_entry",
+        "c2_product_entry_record",
+        "c2_product_entry_length"
+      ],
+      "retained_hot_relocations_examined": 668,
+      "status": "passed-source-and-linked-relocation-closure"
+    },
+    "product_semantics": {
+      "checks": {
+        "fused_entries_are_source_free_where_required": true,
+        "fused_entries_do_not_call_overlays": true,
+        "hot_entry_source_and_locator_free": true,
+        "only_fused_crc_metadata_emitted": true,
+        "only_fused_publication_emitted": true,
+        "restored_e000_floor": true,
+        "shared_entry_emitter_present": true
+      },
+      "generated_runtime": {
+        "bytes": 125410,
+        "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/generated-product-sources/c2_product_runtime.c",
+        "sha256": "ae19fa51023929829ecc8fcd9076c25b2d4d74427fa51dacbc2e3e00d6861daa"
+      },
+      "retired_cold_symbols": {
+        "c2_entry_records": 0,
+        "c2_source_read": 0,
+        "c2_stream_product_child_value": 0
+      },
+      "retired_phase_symbols": {
+        "c2_append_crc_phase": 0,
+        "c2_append_metadata_phase": 0,
+        "c2_append_publish_cells_phase": 0,
+        "c2_append_publish_names_phase": 0
+      },
+      "status": "passed"
+    },
+    "root_surrogate": {
+      "collision_intersections": {
+        "bcode": 0,
+        "fixnum": 0,
+        "native_direct": 0,
+        "symi": 0
+      },
+      "format": "lisp65-c2d-v6-root-surrogate-gate-v1",
+      "high_bit_tag_rejection_witnesses": {
+        "bcode": 4096,
+        "negative_fixnum": 16384,
+        "symi": 4096
+      },
+      "negative_fixtures": [
+        "ordinal-1536",
+        "zero-surrogate",
+        "odd-surrogate",
+        "surrogate-above-root-plane",
+        "surrogate-high-bit",
+        "direct-as-root",
+        "root-as-direct",
+        "positive-even-direct-pointer-shape"
+      ],
+      "permanent_rule": "Every C2 probe imports and executes this complete-domain gate; new direct obj domains must be added to the obj.h-backed emitter.",
+      "root_capacity": 1536,
+      "root_surrogates": {
+        "count": 1536,
+        "maximum_hex": "0x0c00",
+        "minimum_hex": "0x0002",
+        "ordinal_0_hex": "0x0002",
+        "ordinal_1535_hex": "0x0c00",
+        "ordinal_1536": "rejected"
+      },
+      "source_truth": {
+        "compiler": "cc",
+        "domain_rows": {
+          "bcode": 4096,
+          "fixnum": 32768,
+          "native_direct": 16384,
+          "symi": 4096
+        },
+        "domain_unique_values": {
+          "bcode": 4096,
+          "fixnum": 32768,
+          "native_direct": 16384,
+          "symi": 4096
+        },
+        "emitted_rows": 57344,
+        "helper_source_sha256": "49b53691f0db9feb1d9feab369f7b77d428a51ce51f534ceacee0ea75a47d432",
+        "obj_h_sha256": "c780e3573fc4fa09c4b08ec7c5c80168afa74f1cc7e693e028e4c7066734c306"
+      },
+      "status": "pass"
+    },
+    "runtime_family": {
+      "runtime_slices": {
+        "cap_bytes": 1792,
+        "count": 58,
+        "largest_bytes": 1766,
+        "minimum_headroom_bytes": 26
+      },
+      "successor_bank3_pack": {
+        "boot": {
+          "bytes": 15442,
+          "headroom_bytes": 50094,
+          "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/runtime-overlays-boot-final.bin",
+          "sha256": "1b2a2545c758096b296667e9fc652cbdde66676c7d441a70465c69c21bd9523e"
+        },
+        "session": {
+          "bytes": 65438,
+          "headroom_bytes": 98,
+          "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/runtime-overlays-session-final.bin",
+          "sha256": "4f4e25bcf72c4329799961d0e3871b3f17f6955caa4908f943f02653a7a9c3a4"
+        }
+      }
+    },
+    "stage_before_publish": {
+      "evidence_mode": "model replay with the exact SHA-bound host emitter from the consumed Link-37 prelink; no compiler invocation",
+      "maximum_plan_protocol": {
+        "available_bytes": 16912,
+        "forward_compaction": {
+          "read_stride_bytes": 8,
+          "rows_proved": 2048,
+          "unread_rows_overwritten": 0,
+          "write_stride_bytes": 4
+        },
+        "headroom_bytes": 528,
+        "maximum_plan_bytes": 16384,
+        "maximum_rows": 2048,
+        "negative_matrix": {
+          "failure-before-cells-keeps-journal-empty": true,
+          "failure-during-cells-restores-old-functions": true,
+          "name-length-over-available": true,
+          "non-pointer-symbol": true,
+          "ordinal-middle-tag-bits": true,
+          "ordinal-over-entry-cap": true,
+          "plan-count-over-entry-cap": true,
+          "plan-tail-crosses-c2j": true,
+          "zero-name-length": true
+        },
+        "plan_base": 33840,
+        "rollback": {
+          "persistent_difference_after_rollback": 0,
+          "published_before_injected_failure": 19,
+          "restored_cells": 19
+        },
+        "status": "passed",
+        "unwind_base": 50752
+      },
+      "one_emitter": {
+        "dynamic_calls": 2,
+        "implementation": "tools/host-lisp/c2_full_emission.py::emit_image",
+        "implementation_sha256": "34a0c15088ef3ae458469883f196a2c9b1d204993845622784655f118b5bc666",
+        "legacy_emitter_calls": 0,
+        "static_and_dynamic_format": "C2I-v2 through one implementation",
+        "static_calls": 6
+      },
+      "publication": {
+        "captured_rows": 19,
+        "cold_source_reads": 19,
+        "events": [
+          "cold-plan-complete",
+          "header-published",
+          "exports-published",
+          "READY"
+        ],
+        "forced_post_ready_source_read_rejected": true,
+        "post_plan_source_reads": 0,
+        "status": "passed"
+      },
+      "source_contract": {
+        "checks": {
+          "caps_unchanged": true,
+          "class_c_authority": true,
+          "crc_helper_section_follows_fusion": true,
+          "crc_precedes_metadata": true,
+          "fused_entries_do_not_call_overlays": true,
+          "no_format_or_bank_change": true,
+          "publication_has_two_ordered_halves": true,
+          "serial_driver_uses_one_publication_entry": true,
+          "slot_abi_complete": true
+        },
+        "product_handoff_added_bytes": 0,
+        "product_handoff_added_pointers": 0,
+        "status": "passed"
+      },
+      "status": "passed"
+    },
+    "status": "passed",
+    "walls": {
+      "bank0_text_headroom_bytes": 70,
+      "e000_headroom_bytes": 528,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 144,
+      "resident_island_headroom_bytes": 170
+    },
+    "watermarks_and_generation": {
+      "boot_binding_invalidated_before_session": true,
+      "old_handles_rejected": 9,
+      "physical_bytes_retained_on_generation_change": true,
+      "status": "passed"
+    }
+  },
+  "fresh_generic_gates": {
+    "crc_assembler_leaf": "passed-linked-assembler-leaf-crc-equivalence",
+    "crc_codegen": "passed-target-stable-bytewise-crc-loop",
+    "f011_mount_window": "pass-measured-owner-accepted-contract-limit",
+    "fixed_facade": "passed",
+    "handoff_z_abi": "passed",
+    "kernal_freedom": "passed",
+    "kernal_publish_last": "passed",
+    "one_truth_closure": "passed",
+    "overlay_closure": "passed-final-elf-overlay-closure",
+    "pre_ownership": "passed",
+    "preinstallation_island": "passed-static-preinstallation-Island-gate",
+    "profile_data_reference": "passed",
+    "runtime_family_identity": "passed",
+    "section_inventory": "passed",
+    "substitution_balance": "passed",
+    "total_publish_last": "passed",
+    "verifier_publish_last": "passed"
+  },
+  "link_number": 37,
+  "next_gate": "owner-authorized seven-line receipt-less hardware presmoke from line 1",
+  "post_link_identity": {
+    "actual_changed_bytes": 32,
+    "declared_mutable_product_bytes": 34,
+    "status": "passed"
+  },
+  "product_identity": {
+    "elf": {
+      "bytes": 585876,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8a2cdec687024e9b9ef8e492fec04ff983d5b7c72326d3a34a2bed7097453ca9"
+    },
+    "map": {
+      "bytes": 192747,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "a8c05b8c1d288dff2566ad592d5d73cf1a2d41d2e3f84b5cdea3ebb736500bae"
+    },
+    "new_identity": true,
+    "pre_publish_product_sha256": "c2bb7d1fbf5ba5eb7f54326dda88cef0fd4c227f494e2872fc036ef7c5ed35d2",
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/lisp65-c2-substitution-linked.prg",
+      "sha256": "fffa5fdf518763001c840e416c1f448ac7f32a80e0e4f28330a5fab50a15157a"
+    },
+    "resolved_profile": {
+      "bytes": 8604,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/resolved-profile.txt",
+      "sha256": "c4cf02cb7d50f1f36cb4a58210191a91efeacc7afb5ab94259e07a6f831ca12e"
+    },
+    "unbound_product_sha256": "03f381d46950feeb0e4028f7417e32bb50817123bb4a520b6b2e522c6f476c0a"
+  },
+  "product_link_report": {
+    "actual_post_link_changed_bytes": 32,
+    "artifact_resume_compiler_runs": 0,
+    "artifact_resume_linker_runs": 0,
+    "c2_lite_replacement_gate": "passed",
+    "capacity_gate": "passed",
+    "claim_limit": "Artifact-side completion of the already consumed sole Link-37 product closure. No compiler, linker, hardware, promotion or acceptance claim.",
+    "direct_entry_encoding_gate": "passed-637-of-637-fixnum-values-zero",
+    "format": "lisp65-c2-lite-product-link37-artifact-completion-v1",
+    "identity_gate": "passed",
+    "kernal_freedom_gate": "passed",
+    "link_label": "product-link-37-c2-lite-v6-artifact-resume2",
+    "one_truth_gate": "passed",
+    "product": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/lisp65-c2-substitution-linked.prg",
+    "product_closure_link_count": 1,
+    "product_sha256": "fffa5fdf518763001c840e416c1f448ac7f32a80e0e4f28330a5fab50a15157a",
+    "runtime_family_headroom_bytes": {
+      "boot": 50094,
+      "session": 98
+    },
+    "status": "passed",
+    "total_post_link_mutable_product_bytes": 34
+  },
+  "promotable": false,
+  "publish_last_geometry": {
+    "address": "0xb99b",
+    "bytes": 32,
+    "format": "lisp65-c2-lite-v6-publish-last-geometry-v1",
+    "generic_historical_default_unchanged": true,
+    "historical_pre_c2_lite_address": "0xb954",
+    "negative_matrix": {
+      "historical-address-in-c2-lite-profile": "rejected",
+      "wrong-size": "rejected",
+      "wrong-symbol-boundary": "rejected"
+    },
+    "profile": "C2-lite/C2D-v6",
+    "rule": "The C2-lite pin is profile-specific. Historical B954 receipts and the generic pre-C2-lite default remain unchanged.",
+    "section": ".lisp65_runtime_overlay_verifier_bindings",
+    "status": "passed-authority-and-two-independent-witnesses",
+    "witnesses": [
+      {
+        "address": "0xb99b",
+        "bytes": 32,
+        "path": "build/c2-lite/v6-coresident-diet-successor-wplto-probe/full-product-wplto/c2-lite-v6-full-seed.prg.elf",
+        "symbols": {
+          "__lisp65_rtov_verifier_bindings_end": "0xb9bb",
+          "__lisp65_rtov_verifier_bindings_start": "0xb99b",
+          "rtov_boot_verifiers": "0xb99b",
+          "rtov_verifiers": "0xb9ab"
+        }
+      },
+      {
+        "address": "0xb99b",
+        "bytes": 32,
+        "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-successor2/lisp65-c2-substitution-linked.prg.elf",
+        "symbols": {
+          "__lisp65_rtov_verifier_bindings_end": "0xb9bb",
+          "__lisp65_rtov_verifier_bindings_start": "0xb99b",
+          "rtov_boot_verifiers": "0xb99b",
+          "rtov_verifiers": "0xb9ab"
+        }
+      }
+    ]
+  },
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/lisp65-c2-substitution-linked.prg",
+    "sha256": "54c731559fdb72d5d1cb8478b9da7e78a422741e4e5267d64b07fe4c6f763a65",
+    "status": "untouched-and-readable"
+  },
+  "source_first_red_artifacts": {
+    "files": 85,
+    "status": "SHA-bound-and-unchanged"
+  },
+  "status": "passed-new-c2-lite-product-identity-hardware-not-run",
+  "structural_report": {
+    "bytes": 26116,
+    "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/link37-c2-lite-v6-artifact-resume.json",
+    "sha256": "12cbca80c600a67353a53d98a26a90af4f11a3c09241cd8dd24c7f6a47e97a0f"
+  }
+}

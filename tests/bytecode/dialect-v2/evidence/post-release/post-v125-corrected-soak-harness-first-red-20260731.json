@@ -1,0 +1,42 @@
+{
+  "bindings": {
+    "package_readback": {
+      "bytes": 819200,
+      "path": "build/post-release/v125/corrected-soak/session-01/package-readback.d81",
+      "sha256": "871b90824924dacbe27f071d56b0b97488257da0c1a0b9e80f5d5eeae5f23380"
+    },
+    "setup_input_log": {
+      "bytes": 779,
+      "path": "build/post-release/v125/corrected-soak/session-01/setup-cycle-counter-input.log",
+      "sha256": "5f47022c52c56035ce65c101102ec37f02dc56d7f8244d5e52321423a77571d3"
+    },
+    "setup_screen": {
+      "bytes": 3536,
+      "path": "build/post-release/v125/corrected-soak/session-01/setup-cycle-counter.png",
+      "sha256": "2d967ca271e005e154345b59d9a6239b775bd922757fe8173e5220cc35453a6c"
+    },
+    "setup_screen_text": {
+      "bytes": 2672,
+      "path": "build/post-release/v125/corrected-soak/session-01/setup-cycle-counter.txt",
+      "sha256": "b160ea529e3e7172a490559921fed62116b0b580e8df3d8e3c16ff8be6fa8032"
+    }
+  },
+  "classification": {
+    "class": "harness-first-red",
+    "mechanism": "The Python runner captured m65 stdout and stderr into one string. m65 writes screen text to stdout but timing/render diagnostics to stderr, so the result parser saw valid result 0 followed by diagnostic text and rejected the otherwise correct screen.",
+    "product_result": "The first setup form (setq *sc* 0) returned exact 0 and the REPL prompt remained live.",
+    "status": "stopped-before-batch-1"
+  },
+  "execution_accounting": {
+    "completed_soak_batches": 0,
+    "completed_soak_cycles": 0,
+    "hardware_contacts": 1,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-v1.2.5-corrected-soak-harness-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "status": "harness-first-red-preserved-successor-session-02",
+  "successor_rule": "Separate m65 stdout from stderr, pin that separation in the runner selftest, preserve session-01, and use session-02 for the unchanged soak.",
+  "claim_limit": "This receipt proves a parser/tooling failure before batch 1. It makes no product, soak, Chip-RAM, GC, DMA, acceptance, or release claim."
+}

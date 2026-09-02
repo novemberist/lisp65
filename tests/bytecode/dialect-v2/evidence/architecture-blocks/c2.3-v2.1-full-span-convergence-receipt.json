@@ -1,0 +1,294 @@
+{
+  "authority": {
+    "DMA_source": {
+      "bytes": 10398,
+      "path": "src/c2_platform_dma.c",
+      "sha256": "0e58051fd8ecc7780c03172d966b1ac621260705df47aa3350b1300fdc3e87cf"
+    },
+    "assembly": {
+      "bytes": 12929,
+      "path": "src/optional/c2_mapped_far_convergence_full_span.s",
+      "sha256": "f79e9aa068e58c2b405387fcb58c323149b05747bb784fcbf1b108435cd58eab"
+    },
+    "capture": {
+      "bytes": 8344,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-link111-d2-partial-span-capture-receipt.json",
+      "sha256": "926e2b0acb6c79ac882717d6470d523a4458e0adb84f817cfe833effd12b2234"
+    },
+    "contract": {
+      "bytes": 2978,
+      "path": "config/c2-mapped-far-full-span-contract-v3.json",
+      "sha256": "4ef592a7cb9fe0e07b115dadb270d1229c072e492e98354f2ba3b0ad9d4b6b63"
+    },
+    "driver": {
+      "bytes": 28653,
+      "path": "tools/host-lisp/c2_v21_full_span_convergence.py",
+      "sha256": "103b6dcccf83dfa7e21bd6e269cbd268ea88b8d4a78ded0ca08d908963818d96"
+    },
+    "linker": {
+      "bytes": 337100,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 108778,
+      "commit": "afe63882cb1dedab80238b3ee6ef157df75cca9a",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "7d0607060b457e78a11d80d9cb8f41bbe25e266d12004caeb954a8ade2e9ead0"
+    },
+    "predecessor_contract": {
+      "bytes": 3456,
+      "path": "config/c2-mapped-far-abi-preservation-contract-v2.json",
+      "sha256": "3a1023e01d1205c6b61cf63b566e4602a2187f70a97c195df5fbc935e4f73e1a"
+    },
+    "pricing": {
+      "bytes": 12544,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-span-verification-pricing-receipt.json",
+      "sha256": "2aa04b329c010e53252e95af4424a60d24c0497b8c45170aefbbcf0acb2608e6"
+    },
+    "product_config": {
+      "bytes": 2426,
+      "path": "tools/host-lisp/c2_v21_full_span_product_config.py",
+      "sha256": "e3584706aea16396e6d456f1c2c0acae90a40ca2e596712e0a436586e0a5f129"
+    },
+    "runtime_source": {
+      "bytes": 164197,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "24a9f1d79fd1990658733ee60dd8f0d0dbe04281bc9cd4d67239d66996569956"
+    }
+  },
+  "claim_limit": "Host/micro-ELF fix only; the one product card is not yet consumed and D2-D5 remain closed.",
+  "decision": {
+    "D2_D5_open": false,
+    "card_authorized": true,
+    "card_consumed": false,
+    "device_contact": false,
+    "fix_host_green": true
+  },
+  "execution_accounting": {
+    "C_reference_cases": 18,
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "micro_links": 1,
+    "product_links": 0,
+    "target_cases": 18
+  },
+  "format": "lisp65-c2.3-v2.1-full-span-convergence-v1",
+  "linked_execution": {
+    "C_reference_cases": 18,
+    "callee_saved_checks": 288,
+    "cases_per_lane": 9,
+    "equivalent_cases": 18,
+    "false_accepts": 0,
+    "hardware_stack_balanced_cases": 18,
+    "headroom_bytes": 251,
+    "lanes": 2,
+    "linked_relocation_bytes": 4644,
+    "linked_relocation_records": 387,
+    "linked_service_bytes": 1248,
+    "primary_submissions_max": 1,
+    "rows": {
+      "ordinary/clean-equal": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 0,
+        "hardware_stack_balanced": true,
+        "primary": 0,
+        "result": 1,
+        "source_probes": 7
+      },
+      "ordinary/first-only-never": {
+        "callee_saved_preserved": 16,
+        "destination": "3b000000000000",
+        "elapsed_frames": 67,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 0,
+        "source_probes": 45
+      },
+      "ordinary/first-tail-never": {
+        "callee_saved_preserved": 16,
+        "destination": "3b000000000053",
+        "elapsed_frames": 67,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 0,
+        "source_probes": 45
+      },
+      "ordinary/middle-first-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "ordinary/odd-first-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "ordinary/one-byte": {
+        "callee_saved_preserved": 16,
+        "destination": "3b",
+        "elapsed_frames": 2,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 2
+      },
+      "ordinary/prefix-one-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "ordinary/prefix-three-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "ordinary/tail-first-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "physical/clean-equal": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 0,
+        "hardware_stack_balanced": true,
+        "primary": 0,
+        "result": 1,
+        "source_probes": 7
+      },
+      "physical/first-only-never": {
+        "callee_saved_preserved": 16,
+        "destination": "3b000000000000",
+        "elapsed_frames": 67,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 0,
+        "source_probes": 45
+      },
+      "physical/first-tail-never": {
+        "callee_saved_preserved": 16,
+        "destination": "3b000000000053",
+        "elapsed_frames": 67,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 0,
+        "source_probes": 45
+      },
+      "physical/middle-first-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "physical/odd-first-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "physical/one-byte": {
+        "callee_saved_preserved": 16,
+        "destination": "3b",
+        "elapsed_frames": 2,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 2
+      },
+      "physical/prefix-one-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "physical/prefix-three-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      },
+      "physical/tail-first-then-all": {
+        "callee_saved_preserved": 16,
+        "destination": "3b0601012f0153",
+        "elapsed_frames": 3,
+        "hardware_stack_balanced": true,
+        "primary": 1,
+        "result": 1,
+        "source_probes": 8
+      }
+    },
+    "target_cases": 18
+  },
+  "mutations_rejected": [
+    "restore-first-byte-success",
+    "restore-first-tail-success",
+    "atomic-only-fixtures",
+    "lose-tail-first",
+    "admit-false-success",
+    "diverge-C-target",
+    "resubmit-primary",
+    "clobber-callee-saved",
+    "unbalance-stack",
+    "pin-prototype-size",
+    "spend-arena",
+    "pin-old-relocations",
+    "link-predecessor-owner",
+    "two-assembly-owners",
+    "spend-card",
+    "open-D2",
+    "authorize-device"
+  ],
+  "recorded_on": "2026-08-16",
+  "source_scope": {
+    "candidate_defines": [
+      "LISP65_CODE_WINDOW_CONVERGENCE",
+      "LISP65_DMA_CONTENT_CONVERGENCE",
+      "LISP65_C2_ASM_CONVERGENCE",
+      "LISP65_C2_FULL_SPAN_CONVERGENCE"
+    ],
+    "candidate_source": "src/optional/c2_mapped_far_convergence_full_span.s",
+    "candidate_sources": [
+      "src/c2_mapped_far_service.s",
+      "src/optional/c2_mapped_far_convergence_full_span.s"
+    ],
+    "feature": "LISP65_C2_FULL_SPAN_CONVERGENCE",
+    "predecessor_source": "src/c2_mapped_far_convergence.s",
+    "single_assembly_owner": true
+  },
+  "status": "HOST-GREEN: FULL-SPAN SUCCESSOR ARMED"
+}

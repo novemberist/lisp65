@@ -1,0 +1,74 @@
+{
+  "authority": {
+    "candidate_deployment": {
+      "bytes": 4244,
+      "path": "build/c2.2/v1.2.6-editor-hardware/deployment.json",
+      "sha256": "7958ff1c4f4d9a439d72184b46140848857a1fd47a547e5ef69731275686ff70"
+    },
+    "commission": {
+      "bytes": 6655,
+      "path": "docs/planning/c2.2-v1.2.6-editor-jtag-method-review.md",
+      "sha256": "d2d300439b43baa4fc49b292cc6c3dcb95f70333bbb3ac5fc7cd588c55b3d35c"
+    },
+    "driver": {
+      "bytes": 19089,
+      "path": "tools/host-lisp/c2_v126_editor_stall_hang_triggered_device.py",
+      "sha256": "7a7e3f402ceddb0800d340d586c3484fb18c080933eef74c45e12e239881b74c"
+    },
+    "predecessor": {
+      "bytes": 15579,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-observed-device-receipt.json",
+      "sha256": "ba9fb4a7e4ece10b600dbd82aa8929dee6eea156ba21903062c18e99a2ad1d2b"
+    }
+  },
+  "device_commands": 0,
+  "executions": 9,
+  "format": "lisp65-c2.2-v1.2.6-editor-stall-hang-triggered-dry-run-v1",
+  "mutations": {
+    "ASCII-0x61-instead-of-folded-0x41-rejected": true,
+    "cached-status-token-absent": true,
+    "per-key-breakpoint-call-absent": true
+  },
+  "plan": {
+    "editor_abort": "~C",
+    "editor_launch": "(edit)",
+    "forms": [
+      [
+        "context-helper-legacy",
+        "(defun %ib(n)(%ide-buffers-find n(symbol-value(quote ide-buffers))))",
+        "%ib"
+      ],
+      [
+        "context-helper-corrected",
+        "(defun %ib(n a)(if a(if(string= n(caar a))(cdar a)(%ib n(cdr a)))nil))",
+        "%ib"
+      ],
+      [
+        "context-scratch-bind",
+        "(progn(setq b(%ib\"scratch\"(symbol-value(quote ide-buffers))))t)",
+        "t"
+      ]
+    ],
+    "measurement_character": "a",
+    "measurement_keys": 56,
+    "measurement_launch": "(ide\"measure3\")",
+    "scratch_chunk_width": 10,
+    "scratch_text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabc"
+  },
+  "product_bytes_changed": 0,
+  "proof": {
+    "CPU_halt_call_sites": 1,
+    "RUN_STOP_truth": "recovered live REPL product postcondition",
+    "a_b_c_cases": [
+      "a-input-irq-key-queued-not-consumed",
+      "a-input-irq-key-not-observed-before-collection",
+      "b-target-only-gc-hang",
+      "c-post-gc-or-gc-callee-pc-needs-symbol-reading"
+    ],
+    "context_truth": "live ide-buffers memory",
+    "hang_trigger": "buffer-fill timeout at any typed position",
+    "per_key_breakpoints": 0
+  },
+  "recorded_on": "2026-07-31",
+  "status": "passed-option1-hang-triggered-runner"
+}

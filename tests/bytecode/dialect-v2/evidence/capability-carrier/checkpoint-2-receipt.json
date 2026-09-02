@@ -1,0 +1,42 @@
+{
+  "format": "lisp65-v2-capability-carrier-checkpoint-receipt-v1",
+  "block_id": "v2-capability-carrier",
+  "checkpoint": 2,
+  "checkpoint_id": "registry-null-miss-target",
+  "gate": "v2-capability-carrier-check-host-2",
+  "contract_policy_sha256": "7f650c5a029f16b3d83b7401ea52142cd9442c1e7ff770a9addc9e1bd00b525b",
+  "result": "passed",
+  "assertions": [
+    "link-time-registry-linked",
+    "null-miss-target-gate-ready",
+    "carrier-still-active"
+  ],
+  "evidence": [
+    {
+      "path": "config/workbench-native-service-registry.json",
+      "sha256": "6ae38d6fad2610d277733cb005cbe4bea3eac416b82faa4bdce773276447f52c"
+    },
+    {
+      "path": "docs/v2-capability-carrier-registry.md",
+      "sha256": "578e97826294dfa83cd20a6a75597d0fdd2fbe6c1e4a1d9f04fb9c89e6c1f2a8"
+    },
+    {
+      "path": "mk/workbench-service-inventory.mk",
+      "sha256": "d9cb4bc9f27c00fe2127d4dfba33070cc1c258c49e13d792e768d1f39472d872"
+    },
+    {
+      "path": "tools/host-lisp/workbench_service_call_inventory.py",
+      "sha256": "dde5b22d19447fa4fc7b7875540e3ea3d67b55f627c8c7e4c2e162fa52efae76"
+    }
+  ],
+  "metrics": {
+    "callprim_calls": 385,
+    "directory_calls": 1733,
+    "intentional_error_sentinel_calls": 10,
+    "native_service_calls": 53,
+    "runtime_function_pointer_registry": false,
+    "unresolved_calls": 63,
+    "unresolved_targets": 29,
+    "zero_miss_ready": false
+  }
+}

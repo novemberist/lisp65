@@ -1,0 +1,129 @@
+{
+  "answer": {
+    "desktop_attribution_overturned_a_retry_order_bug": true,
+    "desktop_attribution_overturned_an_operand_bug": false,
+    "product_fix_justified": true,
+    "remaining_hardware_question": "whether the single-submit/local-observation form completes Cutpoints 3 and 4 on the device"
+  },
+  "authority": {
+    "attribution_driver": {
+      "bytes": 16023,
+      "path": "tools/host-lisp/c2_link64_completion_poison_operand_attribution.py",
+      "sha256": "55c9848c140bbbe2f378d56e92b1e79a91d553263c815eadfd0ed441a642fa88"
+    },
+    "completion_contract_v6": {
+      "bytes": 13883,
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "sha256": "77e3e9be995d9e529cafb5a350ee8b80d2999fe5aad165181243696a95108cf8"
+    },
+    "final_reader_success_hardware": {
+      "bytes": 5187,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-reader-zero-bounds-composite-hardware-first-red.json",
+      "sha256": "9577d0332012b4b3a9230c3331420dd36a6b8fecce7736f977a062ddea410e06"
+    },
+    "first_ACTIVE_entry_hardware": {
+      "bytes": 8701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-entry-hold-hardware-receipt.json",
+      "sha256": "6c783186645d1ee1fde0c15ad88cc0bb59d610cc572a054c9b5e43f38bd901c0"
+    },
+    "generated_runtime": {
+      "bytes": 154771,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/generated-product-sources/c2_product_runtime.c",
+      "sha256": "1b5a185a94b1064b4735646a3cfdf6da2c5af11ed5c9488cc8e2e3e27fe0f4f3"
+    },
+    "late_Chip_write_hardware": {
+      "bytes": 7830,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link59-C1-Freezer-cutpoint4-late-chip-write-hardware-first-red.json",
+      "sha256": "beb1ae44a5e60462161fa4ee5c24df297bf4d8478eddaa1eebd15711ebbc5b3e"
+    },
+    "linked_ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "postreader_timeout_attribution": {
+      "bytes": 4657,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-completion-postread-timeout-host-ELF-attribution.json",
+      "sha256": "346d63bf710f0c6598582006cb5b6c0effea12231447e83dfa8c0089905b29bf"
+    }
+  },
+  "claim_limit": "This receipt proves linked operand identity and exposes a valid late-read counterexample in the retry order. Hardware must still qualify the corrected product; no C1, matrix, acceptance, promotion or release claim is made.",
+  "contract_correction": {
+    "corrected_model": {
+      "first_compare_matches": false,
+      "poison_count": 1,
+      "read_submit_count": 1,
+      "second_compare_after_delivery_matches": true
+    },
+    "new": "poison once, submit exactly one ordered trailing target read, then sample only the local observed buffer until content matches or the 64-frame timeout expires",
+    "old": "poison before every target read and resubmit the read on every retry",
+    "ordering_property": "the one read job remains ordered after all producer writes; its eventual delivery is the completion witness",
+    "permanent_product_detail_witness_required": false
+  },
+  "format": "lisp65-c2.2-Link64-completion-poison-operands-host-ELF-attribution-v1",
+  "governance": {
+    "C1": "OPEN",
+    "acceptance_chain": "LOCKED",
+    "latency_attempts_consumed": 0,
+    "matrix_gate": "LOCKED",
+    "prior_Class_B_budget": "closed at 3/3",
+    "this_step": "Class-C host attribution"
+  },
+  "operand_attribution": {
+    "CRC_source": {
+      "call": "rtov_crc_mem at $c86d",
+      "pointer": "the same poll-local observed pointer"
+    },
+    "alias_result": {
+      "observed_aliases_producer_seal": false,
+      "poison_aliases_Bank5_target": false,
+      "poison_aliases_reader_destination": true,
+      "reader_destination_aliases_CRC_source": true,
+      "verdict": "all addresses match their intended roles"
+    },
+    "expected_CRC": {
+      "entry_value": "0x2801",
+      "fixed_address_for_current_state": "$c195/$c196",
+      "linked_loads": "$c881 and $c888",
+      "source": "c2_append_state.record[25..26]"
+    },
+    "poison_destination": {
+      "machine_value": "poll-local observed = software stack + 10",
+      "pointer_cells": "__rc24/__rc25",
+      "store": "STA (__rc24),Y at $c7f2"
+    },
+    "target_read": {
+      "call": "c2_stream_c2d_read at $c828",
+      "destination": "the same poll-local observed pointer in Bank 0",
+      "source": "Bank 5:$c640..$c67f"
+    }
+  },
+  "ordering_attribution": {
+    "DMA_submission": "$ff90 writes the 12-byte job address to $d702/$d701/$d700 and returns immediately with RTS",
+    "counterexample": {
+      "attempts": 64,
+      "late_correct_results_erased_before_compare": 63,
+      "matches_during_poll": 0,
+      "observed_correct_after_last_delayed_delivery": true
+    },
+    "defect": "If the submitted read becomes visible after the immediate comparison, the next attempt erases that correct late result before it can be compared. Repeating the read does not establish read completion and can reproduce the exact good-before / never-good-during / good-after signature.",
+    "retry_edge": "$c8c4 JMP $c7e4",
+    "retry_order": [
+      "rematerialize length",
+      "poison the observed buffer",
+      "submit Bank-5-to-Bank-0 read",
+      "immediately CRC/compare the observed buffer",
+      "on nonmatch retry before poison"
+    ]
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "scope": {
+    "class": "Class-C read-only host/ELF attribution",
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "status": "FIRST RED: operands correct; retry re-poisons a potentially late read result before comparison"
+}

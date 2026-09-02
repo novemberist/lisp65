@@ -1,0 +1,90 @@
+{
+  "bindings": {
+    "capitalize_screen": {
+      "bytes": 4034,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-capitalize.png",
+      "sha256": "c7add038799ad21bf97c09c4e05da188eb8bb960e1a923bd208f6a4207eba130"
+    },
+    "capitalize_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-capitalize.txt",
+      "sha256": "04b50b8397a7e20d22ba68ea85c9da13a6f50163ab9c6815d195e0cbb76ca87d"
+    },
+    "config": {
+      "bytes": 5059,
+      "path": "config/c2-v112-link92-phase-d-d3.json",
+      "sha256": "2ae01ce0a30c85ad6cee1423f4b0e07b1de72f07e3bd54ba337dc28b99bb38f2"
+    },
+    "final_clear": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-who-calls-input-attempt-3-clear.txt",
+      "sha256": "2ab88d432271367f47f9ed1e9fdb234db3019ec8ec8bb2154ec8f4e494db571f"
+    },
+    "lowercase_preparation": {
+      "bytes": 7201,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d3-preparation-receipt.json",
+      "sha256": "61d0c8bda93fb3bd66076c4417bcd8f63dda05fe2e45264490efa2ee14670737"
+    },
+    "standing_session_preflight": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-lowercase-resume-preflight.txt",
+      "sha256": "7cd70ce7cf8cb2248b60d38b703188ba5bcc89308dd116738fddaaff5a2c4745"
+    },
+    "string_split_screen": {
+      "bytes": 4529,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-string-split.png",
+      "sha256": "0801fd535f8b26cf1e57a78bd87656d8d4e2eb13b382bd261f9b8ea830872cdb"
+    },
+    "string_split_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-string-split.txt",
+      "sha256": "2ab88d432271367f47f9ed1e9fdb234db3019ec8ec8bb2154ec8f4e494db571f"
+    },
+    "who_calls_attempt_1": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-who-calls-input-attempt-1.txt",
+      "sha256": "79275b560c22f1bdd338dca4b8e8d83bbed91891c26f91ae30b946734553e103"
+    },
+    "who_calls_attempt_2": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-who-calls-input-attempt-2.txt",
+      "sha256": "79275b560c22f1bdd338dca4b8e8d83bbed91891c26f91ae30b946734553e103"
+    },
+    "who_calls_attempt_3": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d3/D3-who-calls-input-attempt-3.txt",
+      "sha256": "79275b560c22f1bdd338dca4b8e8d83bbed91891c26f91ae30b946734553e103"
+    }
+  },
+  "classification": {
+    "actual_active_input": "(who-calls %ide-region-parts-tail)",
+    "attempts": 3,
+    "expected_active_input": "(who-calls '%ide-region-parts-tail)",
+    "mechanism": "The virtual keyboard transport omitted the apostrophe. Verified-input rejected every incomplete echo before RETURN and cleared it back to the empty prompt.",
+    "product_claim": "none",
+    "recommended_correction": "Use (who-calls (quote %ide-region-parts-tail)) with the unchanged exact caller-list oracle; do not repair virtual apostrophe transport inside Phase D.",
+    "type": "harness-first-red-virtual-apostrophe-transport"
+  },
+  "execution_accounting": {
+    "D2_rows": 0,
+    "D3_comfort_forms_executed_in_repeat": 2,
+    "D3_editor_entered": false,
+    "D3_require_reexecuted": false,
+    "physical_keys": 0,
+    "virtual_RETURNs_for_failed_who_calls": 0
+  },
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-d3-apostrophe-transport-first-red-v1",
+  "passed_rows": {
+    "capitalize": "(capitalize \"hello\") => \"Hello\"",
+    "string-split": "(string-split \"a,b,c\" \",\") => (\"a\" \"b\" \"c\")"
+  },
+  "recorded_on": "2026-08-07",
+  "status": "first-red-D3-apostrophe-virtual-input-before-who-calls",
+  "stopped_state": {
+    "D2": "untouched",
+    "REPL": "live-empty-prompt-after-three-verified-clears",
+    "editor": "not-entered",
+    "trace": "not-started",
+    "who-calls": "not-executed"
+  }
+}

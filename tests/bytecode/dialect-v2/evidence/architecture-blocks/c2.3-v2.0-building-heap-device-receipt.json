@@ -1,0 +1,294 @@
+{
+  "authorities": {
+    "IRQ_window_source": {
+      "bytes": 4076,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81"
+    },
+    "candidate_ELF": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-crc-carveout-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+    },
+    "capture_contract": {
+      "bytes": 3792,
+      "path": "config/c2-v20-building-heap-capture-row.json",
+      "sha256": "390d395d9bae1030a7a96823821df7ed55f834a1ccd8928b694d578f47b16e1c"
+    },
+    "host_attribution": {
+      "bytes": 20536,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-building-heap-attribution-receipt.json",
+      "sha256": "79fbdaccd5f7519efab685222101354c8c32473265c532aa85a98928bd50e68b"
+    },
+    "mapped_far_body_source": {
+      "bytes": 9859,
+      "path": "src/c2_mapped_far_convergence.s",
+      "sha256": "697fcc294e30512ccf62255f80ae79c3a75d9bd0ef6bc79c5f920903effcb166"
+    },
+    "mapped_far_contract": {
+      "bytes": 15670,
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    },
+    "mapped_far_facade_source": {
+      "bytes": 1307,
+      "path": "src/c2_mapped_far_service.s",
+      "sha256": "237ba17171877dea8d15347a295f2b6a112e394c64565b01d45274e39b03ac02"
+    },
+    "media_closure": {
+      "bytes": 6123,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-crc-carveout-media-liveness-closure-receipt.json",
+      "sha256": "2991ca54bffd4a429157fbf178a5bd8f673c721fdde156698332debf00e32f2a"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 35416,
+      "commit": "6bbf828ae95372f9ba7ab72b00885ea1bf40b138",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "e089fe748ad2ea24d104cb840fcc06150963f238591def9cecda2b9a981747f0"
+    },
+    "result_driver": {
+      "bytes": 23885,
+      "path": "tools/host-lisp/c2_v20_building_heap_device_result.py",
+      "sha256": "1d7a1086345668e1c74b516d69883ff9a4b29ff6f70bfba3af1846c70dad9dbf"
+    },
+    "tested_core_and_stack_semantics": {
+      "bytes": 12182,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-irq-origin-desk-attribution-receipt.json",
+      "sha256": "aa493290606bcd7ec2274486f2c5333bef6fd933810a3cb22d327e23a97bb492"
+    }
+  },
+  "claim_limit": "One consumed D1 stopped-state row. It proves a software-BRK-class frame and a mapped-far return/instruction-identity contradiction, not the post-stop live byte at $3185, the earlier corruptor, a specific fix, another device read/contact, D2-D5 or release readiness.",
+  "classification": {
+    "capture_row_consumed": true,
+    "first_real_mechanism_evidence": "the mapped-far content-read call returned to nameoff_get with the far-service MAP still selected, an invalid convergence commit byte, and a B=1 frame whose continuation is two bytes after the candidate's linked STA $04",
+    "immediate_terminal_cause": "second consecutive source-less/BRK-class entry selected the product-owned fail-closed loop",
+    "next": "owner disposition over the mapped-far return/instruction-view contradiction",
+    "not_proved": [
+      "the post-stop live CPU-view byte at $3185",
+      "whether $3185 was stale, overwritten or reached via a corrupt frame",
+      "which earlier instruction or writer broke the return/instruction identity",
+      "a heap, OOM, GC-loop, product fix or release result"
+    ],
+    "proved": [
+      "D1 reached STAGING MEDIA and BUILDING HEAP but not LOADING LIBRARIES",
+      "the live stopped PC is the exact candidate fail-closed loop",
+      "the terminal hardware frame has B=1 and continuation $3187",
+      "the linked candidate has STA $04 bytes $85 $04 at $3185",
+      "normal vm_code_load_converged return must execute mapped-far leave",
+      "MAPL remained $2480 and c2_dma_verify_done was invalid $02",
+      "GC count and pending error pointer were both zero"
+    ],
+    "root_cause_named": false,
+    "selected_pre_registered_rows": [
+      "runtime-family-or-convergence",
+      "wild-control-flow"
+    ]
+  },
+  "device": {
+    "convergence_commit": {
+      "address": "0x0087",
+      "clear": "0x5A",
+      "committed": "0xA5",
+      "observed": "0x02",
+      "symbol": "c2_dma_verify_done",
+      "valid_state": false
+    },
+    "hardware_frame": {
+      "candidate_BRK_opcode_address": "0x3185",
+      "handler_SP": "0xC9",
+      "saved": {
+        "A": "0x00",
+        "X": "0x00",
+        "Y": "0xB4",
+        "Z": "0x00"
+      },
+      "stacked_B": 1,
+      "stacked_P": "0x32",
+      "stacked_continuation": "0x3187",
+      "tested_core_semantics": "hardware IRQ stacks B=0 and the resume PC; BRK stacks B=1 and the PC two bytes after opcode $00"
+    },
+    "mapping": {
+      "captured": {
+        "MAPH": "0x8000",
+        "MAPL": "0x2480"
+      },
+      "handler_or_fail_path_changes_mapping": false,
+      "meaning": "mapped far-service CPU block 3 remains selected",
+      "required_after_normal_facade_return": "MAPL=0x0000",
+      "stacked_opcode_site_affected_by_block3_map": false
+    },
+    "one_stopped_session": {
+      "CPU_left_stopped": true,
+      "D2_D5_executed": false,
+      "contacts": 1,
+      "pre_stop_external_observations_after_red": 1,
+      "resumes": 0,
+      "stops": 1
+    },
+    "physical_state": {
+      "allocator-zp": {
+        "bytes": 16,
+        "physical_address": "0x0000003D",
+        "raw_hex": "00000000600000000000000000000000"
+      },
+      "c2-runtime-state": {
+        "bytes": 50,
+        "physical_address": "0x0000C080",
+        "raw_hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "convergence-state": {
+        "bytes": 66,
+        "physical_address": "0x0000C000",
+        "raw_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "gc-runs": {
+        "bytes": 2,
+        "physical_address": "0x0000B9EE",
+        "raw_hex": "0000"
+      },
+      "ordinary-dma-list": {
+        "bytes": 12,
+        "physical_address": "0x0000B9D3",
+        "raw_hex": "000200a3cf0022fa05000000"
+      },
+      "ownership-and-convergence-zp": {
+        "bytes": 9,
+        "physical_address": "0x00000087",
+        "raw_hex": "020000000000000000"
+      },
+      "pending-error-pointer": {
+        "bytes": 2,
+        "physical_address": "0x0000BFEF",
+        "raw_hex": "0000"
+      },
+      "runtime-overlay-state": {
+        "bytes": 4,
+        "physical_address": "0x0000BFF7",
+        "raw_hex": "00810000"
+      },
+      "vm-and-boot-zp": {
+        "bytes": 21,
+        "physical_address": "0x0000005F",
+        "raw_hex": "03000000e000000000000000000000000000000901"
+      }
+    },
+    "readback_identity": {
+      "library_D81_sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060",
+      "product_D81_sha256": "704c60a3979b4a1b5b55f7ccf8de95d99b2ef9fb82c462dfe496952af3ab4dde"
+    },
+    "screen": {
+      "absent_lines": [
+        "LISP65: LOADING LIBRARIES",
+        "WORKBENCH 1.5.0",
+        "lisp65>"
+      ],
+      "frame": "red",
+      "png_sha256": "71ed655d921a0ffa34ddf46d701d6811d90f0b1d5ec0ff511964b9f5b40076d2",
+      "text_sha256": "ab942ccbb45823f713e4269826bdacce0bafc9ad9e6f92e81ddc0335a4ef8c3d",
+      "visible_lines": [
+        "LISP65: STAGING MEDIA",
+        "LISP65: BUILDING HEAP"
+      ]
+    },
+    "tuple_first": {
+      "A": "0x02",
+      "B": "0x00",
+      "CPU_port": {
+        "CHAREN": false,
+        "HIRAM": true,
+        "LORAM": true
+      },
+      "MAPH": "0x8000",
+      "MAPL": "0x2480",
+      "MB": "0x00",
+      "P": "0x24",
+      "PC": "0xE096",
+      "ROMC": false,
+      "SP": "0x01C9",
+      "X": "0x00",
+      "Y": "0xB4",
+      "Z": "0x00"
+    }
+  },
+  "format": "lisp65-c2.3-v20-building-heap-device-result-v1",
+  "linked_candidate": {
+    "commit_slot": {
+      "address": "0x0087",
+      "symbol": "c2_dma_verify_done"
+    },
+    "fail_closed_live_PC": {
+      "CPU_view_hex": "4c96e09d0008608508ae8ec0ac8fc0a9025aa4048406a40584077a8404a40884",
+      "PC": "0xE096",
+      "candidate_prefix_hex": "4c96e0",
+      "owner": "c2_kernal_fail_closed",
+      "result": "exact fail-loop identity"
+    },
+    "mapped_facade": {
+      "call_far_service": "JSR $79DC",
+      "enter": "0xB3C2",
+      "entry": "0xB3B0",
+      "leave": "0xB3D5",
+      "leave_edge": "JMP $B3D5",
+      "restore_tuple": {
+        "A": "0x00",
+        "X": "0x00",
+        "Y": "0x00",
+        "Z": "0x80",
+        "resulting_MAPL": "0x0000"
+      }
+    },
+    "stacked_continuation_owner": {
+      "bytes": 99,
+      "call": {
+        "PC": "0x3180",
+        "callee": "c2_dma_read_or_abort",
+        "instruction": "JSR $B3E4"
+      },
+      "function": "nameoff_get",
+      "post_call": [
+        {
+          "PC": "0x3183",
+          "bytes": "b216",
+          "instruction": "LDA ($16),Z"
+        },
+        {
+          "PC": "0x3185",
+          "bytes": "8504",
+          "instruction": "STA $04"
+        },
+        {
+          "PC": "0x3187",
+          "bytes": "a001",
+          "instruction": "LDY #$01"
+        }
+      ],
+      "start": "0x3143"
+    }
+  },
+  "mutations_rejected": [
+    "call-D1-green",
+    "clear-stacked-B",
+    "move-return-PC",
+    "claim-restored-map",
+    "accept-invalid-commit",
+    "claim-live-3185",
+    "name-root-cause",
+    "open-D2-D5",
+    "authorize-read",
+    "authorize-fix",
+    "resume",
+    "second-stop",
+    "leave-running"
+  ],
+  "recorded_on": "2026-08-12",
+  "session_disposition": {
+    "CPU_left_stopped": true,
+    "D1": "red-with-complete-stopped-state-row",
+    "D2_D5_open": false,
+    "additional_device_reads_authorized": false,
+    "fix_authorized": false,
+    "recontact_authorized": false
+  },
+  "status": "D1-HEAP-RED; MAPPED-FAR-RETURN-INSTRUCTION-IDENTITY-CONTRADICTION"
+}

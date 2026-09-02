@@ -1,0 +1,88 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 1
+  },
+  "candidate_header": {
+    "bytes": 3401,
+    "native_read_line_ordinal": 395,
+    "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+    "repl_banner_ordinal": 239,
+    "sha256": "79f177db731fdd0e26d28b22471d1204e2521bae115320461b0e5524433e43cf"
+  },
+  "compiler_input": {
+    "authored_repl": {
+      "bytes": 15496,
+      "path": "src/repl.c",
+      "profile_sha256": "27718270843164838fdfc0e2fcccbd79713de814401fe9bbc5daa0880532896a",
+      "sha256": "27718270843164838fdfc0e2fcccbd79713de814401fe9bbc5daa0880532896a"
+    },
+    "candidate_extent_header_consumed": true,
+    "candidate_stdlib_header_consumption_receipts": [],
+    "historical_stdlib_header": {
+      "bytes": 3325,
+      "native_read_line_macro_present": false,
+      "path": "build/c2.2/substitution/stdlib-p0.h",
+      "repl_banner_ordinal": 239,
+      "sha256": "28b6b213ecece353700ab305a408e7a2295696495c383c021ff7c5451282e56e"
+    },
+    "resolved_profile": {
+      "bytes": 13550,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/resolved-profile.txt",
+      "sha256": "feff29e0d3d1c6c285a09d58ef5e3a83939cb278eaf1552b5a9061d34689ac2b"
+    }
+  },
+  "final_elf_observation": {
+    "candidate": {
+      "lisp_input_event_calls_from_repl": [
+        "0xaabd"
+      ],
+      "repl_bytes": 711,
+      "repl_start": "0xaa08",
+      "vm_run_dir_calls_from_repl": [
+        "0xacba"
+      ]
+    },
+    "predecessor": {
+      "lisp_input_event_calls_from_repl": [
+        "0xaabd"
+      ],
+      "repl_bytes": 711,
+      "repl_start": "0xaa08",
+      "vm_run_dir_calls_from_repl": [
+        "0xacba"
+      ]
+    },
+    "verdict": "the authored B-light branch was compiled out; the final repl still owns the historical inline C collector"
+  },
+  "format": "lisp65-c2-v190-native-prompt-editor-card-r2-consumption-attribution-v1",
+  "frozen_unqualified_pair": {
+    "ELF": {
+      "bytes": 648608,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "0c0a8b22e2df384801df1aea1bfebed31865690497de344415a0a2d1dd1ff7f9"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "361afb888ee2d7124c24ea3fbafd5a70d9f4be78e28c180977ee7ddcfee3e4bc"
+    }
+  },
+  "mechanism": {
+    "class": "bound-not-consumed at the real compiler stdlib-header seam",
+    "exact_writer": "the B-light setup configured the candidate extent header but never called configure_compiler_consumed_stdlib_header for the generated candidate stdlib-p0.h",
+    "host_preflight_blind_spot": "the target-object probe placed the candidate header root first on -I and therefore compiled the intended branch; the real product compiler retained its historical stdlib header path",
+    "product_defect_not_exonerated": true,
+    "unexplained_members": []
+  },
+  "recorded_on": "2026-08-28",
+  "status": "ATTRIBUTED: REAL PRODUCT COMPILER MISSED B-LIGHT ENTRY HEADER",
+  "successor": {
+    "new_link_required": true,
+    "prelink_gate": "force the exact candidate stdlib header into both real compile_link consumers and prove path plus complete header identity",
+    "repair": "configure compiler consumption from the same generated HEADER/MANIFEST authority; no ordinal literal",
+    "retry_authorized": false
+  }
+}

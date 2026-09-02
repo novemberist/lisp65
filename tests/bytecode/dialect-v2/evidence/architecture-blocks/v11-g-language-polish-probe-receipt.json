@@ -1,0 +1,392 @@
+{
+  "format": "lisp65-v11-g-language-polish-probe-receipt-v1",
+  "status": "passed-not-promoted",
+  "claim_limit": "capacity-and-architecture-probe-only-no-product-delivery-claim",
+  "cost_interpretation": "Each passing row is an absolute candidate-versus-baseline link. The probe-private dispatcher is conservative shared integration overhead, so gc and restart Bank deltas must not be added.",
+  "source_bindings": {
+    "src/obj.h": {
+      "bytes": 7664,
+      "sha256": "c780e3573fc4fa09c4b08ec7c5c80168afa74f1cc7e693e028e4c7066734c306"
+    },
+    "src/error_overlay.c": {
+      "bytes": 6847,
+      "sha256": "9f239acb28c8b11ad84f52cabf30d75a9598efc9e18743fca67b6704e0bcbdb3"
+    },
+    "config/error-code-contract.json": {
+      "bytes": 12271,
+      "sha256": "345aa42fc014b90d92f4d06423e98f372cf2dad79f8631767a7436a015f3ce06"
+    },
+    "config/v11-g-language-polish-probe.json": {
+      "bytes": 1259,
+      "sha256": "4d634703c8a6cb57d2b6fac58d0e5874e6ba7d92a26bc3c6a92ec23ae61e1344"
+    },
+    "config/v2-native-function-registry.json": {
+      "bytes": 13070,
+      "sha256": "6f38436decf1be3d3d780bffa80daedec2405c3ba34142b7cd4d27ec4a7a3a05"
+    },
+    "docs/planning/development-plan-1.1.md": {
+      "bytes": 66721,
+      "sha256": "3e7ed588948012421f1d953f6c2e5da87182c06683a1da773a7ada6a35e93634"
+    }
+  },
+  "variants": {
+    "baseline": {
+      "status": "passed",
+      "capacity": {
+        "bank_post_boot_reserve_bytes": 1890,
+        "ext_post_load_headroom_bytes": 24796,
+        "symbol_headroom": 295,
+        "namepool_headroom_bytes": 4529,
+        "directory_post_align_headroom": 168,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 1344,
+        "installer_slice_headroom_bytes": 22
+      },
+      "resident": {
+        "objects": 214,
+        "code_bytes": 6719,
+        "directory_bytes": 1498,
+        "ext_bytes": 15609
+      },
+      "bindings": {
+        "footprint-audit.json": {
+          "bytes": 615,
+          "sha256": "1e97685f42b2bbbea4015b44f3117edbc205f40f9a5f78c3255d04a41d58d467"
+        },
+        "layout.json": {
+          "bytes": 617,
+          "sha256": "72023fc595b91c169cccb21eb8ec78a68c48140a43faa5efa9aa99acc86b66ef"
+        },
+        "composition-budget.json": {
+          "bytes": 3085,
+          "sha256": "f6f06c98b61e2f736f5d06d830ffd6c669645dbe11c4b22843e245fe9afee06f"
+        },
+        "stdlib-p0.manifest.json": {
+          "bytes": 145814,
+          "sha256": "b2948cc429e8d690d4e975783a0117dd4b81907583266cefce46d0203cdf5d72"
+        },
+        "runtime-overlays-manifest.json": {
+          "bytes": 32009,
+          "sha256": "c09d67b17156efd43ae5f733ded29ce912dea98cfe4a50b8d881fbed02356d18"
+        },
+        "lisp65-workbench-overlay-linked.prg.elf": {
+          "bytes": 132200,
+          "sha256": "c2e1f0cf4edf2cc0de4e0b2f1096781bb6e865d0a130abaa94b6cfe1e13dc1d2"
+        }
+      }
+    },
+    "bitops": {
+      "status": "real-link-rejected",
+      "failure": "resident-bss-overlaps-fixed-runtime-overlay-vma",
+      "bss_end": 50447,
+      "fixed_overlay_vma": 50006,
+      "overlap_bytes": 441,
+      "bindings": {
+        "real-link.log": {
+          "bytes": 24413,
+          "sha256": "17ddb6bad1ac743e140063685b307cbe4fd42aebfe4169cdaad37691243c74a8"
+        }
+      }
+    },
+    "gc": {
+      "status": "passed-not-promoted",
+      "capacity": {
+        "bank_post_boot_reserve_bytes": 1800,
+        "ext_post_load_headroom_bytes": 24782,
+        "symbol_headroom": 294,
+        "namepool_headroom_bytes": 4526,
+        "directory_post_align_headroom": 168,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 1344,
+        "installer_slice_headroom_bytes": 22
+      },
+      "resident": {
+        "objects": 215,
+        "code_bytes": 6733,
+        "directory_bytes": 1505,
+        "ext_bytes": 15635
+      },
+      "bindings": {
+        "footprint-audit.json": {
+          "bytes": 615,
+          "sha256": "53e14b871bca4b7e89ceef5f5ab416dab2037f6a8192dd1601bcd162e48ac14b"
+        },
+        "layout.json": {
+          "bytes": 617,
+          "sha256": "9235feac159b186e31dddde1fa9185addab74a7699423ba2f7a5b835d91fb375"
+        },
+        "composition-budget.json": {
+          "bytes": 3085,
+          "sha256": "2388c4b7ceb0b5b5013d42040c15e1639c2c31fefa34ed2b1c71ef501ace6764"
+        },
+        "stdlib-p0.manifest.json": {
+          "bytes": 146108,
+          "sha256": "d557609bba0a634c9e876de9a18695f03adbc16160c7a238cb24e86eaf0b08cc"
+        },
+        "runtime-overlays-manifest.json": {
+          "bytes": 32009,
+          "sha256": "085ca18c47672d0ffbae8c1165ca9d61c7643a64daaeae84c4362baa709abd8a"
+        },
+        "lisp65-workbench-overlay-linked.prg.elf": {
+          "bytes": 132316,
+          "sha256": "9fe28ccce699e47637a1d35c241c8d2b08a1a75fecac2e254a64404feb9cbda8"
+        }
+      },
+      "delta_from_baseline": {
+        "bank_post_boot_reserve_bytes": -90,
+        "ext_post_load_headroom_bytes": -14,
+        "symbol_headroom": -1,
+        "namepool_headroom_bytes": -3,
+        "directory_post_align_headroom": 0,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 0,
+        "installer_slice_headroom_bytes": 0,
+        "resident_objects": 1,
+        "resident_code_bytes": 14,
+        "resident_directory_bytes": 7,
+        "resident_ext_bytes": 26
+      }
+    },
+    "room": {
+      "status": "real-link-rejected",
+      "failure": "resident-bss-overlaps-fixed-runtime-overlay-vma",
+      "bss_end": 50150,
+      "fixed_overlay_vma": 50006,
+      "overlap_bytes": 144,
+      "bindings": {
+        "real-link.log": {
+          "bytes": 24369,
+          "sha256": "78f4ee3c43059bed1ab1be7ff9e81a0463a4d8aaa80b5ebe610de86c4dbc3cb4"
+        }
+      }
+    },
+    "read-string": {
+      "status": "passed-not-promoted",
+      "capacity": {
+        "bank_post_boot_reserve_bytes": 1890,
+        "ext_post_load_headroom_bytes": 24769,
+        "symbol_headroom": 294,
+        "namepool_headroom_bytes": 4512,
+        "directory_post_align_headroom": 168,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 1344,
+        "installer_slice_headroom_bytes": 22
+      },
+      "resident": {
+        "objects": 215,
+        "code_bytes": 6746,
+        "directory_bytes": 1505,
+        "ext_bytes": 15662
+      },
+      "bindings": {
+        "footprint-audit.json": {
+          "bytes": 615,
+          "sha256": "1e97685f42b2bbbea4015b44f3117edbc205f40f9a5f78c3255d04a41d58d467"
+        },
+        "layout.json": {
+          "bytes": 617,
+          "sha256": "a5f5ee2bfa3eefc7e27a6042f712ca9ac1511ba96073853a15c6f96a7a7a406e"
+        },
+        "composition-budget.json": {
+          "bytes": 3085,
+          "sha256": "36fdb346fc2d076ad0b9090d18c06c81fdc33102379f77e10591e06e3017bd6d"
+        },
+        "stdlib-p0.manifest.json": {
+          "bytes": 146261,
+          "sha256": "5e26ba41b40c067aef945ad32034408da2050183617dbc5a2bbdf4d6bfa86fbc"
+        },
+        "runtime-overlays-manifest.json": {
+          "bytes": 32015,
+          "sha256": "1807abf7bf5a4175173b76023beb82f6af30432ec12db95a32e5b69919bc2b27"
+        },
+        "lisp65-workbench-overlay-linked.prg.elf": {
+          "bytes": 132200,
+          "sha256": "a17e909761762c60ae018d0a09d27cbbd927a8ef7d4b3b2d8e2f7470cc1e4e1c"
+        },
+        "observations.json": {
+          "bytes": 24539,
+          "sha256": "286a30609a3a0068fc35e41c8765a9df9408ef8278c40327fe1d2872039d1213"
+        }
+      },
+      "route_observations": [
+        {
+          "name": "v11-g-read-from-string-direct",
+          "object": "0x0055",
+          "result": "42"
+        },
+        {
+          "name": "v11-g-read-from-string-funcall",
+          "object": "0x0055",
+          "result": "42"
+        },
+        {
+          "name": "v11-g-read-from-string-apply",
+          "object": "0x0055",
+          "result": "42"
+        }
+      ],
+      "delta_from_baseline": {
+        "bank_post_boot_reserve_bytes": 0,
+        "ext_post_load_headroom_bytes": -27,
+        "symbol_headroom": -1,
+        "namepool_headroom_bytes": -17,
+        "directory_post_align_headroom": 0,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 0,
+        "installer_slice_headroom_bytes": 0,
+        "resident_objects": 1,
+        "resident_code_bytes": 27,
+        "resident_directory_bytes": 7,
+        "resident_ext_bytes": 53
+      }
+    },
+    "restart": {
+      "status": "passed-not-promoted",
+      "capacity": {
+        "bank_post_boot_reserve_bytes": 1800,
+        "ext_post_load_headroom_bytes": 24782,
+        "symbol_headroom": 294,
+        "namepool_headroom_bytes": 4516,
+        "directory_post_align_headroom": 168,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 1344,
+        "installer_slice_headroom_bytes": 22
+      },
+      "resident": {
+        "objects": 215,
+        "code_bytes": 6733,
+        "directory_bytes": 1505,
+        "ext_bytes": 15645
+      },
+      "bindings": {
+        "footprint-audit.json": {
+          "bytes": 615,
+          "sha256": "53e14b871bca4b7e89ceef5f5ab416dab2037f6a8192dd1601bcd162e48ac14b"
+        },
+        "layout.json": {
+          "bytes": 616,
+          "sha256": "7d492d252843b6f673a22e68add806c5dadc4dba8647a2b8d15792d887f3ae6a"
+        },
+        "composition-budget.json": {
+          "bytes": 3085,
+          "sha256": "06dd9259e49062957360ad3f6ac88f0929f8ac19beca532d920d57e49bbe23fb"
+        },
+        "stdlib-p0.manifest.json": {
+          "bytes": 146138,
+          "sha256": "aa2dba698c7c825941ee53b3132c0b1172c2e6cfd49c3856c159c5268069b667"
+        },
+        "runtime-overlays-manifest.json": {
+          "bytes": 31962,
+          "sha256": "071b042ea70097e9f56b09c34b76c66315e1847c125903641fc40e7f9b362d98"
+        },
+        "lisp65-workbench-overlay-linked.prg.elf": {
+          "bytes": 132316,
+          "sha256": "33001195ac6beff46c0f05fc5c4ffd62a3e0c54770255ca32f5a1d7fff47f94c"
+        }
+      },
+      "delta_from_baseline": {
+        "bank_post_boot_reserve_bytes": -90,
+        "ext_post_load_headroom_bytes": -14,
+        "symbol_headroom": -1,
+        "namepool_headroom_bytes": -13,
+        "directory_post_align_headroom": 0,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 0,
+        "installer_slice_headroom_bytes": 0,
+        "resident_objects": 1,
+        "resident_code_bytes": 14,
+        "resident_directory_bytes": 7,
+        "resident_ext_bytes": 36
+      }
+    },
+    "tick": {
+      "status": "passed-not-promoted",
+      "capacity": {
+        "bank_post_boot_reserve_bytes": 1867,
+        "ext_post_load_headroom_bytes": 24796,
+        "symbol_headroom": 295,
+        "namepool_headroom_bytes": 4529,
+        "directory_post_align_headroom": 168,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 1344,
+        "installer_slice_headroom_bytes": 22
+      },
+      "resident": {
+        "objects": 214,
+        "code_bytes": 6719,
+        "directory_bytes": 1498,
+        "ext_bytes": 15609
+      },
+      "bindings": {
+        "footprint-audit.json": {
+          "bytes": 615,
+          "sha256": "dac5c169f6423be40e011a467b6b4bcaf7304f8b684e8df2c91a8daa25a5510b"
+        },
+        "layout.json": {
+          "bytes": 616,
+          "sha256": "de7389f3b1d0cfe290a3e4246dd250163516735a05b3eb656add11cc87a3a557"
+        },
+        "composition-budget.json": {
+          "bytes": 3085,
+          "sha256": "f6f06c98b61e2f736f5d06d830ffd6c669645dbe11c4b22843e245fe9afee06f"
+        },
+        "stdlib-p0.manifest.json": {
+          "bytes": 145814,
+          "sha256": "b2948cc429e8d690d4e975783a0117dd4b81907583266cefce46d0203cdf5d72"
+        },
+        "runtime-overlays-manifest.json": {
+          "bytes": 31963,
+          "sha256": "f865c133625f5a019bc5db7e89cad3d90b2f82ded293dd9ff13691c386fc7186"
+        },
+        "lisp65-workbench-overlay-linked.prg.elf": {
+          "bytes": 132284,
+          "sha256": "bd5b4e56a5c79b4031e086535c86d6a7c26d8892160cb419e892e0e0d9e470a6"
+        }
+      },
+      "delta_from_baseline": {
+        "bank_post_boot_reserve_bytes": -23,
+        "ext_post_load_headroom_bytes": 0,
+        "symbol_headroom": 0,
+        "namepool_headroom_bytes": 0,
+        "directory_post_align_headroom": 0,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "runtime_overlay_bank_headroom_bytes": 0,
+        "installer_slice_headroom_bytes": 0,
+        "resident_objects": 0,
+        "resident_code_bytes": 0,
+        "resident_directory_bytes": 0,
+        "resident_ext_bytes": 0
+      }
+    }
+  },
+  "semantic_results": {
+    "bitops": {
+      "status": "resident-c-callprim-cut-rejected",
+      "public_contract": "strict-binary-fixnum logand/logior/logxor and bounded ash",
+      "next_architecture": "compact-vm-opcodes-or-funded-runtime-slice",
+      "peekw_pokew": "design-stop-current-fixnum-cannot-represent-full-u16"
+    },
+    "introspection": {
+      "gc": "real-link-passed-not-promoted",
+      "read_from_string": "probe-viable-by-existing-reader-composition",
+      "room": "resident-list-result-cut-rejected-contract-needs-counter-range-decision",
+      "error": "design-stop-dynamic-user-payload-not-representable-in-current-numeric-error-context"
+    },
+    "tick_hook": {
+      "status": "lower-bound-only-not-a-hook-candidate",
+      "measured_part": "cooperative-kernal-jiffy-observation",
+      "blocker": "calling-lisp-from-nested-vm-poll-is-not-reentrancy-safe-and-no-hook-scheduling-contract-is-pinned"
+    },
+    "restart_repl": {
+      "status": "probe-viable-hardware-proof-required",
+      "mechanism": "non-returning-indirect-jump-through-reset-vector-fffc",
+      "required_acceptance": "attic-restage-and-repl-after-soft-reset-with-m65d-media-unchanged"
+    }
+  },
+  "decisions_required": [
+    "peekw/pokew representation or tombstone",
+    "error payload contract (symbol, string, or stable user code)",
+    "room result and counter overflow contract",
+    "tick-hook scheduling/reentrancy contract"
+  ]
+}

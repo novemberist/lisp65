@@ -1,0 +1,137 @@
+{
+  "format": "lisp65-c2-lite-v6-badopcode-detail-wplto-capacity-first-red-analysis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: permanent BADOPCODE detail does not fit its current hot-path form",
+  "promotable": false,
+  "authority": {
+    "wplto_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-detail-wplto2-receipt.json",
+      "bytes": 3246,
+      "sha256": "ee0c6554f02c2222960b2102331ecb9116160c47da5826caf57932614d30fd13"
+    },
+    "internal_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-detail-wplto2-internal-structural.json",
+      "bytes": 19997,
+      "sha256": "3e304919f68f1faadeea52b96987947712eec06005fa6f367ba6a6f80c063d4f"
+    },
+    "whole_program_lto_object": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-wplto2/resident-island-seed.prg.lto.o",
+      "bytes": 610740,
+      "sha256": "d077a1cf719a455e5f9d344c7aaf90cde3e9478a72f7e28664057e2a6fa54a95"
+    },
+    "link_map": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-wplto2/resident-island-seed.prg.map",
+      "bytes": 190506,
+      "sha256": "e2ee15cf5f1577fcf5f5ecd20ad08704b5db3f252a05914adfa055b3f9d273bd"
+    },
+    "link_stderr": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-wplto2/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 3145,
+      "sha256": "49376fa6cc65bceadeba30a9d4c84a7bd7e05e0b910ecba0fd04748a39a55579"
+    }
+  },
+  "execution_accounting": {
+    "prelink_gate_runs": 1,
+    "whole_program_lto_closure_links": 1,
+    "successful_product_links": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "retry_runs": 0
+  },
+  "measured_text": {
+    "link50_baseline": {
+      "start": "0x2023",
+      "bytes": 37979,
+      "headroom_before_handoff_bytes": 37
+    },
+    "wplto": {
+      "start": "0x2023",
+      "bytes": 38558,
+      "end_exclusive": "0xb6c1",
+      "handoff_start": "0xb4a3",
+      "overlap_bytes": 542
+    },
+    "delta_bytes": 579,
+    "required_noise_reserve_bytes": 32,
+    "resulting_headroom_bytes": -542
+  },
+  "object_attribution_bytes": [
+    {
+      "symbol": "vm_run_inner",
+      "before": 7934,
+      "after": 8447,
+      "delta": 513,
+      "temperature": "hot VM dispatch"
+    },
+    {
+      "symbol": "c2_product_install",
+      "before": 570,
+      "after": 599,
+      "delta": 29,
+      "temperature": "cold append/install"
+    },
+    {
+      "symbol": "vm_check_status",
+      "before": 76,
+      "after": 99,
+      "delta": 23,
+      "temperature": "resident terminal error boundary"
+    },
+    {
+      "symbol": "vm_badopcode_detail",
+      "before": 0,
+      "after": 14,
+      "delta": 14,
+      "temperature": "cold error constructor"
+    },
+    {
+      "symbol": "vm_callprim",
+      "before": 5140,
+      "after": 5144,
+      "delta": 4,
+      "temperature": "hot VM primitive dispatch"
+    },
+    {
+      "symbol": "eval_v2_workbench_service",
+      "before": 1757,
+      "after": 1753,
+      "delta": -4,
+      "temperature": "resident service"
+    }
+  ],
+  "downstream_geometry": {
+    "rodata_vma": {
+      "before": "0xb61d",
+      "after": "0xb83b",
+      "shift_bytes": 542
+    },
+    "bss_vma": {
+      "before": "0xb978",
+      "after": "0xbb96",
+      "shift_bytes": 542,
+      "fixed_block_start": "0xc080",
+      "overlap_bytes": 329
+    },
+    "fixed_block_moved": false,
+    "handoff_moved": false
+  },
+  "separate_renderer_result": {
+    "l65e_bytes": 1173,
+    "l65e_cap_bytes": 1320,
+    "l65e_headroom_bytes": 147,
+    "finding": "the code-qualified FIXNUM renderer fits; it is not the resident blocker"
+  },
+  "unreached_gates": [
+    "final wall qualification",
+    "session aggregate qualification",
+    "post-link identity binding"
+  ],
+  "finding": "Whole-program LTO assigns 513 of the 579 new resident text bytes to vm_run_inner. The permanent seam is semantically green, but initialising and carrying a pre-cursor state plus generic done-boundary materialisation changed the hot interpreter's compiled shape far beyond the five usable Bank-0 bytes.",
+  "review_direction": "Return to Class-C design review. A contract-preserving next cut would keep the typed constructor and renderer, but remove generic pre-cursor state from vm_run_inner: setup failures would emit their named phase at their exact cold branches, while the common done boundary would handle only an already-valid logical cursor. This is a new product-shaped design/probe and is not authorized by this receipt.",
+  "counters": {
+    "class_b_diagnostic_cycles": "3/3 closed",
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  },
+  "next_gate": "Class-C decision on a smaller typed-witness implementation; no retry, product link, or hardware run"
+}

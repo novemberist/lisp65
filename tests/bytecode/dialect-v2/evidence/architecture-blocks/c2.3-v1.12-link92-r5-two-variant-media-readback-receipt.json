@@ -1,0 +1,103 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-r5-two-variant-media-readback-v1",
+  "recorded_on": "2026-08-07",
+  "status": "passed-fresh-process-two-variant-media-readback",
+  "authorization": {
+    "commit": "3d5f76c6",
+    "scope": "fresh-process readback with one configure_shared call, permanent harness-level double-configuration rejection, and acceptance authority for the existing persisted receipt only after clean readback"
+  },
+  "lifecycle_gate": {
+    "status": "passed-one-configuration-per-process-fresh-readback",
+    "harness_guard_precedes_product_selector": true,
+    "readback_processes": 1,
+    "in_process_readback_calls": 0,
+    "readback_writes": 0,
+    "mutations_rejected": {
+      "double-configuration-guard-dimmed": "media readback can double-configure or bypass its fresh process",
+      "second-in-process-configuration": "candidate media harness double configuration"
+    }
+  },
+  "readback": {
+    "command": "python3 tools/host-lisp/c2_v112_candidate_media.py check",
+    "result": "c2-v112-candidate-media: PASS variants=2 shared=19 mutations=6",
+    "variants": 2,
+    "shared_roles": 19,
+    "variant_mutations_rejected": 6,
+    "base_index_mutations_rejected": 29,
+    "defstruct_index_mutations_rejected": 32,
+    "resolver_contract_mutations_rejected": 2,
+    "artifact_writes": 0,
+    "before_after_identity_equal": true
+  },
+  "accepted_authority": {
+    "persisted_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-two-variant-media-receipt.json",
+      "bytes": 8116,
+      "sha256": "a8c544ba9f3b77fab2df1ff3a73241bd34926b7bd837915ca32659fc3c21aff0"
+    },
+    "base_manifest": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/base-candidate-manifest.json",
+      "bytes": 4924,
+      "sha256": "457ec6cc84ab2659838fa76f06f229929edf1a3c2be6cf502377784c92e8cb7a"
+    },
+    "defstruct_acceptance_manifest": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/defstruct-acceptance-manifest.json",
+      "bytes": 5919,
+      "sha256": "7e04eb7f9b8c8d0904cea7d65d6693334afd29f322fd130f23807c746b411d7d"
+    },
+    "aggregate_manifest": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/candidate-manifest.json",
+      "bytes": 8116,
+      "sha256": "a8c544ba9f3b77fab2df1ff3a73241bd34926b7bd837915ca32659fc3c21aff0"
+    },
+    "product_manifest": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/canonical-product-manifest.json",
+      "bytes": 524467,
+      "sha256": "10254204dc5277e1bf2e308fcc32b8d6a2c669a20daf7c464dca2449a99dafec"
+    },
+    "shared_manifest": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/shared-system/candidate-manifest.json",
+      "bytes": 17164,
+      "sha256": "fd8f1ab004929a01b63da6b7d1ef8699596a6cd5746b37d4343ca0d3c1ba4cd0"
+    },
+    "base_D81": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/base/lisp65-library.d81",
+      "bytes": 819200,
+      "sha256": "3182314c3ebb1328d608dd9ca6dfc44d7e2e5c2ea64b2fe5f43e40238c726213"
+    },
+    "defstruct_D81": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/defstruct-acceptance/lisp65-library.d81",
+      "bytes": 819200,
+      "sha256": "6de86390b16837f8030222715d5c95c8e9fa998d000abcaf75e46580863c04dd"
+    }
+  },
+  "source_authority": {
+    "candidate_media": {
+      "path": "tools/host-lisp/c2_v112_candidate_media.py",
+      "bytes": 36015,
+      "sha256": "719bcc328e69e63381505788c7eb241f69b806f0c510790ed95fe33a8389b1fe"
+    },
+    "first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-aggregate-readback-double-config-first-red.json",
+      "bytes": 6768,
+      "sha256": "9a0f32adaffe3cf51a73fd41f9bf65c830129eb808fdecbf430e628c2a390342"
+    }
+  },
+  "execution_accounting": {
+    "product_compiler_runs": 0,
+    "product_linker_runs": 0,
+    "additional_product_cards": 0,
+    "artifact_completion_calls": 0,
+    "cold_stager_compiler_runs": 0,
+    "shared_system_rebuilds": 0,
+    "base_library_rebuilds": 0,
+    "defstruct_sibling_rebuilds": 0,
+    "aggregate_manifest_rewrites": 0,
+    "hardware_runs": 0
+  },
+  "phase_disposition": {
+    "phase_c": "closed-one-core-two-SHA-bound-media-variants",
+    "phase_d": "open-bundled-device-acceptance-and-Halt-1"
+  },
+  "claim_limit": "Host media closure only. This readback authorizes the persisted two-variant receipt and opens Phase D; it creates no device, D2 selector, Halt, Phase E or release claim."
+}

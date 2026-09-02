@@ -1,0 +1,94 @@
+{
+  "format": "lisp65-c2-product-link25-hardware-presmoke-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "attempt": {
+    "candidate": "link-25-coarse-phase",
+    "stage": "receipt-less-hardware-presmoke-manual-step-1",
+    "acceptance_receipt_created": false,
+    "promotion_claim": "not-run"
+  },
+  "pinned_identity": {
+    "product_prg_sha256": "ae16e161cdf1fd8b2085e1c69acca46c6db21b38449c4feeb44ac3bb4fc9532d",
+    "product_elf_sha256": "5f3ec8ec1d1e181bb20f07d3ed754da37dd38362c6f82096d32a291a978343d3",
+    "kernal_window_sha256": "01bb28e36e30d0f36667ebc757073930a7b97ef1406090d6652f139b4b210f34",
+    "deployment_manifest_sha256": "622f8b6c6eb1fa2192d39edcca8e87b1e039705ee1a41215f00cda64e5c68adb",
+    "preload_readbacks_before_each_valid_launch": "6/6 byte-identical"
+  },
+  "owner_observation": {
+    "cold_boot_time": "approximately one minute",
+    "banner": "drawn very slowly and only partially",
+    "prompt": "appeared at the top rather than below the banner",
+    "first_red_rule": "stopped; no downstream hardware case was claimed"
+  },
+  "fresh_valid_reproduction": {
+    "method": "full six-artifact restage and verified product launch; the earlier bare monitor rerun was discarded because it did not restore the unmapped-KERNAL boot environment",
+    "boot_elapsed_observation": "approximately 68 seconds to the partial banner and prompt",
+    "c2_state": {
+      "phase": 13,
+      "finished": 1,
+      "error": 0,
+      "artifact": "build/c2.2/hardware-presmoke-link25/repro-valid-c2-state.bin",
+      "sha256": "0f1c0c33a78627b3a391a736bfd5709fc2a156095982e501c80984d5ad9a455d"
+    },
+    "vm_state": {
+      "status": 2,
+      "status_name": "VM_BADOPCODE",
+      "active_ordinal": 237,
+      "active_function": "%banner-separator",
+      "payload_window_start": 43,
+      "payload_window_length": 35,
+      "artifact": "build/c2.2/hardware-presmoke-link25/repro-valid-banner-vm.bin",
+      "sha256": "330b9b6df0d221a59e8104104b893c03ad4c8b1b7bd7ac5961e52f85946967eb"
+    },
+    "screen_artifact": {
+      "path": "build/c2.2/hardware-presmoke-link25/repro-valid-screen.bin",
+      "sha256": "e6568cf8c71f6bdb5b5d30279154f1ebb8cc4387a65dc84fbf2cfac4bedddc07",
+      "interpretation": "48 of 49 banner runs are visible; the separator, subtitle and final line feeds are absent"
+    },
+    "root_stack_artifact": {
+      "path": "build/c2.2/hardware-presmoke-link25/repro-valid-rootstack.bin",
+      "sha256": "8b2f09e3284c1732760afc08e6076a737ef64c1bec332674542b036501267180",
+      "interpretation": "separator locals and the final poke arguments are valid at the stop"
+    },
+    "ownership_canaries": {
+      "before": {
+        "bytes_hex": "a5650800",
+        "sha256": "039a2eb9c79e109b9b45dac94cdb7f06c506b5afef3e7876be52b98d51c9208b"
+      },
+      "after": {
+        "bytes_hex": "65a5",
+        "sha256": "994d19dea278ae926ec09e783d8b2d9a1a6c347c784ce529521415e2742d371b"
+      }
+    }
+  },
+  "excluded_causes": {
+    "c2_decode": "phase 13 finished with error 0",
+    "directory_publication": "%banner-separator is published as BCODE ordinal 237",
+    "immutable_code": "the complete active code window is byte-identical to ordinal 237 in the pinned shelf manifest",
+    "hot_literals": "the two separator literals materialize as FIXNUM 2048 and FIXNUM 256 exactly",
+    "native_poke_dispatch": "the stop is VM_BADOPCODE after valid separator locals and poke arguments, not a missing primitive or type error"
+  },
+  "root_cause": {
+    "class": "relative-branch-crosses-stream-window-through-out-of-array-c-pointer",
+    "trigger": "%banner-separator payload PC 72 has a relative -64 backedge to PC 8 while the current streamed window begins at PC 43",
+    "mechanism": "The old OP_JMPREL/OP_JFALSEREL implementation performed ip += delta directly. The backedge therefore formed code - 35, a C pointer outside vm_codebuf, before later pointer subtraction attempted to recover the logical PC. That arithmetic is undefined C behavior and the MOS/LTO product misexecuted it as a bad opcode.",
+    "why_host_oracles_were_green": "The host happened to recover the wrapped logical offset and ASAN/UBSAN did not diagnose pointer formation/subtraction without an out-of-bounds dereference. The product target did not preserve that accidental behavior."
+  },
+  "bounded_correction": {
+    "implementation": "Compute every relative target in the uint16 logical payload-PC domain, reject targets outside the payload, and either move within the current window or invalidate the window so WIN_ENSURE reloads the target. Never form an out-of-array C pointer.",
+    "permanent_evidence": [
+      "native product-sized VM_CODEBUF=56 banner execution",
+      "explicit cross-window backward-edge source gate with a mutation that restores direct pointer-relative dispatch",
+      "full capacity and structural gates on any separately authorized successor product link",
+      "fresh receipt-less hardware presmoke before promotion"
+    ]
+  },
+  "separate_performance_first_red": {
+    "status": "open",
+    "observation": "The coarse phase split reduced the approximately twelve-minute Link-24 boot to approximately one minute, but did not reach the projected seconds class.",
+    "known_boundary": "The sixteen runtime-overlay transports are only the outer phase transports; the whole-phase bodies still issue many small shelf and C2D DMA operations.",
+    "next_evidence": "Measure calls and bytes by phase before proposing any batching or cache seam. No performance acceptance is inherited from Link 25."
+  },
+  "claim_limit": "Receipt-less hardware diagnosis of Link 25 only. It proves a VM relative-branch first-red and a separate unresolved cold-boot latency first-red. It proves no hardware acceptance, promotion or release claim."
+}

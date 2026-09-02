@@ -1,0 +1,70 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 335327,
+    "commit": "dcf27b87a489fd22f8791f75c18c601637512365",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "72950c0543ad8983608e46e5f643fd50ad633066cf05df2f46f3edf2e9ec40d1"
+  },
+  "classification": {
+    "family": "single-owner hardware-resource violation",
+    "fix": "while capture is armed, lisp_poll must not read or acknowledge the hardware queue; RUN/STOP remains matrix-owned",
+    "measurement_correction": "11>8=8=8=8 locates loss before the raw witness, not outside the product"
+  },
+  "format": "lisp65-c2-v160-second-queue-consumer-attribution-v1",
+  "frozen_world": {
+    "ELF": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8bb00fd560ddfef9b4f1da5d6269e134de8dc6548a33e3659eb79fc580fecd45"
+    },
+    "capture": {
+      "authority": "git-blob",
+      "bytes": 2800,
+      "commit": "dcf27b87a489fd22f8791f75c18c601637512365",
+      "path": "src/optional/c2_kernal_input_capture.s",
+      "sha256": "eaa34ec7120dada63c9067e79e1fe42caa50abbaac308b742cffadca260e3a40"
+    },
+    "interrupt": {
+      "authority": "git-blob",
+      "bytes": 5402,
+      "commit": "dcf27b87a489fd22f8791f75c18c601637512365",
+      "path": "src/interrupt.c",
+      "sha256": "3daa9e790bbf95d9b1f15da688386b17831d7f9d0c95e61038399ea9d2105de0"
+    },
+    "window": {
+      "authority": "git-blob",
+      "bytes": 2073,
+      "commit": "dcf27b87a489fd22f8791f75c18c601637512365",
+      "path": "src/c2_kernal_window.s",
+      "sha256": "598f8b77bd42a32df9f2af6878cfa2406d31d73e4639e0500a8c1a6ff2413b50"
+    }
+  },
+  "linked_evidence": {
+    "capture_entry": "0xFD08",
+    "poll_calls_in_final_ELF": 2,
+    "queue_poll_entry": "0xE000",
+    "shared_registers": {
+      "code_and_ack": "0xD619",
+      "present_and_head": "0xD60A"
+    },
+    "vm_callsite": "0x4776 -> c2_kernal_event_poll"
+  },
+  "race": {
+    "capture_first": {
+      "capture_raw": 1,
+      "initial_queue": 1,
+      "poll_taken": 0,
+      "remaining_queue": 0
+    },
+    "mechanism": "lisp_poll may consume and acknowledge an ordinary event before the armed raster capture observes it",
+    "poll_first": {
+      "capture_raw": 0,
+      "initial_queue": 1,
+      "poll_taken": 1,
+      "remaining_queue": 0
+    }
+  },
+  "recorded_on": "2026-08-21",
+  "status": "PASS: SECOND PRODUCT QUEUE CONSUMER PROVES LOSS RACE"
+}

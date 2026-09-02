@@ -1,0 +1,288 @@
+{
+  "authorities": {
+    "configured_ROM": {
+      "bytes": 131072,
+      "path": "/home/alex/.local/share/xemu-lgb/mega65/MEGA65.ROM",
+      "sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0"
+    },
+    "deployment": {
+      "bytes": 9693,
+      "path": "build/c2.3/v1.6-defstruct-mem-init-before-after/deployment.json",
+      "sha256": "c018c58fda0b43bd942432a6844d397c4fdf5f2e735868bc57da4dd81f57004e"
+    },
+    "diagnostic_ELF": {
+      "bytes": 620924,
+      "path": "build/c2.3/v1.6-defstruct-mem-init-before-after/artifacts/diagnostic-mem-init-before-after.elf",
+      "sha256": "b68b4aab6819e4a6af078fd9fbbaf7ae021908536e9a3cd71c0f631639d5a9ac"
+    },
+    "diagnostic_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-mem-init-before-after/artifacts/diagnostic-mem-init-before-after.prg",
+      "sha256": "135678bdd9b21808e2ac4b4625b5ca71eb8c3aabc6828d7af010116105986363"
+    },
+    "driver": {
+      "bytes": 22209,
+      "path": "tools/host-lisp/c2_v16_preinstaller_stretch_attribution.py",
+      "sha256": "786e131e3a0338182673f3dcb95632b9555b47acd3dcbe5ce3994eaffdfa3eb1"
+    },
+    "owner_commission": {
+      "bytes": 138008,
+      "path": "git:e1edb6c35a7a83c7cfa7fb097f8b339bbf3ecc2c:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "dc37a097d6af031f8daee20ca0b7b9d09af3a225716a9d9570044b8da9542258"
+    },
+    "primary_CPU": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "primary_core_commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+    "retained_device": {
+      "bytes": 18346,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-repeat-device-receipt.json",
+      "sha256": "83c0bd56681ff3db0ca1f6fbd588eb797d68e795258b65c77d9d3542ef17de72"
+    },
+    "salvage": {
+      "bytes": 2568,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-preoverlay-status-salvage-device-receipt.json",
+      "sha256": "23eb4b9d55de01f798ca4a3342cc95368964d893267e3279cb1b37ead6b398d3"
+    },
+    "write_view": {
+      "bytes": 4597,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-witness-write-view-desk-attribution-receipt.json",
+      "sha256": "0a1ce877ba217cdd0b1e303d78c8dbe301070e1d7797773257eb21e0225f766c"
+    }
+  },
+  "claim_limit": "Desk-only route and mapping attribution. Exact mapped megabyte and device ROM identity remain unbound. No contact, product bytes, mem_init answer, R/A/I/G row or product fault is authorized or claimed.",
+  "facts": {
+    "disposition": {
+      "CPU_device_action": 0,
+      "R_A_I_G": null,
+      "classification": "MICRO-LADDER-REQUIRED; TWO LIVE DIVERSION ROUTES",
+      "mem_init_answer": null,
+      "new_contact_authorized": false,
+      "product_fault": null
+    },
+    "diversion_candidates": [
+      {
+        "id": "U1",
+        "span": "0x2044 JSR $FFD2 / return mapping",
+        "witness": "pre/post CHROUT stamps; absent post stamp convicts this boundary"
+      },
+      {
+        "id": "U2",
+        "span": "0xa4e0 ownership call before/at MAP",
+        "witness": "ownership-entry plus tagged raw return status"
+      },
+      {
+        "id": "U3",
+        "span": "ownership success to installer arming",
+        "witness": "installer-entry stamp plus existing ov_started/status pair"
+      },
+      {
+        "id": "U4",
+        "span": "asynchronous firmware diversion",
+        "witness": "ladder stage plus stopped code-owner/stack capture; no inherited claim"
+      }
+    ],
+    "hidden_callee_audit": {
+      "finding": "firmware target is consumed before c2_kernal_take_ownership establishes MAP",
+      "first_external_target": "0x2044 -> 0xffd2",
+      "local_boot_helpers": "all targets delivered in the linked PRG",
+      "named_boundary": "PRE-OWNERSHIP-CHROUT-OR-OWNERSHIP-FAIL-EXIT",
+      "repaired_hook": "0x2031 -> 0xc03f behind the 0x202c ROMC clear: PASS",
+      "single_mechanism_claimed": false
+    },
+    "mapping_legality": {
+      "IRQ_or_NMI_MAP_sites": 0,
+      "captured_map_compatible_with_external_firmware_private_view": true,
+      "captured_map_established_by_linked_preinstaller_step": false,
+      "illegal_product_state_claim": false,
+      "linked_MAP_result": {
+        "MAPH": "0x8000",
+        "MAPL": "0x0000"
+      },
+      "linked_executable_MAP_sites": [
+        "0xb604"
+      ]
+    },
+    "micro_ladder": {
+      "authorization": "OWNER DECISION REQUIRED; NO CONTACT AUTHORIZED",
+      "base_identity": "mem-init-before-after non-promotable diagnostic",
+      "callsite_bytes_actually_different": 6,
+      "callsite_instruction_bytes_patched": 9,
+      "contacts_priced": 1,
+      "decision_table": {
+        "enter-absent": "LOCAL-CRT-INIT-BOUNDARY",
+        "enter-set,return-absent": "CHROUT-NONRETURN-OR-MAP-NOT-RESTORED",
+        "installer-enter-set,ov_started=0": "INSTALLER-PROLOGUE-BEFORE-ARM",
+        "ov_started=1": "HAND-OFF-TO-EXISTING-STATUS-TABLE",
+        "ownership-enter-set,return-tag-absent": "OWNERSHIP-IN-FLIGHT-BOUNDARY",
+        "ownership-return-raw!=0,installer-enter-absent": "POST-OWNERSHIP-PRE-INSTALLER",
+        "ownership-return-raw=0": "OWNERSHIP-FAIL-CLOSED-EXIT",
+        "return-set,ownership-enter-absent": "MAIN-PREFIX-BOUNDARY"
+      },
+      "durable_witness_after": "0xb5c3",
+      "existing_witness_before": "0xb582..0xb58b",
+      "gap_bytes_changed": 43,
+      "hidden_callee_rule": "each wrapper shares a visibility proof with its caller; CHROUT non-restore leaves the physical pre-call stamp as the classification",
+      "interval_bytes": 55,
+      "layout_shift": 0,
+      "owner_free_bytes_left": 12,
+      "owner_free_interval": "0xb58c..0xb5c2",
+      "product_bytes": 0,
+      "state": {
+        "bytes": 6,
+        "fields": [
+          "CHROUT-enter",
+          "CHROUT-return",
+          "ownership-enter",
+          "ownership-return-tag",
+          "ownership-return-raw",
+          "installer-enter"
+        ],
+        "range": "0xb58c..0xb591",
+        "sentinels": "d0 d1 d2 d3 d4 d5"
+      },
+      "total_bytes_actually_different": 49,
+      "wrappers": [
+        {
+          "bytes": 12,
+          "callsite": "0x2044",
+          "purpose": "stamp around JSR $FFD2",
+          "range": "0xb592..0xb59d"
+        },
+        {
+          "bytes": 17,
+          "callsite": "0xa4e0",
+          "purpose": "stamp and retain ownership return A",
+          "range": "0xb59e..0xb5ae"
+        },
+        {
+          "bytes": 8,
+          "callsite": "0xa4e6",
+          "purpose": "stamp then tail-JMP installer",
+          "range": "0xb5af..0xb5b6"
+        }
+      ]
+    },
+    "route": [
+      {
+        "establishes": "none",
+        "range": "0x2035..0x2038",
+        "requires": "linked low block 1",
+        "stage": "entry-tail",
+        "transfer": null
+      },
+      {
+        "establishes": "none",
+        "range": "0x2039 -> 0x2301 -> 0xb34d",
+        "requires": "linked low/high block 1",
+        "stage": "zero-bss",
+        "transfer": "product-local JSR/tail-JMP"
+      },
+      {
+        "establishes": "none",
+        "range": "0x203c -> 0x23e9 -> 0xb34d",
+        "requires": "linked low/high block 1",
+        "stage": "zero-zp-bss",
+        "transfer": "product-local JSR/tail-JMP"
+      },
+      {
+        "establishes": "none",
+        "range": "0x203f -> 0x23fc -> 0xb2f7",
+        "requires": "linked low/high block 1",
+        "stage": "copy-zp-data",
+        "transfer": "product-local JSR/tail-JMP"
+      },
+      {
+        "establishes": "callee-private/unknown",
+        "range": "0x2042..0x2046",
+        "requires": "firmware-visible high block 3; not established by product",
+        "stage": "crt-shift",
+        "transfer": "JSR 0xffd2 (KERNAL CHROUT)"
+      },
+      {
+        "establishes": "I/O unlocked; no MAP",
+        "range": "0x2047 -> 0xa4af..0xa4df",
+        "requires": "linked high block 1 and I/O",
+        "stage": "main-prefix",
+        "transfer": "product-local JSR"
+      },
+      {
+        "establishes": "none before 0xb604",
+        "range": "0xa4e0 -> 0xb4a3..0xb4ec",
+        "requires": "linked high block 1 and I/O",
+        "stage": "ownership-pre-map",
+        "transfer": "product-local JSR plus three fail-closed guards"
+      },
+      {
+        "establishes": "MAPH=0x8000, MAPL=0x0000",
+        "range": "0xb4ed -> 0xb5ff..0xb608",
+        "requires": "linked high block 1",
+        "stage": "ownership-map",
+        "transfer": "product-local JSR"
+      },
+      {
+        "establishes": "success=1 or fail-closed=0",
+        "range": "0xb4f0..0xb520 -> 0xa4e3",
+        "requires": "owned E000 window",
+        "stage": "ownership-return",
+        "transfer": "CRC/guard return"
+      },
+      {
+        "establishes": "ov_started=1 at 0xa74a",
+        "range": "0xa4e6 -> 0xa714..0xa74b",
+        "requires": "owned map",
+        "stage": "installer-entry",
+        "transfer": "product-local JSR"
+      },
+      {
+        "establishes": "pre-mem_init capture at 0xc048",
+        "range": "installer -> 0xc85a",
+        "requires": "owned map and staged identity",
+        "stage": "overlay-entry",
+        "transfer": "authenticated overlay call"
+      }
+    ],
+    "stopped_world": {
+      "E160_mapped_low20": "0x3e160",
+      "E160_selected": true,
+      "FFD2_mapped_low20": "0x3ffd2",
+      "FFD2_selected": true,
+      "configured_ROM_signature": "a6d1f00ca4d2b91010c6d1e6d2",
+      "last_op": "JSR $E160",
+      "mapped_megabyte_registers_captured": false,
+      "observed_bytes": "a6d1f00ba4d2b91010c6d1e6d2806fa5",
+      "owner_class": "firmware-shaped selected high-MAP; exact owner unresolved",
+      "signature_relation": "same 13-byte instruction skeleton with only branch displacement changed; exact device ROM image and mapped megabyte remain unbound",
+      "tuple": {
+        "B": "0x00",
+        "MAPH": "0xb300",
+        "MAPL": "0xe300",
+        "PC": "0xe160",
+        "SP": "0x01ee"
+      }
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-preinstaller-stretch-desk-attribution-v1",
+  "mutations_rejected": {
+    "mutation-01": "stopped-world claim drift",
+    "mutation-02": "stopped-world claim drift",
+    "mutation-03": "stopped-world claim drift",
+    "mutation-04": "mapping-legality overclaim",
+    "mutation-05": "mapping-legality overclaim",
+    "mutation-06": "hidden-callee claim drift",
+    "mutation-07": "hidden-callee claim drift",
+    "mutation-08": "diversion partition drift",
+    "mutation-09": "micro-ladder price/closure drift",
+    "mutation-10": "micro-ladder price/closure drift",
+    "mutation-11": "micro-ladder price/closure drift",
+    "mutation-12": "micro-ladder price/closure drift",
+    "mutation-13": "micro-ladder price/closure drift",
+    "mutation-14": "micro-ladder price/closure drift",
+    "mutation-15": "desk disposition drift",
+    "mutation-16": "desk disposition drift"
+  },
+  "recorded_on": "2026-08-06",
+  "status": "HOST-GREEN; MICRO-LADDER PRICED; OWNER DECISION REQUIRED"
+}

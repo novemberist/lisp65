@@ -1,0 +1,221 @@
+{
+  "authority": {
+    "accepted_pair": {
+      "ELF": {
+        "bytes": 636100,
+        "path": "build/c2.3/v2.0-release-strip-product-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "3754c3857ecce95943e315bc5ef6fb30962d6c8dde9cb6294cb049c7e512cf6d"
+      },
+      "PRG": {
+        "bytes": 41811,
+        "path": "build/c2.3/v2.0-release-strip-product-card-r1/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "0fb9092a32820c1e3914096f5393a96a14374cdd05c56ef66f9293457422d369"
+      }
+    },
+    "media": {
+      "bytes": 2353133,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-release-strip-device-media-receipt.json",
+      "sha256": "cd6211cbb08b2a470c1749ba3266b0686d1ccbb10639a1269df8b556b555eba1"
+    },
+    "plan_result": {
+      "bytes": 2342,
+      "path": "docs/planning/v2.0.0-pre-plan.md",
+      "section": "## Stripped v2.0 final device result \u2014 2026-09-02",
+      "sha256": "436c12418a0f61ad4ec94d73b14b97a2da3460e42f87836d59a831f7823a0ed9"
+    },
+    "session": {
+      "bytes": 5981,
+      "path": "config/c2-v200-release-strip-device-session.json",
+      "sha256": "f5ebc85e2560aa7965f23c8409ccc89d4aff8e8f5068ec68f671fdef1f6424b4"
+    }
+  },
+  "choreography": {
+    "automated_access_while_CPU_running": 0,
+    "final_CPU_stop_claim": false,
+    "final_observation": "valid INIT result 17 and live prompt",
+    "fresh_BASIC_first": true,
+    "owner_keyboard_only_while_running": true,
+    "stopped_state_captures": [
+      "BCFC..BCFF",
+      "nsym",
+      "npool"
+    ]
+  },
+  "claim_limit": {
+    "accepts": [
+      "Tier-1 device semantics sample",
+      "v1.9-like native editor feel",
+      "forced-collection losslessness",
+      "absent/valid INIT and A0",
+      "four performance smokes",
+      "release-terminal D5 floor"
+    ],
+    "excludes": [
+      "exact 136-event projection",
+      "D5 delta attribution",
+      "Comfort",
+      "Matcher/Blink",
+      "Tier 2",
+      "release",
+      "Ship",
+      "Publish"
+    ]
+  },
+  "decision": {
+    "D5_floor": "PASS-107/1467",
+    "Publish": "CLOSED",
+    "Ship": "CLOSED",
+    "all_four_claim_groups_hardware_green": true,
+    "hardware_acceptance": "INDEPENDENT-REVIEW-PENDING",
+    "losslessness_across_forced_collection": "PASS-138/138/138/138",
+    "release_card": "CLOSED"
+  },
+  "deployment": {
+    "device": "/dev/ttyUSB1",
+    "optional_library_media": "none",
+    "packed_gates": {
+      "active_key_sink": [
+        "c2_kernal_input_take"
+      ],
+      "closure_calls": 2436,
+      "closure_objects": 760,
+      "generation_objects": 397
+    },
+    "qualifying_readbacks": [
+      {
+        "boot": "initial-absent-INIT",
+        "medium": "V20STRP.D81",
+        "result": "boot-green",
+        "sha256": "7b043c689bcd2a862f1117c1bcb8e957c8b193ec6b25530cc5b28f31d1df620c"
+      },
+      {
+        "boot": "fresh-after-power-cycle",
+        "medium": "V20STRP.D81",
+        "result": "boot-green",
+        "sha256": "7b043c689bcd2a862f1117c1bcb8e957c8b193ec6b25530cc5b28f31d1df620c"
+      },
+      {
+        "boot": "fresh-valid-INIT",
+        "medium": "V20SINI.D81",
+        "result": "boot-green",
+        "sha256": "619f4bfc258d74037fb6f74c74bc3ef14ce91b1efa80bb446943b1eacfa7758c"
+      }
+    ],
+    "transport": "mega65_ftp-over-JTAG"
+  },
+  "format": "lisp65-c2-v200-release-strip-device-result-v1",
+  "next": "independent device-result review; attribute D5 -2/-19 before Publish and classify the +2 event projection delta",
+  "nonqualifying_staging_incidents": {
+    "classification": "SESSION/STAGING-LIFECYCLE EVIDENCE; NO PRODUCT DEFECT INFERRED",
+    "discriminator": "fresh power-cycle plus fresh upload and SHA-identical readback of the same bound absent medium booted green",
+    "observations": [
+      "post-stop reuse/remount produced a red frame and character garbage",
+      "a staging attempt produced red L65SYS DISK ERROR - CHECK MEDIA",
+      "a further reuse/restage attempt produced a red frame and garbage"
+    ],
+    "permanent_choreography": "every qualifying cold boot restores and rereads the bound D81; a prior staged copy is not reused"
+  },
+  "recorded_on": "2026-09-02",
+  "rows": [
+    {
+      "id": "S20-1-documented-domain-behavior",
+      "observations": [
+        "(car 1) returned nil",
+        "(length \"abc\") raised *** vm: type error and returned to one live prompt"
+      ],
+      "result": "PASS"
+    },
+    {
+      "acceptance_predicate": "raw=seen=stored=taken and nonzero",
+      "captures": {
+        "counter_bytes_hex": "8A 8A 8A 8A",
+        "counter_values": {
+          "raw": 138,
+          "seen": 138,
+          "stored": 138,
+          "taken": 138
+        },
+        "input_counters": {
+          "bytes": 4,
+          "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-v200-release-strip-device-20260902/input-counters.bin",
+          "sha256": "134b1c8428f669d66803a09ba9e2536c17f0612ac4abfefd6d38d6a2d15b650f"
+        }
+      },
+      "fixture_projection": {
+        "delta": 2,
+        "exact_136_claim": false,
+        "expected": 136,
+        "observed": 138,
+        "status": "OPEN FIXTURE-ARITHMETIC ATTRIBUTION"
+      },
+      "id": "S20-2-v1.9-input-and-forced-collection",
+      "observations": [
+        "ordinary and rapid typing felt like v1.9",
+        "six exact 32-character passes; each 32-delete pass ended empty",
+        "final abcdefg oracle returned 7"
+      ],
+      "result": "PASS: LOSSLESS ACROSS FORCED COLLECTION"
+    },
+    {
+      "id": "S20-3-boot-INIT-A0",
+      "observations": [
+        "absent INIT was silent and booted to one prompt",
+        "(>= nil 32) recovered practically immediately",
+        "valid INIT printed exactly one 17 before banner and prompt",
+        "(init-proof) returned 17"
+      ],
+      "result": "PASS"
+    },
+    {
+      "D5": {
+        "ELF_truth": {
+          "ELF_sha256": "3754c3857ecce95943e315bc5ef6fb30962d6c8dde9cb6294cb049c7e512cf6d",
+          "npool_address": "0xBE18",
+          "nsym_address": "0x005C"
+        },
+        "captures": {
+          "npool": {
+            "bytes": 2,
+            "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-v200-release-strip-device-20260902/d5-npool.bin",
+            "sha256": "ed0a415448ff704a7f47c309d0fa1a9c9673721026f87d33a67c336c02c72d75"
+          },
+          "nsym": {
+            "bytes": 2,
+            "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-v200-release-strip-device-20260902/d5-nsym.bin",
+            "sha256": "a9c4f719aa681581bf3c72e52e1e978f66e5f276c408200858089431dee81552"
+          }
+        },
+        "free": {
+          "namepool_bytes": 1467,
+          "symbol_slots": 107
+        },
+        "minimum_free": {
+          "namepool_bytes": 384,
+          "symbol_slots": 32
+        },
+        "observed": {
+          "npool": 8741,
+          "nsym": 645
+        },
+        "projection": {
+          "namepool_bytes": 1486,
+          "symbol_slots": 109
+        },
+        "projection_delta": {
+          "namepool_bytes": -19,
+          "status": "ATTRIBUTION-PENDING-BEFORE-PUBLISH",
+          "symbol_slots": -2
+        }
+      },
+      "id": "S20-4-release-terminal-D5-and-performance",
+      "performance": [
+        "0 2",
+        "0 (9 2)",
+        "0 98",
+        "0 42"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "status": "PASS: STRIPPED V2.0 DEVICE GROUPS GREEN; INDEPENDENT REVIEW PENDING"
+}

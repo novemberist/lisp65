@@ -1,0 +1,109 @@
+{
+  "format": "lisp65-v2-capability-carrier-checkpoint-receipt-v1",
+  "block_id": "v2-capability-carrier",
+  "checkpoint": 3,
+  "checkpoint_id": "internal-native-capabilities",
+  "gate": "v2-capability-carrier-check-host-3",
+  "contract_policy_sha256": "7f650c5a029f16b3d83b7401ea52142cd9442c1e7ff770a9addc9e1bd00b525b",
+  "result": "passed",
+  "assertions": [
+    "prim-1-2-26-27-v2-tombstoned",
+    "native-lists-string-codecs-internal",
+    "carrier-still-active"
+  ],
+  "evidence": [
+    {
+      "path": "Makefile",
+      "sha256": "5f0946550136ebe09ff977902561884684bb4eccfa64726fb750bdd90cb7d79a"
+    },
+    {
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "e7d0b89344e8ce02fc68f56255e7b2fcac7687c95cd1d0021975247251592302"
+    },
+    {
+      "path": "lib/dialect-v2/strings-core.lisp",
+      "sha256": "64dc2501571e9d3af5a4c72f24e2065283e341dc1cff2c673d062a7c94504ee1"
+    },
+    {
+      "path": "mk/gates.mk",
+      "sha256": "738b9b7f05feaf4ad10a3ff12e31872e803835751bfd53f4049ea98594d2ec09"
+    },
+    {
+      "path": "mk/v2-callprim-runtime.mk",
+      "sha256": "60e8c8f78a88ff7a1cd5d96af3b1333fa367490e1caee69ad8c9aa922093323f"
+    },
+    {
+      "path": "mk/v2-string-caps.mk",
+      "sha256": "95ff2129513bee8822a5e8e09ec9c2e8849dc170927b242168534ac4f47de05b"
+    },
+    {
+      "path": "scripts/v2-runtime-callprim-main.c",
+      "sha256": "dab65ba9b9a55fb939b42810ea4c188082349e86b6f6eac8039bac33f66eb4c9"
+    },
+    {
+      "path": "scripts/v2-string-caps-main.c",
+      "sha256": "70d43981adf57b653bd7c8bef9d165eb5b008e69d35bfd75ce23a869da5d3fdd"
+    },
+    {
+      "path": "src/mem.c",
+      "sha256": "3d1d6690b3e2d8cdd489c2269d238ce3108502af8deef8bb8f8981660ca8cca4"
+    },
+    {
+      "path": "src/mem.h",
+      "sha256": "d16c321e71fb568158b184c49b6658c53813029a803a91fe58a9918b4b05a578"
+    },
+    {
+      "path": "src/vm.c",
+      "sha256": "191153bae8ff5e392c080c696bf1642dd70f63af62d950c3769d60672c32d6bb"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-26-string-slice.json",
+      "sha256": "8ba68e6c57e01adc7f7e8ad6233bd3b6dd63ab32566b1daa1a780477b78aea74"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-27-string-concat-list.json",
+      "sha256": "cc0f664a5eee68b79d2e5e01e9910c015517fcb2b3da03b922f7d02c92506c85"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/string-codec-workload-receipt.json",
+      "sha256": "d2e1b020e85ab66d51113ccd152718b242f94566a2e4a42ac5277aeeca8f7468"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/lists/cases.json",
+      "sha256": "1804dc74d9ff173ac346bf621042382257bb85a3ef563da209c9f3d03cdffd6b"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/strings/cases.json",
+      "sha256": "2937cd3cf56228c3b601fd4b4bf06751c0fb05ef94a697f8b14624032b433d19"
+    },
+    {
+      "path": "tools/host-lisp/v2_carrier_state.py",
+      "sha256": "38c0fb2e627721818a1ea02c7e8afcb919cf573933178bc05b6fb2c6679546c4"
+    },
+    {
+      "path": "tools/host-lisp/v2_prim_lowering.py",
+      "sha256": "ec737d9ddbeafc53603fc0488eabadd332a34b27302ef830ffb378ba6a3407e3"
+    },
+    {
+      "path": "tools/host-lisp/v2_string_codec_workloads.py",
+      "sha256": "8512854c5a74de914e20273afac5c93c9db847ca08064975002960f9d3d2a693"
+    }
+  ],
+  "metrics": {
+    "active_prim_ids": [
+      23,
+      24,
+      25,
+      28,
+      29
+    ],
+    "lists_cases": 35,
+    "strings_cases": 36,
+    "strings_observations": 288,
+    "native_treewalk_carrier_blockers": 15,
+    "lcc_carrier_blockers": 2,
+    "runtime_treewalk_hooks_null": true,
+    "codec_atomic": true,
+    "v1_active_prim_ids": 23
+  }
+}

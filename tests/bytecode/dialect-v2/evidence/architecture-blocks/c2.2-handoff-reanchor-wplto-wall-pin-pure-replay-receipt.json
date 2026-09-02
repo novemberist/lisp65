@@ -1,0 +1,798 @@
+{
+  "authorization": {
+    "canonical_wplto_driver": {
+      "bytes": 18211,
+      "mode": "0o644",
+      "path": "tools/host-lisp/c2_handoff_reanchor_wplto_probe.py",
+      "sha256": "227b976504ac81fbb64af03ca844d90cbd34e544a30eaa2082909a940c081a87"
+    },
+    "diagnosis": {
+      "bytes": 2895,
+      "mode": "0o444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-symbol-replay-wall-pin-diagnosis.json",
+      "sha256": "960fde9558d6fc9c1fbb4d6afdcff8eefa6a5688f98c6fb82309f65463a8dd65"
+    },
+    "elf_truth_contract": {
+      "bytes": 2720,
+      "mode": "0o644",
+      "path": "config/c2-elf-truth-contract.json",
+      "sha256": "de52659f7ad68c1e6d24a067313ff29d4d829be91c001a823dd6722bfd2550cd"
+    },
+    "new_pin_bytes": 33,
+    "old_pin_bytes": 273,
+    "previous_first_red": {
+      "bytes": 667,
+      "mode": "0o444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-symbol-pure-replay-receipt.json",
+      "sha256": "c06df28dd7126cb4203665b5f3026278f9d55d1f8dc58addaa4b8fdbbf544f0f"
+    },
+    "status": "passed-bound-33-byte-wall-pin-authorization"
+  },
+  "authorization_scope": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "link33_attempts": 0,
+    "linker_runs": 0,
+    "product_closure_links": 0,
+    "wplto_retries": 0
+  },
+  "claim_limit": "Pure analysis replay against one SHA-bound read-only WPLTO artifact set. No compiler, linker, WPLTO retry, product link, hardware execution, promotion or acceptance is claimed.",
+  "corrected_boot_lifetime_gate": {
+    "boot_record_names": [
+      "c2-decode-00",
+      "c2-decode-00b",
+      "c2-decode-01",
+      "c2-decode-02a",
+      "c2-decode-02b",
+      "c2-decode-03",
+      "catalog-verifier",
+      "record-verifier",
+      "resident-island-image",
+      "resident-island-installer"
+    ],
+    "elf_truth": {
+      "overlapping_sections_at_runtime_vma": 55,
+      "registered_absolute_markers": {
+        "__lisp65_workbench_runtime_overlay_vma": 50006
+      },
+      "sections": 168,
+      "source": "llvm-readobj-json",
+      "symbols": 974
+    },
+    "external_installer_target_relocations": 0,
+    "installer_functions": {
+      "rtov_island_build_id": ".lisp65_rt_island_00",
+      "rtov_island_source_crc": ".lisp65_rt_island_00",
+      "rtov_island_u16": ".lisp65_rt_island_00",
+      "vm_resident_island_install": ".lisp65_rt_island_00"
+    },
+    "installer_section": {
+      "address": 50006,
+      "bytes": 1273
+    },
+    "installer_target_relocation_count": 40,
+    "internal_installer_target_relocations": 40,
+    "negative_matrix": {
+      "ambiguous-installer-provenance": "rejected",
+      "external-installer-section-addend": "rejected",
+      "external-installer-symbol": "rejected",
+      "external-installer-target-after-parser": "rejected",
+      "helper-in-third-section": "rejected",
+      "installer-after-session": "rejected",
+      "installer-in-session-catalog": "rejected",
+      "reentry-latch-removed": "rejected",
+      "registered-absolute-runtime-vma-marker": "accepted",
+      "same-vma-neighbor-section": "accepted",
+      "structured-section-bound-workbench-marker": "accepted",
+      "unknown-absolute-at-same-vma": "rejected"
+    },
+    "one_way_family_latch": "inactive-to-boot-to-session-no-return",
+    "outside_direct_edges": [],
+    "ownership_identity": "target-section-plus-symbol/addend-never-bare-vma",
+    "retained_relocation_count": 33703,
+    "session_installation_records": [],
+    "status": "passed-single-boot-installer-lifetime-closure"
+  },
+  "corrected_preinstallation_island_gate": {
+    "Island_control_edges": [
+      {
+        "source": "vm_runtime_overlay_exec_family",
+        "target_address": 7560,
+        "target_names": [
+          "rtov_run_batch"
+        ]
+      },
+      {
+        "source": "rtov_transaction_context_if_ready",
+        "target_address": 7714,
+        "target_names": [
+          "rtov_transaction_context"
+        ]
+      }
+    ],
+    "Island_relocation_references": [
+      {
+        "addend": 0,
+        "offset": 45258,
+        "relocation_section": ".rela.text",
+        "source_function": {
+          "address": 45207,
+          "bytes": 190,
+          "end_exclusive": 45397,
+          "name": "vm_runtime_overlay_install_island",
+          "section": ".text"
+        },
+        "source_section": ".text",
+        "target": "__lisp65_resident_island_start",
+        "type": "R_MOS_ADDR16_LO"
+      },
+      {
+        "addend": 0,
+        "offset": 45262,
+        "relocation_section": ".rela.text",
+        "source_function": {
+          "address": 45207,
+          "bytes": 190,
+          "end_exclusive": 45397,
+          "name": "vm_runtime_overlay_install_island",
+          "section": ".text"
+        },
+        "source_section": ".text",
+        "target": "__lisp65_resident_island_start",
+        "type": "R_MOS_ADDR16_HI"
+      },
+      {
+        "addend": 0,
+        "offset": 45302,
+        "relocation_section": ".rela.text",
+        "source_function": {
+          "address": 45207,
+          "bytes": 190,
+          "end_exclusive": 45397,
+          "name": "vm_runtime_overlay_install_island",
+          "section": ".text"
+        },
+        "source_section": ".text",
+        "target": "__lisp65_resident_island_start",
+        "type": "R_MOS_ADDR16_LO"
+      },
+      {
+        "addend": 0,
+        "offset": 45306,
+        "relocation_section": ".rela.text",
+        "source_function": {
+          "address": 45207,
+          "bytes": 190,
+          "end_exclusive": 45397,
+          "name": "vm_runtime_overlay_install_island",
+          "section": ".text"
+        },
+        "source_section": ".text",
+        "target": "__lisp65_resident_island_start",
+        "type": "R_MOS_ADDR16_HI"
+      },
+      {
+        "addend": 0,
+        "offset": 45336,
+        "relocation_section": ".rela.text",
+        "source_function": {
+          "address": 45207,
+          "bytes": 190,
+          "end_exclusive": 45397,
+          "name": "vm_runtime_overlay_install_island",
+          "section": ".text"
+        },
+        "source_section": ".text",
+        "target": "__lisp65_resident_island_start",
+        "type": "R_MOS_ADDR16_LO"
+      },
+      {
+        "addend": 0,
+        "offset": 45340,
+        "relocation_section": ".rela.text",
+        "source_function": {
+          "address": 45207,
+          "bytes": 190,
+          "end_exclusive": 45397,
+          "name": "vm_runtime_overlay_install_island",
+          "section": ".text"
+        },
+        "source_section": ".text",
+        "target": "__lisp65_resident_island_start",
+        "type": "R_MOS_ADDR16_HI"
+      }
+    ],
+    "batch_discriminator": {
+      "guard": "if-rtov_repeat",
+      "initial_value": "zero-initialized-static-storage",
+      "installer_closure_writers": 0,
+      "target": "rtov_run_batch"
+    },
+    "claim_limit": "Static direct-control and retained-relocation proof. Before READY, the sole Bank-0 data-reference exception is the machine-proven complete-Island zero wipe used to erase or fail-close the destination; no Island-owned value is consumed and no unguarded code is entered.",
+    "fixed_facade_Island_references": [
+      {
+        "addend": 0,
+        "offset": 46575,
+        "relocation_section": ".rela.lisp65_c2_host_facade",
+        "source_function": {
+          "address": 46574,
+          "bytes": 3,
+          "end_exclusive": 46577,
+          "name": "c2_facade_handle_normalize",
+          "provenance": "fixed-facade-contract",
+          "section": ".lisp65_c2_host_facade"
+        },
+        "source_section": ".lisp65_c2_host_facade",
+        "target": "c2_product_handle_normalize",
+        "type": "R_MOS_ADDR16"
+      }
+    ],
+    "fixed_facade_contract_interval": {
+      "address": 46574,
+      "bytes": 3,
+      "end_exclusive": 46577,
+      "name": "c2_facade_handle_normalize",
+      "provenance": "fixed-facade-contract",
+      "section": ".lisp65_c2_host_facade"
+    },
+    "fixed_facade_section_evidence": {
+      "address": 46574,
+      "bytes": 0,
+      "name": "c2_facade_handle_normalize",
+      "owner_address": 46532,
+      "owner_bytes": 45,
+      "range_crosscheck": "passed",
+      "section": ".lisp65_c2_host_facade",
+      "st_shndx": 14,
+      "type": "None"
+    },
+    "guard_machine_branch_count": 4,
+    "installer_root": {
+      "address": 45207,
+      "section": ".text"
+    },
+    "negative_matrix": {
+      "batch-discriminator-control-edge": "passed",
+      "exact-b5ee-three-byte-vector": "accepted",
+      "extra-reference": "rejected",
+      "half-address-pair": "rejected",
+      "installer-Island-data-reference": "rejected",
+      "missing-wipe": "rejected",
+      "nonzero-fill": "rejected",
+      "transaction-ready-guarded-control-edge": "passed",
+      "unguarded-control-edge": "rejected",
+      "unlisted-facade-relocation-address": "rejected",
+      "wrong-address-contract-object": "rejected",
+      "wrong-call-target": "rejected",
+      "wrong-elf-section-index": "rejected",
+      "wrong-length": "rejected",
+      "wrong-size-contract-object": "rejected",
+      "wrong-target": "rejected"
+    },
+    "permitted_pre_READY_manufacturing_writes": [
+      {
+        "addend": 0,
+        "call_address": 45274,
+        "call_target": "__memset",
+        "fill": 0,
+        "length": 2048,
+        "pair_complete": true,
+        "relocations": [
+          {
+            "addend": 0,
+            "offset": 45258,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 45207,
+              "bytes": 190,
+              "end_exclusive": 45397,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_LO"
+          },
+          {
+            "addend": 0,
+            "offset": 45262,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 45207,
+              "bytes": 190,
+              "end_exclusive": 45397,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_HI"
+          }
+        ],
+        "source": "vm_runtime_overlay_install_island",
+        "target_address": 6144,
+        "target_symbol": "__lisp65_resident_island_start"
+      },
+      {
+        "addend": 0,
+        "call_address": 45316,
+        "call_target": "__memset",
+        "fill": 0,
+        "length": 2048,
+        "pair_complete": true,
+        "relocations": [
+          {
+            "addend": 0,
+            "offset": 45302,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 45207,
+              "bytes": 190,
+              "end_exclusive": 45397,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_LO"
+          },
+          {
+            "addend": 0,
+            "offset": 45306,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 45207,
+              "bytes": 190,
+              "end_exclusive": 45397,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_HI"
+          }
+        ],
+        "source": "vm_runtime_overlay_install_island",
+        "target_address": 6144,
+        "target_symbol": "__lisp65_resident_island_start"
+      },
+      {
+        "addend": 0,
+        "call_address": 45350,
+        "call_target": "__memset",
+        "fill": 0,
+        "length": 2048,
+        "pair_complete": true,
+        "relocations": [
+          {
+            "addend": 0,
+            "offset": 45336,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 45207,
+              "bytes": 190,
+              "end_exclusive": 45397,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_LO"
+          },
+          {
+            "addend": 0,
+            "offset": 45340,
+            "relocation_section": ".rela.text",
+            "source_function": {
+              "address": 45207,
+              "bytes": 190,
+              "end_exclusive": 45397,
+              "name": "vm_runtime_overlay_install_island",
+              "section": ".text"
+            },
+            "source_section": ".text",
+            "target": "__lisp65_resident_island_start",
+            "type": "R_MOS_ADDR16_HI"
+          }
+        ],
+        "source": "vm_runtime_overlay_install_island",
+        "target_address": 6144,
+        "target_symbol": "__lisp65_resident_island_start"
+      }
+    ],
+    "reachable_function_count": 11,
+    "reachable_functions": [
+      "__call_indir",
+      "__memset",
+      "rtov_crc_byte",
+      "rtov_crc_mem",
+      "rtov_fail",
+      "rtov_read",
+      "rtov_transaction_context_if_ready",
+      "rtov_wipe",
+      "vm_runtime_overlay_exec",
+      "vm_runtime_overlay_exec_family",
+      "vm_runtime_overlay_install_island"
+    ],
+    "status": "passed-static-preinstallation-Island-gate",
+    "unguarded_or_consuming_data_references": []
+  },
+  "e000_equation": "531 - 416 = 115; total formal debit 416 + 6 = 422/450",
+  "elf_truth_selftest": {
+    "contract-interval": "passed",
+    "notype-st-shndx": "passed",
+    "overlay-awareness": "passed",
+    "registered-absolute": "passed",
+    "section-symbol-addend": "passed",
+    "structured-json": "passed",
+    "unique-sized-interval": "passed"
+  },
+  "existing_pre_first_red_gate_reports": {
+    "final-section-inventory-l65r-v2-boot-family-placement.prg.json": {
+      "identity": {
+        "bytes": 42968,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/final-section-inventory-l65r-v2-boot-family-placement.prg.json",
+        "sha256": "11346d16a77b1a41354cd18cfbd962c7acb2160e7e930808f117a92c522befd0"
+      },
+      "status": "passed"
+    },
+    "fixed-host-facade-l65r-v2-boot-family.json": {
+      "identity": {
+        "bytes": 2463,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/fixed-host-facade-l65r-v2-boot-family.json",
+        "sha256": "7d0ed551633a5fceb77793f387a77e56e5aed607bb3195b80051c0a325b24026"
+      },
+      "status": "passed"
+    },
+    "handoff-z-abi-l65r-v2-boot-family.json": {
+      "identity": {
+        "bytes": 2171,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/handoff-z-abi-l65r-v2-boot-family.json",
+        "sha256": "dc7da7eb1eb6199577431c1646f43ad021807ca972bdd0338611b41a3a698459"
+      },
+      "status": "passed"
+    },
+    "kernal-freedom-link.json": {
+      "identity": {
+        "bytes": 6896,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/kernal-freedom-link.json",
+        "sha256": "4c78d1cca2c2d9ac1966aee8d0763999ec8787457ba5a6ec558a6c5be160a3ed"
+      },
+      "status": "passed"
+    },
+    "lto-partition-metadata-l65r-v2-boot-family-placement.prg.json": {
+      "identity": {
+        "bytes": 1456,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/lto-partition-metadata-l65r-v2-boot-family-placement.prg.json",
+        "sha256": "fbc482da9a7c102dbe46d7bfe0c4b66141d20863742c663593bb2f330ee65469"
+      },
+      "status": "passed"
+    },
+    "one-truth-closure.json": {
+      "identity": {
+        "bytes": 254,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/one-truth-closure.json",
+        "sha256": "67026262420894e4bb4245668d7989d8c622f197297d13f25d5d1d2c0cc7accb"
+      },
+      "status": "passed"
+    },
+    "pre-ownership-closure-l65r-v2-boot-family.json": {
+      "identity": {
+        "bytes": 3090,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/pre-ownership-closure-l65r-v2-boot-family.json",
+        "sha256": "20a807c06552829fe653499c85debbb89a8739e67e5aca9f0be6171020a2b1fe"
+      },
+      "status": "passed"
+    },
+    "profile-data-reference-l65r-v2-boot-family.json": {
+      "identity": {
+        "bytes": 4155,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/profile-data-reference-l65r-v2-boot-family.json",
+        "sha256": "092a24f877b39b4d515d488640cb130a006f943577d42f68adbb45237f1bad15"
+      },
+      "status": "passed"
+    },
+    "runtime-family-total-identity.json": {
+      "identity": {
+        "bytes": 377,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/runtime-family-total-identity.json",
+        "sha256": "6aebf9c4bd3f3bd4b40475f29922b2db1566d06ab9a4074fa36a7d764bcfac6d"
+      },
+      "status": "passed"
+    },
+    "runtime-verifier-publish-last.json": {
+      "identity": {
+        "bytes": 635,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/runtime-verifier-publish-last.json",
+        "sha256": "bc20eb988bd6b618feb019f95df69e10a765a69d8a4eee95d0685a892a520025"
+      },
+      "status": "passed"
+    },
+    "substitution-balance.json": {
+      "identity": {
+        "bytes": 5609,
+        "mode": "0o444",
+        "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/substitution-balance.json",
+        "sha256": "689e5cf431224420a124a935bcf97f899bc40e46bbc8f85dfe458e8b600407a9"
+      },
+      "status": "passed"
+    }
+  },
+  "format": "lisp65-c2-handoff-reanchor-wplto-wall-pin-pure-replay-v1",
+  "handoff_reanchor_geometry": {
+    "bank0_text": {
+      "end_exclusive": 46201,
+      "handoff": 46243,
+      "headroom_bytes": 42,
+      "minimum_headroom_bytes": 32
+    },
+    "fixed_points": {
+      "code": 49688,
+      "post_fixed_pocket_bytes": 33,
+      "runtime_overlay_vma": 50006,
+      "state": 49280
+    },
+    "pre_fixed_pocket": {
+      "bss_end_exclusive": 49085,
+      "fixed_block": 49280,
+      "headroom_bytes": 195
+    },
+    "publish_last_addresses": {
+      "kernal_crc_high": 46284,
+      "kernal_crc_low": 46288,
+      "runtime_overlay_verifier_bindings": 47444
+    },
+    "sections": {
+      ".bss": {
+        "address": 47498,
+        "bytes": 1587
+      },
+      ".data": {
+        "address": 47476,
+        "bytes": 22
+      },
+      ".lisp65_c2_fixed_bank0": {
+        "address": 49280,
+        "bytes": 408
+      },
+      ".lisp65_c2_fixed_bank0_code": {
+        "address": 49688,
+        "bytes": 45
+      },
+      ".lisp65_c2_fixed_bank0_hot_bss": {
+        "address": 49733,
+        "bytes": 240
+      },
+      ".lisp65_c2_host_facade": {
+        "address": 46532,
+        "bytes": 45
+      },
+      ".lisp65_c2_kernal_handoff": {
+        "address": 46243,
+        "bytes": 289
+      },
+      ".lisp65_c2_kernal_io_reveal": {
+        "address": 46577,
+        "bytes": 11
+      },
+      ".lisp65_c2_kernal_map_switch": {
+        "address": 46588,
+        "bytes": 10
+      },
+      ".lisp65_c2_kernal_state": {
+        "address": 46598,
+        "bytes": 20
+      },
+      ".lisp65_runtime_overlay_verifier_bindings": {
+        "address": 47444,
+        "bytes": 32
+      },
+      ".lisp65_workbench_overlay": {
+        "address": 50006,
+        "bytes": 1731
+      },
+      ".noinit": {
+        "address": 49973,
+        "bytes": 0
+      },
+      ".rodata": {
+        "address": 46618,
+        "bytes": 826
+      }
+    },
+    "status": "passed-exact-34-byte-chain-reanchor",
+    "vectors": {
+      "c2_facade_c2_dma": 46535,
+      "c2_facade_c2e_cons": 46541,
+      "c2_facade_c2e_overlay": 46544,
+      "c2_facade_car": 46547,
+      "c2_facade_cdr": 46550,
+      "c2_facade_gc_collect": 46553,
+      "c2_facade_gc_mark": 46568,
+      "c2_facade_handle_normalize": 46574,
+      "c2_facade_intern": 46562,
+      "c2_facade_overlay_call_family": 46538,
+      "c2_facade_runtime_overlay_exec": 46571,
+      "c2_facade_select_family": 46565,
+      "c2_facade_str_open": 46556,
+      "c2_facade_str_putc": 46559,
+      "c2_facade_vm_code_load": 46532
+    }
+  },
+  "handoff_reanchor_source_pins": {
+    "facade_vectors": {
+      "c2_facade_c2_dma": 46535,
+      "c2_facade_c2e_cons": 46541,
+      "c2_facade_c2e_overlay": 46544,
+      "c2_facade_car": 46547,
+      "c2_facade_cdr": 46550,
+      "c2_facade_gc_collect": 46553,
+      "c2_facade_gc_mark": 46568,
+      "c2_facade_handle_normalize": 46574,
+      "c2_facade_intern": 46562,
+      "c2_facade_overlay_call_family": 46538,
+      "c2_facade_runtime_overlay_exec": 46571,
+      "c2_facade_select_family": 46565,
+      "c2_facade_str_open": 46556,
+      "c2_facade_str_putc": 46559,
+      "c2_facade_vm_code_load": 46532
+    },
+    "handoff": 46243,
+    "negative_mutations": {
+      "old-crc-high": "rejected",
+      "old-crc-low": "rejected",
+      "old-facade": "rejected",
+      "old-handle-vector": "rejected",
+      "old-handoff": "rejected",
+      "old-verifier-table": "rejected",
+      "short-shift": "rejected"
+    },
+    "profile": {
+      "bytes": 1712,
+      "format": "lisp65-c2-link33-product-profile-v1",
+      "path": "config/c2-link33-product-profile.json",
+      "sha256": "6226b60c3b9785bbef2210644c4ab558a2487e6cbfcbde25a1e99fe8cc9de2a6"
+    },
+    "publish_last": {
+      "crc_high": 46284,
+      "crc_low": 46288,
+      "verifier_table": 47444
+    },
+    "status": "passed-single-successor-pin-source"
+  },
+  "immutable_source": {
+    "corrected_contract": {
+      "bytes": 3880,
+      "mode": "0o644",
+      "path": "config/c2-preinstall-island-guard-contract.json",
+      "sha256": "50884f1db2087536d581ce3e0ded5584ec3771f335361aaf65aa3e82fe5dde46"
+    },
+    "corrected_contract_document": {
+      "bytes": 3401,
+      "mode": "0o644",
+      "path": "docs/planning/c2.2-preinstall-island-guard-addendum.md",
+      "sha256": "52f8f6a30d318b6b363fd6ebf06244c2062d0c4f7c89bbf5d9d6e73f55c2bbc1"
+    },
+    "corrected_gate_source": {
+      "bytes": 38081,
+      "mode": "0o644",
+      "path": "tools/host-lisp/c2_preinstall_island_guard.py",
+      "sha256": "f25f4bdc3162baef4c722f557a263104b920fbdf6bd94749e5e49a7bce416d05"
+    },
+    "diagnosis": {
+      "bytes": 5204,
+      "mode": "0o444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-preinstall-gate-diagnosis.json",
+      "sha256": "c7560e1f2dd5ad69d5124cf3b8e021ffe3f4149aa3a95d5c028564d1eabbc1a9"
+    },
+    "elf": {
+      "bytes": 565544,
+      "mode": "0o444",
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/l65r-v2-boot-family-placement.prg.elf",
+      "sha256": "c82b9bd0763e1c515e083c615b7f35742b571a262e75b03649a5798382110d2b"
+    },
+    "files": 56,
+    "first_red": {
+      "bytes": 20093,
+      "mode": "0o644",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-probe-receipt.json",
+      "sha256": "8332fabca7ee785dffaa9b980cca3bbf1f0d3e1204387845263d4a66411dafec"
+    },
+    "map": {
+      "bytes": 183516,
+      "mode": "0o444",
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/l65r-v2-boot-family-placement.prg.map",
+      "sha256": "3c756c120f3f2d3227e30efacbc91ae148f62d28a29860f8122efd38f334fcf4"
+    },
+    "status": "passed-entire-first-red-evidence-tree-sha-bound-read-only"
+  },
+  "next_gate": "review before any fresh Link 33",
+  "recorded_on": "2026-07-21",
+  "resident_walls": {
+    "bank0_text_headroom_bytes": 42,
+    "e000_headroom_bytes": 115,
+    "fixed_hot_block_headroom_bytes": 33,
+    "ordinary_bank0_bss_headroom_bytes": 195,
+    "resident_island_headroom_bytes": 7
+  },
+  "source_guard": {
+    "checks": {
+      "active_not_ready_case": true,
+      "asan_ubsan_host_target": true,
+      "exact_stale_fixture_case": true,
+      "host_context_counter": true,
+      "installer_is_named_noinline_boundary": true,
+      "installer_source_has_exact_two_complete_zero_wipes": true,
+      "installer_source_has_no_other_target_use": true,
+      "lookup_and_publish_share_guard": true,
+      "not_ready_is_fail_closed": true,
+      "resident_guard_exact": true
+    },
+    "mutation_matrix": {
+      "active-not-ready": "fail-closed-zero-Island-calls",
+      "active-ready": "single-Island-call",
+      "extra-reference": "rejected",
+      "half-address-pair": "rejected",
+      "inactive-stale": "zero-Island-calls",
+      "missing-active-guard": "rejected",
+      "missing-ready-guard": "rejected",
+      "missing-wipe": "rejected",
+      "nonzero-fill": "rejected",
+      "reversed-guard-order": "rejected",
+      "wrong-call-target": "rejected",
+      "wrong-length": "rejected",
+      "wrong-target": "rejected"
+    },
+    "status": "passed"
+  },
+  "status": "passed-wall-pin-pure-replay-no-link33",
+  "successor_pin_package": {
+    "facade_provenance": {
+      "bytes": 10770,
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto-wall-pin-replay/successor-pin-facade-provenance.json",
+      "sha256": "a7e54b95ce28baa283a9a2ef36c7b503c84399d16051b839c38e73ca069a7996"
+    },
+    "handoff_geometry": {
+      "bytes": 2558,
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto-wall-pin-replay/successor-pin-handoff-geometry.json",
+      "sha256": "e86ab7e304dd0261b0d5d9e0cae9778a610bb8fe30e9715b7990e037feb0f215"
+    },
+    "profile_binding": {
+      "bytes": 554,
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto-wall-pin-replay/successor-pin-profile-binding.json",
+      "sha256": "377afbeb6288ecf2bcf2db09b4ae3fa1d7ba6df7ad16d5be2e6de27360d6a3be"
+    },
+    "publish_last": {
+      "bytes": 235,
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto-wall-pin-replay/successor-pin-publish-last.json",
+      "sha256": "5cdb0e163e67857fd78b371a79af5110d24d36b482388a4370d14c1adb981852"
+    },
+    "section_inventory": {
+      "bytes": 48336,
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto-wall-pin-replay/successor-pin-section-inventory.json",
+      "sha256": "f9ab8bffefaad67f52e73b72579d2a3f1b0e8550ecfa23b78fcbbf0d21496a64"
+    }
+  },
+  "v2_packer_mutations": {
+    "abi-one": "rejected-fail-closed",
+    "callable-entry": "rejected-fail-closed",
+    "capability": "rejected-fail-closed",
+    "missing-data-flag": "rejected-fail-closed",
+    "over-cap": "rejected-fail-closed",
+    "source-payload": "rejected-fail-closed",
+    "unknown-data-flag": "rejected-fail-closed",
+    "v1-header": "rejected-fail-closed",
+    "wrong-destination": "rejected-fail-closed",
+    "zero-length": "rejected-fail-closed"
+  }
+}

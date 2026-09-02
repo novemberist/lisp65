@@ -1,0 +1,153 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 628744,
+      "path": "build/c2.3/v2.1-text-recovery-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "6d7adfdd33d4ee2b484df30bf3e159f7c98a4c6357218bae0222c2c8002f2cb8"
+    },
+    "card_driver": {
+      "bytes": 27910,
+      "path": "tools/host-lisp/c2_v21_text_recovery_card.py",
+      "sha256": "554aa8f81ddf07a85271c0b1e2ad250b6ee336bd0dd2721fbb55e91853ee5714"
+    },
+    "driver": {
+      "bytes": 14353,
+      "path": "tools/host-lisp/c2_v21_text_recovery_card_red_attribution.py",
+      "sha256": "313120c6ff07c2fb24e63c4d5f1c087a29ea5df577b38a1066307a4ade274339"
+    },
+    "final_red": {
+      "bytes": 12501,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-text-recovery-card-final-red.json",
+      "sha256": "95e125ea6526c0c6f50a9f1c8a4eac2850d545bf10d8d0c2e678a424235f8516"
+    },
+    "map": {
+      "bytes": 180711,
+      "path": "build/c2.3/v2.1-text-recovery-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "0b8c968bf49c34b47df89ac742d1c30a0dba5fb3197c5e4b8ff6010273360033"
+    },
+    "ownership": {
+      "bytes": 10635,
+      "path": "config/c2-full-map-ownership-contract.json",
+      "sha256": "6bf412202fc7b2b6b04780da8766056a2c785026a5425376c5402601a76c751c"
+    },
+    "product_linker": {
+      "bytes": 337100,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+    },
+    "unbound_session_manifest": {
+      "bytes": 44718,
+      "path": "build/c2.3/v2.1-text-recovery-card/wplto/runtime-overlays-session-unbound.json",
+      "sha256": "8e489409c8799fd5871679d4af5faa5298e1e4ac9b5285ed837c19a4684d5e96"
+    }
+  },
+  "card_disposition": {
+    "card_consumed": true,
+    "completion_allowed": false,
+    "device_allowed": false,
+    "media_allowed": false,
+    "owner_disposition_required": true,
+    "retry_authorized": false
+  },
+  "claim_limit": "Read-only attribution of the consumed card. It proves placement and two linked red mechanisms; it authorizes no repair, replay, completion, media, device, D1-D5 or release claim.",
+  "decision": {
+    "minimum_future_questions": [
+      "derive publish-last base from the current full-map contract",
+      "make return identity intrinsic to the real call instruction rather than a later C label",
+      "run the actual generated consumer before any future card"
+    ],
+    "result": "FINAL-RED-RETURN-TO-OWNER",
+    "why": "The placement thesis is proved, but fixing or replaying only the completion pin cannot make this card green: the linked selector identities are independently false."
+  },
+  "first_stopper": {
+    "class": "HISTORICAL-COMPLETION-PIN-CROSSES-CURRENT-FULL-MAP-CONTRACT",
+    "completion_expected_base": "0xb98a",
+    "current_ownership_contract": "0xb98c",
+    "delta_bytes": 2,
+    "effect": "publish-last verifier binding refused before final family pack",
+    "linked_binding": {
+      "address": "0xb98c",
+      "bytes": 40
+    },
+    "product_geometry_implicated": false
+  },
+  "format": "lisp65-c2.3-v2.1-text-recovery-card-red-attribution-v1",
+  "green_subresult": {
+    "E000_call_instruction_delta_bytes": 0,
+    "cold_displacement": {
+      "aggregate_bytes": 65423,
+      "aggregate_growth_bytes": 0,
+      "bytes": 63,
+      "linked_calls": 5,
+      "outside_cold_calls": 0,
+      "packed_padding_bytes": 34,
+      "packed_page_bytes": 1280,
+      "slice_bytes": 1246,
+      "symbol": "c2e_w32"
+    },
+    "contracted_margins_used_as_freight": false,
+    "fixed_block_bytes": 48,
+    "fixed_block_delta_bytes": 0,
+    "ordinary_text": {
+      "end_exclusive": "0xb398",
+      "facade_start": "0xb3b0",
+      "net_resident_delta_bytes": -23,
+      "reserve_bytes": 24
+    },
+    "reader_bytes": 166,
+    "selector_bytes": 40
+  },
+  "independent_linked_red": {
+    "calls": [
+      {
+        "JSR": "0xe326",
+        "compiler_instructions_before_label": "e329: aa           \ttax",
+        "function": "c2_stream_c2d_read",
+        "hardware_pushed_return": "0xe328",
+        "mismatch_bytes": 1,
+        "selector_expected_return": "0xe329",
+        "selector_match": false,
+        "symbolic_post_call_label": "0xe32a"
+      },
+      {
+        "JSR": "0xe84b",
+        "compiler_instructions_before_label": "e84e: 85 10        \tsta\t$10                     ; 0x10 <__rc14>",
+        "function": "c2_stream_shelf_read",
+        "hardware_pushed_return": "0xe84d",
+        "mismatch_bytes": 2,
+        "selector_expected_return": "0xe84f",
+        "selector_match": false,
+        "symbolic_post_call_label": "0xe850"
+      }
+    ],
+    "card_acceptable_after_completion_pin_only": false,
+    "class": "ISOLATED-FIXTURE-MASKED-REAL-CONSUMER-RETURN-LABEL-GAP",
+    "effect": "Neither actual JSR return matches its selector identity; both would take the legacy runtime-overlay tail with reader arguments.",
+    "fixed_vector": "0xb5eb",
+    "preflight_gap": "The isolated alias-call fixture placed its label immediately, but the real WPLTO consumer inserted result-preservation instructions. The actual linked consumer ran only after the card was consumed.",
+    "selector": "0x231d"
+  },
+  "mutations_rejected": [
+    "authorize-retry",
+    "allow-completion",
+    "erase-reserve",
+    "invent-warm-helper-call",
+    "spend-margin",
+    "blame-product-geometry",
+    "erase-completion-delta",
+    "accept-c2d-return",
+    "erase-shelf-gap",
+    "accept-after-pin-only",
+    "claim-green"
+  ],
+  "recorded_on": "2026-08-14",
+  "status": "ATTRIBUTED FINAL RED: completion pin plus real-consumer selector mismatch"
+}

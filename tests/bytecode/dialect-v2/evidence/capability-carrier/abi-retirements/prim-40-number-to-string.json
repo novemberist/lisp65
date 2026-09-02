@@ -1,0 +1,57 @@
+{
+  "format": "lisp65-prim-id-retirement-evidence-v1",
+  "version": 1,
+  "id": "prim-40-number-to-string",
+  "profile": "dialect-v2",
+  "prim_id": 40,
+  "canonical_name": "number->string",
+  "transition": "active-to-tombstone",
+  "source_commit": "ca9cfb941a7db3374b7705fce1f1925e1e525643",
+  "prior_contracts": [
+    {
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "3328adfcadaa9a7342b85d3d9cd8082504f8ba1024ca8edb95b0beb57930f2d7"
+    },
+    {
+      "path": "config/v2-workbench-artifact-closure.json",
+      "sha256": "3b3734b1922fff8a737176d42e5bd6fa7945843f83ba186bc925383dc0a3a83a"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-4-receipt.json",
+      "sha256": "78cc6e9e1fe9571f68b28796ab302b40daa9dcf29e906393a9da08f67135feaa"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-artifact-differential-receipt.json",
+      "sha256": "1b2cb2862d7fbff26d5f420561d78d16e569e026af9647a74f96bc9c58bb8814"
+    }
+  ],
+  "artifact_evidence": {
+    "manifest": {
+      "source_path": "build/bytecode/dialect-v2/libs/ide.manifest.json",
+      "sha256": "85ed1699d445edbf0ac7e63ec3f3abb742144b5d3cfe3273fde960b3e5fea531",
+      "abi_profile": "dialect-v2",
+      "artifact_role": "disk-lib",
+      "name": "ide",
+      "blob_sha256": "7e47c4c0db7e94e86970708ce12cfb95c39578abdfd9ba7d3c8e8d7d726a8e61",
+      "disasm_sha256": "d03a6d11c193609a389c57ef347a6aeb8d411ddd9c112071f89396ade2aa393d"
+    },
+    "disassembly": {
+      "source_path": "build/bytecode/dialect-v2/libs/ide.disasm.txt",
+      "sha256": "d03a6d11c193609a389c57ef347a6aeb8d411ddd9c112071f89396ade2aa393d",
+      "callprim_id": 40,
+      "call_count": 4,
+      "observations": [
+        "%ide-budget-string:000b CALLPRIM prim=40:number->string argc=1",
+        "%ide-budget-string:0013 CALLPRIM prim=40:number->string argc=1",
+        "ide-status-line:00aa CALLPRIM prim=40:number->string argc=1",
+        "ide-status-line:00ca CALLPRIM prim=40:number->string argc=1"
+      ]
+    }
+  },
+  "retirement_policy": {
+    "decoder_name_retained": true,
+    "runtime_result": "bad-primitive",
+    "new_emission": "forbidden",
+    "reuse": "forbidden"
+  }
+}

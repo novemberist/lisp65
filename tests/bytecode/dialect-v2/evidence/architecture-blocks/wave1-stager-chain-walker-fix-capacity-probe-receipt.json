@@ -1,0 +1,197 @@
+{
+  "format": "lisp65-wave1-stager-chain-walker-fix-capacity-probe-v1",
+  "recorded_on": "2026-07-17",
+  "status": "passed-awaiting-owner-capacity-authorization",
+  "scope": [
+    "cold-stager-length-derived-16-bit-sector-fuel",
+    "corrupt-file-tail-and-link-clamps",
+    "complete-live-c-and-lisp-1581-chain-walker-inventory"
+  ],
+  "failed_hardware_run": {
+    "g6_status": "0/5-applicable-cases-passed",
+    "case_receipt": "not-emitted",
+    "classification": "receipt-less-diagnostic-fund",
+    "diagnosis": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/wave1-g6-cold-stager-sector-fuel-diagnosis.json",
+      "sha256": "953c8f09d4cf5917e5f7e5ce55b097ceb14ce4eb5d05da1606b659264bceae7e"
+    }
+  },
+  "capacity_delta": {
+    "baseline_product_identity_sha256": "05c136a430dcc23a8a4c4fe1cdebfbbc05717efe4f86e3d6324e5b2233d3f5dd",
+    "candidate_product_identity_sha256": "not-pinned-before-owner-authorization",
+    "dimensions": {
+      "bank": {
+        "baseline_headroom_over_1536_target_bytes": 369,
+        "candidate_headroom_over_1536_target_bytes": 354,
+        "baseline_post_boot_reserve_bytes": 1905,
+        "candidate_post_boot_reserve_bytes": 1890,
+        "delta_bytes": -15
+      },
+      "ext": {
+        "baseline_standard_composition_headroom_bytes": 25073,
+        "candidate_standard_composition_headroom_bytes": 24796,
+        "floor_bytes": 16384,
+        "candidate_margin_over_floor_bytes": 8412,
+        "delta_bytes": -277
+      },
+      "symbols": {
+        "baseline_headroom": 298,
+        "candidate_headroom": 295,
+        "required_headroom": 32,
+        "delta": -3
+      },
+      "namepool": {
+        "baseline_headroom_bytes": 4602,
+        "candidate_headroom_bytes": 4529,
+        "required_headroom_bytes": 384,
+        "delta_bytes": -73
+      },
+      "directory": {
+        "baseline_post_align_headroom": 168,
+        "candidate_post_align_headroom": 168,
+        "required_headroom": 32,
+        "delta": 0
+      }
+    },
+    "watch_dimensions": {
+      "boot_overlay": {
+        "baseline_bytes": 1669,
+        "candidate_bytes": 1669,
+        "headroom_bytes": 0,
+        "delta_bytes": 0
+      },
+      "runtime_overlay_bank": {
+        "baseline_bytes": 65472,
+        "candidate_bytes": 65472,
+        "hard_limit_bytes": 65536,
+        "remaining_bytes": 64,
+        "delta_bytes": 0
+      },
+      "resident_island": {
+        "baseline_payload_bytes": 1668,
+        "candidate_payload_bytes": 1668,
+        "remaining_bytes": 120,
+        "delta_bytes": 0
+      },
+      "resident_island_installer_slice": {
+        "baseline_bytes": 1770,
+        "candidate_bytes": 1770,
+        "remaining_bytes": 22,
+        "delta_bytes": 0
+      }
+    }
+  },
+  "attribution": [
+    {
+      "component": "cold-stager",
+      "baseline_bytes": 5355,
+      "candidate_bytes": 5942,
+      "delta_bytes": 587,
+      "capacity_class": "standalone-artifact-no-workbench-bank-or-ext-effect",
+      "ceiling_bytes": 16384
+    },
+    {
+      "component": "disk_chain_to_scratch",
+      "baseline_bytes": 312,
+      "candidate_bytes": 324,
+      "delta_bytes": 12,
+      "capacity_class": "bank"
+    },
+    {
+      "component": "C-directory-link-clamp",
+      "delta_bytes": 3,
+      "capacity_class": "bank"
+    },
+    {
+      "component": "disk_source_fetch-zero-tail-clamp",
+      "baseline_bytes": 137,
+      "candidate_bytes": 137,
+      "delta_bytes": 0,
+      "capacity_class": "resident-island"
+    },
+    {
+      "component": "IDE-file-and-directory-link-guards",
+      "baseline_container_bytes": 27904,
+      "candidate_container_bytes": 28104,
+      "delta_bytes": 200,
+      "capacity_class": "ext"
+    },
+    {
+      "component": "resident-directory-and-C1-FASL-link-guards",
+      "delta_bytes": 77,
+      "capacity_class": "ext",
+      "runtime_symbol_delta": 3,
+      "runtime_namepool_delta_bytes": 73
+    }
+  ],
+  "verification": {
+    "chain_walker_inventory": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/wave1-chain-walker-inventory-probe-receipt.json",
+      "sha256": "af32125e6fcbd7e0903ec75cf5860b49d6c33e9a1f9eddb229f64e6045883de7",
+      "walkers": 22,
+      "shared_negative_classes": 3,
+      "deviations": 0
+    },
+    "stager_large_files": {
+      "overlays_logical_sectors": 258,
+      "shelf_logical_sectors": 257,
+      "fuel": "ceil(expected_length/254) stored in uint16_t",
+      "media_byte_cap": 819200
+    },
+    "resident_bytecode": {
+      "cases": 202,
+      "result": "pass",
+      "new_link_guard_cases": 8
+    },
+    "ide_bytecode": {
+      "cases": 124,
+      "result": "pass",
+      "new_link_guard_cases": 4
+    },
+    "fasl_independent_oracle": {
+      "boundary_lengths": 10,
+      "fault_classes": 5,
+      "zero_tail": "rejected-with-zero-writes",
+      "self_reference": "rejected-on-first-read-with-zero-writes",
+      "result": "pass"
+    },
+    "source_syntax": "299-files-pass",
+    "hardware": "not-run"
+  },
+  "artifact_bindings": {
+    "candidate_stager_probe": {
+      "path": "build/r3/stager-chain-walker-probe.c65",
+      "sha256": "1f948278f3fa6e9dea15a097973a155c49fee8c555deeb62ba0551fb5e3d7d6c"
+    },
+    "candidate_resident_prg": {
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-resident.prg",
+      "sha256": "a12357a9434069a1be05e18cda8755b869b2b3698a611049f2155f967b47224c"
+    },
+    "candidate_ide": {
+      "path": "build/bytecode/dialect-v2/libs/ide.ext.bin",
+      "sha256": "194c4f2c24e9e1052ef8dffcd2ca3155e951fb95dbc8d2bd3666f376342125c2"
+    },
+    "candidate_shelf": {
+      "path": "build/bytecode/dialect-v2/shelf/library-shelf.bin",
+      "sha256": "9dbfaef070a96dbc365dcf7b0ab39a0abe195cd0e984c32f056479f8b146cd83"
+    },
+    "composition_report": {
+      "path": "build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+      "sha256": "81b5e39224da967e72ec55c843a3cd1a65f7ee9d6185bb563e2df1b136ed930b"
+    },
+    "footprint_report": {
+      "path": "build/products/workbench/overlay-stack-guard/footprint-audit.json",
+      "sha256": "1e97685f42b2bbbea4015b44f3117edbc205f40f9a5f78c3255d04a41d58d467"
+    }
+  },
+  "authorization_request": {
+    "bank_delta_bytes": -15,
+    "ext_delta_bytes": -277,
+    "symbol_delta": -3,
+    "namepool_delta_bytes": -73,
+    "directory_delta": 0,
+    "watch_dimension_deltas": "all-zero",
+    "decision": "pending-owner"
+  },
+  "claim_limit": "This probe proves linked capacity, host semantics, and structural closure of the enumerated chain walkers. It makes no hardware or promotion claim; R4/R5/R6 and fresh G5/G6 remain mandatory after authorization."
+}

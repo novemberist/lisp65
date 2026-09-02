@@ -1,0 +1,62 @@
+{
+  "append_only_proof": {
+    "historical_receipt_rewritten": false,
+    "new_bytes": 162163,
+    "new_sha256": "fa82b6287948e92b7ce36e41c994595e4798236780485083545430bea1f37d41",
+    "old_bytes": 58740,
+    "old_plan_remains_exact_prefix": true,
+    "old_prefix_sha256": "f389861ba34ff4c5655a12eff25a37d2cafdcfc8245fac09563caa1a9ca6183e"
+  },
+  "authority_receipt": {
+    "bytes": 18553,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-c-diagnostic-preparation-receipt.json",
+    "sha256": "199004b6f5b8f7f04493f119463d27e15cf87a0ecb27026958f594ac39c54439"
+  },
+  "authorized_bindings": [
+    "driver",
+    "gate_wiring",
+    "plan"
+  ],
+  "format": "lisp65-c2.3-v1.6-phase-C-binding-rebind-v1",
+  "from": {
+    "driver": {
+      "bytes": 50920,
+      "path": "tools/host-lisp/c2_v16_defstruct_phase_c.py",
+      "sha256": "eaee0f2c0213f0913e9dc70068d1563e7a67ab59704e089430d2e16bd33601b0"
+    },
+    "gate_wiring": {
+      "bytes": 33870,
+      "path": "mk/gates.mk",
+      "sha256": "32b526b9bd1402ad91acb4f932ade04c942dec0b52177073c821b997dccb9fa6"
+    },
+    "plan": {
+      "bytes": 58740,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "f389861ba34ff4c5655a12eff25a37d2cafdcfc8245fac09563caa1a9ca6183e"
+    }
+  },
+  "reason": "The Phase-C plan binding predates the append-only launch-boundary method, device dispositions and diagnostic-delta attribution. The plan later grew through the consumed full run, loud Slot-39 correction and pre-rollback shadow preparation. The historical receipt remains unchanged; this checker change consumes the explicit append-only rebind.",
+  "recorded_on": "2026-08-05",
+  "status": "LOUD-DATED-REBIND-PLAN-APPEND-ONLY",
+  "to": {
+    "driver": {
+      "bytes": 54782,
+      "path": "tools/host-lisp/c2_v16_defstruct_phase_c.py",
+      "sha256": "cb569f4beb25644a534c7b084ab330775ede636f61c4fc9411f9121d4c6b1c86"
+    },
+    "gate_wiring": {
+      "bytes": 49280,
+      "path": "mk/gates.mk",
+      "sha256": "5e0c42887a6e3c73015a06b2b43cbb46600d9e8c42f40abd497cacaa89724c79"
+    },
+    "plan": {
+      "bytes": 162163,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "fa82b6287948e92b7ce36e41c994595e4798236780485083545430bea1f37d41"
+    }
+  },
+  "verification": {
+    "mutations_rejected": 5,
+    "scope": "historical Phase-C checker only; no diagnostic artifact or product byte rebound"
+  }
+}

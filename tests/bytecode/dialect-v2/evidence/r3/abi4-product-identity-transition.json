@@ -1,0 +1,53 @@
+{
+  "format": "lisp65-r3-product-identity-transition-v1",
+  "id": "r3-abi4-batch-contract-repin",
+  "status": "accepted",
+  "decided_on": "2026-07-13",
+  "historical_r2_identity": {
+    "product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "banked_headroom_bytes": 269,
+    "treatment": "immutable-historical-promotion-not-amended"
+  },
+  "r3_baseline_identity": {
+    "product_sha256": "984b1d6fef10ae474aa87d604ed568c74ce8322c0053991ad7b80c09b82194bc",
+    "artifact_set_sha256": "1501d4d6dd093e85dd22336fefe7e83b62b7152c7999ff088e0d51f937d42243",
+    "banked_headroom_bytes": 269,
+    "reproducibility_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/canonical-product-reproducibility-receipt.json",
+      "sha256": "4a8827035757571bacaa055d41b8572706060cbf05dd6a8890f364841233b7ed"
+    }
+  },
+  "bank_delta": {
+    "baseline_product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "candidate_product_sha256": "984b1d6fef10ae474aa87d604ed568c74ce8322c0053991ad7b80c09b82194bc",
+    "baseline_banked_headroom_bytes": 269,
+    "candidate_banked_headroom_bytes": 269,
+    "delta_bytes": 0,
+    "authorization": null
+  },
+  "archive_audit": {
+    "archive": "tests/bytecode/dialect-v2/evidence/promotions/r4-product-candidate-8c99a66.tar.gz",
+    "archive_sha256": "8ca3992ee2020b8c4c4693156cc46a982193fdfb29a07621c48894e29a360c85",
+    "manifest_product_bytes": "present",
+    "historical_binary_diff": "performed-against-sealed-resident-prg",
+    "changed_product_instruction": "vm_l65m_batch_repeat cmp-immediate 03-to-04",
+    "additional_changed_bytes": "profile-build-id-and-crc-provenance"
+  },
+  "cause": {
+    "classification": "stale-handwritten-assembler-mirror-of-c-abi-version",
+    "active_nondeterminism": "not-observed",
+    "evidence": [
+      "hardware-runtime-gate-stopped-load-lib-ide-after-12-seconds",
+      "sealed-elf-disassembly-contained-cmp-immediate-03",
+      "live-commit-context-reported-abi-4-repeat-phase-1-cursor-28",
+      "two-varied-fresh-clone-builds-byte-identical"
+    ],
+    "prevention": [
+      "shared-c-to-assembler-generated-contract",
+      "closed-assembler-source-inventory",
+      "raw-numeric-mirror-rejection",
+      "varied-fresh-clone-double-build-before-every-seal"
+    ]
+  },
+  "release_effect": "none"
+}

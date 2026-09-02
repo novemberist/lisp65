@@ -1,0 +1,42 @@
+{
+  "format": "lisp65-v11-c1-bootstrap-final-link-determinism-diagnosis-v1",
+  "recorded_on": "2026-07-16",
+  "status": "final-binding-fixed-capacity-repin-owner-authorized-not-promoted",
+  "trigger": {
+    "gate": "canonical-workbench-varied-double-build",
+    "axis": "fresh-clone-seed-987654321-kiritimati-2030",
+    "observed": "provisional-bootstrap/final resident-island installer mismatch",
+    "first_different_byte_one_based": 31,
+    "provisional_installer_bytes": 1765,
+    "final_installer_bytes": 1759
+  },
+  "diagnosis": {
+    "cause": "The prepared verifier sentinels and final verifier bindings can produce different whole-program register allocation. In the observed build the provisional installer spilled through absolute storage while the final-header installer used zero-page storage.",
+    "ship_relevance": "The provisional bootstrap link is not shipped. It exists only to derive the final verifier header.",
+    "old_gate_error": "It required byte identity between a deliberately provisional link and the final-header product link, conflating header derivation with final installer reproducibility.",
+    "discarded_intermediate_fix": "A second independent final-header link was also rejected: whole-program code generation is not a stable byte-identity boundary across separate link invocations, even with identical generated headers."
+  },
+  "fix": {
+    "header_derivation": "The provisional bootstrap link continues to derive the verifier header.",
+    "slice_binding": "The final runtime-overlay pack still runs header-mode verify against every generated verifier binding.",
+    "installer_binding": "The shipped runtime-overlay image and manifest are reconstructed from the one final product ELF and must match it exactly. This covers all 44 slices, including slot 37 resident-island-installer, without treating a separate compilation as an identity oracle.",
+    "fail_closed": "Any byte difference between a final-ELF slice and the packed image, any manifest/input mismatch, or any verifier-header mismatch stops the product build."
+  },
+  "capacity_delta": {
+    "bank_post_boot_reserve_bytes": 1802,
+    "ext_standard_composition_headroom_bytes": 25073,
+    "overlay_bytes": 1669,
+    "overlay_headroom_bytes": 0,
+    "runtime_overlay_bank_bytes": 65472,
+    "resident_island_installer_bytes_before": 1759,
+    "resident_island_installer_bytes_after": 1765,
+    "resident_island_installer_headroom_before": 33,
+    "resident_island_installer_headroom_after": 27,
+    "resident_island_installer_headroom_delta": -6,
+    "c1_compiler_lifetime_headroom_bytes": 64,
+    "other_capacity_dimensions": "unchanged"
+  },
+  "identity_policy": "The build-contract change is allowed to change the resolved profile and product identity; the regular varied double-build and R3/R4/R5/R6 chain must repin it.",
+  "capacity_authorization": "config/v11-c1-bootstrap-final-link-capacity-authorization.json",
+  "claim_limit": "This diagnosis proves the corrected final-ELF-to-package binding but records a six-byte installer-slice headroom debit caught by the existing C1 gate. It does not authorize that debit, prove the forthcoming varied double-build, promote a product set, or claim G3/G5/G6 evidence."
+}

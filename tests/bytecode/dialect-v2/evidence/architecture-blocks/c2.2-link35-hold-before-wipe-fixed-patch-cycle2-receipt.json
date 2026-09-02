@@ -1,0 +1,127 @@
+{
+  "authority": {
+    "class_b_cycle1_first_red": {
+      "bytes": 3216,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link35-hold-before-wipe-diagnostic-cycle1-link-receipt.json",
+      "sha256": "26a72a34f8b0caee11cb42e3ec7de2e8ef6bdc8691498314659d8eb5a416e7af"
+    },
+    "link35_hardware_first_red": {
+      "bytes": 5208,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link35-dma-completion-hardware-first-red-diagnosis.json",
+      "sha256": "1313edd19d466f290ac6af61f83840884bc385cb7f7b5dfc88928280f1b74c06"
+    },
+    "link35_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/lisp65-c2-substitution-linked.prg",
+      "sha256": "54c731559fdb72d5d1cb8478b9da7e78a422741e4e5267d64b07fe4c6f763a65"
+    },
+    "link35_pure_replay": {
+      "bytes": 18828,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link35-dma-completion-first-status-pure-replay-receipt.json",
+      "sha256": "10bc82583a9b6f80c805a6770769792047e838e93e07d92a4735b673bd2fd13d"
+    },
+    "source_deployment": {
+      "bytes": 2995,
+      "path": "build/c2.2/hardware-presmoke-link35-dma-completion-first-status/deployment.json",
+      "sha256": "1546299d40111c4104441d600852f321907d182c4118667eab167c44dcf238dc"
+    }
+  },
+  "capacity": {
+    "bank0_text_headroom_bytes": 19,
+    "e000": {
+      "actual_headroom_bytes": 115,
+      "debit_bytes": 422,
+      "debit_cap_bytes": 450,
+      "equations": [
+        "531 - 416 = 115",
+        "416 + 6 = 422"
+      ],
+      "facade_debit_bytes_outside_window": 6,
+      "final_floor_bytes": 115,
+      "headroom_above_floor_bytes": 0,
+      "in_window_debit_bytes": 416,
+      "pre_package_headroom_bytes": 531,
+      "third_opening": "forbidden"
+    },
+    "fixed_hot_block_headroom_bytes": 33,
+    "ordinary_bank0_bss_headroom_bytes": 174,
+    "resident_island_headroom_bytes": 7,
+    "runtime_overlay_bank": {
+      "boot_bytes": 15605,
+      "boot_headroom_bytes": 49931,
+      "session_bytes": 60062,
+      "session_headroom_bytes": 5474
+    },
+    "runtime_slices": {
+      "cap_bytes": 1792,
+      "count": 53,
+      "largest_bytes": 1761,
+      "minimum_headroom_bytes": 31
+    }
+  },
+  "capacity_effect": {
+    "bank0_text_bytes": 0,
+    "e000_bytes": 0,
+    "file_bytes": 0,
+    "fixed_hot_block_bytes": 0,
+    "ordinary_bank0_bss_bytes": 0,
+    "resident_island_bytes": 0,
+    "runtime_overlay_bank_bytes": 0,
+    "runtime_slice_bytes": 0
+  },
+  "claim_limit": "Permanently non-promotable fixed-length instrumentation of the SHA-bound Link-35 product. It carries no product, capacity, promotion, acceptance, completion-contract or hardware claim.",
+  "delegation": {
+    "class": "B",
+    "cycle": 2,
+    "cycle_cap": 3,
+    "question": "E2f / hold before wipe"
+  },
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link35-hold-before-wipe-fixed-patch-cycle2/lisp65-link35-hold-before-wipe-cycle2-NONPROMOTABLE.prg",
+    "sha256": "c49462bc65527c463390b19873221e9d75e2c8ffd7df37342ea57b71e4e623db"
+  },
+  "execution_accounting": {
+    "changed_bytes": 2,
+    "compiler_runs": 0,
+    "diagnostic_byte_patches": 1,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "promotable_candidates": 0
+  },
+  "format": "lisp65-c2-link35-hold-before-wipe-fixed-patch-v1",
+  "manifest": {
+    "bytes": 4308,
+    "path": "build/c2.2/substitution/link35-hold-before-wipe-fixed-patch-cycle2/fixed-length-patch-manifest.json",
+    "sha256": "1d42e54ce12aa30361269b2df25ba65ff8aa82ee4e00550e02ec91d1227921e8"
+  },
+  "next_gate": "one announced Class-B cycle-2 hardware run",
+  "patch_gate": {
+    "after_instruction_hex": "4c01ad",
+    "after_semantics": "JMP $AD01 (hold before verifier entry and wipe)",
+    "before_instruction_hex": "4c69af",
+    "before_semantics": "JMP $AF69 (return ERR_CRC)",
+    "changed_bytes": 2,
+    "changed_cpu_addresses": [
+      "0xad02",
+      "0xad03"
+    ],
+    "changed_file_offsets": [
+      "0x8d03",
+      "0x8d04"
+    ],
+    "file_size_delta_bytes": 0,
+    "instruction_address": "0xad01",
+    "instruction_file_offset": "0x8d02",
+    "load_address": "0x2001",
+    "mutations": {
+      "one-operand-byte": "rejected",
+      "opcode-change": "rejected",
+      "third-byte-change": "rejected"
+    },
+    "status": "passed-exact-two-operand-byte-self-loop-patch"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "passed-exact-fixed-length-diagnostic-instrumentation"
+}

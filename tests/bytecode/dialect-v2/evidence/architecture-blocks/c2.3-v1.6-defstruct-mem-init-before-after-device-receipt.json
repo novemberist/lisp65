@@ -1,0 +1,413 @@
+{
+  "authorities": {
+    "capture_first_red": {
+      "bytes": 2021,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-capture-first-red.json",
+      "sha256": "f206fc665bf3dbf585450f710afc251ef6579cd7c9079d4d560139fc2ffcc57b"
+    },
+    "driver": {
+      "bytes": 24935,
+      "path": "tools/host-lisp/c2_v16_mem_init_before_after_contact.py",
+      "sha256": "33eb9cc87cfa4cc848a8e5ecfeab3409fb5258447b8dd3d800d131415d8ca54f"
+    },
+    "preparation": {
+      "bytes": 4055,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-contact-preparation-receipt.json",
+      "sha256": "fc3640018cf16597c6d1e7a7f1a94ee2e646ecc3519663da3da464b046d636a5"
+    },
+    "runner": {
+      "bytes": 3551,
+      "path": "scripts/c2-v16-defstruct-mem-init-before-after-hw.sh",
+      "sha256": "6645b58dec5a4afd3e72a3679a0f1efa22219af6485697aba7844c5d0e2867c7"
+    }
+  },
+  "claim_limit": "One diagnostic-only physical RUN and one post-quiet stop. The target writes the before/after snapshots; all data are read through the captured mapping. No measured form, product change, link or R/A/I/G result is claimed.",
+  "current": {
+    "C2J_nonzero_bytes": 64,
+    "EXT_occupancy": 0,
+    "alloc_high": 0,
+    "boot_witness": "0x44",
+    "first_error_hex": "0000",
+    "freelist_head": "0x0004",
+    "gc_frozen": 0,
+    "gc_runs_RAM_underlay": 0,
+    "phase_owner": "0x00"
+  },
+  "device": "/dev/ttyUSB1",
+  "format": "lisp65-c2.3-v1.6-mem-init-before-after-device-v1",
+  "quiet": {
+    "early_monitor_accesses": 0,
+    "exact_elapsed_lost_to_tool_first_red": true,
+    "original_source_order_enforced_before_the_consumed_stop": true,
+    "required_seconds": 27.653
+  },
+  "raw": {
+    "C2J": {
+      "hex": "10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010",
+      "reads": [
+        {
+          "address": "0x0005c640",
+          "command": "m0005c640",
+          "raw_hex": "6d30303035633634300d0a3a30303035433634303a31303130313031303130313031303130313031303130313031303130313031300d0a0d0a2e",
+          "view": "physical-Bank5-C2J"
+        },
+        {
+          "address": "0x0005c650",
+          "command": "m0005c650",
+          "raw_hex": "6d30303035633635300d0a3a30303035433635303a31303130313031303130313031303130313031303130313031303130313031300d0a0d0a2e",
+          "view": "physical-Bank5-C2J"
+        },
+        {
+          "address": "0x0005c660",
+          "command": "m0005c660",
+          "raw_hex": "6d30303035633636300d0a3a30303035433636303a31303130313031303130313031303130313031303130313031303130313031300d0a0d0a2e",
+          "view": "physical-Bank5-C2J"
+        },
+        {
+          "address": "0x0005c670",
+          "command": "m0005c670",
+          "raw_hex": "6d30303035633637300d0a3a30303035433637303a31303130313031303130313031303130313031303130313031303130313031300d0a0d0a2e",
+          "view": "physical-Bank5-C2J"
+        }
+      ]
+    },
+    "alloc_high": {
+      "hex": "0000",
+      "reads": [
+        {
+          "command": "m00000039",
+          "logical_address": "0x0039",
+          "physical_RAM_address": "0x00000039",
+          "raw_hex": "6d30303030303033390d0a3a30303030303033393a30303030303030303034303032413035303045333030303032383034303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "boot_witness": {
+      "hex": "44",
+      "reads": [
+        {
+          "command": "m0000b5c3",
+          "logical_address": "0xb5c3",
+          "physical_RAM_address": "0x0000b5c3",
+          "raw_hex": "6d30303030623563330d0a3a30303030423543333a34343443423741313443393046463443373332343443314443323443313332340d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "diagnostic_record": {
+      "hex": "a90085028ec3b560ccda48a2008004da48a205a53d9d83b5a53e9d84b5a5399d85b5a53a9d86b58a1869b2b3ffb400b5ffb6b701b806b960baf7bbbbbc00bd0000",
+      "reads": [
+        {
+          "command": "m0000c03f",
+          "logical_address": "0xc03f",
+          "physical_RAM_address": "0x0000c03f",
+          "raw_hex": "6d30303030633033660d0a3a30303030433033463a41393030383530323845433342353630434344413438413230303830303444410d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c04f",
+          "logical_address": "0xc04f",
+          "physical_RAM_address": "0x0000c04f",
+          "raw_hex": "6d30303030633034660d0a3a30303030433034463a34384132303541353344394438334235413533453944383442354135333939440d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c05f",
+          "logical_address": "0xc05f",
+          "physical_RAM_address": "0x0000c05f",
+          "raw_hex": "6d30303030633035660d0a3a30303030433035463a38354235413533413944383642353841313836394232423346464234303042350d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c06f",
+          "logical_address": "0xc06f",
+          "physical_RAM_address": "0x0000c06f",
+          "raw_hex": "6d30303030633036660d0a3a30303030433036463a46464236423730314238303642393630424146374242424242433030424430300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c07f",
+          "logical_address": "0xc07f",
+          "physical_RAM_address": "0x0000c07f",
+          "raw_hex": "6d30303030633037660d0a3a30303030433037463a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "freelist": {
+      "hex": "0400",
+      "reads": [
+        {
+          "command": "m0000003d",
+          "logical_address": "0x003d",
+          "physical_RAM_address": "0x0000003d",
+          "raw_hex": "6d30303030303033640d0a3a30303030303033443a30343030324130353030453330303030323830343030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "gc_frozen": {
+      "hex": "0000",
+      "reads": [
+        {
+          "command": "m0000003b",
+          "logical_address": "0x003b",
+          "physical_RAM_address": "0x0000003b",
+          "raw_hex": "6d30303030303033620d0a3a30303030303033423a30303030303430303241303530304533303030303238303430303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "gc_runs": {
+      "hex": "0000",
+      "reads": [
+        {
+          "command": "m0000b9f0",
+          "logical_address": "0xb9f0",
+          "physical_RAM_address": "0x0000b9f0",
+          "raw_hex": "6d30303030623966300d0a3a30303030423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "mem_init_witness": {
+      "hex": "d1ccccccccd2cccccccc",
+      "reads": [
+        {
+          "command": "m0000b582",
+          "logical_address": "0xb582",
+          "physical_RAM_address": "0x0000b582",
+          "raw_hex": "6d30303030623538320d0a3a30303030423538323a44314343434343434343443243434343434343433030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "phase_owner": {
+      "hex": "00",
+      "reads": [
+        {
+          "command": "m00000089",
+          "logical_address": "0x0089",
+          "physical_RAM_address": "0x00000089",
+          "raw_hex": "6d30303030303038390d0a3a30303030303038393a30303030303030303030303030303430464638303030303030303030303130300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "phase_scratch": {
+      "hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "reads": [
+        {
+          "command": "m0000c0c6",
+          "logical_address": "0xc0c6",
+          "physical_RAM_address": "0x0000c0c6",
+          "raw_hex": "6d30303030633063360d0a3a30303030433043363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c0d6",
+          "logical_address": "0xc0d6",
+          "physical_RAM_address": "0x0000c0d6",
+          "raw_hex": "6d30303030633064360d0a3a30303030433044363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c0e6",
+          "logical_address": "0xc0e6",
+          "physical_RAM_address": "0x0000c0e6",
+          "raw_hex": "6d30303030633065360d0a3a30303030433045363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c0f6",
+          "logical_address": "0xc0f6",
+          "physical_RAM_address": "0x0000c0f6",
+          "raw_hex": "6d30303030633066360d0a3a30303030433046363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c106",
+          "logical_address": "0xc106",
+          "physical_RAM_address": "0x0000c106",
+          "raw_hex": "6d30303030633130360d0a3a30303030433130363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c116",
+          "logical_address": "0xc116",
+          "physical_RAM_address": "0x0000c116",
+          "raw_hex": "6d30303030633131360d0a3a30303030433131363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c126",
+          "logical_address": "0xc126",
+          "physical_RAM_address": "0x0000c126",
+          "raw_hex": "6d30303030633132360d0a3a30303030433132363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c136",
+          "logical_address": "0xc136",
+          "physical_RAM_address": "0x0000c136",
+          "raw_hex": "6d30303030633133360d0a3a30303030433133363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c146",
+          "logical_address": "0xc146",
+          "physical_RAM_address": "0x0000c146",
+          "raw_hex": "6d30303030633134360d0a3a30303030433134363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c156",
+          "logical_address": "0xc156",
+          "physical_RAM_address": "0x0000c156",
+          "raw_hex": "6d30303030633135360d0a3a30303030433135363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c166",
+          "logical_address": "0xc166",
+          "physical_RAM_address": "0x0000c166",
+          "raw_hex": "6d30303030633136360d0a3a30303030433136363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c176",
+          "logical_address": "0xc176",
+          "physical_RAM_address": "0x0000c176",
+          "raw_hex": "6d30303030633137360d0a3a30303030433137363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c186",
+          "logical_address": "0xc186",
+          "physical_RAM_address": "0x0000c186",
+          "raw_hex": "6d30303030633138360d0a3a30303030433138363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c196",
+          "logical_address": "0xc196",
+          "physical_RAM_address": "0x0000c196",
+          "raw_hex": "6d30303030633139360d0a3a30303030433139363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1a6",
+          "logical_address": "0xc1a6",
+          "physical_RAM_address": "0x0000c1a6",
+          "raw_hex": "6d30303030633161360d0a3a30303030433141363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1b6",
+          "logical_address": "0xc1b6",
+          "physical_RAM_address": "0x0000c1b6",
+          "raw_hex": "6d30303030633162360d0a3a30303030433142363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1c6",
+          "logical_address": "0xc1c6",
+          "physical_RAM_address": "0x0000c1c6",
+          "raw_hex": "6d30303030633163360d0a3a30303030433143363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1d6",
+          "logical_address": "0xc1d6",
+          "physical_RAM_address": "0x0000c1d6",
+          "raw_hex": "6d30303030633164360d0a3a30303030433144363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1e6",
+          "logical_address": "0xc1e6",
+          "physical_RAM_address": "0x0000c1e6",
+          "raw_hex": "6d30303030633165360d0a3a30303030433145363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    }
+  },
+  "recorded_on": "2026-08-05",
+  "result": {
+    "CPU_left_stopped": true,
+    "R_A_I_G": null,
+    "classification": "FIRST-RED-UNCLASSIFIED-NO-OVERCLAIM",
+    "measured_forms": 0
+  },
+  "same_contact_recovery": {
+    "additional_RUN": 0,
+    "additional_monitor_entries": 0,
+    "additional_stops": 0,
+    "same_stopped_state": true
+  },
+  "snapshots": {
+    "after": {
+      "EXT_occupancy": 1024,
+      "alloc_high": 52428,
+      "freelist_head": "0xcccc",
+      "reached": false,
+      "tag": "0xd2"
+    },
+    "before": {
+      "EXT_occupancy": 1024,
+      "alloc_high": 52428,
+      "freelist_head": "0xcccc",
+      "reached": false,
+      "tag": "0xd1"
+    },
+    "raw_hex": "d1ccccccccd2cccccccc"
+  },
+  "status": "FIRST-RED-UNCLASSIFIED-NO-OVERCLAIM",
+  "stop": {
+    "PC": "0xb434",
+    "code_owner": {
+      "candidate_bytes": {
+        "MEGA65-ROM": "ffffffffffffffffffffffffffffffff",
+        "mem-init-before-after-diagnostic-PRG": "8617a55b8d5cc0a9ad8d5bc0a9ac8d5a"
+      },
+      "logical_address": "0xb434",
+      "matches": [
+        "mem-init-before-after-diagnostic-PRG"
+      ],
+      "observed": "8617a55b8d5cc0a9ad8d5bc0a9ac8d5a",
+      "selected_owner": "mem-init-before-after-diagnostic-PRG",
+      "symbol_interpretation_allowed": true,
+      "unique": true
+    },
+    "code_reads": [
+      {
+        "command": "m0777b434",
+        "logical": "0xb434",
+        "raw_hex": "6d30373737623433340d0a3a30373737423433343a38363137413535423844354343304139414438443542433041394143384435410d0a0d0a2e",
+        "view": "CPU-resolved-0x0777xxxx"
+      }
+    ],
+    "mapping": {
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "bank0_data_translation": "logical low16 -> physical 0x0000xxxx",
+      "raw_flag_values": "4C31    00     04 .....I.. ...P 1B -  00 - ..c....."
+    },
+    "registers": {
+      "A": "0x02",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC": "0xb434",
+      "SP": "0x0105",
+      "X": "0xbd",
+      "Y": "0x00",
+      "Z": "0x00",
+      "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a42343334203032204244203030203030203030203031303520383030302030303030203443333120202020303020202020203034202e2e2e2e2e492e2e202e2e2e50203142202d20203030202d202e2e632e2e2e2e2e0d0a2c30373737423433342020383620313720202020205354582020202431370d0a0d0a2e",
+      "row": "B434 02 BD 00 00 00 0105 8000 0000 4C31    00     04 .....I.. ...P 1B -  00 - ..c.....",
+      "tail": "4C31    00     04 .....I.. ...P 1B -  00 - ..c....."
+    }
+  }
+}

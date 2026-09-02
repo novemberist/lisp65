@@ -1,0 +1,139 @@
+{
+  "candidate": {
+    "elf": {
+      "bytes": 585876,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8a2cdec687024e9b9ef8e492fec04ff983d5b7c72326d3a34a2bed7097453ca9"
+    },
+    "map": {
+      "bytes": 192747,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "a8c05b8c1d288dff2566ad592d5d73cf1a2d41d2e3f84b5cdea3ebb736500bae"
+    },
+    "new_identity": true,
+    "pre_publish_product_sha256": "c2bb7d1fbf5ba5eb7f54326dda88cef0fd4c227f494e2872fc036ef7c5ed35d2",
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/lisp65-c2-substitution-linked.prg",
+      "sha256": "fffa5fdf518763001c840e416c1f448ac7f32a80e0e4f28330a5fab50a15157a"
+    },
+    "resolved_profile": {
+      "bytes": 8604,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/resolved-profile.txt",
+      "sha256": "c4cf02cb7d50f1f36cb4a58210191a91efeacc7afb5ab94259e07a6f831ca12e"
+    },
+    "unbound_product_sha256": "03f381d46950feeb0e4028f7417e32bb50817123bb4a520b6b2e522c6f476c0a"
+  },
+  "claims_not_run": [
+    "boot-to-REPL pass",
+    "cold first-call latency",
+    "warm second-call latency",
+    "bytecode/native refill timing",
+    "GC block reads and frame cost",
+    "Freezer identity",
+    "nested eval",
+    "RUN/STOP rollback",
+    "generation invalidation",
+    "promotion",
+    "acceptance"
+  ],
+  "contract": {
+    "bank3_rule": "Bank 3 is staged by family; the complete packed family is destination-verified before family/generation publishes.",
+    "presmoke_line_1": "Boot to banner/REPL, including static Chip-plane staging."
+  },
+  "diagnosis": {
+    "cause": "The C2-lite runtime reader consumes the active family from Chip Bank 3, but the product's Boot-family transition only wipes and publishes family/generation. It never stages and destination-verifies the Boot family in Bank 3. The old hardware deployment correctly exposes the missing product operation by supplying only the cold Attic source.",
+    "class": "product-semantics-and-stage-before-publish",
+    "findings": {
+      "boot_preparation_selects_family": true,
+      "family_selection_publishes_without_stage": true,
+      "historic_deployment_loaded_boot_family_only_to_attic": true,
+      "hot_overlay_reader_uses_chip_bank3": true,
+      "no_product_bank3_stage_symbol": true
+    },
+    "forbidden_harness_workaround": "Preloading Bank 3 externally would bypass the contract's product-side initial staging row and cannot turn this run green.",
+    "structural_proof_gap": "The prior stage-before-publish gate proved the model and publication source order but did not require a linked Boot-family Attic-to-Bank-3 transfer before publication."
+  },
+  "evidence": {
+    "authorization": {
+      "bytes": 26399,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link37-c2-lite-v6-artifact-resume2-structural-receipt.json",
+      "sha256": "348407b2b8bb474527cc28196f86ed8898d278a2c5d834aa444843238daf34b1"
+    },
+    "deployment": {
+      "bytes": 3050,
+      "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/deployment.json",
+      "sha256": "3811f893ff6f491cd55b26e1309c6f8c61da9c2d5d7c32814ca32b3297c5e2d4"
+    },
+    "product_runtime_source": {
+      "bytes": 125410,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/generated-product-sources/c2_product_runtime.c",
+      "sha256": "ae19fa51023929829ecc8fcd9076c25b2d4d74427fa51dacbc2e3e00d6861daa"
+    },
+    "readbacks": [
+      {
+        "bytes": 33840,
+        "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/readback-initial.c2d-v6.bin",
+        "sha256": "6d0a9517d09502da1e2d0115c1d0c6f9e9c4f5edea2a08ebf1287026b0f33992"
+      },
+      {
+        "bytes": 1749,
+        "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/readback-boot-overlay.stage.bin",
+        "sha256": "7a8244225487258573797bc94607a079b75044f40c6f617e5d27b00f8597c1ce"
+      },
+      {
+        "bytes": 65438,
+        "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/readback-runtime-overlays-session-final.bin",
+        "sha256": "4f4e25bcf72c4329799961d0e3871b3f17f6955caa4908f943f02653a7a9c3a4"
+      },
+      {
+        "bytes": 70897,
+        "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/readback-product-shelf-v4-direct.bin",
+        "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+      },
+      {
+        "bytes": 15442,
+        "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/readback-runtime-overlays-boot-final.bin",
+        "sha256": "1b2a2545c758096b296667e9fc652cbdde66676c7d441a70465c69c21bd9523e"
+      },
+      {
+        "bytes": 8192,
+        "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/readback-c2-product-kernal-window.bin",
+        "sha256": "be24ea67e3ad37e4271d2ba2eddf32dcb6621b2b2e3995cfdc20f45831f37fdf"
+      }
+    ],
+    "runtime_overlay_source": {
+      "bytes": 72539,
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/generated-product-sources/vm_runtime_overlay.c",
+      "sha256": "2d125455aa0b1aad55c51d56a713a88eeb136a4b96890881594c6504a8a246f8"
+    },
+    "screen_png": {
+      "bytes": 3035,
+      "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/line1/screen.png",
+      "sha256": "b1314439c5ca3d38d55f4e05803233dfc501a8ec90f747a3dcec57df9cab0bf8"
+    },
+    "screen_text": {
+      "bytes": 2241,
+      "path": "build/c2.2/hardware-presmoke-link37-c2-lite-v6/line1/screen.txt",
+      "sha256": "b21a7dda2f4996d77812d15c181028f7e33652e688d11edcbaf9230400d21cb1"
+    }
+  },
+  "format": "lisp65-c2-lite-v6-link37-hardware-first-red-v1",
+  "hardware": {
+    "all_preloads_byte_identical": true,
+    "completed_latency_attempts": 0,
+    "deployment_readbacks": 6,
+    "line_reached": 1,
+    "runs": 1,
+    "two_attempt_rule_slots_consumed": 0,
+    "visible_result": "E2f runtime island invalid; redeploy"
+  },
+  "next_gate": "Class-C review of product-side Boot/Session Bank-3 staging and its linked stage-before-publish gate; no hardware retry.",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "link35_product_sha256": "54c731559fdb72d5d1cb8478b9da7e78a422741e4e5267d64b07fe4c6f763a65",
+    "status": "untouched"
+  },
+  "status": "first-red-receipt-less-hardware-presmoke-stopped-at-line-1"
+}

@@ -1,0 +1,153 @@
+{
+  "format": "lisp65-housekeeping-block-receipt-v1",
+  "version": 1,
+  "recorded_on": "2026-07-29",
+  "plan": "docs/planning/housekeeping-2026-07-29.md",
+  "product_delta": 0,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "integrity_finding": {
+    "what": "five G1 state-error-carrier first-red receipts and one WPLTO tool existed only in the local working copy",
+    "not_on": [
+      "private remote",
+      "any worktree"
+    ],
+    "risk": "evidence base of a parked item held by a single directory",
+    "resolution": "committed and pushed",
+    "files": 6
+  },
+  "working_copy_sync": {
+    "was_behind_commits": 5,
+    "stale_modified_files": 21,
+    "backup": "scratchpad/dirty-backup-20260729 (1258-line patch plus 7 untracked files)",
+    "result": "fast-forwarded to the authoritative head, tree clean"
+  },
+  "disk": {
+    "git_lfs_objects_removed_bytes": 6000000000,
+    "lfs_orphan_proof": "git lfs ls-files --all = 0; no .gitattributes lfs rule",
+    "promotion_archive_cache_removed_bytes": 11000000000,
+    "archive_policy": "archive_transport.local_materialization = ignored-cache",
+    "archive_sha_coverage": "41 of 41 registered archives present in the remote asset inventory",
+    "worktrees_pruned": 5,
+    "git_dir_after": "35M"
+  },
+  "registers_created": [
+    "docs/reference/parked-items-register.md",
+    "docs/reference/gate-and-tool-register.md"
+  ],
+  "tool_classification": {
+    "file": "config/tool-classification.json",
+    "total": 870,
+    "live": 488,
+    "probe": 382,
+    "probe_cited_in_bound_receipts": 198,
+    "decision": "probes are neither moved nor deleted; moving would break citations in immutable receipts"
+  },
+  "configs_archived": 11,
+  "documents_reclassified": {
+    "from": "proposal",
+    "to": "historical",
+    "count": 8
+  },
+  "verification": {
+    "equivalence_chain": "PASS lanes=11 executed=447 canary=COMPLETE",
+    "document_index": "PASS documents=235",
+    "post_v12_housekeeping": "PASS evidence=1506",
+    "promotion_register": "PASS promotions=41 asset-inventory=pass",
+    "evidence_assets_local": "PASS present=3 missing=41 require-all=no",
+    "comment_language": "PASS baseline=v1.1.0"
+  },
+  "open_findings": [
+    {
+      "id": "pre-existing-red",
+      "gate": "c2-bound-artifact-source-parity-check",
+      "detail": "current compiler carrier has no tier-generation receipt",
+      "caused_by_this_block": false,
+      "evidence": "identical failure on the untouched authoritative head (verified by stashing)",
+      "disposition": "reported, not fixed; deciding whether the gate may require a prior tier build is a Class-C question"
+    },
+    {
+      "id": "comment-backlog",
+      "detail": "~558 German comment lines across 52 live source files",
+      "gate": "comment-language go-forward gate passes; the backlog does not grow",
+      "disposition": "deliberately not bulk-translated in this block: the comments are dense design records and a hasty translation loses information; proposed as its own bounded batch"
+    }
+  ],
+  "corrections_20260730": {
+    "policy": "The original rows above are left exactly as recorded. Every claim that later proved wrong is corrected here rather than rewritten.",
+    "configs_archived": {
+      "recorded": 11,
+      "actual": 7,
+      "cause": "The citation search covered code references but not citations that appear as JSON string values. Four archived contracts were cited and are restored: directory-only-l65m-v2-block.json, lists-malformed-type-errors-block.json, public-error-channel-block.json (all from config/dialect-migration-contract.json) and v2-workbench-composition-contract.json (from config/dialect-v2-r2-decisions.json).",
+      "commit": "766f994f"
+    },
+    "promotion_archive_cache_removed_bytes": {
+      "recorded": 11000000000,
+      "verdict": "The justification was incomplete. The transport policy does call the local materialization an ignorable cache, but two consumers required it to be present, so the deletion turned two green gates red.",
+      "resolution": "Owner chose to resolve the contradiction rather than re-download. dialect-migration-selftest is green again through a Git-history fallback for git-tracked historical evidence. r6-g6-registered-seal-check stays red by design: it re-runs an isolated offline verifier from inside the archive, and four archives (3.1 GB) would have to be materialized for it.",
+      "commit": "c5b30c45"
+    },
+    "comment_translation": {
+      "recorded_backlog_lines": 279,
+      "translated": 193,
+      "remaining": 98,
+      "scope": "Every C source, header and scripts/equivalence-main.c is done; src/ and scripts/ hold zero German comment lines.",
+      "deferred": "The 98 remaining lines are in lib/*.lisp, whose file SHAs are bound into product artifacts (the compiler-tier generation binds lib/lcc.lisp and lib/dialect-v2/lcc-profile.lisp by raw sha256). Translating them needs a link cycle that regenerates the carrier.",
+      "commits": [
+        "bc11ff7c",
+        "af210c32"
+      ]
+    },
+    "check_source_state": {
+      "finding": "check-source is not green on b8405551, the head that shipped v1.2.2. Four reds fail identically there: the bound-artifact parity precondition, and three around the v2 while/random surface whose contracts are committed ahead of their sources.",
+      "method": "Each verdict was checked by running the same make target in a detached worktree at b8405551.",
+      "disposition": "Owner item. This block repaired none of it -- it is implementation work."
+    },
+    "product_delta_proof": {
+      "claim": "The block's central promise is zero product delta, yet phase H-D changed 21 C sources and headers.",
+      "method": "Every changed .c file was preprocessed with the actual product compiler (tools/llvm-mos/bin/mos-mega65-clang -E -P) at bc11ff7c~1 and at HEAD, and the token streams byte-compared. -P suppresses line markers, so a changed line count cannot mask a real difference.",
+      "result": "13 of 13 identical, 0 divergent, 0 skipped. The 12 changed headers are covered transitively as includes of those files.",
+      "line_dependent_semantics": "Checked separately: none of the changed product sources uses __LINE__ or assert(). src/vm_embed.c has a _Static_assert, which is compile-time only.",
+      "verdict": "An identical token stream cannot yield different code generation, so the comment translation carries zero product delta by construction, not by assertion."
+    },
+    "b4_known_issues_audit": {
+      "method": "Each of the 9 rows in the parked-items register was checked against docs/known-issues.md for a user-language entry.",
+      "gaps_found": 4,
+      "gaps_closed": 3,
+      "closed": [
+        "the gc/room/error trio",
+        "restart-repl",
+        "the mute fail-closed stop"
+      ],
+      "not_applicable": [
+        "Attic runtime refill (an abandoned internal promise, never user-visible)",
+        "upstream filings L4-L11 (owner action, not a user surface)"
+      ],
+      "note": "This closes phase B4, which the original receipt did not record either way."
+    },
+    "f3_register_citations": {
+      "finding": "The parked-items register cited five files by bare filename rather than by path, so its own promise that every citation resolves did not hold.",
+      "resolution": "All citations in both registers now carry full repository paths and resolve. The single exception is build/compiler-carrier/compiler-tier/tier-generation.json, which is deliberately absent -- it is the subject of the documented precondition."
+    },
+    "phases_still_open": {
+      "H-C1": "Dead sources are not archived. src/l65m_batch_repeat.s is still in src/ and nothing was moved; non-linkage was never proven from an ELF.",
+      "H-C3": "One private ELF view survives: tools/host-lisp/c2_fail_closed_blackbox_gate.py calls llvm-readelf directly instead of going through elf_truth. This is the long-standing H1 item.",
+      "H-C4": "The no-dual-decoder rule was not verified in the *linked* product; that needs a build.",
+      "H-F2": "A clean workbench-product build from a fresh checkout reproducing the sealed v1.2.2 set byte-for-byte was not run in this block. The product-delta proof above covers the block's own claim, but not F2 as written.",
+      "H-E2": "The 661 MB wave-2 bundle in ~/Videos/lisp65-backups/ is still present -- owner action, reviewer recommends deleting it as superseded by the release assets."
+    },
+    "h_c3_elf_truth": {
+      "status": "closed",
+      "correction": "The reviewer first reported 'one private ELF view survives'. That was wrong: the grep used was too narrow. The real count of tools/host-lisp/*.py files that invoke llvm-nm, llvm-readelf or llvm-size without ever using shared ElfTruth is 58.",
+      "finding": "c2-elf-truth-migration reported 'private=0', which reads as a statement about the whole tree. It is not: the migration rule governs six named gate consumers only, and probes are outside it. The gate said more than it proved -- this project's recurring failure family.",
+      "resolution": "The 58 ungoverned probes are pinned by name in config/c2-elf-truth-contract.json (ungoverned_column_parsers_2026_07_30). They are not rewritten or moved -- they are unreachable from the build and several are named in immutable receipts. The gate now verifies the pin and its output states the scope: 'private-in-governed=0 ungoverned-probes-pinned=58 present=58'. A new hand-rolled column parser must either join the governed consumers or move the pin deliberately.",
+      "teeth": "mutations 4 -> 5. The new mutation drops a file from the pin and requires the gate to reject the resulting unpinned parser rather than absorbing it silently."
+    },
+    "tool_defect_found": {
+      "tool": "tools/host-lisp/post_12_housekeeping.py --write",
+      "defect": "It rebinds more receipts than the check requires. Run after an unrelated source change, it also rebound three architecture-block receipts whose staleness had nothing to do with that change -- including one recording an older lib/lcc.lisp than the committed tree. That quietly absorbs someone else's in-flight drift into a housekeeping commit.",
+      "action_taken": "The three gratuitous rebindings were reverted; the gate passes without them. Not fixed here -- reported so the --write path can be narrowed to what the check actually demands.",
+      "disposition": "owner/implementer item"
+    }
+  }
+}

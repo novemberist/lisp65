@@ -1,0 +1,632 @@
+{
+  "acceptance": {
+    "delivered_bytes": {
+      "candidate_elf": {
+        "bytes": 647776,
+        "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "93201ddea4dbbd58f6905bc93abcd49cc92b4905baffedb873743016826e4945"
+      },
+      "completed_resident_prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "0a9a950ac9d5cc422d68bd813e647d0ef70664e41ea136ff5b6b47c0a2131fa8"
+      },
+      "identity_bytes": 290,
+      "identity_mismatches": 0,
+      "load_address": "0x2001",
+      "new_staging_roles": 0,
+      "publish_last": {
+        "addresses": [
+          46324,
+          46330
+        ],
+        "bytes": 2,
+        "independent_crc16": "0x7166",
+        "independent_window_bytes": 8192,
+        "independent_window_sha256": "c0866f8c0dc1b5afcf5743670b7467ce140e92ab0ce79fa2b08efcd6210107ed",
+        "observed_values": [
+          113,
+          102
+        ],
+        "producer_report": {
+          "bytes": 1564,
+          "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/kernal-window-publish-last.json",
+          "sha256": "f95fd96cb85647b75084b202bad64f781be4c9eedeba882fd64db3b8fcf59773"
+        },
+        "values_correct": true
+      },
+      "sections": [
+        {
+          "bytes": 223,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb4a3",
+          "lma_equals_vma": true,
+          "publish_last_values": [
+            {
+              "address": 46324,
+              "correct": true,
+              "expected": 113,
+              "observed": 113
+            },
+            {
+              "address": 46330,
+              "correct": true,
+              "expected": 102,
+              "observed": 102
+            }
+          ],
+          "resident_prg_offset": 38052,
+          "section": ".lisp65_c2_kernal_handoff",
+          "vma": "0xb4a3"
+        },
+        {
+          "bytes": 48,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5c4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38341,
+          "section": ".lisp65_c2_host_facade",
+          "vma": "0xb5c4"
+        },
+        {
+          "bytes": 11,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5f4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38389,
+          "section": ".lisp65_c2_kernal_io_reveal",
+          "vma": "0xb5f4"
+        },
+        {
+          "bytes": 10,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5ff",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38400,
+          "section": ".lisp65_c2_kernal_map_switch",
+          "vma": "0xb5ff"
+        }
+      ],
+      "status": "passed-identity-plus-independent-CRC-value"
+    },
+    "receipt": {
+      "bytes": 17959,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/artifact-acceptance.json",
+      "sha256": "59dd89cd0592a3bd9869ccd93bec5f67b69e4c2a1dc02f45a427c5c8b5df3d31"
+    },
+    "status": "PASS"
+  },
+  "active_frame_final_gate": {
+    "ELF": {
+      "bytes": 647776,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "93201ddea4dbbd58f6905bc93abcd49cc92b4905baffedb873743016826e4945"
+    },
+    "enforcement": {
+      "component_membership": {
+        "components": [
+          {
+            "bytes": 41,
+            "name": "c2_rtov_retire_continuations",
+            "symbol_occurrences": 1,
+            "witnesses": {
+              "read_stack_return_high": 1,
+              "read_stack_return_low": 1,
+              "write_stack_return_high": 1,
+              "write_stack_return_low": 1
+            }
+          },
+          {
+            "bytes": 43,
+            "name": "c2_rtov_sanitize_saved_csrs",
+            "symbol_occurrences": 1,
+            "witnesses": {
+              "normal_retirement_call_sites": 1,
+              "recovery_call_sites": 1,
+              "saved_CSR_pairs": 7
+            }
+          }
+        ],
+        "derivation": "additive named-component membership",
+        "derived_component_bytes": 84,
+        "mutations_rejected": [
+          "single-component-equality",
+          "unregistered-component",
+          "duplicate-component-owner"
+        ],
+        "registered_names": [
+          "c2_rtov_retire_continuations",
+          "c2_rtov_sanitize_saved_csrs"
+        ],
+        "section": ".lisp65_c2_mapped_far_service",
+        "section_bytes": 1488,
+        "section_fully_covered": null
+      },
+      "hot_path_checks": 0,
+      "section": ".lisp65_c2_mapped_far_service",
+      "stack_return_offset": 7,
+      "walker_bytes": 41
+    },
+    "far_service": {
+      "capacity_bytes": 1499,
+      "free_bytes": 11,
+      "used_bytes": 1488
+    },
+    "input_counters": {
+      "commit_sites": {
+        "C2K_INPUT_EVENTS_RAW": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_capture_main",
+          "site": 64789
+        },
+        "C2K_INPUT_EVENTS_SEEN": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_capture_main",
+          "site": 64795
+        },
+        "C2K_INPUT_EVENTS_STORED": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_capture_helper",
+          "site": 65280
+        },
+        "C2K_INPUT_EVENTS_TAKEN": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_consumer",
+          "site": 65352
+        }
+      },
+      "counter_addresses": {
+        "C2K_INPUT_EVENTS_RAW": 48380,
+        "C2K_INPUT_EVENTS_SEEN": 48381,
+        "C2K_INPUT_EVENTS_STORED": 48382,
+        "C2K_INPUT_EVENTS_TAKEN": 48383
+      },
+      "loss_wall": {
+        "dropped": 0,
+        "events": 94,
+        "seen": 94,
+        "stored": 94,
+        "taken": 94
+      },
+      "reserve_events": 13,
+      "ring_usable_events": 107
+    },
+    "population": {
+      "coverage": "exact equality with final-ELF-derived population",
+      "derived_population": [
+        {
+          "call_site": 51513,
+          "callee": "lisp_abort_symbol",
+          "caller": "c2_append_fronts_phase",
+          "generation_section": ".lisp65_rt_c2append_roots_fronts",
+          "resident_retirement_chain": [
+            {
+              "callee": "c2_product_abort_cleanup",
+              "caller": "lisp_abort_symbol",
+              "site": 12219
+            },
+            {
+              "callee": "c2_rtov_retire_continuations_facade",
+              "caller": "c2_product_abort_cleanup",
+              "site": 12240
+            },
+            {
+              "callee": "c2_rtov_retire_continuations",
+              "caller": "c2_rtov_retire_continuations_facade",
+              "site": 46030
+            }
+          ],
+          "stored_return_offset_from_walker_sp": 7
+        }
+      ],
+      "population_count": 1
+    }
+  },
+  "adapter_attribution": {
+    "bytes": 4518,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-recovery-sanitization-final-adapter-attribution.json",
+    "sha256": "32844d6640e8415911e7b487363edb56de449a89e9f745c3b9a04e1e22af6efd"
+  },
+  "alias_allocation_adapter": {
+    "additional_allocated_bytes": 0,
+    "aliases": {
+      "c2_backstop_pending_code": {
+        "additional_allocated_addresses": [],
+        "additional_allocated_bytes": 0,
+        "address": "0x0036",
+        "alias_symbol_bytes": 1,
+        "owner": "pending_code",
+        "owner_address": "0x0036",
+        "owner_address_is_unique": true,
+        "owner_symbol_bytes": 1,
+        "same_address": true
+      },
+      "c2_backstop_pending_symbol": {
+        "additional_allocated_addresses": [],
+        "additional_allocated_bytes": 0,
+        "address": "0xb9e9",
+        "alias_symbol_bytes": 2,
+        "owner": "pending_symbol",
+        "owner_address": "0xb9e9",
+        "owner_address_is_unique": true,
+        "owner_symbol_bytes": 2,
+        "same_address": true
+      },
+      "c2_backstop_rtov_busy": {
+        "additional_allocated_addresses": [],
+        "additional_allocated_bytes": 0,
+        "address": "0x0078",
+        "alias_symbol_bytes": 1,
+        "owner": "rtov_busy",
+        "owner_address": "0x0078",
+        "owner_address_is_unique": true,
+        "owner_symbol_bytes": 1,
+        "same_address": true
+      },
+      "c2_backstop_rtov_loaded_len": {
+        "additional_allocated_addresses": [],
+        "additional_allocated_bytes": 0,
+        "address": "0x0079",
+        "alias_symbol_bytes": 2,
+        "owner": "rtov_loaded_len",
+        "owner_address": "0x0079",
+        "owner_address_is_unique": true,
+        "owner_symbol_bytes": 2,
+        "same_address": true
+      }
+    },
+    "distinct-address_mutation_rejected": true,
+    "owner_address_count": 4,
+    "source": "unique C-owner addresses in final ELF"
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 479152,
+    "commit": "0a897e80",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "edc21abfd8f092646463ec65eef77e0f5aa5991d90021d57da158e7eab11ff93"
+  },
+  "candidate_v16core": {
+    "authority_split": {
+      "native_walls": "final linked ELF",
+      "resident_loop": "candidate v16core artifact"
+    },
+    "blob": {
+      "bytes": 1745,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/candidate-library/v16core.blob.bin",
+      "sha256": "6bab748eee2acc45720f49152d2c32f8e1fe5b292781c33c34589d336446074e"
+    },
+    "empty_phase_semantic_claim": {
+      "emitted_equals_compiled": true,
+      "encoded_bytes": 250,
+      "fixed_status": "PASS: EMPTY PHASE WAITS AND CONTINUES",
+      "length_authority": "candidate manifest",
+      "preload_only_rejected": true,
+      "semantic_fixture": "comfort-cursor-down-empty-boundary",
+      "unfixed_status": "TypeError"
+    },
+    "encoded_bytes": 250,
+    "function": "%read-line-loop",
+    "manifest": {
+      "bytes": 24988,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/candidate-library/v16core.manifest.json",
+      "sha256": "c68e6d83d93807b9c01a110c8425a20a188a941fe77df1c3f4ff75e19b2f90c8"
+    },
+    "mutations_rejected": [
+      "restore-stored-248-size-pin",
+      "unfixed-form-accepted",
+      "emitted-object-not-consumed"
+    ],
+    "source_fix": {
+      "bytes": 7858,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "c3aa9d13fc0e07a36afa7aded5fe3a001a733dafde12c4f32fbc4e139fa0f2ae"
+    }
+  },
+  "device_contacts": 0,
+  "driver": {
+    "bytes": 10712,
+    "path": "tools/host-lisp/c2_v160_recovery_sanitization_adapter_resume.py",
+    "sha256": "53b9db939af2fc6f432431165332ff51f8f06587f76416195daa4b892c7bd02f"
+  },
+  "execution_boundary_final_gate": {
+    "E000_delta_bytes": 0,
+    "cases": [
+      {
+        "case": "retired-window-BRK",
+        "recover": true
+      },
+      {
+        "case": "hardware-IRQ",
+        "recover": false
+      },
+      {
+        "case": "live-overlay",
+        "recover": false
+      },
+      {
+        "case": "outside-window",
+        "recover": false
+      },
+      {
+        "case": "no-toplevel",
+        "recover": false
+      }
+    ],
+    "claim": "every retired-window BRK reaches prompt recovery; all other source-less IRQs remain fail-closed",
+    "classifier": {
+      "bytes": 60,
+      "section": ".text"
+    },
+    "cleanup_free_landing": {
+      "bytes": 32,
+      "section": ".text"
+    },
+    "mapped_far_service": {
+      "bytes": 1488,
+      "capacity_bytes": 1499,
+      "free_bytes": 11
+    },
+    "ordinary_free_bytes": 18,
+    "overlay_interval": {
+      "bytes": 1851,
+      "end": "0xca91",
+      "source": "final ELF symbols",
+      "start": "0xc356"
+    },
+    "protected_BSS": {
+      "address": "0xb9ca",
+      "bytes": 1585,
+      "end": "0xbffb",
+      "validation_margin_bytes": 5
+    },
+    "recovery_sanitization": {
+      "dominates_longjmp": true,
+      "entry": {
+        "bytes": 9,
+        "section": ".text"
+      },
+      "normal_retirement_uses_shared_walker": true,
+      "recovery_reaches_frame_walker": false,
+      "retirement": {
+        "bytes": 41,
+        "section": ".lisp65_c2_mapped_far_service"
+      },
+      "shared_saved_CSR_walker": {
+        "bytes": 43,
+        "pairs": 7,
+        "section": ".lisp65_c2_mapped_far_service"
+      }
+    },
+    "status": "PASS: V1.6 EXECUTION BOUNDARY BACKSTOP",
+    "top_level_active": {
+      "address": "0x0052",
+      "declared_type": "uint8_t",
+      "emitted_bytes": 1
+    },
+    "transitive_MAP_gate": {
+      "mapped_roots": [
+        "c2_abort_driver",
+        "c2_mapped_far_physical_read_converged",
+        "c2_mapped_far_vm_code_load_converged",
+        "c2_rtov_retire_continuations",
+        "c2_rtov_sanitize_saved_csrs",
+        "disk_chain_to_scratch_far",
+        "rtov_transaction_context_if_ready_far"
+      ],
+      "mapped_sections": [
+        ".lisp65_c2_mapped_diagnostic",
+        ".lisp65_c2_mapped_far_service"
+      ],
+      "status": "PASS: NO MAPPED BODY REACHES MAP ENTER/LEAVE",
+      "tenant_count": 7,
+      "tenants": [
+        "c2_abort_driver",
+        "c2_mapped_far_physical_read_converged",
+        "c2_mapped_far_vm_code_load_converged",
+        "c2_rtov_retire_continuations",
+        "c2_rtov_sanitize_saved_csrs",
+        "disk_chain_to_scratch_far",
+        "rtov_transaction_context_if_ready_far"
+      ],
+      "violations": [],
+      "wrappers": [
+        {
+          "body_roots": [
+            "c2_abort_driver"
+          ],
+          "wrapper": "c2_abort_driver_facade"
+        },
+        {
+          "body_roots": [
+            "c2_mapped_far_physical_read_converged"
+          ],
+          "wrapper": "c2_physical_read_converged"
+        },
+        {
+          "body_roots": [
+            "c2_rtov_retire_continuations"
+          ],
+          "wrapper": "c2_rtov_retire_continuations_facade"
+        },
+        {
+          "body_roots": [
+            "c2_rtov_sanitize_saved_csrs"
+          ],
+          "wrapper": "c2_rtov_sanitize_recovery"
+        },
+        {
+          "body_roots": [
+            "disk_chain_to_scratch_far"
+          ],
+          "wrapper": "disk_chain_to_scratch"
+        },
+        {
+          "body_roots": [
+            "rtov_transaction_context_if_ready_far"
+          ],
+          "wrapper": "rtov_transaction_context_if_ready"
+        },
+        {
+          "body_roots": [
+            "c2_mapped_far_vm_code_load_converged"
+          ],
+          "wrapper": "vm_code_load_converged"
+        }
+      ]
+    },
+    "zero_byte_aliases": {
+      "c2_backstop_pending_code": {
+        "additional_allocated_addresses": [],
+        "additional_allocated_bytes": 0,
+        "address": "0x0036",
+        "alias_symbol_bytes": 1,
+        "owner": "pending_code",
+        "owner_address": "0x0036",
+        "owner_address_is_unique": true,
+        "owner_symbol_bytes": 1,
+        "same_address": true
+      },
+      "c2_backstop_pending_symbol": {
+        "additional_allocated_addresses": [],
+        "additional_allocated_bytes": 0,
+        "address": "0xb9e9",
+        "alias_symbol_bytes": 2,
+        "owner": "pending_symbol",
+        "owner_address": "0xb9e9",
+        "owner_address_is_unique": true,
+        "owner_symbol_bytes": 2,
+        "same_address": true
+      },
+      "c2_backstop_rtov_busy": {
+        "additional_allocated_addresses": [],
+        "additional_allocated_bytes": 0,
+        "address": "0x0078",
+        "alias_symbol_bytes": 1,
+        "owner": "rtov_busy",
+        "owner_address": "0x0078",
+        "owner_address_is_unique": true,
+        "owner_symbol_bytes": 1,
+        "same_address": true
+      },
+      "c2_backstop_rtov_loaded_len": {
+        "additional_allocated_addresses": [],
+        "additional_allocated_bytes": 0,
+        "address": "0x0079",
+        "alias_symbol_bytes": 2,
+        "owner": "rtov_loaded_len",
+        "owner_address": "0x0079",
+        "owner_address_is_unique": true,
+        "owner_symbol_bytes": 2,
+        "same_address": true
+      }
+    }
+  },
+  "execution_boundary_mutations_rejected": [
+    "classifier-moved-under-MAP",
+    "price-exceeded",
+    "hardware-IRQ-recovered",
+    "MAP-nesting",
+    "alias-allocated",
+    "BSS-margin-spent",
+    "active-flag-widened",
+    "recovery-after-longjmp",
+    "recovery-enters-frame-walker",
+    "saved-CSR-population-narrowed",
+    "ordinary-floor-spent",
+    "far-service-floor-spent"
+  ],
+  "execution_witness": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "qualification_resumes": 1
+  },
+  "format": "lisp65-c2-v160-recovery-sanitization-adapter-resume-v1",
+  "frozen_pair_after": {
+    "ELF": {
+      "bytes": 647776,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "93201ddea4dbbd58f6905bc93abcd49cc92b4905baffedb873743016826e4945"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "0a9a950ac9d5cc422d68bd813e647d0ef70664e41ea136ff5b6b47c0a2131fa8"
+    }
+  },
+  "frozen_pair_before": {
+    "ELF": {
+      "bytes": 647776,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "93201ddea4dbbd58f6905bc93abcd49cc92b4905baffedb873743016826e4945"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "0a9a950ac9d5cc422d68bd813e647d0ef70664e41ea136ff5b6b47c0a2131fa8"
+    }
+  },
+  "media_authorized": false,
+  "next": "artifact-only media, seam confirmation, witness removal, acceptance",
+  "partial_product_receipt": {
+    "bytes": 1657347,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-recovery-sanitization-library-replacement-card-receipt.json",
+    "sha256": "afc29f2784608775e1bf45e4ff25586e308630386b039339c7d7cabcf2efe381"
+  },
+  "predecessor_Final_Red": {
+    "bytes": 5526,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-recovery-sanitization-library-replacement-card-final-red.json",
+    "sha256": "d3750d85e5a8d8371a7d5cbf47936dd6160805ea03264c31eb7c3c8100780362"
+  },
+  "rebuild_mutations_rejected": [
+    "WPLTO_runs",
+    "product_links",
+    "cards_consumed"
+  ],
+  "receipt_adapter": {
+    "contract": "ring_usable_events >= loss_wall_events",
+    "counter_count": 4,
+    "counter_names": [
+      "C2K_INPUT_EVENTS_RAW",
+      "C2K_INPUT_EVENTS_SEEN",
+      "C2K_INPUT_EVENTS_STORED",
+      "C2K_INPUT_EVENTS_TAKEN"
+    ],
+    "loss_wall_events": 94,
+    "mutations_rejected": [
+      "restore-pre-RAW-108-14-pin",
+      "loss-wall-exceeds-derived-capacity"
+    ],
+    "physical_allocation_bytes": 112,
+    "reserve_events": 13,
+    "ring_index_values": 108,
+    "ring_usable_events": 107,
+    "source": "candidate counter population"
+  },
+  "recorded_on": "2026-08-24",
+  "recovery_sanitization_closed": true,
+  "scope": {
+    "receipt": {
+      "bytes": 2509,
+      "path": "build/c2.3/v1.6-recovery-sanitization-library-replacement-card/owner-scope-result.json",
+      "sha256": "b7935dca0bbb570808085653db534cd7893ff77248508130d0f824a3db78e9ef"
+    },
+    "status": "PASS"
+  },
+  "sealed_alias_allocation_proof": {
+    "bytes": 2928,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-execution-boundary-alias-lto-attribution.json",
+    "sha256": "40a8e08cddfc6db65ccb2336e70096cdaabfb79f7a6b69e51a3e3351b37aef5a"
+  },
+  "status": "PASS: V1.6 RECOVERY SANITIZATION CLOSED READ-ONLY"
+}

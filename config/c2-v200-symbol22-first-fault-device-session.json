@@ -1,0 +1,145 @@
+{
+  "bounded_stimulus": {
+    "actions": [
+      "wait for the native lisp65> prompt after the external library has loaded",
+      "type (list 1 3) without Return",
+      "press Cursor-Left exactly once",
+      "if an error has already returned to lisp65>, touch no key",
+      "otherwise press Return exactly once and wait for result plus lisp65>",
+      "touch no further key before the stopped-state read"
+    ],
+    "maximum_owner_key_events_after_prompt": 12,
+    "repeat_until_failure": false
+  },
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_BASIC_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "one_boot": true,
+    "one_library_append": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_access_before_stimulus": 0,
+    "product_mounted_last": true,
+    "retries": 0
+  },
+  "claim_scope": {
+    "accepts": [
+      "phase-0-symbol22-three-way-decision"
+    ],
+    "excludes": [
+      "Comfort-return",
+      "Block-3-return",
+      "repair",
+      "feature-acceptance",
+      "release"
+    ]
+  },
+  "decision_table": {
+    "any-other-state": "stop for raw-first attribution; no feature claim",
+    "tag-A5-resolvable-caller-and-NUL-name": "writer named; price repair; Comfort and Block 3 may reopen",
+    "tag-zero-and-no-visible-symbol22": "no recurrence; request owner residual-risk word with latch retained",
+    "visible-symbol22-without-usable-name": "recurrence without name; Comfort and Block 3 leave v2.0"
+  },
+  "format": "lisp65-c2-v200-symbol22-first-fault-device-session-v1",
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-symbol22-first-fault-device-media/library/lisp65-library.d81",
+      "remote_name": "V20S22L.D81",
+      "sha256": "b76883347454c6d1a7b864a23bbe5fb88487b4b370b42f9bf95d51bc94f11080"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-symbol22-first-fault-device-media/shared-system/lisp65-product.d81",
+      "remote_name": "V20S22P.D81",
+      "sha256": "218e569ff20cea94fc781ea4cd5438ccd5e601c7d82d5c2c3e1bdc6baed0415a"
+    }
+  },
+  "positive_control": {
+    "final_ELF_executed": true,
+    "meaning": "tag zero on device is discriminating, not an untested latch",
+    "payload_nonzero_bytes": 34,
+    "state_hex": "a567450006"
+  },
+  "read_cutpoint": {
+    "ranges": [
+      {
+        "address": "0xC34D",
+        "bytes": 5,
+        "layout": [
+          "tag",
+          "caller-lo",
+          "caller-hi",
+          "name-lo",
+          "name-hi"
+        ],
+        "name": "latch-state"
+      },
+      {
+        "address": "0xBC89",
+        "bytes": 34,
+        "layout": "name bytes, NUL-stopped",
+        "name": "repl.buf-payload"
+      },
+      {
+        "address": "0x005A",
+        "bytes": 2,
+        "encoding": "little-endian",
+        "name": "nsym"
+      },
+      {
+        "address": "0xBE1A",
+        "bytes": 2,
+        "encoding": "little-endian",
+        "name": "npool"
+      }
+    ],
+    "tag_committed_value": "0xA5",
+    "tag_zero_meaning": "no recurrence; final-ELF positive control proved firing",
+    "when": "first live prompt after the bounded sequence; after longjmp/cleanup/recovery and before further input"
+  },
+  "recorded_on": "2026-08-31",
+  "seam": {
+    "external_library": "v16core single-row append",
+    "historical_authority": {
+      "hardware": {
+        "bytes": 4621,
+        "path": "docs/planning/v1.7.0-block3-left-first-red-attribution.md",
+        "sha256": "5e63d450a8085ffadfd6879b2302a5fdffe55657dcd91604380d26f38833138f"
+      },
+      "host_replay": {
+        "bytes": 2766,
+        "path": "docs/planning/v1.8.0-block1-symbol22-host-reproduction.md",
+        "sha256": "362c30710afd53791158990f679e01f0631d2a4f5082ac87f9a323341abb1ebd"
+      }
+    },
+    "materialized_edge": {
+      "external_caller": {
+        "ext_addr": "0x000414",
+        "length": 225,
+        "name": "%read-line-loop"
+      },
+      "external_target_entries": 0,
+      "literal_edge_count": 1,
+      "manifest": {
+        "bytes": 26740,
+        "path": "build/c2.3/v2.0-symbol22-first-fault-device-media/library-inputs/v17core.manifest.json",
+        "sha256": "db61427157412e310342da762dd17b01040263575877b97c5ac6ae1d9512bb05"
+      },
+      "resident_suite": {
+        "bytes": 608,
+        "path": "build/c2.3/v2.0-symbol22-first-fault-device-media/library-inputs/library-suite/block3-resident.json",
+        "sha256": "40560d50fd62c5e5c5edac1d2452840a515547b9c898409bdc9e6763a0bb7a92"
+      },
+      "resident_target": {
+        "name": "%rl-poll",
+        "reason": "v1.7 line-idle successor object is not part of the historical v16core delta"
+      },
+      "rule": "the shipped external caller names the resident target exactly once",
+      "status": "passed-external-read-line-loop-to-resident-rl-poll"
+    },
+    "required_edge": "external %read-line-loop -> resident %rl-poll",
+    "static_plane_bytes": 47469
+  },
+  "status": "ready-owner-bounded-symbol22-contact"
+}

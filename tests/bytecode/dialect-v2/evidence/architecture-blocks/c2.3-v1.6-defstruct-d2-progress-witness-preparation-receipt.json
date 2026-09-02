@@ -1,0 +1,120 @@
+{
+  "authorities": {
+    "delta_attribution": {
+      "bytes": 10058,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-physical-delta-desk-attribution-receipt.json",
+      "sha256": "07313fe98c2e7813b0b1986fb2b2f080dafa6a3ad0174749ea8f0582a70903e4"
+    },
+    "driver": {
+      "bytes": 19596,
+      "path": "tools/host-lisp/c2_v16_boot_progress_witness.py",
+      "sha256": "ef60400134028ce58b21a27f61fcfb20806616a95c67aae73d81738bbc46bbfc"
+    },
+    "owner_commission": {
+      "bytes": 65026,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "d1b622bf8ecd1b0d12b26e5c4c358bf7f62855917896103fac6f3ef160e5c0bb"
+    },
+    "phase_C_deployment": {
+      "bytes": 8053,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/deployment.json",
+      "sha256": "2f4196ac4771457fc72ddb1e6538c37ed924046d7dca7ed46011fac03dbc7669"
+    }
+  },
+  "claim_limit": "One physical RUN and one read-only progress row for the fully proved non-promotable Link-82 diagnostic identity. No require, defstruct, product fix, link, release or R/A/I/G result.",
+  "execution_witnesses": [
+    "structured ELF names two-byte freelist at $003D",
+    "linked eval_init clears freelist before the EXT loop",
+    "linked loop stores freelist only after cell_set_a returns",
+    "source-defined head transform maps first/final writes to jobs 1/4096",
+    "full diagnostic PRG contains the $202C RAM-entry hook",
+    "appointment runs zero measured Lisp forms"
+  ],
+  "facts": {
+    "appointment": {
+      "CPU_side_reads": [
+        "PC",
+        "$C07A",
+        "$003D..$003E"
+      ],
+      "R_A_I_G_claimed": false,
+      "leave_CPU_stopped_after_final_sample": true,
+      "measured_forms": 0,
+      "physical_RUN": true,
+      "samples": 3,
+      "spacing_seconds": 2.0
+    },
+    "decision_table": {
+      "boot_stamp_and_later_stable_PC": "POST-ENTRY-HANG-SITE",
+      "identical_early_boot_samples": "STALLED-IN-FREELIST-BUILD",
+      "increasing_job_indices": "SLOW-EARLY-BOOT-PROGRESS",
+      "other": "FIRST-RED-UNCLASSIFIED-NO-OVERCLAIM"
+    },
+    "early_boot_intervals": [
+      {
+        "end_exclusive": "0x32cb",
+        "start": "0x3287",
+        "symbol": "ext_dma"
+      },
+      {
+        "end_exclusive": "0x3570",
+        "start": "0x3521",
+        "symbol": "cell_set_a"
+      },
+      {
+        "end_exclusive": "0x35a7",
+        "start": "0x3570",
+        "symbol": "ext_set_a"
+      },
+      {
+        "end_exclusive": "0xc4bd",
+        "start": "0xc45c",
+        "symbol": "eval_init/freelist-loop"
+      }
+    ],
+    "identity": {
+      "boot_reset": "0x6b",
+      "boot_stamp": "0x44",
+      "boot_witness": "0xc07a",
+      "diagnostic_ELF": {
+        "bytes": 620700,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.elf",
+        "sha256": "fb8d9b51a0b9f88d08c6bb22debf686576677ce595b55b296c2e7afdbac66ffd"
+      },
+      "diagnostic_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+        "sha256": "d95bd77c3ea0ec6d091630895e59d31ad5f6df5896292c0f20a9aadbc9ac7936"
+      },
+      "entry_hook": "0x202c",
+      "entry_hook_bytes": "203fc0eaea"
+    },
+    "progress_oracle": {
+      "address": "0x003d",
+      "bytes": 2,
+      "derived_job_index": "head==0 ? 0 : (0x2060-head)/2; range 0..4096",
+      "final_head": "0x0060",
+      "first_nonzero_head": "0x205e",
+      "independent_of_DMA_submit_metadata": true,
+      "jobs": 4096,
+      "source_semantics": "after each completed EXT cell write, freelist=(i<<1) while i descends from MAX_CELLS-1 to HEAP_CELLS",
+      "store_after_cell_set_a": "0xc48a: STX freelist; 0xc48e: STX freelist+1",
+      "symbol": "freelist"
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-D2-progress-witness-preparation-v1",
+  "recorded_on": "2026-08-05",
+  "rejected_mutations": [
+    "freelist-address",
+    "freelist-width",
+    "head-direction",
+    "one-sample-PC",
+    "unspaced-samples",
+    "hook-free-identity",
+    "measured-form",
+    "R-A-I-G-overclaim",
+    "metadata-as-oracle",
+    "decision-table"
+  ],
+  "status": "HOST-GREEN; ONE PHYSICAL PROGRESS ROW AUTHORIZED"
+}

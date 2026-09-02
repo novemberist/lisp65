@@ -1,0 +1,35 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-vic-unlock-edge-preflight-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HOST GREEN; EXACT VIC-IV UNLOCK PAIR IS THE NEXT TARGET EDGE",
+  "candidate_link": 89,
+  "predicate_probe_observation": {
+    "runtime_state": "0xE3",
+    "runtime_sha256": "ee8903bdbc6d657c06589a8c39a8f2248ec21eb7533160ca2853d160db4c1e6f",
+    "witness_hex": "1638e9028516b002c617",
+    "witness_sha256": "a6fbd5d12f2947b5764db6b760aa6c368f589da654d390d647b4333e372ff597",
+    "interpretation": "none of the ten post-unlock witness bytes was established; the deterministic VM_TYPEERROR occurs before the first statement following %m65-vic-open",
+    "memory_ownership_check": "runtime ELF stack=0xd000, BSS=0x848f-0x8c58; 0x17a0 is neither stack nor BSS"
+  },
+  "minimal_fixture": {
+    "source_sha256": "3c647760af2e2a6d22d14435dac393420d1ce849d6fe8c93039213f509ccddaf",
+    "project_sha256": "514ab7e47529b5eb06340ba11f9e8ccf6781c031ac78b7366024477fa6059d4b",
+    "image_sha256": "3eba9f223826add79ec1954f7bdb821d564c9541a2549bca5d0dde23634c821f",
+    "runtime_elf_sha256": "36ecba43d0ea31dbfa195888ac448ea6a59e4ecdbf519936556ceda2ed02b649",
+    "build_receipt_sha256": "69e98f5c01efd152b7800773c9b10032e8110ce27d8fa39fcea65a0e42656d49",
+    "host_execution": "passed once with result t and vm_status 0",
+    "sequence": "write pre-marker; poke $D02F=$47; poke $D02F=$53; write post-marker; read $D06C-$D06E"
+  },
+  "runner": {
+    "path": "scripts/c2-v14-link89-device-session-hw.sh",
+    "sha256": "8429ec974feeea76a32a55f508ae97896b7adb09c5f87d7584c346afe3d9218c",
+    "action": "probe-d2-vic-unlock",
+    "input": "none"
+  },
+  "pre_registered_outcomes": {
+    "pre_only_e3": "the exact target unlock pair owns the VM_TYPEERROR boundary",
+    "pre_and_post_complete": "%m65-vic-open as a separately compiled call edge, not the raw pair, owns the divergence",
+    "pre_and_post_e3": "unlock succeeds; the next live-register read owns the divergence"
+  },
+  "claim_limit": "Disposable diagnostic media only. No Link-89 product or library byte changes."
+}

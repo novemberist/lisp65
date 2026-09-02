@@ -1,0 +1,40 @@
+{
+  "authority": {
+    "commit": "790354e7",
+    "decision": "known fixed-facade linked-owner family; standing self-disposition applies"
+  },
+  "candidate_elf": {
+    "bytes": 647612,
+    "path": "build/c2.3/v1.6-execution-boundary-backstop-uint8-abi-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "39e9e0885895add6644def9d8a04c1058eba5bb5d924aaf61bbff665373ed159"
+  },
+  "final_red": {
+    "bytes": 22844,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-execution-boundary-backstop-uint8-abi-replacement-card-final-red.json",
+    "sha256": "b4e866db13717952cf56a0cf950180b8bd155f86b237496d9d26b557b77e293b"
+  },
+  "finding": {
+    "all_low_edges": [
+      {
+        "instruction": "jmp $222d",
+        "owner_section": ".lisp65_c2_kernal_window.irq_handler",
+        "target_address": "0x222d",
+        "target_symbol": "retired_window_brk_classifier"
+      }
+    ],
+    "foreign_low_edges": 0,
+    "mechanism": "The fixed-facade gate classified every E000-to-low-memory transfer as an ordinary facade bypass. Restoring STT_FUNC made llvm-objdump render the pre-existing authorized IRQ tail edge in the numeric form consumed by that text parser, exposing the gate's missing owner distinction.",
+    "product_defect": false
+  },
+  "mutation_proof": {
+    "foreign_low_edge": "rejected",
+    "foreign_owner_for_tail": "rejected",
+    "missing_owned_tail": "rejected"
+  },
+  "successor": {
+    "change": "classify the one final-image-derived IRQ-handler to retired-window-tail edge as an owned interrupt continuation; every other low edge still requires a fixed facade vector",
+    "scope": "fixed-facade linked-edge ownership only",
+    "wplto_runs_authorized": 1
+  },
+  "status": "ATTRIBUTED: FIXED FACADE LACKED IRQ TAIL OWNER CLASS"
+}

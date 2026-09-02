@@ -1,0 +1,41 @@
+{
+  "format": "lisp65-c2.2-v1.2.2-g1-noinline-semantic-split-first-red-v1",
+  "recorded_on": "2026-07-29",
+  "status": "FIRST RED: G1 noinline semantic split exceeded its cold slice",
+  "classification": "linked cold-code geometry before a complete product ELF; no resident wall moved",
+  "mechanism": {
+    "buffer_read_section_bytes": 1915,
+    "hard_slice_cap_bytes": 1792,
+    "over_cap_bytes": 123,
+    "entry_bytes": 1132,
+    "gc_helper_bytes": 62,
+    "room_helper_bytes": 273,
+    "error_helper_bytes": 291,
+    "diagnostic": "buffer reader exceeds its stack-safe window"
+  },
+  "disposition": {
+    "result": "discard the three noinline helper boundaries",
+    "reason": "the boundaries added call-state preservation and made the one physical carrier 191 bytes larger than the valid inlined form",
+    "restored_authority": "the inlined post-policy carrier measured 1724 bytes and remains below the per-slice cap",
+    "next_question": "G1 still requires one cold packing-quantum decision; no resident capacity is eligible"
+  },
+  "execution_accounting": {
+    "product_links": 0,
+    "hardware_runs": 0,
+    "linked_nonpromotable_ELFs": 0,
+    "failed_seed_links": 1
+  },
+  "authority": {
+    "lto_object": {
+      "path": "build/post-release/v1.2.2/g1-state-error/product-shaped-wplto-v5/wplto/resident-island-seed.prg.lto.o",
+      "bytes": 622928,
+      "sha256": "33de9b9dd8a755b7e0e59544564a1d25c29bc4af905b852132d7210b11d9bca5"
+    },
+    "map": {
+      "path": "build/post-release/v1.2.2/g1-state-error/product-shaped-wplto-v5/wplto/resident-island-seed.prg.map",
+      "bytes": 186089,
+      "sha256": "652b4e5f56edd163542e83b2ee68c4a7f5bcc8272c790d029e1f2c5d30097aa5"
+    }
+  },
+  "claim_limit": "Failed nonpromotable seed-link geometry only; no product, hardware, gc, room, error or GC attribution claim."
+}

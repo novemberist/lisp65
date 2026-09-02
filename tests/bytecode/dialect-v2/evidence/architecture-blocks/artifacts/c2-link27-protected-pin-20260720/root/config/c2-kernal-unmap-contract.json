@@ -1,0 +1,250 @@
+{
+  "format": "lisp65-c2-kernal-unmap-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "link-27-vm-gc-e000-placement-pass-product-link-pending",
+  "claim_limit": "An owner-authorized, product-shaped non-product placement probe proves thirteen pinned facade vectors, post-handoff-only reachability of the VM logical-PC helper and C2 root walker, and 728 bytes of actual E000 margin. Link 27, full product gates, hardware acceptance and promotion remain not-run; no release claim is made.",
+  "authority": {
+    "scope_memo": "docs/planning/v1.2-scope-memo.md",
+    "commission_heading": "KERNAL-unmap block — commissioned (owner go, 2026-07-20)",
+    "residency_audit": "config/c2-kernal-residency-audit.json",
+    "first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-lifetime-first-red-receipt.json",
+    "hardware_reference": {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+      "printed_to_pdf_pages": {
+        "map_and_kernal": [[9, 23], [10, 24], [11, 25]],
+        "vic_raster_irq": [[50, 64], [51, 65]],
+        "typed_event_queue": [[102, 116], [103, 117], [104, 118]]
+      }
+    }
+  },
+  "product_window_identity": {
+    "source": "link-27-vm-gc-e000-placement-probe",
+    "source_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link27-vm-gc-e000-placement-probe-receipt.json",
+    "source_elf": "build/c2.2/substitution/link27-vm-gc-e000-placement-probe/vm-gc-e000-placement-probe.prg.elf",
+    "source_elf_sha256": "5084b60386e43e159e568fea0fb895c34a1e6367de5a3030d9fcbaf4a5fa93c3",
+    "bytes": 8192,
+    "crc16": "0xbbdd",
+    "sha256": "c5a426a9869e3cd8e6190b2af108482b71d1eb583096675af4cf9a565b77a83e",
+    "rule": "The one authorized Link 27 product closure consumes this placement-probe identity before LTO and must reproduce all 8192 window bytes exactly; rebinding it after the product link is forbidden."
+  },
+  "hardware_facts": {
+    "cpu_window": "0xe000..0xffff",
+    "gross_bytes": 8192,
+    "currency": "16-bit CPU address space only",
+    "map_rule": "MAP selects eight 8-KiB slabs and overrides legacy banking mechanisms.",
+    "typed_event": {
+      "queue_and_event_modifiers": "0xd60a",
+      "petscii_and_dequeue": "0xd619",
+      "rule": "capture code and event-time modifiers from one queue head, then dequeue exactly once"
+    },
+    "frame_irq_candidate": {
+      "raster_compare": "0xd012",
+      "irq_flag_ack": "0xd019",
+      "irq_mask": "0xd01a",
+      "status": "primary candidate; bounded probe must select and pin the actual source"
+    }
+  },
+  "capacity_model": {
+    "gross_window_bytes": 8192,
+    "fixed_resident_deficit_bytes": 3639,
+    "replacement_categories": [
+      "typed_queue_driver",
+      "irq_handler",
+      "nmi_and_freezer_return",
+      "frame_source",
+      "map_switch_and_guards",
+      "post_startup_output_seam",
+      "alignment_and_vectors"
+    ],
+    "probe_values": {
+      "replacement_resident_bytes": 490,
+      "future_margin_bytes": 4063,
+      "actual_live_window_bytes": 7464,
+      "actual_future_margin_bytes": 728
+    },
+    "equation": "future_margin_bytes = 8192 - 3639 - replacement_resident_bytes",
+    "pass_rule": "Every category is reported, arithmetic closes exactly, and future_margin_bytes is greater than zero.",
+    "memo_4_5k_status": "gross upper bound before replacement residents; not a result claim"
+  },
+  "state_machine": {
+    "ordered_states": [
+      "firmware-owned",
+      "replacement-armed",
+      "handoff-closed",
+      "product-owned"
+    ],
+    "freezer_states": ["freezer-suspended", "freezer-return"],
+    "transition_rules": [
+      "cold boot, CRT startup and C2 staging retain the KERNAL",
+      "typed input, abort, frame IRQ, output and owned vectors are verified before unmap",
+      "interrupt delivery is masked only for the bounded MAP/vector commit",
+      "product-owned is published only after mapping, vectors, abort and frame sources verify",
+      "freezer return verifies mapping and vector generation before any product instruction resumes",
+      "platform reset returns to the firmware-owned boot world"
+    ],
+    "fail_closed": {
+      "before_unmap": "leave KERNAL mapped",
+      "after_unmap": "do not resume product execution; require documented disk reboot"
+    }
+  },
+  "continuity_invariants": {
+    "run_stop_abort": {
+      "minimum_authoritative_sources": 1,
+      "handoff_rule": "new queue or matrix source is proven before STKEY 0x91 is retired",
+      "masked_window_rule": "a pending abort is latched and delivered before the next evaluator step"
+    },
+    "frame_source": {
+      "minimum_authoritative_sources": 1,
+      "handoff_rule": "owned source is installed and advancing before the firmware-maintained source is retired",
+      "observation_rule": "one monotonic product counter; switching sources may not hide duplicate, backward or missing transitions"
+    },
+    "publication_rule": "vector target bytes and their mapping become valid before the vector is published"
+  },
+  "input_and_keymap": {
+    "event_shape": "(key code modifiers)",
+    "queue_empty_is_not_code_zero": true,
+    "blocking_and_polling_share_one_capture": true,
+    "run_stop_meaning": "abort running evaluation to a usable REPL; idle no-op; never an editor binding",
+    "single_source": "config/v11-l-lite-keymap.json evolves through tools/host-lisp/v11_l_lite_keymap.py",
+    "generated_consumers": [
+      "lib/ide-keymap-generated.lisp",
+      "lib/tests/ide-keymap-eval-cases.generated.json",
+      "tests/bytecode/libs/p0-ide-keymap-cases.generated.json",
+      "tests/bytecode/libs/p0-ide-keymap-extra-cases.generated.json",
+      "docs/generated/ide-keymap.md"
+    ],
+    "required_l_full_bindings": [
+      {"physical": "Control-Space", "command": "set-mark"},
+      {"physical": "Meta-x", "command": "execute-command"}
+    ],
+    "documentation_rule": "No physical modifier binding is documented until injected queue cases and a real-key hardware sample pass."
+  },
+  "interrupt_and_output": {
+    "frame_source_selection": "bounded probe selects and pins one owned source; VIC raster IRQ is the primary candidate",
+    "irq_rule": "acknowledge only the owned source, preserve machine context, never call Lisp and never allocate",
+    "nmi_rule": "no evaluator work; Freezer return makes mapping validation unavoidable",
+    "chrout_rule": "audited CRT CHROUT may execute before main; no post-startup CHROUT edge is legal",
+    "reset_rule": "cold boot and hardware reset retain firmware mapping; unmap is a post-boot product transition"
+  },
+  "fixed_cross_domain_facade": {
+    "rule": "Code in the owned E000 window reaches moving Bank-0 implementations only through thirteen fixed three-byte tail-jump vectors. The original twelve addresses remain unchanged; c2_facade_gc_mark is appended for the C2-owned block root walker. All E000-referenced Bank-0 and zero-page state has explicit linker placement.",
+    "vector_base": "0xb5a2",
+    "vector_stride_bytes": 3,
+    "vector_count": 13,
+    "vector_symbols": [
+      "c2_facade_vm_code_load",
+      "c2_facade_c2_dma",
+      "c2_facade_overlay_call_family",
+      "c2_facade_c2e_cons",
+      "c2_facade_c2e_overlay",
+      "c2_facade_car",
+      "c2_facade_cdr",
+      "c2_facade_gc_collect",
+      "c2_facade_str_open",
+      "c2_facade_str_putc",
+      "c2_facade_intern",
+      "c2_facade_select_family",
+      "c2_facade_gc_mark"
+    ],
+    "fixed_state": {
+      "zero_page": {
+        "base": "0x0089",
+        "bytes": 7
+      },
+      "bank0": {
+        "base": "0xc080",
+        "bytes": 408,
+        "code_base": "0xc218",
+        "code_bytes": 45,
+        "c2e_cons_code_base": "0xc21d",
+        "c2e_cons_code_bytes": 40,
+        "headroom_to_runtime_overlay_bytes": 273
+      },
+      "owned_e000_session_state": {
+        "bytes": 346,
+        "lifetime": "product-owned session only"
+      }
+    },
+    "link_rules": [
+      "each vector address is a pinned contract value; the thirteenth vector c2_facade_gc_mark is fixed at 0xb5c6",
+      "the vector and fixed-state sections are explicitly placed under orphan-handling=error",
+      "the five-byte kb_cursor_off helper is pinned at 0xc218, the 40-byte c2e-cons facade target at 0xc21d, and any address or size drift is a link-gate failure",
+      "a direct E000-to-low-memory call outside the vector set is a link-gate failure",
+      "any vector or fixed-state address drift is a link-gate failure",
+      "the pre-ownership boot closure contains no edge or operand to session-only E000 code or state",
+      "vm_logical_relative_target and c2_product_gc_mark_roots live in the owned E000 code region and are unreachable before c2_kernal_take_ownership"
+    ]
+  },
+  "kernal_freedom_link_gate": {
+    "owned_section": ".lisp65_c2_kernal_window",
+    "owned_vector_section": ".lisp65_c2_vectors",
+    "forbidden_service_targets": ["0xffd2", "0xffe4"],
+    "forbidden_state_addresses": ["0x0091"],
+    "rules": [
+      "all live bytes in 0xe000..0xffff belong to named C2-owned sections or vectors",
+      "no relocation, call edge or absolute operand targets a KERNAL service or retired STKEY",
+      "every post-unmap edge into 0xe000..0xffff resolves to an owned symbol",
+      "no KERNAL, CBM-I/O or legacy GETIN object/archive member remains in the post-unmap closure",
+      "the source and disassembly census has exactly one input path, one abort source and one frame owner"
+    ]
+  },
+  "freezer_fidelity": {
+    "classification": "hardware-only",
+    "xemu_claim": "non-authoritative queue/mapping dry run only; no Freezer safety PASS",
+    "prechain_smoke": [
+      "typed physical modifier event",
+      "RUN/STOP during evaluation",
+      "advancing product frame counter",
+      "Freezer entry and return",
+      "map and vector generation re-established",
+      "one typed key event after return"
+    ]
+  },
+  "bounded_probe": {
+    "artifact_class": "isolated non-product proof target",
+    "required_outputs": [
+      "full ownership state machine and vector table",
+      "typed queue driver and generated L-full closure",
+      "pinned-toolchain MAP/vector disassembly",
+      "category-complete net capacity equation",
+      "continuity cutpoint proof",
+      "structural KERNAL-freedom link report",
+      "negative and mutation matrix"
+    ],
+    "product_artifacts_emitted": 0,
+    "next_if_green": "return for review before exactly one real substitution link",
+    "next_if_red": "first-red stop; no cap or claim softening"
+  },
+  "required_negative_cases": [
+    "unmap before typed queue readiness",
+    "retire STKEY before new abort source is proven",
+    "lose an abort latched during the handoff",
+    "retire firmware frame source before owned frame source advances",
+    "publish vector before target mapping",
+    "owned IRQ fails to acknowledge its raster source",
+    "IRQ calls Lisp or allocates",
+    "Freezer return with unknown map generation",
+    "resume product execution after failed post-unmap validation",
+    "post-unmap CHROUT edge",
+    "post-unmap GETIN edge",
+    "post-unmap STKEY read",
+    "edge into KERNAL window without an owned target symbol",
+    "legacy KERNAL or CBM-I/O object in post-unmap closure",
+    "typed event code and modifiers sampled from different queue heads",
+    "typed event dequeued more than once",
+    "queue empty represented as code zero",
+    "RUN/STOP routed to an editor command",
+    "generated keymap, test list and documentation drift",
+    "physical modifier documented without hardware sample",
+    "capacity category omitted from the net equation",
+    "gross 8192 bytes reported as future margin",
+    "replacement residents plus deficit leave zero or negative margin",
+    "platform reset treated as an in-product restart",
+    "Freezer safety PASS emitted by Xemu",
+    "fixed host-facade vector address drift",
+    "fixed Bank-0 or zero-page state address drift",
+    "owned-window call bypasses the fixed host facade"
+  ]
+}

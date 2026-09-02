@@ -1,0 +1,761 @@
+{
+  "authorities": {
+    "assembly_contract": {
+      "bytes": 1748,
+      "path": "config/c2-mapped-far-asm-equivalence-contract.json",
+      "sha256": "89818e0b5bc884b04e7039f49991b1b3d881e14b65d1d5e0be36f69721e4510f"
+    },
+    "assembly_equivalence": {
+      "bytes": 6499,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-mapped-far-assembly-equivalence-receipt.json",
+      "sha256": "1bc32fba6b5f5341def1629405447f6d2d4d9cebcd14bb4b4dab6ff5b9fec127"
+    },
+    "driver": {
+      "bytes": 13971,
+      "path": "tools/host-lisp/c2_v17_state_ownership_phase_c.py",
+      "sha256": "afaea88c7ee2b3068e5f882bc3734a4cdeef35314c69f0b62242a2e385aeecb5"
+    },
+    "mapped_ownership": {
+      "bytes": 6501,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-stack-overlay-mapped-far-service-ownership-gate-receipt.json",
+      "sha256": "43ca8d911c8405f9435bcd08869d6c32163eb62b67d0fb4f51cbb2f018be0dcc"
+    },
+    "phase_a": {
+      "bytes": 34296,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-state-ownership-phase-a-inventory-receipt.json",
+      "sha256": "36ca85eff18c8f8b59a33ee4b69f3026303a90a26ae2d16217d323b5842ab9b5"
+    },
+    "phase_b": {
+      "bytes": 21351,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-state-ownership-phase-b-halt1-pricing-receipt.json",
+      "sha256": "c15516e2f797b8b4ab9519f289c594247a078890e6bdf26cd985047b7b4e204d"
+    },
+    "state_contract": {
+      "bytes": 6445,
+      "path": "config/c2-state-ownership-contract.json",
+      "sha256": "d3aab71ef52a8b52b6302eb2b7ca932860f230b7f0d27289a0aaa1a040bb06f0"
+    }
+  },
+  "claim": "Host/source/final-micro-ELF state and assembly ownership only; the sole Phase-D product WPLTO remains unconsumed.",
+  "execution_witness": {
+    "assembly_equivalence": 73,
+    "far_clean_builds": 2,
+    "ownership_suite": 125,
+    "phase_c_mutations": 8,
+    "stack_cases": 5,
+    "state_inputs": 72,
+    "total": 287,
+    "zp_cases": 2
+  },
+  "facts": {
+    "assembly_equivalent_cases": 16,
+    "derived_floor": false,
+    "existing_convergence_mutations": 15,
+    "expectation_authority": "halt1-contract",
+    "far_byteidentical": true,
+    "far_clean_builds": 2,
+    "far_exact_bytes": 874,
+    "far_vma": 30898,
+    "hardware_contacts": 0,
+    "initialization_families": 7,
+    "new_seam_mutations": 10,
+    "overlay_floor": 50004,
+    "product_wplto": false,
+    "stack_overflow_rejected": 13,
+    "stack_pass_shapes": [
+      3,
+      4,
+      6,
+      12
+    ],
+    "state_executions": 72,
+    "state_inputs": 72,
+    "state_inputs_owned_once": true,
+    "zp_capacity": 2,
+    "zp_overflow_rejected": 3
+  },
+  "far_clean_builds": [
+    {
+      "lane": "equivalence",
+      "sha256": "5056e6389ffd1b421b242048150e32c080e57daa3a4f7ca2af75767c7aa18077"
+    },
+    {
+      "lane": "ownership",
+      "sha256": "5056e6389ffd1b421b242048150e32c080e57daa3a4f7ca2af75767c7aa18077"
+    }
+  ],
+  "format": "lisp65-c2-v1.7-state-ownership-phase-c-v1",
+  "mutations_rejected": {
+    "derived-floor": "overlay floor is not independently owned",
+    "far-identity-drift": "far body lacks two clean byteidentical assembly builds",
+    "missing-equivalence-case": "assembly semantic equivalence witness drift",
+    "missing-init-family": "zero/init/preservation family coverage drift",
+    "optimizer-sized-far-body": "far body lacks two clean byteidentical assembly builds",
+    "orphan-state": "state input is orphaned or double-owned",
+    "source-derived-oracle": "gate derived an expected address from tested source",
+    "zp-overlap": "ZP capacity execution drift"
+  },
+  "recorded_on": "2026-08-15",
+  "state_execution": [
+    {
+      "bytes": 12,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.c2_dma_list",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.cs_idx",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.disk_source_len",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.disk_source_pos",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.eval.k_lccrun",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 12,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.ext_dl",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.ext_stg",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.ext_stg1",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 9,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.f011_guard@canonical-asm-object",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.gc_runs",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.gensym.tag",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.k_bytecode",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.k_other",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.lisp_error_msg",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 19,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.lisp_toplevel",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 134,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.marks",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 512,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.markstack",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 376,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.namelen4",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.npool",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.pending_symbol",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rd_sc",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rd_sf",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rd_sn",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 192,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.repl.buf",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rtov_batch_crc",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rtov_batch_entry",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rtov_call_result",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rtov_family",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rtov_family_generation",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.rtov_fault",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.str_stg1",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 94,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.symbnd",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 94,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.symfnptr",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_buf_bank",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 56,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_codebuf",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_k_control",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_run_inner.poll_",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_upvals",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_workbench_error_symbols.0",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_workbench_error_symbols.10",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_workbench_error_symbols.2",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_workbench_error_symbols.3",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_workbench_error_symbols.5",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_workbench_error_symbols.7",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vm_workbench_error_symbols.8",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_code",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_hdrlen",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_littab",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_plen",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_poff",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_pwmax",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_streaming",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_win",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "ordinary-bank0-bss",
+      "initial_sentinel": 165,
+      "input": ".bss.vmr_winlen",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 24,
+      "executed": true,
+      "family": "convergence-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_convergence_state.d700_jobs",
+      "operation": "per-submit-explicit-init",
+      "postcondition": 90
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "convergence-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_convergence_state.d700_value",
+      "operation": "per-submit-explicit-init",
+      "postcondition": 90
+    },
+    {
+      "bytes": 40,
+      "executed": true,
+      "family": "convergence-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_convergence_state.d705_jobs",
+      "operation": "per-submit-explicit-init",
+      "postcondition": 90
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "convergence-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_convergence_state.d705_value",
+      "operation": "per-submit-explicit-init",
+      "postcondition": 90
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "convergence-zero-page",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_convergence_zp.d700_done",
+      "operation": "per-submit-explicit-init",
+      "postcondition": 90
+    },
+    {
+      "bytes": 1,
+      "executed": true,
+      "family": "convergence-zero-page",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_convergence_zp.d705_done",
+      "operation": "per-submit-explicit-init",
+      "postcondition": 90
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "fixed-c2-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_fixed_bank0.committed_roots",
+      "operation": "preserve-existing-owner-semantics",
+      "postcondition": 165
+    },
+    {
+      "bytes": 2,
+      "executed": true,
+      "family": "fixed-c2-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_fixed_bank0.decode_active",
+      "operation": "preserve-existing-owner-semantics",
+      "postcondition": 165
+    },
+    {
+      "bytes": 20,
+      "executed": true,
+      "family": "fixed-c2-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_fixed_bank0.edma_job",
+      "operation": "preserve-existing-owner-semantics",
+      "postcondition": 165
+    },
+    {
+      "bytes": 304,
+      "executed": true,
+      "family": "fixed-c2-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_fixed_bank0.phase_scratch",
+      "operation": "preserve-existing-owner-semantics",
+      "postcondition": 165
+    },
+    {
+      "bytes": 46,
+      "executed": true,
+      "family": "fixed-c2-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_fixed_bank0.runtime",
+      "operation": "preserve-existing-owner-semantics",
+      "postcondition": 165
+    },
+    {
+      "bytes": 34,
+      "executed": true,
+      "family": "fixed-c2-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_fixed_bank0.sym_name_scratch",
+      "operation": "preserve-existing-owner-semantics",
+      "postcondition": 165
+    },
+    {
+      "bytes": 240,
+      "executed": true,
+      "family": "fixed-c2-bank0-state",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_fixed_bank0_hot_bss.heap",
+      "operation": "preserve-existing-owner-semantics",
+      "postcondition": 165
+    },
+    {
+      "bytes": 1433,
+      "executed": true,
+      "family": "mapped-far-service-body",
+      "initial_sentinel": 165,
+      "input": ".lisp65_c2_mapped_far_service",
+      "operation": "immutable-stage-and-readback",
+      "postcondition": 165
+    },
+    {
+      "bytes": 6,
+      "executed": true,
+      "family": "compiler-static-stack",
+      "initial_sentinel": 165,
+      "input": ".noinit..Lstatic_stack",
+      "operation": "transient-no-persistence-claim",
+      "postcondition": 165
+    },
+    {
+      "bytes": 77,
+      "executed": true,
+      "family": "ordinary-zero-page",
+      "initial_sentinel": 165,
+      "input": ".zp.bss",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 12,
+      "executed": true,
+      "family": "ordinary-zero-page",
+      "initial_sentinel": 165,
+      "input": ".zp.data",
+      "operation": "boot-zero",
+      "postcondition": 0
+    },
+    {
+      "bytes": 12,
+      "executed": true,
+      "family": "ordinary-zero-page",
+      "initial_sentinel": 165,
+      "input": ".zp.noinit",
+      "operation": "boot-zero",
+      "postcondition": 0
+    }
+  ],
+  "status": "PASS",
+  "zp_cases": [
+    {
+      "bytes": 2,
+      "status": "passed",
+      "vma": "0x87"
+    },
+    {
+      "bytes": 3,
+      "status": "rejected"
+    }
+  ]
+}

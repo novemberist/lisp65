@@ -1,0 +1,327 @@
+{
+  "answer": {
+    "boundary": "The persistent definition failed inside c2_product_install / append service before publication. lcc_install_obj calls vm_check_status inside the service, so its longjmp precedes the patched vm_callprim-return edge.",
+    "reason": "Each patched edge executes SEI and then a permanent BRA-to-self. The machine instead rendered the error and returned to the REPL, so invalid dispatch, post-handler status and final vm_callprim propagation were not reached.",
+    "remaining_question": "Which first service substep failed: transaction begin, emitter, append begin or transaction end.",
+    "rollback": "C2D stayed at 6 images / 588 entries / 2264 resolutions / 283 roots, C2J is zero and READY remains one; the failed defun published no dynamic object.",
+    "three_inner_edges_reached": false
+  },
+  "authorization": {
+    "bytes": 6155,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-first-call-badopcode-inner-hold-cycle2-patch-receipt.json",
+    "sha256": "ab872ac3c3ccc14d20916d8f4117836e31925717c9b31d86a03907453d9c855c"
+  },
+  "budgets": {
+    "class_b_first-execution-diagnostic": "2/3 consumed",
+    "completed_latency_measurements": "0/2 unchanged",
+    "line1_product_first_reds": "2/3 unchanged"
+  },
+  "captured_state": {
+    "bank0": [
+      {
+        "active_owner": {
+          "active_owner_cache_exact": true,
+          "bank_tag": 1,
+          "c2d_entry": {
+            "code_length": 76,
+            "code_offset": 3899,
+            "generation": 1,
+            "image_slot": 0,
+            "literal_count": 3,
+            "ordinal": 171,
+            "raw_hex": "00033b0f4c00ad000100",
+            "resolution_base": 173
+          },
+          "header": {
+            "bytes": 13,
+            "code_pointer": "0xbf67",
+            "expected_scalar_hex": "b50101023f0003",
+            "littab_pointer": "0xbf61",
+            "materialized_literal_table_hex": "18e11ae11ce1",
+            "scalar_bytes": 7,
+            "scalar_exact": true,
+            "scalar_hex": "b50101023f0003"
+          },
+          "object_hex": "b50101023f00030000000000000b3c00013a010b361d070b3406011e1c012b1d0d0b353439012b3d26023d2302050b361d070b3406021e1c012b1d0939010b35343d26020539012c3d260205",
+          "object_name": "lcc-run",
+          "object_sha256": "a1df2dba815c518fe7489cefc6550ff0865c0954928bdfcb37e5ca4277880fee",
+          "ordinal": 171,
+          "payload": {
+            "expected_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "held_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "length": 63,
+            "offset": 13,
+            "streaming": 1,
+            "window_exact": true,
+            "window_length": 18,
+            "window_max": 43,
+            "window_start": 45
+          }
+        },
+        "address": "0x00000000",
+        "bytes": 65536,
+        "capture": 1,
+        "elapsed_ms": 1215,
+        "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/held-bank0-1.bin",
+        "product_state": {
+          "c2_journal_count": 0,
+          "c2_ready": 1,
+          "vm_status": 0
+        },
+        "sha256": "b0da34af4ce8bb75a9e67ce36f1f389fe25f8f61afe52088effbf3352186438d"
+      },
+      {
+        "active_owner": {
+          "active_owner_cache_exact": true,
+          "bank_tag": 1,
+          "c2d_entry": {
+            "code_length": 76,
+            "code_offset": 3899,
+            "generation": 1,
+            "image_slot": 0,
+            "literal_count": 3,
+            "ordinal": 171,
+            "raw_hex": "00033b0f4c00ad000100",
+            "resolution_base": 173
+          },
+          "header": {
+            "bytes": 13,
+            "code_pointer": "0xbf67",
+            "expected_scalar_hex": "b50101023f0003",
+            "littab_pointer": "0xbf61",
+            "materialized_literal_table_hex": "18e11ae11ce1",
+            "scalar_bytes": 7,
+            "scalar_exact": true,
+            "scalar_hex": "b50101023f0003"
+          },
+          "object_hex": "b50101023f00030000000000000b3c00013a010b361d070b3406011e1c012b1d0d0b353439012b3d26023d2302050b361d070b3406021e1c012b1d0939010b35343d26020539012c3d260205",
+          "object_name": "lcc-run",
+          "object_sha256": "a1df2dba815c518fe7489cefc6550ff0865c0954928bdfcb37e5ca4277880fee",
+          "ordinal": 171,
+          "payload": {
+            "expected_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "held_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "length": 63,
+            "offset": 13,
+            "streaming": 1,
+            "window_exact": true,
+            "window_length": 18,
+            "window_max": 43,
+            "window_start": 45
+          }
+        },
+        "address": "0x00000000",
+        "bytes": 65536,
+        "capture": 2,
+        "elapsed_ms": 2930,
+        "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/held-bank0-2.bin",
+        "product_state": {
+          "c2_journal_count": 0,
+          "c2_ready": 1,
+          "vm_status": 0
+        },
+        "sha256": "aaaa2cb9f6df61a7dac6c10558c3bee729a9c0c855a6016b96489f34100e83e8"
+      },
+      {
+        "active_owner": {
+          "active_owner_cache_exact": true,
+          "bank_tag": 1,
+          "c2d_entry": {
+            "code_length": 76,
+            "code_offset": 3899,
+            "generation": 1,
+            "image_slot": 0,
+            "literal_count": 3,
+            "ordinal": 171,
+            "raw_hex": "00033b0f4c00ad000100",
+            "resolution_base": 173
+          },
+          "header": {
+            "bytes": 13,
+            "code_pointer": "0xbf67",
+            "expected_scalar_hex": "b50101023f0003",
+            "littab_pointer": "0xbf61",
+            "materialized_literal_table_hex": "18e11ae11ce1",
+            "scalar_bytes": 7,
+            "scalar_exact": true,
+            "scalar_hex": "b50101023f0003"
+          },
+          "object_hex": "b50101023f00030000000000000b3c00013a010b361d070b3406011e1c012b1d0d0b353439012b3d26023d2302050b361d070b3406021e1c012b1d0939010b35343d26020539012c3d260205",
+          "object_name": "lcc-run",
+          "object_sha256": "a1df2dba815c518fe7489cefc6550ff0865c0954928bdfcb37e5ca4277880fee",
+          "ordinal": 171,
+          "payload": {
+            "expected_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "held_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "length": 63,
+            "offset": 13,
+            "streaming": 1,
+            "window_exact": true,
+            "window_length": 18,
+            "window_max": 43,
+            "window_start": 45
+          }
+        },
+        "address": "0x00000000",
+        "bytes": 65536,
+        "capture": 3,
+        "elapsed_ms": 4646,
+        "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/held-bank0-3.bin",
+        "product_state": {
+          "c2_journal_count": 0,
+          "c2_ready": 1,
+          "vm_status": 0
+        },
+        "sha256": "263dc9514e4a5c9a95f48b5e63b8b72d1b62625e52a76988352b9033ed3483f4"
+      }
+    ],
+    "bank0_variance_offsets": [
+      "0x0016",
+      "0x0017",
+      "0x01d3",
+      "0x01d4",
+      "0x01d6",
+      "0x01d8",
+      "0xff83",
+      "0xff84"
+    ],
+    "bank2": {
+      "address": "0x00020000",
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/held-bank2.bin",
+      "sha256": "1660dd526069540e20698fefb38a3d5f6699fa10705edfdee406e37c27874943"
+    },
+    "bank5": {
+      "address": "0x00050000",
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/held-bank5.bin",
+      "sha256": "e7b46c1342ce6f9235f2d9481b84206af3b8b82a529d0e805bf7520c91c6fa29"
+    },
+    "c2d_v6_header": {
+      "entry_count": 588,
+      "generation": 1,
+      "image_count": 6,
+      "resolution_count": 2264,
+      "root_count": 283,
+      "transient_watermark": 4096
+    },
+    "timing": {
+      "bytes": 1526,
+      "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/capture-timing.json",
+      "sha256": "7bc95a312bd075539af207071b22250bb6771614dd66663ab5a99fbe3471f58f"
+    },
+    "variance_class": "normal IRQ/compiler scratch after a rendered error; product witnesses are stable, so no inner SEI hold is claimed"
+  },
+  "claim_limit": "This no-hit receipt localizes the failure to the definition/install service boundary. It does not identify the failing service substep, prove the subsequent execution path, change product bytes, or make a latency, promotion or acceptance claim.",
+  "delegation": {
+    "class": "B",
+    "cycle": 2,
+    "cycle_cap": 3
+  },
+  "deployment": {
+    "bytes": 4252,
+    "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/deployment.json",
+    "sha256": "5b9d55dd7089a225980ada8899c3d1bb3b10e12afe53ae3927b16c1747bf00d6"
+  },
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link50-first-call-badopcode-inner-hold-cycle2-NONPROMOTABLE/lisp65-link50-badopcode-inner-hold-cycle2-NONPROMOTABLE.prg",
+    "sha256": "4de48e1d7587f05009ed864fa47e8d1338ced1c4e4cf730695e00dc5b40f0240"
+  },
+  "execution_accounting": {
+    "changed_bytes": 9,
+    "compiler_runs": 0,
+    "completed_latency_attempts": 0,
+    "diagnostic_instruction_patches": 3,
+    "hardware_runs": 1,
+    "linker_runs": 0,
+    "read_only_post_error_captures": 5,
+    "remaining_autonomous_cycles": 1
+  },
+  "format": "lisp65-c2-link50-badopcode-inner-hold-cycle2-hardware-v2",
+  "next_gate": "Use the final autonomous cycle only if ELF dataflow proves a stable service-boundary discriminator before hardware.",
+  "operator_observation": {
+    "ansi": {
+      "bytes": 72643,
+      "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/after-defun.ansi.txt",
+      "sha256": "4c8f8d8d38a5c801459e5694f56a18d88d5e0e965349a63698da2c9a3d29c6d2"
+    },
+    "input": "(defun %c2h () 't)",
+    "instruction_after_observation": "no further input",
+    "rendered": "*** vm: bad bytecode",
+    "screenshot": {
+      "bytes": 3835,
+      "path": "build/c2.2/hardware-link50-badopcode-inner-hold-cycle2/after-defun.png",
+      "sha256": "2360997f0540d04c3973dae0d82d0a2c4462d7971486f205d0ca7d000402ad5a"
+    },
+    "timing": "during defun; (%c2h) was not submitted"
+  },
+  "patch_gate": {
+    "changed_bytes": 9,
+    "changed_file_offsets": [
+      "0x4dcb",
+      "0x4dcc",
+      "0x4dcd",
+      "0x5067",
+      "0x5068",
+      "0x5069",
+      "0x581b",
+      "0x581c",
+      "0x581d"
+    ],
+    "file_size_delta_bytes": 0,
+    "hold_hex": "7880fe",
+    "hold_semantics": "SEI once, then BRA to itself; live frame and ZP stop changing",
+    "mutations_rejected": {
+      "extra-neighbour-byte": "rejected",
+      "irq-open-callprim-propagation": "rejected",
+      "irq-open-invalid-opcode-dispatch": "rejected",
+      "irq-open-post-handler-status": "rejected",
+      "missing-callprim-propagation": "rejected",
+      "missing-invalid-opcode-dispatch": "rejected",
+      "missing-post-handler-status": "rejected",
+      "wrong-loop-callprim-propagation": "rejected",
+      "wrong-loop-invalid-opcode-dispatch": "rejected",
+      "wrong-loop-post-handler-status": "rejected"
+    },
+    "sites": [
+      {
+        "after_hex": "7880fe",
+        "before_hex": "4cb76a",
+        "instruction_address": "0x6dca",
+        "instruction_file_offset": "0x4dcb",
+        "name": "invalid-opcode-dispatch",
+        "precondition": "opcode >= 0x42; vm_status is still VM_OK",
+        "witness": "__rc20/__rc21 is the physical cursor immediately after the fetched opcode"
+      },
+      {
+        "after_hex": "7880fe",
+        "before_hex": "4cbb6a",
+        "instruction_address": "0x7066",
+        "instruction_file_offset": "0x5067",
+        "name": "post-handler-status",
+        "precondition": "LDX vm_status observed a nonzero handler status",
+        "witness": "vm_status is nonzero; the live vm_run_inner frame has not unwound"
+      },
+      {
+        "after_hex": "7880fe",
+        "before_hex": "4c5d88",
+        "instruction_address": "0x781a",
+        "instruction_file_offset": "0x581b",
+        "name": "callprim-propagation",
+        "precondition": "LDX vm_status observed a nonzero vm_callprim result",
+        "witness": "software-frame offsets +7/+8 retain CALLPRIM pcur; lcc-run final pcur is 62"
+      }
+    ],
+    "status": "passed-three-exact-sei-bra-inner-holds"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg",
+    "sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "status": "untouched"
+  },
+  "status": "answered-no-inner-hold-definition-failed-before-publication"
+}

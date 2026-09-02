@@ -1,0 +1,146 @@
+{
+  "authority": {
+    "commission": {
+      "bytes": 5959,
+      "path": "docs/planning/v1.7.0-pre-plan.md",
+      "sha256": "c12571c31e5d4b40cce3aa9c02108f66543bd84693a807c3370a9969a6dd4cea"
+    },
+    "sealed_candidate_ELF": {
+      "bytes": 647532,
+      "path": "build/c2.3/v1.6-clean-product-operand-root-fix/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b390ec5dfbc049ea7e857b3af984da7769117ac439c0ffe4ca758c159b2f846b"
+    },
+    "sealed_fix_receipt": {
+      "bytes": 49805,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-clean-product-operand-root-fix-receipt.json",
+      "sha256": "bffa611ec961733fa73b72d2f6f6821583169d618130ac4f1f3f1cd8f1053644"
+    },
+    "sealed_media_receipt": {
+      "bytes": 11139,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-clean-product-operand-root-media-receipt.json",
+      "sha256": "55656a67fb48437473495de6fdcef6ccbb8033fe60ffc60e5f748029ddf4b374"
+    }
+  },
+  "claim_limit": "Host/ELF attribution of the sealed Comfort entry failure only. It does not choose or qualify a fix.",
+  "decision": {
+    "automatic_block3_pivot": false,
+    "next_authority": "owner touchpoint for Phase 1b",
+    "not_authorized_here": [
+      "enable LISP65_SCREEN_WRITE_STRING in the product profile",
+      "rewrite Comfort to consume the resident fallback",
+      "product card",
+      "WPLTO",
+      "link",
+      "medium",
+      "device contact"
+    ],
+    "phase1a_outcome": "mechanism named within the three-day box",
+    "phase1b_gate_required": "every native primitive consumed by a library must be delivered by the selected final product profile"
+  },
+  "format": "lisp65-c2.3-v1.7-comfort-phase1a-attribution-v1",
+  "host_target_divergence": {
+    "host": "bytecode_p0.py implements primitive 12 without the selected product-profile capability set",
+    "target": "the final ELF routes primitive 12 to VM_BADOPCODE because LISP65_SCREEN_WRITE_STRING is absent",
+    "why_prior_host_gates_were_green": "they proved dialect-wide semantics, not delivery in the linked product profile"
+  },
+  "inputs": {
+    "comfort_disassembly": {
+      "bytes": 8889,
+      "path": "build/c2.3/v1.6-clean-product-operand-root-media/library-inputs/repl-comfort.disasm.txt",
+      "sha256": "5d99b2e3e895ec4fc3e12ea76d2b1fe0db3d9006fb3d6b7a640a79c099b7392b"
+    },
+    "comfort_manifest": {
+      "bytes": 16534,
+      "path": "build/c2.3/v1.6-clean-product-operand-root-media/library-inputs/repl-comfort.manifest.json",
+      "sha256": "9061cf6da1ea03d921c431b9bcce5abbee4195edf6290595ea583bb48cd15382"
+    },
+    "comfort_source": {
+      "bytes": 3505,
+      "path": "lib/repl-comfort.lisp",
+      "sha256": "c78f834382518795f16e0707dfe5aa03fa12e5e4ab8099d011e700d12fd58321"
+    },
+    "host_VM": {
+      "bytes": 98920,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "0544151da0b7a86b21906f9252519dae485d6bc88251159db732c0f55c783db8"
+    },
+    "product_profile_source": {
+      "bytes": 393638,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "e5d2f8483d97dfaaa2e62b3766290f18c368b4753011535c42280bd57fcb3f94"
+    },
+    "surface_delivery_contract": {
+      "bytes": 8911,
+      "path": "config/v11-surface-delivery-parity.json",
+      "sha256": "2d7e78de80a56aecaeea2f85df804fa03701b6fc17a63bfc8a443fe748c62517"
+    },
+    "target_VM_header": {
+      "bytes": 7524,
+      "path": "src/vm.h",
+      "sha256": "2075eae3a3acbd7b5689e35ed0a4aa2485fb27cb14edfb114d7398d76695e6d1"
+    },
+    "target_VM_source": {
+      "bytes": 105101,
+      "path": "src/vm.c",
+      "sha256": "8eff780e7aa017a54ffb9334edb851dda352655d53d3eb29335349c766686de9"
+    }
+  },
+  "mechanism": {
+    "excluded_alternatives": [
+      "raw refill contents: the sealed capture was byte-correct",
+      "generic streamed return: target reductions returned correctly",
+      "operand-result lifetime: the repaired ordering reproduced the same red",
+      "screen writer corruption: the product never enters that implementation"
+    ],
+    "name": "library-to-product profile-capability closure gap",
+    "sequence": [
+      "%repl-step returns from %rl-screen-tail",
+      "the next visible operation is CALLPRIM 12 at logical PC 0x004c",
+      "the selected product has no LISP65_SCREEN_WRITE_STRING case",
+      "the linked dispatch table enters the VM_BADOPCODE tombstone",
+      "the native REPL prints *** vm: bad bytecode"
+    ]
+  },
+  "recorded_on": "2026-08-25",
+  "status": "ATTRIBUTED: PROFILE-CAPABILITY CLOSURE: BOUND DIALECT PRIMITIVE NOT DELIVERED",
+  "two_sides": {
+    "consumer": {
+      "instruction": "CALLPRIM 12 screen-write-string argc=3",
+      "logical_pc": "0x004c",
+      "object": "%repl-step",
+      "object_bytes": 255
+    },
+    "delivered_product": {
+      "CALLPRIM_table_section": ".lisp65_c2_kernal_window.profile_rodata",
+      "CALLPRIM_table_start": "0xfd4c",
+      "dispatch_target": "0x6c4a",
+      "parent_define_present": true,
+      "primitive_id": 12,
+      "required_define": "LISP65_SCREEN_WRITE_STRING",
+      "required_define_present": false,
+      "shared_tombstone_ids": [
+        1,
+        2,
+        12
+      ],
+      "sink_bytes": "a2024cfe7b",
+      "sink_semantics": "LDX #VM_BADOPCODE; JMP shared status store",
+      "status_store": "0x7bfe",
+      "vm_status_address": "0x0061"
+    }
+  },
+  "verification": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "mutation_results": {
+      "deliver-required-capability": "product profile now delivers screen-write-string",
+      "make-host-oracle-profile-aware": "host oracle no longer explains the false host green",
+      "remove-library-consumer": "Comfort CALLPRIM 12 consumer disappeared",
+      "route-callprim-to-implementation": "final CALLPRIM 12 no longer reaches VM_BADOPCODE"
+    },
+    "mutations_rejected": 4,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  }
+}

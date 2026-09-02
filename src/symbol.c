@@ -124,6 +124,14 @@ static void sympool_write(uint16_t off, const char *src, uint16_t len) {
 char LISP65_C2_FIXED_BANK0("sym_name_scratch")
     sym_name_scratch[LISP65_SYMBOL_NAME_BUFFER];
 
+#ifdef LISP65_V200_SYMBOL22_FIRST_FAULT
+/* The first-fault helper is handwritten because the MOS backend cannot
+ * materialize the caller's return address through __builtin_return_address.
+ * It returns directly into the existing numeric-abort edge, retaining that
+ * path's active/no-toplevel behavior without carrying a second abort tail. */
+extern void lisp65_symbol22_latch_capture(void);
+#endif
+
 /* Namen aus dem Pool mit einem C-String vergleichen (0 = gleich): 1 Bulk-Read + lokaler strcmp. */
 static int sympool_streq(uint16_t off, const char *name) {
     char buf[LISP65_SYMBOL_NAME_BUFFER]; uint16_t i;
@@ -145,6 +153,9 @@ static obj new_symbol(const char *name) {
     while (name[len] && len <= LISP65_SYMBOL_NAME_MAX) len++;
     if (len > LISP65_SYMBOL_NAME_MAX || nsym >= MAX_SYM
         || (uint16_t)(len + 1) > (uint16_t)(NAMEPOOL - npool)) {
+#ifdef LISP65_V200_SYMBOL22_FIRST_FAULT
+        lisp65_symbol22_latch_capture();
+#endif
         lisp_abort_static(LISP65_ERR_TOO_MANY_SYMBOLS, "too many symbols");
         return NIL;                      /* falls kein Toplevel aktiv (Host/Smoke) */
     }

@@ -1,0 +1,74 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 329477,
+    "commit": "166227bef86e2751362e155c4fb9c5ffc367431d",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "a8c6734290ae6bc22e4cac71adc4cd8f450fe8232cbe793f7f1db99a019c49d0"
+  },
+  "decision": {
+    "arithmetic": "physical 11 > raw 8 = seen 8 = stored 8 = taken 8",
+    "exonerated": [
+      "IRQ read/filter",
+      "ring admission/write",
+      "consumer/take",
+      "Comfort service time as loss cause"
+    ],
+    "located": "physical keyboard/core boundary before queue-present observation",
+    "verdict": "keyboard-core-before-queue-present-observation"
+  },
+  "device_contact": {
+    "capture": {
+      "bytes": 4,
+      "path": "build/c2.3/v1.6-bound-origin-measurement-contact/counters-read.bin",
+      "sha256": "918bd027f59087bef8e055f9b587b25486d58c606d8658d4ce7b1199274f6744"
+    },
+    "contacts": 1,
+    "counter_addresses": [
+      "0xBCFC",
+      "0xBCFD",
+      "0xBCFE",
+      "0xBCFF"
+    ],
+    "counter_bytes_hex": "08080808",
+    "counter_order": [
+      "raw",
+      "seen",
+      "stored",
+      "taken"
+    ],
+    "counter_values": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "counter_width_bits": 8,
+    "physical_attempts": 11,
+    "resumes": 0,
+    "stops": 1,
+    "visible_characters": 8,
+    "visible_target": "a(a(a(a("
+  },
+  "format": "lisp65-c2-v160-bound-origin-measurement-result-v1",
+  "inputs": {
+    "media": {
+      "bytes": 10859,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-bound-origin-measurement-media-receipt.json",
+      "sha256": "98d40c2d2901cb0936e05489360c3a3751e6915e6b4428a98c3ffd3501e7374d"
+    },
+    "session": {
+      "bytes": 3909,
+      "path": "config/c2-v160-bound-origin-measurement-device-session.json",
+      "sha256": "81cb073313eeb308fa111f2fc94d4c1e8dfb9fe408031930a38e9443cd2bd4a7"
+    }
+  },
+  "recorded_on": "2026-08-21",
+  "release_effect": {
+    "claim_limit": "the contact locates these three absent attempts before the product raw witness; it does not distinguish keyboard matrix, debounce, core firmware, or KERNAL queue internals",
+    "device_followup": "none for this classification",
+    "v1.6_items_1_2": "continue; this is not an owned v1.6 loss arc",
+    "v1.6_items_3_4": "remain may-slip and are expected to slip"
+  },
+  "status": "PASS: V1.6 INPUT LOSS LOCATED BEFORE RAW QUEUE WITNESS"
+}

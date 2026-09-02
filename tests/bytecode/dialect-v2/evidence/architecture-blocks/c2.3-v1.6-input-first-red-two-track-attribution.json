@@ -1,0 +1,142 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 273432,
+    "commit": "23a46098",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "87b64deea812cf7bec57e20d182decde4342468240b0b609f01cc9976e51e60e"
+  },
+  "claim_limit": "Host-only attribution. Track B product implementation is separately authorized; no link, medium, device contact or Track-A fix.",
+  "format": "lisp65-c2.3-v1.6-input-first-red-two-track-attribution-v2",
+  "inputs": {
+    "ELF": {
+      "bytes": 632508,
+      "path": "build/c2.3/v1.6-liveness-prompt-device-preparation-r1/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "102eac84ab25ec57b39990377d4808c3287746b94c65617cca3259fd43f73bcd"
+    },
+    "capture": {
+      "bytes": 25112,
+      "path": "build/c2.3/v1.6-liveness-prompt-owner-contact/input-first-red-stopped-state/capture.json",
+      "sha256": "f31fca37b0b335bde5730744c5f2c067f19d68a63016b6141ec3502c1d606eb2"
+    }
+  },
+  "raw_decision": {
+    "abort_state": {
+      "c2_ready": 1,
+      "phase_owner": 2,
+      "rtov_busy": 0,
+      "rtov_loaded_len": 0
+    },
+    "gc_runs": 5,
+    "pending_error": "LISP65_ERR_READER_INVALID_TOKEN (5)",
+    "physical_return": {
+      "code": "0x0d",
+      "queue_present": "0x80"
+    },
+    "reader_error": "READER_ERR_TOKEN_TOO_LONG (8)",
+    "software_BRK": {
+      "B": 1,
+      "continuation": "0xc8b6",
+      "opcode": "0xc8b4",
+      "stacked_P": "0x32"
+    },
+    "software_ring": {
+      "backlog": 0,
+      "head": 47,
+      "tail": 47
+    }
+  },
+  "recorded_on": "2026-08-20",
+  "status": "ATTRIBUTED: ACTIVE-FRAME-RETIREMENT PLUS INPUT-COUNTERS",
+  "track_A": {
+    "active_frame_population_count": 1,
+    "claim_correction": "setjmp/jmp_buf derivation is complete at one stored member but the retirement population has a second carrier class: live call frames",
+    "commission_hypothesis": "a second jmp_buf-class store exists",
+    "derived_active_frame_population": [
+      {
+        "abort_trigger": {
+          "call_site": "0xc939",
+          "callee": "lisp_abort_symbol",
+          "function": "c2_append_fronts_phase",
+          "generation_section": ".lisp65_rt_c2append_roots_fronts"
+        },
+        "carrier": "live mapped execution frame, not a stored continuation",
+        "entry": "0xc356",
+        "exit_identity": "RTS ($60) in the owning generation; $00 after wipe",
+        "extent_end_exclusive": "0xc914",
+        "function": "c2_append_reserve_transient_code_phase",
+        "generation_section": ".lisp65_rt_c2append_reserve_transient_code",
+        "observed_live_exit": "0xc8b4",
+        "retirement_path": [
+          "lisp_abort_symbol+0x1b@0x2e8c",
+          "c2_product_abort_cleanup+0x0c@0x2eaa",
+          "rtov_wipe"
+        ]
+      }
+    ],
+    "derived_setjmp_population": [
+      {
+        "call_relocation": "0xaa62",
+        "call_source_section": ".text",
+        "saved_csr_pairs": 7,
+        "storage": "lisp_toplevel",
+        "storage_address": "0xbd47",
+        "storage_bytes": 19
+      }
+    ],
+    "fix_authorized": false,
+    "hypothesis_result": "REFUTED BY FINAL ELF",
+    "mutation": "removing the C8B4 live-frame member fails coverage",
+    "mutations": [
+      "removing the derived member makes coverage unequal and fails",
+      "adding a hand-listed foreign member makes coverage unequal and fails"
+    ],
+    "permanent_rule": "a generation may not retire while any active frame belongs to it; stored continuations and live hardware frames are separate populations",
+    "population_count": 1,
+    "required_gate_broadening": "derive retirement-reachable live mapped frames from final-ELF control flow; an unclassified frame fails completeness",
+    "second_live_continuation_class": {
+      "name": "append-abort overlay episode continuation",
+      "site": "0xc8b4",
+      "site_identity": "RTS exit in c2_append_reserve_transient_code_phase; the same address is $02 in the ordinary Workbench overlay",
+      "storage_identity": null,
+      "timing": "software BRK occurs while c2_product_abort_cleanup is still active; it precedes the top-level longjmp",
+      "why_not_named": "the authorized rows omit c2 phase scratch and the live overlay-call continuation carrier; the consumed carrier is absent from the stopped stack"
+    }
+  },
+  "track_B_pricing": {
+    "bounded_measurement": "cold boot, fewer than 256 physical events, pre/post counter read; 8-bit wrap is excluded by the session bound",
+    "claim_limit": "permanent product health signal; no acceptance claim by itself",
+    "code_price": {
+      "current_E000_margin_over_floor": 15,
+      "events_seen_INC_abs": 3,
+      "events_stored_INC_abs": 3,
+      "events_taken_INC_abs": 3,
+      "instrumented_margin_over_floor": 6,
+      "ordinary_text_delta": 0,
+      "total_E000_bytes": 9
+    },
+    "decision_table": [
+      "seen < physical events: loss before capture / hardware queue service",
+      "seen > stored: capture-ring full or capture commit loss",
+      "stored > taken: consumer backlog or take failure",
+      "seen = stored = taken but visible input differs: edit/render semantic path"
+    ],
+    "implementation_authority": "23a46098",
+    "implementation_authorized": true,
+    "instrument": "three bounded 8-bit monotonic counters",
+    "state_layout": {
+      "aliases": [
+        "events_seen",
+        "events_stored",
+        "events_taken"
+      ],
+      "capacity_margin_events": 14,
+      "counter_bytes": 3,
+      "loss_test_events": 94,
+      "ring_slots_before": 112,
+      "ring_slots_instrumented": 109,
+      "usable_capacity_before": 111,
+      "usable_capacity_instrumented": 108
+    }
+  }
+}

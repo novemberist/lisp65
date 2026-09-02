@@ -1,0 +1,220 @@
+{
+  "format": "lisp65-c2-cpu-chip-write-completion-granularity-review-v1",
+  "recorded_on": "2026-07-24",
+  "status": "AWAITING CLASS-C CONTRACT ANSWER BEFORE PRODUCT CHANGES",
+  "promotable": false,
+  "authority": {
+    "product_baseline": "Link 59",
+    "baseline_map": {
+      "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-recovery-wplto/resident-island-seed.prg.map",
+      "sha256": "3e679955c3680ade54125d359b8a787e9c3d02809c9bb3160d734ea470e7c4ac"
+    },
+    "failed_product_shaped_map": {
+      "path": "build/c2.2/substitution/cpu-chip-write-completion-product-shaped-wplto/resident-island-seed.prg.map",
+      "sha256": "76e89ecb38bda95e144a12ba2370d3052096095ff1ef6648b6521b234a9fbdbf"
+    },
+    "capacity_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cpu-chip-write-completion-capacity-first-red-receipt.json",
+      "sha256": "cf3bf6171962b7b47a53b5bedf80bd2db62f578081585c4eaf345346c04dfdb9"
+    },
+    "challenged_contract_draft": {
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "sha256": "5858484bad722b48343e21441e0970400f096609cbe7b7adef4396c178db8adf"
+    },
+    "challenged_product_source": {
+      "path": "src/c2_product_runtime.c",
+      "sha256": "8e222bdebd92ce78acaed3bdd87c901594b23e2cdc1ae8f6382821a8f07e064d"
+    }
+  },
+  "execution_accounting": {
+    "product_source_changes_after_first_red": 0,
+    "whole_program_LTO_attempts_after_first_red": 0,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "semantic_splits": 0
+  },
+  "measured_payload_attribution": {
+    "raw_delta_bytes": 3296,
+    "fully_attributed_bytes": 3296,
+    "unattributed_bytes": 0,
+    "objects": [
+      {
+        "object": "c2_append_stage_copy_phase",
+        "before_bytes": 1351,
+        "after_bytes": 1598,
+        "delta_bytes": 247,
+        "cause": "per-block Bank-2 write plus poison/readback/convergence loop"
+      },
+      {
+        "object": "c2_append_header_phase",
+        "before_bytes": 629,
+        "after_bytes": 800,
+        "delta_bytes": 171,
+        "cause": "private header target-convergence body"
+      },
+      {
+        "object": "c2_append_journal_write_phase",
+        "before_bytes": 856,
+        "after_bytes": 986,
+        "delta_bytes": 130,
+        "cause": "C2J ACTIVE content-convergence bookend"
+      },
+      {
+        "object": "c2_append_publish_exports_phase",
+        "before_bytes": 950,
+        "after_bytes": 1181,
+        "delta_bytes": 231,
+        "cause": "per-record export-journal convergence before every function-cell publication"
+      },
+      {
+        "object": "c2_append_journal_clear_phase",
+        "before_bytes": 213,
+        "after_bytes": 701,
+        "delta_bytes": 488,
+        "cause": "per-record scratch convergence plus C2J CLEAR convergence"
+      },
+      {
+        "object": "c2_append_rollback_unpublish_phase",
+        "before_bytes": 591,
+        "after_bytes": 961,
+        "delta_bytes": 370,
+        "cause": "private predecessor-header convergence used as the pre-wipe fence"
+      },
+      {
+        "object": "c2_append_rollback_finalize_phase",
+        "before_bytes": 1204,
+        "after_bytes": 1768,
+        "delta_bytes": 564,
+        "cause": "private final-restoration convergence paths"
+      },
+      {
+        "object": "c2_append_rollback_zero_plane",
+        "before_bytes": 196,
+        "after_bytes": 445,
+        "delta_bytes": 249,
+        "cause": "per-block Bank-5 poison/readback/convergence loop"
+      },
+      {
+        "object": "c2_append_rollback_zero_chip_code",
+        "before_bytes": 0,
+        "after_bytes": 846,
+        "delta_bytes": 846,
+        "cause": "new per-block Bank-2 zero plus poison/readback/convergence loop"
+      }
+    ],
+    "finding": "The complete 3296-byte growth is proof machinery materialized in nine producer/cleanup objects. C2_APPEND_INLINE makes the common equality, timeout and readback work private to each consumer; no shared cold completion body exists."
+  },
+  "complete_transaction_write_inventory": [
+    {
+      "order": 0,
+      "class": "pre-append emitter scratch",
+      "targets": [
+        "Bank-5 emitter root descriptors"
+      ],
+      "required_dominating_event": "the independently converged C2J ACTIVE bookend is the ordered tail job before any append consumer"
+    },
+    {
+      "order": 1,
+      "class": "journal open",
+      "targets": [
+        "Bank-5 C2J ACTIVE record"
+      ],
+      "required_dominating_event": "C2J ACTIVE itself must converge before the first mutable append write"
+    },
+    {
+      "order": 2,
+      "class": "pre-publication transaction data",
+      "targets": [
+        "Bank-2 appended code interval",
+        "Bank-5 C2D image, entry, resolution and root suffix",
+        "Bank-5 export-plan scratch",
+        "Bank-5 symbol pool, name-offset and value cells created by interning"
+      ],
+      "required_dominating_event": "one gathered pre-header data barrier followed by content-proven header publication"
+    },
+    {
+      "order": 3,
+      "class": "header publication",
+      "targets": [
+        "Bank-5 C2D header"
+      ],
+      "required_dominating_event": "header target identity must converge before committed/runtime publication"
+    },
+    {
+      "order": 4,
+      "class": "post-header publication data",
+      "targets": [
+        "Bank-5 export rollback records",
+        "Bank-5 symbol-function cells"
+      ],
+      "required_dominating_event": "on success, the C2J CLEAR bookend is the ordered tail fence; on error, the pre-rollback data barrier must dominate the first restoration"
+    },
+    {
+      "order": 5,
+      "class": "rollback restoration",
+      "targets": [
+        "Bank-5 restored symbol-function cells",
+        "Bank-5 predecessor header",
+        "Bank-5 zeroed C2D and export-scratch suffix",
+        "Bank-2 zeroed appended code interval"
+      ],
+      "required_dominating_event": "the C2J CLEAR bookend is the final ordered and content-proven write"
+    },
+    {
+      "order": 6,
+      "class": "journal close",
+      "targets": [
+        "Bank-5 all-zero C2J record"
+      ],
+      "required_dominating_event": "C2J CLEAR itself must converge before scratch release or a following transaction"
+    }
+  ],
+  "proposed_granularity": {
+    "amortized_data_barriers": 2,
+    "data_boundaries": [
+      {
+        "id": "pre-header",
+        "dominates": "header write, c2_runtime/committed publication and export publication",
+        "work": "drain all earlier ordered CPU-to-Chip jobs and prove the target identities of the touched Bank-2 and Bank-5 spans once"
+      },
+      {
+        "id": "pre-rollback",
+        "dominates": "export restoration, predecessor-header restoration and every wipe",
+        "work": "drain every outstanding forward job and prove the touched target spans once before rollback changes any target"
+      }
+    ],
+    "journal_bookends": 2,
+    "bookends": [
+      {
+        "id": "C2J-ACTIVE",
+        "reason_not_a_data_barrier": "this is journal publication, not repeated producer verification",
+        "required_property": "content-converged before the first transaction mutation"
+      },
+      {
+        "id": "C2J-CLEAR",
+        "reason_not_a_data_barrier": "this is journal retirement and the ordered tail fence, not repeated producer verification",
+        "required_property": "content-converged last after either success publication or rollback restoration"
+      }
+    ],
+    "shared_implementation": "one cold boundary body selected by a zero-cost scratch marker and called only by the resident serial driver; no overlay calls another overlay",
+    "per_write_policy": "writers submit and update the bounded touched-span description only; they do not carry private poison/readback/timeout loops",
+    "expected_effect": "remove the nine private proof bodies and pay the target-CRC/readback machinery once in the shared cold body plus the two journal bookends"
+  },
+  "contract_risk_if_only_two_physical_proofs_total": [
+    "Without a converged ACTIVE record, an abort may observe NONE or a torn C2J after mutations have started.",
+    "Without a converged CLEAR record, a late zero may leave ACTIVE visible after return or erase the ACTIVE record of the following transaction.",
+    "Post-header export-journal and symbol-function writes need the successful CLEAR bookend as their ordered tail fence.",
+    "Rollback restoration writes need the rollback CLEAR bookend as their ordered tail fence."
+  ],
+  "class_c_question": {
+    "question": "Does 'completion proof at exactly two points' mean exactly two amortized transaction-data barriers, while C2J ACTIVE and C2J CLEAR remain mandatory independently content-converged journal bookends?",
+    "recommended_answer": "YES",
+    "consequence_of_yes": "Rewrite the draft contract around two gathered data boundaries plus two journal bookends, then deduplicate into one common cold body before any slice split or WPLTO.",
+    "consequence_of_no": "If only two physical proofs total are allowed, the existing every-error rollback and publish-last journal contract is under-specified and product work must remain stopped."
+  },
+  "separate_currency": {
+    "bank0_text_deficit_bytes": 28,
+    "disposition": "unchanged separate named-fund currency; not credited by this granularity analysis"
+  },
+  "claim_limit": "This is read-only map/source contract analysis. It changes no product byte, runs no compiler/linker/hardware, authorizes no semantic split and leaves C1 OPEN."
+}

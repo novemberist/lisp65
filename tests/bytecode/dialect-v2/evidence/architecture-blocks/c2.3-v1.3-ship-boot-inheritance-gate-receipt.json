@@ -1,0 +1,161 @@
+{
+  "authority": {
+    "compiler": {
+      "bytes": 78628536,
+      "path": "tools/llvm-mos/bin/mos-mega65-clang",
+      "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+    },
+    "contract": {
+      "bytes": 2464,
+      "path": "config/c2-ship-boot-inheritance-contract.json",
+      "sha256": "73c2cdb456b24902238f59b7b8c05ef8e4e154a450a393c83dc326c4d650a660"
+    },
+    "elf_truth": {
+      "bytes": 18934,
+      "path": "tools/host-lisp/elf_truth.py",
+      "sha256": "b10ee96bf33b54f408dab3e6869b6705966bce5477efa0aced9bbc85c0bff6e9"
+    },
+    "gate": {
+      "bytes": 22966,
+      "path": "tools/host-lisp/c2_ship_boot_inheritance_gate.py",
+      "sha256": "50572765995ec7ca8992080a8d869c8e6d431473e6da4555a9d2a0a711175bf2"
+    },
+    "host_runner": {
+      "bytes": 3780,
+      "path": "scripts/ship-runtime-host-main.c",
+      "sha256": "c7a43bb54cec3ee7164a4315023df679c82025a378c02af841e69b3b86b5262a"
+    },
+    "host_witness": {
+      "bytes": 2565,
+      "path": "scripts/ship-boot-inheritance-host-main.c",
+      "sha256": "6de58e055ce25dd5d89e183abdf4f28d23e884ffc77e7a677756332bb067228d"
+    },
+    "llvm_readobj": {
+      "bytes": 6329848,
+      "path": "tools/llvm-mos/bin/llvm-readobj",
+      "sha256": "10ecb9758875bfeaaff8f0ee78c7a3b907c39e15b62c00e70683863ae887a88b"
+    },
+    "runtime": {
+      "bytes": 8356,
+      "path": "products/runtime-core/main.c",
+      "sha256": "d1ff36fa28ff3270f7ac618fdffd659e924f459de982261a2dce1c775c7145aa"
+    },
+    "shared_arm_sequence": {
+      "bytes": 1047,
+      "path": "src/mega65_raster_timebase.h",
+      "sha256": "d6e5c91501855ba852cc592c48821f072c33535d432c1b0407c72a2bf1012912"
+    },
+    "ship_builder": {
+      "bytes": 52116,
+      "path": "tools/host-lisp/ship_builder.py",
+      "sha256": "a336365edf466f6306af068e4b63c2eefe6bff19cca6e80c26307d1f72e9c777"
+    },
+    "ship_header": {
+      "bytes": 1340,
+      "path": "src/ship_runtime_io.h",
+      "sha256": "0d27be53554843dbb443c91786828d50ec13b28c16615f399e256fcca200b7e8"
+    },
+    "ship_io": {
+      "bytes": 10278,
+      "path": "products/runtime-core/ship_io.c",
+      "sha256": "3cc81efd92e53edefe3dcab2c406a868be01995f023782706735518df0ebf209"
+    },
+    "ship_timebase": {
+      "bytes": 956,
+      "path": "products/runtime-core/ship_timebase.s",
+      "sha256": "c3dcef1a232eaa2e393b844be781465a91744c2d3c1d2cc6558b24e65b6c4ee2"
+    },
+    "workbench_owner": {
+      "bytes": 5933,
+      "path": "src/c2_kernal_runtime.c",
+      "sha256": "7264b2cb879a4d7842e4b8dd83efd0de3914a0b347d2fb4d0d3521129e871180"
+    }
+  },
+  "clock_contract": {
+    "independent_oracle": "$D011/$D012 9-bit high-to-low wraps",
+    "logical_surface": "$FF83/$FF84",
+    "one_shot_false_green": "rejected by executed negative case",
+    "ship_backing": "private chained-raster-IRQ counter",
+    "synchronization_wraps": 1,
+    "verified_unit_deltas": 3
+  },
+  "format": "lisp65-c2.3-v1.3-ship-boot-inheritance-gate-v3",
+  "hardware_runs": 0,
+  "host_execution": {
+    "executions": 3,
+    "negative_executions": 2,
+    "output": "ship-boot-inheritance-host: PASS inherited=0 one-shot=reject stagnant=reject armed=1 verified=1 deltas=3 oracle-wraps=4 input=1 executions=3",
+    "positive_executions": 1,
+    "status": "passed"
+  },
+  "mutation_count": 22,
+  "mutations_rejected": {
+    "builder-omits-target-timebase": "Ship target builder timebase ownership drift",
+    "contract-one-delta": "Ship boot-inheritance contract identity drift",
+    "host-oracle-api-removed": "Ship host oracle interface drift: uint16_t lisp65_ship_io_host_raster_step(void);",
+    "irq-no-high-tick": "Ship IRQ counter/chain drift: inc lisp65_ship_frame_hi",
+    "irq-no-kernal-chain": "Ship IRQ counter/chain drift: jmp (lisp65_ship_old_irq)",
+    "irq-no-low-tick": "Ship IRQ counter/chain drift: inc lisp65_ship_frame_lo",
+    "irq-no-owned-ack": "Ship IRQ counter/chain drift: sta $d019",
+    "raster-line-drift": "shared raster arm/readback sequence drift",
+    "runtime-host-no-oracle": "runtime host oracle assertion drift: uint16_t lisp65_ship_io_host_raster_step(void)",
+    "runtime-loaded-before-proof": "Runtime publishes LOADED before repeated-progress proof",
+    "ship-accept-any-change": "Ship repeated-progress seam drift: if ((uint16_t)(current - previous) != 1u) return 0u;",
+    "ship-low-byte-only-oracle": "Ship repeated-progress seam drift: if ((previous & 0x100u) && !(current & 0x100u)) return 1u;",
+    "ship-no-raster-high-bit": "Ship repeated-progress seam drift: volatile uint8_t *control = (volatile uint8_t *)0xd011;",
+    "ship-no-sync-wrap": "Ship repeated-progress seam drift: if (!ship_reference_wrap()) return 0u;\n    previous = ship_frame_read();",
+    "ship-no-vector-readback": "Ship repeated-progress seam drift: && *(volatile uint8_t *)0x0314 == (uint8_t)handler",
+    "ship-old-a1-low": "Ship repeated-progress seam drift: *value = lisp65_ship_frame_lo;",
+    "ship-one-delta": "Ship repeated-progress seam drift: #define LISP65_SHIP_PROGRESS_DELTAS 3u",
+    "ship-self-referential-oracle": "Ship repeated-progress seam drift: volatile uint8_t *raster = (volatile uint8_t *)0xd012;",
+    "ship-torn-raster-accepted": "Ship repeated-progress seam drift: while (high_before != high_after);",
+    "witness-accepts-one-shot": "independent host witness drift: oracle_reset(ORACLE_ONE_SHOT);\n    if (lisp65_ship_io_init() || lisp65_ship_io_host_clock_verified()) return 2;",
+    "witness-drops-stalled-case": "independent host witness drift: oracle_reset(ORACLE_STALLED);\n    if (lisp65_ship_io_init() || lisp65_ship_io_host_clock_verified()) return 3;",
+    "workbench-private-arm": "Workbench no longer consumes the shared raster arm sequence"
+  },
+  "next_gate": "one Link 88 plus one physical Ada+RETURN acceptance row",
+  "out_of_scope": [
+    "$91 RUN/STOP address correction",
+    "new input semantics",
+    "Workbench IRQ ownership policy"
+  ],
+  "product_links": 0,
+  "promotable": false,
+  "raster_phase_matrix": {
+    "d012_low_decrease_passes": 0,
+    "d012_low_decrease_rejections": 312,
+    "d012_low_first_bad_delta_histogram": {
+      "0": 312
+    },
+    "full_9bit_high_to_low_passes": 312,
+    "raster_lines": 312,
+    "required_unit_deltas": 3,
+    "start_phases_executed": 312,
+    "status": "passed"
+  },
+  "recorded_on": "2026-08-30",
+  "status": "passed-ship-owned-full-9bit-repeated-frame-clock",
+  "target_claim": "source plus target IRQ object; complete Link-88 ELF and physical Ada+RETURN remain pending",
+  "target_object_execution": {
+    "bytes": 23,
+    "relocations": [
+      {
+        "offset": 12,
+        "target": "lisp65_ship_frame_lo",
+        "type": "R_MOS_ADDR16"
+      },
+      {
+        "offset": 17,
+        "target": "lisp65_ship_frame_hi",
+        "type": "R_MOS_ADDR16"
+      },
+      {
+        "offset": 21,
+        "target": "lisp65_ship_old_irq",
+        "type": "R_MOS_ADDR16"
+      }
+    ],
+    "sha256": "67addbf8215e400d7612d163eba119d9fa6641eda43ae557617b103fea7da459",
+    "status": "passed"
+  }
+}

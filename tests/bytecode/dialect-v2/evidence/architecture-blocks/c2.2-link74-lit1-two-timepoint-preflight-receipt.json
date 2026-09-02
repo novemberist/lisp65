@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-c2.2-link74-lit1-two-timepoint-preflight-receipt-v1",
+  "status": "passed-prequalified-target-discriminator-hardware-not-run",
+  "recorded_on": "2026-07-28",
+  "product_link": 74,
+  "product": {
+    "path": "build/post-promotion/link74-asm-z-boundary/final/lisp65-c2-substitution-linked.prg",
+    "sha256": "e0a925f085786c02444ba259b90eb0d811234656243ca728d2a675a05e71eab9",
+    "bytes": 41566
+  },
+  "qualified_wplto": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link74-asm-z-boundary-wplto-receipt.json",
+    "sha256": "0f3e189e997cc40ffd126eccf87d37a3e25df5cddddc0d558af825516c25fabd",
+    "bytes": 81484
+  },
+  "successor_link": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link74-asm-z-boundary-structural-receipt.json",
+    "sha256": "b2484fb06e78526b106ea1a465122f45ddb42d1df7bebfed413eee093978de2b",
+    "bytes": 80119
+  },
+  "discriminator": {
+    "contract": {
+      "path": "config/c2.2-link74-lit1-two-timepoint-discriminator.json",
+      "sha256": "2f9c563a98dabfcb85eff2c87aa7b6e0f62df5c58ee03c3f56576cc86813dd03"
+    },
+    "gate": {
+      "path": "tools/host-lisp/c2_link74_lit1_two_timepoint_gate.py",
+      "sha256": "f856d6f108d891fa14a3d7b8aca25121ba26a39fedaac4e18a4bc0fc7decfdb6"
+    },
+    "gate_result": "PASS",
+    "mutations": "6/6",
+    "measured_cell": "$bfa9/$bfaa (vm_codebuf LIT(1))",
+    "checkpoints": [
+      "$1e8f: after Prim-68 selection, before vm_codebuf takeover",
+      "$543b: after successful full owner reload, before literal consumption"
+    ],
+    "independent_reference": "Live C2D resolution word derived from the live owner ordinal, C2D entry resolution_base and literal index 1; no host numeric symbol ordinal is authoritative."
+  },
+  "adjudication": {
+    "transport_or_materialization_fault": "At least one materialized LIT(1) sample differs from the live C2D reference.",
+    "transport_correct_consumption_fault": "C2D reference, initial LIT(1) and reloaded LIT(1) are byteidentical and name %is."
+  },
+  "preflight_first_red": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link74-lit1-two-timepoint-preflight-first-red.json",
+    "sha256": "e060f8bf72c12339ec1cb80d45d36dc0b6778dc188a85ac2b9bb59aca4601209",
+    "disposition": "closed checker-source ownership correction; no product, link or hardware effect"
+  },
+  "execution_accounting": {
+    "diagnostic_artifacts_built": 0,
+    "hardware_runs": 0,
+    "product_links_after_link74": 0
+  },
+  "promotable": false,
+  "claim_limit": "Prequalified two-timepoint measurement design only. No diagnostic carrier has been built, no hardware has run and no runtime result is claimed."
+}

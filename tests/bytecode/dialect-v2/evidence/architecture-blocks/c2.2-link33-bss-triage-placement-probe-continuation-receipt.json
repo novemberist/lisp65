@@ -1,0 +1,89 @@
+{
+  "diagnostic": "ld.lld stopped on the explicit ordinary-rodata VMA/LMA assertion: required 0xb694/0xb694, actual 0xb5f8/0xb5f8",
+  "evidence": {
+    "bss-triage-placement-seed.prg.link.stderr.txt": {
+      "bytes": 997,
+      "path": "build/c2.2/substitution/link33-bss-triage-placement-probe-continuation/bss-triage-placement-seed.prg.link.stderr.txt",
+      "sha256": "fcf7ecd1fe65db63b38a02e502b8768b16c92c7def001b596e83cf498d6e0fd4"
+    },
+    "bss-triage-placement-seed.prg.link.stdout.txt": {
+      "bytes": 0,
+      "path": "build/c2.2/substitution/link33-bss-triage-placement-probe-continuation/bss-triage-placement-seed.prg.link.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bss-triage-placement-seed.prg.lto.o": {
+      "bytes": 563752,
+      "path": "build/c2.2/substitution/link33-bss-triage-placement-probe-continuation/bss-triage-placement-seed.prg.lto.o",
+      "sha256": "b66b449ac2d0e2c6e40f4b36231d3b597521e30ebdbda3e98a3cf425b1feed3b"
+    },
+    "bss-triage-placement-seed.prg.map": {
+      "bytes": 189421,
+      "path": "build/c2.2/substitution/link33-bss-triage-placement-probe-continuation/bss-triage-placement-seed.prg.map",
+      "sha256": "23e745e9ba6cdf4f1308ee669d73b1b7333ec0670c3f0a0cda99f99f41e4a2b1"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "linker_script_parse_attempts": 1,
+    "linker_script_parse_passes": 1,
+    "product_closure_links": 0,
+    "successful_seed_links": 0,
+    "whole_program_lto_seed_attempts": 1
+  },
+  "final_e000_floor": "not-bound",
+  "format": "lisp65-c2-link33-bss-triage-placement-first-red-v1",
+  "inventory": {
+    "bytes": 11354,
+    "path": "config/c2-link33-bss-triage-inventory.json",
+    "sha256": "18f04817f7be971176c4947f3ee14870613eca1b71a71a548739792455faed97"
+  },
+  "next_gate": "return-to-owner-review-no-retry-link-or-presmoke",
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "link32_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "untouched"
+  },
+  "status": "FIRST RED: sole Whole-Program-LTO map closed resident walls but failed the explicit ordinary-rodata VMA/LMA anchor",
+  "whole_program_map_observation": {
+    "capacity_interpretation": "All measured resident walls are nonnegative, but the final E000 floor remains unbound because the explicit rodata placement gate failed before post-link gates.",
+    "claim_limit": "The linker emitted a complete map before its explicit rodata assertion stopped the attempt. These are map observations, not passed capacity or structural gates.",
+    "e000_actual_debit_bytes": 419,
+    "fixed_hot_heap": {
+      "address": 49733,
+      "bytes": 240,
+      "end_exclusive": 49973,
+      "load_address": 49733
+    },
+    "headroom_bytes": {
+      "bank0_text_headroom_bytes": 41,
+      "e000_headroom_bytes": 115,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 229,
+      "resident_island_headroom_bytes": 7
+    },
+    "ordinary_bss": {
+      "address": 47464,
+      "bytes": 1587,
+      "end_exclusive": 49051,
+      "limit": 49280
+    },
+    "ordinary_rodata": {
+      "address": 46584,
+      "address_delta_from_requirement": -156,
+      "bytes": 826,
+      "end_exclusive": 47410,
+      "gate": "failed-explicit-vma-lma-anchor",
+      "load_address": 46584,
+      "load_address_delta_from_requirement": -156,
+      "required_address": 46740,
+      "required_load_address": 46740
+    },
+    "resident_island": {
+      "annex_bytes": 260,
+      "payload_bytes": 1781,
+      "total_bytes": 2041
+    },
+    "root_cause": "SECTIONS { . = 0xb694; } INSERT BEFORE .rodata records a location-counter assignment but does not place the inherited llvm-mos .rodata output section. Pinned lld instead begins .rodata immediately after the explicitly placed low-resident state at 0xb5f8.",
+    "structural_gates_after_link": "not-reached"
+  }
+}

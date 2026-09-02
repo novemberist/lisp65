@@ -1,0 +1,119 @@
+{
+  "format": "lisp65-c2-lite-v6-bank2-target-stage-wplto-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: target-stage semantics are source-gated, but phase 03b exceeds the slice cap and textual REPL status rendering displaces resident layout",
+  "scope": {
+    "whole_program_lto_runs": 1,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "promotable": false
+  },
+  "green_before_link": {
+    "bank2_stage_model": "phase 03 authenticates the source; phase 03b copies each immutable code record to its C2D-v6 Bank-2 coordinate and verifies the target CRC before phase 04",
+    "ready_dependency": "phase 04 is unreachable until phase 03b clears cutpoint 0x3b after all six target CRCs and the exact 34403-byte aggregate pass",
+    "repl_rule": "a non-OK/non-HALT banner VM status returns before the prompt",
+    "mutations_rejected": [
+      "stage call removed",
+      "target bank changed",
+      "target CRC bypassed",
+      "cutpoint replayed",
+      "banner status discarded"
+    ]
+  },
+  "first_red_roots": {
+    "phase_03b": {
+      "bytes": 1847,
+      "slice_cap_bytes": 1792,
+      "overlap_bytes": 55,
+      "phase_03_bytes": 1584,
+      "phase_02a_bytes": 1665,
+      "interpretation": "The target-stage body is semantically isolated but 55 bytes too large. The cap is not negotiable. Phase 02a still has 127 bytes of local headroom and is already the record-cross-binding phase."
+    },
+    "repl_textual_status": {
+      "baseline_rodata_bytes": 947,
+      "probe_rodata_bytes": 1160,
+      "delta_bytes": 213,
+      "string_pool_delta_bytes": 193,
+      "vm_status_switch_table_delta_bytes": 20,
+      "cause": "Calling vm_status_message() from the resident REPL pulls the VM status strings and switch table into ordinary Bank-0 rodata.",
+      "interpretation": "The semantic requirement is to preserve and render the inner numeric VM status and suppress the prompt; it does not require a second resident textual error vocabulary."
+    }
+  },
+  "whole_program_layout": {
+    "text": {
+      "baseline_bytes": 37988,
+      "probe_bytes": 38032,
+      "delta_bytes": 44,
+      "baseline_headroom_to_handoff_bytes": 28,
+      "probe_headroom_to_handoff_bytes": -16,
+      "handoff_vma": "0xb4a3"
+    },
+    "ordinary_bss": {
+      "baseline_bytes": 1587,
+      "probe_bytes": 1587,
+      "size_delta_bytes": 0,
+      "baseline_vma": "0xb9f7",
+      "probe_vma": "0xbadc",
+      "positional_shift_bytes": 229,
+      "baseline_headroom_to_fixed_block_bytes": 86,
+      "probe_headroom_to_fixed_block_bytes": -143,
+      "fixed_block_vma": "0xc080"
+    },
+    "downstream_errors": [
+      "workbench overlay below heap floor",
+      "resident/noinit overlaps overlay VMA",
+      "ordinary rodata predecessor relation drift",
+      "phase 12 overlaps .noinit"
+    ],
+    "interpretation": "The BSS did not grow. Its 143-byte fixed-block overlap is positional: +16 bytes of preceding text alignment plus +213 bytes of textual REPL rodata shift it by 229 bytes. The noinit/overlay and predecessor failures are downstream layout consequences, not independent state growth."
+  },
+  "recommended_class_c_cut": {
+    "repl": "Render vm_status_error_code(vm_status) through the existing numeric error-render seam and return before the prompt; do not call vm_status_message() and do not add a second resident error vocabulary.",
+    "stage": "Move the C2D target-offset cross-binding into phase 02a, where record cross-bindings already live and 127 bytes remain, then let phase 03b consume the already authenticated immutable plan and retain only copy plus target-CRC convergence. Re-run all cutpoint, target-dataflow and Workbench-scratch mutations.",
+    "constraints": [
+      "slice cap remains 1792 bytes",
+      "no floor, anchor or window change",
+      "one staging machinery and one numeric error truth",
+      "one new WPLTO only after explicit Class-C review"
+    ]
+  },
+  "claim_limit": "No product link and no hardware run occurred. Link 43 remains the untouched rollback line. This prelink First Red does not consume a product line-1 hardware First-Red slot or a completed latency attempt.",
+  "budgets": {
+    "product_line1_first_reds": "2/3 consumed; 1 remains",
+    "completed_latency_attempts": "0/2 consumed"
+  },
+  "rollback_line": {
+    "product": "Link 43",
+    "path": "build/c2.2/substitution/product-link-43-c2-lite-v6-export-symbol-domain/lisp65-c2-substitution-linked.prg",
+    "sha256": "9bbfb17707fe6e57bfd93c49db13f920fa48d0654227c19150aec4a34f1be43b",
+    "status": "untouched"
+  },
+  "evidence": [
+    {
+      "path": "build/c2-lite/v6-bank2-target-stage-wplto-replay2/full-product-wplto/c2-lite-v6-full-seed.prg.lto.o",
+      "bytes": 607312,
+      "sha256": "d376d8bcb869c9cd79e550d9634e56f8b1e2166e6ea3be3f54e30ae2ee625651"
+    },
+    {
+      "path": "build/c2-lite/v6-bank2-target-stage-wplto-replay2/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "bytes": 196312,
+      "sha256": "ad40145b4f3c28c2ccf8c6f86e6e6a163d407117b8cc39db67993f07834c3671"
+    },
+    {
+      "path": "build/c2-lite/v6-bank2-target-stage-wplto-replay2/full-product-wplto/c2-lite-v6-full-seed.prg.link.stderr.txt",
+      "bytes": 3250,
+      "sha256": "49b57676a1cba21a7b1dedb09a37a1a922a15fc822409be693fb76a67bc16126"
+    },
+    {
+      "path": "build/c2.2/substitution/product-link-43-c2-lite-v6-export-symbol-domain/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 200914,
+      "sha256": "8f3f4568c9702c28ec3e02754bbd30f8f8239f08a269fb5bc9c94af941eff5d1"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank2-target-stage-wplto-replay2-receipt.json",
+      "bytes": 11698,
+      "sha256": "ec4e027351d9760cd02e7c3a99d9816a55048be03b0bb49381cc8850356fe11d"
+    }
+  ],
+  "review_question": "Authorize the two-part cut above as one product-shaped WPLTO attempt, or choose a different semantic home for the 55-byte phase-03b excess. No automatic retry, product link or hardware run is permitted."
+}

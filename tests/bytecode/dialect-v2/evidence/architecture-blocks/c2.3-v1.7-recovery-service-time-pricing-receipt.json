@@ -1,0 +1,279 @@
+{
+  "authority": {
+    "capture": {
+      "bytes": 29773,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/device-session/contact-r1/abort-recovery-stall/capture.json",
+      "sha256": "edf7553b4c3dac1ebb28b946ff9e850d4d4dfffb642a366488aca058f55b2076"
+    },
+    "commission": {
+      "bytes": 80658,
+      "path": "docs/planning/v1.7.0-pre-plan.md",
+      "sha256": "fd19126db5cd1ccc7c96a26595f5ead3c6b062c7b34a9d17bab34836d2a066c2"
+    },
+    "crc_source": {
+      "bytes": 1187,
+      "path": "src/rtov_crc_mem.s",
+      "sha256": "e63328fb96cee962b970fc9965a3d5b78cf4423b770c58c353a5ba04f3102821"
+    },
+    "final_elf": {
+      "bytes": 647588,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+    },
+    "overlay_source": {
+      "bytes": 92183,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "b70f032a8e78c0474b8079d71b1dbd6543b44ee83816d02176f00863cdbc70d2"
+    },
+    "pricing_tool": {
+      "bytes": 24389,
+      "path": "tools/host-lisp/c2_v17_recovery_service_time_pricing.py",
+      "sha256": "efd3176920ae6194fd3461708de1a0d7030ba0719f36c631cf72e3cb32e31c1a"
+    },
+    "runtime_source": {
+      "bytes": 165510,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "e3e8a99fade8baad445379b52f3b5363fef51153379267d817cbd37787ee2efa"
+    },
+    "sealed_attribution": {
+      "bytes": 3628,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-comfort-abort-reentry-repair-stall-attribution.json",
+      "sha256": "6b86b7d7477438d0a61381f588ae962205050c1763c3c9baea435487a66f063c"
+    },
+    "session_manifest": {
+      "bytes": 44708,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/canonical-product/final/runtime-overlays-session-final.json",
+      "sha256": "57b5c2eabc600cfde4e3947e48e55825bb74cfa455ee3cab25c985528e7b59d7"
+    },
+    "session_package": {
+      "bytes": 65423,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/canonical-product/final/runtime-overlays-session-final.bin",
+      "sha256": "e6e529d3d5415e47966d2faffd9ae230e44d9131fdbfccea9432711306e1e5f2"
+    },
+    "session_region1_package": {
+      "bytes": 1956,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/canonical-product/final/runtime-overlays-session-final-region1.bin",
+      "sha256": "583f681b1134a437aefb6f086fb20c4f5b5e383d2e5e94095f2075daa05ed739"
+    }
+  },
+  "candidates": {
+    "A0_empty_journal_bypass": {
+      "emitted_probe_bytes": 51,
+      "mechanism": "Derive all-zero C2J in exclusive phase scratch, bypass validate/reconstruct and its control choreography, then run the unchanged fronts and rollback-prepare phases.",
+      "new_state_bytes": 0,
+      "physical_bytes_read_before_branch": 64,
+      "reduction_percent": 65.8,
+      "remaining_crc_bytes": 6110,
+      "remaining_crc_instruction_lower_bound": 471197,
+      "remaining_overlay_calls": 2,
+      "verdict": "SMALL FALLBACK PRICE: safe and cheap, but still leaves two indivisible overlay verifications on the prompt path"
+    },
+    "A_empty_obligation_fast_path": {
+      "authority_model": "born-derived; no shadow depth or dirty latch",
+      "emitted_probe_bytes": 304,
+      "fallback": "unchanged serial driver on any nonzero/invalid read",
+      "mechanism": "Before the overlay serial driver, derive quiescence from the complete zero C2J, the generation-bound header/front watermark and the top transient image row. Reuse exclusive phase scratch; uncertainty falls through to the slow path.",
+      "new_state_bytes": 0,
+      "physical_bytes_read_on_quiescent_abort": 144,
+      "physical_read_breakdown": {
+        "C2J": 64,
+        "header": 48,
+        "top_image_row": 32
+      },
+      "quiescent_crc_bytes": 0,
+      "quiescent_overlay_calls": 0,
+      "verdict": "WINNER: smallest service and no second state authority"
+    },
+    "B_deferred_existing_driver": {
+      "atomicity_problem": "one overlay call still contains an indivisible verifier and payload CRC; deferral changes when the stall occurs, not its service cost",
+      "crc_instruction_lower_bound_after_prompt": 1376050,
+      "emitted_scheduler_bytes": 25,
+      "mechanism": "Render the native prompt first and mark recovery pending; an idle seam later invokes the unchanged serial driver.",
+      "new_state_bytes": 1,
+      "synchronous_crc_bytes_after_prompt": 17852,
+      "verdict": "DOMINATED unless the overlay transport itself becomes resumable"
+    },
+    "C_resident_obligation_ledger": {
+      "authority_problem": "duplicates the record-derived fronts that the v5 contract deliberately made the sole authority",
+      "emitted_core_bytes": 22,
+      "integration_not_in_micro_price": "all writer edges, crash/failure stickiness, boot initialization and a reconciliation proof against C2D",
+      "mechanism": "Maintain journal-active and transient-depth cells at every publication/clear edge, allowing an O(1) quiescent return.",
+      "new_state_bytes": 2,
+      "quiescent_crc_bytes": 0,
+      "quiescent_overlay_calls": 0,
+      "verdict": "FASTER-EQUAL BUT STRUCTURALLY DOMINATED BY A"
+    }
+  },
+  "claim_limit": "Reproduces the sealed machine state and prices three repair shapes. Micro-prices are exact emitted target bytes for the named cores; only an implementation card may price placement and integration.",
+  "emitted_micro_prices": {
+    "candidate_a0_code_bytes": 51,
+    "candidate_a_code_bytes": 304,
+    "candidate_a_state_bytes": 0,
+    "candidate_b_code_bytes": 25,
+    "candidate_b_state_bytes": 1,
+    "candidate_c_code_bytes": 22,
+    "candidate_c_state_bytes": 2,
+    "compiler": {
+      "bytes": 78628536,
+      "path": "tools/llvm-mos/bin/clang-23",
+      "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+    },
+    "compiler_entrypoint": "tools/llvm-mos/bin/mos-clang",
+    "exact_function_bytes": {
+      "price_defer_recovery": 6,
+      "price_empty_journal_derived": 51,
+      "price_ledger_quiescent": 14,
+      "price_mark_journal": 4,
+      "price_mark_transient_depth": 4,
+      "price_quiescent_derived": 304,
+      "price_service_deferred": 19
+    },
+    "exact_state_bytes": {
+      "price_journal_active": 1,
+      "price_recovery_pending": 1,
+      "price_transient_depth": 1
+    },
+    "object_state_bytes": 3,
+    "scope": "stand-alone target micro-prototypes; call-site, placement and lifecycle integration remain implementation-card prices"
+  },
+  "format": "lisp65-c2-v17-recovery-service-time-pricing-v1",
+  "graduation": {
+    "abort_plan": {
+      "done": 0,
+      "end": 32,
+      "start": 31,
+      "state": 0
+    },
+    "crc_machine_model": {
+      "A": 67,
+      "Y": 7,
+      "crc_high": 134,
+      "crc_low": 234,
+      "instructions_to_pc": 58405,
+      "pointer": 50768,
+      "remaining": 671
+    },
+    "crc_machine_observed": {
+      "A": 67,
+      "Y": 7,
+      "crc_high": 134,
+      "crc_low": 234,
+      "pointer": 50768,
+      "remaining": 671
+    },
+    "explanation": "The remaining count is decremented before the byte is folded; the pointer advances only after all eight bits. At $22c5 the 763rd byte is in bit two, so remaining=671 while pointer is $c356+762=$c650. A/Y and the live CRC pair also match exactly.",
+    "journal": {
+      "C2J_all_zero": true,
+      "journal_result": 0
+    },
+    "loaded_slice": {
+      "bytes": 1434,
+      "carry_poly_iterations": 5751,
+      "crc16": 239,
+      "full_crc_instructions": 110529,
+      "id": 1,
+      "name": "record-verifier"
+    },
+    "transient_front_depth": 0
+  },
+  "quiescence_mutations": [
+    {
+      "name": "nonzero-final-C2J-byte",
+      "result": "slow-path-required"
+    },
+    {
+      "name": "transient-top-image-row",
+      "result": "slow-path-required"
+    },
+    {
+      "name": "foreign-header-generation",
+      "result": "slow-path-required"
+    },
+    {
+      "name": "incomplete-C2J-population",
+      "result": "slow-path-required"
+    }
+  ],
+  "recommendation": {
+    "candidate": "A_empty_obligation_fast_path",
+    "implementation_card_required": true,
+    "not_authorized_here": "no product edit, WPLTO, link, medium or device contact",
+    "required_gates": [
+      "quiescent proof consumes all 64 C2J bytes plus generation-bound header/front facts",
+      "a nonzero C2J or a transient top row reaches the unchanged slow driver",
+      "a read/identity failure reaches the slow driver, never the fast return",
+      "final ELF proves the probe before the first overlay call"
+    ]
+  },
+  "recorded_on": "2026-08-27",
+  "sealed_empty_path_cost": {
+    "crc_instruction_lower_bound": 1376050,
+    "excluded_from_lower_bound": [
+      "physical MAP/CPU reads",
+      "record-verifier execution",
+      "phase-body execution",
+      "wipes and call/return glue"
+    ],
+    "overlay_calls": 8,
+    "route": [
+      {
+        "crc_instruction_lower_bound": 131182,
+        "name": "c2-append-abort-control",
+        "record_verifier_crc_bytes": 1434,
+        "slot": 46,
+        "target_crc_bytes": 268
+      },
+      {
+        "crc_instruction_lower_bound": 184566,
+        "name": "c2-append-journal-validate",
+        "record_verifier_crc_bytes": 1434,
+        "slot": 31,
+        "target_crc_bytes": 964
+      },
+      {
+        "crc_instruction_lower_bound": 195559,
+        "name": "c2-append-journal-reconstruct",
+        "record_verifier_crc_bytes": 1434,
+        "slot": 32,
+        "target_crc_bytes": 1102
+      },
+      {
+        "crc_instruction_lower_bound": 131182,
+        "name": "c2-append-abort-control",
+        "record_verifier_crc_bytes": 1434,
+        "slot": 46,
+        "target_crc_bytes": 268
+      },
+      {
+        "crc_instruction_lower_bound": 227054,
+        "name": "c2-append-roots-fronts",
+        "record_verifier_crc_bytes": 1434,
+        "slot": 25,
+        "target_crc_bytes": 1510
+      },
+      {
+        "crc_instruction_lower_bound": 131182,
+        "name": "c2-append-abort-control",
+        "record_verifier_crc_bytes": 1434,
+        "slot": 46,
+        "target_crc_bytes": 268
+      },
+      {
+        "crc_instruction_lower_bound": 244143,
+        "name": "c2-append-journal-prepare",
+        "record_verifier_crc_bytes": 1434,
+        "slot": 30,
+        "target_crc_bytes": 1732
+      },
+      {
+        "crc_instruction_lower_bound": 131182,
+        "name": "c2-append-abort-control",
+        "record_verifier_crc_bytes": 1434,
+        "slot": 46,
+        "target_crc_bytes": 268
+      }
+    ],
+    "synchronous_crc_bytes": 17852
+  },
+  "status": "GRADUATED: SEALED STALL REPRODUCED; THREE REPAIR SHAPES PRICED"
+}

@@ -1,0 +1,50 @@
+{
+  "format": "lisp65-c2-product-link33-direct-entry-prerequisite-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "FIRST RED: direct-entry semantic gate green but its source binding is stale; no seed or product link ran",
+  "execution_accounting": {
+    "fresh_nonproduct_target_compiles": 2,
+    "resident_island_seed_links": 0,
+    "product_closure_links": 0,
+    "hardware_runs": 0
+  },
+  "first_red": {
+    "gate": "c2_hot_refill_direct_entry_contract.py check",
+    "reason": "The receipt pins an earlier scripts/c2-stream-v2-decoder.c identity. The current authorized v5 decoder adds 264 source bytes, while the fresh direct-entry model still closes at 637 references, zero Fixnum-decodable published values, and four target negative classes.",
+    "old_target_decoder": {
+      "bytes": 22092,
+      "sha256": "6a7a5ad692bf1b2bcc7129005b19c57f6c4c86b8ada2bcbf2900ae9ca6bae188"
+    },
+    "current_target_decoder": {
+      "path": "scripts/c2-stream-v2-decoder.c",
+      "bytes": 22356,
+      "sha256": "159905012aba49901ff79e7b294686b12b87579424079a5c4a403cabcfdf3cfd"
+    },
+    "fresh_semantics": {
+      "direct_entry_references": 637,
+      "fixnum_decodable_published_values": 0,
+      "target_phase12_negative_classes": 4,
+      "changed_binding_set": [
+        "target_decoder"
+      ]
+    }
+  },
+  "prelink_artifacts": {
+    "runtime_object": {
+      "path": "build/c2.2/substitution/product-link-33-nested-append-v5/fresh-v5-prelink-gates/c2-runtime.o",
+      "bytes": 157784,
+      "sha256": "85eca8b353e6e09bfd1e27291a6b23f23d396ce4a4f4b32eb07794a33c3156c5"
+    },
+    "interrupt_object": {
+      "path": "build/c2.2/substitution/product-link-33-nested-append-v5/fresh-v5-prelink-gates/interrupt.o",
+      "bytes": 5248,
+      "sha256": "8bd46d6fb56ce304c6d970407920e9d5cfacb69638d73eb9c17606417ae29755"
+    }
+  },
+  "rollback_identity": {
+    "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+    "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a"
+  },
+  "claim_limit": "This receipt proves only that the authorized Link-33 attempt stopped before either linker invocation and that the direct-entry semantic values remain green under the current decoder source. It does not authorize rebinding, retrying the product link, hardware execution, capacity, promotion, or C2.2 acceptance.",
+  "recommended_next_gate": "Regenerate the direct-entry receipt against the current authorized decoder, pin its new SHA, then rerun the still-unspent single Link-33 attempt from a clean output directory."
+}

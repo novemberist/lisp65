@@ -1,0 +1,167 @@
+{
+  "format": "lisp65-c2.2-link59-C1-Freezer-cutpoint4-late-chip-write-hardware-first-red-v1",
+  "status": "first-red-C1-cutpoint4-Freezer-crossed-uncompleted-CPU-to-Chip-writes",
+  "recorded_on": "2026-07-24",
+  "matrix_row": "C1",
+  "authority": {
+    "product": {
+      "path": "build/c2.2/substitution/product-link-59-c1-freezer-irq-episode/lisp65-c2-substitution-linked.prg",
+      "sha256": "b46ab695a803f993e206f48f87e6ce310de1e6e56ca897bf07900502697000e6"
+    },
+    "product_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link59-c1-freezer-irq-episode-structural-receipt.json",
+      "sha256": "2baa8299a1ee221767d714d48c60ac282958f92bf5453adb18478a1ea54e6ce3"
+    },
+    "nonpromotable_carrier": {
+      "path": "build/c2.2/substitution/link59-c1-freezer-memory-holds-link59-rebound-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-memory-holds-link59-rebound-stage-bound.bin",
+      "sha256": "f93dd547ae8a22b2fe55f9461d3effdaca5c8f8cf286138ae34e278329e8e61f"
+    },
+    "contract": {
+      "path": "config/c2-c1-freezer-cutpoint-contract.json",
+      "sha256": "c9c693974b6a053876b083757dc9af3147cd1ece08e636ac16e1d076c85f6888"
+    },
+    "deployment": {
+      "path": "build/c2.2/c1-freezer-memory-hold-hardware-link59-attempt6-NONPROMOTABLE/deployment.json",
+      "sha256": "37c635036ebc065eb30e7ddb5d1dbf362e2257abc73e76a7573e684203a8688a"
+    },
+    "hardware_state_before_observation": {
+      "path": "build/c2.2/c1-freezer-memory-hold-hardware-link59-attempt6-NONPROMOTABLE/hardware-state.json",
+      "sha256": "95431529916cb0a5a81778e614df9d98cfbb1c79cae026620f9254e93b895507"
+    },
+    "source": {
+      "c2_product_runtime.c": "f21c1ed1388ff1a07e3fd0cf390c89f560e85ca78db5c200c243b525a0a1bf04",
+      "c2_platform_dma.c": "68ed902d1114e148c54c70d886fea519472f92064e9de104ad8703432ef6c465"
+    }
+  },
+  "operator_observation": {
+    "Freezer_return_key": "F3",
+    "red_frame": false,
+    "definition_before_host_release": "still blocked",
+    "verbatim": "kein roter Rahmen, Definition weiterhin blockiert"
+  },
+  "cutpoint": {
+    "id": 4,
+    "name": "abort-unpublish",
+    "hold_control_before_Freezer": "04 00",
+    "hold_control_after_Freezer": "04 00",
+    "same_hold_after_thaw": true,
+    "host_release_was_written": true,
+    "automatic_REPL_call_was_not_sent": true,
+    "reason": "The identity gate stopped before the call after Bank 2 changed across the Freezer roundtrip."
+  },
+  "captures": {
+    "bank2": {
+      "baseline_sha256": "362288e2cc1454419234f138c04812de2264433812105cff9116b6150305558f",
+      "hold_before_sha256": "362288e2cc1454419234f138c04812de2264433812105cff9116b6150305558f",
+      "hold_after_sha256": "1351c60b28a4333a1cc1b8111f100c58284a81ef72cf006f6f37cd5bc516b902",
+      "post_sha256": "1351c60b28a4333a1cc1b8111f100c58284a81ef72cf006f6f37cd5bc516b902",
+      "changed_bytes": 5,
+      "changed_file_offsets": [
+        "0x86f7",
+        "0x86fa",
+        "0x86fb",
+        "0x86fe",
+        "0x86ff"
+      ],
+      "changed_physical_addresses": [
+        "0x000286f7",
+        "0x000286fa",
+        "0x000286fb",
+        "0x000286fe",
+        "0x000286ff"
+      ],
+      "range_before": "00 00 00 00 00 00 00 00 00",
+      "range_after": "b5 00 00 02 02 00 00 2c 05",
+      "attribution": "The nine-byte range at 0x86f7..0x86ff became an exact second copy of the already committed preceding code object at 0x86ee..0x86f6. It is the staged body of the aborted same-body definition."
+    },
+    "bank3": {
+      "baseline_sha256": "f5644f5475c79250bf7add5b81d3bb7de33ee49b0c859abf441e9a65e00f837d",
+      "hold_before_sha256": "f5644f5475c79250bf7add5b81d3bb7de33ee49b0c859abf441e9a65e00f837d",
+      "hold_after_sha256": "f5644f5475c79250bf7add5b81d3bb7de33ee49b0c859abf441e9a65e00f837d",
+      "post_sha256": "f5644f5475c79250bf7add5b81d3bb7de33ee49b0c859abf441e9a65e00f837d",
+      "changed_bytes": 0
+    },
+    "bank5": {
+      "baseline_sha256": "ea64b358d39eac4747188fb8eeabdab7256238682d0bf83e9ea02b7ace3a7dc8",
+      "hold_before_sha256": "d5d7b7b13b524f443553b8b2fef869ade48c808e3e7c31f1a10c436d2d32c746",
+      "hold_after_sha256": "ea35f5e6874866ec581395f0d75e22d3058614e578e5f33cbf1ad0c65dd44649",
+      "post_sha256": "0cd6781bc9259d865c42066dd6f2333328936f836e3294521e4291db7e1b1139",
+      "Freezer_delta": {
+        "export_journal_offsets": [
+          {
+            "offset": "0x8430",
+            "before": "b4",
+            "after": "b6"
+          },
+          {
+            "offset": "0x8434",
+            "before": "4e",
+            "after": "4f"
+          }
+        ],
+        "C2J": "ACTIVE and otherwise byte-identical"
+      },
+      "post_delta_from_baseline": {
+        "changed_bytes": 2,
+        "offsets": [
+          "0x8430",
+          "0x8434"
+        ],
+        "C2J": "all zero"
+      },
+      "attribution": "The first two export-journal records changed only after the Freezer interval and survived rollback finalization."
+    },
+    "e000": {
+      "hold_before_sha256": "64bb76c51a1d0285d477b656b492a6b36bb2579021a5fcc72251f2ac7bf89fe2",
+      "hold_after_sha256": "0eeb821662aa39b6500d6e3471125f05f69f65bce33b8047d4460373632ea0ce",
+      "post_sha256": "bf21133cd1dbcccd8c1ef2f07a36feee2cd2e8fdc14046b3a42a6a76269d88e5",
+      "changed_bound_bytes": 0,
+      "changed_contract_volatile_bytes": [
+        "0xff83",
+        "0xff84"
+      ]
+    }
+  },
+  "state_facts": {
+    "header_counts_before_after_post": {
+      "images": 7,
+      "entries": 591,
+      "resolutions": 2273,
+      "roots": 283,
+      "watermark": 2096
+    },
+    "C2J_at_hold": "ACTIVE",
+    "C2J_after_host_release": "zero",
+    "Bank3_identity": "byteidentical",
+    "published_header": "restored",
+    "physical_Bank2_suffix": "not restored",
+    "export_journal_scratch": "not restored"
+  },
+  "causal_attribution": {
+    "observation": "CPU-to-Chip writes submitted before abort were not complete when cutpoint 4 entered its memory-driven hold. They became visible during the physical Freezer interval.",
+    "mechanism": [
+      "c2_stream_c2d_write returns success immediately after the DMA trigger and carries no content-completion proof.",
+      "c2_append_stage_copy_phase writes Bank 2 from readback and then reads Bank 2 back into that same already-correct buffer; an uncompleted read can therefore leave expected bytes in place and falsely satisfy the comparison.",
+      "rollback unpublish/finalize can restore header and clear C2J while late Bank-2 and export-journal writes remain able to land afterward."
+    ],
+    "scope": "This is the previously unproved CPU-to-Chip write direction. It does not contradict the accepted Chip-Bank-to-window read prefilter; it exposes a different transport seam."
+  },
+  "verdict": {
+    "C1": "OPEN",
+    "matrix_gate": "blocked",
+    "acceptance_chain": "blocked",
+    "product_link59_modified": false,
+    "device_retry_authorized": false
+  },
+  "required_class_C_review": {
+    "contract_question": "Define and prove completion for every CPU-to-Bank2/Bank5 write before phase advance, publication, rollback restoration, C1 hold or return to evaluator.",
+    "minimum_probe_scope": [
+      "inventory every CPU-to-Chip write-to-consumer or write-to-transition seam",
+      "replace same-buffer readback with an independent poisoned/content-bound completion witness",
+      "prove no outstanding CPU-to-Chip write can cross a Freezer cutpoint",
+      "make abort restore the appended Bank-2 suffix and export-journal bytes exactly",
+      "pin barrier-removed, same-buffer-readback and late-write-after-rollback mutations"
+    ]
+  },
+  "claim_limit": "Hardware First Red and causal diagnosis only. It does not authorize a product fix, contract change, successor link, C1 closure, matrix-gate fall, promotion or acceptance-chain result."
+}

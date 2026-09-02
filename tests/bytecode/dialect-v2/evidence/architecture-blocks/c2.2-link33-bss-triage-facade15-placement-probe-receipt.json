@@ -1,0 +1,105 @@
+{
+  "diagnostic": "relocation provenance red: [{'reason': 'source-function-unresolved', 'record': {'relocation_section': '.rela.lisp65_c2_host_facade', 'source_section': '.lisp65_c2_host_facade', 'offset': 46541, 'type': 'R_MOS_ADDR16', 'target': 'c2_product_handle_normalize', 'addend': 0}, 'candidate_functions': []}]",
+  "evidence": {
+    "bss-triage-facade15-placement-seed.prg": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/bss-triage-facade15-placement-seed.prg",
+      "sha256": "75924e481118e5510e75d02519f2cc6f50601bde69988fe20b6abe023558d3d8"
+    },
+    "bss-triage-facade15-placement-seed.prg.elf": {
+      "bytes": 561144,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/bss-triage-facade15-placement-seed.prg.elf",
+      "sha256": "6644da0e46078dd0c8819188c25e9bd5b878ee387cf01719027cbba9d9c50cf3"
+    },
+    "bss-triage-facade15-placement-seed.prg.link.stderr.txt": {
+      "bytes": 859,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/bss-triage-facade15-placement-seed.prg.link.stderr.txt",
+      "sha256": "1b2ef283485a164030ba52cfb6c7f531919a2879388ba4e5f9201b5b13b9b692"
+    },
+    "bss-triage-facade15-placement-seed.prg.link.stdout.txt": {
+      "bytes": 0,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/bss-triage-facade15-placement-seed.prg.link.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bss-triage-facade15-placement-seed.prg.lto.o": {
+      "bytes": 563796,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/bss-triage-facade15-placement-seed.prg.lto.o",
+      "sha256": "09ec83bc07b84961806f980fb17e5f5a278ad788ae4462f77958914058b6dec6"
+    },
+    "bss-triage-facade15-placement-seed.prg.map": {
+      "bytes": 191833,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/bss-triage-facade15-placement-seed.prg.map",
+      "sha256": "f17d1130d876eadc9219294e0a3c01f31ed9f4967b3847f63a8e547f97c4dd16"
+    },
+    "handoff-z-abi-bss-triage-probe.json": {
+      "bytes": 2168,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/handoff-z-abi-bss-triage-probe.json",
+      "sha256": "c82f5c6ddbe55bc6cdabdd5528acb439c3f836057b59a7d99037385e7136593b"
+    },
+    "pre-ownership-closure-bss-triage-probe.json": {
+      "bytes": 3087,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/pre-ownership-closure-bss-triage-probe.json",
+      "sha256": "ef73ab9a67510adb17a725a085f700994fab20eea480b890938b7554d169c08f"
+    },
+    "profile-data-reference-bss-triage-probe.json": {
+      "bytes": 4152,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/profile-data-reference-bss-triage-probe.json",
+      "sha256": "2acf92749e7b6ff1c8e2f60627e4bf85265e0ab36a605ff749e2df15dcac0959"
+    },
+    "resolved-profile.txt": {
+      "bytes": 6420,
+      "path": "build/c2.2/substitution/link33-bss-triage-facade15-placement-probe/resolved-profile.txt",
+      "sha256": "37b5fa04b53dba843a2d0ae0aeef89d201400117460d1e9eb00453805ff6da9b"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "linker_script_parse_attempts": 1,
+    "product_closure_links": 0,
+    "successful_seed_links": 1,
+    "whole_program_lto_seed_attempts": 1
+  },
+  "final_e000_floor": "not-bound",
+  "format": "lisp65-c2-link33-bss-triage-placement-first-red-v1",
+  "inventory": {
+    "bytes": 11354,
+    "path": "config/c2-link33-bss-triage-inventory.json",
+    "sha256": "18f04817f7be971176c4947f3ee14870613eca1b71a71a548739792455faed97"
+  },
+  "next_gate": "return-to-owner-review-no-retry-link-or-presmoke",
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "link32_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "untouched"
+  },
+  "status": "FIRST RED: sole Whole-Program-LTO placement probe failed",
+  "whole_program_map_observation": {
+    "capacity_interpretation": "All measured resident walls are nonnegative, but the final E000 floor remains unbound until every post-link structural gate passes and the contract is updated.",
+    "claim_limit": "The linker emitted a complete map before the first-red gate stopped the attempt. These are map observations, not passed capacity or structural gates.",
+    "e000_actual_debit_bytes": 422,
+    "fixed_hot_heap": {
+      "address": 49733,
+      "bytes": 240,
+      "end_exclusive": 49973,
+      "load_address": 49733
+    },
+    "headroom_bytes": {
+      "bank0_text_headroom_bytes": 41,
+      "e000_headroom_bytes": 115,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 229,
+      "resident_island_headroom_bytes": 7
+    },
+    "ordinary_rodata": {
+      "address": 46584,
+      "address_delta_from_requirement": 0,
+      "bytes": 826,
+      "end_exclusive": 47410,
+      "gate": "passed-predecessor-vma-lma-relation",
+      "load_address": 46584,
+      "load_address_delta_from_requirement": 0,
+      "required_address": 46584,
+      "required_load_address": 46584
+    }
+  }
+}

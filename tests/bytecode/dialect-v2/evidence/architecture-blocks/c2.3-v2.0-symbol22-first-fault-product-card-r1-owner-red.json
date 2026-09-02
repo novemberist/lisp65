@@ -1,0 +1,519 @@
+{
+  "accounting": {
+    "acceptance_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_cards": 1,
+    "product_closure_links": 0,
+    "scope_runs": 0,
+    "seed_WPLTO": 1
+  },
+  "authority": {
+    "budget": {
+      "WPLTO_runs": 1,
+      "device_contacts": 0,
+      "media_builds": 0,
+      "product_cards": 1,
+      "product_links": 1
+    },
+    "pricing": {
+      "bytes": 8565,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-symbol22-first-fault-pricing-receipt.json",
+      "sha256": "34de78cf6c00f96363209cc7b89f14c14247be69bec37bdf33af6e8feec41a56"
+    },
+    "review_authorization": {
+      "bytes": 1756,
+      "commit": "99ad358dfead396a8b24ba2c10e6a14557915186",
+      "path": "docs/planning/v2.0.0-pre-plan.md",
+      "section": "## Reviewer authorization \u2014 Phase 0 product card \u2014 2026-08-31",
+      "sha256": "dd9933845c1c22732722e56f17178828d47835d73de4c1e405e4a50db1292565"
+    },
+    "v1_9_release_predecessor": {
+      "bytes": 867347,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9.0-release-card-r1-receipt.json",
+      "sha256": "15424dd7d4ea733f27abc54c5f9f9e113ea498d3ca67a63a0f67f5c4790a08c0"
+    }
+  },
+  "blocked_conditions": {
+    "positive_control": "an isolated helper execution cannot qualify code that an active product path overwrites",
+    "survival_proof": "not reachable on an overlapping product world"
+  },
+  "candidate_disposition": "FROZEN-UNQUALIFIED-PRODUCT-EVIDENCE",
+  "decision_required": [
+    "retire or relocate the active terminal-return guard, then rebuild",
+    "reprice the latch into a disjoint owner interval, then rebuild"
+  ],
+  "diagnosis": {
+    "blind_spot": "the price and preflight counted SHF_ALLOC interval owners but not fixed-address readers/writers with no allocation",
+    "effect": "four emitted overlay wrappers write B582..B591, overwriting the latch state and the first eleven bytes of its helper",
+    "family": "composed ownership omitted a raw fixed-address owner",
+    "observed_predecessor_fact": "LISP65_C2_TERMINAL_RETURN_GUARD is active in the sealed v1.9 profile and remains active in the candidate profile",
+    "pricing_premise": "terminal-return diagnostic inactive",
+    "product_defect_established": true
+  },
+  "first_red": {
+    "bytes": 3662,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-symbol22-first-fault-product-card-r1-first-red.json",
+    "sha256": "e94022c6704a397f8b3098af20945c07f865df2efc1c81c40d5c4a3f0471d3da"
+  },
+  "format": "lisp65-c2.3-v200-symbol22-first-fault-product-card-v1-owner-red",
+  "frozen_seed": {
+    "resident-island-seed.prg": {
+      "bytes": 41564,
+      "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r1/wplto/resident-island-seed.prg",
+      "sha256": "a43d1ca0ebfc172394eebad7c9586163ff4992e90c840eb4a0792af1796e5b30"
+    },
+    "resident-island-seed.prg.elf": {
+      "bytes": 635980,
+      "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r1/wplto/resident-island-seed.prg.elf",
+      "sha256": "bbf80a2b2abd08d718da660604223954c52a893a592cb4358e175b78ce50fe01"
+    },
+    "resident-island-seed.prg.lto.o": {
+      "bytes": 620988,
+      "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r1/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "69c65beda1c43bf3114b34e1fc6a3e9ed483e1eb901d660aa45eb258dd11b144"
+    },
+    "resident-island-seed.prg.map": {
+      "bytes": 195346,
+      "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r1/wplto/resident-island-seed.prg.map",
+      "sha256": "f716ae27488eedf24daa13bd3474bbd7a295069c97c30eaed1c51964bcb03429"
+    },
+    "resolved-profile.txt": {
+      "bytes": 13898,
+      "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r1/wplto/resolved-profile.txt",
+      "sha256": "77219d206b5532a04e10de4917dd07be94ee63c49b475ea16a997530511d1b9c"
+    }
+  },
+  "invocation": {
+    "bytes": 1393,
+    "path": "build/c2.3/v2.0-symbol22-first-fault-product-card-r1-preflight/candidate-invocation.json",
+    "sha256": "eef257f47370d4668f86419125713452f42eb1150e10f8d7108ffdd529dec67a"
+  },
+  "mutations": {
+    "composed_owner_count": 2,
+    "section_only_false_green_rejected": true,
+    "section_only_owner_count": 1
+  },
+  "ownership": {
+    "allocated_owners": [
+      ".lisp65_symbol22_first_fault_latch"
+    ],
+    "gap": {
+      "end_exclusive": 46532,
+      "start": 46466
+    },
+    "latch": {
+      "bytes": 57,
+      "end_exclusive": 46523,
+      "start": 46466
+    },
+    "logical_owners": [
+      ".lisp65_symbol22_first_fault_latch",
+      "raw-fixed-address-terminal-return-guard"
+    ],
+    "raw_external_references": [
+      {
+        "instruction": 50010,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46467
+      },
+      {
+        "instruction": 50016,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46468
+      },
+      {
+        "instruction": 50025,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46469
+      },
+      {
+        "instruction": 50030,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46466
+      },
+      {
+        "instruction": 50037,
+        "mnemonic": "dec",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46466
+      },
+      {
+        "instruction": 50046,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46467
+      },
+      {
+        "instruction": 50054,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46468
+      },
+      {
+        "instruction": 50061,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46469
+      },
+      {
+        "instruction": 50079,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46473
+      },
+      {
+        "instruction": 50085,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46474
+      },
+      {
+        "instruction": 50088,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46467
+      },
+      {
+        "instruction": 50091,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46475
+      },
+      {
+        "instruction": 50095,
+        "mnemonic": "stx",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46473
+      },
+      {
+        "instruction": 50099,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46467
+      },
+      {
+        "instruction": 50105,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46468
+      },
+      {
+        "instruction": 50111,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_scan",
+        "target": 46469
+      },
+      {
+        "instruction": 50010,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46467
+      },
+      {
+        "instruction": 50016,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46468
+      },
+      {
+        "instruction": 50025,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46469
+      },
+      {
+        "instruction": 50030,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46466
+      },
+      {
+        "instruction": 50037,
+        "mnemonic": "dec",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46466
+      },
+      {
+        "instruction": 50046,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46467
+      },
+      {
+        "instruction": 50054,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46468
+      },
+      {
+        "instruction": 50061,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46469
+      },
+      {
+        "instruction": 50079,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46476
+      },
+      {
+        "instruction": 50085,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46477
+      },
+      {
+        "instruction": 50088,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46467
+      },
+      {
+        "instruction": 50091,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46478
+      },
+      {
+        "instruction": 50095,
+        "mnemonic": "stx",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46476
+      },
+      {
+        "instruction": 50099,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46467
+      },
+      {
+        "instruction": 50105,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46468
+      },
+      {
+        "instruction": 50111,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_plan_resolve",
+        "target": 46469
+      },
+      {
+        "instruction": 50037,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46467
+      },
+      {
+        "instruction": 50043,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46468
+      },
+      {
+        "instruction": 50052,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46469
+      },
+      {
+        "instruction": 50057,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46466
+      },
+      {
+        "instruction": 50064,
+        "mnemonic": "dec",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46466
+      },
+      {
+        "instruction": 50073,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46467
+      },
+      {
+        "instruction": 50081,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46468
+      },
+      {
+        "instruction": 50088,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46469
+      },
+      {
+        "instruction": 50106,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46470
+      },
+      {
+        "instruction": 50112,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46471
+      },
+      {
+        "instruction": 50115,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46467
+      },
+      {
+        "instruction": 50118,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46472
+      },
+      {
+        "instruction": 50122,
+        "mnemonic": "stx",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46470
+      },
+      {
+        "instruction": 50126,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46467
+      },
+      {
+        "instruction": 50132,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46468
+      },
+      {
+        "instruction": 50138,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_header",
+        "target": 46469
+      },
+      {
+        "instruction": 50010,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46467
+      },
+      {
+        "instruction": 50016,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46468
+      },
+      {
+        "instruction": 50025,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46469
+      },
+      {
+        "instruction": 50030,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46466
+      },
+      {
+        "instruction": 50037,
+        "mnemonic": "dec",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46466
+      },
+      {
+        "instruction": 50046,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46467
+      },
+      {
+        "instruction": 50054,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46468
+      },
+      {
+        "instruction": 50061,
+        "mnemonic": "cmp",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46469
+      },
+      {
+        "instruction": 50079,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46479
+      },
+      {
+        "instruction": 50085,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46480
+      },
+      {
+        "instruction": 50088,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46467
+      },
+      {
+        "instruction": 50091,
+        "mnemonic": "sta",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46481
+      },
+      {
+        "instruction": 50095,
+        "mnemonic": "stx",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46479
+      },
+      {
+        "instruction": 50099,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46467
+      },
+      {
+        "instruction": 50105,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46468
+      },
+      {
+        "instruction": 50111,
+        "mnemonic": "lda",
+        "source_section": ".lisp65_rt_c2append_publish_clear",
+        "target": 46469
+      }
+    ],
+    "raw_external_sections": [
+      ".lisp65_rt_c2append_header",
+      ".lisp65_rt_c2append_publish_clear",
+      ".lisp65_rt_c2append_publish_plan_resolve",
+      ".lisp65_rt_c2append_publish_plan_scan"
+    ],
+    "terminal_return_guard_active": true
+  },
+  "preflight": {
+    "bytes": 5223,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-symbol22-first-fault-product-card-r1-preflight.json",
+    "sha256": "2f2d4ea026b6c48455d0584a45eadc94b44c78c39bd846b8a507f675658d9f68"
+  },
+  "recorded_on": "2026-08-31",
+  "resume_right": "none under the current one-WPLTO authority",
+  "status": "SECOND RED: ACTIVE RAW OWNER OVERLAPS LATCH",
+  "unspent_budget": {
+    "product_closure_links": 1
+  }
+}

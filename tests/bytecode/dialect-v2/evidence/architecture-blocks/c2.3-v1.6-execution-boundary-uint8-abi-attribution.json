@@ -1,0 +1,58 @@
+{
+  "authority": {
+    "commit": "5c41adf2dfb62641b4c7ed03faec79e1d081aa2f",
+    "decision": "known ABI-policy and linked-owner identity family; standing self-disposition applies"
+  },
+  "candidate_elf": {
+    "bytes": 647612,
+    "path": "build/c2.3/v1.6-execution-boundary-backstop-uint8-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "b932ff799056ce8b02064893b8090442bec0564c9f818eec04415073245c598e"
+  },
+  "final_red": {
+    "bytes": 23618,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-execution-boundary-backstop-uint8-card-final-red.json",
+    "sha256": "11d9cb85f280ee174869c9166189fad77cbdc7d292e45a580b9d30ff14982f8e"
+  },
+  "finding": {
+    "classifier": {
+      "address": "0x222d",
+      "bytes": 60,
+      "linked_symbol_type": "NOTYPE",
+      "name": "retired_window_brk_classifier",
+      "role": "IRQ-owned sized ASM tail continuation"
+    },
+    "misclassified_edge": {
+      "owner": "retired_window_brk_classifier",
+      "relocation_offsets": [8794, 8799],
+      "relocation_types": ["R_MOS_ADDR16_LO", "R_MOS_ADDR16_HI"],
+      "target": "retired_window_resume"
+    },
+    "resume": {
+      "address": "0x2269",
+      "bytes": 29,
+      "linked_symbol_type": "FUNC",
+      "name": "retired_window_resume"
+    }
+  },
+  "mechanism": "The classifier deliberately lost STT_FUNC identity while retaining a sized independent ASM body. The ELF-derived ABI inventory therefore could not recognize it as the owner of its two address relocations to retired_window_resume and attributed the resume surface to the non-ASM root class.",
+  "product_exoneration": {
+    "bss_seed_link_passed": true,
+    "card_consumed": true,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_bytes_changed_by_successor": false,
+    "product_link_attempts": 1,
+    "uint8_capacity_fix_exonerated": true,
+    "wplto_runs": 1
+  },
+  "successor": {
+    "abi_policies": [
+      "retired_window_brk_classifier",
+      "retired_window_resume"
+    ],
+    "change": "restore explicit STT_FUNC citizenship to the sized IRQ continuation and register the distinct IRQ-tail and cleanup-free-landing ABI contracts",
+    "mutation": "erasing classifier function identity or either ABI policy fails before WPLTO",
+    "scope": "gate identity and policy only; no instruction or data byte changes"
+  },
+  "status": "ATTRIBUTED: IRQ TAIL CONTINUATION LOST ELF FUNCTION IDENTITY"
+}

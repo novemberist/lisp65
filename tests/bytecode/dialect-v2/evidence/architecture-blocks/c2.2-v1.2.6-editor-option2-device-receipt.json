@@ -1,0 +1,86 @@
+{
+  "authority": {
+    "commission": {
+      "bytes": 4354,
+      "path": "docs/planning/c2.2-v1.2.6-editor-option1-contact-review.md",
+      "sha256": "bf657bd6bfbccdcd845a1d3830eebc12d09d60f7eacf72a3743e1b04b24dee20"
+    },
+    "contact_1_setup_first_red": {
+      "bytes": 3031,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-option2-setup-first-red-receipt.json",
+      "sha256": "928b90ca33d88e4653e1f197173f2fe744c1d886c84d7a535da9d28e1fa6a241"
+    },
+    "deployment": {
+      "bytes": 4292,
+      "path": "build/c2.2/v1.2.6-editor-option2/deployment.json",
+      "sha256": "905a2e77e052580fcd1efa121de064beab3bc3a2347229a0517ef6faf2163eb9"
+    },
+    "driver": {
+      "bytes": 21348,
+      "path": "tools/host-lisp/c2_v126_editor_option2_device.py",
+      "sha256": "9c218b5492be4575ef18d78cc97ae70bfd3a2575090dd9d5b9bd3c8660058010"
+    },
+    "equivalence": {
+      "bytes": 28533,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-option2-equivalence-receipt.json",
+      "sha256": "c558a5adf43f11a5d696bddd215101a754078edfdb0e2bb39c712e5c2b5eb113"
+    },
+    "host_dry_run": {
+      "bytes": 1894,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-option2-host-dry-run-receipt.json",
+      "sha256": "5981226d02e229ccd7b58cff238f1f5dc7c15aacaa51e6a8033552eb32ccdfa6"
+    },
+    "preparation": {
+      "bytes": 6202,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-option2-preparation-receipt.json",
+      "sha256": "e15df43204a25bb5a8eb147915f039d9d8f6f8548e28c0a0da78d4f28450baff"
+    }
+  },
+  "contact": {
+    "CPU_halts": 0,
+    "CPU_state_at_exit": "running in the product fail-closed loop",
+    "bounded_interpretation": "The non-promotable pre-stage source caused the product fail-closed frame before it returned and before the exact live handoff could be checked. This is not an a/b/c editor-stall measurement and does not establish that the historical typed construction path has the same failure.",
+    "contact": 2,
+    "error": "(7, 'red fail-closed frame is visible')",
+    "error_type": "CheckError",
+    "measurement_claimed": false,
+    "original_editor_stall_claimed": false,
+    "product_bytes_changed": 0,
+    "raw_evidence": {
+      "ansi_screen": {
+        "bytes": 72271,
+        "path": "build/c2.2/v1.2.6-editor-option2/device/contact-02/option2-source-load.ansi.txt",
+        "sha256": "3f24f3c19e984b5d756ced18d95be3f6b959a17992d0b61de46364d84e995284"
+      },
+      "package_readback": {
+        "bytes": 819200,
+        "path": "build/c2.2/v1.2.6-editor-option2/device/contact-02/package-readback.d81",
+        "sha256": "a1b358cc5592cfa1ebfe4cae3f2df83a4fbf4fe24732a5c715a14e2df5b7e3eb"
+      },
+      "png_screen": {
+        "bytes": 3430,
+        "path": "build/c2.2/v1.2.6-editor-option2/device/contact-02/option2-source-load.png",
+        "sha256": "21ca6dfdb0cb8f23cf00ef1f90ef56fccc16119db1497088d763f3ce7b3b23c2"
+      },
+      "text_screen": {
+        "bytes": 2241,
+        "path": "build/c2.2/v1.2.6-editor-option2/device/contact-02/option2-source-load.txt",
+        "sha256": "9de7e5523995d329f55ff61275dddf5e38b197e60fef550d24b6d2bb4961ce64"
+      }
+    },
+    "stage": "source load before handoff capture, editor launch, or first measurement key",
+    "status": "FIRST-RED-option2-prestage-fail-closed-before-handoff"
+  },
+  "execution_accounting": {
+    "contact_1": "setup First Red before measurement",
+    "contact_2": "FIRST-RED-option2-prestage-fail-closed-before-handoff",
+    "physical_contacts": 2,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "reserve_consumed": true
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-option2-device-v1",
+  "next_step": "owner review; both authorized contacts are consumed and no further device contact is permitted under this commission",
+  "recorded_on": "2026-07-31",
+  "status": "FIRST-RED-option2-prestage-fail-closed-before-handoff"
+}

@@ -1,0 +1,201 @@
+{
+  "authority": {
+    "guarded_media": {
+      "bytes": 6428,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-media-receipt.json",
+      "sha256": "b0a3a0d4ea40cd3353aa8363761e1096cd47417244ca0f0bcc9b6ba5df973e18"
+    },
+    "result_recorder": {
+      "bytes": 14736,
+      "path": "tools/host-lisp/c2_terminal_return_guard_device_result.py",
+      "sha256": "22cd0b295fa7fb3736a5d3ce04250c98e87d20dd2fc98b6ed310dcb3fd1fb158"
+    },
+    "screen_checker": {
+      "bytes": 21241,
+      "path": "tools/host-lisp/repl_screen_check.py",
+      "sha256": "805fb04f3578aef8caa7ba5a6e2635eb625f726a9b493cf79be64ac1dcd9c30e"
+    },
+    "session_contract": {
+      "bytes": 1463,
+      "path": "config/c2-terminal-return-guard-link96-device-session.json",
+      "sha256": "768fcf77fc9513042caa5a6ef964195af9b168a86073314fdbd34dfa665c1ef3"
+    }
+  },
+  "claim_limit": "Link-96 point hardware acceptance and terminal-return-guard readback only. A restored record names the mismatching tuple field and values, not its writer. No release or Experience-block claim is made here.",
+  "execution_accounting": {
+    "final_stops": 1,
+    "hardware_contacts": 1,
+    "observations_during_active_forms": 0,
+    "physical_forms": 3,
+    "product_links": 0,
+    "virtual_forms": 0
+  },
+  "format": "lisp65-c2.3-link96-terminal-return-guard-device-result-v1",
+  "media_readback": {
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/library-readback.d81",
+      "sha256": "6090dba14e9e4554459d32bbfa18d2db69b1dc3140e04bbe4fb147bf0775fa71"
+    },
+    "library_source": {
+      "bytes": 819200,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/defstruct-library/lisp65-library.d81",
+      "sha256": "6090dba14e9e4554459d32bbfa18d2db69b1dc3140e04bbe4fb147bf0775fa71"
+    },
+    "product_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/product-readback.d81",
+      "sha256": "b54a619d0de241a60081a30accec5ee5e1f44871251f4aefac2078dd868f9267"
+    },
+    "product_source": {
+      "bytes": 819200,
+      "path": "build/c2.3/terminal-return-guard-link96-media-r2/shared-system/lisp65-product.d81",
+      "sha256": "b54a619d0de241a60081a30accec5ee5e1f44871251f4aefac2078dd868f9267"
+    },
+    "result": "byteidentical"
+  },
+  "mutation_contract": [
+    "drop-row",
+    "wrong-point",
+    "allow-virtual-input",
+    "allow-polling",
+    "replace-product-readback",
+    "replace-library-readback",
+    "leave-guard-armed",
+    "drop-guard-record",
+    "wrong-restoration-count",
+    "wrong-status",
+    "claim-product-link",
+    "claim-writer-attribution",
+    "wrong-record-base"
+  ],
+  "next": "owner-halt-before-experience-block",
+  "point_postcondition": {
+    "defstruct_hardware_green": true,
+    "form": "(make-point 3 4)",
+    "result": "(point 3 4)"
+  },
+  "readback_decoder": {
+    "arm": "0xB582",
+    "device_reads_after_first_red": 0,
+    "initial_first_red": "parser treated working shadow byte 0xE4 as record tag",
+    "layout_mutations_rejected": 1,
+    "records": "0xB586..0xB591",
+    "rescued_from_same_capture": true,
+    "working_shadow": "0xB583..0xB585"
+  },
+  "recorded_on": "2026-08-11",
+  "release_claim": false,
+  "rows": [
+    {
+      "form": "(require (quote defstruct))",
+      "id": "require-defstruct",
+      "latest_visible_results": [
+        "t"
+      ],
+      "quiet_floor_seconds": 180,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 3611,
+        "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/row-require-defstruct.png",
+        "sha256": "3867900516eaac1441ac9a86703a2d94cbc8f520a2f67a4d7d17a1149e4be947"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/row-require-defstruct.txt",
+        "sha256": "fa6cd014e2d41427f2048c8377b57cc4b43d6f8673d910e21cc920c76abd71d2"
+      }
+    },
+    {
+      "form": "(defstruct point x y)",
+      "id": "define-point",
+      "latest_visible_results": [
+        "t"
+      ],
+      "quiet_floor_seconds": 240,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 3982,
+        "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/row-define-point.png",
+        "sha256": "898ba98e8d9d4862ce74cc328c550d9ecf39a63391eb65742dfcebcd63453543"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/row-define-point.txt",
+        "sha256": "77e8828afd40c53465c5b38b7feccc67d408669e4c6266cfa62c9a1409cf725e"
+      }
+    },
+    {
+      "form": "(make-point 3 4)",
+      "id": "make-point",
+      "latest_visible_results": [
+        "(point 3 4)"
+      ],
+      "quiet_floor_seconds": 30,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 4443,
+        "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/row-make-point.png",
+        "sha256": "321c4a38b8925a444ade902f98ac9f0087527649cd820e8deba8f738726b1255"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/row-make-point.txt",
+        "sha256": "46726df0f0411dc6f06141990e66b1b68d12fa40815850d25b622be91ffd506b"
+      }
+    }
+  ],
+  "status": "LINK96-POINT-HARDWARE-GREEN; GUARD-CLEAN",
+  "terminal_return_guard": {
+    "arena": "physical Bank-0 0x0000b582..0x0000b591",
+    "arm": 0,
+    "capture": {
+      "bytes": 16,
+      "path": "build/c2.3/terminal-return-guard-link96-device-session-r2/terminal-return-guard.bin",
+      "sha256": "b2e5a8523a61d2da886dd256cf5df467cb5cbbf442e0f1df05b32da7f44a314e"
+    },
+    "classification": "clean",
+    "raw_hex": "00e42c02000000000000000000000000",
+    "records": [
+      {
+        "field": null,
+        "live": 0,
+        "restored": false,
+        "shadow": 0,
+        "tag": 0,
+        "transfer": "append-header"
+      },
+      {
+        "field": null,
+        "live": 0,
+        "restored": false,
+        "shadow": 0,
+        "tag": 0,
+        "transfer": "publish-plan-scan"
+      },
+      {
+        "field": null,
+        "live": 0,
+        "restored": false,
+        "shadow": 0,
+        "tag": 0,
+        "transfer": "publish-plan-resolve"
+      },
+      {
+        "field": null,
+        "live": 0,
+        "restored": false,
+        "shadow": 0,
+        "tag": 0,
+        "transfer": "publish-clear"
+      }
+    ],
+    "restoration_count": 0,
+    "working_shadow": {
+      "phase_owner": 2,
+      "return_high": 44,
+      "return_low": 228
+    },
+    "writer_attributed": false
+  }
+}

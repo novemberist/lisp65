@@ -1,0 +1,146 @@
+{
+  "authority": {
+    "PC_captures": {
+      "bytes": 2338,
+      "path": "build/c2.2/hardware-link62-slot39-threshold-hold2-NONPROMOTABLE/pc-captures.json",
+      "sha256": "b04139ff99839bf41d2b1c96b99570b9a6dbb236f1d1dd6aa92694b3508c0676"
+    },
+    "diagnostic_patch_receipt": {
+      "bytes": 4600,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link62-slot39-threshold-hold2-nonpromotable-receipt.json",
+      "sha256": "5b4ad505acbfe257f3da1495a2ba3b8a0153e3b51a81006a8111a9f91e6b1a70"
+    },
+    "donor_ELF": {
+      "bytes": 619644,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ecaef987c93f5ff10963d15a729a278fe7b4a13c072a0299ffd1752dcc11ae95"
+    },
+    "evaluator": {
+      "bytes": 10056,
+      "path": "tools/host-lisp/c2_link62_slot39_length_liveness_replay.py",
+      "sha256": "611f3a11ba400d66bb7aaf1213cc012b46c996a74813af085d4490239fd851d9"
+    },
+    "generated_runtime_source": {
+      "bytes": 153856,
+      "path": "build/c2.2/substitution/link60-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/generated-product-sources/c2_product_runtime.c",
+      "sha256": "eb11a79ea5e9dab98c573c47aee3b46400fb01e4060a0e15f1344d71c3046226"
+    },
+    "late_ZP_captures": [
+      {
+        "address": "0x00000000",
+        "bytes": 34,
+        "path": "build/c2.2/hardware-link62-slot39-threshold-hold2-NONPROMOTABLE/poll-zp-late-1.bin",
+        "sha256": "2cbfc8affa244c3d55a468c4ff3c3b808de767078eb9e09d99fcb2854c7a84db"
+      },
+      {
+        "address": "0x00000000",
+        "bytes": 34,
+        "path": "build/c2.2/hardware-link62-slot39-threshold-hold2-NONPROMOTABLE/poll-zp-late-2.bin",
+        "sha256": "5a97d41e4d295f9ba6f6608542dc1713da8ea7d568fada85d2284c19b0ae034a"
+      },
+      {
+        "address": "0x00000000",
+        "bytes": 34,
+        "path": "build/c2.2/hardware-link62-slot39-threshold-hold2-NONPROMOTABLE/poll-zp-late-3.bin",
+        "sha256": "e0d50b3d47e900261932068b4db1d06175b4bdac688374552b8788f826754ea2"
+      }
+    ],
+    "prior_hardware_receipt": {
+      "bytes": 8708,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link62-slot39-threshold-hold-hardware-receipt.json",
+      "sha256": "dcda7e938c6889665c22fc961646a79d0eb4bc2146ba2b50523605387768da8e"
+    },
+    "runtime_Slot39_capture": {
+      "address": "0x0000c356",
+      "bytes": 1526,
+      "path": "build/c2.2/hardware-link62-slot39-threshold-hold2-NONPROMOTABLE/runtime-slot39.bin",
+      "sha256": "830f85c823ab536bcb9a73520b866caf8fb006cfa7bd955481cc2b309ee338b7"
+    }
+  },
+  "claim_limit": "Diagnostic root-cause attribution only; no product fix, C1 closure, matrix-gate, acceptance-chain, promotion or release claim.",
+  "execution_accounting": {
+    "latency_attempts_consumed": 0,
+    "new_compiler_runs": 0,
+    "new_hardware_runs": 0,
+    "new_product_links": 0,
+    "operation": "pure replay against read-only captures",
+    "product_bytes_changed": 0
+  },
+  "finding": {
+    "classification": "product/linked-code ABI-liveness defect across the nested read call, not a producer-seal mismatch, poll-start error, frame-counter stall or timeout-arithmetic error",
+    "entry_length": "0x0040",
+    "observed_retry_length": "0xbb04",
+    "poison_loop_is_live": true,
+    "producer_target_seal_divergence": false,
+    "root_cause": "the linked poll retains length in __rc20/__rc30 across the nested Bank-5 read path; by the retry those live bytes are $bb/$04 rather than the callsite's $00/$40.  Because the high byte is nonzero, the poison loop cannot terminate and control never reaches the 64-frame timeout sample",
+    "timeout_boundary_reached": false
+  },
+  "format": "lisp65-c2.2-Link62-slot39-threshold-length-liveness-replay-v1",
+  "linked_dataflow": {
+    "nested_reader": {
+      "address": "0xc7f6",
+      "target": "c2_stream_c2d_read/$e691"
+    },
+    "poll_entry": {
+      "address": "0xc747",
+      "length_storage": {
+        "high": "__rc20/$16",
+        "low": "__rc30/$20"
+      }
+    },
+    "retry_guard": {
+      "address": "0xc7d6",
+      "rule": "nonzero __rc20 jumps directly into the poison loop; __rc30 is compared only when __rc20 is zero"
+    },
+    "rollback_reentry_callsite": {
+      "address": "0xc403",
+      "length_argument": "0x0040",
+      "proof": "LDX #$40; STZ __rc6 before JSR $c6ff"
+    },
+    "timeout_boundary": {
+      "patched_threshold_branch": "0xc8ca",
+      "reachable_only_after_poison/read/verify body returns": true,
+      "sample_address": "0xc8a2"
+    }
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "required_product_decision": {
+    "class": "C",
+    "implemented_here": false,
+    "narrow_fix_direction": "preserve or reload the canonical length across every nested read attempt, then pin a mutation that clobbers call-scratch state and still requires timeout-or-convergence fail-closed",
+    "upstream_claim": "not made; a minimal compiler/ABI reproduction is required before attributing the defect outside this linked product"
+  },
+  "status": "FIRST RED: retry length clobbered before timeout boundary",
+  "time_separated_PCs": [
+    "0xc848",
+    "0xc84c",
+    "0xc850"
+  ],
+  "time_separated_live_state": [
+    {
+      "index": 1,
+      "live_length_high___rc20": "0xbb",
+      "live_length_low___rc30": "0x04",
+      "poison_index_low___rc6": "0xec",
+      "poll_start_high___rc21": "0x05",
+      "poll_start_low___rc28": "0xc8"
+    },
+    {
+      "index": 2,
+      "live_length_high___rc20": "0xbb",
+      "live_length_low___rc30": "0x04",
+      "poison_index_low___rc6": "0xf8",
+      "poll_start_high___rc21": "0x05",
+      "poll_start_low___rc28": "0xc8"
+    },
+    {
+      "index": 3,
+      "live_length_high___rc20": "0xbb",
+      "live_length_low___rc30": "0x04",
+      "poison_index_low___rc6": "0x37",
+      "poll_start_high___rc21": "0x05",
+      "poll_start_low___rc28": "0xc8"
+    }
+  ]
+}

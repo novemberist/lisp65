@@ -1,0 +1,132 @@
+{
+  "authority": {
+    "decision_table": {
+      "all-five-groups-green": "Tier 2 and resident interactive delivery hardware-accepted",
+      "claim-expansion": "forbidden during device session",
+      "daily-use-blocker": "at most one repair round for the affected block, otherwise descope",
+      "rare-or-cosmetic": "Known Issue and v2.0 register row"
+    },
+    "media": {
+      "bytes": 1180885,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-block3-hot-path-repair-device-media-receipt.json",
+      "sha256": "3c1f49df73cb6b0517bd56cb1152f38f17d7cb9ac0a91515d12868f69cc7ed54"
+    },
+    "plan_result": {
+      "bytes": 1541,
+      "path": "docs/planning/v2.0.0-pre-plan.md",
+      "section": "## Block-3 hot-path repair device result and final descope \u2014 2026-09-02",
+      "sha256": "658f62114038f988bba0fcdbcf950ca4c717870654a14a553a731cdabcbc1804"
+    },
+    "session": {
+      "bytes": 5736,
+      "path": "config/c2-v200-block3-hot-path-repair-device-session.json",
+      "sha256": "03651f875f8632a35313634634176c1d06ecc0f9648d0601034f3935825e9ce2"
+    }
+  },
+  "claim_limit": {
+    "accepts": [
+      "byte-identical medium deployment",
+      "boot to native prompt",
+      "documented (car 1) result",
+      "type-error and prompt recovery for (length \"abc\")",
+      "absence of a visible line-editor match mark",
+      "owner latency comparison against v1.9",
+      "pre-bound Block-3 descope branch"
+    ],
+    "excludes": [
+      "string-length hint",
+      "Block-3 acceptance",
+      "IDE matcher",
+      "either blink surface",
+      "lossless collection",
+      "INIT/A0",
+      "D5",
+      "performance smokes",
+      "release"
+    ]
+  },
+  "decision": {
+    "block3_v2_0": "DESCOPED",
+    "classification": "daily-use product red",
+    "diagnostic_hint": "recorded discrepancy; not accepted",
+    "further_device_rows": "stopped at first daily-use red",
+    "latency_device_claim": "not accepted",
+    "matcher_device_claim": "not accepted",
+    "remaining_block3_feature_repair_rounds": 0,
+    "tier1": "independent and retained"
+  },
+  "deployment": {
+    "automated_device_access_after_boot": 0,
+    "byteidentical": true,
+    "fresh_BASIC_first": true,
+    "optional_library_media": "none",
+    "readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-block3-hot-path-repair-device-media/device-stage/product-readback.d81",
+      "sha256": "5cd1c79d4348bbae099aeffb16b6fbb7347e945e0899981a8866f8efc3ab0320"
+    },
+    "remote_name": "V20B3R.D81",
+    "source": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-block3-hot-path-repair-device-media/shared-system/lisp65-product.d81",
+      "sha256": "5cd1c79d4348bbae099aeffb16b6fbb7347e945e0899981a8866f8efc3ab0320"
+    },
+    "transport": "mega65_ftp-over-JTAG"
+  },
+  "format": "lisp65-c2-v200-block3-hot-path-repair-device-result-v1",
+  "next": "retain Tier 1; remove Block 3 from the v2.0 release world",
+  "owner_observations": [
+    {
+      "evidence": "banner, native lisp65> and cursor visible",
+      "id": "BOOT-0",
+      "result": "PASS"
+    },
+    {
+      "id": "T2D-1-car",
+      "observed": "nil",
+      "result": "PASS",
+      "stimulus": "(car 1)"
+    },
+    {
+      "id": "T2D-1-length",
+      "missing": "string-length diagnostic hint",
+      "observed": "*** vm: type error; exactly one live prompt",
+      "result": "PARTIAL RED: HINT ABSENT",
+      "stimulus": "(length \"abc\")"
+    },
+    {
+      "id": "B3-2-line-editor-matcher",
+      "observed": "no mark immediately or after many idle seconds",
+      "result": "FIRST DAILY-USE RED: NO MATCH MARK",
+      "stimulus": "(list 1 3), cursor on closing delimiter"
+    },
+    {
+      "id": "B3-physical-key-feel",
+      "observed": "much better than the prior roughly-one-second runs, but definitely laggy and noticeably worse than v1.9, especially while typing fast",
+      "result": "RED: WORSE THAN V1.9"
+    }
+  ],
+  "recorded_on": "2026-09-02",
+  "session_progress": {
+    "completed": [
+      "BOOT-0",
+      "T2D-1-car"
+    ],
+    "not_run": [
+      "IDE matcher",
+      "line-editor blink",
+      "IDE blink",
+      "forced-collection input and counters",
+      "explicit INIT.L65",
+      "A0",
+      "D5",
+      "performance smokes"
+    ],
+    "partial": [
+      "T2D-1-length",
+      "B3-2-line-editor-matcher",
+      "B3-physical-key-feel"
+    ]
+  },
+  "status": "FINAL RED: BLOCK 3 DESCOPED AFTER HOT-PATH REPAIR"
+}

@@ -1,0 +1,164 @@
+{
+  "authorities": {
+    "build_preparation": {
+      "bytes": 8218,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-preparation-receipt.json",
+      "sha256": "d1720474581f002034c65394213b7f42611fe97651a5fd1f525f855fa87001d5"
+    },
+    "day_rollover_first_red": {
+      "bytes": 958,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-repeat-day-rollover-first-red.json",
+      "sha256": "05c33211950b81d064dbcd5234765e941182fbb108ffa8d7d42931938e155bd3"
+    },
+    "deployment": {
+      "bytes": 9693,
+      "path": "build/c2.3/v1.6-defstruct-mem-init-before-after/deployment.json",
+      "sha256": "c018c58fda0b43bd942432a6844d397c4fdf5f2e735868bc57da4dd81f57004e"
+    },
+    "driver": {
+      "bytes": 39668,
+      "path": "tools/host-lisp/c2_v16_mem_init_before_after_contact.py",
+      "sha256": "a366bb9a204442ad3c7f3acb002500063a2cdb9a08d5a57b0bfb38fe2a2c0ae2"
+    },
+    "owner_authorization": {
+      "bytes": 127379,
+      "path": "git:049e0b083ed67e0d8a73ff27eb22a6c47d823a20:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "862213b408d2b6677c7f6354bce68dcfa75836dec7488ef4146ed4ccc812f7c1"
+    },
+    "runner": {
+      "bytes": 4512,
+      "path": "scripts/c2-v16-defstruct-mem-init-before-after-hw.sh",
+      "sha256": "70219c38795420b4b361e8f91b52b8b0a9895378a1f67b4f7c61e4ff3771cd6a"
+    },
+    "standing_reset_domain_gate": {
+      "bytes": 6017,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link85-full-reset-domain-host-receipt.json",
+      "sha256": "1c02df13fda2dcc71868351f308cc89f4fc88fa2f6991fda9229bc41700dc077"
+    }
+  },
+  "claim_limit": "One repeat diagnostic-only physical RUN after complete reset-domain readback and a pre-RUN C2J CLEAR assertion, followed by one post-quiet stop. The target writes the before/after snapshots; all data are read through the captured mapping. No measured form, product change, link or R/A/I/G result is claimed.",
+  "decision_execution_witnesses": {
+    "built-live": "INIT-BUILT-NO-FAILURE-REPRODUCED",
+    "later-destruction": "LATER-TARGET-STATE-DESTRUCTION",
+    "mem-init-empty": "MEM-INIT-DID-NOT-BUILD-FREELIST",
+    "missing-after": "MEM-INIT-IN-FLIGHT-OR-STALLED-NO-OVERCLAIM",
+    "unclassified": "FIRST-RED-UNCLASSIFIED-NO-OVERCLAIM"
+  },
+  "facts": {
+    "appointment": {
+      "CPU_left_stopped": true,
+      "cold_reset": true,
+      "measured_forms": 0,
+      "monitor_entries_after_RUN": 1,
+      "physical_RUN": true,
+      "quiet_floor_seconds": 27.653,
+      "stops": 1
+    },
+    "decision_table": {
+      "after_built_live_nonempty": "INIT-BUILT-NO-FAILURE-REPRODUCED",
+      "after_built_then_live_empty": "LATER-TARGET-STATE-DESTRUCTION",
+      "before_empty_after_reached_empty": "MEM-INIT-DID-NOT-BUILD-FREELIST",
+      "before_reached_after_absent": "MEM-INIT-IN-FLIGHT-OR-STALLED-NO-OVERCLAIM",
+      "other": "FIRST-RED-UNCLASSIFIED-NO-OVERCLAIM"
+    },
+    "read_protocol": {
+      "C2J": "physical Bank-5 address 0x0005c640",
+      "code": "CPU-view bytes with unique active-owner binding",
+      "low_RAM": "physical Bank-0 RAM after same-stop mapping capture",
+      "mapping_captured_before_data": true
+    },
+    "read_set": {
+      "C2J": [
+        "0x0005c640",
+        64
+      ],
+      "alloc_high": [
+        "0x0039",
+        2
+      ],
+      "boot_witness": [
+        "0xb5c3",
+        1
+      ],
+      "diagnostic_record": [
+        "0xc03f",
+        65
+      ],
+      "freelist": [
+        "0x003d",
+        2
+      ],
+      "gc_frozen": [
+        "0x003b",
+        2
+      ],
+      "gc_runs": [
+        "0xb9f0",
+        2
+      ],
+      "mem_init_witness": [
+        "0xb582",
+        10
+      ],
+      "phase_owner": [
+        "0x0089",
+        1
+      ],
+      "phase_scratch": [
+        "0xc0c6",
+        304
+      ]
+    },
+    "receipt_timebase": {
+      "date_today_not_used_by_stable_receipt_checks": true,
+      "historical_result_recorded_on": "2026-08-05",
+      "preparation_recorded_on": "2026-08-05",
+      "runtime_capture_uses_actual_date": true
+    },
+    "scope": {
+      "R_A_I_G": null,
+      "contact_authorized": true,
+      "contact_consumed": false,
+      "diagnostic_promotable": false,
+      "owner_authority": "git:049e0b083ed67e0d8a73ff27eb22a6c47d823a20",
+      "product_bytes": 0,
+      "product_links": 0
+    },
+    "staging": {
+      "C2J_CLEAR_asserted_before_RUN": true,
+      "C2J_nonzero_bytes": 0,
+      "complete_target_readback": true,
+      "identity_prefix_bytes": 33840,
+      "partial_staging_rejected": true,
+      "reset_domain_bytes": 50816,
+      "suffix_nonzero_bytes": 0
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-mem-init-before-after-repeat-preparation-v1",
+  "mutations_rejected": {
+    "mutation-01": "appointment drift",
+    "mutation-02": "appointment drift",
+    "mutation-03": "appointment drift",
+    "mutation-04": "appointment drift",
+    "mutation-05": "appointment drift",
+    "mutation-06": "appointment drift",
+    "mutation-07": "appointment drift",
+    "mutation-08": "read protocol drift",
+    "mutation-09": "read protocol drift",
+    "mutation-10": "read protocol drift",
+    "mutation-11": "read protocol drift",
+    "mutation-12": "read set drift",
+    "mutation-13": "read set drift",
+    "mutation-14": "staging closure drift",
+    "mutation-15": "staging closure drift",
+    "mutation-16": "staging closure drift",
+    "mutation-17": "staging closure drift",
+    "mutation-18": "stable receipt timebase drift",
+    "mutation-19": "decision table drift",
+    "mutation-20": "scope drift",
+    "mutation-21": "scope drift",
+    "mutation-22-partial-staging-runner": "complete reset-domain size assertion absent"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "HOST-GREEN; FULL RESET DOMAIN; REPEAT CONTACT READY"
+}

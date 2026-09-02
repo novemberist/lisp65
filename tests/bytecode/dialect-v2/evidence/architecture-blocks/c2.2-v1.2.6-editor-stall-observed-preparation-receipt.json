@@ -1,0 +1,96 @@
+{
+  "addresses": {
+    "gc_collect": "0x38f7..0x3ec1",
+    "gc_runs": "0x0000b9f0",
+    "queue_code": "0x0000d619",
+    "queue_state": "0x0000d60a"
+  },
+  "authorities": {
+    "commission": {
+      "bytes": 19812,
+      "path": "docs/planning/c2.2-v1.2.6-editor-halt1-first-red-review.md",
+      "sha256": "0cac2f1aead3ab3f5a3031b58d66694955cf69c063fa2d7c1a8245b6372e0ea2"
+    },
+    "conditional_authorization_commit": "a31e0037",
+    "driver": {
+      "bytes": 79515,
+      "path": "tools/host-lisp/c2_v126_editor_stall_device.py",
+      "sha256": "9074a332682f89e66a5bc9fea0db23c771493b9725945e91a5b6a98d0d9906af"
+    },
+    "expectation_table": {
+      "bytes": 89989,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-key-expectation-table-receipt.json",
+      "sha256": "99d4fd1875c1c2b29e18a50a6ba9405a04d57399bc21849bb23d720cbec828d3"
+    },
+    "host_attribution": {
+      "bytes": 7525,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-host-attribution-receipt.json",
+      "sha256": "844e67cd545fd972670120ca06fafae019a32ec9610073a43eb9800411d7df4e"
+    },
+    "host_dry_run": {
+      "bytes": 6335,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-observed-host-dry-run-receipt.json",
+      "sha256": "bfd35e63da466b0aeb25ecb0b999390ef5ec8ef5b72a54287ea6c83b00c475c4"
+    }
+  },
+  "candidate": {
+    "ELF": {
+      "bytes": 622560,
+      "name": "lisp65-c2-substitution-linked.prg.elf",
+      "path": "build/c2.2/v1.2.6-candidate-product-link83/final/lisp65-c2-substitution-linked.prg.elf",
+      "role": "linked-product-elf",
+      "sha256": "06cd0eaf5dbc343343407acb60b82e61575d9ad7e4b19dabc380789d0c1d1890"
+    },
+    "deployment": {
+      "bytes": 4244,
+      "path": "build/c2.2/v1.2.6-editor-hardware/deployment.json",
+      "sha256": "7958ff1c4f4d9a439d72184b46140848857a1fd47a547e5ef69731275686ff70"
+    },
+    "link": 83,
+    "package_medium": {
+      "bytes": 819200,
+      "name": "lisp65-product.d81",
+      "path": "build/c2.2/v1.2.6-candidate-media/lisp65-product.d81",
+      "role": "product-d81",
+      "sha256": "fef071559a3a5af5e31f7b9aebe0f520d8f463889d4ed11a05cc73753e19f8c2"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "name": "lisp65-c2-substitution-linked.prg",
+      "path": "build/c2.2/v1.2.6-candidate-product-link83/final/lisp65-c2-substitution-linked.prg",
+      "role": "c2-resident-prg",
+      "sha256": "9a39c43cfd680116440b01086850c8d46b951e8a827449df7440f61ad3f3bf53"
+    },
+    "release": "v1.2.6"
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-stall-observed-preparation-v1",
+  "protocol": {
+    "authorized_contact_index": 2,
+    "cold_reset_and_asserted_BASIC": true,
+    "context_truth": {
+      "cached_status_line_consumed": false,
+      "expected_measure3_initial_fill": 0,
+      "expected_scratch_fill": 34,
+      "source": "live ide-buffers value cell and Bank-0/4 heap"
+    },
+    "fresh_contacts": 0,
+    "hang_policy": "every timeout at every position captures queue, gc_runs and stopped PC",
+    "key_expectations": {
+      "rows": 318,
+      "rows_sha256": "561ae197bceeb89e9d269d73f566a1ffaebf7b4491e0c2507f71da85d5bc1519",
+      "source": "complete phase/payload/PETSCII table; no runtime inference"
+    },
+    "package_upload_readback": true,
+    "product_bytes_changed": 0,
+    "queue_arrival_per_key": {
+      "all_runner_keys": true,
+      "physical_RUN_STOP_exception": "freeze at E00B and witness FF8A pending latch; RUN/STOP is not a typed-queue event by the product contract",
+      "read_is_nondequeuing": true,
+      "sequence": "empty-stop preflight -> resume -> set E01C breakpoint -> inject matrix key -> freeze before D619 dequeue -> read D60A/D619 -> clear breakpoint -> resume on match"
+    },
+    "reserve": 1
+  },
+  "recorded_on": "2026-07-31",
+  "status": "prepared-complete-key-table-one-reserve-contact"
+}

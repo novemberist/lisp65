@@ -1,0 +1,141 @@
+{
+  "claim_hygiene": {
+    "established": "The exact 66-byte rtov_crc_mem leaf linked into Link 34 executed correctly on the MEGA65 for the canonical CCITT vector and all five exact early-boot inputs. The input bytes, leaf bytes and probe bytes were read back byte-identically before execution; the leaf remained byte-identical after execution.",
+    "not_established": "The inner verifier status and exact rejection stage of Link 34 remain unknown. This probe did not enter the product and is not a product presmoke retry."
+  },
+  "claim_limit": "One owner-authorized, receipt-less, exact-byte diagnostic hardware run. It exonerates only the Link-34 CRC leaf on the six named inputs; it is not product acceptance, promotion, latency evidence, a source fix, a successor product link or authorization for another hardware run.",
+  "decision": {
+    "conclusion": "The hand-written CRC leaf is exonerated on metal. E2f originates in the verifier/integration path before successful resident-Island installer entry.",
+    "next_probe": {
+      "authorization": "separate authorization required",
+      "kind": "diagnostic-only inner-status latch; capacity/placement first, then at most one diagnostic hardware run",
+      "no_new_state_bytes": true,
+      "preserved_fields_after_fail_closed_cleanup": {
+        "rtov_call_context_low": "verifier index: 0 catalog, 1 record",
+        "rtov_call_context_high": "inner vm_runtime_overlay_status before E2f mapping",
+        "rtov_call_result_u16": "rtov_loaded_len before rtov_fail; nonzero identifies tuple-payload CRC failure, zero identifies verifier-returned status"
+      },
+      "required_properties": [
+        "diagnostic build flag only; ordinary product semantics and layout source remain unchanged",
+        "no BSS, Island or E000 state allocation",
+        "the existing fail-closed wipe and outer E2f user-visible mapping remain unchanged",
+        "one Whole-Program-LTO capacity/placement probe before any diagnostic link",
+        "the diagnostic candidate is not promotable and cannot satisfy any product gate"
+      ]
+    }
+  },
+  "execution_accounting": {
+    "diagnostic_hardware_runs": 1,
+    "presmoke_retries": 0,
+    "product_entries": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2-product-link34-crc-leaf-hardware-exoneration-v1",
+  "hardware_result": {
+    "cases": [
+      {
+        "bytes": 9,
+        "expected_crc16": "0x29b1",
+        "name": "ccitt-check",
+        "observed_crc16": "0x29b1"
+      },
+      {
+        "bytes": 32,
+        "expected_crc16": "0xf0de",
+        "name": "catalog-header",
+        "observed_crc16": "0xf0de"
+      },
+      {
+        "bytes": 1156,
+        "expected_crc16": "0x291d",
+        "name": "catalog-verifier",
+        "observed_crc16": "0x291d"
+      },
+      {
+        "bytes": 1411,
+        "expected_crc16": "0x3d7c",
+        "name": "record-verifier",
+        "observed_crc16": "0x3d7c"
+      },
+      {
+        "bytes": 1287,
+        "expected_crc16": "0xbf4b",
+        "name": "resident-island-installer",
+        "observed_crc16": "0xbf4b"
+      },
+      {
+        "bytes": 1781,
+        "expected_crc16": "0x8009",
+        "name": "resident-island-image",
+        "observed_crc16": "0x8009"
+      }
+    ],
+    "completed_cases": 6,
+    "first_failing_case": 255,
+    "mailbox_marker": "P",
+    "status": "passed-receipt-less-exact-linked-leaf-on-hardware"
+  },
+  "identity": {
+    "deployment": {
+      "bytes": 4693,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/deployment.json",
+      "sha256": "cf7610c75e3441e5ee5117a292be125788b479f9270af79defe4bd7cf3d066bd"
+    },
+    "exact_linked_leaf": {
+      "bytes": 66,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/link34-rtov-crc-mem.bin",
+      "sha256": "1a7f57ca7039ec866907c1c2ed12da6fd4354ce1916deb2961fe5d518268ee86"
+    },
+    "hardware_mailbox": {
+      "bytes": 32,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/hardware-mailbox.bin",
+      "sha256": "ae531bd43e84fe66cbd0b14543486dff84bf209d756eb07013bc0998d40f7235"
+    },
+    "hardware_result": {
+      "bytes": 2285,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/hardware-result.json",
+      "sha256": "95e1467afecf5a7766195e663628b75c96c03849248938841cbbee01cb883232"
+    },
+    "input_bundle": {
+      "bytes": 6645,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/c2-link34-crc-inputs.bin",
+      "sha256": "d3487e6799face5f09b78aac119bd9db37846aba1388485ffdfb24885e582a2d"
+    },
+    "leaf_readback_after_probe": {
+      "bytes": 66,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/readback-leaf-after-probe.bin",
+      "sha256": "1a7f57ca7039ec866907c1c2ed12da6fd4354ce1916deb2961fe5d518268ee86"
+    },
+    "leaf_readback_before_probe": {
+      "bytes": 66,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/readback-leaf-before-probe.bin",
+      "sha256": "1a7f57ca7039ec866907c1c2ed12da6fd4354ce1916deb2961fe5d518268ee86"
+    },
+    "link34_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+      "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485"
+    },
+    "probe_prg": {
+      "bytes": 359,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/c2-link34-crc-leaf-hw-probe.prg",
+      "sha256": "576bf7dca2a40f01734115c0baa1586272802c3bf4bbb6eeb6dcd86929b1c989"
+    },
+    "probe_readback": {
+      "bytes": 357,
+      "path": "build/c2.2/link34-crc-leaf-hardware-probe/readback-probe.bin",
+      "sha256": "42d41c4132d1a586aa3b8a8e95b98d712ca588bce4f66183e53eddb9e057bbe9"
+    }
+  },
+  "source_path_diagnosis": {
+    "captured_precondition": "rtov_call_context == 0 and rtov_call_result == 0 after E2f; the record verifier is the sole successful publisher of the installer frame and the installer is the sole publisher of the target",
+    "localization": "failure before successful record-verifier publication and before resident-Island installer entry",
+    "masking_site": "vm_runtime_overlay_install_island maps every non-OK transport to VM_RUNTIME_OVERLAY_ERR_ISLAND after fail-closed cleanup, overwriting the inner rtov_fault",
+    "unchanged_guarantees": [
+      "the Boot-family preload remained byte-identical",
+      "the resident Island was wiped to all zero bytes",
+      "busy was cleared and the Island state was latched FAILED"
+    ]
+  },
+  "status": "leaf-exonerated-next-stage-requires-separate-authorization"
+}

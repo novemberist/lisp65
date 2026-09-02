@@ -1,0 +1,142 @@
+{
+  "authorities": {
+    "base_ELF": {
+      "bytes": 620924,
+      "path": "build/c2.3/v1.6-defstruct-mem-init-before-after/artifacts/diagnostic-mem-init-before-after.elf",
+      "sha256": "b68b4aab6819e4a6af078fd9fbbaf7ae021908536e9a3cd71c0f631639d5a9ac"
+    },
+    "base_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-mem-init-before-after/artifacts/diagnostic-mem-init-before-after.prg",
+      "sha256": "135678bdd9b21808e2ac4b4625b5ca71eb8c3aabc6828d7af010116105986363"
+    },
+    "base_preparation": {
+      "bytes": 8218,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-preparation-receipt.json",
+      "sha256": "d1720474581f002034c65394213b7f42611fe97651a5fd1f525f855fa87001d5"
+    },
+    "contact_driver": {
+      "bytes": 13898,
+      "path": "tools/host-lisp/c2_v16_preinstaller_micro_ladder_contact.py",
+      "sha256": "07ddd1154b1d52fa97b48d39a0bc422edbfaef6a603928c4750d192f5c2d683b"
+    },
+    "deployment": {
+      "bytes": 10157,
+      "path": "build/c2.3/v1.6-defstruct-preinstaller-micro-ladder/deployment.json",
+      "sha256": "5fa3581f8af616199a14439ddeedf3c4c9b3f990b4ad0160f6a738a8d1f7e38f"
+    },
+    "desk_attribution": {
+      "bytes": 11156,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-preinstaller-stretch-desk-attribution-receipt.json",
+      "sha256": "e60118e1d402ec834867d6cc0a183b04fd8e8b5f8141168b37b33f0eb116eabd"
+    },
+    "diagnostic_ELF": {
+      "bytes": 621260,
+      "path": "build/c2.3/v1.6-defstruct-preinstaller-micro-ladder/artifacts/diagnostic-preinstaller-micro-ladder.elf",
+      "sha256": "646a1db7004cfc89f0c831d4b855483d6a8d9035da864f88de4cd5a4c3ee9cb6"
+    },
+    "diagnostic_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-preinstaller-micro-ladder/artifacts/diagnostic-preinstaller-micro-ladder.prg",
+      "sha256": "b1db6e1b2f8bb45ee9bab21d82d7f4b5225da256bd90372930d797f0f69f6fba"
+    },
+    "driver": {
+      "bytes": 18507,
+      "path": "tools/host-lisp/c2_v16_preinstaller_micro_ladder.py",
+      "sha256": "29b18e23e40818a0089c81994e8c7c7fe36269fd9169204575e985acf49c9773"
+    },
+    "owner_authorization": {
+      "bytes": 141463,
+      "path": "git:20b4b990666e74a9bb2ebe5251c1617a4ea094d1:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "7c7ae4f229ad76f7debf0ffd0812ee93408c339b4bc7f4ea938c61a8c5ddc497"
+    },
+    "runner": {
+      "bytes": 4840,
+      "path": "scripts/c2-v16-defstruct-preinstaller-micro-ladder-hw.sh",
+      "sha256": "91ba2ff1ebbe5488fbb3e3b8c5dcfb2a5d1d2f516e66dd7aa20889936d3f67a5"
+    }
+  },
+  "claim_limit": "Non-promotable diagnostic preparation only. One owner-authorized contact; no product bytes, mem_init answer, R/A/I/G row, fix, Link or release.",
+  "facts": {
+    "appointment": {
+      "C2J_CLEAR_before_RUN": true,
+      "CPU_left_stopped": true,
+      "complete_reset_domain": true,
+      "contacts": 1,
+      "owner_authority": "git:20b4b990666e74a9bb2ebe5251c1617a4ea094d1",
+      "physical_RUN": true,
+      "quiet_floor_seconds": 27.653,
+      "stops": 1
+    },
+    "decision_table": {
+      "enter-absent": "LOCAL-CRT-INIT-BOUNDARY",
+      "enter-set,return-absent": "CHROUT-NONRETURN-OR-MAP-NOT-RESTORED",
+      "installer-enter-set,ov_started=0": "INSTALLER-PROLOGUE-BEFORE-ARM",
+      "ov_started=1": "HAND-OFF-TO-EXISTING-STATUS-TABLE",
+      "ownership-enter-set,return-tag-absent": "OWNERSHIP-IN-FLIGHT-BOUNDARY",
+      "ownership-return-raw!=0,installer-enter-absent": "POST-OWNERSHIP-PRE-INSTALLER",
+      "ownership-return-raw=0": "OWNERSHIP-FAIL-CLOSED-EXIT",
+      "return-set,ownership-enter-absent": "MAIN-PREFIX-BOUNDARY"
+    },
+    "identity": {
+      "actual_differing_bytes": 49,
+      "base_bytes": 41566,
+      "callsite_operand_bytes": 6,
+      "gap_bytes": 43,
+      "layout_shift": 0,
+      "product_bytes": 0,
+      "promotable": false,
+      "sibling_bytes": 41566
+    },
+    "placement": {
+      "chrout_wrapper": [
+        "0xb592",
+        "0xb59e"
+      ],
+      "durable_boot_witness": "0xb5c3",
+      "installer_wrapper": [
+        "0xb5af",
+        "0xb5b7"
+      ],
+      "owner_free_bytes_left": 12,
+      "ownership_wrapper": [
+        "0xb59e",
+        "0xb5af"
+      ],
+      "state": [
+        "0xb58c",
+        "0xb592"
+      ]
+    },
+    "semantics": {
+      "CHROUT": "incoming A commits entry; E1 commits only after RTS",
+      "hidden_callee": "all wrappers share the caller's proved visibility",
+      "installer": "E4 entry then tail-JMP A714",
+      "ownership": "E2 entry; raw return A stored before E3 commit tag"
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-preinstaller-micro-ladder-preparation-v1",
+  "mutations_rejected": {
+    "mutation-01": "identity delta drift",
+    "mutation-02": "identity delta drift",
+    "mutation-03": "identity delta drift",
+    "mutation-04": "identity delta drift",
+    "mutation-05": "identity delta drift",
+    "mutation-06": "identity delta drift",
+    "mutation-07": "placement drift",
+    "mutation-08": "placement drift",
+    "mutation-09": "placement drift",
+    "mutation-10": "wrapper semantic drift",
+    "mutation-11": "wrapper semantic drift",
+    "mutation-12": "wrapper semantic drift",
+    "mutation-13": "appointment/closure drift",
+    "mutation-14": "appointment/closure drift",
+    "mutation-15": "appointment/closure drift",
+    "mutation-16": "appointment/closure drift",
+    "mutation-17": "appointment/closure drift",
+    "mutation-18": "appointment/closure drift",
+    "mutation-19": "appointment/closure drift"
+  },
+  "recorded_on": "2026-08-06",
+  "status": "HOST-GREEN; CONTACT READY"
+}

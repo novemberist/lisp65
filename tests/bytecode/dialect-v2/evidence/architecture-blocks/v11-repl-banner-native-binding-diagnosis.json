@@ -1,0 +1,67 @@
+{
+  "format": "lisp65-v11-repl-banner-native-binding-diagnosis-v1",
+  "block_id": "1.1-D-repl-banner-native-binding",
+  "status": "diagnosed-owner-review-required",
+  "recorded_on": "2026-07-16",
+  "affected_product_commit": "7d9696e",
+  "affected_block_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-repl-banner-block-receipt.json",
+    "sha256": "4a7528093415a8c5d179a33daad91dad2565ceb8cdeab53eb2c519977ba21f2e"
+  },
+  "hardware_observation": {
+    "result": "fail-closed-no-visual-acceptance",
+    "screen": "legacy lisp65 line and row-1 prompt; no banner",
+    "screenshot_path": "build/evidence/v11-repl-banner-hardware/banner-first-prompt.png",
+    "screenshot_sha256": "ab60489bc2916859665ab58bd3e03f898ef511d6fe6c52000a36e2ce21259a9c",
+    "candidate_resident_prg_sha256": "eb6c084891f65a8c2badf3b6bd5d7af830fee41ab57feb5b005ac65fdfee8301",
+    "claim": "diagnostic only; not hardware acceptance"
+  },
+  "root_cause": {
+    "summary": "The generator emitted the banner ordinal, but src/repl.c did not include the generated stdlib header. Its conditional compiled the legacy fallback into the real product while the host visual oracle invoked %repl-banner directly.",
+    "generated_macro": "LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY=198",
+    "missing_edge": "generated stdlib header -> native REPL translation unit",
+    "class": "binding completeness: implementation and direct oracle green while the product launch edge is absent"
+  },
+  "probe_fix": {
+    "working_tree_only": true,
+    "mechanism": [
+      "The Workbench profile declares LISP65_REPL_BANNER_REQUIRED.",
+      "src/repl.c includes the generated stdlib header when that contract is active.",
+      "Compilation fails if the generated banner ordinal is absent."
+    ],
+    "negative_gate": "pass: a generated header without the banner entry is rejected during preprocessing",
+    "binary_binding": "pass: final repl disassembly calls vm_run_dir with ordinal 198 immediately after scr_init",
+    "legacy_fallback_in_candidate": false
+  },
+  "capacity_correction": {
+    "unchanged_dimensions": {
+      "ext_headroom_bytes": 25186,
+      "symbol_headroom": 389,
+      "namepool_headroom_bytes": 5643,
+      "directory_post_align_headroom": 168,
+      "boot_overlay_bytes": 1669
+    },
+    "bank": {
+      "previously_authorized_candidate_reserve_bytes": 1876,
+      "corrected_candidate_reserve_bytes": 1873,
+      "release_target_bytes": 1536,
+      "corrected_margin_bytes": 337,
+      "correction_bytes": -3,
+      "delta_from_pre_banner_baseline_bytes": 78
+    },
+    "overlay_vma": {
+      "previously_authorized_base": "0xc304",
+      "corrected_base": "0xc306",
+      "ceiling": "0xc356",
+      "previously_authorized_headroom_bytes": 82,
+      "corrected_headroom_bytes": 80,
+      "correction_bytes": -2,
+      "delta_from_pre_banner_baseline_bytes": 78,
+      "eventqueue_projection_bytes": 68,
+      "projected_post_eventqueue_headroom_bytes": 12
+    },
+    "attribution": "The real generated-ordinal vm_run_dir launch replaces the smaller legacy emit_str fallback. No Lisp blob, symbol, namepool, directory, or overlay-owned source changed."
+  },
+  "recommendation": "Authorize the corrected three-byte Bank debit and two-byte overlay-headroom correction. A reclaim sweep for five effective bytes would not serve a capacity contract; both floors remain met and the measured 68-byte eventqueue path retains 12 bytes of projected overlay margin.",
+  "claim_limit": "This diagnosis proves why the first hardware screenshot failed and measures a fail-closed binding fix. It does not authorize the corrected capacity, promote the working-tree fix, or accept hardware appearance."
+}

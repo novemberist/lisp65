@@ -1,0 +1,278 @@
+{
+  "accounting": {
+    "code_bytes_after": 17206,
+    "code_bytes_before": 17134,
+    "code_bytes_delta": 72,
+    "directory_bytes_after": 2751,
+    "directory_bytes_before": 2737,
+    "directory_bytes_delta": 14,
+    "external_bytes_after": 40340,
+    "external_bytes_before": 40126,
+    "external_bytes_delta": 214,
+    "objects_after": 393,
+    "objects_before": 391,
+    "objects_delta": 2,
+    "resident_bytes_delta": 0
+  },
+  "authorities": {
+    "Link96_world": {
+      "bytes": 21534,
+      "path": "build/c2.3/terminal-return-guard-link96/canonical-product-manifest.json",
+      "sha256": "769490bf8c5978bc7bac6c1b6b2ba7271f801a22a6153bee28e73a0ee7be6742"
+    },
+    "baseline_attribution": {
+      "bytes": 48357,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-repl-pipeline-cost-attribution-receipt.json",
+      "sha256": "68a2a71b45c6a9038d67bfc2f67a43726bbcd87546678473f9f5116db0781767"
+    },
+    "baseline_manifest": {
+      "bytes": 342773,
+      "path": "build/c2.3/link95-packed-callee-closure/static-plane/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "56f691c54f6c0dcc5930f21c13eb494d53d5b5e129957db8e5dcd6122768ce08"
+    },
+    "contract": {
+      "bytes": 1568,
+      "path": "config/c2-repl-direct-expression-contract.json",
+      "sha256": "4797e7ec52d214f8bc8f8d213a11f3d0fd4e0c7b48797e0fc3dffe128b48d9b7"
+    },
+    "driver": {
+      "bytes": 29408,
+      "path": "tools/host-lisp/c2_repl_direct_expression_gate.py",
+      "sha256": "88616100d9fcac973ee88cf1ed32135523ce81a7acc824669ea0ed6c50b6092b"
+    },
+    "source": {
+      "bytes": 7047,
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "0250155f1cf3a6ff5fcaaf748534b270065c4d32123ca14e92bcb2e142874797"
+    }
+  },
+  "candidate_runtime": {
+    "bytes": 7198,
+    "compiler_private_macro_predicate_absent": true,
+    "published_macro_predicate": "%c2-top-level-macro-p",
+    "sha256": "1d68809e3dfd5194a4873582f5a1a1da82baaffaf56049386a7502b7412a1616"
+  },
+  "ceremony_amortisation": {
+    "authorities": {
+      "dynamic_code_gap": {
+        "bytes": 6450,
+        "path": "config/c2-dynamic-code-gap-proposal.json",
+        "sha256": "5a2916b106dccd06b44fe0e7b7a2d867d3b552eeff40acae020a2ca3ecc4414b"
+      },
+      "experience_plan": {
+        "bytes": 9241,
+        "path": "docs/planning/startup-require-experience-work-plan.md",
+        "sha256": "53a3d44883d0bbcd3539d6b93b64b3b420678d6648aa67a84fbf845e6aca0995"
+      },
+      "legacy_installer": {
+        "bytes": 18121,
+        "path": "src/lcc_install_overlay.c",
+        "sha256": "ecc1ae0ed344aef2f9a6fd04d7db233a20c6c20978d85c021ce5941974daae96"
+      },
+      "product_dispatch": {
+        "bytes": 97933,
+        "path": "src/eval.c",
+        "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+      },
+      "product_runtime": {
+        "bytes": 163560,
+        "path": "src/c2_product_runtime.c",
+        "sha256": "8d1ab8d0150fa2401094613372ebf57143027c612d4612a4479ecfe43e2c6b00"
+      }
+    },
+    "conclusion": "No in-scope ceremony-amortisation lever survives the current one-decoder, immutable-publication and rollback walls.  The recursive direct path is the material safe result; setq and definitions retain the measured 60/62-frame lane.",
+    "current_product_lane": "emit -> authenticated append -> execute -> rollback; serial and repeated once for every non-direct expression",
+    "priced_candidates": [
+      {
+        "candidate": "reuse the legacy transient overlay",
+        "reason": "compile-time-exclusive non-C2 implementation; restoring it would reintroduce the rejected dual decoder/address domain",
+        "result": "rejected"
+      },
+      {
+        "candidate": "mutable reusable C2 execution slot",
+        "reason": "requires a new address, literal-root, generation and publication contract; no such owned lane exists",
+        "result": "out-of-scope architecture"
+      },
+      {
+        "candidate": "skip append or rollback for compiled expressions",
+        "reason": "weakens the immutable-code and rollback contracts which are explicit Phase-C walls",
+        "result": "rejected"
+      },
+      {
+        "candidate": "batch independent interactive forms",
+        "reason": "changes prompt/RETURN semantics and cannot reduce the first form's 60/62-frame response",
+        "result": "not a single-form latency lever"
+      }
+    ],
+    "release_edge": "still red for ceremony forms: sub-0.5-second response requires a separately owned transient-execution architecture, not a local edit"
+  },
+  "effect": {
+    "bound_accessor_calls": "60/62-frame ceremony removed",
+    "common_nested_calls": "60/62-frame ceremony removed",
+    "persistent_and_special_forms": "unchanged compile/install ceremony",
+    "remaining_target": "amortise the measured ceremony without weakening publication or rollback; no sub-0.5-second claim is made by this host gate"
+  },
+  "execution": {
+    "direct": [
+      {
+        "case": "historical-flat",
+        "install_calls": 0,
+        "instructions": 156,
+        "result": "41",
+        "route": "direct",
+        "source": "(probe 41)"
+      },
+      {
+        "case": "nested-call",
+        "install_calls": 0,
+        "instructions": 431,
+        "result": "6",
+        "route": "direct",
+        "source": "(+ 1 (+ 2 3))"
+      },
+      {
+        "case": "bound-list-access",
+        "install_calls": 0,
+        "instructions": 313,
+        "result": "2",
+        "route": "direct",
+        "source": "(car (cdr lst))"
+      },
+      {
+        "case": "accessor",
+        "install_calls": 0,
+        "instructions": 189,
+        "result": "4",
+        "route": "direct",
+        "source": "(point-y test)"
+      },
+      {
+        "case": "allocation",
+        "install_calls": 0,
+        "instructions": 364,
+        "result": "(1 2 3 4 5)",
+        "route": "direct",
+        "source": "(list 1 2 3 4 5)"
+      }
+    ],
+    "direct_cases": 6,
+    "fallback": [
+      {
+        "case": "setq",
+        "install_calls": 1,
+        "install_name": "t",
+        "instructions": 1116,
+        "route": "compile-install",
+        "source": "(setq x 1)"
+      },
+      {
+        "case": "definition",
+        "install_calls": 1,
+        "install_name": "%proof-new",
+        "instructions": 536,
+        "route": "compile-install",
+        "source": "(defun %proof-new () 7)"
+      },
+      {
+        "case": "macro-definition",
+        "install_calls": 1,
+        "install_name": "nil",
+        "instructions": 496,
+        "route": "compile-install",
+        "source": "(defmacro %proof-m () 7)"
+      },
+      {
+        "case": "macro-generated-definition",
+        "install_calls": 1,
+        "install_name": "%proof-made",
+        "instructions": 557,
+        "route": "compile-install",
+        "source": "(%make-proof-function %proof-made)"
+      },
+      {
+        "case": "special-form",
+        "install_calls": 1,
+        "install_name": "t",
+        "instructions": 1267,
+        "route": "compile-install",
+        "source": "(if t 1 2)"
+      },
+      {
+        "case": "unbound-value",
+        "install_calls": 1,
+        "install_name": "t",
+        "instructions": 1870,
+        "route": "compile-install",
+        "source": "(probe never-bound)"
+      }
+    ],
+    "fallback_cases": 8,
+    "left_to_right": {
+      "install_calls": 0,
+      "instructions": 468,
+      "result": "(1 11)",
+      "route": "direct"
+    },
+    "undefined": {
+      "install_calls": 1,
+      "install_name": "t",
+      "instructions": 1400,
+      "route": "compile-install"
+    },
+    "wrong_arity": {
+      "detail": "wrong argument count for probe: expected 1..1, got 2",
+      "error": "ArityError",
+      "functions": {
+        "%c2-direct-expression": 26,
+        "%c2-direct-expression-p": 10,
+        "%c2-direct-quoted-value-p": 20,
+        "%c2-direct-value": 10,
+        "%c2-direct-value-p": 36,
+        "%c2-direct-values": 24,
+        "%c2-direct-values-p": 28,
+        "%c2-published-direct-call-p": 16,
+        "%c2-run-expanded": 14,
+        "%c2-top-level-expand": 10,
+        "%c2-top-level-macro-p": 8,
+        "lcc-run": 3
+      },
+      "install_calls": 0,
+      "instructions": 205,
+      "route": "vm-error"
+    }
+  },
+  "format": "lisp65-c2.3-repl-direct-expression-v1",
+  "gate_wiring": [
+    "c2-repl-direct-expression-selftest:",
+    "python3 tools/host-lisp/c2_repl_direct_expression_gate.py selftest",
+    "c2-repl-direct-expression-check:",
+    "python3 tools/host-lisp/c2_repl_direct_expression_gate.py check",
+    "check-source: c2-repl-direct-expression-check"
+  ],
+  "recorded_on": "2026-08-11",
+  "scope": {
+    "device_contacts": 0,
+    "product_links": 0,
+    "release_claim": false,
+    "resident_bytes_delta": 0
+  },
+  "source_gate": {
+    "definitions": [
+      "%c2-direct-quoted-value-p",
+      "%c2-direct-value-p",
+      "%c2-direct-values-p",
+      "%c2-direct-value",
+      "%c2-direct-expression-p",
+      "%c2-direct-expression",
+      "%c2-direct-values",
+      "%c2-published-direct-call-p",
+      "%c2-top-level-expand",
+      "%c2-top-level-run-forms",
+      "%c2-run-expanded",
+      "lcc-run"
+    ],
+    "fallback_preserved": true,
+    "mutations_rejected": 11
+  },
+  "status": "PASSED-DIRECT-EXPRESSION-WIDENING-HOST-AND-ARTIFACT-GATES"
+}

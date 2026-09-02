@@ -1,0 +1,74 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-split-d3-trace-first-red-v1",
+  "recorded_on": "2026-08-08",
+  "status": "first-red-d3-trace-install-under-result-poll",
+  "candidate": {
+    "product": "Link-92-r5",
+    "banner": "WORKBENCH 1.4.0",
+    "library_medium_sha256": "9f4fd70b3ce31d8a8f887bfc92d2d5eff3e4921f8e493c6e59ae66b4a95d50fe"
+  },
+  "green_prefix": [
+    {"form": "(require(quote string-extra))", "result": "t", "quiet_seconds": 120},
+    {"form": "(require(quote inspect))", "result": "t", "quiet_seconds": 120},
+    {"form": "(capitalize \"hello\")", "result": "\"Hello\""},
+    {"form": "(string-split \"a,b,c\" \",\")", "result": "(\"a\" \"b\" \"c\")"},
+    {"form": "(who-calls(quote %ide-region-parts-tail))", "result": "(%ide-region-parts %ide-region-parts-tail)"}
+  ],
+  "first_red": {
+    "form": "(trace capitalize)",
+    "input_echo_verified_before_return": true,
+    "expected": "capitalize",
+    "observed": "red fail-closed frame with the submitted form still visible and no result",
+    "poll_budget_seconds": 60,
+    "elapsed_to_red_seconds": 3,
+    "runner_behavior": "the result helper took repeated screenshots while waiting for the trace result",
+    "automatic_retry": false
+  },
+  "bindings": {
+    "config": {"path": "config/c2-v112-link92-phase-d-d3.json", "bytes": 5282, "sha256": "516c4e6f5dd0391a1fbb4a2305b6446994fc1eb936664f91208758c0aafc6eb4"},
+    "runner": {"path": "scripts/c2-v112-link92-phase-d-d3-hw.sh", "bytes": 8465, "sha256": "495f7dc96433f37a546773a6ad485e8d7bbfb02621d762cf8eb6f28f4ef98542"},
+    "preparation": {"path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d3-preparation-receipt.json", "bytes": 7940, "sha256": "e620be908eee1b2fea0998c52d0c913c198887cf5f90efa4f5ce721f03f1b9d6"},
+    "green_D1": {"path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-split-d1-smoke-device-receipt.json", "bytes": 4112, "sha256": "8961c29c033293d33c283e67eed05324ccc2debadf2ca11d8fbf06a11a391b53"},
+    "library_readback": {"path": "build/c2.3/v1.4.0-release/phase-d-split/d3/D3-library-readback.d81", "bytes": 819200, "sha256": "9f4fd70b3ce31d8a8f887bfc92d2d5eff3e4921f8e493c6e59ae66b4a95d50fe"},
+    "last_green_result": {"path": "build/c2.3/v1.4.0-release/phase-d-split/d3/D3-who-calls.txt", "bytes": 2241, "sha256": "ee5c33bc83a2fd96912413336df392728141110334fbea997d00bd421915ec20"},
+    "trace_input_echo": {"path": "build/c2.3/v1.4.0-release/phase-d-split/d3/D3-trace-input-attempt-1.txt", "bytes": 2241, "sha256": "688dfe8ddd917698121e7e5c1bfc4720e8d13abce36d42c41422c3ee3b7da5e5"},
+    "trace_screen": {"path": "build/c2.3/v1.4.0-release/phase-d-split/d3/D3-trace.png", "bytes": 5976, "sha256": "befed79d2f0be2194b6d8c8843ebf37455f7c1d6c161bc6f153fec9ca32a3d9d"},
+    "trace_text": {"path": "build/c2.3/v1.4.0-release/phase-d-split/d3/D3-trace.txt", "bytes": 2241, "sha256": "688dfe8ddd917698121e7e5c1bfc4720e8d13abce36d42c41422c3ee3b7da5e5"},
+    "trace_timing": {"path": "build/c2.3/v1.4.0-release/phase-d-split/d3/D3-trace-timing.json", "bytes": 179, "sha256": "d4de9898f4ad5e9eb86be6998484c68bf7d915b9de84a6dfe705311f45b166fe"}
+  },
+  "attribution_boundary": {
+    "proven": [
+      "both renamed libraries load and their pre-trace public rows pass on the target",
+      "the complete trace form reached the active input line before the separate RETURN",
+      "the target showed the fail-closed frame during the result-poll loop and before a trace result appeared",
+      "untrace, post-untrace, editor and D2 did not run"
+    ],
+    "not_proven": [
+      "that trace fails without monitor polling",
+      "that the monitor crossing alone caused the fail-closed transition",
+      "that trace installed its wrapper before the transition",
+      "any editor, defstruct, selector, Halt or release result"
+    ],
+    "remaining_cases": [
+      "the repeated screenshot poll crossed a still-active trace installation and triggered the known source-less fail-closed guard class",
+      "trace has an independent target-only product failure before producing its result"
+    ]
+  },
+  "execution_accounting": {
+    "hardware_contacts": 1,
+    "D3_green_requires": 2,
+    "D3_green_function_rows": 3,
+    "D3_first_red_rows": 1,
+    "D3_unrun_function_rows": 4,
+    "editor_rows": 0,
+    "D2_rows": 0,
+    "additional_links": 0,
+    "product_or_media_rebuilds": 0
+  },
+  "disposition": {
+    "phase_D": "halted-in-D3-before-editor-and-D2",
+    "recontact_authorized": false,
+    "recommended_next_step": "Host-first bind the exact trace expansion and target operation path, determine whether trace installation enters a guard-sensitive or persistent interval, and price a no-poll first-observation window if it does. Do not retry the device row until the two remaining cases are separated or the quiet choreography is mutation-proven."
+  },
+  "claim_limit": "A D3 trace First Red under an active screenshot-poll loop. It is neither a trace product-failure claim nor a harness-only attribution. D1 and the D3 green prefix stand; later D3 rows, editor, D2, selector, Halt, Phase E and release remain unclaimed."
+}

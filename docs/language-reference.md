@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 1.5.0**. The language remains
+This living reference describes **lisp65 1.9.0**. The language remains
 Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
@@ -94,7 +94,8 @@ The released surface includes:
 - input: `read-line` (a Bank-2 last-row editor), plus low-level `key-event`
   for polling or raw events;
 - timing: `time`, `wait`;
-- optional strings from the string-extra library: `capitalize`, `string-split`;
+- optional strings from the separately loaded string-extra library:
+  `capitalize`, `string-split`;
 - optional inspection from the inspect library: `who-calls`, `trace`,
   `untrace`;
 - optional positional structures from the defstruct library: `defstruct` and
@@ -111,10 +112,12 @@ The released surface includes:
 `search`, `position`, and `string-ref` use zero-based indexes. A missing search
 or position returns `nil`.
 
-`trace` and `untrace` take an unquoted function name as macro input. Tracing
-publishes a wrapper transactionally, saves the exact original function-cell
-value and prints ordered `trace-enter`/`trace-exit` records. `untrace` restores
-the captured value exactly.
+These optional packages remain documented public modules, but they are not
+preloaded by the selected v1.9 boot profile. `trace` and `untrace` take an
+unquoted function name as macro input. Tracing publishes a wrapper
+transactionally, saves the exact original function-cell value and prints
+ordered `trace-enter`/`trace-exit` records. `untrace` restores the captured
+value exactly.
 
 `(defstruct name slot*)` is positional and option-free. It publishes
 `make-NAME`, `NAME-p`, `copy-NAME`, `NAME-SLOT`, `NAME-set-SLOT`, and
@@ -150,10 +153,11 @@ count, and returns the form's value unchanged. The counter is read atomically
 and calibrated at approximately 50 Hz; a duration of 16,384 frames or more
 fails explicitly instead of silently wrapping.
 
-`(read-line)` blocks for one editable line, echoes accepted printable input,
-uses DEL to erase, terminates on RETURN, and returns a packed string. Lines are
-bounded to 250 characters; further printable input is ignored until DEL or
-RETURN. `(key-event 0)` polls and `(key-event 1)` blocks, returning
+`(read-line)` blocks for one insertion-mode editable line and returns a packed
+string. The native `lisp65>` prompt uses the same editor. Cursor Left/Right and
+`C-b`/`C-f` move, `C-a`/`C-e` select endpoints, DEL removes backward and `C-d`
+removes forward. Lines are bounded to 250 characters; further printable input
+is ignored until deletion or RETURN. `(key-event 0)` polls and `(key-event 1)` blocks, returning
 `(key code modifiers)` when an event is available. RUN/STOP remains the global
 abort and is never returned as ordinary input.
 
@@ -191,7 +195,7 @@ First-class byte buffers were added in 1.1. They print as the opaque marker
 
 ## Interactive latency boundary
 
-Ordinary non-persistent expressions use the v1.5 direct path and begin at the
+Ordinary non-persistent expressions use the direct path introduced in v1.5 and begin at the
 interactive price: nested arithmetic, list access, function calls and structure
 accessors no longer pay the transient append/rollback ceremony. Durable forms
 such as `setq`, `defun`, `defmacro`, and macros that expand into definitions

@@ -1,0 +1,111 @@
+{
+  "format": "lisp65-c2-product-link35-dma-completion-hardware-first-red-v1",
+  "status": "FIRST RED: chained completion marker observed but catalog-verifier payload CRC failed",
+  "recorded_on": "2026-07-21",
+  "claim_limit": "One receipt-less Link-35 hardware pre-smoke plus read-only post-stop captures. It is not hardware acceptance, promotion, latency evidence or authorization for another product or diagnostic link.",
+  "product_identity": {
+    "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/lisp65-c2-substitution-linked.prg",
+    "bytes": 41542,
+    "sha256": "54c731559fdb72d5d1cb8478b9da7e78a422741e4e5267d64b07fe4c6f763a65"
+  },
+  "authorization": {
+    "pure_replay": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link35-dma-completion-first-status-pure-replay-receipt.json",
+      "bytes": 18828,
+      "sha256": "10bc82583a9b6f80c805a6770769792047e838e93e07d92a4735b673bd2fd13d"
+    },
+    "deployment": {
+      "path": "build/c2.2/hardware-presmoke-link35-dma-completion-first-status/deployment.json",
+      "bytes": 2995,
+      "sha256": "1546299d40111c4104441d600852f321907d182c4118667eab167c44dcf238dc"
+    }
+  },
+  "hardware_observation": {
+    "frame": "blue-and-white; no red frame",
+    "display": "E2f runtime island invalid; redeploy",
+    "repl": "not reached",
+    "first_red_line": "boot-to-REPL"
+  },
+  "live_zero_page": {
+    "capture": {
+      "path": "build/c2.2/hardware-presmoke-link35-dma-completion-first-status/first-red-zp-0060-0090-read1.bin",
+      "bytes": 48,
+      "sha256": "5a7d811bba9e662a1616b9bc3d0bd02c01b0f5fc2bcd9998e41adc89225271dd"
+    },
+    "rtov_family": 1,
+    "rtov_family_name": "boot",
+    "rtov_island_state": 3,
+    "rtov_island_state_name": "FAILED",
+    "rtov_loaded_len_after_fail_closed_wipe": 0,
+    "rtov_busy": 0,
+    "rtov_fault": 15,
+    "rtov_fault_name": "VM_RUNTIME_OVERLAY_ERR_CRC"
+  },
+  "transport_binding": {
+    "verifier": "catalog-verifier",
+    "verifier_index": 0,
+    "source_physical": "0x08200200",
+    "destination_cpu": "0xc356",
+    "bytes": 1156,
+    "expected_crc16": "0xe856",
+    "live_job_hex": "0b8082810085010004840400020056c3000000000b80008100850100030100a50000d1bf00000000",
+    "completion_marker_address": "0xbfd1",
+    "completion_marker_live": "0xa5",
+    "source_after_stop": {
+      "path": "build/c2.2/hardware-presmoke-link35-dma-completion-first-status/first-red-boot-family-poststop-read1.bin",
+      "bytes": 15605,
+      "sha256": "2703d1e868369c6e54d432e25f0548e9ab85df1a4994442b96e7096bf0ac541d",
+      "matches_deployed_boot_family": true
+    },
+    "job_and_marker_capture": {
+      "path": "build/c2.2/hardware-presmoke-link35-dma-completion-first-status/first-red-job-and-marker-b960-bfe0-read1.bin",
+      "bytes": 1664,
+      "sha256": "15abf05baf99b3414f16447b31f0c729c5c5fdd6f71af846afcc5ff83e2a3cf3"
+    },
+    "destination_after_cleanup": {
+      "path": "build/c2.2/hardware-presmoke-link35-dma-completion-first-status/first-red-runtime-window-c356-c7da-read1.bin",
+      "bytes": 1156,
+      "sha256": "6bed6ecd7fb8a2ef5778c39309a072b28fd839f212be56b3537c590866129ce7",
+      "nonzero_bytes": 0
+    }
+  },
+  "diagnosis": {
+    "proved": [
+      "the Link-35 non-LTO completion leaf ran far enough to observe the chained 0xa5 marker",
+      "the exact deployed Boot-family source remained byte-identical",
+      "the first verifier transport nevertheless failed its payload CRC before verifier entry",
+      "the inner first-status product change preserved ERR_CRC in rtov_fault",
+      "the fail-closed destination wipe completed"
+    ],
+    "not_proved": [
+      "whether the post-marker destination is still changing or stably wrong",
+      "the exact DMA/core mechanism that permits marker publication without a valid payload",
+      "a replacement completion boundary"
+    ],
+    "conclusion": "The chained Bank-0 fill marker is not a sufficient publication witness on the tested device and cannot be promoted as the rtov_read completion contract.",
+    "public_error_masking_followup": "main() still maps every non-OK Island-install return to public E2f. The inner-first-status rule is correct internally but has not yet reached the boot display."
+  },
+  "bounded_next_probe": {
+    "authorization": "not granted by this diagnosis",
+    "kind": "non-promotable completion-plus-double-CRC diagnostic link",
+    "method": "reuse the existing four lifetime-dead context/result bytes to preserve two immediate CRC passes after the observed 0xa5 marker and before the unchanged wipe",
+    "decides": {
+      "different_wrong_crcs": "payload visibility is still evolving after the marker",
+      "same_wrong_crc": "payload is stable but copied or addressed incorrectly"
+    },
+    "limits": [
+      "capacity and placement first",
+      "no new state bytes",
+      "one diagnostic link only",
+      "at most one separately authorized hardware run",
+      "Link 35 remains untouched",
+      "no product fix or completion-contract replacement in this probe"
+    ]
+  },
+  "execution_accounting": {
+    "product_links": 0,
+    "hardware_presmoke_runs": 1,
+    "post_stop_read_only_captures": 4,
+    "retries": 0
+  }
+}

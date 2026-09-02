@@ -654,21 +654,41 @@ def public_native_fallback_gate(editor: str) -> dict[str, Any]:
     poll = next((form for form in defuns(editor)
                  if form[1] == "%rl-poll"), None)
     require(poll is not None, "%rl-poll definition absent")
-    suffix = ["nthcdr", 8, "state"]
-    aliases = {
-        binding[0]
-        for node in walk_form(poll)
-        if len(node) >= 2 and node[0] in ("let", "let*")
-        and isinstance(node[1], list)
-        for binding in node[1]
-        if isinstance(binding, list) and len(binding) == 2
-        and binding[1] == suffix
-    }
-    conditions: list[Any] = [suffix, *sorted(aliases)]
+
+    def list_offset(expr: Any, offsets: dict[str, int]) -> int | None:
+        if isinstance(expr, str):
+            return offsets.get(expr)
+        if not isinstance(expr, list):
+            return None
+        if len(expr) == 2 and expr[0] == "cdr":
+            base = list_offset(expr[1], offsets)
+            return None if base is None else base + 1
+        if (len(expr) == 3 and expr[0] == "nthcdr"
+                and isinstance(expr[1], int)):
+            base = list_offset(expr[2], offsets)
+            return None if base is None else base + expr[1]
+        return None
+
+    offsets = {"state": 0}
+    for node in walk_form(poll):
+        if (len(node) < 2 or node[0] not in ("let", "let*")
+                or not isinstance(node[1], list)):
+            continue
+        local = dict(offsets)
+        for binding in node[1]:
+            if not (isinstance(binding, list) and len(binding) == 2
+                    and isinstance(binding[0], str)):
+                continue
+            offset = list_offset(binding[1], local)
+            if offset is not None:
+                offsets[binding[0]] = offset
+                local[binding[0]] = offset
+    aliases = {name for name, offset in offsets.items()
+               if name != "state" and offset == 8}
     edges = [
         node for node in walk_form(poll)
         if len(node) == 4 and node[0] == "if"
-        and node[1] in conditions
+        and list_offset(node[1], offsets) == 8
         and ["%rl-render", "nil", 0, 0, 0, 0, -1]
             in walk_form(node[2])
         and ["key-event", 1] in walk_form(node[3])

@@ -1,0 +1,38 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: private diagnostic manifest paths were treated as product identity",
+  "source_commit": "cc5ec6c53ff31bd555f141ff39a47881082a8f57",
+  "axis": "fresh-clone-seed-23-pago-pago-2002",
+  "failed_step": "C2-lite static-plane profile gate",
+  "diagnostic": "substitution artifacts binding drift",
+  "cause": "The historical source gate pinned whole diagnostic manifests containing checkout-absolute blob, source, disassembly and suite paths. The emitted code, containers, counts and product identity were unchanged.",
+  "correction": "Fresh Clone applies the canonical semantic profile to the freshly emitted substitution and IDE manifests. Only the shipped code/container identities are product truth; private diagnostic paths are not a twentieth artifact.",
+  "failed_driver": {
+    "path": "tools/host-lisp/c2_lite_canonical_product.py",
+    "bytes": 24349,
+    "sha256": "aa113b8a552e2f93f531f99ae5f8772fa3ed6c89b1d659615b1051186b030926"
+  },
+  "observed": {
+    "expected_substitution_manifest_sha256": "9687c46735e8abd7bed696ade1cbc46f2fc8553f708b308b9106016686d6fc71",
+    "fresh_substitution_manifest_sha256": "6ec6a92b6e2135843536f78deeccc34b042a9b1056ae1b7bb04dffae5e000fd8",
+    "expected_IDE_container_sha256": "4b613ef6aaf858eb8e6ed4f16c770793328598049f894d35c659feb2aeff77dd",
+    "fresh_IDE_container_sha256": "4b613ef6aaf858eb8e6ed4f16c770793328598049f894d35c659feb2aeff77dd"
+  },
+  "execution_accounting": {
+    "fresh_clones_started": 1,
+    "product_links_completed": 0,
+    "media_packages": 0,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "allocation": {
+    "cases": 16,
+    "initial_state_cells_before_first_key": 9,
+    "keys": 586,
+    "maximum_cells_per_key": 4,
+    "navigation_maximum_cells": 3,
+    "nursery_cells": 192,
+    "status": "PASS: per-key allocation contract"
+  },
+  "artifacts": {
+    "bank2_headroom_after_bytes": 18309,
+    "bank2_headroom_before_bytes": 19493,
+    "baseline_manifest": {
+      "bytes": 350392,
+      "path": "build/c2.3/v1.6-repl-cursor-navigation/baseline/stdlib-p0.manifest.json",
+      "sha256": "16aaf0e91acf59d3b8e639b773a2d940d12e7061de32454e168e0cde277a090e"
+    },
+    "candidate_manifest": {
+      "bytes": 363645,
+      "path": "build/c2.3/v1.6-repl-cursor-navigation/candidate/stdlib-p0.manifest.json",
+      "sha256": "cd062c36d52166fdf0d81bba004d952dc29fbfa1216df3758050a772c2932dde"
+    },
+    "delta": {
+      "bank2_code_bytes": 1184,
+      "directory_bytes": 21,
+      "native_bytes": 0,
+      "objects": 3,
+      "resident_bytes": 0
+    },
+    "execution_lanes": 3,
+    "limit_observations": {
+      "bytes": 34674,
+      "path": "build/c2.3/v1.6-repl-cursor-navigation/limit/observations.json",
+      "sha256": "739008c89356c0be45200f2e63580b7b8a1ad547dcb9c505acd2f820dfc66da4"
+    },
+    "navigation_cases": 11,
+    "observations": {
+      "bytes": 33071,
+      "path": "build/c2.3/v1.6-repl-cursor-navigation/candidate/observations.json",
+      "sha256": "eda46eb434ae8eeb35d05286d5e35a54c0026aff4413e5872d9f36cc625548c5"
+    },
+    "public_only_key_event_modes": [
+      0,
+      1
+    ],
+    "public_only_observations": {
+      "bytes": 33077,
+      "path": "build/c2.3/v1.6-repl-cursor-navigation/public-only/observations.json",
+      "sha256": "770e27882c1bf5f2767432f17b0e70f72d1bbc4277ca5a013bf2e46ce7138ac1"
+    },
+    "public_only_source": {
+      "bytes": 7431,
+      "path": "build/c2.3/v1.6-repl-cursor-navigation/public-only/stdlib-read-line.lisp",
+      "sha256": "71853a6f3769114d608fe1f7fd61037758c4cb92d51257fc7064e4716e6c3312"
+    }
+  },
+  "authority": {
+    "comfort_successor_contract": {
+      "bytes": 2698,
+      "path": "config/c2-v160-comfort-repl-implementation-contract.json",
+      "sha256": "f6743df84c5bc20f091dc138a4f5e8e912a27c0810dd8b10b610c64fe0ae7359"
+    },
+    "contract": {
+      "bytes": 2664,
+      "path": "config/c2-v160-repl-cursor-navigation-contract.json",
+      "sha256": "46f6e15a60d81914ef4a62a3421ae75375ce6613b3f15750113775a942e62a22"
+    },
+    "gate": {
+      "bytes": 27109,
+      "path": "tools/host-lisp/c2_v160_repl_cursor_navigation.py",
+      "sha256": "e725266d61b941126d25c33be038f57d61a64272b585a392cf483a101f717d90"
+    },
+    "keymap": {
+      "bytes": 9852,
+      "path": "config/v11-l-lite-keymap.json",
+      "sha256": "a7b0f0ac2f131de5e6a4bda911a742e2b39270fb88aff5d412974432be01129d"
+    },
+    "keymap_generator": {
+      "bytes": 28641,
+      "path": "tools/host-lisp/v11_l_lite_keymap.py",
+      "sha256": "76bcd89c896a428614c4da5f86db0f4cf6e758a7df974df0b1a9dd82a676a3ac"
+    },
+    "prior_capacity": {
+      "bytes": 13965,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-release-preflight-receipt.json",
+      "sha256": "56facd7387eccfd51546dd3473cf44662f6fde6ea15094bdb2c23df1aacb5975"
+    },
+    "read_line": {
+      "bytes": 7451,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "8f905e4c1a630ab274c9df795d1a5766d5f9d9766313aa69bee0770e7dc1430d"
+    },
+    "suite": {
+      "bytes": 6182,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "sha256": "0f166039d7050d191e880a85b7a6a64bb2b72c5c9bfeb749ba02544403d0fc46"
+    }
+  },
+  "claim_limit": "host source/artifact semantics and capacity; no device claim",
+  "format": "lisp65-c2-v160-repl-cursor-navigation-host-first-v1",
+  "hardware_runs": 0,
+  "mutations_rejected": {
+    "executable_mutation": "rejected-by-real-source-and-emitted-artifact-case",
+    "public_projection_mutation": "public projection reintroduced private mode 3",
+    "source_mutations": {
+      "D5-symbol-headroom": "cursor placement/D5 contract drift",
+      "allocation-ceiling-drift": "cursor allocation contract drift",
+      "cursor-not-visible": "REPL cursor/editor invariant drift: (if at-cursor 129 1)",
+      "cursor-position-not-stored": "not every edit/motion path publishes cursor position",
+      "delete-does-not-link": "REPL cursor/editor invariant drift: (rplacd before (cdr removed))",
+      "forward-delete-case-absent": "cursor execution suite shape drift",
+      "function-not-built": "cursor execution suite shape drift",
+      "hardcoded-binding-outside-generator": "hard-coded REPL key escaped generated block: 157",
+      "insert-does-not-link": "REPL cursor/editor invariant drift: (rplacd cursor inserted)",
+      "legacy-alias-parity": "REPL legacy DEL alias drift",
+      "repl-generated-binding-drift": "authorized Comfort keymap successor/parity drift",
+      "resident-byte": "cursor placement/D5 contract drift"
+    }
+  },
+  "next": "owner review closes cursor card; Comfort REPL remains unopened until then",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-08-18",
+  "source_contract": {
+    "d5_projected": {
+      "namepool_bytes": 562,
+      "symbol_slots": 32
+    },
+    "functions": 9,
+    "generated_bindings": 12,
+    "namepool_bytes_reclaimed": 17,
+    "native_delta": 0,
+    "new_private_function_slots": 2,
+    "resident_delta_bytes": 0,
+    "status": "PASS: generated keymap, mutable line editor and Comfort successor"
+  },
+  "status": "PASS: v1.6 REPL cursor navigation host-qualified"
+}

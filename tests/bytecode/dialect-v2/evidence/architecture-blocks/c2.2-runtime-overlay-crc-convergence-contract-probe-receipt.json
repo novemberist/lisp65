@@ -1,0 +1,118 @@
+{
+  "authority": {
+    "class_b_cycle2_hardware": {
+      "bytes": 4712,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link35-hold-before-wipe-cycle2-hardware-receipt.json",
+      "sha256": "e8ac3f794d8d8030d15c84b9885c134833faad096420580e99a734d55d291fb6"
+    },
+    "config": {
+      "bytes": 7945,
+      "path": "config/c2-runtime-overlay-dma-completion-contract.json",
+      "sha256": "368175100ddc139571b63121e47445d9efec2d58fb45177cb4787ab3b6ea8437"
+    },
+    "contract": {
+      "bytes": 8416,
+      "path": "docs/planning/c2.2-runtime-overlay-dma-completion-contract.md",
+      "sha256": "4e087fbde2c6492218292e61bdd971b0fc5c9ab5ac561074ee6ce4ff87cf76a7"
+    },
+    "upstream_register": {
+      "bytes": 12157,
+      "path": "docs/upstream-findings.md",
+      "sha256": "bca2623a728ad5bb359f71f01bc617f7540c6a148af477cc80cfe98fde5f5a84"
+    }
+  },
+  "capacity": "not-run; no estimate is an authorization",
+  "claim_limit": "Contract, model and source inventory only: zero product bytes, zero compiler/product links and zero hardware runs.",
+  "contract_gate": {
+    "seam_count": 9,
+    "status": "passed-crc-convergence-contract",
+    "timeout_frames": 64,
+    "timeout_status": "VM_RUNTIME_OVERLAY_ERR_COMPLETION_TIMEOUT"
+  },
+  "documentation_gate": {
+    "contract_tokens": 6,
+    "status": "passed-contract-and-L10-documentation-gate",
+    "upstream_tokens": 5
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "contract_mutations_rejected": 7,
+    "hardware_runs": 0,
+    "host_model_cases": 6,
+    "product_bytes": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2-runtime-overlay-crc-convergence-contract-probe-v1",
+  "model_cases": {
+    "immediate-match": {
+      "crc16": "0xe856",
+      "elapsed_frames": 0,
+      "status": "complete"
+    },
+    "marker-with-wrong-content": {
+      "elapsed_frames": 1,
+      "status": "pending"
+    },
+    "mismatch-at-63-then-match-at-64": {
+      "crc16": "0xe856",
+      "elapsed_frames": 64,
+      "status": "complete"
+    },
+    "mismatch-at-64-timeout": {
+      "crc16": "0x1111",
+      "elapsed_frames": 64,
+      "error": "VM_RUNTIME_OVERLAY_ERR_COMPLETION_TIMEOUT",
+      "status": "completion-timeout"
+    },
+    "observed-match-at-35-frames": {
+      "crc16": "0xe856",
+      "elapsed_frames": 35,
+      "status": "complete"
+    },
+    "uint16-frame-wrap": {
+      "crc16": "0xe856",
+      "elapsed_frames": 32,
+      "status": "complete"
+    }
+  },
+  "negative_matrix": {
+    "foreign-frame-source": "rejected",
+    "generic-timeout-status": "rejected",
+    "marker-as-completion": "rejected",
+    "missing-seam": "rejected",
+    "optional-core-identity": "rejected",
+    "standalone-record-read": "rejected",
+    "timeout-63": "rejected"
+  },
+  "next_gate": "Class-C Whole-Program capacity/placement probe for the common convergence driver, record capture and specific timeout path; no product link is authorized by this receipt.",
+  "recorded_on": "2026-07-21",
+  "source_inventory": {
+    "function_pointer_binding": 1,
+    "product_implementation": "not-present",
+    "seams": {
+      "application-payload": 1,
+      "catalog-directory-chunks": 1,
+      "catalog-header": 1,
+      "catalog-verifier-payload": 1,
+      "island-carrier-destination": 1,
+      "island-carrier-record": 1,
+      "island-source-crc-chunks": 1,
+      "record-verifier-payload": 1,
+      "requested-record-entry": 1
+    },
+    "standalone_record_reads_pending_removal": [
+      "requested-record-entry",
+      "island-carrier-record"
+    ],
+    "status": "passed-current-nine-seam-source-inventory"
+  },
+  "status": "passed-crc-convergence-contract-product-not-implemented",
+  "timeout_derivation": {
+    "bound_frames": 64,
+    "bound_nominal_ms": 1280,
+    "margin_frames": 29,
+    "margin_ms_over_raw_observation": 589,
+    "observed_quantized_frames": 35,
+    "observed_upper_bound_ms": 691
+  }
+}

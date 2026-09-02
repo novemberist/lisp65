@@ -1,0 +1,127 @@
+{
+  "format": "lisp65-c2.2-link27-v2-profile-wiring-diagnosis-v1",
+  "recorded_on": "2026-07-20",
+  "status": "root-cause-proven-no-product-link",
+  "source_first_red": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link27-hardware-presmoke-first-red-receipt.json",
+    "sha256": "d1c7e8f7ec012b3a1c531f8514d6b4912be56b647dd3e1f84f20a227aba297d6",
+    "candidate_prg_sha256": "7303eb122a34bf2a4c49c3f9875f2eb2e3634ffff91a368f589b1abec7341fbc"
+  },
+  "supplemental_hardware_evidence": {
+    "method": "Read-only JTAG snapshots of the already stopped Link-27 process; no bytes were written and no product was rebuilt.",
+    "archive_root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link27-hardware-presmoke-first-red-supplement-20260720/root",
+    "files": 2,
+    "total_file_bytes": 526,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "20dc0c81019dcafaa87a2adeb252ca8e79cb721417f23b9c12d98b95da3646df",
+    "file_mode": "0444",
+    "directory_mode": "0555",
+    "rootstack": {
+      "path": "build/c2.2/hardware-presmoke-link27/first-red-rootstack-198e-1b8e.bin",
+      "sha256": "ea4e8776566166706ee58d9d956fff3a4a8197761d6bbee3fb47473ac49aa16a",
+      "separator_frame_base_index": 8,
+      "locals_raw": [
+        "0x0085",
+        "0x0001",
+        "0x0003",
+        "0x13c3"
+      ],
+      "locals_fixnum_values": [
+        66,
+        0,
+        1,
+        2529
+      ],
+      "poke_arguments_raw": [
+        "0x0013",
+        "0x01c3",
+        "0x0081"
+      ],
+      "poke_arguments_fixnum_values": [
+        9,
+        225,
+        64
+      ],
+      "interpretation": "The first separator iteration computed column 1 and address 0x09e1, then left the exact poke arguments (9,225,64) in the popped operand slots. Local cell remains 0, so execution did not reach the post-poke loop increment."
+    },
+    "vm_globals": {
+      "path": "build/c2.2/hardware-presmoke-link27/first-red-vm-globals-beaf-bebd.bin",
+      "sha256": "653eb846c15f832b86306a433affa127812823d149f71a52f954c0f554d306f0",
+      "header_length": 11,
+      "payload_length": 78,
+      "payload_window_max": 45,
+      "payload_window_length": 35,
+      "streaming": 1
+    }
+  },
+  "profile_wiring_proof": {
+    "c2_product_profile_builder": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "c51263ff4bacd72354d45b0c7a006fa99e34c184a3537d9f32e0ad6c807da03a"
+    },
+    "canonical_v2_bundle_source": {
+      "path": "Makefile",
+      "sha256": "e51bfe7d930871aff95a19e5380f3bfbcd058d874ee9100c2dd129038d0dcbac",
+      "variable": "V2_CAPABILITY_CARRIER_G5_V2_DEFINES"
+    },
+    "required_bundle": [
+      "LISP65_DIALECT_V2",
+      "LISP65_V2_CARRIER_CUT",
+      "LISP65_VM_NATIVE_APPLY",
+      "LISP65_V2_NATIVE_CAPABILITIES",
+      "LISP65_V2_NATIVE_STRING_CODECS",
+      "LISP65_V2_SERVICE_REGISTRY_CLOSED",
+      "LISP65_V2_WORKBENCH_SERVICES",
+      "LISP65_V2_TREE_PRIMITIVE_VIEW"
+    ],
+    "required_bundle_members_present_in_c2_definitions": 0,
+    "required_bundle_members_missing_from_c2_definitions": 8,
+    "mutation_free_assertion": "The definitions() body was parsed read-only and all eight required names are absent."
+  },
+  "dispatch_proof": {
+    "vm_source": {
+      "path": "src/vm.c",
+      "sha256": "3ef56f65fc772bf0e027e7910d493050b603be5a91f5973dc21a52d3b3cbad33"
+    },
+    "registry": {
+      "path": "config/v2-native-function-registry.json",
+      "sha256": "adc85fbb7f84aa9cdf5efbf1b3da502aeb04226134caa871c1a49f7bc47d87d4",
+      "poke_callprim_id": 62
+    },
+    "generated_dispatch": {
+      "path": "src/v2_native_function_dispatch.h",
+      "sha256": "8480d934e37f237ac729084e1ccd602347e99c26dad60702c4cf21388c2adc14",
+      "poke_callprim_id": 62
+    },
+    "compile_time_condition": "The vm_callprim cases for peek/poke and their strict byte-argument helper are inside LISP65_DIALECT_V2.",
+    "observed_result": "Because Link 27 omits LISP65_DIALECT_V2, pid 62 is not present in the compiled switch and reaches the default VM_BADOPCODE path.",
+    "registry_status": "The registry and generated header are correct; the product-profile consumer failed to enable their implementation."
+  },
+  "root_cause": {
+    "class": "canonical-v2-profile-bundle-not-wired-into-c2-product-link",
+    "mechanism": "C2's standalone definitions() list reconstructed the Workbench profile but omitted the complete canonical v2 carrier bundle. The emitted shelf contains v2 CALLPRIM 62 for poke, while the resident VM was compiled without that case.",
+    "hardware_trigger": "%banner-separator is the first boot path to execute the missing poke capability; it fails in iteration zero with VM_BADOPCODE.",
+    "scope_warning": "This is wider than the banner. Other v2-only native capabilities, service cases, native apply semantics and carrier-cut restrictions may also be absent. A poke-only correction would leave the product profile internally inconsistent."
+  },
+  "required_class_closure": {
+    "product_fix": "Restore the entire canonical eight-define v2 bundle to the C2 product profile, not only LISP65_DIALECT_V2 or poke.",
+    "gate": "Add a bidirectional profile-parity gate: every canonical v2 product define required by the generated shelf must be present in the C2 compile profile, and removing any one define must make the gate fail.",
+    "surface_check": "Run the generated callprim/profile parity matrix against the actual C2 definitions and require direct, funcall and apply coverage where the registry contract permits them.",
+    "capacity_rule": "The restored bundle changes resident code and possibly slices; all budgets and structure gates require a fresh measured link before hardware.",
+    "hardware_rule": "A successor must rerun the six-artifact receipt-less presmoke before any promotion or acceptance chain."
+  },
+  "options": {
+    "option_1_recommended": "Restore the full canonical v2 bundle, add the bidirectional profile gate, run one capacity/placement probe and request authorization for at most one successor product link.",
+    "option_2_rejected": "Enable only LISP65_DIALECT_V2 or special-case poke. This may repair the banner while leaving other promised v2 surfaces absent and the profile split-brained.",
+    "option_3_rejected": "Rewrite the banner to avoid poke. This hides the first witness and preserves the underlying product-profile divergence."
+  },
+  "claims": {
+    "new_product_links": 0,
+    "product_bytes_changed": 0,
+    "hardware_root_cause": "proven",
+    "successor_link": "not-authorized-not-run",
+    "promotion": "not-run",
+    "release": "not-run"
+  },
+  "claim_limit": "Read-only root-cause diagnosis for the Link-27 hardware first-red. It proves a missing canonical v2 compile-profile bundle and the resulting absent poke dispatch. It authorizes no product change, successor link, hardware acceptance, promotion or release."
+}

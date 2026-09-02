@@ -1,0 +1,119 @@
+{
+  "format": "lisp65-c2-link28-v2-profile-data-placement-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-linker-placement-product-link-28-blocked",
+  "authorization_accounting": {
+    "authorized_profile_data_placement_probes": 1,
+    "completed_profile_data_placement_probes": 1,
+    "resident_island_seed_links": 1,
+    "product_closure_links": 0,
+    "link_28_product_candidates": 0,
+    "retry_or_tuning_links": 0
+  },
+  "scope": {
+    "intended_move": "three exact complete-profile immutable service-dispatch tables from ordinary rodata into one named E000 data section",
+    "hardware_execution": "prohibited-not-run",
+    "promotion": "blocked-not-run"
+  },
+  "inputs": {
+    "tool": "tools/host-lisp/c2_product_substitution_link.py",
+    "tool_sha256": "bc6df105bdcd4667eaae52c6f0c6443e20aafc46cd76d27fb88b7788bfe56db2",
+    "contract": "config/c2-kernal-unmap-contract.json",
+    "contract_sha256": "433d3adb5e2360dab1ab97a6dd18da45b95fbb25d19657b6630f94ae9254d63f",
+    "profile_parity_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v2-product-profile-parity-gate-receipt.json",
+    "profile_parity_receipt_sha256": "341f06fafae487f3539093038a7431f68632d2320ad631a405fe050a7a402413"
+  },
+  "first_red": {
+    "primary": {
+      "gate": "owned-window output-section placement",
+      "diagnosis": "A separate INSERT BEFORE .rodata block set the global output location counter to the profile-data VMA. The following owned-window block reset only its first section to E000; subsequent implicitly chained sections resumed above the profile-data interval.",
+      "observed": {
+        "typed_queue_driver_start": "0xe000",
+        "profile_data_start": "0xfd12",
+        "profile_data_end_exclusive": "0xfe68",
+        "frame_source_start": "0xfe87",
+        "c2_resident_start": "0xff06",
+        "c2_resident_end_exclusive": "0x11a20",
+        "session_state_start": "0x11a20",
+        "session_state_end_exclusive": "0x11b7a",
+        "fixed_owned_state_start": "0xff80"
+      },
+      "linker_errors": [
+        "section .lisp65_c2_kernal_window.c2_resident virtual address range overlaps with .lisp65_c2_kernal_window.state",
+        "section .lisp65_c2_kernal_window.c2_resident load address range overlaps with .lisp65_c2_kernal_window.state"
+      ]
+    },
+    "secondary": {
+      "gate": "orphan handling",
+      "diagnosis": "--emit-relocs retains one 15-byte LLVM symbol-partition metadata section that the exact non-ALLOC allowlist does not yet name.",
+      "section": ".llvm_sympart",
+      "bytes": 15,
+      "linker_error": ".llvm_sympart is being placed in an undeclared output section"
+    }
+  },
+  "measured_map_facts_not_passed_gates": {
+    "profile_data": {
+      "output_section": ".lisp65_c2_kernal_window.profile_rodata",
+      "address": "0xfd12",
+      "bytes": 342,
+      "end_exclusive": "0xfe68",
+      "components": {
+        ".rodata.eval_v2_workbench_service": 32,
+        ".rodata.vm_callprim": 164,
+        ".rodata.vm_native_call": 146
+      },
+      "arithmetic": "32 + 164 + 146 = 342"
+    },
+    "ordinary_bank0": {
+      ".text_bytes": 37808,
+      ".rodata_before_failed_link27_bytes": 1142,
+      ".rodata_probe_bytes": 800,
+      ".rodata_delta_bytes": -342,
+      ".bss_start": "0xb94a",
+      ".bss_bytes": 1827,
+      ".bss_end_exclusive": "0xc06d",
+      "fixed_c2_start": "0xc080",
+      "headroom_bytes": 19,
+      "prior_failed_overlap_bytes": 323,
+      "qualification": "The map shows the intended Bank-0 gap closure, but no ELF or post-link capacity gate exists."
+    },
+    "e000": {
+      "link27_passed_margin_bytes": 728,
+      "new_profile_data_bytes": 342,
+      "projected_margin_if_section_order_is_repaired_bytes": 386,
+      "qualification": "Arithmetic projection only; the invalid output-section order prevented the actual window-capacity gate."
+    }
+  },
+  "gate_status": {
+    "v2_profile_parity": "passed-before-probe",
+    "linker_placement": "first-red",
+    "retained_relocation_data_reference_gate": "not-reached-not-passed",
+    "pre_ownership": "not-reached-not-passed",
+    "fixed_facade": "not-reached-not-passed",
+    "runtime_slice_capacity": "not-reached-not-passed",
+    "kernal_freedom": "not-reached-not-passed",
+    "one_truth": "not-reached-not-passed",
+    "identity": "not-reached-not-passed"
+  },
+  "bounded_followup_candidates_not_authorized": {
+    "recommended": "Give every owned-window output section an explicit VMA derived from its predecessor, so a separately placed data section cannot contaminate the implicit location counter; declare exactly .llvm_sympart as required non-ALLOC proof metadata while unknown orphans remain fatal.",
+    "source_level_table_rewrite": "Replace compiler-generated switch tables with hand-maintained explicit data structures; rejected as a larger semantic and maintenance surface unless the bounded linker correction fails.",
+    "find_323_bytes_elsewhere": "Reject the measured immutable-data solution and start a resident reclaim; disproportionate while the intended data move itself closes the gap exactly."
+  },
+  "immutable_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-v2-profile-data-placement-first-red-20260720/root",
+    "files": 11,
+    "total_file_bytes": 250013,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "37cee90c223f1fc0a8dfac4c984c499f82c8c3809aba05c2aa8a78d16e8682c6",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "decision": {
+    "window_closed_to_new_tenants": "retained-contract-rule",
+    "profile_data_cut": "not-promoted-pending-review",
+    "second_placement_probe": "not-authorized-not-run",
+    "link_28": "blocked-not-run"
+  },
+  "claim_limit": "This receipt proves one owner-authorized product-shaped placement attempt stopped at the first linker red. Its failed map shows the exact 342-byte data move would close the 323-byte Bank-0 overlap, but it proves neither a valid ELF nor data reachability, capacity, structural gates, hardware behavior, promotion, or release readiness."
+}

@@ -1,0 +1,113 @@
+{
+  "authorities": {
+    "MAP_source": {
+      "bytes": 1315,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/source/src/c2_kernal_map.s",
+      "sha256": "9a6248653e92ede1b51daac5bf1f55d340e474fb2775a76057e14b55d22f1551"
+    },
+    "device": {
+      "bytes": 18346,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-repeat-device-receipt.json",
+      "sha256": "83c0bd56681ff3db0ca1f6fbd588eb797d68e795258b65c77d9d3542ef17de72"
+    },
+    "diagnostic_ELF": {
+      "bytes": 620924,
+      "path": "build/c2.3/v1.6-defstruct-mem-init-before-after/artifacts/diagnostic-mem-init-before-after.elf",
+      "sha256": "b68b4aab6819e4a6af078fd9fbbaf7ae021908536e9a3cd71c0f631639d5a9ac"
+    },
+    "driver": {
+      "bytes": 14803,
+      "path": "tools/host-lisp/c2_v16_mem_init_witness_write_view.py",
+      "sha256": "02afadd2fda3b182b81098654e05c4d7728daf8cab18a5b99a20cb42e245c421"
+    },
+    "mapping_result": {
+      "bytes": 3207,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-repeat-mapping-result.json",
+      "sha256": "5c53501e24e1c5821786b9951140d7df31855f2168aad1a6a053560f816b2b34"
+    },
+    "ownership": {
+      "bytes": 14701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-boot-order-durable-witness-receipt.json",
+      "sha256": "5ec917daf1308ebab615b7fa73f0997b87abbe52d85ee0488ba41033b0d7cb8e"
+    },
+    "primary_core": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "window_source": {
+      "bytes": 4076,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/source/src/c2_kernal_window.s",
+      "sha256": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81"
+    },
+    "witness_preparation": {
+      "bytes": 8218,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-preparation-receipt.json",
+      "sha256": "d1720474581f002034c65394213b7f42611fe97651a5fd1f525f855fa87001d5"
+    }
+  },
+  "claim_limit": "Desk-only write-time view attribution. The physical witness was not redirected by MAP, so neither tagged capture committed. This does not answer the mem_init binary question, classify R/A/I/G, name a product fault, or authorize another contact.",
+  "facts": {
+    "disposition": {
+      "R_A_I_G": null,
+      "binary_mem_init_answer": null,
+      "classification": "PRE-MEM-INIT-WITNESS-NOT-COMMITTED",
+      "new_contact_authorized": false,
+      "next_required": "desk-design a mapping-independent progress partition between the proven _start witness and the uncommitted C85A capture",
+      "product_fault": null
+    },
+    "linked_route": {
+      "after_capture": "0xc04e",
+      "before_capture": "0xc048",
+      "overlay_entry": "0xc85a",
+      "overlay_install_call": "0xa4e6",
+      "ownership_call": "0xa4e0",
+      "ownership_precedes_overlay": true,
+      "sole_executable_MAP": "0xb604"
+    },
+    "observation": {
+      "after_commit_seen": false,
+      "before_commit_seen": false,
+      "mapped_elsewhere_explanation_rejected": true,
+      "physical_read": "d1ccccccccd2cccccccc"
+    },
+    "scope": {
+      "device_actions": 0,
+      "links": 0,
+      "measured_forms": 0,
+      "product_bytes": 0
+    },
+    "write_time_view": {
+      "IRQ_and_NMI_change_MAP": false,
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "mapped_MB_relevant": false,
+      "selected_blocks": [
+        "0xe000-0xffff"
+      ],
+      "store_destination": "physical-bank0-RAM-underlay",
+      "witness": [
+        "0xb582",
+        "0xb58c"
+      ],
+      "witness_block_selected": false
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-mem-init-witness-write-view-desk-v1",
+  "mutations_rejected": {
+    "mutation-01": "linked route claim drift",
+    "mutation-02": "linked route claim drift",
+    "mutation-03": "write-time view claim drift",
+    "mutation-04": "write-time view claim drift",
+    "mutation-05": "write-time view claim drift",
+    "mutation-06": "write-time view claim drift",
+    "mutation-07": "write-time view claim drift",
+    "mutation-08": "witness observation claim drift",
+    "mutation-09": "witness observation claim drift",
+    "mutation-10": "desk disposition drift",
+    "mutation-11": "desk disposition drift",
+    "mutation-12": "desk disposition drift"
+  },
+  "recorded_on": "2026-08-06",
+  "status": "DESK ATTRIBUTION PASS; WITNESS VIEW VALID; PRE-HOOK UNCOMMITTED"
+}

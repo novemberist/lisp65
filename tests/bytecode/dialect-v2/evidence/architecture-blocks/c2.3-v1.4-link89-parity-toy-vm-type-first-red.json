@@ -1,0 +1,35 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-parity-toy-vm-type-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "PRODUCT FIRST RED: parity-toy terminated with VM_TYPEERROR before physical input",
+  "candidate_link": 89,
+  "product_started": true,
+  "mechanism_boundary": "The shipped image drew all three panel rows and then published RUNTIME_VM_ERROR=$E3 with vm_status=3 (VM_TYPEERROR), NIL result and no preload error. In source order, m65-sprite-shape is the first call after the visible panel. Its only target-only type rejection is the live VIC-IV sprite-pointer table geometry read from $D06C-$D06E. A CPU-side read-only probe is therefore the next discriminator; no fix is claimed yet.",
+  "observation": {
+    "image_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/run/D2-toy-readback.d81",
+      "bytes": 819200,
+      "sha256": "2020ee8b641dcc82ae0b53b31d723dab0779e838ea09cd7f35f638afd7f34060"
+    },
+    "terminal_screen": {
+      "path": "build/post-promotion/v14/link89-device-session/run/D2-terminal-e3.png",
+      "bytes": 2665,
+      "sha256": "c571cadc0b17afa44ecbfa9165ac7b60a8e5bd601a8648d65d92c8a94bec20b8"
+    },
+    "runtime_bytes": {
+      "path": "build/post-promotion/v14/link89-device-session/run/D2-terminal-e3-runtime.bin",
+      "address": "0x00000085",
+      "bytes": 11,
+      "sha256": "1d3c2fd45b4ffc204bee3f0c19aa9b16baec6bf49a8e85ce69e28cb8bd9ed068",
+      "hex": "e30000000103000f380150",
+      "decoded": {
+        "runtime_state": "RUNTIME_VM_ERROR=$E3",
+        "runtime_result": "NIL",
+        "runtime_preload_detail": 0,
+        "vm_status": "VM_TYPEERROR=3"
+      }
+    }
+  },
+  "disposition": "Read $D06C-$D06E once through the proven CPU-side m65-byte-read path on an exact Link-89 Workbench identity. Valid Bank-0 geometry clears the shape-guard hypothesis; any nonzero high byte or low byte above $F8 attributes the rejection.",
+  "claim_limit": "A target VM type error after completed panel drawing and before input. Sprite-table geometry is the named discriminator, not yet a proven cause. D1 draw evidence and independent D3 rows remain valid."
+}

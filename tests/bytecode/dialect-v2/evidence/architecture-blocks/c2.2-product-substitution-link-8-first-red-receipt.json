@@ -1,0 +1,110 @@
+{
+  "format": "lisp65-c2-product-substitution-link-8-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "attempt": {
+    "authorization": "Make all three C2 MEMORY regions ineligible for automatic placement, enable ld.lld --orphan-handling=error, and run the eighth complete substitution link once under first-red",
+    "command": "python3 tools/host-lisp/c2_product_substitution_link.py --out build/c2.2/substitution/product-link-8 --prepare-smoke",
+    "pipeline_stage_reached": "resident-island seed orphan-placement gate",
+    "status": "failed-not-promoted",
+    "first_red_policy": "honored",
+    "automatic_further_attempt_allowed": false,
+    "product_prg_emitted": false,
+    "product_elf_emitted": false,
+    "runtime_family_images_emitted": 0,
+    "one_truth_gate": "not-reached",
+    "kernal_freedom_gate": "not-reached",
+    "substitution_balance": "not-claimable",
+    "hardware": "not-run"
+  },
+  "first_red": {
+    "gate": "explicit output-section closure",
+    "orphan_handling": "error",
+    "reported_orphans": [
+      ".comment",
+      ".lisp65_error_callsites",
+      ".symtab",
+      ".shstrtab",
+      ".strtab"
+    ],
+    "classification": {
+      "elf_metadata": [
+        ".comment",
+        ".symtab",
+        ".shstrtab",
+        ".strtab"
+      ],
+      "product_evidence_metadata": [
+        ".lisp65_error_callsites"
+      ]
+    },
+    "finding": "The newly enabled structural gate rejects every output section that lacks an explicit linker-script rule. Four reported names are non-runtime ELF metadata. .lisp65_error_callsites is the existing non-ALLOC, address-zero, LTO-pruned error-emission evidence surface and must remain present for the error-code contract rather than be discarded or placed as product bytes.",
+    "next_action": "Return for review. Any subsequent bounded correction must explicitly classify the four ELF metadata sections and place .lisp65_error_callsites as a non-ALLOC address-zero information section while keeping --orphan-handling=error enabled; no relink is authorized by this receipt."
+  },
+  "generated_inputs": {
+    "linker": {
+      "path": "build/c2.2/substitution/product-link-8/c2-substitution.ld",
+      "bytes": 39485,
+      "sha256": "939ff9a8cfdbca7fc7b846b84e9d20807e11ac5a7b2cd0cdaef8789d1d31593a"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-8/resolved-profile.txt",
+      "bytes": 3939,
+      "sha256": "8aab7ea79d14c6c42c2f6dd8ee85a9a784a24e7ae9c467bd4f8df2a27ec08c20"
+    },
+    "partial_map": {
+      "path": "build/c2.2/substitution/product-link-8/resident-island-seed.prg.map",
+      "bytes": 110729,
+      "sha256": "63b294e761ef2156eeb2c7c896d8228b8b1f6423e28e36e53a9d9d55051c11ee"
+    }
+  },
+  "diagnostic_only_partial_layout": {
+    "claim_status": "not-authoritative-because-link-red",
+    "load_domains": {
+      "product_prg_header_vma": "0x2001",
+      "product_prg_header_lma": "0x2001",
+      "runtime_overlay_vma": "0xc356",
+      "runtime_overlay_lma": "0x10000",
+      "e000_window_vma": "0xe000",
+      "e000_window_lma": "0x40000",
+      "automatic_region_leak_detected": false
+    },
+    "phase_00_split": {
+      "phase_00_bytes": 1363,
+      "phase_00b_bytes": 1443,
+      "unchanged_limit_bytes": 1792,
+      "both_fit_in_partial_layout": true,
+      "capacity_claim": "withheld-until-green-link"
+    },
+    "e000_window": {
+      "relocated_c2_resident_bytes": 4294,
+      "covers_fixed_3639_byte_deficit": true
+    },
+    "low_resident_sections": {
+      "handoff_vma": "0xb481",
+      "map_switch_vma": "0xb5d0",
+      "dma_state_vma": "0xb5dd",
+      "all_below_e000": true
+    }
+  },
+  "implementation_inputs": {
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "70bc92d72e3cb85728a38b7267e28ba80dfb22da4516ba33705c2a1381e3950a"
+    },
+    "error_marker_contract": {
+      "path": "config/error-code-contract.json",
+      "section": ".lisp65_error_callsites",
+      "required_non_alloc": true
+    }
+  },
+  "preserved_constraints": {
+    "runtime_slice_limit_bytes": 1792,
+    "runtime_slice_limit_relaxed": false,
+    "orphan_gate_removed_after_failure": false,
+    "interactive_compilation_present_in_sources": true,
+    "legacy_l65m_path_reintroduced": false,
+    "single_c2_emitter_decoder_rule_preserved_in_sources": true,
+    "product_bytes_promoted": false,
+    "no_tuning_after_first_red": true
+  }
+}

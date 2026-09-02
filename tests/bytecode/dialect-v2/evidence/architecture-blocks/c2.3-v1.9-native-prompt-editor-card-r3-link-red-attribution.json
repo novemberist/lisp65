@@ -1,0 +1,1344 @@
+{
+  "LTO_mechanism": {
+    "disassembly": {
+      "r2_kb_cursor_off": "lda #0; tail-jump to emitted scr_cursor",
+      "r3_kb_cursor_off": "51-byte scr_cursor body folded into fixed-bank0 caller"
+    },
+    "mechanism": "The candidate stdlib entry removes the old C collector and its other scr_cursor calls. LTO then eliminates the standalone 65-byte scr_cursor and folds its body into the used/noinline kb_cursor_off fixed-section wrapper. The target-object +1-byte price could not observe this cross-function final-LTO move.",
+    "objects": {
+      "r2": {
+        "bytes": 620768,
+        "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/resident-island-seed.prg.lto.o",
+        "sha256": "054beb93fae2a5755e55f0c8093cd16e5612b1f953f62e638a9ab68edb44298e"
+      },
+      "r3": {
+        "bytes": 620772,
+        "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/resident-island-seed.prg.lto.o",
+        "sha256": "117f955ae5e5d355b25e829203a345386cc560bfdb848bb0bcedf9ac50023b45"
+      }
+    },
+    "status": "PASS: LTO FOLDED SCR_CURSOR INTO FIXED CALLER",
+    "symbols": {
+      "kb_cursor_off": {
+        "delta_bytes": 46,
+        "r2_bytes": 5,
+        "r3_bytes": 51
+      },
+      "lisp_input_event": {
+        "r2_bytes": 128,
+        "r3_bytes": 76
+      },
+      "repl": {
+        "r2_bytes": 711,
+        "r3_bytes": 642
+      },
+      "scr_cursor": {
+        "r2_bytes": 65,
+        "r3_emitted_symbols": 0
+      }
+    }
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "acceptance_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "scope_runs": 0
+  },
+  "authority": {
+    "budget": {
+      "WPLTO_runs": 1,
+      "device_contacts": 0,
+      "media_builds": 0,
+      "product_links": 1
+    },
+    "decision": {
+      "bytes": 1038,
+      "path": "config/c2-v190-native-prompt-editor-card.json",
+      "sha256": "d4ed919067772e2b3d04cdecf93215edde147dc354039b714e10ce375f20b7aa"
+    },
+    "predecessor_pair": {
+      "ELF_sha256": "0c3282c9625e47f9549833c9f0382a2ba26fc967f8dafc473d382c47c80fee82",
+      "PRG_sha256": "13eb21566cc89e954bc50d5bb62b56aa8879c728cbcf845a221514192da177f0"
+    },
+    "pricing": {
+      "bytes": 17227,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-pricing-receipt.json",
+      "sha256": "a44f76bde4a9d5fb302d2a3f191529064129e6b2991f8328415afea82492dd4d"
+    },
+    "r2_frozen_unqualified_pair": {
+      "ELF_sha256": "0c0a8b22e2df384801df1aea1bfebed31865690497de344415a0a2d1dd1ff7f9",
+      "PRG_sha256": "361afb888ee2d7124c24ea3fbafd5a70d9f4be78e28c180977ee7ddcfee3e4bc"
+    },
+    "r3_decision": {
+      "bytes": 1275,
+      "path": "config/c2-v190-native-prompt-editor-card-r3.json",
+      "sha256": "605d8d77b09e052bfd9fa706afd0d3710c3c32c7749704cc3fbf4160ea12a82c"
+    },
+    "selected_variant": "B-light"
+  },
+  "candidate_successor": {
+    "authorized": false,
+    "checker_conversions": [
+      "derive the ordinary full-map chain from the candidate",
+      "validate the five-byte protection as a lower bound"
+    ],
+    "new_WPLTO_and_link_required": true,
+    "product_fix_to_price": "preserve a stable non-inlined call boundary from the fixed kb_cursor_off wrapper to ordinary scr_cursor; do not enlarge the fixed arena or pin a codegen spelling"
+  },
+  "compiler_object_closure": {
+    "changed": 36,
+    "changed_names": [
+      "001-c2_hot_literal.c.o",
+      "004-c2_platform_dma.c.o",
+      "005-c2_product_runtime.c.o",
+      "009-error_overlay.c.o",
+      "010-eval.c.o",
+      "012-interrupt.c.o",
+      "014-main.c.o",
+      "015-mem.c.o",
+      "017-reader.c.o",
+      "018-repl.c.o",
+      "021-symbol.c.o",
+      "022-vm.c.o",
+      "023-vm_boot_overlay.c.o",
+      "024-vm_runtime_overlay.c.o",
+      "025-c2-stream-init.c.o",
+      "026-c2-stream-phase-00.c.o",
+      "027-c2-stream-phase-00b.c.o",
+      "028-c2-stream-phase-01.c.o",
+      "029-c2-stream-phase-02a.c.o",
+      "030-c2-stream-phase-02b.c.o",
+      "031-c2-stream-phase-03.c.o",
+      "032-c2-stream-phase-03b.c.o",
+      "033-c2-stream-phase-04.c.o",
+      "034-c2-stream-phase-05a.c.o",
+      "035-c2-stream-phase-05b.c.o",
+      "036-c2-stream-phase-06a.c.o",
+      "037-c2-stream-phase-06b.c.o",
+      "038-c2-stream-v2-phase-07.c.o",
+      "039-c2-stream-v2-phase-08.c.o",
+      "040-c2-stream-v2-phase-09.c.o",
+      "041-c2-stream-v2-phase-10.c.o",
+      "042-c2-stream-v2-phase-11a.c.o",
+      "043-c2-stream-v2-phase-11b.c.o",
+      "044-c2-stream-v2-phase-12.c.o",
+      "045-c2-stream-v2-phase-13.c.o",
+      "combined-c.bc"
+    ],
+    "members": [
+      {
+        "family": "byte-identical",
+        "name": "000-buffer_overlay.c.o",
+        "r2": {
+          "bytes": 5924,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/000-buffer_overlay.c.o",
+          "sha256": "62ab6f3a6a93414a5d2bb4d4f89c1c10bd47b86998ad8e6912c5a780f01e2470"
+        },
+        "r3": {
+          "bytes": 5924,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/000-buffer_overlay.c.o",
+          "sha256": "62ab6f3a6a93414a5d2bb4d4f89c1c10bd47b86998ad8e6912c5a780f01e2470"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "001-c2_hot_literal.c.o",
+        "r2": {
+          "bytes": 4968,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/001-c2_hot_literal.c.o",
+          "sha256": "cd5363bdbe9e2bf749b4d4a92e75e146fda06c156aa3fb80efaa1f23b5f1def9"
+        },
+        "r3": {
+          "bytes": 4968,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/001-c2_hot_literal.c.o",
+          "sha256": "a036554e26126f17d784401376fc9db1d7a471579b26d78cf1393d14ad013438"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "002-c2_kernal_runtime.c.o",
+        "r2": {
+          "bytes": 5176,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/002-c2_kernal_runtime.c.o",
+          "sha256": "a57ec57f34d50fb84da7d7ce3f326d9f9320701912365b09965dc2e32d45a7fa"
+        },
+        "r3": {
+          "bytes": 5176,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/002-c2_kernal_runtime.c.o",
+          "sha256": "a57ec57f34d50fb84da7d7ce3f326d9f9320701912365b09965dc2e32d45a7fa"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "003-c2_phase_scratch.c.o",
+        "r2": {
+          "bytes": 3332,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/003-c2_phase_scratch.c.o",
+          "sha256": "e71df3612ea5265efaea9dc2309f79d3adf5400789aa34ee69f2c8eddeb612c3"
+        },
+        "r3": {
+          "bytes": 3332,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/003-c2_phase_scratch.c.o",
+          "sha256": "e71df3612ea5265efaea9dc2309f79d3adf5400789aa34ee69f2c8eddeb612c3"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "004-c2_platform_dma.c.o",
+        "r2": {
+          "bytes": 6716,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/004-c2_platform_dma.c.o",
+          "sha256": "bcf7027131dab9cd28bd75a1731e5a9e68837ede714ddf24f29898081c8ac8e0"
+        },
+        "r3": {
+          "bytes": 6716,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/004-c2_platform_dma.c.o",
+          "sha256": "d35079350d2973465a150d2a1f091cd40ae580d2eb3577876622ddf35f7a0ba1"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "005-c2_product_runtime.c.o",
+        "r2": {
+          "bytes": 66544,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/005-c2_product_runtime.c.o",
+          "sha256": "c7099d5761d586ecc092240eddc340704b8b75fa8e83f33e4a764a4cf669d4fc"
+        },
+        "r3": {
+          "bytes": 66544,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/005-c2_product_runtime.c.o",
+          "sha256": "0ae1022da1bbd6421088917f9182875302a5b29af9012353c77a443eb07356a4"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "006-c2_session_emitter.c.o",
+        "r2": {
+          "bytes": 19208,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/006-c2_session_emitter.c.o",
+          "sha256": "1a208069c7f73569125c14ff8bb1054587a23223266511063e7621638ef1982c"
+        },
+        "r3": {
+          "bytes": 19208,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/006-c2_session_emitter.c.o",
+          "sha256": "1a208069c7f73569125c14ff8bb1054587a23223266511063e7621638ef1982c"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "007-compile.c.o",
+        "r2": {
+          "bytes": 33392,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/007-compile.c.o",
+          "sha256": "ffce601ae688759bffeaa2fdd7bafbfdb42194cfa3d8cd376ede2b53c23fbc01"
+        },
+        "r3": {
+          "bytes": 33392,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/007-compile.c.o",
+          "sha256": "ffce601ae688759bffeaa2fdd7bafbfdb42194cfa3d8cd376ede2b53c23fbc01"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "008-compile_repl.c.o",
+        "r2": {
+          "bytes": 8356,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/008-compile_repl.c.o",
+          "sha256": "f83e7c0be695fac80c928bd158796d102a90cdd61dea9bd20f6551333735c721"
+        },
+        "r3": {
+          "bytes": 8356,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/008-compile_repl.c.o",
+          "sha256": "f83e7c0be695fac80c928bd158796d102a90cdd61dea9bd20f6551333735c721"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "009-error_overlay.c.o",
+        "r2": {
+          "bytes": 4392,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/009-error_overlay.c.o",
+          "sha256": "5b5e500a17e2f9b405befe62720b421dd5816da098a158660e5bfa7f05dc95b6"
+        },
+        "r3": {
+          "bytes": 4392,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/009-error_overlay.c.o",
+          "sha256": "eedbf47f9cc79e7fc41224c54eca1b821cd04ab4f5c2effa55fd29d53050120e"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "010-eval.c.o",
+        "r2": {
+          "bytes": 18724,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/010-eval.c.o",
+          "sha256": "a47bc73315e31687a4d7df483043cb8f20ad7edfaba0c9f932e91d6e2926f98c"
+        },
+        "r3": {
+          "bytes": 18724,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/010-eval.c.o",
+          "sha256": "5f29075b7f17c0e5312e974dc885aa0033007c2d197dca433d6d2bb892012df3"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "011-intern_service_overlay.c.o",
+        "r2": {
+          "bytes": 3572,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/011-intern_service_overlay.c.o",
+          "sha256": "b56794ce66cd7088ff3246b4b1822d1bcdd7d5fe9a6613096f8fd23f5cc15dc6"
+        },
+        "r3": {
+          "bytes": 3572,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/011-intern_service_overlay.c.o",
+          "sha256": "b56794ce66cd7088ff3246b4b1822d1bcdd7d5fe9a6613096f8fd23f5cc15dc6"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "012-interrupt.c.o",
+        "r2": {
+          "bytes": 6668,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/012-interrupt.c.o",
+          "sha256": "bf9bdde37a3dd2ca7e065d960e7c369f958eea4e0a5ed952c60c9aea5c697b7d"
+        },
+        "r3": {
+          "bytes": 6668,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/012-interrupt.c.o",
+          "sha256": "d765b9c1c13ce5acf94e9b78537842ec8d84957568f2286d70118b56641c4b1e"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "013-io.c.o",
+        "r2": {
+          "bytes": 10044,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/013-io.c.o",
+          "sha256": "daacec1b87a93ee44c95987885d9aed519abcb694d035e4a3aac724ab529ed16"
+        },
+        "r3": {
+          "bytes": 10044,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/013-io.c.o",
+          "sha256": "daacec1b87a93ee44c95987885d9aed519abcb694d035e4a3aac724ab529ed16"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "014-main.c.o",
+        "r2": {
+          "bytes": 4456,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/014-main.c.o",
+          "sha256": "78370948c87248efa76620ff3c68892cabcaa69d6a0a0b421806d511f8189c09"
+        },
+        "r3": {
+          "bytes": 4456,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/014-main.c.o",
+          "sha256": "52b35b2ffdb6ae3a553388899f7102894f9eaaf966c49a8c83cfd71eaefc617c"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "015-mem.c.o",
+        "r2": {
+          "bytes": 20240,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/015-mem.c.o",
+          "sha256": "f833efb0fd3411dbe5e750436f56d4b820e6b1b8d9c5d0ce54c8c4b0e1f5299f"
+        },
+        "r3": {
+          "bytes": 20240,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/015-mem.c.o",
+          "sha256": "54ea4a7865f35d43bb29bfcee02f0e207acd5cddf87840813545ecc18feb6d46"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "016-printer.c.o",
+        "r2": {
+          "bytes": 5896,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/016-printer.c.o",
+          "sha256": "a01f2bcc27871c525e054147039951b080e18bd2d7043e10b087adf22208f1ab"
+        },
+        "r3": {
+          "bytes": 5896,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/016-printer.c.o",
+          "sha256": "a01f2bcc27871c525e054147039951b080e18bd2d7043e10b087adf22208f1ab"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "017-reader.c.o",
+        "r2": {
+          "bytes": 11468,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/017-reader.c.o",
+          "sha256": "d30b4942a41cfb32c053f8976b5b1a9945187d404791627ae6c348e386c34bd5"
+        },
+        "r3": {
+          "bytes": 11468,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/017-reader.c.o",
+          "sha256": "66b86de02dc117199dd1979c5bde20c9d76966e88542aeff1b99543fa5762e66"
+        }
+      },
+      {
+        "family": "entry-macro-editor-collector-object",
+        "name": "018-repl.c.o",
+        "r2": {
+          "bytes": 6600,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/018-repl.c.o",
+          "sha256": "c1f76d1c66acc1e0e4c5eedb9da720432d67b1e99e375a4443c75907c3abfdf3"
+        },
+        "r3": {
+          "bytes": 6288,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/018-repl.c.o",
+          "sha256": "c156dca019f42609cfa34e8a1ec5c4397c1b6117f5336df2562bd1d7170180bf"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "019-screen.c.o",
+        "r2": {
+          "bytes": 6852,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/019-screen.c.o",
+          "sha256": "f11219ef2786b6e287d25cb61d26828a34cef9b59de92b2c1b2928ecc491749a"
+        },
+        "r3": {
+          "bytes": 6852,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/019-screen.c.o",
+          "sha256": "f11219ef2786b6e287d25cb61d26828a34cef9b59de92b2c1b2928ecc491749a"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "020-screen_scroll_overlay.c.o",
+        "r2": {
+          "bytes": 2640,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/020-screen_scroll_overlay.c.o",
+          "sha256": "2d71cc0058492521173d6f9dd31543011d10f97c975ba8488338d1e53d46e332"
+        },
+        "r3": {
+          "bytes": 2640,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/020-screen_scroll_overlay.c.o",
+          "sha256": "2d71cc0058492521173d6f9dd31543011d10f97c975ba8488338d1e53d46e332"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "021-symbol.c.o",
+        "r2": {
+          "bytes": 8332,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/021-symbol.c.o",
+          "sha256": "45fb704e4f04f16dbdb4493dcf5b0ca188be6500c552775a29043b8cb102456b"
+        },
+        "r3": {
+          "bytes": 8332,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/021-symbol.c.o",
+          "sha256": "de4a7705f90b870bb738b236bd9abf3c12808c3a4c6245c50cda9c77a0480f99"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "022-vm.c.o",
+        "r2": {
+          "bytes": 35292,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/022-vm.c.o",
+          "sha256": "c4bfe6e279ac39b7cca3c68b6bd0abee275a10668533851ae36846ad2161b1ae"
+        },
+        "r3": {
+          "bytes": 35292,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/022-vm.c.o",
+          "sha256": "eccbcbd31ee9b6fc8619a02f51fe0e6ebc2dd817317f5e1dc3ca04c48fafa293"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "023-vm_boot_overlay.c.o",
+        "r2": {
+          "bytes": 7196,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/023-vm_boot_overlay.c.o",
+          "sha256": "8fd2f3d199cadeb3af012d0093872f2795815a5cef24ca9eba45b4c55a8b4961"
+        },
+        "r3": {
+          "bytes": 7204,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/023-vm_boot_overlay.c.o",
+          "sha256": "65595ad34405cda25b291b522aaa50ddc26c2e85e0716b9f1a1f80a26c18f843"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "024-vm_runtime_overlay.c.o",
+        "r2": {
+          "bytes": 22456,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/024-vm_runtime_overlay.c.o",
+          "sha256": "b472204eabead6e8254ea3bbc1226830d18149ef9d55e29c6e92f21026b4a589"
+        },
+        "r3": {
+          "bytes": 22468,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/024-vm_runtime_overlay.c.o",
+          "sha256": "d752704b41cb940d4dca6a2ffadfb7cdbe4c5a50921372db51925de17585b543"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "025-c2-stream-init.c.o",
+        "r2": {
+          "bytes": 3056,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/025-c2-stream-init.c.o",
+          "sha256": "ffeea334f97fe12843b3c3cbe664e08dfa3f498e82fc2684a76c931ef542c637"
+        },
+        "r3": {
+          "bytes": 3056,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/025-c2-stream-init.c.o",
+          "sha256": "6e4185872af216feddc6740871d9a5c62a9238f21bf87787d61a0706eb07c25e"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "026-c2-stream-phase-00.c.o",
+        "r2": {
+          "bytes": 5336,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/026-c2-stream-phase-00.c.o",
+          "sha256": "8572bc99734effec59168b14c9b5ce05c1f6346896b058b6699ee6e50cfa4a2a"
+        },
+        "r3": {
+          "bytes": 5336,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/026-c2-stream-phase-00.c.o",
+          "sha256": "ab6c339afe04951237f28d452fcfaf62616750790460325439bd97ba63a0c48b"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "027-c2-stream-phase-00b.c.o",
+        "r2": {
+          "bytes": 4636,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/027-c2-stream-phase-00b.c.o",
+          "sha256": "cca51e199d14fe26d4b48a0f5c2f7911b4a0e9d77be23a755914c7f858939430"
+        },
+        "r3": {
+          "bytes": 4636,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/027-c2-stream-phase-00b.c.o",
+          "sha256": "c074a9261f2cac2851d0f836cb2b73b7afc54d781cf907500f91927d2a430906"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "028-c2-stream-phase-01.c.o",
+        "r2": {
+          "bytes": 4832,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/028-c2-stream-phase-01.c.o",
+          "sha256": "b5d41648918323486d1a5b848bd7d202e0fe17d4693c895122e6020304442b20"
+        },
+        "r3": {
+          "bytes": 4832,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/028-c2-stream-phase-01.c.o",
+          "sha256": "e1ff87722829aa27db0192d7303902ac1aeec1ddad4f2b83208d905ca88e8e77"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "029-c2-stream-phase-02a.c.o",
+        "r2": {
+          "bytes": 5824,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/029-c2-stream-phase-02a.c.o",
+          "sha256": "077921239d24d8940d5c5f7f9a6efc839ce878464f7b908b35c0571ffc20eb2e"
+        },
+        "r3": {
+          "bytes": 5824,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/029-c2-stream-phase-02a.c.o",
+          "sha256": "1d71ff57840427de04f7884a1eb15272b2f9d30061b70f93271817249646f408"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "030-c2-stream-phase-02b.c.o",
+        "r2": {
+          "bytes": 4072,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/030-c2-stream-phase-02b.c.o",
+          "sha256": "1fc5c457f2caed1e8528c45ced3ac5d48c06ad6390e71338b5b4c8f7d855b6f7"
+        },
+        "r3": {
+          "bytes": 4072,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/030-c2-stream-phase-02b.c.o",
+          "sha256": "066add42671a60c7dd4e61afd60586b6d8a9a197473d63d7ed0fcc73b62616d4"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "031-c2-stream-phase-03.c.o",
+        "r2": {
+          "bytes": 5608,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/031-c2-stream-phase-03.c.o",
+          "sha256": "bab54494deb03ba59a8eec44900ee54e7d2551f5dc8c9eb88b1a8e3485e2b023"
+        },
+        "r3": {
+          "bytes": 5608,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/031-c2-stream-phase-03.c.o",
+          "sha256": "528d3fa3f226e08e8325c56fb0be35d37f60b02d4a1a74f3a58cf877b4f2b6b2"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "032-c2-stream-phase-03b.c.o",
+        "r2": {
+          "bytes": 4688,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/032-c2-stream-phase-03b.c.o",
+          "sha256": "083880aee14aa5e15dfee1a4e10b1bff1c02eda5c04e2e8416f90165b60f181c"
+        },
+        "r3": {
+          "bytes": 4688,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/032-c2-stream-phase-03b.c.o",
+          "sha256": "2636568ce2eabfd21a9a29b546150252578248eee93f8946ba02f3985d8258d5"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "033-c2-stream-phase-04.c.o",
+        "r2": {
+          "bytes": 4864,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/033-c2-stream-phase-04.c.o",
+          "sha256": "57b4191468a7a32fe8034b106b0c9c90e33cbed1566e8b7b153e42ca93995258"
+        },
+        "r3": {
+          "bytes": 4864,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/033-c2-stream-phase-04.c.o",
+          "sha256": "47238e9c902569d31816cb199e4d08e18357f3a47a10d3de27e87f7369492bab"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "034-c2-stream-phase-05a.c.o",
+        "r2": {
+          "bytes": 4696,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/034-c2-stream-phase-05a.c.o",
+          "sha256": "d3bc0c75c28c9d4f0879e06f63077c67a8e0baf57e0b361bf9a784ed5b75dc83"
+        },
+        "r3": {
+          "bytes": 4696,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/034-c2-stream-phase-05a.c.o",
+          "sha256": "36227687c83da6b81d2528af11d9f59b3df45535bced9b3bcc4699a34f29934f"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "035-c2-stream-phase-05b.c.o",
+        "r2": {
+          "bytes": 5216,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/035-c2-stream-phase-05b.c.o",
+          "sha256": "2d8a93f168bb2b813d10d3cbf2e8a6dee5405ff8822e5b2d5bf5cb9af33d5920"
+        },
+        "r3": {
+          "bytes": 5216,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/035-c2-stream-phase-05b.c.o",
+          "sha256": "48048aadce151ef503e806d7acab41ae097458239d7e9db275ad10718833e2dd"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "036-c2-stream-phase-06a.c.o",
+        "r2": {
+          "bytes": 4964,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/036-c2-stream-phase-06a.c.o",
+          "sha256": "6a46127b9bd7f8b936223b991dc48ce0a29fed3c3417e27b45141a2f198c6ecf"
+        },
+        "r3": {
+          "bytes": 4964,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/036-c2-stream-phase-06a.c.o",
+          "sha256": "18180634e2e1308b463417ab4d9e879843d7a10a79a575e8088e7f0c74c749d1"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "037-c2-stream-phase-06b.c.o",
+        "r2": {
+          "bytes": 4800,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/037-c2-stream-phase-06b.c.o",
+          "sha256": "49cfbc7ea41210b4c187cf4b10344d5713c9f39f4b607d7a5ae6f5587a547194"
+        },
+        "r3": {
+          "bytes": 4800,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/037-c2-stream-phase-06b.c.o",
+          "sha256": "c6bdd9eb24ae99d8aee9cb2a07691de4bf0eb3b38aa3e44086ab037aae34f275"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "038-c2-stream-v2-phase-07.c.o",
+        "r2": {
+          "bytes": 4684,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/038-c2-stream-v2-phase-07.c.o",
+          "sha256": "0f135e27bb33ef1d8db8b84e4e74d20ba8ee4074674ddf5d2e353759263a4160"
+        },
+        "r3": {
+          "bytes": 4684,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/038-c2-stream-v2-phase-07.c.o",
+          "sha256": "32b00ba445482fc6b1ba8fffc62f27a664a42e080b613cf46a00ac97cf506b46"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "039-c2-stream-v2-phase-08.c.o",
+        "r2": {
+          "bytes": 5188,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/039-c2-stream-v2-phase-08.c.o",
+          "sha256": "fe9d43d6240a2ce68f449e0cfcc85394671e7acbc9a6fd899d89e97913a825e5"
+        },
+        "r3": {
+          "bytes": 5188,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/039-c2-stream-v2-phase-08.c.o",
+          "sha256": "2b14ff57e4602c5f4766184df1502331909801dd321a8d3b2cbdc7559d978818"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "040-c2-stream-v2-phase-09.c.o",
+        "r2": {
+          "bytes": 5540,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/040-c2-stream-v2-phase-09.c.o",
+          "sha256": "11f0a57deb95380070a409ca15e28549dad095d5ece0372f92f6f42258d87b19"
+        },
+        "r3": {
+          "bytes": 5540,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/040-c2-stream-v2-phase-09.c.o",
+          "sha256": "cf22f727594f50c55904ab1bc2f467e0be14f49485dee1ee10096131eed10444"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "041-c2-stream-v2-phase-10.c.o",
+        "r2": {
+          "bytes": 5256,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/041-c2-stream-v2-phase-10.c.o",
+          "sha256": "3a2274826ce82c54d48c991d9f0cba0f1a32d8bfc47fe846363bb9a1e351c0d5"
+        },
+        "r3": {
+          "bytes": 5256,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/041-c2-stream-v2-phase-10.c.o",
+          "sha256": "cf85ea0d3971a976df2c7991e7999c10c1245f267106320c751a85a63eef5c97"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "042-c2-stream-v2-phase-11a.c.o",
+        "r2": {
+          "bytes": 4480,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/042-c2-stream-v2-phase-11a.c.o",
+          "sha256": "12f8c2115026693621ea2e85ac6709973caa1e32070288a9c645093561b8d2b2"
+        },
+        "r3": {
+          "bytes": 4480,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/042-c2-stream-v2-phase-11a.c.o",
+          "sha256": "04c067b22db0015c5b6829d5e00a60a4136087a628da8440a6bf54b2c0832151"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "043-c2-stream-v2-phase-11b.c.o",
+        "r2": {
+          "bytes": 6060,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/043-c2-stream-v2-phase-11b.c.o",
+          "sha256": "7121f409823420bcef2ce213337b4643f8c119fa6e3113d3cb54a1c2eb32640b"
+        },
+        "r3": {
+          "bytes": 6060,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/043-c2-stream-v2-phase-11b.c.o",
+          "sha256": "c8b32219c1402268c13de8da9b69a7ffab9f5d7c69bc00a4fafe7a73420ba32d"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "044-c2-stream-v2-phase-12.c.o",
+        "r2": {
+          "bytes": 5096,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/044-c2-stream-v2-phase-12.c.o",
+          "sha256": "013513c63984e87aba69882a87fa02ac8e9edee26fae8af5b2e133ae841e82a7"
+        },
+        "r3": {
+          "bytes": 5096,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/044-c2-stream-v2-phase-12.c.o",
+          "sha256": "80e9a438bd2069ee13da6c5c41309ad3fb10d7c42a2415a92d86b429764284c2"
+        }
+      },
+      {
+        "family": "profile-build-id-transitive-C-object",
+        "name": "045-c2-stream-v2-phase-13.c.o",
+        "r2": {
+          "bytes": 3560,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/045-c2-stream-v2-phase-13.c.o",
+          "sha256": "189a82e99cc975f0da6f401b55bb26503e83f97c41ffc17969ae9093aaeb66f2"
+        },
+        "r3": {
+          "bytes": 3560,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/045-c2-stream-v2-phase-13.c.o",
+          "sha256": "b4a3510eb2d91d2d1612e8dd3ae6443b6de70590e8a30999d5b2225d121df880"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "046-mega65_math.s.o",
+        "r2": {
+          "bytes": 2328,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/046-mega65_math.s.o",
+          "sha256": "201afe3d30bc78e2a146ac2f522da89f0c37827dc141a01fa440895bf77ede87"
+        },
+        "r3": {
+          "bytes": 2328,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/046-mega65_math.s.o",
+          "sha256": "201afe3d30bc78e2a146ac2f522da89f0c37827dc141a01fa440895bf77ede87"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "047-f011_guarded_write.s.o",
+        "r2": {
+          "bytes": 1008,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/047-f011_guarded_write.s.o",
+          "sha256": "ba46697d27906e91a3215c759e3deef269b7addb67ec4b94aba5849754a300e6"
+        },
+        "r3": {
+          "bytes": 1008,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/047-f011_guarded_write.s.o",
+          "sha256": "ba46697d27906e91a3215c759e3deef269b7addb67ec4b94aba5849754a300e6"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "048-runtime_overlay_verifier_bindings.s.o",
+        "r2": {
+          "bytes": 704,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/048-runtime_overlay_verifier_bindings.s.o",
+          "sha256": "712e60a1e8d507155d17fa9af414b6820e1faad4b8bd7bad0b3cbd9ba931c014"
+        },
+        "r3": {
+          "bytes": 704,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/048-runtime_overlay_verifier_bindings.s.o",
+          "sha256": "712e60a1e8d507155d17fa9af414b6820e1faad4b8bd7bad0b3cbd9ba931c014"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "049-c2_kernal_facade.s.o",
+        "r2": {
+          "bytes": 1380,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/049-c2_kernal_facade.s.o",
+          "sha256": "fbe77895527cf7eeb3c9836d3bb05445eaabf4fc618e07046fc819b721978b0b"
+        },
+        "r3": {
+          "bytes": 1380,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/049-c2_kernal_facade.s.o",
+          "sha256": "fbe77895527cf7eeb3c9836d3bb05445eaabf4fc618e07046fc819b721978b0b"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "050-c2_kernal_map.s.o",
+        "r2": {
+          "bytes": 488,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/050-c2_kernal_map.s.o",
+          "sha256": "48987f13d74443504a0b9a8ca57fe90329e823dc2cca724484025442e2c2cd37"
+        },
+        "r3": {
+          "bytes": 488,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/050-c2_kernal_map.s.o",
+          "sha256": "48987f13d74443504a0b9a8ca57fe90329e823dc2cca724484025442e2c2cd37"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "051-c2_kernal_window.s.o",
+        "r2": {
+          "bytes": 3000,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/051-c2_kernal_window.s.o",
+          "sha256": "eeca65beb8f834a5a8158a55d5a1eeb5587f434fdf622dd80f72185b8c6cc359"
+        },
+        "r3": {
+          "bytes": 3000,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/051-c2_kernal_window.s.o",
+          "sha256": "eeca65beb8f834a5a8158a55d5a1eeb5587f434fdf622dd80f72185b8c6cc359"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "052-c2_kernal_input_capture.s.o",
+        "r2": {
+          "bytes": 1800,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/052-c2_kernal_input_capture.s.o",
+          "sha256": "1a4009613e7a6336d451f044c637350a1a13db8b2d037cddcdb5ba4467b9d368"
+        },
+        "r3": {
+          "bytes": 1800,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/052-c2_kernal_input_capture.s.o",
+          "sha256": "1a4009613e7a6336d451f044c637350a1a13db8b2d037cddcdb5ba4467b9d368"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "053-rtov_crc_mem.s.o",
+        "r2": {
+          "bytes": 880,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/053-rtov_crc_mem.s.o",
+          "sha256": "83109a0f5c05b7d7c47b9f6f3a053586b50c41427be846b7bd80379baac878d2"
+        },
+        "r3": {
+          "bytes": 880,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/053-rtov_crc_mem.s.o",
+          "sha256": "83109a0f5c05b7d7c47b9f6f3a053586b50c41427be846b7bd80379baac878d2"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "054-c2_completion_mode_length.s.o",
+        "r2": {
+          "bytes": 388,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/054-c2_completion_mode_length.s.o",
+          "sha256": "a54b8bcca36c95fd10d85c3308bd6e44dab67b4e7bdc848e7446abbce7ffefa1"
+        },
+        "r3": {
+          "bytes": 388,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/054-c2_completion_mode_length.s.o",
+          "sha256": "a54b8bcca36c95fd10d85c3308bd6e44dab67b4e7bdc848e7446abbce7ffefa1"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "055-lisp65_ash_tagged.s.o",
+        "r2": {
+          "bytes": 896,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/055-lisp65_ash_tagged.s.o",
+          "sha256": "2ce1187efac9f300856102cf2089a6fdcc3242dd6d68016c9209f329750f4007"
+        },
+        "r3": {
+          "bytes": 896,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/055-lisp65_ash_tagged.s.o",
+          "sha256": "2ce1187efac9f300856102cf2089a6fdcc3242dd6d68016c9209f329750f4007"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "056-l65e_bcode_ordinal.s.o",
+        "r2": {
+          "bytes": 2068,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/056-l65e_bcode_ordinal.s.o",
+          "sha256": "8a40caf0cc616b4e0f7c74777a7e055ee9ac39b33a540bddc2c72ddab2844b3c"
+        },
+        "r3": {
+          "bytes": 2068,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/056-l65e_bcode_ordinal.s.o",
+          "sha256": "8a40caf0cc616b4e0f7c74777a7e055ee9ac39b33a540bddc2c72ddab2844b3c"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "057-c2_append_plan_walk.s.o",
+        "r2": {
+          "bytes": 964,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/057-c2_append_plan_walk.s.o",
+          "sha256": "a4926d953c01928c22c1b44bf285b8a61f38a96d7d002ab85beb22741c24fc64"
+        },
+        "r3": {
+          "bytes": 964,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/057-c2_append_plan_walk.s.o",
+          "sha256": "a4926d953c01928c22c1b44bf285b8a61f38a96d7d002ab85beb22741c24fc64"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "058-vm_c2d_byte.s.o",
+        "r2": {
+          "bytes": 912,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/058-vm_c2d_byte.s.o",
+          "sha256": "f75e49ed7d4681e625eede8ab8da30e33f5444c9ed1af619699d65e833d836a6"
+        },
+        "r3": {
+          "bytes": 912,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/058-vm_c2d_byte.s.o",
+          "sha256": "f75e49ed7d4681e625eede8ab8da30e33f5444c9ed1af619699d65e833d836a6"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "059-c2_journal_prepare_select.s.o",
+        "r2": {
+          "bytes": 780,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/059-c2_journal_prepare_select.s.o",
+          "sha256": "2298fee56e5dbad4606c6e8c470e8c7d7f8db51f46e531e209c4b687fe1b9fc0"
+        },
+        "r3": {
+          "bytes": 780,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/059-c2_journal_prepare_select.s.o",
+          "sha256": "2298fee56e5dbad4606c6e8c470e8c7d7f8db51f46e531e209c4b687fe1b9fc0"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "060-c2_mapped_far_service_liveness_v4.s.o",
+        "r2": {
+          "bytes": 2156,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/060-c2_mapped_far_service_liveness_v4.s.o",
+          "sha256": "6ad6e8b47b76d713511cd01e0c55f9ac66f0b19d53f9bbc23e7575a9cf715c22"
+        },
+        "r3": {
+          "bytes": 2156,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/060-c2_mapped_far_service_liveness_v4.s.o",
+          "sha256": "6ad6e8b47b76d713511cd01e0c55f9ac66f0b19d53f9bbc23e7575a9cf715c22"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "061-c2_mapped_far_convergence_full_span.s.o",
+        "r2": {
+          "bytes": 7548,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/061-c2_mapped_far_convergence_full_span.s.o",
+          "sha256": "c06745a1f37777b72c572857a1ea21b5064ca30afc10f732f762499a126f469c"
+        },
+        "r3": {
+          "bytes": 7548,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/061-c2_mapped_far_convergence_full_span.s.o",
+          "sha256": "c06745a1f37777b72c572857a1ea21b5064ca30afc10f732f762499a126f469c"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "062-c2_mapped_far_facade_padding_liveness_v3.s.o",
+        "r2": {
+          "bytes": 584,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/062-c2_mapped_far_facade_padding_liveness_v3.s.o",
+          "sha256": "1ddd867bbaf0b48d4c823a5b4d4a01565f7b67990b85b95b144cb8f841106e2e"
+        },
+        "r3": {
+          "bytes": 584,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/062-c2_mapped_far_facade_padding_liveness_v3.s.o",
+          "sha256": "1ddd867bbaf0b48d4c823a5b4d4a01565f7b67990b85b95b144cb8f841106e2e"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "063-c2_map_cpu_read.s.o",
+        "r2": {
+          "bytes": 1752,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/063-c2_map_cpu_read.s.o",
+          "sha256": "8dec1558ef7b1cbfed1e916345c955374c7326ffb3fc8b44653e390e36e24f5d"
+        },
+        "r3": {
+          "bytes": 1752,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/063-c2_map_cpu_read.s.o",
+          "sha256": "8dec1558ef7b1cbfed1e916345c955374c7326ffb3fc8b44653e390e36e24f5d"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "064-c2_kernal_input_consumer.s.o",
+        "r2": {
+          "bytes": 744,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/064-c2_kernal_input_consumer.s.o",
+          "sha256": "ff771d24f8b7780d5c769eb37f940123ff21eea007c03369e4ce14217c8a560a"
+        },
+        "r3": {
+          "bytes": 744,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/064-c2_kernal_input_consumer.s.o",
+          "sha256": "ff771d24f8b7780d5c769eb37f940123ff21eea007c03369e4ce14217c8a560a"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "065-c2_product_cold_disk_chain.s.o",
+        "r2": {
+          "bytes": 544,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/065-c2_product_cold_disk_chain.s.o",
+          "sha256": "4f0b469d321147cfc3a89504d3fdcaddac6f854286a22b74e3acddb18418c60f"
+        },
+        "r3": {
+          "bytes": 544,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/065-c2_product_cold_disk_chain.s.o",
+          "sha256": "4f0b469d321147cfc3a89504d3fdcaddac6f854286a22b74e3acddb18418c60f"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "066-c2_lite_bank3_stage_entry.s.o",
+        "r2": {
+          "bytes": 740,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/066-c2_lite_bank3_stage_entry.s.o",
+          "sha256": "e02ed2484dc167d6a2bcd44dd86b50d657e0248fce2fb45844c301b784c22253"
+        },
+        "r3": {
+          "bytes": 740,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/066-c2_lite_bank3_stage_entry.s.o",
+          "sha256": "e02ed2484dc167d6a2bcd44dd86b50d657e0248fce2fb45844c301b784c22253"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "067-c2_boot_chain_commit.s.o",
+        "r2": {
+          "bytes": 1812,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/067-c2_boot_chain_commit.s.o",
+          "sha256": "1a38d8a2e4c77cdc01b920b032794e536abbbebb8666228c75bcb1bffb8c0cbb"
+        },
+        "r3": {
+          "bytes": 1812,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/067-c2_boot_chain_commit.s.o",
+          "sha256": "1a38d8a2e4c77cdc01b920b032794e536abbbebb8666228c75bcb1bffb8c0cbb"
+        }
+      },
+      {
+        "family": "byte-identical",
+        "name": "068-c2_kernal_facade_reopen.s.o",
+        "r2": {
+          "bytes": 656,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/068-c2_kernal_facade_reopen.s.o",
+          "sha256": "1cfb2efe25f3ecc8a20263a39dfb8df6ebbdc23184c368f6f8e93dee0c9d6ae4"
+        },
+        "r3": {
+          "bytes": 656,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/068-c2_kernal_facade_reopen.s.o",
+          "sha256": "1cfb2efe25f3ecc8a20263a39dfb8df6ebbdc23184c368f6f8e93dee0c9d6ae4"
+        }
+      },
+      {
+        "family": "combined-C-routing-closure",
+        "name": "combined-c.bc",
+        "r2": {
+          "bytes": 234204,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/.canonical-objects-resident-island-seed/combined-c.bc",
+          "sha256": "73c54648160b8afb78c22daa26ac856603868542627e0355f0519b8b118a1778"
+        },
+        "r3": {
+          "bytes": 233828,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/.canonical-objects-resident-island-seed/combined-c.bc",
+          "sha256": "ca7a5a3690efcdedfc8d8679c7e6e7475ab2f6ea5fee8092d7167c194f461dd4"
+        }
+      }
+    ],
+    "native_objects_changed": 0,
+    "unchanged": 34
+  },
+  "first_red": {
+    "bytes": 14039,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r3-first-red.json",
+    "sha256": "5266140060e2b19e0d1484657e3c6ef6c3746f50796b4c876b2ccf808bd3c6b1"
+  },
+  "format": "lisp65-c2-v190-native-prompt-editor-card-r3-v1-link-red-attribution",
+  "invocation": {
+    "bytes": 3929,
+    "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/candidate-invocation-r3.json",
+    "sha256": "6f75d89e7b32931bcbac830a99ccf6b4474f0640838567a7f044ed27c2138618"
+  },
+  "link_map": {
+    "actual_product_overlap_bytes": 46,
+    "ordinary_full_map": {
+      "bss_delta_bytes": -1,
+      "rodata_delta_bytes": -9,
+      "validation_margin": {
+        "r2": 5,
+        "r3": 6
+      }
+    },
+    "r2": {
+      "bytes": 189557,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/resident-island-seed.prg.map",
+      "sha256": "a553d2dcf7fc759bbca827a790f1421c2b95ea2a54bdb23dc9da22974b2dfeae"
+    },
+    "r3": {
+      "bytes": 189344,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/resident-island-seed.prg.map",
+      "sha256": "4fea2756a9681b6bb32f866df1b471f97186c4308ab1397531767ddcdcfe7a19"
+    },
+    "sections": {
+      ".bss": {
+        "r2": {
+          "LMA": 47562,
+          "VMA": 47562,
+          "bytes": 1585,
+          "end_exclusive": 49147
+        },
+        "r3": {
+          "LMA": 47562,
+          "VMA": 47562,
+          "bytes": 1584,
+          "end_exclusive": 49146
+        }
+      },
+      ".data": {
+        "r2": {
+          "LMA": 47540,
+          "VMA": 47540,
+          "bytes": 22,
+          "end_exclusive": 47562
+        },
+        "r3": {
+          "LMA": 47540,
+          "VMA": 47540,
+          "bytes": 22,
+          "end_exclusive": 47562
+        }
+      },
+      ".lisp65_c2_fixed_bank0_code": {
+        "r2": {
+          "LMA": 49688,
+          "VMA": 49688,
+          "bytes": 69,
+          "end_exclusive": 49757
+        },
+        "r3": {
+          "LMA": 49688,
+          "VMA": 49688,
+          "bytes": 115,
+          "end_exclusive": 49803
+        }
+      },
+      ".lisp65_c2_fixed_bank0_hot_bss": {
+        "r2": {
+          "LMA": 49757,
+          "VMA": 49757,
+          "bytes": 240,
+          "end_exclusive": 49997
+        },
+        "r3": {
+          "LMA": 49757,
+          "VMA": 49757,
+          "bytes": 240,
+          "end_exclusive": 49997
+        }
+      },
+      ".lisp65_runtime_overlay_verifier_bindings": {
+        "r2": {
+          "LMA": 47500,
+          "VMA": 47500,
+          "bytes": 40,
+          "end_exclusive": 47540
+        },
+        "r3": {
+          "LMA": 47500,
+          "VMA": 47500,
+          "bytes": 40,
+          "end_exclusive": 47540
+        }
+      },
+      ".rodata": {
+        "r2": {
+          "LMA": 46621,
+          "VMA": 46621,
+          "bytes": 879,
+          "end_exclusive": 47500
+        },
+        "r3": {
+          "LMA": 46621,
+          "VMA": 46621,
+          "bytes": 870,
+          "end_exclusive": 47491
+        }
+      }
+    }
+  },
+  "normalized_profile": {
+    "normalized_differences": [],
+    "normalized_lines": 140,
+    "only_raw_profile_difference": "phase-owned output-root spelling",
+    "profile_build_ids": {
+      "r2": "0xfeff29e0",
+      "r3": "0xb193fd69"
+    },
+    "r2": {
+      "bytes": 13550,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r2/wplto/resolved-profile.txt",
+      "sha256": "feff29e0d3d1c6c285a09d58ef5e3a83939cb278eaf1552b5a9061d34689ac2b"
+    },
+    "r3": {
+      "bytes": 13550,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/resolved-profile.txt",
+      "sha256": "b193fd6911b4d2e3c4fa96c4722dbb036b4867224a5f4453ced6d5dc74600f2b"
+    },
+    "source_inputs": 70,
+    "status": "PASS: R2/R3 NORMALIZED 70-SOURCE WORLD IDENTICAL"
+  },
+  "positive_header_consumption": {
+    "candidate_header": {
+      "bytes": 3401,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+      "sha256": "79f177db731fdd0e26d28b22471d1204e2521bae115320461b0e5524433e43cf"
+    },
+    "emitted_route_delta": {
+      "proof": "the successful r3 compile emits the native-entry collector object; the historical header cannot produce this undefined-symbol set",
+      "r2_undefined": [
+        "lisp_input_event",
+        "scr_backspace",
+        "scr_clear",
+        "scr_putc"
+      ],
+      "r3_undefined": [
+        "str_copy_out",
+        "str_len"
+      ]
+    },
+    "prelink": {
+      "materialized": {
+        "actual_force_include_flags": [
+          "-include",
+          "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+          "-include",
+          "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/real-stdlib-consumer-probe.stdlib-input-assert.h"
+        ],
+        "bound_header": {
+          "bytes": 3401,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+          "sha256": "79f177db731fdd0e26d28b22471d1204e2521bae115320461b0e5524433e43cf"
+        },
+        "compile_time_assertion": {
+          "bytes": 236,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/real-stdlib-consumer-probe.stdlib-input-assert.h",
+          "sha256": "8b1b70a28a8a706d617acb9a67218fdf412bb62d639c7ff7cc8d09270959d812"
+        },
+        "consumed_value": 239,
+        "consumer": "c2_product_substitution_link.compile_link",
+        "force_include_order": [
+          "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+          "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/real-stdlib-consumer-probe.stdlib-input-assert.h"
+        ],
+        "format": "lisp65-real-stdlib-input-consumption-v1",
+        "historical_same_basename_accepted": false,
+        "macro": "LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY",
+        "materialized_header": {
+          "bytes": 3401,
+          "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+          "sha256": "79f177db731fdd0e26d28b22471d1204e2521bae115320461b0e5524433e43cf"
+        },
+        "materialized_value": 239,
+        "status": "passed-bound-candidate-stdlib-header-consumed",
+        "target": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/real-stdlib-consumer-probe.prg"
+      },
+      "mutations_rejected": {
+        "candidate-path-historical-banner-value": "materialized stdlib header path/value diverged from candidate",
+        "historical-header-path": "bound candidate stdlib header escaped the real compiler flags"
+      },
+      "native_entry_proven_by_exact_header_binding": true,
+      "ordinals": {
+        "native_read_line": 395,
+        "repl_banner": 239
+      },
+      "status": "PASS: REAL COMPILER CONSUMES CANDIDATE STDLIB HEADER"
+    },
+    "seed_assertion": {
+      "bytes": 236,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r3/wplto/resident-island-seed.stdlib-input-assert.h",
+      "sha256": "8b1b70a28a8a706d617acb9a67218fdf412bb62d639c7ff7cc8d09270959d812"
+    }
+  },
+  "recorded_on": "2026-08-29",
+  "status": "ATTRIBUTED: FINAL-LTO CALLEE FOLD OVERFLOWS FIXED BANK0",
+  "unexplained_members": [],
+  "verdicts": {
+    "five-byte-margin": {
+      "actual": "6 bytes free, one better than the 5-byte floor",
+      "kind": "forecast-as-equality checker"
+    },
+    "fixed-bank0-overlap": {
+      "bytes": 46,
+      "cause": "kb_cursor_off final-LTO growth 5 to 51 bytes",
+      "kind": "product-placement blocker"
+    },
+    "ordinary-full-map-chain": {
+      "actual": "rodata is 9 bytes smaller; bss is 1 byte smaller",
+      "kind": "stored-world checker equality"
+    }
+  }
+}

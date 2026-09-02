@@ -1,0 +1,68 @@
+{
+  "format": "lisp65-c2-gc-operational-binding-probe-v1",
+  "recorded_on": "2026-07-20",
+  "status": "passed-host-probe-only",
+  "trigger": {
+    "hardware_candidate": "link-25-coarse-phase",
+    "observation": "cold boot remained in the approximately one-minute class after outer decoder transports fell to sixteen",
+    "separation": "independent of the VM cross-window relative-branch correctness first-red"
+  },
+  "inputs": {
+    "shelf": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+    "shelf_sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74",
+    "c2d": "build/c2.2/substitution/initial.c2d-v3.bin",
+    "c2d_sha256": "0a0ddf0168028bae27e7cd6fdc687fe8ca3a3f4940cdf70dae844c0bd5c1c185",
+    "product_binding_source": "src/c2_product_runtime.c",
+    "product_binding_source_sha256": "fb7314e9865baac83c5609e871abb7f7a8fdf3895918e3775bea09116f77ee10",
+    "probe": "tools/host-lisp/c2_gc_operational_binding.py",
+    "probe_sha256": "024e059ce95c089d665c0a3c4a32861e6afdfe96ef3c8a0b311513174703651c"
+  },
+  "measured": {
+    "images": 6,
+    "entries": 588,
+    "resolutions": 2264,
+    "kind_counts": {
+      "0": 1,
+      "2": 261,
+      "3": 115,
+      "4": 637,
+      "7": 168,
+      "8": 1082
+    },
+    "canonical_roots": 283,
+    "allocation_checkpoints": 283,
+    "old_forced_collections": 283,
+    "old_minimum_two_byte_root_dma_reads": 80089,
+    "approved_root_scan_block_bytes": 32,
+    "old_root_dma_reads_per_collection": 283,
+    "candidate_root_dma_reads_per_natural_collection": 18,
+    "candidate_forced_collections": 0
+  },
+  "diagnosis": {
+    "class": "host-stress-schedule-bound-as-product-policy-plus-root-scan-granularity-drift",
+    "mechanism": "Every kind-3 or kind-7 publication called c2_stream_gc_checkpoint. The product binding forced gc_collect at all 283 checkpoints, and c2_product_gc_mark_roots then read all 283 canonical values in separate two-byte DMA operations. The minimum root-list traffic alone was therefore 283 times 283, or 80,089 DMA reads.",
+    "contract_drift": "The approved single-source addendum already specified the contiguous root-value plane as a 568-byte/18-read geometry. The product binding had accidentally retained the rejected scattered-read behavior."
+  },
+  "candidate_binding": {
+    "checkpoint": "Validate the canonical root range and publish c2_pending_roots before any later allocation; do not force a collection.",
+    "natural_collection": "Read the contiguous root-value plane in bounded 32-byte blocks and mark every value without writeback.",
+    "host_stress": "Continue to simulate a collection after every kind-3 and kind-7 publication; 283/283 stress points remain covered.",
+    "safety_argument": [
+      "cons may collect before allocating its result, then performs no allocation before the result is published",
+      "the streaming string builder roots its open string across any internal collection and performs no allocation between str_close and publication",
+      "the checkpoint publishes the full pending-root span before the next descriptor allocation",
+      "the collector remains non-moving and never writes a canonical root back"
+    ]
+  },
+  "permanent_probe": {
+    "result": "PASS roots=283 forced-root-reads=80089->0 natural-scan-reads=283->18 mutations=2",
+    "mutations": {
+      "forced_collection_reintroduced": "rejected",
+      "two-word-root-scan_reintroduced": "rejected"
+    }
+  },
+  "capacity": "not-linked-not-measured",
+  "hardware": "not-run-not-passed",
+  "next_gate": "One separately authorized product link must attribute the VM logical-PC correction and the GC operational-binding correction independently, run every structural/capacity gate, and then restart the receipt-less hardware presmoke from a full six-artifact restage.",
+  "claim_limit": "Host-only operational-binding and transfer-count probe. It proves the exact source of the dominant redundant root traffic and the candidate invariant model; it authorizes no product link, capacity debit, hardware acceptance or promotion claim."
+}

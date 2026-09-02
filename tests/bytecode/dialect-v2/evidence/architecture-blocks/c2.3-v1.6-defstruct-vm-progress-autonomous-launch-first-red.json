@@ -1,0 +1,87 @@
+{
+  "accounting": {
+    "contact_budget_consumed": true,
+    "hardware_contacts": 1,
+    "measured_forms_started": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "progress_samples_taken": 0,
+    "recontact_authorized": false
+  },
+  "artifacts": {
+    "boot_first_observation_png": {
+      "bytes": 4682,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-a/boot-first-observation.png",
+      "sha256": "5ef469a968f152e5e3c21de3604f0e4e21c106568f20ecc4280ff5de2c2f7996"
+    },
+    "boot_first_observation_text": {
+      "bytes": 2253,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-a/boot-first-observation.txt",
+      "sha256": "2f54e54efe8d5b655d5b6dd068fd7847edd5034cafb4c6ef98895b2dd8d7bd37"
+    },
+    "diagnostic_prg_payload_readback": {
+      "bytes": 41564,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-a/diagnostic-prg-payload.bin",
+      "sha256": "bd787ed2980a1f7a293f7098ecec2f0706c27d2eddb57dcbb296a7b089d56c18"
+    },
+    "fresh_basic_text": {
+      "bytes": 2253,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-a/fresh-basic.txt",
+      "sha256": "cbdda905c462d79a908541de3b1d78eef89e1d82fe554f47a6f3bca130ac7208"
+    },
+    "pre_run_c2j": {
+      "bytes": 64,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-a/pre-run-c2j.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "upload_log": {
+      "bytes": 2350,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-a/upload.log",
+      "sha256": "16330c6569276b4f0321456ba8344809f6f6895ff56ea6f0785bcad375902b72"
+    }
+  },
+  "authorities": {
+    "authorization_commit": "4bf84dfbdf5f71b46c4357aa2f4610d09cab0534",
+    "executed_instrument_commit": "9044ac6cbf4822b3f7b5900fb75766d4ae47bc56",
+    "executed_runner": {
+      "bytes": 9693,
+      "path": "scripts/c2-v16-defstruct-vm-progress-hw.sh",
+      "sha256": "2fdd424b2ffd1111f7c133cef832dade09a3f0d892d6befd73b43cc4bddf2c51"
+    }
+  },
+  "claim_limit": "The full reset domain, diagnostic payload and preloads passed their readbacks, and C2J was CLEAR immediately before launch. The autonomous launch postcondition did not pass: the first observation after the 27.653-second floor showed BASIC READY after the staging loader's REM feedback and no lisp65 prompt. This is a launch-harness First Red. It does not prove that virtual RUN was lost rather than that an entered image returned, and it makes no product, require, defstruct, progress, loop, performance, or R/A/I/G claim.",
+  "contact": {
+    "first_observation_floor_seconds": "27.653",
+    "launch_input": "m65 -T RUN",
+    "launch_input_pre_submit_echo_verified": false,
+    "monitor_or_CPU_stop_during_measured_form": "not-applicable; measured form never started",
+    "output_root": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-a",
+    "staging": {
+      "C2J_before_RUN": "64x00",
+      "diagnostic_payload_readback": "byteidentical",
+      "full_reset_domain_bytes": 50816,
+      "preload_readbacks": "byteidentical"
+    }
+  },
+  "first_observation": {
+    "BREAK_or_monitor_text_visible": false,
+    "lisp65_prompt_visible": false,
+    "nonblank_lines_casefolded": [
+      "the mega65 personal computer system",
+      "(c) 2021 mega, 1991 commodore, 1977 microsoft",
+      "basic 65 v920395 07-feb-2000 08:25:15",
+      "ready.",
+      "rem m65 injecting at $2001:",
+      "ready."
+    ]
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-vm-progress-autonomous-launch-first-red-v1",
+  "next_method": {
+    "contact_status": "NOT-AUTHORIZED",
+    "required_fix": "Drain and assert the staging loader feedback first; then type RUN without RETURN, prove the complete active input line by screenshot, and submit RETURN as a separate operation. Apply the same pre-submit echo proof to require and defstruct. No observation may occur after measured-form RETURN until the target-side samples are complete.",
+    "required_mutation": "An autonomous launch that submits an unobserved combined text-plus-RETURN command must fail the runner gate."
+  },
+  "recorded_at": "2026-08-06T17:35:42Z",
+  "recorded_on": "2026-08-06",
+  "status": "AUTONOMOUS-LAUNCH-HARNESS-FIRST-RED; MEASURED-FORM-NOT-STARTED; RECONTACT-NOT-AUTHORIZED"
+}

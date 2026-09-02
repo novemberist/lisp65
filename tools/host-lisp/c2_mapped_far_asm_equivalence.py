@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 from copy import deepcopy
-from datetime import date
 import hashlib
 import json
 from pathlib import Path
@@ -20,6 +19,7 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 
 from cpu6502 import CPU  # noqa: E402
 from elf_truth import ElfTruth  # noqa: E402
+from evidence_era import stable_recorded_on  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-mapped-far-asm-equivalence-contract.json"
@@ -633,7 +633,7 @@ def mutation_selftest(facts: dict[str, Any]) -> dict[str, str]:
     return rejected
 
 
-def build_receipt() -> dict[str, Any]:
+def build_receipt(output_receipt: Path = RECEIPT) -> dict[str, Any]:
     contract, successor = effective_contract()
     convergence = load(CONVERGENCE_RECEIPT)
     require(convergence["status"] == "PASS"
@@ -720,7 +720,7 @@ def build_receipt() -> dict[str, Any]:
         }
     return {
         "format": "lisp65-c2-mapped-far-assembly-equivalence-receipt-v1",
-        "recorded_on": date.today().isoformat(),
+        "recorded_on": stable_recorded_on(output_receipt),
         "status": "PASS",
         "claim": contract["claim"],
         "authorities": {key: bind(path) for key, path in {
@@ -755,7 +755,7 @@ def main() -> int:
     parser.add_argument("--receipt", type=Path)
     args = parser.parse_args()
     try:
-        receipt = build_receipt()
+        receipt = build_receipt(args.receipt or RECEIPT)
         if args.receipt:
             args.receipt.parent.mkdir(parents=True, exist_ok=True)
             args.receipt.write_bytes(canonical(receipt))

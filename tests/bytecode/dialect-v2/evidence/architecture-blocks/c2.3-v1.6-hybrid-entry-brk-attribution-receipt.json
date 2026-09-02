@@ -1,0 +1,93 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 221464,
+    "commit": "73163f2dc8c881b38e93d2ab0724f702f6243d8e",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "73b5e7906b45717c69ceba399a8e835481d08158b7fab3d953a394423231d510"
+  },
+  "candidate_world_at_continuation": {
+    "candidate_byte_at_BRK_PC": "0x02",
+    "candidate_neighborhood_hex": "69f88502a50369",
+    "intended_owner": "buf_from_string",
+    "meaning": "the tested core says B=1 makes $c5b8 the continuation of opcode $00 at $c5b6; the candidate's intended buf_from_string byte there is $02, so the executing CPU view did not match that intended owner",
+    "owner_start": "0xc5af"
+  },
+  "claim_limit": "Host-only attribution from frozen bytes. No product fix, link, medium, resume, reset, or device contact.",
+  "decision": {
+    "acknowledge_order_defect": "excluded for the terminal entry",
+    "claim_correction": "C2K_SOURCELESS_IRQS is a shared IRQ/BRK-class episode latch. Its value 1 did not prove that the terminal second entry was a hardware IRQ.",
+    "genuine_second_hardware_IRQ_source": "excluded by stacked B=1",
+    "owned_raster_misclassification": "excluded for the terminal entry",
+    "selected": "software BRK in a CPU view inconsistent with candidate buf_from_string"
+  },
+  "emitted_choreography": {
+    "capture_entry": "0xfd08",
+    "capture_first_action": "STZ C2K_SOURCELESS_IRQS",
+    "capture_writes_D019": false,
+    "handler": "0xe038..0xe081",
+    "order": [
+      "read D019 and classify raster bit",
+      "acknowledge owned D019 raster bit",
+      "call capture/drain",
+      "increment frame",
+      "RTI"
+    ],
+    "second_class_entry": "0xe06d",
+    "terminal_edge": "0xe07a -> 0xe08b"
+  },
+  "exonerated": [
+    "input ring backlog",
+    "Hybrid consumer",
+    "rendering",
+    "GC",
+    "OOM",
+    "MAP residue",
+    "IRQ acknowledge ordering as terminal cause"
+  ],
+  "format": "lisp65-c2.3-v1.6-hybrid-entry-brk-attribution-v1",
+  "inputs": {
+    "ELF": {
+      "bytes": 632156,
+      "path": "build/c2.3/v1.6-hybrid-live-stack-replacement-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a03f9fafc5629f913dcf213925d7f007fd91b353ab2229a6189080c37f604c9c"
+    },
+    "capture": {
+      "bytes": 18335,
+      "path": "build/c2.3/v1.6-items12-hybrid-owner-contact/hybrid-entry-first-red-stopped-state/capture.json",
+      "sha256": "73827d43bb82102b434bd81a92bc2ce216bf9c3c5b67cc85b3b9b29a89188992"
+    },
+    "source": {
+      "bytes": 2439,
+      "path": "src/optional/c2_kernal_input_capture.s",
+      "sha256": "aa5c12995541f253e4723f74a167e7b7d9f749896e0ca8bc52e1b9f3174f390d"
+    },
+    "tested_core_authority": {
+      "bytes": 12182,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-irq-origin-desk-attribution-receipt.json",
+      "sha256": "aa493290606bcd7ec2274486f2c5333bef6fd933810a3cb22d327e23a97bb492"
+    }
+  },
+  "open_boundary": "the frozen row did not read the live CPU-view bytes at $c5b6; host evidence attributes BRK and candidate-view mismatch, but does not yet name which overlay install or control-transfer mechanism supplied the zero byte",
+  "recorded_on": "2026-08-20",
+  "status": "ATTRIBUTED-BRK-NOT-IRQ",
+  "stopped_state": {
+    "BRK_opcode_PC": "0xc5b6",
+    "C2K_SOURCELESS_IRQS": 1,
+    "C2K_UNOWNED_VIC": 0,
+    "MAPH": "0x8000",
+    "MAPL": "0x0000",
+    "PC": "0xe096",
+    "SP": "0x01c5",
+    "continuation_PC": "0xc5b8",
+    "gc_runs": 3,
+    "mem_oom": 0,
+    "ring_head": 0,
+    "ring_logically_empty": true,
+    "ring_residue_sha256": "b3749ae672d160dbeb9a51a59521863ee0235d180ec27c4f78c752d5d83c7236",
+    "ring_tail": 0,
+    "saved_frame_hex": "00c7000032b8c5",
+    "stacked_B": 1,
+    "stacked_P": "0x32"
+  }
+}

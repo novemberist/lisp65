@@ -1,0 +1,191 @@
+{
+  "authorities": {
+    "MEGA65_ROM": {
+      "bytes": 131072,
+      "path": "/home/alex/.local/share/xemu-lgb/mega65/MEGA65.ROM",
+      "sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0"
+    },
+    "ROM_contract": {
+      "bytes": 11018,
+      "path": "config/r3-g3-g6-contract.json",
+      "sha256": "5c8e224184d7a54d0d818b77b90a50604b33966bbb3c8f1489524064fcc17681"
+    },
+    "control": {
+      "bytes": 2429,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-launch-boundary-control-device-receipt.json",
+      "sha256": "fe5e918571fc984cfb91604ab4c0f5c4e2f0feed3acf2d32b2df72dbcb87436e"
+    },
+    "core_CPU_view": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "core_monitor_format": {
+      "bytes": 60075,
+      "path": "build/upstream-verification/mega65-core/src/monitor/monitor.a65",
+      "sha256": "d7fd09c2a43332a9967310d3043f72de99eb2cf26c89d539f3df5ec6e39208bc"
+    },
+    "deployment": {
+      "bytes": 8053,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/deployment.json",
+      "sha256": "2f4196ac4771457fc72ddb1e6538c37ed924046d7dca7ed46011fac03dbc7669"
+    },
+    "device": {
+      "bytes": 4067,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-durable-progress-device-receipt.json",
+      "sha256": "10eae5c566c611f3dd187a1615cbbf5ee6d0fe028d84ede9e2ed6f9413dcb36b"
+    },
+    "diagnostic_window": {
+      "bytes": 8192,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-window.bin",
+      "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+    },
+    "driver": {
+      "bytes": 18768,
+      "path": "tools/host-lisp/c2_v16_durable_progress_identity_view_attribution.py",
+      "sha256": "c7750271808f70783eb198decb9afe34ff4ada86a8b78cd86347aa90d341ead9"
+    },
+    "durable_runner": {
+      "bytes": 23516,
+      "path": "tools/host-lisp/c2_v16_boot_durable_progress.py",
+      "sha256": "ccdfa0ec0562f3e1f90d2e4b310a178a720bbf4259bbac095ba70b574223d6d0"
+    },
+    "m65_fetch_ram_source": {
+      "bytes": 58348,
+      "path": "mega65-tools@c5bf0ccd7ec6398290176f8af928d0780482577f:src/tools/m65common.c",
+      "sha256": "3aae4002e3c6a36b1dbbac5534b7e611fe48f85bd59ee1efecc5564898eda722"
+    },
+    "plan": {
+      "bytes": 81336,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "65357d17cc29ae1b923b936a6909c0e13d058887e835573fcfb9e49627c81fde"
+    },
+    "prior_first_red": {
+      "bytes": 5110,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-durable-progress-first-red-receipt.json",
+      "sha256": "25d24acf9fa3b2f7061bc8e8815e022c662207d5a2891b9d5845e40513bd7656"
+    }
+  },
+  "claim_limit": "Desk attribution of the consumed identity/view contradiction only. It names KERNAL E000 ownership plus unresolved physical-RAM reads, withdraws every root-scan interpretation, and authorizes no hardware, product/diagnostic fix, measured form, F018B membership or R/A/I/G row.",
+  "execution_witnesses": [
+    "both E000 candidate byte streams are bound independently",
+    "the KERNAL stream contains the observed descending-X search loop",
+    "the product stream at both sampled addresses contains ordinary stores",
+    "the diagnostic entry sentinel remains reset in all three samples",
+    "the core reserves 0x0777xxxx, not 0x0000xxxx, for CPU-view monitor reads",
+    "the runner used only unresolved 0x0000xxxx memory commands",
+    "the monitor register row exposed mapping/ROM fields that the runner discarded",
+    "the separate control row owns an explicit post-RUN prompt postcondition"
+  ],
+  "facts": {
+    "code_owner_binding": {
+      "kernal_ROM": {
+        "bytes": "80288adff724a20fdd6deef005ca10f88018a5d1d012bd00",
+        "contains_descending_X_search_loop": true,
+        "loop": "LDX #$0f; CMP $ee6d,X; BEQ exit; DEX; BPL loop",
+        "loop_PC_fetch_span": "0xe1be..0xe1c7",
+        "slice": "0xe1b8..0xe1cf"
+      },
+      "product_E000": {
+        "at_E1BC": "STA $07",
+        "at_E1C2": "STA $04",
+        "bytes": "068a69008507a41fb1048504a001b106aaa50420e8b518a5",
+        "contains_descending_X_search_loop": false,
+        "slice": "0xe1b8..0xe1cf"
+      },
+      "selected_owner": "MEGA65-KERNAL-ROM",
+      "why": "the sampled E1xx PC/X signature matches the KERNAL's descending table search, while the physical entry sentinel proves the diagnostic $202C path never ran"
+    },
+    "control_reconciliation": {
+      "control_physical_RUN_reached_visible_REPL": true,
+      "control_proves_diagnostic_contact_entered": false,
+      "control_proves_environment_can_launch": true,
+      "diagnostic_entry_stamp_observed": false,
+      "diagnostic_post_RUN_screen_or_mapping_proof_retained": false,
+      "explanation": "the control row has its own post-RUN prompt postcondition; the diagnostic row has only pre-RUN staging identity plus later samples. Byteidentical staging capability is not execution identity for a separate physical launch"
+    },
+    "decision": {
+      "F018B_membership_claim": false,
+      "R_A_I_G_claim": false,
+      "diagnostic_launch_entry_proved": false,
+      "named_mechanism": "address-only product-ELF symbolization was applied to KERNAL-owned E000 PCs, then combined with unresolved physical bank-0 monitor reads after the diagnostic entry witness had not fired",
+      "new_device_contact_authorized": false,
+      "prior_root_scan_claim_valid": false,
+      "product_hang_claim": false,
+      "required_shape_before_owner_contact_question": "retain raw r-row MAPH/MAPL/ROM flags or otherwise prove the E000 owner, and use 0x0777xxxx CPU-view reads (or a CPU-side RAM copy) for every state value compared with executing code",
+      "wrong_code_owner": true,
+      "wrong_read_view_for_CPU_identity_claim": true
+    },
+    "monitor_view": {
+      "CPU_view_magic": "0x0777xxxx",
+      "CPU_view_magic_used": false,
+      "mapping_fields_retained_by_runner": false,
+      "memory_commands": [
+        "m0000b5c3",
+        "m0000003d",
+        "m0000b9f0",
+        "m00000016"
+      ],
+      "memory_values_prove_executing_CPU_view": false,
+      "memory_values_valid_as_physical_RAM": true,
+      "memory_view": "28-bit-physical-bank0-unresolved",
+      "register_PC_source": "CPU history/register state",
+      "register_fields_retained_by_runner": [
+        "PC",
+        "A",
+        "X",
+        "Y",
+        "Z",
+        "B",
+        "SP"
+      ],
+      "register_row_exposes": [
+        "MAPH",
+        "MAPL",
+        "ROM-enable-flags"
+      ]
+    },
+    "sample_signature": {
+      "PCs": [
+        "0xe1bc",
+        "0xe1c2",
+        "0xe1c2"
+      ],
+      "X_values": [
+        "0x08",
+        "0x07",
+        "0x06"
+      ],
+      "durable_witness": [
+        "0xd7",
+        "0xd7",
+        "0xd7"
+      ],
+      "gc_runs": [
+        0,
+        0,
+        0
+      ],
+      "stable_BASIC_echo": "owner-bound hint; not promoted alone"
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-D2-identity-view-desk-attribution-v1",
+  "mutations_rejected": {
+    "authorize-contact": "claim/contact boundary drift",
+    "claim-777-magic-used": "monitor-view attribution drift",
+    "claim-F018B": "claim/contact boundary drift",
+    "claim-R-A-I-G": "claim/contact boundary drift",
+    "claim-diagnostic-entry": "claim/contact boundary drift",
+    "claim-mapping-fields-retained": "monitor-view attribution drift",
+    "claim-physical-values-prove-CPU-view": "monitor-view attribution drift",
+    "claim-product-hang": "claim/contact boundary drift",
+    "erase-kernal-X-loop": "E000 owner attribution drift",
+    "invent-product-X-loop": "E000 owner attribution drift",
+    "promote-control-to-diagnostic-entry-proof": "control reconciliation drift",
+    "reinterpret-m-as-CPU-view": "monitor-view attribution drift",
+    "retain-root-scan-claim": "claim/contact boundary drift",
+    "select-product-E000-owner": "E000 owner attribution drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "ATTRIBUTED WRONG E000 OWNER PLUS PHYSICAL-RAM VIEW"
+}

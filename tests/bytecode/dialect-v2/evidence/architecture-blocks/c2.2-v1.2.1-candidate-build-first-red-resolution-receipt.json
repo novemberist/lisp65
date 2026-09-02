@@ -1,0 +1,52 @@
+{
+  "candidate": {
+    "artifact_count": 19,
+    "artifact_set_sha256": "2115b955512a3b794f68d5f2a1d160708cb89184735b7a0984a7cfc61c38f63f",
+    "bank2_sha256": "cac8e6392de04b9086f37d77b38db7a2f2fd99e904b7b985c50af93db4b16c09",
+    "bank2_static_code_bytes": 41485,
+    "entries": 696,
+    "linked_elf_sha256": "23ae6a7b9765b5fb7bb1d81ba8b97aa1de4d69c8988379609ed2ce98d6d831e3",
+    "media_manifest_sha256_by_fresh_axis": [
+      "791014fc33f0837b58ee52e06b6534e47ac236191b1ff49e85967a8c076b1878",
+      "a00804a0c9dfd910995c66384490d686a0dc2e0d2e0569e9a5b4124c7c09c89e"
+    ],
+    "product_build_id": "ee357d31",
+    "profile_build_id": "1b242dd9",
+    "resident_prg_sha256": "a7c48ec9ef42892f1ac09b80297d057d2e322eb37c406e37ccb9a0f517ceda8c",
+    "resolutions": 2760,
+    "roots": 340
+  },
+  "claim_limit": "Source-to-product/media build and varied double Fresh-Clone only. The candidate has not passed R4, R5, R6, G5, G6, promotion, release, tag or public sync.",
+  "first_red": {
+    "command": "make workbench-product",
+    "finding": "The public entry correctly remained bound to the promoted v1.2.0 sealed set and rejected the unpromoted freight at the cold-stager role.",
+    "status": "FIRST RED: pre-promotion candidate cannot replace the public v1.2.0 authority"
+  },
+  "format": "lisp65-v1.2.1-candidate-build-first-red-resolution-v1",
+  "link77_comparison": {
+    "hardware_bound_resident_prg_sha256": "9e8999c0de31e306ee957f4912b7fa0baa52c55d58dfe8a933b1c02462e1faa3",
+    "same_bank2_identity": true,
+    "same_geometry": true,
+    "source_identity_difference": {
+      "current_mem_c_sha256": "a2279506a55731bfd0648758411ecf4a74605e79d9ebec243a5e90402be4bb90",
+      "link77_mem_c_sha256": "05aa427b3b655e8bd376ea18ce63b435334c8eda837d32a7a86c329c2ede7688",
+      "mechanism": "The post-Link-77 EXT-heap DMA/GC measurement lane is guarded by !__mos__ and therefore emits no target implementation, but the complete source file remains part of the source-bound resolved-profile identity.",
+      "result": "The fresh candidate is a source successor with a distinct identity and must earn its own R4/R5/R6/G5/G6 chain; no Link-77 hardware green is inherited."
+    }
+  },
+  "recorded_on": "2026-07-29",
+  "resolution": {
+    "candidate_media_driver": "tools/host-lisp/c2_v121_candidate_media.py",
+    "candidate_product_driver": "tools/host-lisp/c2_v121_candidate_product.py",
+    "fresh_clone_driver": "tools/host-lisp/c2_v121_product_reproducibility.py",
+    "fresh_clone_receipt": {
+      "bytes": 8648,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.1-media-fresh-clone-reproducibility-receipt.json",
+      "sha256": "8093e3171877bc360fb50332f7eb523987643f2d317784b88db25b4b22f9fbee",
+      "source_commit": "5c1f06678299229f478a97e5fc68f099180d9aa7"
+    },
+    "public_v1.2.0_authority_changed": false,
+    "status": "passed-isolated-pre-promotion-source-successor-double-fresh-clone"
+  },
+  "status": "passed-first-red-attributed-candidate-build-isolated-and-reproduced"
+}

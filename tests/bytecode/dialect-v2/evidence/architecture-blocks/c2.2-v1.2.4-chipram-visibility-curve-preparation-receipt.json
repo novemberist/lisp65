@@ -1,0 +1,150 @@
+{
+  "authority": {
+    "G5_deployment": {
+      "bytes": 3013,
+      "path": "build/c2.2/v1.2.4-acceptance/r5/hardware-session-01/deployment.json",
+      "sha256": "1182db12a3405135a89b9d738f149f98468514c58ac5db7de0d8e557e941f425"
+    },
+    "G5_receipt": {
+      "bytes": 13192,
+      "path": "build/c2.2/v1.2.4-acceptance/r5/hardware-session-01/g5-hardware-receipt.json",
+      "sha256": "f7f1d58d3a2fe319ceda75450efb20906f447997af724c28fb2effda31f2ccbc"
+    },
+    "candidate_manifest": {
+      "bytes": 18426,
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/canonical-product-manifest.json",
+      "sha256": "7cdca5f7a4a6615c2ebb3c1ee9f0c3afebc763ae576dc5bbdca32ddb65c988cb"
+    },
+    "contract": {
+      "bytes": 3365,
+      "path": "docs/planning/c2d-append-visibility-measurement-contract.md",
+      "sha256": "684734ce1582050b68df3776ba2be127b0e63c777809764d65d3dfbf7eb19709"
+    },
+    "deployment": {
+      "bytes": 2552,
+      "path": "build/post-promotion/v124/chipram-visibility/preparation/deployment.json",
+      "sha256": "79f65ae37076823846bd04e8d05ccd8e2c9ccb5339805ff3ca16bc7df1a8e693"
+    },
+    "linker": {
+      "bytes": 443,
+      "path": "config/c2-v124-chipram-visibility-link.ld",
+      "sha256": "2980f338613d43ff26e6989001f455ffec8b6c0a05d3adf3805f366e21dcd275"
+    },
+    "plan": {
+      "bytes": 13577,
+      "path": "docs/planning/1.2.4-work-plan.md",
+      "sha256": "991412f6d9c292d3ab11252c03b0ae0a99f0ef35d360139fe9f458a2a0a7fc8a"
+    },
+    "product_DMA_source": {
+      "bytes": 5446,
+      "path": "src/c2_platform_dma.c",
+      "sha256": "68ed902d1114e148c54c70d886fea519472f92064e9de104ad8703432ef6c465"
+    },
+    "source": {
+      "bytes": 6546,
+      "path": "tools/host-lisp/fixtures/c2_v124_chipram_visibility_curve.c",
+      "sha256": "b4d1e3ad4de874d2522acc6d1603c0da084ce347f32469583f9e5767add1615a"
+    }
+  },
+  "classification": "nonpromotable-measurement-rider-not-acceptance",
+  "curve": {
+    "bytes": 256,
+    "immediate_repetitions": 20,
+    "points": [
+      {
+        "cumulative_lines": 0,
+        "id": "immediate"
+      },
+      {
+        "cumulative_lines": 31,
+        "id": "2ms"
+      },
+      {
+        "cumulative_lines": 1563,
+        "id": "100ms"
+      },
+      {
+        "cumulative_lines": 11156,
+        "id": "714ms"
+      }
+    ],
+    "timing_authority": "device-raster-lines-not-host-time"
+  },
+  "format": "lisp65-c2.2-v1.2.4-chipram-visibility-curve-v1",
+  "geometry": {
+    "__bss_end": {
+      "address": 10782,
+      "bytes": 0,
+      "section": ".bss"
+    },
+    "__c2_v124_curve_mailbox_end": {
+      "address": 28928,
+      "bytes": 0,
+      "section": ".c2_v124_curve_mailbox"
+    },
+    "__c2_v124_curve_mailbox_start": {
+      "address": 28672,
+      "bytes": 0,
+      "section": ".c2_v124_curve_mailbox"
+    },
+    "c2_dma_list": {
+      "address": 34,
+      "bytes": 12,
+      "section": ".zp.bss"
+    },
+    "main": {
+      "address": 8303,
+      "bytes": 607,
+      "section": ".text"
+    },
+    "probe_curve": {
+      "address": 9502,
+      "bytes": 1024,
+      "section": ".bss"
+    },
+    "probe_readback": {
+      "address": 10526,
+      "bytes": 256,
+      "section": ".bss"
+    },
+    "probe_source": {
+      "address": 9246,
+      "bytes": 256,
+      "section": ".bss"
+    },
+    "product_dma_copy": {
+      "address": 9060,
+      "bytes": 50,
+      "section": ".text"
+    }
+  },
+  "host_execution_witness": {
+    "bound_trigger_shape": {
+      "sta_D700": 1,
+      "sta_D701": 1,
+      "sta_D702": 1,
+      "sta_D703": 1,
+      "sta_D705": 0
+    },
+    "compiled_artifacts": 3,
+    "source_mutations_rejected": 8
+  },
+  "policy": {
+    "all_exact_disposition": "bounded-exoneration-not-family-closure",
+    "can_make_acceptance_chain_red": false,
+    "mismatch_disposition": "prepared-Class-C-review-at-halt-2",
+    "red_acceptance_row_invalidates_measurement": false
+  },
+  "recorded_on": "2026-07-30",
+  "safety": {
+    "C2J_must_be_CLEAR": true,
+    "only_Bank5_write": "0x58430..0x5852f, unpublished Link-81 append scratch",
+    "phase_owner_must_be_NONE": true,
+    "product_bytes": 0,
+    "product_links": 0,
+    "promotable": false,
+    "published_C2D_end_derived_from_candidate_bytes": 33840
+  },
+  "status": "passed-host-prepared-awaiting-device-curve",
+  "version": 1
+}

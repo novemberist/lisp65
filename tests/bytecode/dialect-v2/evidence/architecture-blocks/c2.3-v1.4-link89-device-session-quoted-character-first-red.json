@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-device-session-quoted-character-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HARNESS FIRST RED: quoted characters were absent even in the short shape seed",
+  "candidate_link": 89,
+  "hardware_contact": 3,
+  "product_started": true,
+  "completed_product_rows": [
+    "exact product D81 readback",
+    "exact Bank-2 readback",
+    "bounds rejection",
+    "post-error REPL recovery",
+    "three synchronous draw forms"
+  ],
+  "mechanism": "Shortening the quoted payload from 63 characters to seven did not change the transport result: the visible active echo was (progn(setq s \"\")t). The failure is quote-content transport, not input length. The helper stopped before RETURN on all three attempts.",
+  "observation": {
+    "product_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-shape-quoted-character/D1-product-readback.d81",
+      "bytes": 819200,
+      "sha256": "cc3509b7a6df421bb749f85dcbb77bf75d704016c0cb702b011e20c5d3b54696"
+    },
+    "bank2_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-shape-quoted-character/D1-bank2.bin",
+      "bytes": 47298,
+      "sha256": "eb45f07ed2edc179812c585399aef5ee9ceb0dbdd02f1126e086e357156f4c30"
+    },
+    "third_attempt_capture": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-shape-quoted-character/d1-sprite-setup-1-input-attempt-3.png",
+      "bytes": 5179,
+      "sha256": "fcb0f6bb23271053a2bf3b63ce6e3c66c8c4b31cbed8fa05c8e41c5c5d26b137"
+    },
+    "third_attempt_text": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-shape-quoted-character/d1-sprite-setup-1-input-attempt-3.txt",
+      "bytes": 2241,
+      "sha256": "4cf7bd1e81ede927230da588d12cac3b37f2521127f54a6daf3b06d3a4756803"
+    }
+  },
+  "disposition": "Remove quoted input from the row entirely. Construct one X with the delivered char->string primitive, derive powers of two with short acknowledged string-append forms and concatenate 32+16+8+4+2+1 before the unchanged sprite-shape call.",
+  "claim_limit": "A verified-input transport failure after the listed partial D1 rows. It proves no sprite, SID, Ship-sample, trailing-library, release or promotion claim."
+}

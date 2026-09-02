@@ -1,0 +1,244 @@
+{
+  "active_candidate_capture_guard": {
+    "arena_equality_boundary_accepted": true,
+    "candidate": {
+      "capture_bytes": 59,
+      "derived_freight": {
+        "facade_members": [
+          {
+            "address": 46000,
+            "bytes": 9,
+            "name": "vm_code_load_converged"
+          },
+          {
+            "address": 46009,
+            "bytes": 9,
+            "name": "c2_physical_read_converged"
+          },
+          {
+            "address": 46018,
+            "bytes": 9,
+            "name": "c2_abort_driver_facade"
+          },
+          {
+            "address": 46027,
+            "bytes": 9,
+            "name": "c2_rtov_retire_continuations_facade"
+          },
+          {
+            "address": 46036,
+            "bytes": 19,
+            "name": "c2_mapped_far_enter"
+          },
+          {
+            "address": 46055,
+            "bytes": 15,
+            "name": "c2_mapped_far_leave"
+          },
+          {
+            "address": 46070,
+            "bytes": 27,
+            "name": "c2_dma_read_or_abort"
+          },
+          {
+            "address": 46097,
+            "bytes": 1,
+            "name": "c2_retired_continuation_stub"
+          }
+        ],
+        "padding_bytes": 0,
+        "service_bytes": 1425
+      },
+      "equates": {
+        "C2K_BREAK_HELD": {
+          "count": 1,
+          "value": 65419
+        },
+        "C2K_BREAK_PENDING": {
+          "count": 1,
+          "value": 65418
+        },
+        "C2K_EVENT_CODE": {
+          "count": 1,
+          "value": 65408
+        },
+        "C2K_EVENT_MODIFIERS": {
+          "count": 1,
+          "value": 65409
+        },
+        "C2K_EVENT_READY": {
+          "count": 1,
+          "value": 65410
+        },
+        "C2K_FRAME_HI": {
+          "count": 1,
+          "value": 65412
+        },
+        "C2K_FRAME_LO": {
+          "count": 1,
+          "value": 65411
+        },
+        "C2K_INPUT_RING_BASE": {
+          "count": 1,
+          "value": 48272
+        },
+        "C2K_INPUT_RING_HEAD": {
+          "count": 1,
+          "value": 65420
+        },
+        "C2K_INPUT_RING_SLOTS": {
+          "count": 1,
+          "value": 112
+        },
+        "C2K_INPUT_RING_TAIL": {
+          "count": 1,
+          "value": 65421
+        },
+        "C2K_MAP_GENERATION": {
+          "count": 1,
+          "value": 65415
+        },
+        "C2K_NMI_COUNT": {
+          "count": 1,
+          "value": 65413
+        },
+        "C2K_SOURCELESS_IRQS": {
+          "count": 1,
+          "value": 65414
+        },
+        "C2K_STATE": {
+          "count": 1,
+          "value": 65416
+        },
+        "C2K_UNOWNED_VIC": {
+          "count": 1,
+          "value": 65417
+        }
+      },
+      "fixed_contracts": {
+        "abort_body_bytes": 134,
+        "abort_entry_bytes": 9,
+        "facade_bytes": 98
+      },
+      "post_capture_free_bytes": 69,
+      "reserve_floor_bytes": 54,
+      "service_arena": {
+        "capacity_bytes": 1499,
+        "free_bytes": 74,
+        "relation": "used <= capacity",
+        "used_bytes": 1425
+      },
+      "status": "PASS: ACTIVE-CANDIDATE CAPTURE SUCCESSOR CONTRACTS",
+      "surplus_over_floor_bytes": 15,
+      "worst_state_forbidden_reached": []
+    },
+    "capacity_semantics": "used <= fixed capacity, not used == capacity",
+    "mutations_rejected": [
+      "stored-1382-10-equality",
+      "facade-outsider",
+      "arena-overflow"
+    ],
+    "status": "PASS: ACTIVE-CANDIDATE CAPTURE GUARD MUTATIONS"
+  },
+  "artifacts_after": {
+    "ELF": {
+      "bytes": 632508,
+      "path": "build/c2.3/v1.6-liveness-capture-guard-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "102eac84ab25ec57b39990377d4808c3287746b94c65617cca3259fd43f73bcd"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-liveness-capture-guard-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "0410005035ee42463cc51d14fc2510528910a808358bb194a8e6e8c893ffd8d8"
+    }
+  },
+  "artifacts_before": {
+    "ELF": {
+      "bytes": 632508,
+      "path": "build/c2.3/v1.6-liveness-capture-guard-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "102eac84ab25ec57b39990377d4808c3287746b94c65617cca3259fd43f73bcd"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-liveness-capture-guard-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "0410005035ee42463cc51d14fc2510528910a808358bb194a8e6e8c893ffd8d8"
+    }
+  },
+  "call_indir_identity": {
+    "authority": "unique ELF entry plus three decoded instruction bytes",
+    "candidate": {
+      "ELF_symbol_bytes": 0,
+      "address": 9419,
+      "instruction": "JMP ($0014)",
+      "metadata_proxy_hex": "",
+      "section": ".text",
+      "semantic_hex": "6c1400",
+      "semantic_instruction_bytes": 3
+    },
+    "predecessor": {
+      "ELF_symbol_bytes": 0,
+      "address": 9419,
+      "instruction": "JMP ($0014)",
+      "metadata_proxy_hex": "",
+      "section": ".text",
+      "semantic_hex": "6c1400",
+      "semantic_instruction_bytes": 3
+    },
+    "wrong_instruction_mutation_rejected": true,
+    "zero_size_symbol_body_proxy_rejected": true
+  },
+  "claim_limit": "Read-only closure over the frozen final pair; no media or device.",
+  "execution": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "final_liveness_gate": {
+    "capacity": {
+      "e000_floor_bytes": 54,
+      "e000_free_bytes": 69,
+      "e000_surplus_bytes": 15,
+      "facade_padding_bytes": 0,
+      "far_service_bytes": 1425,
+      "far_service_capacity": 1499,
+      "far_service_free_bytes": 74,
+      "fixed_facade_bytes": 98,
+      "ordinary_text_forecast_equality_pin_rejected": true,
+      "ordinary_text_forecast_floor_bytes": 3,
+      "ordinary_text_free_bytes": 14
+    },
+    "claim_source": "final linked ELF only",
+    "contract": {
+      "hot_call_indir_byteidentical": true,
+      "mapped_enter_leave_paired": true,
+      "neutral_stub_is_RTS": true,
+      "retirement_call_count": 1,
+      "walker_matches_all_seven_pair_loop": true
+    },
+    "status": "PASS: FINAL ELF ENFORCES RETIREMENT LIVENESS",
+    "symbols": {
+      "facade": {
+        "address": "0xb3cb",
+        "bytes": 9
+      },
+      "stub": {
+        "address": "0xb411",
+        "bytes": 1
+      },
+      "walker": {
+        "address": "0x7e18",
+        "bytes": 43
+      }
+    }
+  },
+  "format": "lisp65-c2-v160-liveness-call-indir-replay-v1",
+  "next": "authorized Comfort prompt card",
+  "predecessor_Final_Red": {
+    "bytes": 16800,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-liveness-capture-guard-card-final-red.json",
+    "sha256": "c21ce1c0330afee6255bdc712811bcc0e175feb7fb0fbf3eb32953022e0e2f7b"
+  },
+  "recorded_on": "2026-08-20",
+  "status": "PASS: V1.6 RETIREMENT LIVENESS CONTRACT CLOSED"
+}

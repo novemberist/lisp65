@@ -1,0 +1,1521 @@
+{
+  "authority": {
+    "current_external_manifests": [
+      "buffer",
+      "ide",
+      "idex",
+      "m65d"
+    ],
+    "errors": {
+      "path": "src/error_codes.h",
+      "records": 64,
+      "sha256": "15dd67e06cbbe829760298e19487e436abf25f5ddc84c2cf27c327336fe1aa8d"
+    },
+    "metadata": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-function-metadata-index.json",
+      "records": 139,
+      "sha256": "cb9413f40cd83e1958f0ce66ae2f1acadebb2cb630f2cdf9071959724c83258c"
+    },
+    "release_notes": {
+      "path": "docs/releases/1.9.0.md",
+      "sha256": "6da05a1c0ae0c65337b0531388163d0f54a86ecf6a1681fcac37f09c63ca6b00"
+    },
+    "user_guide": {
+      "path": "docs/user-guide.md",
+      "sha256": "3a554336fddad1ba713980d88e1cecb927426cb050f7ba61d8c64f45943bc54d"
+    },
+    "v2_plan": {
+      "path": "docs/planning/v2.0.0-pre-plan.md",
+      "sha256": "5864ef21c2eab15c55bd9a4ce3ebcff8f6db643a23e076278ed6eea0f26f4e14"
+    }
+  },
+  "counts": {
+    "error_identifiers": 64,
+    "function_rename_candidates": 7,
+    "guide_terms": 6,
+    "library_designators": 4,
+    "media_and_files": 8,
+    "public_functions": 139
+  },
+  "error_identifiers": [
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_NONE",
+      "speaking_name": "none"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STOPPED",
+      "speaking_name": "stopped"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_READER_UNCLOSED_LIST",
+      "speaking_name": "reader-unclosed-list"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_READER_UNCLOSED_STRING",
+      "speaking_name": "reader-unclosed-string"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_READER_UNFINISHED_ESCAPE",
+      "speaking_name": "reader-unfinished-escape"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_READER_INVALID_TOKEN",
+      "speaking_name": "reader-invalid-token"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_READER_TOO_DEEP",
+      "speaking_name": "reader-too-deep"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_READER_SYNTAX",
+      "speaking_name": "reader-syntax"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_LCC_INSTALL",
+      "speaking_name": "lcc-install"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_WRITE_STRING_TYPE",
+      "speaking_name": "write-string-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_COMPILE_STRING_TYPE",
+      "speaking_name": "compile-string-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_SAVE_STAGED_TYPE",
+      "speaking_name": "save-staged-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_TYPE",
+      "speaking_name": "fasl-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_EVAL_STRING_TYPE",
+      "speaking_name": "eval-string-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_SAVE_ARGS_TYPE",
+      "speaking_name": "save-args-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_SAVE_TOO_LONG",
+      "speaking_name": "save-too-long"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_DIVISION_BY_ZERO",
+      "speaking_name": "division-by-zero"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_LOAD_TYPE",
+      "speaking_name": "load-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_LOAD_OPEN",
+      "speaking_name": "load-open"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STRING_TO_LIST_TYPE",
+      "speaking_name": "string-to-list-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_SYMBOL_NAME_TYPE",
+      "speaking_name": "symbol-name-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_RPLACA_TYPE",
+      "speaking_name": "rplaca-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_RPLACD_TYPE",
+      "speaking_name": "rplacd-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_SCREEN_WRITE_STRING_TYPE",
+      "speaking_name": "screen-write-string-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STRING_LENGTH_TYPE",
+      "speaking_name": "string-length-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STRING_REF_TYPE",
+      "speaking_name": "string-ref-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STRING_REF_RANGE",
+      "speaking_name": "string-ref-range"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_WRITE_CHAR_TYPE",
+      "speaking_name": "write-char-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_UNDEFINED_FUNCTION",
+      "speaking_name": "undefined-function"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_TOO_MANY_ARGS",
+      "speaking_name": "too-many-args"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_NOT_A_FUNCTION",
+      "speaking_name": "not-a-function"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_RECURSION_TOO_DEEP",
+      "speaking_name": "recursion-too-deep"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_DOTIMES_COUNT_TYPE",
+      "speaking_name": "dotimes-count-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_NO_LCC_RUN",
+      "speaking_name": "no-lcc-run"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_TOO_MANY_SYMBOLS",
+      "speaking_name": "too-many-symbols"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STDLIB_BOOT_OVERLAY",
+      "speaking_name": "stdlib-boot-overlay"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STDLIB_BOOT_WIPE",
+      "speaking_name": "stdlib-boot-wipe"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STDLIB_PROFILED_PRELOAD",
+      "speaking_name": "stdlib-profiled-preload"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_VM_TYPE",
+      "speaking_name": "vm-type"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_VM_STACK",
+      "speaking_name": "vm-stack"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_VM_OOM",
+      "speaking_name": "vm-oom"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_VM_UNDEFINED_FUNCTION",
+      "speaking_name": "vm-undefined-function"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_VM_STEP_LIMIT",
+      "speaking_name": "vm-step-limit"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_VM_BAD_BYTECODE",
+      "speaking_name": "vm-bad-bytecode"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STDLIB_METADATA",
+      "speaking_name": "stdlib-metadata"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_STDLIB_REGISTER",
+      "speaking_name": "stdlib-register"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_RUNTIME_CATALOG",
+      "speaking_name": "runtime-catalog"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_RUNTIME_ISLAND",
+      "speaking_name": "runtime-island"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_WRONG_ARGUMENT_COUNT",
+      "speaking_name": "wrong-argument-count"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_ENTRIES_OVERFLOW",
+      "speaking_name": "fasl-entries-overflow"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_NODES_OVERFLOW",
+      "speaking_name": "fasl-nodes-overflow"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_NOT_A_DEFUN",
+      "speaking_name": "fasl-not-a-defun"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_OUTPUT_OVERFLOW",
+      "speaking_name": "fasl-output-overflow"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_PATCHES_OVERFLOW",
+      "speaking_name": "fasl-patches-overflow"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_STRINGS_OVERFLOW",
+      "speaking_name": "fasl-strings-overflow"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_TOO_MANY_HELPERS",
+      "speaking_name": "fasl-too-many-helpers"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_UNSUPPORTED_LITERAL",
+      "speaking_name": "fasl-unsupported-literal"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_FASL_WINDOW_OVERFLOW",
+      "speaking_name": "fasl-window-overflow"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_LCC_DO_BODY_TOO_BIG",
+      "speaking_name": "lcc-do-body-too-big"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_LCC_INVALID_PARAMETER_LIST",
+      "speaking_name": "lcc-invalid-parameter-list"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_VM_PRIMITIVE_NOT_DESIGNATOR",
+      "speaking_name": "vm-primitive-not-designator"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT",
+      "speaking_name": "runtime-overlay-timeout"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_RUNTIME_FAMILY_STAGE",
+      "speaking_name": "runtime-family-stage"
+    },
+    {
+      "classification": "internal-implementation-identifier",
+      "migration": "keep enum internal; visible errors use operation: problem wording",
+      "name": "LISP65_ERR_C2_NESTING_DEPTH",
+      "speaking_name": "c2-nesting-depth"
+    }
+  ],
+  "format": "lisp65-public-naming-audit-v1",
+  "guide_terms": [
+    {
+      "classification": "capability",
+      "name": "product D81",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability",
+      "name": "work disk",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability",
+      "name": "resident prompt editor",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "implementation-detail",
+      "name": "IDEX",
+      "speaking_name": "editor extensions"
+    },
+    {
+      "classification": "implementation-detail",
+      "name": "M65D",
+      "speaking_name": "disk persistence"
+    },
+    {
+      "classification": "implementation-detail",
+      "name": "Capture",
+      "speaking_name": "lossless input queue"
+    }
+  ],
+  "library_designators": [
+    {
+      "classification": "implementation-detail",
+      "migration": "direct rename in v2.0",
+      "name": "ide",
+      "speaking_name": "editor",
+      "status": "current-shipped"
+    },
+    {
+      "classification": "implementation-detail",
+      "migration": "direct rename in v2.0",
+      "name": "idex",
+      "speaking_name": "editor-tools",
+      "status": "current-shipped"
+    },
+    {
+      "classification": "implementation-detail",
+      "migration": "direct rename in v2.0",
+      "name": "m65d",
+      "speaking_name": "disk-tools",
+      "status": "current-shipped"
+    },
+    {
+      "classification": "era-and-implementation-detail",
+      "migration": "remove stale documentation; no runtime alias",
+      "name": "v16core",
+      "speaking_name": "workbench-core",
+      "status": "historical-not-in-v1.9-authority"
+    }
+  ],
+  "media_and_files": [
+    {
+      "classification": "capability",
+      "name": "lisp65-product.d81",
+      "speaking_name": "keep",
+      "status": "current-release"
+    },
+    {
+      "classification": "capability",
+      "name": "lisp65-work.d81",
+      "speaking_name": "keep",
+      "status": "current-release"
+    },
+    {
+      "classification": "capability",
+      "name": "AUTOBOOT.C65",
+      "speaking_name": "keep",
+      "status": "current-release"
+    },
+    {
+      "classification": "capability",
+      "name": "INIT.L65",
+      "speaking_name": "keep",
+      "status": "public-convention"
+    },
+    {
+      "classification": "implementation-detail",
+      "name": "ide.ext.bin",
+      "speaking_name": "editor.ext.bin",
+      "status": "packaged-internal-role"
+    },
+    {
+      "classification": "implementation-detail",
+      "name": "idex.ext.bin",
+      "speaking_name": "editor-tools.ext.bin",
+      "status": "packaged-internal-role"
+    },
+    {
+      "classification": "implementation-detail",
+      "name": "m65d.ext.bin",
+      "speaking_name": "disk-tools.ext.bin",
+      "status": "packaged-internal-role"
+    },
+    {
+      "classification": "era-and-work-item-detail",
+      "name": "V17B3P.D81",
+      "speaking_name": "diagnostic-block3-product.d81",
+      "status": "historical-diagnostic"
+    }
+  ],
+  "migration_policy": {
+    "newer_owner_correction": "no known user base",
+    "proposal": "direct v2.0 renames without alias freight; release migration table remains a courtesy; every rename still needs owner word",
+    "work_plan_assumption": "one-cycle alias"
+  },
+  "public_functions": [
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "*",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "+",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "-",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "/",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "/=",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "<",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "<=",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "=",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": ">",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": ">=",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "abs",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "and",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "append",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "apply",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "assoc",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "atom",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "boundp",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "buffer->string",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "buffer-length",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "buffer-ref",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "buffer-set!",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "bufferp",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "butlast",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "car",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "case",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "cdr",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "char",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "char->string",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "char-downcase",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "char-upcase",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "compile-buffer-to-lib",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "compile-file-to-lib",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "cond",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "cons",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "consp",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "copy-list",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "count",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "decf",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "defparameter",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "defun",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "defvar",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "dir",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "dolist",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "dotimes",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "edit",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "eq",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "equal",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "eval",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "eval-buffer",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "every",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "filter",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "find",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "funcall",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "gensym",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "getf",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "implementation-detail",
+      "kind": "function",
+      "migration": "direct rename in v2.0",
+      "name": "ide",
+      "speaking_name": "editor"
+    },
+    {
+      "classification": "implementation-detail",
+      "kind": "function",
+      "migration": "direct rename in v2.0",
+      "name": "ide-buffers",
+      "speaking_name": "editor-buffers"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "incf",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "intern",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "key-event",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "last",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "length",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "let",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "let*",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "list",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "list*",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "load",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "load-file-to-buffer",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "load-lib",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "implementation-detail",
+      "kind": "function",
+      "migration": "direct rename in v2.0",
+      "name": "m65d-remount",
+      "speaking_name": "disk-remount"
+    },
+    {
+      "classification": "implementation-detail",
+      "kind": "function",
+      "migration": "direct rename in v2.0",
+      "name": "m65d-save",
+      "speaking_name": "disk-save"
+    },
+    {
+      "classification": "implementation-detail",
+      "kind": "function",
+      "migration": "direct rename in v2.0",
+      "name": "m65d-save-new",
+      "speaking_name": "disk-save-new"
+    },
+    {
+      "classification": "implementation-detail",
+      "kind": "function",
+      "migration": "direct rename in v2.0",
+      "name": "m65d-status",
+      "speaking_name": "disk-status"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "make-buffer",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "mapc",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "mapcan",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "mapcar",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "max",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "member",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "min",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "mod",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "nreverse",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "nth",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "nthcdr",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "null",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "number->string",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "numberp",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "or",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "peek",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "poke",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "pop",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "position",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "prin1",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "princ",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "print",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "push",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "random",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "random-seed",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "read-from-string",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "reduce",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "remf",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "reverse",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "rplaca",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "rplacd",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "implementation-detail",
+      "kind": "function",
+      "migration": "direct rename in v2.0",
+      "name": "runtime-main",
+      "speaking_name": "run-program"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "save-buffer-to",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "screen-clear",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "screen-put-char",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "screen-size",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "screen-write-string",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "search",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "set",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "setf",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "some",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string->buffer",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string-append",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string-downcase",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string-equal",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "string-length",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string-prefix-p",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "string-ref",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string-suffix-p",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string-trim",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string-upcase",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string<",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "string=",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "stringp",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "substring",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "symbol-value",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "symbolp",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "terpri",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "unless",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "when",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "macro",
+      "migration": "none",
+      "name": "while",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "write",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "primitive",
+      "migration": "none",
+      "name": "write-char",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "write-line",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "write-string",
+      "speaking_name": "keep"
+    },
+    {
+      "classification": "capability-or-language-term",
+      "kind": "function",
+      "migration": "none",
+      "name": "zerop",
+      "speaking_name": "keep"
+    }
+  ],
+  "rule": "User-facing names state capabilities; era and implementation identities receive speaking-name proposals before v2 owner review.",
+  "status": "READ-ONLY CLASSIFICATION; NO RENAME AUTHORIZED"
+}

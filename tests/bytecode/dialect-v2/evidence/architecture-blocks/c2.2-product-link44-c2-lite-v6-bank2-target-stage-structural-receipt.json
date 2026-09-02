@@ -1,0 +1,133 @@
+{
+  "authority": {
+    "bank2_phase02b_green_wplto": {
+      "bytes": 343884,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank2-target-stage-phase02b-artifact-replay-receipt.json",
+      "sha256": "8ef2e990d8cfe56d4772f09a5e4137f9825c6f4c1a97ab0008dbf33b362ae1a0"
+    },
+    "c2_lite_addendum": {
+      "bytes": 30266,
+      "path": "docs/planning/c2-lite-execution-contract-addendum.md",
+      "sha256": "41f46e3e5e8284b1286cc4c919535514124fed31d7e2018027fb10bd5d3445c9"
+    },
+    "c2_lite_contract": {
+      "bytes": 26240,
+      "path": "config/c2-lite-execution-contract.json",
+      "sha256": "f2262b758688e5070795f0bf85999c47d43ae73aeb803a3aa5151a773a7a6aa3"
+    },
+    "canonical_product_profile": {
+      "feature_defines": [
+        "LISP65_C2_DIRECT_HOT_REFILL",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+        "LISP65_C2_TRANSACTION_AUTH",
+        "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+        "LISP65_C2_NESTED_APPEND_V5",
+        "LISP65_C2_RESIDENCY_TRIAGE",
+        "LISP65_C2_E000_REOPEN",
+        "LISP65_C2_BSS_TRIAGE",
+        "LISP65_RUNTIME_OVERLAY_FORMAT_V3",
+        "LISP65_C2_PHASE11_SPLIT",
+        "LISP65_C2_LITE_COLD_EVICTION",
+        "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+        "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+        "LISP65_C2_LITE_BANK3_STAGING",
+        "LISP65_C2_LITE_BANK2_STAGING",
+        "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+        "LISP65_C2_LITE_VM_ARITY_E000",
+        "LISP65_C2_LITE_CHIP_RAM"
+      ],
+      "green_wplto_profile": {
+        "bytes": 8652,
+        "path": "build/c2-lite/v6-bank2-target-stage-phase02b-wplto/full-product-wplto/resolved-profile.txt",
+        "sha256": "a70b02189ca0bc6e014fbacfe23be5bc76e46e5a05db06505730f8ac0d10e9e2"
+      },
+      "link33_gap_disposition": "The Link-33 object bound the base profile only. Later C2-lite wrapper features were appended outside that object; the Link-41 driver inherited the pre-E000 wrapper and therefore omitted one already-authorized feature without tripping the base-object hash.",
+      "profile_object": {
+        "bytes": 2722,
+        "format": "lisp65-c2-lite-v6-roots-fronts-product-profile-v1",
+        "path": "config/c2-lite-v6-roots-fronts-product-profile.json",
+        "sha256": "05a6db5519e8d023bac3bbaae5770efa909f66f26204a374d33330aff09c6b53"
+      },
+      "shape": {
+        "boot_family_slice_count": 12,
+        "roots_fronts_slice_bytes": 1473,
+        "session_family_bytes": 65438,
+        "session_family_headroom_bytes": 98,
+        "session_family_slice_count": 50,
+        "unique_slice_count": 58
+      },
+      "source_gate": {
+        "driver": {
+          "bytes": 10881,
+          "path": "tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py",
+          "sha256": "cbd7056ad607982ac86be9b22ea47b6c93a194fd495db50dfde3216cb10e1d46"
+        },
+        "status": "passed-fixed-link-entry-source-gate"
+      },
+      "status": "passed-canonical-profile-and-fixed-entry-gate"
+    },
+    "driver": {
+      "bytes": 10881,
+      "path": "tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py",
+      "sha256": "cbd7056ad607982ac86be9b22ea47b6c93a194fd495db50dfde3216cb10e1d46"
+    },
+    "link43_bank2_hardware_first_red": {
+      "bytes": 9412,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link43-c2-lite-v6-bank2-stage-hardware-first-red.json",
+      "sha256": "835f743667d3db99f14bc1396bc47aab2943adf5c2ad7b89138206fd12e1ea17"
+    },
+    "link43_rollback_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-43-c2-lite-v6-export-symbol-domain/lisp65-c2-substitution-linked.prg",
+      "sha256": "9bbfb17707fe6e57bfd93c49db13f920fa48d0654227c19150aec4a34f1be43b"
+    },
+    "link43_structural_authority": {
+      "bytes": 280266,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link43-c2-lite-v6-export-symbol-domain-structural-receipt.json",
+      "sha256": "6cad468649ac5af85876be5e14b66e28fa4f5d6e32d64c25a6389a7934e04ae4"
+    }
+  },
+  "conditional_next_gate": "Only a resident-capacity overflow authorizes the standing small-hot-object E000 relocation probe; every other failure returns to Class-C review.",
+  "diagnostic": {
+    "message": "co-resident source contract red: ['class_c_authority']",
+    "type": "ProbeError"
+  },
+  "evidence": {
+    "fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin": {
+      "bytes": 34403,
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2-lite-dynamic.code.bin": {
+      "bytes": 84,
+      "sha256": "4af73b51d5cc56bd534f674bbc0406d63af180af99b4f09cbe404ff865f8ba8d"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2-lite-dynamic.manifest.json": {
+      "bytes": 2717,
+      "sha256": "514e7f3ecf6fe52d1b17592bea95e432ec66363bc58f258d27ceebbd5c59c2f1"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2d-v6-entry-emitter-host.so": {
+      "bytes": 11616,
+      "sha256": "602bd3d7a141e7a686a40d0696056d413fcea9c46acdf53e50f2802ae0a54d58"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin": {
+      "bytes": 33840,
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "latency_attempts_consumed": "0/2",
+    "product_closure_links": 0
+  },
+  "format": "lisp65-c2-lite-v6-real-abi-link44-first-red-v1",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-43-c2-lite-v6-export-symbol-domain/lisp65-c2-substitution-linked.prg",
+    "sha256": "9bbfb17707fe6e57bfd93c49db13f920fa48d0654227c19150aec4a34f1be43b",
+    "status": "untouched"
+  },
+  "status": "FIRST RED: C2-lite real-ABI Link 44 stopped"
+}

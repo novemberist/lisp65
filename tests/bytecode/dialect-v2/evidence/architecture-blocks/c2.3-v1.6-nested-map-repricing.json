@@ -1,0 +1,665 @@
+{
+  "authority": {
+    "disk_source": {
+      "bytes": 37292,
+      "path": "src/io.c",
+      "sha256": "ac29b4248208d678b97ce9be017dc959f82e4524a7cfa742a1f427fb9c168ba7"
+    },
+    "final_candidate_ELF": {
+      "bytes": 644088,
+      "path": "build/c2.3/v1.6-refill-boundary-witness-media-repair-replacement/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a82202e17def39303e57bfd7b3f997409973b49b5d2183d3c193a590e9a92fce"
+    },
+    "pricing_tool": {
+      "bytes": 16879,
+      "path": "tools/host-lisp/c2_v160_nested_map_repricing.py",
+      "sha256": "ae42eb71bdad8d2222c4fff777cf169676e9e1a9c99547438274e6fcd0be9b5d"
+    },
+    "progress_source": {
+      "bytes": 6279,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "23ac439dbae2655a20a3c858717aeb924ecba3d817ef6a83c43ffe166ee063ef"
+    },
+    "review_plan": {
+      "authority": "git-blob",
+      "bytes": 402846,
+      "commit": "2ee49053",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "368a53d67f8d4e388b9c6d82ca6fec71a2de541bdee2abc9f361b6ac1cc435f2"
+    },
+    "runtime_source": {
+      "bytes": 92261,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "48b56d5cb37bec5ec0a7476f3a865dacaf353a1db8b2e710379f628c1790105c"
+    },
+    "transitive_gate": {
+      "bytes": 8444,
+      "path": "tools/host-lisp/c2_transitive_map_nesting_gate.py",
+      "sha256": "7be62b96b93f067653301c2726754a00ad2ecb4f4152b26bb48e65f883898dca"
+    },
+    "witness_source": {
+      "bytes": 2021,
+      "path": "src/optional/c2_refill_boundary_witness.s",
+      "sha256": "75639276dc8961188d9df253fe7f954c4d2a3e6282958d0352f308149d438240"
+    }
+  },
+  "candidate_enumeration": [
+    {
+      "address": "0x4376",
+      "bytes": 221,
+      "closure_functions": 6,
+      "hidden_callees": [],
+      "incoming_owners": [
+        "gc_collect"
+      ],
+      "nested_MAP_paths": [],
+      "structurally_eligible": true,
+      "symbol": "str_relocate"
+    },
+    {
+      "address": "0x40e6",
+      "bytes": 231,
+      "closure_functions": 1,
+      "hidden_callees": [],
+      "incoming_owners": [
+        "gc_collect",
+        "gc_mark_spine"
+      ],
+      "nested_MAP_paths": [],
+      "structurally_eligible": true,
+      "symbol": "gc_mark1"
+    },
+    {
+      "address": "0x683a",
+      "bytes": 232,
+      "closure_functions": 40,
+      "hidden_callees": [
+        "c2_abort_driver",
+        "c2_rtov_retire_continuations"
+      ],
+      "incoming_owners": [
+        "c2_stream_phase_11b",
+        "eval",
+        "read_expr_1",
+        "sugar",
+        "vm_callprim",
+        "vm_frame_fill",
+        "vm_key_event",
+        "vm_run_inner"
+      ],
+      "nested_MAP_paths": [
+        {
+          "mapped_body": "cons",
+          "path": [
+            "cons",
+            "alloc",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_enter"
+          ],
+          "terminal": "c2_mapped_far_enter"
+        },
+        {
+          "mapped_body": "cons",
+          "path": [
+            "cons",
+            "alloc",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_leave"
+          ],
+          "terminal": "c2_mapped_far_leave"
+        }
+      ],
+      "structurally_eligible": false,
+      "symbol": "cons"
+    },
+    {
+      "address": "0x9ef4",
+      "bytes": 260,
+      "closure_functions": 152,
+      "hidden_callees": [
+        "c2_abort_driver",
+        "c2_rtov_retire_continuations",
+        "cons",
+        "dir_find",
+        "rtov_transaction_context_if_ready_far",
+        "vm_callprim",
+        "vm_fixbinop",
+        "vm_frame_fill",
+        "vm_native_call",
+        "vm_string_arg_p",
+        "vm_symbol_arg_p",
+        "vm_upval_nth"
+      ],
+      "incoming_owners": [
+        "repl",
+        "vm_callprim"
+      ],
+      "nested_MAP_paths": [
+        {
+          "mapped_body": "eval",
+          "path": [
+            "eval",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_enter"
+          ],
+          "terminal": "c2_mapped_far_enter"
+        },
+        {
+          "mapped_body": "eval",
+          "path": [
+            "eval",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_leave"
+          ],
+          "terminal": "c2_mapped_far_leave"
+        }
+      ],
+      "structurally_eligible": false,
+      "symbol": "eval"
+    },
+    {
+      "address": "0x8d31",
+      "bytes": 263,
+      "closure_functions": 152,
+      "hidden_callees": [
+        "c2_abort_driver",
+        "c2_rtov_retire_continuations",
+        "cons",
+        "dir_find",
+        "rtov_transaction_context_if_ready_far",
+        "vm_callprim",
+        "vm_fixbinop",
+        "vm_frame_fill",
+        "vm_native_call",
+        "vm_string_arg_p",
+        "vm_symbol_arg_p",
+        "vm_upval_nth"
+      ],
+      "incoming_owners": [
+        "eval",
+        "eval_v2_workbench_service"
+      ],
+      "nested_MAP_paths": [
+        {
+          "mapped_body": "eval_vm_native_apply_checked",
+          "path": [
+            "eval_vm_native_apply_checked",
+            "vm_check_status",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_enter"
+          ],
+          "terminal": "c2_mapped_far_enter"
+        },
+        {
+          "mapped_body": "eval_vm_native_apply_checked",
+          "path": [
+            "eval_vm_native_apply_checked",
+            "vm_check_status",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_leave"
+          ],
+          "terminal": "c2_mapped_far_leave"
+        }
+      ],
+      "structurally_eligible": false,
+      "symbol": "eval_vm_native_apply_checked"
+    },
+    {
+      "address": "0x3857",
+      "bytes": 281,
+      "closure_functions": 39,
+      "hidden_callees": [
+        "c2_abort_driver",
+        "c2_rtov_retire_continuations"
+      ],
+      "incoming_owners": [
+        "buf_allocate",
+        "c2_append_publish_exports_phase",
+        "cons",
+        "defprim",
+        "eval_v2_workbench_service",
+        "str_open",
+        "vm_run_inner"
+      ],
+      "nested_MAP_paths": [
+        {
+          "mapped_body": "alloc",
+          "path": [
+            "alloc",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_enter"
+          ],
+          "terminal": "c2_mapped_far_enter"
+        },
+        {
+          "mapped_body": "alloc",
+          "path": [
+            "alloc",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_leave"
+          ],
+          "terminal": "c2_mapped_far_leave"
+        }
+      ],
+      "structurally_eligible": false,
+      "symbol": "alloc"
+    },
+    {
+      "address": "0x99b0",
+      "bytes": 292,
+      "closure_functions": 45,
+      "hidden_callees": [
+        "c2_abort_driver",
+        "c2_rtov_retire_continuations"
+      ],
+      "incoming_owners": [
+        "read_expr_1"
+      ],
+      "nested_MAP_paths": [
+        {
+          "mapped_body": "read_string",
+          "path": [
+            "read_string",
+            "str_open",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_enter"
+          ],
+          "terminal": "c2_mapped_far_enter"
+        },
+        {
+          "mapped_body": "read_string",
+          "path": [
+            "read_string",
+            "str_open",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_leave"
+          ],
+          "terminal": "c2_mapped_far_leave"
+        }
+      ],
+      "structurally_eligible": false,
+      "symbol": "read_string"
+    },
+    {
+      "address": "0x9b12",
+      "bytes": 293,
+      "closure_functions": 58,
+      "hidden_callees": [
+        "c2_abort_driver",
+        "c2_rtov_retire_continuations",
+        "cons"
+      ],
+      "incoming_owners": [
+        "read_expr_1"
+      ],
+      "nested_MAP_paths": [
+        {
+          "mapped_body": "sugar",
+          "path": [
+            "sugar",
+            "intern",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_enter"
+          ],
+          "terminal": "c2_mapped_far_enter"
+        },
+        {
+          "mapped_body": "sugar",
+          "path": [
+            "sugar",
+            "intern",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_leave"
+          ],
+          "terminal": "c2_mapped_far_leave"
+        }
+      ],
+      "structurally_eligible": false,
+      "symbol": "sugar"
+    },
+    {
+      "address": "0x9402",
+      "bytes": 319,
+      "closure_functions": 38,
+      "hidden_callees": [
+        "c2_abort_driver",
+        "c2_rtov_retire_continuations"
+      ],
+      "incoming_owners": [
+        "eval_v2_workbench_service",
+        "read_string",
+        "vm_callprim"
+      ],
+      "nested_MAP_paths": [
+        {
+          "mapped_body": "str_putc",
+          "path": [
+            "str_putc",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_enter"
+          ],
+          "terminal": "c2_mapped_far_enter"
+        },
+        {
+          "mapped_body": "str_putc",
+          "path": [
+            "str_putc",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_leave"
+          ],
+          "terminal": "c2_mapped_far_leave"
+        }
+      ],
+      "structurally_eligible": false,
+      "symbol": "str_putc"
+    },
+    {
+      "address": "0x82d8",
+      "bytes": 324,
+      "closure_functions": 4,
+      "hidden_callees": [],
+      "incoming_owners": [
+        "vm_callprim"
+      ],
+      "nested_MAP_paths": [],
+      "structurally_eligible": true,
+      "symbol": "disk_chain_to_scratch"
+    },
+    {
+      "address": "0x818b",
+      "bytes": 333,
+      "closure_functions": 41,
+      "hidden_callees": [
+        "c2_abort_driver",
+        "c2_rtov_retire_continuations",
+        "cons"
+      ],
+      "incoming_owners": [
+        "vm_callprim"
+      ],
+      "nested_MAP_paths": [
+        {
+          "mapped_body": "vm_key_event",
+          "path": [
+            "vm_key_event",
+            "cons",
+            "alloc",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_enter"
+          ],
+          "terminal": "c2_mapped_far_enter"
+        },
+        {
+          "mapped_body": "vm_key_event",
+          "path": [
+            "vm_key_event",
+            "cons",
+            "alloc",
+            "gc_collect",
+            "ext_a",
+            "ext_dma_read_or_abort",
+            "lisp_abort_code",
+            "lisp_abort_symbol",
+            "c2_product_abort_cleanup",
+            "c2_abort_driver_facade",
+            "c2_mapped_far_leave"
+          ],
+          "terminal": "c2_mapped_far_leave"
+        }
+      ],
+      "structurally_eligible": false,
+      "symbol": "vm_key_event"
+    },
+    {
+      "address": "0x66c9",
+      "bytes": 369,
+      "closure_functions": 6,
+      "hidden_callees": [],
+      "incoming_owners": [
+        "vm_native_call",
+        "vm_run_inner"
+      ],
+      "nested_MAP_paths": [],
+      "structurally_eligible": true,
+      "symbol": "vm_fixbinop"
+    }
+  ],
+  "card_lock": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "product_sources_changed": 0
+  },
+  "claim_boundary": "Pricing and permanent gate design only.  The post-swap geometry is arithmetic over final-ELF emission; no product fix or linked candidate is claimed.",
+  "current_final_world": {
+    "derived_mapped_sections": [
+      ".lisp65_c2_mapped_diagnostic",
+      ".lisp65_c2_mapped_far_service"
+    ],
+    "derived_tenant_count": 6,
+    "derived_tenants": [
+      "c2_abort_driver",
+      "c2_mapped_far_physical_read_converged",
+      "c2_mapped_far_vm_code_load_converged",
+      "c2_rtov_retire_continuations",
+      "rtov_transaction_context_if_ready_far",
+      "vm_runtime_overlay_install_island_far"
+    ],
+    "derived_wrappers": [
+      {
+        "body_roots": [
+          "c2_abort_driver"
+        ],
+        "wrapper": "c2_abort_driver_facade"
+      },
+      {
+        "body_roots": [
+          "c2_mapped_far_physical_read_converged"
+        ],
+        "wrapper": "c2_physical_read_converged"
+      },
+      {
+        "body_roots": [
+          "c2_rtov_retire_continuations"
+        ],
+        "wrapper": "c2_rtov_retire_continuations_facade"
+      },
+      {
+        "body_roots": [
+          "rtov_transaction_context_if_ready_far"
+        ],
+        "wrapper": "rtov_transaction_context_if_ready"
+      },
+      {
+        "body_roots": [
+          "c2_mapped_far_vm_code_load_converged"
+        ],
+        "wrapper": "vm_code_load_converged"
+      },
+      {
+        "body_roots": [
+          "vm_runtime_overlay_install_island_far"
+        ],
+        "wrapper": "vm_runtime_overlay_install_island"
+      }
+    ],
+    "mechanism": "mapped installer reaches the ordinary transaction wrapper, whose inner leave restores baseline before the installer resumes at $7EF0",
+    "violations": [
+      {
+        "mapped_body": "vm_runtime_overlay_install_island_far",
+        "path": [
+          "vm_runtime_overlay_install_island_far",
+          "vm_runtime_overlay_exec_family",
+          "rtov_transaction_context_if_ready",
+          "c2_mapped_far_enter"
+        ],
+        "terminal": "c2_mapped_far_enter"
+      },
+      {
+        "mapped_body": "vm_runtime_overlay_install_island_far",
+        "path": [
+          "vm_runtime_overlay_install_island_far",
+          "vm_runtime_overlay_exec_family",
+          "rtov_transaction_context_if_ready",
+          "c2_mapped_far_leave"
+        ],
+        "terminal": "c2_mapped_far_leave"
+      }
+    ]
+  },
+  "depth_counting_alternative": {
+    "current_enter_leave_bytes": 34,
+    "cycle_basis": "absolute LDA/INC plus not-taken BNE and BRA on enter; absolute DEC plus not-taken BNE on leave",
+    "enter_bytes": 32,
+    "facade_growth_bytes": 18,
+    "facade_padding_bytes": 0,
+    "leave_bytes": 20,
+    "outer_pair_incremental_cycles": 23,
+    "state_bytes": 1,
+    "verdict": "DOMINATED: +18 fixed-facade bytes do not fit, one new state byte is required, and every ordinary MAP pair pays +23 cycles before any nesting benefit"
+  },
+  "format": "lisp65-c2.3-v1.6-nested-map-repricing-v1",
+  "mutations_rejected": [
+    "accept-nested-path",
+    "restore-hot-depth-default",
+    "pin-old-installer-placement",
+    "erase-visible-zero"
+  ],
+  "permanent_gate": {
+    "claim": "no mapped tenant transitively reaches MAP enter/leave",
+    "current_red_paths": 2,
+    "linked_ownership_dependency": "existing gate rejects direct entry into mapped body sections without a derived wrapper",
+    "mutations_rejected": [
+      "reachable-nested-enter",
+      "restore-installer-as-mapped-tenant"
+    ],
+    "population": "wrapper-derived body sections and every sized function tenant in those sections",
+    "proposed_paths": 0
+  },
+  "recorded_on": "2026-08-22",
+  "status": "PRICED: VISIBLE INSTALLER VIA COLD DISK-CHAIN SWAP",
+  "visible_zero_attribution": {
+    "classification": "separate screen-lease ordering symptom exposed by the boot stop; not a byte-delivery or IRQ fault",
+    "fix_scope": "not part of the MAP placement successor",
+    "lifetime": "the ordinal writer can run during BUILDING HEAP, before LOADING LIBRARIES owns row 10; successful boot later supplies the line and finally clears the cell",
+    "status": "ATTRIBUTED: EARLY PRODUCT-LIVENESS ORDINAL",
+    "store": "$0B3A (row 10, column 26)",
+    "value": "phase 0 follows the numeric path and emits screen-code $30, visibly '0'",
+    "writer": "c2_map_cpu_read"
+  },
+  "winner": {
+    "form": "cold ordinary-body swap",
+    "mapped_replacement": {
+      "body_bytes": 324,
+      "hidden_callees": [],
+      "incoming_owners": [
+        "vm_callprim"
+      ],
+      "nested_MAP_paths": [],
+      "ordinary_stub_bytes": 9,
+      "symbol": "disk_chain_to_scratch",
+      "temperature": "one wrapper per disk-chain staging request; no refill, key, arithmetic or evaluator edge",
+      "transitive_closure": [
+        "disk_chain_to_scratch",
+        "ext_disk_put",
+        "ext_dma",
+        "f011_read_at"
+      ]
+    },
+    "post_swap_capacity": {
+      "facade_bytes": 98,
+      "facade_padding_bytes": 0,
+      "largest_E000_hole_bytes": 49,
+      "mapped_diagnostic_free_bytes": 47,
+      "mapped_diagnostic_used_bytes": 324,
+      "mapped_far_service_free_bytes": 15,
+      "ordinary_text_free_bytes": 116
+    },
+    "post_swap_mapped_tenants": [
+      "c2_abort_driver",
+      "c2_mapped_far_physical_read_converged",
+      "c2_mapped_far_vm_code_load_converged",
+      "c2_rtov_retire_continuations",
+      "disk_chain_to_scratch",
+      "rtov_transaction_context_if_ready_far"
+    ],
+    "post_swap_nested_MAP_paths": [],
+    "visible_body": {
+      "old_stub_bytes_removed": 9,
+      "placement": "ordinary text; permanently visible",
+      "restored_body_bytes": 211,
+      "symbol": "vm_runtime_overlay_install_island"
+    }
+  }
+}

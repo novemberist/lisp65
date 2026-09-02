@@ -1,0 +1,106 @@
+{
+  "format": "lisp65-c2.2-cross-invariant-C1-terminal-disposition-v1",
+  "recorded_on": "2026-07-26",
+  "status": "C1-documented-C2.3-deferred-matrix-gate-may-fall",
+  "matrix_row": "C1",
+  "decision": {
+    "C2_2_status": "documented-restriction",
+    "C1_PROVEN": false,
+    "restriction": "Freezer entry during a persistent definition or append transaction is unsupported in C2.2; use the Freezer only at a visible REPL prompt or while the evaluator is otherwise idle.",
+    "operator_recovery": "Return with F3 and cold-restart lisp65 before relying on the interrupted definition.",
+    "C2_3_obligation": "Define and hardware-prove the lifecycle rule for Freezer entry during an active definition/append transaction before C2.3 acceptance.",
+    "no_further_C1_diagnostic_cycles_before_chain": true
+  },
+  "authority": {
+    "owner_approved_terminal_rule": {
+      "path": "docs/planning/v1.2-scope-memo.md",
+      "bytes": 44033,
+      "sha256": "22e36a6855daa580920a9bf8d1cf58ded4f67a7a8a7d82e59a9156e8517f8488"
+    },
+    "matrix_document_with_terminal_disposition": {
+      "path": "docs/planning/c2.2-cross-invariant-matrix.md",
+      "bytes": 15756,
+      "sha256": "ecff5ab35452c1ad6c5bfd7e53b7a2684662ecc034125b66fbfdd01ca804b424"
+    },
+    "user_documentation": {
+      "path": "docs/user-guide.md",
+      "bytes": 8546,
+      "sha256": "63c87dae9455dea7ea64097b67cf3411ca9824f67daec6558531d5ea72522899"
+    },
+    "Link66_product": {
+      "path": "build/c2.2/substitution/product-link-66-single-submit-completion/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "482b0b28171515c79ee2c8fd3ad78cea37716887ba06acddac0067db8171f6b4"
+    },
+    "Link66_structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link66-single-submit-completion-structural-receipt.json",
+      "bytes": 12068,
+      "sha256": "d0cc2c4a727e8b4762f4e1b1cfe55a89c8358a95ab172aa5e5c0bb80ada451b0"
+    },
+    "bundled_carrier_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link66-c1-bundled-session-carrier-nonpromotable-receipt.json",
+      "bytes": 8413,
+      "sha256": "30ce9e5fb9a84d48f0cad955d22ab52f3f01511cadd70eab1c49fe57e09576cd"
+    },
+    "bundled_hardware_state": {
+      "path": "build/c2.2/c1-bundled-session-hardware-link66-NONPROMOTABLE/hardware-state.json",
+      "bytes": 13595,
+      "sha256": "3dc8e78aedf64079bba4587242f0bd05d611279b85ef11b1a78c01c7029b8a58"
+    },
+    "prior_Link66_First_Red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link66-C1-cutpoint3-defun-hardware-first-red.json",
+      "bytes": 6788,
+      "sha256": "64939ce73f1ba2625274aaff90f2e9fb1eb8994471abe2c949fa4e870958fc79"
+    }
+  },
+  "accepted_evidence": {
+    "cutpoint_1": {
+      "name": "journal-written",
+      "status": "passed",
+      "source": "carried verbatim in the Link-66 bundled hardware state",
+      "result": "Bank2, Bank3 and contracted Bank5 state preserved across thaw; C2J cleared last; call returned t"
+    },
+    "cutpoint_2": {
+      "name": "staged-before-header",
+      "status": "passed",
+      "source": "carried verbatim in the Link-66 bundled hardware state",
+      "result": "Bank2, Bank3 and contracted Bank5 state preserved across thaw; C2J cleared last; call returned t"
+    },
+    "idle_Freezer_Link66": {
+      "status": "passed",
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link66-bundled-hardware-measurements-receipt.json",
+      "result": "complete Bank2 and Bank3 identity; all non-live E000 bytes identical; post-return arithmetic 9; family/generation 1/4"
+    }
+  },
+  "bundled_session_terminal_event": {
+    "carrier_promotable": false,
+    "submitted_form": "(defun %c1e () (quote t))",
+    "result": "*** vm: bad bytecode",
+    "cutpoint_3_command": 3,
+    "cutpoint_3_reached": 0,
+    "Freezer_actions": 0,
+    "witness_captures": 3,
+    "witness_bytes_hex": "03 00 05 f7 6e 20 45 70 f0 23 a0 05 b1 02",
+    "witness_sha256": "abf5c584c1c7d6361b7f05939007a28fbb1f9eea67c3020a25484ba8f5c56846",
+    "interpretation_limit": "The stage byte can be overwritten by later cleanup. It proves a new pre-Cutpoint-3 failure class but does not identify a root cause.",
+    "terminal_rule_triggered": true
+  },
+  "other_open_rows": {
+    "C2_2_rows": "closed by their reviewed fixtures/addenda and the Link-66 fresh structural gate set",
+    "explicit_C2_3_deferrals": ["C1", "E3", "E4"]
+  },
+  "gate_transition": {
+    "matrix_C1": "DOCUMENTED-C2.3-DEFERRED-not-PROVEN",
+    "matrix_gate": "FALLS",
+    "acceptance_chain": "AUTHORIZED-TO-START-FRESH",
+    "required_chain": ["R4", "R5", "R6", "G5", "G6"],
+    "no_inherited_green": true
+  },
+  "execution_accounting": {
+    "product_bytes_changed_by_disposition": 0,
+    "product_links": 0,
+    "compiler_runs": 0,
+    "additional_C1_hardware_cycles_authorized": 0
+  },
+  "claim_limit": "This is a reviewed benign/deferred matrix disposition, not a proof of active-transaction Freezer safety. It allows the C2.2 acceptance chain to start; it does not claim promotion, acceptance, release, or any R4/R5/R6/G5/G6 result."
+}

@@ -1,0 +1,150 @@
+{
+  "format": "lisp65-c2-hot-refill-link29-seams-vma-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-stopped-before-structural-replay-and-product-link",
+  "scope": {
+    "amended_resident_island_seed_links": 1,
+    "product_closure_links": 0,
+    "hardware_execution": "none",
+    "promotion": "blocked",
+    "retry": "not-run"
+  },
+  "authorization": {
+    "contract": {
+      "path": "config/c2-hot-refill-link29-seams-amendment.json",
+      "bytes": 1968,
+      "sha256": "2a7e484129f017e2ef6797411fd3c2d63d4b5e5b9c9a90343c9647aa66dcfbe7"
+    },
+    "addendum": {
+      "path": "docs/planning/c2.2-hot-refill-link29-seams-amendment.md",
+      "bytes": 2145,
+      "sha256": "d971594ecab8537fbd659590272c29ac2afd298f23e8d28b4c4c047774b2fe5b"
+    },
+    "fresh_semantic_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-hot-refill-link29-seams-contract-probe-receipt.json",
+      "bytes": 8432,
+      "sha256": "3527f95aa7b418630a5d901353852eafaf1293804b0a183d4af84b580445aec0"
+    }
+  },
+  "fresh_semantic_and_source_gates": {
+    "published_entries": "588/588 exact",
+    "literal_values": "1931/1931 exact",
+    "nested_rematerialization": "passed",
+    "pre_publication_content_mutations": "4/4 failed-closed",
+    "post_publication_transport_failures": "2/2 failed-closed",
+    "link29_child_source_retained": "passed",
+    "link29_record_algorithm_retained": "passed-with-declared-external-linkage-only",
+    "link29_entry_length_source_retained": "passed",
+    "one_materializer_source_gate": "passed"
+  },
+  "seed_identity": {
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/hot-refill-link29-seams-capacity-probe/resolved-profile.txt",
+      "bytes": 5452,
+      "sha256": "307020a7841b87f57bd8f7b092e6234694ee3d7b85aee32242572dbc947d6bfd"
+    },
+    "prg": {
+      "path": "build/c2.2/substitution/hot-refill-link29-seams-capacity-probe/hot-refill-capacity-seed.prg",
+      "bytes": 41542,
+      "sha256": "8fc25ae0ebc672140aa3db4cdaf1ef02ab6b5c033850fa5301fa722ade3fcdb1",
+      "mode": "0444"
+    },
+    "elf": {
+      "path": "build/c2.2/substitution/hot-refill-link29-seams-capacity-probe/hot-refill-capacity-seed.prg.elf",
+      "bytes": 503832,
+      "sha256": "6ba5d9bed4d33915fe50d0f918db06f8cac143f1681135eb965f364b44b5526d",
+      "mode": "0555"
+    },
+    "lto_object": {
+      "path": "build/c2.2/substitution/hot-refill-link29-seams-capacity-probe/hot-refill-capacity-seed.prg.lto.o",
+      "bytes": 508864,
+      "sha256": "c44ecc673f2a320eed9607387a375b6a83f00496acb389351c0685226705fc71",
+      "mode": "0444"
+    },
+    "link29_baseline_elf": {
+      "path": "build/c2.2/substitution/product-link-29-direct-entry-encoding/resident-island-seed.prg.elf",
+      "sha256": "dc27a8a47f3274cc08fba71d5907c58b527a0b783ca3ea04bfca8f202f89c18e"
+    }
+  },
+  "explicit_authorized_e000_gate": {
+    "status": "passed-exact-zero-delta",
+    "link29_occupied_bytes": 7806,
+    "probe_occupied_bytes": 7806,
+    "delta_bytes": 0,
+    "named_sections": "12/12 exact byte counts and VMAs",
+    "future_margin_bytes": 386
+  },
+  "retained_seam_measurements": {
+    "c2_stream_product_child_value": {
+      "link29_address": 59852,
+      "probe_address": 59852,
+      "address_delta": 0,
+      "link29_bytes": 532,
+      "probe_bytes": 532,
+      "bytes_delta": 0
+    },
+    "c2_entry_records": {
+      "link29_address": 61519,
+      "probe_address": 61343,
+      "address_delta": -176,
+      "link29_bytes": 648,
+      "probe_bytes": 648,
+      "bytes_delta": 0
+    },
+    "c2_product_entry_length": {
+      "link29_address": 61343,
+      "probe_address": 62105,
+      "address_delta": 762,
+      "link29_bytes": 176,
+      "probe_bytes": 176,
+      "bytes_delta": 0
+    }
+  },
+  "first_red": {
+    "gate": "extra exact retained-symbol-VMA identity",
+    "message": "retained Link29 seam drift: c2_entry_records address 61519 -> 61343 while size remained 648 bytes",
+    "classification": "The explicit owner hard gate ($E000 delta exactly 0 bytes) passed. The source algorithms and sizes passed. The stricter symbol-address invariant was added by the probe and its necessity is not established by the amendment.",
+    "likely_mechanism": "Making the existing record seam externally visible allowed LTO to reorder c2_entry_records and c2_product_entry_length inside the unchanged c2_resident section; all references were bound within this one seed link.",
+    "claim_limit": "No conclusion is claimed yet on whether exact intra-section symbol VMA is contractual placement or incidental LTO ordering."
+  },
+  "capacity_observations_before_stop": {
+    "resident_island": {
+      "link29_base_bytes": 395,
+      "probe_base_bytes": 1291,
+      "annex_bytes": 260,
+      "headroom_bytes": 497
+    },
+    "bank0_text": {
+      "link29_bytes": 37806,
+      "probe_bytes": 37784,
+      "credit_bytes": 22
+    },
+    "bank0_bss": {
+      "link29_bytes": 1827,
+      "probe_bytes": 1827,
+      "delta_bytes": 0
+    },
+    "phase13": {
+      "link29_bytes": 1776,
+      "probe_bytes": 121,
+      "credit_bytes": 1655
+    },
+    "note": "These are pre-stop observations, not a completed capacity receipt. Runtime-family packing and all later structural gates were not run."
+  },
+  "not_run_after_first_red": [
+    "handoff-Z/IO gate",
+    "pre-ownership gate",
+    "profile-data-reference gate",
+    "fixed-facade gate",
+    "runtime-family packing",
+    "KERNAL-freedom gate",
+    "linked one-materializer control-flow gate",
+    "product link",
+    "hardware execution"
+  ],
+  "decision_required": {
+    "recommended": "Define retained placement as the same owned $E000 section plus identical source algorithm and symbol size, retain the already-passed exact-zero total and per-section byte gates, then replay the remaining gates against this same protected ELF without another link.",
+    "alternative": "If exact internal symbol VMAs are contractual, a separately authorized linker-order/pinning change and new seed link are required.",
+    "no_action_taken": "The probe stopped and the complete seed directory was made read-only."
+  }
+}

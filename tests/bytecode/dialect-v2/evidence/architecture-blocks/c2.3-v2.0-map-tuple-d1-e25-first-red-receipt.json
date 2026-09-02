@@ -1,0 +1,241 @@
+{
+  "artifacts": {
+    "candidate_ELF": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a481eff4acd32f04dde6660090aa2761a2f4a4b6307945cbcb2cda0f70435673"
+    },
+    "library_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-map-tuple-media-base/library/lisp65-library.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "library_D81_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-map-tuple-d1/library-readback.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "product_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-map-tuple-media/shared-system/lisp65-product.d81",
+      "sha256": "43da1ce57ced3088a56349c84d3b0c32bbc25f1aae34928b808fe31af8462a95"
+    },
+    "product_D81_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-map-tuple-d1/product-readback.d81",
+      "sha256": "43da1ce57ced3088a56349c84d3b0c32bbc25f1aae34928b808fe31af8462a95"
+    },
+    "screen": {
+      "bytes": 2655,
+      "path": "build/c2.3/v2.0-map-tuple-d1/product-boot.png",
+      "sha256": "27225182cc1222b075900be7dbb69099ddb20d89e0c13d839bbc683889d09a7a"
+    },
+    "screen_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v2.0-map-tuple-d1/product-boot.txt",
+      "sha256": "3f5cbb30109fb71c0d596ffd4149e7c6ca49c110f4bdf03dba275447157921d5"
+    }
+  },
+  "authority": {
+    "capture_row": {
+      "bytes": 2754,
+      "path": "config/c2-v20-map-tuple-d1-e25-capture-row.json",
+      "sha256": "59d1ecc001bbca3f8c2720a2fabf7e075dc9985285e1fa921a7de607f68bc777"
+    },
+    "device_session": {
+      "bytes": 2811,
+      "path": "config/c2-v150-v20-map-tuple-far-device-session.json",
+      "sha256": "e650fa7e9ee15066a767ce25580dd077e0b58732b236327ca2dc9b37b8eb917c"
+    },
+    "driver": {
+      "bytes": 11570,
+      "path": "tools/host-lisp/c2_v20_map_tuple_d1_e25.py",
+      "sha256": "eabb06a4f2c1976a84a5cd5697fd7cdf8b573e2ce791c4da52c1f2ab2847a217"
+    },
+    "error_codes": {
+      "bytes": 3395,
+      "path": "src/error_codes.h",
+      "sha256": "15dd67e06cbbe829760298e19487e436abf25f5ddc84c2cf27c327336fe1aa8d"
+    },
+    "main": {
+      "bytes": 9508,
+      "path": "src/main.c",
+      "sha256": "fd3aa5721306cbc8346e6070f780e0690bf4e859c38bba2c5388c8ddc184276d"
+    },
+    "runtime": {
+      "bytes": 163560,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "8d1ab8d0150fa2401094613372ebf57143027c612d4612a4479ecfe43e2c6b00"
+    },
+    "runtime_layout": {
+      "bytes": 6846,
+      "path": "scripts/c2-stream-decoder.h",
+      "sha256": "670eeb833f1da04c88b2ba21e9cdbf9fe7ad3d879d7695aad9d181bb0995d0f9"
+    }
+  },
+  "capture": {
+    "candidate_elf": "build/c2.3/v2.0-map-tuple-fix-replacement-card/final/lisp65-c2-substitution-linked.prg.elf",
+    "claim_limit": "This specification authorizes no device access, repeat boot, product fix, D2-D5 execution or E25 submechanism claim.",
+    "code_rule": "Bind the sampled PC to bytes in the captured CPU view before assigning a symbol.",
+    "data_rule": "Read the listed state as physical Bank-0 RAM after capturing the mapping tuple; a raw ROM-overlaid logical read is not evidence.",
+    "decision_rows": {
+      "ambiguous": "make no product-mechanism claim and return the one complete row to the owner.",
+      "decoder-failure": "error is nonzero, or the successful-decode tuple is absent before roots are committed; report phase/error/provenance only.",
+      "export-publication-failure": "phase=13, finished=1, error=0 and pending/committed roots equal c2_runtime.c2_root_count while c2_ready=0; mem_oom and journal_count further split allocation from structural publication failure.",
+      "identity-or-visibility-red": "pending_code is not 0x25, the runtime pointer/layout contradicts the bound ELF, or physical and mapped reads disagree; make no decoder or publication claim."
+    },
+    "format": "lisp65-c2-v20-map-tuple-d1-e25-capture-row-v1",
+    "observation": {
+      "D2_D5_executed": false,
+      "precondition": "D1 displayed all three liveness lines, then E25 on a red frame without a prompt",
+      "read_session": "tuple first, then only the listed physical Bank-0 ranges in the same stopped session",
+      "resume_count": 0,
+      "stop_count": 1
+    },
+    "physical_bank0_ranges": [
+      {
+        "address": "0x002e",
+        "bytes": 9,
+        "name": "boot-publication-zp"
+      },
+      {
+        "address": "0x008a",
+        "bytes": 6,
+        "name": "roots-ready-oom-zp"
+      },
+      {
+        "address": "0xbfef",
+        "bytes": 2,
+        "name": "pending-error-pointer"
+      },
+      {
+        "address": "0xc080",
+        "bytes": 50,
+        "name": "c2-boot-runtime"
+      }
+    ],
+    "runtime_layout": {
+      "error": "0xc0b0",
+      "finished": "0xc0af",
+      "phase": "0xc0ae",
+      "reserved_provenance": "0xc0b1",
+      "successful_decode_tuple": {
+        "error": 0,
+        "finished": 1,
+        "phase": 13
+      }
+    },
+    "status": "host-specified-owner-authorization-pending",
+    "symbol_bindings": {
+      "c2_committed_roots": [
+        "0xc080",
+        2
+      ],
+      "c2_decode_active": [
+        "0xc082",
+        2
+      ],
+      "c2_journal_count": [
+        "0x002e",
+        2
+      ],
+      "c2_pending_roots": [
+        "0x008a",
+        2
+      ],
+      "c2_ready": [
+        "0x008c",
+        1
+      ],
+      "c2_runtime": [
+        "0xc084",
+        46
+      ],
+      "lisp_error_msg": [
+        "0xbfef",
+        2
+      ],
+      "mem_oom": [
+        "0x008f",
+        1
+      ],
+      "pending_code": [
+        "0x0036",
+        1
+      ]
+    },
+    "tuple_first": [
+      "PC",
+      "SP",
+      "A",
+      "X",
+      "Y",
+      "P",
+      "MAPH",
+      "MAPL",
+      "MB",
+      "CPU-port-ROMC-state"
+    ]
+  },
+  "classification": {
+    "bound_call": "c2_product_boot",
+    "claim_limit": "E25 proves c2_product_boot returned non-OK after decoder entry; it does not yet identify decoder versus export publication.",
+    "error_code": {
+      "decimal": 37,
+      "hex": "0x25",
+      "name": "LISP65_ERR_STDLIB_PROFILED_PRELOAD"
+    },
+    "excluded_before_libraries_liveness": [
+      "KERNAL ownership rejection",
+      "c2_product_prepare_boot rejection",
+      "runtime-island installation rejection"
+    ],
+    "remaining_split": [
+      "c2_decode_from",
+      "c2_publish_exports_from"
+    ]
+  },
+  "elf_state": {
+    "c2_runtime_bytes": 46,
+    "successful_decode_tuple": {
+      "error": 0,
+      "finished": 1,
+      "phase": 13
+    },
+    "symbols": {
+      "c2_committed_roots": "0xc080",
+      "c2_decode_active": "0xc082",
+      "c2_journal_count": "0x002e",
+      "c2_pending_roots": "0x008a",
+      "c2_ready": "0x008c",
+      "c2_runtime": "0xc084",
+      "lisp_error_msg": "0xbfef",
+      "mem_oom": "0x008f",
+      "pending_code": "0x0036"
+    },
+    "terminal_offsets": {
+      "error": "0xc0b0",
+      "finished": "0xc0af",
+      "phase": "0xc0ae",
+      "reserved": "0xc0b1"
+    }
+  },
+  "format": "lisp65-c2.3-v20-map-tuple-d1-e25-first-red-v1",
+  "next": "Owner authorization for the single stopped-state discriminator row; no repeat boot is needed while the state remains available.",
+  "owner_observation": {
+    "liveness_lines": [
+      "LISP65: STAGING MEDIA",
+      "LISP65: BUILDING HEAP",
+      "LISP65: LOADING LIBRARIES"
+    ],
+    "provenance": "owner physical observation; E25/no-prompt independently screen-bound",
+    "terminal": {
+      "background": "blue",
+      "frame": "red",
+      "prompt_visible": false,
+      "text": "E25"
+    }
+  },
+  "recorded_on": "2026-08-13",
+  "status": "D1-FIRST-RED-E25; SUBMECHANISM-UNDECIDED"
+}

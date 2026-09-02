@@ -1,0 +1,60 @@
+{
+  "format": "lisp65-r5-wave3-harness-stop-diagnosis-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "diagnosed-harness-stale-set-mark-binding-no-case-receipt",
+  "source_commit": "8216c5e5d0dff68d6798378d3f431aa9b6d7c054",
+  "candidate": {
+    "product_artifact_set_sha256": "048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024",
+    "build_id": "f144fd48",
+    "historical_candidate_manifest_sha256": "d61aa1f7fe3e7cd72a821bdf5c818308c9804fea0a00e6e4dd60ce41924d7a6f",
+    "historical_test_closure_set_sha256": "e5cdade1fe847971393613674dd56b8971524ad1e4e8e53be2c7b05811ac568c",
+    "corrected_candidate_manifest_sha256": "90ef01235b554276f5af31aa413095f206b1c56990c4b4cbe84c6c3d595b3b09",
+    "corrected_test_closure_set_sha256": "c1082fb47e6172cf56534b9c7b2f1777398b58d944cd42fe700bf144ed1699c2"
+  },
+  "trigger": {
+    "gate": "G5",
+    "run_id": "r5-run-20260719-wave3-01",
+    "case": "workbench-ux/ux-complete",
+    "phase": "region-edit",
+    "expected": "((\"ad\") \"bc\")",
+    "observed": "((\"abcd\") \"\")",
+    "case_receipt": "not-emitted",
+    "raw_transcript": {
+      "path": "build/r5-global-g5/evidence/r5-run-20260719-wave3-01/workbench-ux-complete/r5-g5-ux-region-edit.txt",
+      "sha256": "766ff863152ca531fafa64ad069f16973c5e1faed6284ffad17b711609796ed4"
+    }
+  },
+  "diagnosis": {
+    "classification": "harness-binding-drift-after-l-lite-keymap-generation",
+    "root": "The hardware UX sequence still sent legacy key code 0 to set the region mark. L-lite intentionally makes code 0 unreachable and binds set-mark to the generated C-x Space sequence, key codes 24 then 32.",
+    "product_behavior": "The product correctly left the mark unset; the later C-x C-r therefore had no region to kill, producing the exact observed unchanged buffer and empty kill ring.",
+    "decisive_evidence": [
+      "The receipt-less Wave-3 pre-smoke physically proved C-x Space sets the mark on this product candidate.",
+      "The generated keymap, generated evaluator cases, generated hardware cases, and documentation all bind C-x Space to command 1115.",
+      "The generated negative case requires legacy key code 0 to remain unbound."
+    ],
+    "conclusion": "The R4 product is correct; two region phases in the R5 hardware UX harness alone retained the revoked single-key binding."
+  },
+  "structural_fix": {
+    "harness": "Both region-edit and region-multiline now submit the generated C-x Space sequence before exercising region operations.",
+    "host_verification": [
+      "workbench UX harness self-test passed",
+      "IDE UI evaluator passed 87/87",
+      "shell syntax check passed"
+    ],
+    "product_artifact_effect": "none",
+    "required_repin": "R5 test closure and static preflight only"
+  },
+  "resume": {
+    "static_preflight": "14/14 ready against corrected closure; six verifier mutations rejected",
+    "passed_cases": [
+      "workbench-ux/overlay-stack-guard",
+      "workbench-ux/stdlib-runtime"
+    ],
+    "passed_receipts": "raw evidence was byte-preserved, repacked against the corrected candidate manifest, and immediately offline reverified",
+    "hardware_rerun": "ux-complete and all later not-yet-run cases only",
+    "r4": "historical-and-still-valid",
+    "claim": "diagnosis and harness-only rebind; no ux-complete pass and no product acceptance"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "format": "lisp65-c2-link59-c1-freezer-irq-episode-WPLTO-first-red-v1",
+  "recorded_on": "2026-07-23",
+  "status": "FIRST RED: linked fail-closed target and Bank-0 text-noise reserve",
+  "promotable": false,
+  "authority": {
+    "product": {
+      "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-wplto2/lisp65-c2-substitution-linked.prg",
+      "sha256": "0b09140a674975c3f9132a5a127136cf4536550da3272616a5e1bbe8731f0798"
+    },
+    "elf": {
+      "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-wplto2/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "1e104de01c00d84d28b4d7a63d86a27238384373a21b8b7e1701f93236039ed4"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-wplto2/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "b1e3665c467349bdb4ad163f8dafb6aff35323f2fda0bcb896b6272b467744c1"
+    },
+    "episode_source_gate": {
+      "path": "build/c2.2/c1-freezer-irq-episode/source-gate-receipt.json",
+      "sha256": "1ad8f14d02870be9ff8c8400e3f19de82a6507afe399b9cd593d7f6e73dfe6f4"
+    },
+    "raw_WPLTO_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link59-c1-freezer-irq-episode-wplto2-raw-receipt.json",
+      "sha256": "90a3c5c72897566e1ce63d5ebcbf4232f1e972536289e16a794b232f051c0fc7"
+    },
+    "read_only_replay": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link59-c1-freezer-irq-episode-wplto2-replay2-receipt.json",
+      "sha256": "a0b65346579e9a3607eaffc76120388b1aa00a7e577cbfe609bd370661b3cd36"
+    }
+  },
+  "source_contract": {
+    "status": "passed",
+    "mutations": "8/8 rejected",
+    "double_freezer_sequence": "accepted",
+    "double_source_less_without_raster": "fail-closed"
+  },
+  "linked_control_flow_first_red": {
+    "instruction": {
+      "address": "0xe078",
+      "bytes": "d3 0e 00",
+      "decoded": "bne $e088"
+    },
+    "actual_target": {
+      "address": "0xe088",
+      "identity": "final RTI byte of c2_kernal_nmi_handler"
+    },
+    "required_target": {
+      "address": "0xe089",
+      "identity": "c2_kernal_fail_closed"
+    },
+    "effect": "a second consecutive source-less IRQ would enter an RTI without the NMI handler's matching PHA and would not fail closed",
+    "cause": "the section-crossing conditional branch was encoded as a three-byte long branch whose linked displacement lands one byte before the target symbol",
+    "proposed_narrow_correction": [
+      "branch locally over an absolute JMP c2_kernal_fail_closed instead of conditionally branching across sections",
+      "remove the redundant LDA #$01 before STA $D019 because the owned path already has A == 1 after AND #$01",
+      "the two changes together preserve the measured E000 geometry at 55 bytes headroom"
+    ]
+  },
+  "capacity_first_red": {
+    "walls": {
+      "bank0_text_headroom_bytes": 25,
+      "required_text_noise_headroom_bytes": 32,
+      "bank0_text_deficit_bytes": 7,
+      "ordinary_bank0_bss_headroom_bytes": 213,
+      "fixed_hot_block_headroom_bytes": 4,
+      "resident_island_headroom_bytes": 5,
+      "e000_headroom_bytes": 55,
+      "e000_floor_bytes": 54
+    },
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98,
+    "Link58_to_WPLTO_text_section_delta_bytes": 8,
+    "object_size_attribution": [
+      {"symbol": "vm_run_inner", "delta_bytes": 8},
+      {"symbol": "eval_v2_workbench_service", "delta_bytes": -6},
+      {"symbol": "vm_key_event", "delta_bytes": 4},
+      {"symbol": "c2_product_install", "delta_bytes": -2},
+      {"symbol": "vm_callprim", "delta_bytes": 2},
+      {"symbol": "vm_fixbinop", "delta_bytes": 2}
+    ],
+    "attributed_net_bytes": 8,
+    "classification": "real Whole-Program-LTO movement; no optimizer retry or byte shaving authorized"
+  },
+  "execution_accounting": {
+    "whole_program_LTO_closure_links": 1,
+    "read_only_gate_replays": 1,
+    "promotable_product_links": 0,
+    "hardware_runs": 0
+  },
+  "rollback_line": {
+    "link": 58,
+    "status": "untouched"
+  },
+  "next_gate": "Class-C decision for the narrow linked-branch correction and a legitimate recovery of at least 7 Bank-0 text bytes while retaining the 32-byte noise reserve",
+  "claim_limit": "No product link, C1 closure, matrix-gate fall, hardware promotion or acceptance-chain claim."
+}

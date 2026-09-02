@@ -1,0 +1,62 @@
+{
+  "authority": {
+    "commission": {
+      "bytes": 4354,
+      "path": "docs/planning/c2.2-v1.2.6-editor-option1-contact-review.md",
+      "sha256": "bf657bd6bfbccdcd845a1d3830eebc12d09d60f7eacf72a3743e1b04b24dee20"
+    },
+    "driver": {
+      "bytes": 21348,
+      "path": "tools/host-lisp/c2_v126_editor_option2_device.py",
+      "sha256": "9c218b5492be4575ef18d78cc97ae70bfd3a2575090dd9d5b9bd3c8660058010"
+    },
+    "equivalence": {
+      "bytes": 28533,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-option2-equivalence-receipt.json",
+      "sha256": "c558a5adf43f11a5d696bddd215101a754078edfdb0e2bb39c712e5c2b5eb113"
+    }
+  },
+  "checks": {
+    "all_target_preconditions_before_editor_launch": true,
+    "bound_packaged_call_surface_green": true,
+    "equivalence_receipt_green": true,
+    "live_memory_ack_after_each_key": true,
+    "no_RUN_STOP_setup": true,
+    "no_per_key_breakpoint": true,
+    "one_halt_call_site": true,
+    "one_stop_on_first_failed_fill": true,
+    "ordinary_single_character_injection": true
+  },
+  "device_workload": {
+    "measurement": {
+      "CPU_halts": 1,
+      "ack": "live ide-buffers fill after every key",
+      "injection_width": 1,
+      "keys": 56,
+      "on_first_failed_fill": [
+        "D60A",
+        "D619",
+        "gc_runs",
+        "PC"
+      ],
+      "payload": "a",
+      "per_key_breakpoints": 0
+    },
+    "setup": [
+      "(load \"v126diag\")",
+      "(ide \"measure3\")"
+    ]
+  },
+  "executions": 9,
+  "format": "lisp65-c2.2-v1.2.6-editor-option2-host-dry-run-v1",
+  "mutations": {
+    "active-owner-rejected": true,
+    "bulk-width-rejected": true,
+    "dirty-C2J-rejected": true,
+    "mem-oom-rejected": true,
+    "missing-live-ack-rejected": true,
+    "per-key-breakpoints-rejected": true
+  },
+  "recorded_on": "2026-07-31",
+  "status": "passed-option2-one-stop-device-protocol"
+}

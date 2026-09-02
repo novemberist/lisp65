@@ -1,0 +1,141 @@
+{
+  "format": "lisp65-c2.2-link66-bundled-hardware-measurements-v1",
+  "recorded_on": "2026-07-26",
+  "status": "passed-Link66-product-measurement-bundle-C1-separately-documented",
+  "product_identity": {
+    "link": 66,
+    "path": "build/c2.2/substitution/product-link-66-single-submit-completion/lisp65-c2-substitution-linked.prg",
+    "bytes": 41566,
+    "sha256": "482b0b28171515c79ee2c8fd3ad78cea37716887ba06acddac0067db8171f6b4"
+  },
+  "authority": {
+    "structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link66-single-submit-completion-structural-receipt.json",
+      "bytes": 12068,
+      "sha256": "d0cc2c4a727e8b4762f4e1b1cfe55a89c8358a95ab172aa5e5c0bb80ada451b0"
+    },
+    "transient_blockread_contract": {
+      "path": "config/c2-transient-handle-contract.json",
+      "bytes": 6136,
+      "sha256": "54fc7e230451b1dbce9f21e58539ed84d08cfef1841096e59cbb29ddc7d7a94b"
+    },
+    "hardware_output_root": "build/c2.2/link66-post-c1-acceptance-measurements"
+  },
+  "deployment": {
+    "exact_product_reloaded_after_nonpromotable_C1_carrier": true,
+    "all_upload_readbacks_byteidentical": true,
+    "boot_family_sha256": "7cb22bc89543b144337271ba8b0bc5debc1f5b95e4da26c36c223f7111b68b28",
+    "session_region0_sha256": "8203b54757fbf344d2cfb6e004096283ba1123eadb7090ade7d86fd2cf4add6f",
+    "session_region1_sha256": "38e5771ab7f6840d487715d473a63b8e3ea268a23c6993928be7535152ad7b6b",
+    "initial_C2D_sha256": "672c260c530b61aff12f35864b2fd3a3adf250da78bf32aad5ab649e2022f1bf",
+    "E000_window_sha256": "997051365bc88c27dd08f362d8a0dea51b66159ce5912fa319225bd8668616b4"
+  },
+  "measurements": {
+    "boot_watch": {
+      "status": "passed-banner-and-usable-REPL",
+      "counter_tuple": [8, 56, 8],
+      "limit": "regression-watch-only",
+      "screen": {
+        "path": "build/c2.2/link66-post-c1-acceptance-measurements/boot-screen.txt",
+        "bytes": 2241,
+        "sha256": "7501eb06924f35c93daae7a861962c852c86c4d1f250dc1aaa83a60bdd09a09b"
+      }
+    },
+    "published_nullary": {
+      "definition": "(defun %c2h()(quote t))",
+      "cold": {
+        "raw": "(t 167 168)",
+        "frames": 1,
+        "limit_frames": 16,
+        "status": "passed",
+        "evidence_sha256": "a8450c1ea30b8985d256ca492a79a98bfd1e0163785fc7c4d2268dc56333fe68"
+      },
+      "warm": {
+        "raw": "(t 254 254)",
+        "frames": 0,
+        "limit_frames": 10,
+        "status": "passed",
+        "evidence_sha256": "11557cc939b6d44da2443b48d9dcb2a124a0309e539e28dd782de4098f1c58a1"
+      },
+      "latency_attempt_accounting": "observational replay after the already closed 2-of-2 latency question; no new budget slot claimed"
+    },
+    "published_argument_informative": {
+      "definition": "(defun %c2a(x)x)",
+      "raw": "(1 110 185)",
+      "frames": 75,
+      "limit": null,
+      "status": "recorded-no-claim",
+      "evidence_sha256": "a057d92b243f3d177d73c1997f167590bbb984e185708e054c09b84c0ad4e191"
+    },
+    "native_transaction_informative": {
+      "raw": "(%c2n 222 21)",
+      "frames_modulo_256": 55,
+      "limit": null,
+      "status": "recorded-no-claim",
+      "evidence_sha256": "c1f719aa9bcc7774ab1718977cab17dc695e2f1c503a3f11d653da0258709cd9"
+    },
+    "gc_envelope_informative": {
+      "raw": "(t 11 99)",
+      "frames": 88,
+      "gc_runs_before": 3,
+      "gc_runs_after": 4,
+      "collections": 1,
+      "blockreads_per_collection": 96,
+      "blockreads_basis": "contractual high-edge block count; the hardware counter directly observed the one collection, not each individual block read",
+      "limit": null,
+      "status": "recorded-no-claim",
+      "evidence_sha256": "ccb1e50bc92cada2453b591e4f3ab0f33870f052a35be477950116cb2db38ff4"
+    },
+    "nested_eval": {
+      "form": "(eval(quote(%c2h)))",
+      "result": "t",
+      "C2D_before_sha256": "7717c69616f33278db6cb3fe4e67e550992e55daac99cd50fe2c91e4dce97669",
+      "C2D_after_sha256": "7717c69616f33278db6cb3fe4e67e550992e55daac99cd50fe2c91e4dce97669",
+      "status": "passed-zero-growth",
+      "evidence_sha256": "69cd30928d29e1e372a0c1671ef50dd0b3c9c8796fe46046d55c0e8bd550b760"
+    },
+    "idle_freezer": {
+      "operator_return_key": "F3",
+      "Bank2_before_sha256": "64b7e32ab8fefb117407a17d57daf6d927543e0cbdb7c27dd1dc5b54805f24f7",
+      "Bank2_after_sha256": "64b7e32ab8fefb117407a17d57daf6d927543e0cbdb7c27dd1dc5b54805f24f7",
+      "Bank3_before_sha256": "062f90aa5ad716cc1edb0ff720d6d9397a374ecef22da33213d973fb07f4061d",
+      "Bank3_after_sha256": "062f90aa5ad716cc1edb0ff720d6d9397a374ecef22da33213d973fb07f4061d",
+      "E000_before_sha256": "1fd002733096cf8c693e84866f71863377eb4d6dea2998a419826a16ad14884e",
+      "E000_after_sha256": "c6cababe3ce368572eb66e7d2596e6896a154c53dff38c3e1b5559d65c81b7db",
+      "E000_contract_live_cells": ["0xff83", "0xff84", "0xff86"],
+      "E000_observed_differences": ["0xff83:0x0c->0xc3", "0xff84:0x32->0x36"],
+      "all_other_E000_bytes_identical": true,
+      "post_return_arithmetic": 9,
+      "family_generation": [1, 4],
+      "status": "passed-for-Link66-identity-only"
+    },
+    "runstop_rollback": {
+      "definition": "(defun c2loop()(c2loop))",
+      "call": "(c2loop)",
+      "operator_result": "*** stopped (run/stop)",
+      "C2D_before_sha256": "9e9d4bb6081b24490e8125d3307f32f4027606960dccc2d4814e1d33c8cdac6e",
+      "C2D_after_sha256": "9e9d4bb6081b24490e8125d3307f32f4027606960dccc2d4814e1d33c8cdac6e",
+      "post_abort_arithmetic": 3,
+      "status": "passed-byteidentical-rollback-and-usable-REPL",
+      "evidence": {
+        "path": "build/c2.2/link66-post-c1-acceptance-measurements/runstop/runstop-continuation.txt",
+        "bytes": 2241,
+        "sha256": "2fde2381ec7e715ac8b44712cc6baff879afffeadc8f710de0cf49a01bbb7772"
+      }
+    }
+  },
+  "matrix_effect": {
+    "C2_idle_Freezer": "PROVEN-for-Link66-product-identity-only",
+    "C1_open_transaction_Freezer": "not-PROVEN; governed by the separate terminal-disposition receipt"
+  },
+  "execution_accounting": {
+    "physical_device_appointments": 1,
+    "Freezer_roundtrips_on_exact_product": 1,
+    "RUNSTOP_aborts": 1,
+    "product_links": 0,
+    "compiler_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "value_string": "link66=482b0b28171515c79ee2c8fd3ad78cea37716887ba06acddac0067db8171f6b4 boot=pass cold-nullary=1f<=16f warm-nullary=0f<=10f argument=75f/no-limit native=55f/no-limit gc=88f/1-collection/96-contract-blockreads nested=pass-zero-growth freezer=bank2+bank3+8189of8192-e000-pass family-generation=1,4 runstop=pass-zero-growth C1=documented-C2.3-deferred acceptance-chain=not-yet-run",
+  "claim_limit": "Fresh Link-66 hardware measurements and product-identity-specific idle-Freezer/RUNSTOP/nested-eval evidence only. C1 is not PROVEN. This is not promotion, R4/R5/R6/G5/G6, remote-head sealing, release or full acceptance."
+}

@@ -1,0 +1,177 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 5502,
+      "path": "config/c2.2-link77-phase-v-bundled-hardware-session.json",
+      "sha256": "2a07e1c2d5a578cae40aac6fd2dcefeedc955a1667448772215ab11224b5936b"
+    },
+    "link": {
+      "bytes": 14899,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link77-random-while-structural-receipt.json",
+      "sha256": "bcdbaa81fa81b92ca392ec0922865bfb4a9f30b5dbe6a3cfc6929ca700120b90"
+    },
+    "observations": {
+      "bytes": 4892,
+      "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/observed-rows.json",
+      "sha256": "c66dba53066d5e7206f954838d6c4287d6a590d1f3b7e6b089e8dd235563ab3e"
+    },
+    "preparation": {
+      "bytes": 2213,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link77-phase-v-bundled-hardware-preparation-receipt.json",
+      "sha256": "f4f3214437d44e7b448bce5a7cf07a6bfa1476749cc37239284fd4048503b9b8"
+    }
+  },
+  "candidate": {
+    "elf": {
+      "bytes": 622588,
+      "path": "build/post-promotion/link77-random-while/final/lisp65-c2-substitution-linked.prg.elf",
+      "role": "linked-product-elf",
+      "sha256": "ede88619d0e9711b8d5144495ca84f0414ee38352f882df8aadf5372504e9889"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link77-random-while/final/lisp65-c2-substitution-linked.prg",
+      "role": "c2-resident-prg",
+      "sha256": "9e8999c0de31e306ee957f4912b7fa0baa52c55d58dfe8a933b1c02462e1faa3"
+    }
+  },
+  "claim_limit": "The five listed rows passed.  The corrected allocation row returned 600 but set mem_oom; RUN/STOP, random, IRQ readback and DIRMISS were not run.",
+  "execution_accounting": {
+    "diagnostic_deployments": 0,
+    "physical_device_sessions": 1,
+    "product_deployments": 1,
+    "product_links": 0
+  },
+  "first_red": {
+    "classification": "product First Red: the result completes, but the final allocation leaves mem_oom set despite a transient live set",
+    "fail_closed_frame": false,
+    "group": "while",
+    "id": "while-allocation-gc",
+    "image": {
+      "bytes": 8212,
+      "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-allocation-gc.png",
+      "sha256": "2bee5fe1842ba0172aff3f93c01d093f4332c3e9addf8b166b5a1deab1e4405b"
+    },
+    "live_prompt": true,
+    "outcome": "600 followed by *** vm: out of memory",
+    "screen": {
+      "bytes": 2241,
+      "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-allocation-gc.txt",
+      "sha256": "baebb7180054a09359085f724884649cf1f8df6a46816ec351df1274d4fff2b4"
+    }
+  },
+  "format": "lisp65-c2.2-link77-phase-v-hardware-receipt-v1",
+  "harness_corrections": [
+    {
+      "allocation_row": {
+        "attribution": "The rejected row retained 5000 cons cells, but the bound target has only 48 hot plus 1024 extended cells.",
+        "observed": "*** vm: out of memory",
+        "proof": {
+          "allocations": 1200,
+          "extended_cells": 1024,
+          "heap_cells": 48,
+          "reason": "The 1200 transient cons allocations exceed the complete 1072-cell target heap, so a successful result proves collection without requiring an impossible live set."
+        },
+        "rejected_form": "(let((i 0)(kept nil))(progn(while(car(cons(< i 5000)nil))(setq kept(cons i kept))(setq i(+ i 1)))(+ i(car kept))))",
+        "replacement": "(let((i 0))(progn(while(car(cons(< i 600)nil))(car(cons i nil))(setq i(+ i 1)))i))",
+        "replacement_expected": "600"
+      },
+      "kind": "test-harness-only",
+      "path_binding": "Relative evidence paths are normalized against the workspace before receipt binding.",
+      "product_delta_bytes": 0,
+      "product_redeployments": 0
+    }
+  ],
+  "passed_rows": [
+    {
+      "group": "regression",
+      "id": "boot-repl",
+      "image": {
+        "bytes": 3536,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-boot-repl.png",
+        "sha256": "1fb9d1b2e29f98efbda060133bdf48228c98b45792f79f607e29238c00e20cee"
+      },
+      "outcome": "3",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-boot-repl.txt",
+        "sha256": "fe8f5da77403d11de5ce26d4a18b2fe8e95cf007eba18ab3c2e01c9de85e909f"
+      }
+    },
+    {
+      "group": "while",
+      "id": "while-zero",
+      "image": {
+        "bytes": 3867,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-zero.png",
+        "sha256": "1fb5ed681c507c7d4068f704d450da34ac845b2f2088fb06b5ee6a630d35654e"
+      },
+      "outcome": "nil",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-zero.txt",
+        "sha256": "fa0b73d8b5eaee10f22aaf24ca3cfb2f1e3fb8200f8768f0b57f86b80a65741e"
+      }
+    },
+    {
+      "group": "while",
+      "id": "while-multiple",
+      "image": {
+        "bytes": 4644,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-multiple.png",
+        "sha256": "8c9dbede52bc06127f5143ae469adae3150a034b0b21ce2e744d599073ab049d"
+      },
+      "outcome": "6",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-multiple.txt",
+        "sha256": "860dd31265c17b67642d60939060bd7e7b4cddcb9438983522adc6fef7a634ea"
+      }
+    },
+    {
+      "group": "while",
+      "id": "while-nonboolean-truth",
+      "image": {
+        "bytes": 5436,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-nonboolean-truth.png",
+        "sha256": "e1297d32b95dce691c53b35a2ab69cd9e0ee1e0505da75a4837e154f9a1ef9b5"
+      },
+      "outcome": "3",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-nonboolean-truth.txt",
+        "sha256": "7378979923d1c7eb85bdd5b966eb93991ec12fd2e69dd3804bad51c4f0d1c34d"
+      }
+    },
+    {
+      "group": "while",
+      "id": "while-long-constant-stack",
+      "image": {
+        "bytes": 6070,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-long-constant-stack.png",
+        "sha256": "604c975f9f0ca886c19a4758c506d07e52f5914666ee66a38bc6f1d5bc509451"
+      },
+      "outcome": "200",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/row-while-long-constant-stack.txt",
+        "sha256": "07e2a34552566ec8b43a2f570abc2fc031d7d11584ca14a51355f5fdec3e86a6"
+      }
+    }
+  ],
+  "recorded_on": "2026-07-29",
+  "remaining_rows_not_run": [
+    "while-allocation-gc",
+    "while-run-stop",
+    "post-run-stop-repl",
+    "random-state-width",
+    "random-rejection-path",
+    "random-seed-reproducible",
+    "random-range",
+    "irq-mask-readback",
+    "dirmiss-full-name",
+    "post-dirmiss-repl"
+  ],
+  "status": "first-red-while-allocation-gc-oom"
+}

@@ -30,6 +30,7 @@ FINAL_ELF = TERMINAL / "lisp65-c2-substitution-linked.prg.elf"
 FINAL_PARK = ROOT / "docs/planning/1.9-full-map-recharter-final-park.md"
 OWNER_PLAN = "docs/planning/post-v1.4.0-direction-plan.md"
 OWNER_APPROVAL_COMMIT = "849dca0a9be6aefec36e14ec867036f97272fc40"
+REVIEW_SEAL_COMMIT = "7ad5f610f1a9b1523a51cf0c30973089de048226"
 GOLDEN_SHA256 = "65a13501c36db615f356bb7f992dcbb1c6a6f932fcf1968bf34646f9cbc7b4f7"
 SEED_ELF_SHA256 = "969c311350c4761f71c002aa59f9712d0bbf52a441f73e179b2ae4df9ec23e82"
 FINAL_ELF_SHA256 = "64e269eaf820cdd1ee5f1eb35da32c404793bb4b2104be8290fa7483450c7fc4"
@@ -130,8 +131,25 @@ def git_binding(commit: str, path: str) -> dict[str, Any]:
     }
 
 
-def layout_from_elf(path: Path) -> dict[str, Any]:
+def sealed_path_binding(commit: str, path: str) -> dict[str, Any]:
+    """Bind a receipt input in its evidence era without rewriting the receipt."""
+    value = git_binding(commit, path)
+    return {
+        "path": value["path"],
+        "bytes": value["bytes"],
+        "sha256": value["sha256"],
+    }
+
+
+def layout_from_elf(path: Path, *, packed_prg: Path | None = None,
+                    allowed_flat_packed_sections: set[str] | None = None
+                    ) -> dict[str, Any]:
     truth, raw_sections, headers = OWN.read_elf(path)
+    flat_allowed = (set() if allowed_flat_packed_sections is None
+                    else set(allowed_flat_packed_sections))
+    packed = packed_prg.read_bytes() if packed_prg is not None else b""
+    packed_load = int.from_bytes(packed[:2], "little") if len(packed) >= 2 else 0
+    elf_raw = path.read_bytes()
     sections: list[dict[str, Any]] = []
     for section in truth.sections:
         if "SHF_ALLOC" not in section.flags:
@@ -142,9 +160,26 @@ def layout_from_elf(path: Path) -> dict[str, Any]:
             try:
                 lma = OWN.section_lma(section, raw, headers)
             except OWN.OwnershipError:
-                require(section.section_type == "SHT_NOBITS",
-                        f"load address unresolved for file-backed section: "
-                        f"{section.name}")
+                if section.section_type == "SHT_NOBITS":
+                    pass
+                else:
+                    offset = 2 + section.address - packed_load
+                    elf_offset = int(raw["Offset"])
+                    section_raw = elf_raw[elf_offset:elf_offset + section.bytes]
+                    flat_proven = (
+                        section.name in flat_allowed
+                        and packed_prg is not None
+                        and section.section_type == "SHT_PROGBITS"
+                        and "SHF_WRITE" in section.flags
+                        and 0 <= offset
+                        and offset + section.bytes <= len(packed)
+                        and packed[offset:offset + section.bytes] == section_raw)
+                    require(flat_proven,
+                            "load address unresolved for unproved file-backed "
+                            f"section: {section.name}")
+                    # The MEGA65 PRG is a flat VMA image.  Byte identity at
+                    # the VMA is therefore the delivered load-address proof.
+                    lma = section.address
         sections.append({
             "alignment": int(raw["AddressAlignment"]),
             "bytes": section.bytes,
@@ -352,7 +387,9 @@ def build_receipt() -> dict[str, Any]:
         "authority": {
             "owner_approval": git_binding(OWNER_APPROVAL_COMMIT, OWNER_PLAN),
             "final_park_restart_wisdom": bind(FINAL_PARK),
-            "gate": bind(Path(__file__).resolve()),
+            "gate": sealed_path_binding(
+                REVIEW_SEAL_COMMIT,
+                Path(__file__).resolve().relative_to(ROOT).as_posix()),
         },
         "next_gate": (
             "One-time owner review of the golden artifact. Only an accepted "

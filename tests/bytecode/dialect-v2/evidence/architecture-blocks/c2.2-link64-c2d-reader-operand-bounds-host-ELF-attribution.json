@@ -1,0 +1,203 @@
+{
+  "attribution": {
+    "caller_dataflow": {
+      "ACTIVE_length_materialization": "$c813 call to 27-byte stateless leaf returns $40; $c818 writes __rc4=$40 and $c822 writes __rc5=$00",
+      "ACTIVE_offset_materialization": "$c782..$c788 writes __rc31=$c6, __rc30=$40",
+      "call_edge": "$c824 X=__rc31, $c826 A=__rc30, $c828 JSR $e691",
+      "intervening_general_calls": 0,
+      "linked_expected_tuple": "offset=$c640, length=$0040, exact end=$c680",
+      "only_intervening_leaf": "c2_completion_mode_length; touches A and Z only"
+    },
+    "exact_meet_comparison": {
+      "boundary_cases_checked": 247422,
+      "exact_meet": {
+        "accepted": true,
+        "end": "0xc680",
+        "length": 64,
+        "offset": "0xc640"
+      },
+      "linked_low_compare": "CPY $06 at $e6bf; BCC $e6e0 at $e6c1",
+      "linked_rule": "subtract $c680-offset; reject high word only when remaining<length, or equal-high low word via CPY/BCC; equality is accepted",
+      "one_byte_over": {
+        "accepted": false,
+        "length": 65,
+        "offset": "0xc640"
+      },
+      "source_rule": "offset > $c680 || length > ($c680 - offset) rejects",
+      "verdict": "exact-meet rejection hypothesis disproved",
+      "zero_at_end": {
+        "accepted": true,
+        "length": 0,
+        "offset": "0xc680"
+      }
+    },
+    "hardware_contradiction": {
+      "consequence": "the linked comparison is not an off-by-one; at least one runtime operand at the reader differs from its linked last writer in the failing episode",
+      "prior_result": "$c82c discriminator proved c2_stream_c2d_read returned 0"
+    },
+    "next_discriminator": {
+      "capacity_delta": 0,
+      "capture": {
+        "address": "0x0004",
+        "bytes": 8,
+        "fields": {
+          "destination": "$04/$05",
+          "length": "$06/$07",
+          "saved_offset_high": "$0a",
+          "saved_offset_low": "$0b"
+        }
+      },
+      "live_executable_bytes_changed": 4,
+      "method": "after clean REPL, patch only the four reject-edge target operands in live $e000 code; a rejection self-loops while saved entry offset $0a/$0b and length $06/$07 remain memory-stable",
+      "outcomes": {
+        "hang": "a bounds-reject edge fired; captured operands identify offset versus length corruption",
+        "no_hang": "the intermittent reader rejection did not recur in this episode; no product inference"
+      },
+      "patches": [
+        {
+          "address": "0xe6a3",
+          "after": "0xa2",
+          "before": "0xe0",
+          "reader_offset": 18,
+          "reject_class": "offset-low-overflow"
+        },
+        {
+          "address": "0xe6ac",
+          "after": "0xab",
+          "before": "0xe0",
+          "reader_offset": 27,
+          "reject_class": "offset-high-overflow"
+        },
+        {
+          "address": "0xe6c2",
+          "after": "0xfe",
+          "before": "0x1d",
+          "reader_offset": 49,
+          "reject_class": "length-low-overflow"
+        },
+        {
+          "address": "0xe6e7",
+          "after": "0xfe",
+          "before": "0xf8",
+          "reader_offset": 86,
+          "reject_class": "length-high-overflow"
+        }
+      ],
+      "product_file_bytes_changed": 0
+    },
+    "reader": {
+      "address": "0xe691",
+      "byteidentical_product_donor_window": true,
+      "bytes": 87,
+      "sha256": "d4bdb0340028893c980ef68ada56b973db526578434289a503e6a2f85973b1ad",
+      "symbol": "c2_stream_c2d_read"
+    }
+  },
+  "authority": {
+    "donor_ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "driver": {
+      "bytes": 22854,
+      "path": "tools/host-lisp/c2_link64_c2d_reader_bounds_hold.py",
+      "sha256": "10cf6008815740a60e91174276fb6baefdcce3c16dd5233ba716b52c5951966c"
+    },
+    "hardware_driver": {
+      "bytes": 4653,
+      "path": "scripts/c2-link64-c2d-reader-bounds-hold-hw.sh",
+      "sha256": "c1ac6998674822365034653259ef111c3bf932d743061f89dc243309e2990c68"
+    },
+    "product_ELF": {
+      "bytes": 619524,
+      "path": "build/c2.2/substitution/product-link-64-nonlto-stateless-completion-length/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8ca73935122d07a6bb1f1d439ff43ecf53db2ef57c9bae7c882ca8fe967455bd"
+    },
+    "reader_return_hardware_receipt": {
+      "bytes": 11569,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-reader-return-hold-hardware-receipt.json",
+      "sha256": "9817c911441d9afca4e080ac703d5105ae60c1d0f59139fc0e412e59de423aff"
+    },
+    "source_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-link64-stage-bound.bin",
+      "sha256": "bb436ba264065ec49a76dc90f60b9226f1d59065d51ef181e9454990cc40ce1b"
+    },
+    "source_deployment": {
+      "bytes": 10049,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt4-NONPROMOTABLE/deployment.json",
+      "sha256": "aec06ae9fdafb74298389ab356c7dc51bff4f66c170152878d8e0518bfbeb27d"
+    },
+    "window": {
+      "address": "0x087fe000",
+      "bytes": 8192,
+      "path": "build/c2.2/substitution/product-link-64-nonlto-stateless-completion-length/c2-product-kernal-window.bin",
+      "sha256": "484fce351196673c1c56ed1e188b75f85b332a6dde5fdef37c1cb9f813af245c"
+    }
+  },
+  "candidate": {
+    "identity_separate_from_Link64": true,
+    "lifecycle": "discard after one diagnostic outcome",
+    "manifest": {
+      "bytes": 1879,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/manifest.json",
+      "sha256": "e9d1c8c490f446b469320765788e282decd68681116483972914db004e5e57b0"
+    },
+    "original_reader": {
+      "address": "0x0000e691",
+      "bytes": 87,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/c2-stream-c2d-read-original.bin",
+      "sha256": "d4bdb0340028893c980ef68ada56b973db526578434289a503e6a2f85973b1ad"
+    },
+    "patch_files": [
+      {
+        "address": "0x0000e6a3",
+        "bytes": 1,
+        "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/patch-e6a3.bin",
+        "reject_class": "offset-low-overflow",
+        "sha256": "0a43b22d89fa2499be5c7704c9bf273260b0ca9588e4cd1897cd80f9c96cd97a"
+      },
+      {
+        "address": "0x0000e6ac",
+        "bytes": 1,
+        "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/patch-e6ac.bin",
+        "reject_class": "offset-high-overflow",
+        "sha256": "087d80f7f182dd44f184aa86ca34488853ebcc04f0c60d5294919a466b463831"
+      },
+      {
+        "address": "0x0000e6c2",
+        "bytes": 1,
+        "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/patch-e6c2.bin",
+        "reject_class": "length-low-overflow",
+        "sha256": "aa687b58b0e73e2e383f8c500d75b591e188efe0168b3ffbcd3771caaa6dd4c7"
+      },
+      {
+        "address": "0x0000e6e7",
+        "bytes": 1,
+        "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/patch-e6e7.bin",
+        "reject_class": "length-high-overflow",
+        "sha256": "aa687b58b0e73e2e383f8c500d75b591e188efe0168b3ffbcd3771caaa6dd4c7"
+      }
+    ],
+    "patched_reader": {
+      "address": "0x0000e691",
+      "bytes": 87,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/c2-stream-c2d-read-bounds-holds.bin",
+      "sha256": "b9e59c74ee7ba3d988bdf67f5efc4e49ffbbd37ecc59884ae2038d9a87fe5675"
+    }
+  },
+  "claim_limit": "Host/ELF bounds attribution and nonpromotable live-patch feasibility only. C1 remains OPEN.",
+  "construction": {
+    "all_capacity_deltas": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_file_bytes_changed": 0
+  },
+  "format": "lisp65-c2.2-Link64-c2d-reader-operand-bounds-host-ELF-attribution-v1",
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "status": "passed-exact-meet-accepted-runtime-operands-remain"
+}

@@ -1,0 +1,148 @@
+{
+  "authority": {
+    "contract_doc_input": {
+      "bytes": 27088,
+      "path": "docs/planning/c2.2-kernal-unmap-contract.md",
+      "sha256": "36547fe81d33ba9d335be26c307a5b8f537299ed8e806f917c18388d8b6f055e"
+    },
+    "contract_input": {
+      "bytes": 20853,
+      "path": "config/c2-kernal-unmap-contract.json",
+      "sha256": "6d080fdf0f7a4ded5a822aef383f79594d0fc9bbfcced03b344024171d41a3f4"
+    },
+    "debit_cap_bytes": 450,
+    "plan_input": {
+      "bytes": 6815,
+      "path": "docs/planning/c2.2-link33-coordinated-residency-plan.md",
+      "sha256": "b2677c4afba46c115a1aebe80e7b79cc022e55d04bf2f5b54647d508be922d42"
+    },
+    "third_opening": "not-attempted-and-forbidden-without-new-owner-decision"
+  },
+  "authorized_freight_measurement": {
+    "actual_total_debit_bytes": 419,
+    "bank0_text_package": {
+      "bytes": 181,
+      "minimum_bytes": 167,
+      "size_gate": "passed",
+      "symbols": {
+        "c2_abort_driver": 113,
+        "c2_facade_target_c2_dma": 68
+      }
+    },
+    "cap_headroom_bytes": 31,
+    "debit_cap_bytes": 450,
+    "debit_gate": "passed",
+    "reopening_sections": {
+      ".lisp65_c2_host_facade_extension": 3,
+      ".lisp65_c2_kernal_window.reopen_gap0": 128,
+      ".lisp65_c2_kernal_window.reopen_gap1": 220,
+      ".lisp65_c2_kernal_window.reopen_gap2": 68
+    },
+    "resident_island_package": {
+      "bytes": 235,
+      "minimum_bytes": 228,
+      "size_gate": "passed",
+      "symbols": {
+        "vm_runtime_overlay_exec_batch_island": 60,
+        "vm_runtime_overlay_transaction_begin": 128,
+        "vm_runtime_overlay_transaction_end": 47
+      }
+    }
+  },
+  "claim_limit": "One and only owner-authorized product-shaped Whole-Program-LTO placement attempt, stopped at first linker red. No PRG/ELF, product identity, hardware, latency, promotion or release claim.",
+  "evidence": {
+    "fresh_prelink_interrupt_object": {
+      "bytes": 5248,
+      "path": "build/c2.2/substitution/link33-e000-reopening-placement-probe/fresh-v5-prelink-gates/interrupt.o",
+      "sha256": "8bd46d6fb56ce304c6d970407920e9d5cfacb69638d73eb9c17606417ae29755"
+    },
+    "fresh_prelink_runtime_object": {
+      "bytes": 157784,
+      "path": "build/c2.2/substitution/link33-e000-reopening-placement-probe/fresh-v5-prelink-gates/c2-runtime.o",
+      "sha256": "85eca8b353e6e09bfd1e27291a6b23f23d396ce4a4f4b32eb07794a33c3156c5"
+    },
+    "link_stderr": {
+      "bytes": 1740,
+      "path": "build/c2.2/substitution/link33-e000-reopening-placement-probe/e000-reopening-placement-seed.prg.link.stderr.txt",
+      "sha256": "1ca0abaab35324d63454de212cdf97ffacd28119e9c40a24b6c4a0dd7c417487"
+    },
+    "lto_object": {
+      "bytes": 563356,
+      "path": "build/c2.2/substitution/link33-e000-reopening-placement-probe/e000-reopening-placement-seed.prg.lto.o",
+      "sha256": "c32b01a2065885bdf4668290a450965a0a6655362bd9122bb84ac73204167cd9"
+    },
+    "map": {
+      "bytes": 186613,
+      "path": "build/c2.2/substitution/link33-e000-reopening-placement-probe/e000-reopening-placement-seed.prg.map",
+      "sha256": "2b51f072e912203fc3a36d02a18599262229c09779e15136ad578e254296fa35"
+    },
+    "resolved_profile": {
+      "bytes": 6267,
+      "path": "build/c2.2/substitution/link33-e000-reopening-placement-probe/resolved-profile.txt",
+      "sha256": "b222b990ab6c63914af5850a9bbe81299e8bed93146c8418e0f13b55770f2bb9"
+    }
+  },
+  "execution_accounting": {
+    "fresh_prelink_target_compiles": 2,
+    "hardware_runs": 0,
+    "product_closure_links": 0,
+    "successful_seed_links": 0,
+    "whole_program_lto_seed_attempts": 1
+  },
+  "first_red_diagnostics": [
+    "ordinary Bank-0 state overlaps fixed C2 state",
+    "profile_rodata file range overlaps with .lisp65_c2_host_facade_extension",
+    "section .bss virtual address range overlaps with .lisp65_c2_fixed_bank0"
+  ],
+  "format": "lisp65-c2-link33-formal-e000-reopening-placement-first-red-v1",
+  "gate_accounting": {
+    "final_floor": "not-bound",
+    "fresh_nested_append_source_mutation_closure_b2": "passed-before-link",
+    "fresh_v2_profile_parity": "passed-before-link",
+    "link_capacity_and_lma": "FIRST RED",
+    "post_link_structural_gates": "not-reached-not-passed"
+  },
+  "next_gate": "Return to owner review. The authorized package cannot satisfy its BSS condition; no retry, product link, floor binding or hardware presmoke is permitted from this result.",
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "expected_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "link32_product_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "byte-identical-untouched"
+  },
+  "root_cause": {
+    "additional_tool_layout_effect": "The new fixed facade output also made lld advance .rodata by 212 bytes and assigned an overlapping load-file range to the E000 profile data. Fixing that LMA plumbing would not cure the independent baseline BSS deficit.",
+    "attempt_bss_bytes": 1827,
+    "baseline_bss_bytes": 1827,
+    "baseline_bss_headroom_bytes": -167,
+    "bss_size_delta_bytes": 0,
+    "corrected_model": "Ordinary BSS does not follow the movable end of .text across this cut. The handoff, facade and fixed low sections have absolute VMAs between .text and .rodata/.data/.bss, so text relief is absorbed before the fixed anchors and cannot close the independent BSS overlap.",
+    "counterfactual_if_downstream_vmas_had_not_drifted_bytes": -167
+  },
+  "status": "FIRST RED: purpose packages fit cap but cannot close anchored ordinary BSS",
+  "whole_program_capacity": {
+    "baseline_coordinated_first_red": {
+      "bank0_bss_headroom_bytes": -167,
+      "bank0_text_headroom_bytes": -162,
+      "e000_headroom_bytes": 531,
+      "resident_island_headroom_bytes": -228
+    },
+    "formal_reopening_attempt": {
+      "bank0_bss_headroom_bytes": -379,
+      "bank0_text_headroom_bytes": 41,
+      "e000_headroom_bytes": 115,
+      "resident_island_headroom_bytes": 7
+    },
+    "gates": {
+      "bank0_text": "passed",
+      "e000_window": "passed-cap-but-not-contractually-bound",
+      "ordinary_bank0_bss": "FIRST RED",
+      "resident_island": "passed"
+    },
+    "headroom_deltas": {
+      "bank0_bss_headroom_bytes": -212,
+      "bank0_text_headroom_bytes": 203,
+      "e000_headroom_bytes": -416,
+      "resident_island_headroom_bytes": 235
+    }
+  }
+}

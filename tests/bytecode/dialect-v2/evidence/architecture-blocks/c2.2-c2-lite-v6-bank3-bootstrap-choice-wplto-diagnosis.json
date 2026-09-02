@@ -1,0 +1,111 @@
+{
+  "format": "lisp65-c2-lite-bank3-bootstrap-choice-wplto-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: assembler fallback fits all capacity walls; current publish-last address pin is stale",
+  "scope": {
+    "whole_program_lto_probes": 4,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "promotable": false
+  },
+  "chain_loader_option": {
+    "source_contract_checks": "13/13",
+    "source_mutations_rejected": "4/4",
+    "prefamily_boot_record_bytes": 1531,
+    "prefamily_boot_record_headroom_bytes": 261,
+    "resident_components_bytes": {
+      "one_record_loader": 442,
+      "crc": 86,
+      "c_commit": 215
+    },
+    "bank0_text_headroom_bytes": -49,
+    "nocrossrefs_violations": 8,
+    "disposition": "rejected: the cold record owned Workbench sibling relocations and the resident C seam did not fit",
+    "map": {
+      "path": "build/c2-lite/v6-bank3-stage-chain-wplto-replay2/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "sha256": "9b2f2d2bfd83a2822da898f60b5d1ab790ba24a30fddd725ff4c8332e3d2f812"
+    },
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank3-stage-chain-wplto-replay2-receipt.json",
+      "sha256": "5a3449cc3f1e4a1d400c56f186cc498dcc6e505e7bb120c70ff739eade333c2d"
+    }
+  },
+  "non_lto_assembler_fallback": {
+    "source_contract_checks": "13/13",
+    "source_mutations_rejected": "4/4",
+    "prefamily_boot_record_bytes": 1494,
+    "prefamily_boot_record_headroom_bytes": 298,
+    "resident_components_bytes": {
+      "one_record_loader": 467,
+      "crc": 78,
+      "assembler_commit_leaf": 138,
+      "immutable_successor_geometry": 6
+    },
+    "resident_design": "Record 1 consumes a resident immutable (VMA, entry, length) tuple; the sole commit implementation is a sized Non-LTO assembly leaf",
+    "nocrossrefs_violations": 0,
+    "walls": {
+      "bank0_text_headroom_bytes": 11,
+      "ordinary_bank0_bss_headroom_bytes": 86,
+      "fixed_hot_block_headroom_bytes": 33,
+      "resident_island_headroom_bytes": 170,
+      "e000_headroom_bytes": 501
+    },
+    "family_capacity": {
+      "boot_bytes": 16210,
+      "boot_headroom_bytes": 49326,
+      "boot_records": 11,
+      "session_bytes": 65438,
+      "session_headroom_bytes": 98,
+      "session_records": 51
+    },
+    "cold_sections": {
+      "workbench_bytes": 1731,
+      "phase03_bytes": 1584,
+      "session_stage_bytes": 763
+    },
+    "publish_last": {
+      "bytes": 40,
+      "old_authority_address": "0xb99b",
+      "measured_address": "0xb9cd",
+      "delta_bytes": 50,
+      "status": "unpublished; product gate stopped before patching"
+    },
+    "artifacts": {
+      "elf": {
+        "path": "build/c2-lite/v6-bank3-stage-asm-fallback-wplto-replay2/full-product-wplto/c2-lite-v6-full-seed.prg.elf",
+        "sha256": "dceb9505a8d74efae3af4b4e3583c06f3c085ddbc7f80e0426980a83d21351e2"
+      },
+      "map": {
+        "path": "build/c2-lite/v6-bank3-stage-asm-fallback-wplto-replay2/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+        "sha256": "7a43bbbb97be106fa64038e8a83746e542879ac565fe40a9437bb576dea2f721"
+      },
+      "boot_manifest": {
+        "path": "build/c2-lite/v6-bank3-stage-asm-fallback-wplto-replay2/full-product-wplto/runtime-overlays-boot-c2-lite.json",
+        "sha256": "f6ed13db8c0729e8d83b0875feb140041f8ece5452f9983fc706fcba6b7764d1"
+      },
+      "session_manifest": {
+        "path": "build/c2-lite/v6-bank3-stage-asm-fallback-wplto-replay2/full-product-wplto/runtime-overlays-session-c2-lite.json",
+        "sha256": "273255a03d365122de778325215ac71e462a708ae166f18297c5d0ae512d8d3c"
+      },
+      "first_red_receipt": {
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank3-stage-asm-fallback-wplto-replay2-receipt.json",
+        "sha256": "dada875b5b72d16b14f0a711c8dda8ecafbe6dbc8dad954332c4811ec36a2bec"
+      }
+    }
+  },
+  "decision": {
+    "recommended_option": "non-lto-assembler-fallback",
+    "reason": "It is the only measured option with zero overlay cross-references and positive headroom in every wall.",
+    "required_class_c_action": "Authorize the C2-lite publish-last geometry re-pin from 0xb99b to 0xb9cd, propagate it through current authority/config/gates, and replay artifact-side completion without a compiler or product link.",
+    "forbidden_without_review": [
+      "changing the publish-last address authority",
+      "patching the 40-byte table",
+      "starting a successor product link",
+      "hardware execution"
+    ]
+  },
+  "rollback_line": {
+    "product": "Link 35",
+    "status": "untouched"
+  }
+}

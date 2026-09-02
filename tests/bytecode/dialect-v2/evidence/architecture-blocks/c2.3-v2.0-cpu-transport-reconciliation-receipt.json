@@ -1,0 +1,128 @@
+{
+  "accounting": {
+    "D1_D5_open": false,
+    "contact_authorized": false,
+    "device_contacts": 0,
+    "media_bytes_changed": 0,
+    "product_bytes_changed": 0
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 75581,
+    "commit": "db20fc5b01bfdc1a075666b3c5607ae062d2568c",
+    "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+    "sha256": "4f05db80ac3181e3fcd4495bbf2ee67ee6e15cc041fd8bbcdf9b3b4f6868dcb1"
+  },
+  "claim_limit": "Desk-only scope reconciliation. It does not claim that MAP cannot expose Bank-5 or Attic; it proves only that no such target proof exists and that none of the 346,298 Link-106 library reads lies in the positively proven flat-CPU Bank-0 domain.",
+  "format": "lisp65-c2.3-v2.0-cpu-transport-reconciliation-v1",
+  "historical_exclusion": {
+    "MAP_based_transport_test_present": false,
+    "attic_target_test_present": false,
+    "bank5_target_test_present": false,
+    "meaning": "Bank 4 falsifies this flat-opcode family as a bank-agnostic release transport; Bank 5 and Attic remain unproved, not separately measured failures",
+    "negative_domain": "physical Bank-4; observed at 0x0004C800",
+    "positive_domain": "physical Bank-0 high RAM; observed at 0x0000FFFA",
+    "transport_family": "45GS02 flat LDA [$zp],Z (EA B2 zp)"
+  },
+  "inputs": {
+    "c2d": {
+      "bytes": 33840,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+    },
+    "delivered_runtime": {
+      "bytes": 163339,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/wplto/generated-product-sources/c2_product_runtime.c",
+      "sha256": "f187612a73d501733a3407b117fb16164719b1377199b9d219481aa28c90a692"
+    },
+    "flat_opcode_implementation": {
+      "bytes": 4532,
+      "path": "scripts/hw-mega65-hwops.h",
+      "sha256": "f63c110b835d1cdab6a9e8a8ca3b4d24d551c4b6c63631f3eac3fafabbc9b59c"
+    },
+    "historical_reading": {
+      "bytes": 32131,
+      "path": "docs/archive/pre-1.0/reference/mega65-hardware-deepdive-2026-07-10.md",
+      "sha256": "21625a787b7b131f5bf80af15967a95957079d408871200968e93f82ec8c14ad"
+    },
+    "pricing": {
+      "bytes": 17573,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-loading-libraries-duration-pricing-receipt.json",
+      "sha256": "54b3a93abcac2fa626610cdfcbda57192d10a3d6171db03d1a9334151bc10aa9"
+    },
+    "runtime_header": {
+      "bytes": 26938,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "bc3841df851f24c0b2f3829bf7495aa9283882b1b88fc983cb366616cf4cfdb5"
+    },
+    "selection_contract": {
+      "bytes": 3267,
+      "path": "config/c2-f018b-content-safe-read-contract.json",
+      "sha256": "9d1cf8e90e5745fce519f623f08b4d4ce64845ac886a51468cd702ac01dcbd09"
+    },
+    "shelf": {
+      "bytes": 93681,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+      "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+    },
+    "target_smoke": {
+      "bytes": 6707,
+      "path": "scripts/hw-access-smoke-main.c",
+      "sha256": "dde2486d85326859b8db660b6f13267f73344321f046573e49808766d4da062a"
+    }
+  },
+  "library_load_sources": {
+    "initial_c2d": {
+      "bytes": 33840,
+      "domain": "Bank-5",
+      "logical_calls": 8147,
+      "owned_region_end_exclusive": "0x0005C680",
+      "physical_end_exclusive": "0x00058430",
+      "physical_start": "0x00050000"
+    },
+    "reads_in_proven_CPU_domain": 0,
+    "reads_outside_proven_CPU_domain": 346298,
+    "session_successor": {
+      "domain": "Attic; post-READY append source",
+      "maximum_bytes": 1048576,
+      "physical_start": "0x08400000"
+    },
+    "shelf": {
+      "bytes": 93681,
+      "domain": "Attic",
+      "logical_calls": 338151,
+      "physical_end_exclusive": "0x08116DF1",
+      "physical_start": "0x08100000"
+    },
+    "total_logical_reads": 346298
+  },
+  "mutations": {
+    "count": 14,
+    "rejected": {
+      "admit-one-proven-read": "library source coverage drift",
+      "authorize-contact": "desk-only accounting drift",
+      "broaden-flat-positive-to-bank5": "historical evidence was broadened or weakened",
+      "claim-MAP-target-test": "historical evidence was broadened or weakened",
+      "claim-attic-target-test": "historical evidence was broadened or weakened",
+      "claim-bank5-target-test": "historical evidence was broadened or weakened",
+      "drop-one-unproved-read": "library source coverage drift",
+      "erase-new-proof-requirement": "CPU-successor claim broadened",
+      "invent-root-removal": "CPU-successor claim broadened",
+      "move-c2d-to-bank0": "library source coverage drift",
+      "move-shelf-to-bank0": "library source coverage drift",
+      "open-D1-D5": "desk-only accounting drift",
+      "truncate-c2d-domain": "library source coverage drift",
+      "truncate-shelf-domain": "library source coverage drift"
+    }
+  },
+  "reconciliation": {
+    "F018B_root_removal_available_now": false,
+    "Link106_release_fix": "verified convergence remains required for 100% of LOADING LIBRARIES reads",
+    "architecture_decision_after_contact": "retain convergence for measured DMA domains; separately price/prove MAP-based or restaged CPU visibility",
+    "contradiction": false,
+    "flat_opcode_successor": "rejected; the exact tested Bank-4 failure still applies",
+    "mapped_or_other_synchronous_CPU_successor": "still promising but new: it needs separate target proof for both Bank-5 and Attic before it can replace DMA"
+  },
+  "recorded_on": "2026-08-14",
+  "status": "DESK-GREEN; NO-CPU-TRANSPORT-FOR-LINK106; RING-STILL-REQUIRED"
+}

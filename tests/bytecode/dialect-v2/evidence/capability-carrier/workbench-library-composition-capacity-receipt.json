@@ -1,0 +1,129 @@
+{
+  "format": "lisp65-workbench-library-composition-capacity-v1",
+  "status": "pass-host-and-link-g5-pending",
+  "profile": "dialect-v2-capability-carrier-workbench-staging",
+  "decision": {
+    "selected": "composition-capacity-with-user-margin",
+    "rejected": "exclude-idex-from-persistence-composition",
+    "persistence_policy": "unconditional-across-ide-comfort-tiers",
+    "required_composition": ["ide", "idex", "m65d"],
+    "required_user_symbol_margin": 32,
+    "required_user_directory_margin": 32,
+    "required_user_namepool_margin_bytes": 384
+  },
+  "privacy_first_probe": {
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-private-inline-composition-probe.json",
+      "sha256": "39e557b595c32c8f67e76f290cad7bb1d8783a887bf764f97385423a7c8a944c"
+    },
+    "candidate_count": 25,
+    "additional_private_symbols": 0,
+    "rel8_overflow_count": 20,
+    "code_object_overflow_count": 4,
+    "recursive_rejection_count": 1,
+    "conclusion": "the-established-private-inline-mechanism-cannot-finance-this-composition"
+  },
+  "post_reset_calibration": {
+    "manifest_model_ide_idex": {
+      "symbols": 672,
+      "namepool_bytes": 9060,
+      "directory_entries": 533
+    },
+    "hardware_ide_idex": {
+      "symbols": 677,
+      "namepool_bytes": 9111,
+      "directory_entries": 533
+    },
+    "correction": {
+      "symbols": 5,
+      "namepool_bytes": 51,
+      "directory_entries": 0
+    },
+    "raw_evidence": [
+      {"path": "build/hw/v2-capacity-diagnostics/cp5-g5-restart-ide-idex-m65d-dir-watermark.txt", "sha256": "133a79ef87817861fb9d77ab85a0d34a0c4812fa077ad2882f6334a494484d52"},
+      {"path": "build/hw/v2-capacity-diagnostics/cp5-g5-restart-ide-idex-m65d-dir-watermark-nsym.bin", "sha256": "1ca8609f6bb5db586fd3b2822ec40604d6004d170fc892f9ec17b4aa6f1ad3b0"},
+      {"path": "build/hw/v2-capacity-diagnostics/cp5-g5-restart-ide-idex-m65d-dir-watermark-npool.bin", "sha256": "3d7c100ff0d35ba900cafe994edd073c2739426774c527bd1a52e74d800799d9"},
+      {"path": "build/hw/v2-capacity-diagnostics/cp5-g5-restart-ide-idex-m65d-dir-watermark-dir_n.bin", "sha256": "df5a59a3fc11519aaa5e95662d08b0ae5686a1a7b9542c93e9c924c9f0b08605"}
+    ]
+  },
+  "permanent_manifest_gate": {
+    "make_target": "v2-workbench-library-composition-check",
+    "tool": {
+      "path": "tools/host-lisp/workbench_disklib_budget.py",
+      "sha256": "198be17662923aa1432fc04889a617bbbecb3117d754e84a91e3c4e6dca6db1e"
+    },
+    "manifests": [
+      {"id": "resident", "path": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json", "sha256": "73496d517a84fb80285436f0539ae23c75cb53739f93edfef44477c0e9417800"},
+      {"id": "ide", "path": "build/bytecode/dialect-v2/libs/ide.manifest.json", "sha256": "40731613d91f4636569124e590b27abf33f98a722fd5b1fa6dd92299cf1409a6"},
+      {"id": "idex", "path": "build/bytecode/dialect-v2/libs/idex.manifest.json", "sha256": "958e77169e205d57827afc0d4f00be612e854eb822159ffd080890f5a486b72d"},
+      {"id": "m65d", "path": "build/bytecode/dialect-v2/libs/m65d.manifest.json", "sha256": "f40a8cd99172a2e4095ae274cf2821bbf827822b2353afd4691a93a56be73255"}
+    ],
+    "result": {
+      "directory_entries": 571,
+      "directory_cap": 608,
+      "directory_headroom": 37,
+      "directory_post_align": 576,
+      "directory_post_align_headroom": 32,
+      "symbols": 713,
+      "symbol_cap": 752,
+      "symbol_headroom": 39,
+      "namepool_bytes": 9718,
+      "namepool_cap_bytes": 10208,
+      "namepool_headroom_bytes": 490,
+      "ext_code_post_headroom_bytes": 16393
+    },
+    "old_cap_negative_control": {
+      "directory_cap": 560,
+      "directory_deficit_bytes_or_entries": 11,
+      "symbol_cap": 720,
+      "symbol_headroom": 7,
+      "required_symbol_headroom": 32,
+      "namepool_cap_bytes": 9536,
+      "namepool_deficit_bytes": 182
+    }
+  },
+  "cap_change": {
+    "max_symbols": {"before": 720, "after": 752, "delta": 32},
+    "namepool_bytes": {"before": 9536, "after": 10208, "delta": 672},
+    "vm_directory_entries": {"before": 560, "after": 608, "delta": 48},
+    "symbol_layout_start": {"before": "0xc9e0", "after": "0xc680"},
+    "bank5_end": "0x10000"
+  },
+  "gc_scan": {
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/gc-symbol-scan-timing-receipt.json",
+      "sha256": "1129c7d094ed7cd4771792b3f6ba417a3876dd71b43befaf607d2785366aa471"
+    },
+    "exact_visit_rule": "symbol_count-times-gc_runs",
+    "linear_fit_r_squared": 0.999975,
+    "scope": "host-monotonic-timing-plus-exact-visit-counter-not-target-cycle-accurate",
+    "hardware_acceptance": "full-g5-from-start-required"
+  },
+  "real_product_link": {
+    "runtime_overlay_vma": "0xc22c",
+    "runtime_overlay_vma_max": "0xc356",
+    "runtime_overlay_vma_headroom_bytes": 298,
+    "post_boot_reserve_bytes": 2091,
+    "post_boot_reserve_target_bytes": 1536,
+    "post_boot_reserve_headroom_bytes": 555,
+    "cap_change_cost_vs_2175_byte_candidate": 84,
+    "total_delta_vs_2397_byte_baseline": -306,
+    "banked_release_blocker_spend_bytes": 84,
+    "banked_remaining_bytes": 555,
+    "artifacts": [
+      {"id": "elf", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf", "sha256": "72ef2993872e48f1bfdd8e886a7e23055eda48fc80635e33b4986ee40b014df9"},
+      {"id": "resident-prg", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/lisp65-workbench-resident.prg", "sha256": "82c3e868b438209e69024abb5da18212d726404dd0731091b443579cc9a949f9"},
+      {"id": "preload", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/stdlib-with-overlay.ext.bin", "sha256": "69d38aa798d7f256e78e75d132e028d5eaa89b52152f10bdd461220b0f590e10"},
+      {"id": "runtime-overlays", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/lisp65-mvp-workbench.overlays.bin", "sha256": "67ad234530285d812b4756300df22889bc69f0f535e04b4af28cea66a1d845c1"},
+      {"id": "runtime-overlays-manifest", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/runtime-overlays-manifest.json", "sha256": "eb8399c74accc377e93bbff2e5cec531f42b6e4ce095f2e80d025abc258c8172"},
+      {"id": "resolved-profile", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/resolved-profile.txt", "sha256": "5ede475dd1d93b7a35693183363600795ddd8cbdb64a9a965b31b8001ffd58ba"},
+      {"id": "footprint-audit", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/footprint-audit.json", "sha256": "0d3bb9b04e9a5c2882580c165dd8ad06d74a0017c023439a67b01f5c1f7b23b6"}
+    ]
+  },
+  "gate_effect": {
+    "checkpoint_4": "reopened-and-host-reclosed-with-composition-construction-gate",
+    "checkpoint_5": "pending-fresh-g5",
+    "g5_evidence_reuse": "none",
+    "next": "seal-one-new-binary-and-run-all-14-hardware-cases-from-the-start"
+  }
+}

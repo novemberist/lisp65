@@ -1,0 +1,115 @@
+{
+  "bounded_next_probe": {
+    "authorization": "not granted by this diagnosis",
+    "kind": "diagnostic-only observed-CRC latch at the tuple-CRC comparison",
+    "limits": [
+      "capacity/placement first",
+      "non-promotable identity only",
+      "at most one separately authorized hardware run",
+      "no product fix or successor product link"
+    ],
+    "purpose": "preserve the actual CRC computed over 0xc356 before wipe; compare against expected 0xce8c, all-zero 0xba75 and all-ff 0x5aee",
+    "state_budget": "reuse the same four diagnostic bytes; no new state"
+  },
+  "claim_limit": "One owner-authorized non-promotable diagnostic hardware run plus read-only post-stop captures. It localizes the First Red but is not a fix, product hardware acceptance, promotion, latency evidence or authorization for another run.",
+  "error_path_followup": {
+    "finding": "vm_runtime_overlay_install_island overwrites the first, specific transport status ERR_CRC with generic ERR_ISLAND/E2f",
+    "implementation": "not authorized and not attempted",
+    "permanent_rule": "the first innermost status wins; outer layers may add context but must never replace it"
+  },
+  "evidence": {
+    "boot_family_capture": {
+      "bytes": 15605,
+      "path": "build/c2.2/link34-island-status-latch-hardware/diagnostic-boot-family.bin",
+      "sha256": "25a95c48fc947becdf687e1484f2d46936ac5aefc74ab4eccaf018c6f2223ed8"
+    },
+    "boot_manifest": {
+      "bytes": 8533,
+      "path": "build/c2.2/substitution/link34-island-status-latch-diagnostic/runtime-overlays-boot-final.json",
+      "sha256": "051eded1a16befb18d563bd5dea66f654fa25cad51ed1f0af935af2099bbfc82"
+    },
+    "deployment": {
+      "bytes": 2682,
+      "path": "build/c2.2/link34-island-status-latch-hardware/deployment.json",
+      "sha256": "f996db93f6802e1f345c21b627ac6a286b58fc75a065f77839aa0ccf338d2708"
+    },
+    "diagnostic_link": {
+      "bytes": 6548,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-island-status-latch-diagnostic-link-receipt.json",
+      "sha256": "586dc0d1e86e3c55f65ed7f2cbb827f09eabb31b42a0dd9d7592a3c25073e643"
+    },
+    "hardware_result": {
+      "bytes": 1866,
+      "path": "build/c2.2/link34-island-status-latch-hardware/hardware-result.json",
+      "sha256": "150d152eaa8f8764d0ce2e1f2c52b6fe66034ec36fe9759669ebdd10006b8b82"
+    },
+    "live_binding_and_dma_capture": {
+      "bytes": 192,
+      "path": "build/c2.2/link34-island-status-latch-hardware/post-stop-binding-and-edma.bin",
+      "sha256": "616c76317f810382ea9dc9924491fbf68f63060e40b9206e29eb08dfd6dc51c9"
+    },
+    "low_capture": {
+      "bytes": 8192,
+      "path": "build/c2.2/link34-island-status-latch-hardware/diagnostic-low-0000-1fff.bin",
+      "sha256": "d263366f9c917de78d25714f674bbcfc7903c48ff196b779b90e5578f60d5412"
+    },
+    "verifier_binding_table": {
+      "bytes": 32,
+      "path": "build/c2.2/substitution/link34-island-status-latch-diagnostic/runtime-overlay-verifier-bindings.bin",
+      "sha256": "7445c0d182712106ca00f50892116fa23d1d73e60cc1c17da73acfb640b51fc4"
+    },
+    "wiped_runtime_window_capture": {
+      "bytes": 1156,
+      "path": "build/c2.2/link34-island-status-latch-hardware/post-stop-runtime-window.bin",
+      "sha256": "6bed6ecd7fb8a2ef5778c39309a072b28fd839f212be56b3537c590866129ce7"
+    }
+  },
+  "execution_accounting": {
+    "diagnostic_hardware_runs": 1,
+    "post_stop_read_only_captures": 2,
+    "product_presmoke_retries": 0,
+    "promotable_product_links": 0
+  },
+  "format": "lisp65-c2-link34-catalog-verifier-transport-first-red-v1",
+  "hardware_observation": {
+    "busy": 0,
+    "failure_class": "tuple-payload-crc-before-verifier",
+    "inner_status": 15,
+    "inner_status_name": "ERR_CRC",
+    "island_state": 3,
+    "loaded_len_before_wipe": 1156,
+    "outer_fault": 20,
+    "outer_fault_name": "ERR_ISLAND",
+    "verifier": "catalog",
+    "verifier_index": 0
+  },
+  "localization": {
+    "not_yet_known": "the observed pre-wipe CRC and pre-wipe destination bytes",
+    "remaining_boundary": "the actual bytes/CPU view produced at 0xc356 by the first Enhanced-DMA transfer, including completion ordering",
+    "ruled_out": [
+      "hand-written CRC leaf semantics on the canonical and five exact Link-34 inputs",
+      "Boot-family deployment corruption",
+      "verifier tuple offset/length/expected-CRC binding drift",
+      "Enhanced-DMA descriptor address/count construction",
+      "catalog-verifier semantic rejection",
+      "record-verifier and resident-Island installer entry"
+    ]
+  },
+  "next_gate": "return exact transport First Red for review; no automatic fix",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: catalog-verifier tuple payload CRC before verifier entry",
+  "transport_binding": {
+    "bytes": 1156,
+    "destination_after_cleanup": "1156 zero bytes",
+    "destination_cpu": "0xc356",
+    "enhanced_dma_descriptor_live": "0b8082810085010000840400020056c300000000",
+    "enhanced_dma_descriptor_matches_manifest": true,
+    "expected_crc16": "0xce8c",
+    "source_base": "0x08200000",
+    "source_boot_family_post_stop_byte_identical": true,
+    "source_physical": "0x08200200",
+    "source_relative": "0x0200",
+    "verifier_binding_table_live_byte_identical": true
+  }
+}

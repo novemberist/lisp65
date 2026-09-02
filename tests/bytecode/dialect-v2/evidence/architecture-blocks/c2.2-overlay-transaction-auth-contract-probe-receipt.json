@@ -1,0 +1,83 @@
+{
+  "authorization": {
+    "contract": {
+      "bytes": 2835,
+      "path": "config/c2-overlay-transaction-auth-contract.json",
+      "sha256": "781e7a22ad7905d0a2eb5521c77de421738d4bc282663874f57299eb498b965e"
+    },
+    "document": {
+      "bytes": 2779,
+      "path": "docs/planning/c2.2-overlay-transaction-auth-addendum.md",
+      "sha256": "938ef474df9abd8b28a2bf17753b3a652d10deea3e19372096c38a877df272de"
+    },
+    "hardware_runs": 0,
+    "product_links": 0
+  },
+  "claim_limit": "Host/source/mutation proof only. Capacity and placement are not-run. No product SHA, product link, hardware, latency, promotion or release claim.",
+  "format": "lisp65-c2-overlay-transaction-auth-contract-probe-receipt-v1",
+  "host_mutation_gate": {
+    "active_generation_switch": "rejected-and-fault-latched",
+    "binary": {
+      "bytes": 98336,
+      "path": "build/runtime-overlay-transaction-host",
+      "sha256": "92a87a982950b740b0daf8445d40b9a90902f2d4af0737adac059c31a400d585"
+    },
+    "catalog_authentications_for_two_slices": 1,
+    "new_generation_catalog_identity_mutation": "rejected-before-entry-by-fresh-catalog-authentication",
+    "payload_executions_for_two_slices": 2,
+    "record_authentications_for_two_slices": 2,
+    "same_generation_between_transactions_payload_mutation": "rejected-before-entry-by-payload-crc",
+    "status": "passed-asan-ubsan",
+    "value_string": "runtime-overlay-transaction: PASS catalog=once-per-transaction record+payload=per-slice same-generation-mutation=crc-red generation-change=reauthenticated"
+  },
+  "implementation": {
+    "fixture": {
+      "bytes": 11726,
+      "path": "scripts/runtime-overlay-transaction-main.c",
+      "sha256": "c19fad1661dea18db8e835b6228689a60c5433559e25ad1433392caf600f5250"
+    },
+    "header": {
+      "bytes": 6129,
+      "path": "src/vm_runtime_overlay.h",
+      "sha256": "32f2caff9206777acc651130b415804eef50dbb75b8de544340cd363b5306314"
+    },
+    "product_integration": {
+      "bytes": 56811,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "88892477a3bb1b4e9a361ff024f0dab94ca312bb6bf9108d7d880b0db1580ac4"
+    },
+    "runtime": {
+      "bytes": 41705,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "54cdd33c1c4cf4bd927a2d2b58a6966bf9d7400a1745854cae0d7ae8d36ef305"
+    }
+  },
+  "next_gate": "Exactly one product-shaped seed capacity/placement probe may run with Bank-0 BSS, text, Island, all runtime slices and E000 delta reported.",
+  "recorded_on": "2026-07-20",
+  "security_argument": {
+    "catalog": "One full catalog proof per append transaction; the selected family/generation and catalog outputs cannot change while active.",
+    "invalidation": "Trust is erased on end, transport error, abort, reset and any attempted family transition.",
+    "slice": "Every slice retains record validation, target payload CRC and verified wipe; manipulated fresh data never inherits catalog trust."
+  },
+  "source_gate": {
+    "checks": {
+      "abort_discards_trust": true,
+      "active_family_switch_fails_closed": true,
+      "api_feature_guarded": true,
+      "begin_is_session_generation_bound": true,
+      "catalog_cache_is_transaction_scoped": true,
+      "end_discards_trust": true,
+      "first_slice_runs_both_verifiers": true,
+      "later_slices_start_at_record_verifier": true,
+      "no_e000_facade_growth": true,
+      "payload_crc_remains_per_slice": true,
+      "permanent_make_gate": true,
+      "product_install_has_one_outer_transaction": true,
+      "required_mutations_are_present": true,
+      "standalone_append_has_bounded_transaction": true,
+      "transport_failure_discards_trust": true
+    },
+    "status": "passed"
+  },
+  "status": "passed-host-source-mutations-capacity-not-run"
+}

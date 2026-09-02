@@ -1,0 +1,114 @@
+{
+  "format": "lisp65-c2-v160-refill-boundary-witness-successor-gate-attribution-v1",
+  "recorded_on": "2026-08-22",
+  "status": "PASS: WITNESS FINAL WORLD EXONERATED; BOOT GATE IS SUCCESSOR-UNAWARE",
+  "decision": {
+    "class": "successor-identity-and-counted-edge-expectations",
+    "mechanism_fully_attributed": true,
+    "product_fault": false,
+    "pricing_refuted": false,
+    "replacement_card_consumed": true,
+    "retry_authorized": false
+  },
+  "materialized_preflight": {
+    "receipt_sha256": "c3cb474fa550a59147cd4d7d440a7f0618233a3aaac149c9ad726d4b38ed06cd",
+    "compiler_processes": 69,
+    "witness_in_resolved_profile": true,
+    "witness_in_compiler_source_list": true,
+    "witness_seed_object_present": true,
+    "registry_only_mutation": "rejected",
+    "feature_generic_scopes": 4,
+    "feature_generic_mutations_rejected": 4
+  },
+  "frozen_final_pair": {
+    "ELF": {
+      "path": "build/c2.3/v1.6-refill-boundary-witness-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 647116,
+      "sha256": "fa686ea4c9c667f681a7e78e7fe508fc964495e933b26004156a816d45312f4d",
+      "mode": "0444"
+    },
+    "PRG": {
+      "path": "build/c2.3/v1.6-refill-boundary-witness-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "d878b418ff33f944e4a9272c601d55d7847d05706c840c350badb23c4a2022d9",
+      "mode": "0444"
+    },
+    "map_sha256": "491218c22c7920bd7cc85124ca75e7ca675b1b306f06e0d9a837f8c2ee624e02",
+    "resolved_profile_sha256": "990c70504abcac2b2a7b8c2a87dcf3c38ffe1675d08e7c679fc84706150952ad"
+  },
+  "linked_witness_world": {
+    "ordinary_text_free_bytes": 3,
+    "far_service": {
+      "bytes": 1484,
+      "capacity_bytes": 1499,
+      "free_bytes": 15
+    },
+    "diagnostic_arena": {
+      "address": "0x7e8d",
+      "bytes": 211,
+      "capacity_bytes": 371,
+      "free_bytes": 160
+    },
+    "installer_entry": {
+      "symbol": "vm_runtime_overlay_install_island",
+      "address": "0x2365",
+      "bytes": 9,
+      "calls": [
+        "c2_mapped_far_enter",
+        "vm_runtime_overlay_install_island_far",
+        "c2_mapped_far_leave"
+      ],
+      "family_seam_calls": 0
+    },
+    "installer_body": {
+      "symbol": "vm_runtime_overlay_install_island_far",
+      "address": "0x7e8d",
+      "bytes": 211,
+      "family_seam": "vm_runtime_overlay_exec_family@0x29e3",
+      "family_seam_calls": 1,
+      "slot_writer_before_seam": "LDX #$0A; STX __rc3"
+    },
+    "trace_reader": {
+      "symbol": "c2_refill_trace_read",
+      "address": "0x236e",
+      "bytes": 205,
+      "linked_callers": 7,
+      "caller_classification": "all seven call sites belong to vm_run_inner after LTO inlined vm_object_load",
+      "payload_filter": "directory=$02fd window=$0045 length=21"
+    },
+    "composed_image_source_gate": "passed before link",
+    "new_resident_bytes": 0
+  },
+  "primary_stop": {
+    "consumer": "_linked_c2_lite_boot_slots",
+    "stored_identity": "vm_runtime_overlay_install_island entry symbol",
+    "observed": "zero family-seam calls in the 9-byte entry stub",
+    "candidate_truth": "exactly one family-seam call in its linked successor body",
+    "mechanism": "the guard searches one historical function body instead of the linked entry-to-successor closure"
+  },
+  "transitive_tail": {
+    "consumer": "refill witness final edge gate",
+    "stored_expectation": "exactly one incoming trace-reader edge",
+    "observed": "seven legitimate linked call sites, all owned by vm_run_inner",
+    "mechanism": "LTO inlined the single source-level vm_object_load routing point into seven candidate call sites",
+    "required_rule": "classify every candidate-derived caller by semantic owner; never pin the source-level edge count"
+  },
+  "required_successor_shape": {
+    "boot_gate": "resolve the unique family-seam owner through the linked installer entry closure and derive slot evidence from that owner",
+    "trace_gate": "derive all incoming trace-reader edges from the final ELF and require every caller to be a legitimate vm_run_inner refill edge",
+    "mutations": [
+      "a seam call absent from the linked installer closure fails",
+      "a second or foreign seam owner fails",
+      "a trace-reader caller outside the classified VM refill closure fails",
+      "a reintroduced exact caller-count pin fails"
+    ],
+    "execution": "read-only qualification resume over the frozen pair is possible only after a fresh explicit authorization"
+  },
+  "attempt_accounting": {
+    "cards_consumed": 1,
+    "WPLTO_runs": 1,
+    "product_link_attempts": 1,
+    "media_builds": 0,
+    "device_contacts": 0
+  }
+}

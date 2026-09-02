@@ -1,0 +1,156 @@
+{
+  "artifact_comparison": {
+    "input_path_sources": {
+      "c2_kernal_window.s": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81",
+      "interrupt.c": "3daa9e790bbf95d9b1f15da688386b17831d7f9d0c95e61038399ea9d2105de0",
+      "result": "byteidentical between v1.2.5 source authority and Link 83",
+      "vm.c": "31f00ad3d4df9311ff59ab9e1f34cb76cd837ea6c25a94c9d0f93d1fd4b85695"
+    },
+    "loop_objects": {
+      "%ide-drain-pending": {
+        "code_bytes": 31,
+        "code_sha256": "f0de141d841d4a18dbca47c855a2e1e2ce1747dd9d845f14ccf70768e1f9444b",
+        "link83_object_bytes": 46,
+        "v1.2.5_object_bytes": 46
+      },
+      "ide-run": {
+        "code_bytes": 71,
+        "code_sha256": "b46388baf4f8890d1dad46c14b4d0c7912ae5266be0cf3b6b7a54235438328e8",
+        "link83_object_bytes": 96,
+        "v1.2.5_object_bytes": 96
+      },
+      "reading": "Opcode payload and symbolic literal shape are byteidentical. Full object bytes differ only where the newly generated combined suite resolves moved directory ordinals."
+    }
+  },
+  "authorities": {
+    "candidate_elf": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.6-candidate-product-link83/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "06cd0eaf5dbc343343407acb60b82e61575d9ad7e4b19dabc380789d0c1d1890"
+    },
+    "hardware_first_red": {
+      "bytes": 12597,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-hardware-first-red-receipt.json",
+      "sha256": "22efaaab7df6284b2d200e4430e0d392bb1cee4c09918290f6626da523be3c50"
+    },
+    "host_harness": {
+      "bytes": 9327,
+      "path": "scripts/c2-v126-editor-target-host-main.c",
+      "sha256": "0567f3844a506f9b09f54f05af9c20259ad4407bac7179ba9e135dce8640d61b"
+    },
+    "owner_commission": "docs/planning/c2.2-v1.2.6-editor-halt1-first-red-review.md",
+    "v1.2.5_source_authority": {
+      "commit": "692afdfc6a925471b90d52835a2c13c9888b0cbc",
+      "subject": "docs: commission the 1.2.6 editor-latency block"
+    }
+  },
+  "claim_boundary": {
+    "exonerated": [
+      "A deterministic capacity or wrap boundary at editor character 55/56 in the Lisp renderer, evaluator, VM or collector model",
+      "The Link-83 typed-character cache as a host-visible 55/56 mechanism",
+      "The ide-run or %ide-drain-pending bytecode body as a Link-83 regression",
+      "An input-loop or typed-queue source change since the v1.2.5 source authority"
+    ],
+    "not_exonerated": [
+      "Physical $D60A/$D619 virtual-key delivery of the 56th key",
+      "Target-only completion of the collection that the host enters while processing key 56",
+      "Target-only work after that collection and before the visible render acknowledgement",
+      "Whether v1.2.5 would pass the same 80-key sequence on physical hardware"
+    ],
+    "summary": "No host-visible Link-83 regression exists at 55/56. The first unresolved boundary is physical event delivery versus target-only execution after the key is consumed."
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-stall-host-attribution-v1",
+  "host_lane": {
+    "common": {
+      "heap_geometry": {
+        "ext_cells": 1024,
+        "gc_roots": 128,
+        "hot_cells": 48,
+        "nursery_hysteresis": 192,
+        "vm_codebuf": 56
+      },
+      "input_model": "one typed event, then one empty nonblocking poll; the next event is released only after the previous cumulative line is present in the host screen image",
+      "product_code": "real eval.c, vm.c, mem.c, symbol.c, reader.c, printer.c, interrupt.c, screen.c, io.c and vm_embed.c",
+      "transport_model": "EXT and screen transport are checked host-memory copies; physical MEGA65 MMIO and DMA are not executed"
+    },
+    "link83": {
+      "asan_ubsan": "passed-80",
+      "final": {
+        "accepted_keys": 80,
+        "free_cells": 556,
+        "gc_runs": 39,
+        "mem_oom": 0
+      },
+      "generated_blob_sha256": "51405b54b53b01a51b3af94812b0706254b10afa7e6d01d4534d310f8f3de750",
+      "generated_manifest_sha256": "59db7c35124a5365ac0b9b4bc881cbc1fc6b5da3e15db3d35a21516a26fc47f4",
+      "key_window_before_processing": {
+        "55": {"free_cells": 461, "gc_runs": 23},
+        "56": {"free_cells": 355, "gc_runs": 23},
+        "57": {"free_cells": 456, "gc_runs": 24}
+      },
+      "observation": "The exact key 55 -> 56 transition completes. One collection occurs after key 56 is delivered and before key 57 is requested."
+    },
+    "v1.2.5": {
+      "final": {
+        "accepted_keys": 80,
+        "free_cells": 370,
+        "gc_runs": 77,
+        "mem_oom": 0
+      },
+      "generated_blob_sha256": "2e96e909cb0af0573bf0518361a725cb61880d2ab068c1998b3fb9f5bd727264",
+      "generated_manifest_sha256": "94b8c9b180d287281f7a43668bc90fe4c2f6b3445140a656922cff120ae8904d",
+      "key_window_before_processing": {
+        "55": {"free_cells": 426, "gc_runs": 41},
+        "56": {"free_cells": 423, "gc_runs": 42},
+        "57": {"free_cells": 360, "gc_runs": 43}
+      },
+      "observation": "The predecessor also completes the exact key 55 -> 56 transition under its own generated editor image and target heap geometry."
+    }
+  },
+  "hardware_evidence_limit": {
+    "captured": "The device displayed and persisted 55 keys; the 56th had no visible acknowledgement for 120 seconds; RUN/STOP restored a live REPL; final mem_oom was zero.",
+    "missing_at_stall": [
+      "typed-queue head/presence",
+      "gc_runs before and during the stalled key",
+      "program counter"
+    ],
+    "reason_gc_is_not_attributed": "The hardware receipt captured gc_runs only after abort and later independent rows. The host collection at key 56 is therefore a named correlation, not a target mechanism claim."
+  },
+  "next_discriminator_for_owner_review": {
+    "changes_product_bytes": 0,
+    "pre_56_capture": [
+      "$D60A queue presence/modifiers",
+      "$D619 PETSCII head",
+      "gc_runs at $B9F0/$B9F1"
+    ],
+    "stalled_capture": [
+      "$D60A queue presence/modifiers",
+      "$D619 PETSCII head (read only; only the product write dequeues)",
+      "gc_runs at $B9F0/$B9F1",
+      "CPU PC"
+    ],
+    "linked_addresses": {
+      "c2_kernal_event_poll": "0xE000..0xE037",
+      "gc_collect": "0x38F7..0x3EC1",
+      "gc_runs": "0xB9F0"
+    },
+    "outcomes": {
+      "A": "$D60A bit 7 set with $D619=$61: key reached the hardware queue but the product did not consume it.",
+      "B": "queue empty, gc_runs advanced, PC inside $38F7..$3EC1: key was consumed and target GC completion is the mechanism.",
+      "C": "queue empty, gc_runs advanced, PC outside gc_collect: key was consumed and the stall is post-GC in step/render/persist.",
+      "D": "queue empty and gc_runs unchanged: virtual-key delivery is unproved or execution stopped before the host-predicted collection; the PC names which side."
+    },
+    "unavailable_witness": "LA(17..20) cannot be read from Link 83: LISP65_HEARTBEAT was disabled and the stores to $0832 are absent from the linked gc_collect body."
+  },
+  "recorded_on": "2026-07-31",
+  "static_findings": {
+    "cache_fill_boundary": 79,
+    "capacity_near_55_or_56": "none found",
+    "m65_virtual_keyboard": "The device harness invokes m65 -t once per key. The tool itself labels virtual typing as awfully slow and problematic; process success does not prove insertion into the $D60A/$D619 queue.",
+    "tail_calls": [
+      "%ide-drain-pending ends in TAILCALL",
+      "ide-run ends in TAILCALL"
+    ]
+  },
+  "status": "host-boundary-exhausted-owner-review-required"
+}

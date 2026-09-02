@@ -1,0 +1,41 @@
+{
+  "format": "lisp65-v11-capacity-review-v1",
+  "block_id": "1.1-A-attic-library-shelf",
+  "status": "owner-authorized",
+  "reviewed_on": "2026-07-15",
+  "reviewed_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-attic-library-shelf-block-receipt.json",
+    "recording_commit": "13d51989abd41cc4f901710801091277fb8308b2",
+    "sha256_at_recording_commit": "9586e946f8455ab7f3f23693867bf313c45c194e049bdf7e868b0c116e9db59f"
+  },
+  "architecture_basis": {
+    "path": "docs/planning/v1.1-c-ext-relief-design-memo.md",
+    "sha256": "dbf0ba37029c79c4e7e5bb088e5f67501ea96946c9ddc676c335c03b3f6d05a4",
+    "advisor_vote": "C1",
+    "implementer_vote": "C1",
+    "owner_decision": {
+      "path": "config/v11-c1-architecture-decision.json",
+      "sha256": "5fb4dacc5defc32736c135362041915dbee453334df5f0776daed889bafabaea",
+      "selected": "C1-compiler-tier-deresidentization"
+    }
+  },
+  "authorized_delta": {
+    "bank": {
+      "baseline": 332,
+      "candidate": 283,
+      "delta": -49
+    },
+    "ext": {
+      "baseline": 16410,
+      "candidate": 16384,
+      "delta": -26
+    }
+  },
+  "conditions": [
+    "EXT margin is exactly zero after 1.1-A and is absolutely frozen; C1 is the only next EXT-touching transaction, and filter, 1.1-D and 1.1-M wait until C1 has created measured headroom.",
+    "1.1-E moves into wave 1 before C1 and must be EXT-neutral: native code may use the measured Bank-0 margin, while Lisp helpers ship as an Attic shelf library. C1 may precede E only if a separate non-EXT execution window is proved.",
+    "C1 inherits the memo gate: exact 9573-byte compiler-tier exclusion, named link deviations, at least 64 bytes post-block EXT margin, zero compiler-private references after retirement, identical compile results and fail-closed rollback including reset.",
+    "Wave 1 cannot seal without a successful C1 gate receipt."
+  ],
+  "scope_limit": "This authorizes only the measured 1.1-A deltas for the cb39f5d implementation and 075d9613 composition identity. The separately bound owner decision selects C1 but does not authorize any later EXT debit."
+}

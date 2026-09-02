@@ -1,0 +1,17 @@
+{
+  "error": "require-resolver profile selector order drift",
+  "format": "lisp65-c2.3-v1.12-link92-startup-first-red-v1",
+  "mechanism": {
+    "cause": "The v1.4 wrapper called configure(BUILD) directly and the inherited PRODUCT.main entrypoint called the same one-shot configuration again. The second require-resolver selector therefore saw the already-selected 166-byte CALLPRIM profile instead of its 164-byte predecessor and failed closed.",
+    "failed_boundary": "wrapper startup before product build directory creation",
+    "permanent_closer": "The candidate startup gate forbids a direct configure call and requires exactly one PRODUCT.configure binding for the inherited entrypoint. Its double-configure mutation must fail."
+  },
+  "observed_on": "2026-08-07",
+  "status": "FIRST RED-attributed-pre-WPLTO-double-configuration",
+  "wplto": {
+    "build_directory_created": false,
+    "product_builds_consumed": 0,
+    "wplto_runs_consumed": 0
+  },
+  "claim_limit": "Host startup First Red only. No product, linker, geometry, media, device, Link-92 or release claim."
+}

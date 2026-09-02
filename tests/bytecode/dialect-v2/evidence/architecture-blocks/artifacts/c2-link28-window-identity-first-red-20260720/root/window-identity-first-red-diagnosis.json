@@ -1,0 +1,84 @@
+{
+  "format": "lisp65-c2-link28-window-identity-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-prelink-window-identity-drift",
+  "link_accounting": {
+    "resident_island_seed_links": 1,
+    "product_closure_links": 1,
+    "retries": 0,
+    "gate_resumes": 0
+  },
+  "expected_replay_pin": {
+    "bytes": 8192,
+    "crc16": "0xfc2b",
+    "sha256": "70b5562c9f75a1f5f18face3068096203a6d365c1015cc269d8015f8e1cf10ce"
+  },
+  "current_seed_window": {
+    "bytes": 8192,
+    "crc16": "0xa6c9",
+    "sha256": "f2d76d7ff6d490d8e69797047485d43e0cd79e5083e490907cb298d18db95ef6",
+    "difference_from_replay_pin_bytes": 169
+  },
+  "final_product_window": {
+    "bytes": 8192,
+    "crc16": "0xacdc",
+    "sha256": "2406ebb832aa05c8a694084935941735e8f16db01bd5a078033a46265de426dd",
+    "difference_from_current_seed_bytes": 167
+  },
+  "difference_localization": {
+    "profile_data_address": "0xfd12",
+    "profile_data_end_exclusive": "0xfe68",
+    "profile_data_bytes": 342,
+    "first_changed_window_offset": "0x1d14",
+    "last_changed_window_offset": "0x1e66",
+    "changed_bytes_outside_profile_data": 0,
+    "pin_to_current_seed": {
+      "eval_component_changed_bytes": 10,
+      "callprim_component_changed_bytes": 86,
+      "native_component_changed_bytes": 73,
+      "changed_u16_values": 165
+    },
+    "current_seed_to_final_product": {
+      "eval_component_changed_bytes": 8,
+      "callprim_component_changed_bytes": 86,
+      "native_component_changed_bytes": 73,
+      "changed_u16_values": 163
+    }
+  },
+  "function_layout_observation": {
+    "current_seed": {
+      "eval_v2_workbench_service": {"address": "0x2c39", "bytes": 2468},
+      "vm_callprim": {"address": "0x8c8e", "bytes": 5283},
+      "vm_native_call": {"address": "0xa18c", "bytes": 1019}
+    },
+    "final_product": {
+      "eval_v2_workbench_service": {"address": "0x2c39", "bytes": 2466},
+      "vm_callprim": {"address": "0x8c82", "bytes": 5285},
+      "vm_native_call": {"address": "0xa182", "bytes": 1019}
+    }
+  },
+  "root_cause": "The three moved compiler-generated service-dispatch tables are immutable during one execution, but their contents are direct link-resolved Bank-0 function addresses. LTO changes those addresses between the prepared replay seed, the current resident-island seed, and the materialized final product link. Therefore these tables are not stable under the existing pre-link whole-window identity pin.",
+  "classification": "The function-provenance and placement proofs remain valid for the immutable replay ELF, but the pre-link whole-window identity model is incompatible with link-dependent pointer tables. This is an identity-contract First Red, not a data-reference safety failure.",
+  "gate_status": {
+    "v2_profile_parity": "passed-during-both-links",
+    "exact_orphan_wrapper": "passed-during-both-links",
+    "section_inventory": "passed-during-both-links",
+    "lto_partition_metadata": "passed-during-both-links",
+    "prelink_window_identity": "first-red",
+    "handoff_z_and_io": "not-reached-not-passed",
+    "pre_ownership": "not-reached-not-passed",
+    "profile_data_reference_provenance": "not-reached-on-link28-not-passed",
+    "fixed_facade": "not-reached-not-passed",
+    "runtime_family_capacity": "not-reached-not-passed",
+    "one_truth": "not-reached-not-passed",
+    "kernal_freedom": "not-reached-not-passed",
+    "substitution_balance": "not-reached-not-passed",
+    "hardware": "not-run"
+  },
+  "bounded_followup_directions_not_authorized": {
+    "recommended_for_review": "Make the final product-linked window the single identity truth through a designated non-LTO publish-last verifier binding, analogous to the existing runtime-family verifier binding; the binding bytes and all permitted post-link changes must be explicitly delimited and mutation-tested.",
+    "fixed_projection": "Replace link-dependent pointers in the window tables with stable IDs or fixed facade vectors; structurally possible but potentially much larger and should be costed before implementation.",
+    "move_tables_back": "Return the tables to Bank 0 and obtain the missing 323 bytes elsewhere; this reopens the resident-capacity problem and is not a retry of the authorized cut."
+  },
+  "claim_limit": "Read-only localization after the one authorized Link 28 stopped. No followup architecture, retry, hardware acceptance, promotion, or release claim is made."
+}

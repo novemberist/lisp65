@@ -1,0 +1,65 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 4135,
+      "path": "config/c2-two-region-session-store-contract.json",
+      "sha256": "b90de07ac12b1d4bb852aee0e81ec9de3366dacae24c034af795212c24291b02"
+    },
+    "emitter": {
+      "bytes": 100373,
+      "path": "tools/host-lisp/runtime_overlay_bank.py",
+      "sha256": "faac20ce59059f18f01ee3d62f4d25ecc2bbd109818260e53604ef6ce84aa12b"
+    },
+    "gate": {
+      "bytes": 9959,
+      "path": "tools/host-lisp/c2_l65r_v4_two_region_gate.py",
+      "sha256": "67209cf33adf19942d7fc6e36390c7f61818971ec72de7200f8b17815b8e9106"
+    },
+    "target_decoder": {
+      "bytes": 93503,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "4df680b99ecc97d3d703cdbecbc9b8e5e9fef36338e55716c098bf7fde80c9f7"
+    }
+  },
+  "canonical_fixture": {
+    "header_bytes": 32,
+    "main_image_bytes": 273,
+    "overflow_image_bytes": 23,
+    "record_bytes": 32,
+    "record_crc_nonzero": true,
+    "record_regions": [
+      0,
+      1
+    ],
+    "record_source_addresses": [
+      134217984,
+      376064
+    ]
+  },
+  "format": "lisp65-c2-l65r-v4-two-region-contract-receipt-v1",
+  "mutation_count": 13,
+  "mutations": {
+    "main-as-overflow": "source-address",
+    "overflow-as-main": "source-address",
+    "overflow-capacity": "bank-overflow",
+    "overflow-truncated": "overflow-binding",
+    "region-without-record-crc": "record-crc",
+    "source-reserved-byte": "bad-region",
+    "unknown-region": "bad-region",
+    "v3-as-v4": "bad-version",
+    "v4-as-v3": "bad-version",
+    "wrong-source-bank": "source-address",
+    "wrong-source-low": "source-address",
+    "wrong-source-megabyte": "source-address",
+    "zero-record-crc": "record-crc-zero"
+  },
+  "recorded_on": "2026-07-24",
+  "status": "passed-strict-v4-two-region-format-and-mutations",
+  "strict_asymmetry": {
+    "accepted_versions": [
+      4
+    ],
+    "dual_decoder": false,
+    "one_emitter": true
+  }
+}

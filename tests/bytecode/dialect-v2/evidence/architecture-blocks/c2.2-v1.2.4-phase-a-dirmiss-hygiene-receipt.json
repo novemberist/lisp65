@@ -1,0 +1,107 @@
+{
+  "authorities": {
+    "current_smoke": {
+      "bytes": 20333,
+      "path": "tools/host-lisp/error_overlay_smoke.py",
+      "sha256": "fe58e449fd206b26637d7b18699c1dd5678bb0c99691af4e277228163d0d6a39"
+    },
+    "current_source": {
+      "bytes": 4976,
+      "path": "src/l65e_bcode_ordinal.s",
+      "sha256": "81692a38bf6cffc9c9924b9542314a04b24aceb10fe30d0256bb802debc38862"
+    },
+    "driver": {
+      "bytes": 8913,
+      "path": "tools/host-lisp/c2_v124_phase_a.py",
+      "sha256": "b04aca95b7b620471b3bf917349940c89933abde42d26d212978ae38d39d86bc"
+    },
+    "historical_gate": {
+      "bytes": 13108,
+      "path": "tools/host-lisp/c2_v121_dirmiss_renderer_attribution.py",
+      "sha256": "8f1e5474b08d0a86cccc07d8ea01dc77c9c803f7364adb0925adfa10ac69e98d"
+    },
+    "historical_receipt": {
+      "bytes": 2531,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.1-dirmiss-renderer-attribution-receipt.json",
+      "sha256": "60b74cb92ee1fec1916b0906fdabd90066c0eb23cba61fc51a4ca2f69f707845"
+    },
+    "link78_hardware": {
+      "bytes": 10133,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link78-d1-d2-bundled-hardware-receipt.json",
+      "sha256": "95c6ff2857f1a9186b44d6ec19fc938d6e0845a064a7b2f1f1436a5e6cf87025"
+    },
+    "link78_structural": {
+      "bytes": 16946,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link78-dirmiss-renderer-structural-receipt.json",
+      "sha256": "ed7a2c533944024c33dc8733c9d10d96b2b58b3603df656f0abe3bbe1faec95f"
+    },
+    "link80_elf": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "687134067263173763a6777859d3e2404cb44ba2fb483f30ddab87df7e5afede"
+    },
+    "plan": {
+      "bytes": 8303,
+      "path": "docs/planning/1.2.4-work-plan.md",
+      "sha256": "9a4c4f3000308cb74e2d0a29eb396dcecbe4fa92279412bf89e9b688005eff5c"
+    },
+    "v1.2.3_publication": {
+      "bytes": 5131,
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/v123-public-publication-receipt-20260730.json",
+      "sha256": "1e7f153ac45dad868ed89034ca842b4be17e1f2633ebbf289352d492e64e752c"
+    }
+  },
+  "claim_limit": "Host/static closure plus inherited Link-78 full-name hardware authority only; no new product, timing, WPLTO, link or hardware claim.",
+  "classification": "checker-harness-fix-no-product-question",
+  "disposition": {
+    "checker_fix": "read historical source and plan blobs from bound Git commits",
+    "historical_fault": "renderer overwrote symname's __rc2/__rc3 with incidental A/X",
+    "open_product_question": false,
+    "product_fix": "landed-in-Link78-and-released-in-v1.2.2",
+    "remaining_red": "historical checker read corrected current source"
+  },
+  "execution_witnesses": {
+    "current_host_cases": 20,
+    "current_smoke_output": [
+      "error-text-table: ok profile=workbench codes=63 active=44 omitted=19 bytes=803 crc16=0e96 build_id=12345678",
+      "error-overlay smoke: ok (cases=20 full-symbol=intern-renderer-missing target-mutations=5 tag-first+text+bcode12-boundaries+depth5-fixnum+textless+alloc0+busy/latch)",
+      "error-overlay MOS workbench sections: code=403 table=803 total=1206 headroom=114",
+      "error-overlay MOS symbols: 00000000 00000323 R l65e_table;                   U l65e_table; 0000014f 00000044 T l65e_emit_bcode_ordinal; 00000000 0000014f T lisp65_error_overlay_entry",
+      "error-overlay target pointer contract: ok (mutations=5 full-symbol=intern-renderer-missing)"
+    ],
+    "current_target_mutations": [
+      "restore-incidental-A-store",
+      "restore-incidental-X-store",
+      "nonzero-Z-before-name-read",
+      "wrong-name-pointer-byte",
+      "symname-call-removed"
+    ],
+    "hardware_full_name": "*** undefined function: intern-renderer-missing",
+    "historical_attribution_mutations": "5/5",
+    "historical_gate_output": "c2-v1.2.1-dirmiss-attribution: VERIFY PASS mechanism=renderer-pointer-abi-overwrite mutations=5/5"
+  },
+  "format": "lisp65-c2.2-v1.2.4-phase-a-dirmiss-hygiene-v1",
+  "recorded_on": "2026-07-30",
+  "released_product": {
+    "artifact_set_sha256": "e71cc4f46068a1c5ebebf050a76fb14717c03a27e954d0bbaacd95a70970e315",
+    "link80_renderer": {
+      "delta_bytes": -4,
+      "entry_address": "0xc356",
+      "entry_bytes": 335,
+      "instructions_after_symname": [
+        "ldz #$0",
+        "lda ($4),z"
+      ],
+      "old_entry_bytes": 339,
+      "status": "passed-linked-symname-result-consumed-directly"
+    },
+    "release": "v1.2.3"
+  },
+  "scope_effects": {
+    "hardware_runs": 0,
+    "product_bytes": 0,
+    "product_links": 0,
+    "wplto_runs": 0
+  },
+  "status": "passed-phase-A-checker-harness-debt-closed"
+}

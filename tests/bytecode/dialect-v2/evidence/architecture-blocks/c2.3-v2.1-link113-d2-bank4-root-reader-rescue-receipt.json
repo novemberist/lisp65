@@ -1,0 +1,294 @@
+{
+  "authority": {
+    "ELF": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "MAP_device": {
+      "bytes": 6434,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-loading-libraries-progress-map-device-receipt.json",
+      "sha256": "78ae6a3e6f9b9de0af712958a3fd26d45341568dc908b4d2cae7436df392a40d"
+    },
+    "acceptance": {
+      "bytes": 29656,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-root-padding-configurator-parity-acceptance-receipt.json",
+      "sha256": "88b214f3ac5e64248df85902519baa2599ed6574e4710decb95e658c01cd5acb"
+    },
+    "checker": {
+      "bytes": 20822,
+      "path": "tools/host-lisp/c2_v21_link113_bank4_root_reader_rescue.py",
+      "sha256": "aecefa7275988f149ef1e25b84d4789590ed657175c19f4bc403001dbc1a4c9a"
+    },
+    "flat_CPU": {
+      "bytes": 4499,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-f018b-content-safe-read-pricing-receipt.json",
+      "sha256": "9372c24ef06e4146bd85087d966614113485f8792c47ed8c5374f2b404e0235d"
+    },
+    "historical_poison": {
+      "bytes": 11083,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-name-freight-d2-defun-badopcode-capture-receipt.json",
+      "sha256": "c4bc5063300a13f15e2a002648de5754a77efafa29b6686d6c521ddcf0543de7"
+    },
+    "media": {
+      "bytes": 92796,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-configurator-parity-completion-media-receipt.json",
+      "sha256": "45e185049dacca2ffe25ccdcca013462fb683637fa26d00d169602baca05d456"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 152875,
+      "commit": "cdced6da687d44e31439fd20edb1e1a6b768e4c5",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "eb382810907a6b257bd68e054a3f355b41bf897d64ef382b8f99c15846559fbc"
+    },
+    "root_fix": {
+      "bytes": 7063,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-probe-oracle-root-fix-receipt.json",
+      "sha256": "7d77e1456227d54b700b38510012b5aa797d638ff6c2ae11e06a7ede255ab654"
+    }
+  },
+  "capture": {
+    "CPU_remains_stopped": true,
+    "device_resumes": 0,
+    "device_stops": 1,
+    "physical_reads": [
+      {
+        "bytes": 65536,
+        "path": "build/c2.3/v2.1-link113-d2-root-reader-rescue/physical-bank0.bin",
+        "sha256": "adde70d38c7a6f05e17eeda810a8a632a83b4055a85e937f6c149a009232ac34"
+      },
+      {
+        "bytes": 27648,
+        "path": "build/c2.3/v2.1-link113-d2-root-reader-rescue/physical-bank4.bin",
+        "sha256": "291a4252898af0967de2c57f27b820c7636a0f261a0bc702995e6215f0f4713d"
+      },
+      {
+        "bytes": 50816,
+        "path": "build/c2.3/v2.1-link113-d2-root-reader-rescue/physical-bank5.bin",
+        "sha256": "a9a4955d87aa1d34c8c54a9754e53093675f3499eb37a3bda850ed033fb83106"
+      }
+    ],
+    "registers": {
+      "A": "0x01",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC": "0xe000",
+      "SP": "0x01d8",
+      "X": "0xcf",
+      "Y": "0x00",
+      "Z": "0x00",
+      "raw_hex": "74310d0a0d0a2e720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45303030203031204346203030203030203030203031443820383030302030303030203230303045302020303020202020204131204e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c30373737453030302020413520303420202020204c44412020202430340d0a0d0a2e",
+      "row": "E000 01 CF 00 00 00 01D8 8000 0000 2000E0  00     A1 N.E....C ...P 15 -  00 - .....lh.",
+      "tail": "2000E0  00     A1 N.E....C ...P 15 -  00 - .....lh."
+    }
+  },
+  "claim_limit": "This capture proves the current Bank-4 mutable-read product path is not content-correct and reproduces the historical poison object. It does not yet distinguish intrinsic Bank-4 MAP semantics from a Bank-4 implementation case, authorize a fix, resume the device, or open D3-D5.",
+  "conclusion": {
+    "Bank4_root_generalization_refuted": true,
+    "fix_authorized": false,
+    "guard_behavior": "correct phase-10 decoder refusal and clean rollback; no C2D commit",
+    "intrinsic_Bank4_MAP_unreadability_proven": false,
+    "mechanism": "the delivered MAP-CPU path serving Bank-4 EXT compiler inputs reproduced the exact historical poison object",
+    "next": "owner disposition for a Bank-4-specific MAP attribution",
+    "product_path_membership": true,
+    "remaining_split": "intrinsic Bank-4 MAP semantics versus a Bank-4 case in the delivered reader's tuple/pointer implementation"
+  },
+  "evidence_ledger": {
+    "delivered_root_fix": {
+      "DMA_primary_jobs": 0,
+      "DMA_probe_jobs": 0,
+      "completion_signal_trusted": false,
+      "feature": "LISP65_C2_MUTABLE_CPU_READS",
+      "mapped_facade_wrapper": "MAP-CPU",
+      "mutable_readers": {
+        "Bank4_EXT": [
+          "ext_type",
+          "ext_a",
+          "ext_b",
+          "ext_disk_get",
+          "str_read_byte"
+        ],
+        "Bank5_symbols": [
+          "sympool_read",
+          "symval_get",
+          "nameoff_get",
+          "symfn_ext_get"
+        ]
+      },
+      "ordinary_wrapper": "MAP-CPU",
+      "physical_address_formula": "offset | bank<<16",
+      "reader_count": 9
+    },
+    "exact_Link113_unsafe_content_DMA_count": 0,
+    "hardware_MAP_proof": {
+      "Bank4_proved": false,
+      "claim_limit": "The MAP claim is limited to 256 repeated four-byte CPU reads at each tested Bank-5 and Attic source base. The ring decides life versus fixed state and measures its observed interval rate; it does not by itself promote a transport or diagnose every remaining reader.",
+      "proved_domains": [
+        "Bank-5",
+        "Attic"
+      ],
+      "reads_per_domain": 256
+    },
+    "historical_flat_CPU": "rejected-by-bound-target-evidence"
+  },
+  "execution_accounting": {
+    "WPLTO": 0,
+    "device_resumes": 0,
+    "device_stops": 1,
+    "links": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2.3-v2.1-link113-D2-bank4-root-reader-rescue-v1",
+  "mutations_rejected": [
+    "change-staged-SHA",
+    "normalize-code",
+    "deny-poison-match",
+    "break-CRC",
+    "erase-resolution-error",
+    "move-decoder-phase",
+    "claim-commit",
+    "dirty-C2J",
+    "invent-OOM",
+    "deny-product-membership",
+    "preserve-bank4-generalization",
+    "overclaim-intrinsic-hardware",
+    "silently-authorize-fix",
+    "resume"
+  ],
+  "recorded_on": "2026-08-17",
+  "status": "BANK4-MAP-CPU-PRODUCT-PATH-REFUTED",
+  "stopped_state": {
+    "C2J_CLEAR": true,
+    "append_scalars": {
+      "code_len": 20,
+      "code_off": 64,
+      "entries": 1,
+      "length": 148,
+      "literals": 1,
+      "meta_len": 64,
+      "meta_off": 84,
+      "new_entries": 772,
+      "new_images": 9,
+      "new_resolutions": 3349,
+      "new_roots": 563,
+      "old_entries": 771,
+      "old_images": 8,
+      "old_resolutions": 3348,
+      "old_roots": 563,
+      "roots": 0
+    },
+    "committed": 0,
+    "committed_runtime": {
+      "c2d_bytes": 33840,
+      "catalog_crc32": 1599025767,
+      "entries_offset": 2096,
+      "entry_count": 771,
+      "entry_cursor": 0,
+      "entry_first": 4096,
+      "error": 0,
+      "finished": 1,
+      "generation": 1,
+      "image_count": 8,
+      "image_cursor": 563,
+      "image_first": 7,
+      "images_offset": 48,
+      "pair_depth_max": 563,
+      "phase": 13,
+      "reserved": 0,
+      "resolution_count": 3348,
+      "resolution_cursor": 3348,
+      "resolution_first": 3338,
+      "resolutions_offset": 22576,
+      "root_first": 563,
+      "roots_offset": 30768,
+      "shelf_bytes": 93681
+    },
+    "decoder_context": {
+      "c2d_bytes": 33840,
+      "catalog_crc32": 1599025767,
+      "entries_offset": 2096,
+      "entry_count": 772,
+      "entry_cursor": 0,
+      "entry_first": 771,
+      "error": 7,
+      "finished": 0,
+      "generation": 1,
+      "image_count": 9,
+      "image_cursor": 563,
+      "image_first": 8,
+      "images_offset": 48,
+      "pair_depth_max": 563,
+      "phase": 10,
+      "reserved": 0,
+      "resolution_count": 3349,
+      "resolution_cursor": 3348,
+      "resolution_first": 3348,
+      "resolutions_offset": 22576,
+      "root_first": 563,
+      "roots_offset": 30768,
+      "shelf_bytes": 93681
+    },
+    "gc_badobj": 0,
+    "installer_trace": {
+      "flags": 128,
+      "last_slot": 39
+    },
+    "mem_oom": 0,
+    "namepool_used": 10021,
+    "phase_owner": 0,
+    "rollback_rebuild_header": 0,
+    "staged": 1,
+    "sym_name_scratch_hex": "a0000000000000000000000000000000000000000000000000000000000000000000",
+    "symbol_count": 711,
+    "vm_status_after_REPL_cleanup": 0
+  },
+  "three_way_comparison": {
+    "canonical_host": {
+      "encoded_hex": "b50100020500000b01010205",
+      "flags": 2,
+      "install_name": "trace-probe",
+      "literal_count": 0,
+      "literals": [],
+      "nargs": 1,
+      "nlocals": 0,
+      "payload_hex": "0b01010205"
+    },
+    "captured_form": "(defun trace-probe (x) (+ x 1))",
+    "historical_poison_form": {
+      "encoded_hex": "b50100020b00010c0006003d13013b0b01010205",
+      "flags": 2,
+      "install_name": "trace-probe",
+      "literal_count": 1,
+      "literals": [
+        "+"
+      ],
+      "nargs": 1,
+      "nlocals": 0,
+      "payload_hex": "06003d13013b0b01010205"
+    },
+    "staged_equals_canonical_host_code": false,
+    "staged_equals_historical_poison_object": true,
+    "staged_object": {
+      "all_CRCs_valid": true,
+      "bytes": 148,
+      "code": {
+        "bytes": 20,
+        "canonical_bytes": 12,
+        "canonical_hex": "b50100020500000b01010205",
+        "hex": "b50100020b0001000006003d13013b0b01010205",
+        "matches_canonical": false,
+        "matches_historical_poison": true
+      },
+      "metadata": {
+        "install_name": "trace-probe",
+        "literal_count": 1,
+        "noncanonical_literal_byte": "0xa0"
+      },
+      "physical_address": "0x00046a00",
+      "sha256": "40acc5f061b755f2a2ddda4b6cbd64ac3bba9eae1c6295493411d38b09d86fcd",
+      "source_domain": "Bank-4 EXT staging"
+    }
+  }
+}

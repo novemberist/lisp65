@@ -1,0 +1,118 @@
+{
+  "assembled_price": {
+    "E000_delta_bytes": 0,
+    "component_membership": {
+      "components": [
+        {
+          "bytes": 41,
+          "name": "c2_rtov_retire_continuations",
+          "symbol_occurrences": 1,
+          "witnesses": {
+            "read_stack_return_high": 1,
+            "read_stack_return_low": 1,
+            "write_stack_return_high": 1,
+            "write_stack_return_low": 1
+          }
+        },
+        {
+          "bytes": 43,
+          "name": "c2_rtov_sanitize_saved_csrs",
+          "symbol_occurrences": 1,
+          "witnesses": {
+            "normal_retirement_call_sites": 1,
+            "recovery_call_sites": 1,
+            "saved_CSR_pairs": 7
+          }
+        }
+      ],
+      "derivation": "additive named-component membership",
+      "derived_component_bytes": 84,
+      "mutations_rejected": [
+        "single-component-equality",
+        "unregistered-component",
+        "duplicate-component-owner"
+      ],
+      "registered_names": [
+        "c2_rtov_retire_continuations",
+        "c2_rtov_sanitize_saved_csrs"
+      ],
+      "section": ".lisp65_c2_mapped_far_service.liveness",
+      "section_bytes": 84,
+      "section_fully_covered": true
+    },
+    "derived_liveness_section_bytes": 84,
+    "far_service_delta_bytes": 41,
+    "ordinary_text_delta_bytes": 0,
+    "shared_saved_CSR_bytes": 43,
+    "stack_return_high": "0x0108",
+    "stack_return_low": "0x0107",
+    "walker_bytes_after": 41,
+    "walker_bytes_before": 43
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 277276,
+    "commit": "ad4a25ad",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "40abbc61bc5e84faea5572191c40c4dc4a1c5daa49df729d8a84be73435f7927"
+  },
+  "claim_limit": "preflight only; final enforcement and counters require the product ELF",
+  "format": "lisp65-c2.3-v1.6-active-frame-liveness-v1",
+  "inputs": {
+    "ELF": {
+      "bytes": 632508,
+      "path": "build/c2.3/v1.6-liveness-prompt-device-preparation-r1/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "102eac84ab25ec57b39990377d4808c3287746b94c65617cca3259fd43f73bcd"
+    },
+    "attribution": {
+      "bytes": 5651,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-input-first-red-two-track-attribution.json",
+      "sha256": "2fcd34d354909ecb65ab2a65562e17da86e08745cdebf9a9d981202acddbfeb4"
+    },
+    "padding": {
+      "bytes": 1030,
+      "path": "src/optional/c2_mapped_far_facade_padding_liveness_v3.s",
+      "sha256": "da21b3dcefe9356369a6ae0ab8d4e8d2ee10c3686f9d108cfee09c44203446a6"
+    },
+    "source": {
+      "bytes": 4058,
+      "path": "src/optional/c2_mapped_far_service_liveness_v4.s",
+      "sha256": "e2229f3a3e0f1333d286ba42e4f9264db5263711dba22e4893d6c8c37d8b0de7"
+    }
+  },
+  "mutations_rejected": [
+    "omitted-live-frame",
+    "foreign-handlist"
+  ],
+  "population": {
+    "coverage": "exact equality with final-ELF-derived population",
+    "derived_population": [
+      {
+        "call_site": 51513,
+        "callee": "lisp_abort_symbol",
+        "caller": "c2_append_fronts_phase",
+        "generation_section": ".lisp65_rt_c2append_roots_fronts",
+        "resident_retirement_chain": [
+          {
+            "callee": "c2_product_abort_cleanup",
+            "caller": "lisp_abort_symbol",
+            "site": 11916
+          },
+          {
+            "callee": "c2_rtov_retire_continuations_facade",
+            "caller": "c2_product_abort_cleanup",
+            "site": 11937
+          },
+          {
+            "callee": "c2_rtov_retire_continuations",
+            "caller": "c2_rtov_retire_continuations_facade",
+            "site": 46030
+          }
+        ],
+        "stored_return_offset_from_walker_sp": 7
+      }
+    ],
+    "population_count": 1
+  },
+  "status": "HOST-GREEN: ACTIVE-FRAME LIVENESS ARMED"
+}

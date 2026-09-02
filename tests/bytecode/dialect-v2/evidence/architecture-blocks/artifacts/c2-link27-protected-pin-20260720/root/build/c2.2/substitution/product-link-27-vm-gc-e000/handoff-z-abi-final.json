@@ -1,0 +1,72 @@
+{
+  "boundary": "firmware-owned-state-to-llvm-mos-mega65-io-and-c2-ownership-order",
+  "claim_limit": "Disassembly and mutation proof of the firmware-to-product Z and I/O-personality normalization boundary. Hardware execution is a separate gate.",
+  "fixed_handoff_section": {
+    "address": 46209,
+    "bytes": 289
+  },
+  "format": "lisp65-c2-handoff-boundary-abi-v3",
+  "hardware_origin": {
+    "link_19": {
+      "effect": "C zero stores wrote 0x06 into IRQ controls and the DMA descriptor",
+      "observed_z": "0x06"
+    },
+    "link_20": {
+      "effect": "the correct descriptor was never triggered until the $47/$53 knock was repeated",
+      "observed_d700_cpu_view": "all zero / not MEGA65 I/O"
+    },
+    "link_23": {
+      "effect": "mapping block 6 hid $d000 I/O behind Bank-0 RAM; the real VIC raster IRQ could not be acknowledged and stormed",
+      "observed_map_high": "0xc000"
+    }
+  },
+  "io_reveal_sequence": [
+    "lda #$47",
+    "sta $d02f",
+    "lda #$53",
+    "sta $d02f",
+    "rts"
+  ],
+  "link_stage": "final",
+  "map_operand_sequence": [
+    "tza",
+    "tax",
+    "tay",
+    "ldz #$80",
+    "map",
+    "nop",
+    "ldz #$0",
+    "rts"
+  ],
+  "mapped_cpu_domain": "0xe000-0xffff to physical bank-0; block-6 remains un-MAP so 0xd000 I/O stays visible",
+  "negative_matrix": {
+    "c000-plus-e000-map-mask": "rejected",
+    "late-io-reveal-call": "rejected",
+    "late-z-normalization": "rejected",
+    "missing-first-knock": "rejected",
+    "missing-fixed-size-payment": "rejected",
+    "missing-io-reveal-call": "rejected",
+    "missing-z-normalization": "rejected",
+    "nonzero-z-normalization": "rejected",
+    "redundant-d704-write": "rejected",
+    "valid-mega65-io-knock": "passed",
+    "valid-sei-ldz-zero-prefix": "passed",
+    "wrong-map-register-source": "rejected",
+    "wrong-second-knock": "rejected"
+  },
+  "observed_prefix": [
+    "sei",
+    "ldz #$0",
+    "jsr $b5c9 <c2_kernal_reveal_io>"
+  ],
+  "required_prefix": [
+    "sei",
+    "ldz #$00",
+    "jsr $b5c9"
+  ],
+  "size_payment": {
+    "kept": "stz $d702",
+    "omitted_as_controller-defined_side_effect": "write $d702 clears $d704"
+  },
+  "status": "passed"
+}

@@ -1,0 +1,40 @@
+{
+  "classification": "harness-first-red-before-first-product-instruction",
+  "evidence": {
+    "completed_readback": {
+      "address": "0x00050000",
+      "bytes": 33840,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/preload-c2d-v6-code-plane.bin",
+      "sha256": "339ac255005aa69229c3a54ae10b39647145dbd5ea4f1572e4ed7cb15d5478fe"
+    },
+    "timeout_record": {
+      "bytes": 639,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/first-anomaly.json",
+      "sha256": "fa486df07fb19999a2f71a25df08d0599334ced062287b72e6696eea44f04839"
+    },
+    "recovery_basic": {
+      "bytes": 4200,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/stuck-recovery-basic.png",
+      "sha256": "85f19075c630a0362380131be1a15915b02461017033f43e250ea0b1f416457a"
+    }
+  },
+  "finding": {
+    "candidate_executed": false,
+    "command_timeout_seconds": 60,
+    "mechanism": "The m65 memsave process failed to exit, but its newly written 33840-byte result was complete and byteidentical to the bound C2D preload. The harness had conflated process completion with transfer completion.",
+    "observed_on_two_preload_readbacks": true,
+    "product_semantics_claimed": false
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-memsave-exit-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "remedy": {
+    "authority_compare_retained": true,
+    "exit_guard_seconds": 15,
+    "fresh_path_required": true,
+    "missing_or_short_file": "terminal first red",
+    "product_bytes_changed": 0,
+    "product_links_added": 0,
+    "timeout_acceptance": "only a newly created exact-width file may proceed to the unchanged byteidentity comparison"
+  },
+  "status": "closed-exitless-complete-memsave-boundary"
+}

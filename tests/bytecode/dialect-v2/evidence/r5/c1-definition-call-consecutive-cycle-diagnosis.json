@@ -1,0 +1,65 @@
+{
+  "format": "lisp65-v11-c1-definition-call-consecutive-cycle-diagnosis-v1",
+  "version": 1,
+  "status": "historical-stop-resolved-by-owner-session-band-correction",
+  "recorded_on": "2026-07-17",
+  "scope": "Fresh, manifest-bound hardware reproduction of the definition-to-first-call stability limit across two immediately consecutive persistent definitions.",
+  "product": {
+    "artifact_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+    "product_bytes_changed": false,
+    "r4_seal_remains_historical": true
+  },
+  "setup": {
+    "stage": "complete Stage A preload/readback followed by canonical Stage B reset/remount/product boot",
+    "intervening_forms_between_cycles": 0,
+    "first_definition": "%c1l",
+    "second_definition": "%c1m",
+    "measurement_clock": "$D7FA, 20 ms frames, modulo-256 end-minus-start"
+  },
+  "observations": [
+    {
+      "cycle": 1,
+      "result": "(t 28 123)",
+      "frames": 95,
+      "milliseconds": 1900
+    },
+    {
+      "cycle": 2,
+      "result": "(t 213 54)",
+      "frames": 97,
+      "milliseconds": 1940
+    }
+  ],
+  "authority": {
+    "transcript": "tests/bytecode/dialect-v2/evidence/r5/diagnostics/c1-definition-call-consecutive-cycle-97.txt",
+    "transcript_sha256": "e714f2e97dc53abe73f587ebc79688da95a698bd4e643db00d52b8970c53b749",
+    "latency_exception": "config/v11-c1-definition-call-latency-exception.json",
+    "latency_exception_sha256": "32b5a8b6e914aa776f6e889a41c6f5dc0f4b659862d6eda4a32a36f5184e4249"
+  },
+  "decision_application": {
+    "authorized_fresh_baseline_frames": [95, 96, 96],
+    "authorized_stability_maximum_frames": 96,
+    "bound_policy": "one-time-not-iterative; 97 frames is a regression",
+    "result": "stop",
+    "boundary_widened": false
+  },
+  "resolution": {
+    "owner_confirmed_on": "2026-07-17",
+    "receipt": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-session-band-authorization-receipt.json",
+    "basis": "A complete twelve-cycle curve classified the 97-frame observation as part of a 95-to-98-frame jitter distribution without demonstrated session growth. This is a curve-based baseline correction, not an iteration of the earlier one-frame quantization allowance.",
+    "new_stability_maximum_frames": 98,
+    "values_above_new_maximum": "stop",
+    "performance_bar": "not-passed"
+  },
+  "harness_hygiene": {
+    "temporary_diagnostic_stop_removed": true,
+    "harness_sha256_before_and_after": "c42986595b2637512c7d72d27713fcb4a513fa6bb5619b0e0e1b4ef1d729f7d9",
+    "case_receipt_created": false
+  },
+  "matrix": {
+    "G5": "0/14",
+    "remaining_cases_started": false,
+    "promotion": "blocked"
+  },
+  "claim_limit": "This diagnosis proves that the second consecutive cycle exceeded the then-valid 96-frame pin and correctly stopped the run. Its stop is resolved only by the separately owner-authorized twelve-cycle session-band correction; it does not itself alter product bytes, create a G5 case receipt or claim G5/G6 acceptance."
+}

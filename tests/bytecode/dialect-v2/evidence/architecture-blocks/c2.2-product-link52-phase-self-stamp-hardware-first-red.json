@@ -1,0 +1,132 @@
+{
+  "authority": {
+    "deployment": {
+      "bytes": 3594,
+      "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/deployment.json",
+      "sha256": "b8d55dc5ddaf2bd3ff4e183404660bdca648a3158f63262cd39e2451b415034e"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-52-c2-lite-v6-phase-self-stamp/lisp65-c2-substitution-linked.prg",
+      "sha256": "183fb17392eb5c50c30a43cf4ad43cd188731b35dd0218b75b91bbe28725879c"
+    },
+    "session_manifest": {
+      "bytes": 38950,
+      "path": "build/c2.2/substitution/product-link-52-c2-lite-v6-phase-self-stamp/runtime-overlays-session-final.json",
+      "sha256": "e803309a3997fc2a9195b70089fb87b1a49cc36f5763a9ad85c10a2869f92cba"
+    },
+    "structural_receipt": {
+      "bytes": 404125,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link52-c2-lite-v6-phase-self-stamp-structural-receipt.json",
+      "sha256": "ab77fcce6b380c2f5a988b9837fa6c9fdda8bc0f98bb08e8410ff243147710fe"
+    }
+  },
+  "counters": {
+    "completed_latency_measurements": "0/2",
+    "line1_product_first_reds": "2/3 unchanged; boot passed",
+    "phase_diagnostic_hardware_runs": "1"
+  },
+  "execution_accounting": {
+    "additional_compiler_runs": 0,
+    "additional_product_links": 0,
+    "hardware_runs": 1
+  },
+  "finding": {
+    "bounded_origin": "emission/append/install failed before the transition into inner VM execution; abort cleanup then stamped slot 44",
+    "important_limit": "because rollback and abort phases also self-stamp, slot 44 is the cleanup terminus, not proof of the primary failing slot",
+    "inner_vm_entered": false,
+    "last_observed_phase": "c2-append-abort-control",
+    "transport_or_refill_claim": "not implicated by this witness",
+    "vm_run_dir_reached": false
+  },
+  "format": "lisp65-c2-lite-v6-link52-phase-self-stamp-hardware-first-red-v1",
+  "hardware": {
+    "boot": "passed-banner-and-usable-REPL",
+    "cold_first_call": {
+      "completed_latency_measurement": false,
+      "form": "%c2h wrapped by the bound frame-counter form",
+      "result": "*** vm: bad bytecode",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/observations/definition-first-call.txt",
+        "sha256": "c42ff457d39dbee0b7e491f1f60a46c0f2ddbcfe1bb139ba04cf52879e912c6f"
+      }
+    },
+    "core_tool_identity": "m65 20260722.00-develo-c5bf0cc",
+    "definition": {
+      "form": "(defun %c2h () 't)",
+      "result": "%c2h",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/observations/definition-setup.txt",
+        "sha256": "5c474ff70e8c941efe09df15e8dcb42d8d7b1d6129cd1589c58a874d58b94d6e"
+      }
+    },
+    "phase_witness": {
+      "addresses": {
+        "inner_vm_entered": "0xc1f5",
+        "last_session_slot": "0xc1f4"
+      },
+      "captures": [
+        {
+          "bytes": 2,
+          "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/observations/witness-1.bin",
+          "sha256": "d8fa32dd40b181d8250a4ecde2f2f17bd7bfdf2793278d06ea5afc647f3d5762"
+        },
+        {
+          "bytes": 2,
+          "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/observations/witness-2.bin",
+          "sha256": "d8fa32dd40b181d8250a4ecde2f2f17bd7bfdf2793278d06ea5afc647f3d5762"
+        },
+        {
+          "bytes": 2,
+          "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/observations/witness-3.bin",
+          "sha256": "d8fa32dd40b181d8250a4ecde2f2f17bd7bfdf2793278d06ea5afc647f3d5762"
+        }
+      ],
+      "slot_44": "c2-append-abort-control",
+      "stable_captures": 3,
+      "values": [
+        44,
+        0
+      ]
+    },
+    "preloads": "6/6 byte-identical readbacks"
+  },
+  "next_gate": "Class-C review: the witness answers pre-inner versus inner, but the primary append slot is overwritten by cleanup provenance.",
+  "promotable": false,
+  "readback_evidence": [
+    {
+      "bytes": 3285,
+      "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/readback-boot-overlay.stage.bin",
+      "sha256": "087bb3bf58dbcfbf76511133ebff129edc950b4185340bf3df6ae01ead84610e"
+    },
+    {
+      "bytes": 8192,
+      "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/readback-c2-product-kernal-window.bin",
+      "sha256": "fd0c1f775f800c7cc4b70570160508bfee1f14525d446967ec625e88b79d6f03"
+    },
+    {
+      "bytes": 33840,
+      "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/readback-initial.c2d-v6.bin",
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    {
+      "bytes": 70897,
+      "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/readback-product-shelf-v4-direct.bin",
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+    },
+    {
+      "bytes": 18935,
+      "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/readback-runtime-overlays-boot-final.bin",
+      "sha256": "b2a71f54dea9ba3b8d93f4d88d8c1d00bff5690f4fe42ebbab9e23666acd6da5"
+    },
+    {
+      "bytes": 65438,
+      "path": "build/c2.2/hardware-presmoke-link52-phase-self-stamp/readback-runtime-overlays-session-final.bin",
+      "sha256": "c01c334d895b5fa2f4e1128b9b05d21386ff7674b51f5bd4de0d85a85fa7f346"
+    }
+  ],
+  "recorded_on": "2026-07-22",
+  "status": "first-red-before-inner-vm-after-successful-definition"
+}

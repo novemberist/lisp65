@@ -1,0 +1,97 @@
+; lib-c64key-load -- C64-LOAD-safe keyboard bridge subset.
+;
+; This is the MVP load contract for lib-c64key.lsp: LOAD defines functions only;
+; callers must then run (C64KEYINIT) to install CIA addresses and key tables.
+
+(DE KEY-ROW0 () (LIST "DEL" "RET" "CRSR-LR" "F7" "F1" "F3" "F5" "CRSR-UD"))
+(DE KEY-ROW1 () (LIST "3" "W" "A" "4" "Z" "S" "E" "LSHIFT"))
+(DE KEY-ROW2 () (LIST "5" "R" "D" "6" "C" "F" "T" "X"))
+(DE KEY-ROW3 () (LIST "7" "Y" "G" "8" "B" "H" "U" "V"))
+(DE KEY-ROW4 () (LIST "9" "I" "J" "0" "M" "K" "O" "N"))
+(DE KEY-ROW5 () (LIST "+" "P" "L" "-" "." ":" "@" ","))
+(DE KEY-ROW6 () (LIST "PND" "*" ";" "HOME" "RSHIFT" "=" "UP" "/"))
+(DE KEY-ROW7 () (LIST "1" "LEFT" "CTRL" "2" "SPACE" "CBM" "Q" "STOP"))
+
+(DE KEY-MATRIX-INIT ()
+  (LIST (KEY-ROW0) (KEY-ROW1) (KEY-ROW2) (KEY-ROW3)
+        (KEY-ROW4) (KEY-ROW5) (KEY-ROW6) (KEY-ROW7)))
+
+(DE KEY-SPECIALS ()
+  (LIST "RET" "DEL" "SPACE" "F1" "F3" "F5" "F7" "HOME" "STOP"
+        "CRSR-LR" "CRSR-UD" "LEFT" "UP" "PND"))
+
+(DE C64KEYINIT ()
+  (PROG NIL
+    (SETQ CIA1PRA 56320)
+    (SETQ CIA1PRB 56321)
+    (SETQ KEY-MATRIX (KEY-MATRIX-INIT))
+    (SETQ KEY-SPECIAL (KEY-SPECIALS))))
+
+(DE KEY-MASK (N) (COND ((ZEROP N) 1) (T (TIMES 2 (KEY-MASK (SUB1 N))))))
+(DE KN (N L) (COND ((ZEROP N) (CAR L)) (T (KN (SUB1 N) (CDR L)))))
+(DE K2 (A B) (PACK (APPEND (UNPACK A) (UNPACK B))))
+(DE K-MEMB (X L)
+  (COND ((NULL L) NIL) ((EQUAL X (CAR L)) T) (T (K-MEMB X (CDR L)))))
+
+(DE MATRIX-REF (C R) (KN R (KN C KEY-MATRIX)))
+(DE KEY-COL-SELECT (C) (LOGXOR 255 (KEY-MASK C)))
+(DE READ-COL (C) (POKE CIA1PRA (KEY-COL-SELECT C)) (PEEK CIA1PRB))
+(DE READ-SNAP-AUX (C)
+  (COND ((GREATERP C 7) NIL) (T (CONS (READ-COL C) (READ-SNAP-AUX (ADD1 C))))))
+(DE READ-SNAPSHOT () (READ-SNAP-AUX 0))
+
+(DE PRESSED-P (SNAP C R) (ZEROP (LOGAND (KN C SNAP) (KEY-MASK R))))
+(DE MOD-POS-P (C R)
+  (OR (AND (EQ C 1) (EQ R 7))
+      (AND (EQ C 6) (EQ R 4))
+      (AND (EQ C 7) (EQ R 2))
+      (AND (EQ C 7) (EQ R 5))))
+
+(DE CTRL-P (SNAP) (PRESSED-P SNAP 7 2))
+(DE CBM-P (SNAP) (PRESSED-P SNAP 7 5))
+(DE SHIFT-P (SNAP) (OR (PRESSED-P SNAP 1 7) (PRESSED-P SNAP 6 4)))
+
+(DE SCAN-FIRST (SNAP) (SF SNAP 0 0))
+(DE SF (SNAP C R)
+  (COND ((GREATERP C 7) NIL)
+        ((GREATERP R 7) (SF SNAP (ADD1 C) 0))
+        ((AND (PRESSED-P SNAP C R) (NOT (MOD-POS-P C R))) (CONS C R))
+        (T (SF SNAP C (ADD1 R)))))
+
+(DE KEY-DOWNCASE (S) (KEY-DOWNCASE1 S (ASC S)))
+(DE KEY-DOWNCASE1 (S C)
+  (COND ((AND (GREATERP C 64) (LESSP C 91)) (CHAR (PLUS C 32))) (T S)))
+
+(DE DECODE-KEY (SNAP) (DECODE-KEY1 SNAP (SCAN-FIRST SNAP)))
+(DE DECODE-KEY1 (SNAP HIT)
+  (COND ((NULL HIT) NIL) (T (APPLY-MODS SNAP (MATRIX-REF (CAR HIT) (CDR HIT))))))
+
+(DE KEY-SPECIAL-P (BASE)
+  (COND ((K-MEMB BASE KEY-SPECIAL) (COND ((EQUAL BASE "SPACE") " ") (T BASE)))
+        (T NIL)))
+
+(DE APPLY-MODS (SNAP BASE) (AM1 SNAP BASE (KEY-SPECIAL-P BASE)))
+(DE AM1 (SNAP BASE SPECIAL)
+  (COND ((NULL SPECIAL) (AM2 SNAP BASE)) (T SPECIAL)))
+(DE AM2 (SNAP BASE)
+  (COND ((CTRL-P SNAP) (K2 "C-" (KEY-DOWNCASE BASE)))
+        ((CBM-P SNAP) (K2 "M-" (KEY-DOWNCASE BASE)))
+        ((SHIFT-P SNAP) BASE)
+        (T (KEY-DOWNCASE BASE))))
+
+(DE READ-KEY () (DECODE-KEY (READ-SNAPSHOT)))
+
+(DE PET-PRINTABLEP (C) (AND (GREATERP C 31) (LESSP C 128)))
+(DE PET-CTRLP (C) (AND (GREATERP C 0) (LESSP C 27)))
+(DE PET-CTRL-TOKEN (C) (K2 "C-" (CHAR (PLUS C 96))))
+(DE PETSCII->TOKEN (C)
+  (COND ((NULL C) NIL)
+        ((EQ C 0) NIL)
+        ((EQ C 13) "RET")
+        ((EQ C 20) "DEL")
+        ((EQ C 32) " ")
+        ((PET-CTRLP C) (PET-CTRL-TOKEN C))
+        ((PET-PRINTABLEP C) (CHAR C))
+        (T NIL)))
+
+(DE GETKEY->TOKEN () (PETSCII->TOKEN (GETKEY)))

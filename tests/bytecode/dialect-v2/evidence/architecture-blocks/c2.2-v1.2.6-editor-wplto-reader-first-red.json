@@ -1,0 +1,16 @@
+{
+  "format": "lisp65-c2.2-v1.2.6-editor-WPLTO-reader-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "status": "FIRST RED: generated Lisp consumer rejected one 33-byte helper name",
+  "promotable": false,
+  "target_linker_invocations": 0,
+  "wplto_probes_consumed": 0,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "reader_limit_bytes": 32,
+  "rejected_token": "%ide-render-status-message-direct",
+  "replacement_token": "%ide-render-status-msg-direct",
+  "attribution": "The bytecode artifact builder accepts longer host symbols, but the actual generated-Lisp consumer oracle enforces the target reader's 32-byte token ceiling. The canonical WPLTO ran that consumer before invoking the target linker and failed closed.",
+  "disposition": "Rename only the private helper, regenerate the IDE artifact and profile identity, preserve the pre-link scratch tree, and resume the unconsumed WPLTO card.",
+  "claim_limit": "A target-reader compatibility First Red before WPLTO or product link."
+}

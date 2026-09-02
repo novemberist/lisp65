@@ -1,0 +1,112 @@
+{
+  "adjudications": {
+    "fx_premise": {
+      "automatic_status": "row-local-first-red",
+      "classification": "harness-timeout-not-product-red",
+      "evidence": {
+        "first_capture": {
+          "bytes": 2241,
+          "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-math-product-low.txt",
+          "sha256": "c818f80db5d576286c21b04b3f59617b3e9d25136616c1cea5262e257e45afef"
+        },
+        "later_live_repl_capture": {
+          "bytes": 2241,
+          "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-post-run-stop-repl.txt",
+          "sha256": "ba171f01e3bddd2faa046030fa699f6a8aba94bf0a269fffbab10678a981e279"
+        }
+      },
+      "observation": {
+        "low_result_bytes": [
+          0,
+          120
+        ],
+        "high_result_bytes": null
+      },
+      "reason": "The row-local capture was taken before the result appeared. The later defined-state REPL capture contains the exact submitted form followed by (0 120), then the independent RUN/STOP and post-abort rows. This corrects only the classification and records the visible informational bytes; it does not invent the skipped high-byte result."
+    },
+    "require_fastpath": {
+      "automatic_status": "row-local-first-red",
+      "classification": "product-first-red",
+      "contract": {
+        "expected_middle": "t",
+        "reference": "docs/planning/c2.2-workbench-era-ramp-halt3.md",
+        "require_returns_t_when_already_loaded": true,
+        "require_returns_t_when_newly_loaded": true
+      },
+      "evidence": {
+        "bytes": 2241,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/row-require-first.txt",
+        "sha256": "e5ed29874193a3a286c9285eac59f3a9c28bf126c77e48cd441f8a318da5f2af"
+      },
+      "observation": {
+        "end_frame": 4200,
+        "frame_delta": 272,
+        "raw_result": "((15 88 15) nil (16 104 16))",
+        "require_result": "nil",
+        "start_frame": 3928
+      },
+      "reason": "The tuple was not absent or malformed. It was well-formed but failed the harness regex because the middle value was nil rather than the contract-required t. The dependent repeat row was correctly skipped. No cause is claimed by this receipt."
+    }
+  },
+  "authority": {
+    "hardware_receipt": {
+      "bytes": 18553,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.3-link80-bundled-hardware-receipt.json",
+      "sha256": "4da0746480d05001c04adcd9a12e8a957096b757ba870119c47866482a96dff6"
+    },
+    "plan": "docs/planning/1.2.3-work-plan.md"
+  },
+  "candidate": {
+    "link": 80,
+    "product_sha256": "5130971b4cb66fe226fec9b37b8cc974056b3541c1824431d78ec0c2074bb659",
+    "release": "v1.2.3"
+  },
+  "diagnostics": {
+    "DIRMISS": {
+      "classification": "renderer-consumption-path",
+      "outcome": "scratch-correct-after-symname",
+      "receipt": {
+        "bytes": 1784,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/dirmiss-post-symname-receipt.json",
+        "sha256": "e8da3abdb28507708538668c65b19fba500aceeaa836309ac254febeb2871bf0"
+      }
+    },
+    "GC": {
+      "classification": "intermittent-observation-not-reproduced",
+      "marked_cells": null,
+      "receipt": {
+        "bytes": 1179,
+        "path": "build/post-promotion/v1.2.3/link80-bundled-session/gc-two-number-receipt.json",
+        "sha256": "9ae221af6f990d63230f2542af2e8ed129a642d01ce7ce60a6ee5ae7de05e74c"
+      },
+      "returned_cells": null,
+      "workload_result": 600
+    }
+  },
+  "format": "lisp65-c2.2-v1.2.3-link80-halt1-attribution-v1",
+  "owner_halt": {
+    "decision_required": "Disposition of the require-first product red before Phase E.",
+    "recommended_next_step": "Do not start Phase E. First run one bounded host attribution against the exact Link-80 product-bound C2D state and the rebound session D81. It must distinguish media/index binding failure from a target-only require divergence. No product fix, new link or hardware retry is authorized by this receipt.",
+    "release_implication": "while, random, interrupt ownership and RUN/STOP are hardware-green, but the advertised require-fastpath freight is not hardware-qualified because the first require returned nil and the repeat was not executed."
+  },
+  "passed_product_surfaces": {
+    "boot_repl": true,
+    "interrupt_masks": [
+      0,
+      0,
+      0
+    ],
+    "post_run_stop_repl": true,
+    "random": true,
+    "run_stop": true,
+    "while": true
+  },
+  "recorded_on": "2026-07-30",
+  "session_accounting": {
+    "controlled_deployments": 3,
+    "diagnostic_identities_promotable": 0,
+    "physical_device_sessions": 1,
+    "product_links_created_during_session": 0
+  },
+  "status": "halt-1-awaiting-owner-require-disposition"
+}

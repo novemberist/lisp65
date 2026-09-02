@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+python3 tools/host-lisp/evidence_archive_assets.py index-size-gate

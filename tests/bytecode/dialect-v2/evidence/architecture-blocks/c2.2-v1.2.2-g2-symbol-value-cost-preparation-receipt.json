@@ -1,0 +1,187 @@
+{
+  "G3": {
+    "reason": "No block-read or other GC cut is authorized by host counts.",
+    "status": "closed-until-measurement"
+  },
+  "bound_carrier_execution": {
+    "carrier": {
+      "bytes": 228972,
+      "path": "build/post-promotion/phase-v/while/gate/carrier/lcc.manifest.json",
+      "sha256": "7b2a5f913f9ac1898292e5d5713d128d2c1efac79f4317e4b84efaddfb245708"
+    },
+    "control": {
+      "encoded_bytes": 64,
+      "encoded_sha256": "8b35529baa1f253b94bf6caa9743ad98d51daba685dd87376a63b316d5f294f3",
+      "flags": 2,
+      "literals": [
+        {
+          "symbol": "%f"
+        },
+        1000,
+        {
+          "symbol": ">="
+        },
+        {
+          "symbol": "list"
+        }
+      ],
+      "nargs": 0,
+      "nlocals": 2,
+      "payload_hex": "3c00003a0001003a0106013a02390139023c02021d032b1c0e2c3d39013b39010101023a011ce63a0139003c00003e0302",
+      "semantic_sha256": "274503669b5ef796bb7d30be1d41aabb29811ad37cb450bfb690bb8a7c7b0e2a"
+    },
+    "executed_compiler_cases": 2,
+    "measured": {
+      "encoded_bytes": 64,
+      "encoded_sha256": "63ffe3c0a4948cfbb15effef892043d6d6608dff7bda1326f0ad3a0b58c512f1",
+      "flags": 2,
+      "literals": [
+        {
+          "symbol": "%f"
+        },
+        1000,
+        {
+          "symbol": ">="
+        },
+        {
+          "symbol": "list"
+        }
+      ],
+      "nargs": 0,
+      "nlocals": 2,
+      "payload_hex": "3c00003a0001003a0106013a02390139023c02021d032b1c0e2c3d13013b39010101023a011ce63a0139003c00003e0302",
+      "semantic_sha256": "a6231721a7ded544a2a730afeeb5892aa1fcb94b39281c797cefcdf95b294970"
+    },
+    "payload_differences": [
+      {
+        "control": 57,
+        "measured": 19,
+        "offset": 27
+      }
+    ],
+    "status": "passed-actual-bound-carrier-one-byte-measurement-pair",
+    "tier": {
+      "bytes": 1313,
+      "path": "build/post-promotion/phase-v/while/gate/compiler-tier/tier-generation.json",
+      "sha256": "00b5f91290d1e9bb572899f56d4cab9b3fd1f0dead4dbd3a7f5e968ab6b96524"
+    }
+  },
+  "claim_limit": "The host gate proves an actual-bound-carrier, one-byte-matched target timing pair and its target dataflows. It does not supply hardware frames and does not call the delta the absolute cost of symval_get.",
+  "execution_witnesses": {
+    "bound_carrier_cases": 2,
+    "negative_mutations": 12
+  },
+  "format": "lisp65-c2.2-v1.2.2-g2-symbol-value-cost-preparation-v1",
+  "inputs": {
+    "Link78_ELF": {
+      "bytes": 622560,
+      "path": "build/post-release/link78-dirmiss-renderer/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "763cb2a9acd5275b618e13ce10a9f9acddbc2980a97d417b6b3f8b6e7e30c7d9"
+    },
+    "Link78_product": {
+      "bytes": 41566,
+      "path": "build/post-release/link78-dirmiss-renderer/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "77f1c734e0818e5765d893627e4f7f514d62ca312a22b8123ead5d1c3ab40c36"
+    },
+    "Link78_structural_authority": {
+      "bytes": 16946,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link78-dirmiss-renderer-structural-receipt.json",
+      "sha256": "ed7a2c533944024c33dc8733c9d10d96b2b58b3603df656f0abe3bbe1faec95f"
+    },
+    "measurement_contract": {
+      "bytes": 5308,
+      "path": "config/c2.2-v1.2.2-g2-symbol-value-cost-session.json",
+      "sha256": "8614faf15479f3ecec3e0a93acd630369599739694e2d38f2bb36bee31d4d0ef"
+    },
+    "prior_G2_attribution": {
+      "bytes": 9011,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.2-g2-gc-work-attribution-receipt.json",
+      "sha256": "eb1975ffb25142649a3bf8b258bde587aad660c994b14a8b78494ee16c3691ff"
+    }
+  },
+  "measurement": {
+    "accepted_target_symbol_reads": 480,
+    "accepted_whole_collection_frames": 89,
+    "cost_constant_applicability": {
+      "R2_rule": "Use the reported microseconds per read directly only for counted 2-byte vm_dma reads. The 399 Prim-67 resolver reads may be compared as scale evidence, but their time is not calculated from this constant without a separate path-equivalence proof.",
+      "directly_comparable_2_byte_vm_dma_reads": [
+        "symval_get",
+        "nameoff_get",
+        "symfn_ext_get"
+      ],
+      "reference_only_not_directly_multipliable": [
+        "sympool_read/symname: a larger bulk transfer with different length amortization",
+        "Prim-67 %c2d-byte: a one-byte c2_stream_c2d_read path rather than the symval vm_dma call"
+      ]
+    },
+    "dominance_threshold_frames": 44.5,
+    "frame_counter": "$FF84/$FF83/$FF84",
+    "frame_width_bits": 16,
+    "hardware_results": null,
+    "iterations_per_row": 1000,
+    "projected_share_formula": "(symbol_value_frames - boundp_frames) * 480 / 1000",
+    "required_per_read_report": {
+      "excess_frames_per_1000": "symbol_value_frames - boundp_frames",
+      "excess_frames_per_read": "(symbol_value_frames - boundp_frames) / 1000",
+      "excess_microseconds_per_read": "(symbol_value_frames - boundp_frames) * 20",
+      "value_string": "symval-minus-boundp=<delta>f/1000 = <delta/1000>f/read = <delta*20>us/read; projected-480=<delta*480/1000>f/89f"
+    },
+    "rows": 2
+  },
+  "mutations_rejected": [
+    "iteration-count-drift",
+    "control-primitive-drift",
+    "measured-primitive-drift",
+    "one-byte-clock-substitution",
+    "unstable-start-snapshot",
+    "target-read-count-drift",
+    "whole-envelope-authority-drift",
+    "majority-threshold-drift",
+    "absolute-cost-overclaim",
+    "microsecond-conversion-drift",
+    "Prim67-transfer-overclaim",
+    "product-byte-creep"
+  ],
+  "product_delta": {
+    "bytes": 0,
+    "dedicated_hardware_sessions": 0,
+    "links": 0
+  },
+  "recorded_on": "2026-07-29",
+  "status": "passed-host-qualified-two-row-measurement-awaiting-bundled-session",
+  "target_dataflow": {
+    "control": "CALLPRIM 57 -> sym_boundp -> resident symbnd bitmap",
+    "measured": "CALLPRIM 19 -> sym_value -> symval_get -> 2-byte Bank-5 DMA",
+    "reference_only_consumers": [
+      "sympool_read/symname: variable-length bulk vm_dma",
+      "Prim-67 %c2d-byte: c2_stream_c2d_read"
+    ],
+    "same_shape_consumers": [
+      "nameoff_get: 2-byte Bank-5 vm_dma",
+      "symfn_ext_get: 2-byte Bank-5 vm_dma"
+    ],
+    "sources": [
+      {
+        "bytes": 83869,
+        "path": "src/vm.c",
+        "sha256": "e357a571a9297f8cf13923f844f829a658c9e86006a7852e00bbc4660d78c4b6"
+      },
+      {
+        "bytes": 12142,
+        "path": "src/symbol.c",
+        "sha256": "df5f4836fc0c19df37d9baaaae2bd1d5985d2c467221e7453be4de6448177b2d"
+      },
+      {
+        "bytes": 39296,
+        "path": "src/vm_embed.c",
+        "sha256": "8477785a2eb245891bc8010af8cb08a25c8dba4900f428b86d0806b6e68704de"
+      },
+      {
+        "bytes": 22860,
+        "path": "config/workbench.mk",
+        "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+      }
+    ],
+    "status": "passed-target-control-and-measured-paths"
+  }
+}

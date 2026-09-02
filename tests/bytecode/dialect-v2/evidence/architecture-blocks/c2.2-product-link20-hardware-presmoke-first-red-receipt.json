@@ -1,0 +1,62 @@
+{
+  "format": "lisp65-c2-product-link20-hardware-presmoke-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "attempt": {
+    "candidate": "link-20-probe",
+    "stage": "receipt-less-hardware-presmoke-manual-step-1",
+    "acceptance_receipt_created": false,
+    "promotion_claim": "not-run"
+  },
+  "pinned_identity": {
+    "product_prg_sha256": "35ef28dba31c21333fdbf000f326bc58d3e94c3740d5eb93a7f01f1bcc26c7aa",
+    "product_elf_sha256": "5009d9f9cd7907b5a208d6de6a288fba59e2042c04c9b879e3417bf135f6045e",
+    "kernal_window_sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0",
+    "preload_readbacks_before_first_launch": "6/6 byte-identical"
+  },
+  "hardware_observation": {
+    "first_launch": "completely black screen",
+    "first_manual_presmoke_step": "failed before a banner or usable REPL",
+    "first_red_rule": "stopped; no downstream hardware case was claimed"
+  },
+  "preserved_failure_state": {
+    "pending_code_at_0x0034": "0x25 (LISP65_ERR_STDLIB_PROFILED_PRELOAD)",
+    "c2_ready_at_0x008c": "0x01",
+    "boot_overlay_status_at_0x006f": "0x00",
+    "attic_window_source_sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0",
+    "physical_target_before_repair_sha256": "9a08a376d55aa8121dfaa26fff3eb19557f91dfd6c3193f07b0fb7044cf7dc0a"
+  },
+  "breakpoint_diagnosis": {
+    "cutpoint": "after c2k_copy and before c2_kernal_map_window",
+    "pc": "0xb4a0",
+    "z_register": "0x00",
+    "dma_descriptor_hex": "0b8087810085010000002000e00f00e000000000",
+    "descriptor_result": "byte-exact expected descriptor",
+    "cpu_view_d700_d7ff_before_knock": "all zero; extended DMA registers not visible",
+    "cpu_view_after_d02f_47_53": "DMA register file visible",
+    "controlled_replay": {
+      "changed_product_bytes": false,
+      "operation": "repeat the unchanged c2k_copy after only the $47/$53 I/O knock",
+      "physical_target_after_replay_sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0",
+      "result": "byte-identical to the pinned Attic source"
+    }
+  },
+  "rejected_hypotheses": {
+    "stz_dma_register_writes": "isolated non-product A/B copied byte-identically with STZ",
+    "omitting_explicit_d704_clear": "isolated non-product A/B copied byte-identically; writing D702 clears D704 by controller contract",
+    "cram2k_alone": "isolated non-product A/B did not reproduce the failure"
+  },
+  "root_cause": {
+    "class": "firmware-to-product-io-personality-boundary-not-normalized",
+    "mechanism": "C2 boot reached the ownership seam without the MEGA65 I/O personality. The correct descriptor was built in RAM, but accesses to $D700-$D705 did not address DMAgic, so no publication occurred.",
+    "why_the_crc_failed": "The unchanged physical $E000 window did not match the pinned Attic image after MAP.",
+    "why_the_screen_was_black": "The fail-closed return occurs after interrupts are masked and before product display ownership is published."
+  },
+  "required_fix_and_gate": {
+    "product_fix": "Repeat the complete $D02F $47/$53 MEGA65 I/O knock immediately after SEI/LDZ and before the first CIA, VIC or DMA register access.",
+    "layout_payment": "Place the 11-byte knock/RTS helper in the post-facade gap; pay the ownership JSR by omitting the redundant D704 write and recover the helper's eleventh byte with the equivalent LDQ MAP operand initialization.",
+    "permanent_gate": "Disassembly and mutations bind SEI, LDZ #0, the immediate fixed helper call, the exact $47/$53 sequence, D702 clearing D704, and all fixed low-resident addresses.",
+    "hardware_recheck": "A fresh candidate must restart the receipt-less pre-smoke at manual step 1; no Link-20 green is inherited."
+  },
+  "claim_limit": "Receipt-less hardware diagnosis of Link 20 only. It proves a first-red at the I/O-personality boundary and no hardware acceptance, product promotion or release claim."
+}

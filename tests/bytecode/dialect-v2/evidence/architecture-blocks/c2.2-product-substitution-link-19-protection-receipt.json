@@ -1,0 +1,59 @@
+{
+  "format": "lisp65-c2-product-substitution-link-protection-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "protected-structural-hardware-not-run",
+  "link_number": 19,
+  "product_identity": {
+    "bytes": 41542,
+    "sha256": "1fb99ddbbc7fe011efc6b28c7c4e61adf7ced4258d2e9939ececbaaad526517e"
+  },
+  "source_receipts": {
+    "pin": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-link-19-pin-receipt.json",
+      "sha256": "bc766e553bbb1fe50f7253c5a9b2d16ac2b573c672bf95de273b56a18dfa50cf"
+    },
+    "replay": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-link-19-replay-receipt.json",
+      "sha256": "0e50c80be08208ed6824d3b5bcdd4f0e6866960fef05419778dfe861cbad6c18"
+    }
+  },
+  "protected_archive": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link19-protected-pin-20260720/root",
+    "pin_objects_verified": 43,
+    "replay_reports_verified": 8,
+    "total_files": 57,
+    "total_bytes": 1315359,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "b64fe87118cb155204094accedfc14e284596f924b607f220629f05566f6f08a",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "working_pin_protection": {
+    "pinned_build_files": "0444",
+    "link19_build_directory": "0555",
+    "replay_files": "0444",
+    "replay_directory": "0555",
+    "pin_and_replay_receipts": "0444",
+    "rule": "Inspection or extraction that can write must use a disposable copy; the protected source is never a tool destination."
+  },
+  "presmoke_hardening": {
+    "tool": {
+      "path": "tools/host-lisp/c2_product_hw_presmoke.py",
+      "bytes": 14565,
+      "sha256": "33510f437712850682fbe3473601c1c2f879c03c95d52b9c3280a5494342c78d"
+    },
+    "launcher": {
+      "path": "scripts/c2-product-hw-presmoke.sh",
+      "bytes": 3603,
+      "sha256": "0d8377aefc87a798ada0a23fa4d6ed01320c642a8f7458417180682ba6b5d631"
+    },
+    "prepared_deployment": {
+      "path": "build/c2.2/hardware-presmoke-link19/deployment.json",
+      "bytes": 2755,
+      "sha256": "fd3fb31fa54c2595399cf9a41e9da5d27c591420d06e6ee55ba8d0c7afe900af",
+      "new_product_links": 0
+    },
+    "pinned_elf_after_prepare_sha256": "4eb98e1f05ac889b43f58a0899da5da09d7b29a0fbe858be9d22b15f4bd85bf1"
+  },
+  "claim_limit": "Filesystem protection and a redundant immutable archive for the fresh Link-19 structural pin. Hardware remains not-run; this is not promotion, acceptance or release evidence."
+}

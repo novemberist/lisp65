@@ -1,0 +1,188 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 1,
+    "device_resumes": 0,
+    "media_builds": 0,
+    "product_cards": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "decision_table": {
+      "daily-use-blocker": "at most one fix round, else feature descope"
+    },
+    "further_repair_rounds_authorized": false,
+    "read_only_capture_authorized_by_owner": true,
+    "repair_rounds_already_consumed": 1,
+    "session": {
+      "bytes": 4528,
+      "path": "config/c2-v17-block3-banner-ordinal-acceptance-session.json",
+      "sha256": "ab939095416c9fd22d096e25ab3c4d2e4891dba9618c2670c0a5188ac5eead05"
+    }
+  },
+  "candidate": {
+    "ELF": {
+      "bytes": 647940,
+      "path": "build/c2.3/v1.7-block3-banner-ordinal-repair/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "9ce3ff079ead7df5b15c8b3d0cc57c5729009b860522002d19425c168456221b"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-block3-banner-ordinal-repair/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "2e8274902a357bae76d55f31ee4e2869480126c9a7cb791291a56c6d1708387d"
+    },
+    "library_medium": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-block3-banner-ordinal-acceptance-media/library/lisp65-library.d81",
+      "sha256": "841eec3a12b019212780fd985b8fffed88eeaaf0ed29df41b2f843844736fefd"
+    },
+    "product_medium": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-block3-banner-ordinal-acceptance-media/shared-system/lisp65-product.d81",
+      "sha256": "a23cafdb5d1121761413a914094a5e179aff639df7ed51d29f4f57a27d2cde4f"
+    },
+    "v16core": {
+      "bytes": 2849,
+      "path": "build/c2.3/v1.7-block3-banner-ordinal-acceptance-media/library/v16core.l65s",
+      "sha256": "74f21e2120eccc2a0452a36e423a8a56580cccf9cb4b683d2bb5ee2211c31dbe"
+    }
+  },
+  "capture": {
+    "CPU": {
+      "A": "0x00",
+      "B": "0x00",
+      "PC": "0xb28f",
+      "SP": "0x01cb",
+      "X": "0x9c",
+      "Y": "0x03",
+      "Z": "0x00"
+    },
+    "assets": [
+      {
+        "address": "0x0000",
+        "bytes": 512,
+        "capture_name": "v17b3-match-hang-zp_stack.bin",
+        "sha256": "5a4150781a8d31fe97079b5d6125e31000ed9c7dc63cda102aaae5827687e67a"
+      },
+      {
+        "bytes": 768,
+        "capture_name": "v17b3-match-hang-rootstack.bin",
+        "sha256": "04c25470760c7b25d467282c35333840704570f6fc094c096f4768bccb296f0a"
+      },
+      {
+        "address": "0xb900",
+        "bytes": 3072,
+        "capture_name": "v17b3-match-hang-vm_repl_bss.bin",
+        "sha256": "d140c7d11d20cf9d02254ea64700e0156624af010789c053ef7443f16d65f29c"
+      },
+      {
+        "bytes": 128,
+        "capture_name": "v17b3-match-hang-frame_input.bin",
+        "sha256": "5016af8db427b5ff1637f3ca45737c14090a24e921cc6c0ed5f3511d60cee0c0"
+      },
+      {
+        "address": "0xb26f",
+        "bytes": 64,
+        "capture_name": "v17b3-match-hang-pc_window.bin",
+        "sha256": "9a0792086f9df30297cc03cba493bcb424b7e6cb92c42fcd3bf1440b19b393f2"
+      }
+    ],
+    "hardware_stack": [
+      "repl",
+      "c2_product_abort_recover",
+      "c2_abort_driver_facade",
+      "c2_abort_driver",
+      "vm_runtime_overlay_exec_family",
+      "rtov_wipe",
+      "__memset"
+    ],
+    "input_buffer": {
+      "address": "0xbc89",
+      "value": "(list 1 3)\\0"
+    },
+    "overlay": {
+      "loaded_length": 1434,
+      "rtov_busy": 1,
+      "wipe_start": "0xc356"
+    },
+    "stopped_function": "__memset in rtov_wipe"
+  },
+  "claim_limit": "One owner-authorized read-only attribution of the replacement Block-3 hardware first red. It does not authorize or claim a product repair, another diagnostic instrument, another device contact, a WPLTO, a link, media, hardware acceptance or release freight.",
+  "decision": {
+    "block3_hardware_accepted": false,
+    "descoped_features": [
+      "shared parenthesis/quote matcher",
+      "native line-editor idle cursor blink",
+      "IDE idle cursor blink"
+    ],
+    "next_action": "owner touchpoint; no later v1.7 block is commissioned by this receipt",
+    "status": "automatic-feature-descope"
+  },
+  "device_observation": {
+    "action": "typed (list 1 3) without Return, then pressed Left once",
+    "boot_and_library_load": "completed; native lisp65> prompt visible",
+    "result": "cursor remained after the input and subsequent keys appeared unaccepted"
+  },
+  "exonerated": [
+    "a non-yielding matcher loop as the stopped state",
+    "input-ring backlog as the stopped state",
+    "framebuffer corruption as the stopped state",
+    "symbol-table capacity exhaustion",
+    "name-pool capacity exhaustion",
+    "an overlong entry name in the canonical v16core container"
+  ],
+  "fixture_gap": {
+    "host_fixture": {
+      "bytes": 24336,
+      "path": "tools/host-lisp/c2_v17_repl_idle_blink_card.py",
+      "sha256": "ff1e253f142f36f62b6714901ae9c330e274f1966a37499d100180abc3f1d73a"
+    },
+    "missing_world": "the real disk-library append and resolution of external %read-line-loop over the already published final static plane",
+    "measured_world": "all Block-3 functions in one host heap and one directory",
+    "statement": "The fixture proves matcher semantics and bounded passes, but not the mixed publication boundary crossed by the device."
+  },
+  "format": "lisp65-c2-v17-block3-left-first-red-attribution-v1",
+  "primary_error": {
+    "capacity": {
+      "name_bytes_free": 1319,
+      "name_bytes_limit": 10208,
+      "name_bytes_used": 8889,
+      "symbol_slots_free": 93,
+      "symbol_slots_limit": 752,
+      "symbol_slots_used": 659
+    },
+    "code_decimal": 34,
+    "code_hex": "0x22",
+    "identity": "LISP65_ERR_TOO_MANY_SYMBOLS",
+    "mechanical_conclusion": "new_symbol received a name longer than LISP65_SYMBOL_NAME_MAX=33 or without a terminator inside that bound; both capacity predicates were false",
+    "sole_product_emitter": "new_symbol in src/symbol.c"
+  },
+  "publication_boundary": {
+    "external_caller": "%read-line-loop from v16core.l65s",
+    "first_resident_callee": "%rl-poll from the final static plane",
+    "library_manifest": {
+      "code_bytes": 1719,
+      "entries": 9,
+      "max_entry_name_bytes": 19,
+      "path": "build/c2.3/v1.7-block3-banner-ordinal-acceptance-media/library-inputs/v17core.manifest.json",
+      "sha256": "30d3fc9b3e431bb026df927fa7726119f415735f7544b0df63f26dd4227ad20f"
+    },
+    "static_manifest": {
+      "path": "build/c2.3/v1.7-ide-idle-blink-current-plane/stdlib-p0.manifest.json",
+      "sha256": "91e095e5c4529068221b3805d512140c2099c197a85efb13bdd12997e17a237a"
+    }
+  },
+  "recorded_on": "2026-08-27",
+  "retained_unknown": {
+    "missing_fact": "the exact dynamic C-name pointer presented to intern/new_symbol at first fault",
+    "reason": "longjmp removed the failing VM call chain, cleanup retired the dynamic runtime view, and shared sym_name_scratch was subsequently overwritten",
+    "required_but_not_authorized": [
+      "a first-fault name/pointer latch at new_symbol",
+      "or a host executor composing the final static C2D plane with the real disk-library append",
+      "a second Block-3 product repair round"
+    ],
+    "sym_name_scratch_after_recovery": "%c2-compile-form",
+    "warning": "the post-fault scratch value is not evidence of the failing name"
+  },
+  "status": "PASS: PRIMARY ERROR CLASS AND RECOVERY STALL ATTRIBUTED; EXACT WRITER NOT RETAINED; PRE-BOUND RULE SELECTS DESCOPE"
+}

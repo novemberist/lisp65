@@ -1,0 +1,101 @@
+{
+  "format": "lisp65-c2.3-v1.6-comfort-repl-input-fidelity-device-first-red-v1",
+  "recorded_on": "2026-08-18",
+  "status": "FIRST RED: semantic rows green, physical input fidelity red",
+  "candidate": {
+    "review_authority_commit": "71a6211f",
+    "build_id": "0x0401e53e",
+    "product_medium": {
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-media/shared-system/lisp65-product.d81",
+      "sha256": "b1445da2a0d7c0d673b2481723b1f1f922008606066efc8c46ed0e51f0e96831"
+    },
+    "library_medium": {
+      "path": "build/c2.3/v1.6-comfort-repl-hardware/v16comfort.d81",
+      "sha256": "cc9d870128bcbbb8823d1add5a21de436bca638dc166cdd2ab2f806f89dd942c"
+    },
+    "resolver_order": ["v16core", "repl-comfort"]
+  },
+  "protocol": {
+    "fresh_basic": true,
+    "single_pre_boot_ftp_lifetime": true,
+    "product_mounted_last": true,
+    "library_mounted_via_physical_freezer": true,
+    "post_boot_ftp_calls": 0,
+    "device_access_during_active_repl": 0,
+    "final_read_only_screen_capture_after_exit": true
+  },
+  "functional_result": {
+    "rows_passed": 10,
+    "rows_total": 10,
+    "native_prompt_recovered": true,
+    "vm_error": false,
+    "disk_error": false,
+    "screen_text_sha256": "ca9cd3297dfd72613b70d5ab17554568c3e7a431808dd596bc38f574d626aa1c",
+    "screen_png_sha256": "5c169fd14761e9e8800091fccd1f9c45e4853af7a137cff231ebcc134f9bec67"
+  },
+  "owner_observation": {
+    "native_repl_control": "normal REPL typing is more fluid",
+    "comfort_repl": "typing feels clunky and physical key presses are frequently not registered and must be repeated",
+    "classification": "release-relevant ordinary-input loss"
+  },
+  "bound_sources": {
+    "read_line": {
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "f2d01133dac20ca0505721d2d644f18270e58ccd6a2e54883fca79a92fea90ce"
+    },
+    "comfort": {
+      "path": "lib/repl-comfort.lisp",
+      "sha256": "d9e99ac4cb46741a245ba90af4faf77aad6c970d071afa45a4201a0d2eb44120"
+    },
+    "native_repl": {
+      "path": "src/repl.c",
+      "sha256": "d3d7ef514615c4975f7994b48d3705e68706815e84019b05eecd776fc449effd"
+    },
+    "event_primitive": {
+      "path": "src/vm.c",
+      "sha256": "34f56244cf73dcac942f7629f0e0e41f4ba5631f0bccbeb61aba22d62fbc656a"
+    },
+    "queue_consumer": {
+      "path": "src/c2_kernal_window.s",
+      "sha256": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81"
+    }
+  },
+  "attribution": {
+    "hardware_queue": {
+      "total_events": 5,
+      "overflow": "sixth event is not enqueued while full",
+      "authority_sha256": "cf4a9bc1be4858371d746d31b44b1ff6fa110431ad976c6b7d5a62e4112a7752"
+    },
+    "comfort_printable_path": {
+      "key_event_cells": 3,
+      "editor_cells": 1,
+      "total_cells": 4,
+      "nursery_cells": 192,
+      "maximum_printables_between_collections_without_other_allocation": 48,
+      "host_vm_steps_between_polls": [1259, 1275, 1291]
+    },
+    "navigation_path": {
+      "cursor_left_cells": 3,
+      "cursor_left_host_vm_steps_between_polls": 1016,
+      "middle_insert_cells": 4,
+      "middle_insert_host_vm_steps_between_polls": 1271
+    },
+    "native_control": "event copied through a stack struct into a static C line buffer; no Lisp event tuple or inserted cons cell",
+    "standing_collection_authority_frames": [88, 89],
+    "mechanism_class": "synchronous editor service gaps versus a finite producer queue",
+    "strongest_preregistered_term": "periodic GC while input is not polled",
+    "unresolved_split": "exact current VM, screen-render and collection share of each observed loss"
+  },
+  "gate_gap": {
+    "cursor_receipt_sha256": "e4ee1667fed1bf59556eaa32885379cb27fec849862be19db3aef2b31e5ae5be",
+    "accepted_property": "maximum four cells and at most one collection per key",
+    "missing_property": "zero dropped physical keys under realistic typing against the five-event queue"
+  },
+  "disposition": {
+    "device_acceptance": false,
+    "d5": "closed",
+    "further_device_contacts": "closed pending a host-priced repair",
+    "required_fix_property": "input capture remains lossless while Lisp editing, rendering or collection is active"
+  },
+  "claim_limit": "Direct owner evidence proves frequent lost physical input in this candidate. Source and host execution prove the finite-queue/synchronous-consumer class and periodic allocation. This receipt does not assign an individual lost key to GC or claim an exact current collection duration."
+}

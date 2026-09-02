@@ -1,0 +1,125 @@
+{
+  "WPLTO": {
+    "exception": null,
+    "product_completed": false,
+    "raw_receipt": {
+      "bytes": 15683,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-session-store-source-plan-union-wplto-raw.json",
+      "sha256": "1451f6024e9b4450841102efa54352606e4d041f33ecb1e75e9d0b9ea05f2ad9"
+    },
+    "return_code": 2
+  },
+  "authority": {
+    "completion_source_gate": {
+      "bytes": 3422,
+      "path": "build/c2.2/two-region-session-store/write-completion-source-plan-union-gate.json",
+      "sha256": "dd634426f3615f1606d915c5425dc8fe19ca094c37e31b86608aeb2c7d476343"
+    },
+    "contract": {
+      "bytes": 4135,
+      "path": "config/c2-two-region-session-store-contract.json",
+      "sha256": "b90de07ac12b1d4bb852aee0e81ec9de3366dacae24c034af795212c24291b02"
+    },
+    "driver": {
+      "bytes": 12145,
+      "path": "tools/host-lisp/c2_two_region_session_store_wplto.py",
+      "sha256": "2e8df9a743b6b1b827651602c9499b44456b5f07bd820a3ab482b2ffea7e794c"
+    },
+    "emitter_union_gate": {
+      "bytes": 1529,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-emitter-work-state-lifetime-union-receipt.json",
+      "sha256": "835f717a44be58256a19586cc14b8fbc17b913741889500178fa6fd4c9777dfe"
+    },
+    "format_gate": {
+      "bytes": 1919,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v4-two-region-contract-receipt.json",
+      "sha256": "a7af922b7307a9191f3728c36d10a588f7479646c591788feff1be6ee3b28991"
+    }
+  },
+  "claim_limit": "Capacity/placement WPLTO only. No product link, C1 closure, matrix-gate fall or acceptance-chain claim.",
+  "completion_gate": {
+    "mutations": 21,
+    "status": "passed-four-point-emission-bound-C2J-seal-source-model-awaiting-WPLTO"
+  },
+  "emitter_union_gate": {
+    "geometry": {
+      "installer_trace_offset": 302,
+      "new_gc_roots": 0,
+      "phase_scratch_bytes": 304,
+      "removed_E000_bytes": 10,
+      "session_state_bytes": 10,
+      "work_state_bytes": 302
+    },
+    "mutations": {
+      "code-before-literal-end": "rejected",
+      "final-before-add-end": "rejected",
+      "function-after-final": "rejected",
+      "literal-after-code": "rejected"
+    },
+    "status": "passed-sanitized-lifetime-union-and-mutations"
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "whole_program_LTO_closure_links": 1
+  },
+  "format": "lisp65-c2-two-region-session-store-l65r-v4-WPLTO-v1",
+  "format_gate": {
+    "mutations": {
+      "main-as-overflow": "source-address",
+      "overflow-as-main": "source-address",
+      "overflow-capacity": "bank-overflow",
+      "overflow-truncated": "overflow-binding",
+      "region-without-record-crc": "record-crc",
+      "source-reserved-byte": "bad-region",
+      "unknown-region": "bad-region",
+      "v3-as-v4": "bad-version",
+      "v4-as-v3": "bad-version",
+      "wrong-source-bank": "source-address",
+      "wrong-source-low": "source-address",
+      "wrong-source-megabyte": "source-address",
+      "zero-record-crc": "record-crc-zero"
+    },
+    "status": "passed-strict-v4-two-region-format-and-mutations"
+  },
+  "gates": {
+    "all_slices_under_1792": false,
+    "main_region_at_most_u16": false,
+    "overflow_region_at_most_2032": false
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "rollback_slices": {
+    "rollback_finalize": {
+      "bytes": null,
+      "region_id": null
+    },
+    "rollback_unpublish": {
+      "bytes": null,
+      "region_id": null
+    },
+    "rollback_wipe_attic": {
+      "bytes": null,
+      "region_id": null
+    },
+    "rollback_wipe_chip": {
+      "bytes": null,
+      "region_id": null
+    },
+    "rollback_wipe_plane": {
+      "bytes": null,
+      "region_id": null
+    }
+  },
+  "session_regions": {
+    "c2d_append_scratch_floor_bytes": 14544,
+    "main_bytes": null,
+    "main_headroom_bytes": null,
+    "overflow_capacity_bytes": null,
+    "overflow_headroom_bytes": null,
+    "overflow_slices": [],
+    "overflow_used_bytes": null,
+    "worst_case_dynamic_entry_delta_rows": -25
+  },
+  "status": "FIRST RED: product-shaped two-region package did not close"
+}

@@ -1,0 +1,171 @@
+{
+  "ELF": {
+    "bytes": 622536,
+    "path": "build/post-promotion/link70-defstruct-header-crc/final/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "a875c96ab35ba81ef158134d98fbb37343b2c01fe3ba24fbf581f9daa740dd40"
+  },
+  "authority": {
+    "WPLTO_internal": {
+      "bytes": 437006,
+      "path": "build/post-promotion/link70-defstruct-header-crc/receipts/wplto-internal.json",
+      "sha256": "b50f92f18a6287997fd33f522184543745ee0d6778dc9429488f1efb58619010"
+    },
+    "artifact_completion": {
+      "bytes": 6070,
+      "path": "build/post-promotion/link70-defstruct-header-crc/receipts/artifact-completion.json",
+      "sha256": "76358fd0181f4b550460935502f7d3e33e06bb2c85f25a837d6564a34bbbd22c"
+    },
+    "driver": {
+      "bytes": 18238,
+      "path": "tools/host-lisp/c2_defstruct_header_crc_successor.py",
+      "sha256": "712915424c06c8c981414b142de660a68102ae46c4750ce394e8dbc3becfa136"
+    }
+  },
+  "claim_limit": "Link 70 structural completion only; hardware unclaimed.",
+  "execution_accounting": {
+    "artifact_completion_compiler_runs": 0,
+    "artifact_completion_linker_runs": 0,
+    "hardware_runs": 0,
+    "whole_program_product_links": 1
+  },
+  "fix_gates": {
+    "fix": {
+      "changed_calls": 2,
+      "field": "L65I-v1 header record CRC16 at bytes 11..12",
+      "format_delta_bytes": 0,
+      "media_delta_bytes": 0,
+      "new_reader": "%l65i-next-crc",
+      "old_reader": "%l65i-next-byte"
+    },
+    "media_mutations_rejected": {
+      "artifact-identity": "index-artifact-identity",
+      "artifact-length": "index-artifact-length",
+      "artifact-zero": "index-row-zero-authority",
+      "bank2-zero": "index-row-zero-authority",
+      "dependency-count": "index-row-dependency-count",
+      "dependency-padding": "index-row-dependency-padding",
+      "dependency-self": "index-row-dependency",
+      "dependency-width": "index-widths",
+      "duplicate-identity": "index-artifact-identity",
+      "duplicate-name": "index-artifact-length",
+      "empty-name": "index-row-name",
+      "execution-source": "index-row-source",
+      "header-crc": "index-header-crc",
+      "header-reserved": "index-header-reserved",
+      "header-seal-omits-record-crc-fields": "index-header-crc",
+      "header-width": "index-widths",
+      "identity": "index-identity",
+      "images-zero": "index-row-zero-authority",
+      "magic": "index-magic",
+      "name-padding": "index-row-name",
+      "record-bytes": "index-record-bytes",
+      "record-crc": "index-record-crc",
+      "row-crc": "index-record-crc",
+      "row-reserved": "index-row-reserved",
+      "row-width": "index-widths",
+      "sector-range": "index-row-locator",
+      "track-zero": "index-row-locator",
+      "version": "index-version",
+      "zero-identity": "index-row-zero-authority",
+      "zero-rows": "index-count"
+    },
+    "source": {
+      "arguments": [
+        "offset-low-byte",
+        "offset-high-byte"
+      ],
+      "assembler_leaf": "vm_c2d_byte",
+      "assembler_leaf_tokens": 8,
+      "bank2_decisions": [
+        "active persistent identity universe",
+        "canonical static Bank-2 edge from C2D slots 0..5",
+        "persistent Bank-2 low edge",
+        "transient C2D and Bank-2 high edges",
+        "six-currency aggregate preflight",
+        "dependency order and idempotence"
+      ],
+      "claimed_resident_state_bytes": 0,
+      "lisp_tokens": 10,
+      "native_policy_decisions": 0,
+      "new_session_records": 0,
+      "overlay_roundtrips": 0,
+      "prim_id": 67,
+      "primitive_tokens": 3,
+      "published_c2d_bytes": 33840,
+      "read_bytes": 1,
+      "retired_string_query_protocol": true,
+      "status": "passed-private-C2D-byte-primitive-bank2-orchestration"
+    },
+    "source_mutations_rejected": {
+      "active-prefix-removed": "lisp-seam",
+      "append-seam-removed": "lisp-seam",
+      "assembler-leaf-edge": "primitive-seam",
+      "byte-args-arity": "primitive-seam",
+      "byte-args-helper-removed": "primitive-seam",
+      "c2d-read-address": "primitive-seam",
+      "c2d-read-width": "primitive-seam",
+      "capacity-orchestration-removed": "lisp-seam",
+      "header-record-crc-high-omitted": "lisp-seam",
+      "header-record-crc-low-omitted": "lisp-seam",
+      "leaf-proof-precondition": "assembler-leaf-seam",
+      "leaf-published-high-bound": "assembler-leaf-seam",
+      "leaf-published-low-bound": "assembler-leaf-seam",
+      "leaf-reader-Z": "assembler-leaf-seam",
+      "leaf-reader-edge": "assembler-leaf-seam",
+      "leaf-size": "assembler-leaf-seam",
+      "native-policy-reintroduced": "native-policy",
+      "old-query-protocol": "retired-query-protocol",
+      "prim-id": "primitive-seam",
+      "raw-c2d-read-removed": "lisp-seam",
+      "registry-introduced": "loaded-registry",
+      "static-prefix-removed": "lisp-seam",
+      "transient-fronts-removed": "lisp-seam",
+      "typed-result": "primitive-seam"
+    },
+    "target_compile": "bytecode-p0-stdlib-check: PASS suites=1 functions=333 cases=204 objects=553 code_bytes=18168 dir_bytes=3871 steps=26390"
+  },
+  "format": "lisp65-c2.2-product-link70-header-crc-successor-v1",
+  "link_number": 70,
+  "manifest": {
+    "bytes": 354122,
+    "path": "build/post-promotion/link70-defstruct-header-crc/canonical-product-manifest.json",
+    "sha256": "69a4873be8eb510badfc953b116803765547e746462b68a46b8f750e390852df"
+  },
+  "next_gate": "Bundled hardware replay: require defstruct, construct/access/mutate a point, same-generation require idempotence, and busy Session-service fail-closed window identity.",
+  "predecessor": {
+    "bytes": 4247,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link69-defstruct-foundations-structural-receipt.json",
+    "sha256": "0865e95b101a2df4cf0aaf08d8a96ad6dcf9d28270f3e58549c3487a7d956d93"
+  },
+  "product": {
+    "bytes": 41566,
+    "path": "build/post-promotion/link70-defstruct-header-crc/final/lisp65-c2-substitution-linked.prg",
+    "sha256": "da53d89b8a60e259516ed20615f02aa373daf9a707517cadfe5557c1276514c6"
+  },
+  "promotable": false,
+  "qualified_WPLTO": {
+    "bytes": 11829,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link70-defstruct-header-crc-wplto-receipt.json",
+    "sha256": "41211a96b5b81fcc705bf517a43a6167e7297fe75a30ba93875959671ee7998b"
+  },
+  "recorded_on": "2026-07-27",
+  "session_service": {
+    "boot_records": 12,
+    "generation_binding": "canonical selected Session-family catalog and generation",
+    "overlay_to_loader_edges": 0,
+    "session_records": 52,
+    "shared_facade_to_loader_edges": 1,
+    "slice_bytes": 399,
+    "slot": 51,
+    "status": "passed-one-Session-record-no-overlay-recursion-generation-bound"
+  },
+  "status": "passed-Link70-header-CRC-successor-hardware-not-run",
+  "walls": {
+    "bank0_text_headroom_bytes": 351,
+    "e000_headroom_bytes": 56,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 61,
+    "session_family_headroom_bytes": 113
+  }
+}

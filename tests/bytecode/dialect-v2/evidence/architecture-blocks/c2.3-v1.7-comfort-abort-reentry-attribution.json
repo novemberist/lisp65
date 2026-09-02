@@ -1,0 +1,124 @@
+{
+  "authority": {
+    "candidate_ELF": {
+      "bytes": 647524,
+      "path": "build/c2.3/v1.7-comfort-phase1b-acceptance-media-r1/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "79158c0e0b0034d6843b90b4acae32ed6363cc4c835e1a68f4a37317bf00aa3e"
+    },
+    "plan": {
+      "bytes": 20835,
+      "path": "docs/planning/v1.7.0-pre-plan.md",
+      "sha256": "87b75f994959287bb52ecf7a6d1405a18304812de1c410a7094e734e58216450"
+    },
+    "raw_capture": {
+      "bytes": 16176,
+      "path": "build/c2.3/v1.7-comfort-phase1b-acceptance-media-r1/device-session/abort-reentry-first-red-20260825/capture.json",
+      "sha256": "b3121b561b896f3b5ac44ed2949126b58f15b2620e4ed6edc1628ebbc8f90358"
+    }
+  },
+  "claim_limit": "Names the post-E26 E29 mechanism from one stopped-state capture and the accepted final ELF. No fix, link, medium or acceptance claim.",
+  "device": {
+    "abort": {
+      "done": 0,
+      "end_slot": 32,
+      "front_depth_scratch": {
+        "causal": false,
+        "reason": "fronts phase was never reached",
+        "value": 1
+      },
+      "journal_result": 0,
+      "start_slot": 31,
+      "state": 1
+    },
+    "c2_ready": 0,
+    "c2j": {
+      "all_zero": true,
+      "bytes": 64
+    },
+    "comfort_rows_353_356_present": true,
+    "high_row63_all_zero": true,
+    "phase_owner": {
+      "name": "APPEND",
+      "value": 2
+    },
+    "rtov": {
+      "busy": 0,
+      "family": {
+        "name": "SESSION",
+        "value": 2
+      },
+      "fault": {
+        "name": "ERR_STACK",
+        "value": 14
+      },
+      "generation": 1,
+      "loaded_len": 0
+    },
+    "tuple": {
+      "A": "0x01",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC": "0x83d1",
+      "SP": "0x01da",
+      "X": "0xcf",
+      "Y": "0x00",
+      "Z": "0x00",
+      "suffix": "A619    00     A1 N.E....C ...P 15 -  00 - .....lh."
+    }
+  },
+  "format": "lisp65-c2-v17-comfort-abort-reentry-attribution-v1",
+  "inputs": {
+    "abort_landing": {
+      "bytes": 6580,
+      "path": "src/interrupt.c",
+      "sha256": "8f68517539d3e62590abb42125909fdbc7fb13b737c495bd7542d7394bbfafec"
+    },
+    "native_repl": {
+      "bytes": 14119,
+      "path": "src/repl.c",
+      "sha256": "df2c0c184e3bac264a222d2e8740ce38308dd23601b3a08f5d865626809eb208"
+    },
+    "product_runtime": {
+      "bytes": 165420,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "0a9d3ef1b0b64734cb09c3746ed326a80ffceaf9a6aaf89cc8f68b647ef946c2"
+    },
+    "runtime_overlay": {
+      "bytes": 92183,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "b70f032a8e78c0474b8079d71b1dbd6543b44ee83816d02176f00863cdbc70d2"
+    }
+  },
+  "mechanism": {
+    "excluded": [
+      "stale C2J (64 zero bytes)",
+      "surviving transient record (row 63 is zero)",
+      "lost Comfort publication (all four entry rows remain present)",
+      "static overlay overflow (all linked sections fit the window)",
+      "runtime-overlay busy or unwiped payload (busy=0, loaded_len=0)"
+    ],
+    "linked_window": {
+      "bytes": 1792,
+      "limit": "0xca56",
+      "start": "0xc356"
+    },
+    "name": "abort cleanup executes transported C2J phases before longjmp restores the soft stack",
+    "sequence": [
+      "Comfort evaluation raises the intentional type error",
+      "lisp_abort_jump invokes c2_product_abort_cleanup on the still-deep Comfort soft stack",
+      "journal validate/reconstruct is the first transported abort range",
+      "vm_runtime_overlay_exec_family rejects RTOV_SOFT_SP <= 0xca56 with ERR_STACK",
+      "c2_abort_driver clears c2_ready and cannot release the APPEND owner after the latched transport fault",
+      "longjmp returns to the native prompt; the next persistent BCODE lookup has zero visible length and reports E29"
+    ]
+  },
+  "recorded_on": "2026-08-25",
+  "repair_boundary": {
+    "not_a_ready_rearm": true,
+    "one_round_only": true,
+    "pre_longjmp_work_retained": "overlay retirement/transaction invalidation and continuation sanitization remain before control leaves the failing stack",
+    "required_property": "transported C2J cleanup runs after the top-level longjmp has restored the soft stack and before error rendering or new evaluation"
+  },
+  "status": "ATTRIBUTED: PRE-LONGJMP SOFT-STACK OVERLAY REFUSAL"
+}

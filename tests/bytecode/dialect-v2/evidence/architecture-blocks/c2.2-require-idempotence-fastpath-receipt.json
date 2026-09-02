@@ -1,0 +1,218 @@
+{
+  "authority": {
+    "baseline_code_calibration": {
+      "authority": {
+        "bytes": 13165,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-phase-m1-require-latency-measurement-receipt.json",
+        "sha256": "11068e07e177a74f7bd110c2abd937124c075323b8b1e3328b442e78c1abf241"
+      },
+      "bytes": 13835,
+      "scope": "accepted pre-fastpath Bank-2 resolver measurement"
+    },
+    "baseline_measurement": {
+      "bytes": 13165,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-phase-m1-require-latency-measurement-receipt.json",
+      "sha256": "11068e07e177a74f7bd110c2abd937124c075323b8b1e3328b442e78c1abf241"
+    },
+    "candidate_manifest": {
+      "bytes": 293075,
+      "path": "build/post-promotion/phase-m/require-fastpath/stdlib-p0.manifest.json",
+      "sha256": "ab00bdb6050c69edc89bf9d799716c849a91a90e31001eee38079925bb245d3a"
+    },
+    "driver": {
+      "bytes": 18275,
+      "path": "tools/host-lisp/c2_require_idempotence_fastpath.py",
+      "sha256": "4e7df0e1ef67602b8f78f4c49e9752dd775c65822f959ecaa50d645a179263f1"
+    },
+    "lisp": {
+      "bytes": 32854,
+      "path": "lib/stdlib-require.lisp",
+      "sha256": "0fc0bfe95595db61e3ed454dbf303581e16ccfa3e579cb37c445f06ceef571ff"
+    },
+    "suite": {
+      "bytes": 3402,
+      "path": "tests/bytecode/libs/p0-stdlib-require-resolver.json",
+      "sha256": "98bd2834f99cee247ade79c7001d0dac984cfd25b46b42e8fbfbec8c9861c95a"
+    }
+  },
+  "baseline_repeat": {
+    "prim67_reads": 384,
+    "vm_instructions": 134788
+  },
+  "candidate": {
+    "first_require": {
+      "c2d_and_code_changed": true,
+      "disk_sector_reads": 2,
+      "loader_attempts": 2,
+      "phase_instructions": {
+        "control": 20,
+        "load_publish": 20797,
+        "parse": 105974,
+        "resolve": 25900
+      },
+      "prim67_reads": 612,
+      "result": "t",
+      "vm_instructions": 152691
+    },
+    "idempotent_repeat": {
+      "c2d_and_code_changed": false,
+      "disk_sector_reads": 0,
+      "loader_attempts": 0,
+      "phase_instructions": {
+        "control": 2750,
+        "load_publish": 0,
+        "parse": 0,
+        "resolve": 0
+      },
+      "prim67_reads": 26,
+      "result": "t",
+      "vm_instructions": 2750
+    },
+    "repeat_reduction": {
+      "prim67_reads_percent": 93.2292,
+      "required_minimum_percent": 90,
+      "vm_steps_percent": 97.9598
+    }
+  },
+  "claim_limit": "Host VM steps and Prim-67 reads are exact for the compiled candidate against the source-built current profile/D81 model. No target timing, DMA, IRQ, physical GC, product link or hardware claim is made.",
+  "fallback_mutations": {
+    "different-library": {
+      "loader_attempts": 0,
+      "parser_instructions": 105974,
+      "prim67_reads": 491,
+      "result": "t",
+      "vm_instructions": 143220
+    },
+    "foreign-identity": {
+      "loader_attempts": 1,
+      "parser_instructions": 105974,
+      "prim67_reads": 703,
+      "result": "t",
+      "vm_instructions": 159810
+    },
+    "stale-cache": {
+      "loader_attempts": 0,
+      "parser_instructions": 105974,
+      "prim67_reads": 597,
+      "result": "t",
+      "vm_instructions": 150548
+    },
+    "wrong-generation": {
+      "loader_attempts": 0,
+      "parser_instructions": 105974,
+      "prim67_reads": 65,
+      "result": "nil",
+      "vm_instructions": 111147
+    },
+    "wrong-index-lock": {
+      "loader_attempts": 0,
+      "parser_instructions": 105974,
+      "prim67_reads": 0,
+      "result": "nil",
+      "vm_instructions": 106251
+    }
+  },
+  "format": "lisp65-c2.2-require-idempotence-fastpath-v1",
+  "geometry": {
+    "bank2_ceiling_bytes": 512,
+    "bank2_delta_bytes": 481,
+    "baseline_code_bytes": 13835,
+    "candidate_code_bytes": 14316,
+    "compile_stdout": [
+      "bytecode-p0-stdlib-check: PASS suites=1 functions=338 cases=204 objects=558 code_bytes=18655 dir_bytes=3906 steps=26257",
+      "bytecode-p0-stdlib-artifacts: WROTE build/post-promotion/phase-m/require-fastpath/stdlib-p0 objects=339 code_bytes=14316 ext_bytes=33944 dir_bytes=2373 manifest=build/post-promotion/phase-m/require-fastpath/stdlib-p0.manifest.json disasm=build/post-promotion/phase-m/require-fastpath/stdlib-p0.disasm.txt",
+      "bytecode-p0-stdlib-embed-check: PASS cases=204 objects=339 literal_nodes=744 literal_patches=688 steps=26257"
+    ],
+    "resident_delta_bytes": 0
+  },
+  "hardware_runs": 0,
+  "option_A_mutation_narrowing": {
+    "foreign-identity": "still invalidates the cache and executes the full parser/resolver, but a geometrically valid non-index row is now an ordinary Session definition and the requested loaded package returns t"
+  },
+  "product_links": 0,
+  "promotable": false,
+  "proof_boundary": {
+    "cache_is_not_authority": "The cache never marks a library loaded. A hit is accepted only after current C2D truth independently matches every cached discriminator.",
+    "fast_checks": [
+      "same library symbol as one-entry resolution cache",
+      "same non-NIL canonical L65I index lock",
+      "same generation and all five published count/front values",
+      "same complete ordered persistent C2D identity sequence"
+    ],
+    "immutable_header_not_reread": "The slow path proves header shape, caps, layout, static prefix, active layout and transient fronts before caching. Between serialized top-level operations no legal product writer can mutate those immutable fields without changing the checked generation/count/front state. The permanent source/ELF no-writer proof is required before promotion."
+  },
+  "recorded_on": "2026-07-28",
+  "sample_count": 5,
+  "source_gate": {
+    "cache_authority": false,
+    "loaded_registry": false,
+    "mutations_rejected": {
+      "identity-sequence-check": "fastpath-proof-guard",
+      "index-lock-check": "fastpath-proof-guard",
+      "loaded-registry": "loaded-registry",
+      "parser-before-fastpath": "fastpath-source-seam",
+      "state-check": "fastpath-proof-guard"
+    },
+    "tokens": 7
+  },
+  "source_reproducible_fixture": {
+    "fixtures": {
+      "compiler_carrier": "bytecode-p0-stdlib-embed-check: PASS cases=3 objects=111 literal_nodes=592 literal_patches=592 steps=10025",
+      "compiler_tier": "c2-product-compiler-tier: PASS functions=111 suite=build/post-promotion/require-option-A-fresh-fixtures/compiler/p0-c2-compiler-tier.json",
+      "defstruct": "bytecode-p0-stdlib-embed-check: PASS cases=2 objects=16 literal_nodes=92 literal_patches=92 steps=525",
+      "place": "bytecode-p0-stdlib-embed-check: PASS cases=11 objects=16 literal_nodes=50 literal_patches=50 steps=369"
+    },
+    "geometry": {
+      "build_id": 154461424,
+      "catalog_crc32": 0,
+      "code_bytes": 45063,
+      "entries": 750,
+      "generation": 1,
+      "images": 6,
+      "immutable_images": 6,
+      "resolutions": 2931,
+      "roots": 350
+    },
+    "media": {
+      "D81": {
+        "bytes": 819200,
+        "path": "build/post-promotion/require-option-A-fresh-fixtures/require-place-current-bound.d81",
+        "sha256": "03a7565cbc99178486e5fbe6bc51745e1d9a3cb62df63190f4cfddfd7c8d1057"
+      },
+      "defstruct": {
+        "bytes": 2659,
+        "path": "build/post-promotion/require-option-A-fresh-fixtures/defstruct.l65s",
+        "sha256": "80d8b5ac614fcd5d021a0aaf6e9a30de850b766412650765c98e74b03229c4ef"
+      },
+      "index": {
+        "bytes": 128,
+        "path": "build/post-promotion/require-option-A-fresh-fixtures/l65index",
+        "sha256": "10c651d6065a16ae882d04f40aa97fe0cc467213f6ed6d390f43db3fcb94a8bf"
+      },
+      "index_mutations_rejected": 32,
+      "locators": {
+        "defstruct": [
+          39,
+          9
+        ],
+        "l65index": [
+          39,
+          0
+        ],
+        "place": [
+          39,
+          1
+        ]
+      },
+      "place": {
+        "bytes": 1925,
+        "path": "build/post-promotion/require-option-A-fresh-fixtures/place.l65s",
+        "sha256": "5a58c442febc1d4f49550887877f47cb1117ab13c177e6a8d44ae828669bf4d6"
+      },
+      "product_build_id": "0x0934e4f0",
+      "source_rebuilt": true
+    },
+    "resolver": "c2-require-resolver-gate: PASS rows=2 source-mutations=36 index-mutations=32 capacity=6/6"
+  },
+  "status": "passed-parser-free-idempotence-fastpath"
+}

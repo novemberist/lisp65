@@ -3445,3 +3445,388 @@ c2-v190-release-package-selftest: c2-v190-public-clean-build-selftest
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_release_package.py selftest
 
 check-source: c2-v190-release-package-selftest
+
+.PHONY: c2-v200-release-media-check c2-v200-candidate-seal-check c2-v200-public-clean-build-selftest
+c2-v200-release-media-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_media.py check
+
+c2-v200-candidate-seal-check: c2-v200-release-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_candidate_seal.py check
+
+c2-v200-public-clean-build-selftest: c2-v200-candidate-seal-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_public_clean_build.py selftest
+
+check-source: c2-v200-public-clean-build-selftest
+
+.PHONY: check-source-runtime-selftest check-source-runtime-check check-source-inner
+check-source-runtime-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/check_source_runtime.py selftest
+
+check-source-runtime-check: check-source-runtime-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/check_source_runtime.py check \
+		tests/bytecode/dialect-v2/evidence/post-release/post-v190-check-source-runtime-receipt-20260830.json \
+		--tiers config/check-source-tiers.json
+
+# Developer convenience only.  The complete check-source target remains the
+# sole closing-commit certification and deliberately does not depend on this.
+check-source-inner:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/check_source_runtime.py inner \
+		--receipt tests/bytecode/dialect-v2/evidence/post-release/post-v190-check-source-runtime-receipt-20260830.json \
+		--tiers config/check-source-tiers.json
+
+check-source: check-source-runtime-check
+
+.PHONY: plan-document-hygiene-selftest plan-document-hygiene-check
+plan-document-hygiene-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/plan_document_hygiene.py selftest
+
+plan-document-hygiene-check: plan-document-hygiene-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/plan_document_hygiene.py check
+
+check-source: plan-document-hygiene-check
+
+.PHONY: consolidated-consumption-authority-selftest consolidated-consumption-authority-check
+consolidated-consumption-authority-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/consolidated_consumption_authority.py selftest
+
+consolidated-consumption-authority-check: consolidated-consumption-authority-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/consolidated_consumption_authority.py check
+
+check-source: consolidated-consumption-authority-check
+
+.PHONY: receipt-idempotence-audit-selftest receipt-idempotence-audit-check
+receipt-idempotence-audit-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/receipt_idempotence_audit.py selftest
+
+receipt-idempotence-audit-check: receipt-idempotence-audit-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/receipt_idempotence_audit.py check
+
+check-source: receipt-idempotence-audit-check
+
+.PHONY: public-surface-domain-audit-selftest public-surface-domain-audit-check
+public-surface-domain-audit-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/public_surface_domain_audit.py selftest
+
+public-surface-domain-audit-check: public-surface-domain-audit-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/public_surface_domain_audit.py check
+
+check-source: public-surface-domain-audit-check
+
+.PHONY: public-naming-audit-selftest public-naming-audit-check
+public-naming-audit-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/public_naming_audit.py selftest
+
+public-naming-audit-check: public-naming-audit-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/public_naming_audit.py check
+
+check-source: public-naming-audit-check
+
+.PHONY: c2-v200-symbol22-first-fault-pricing-selftest c2-v200-symbol22-first-fault-pricing-check
+c2-v200-symbol22-first-fault-pricing-selftest: public-naming-audit-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_first_fault_pricing.py selftest
+
+c2-v200-symbol22-first-fault-pricing-check: c2-v200-symbol22-first-fault-pricing-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_first_fault_pricing.py check
+
+check-source: c2-v200-symbol22-first-fault-pricing-check
+
+.PHONY: c2-v200-symbol22-first-fault-repricing-selftest c2-v200-symbol22-first-fault-repricing-check
+c2-v200-symbol22-first-fault-repricing-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_first_fault_repricing.py selftest
+
+c2-v200-symbol22-first-fault-repricing-check: c2-v200-symbol22-first-fault-repricing-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_first_fault_repricing.py check
+
+check-source: c2-v200-symbol22-first-fault-repricing-check
+
+.PHONY: c2-v200-symbol22-r2-inventory-red-selftest c2-v200-symbol22-r2-inventory-red-check
+c2-v200-symbol22-r2-inventory-red-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_r2_inventory_first_red.py selftest
+
+c2-v200-symbol22-r2-inventory-red-check: c2-v200-symbol22-r2-inventory-red-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_r2_inventory_first_red.py check
+
+check-source: c2-v200-symbol22-r2-inventory-red-check
+
+.PHONY: c2-v200-symbol22-first-fault-device-media-check
+c2-v200-symbol22-first-fault-device-media-check: c2-v200-symbol22-r2-inventory-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_first_fault_device_media.py source-check
+
+check-source: c2-v200-symbol22-first-fault-device-media-check
+
+.PHONY: c2-v200-symbol22-build-id-rebind-check
+c2-v200-symbol22-build-id-rebind-check: c2-v200-symbol22-first-fault-device-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_build_id_rebind.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_build_id_rebind.py selftest
+
+check-source: c2-v200-symbol22-build-id-rebind-check
+
+.PHONY: c2-v200-symbol22-build-id-device-media-check
+c2-v200-symbol22-build-id-device-media-check: c2-v200-symbol22-build-id-rebind-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_build_id_device_media.py source-check
+
+check-source: c2-v200-symbol22-build-id-device-media-check
+
+.PHONY: c2-v200-symbol22-build-id-device-result-check
+c2-v200-symbol22-build-id-device-result-check: c2-v200-symbol22-build-id-device-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_symbol22_build_id_device_result.py check
+
+check-source: c2-v200-symbol22-build-id-device-result-check
+
+.PHONY: c2-v200-comfort-return-card-check
+c2-v200-comfort-return-card-check: c2-v200-symbol22-build-id-device-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_card.py selftest
+
+check-source: c2-v200-comfort-return-card-check
+
+.PHONY: c2-v200-comfort-return-media-check
+c2-v200-comfort-return-media-check: c2-v200-comfort-return-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_media.py source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_media.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_materialization_repair.py source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_materialization_repair.py selftest
+
+check-source: c2-v200-comfort-return-media-check
+
+.PHONY: c2-v200-comfort-return-repair-red-attribution-check
+c2-v200-comfort-return-repair-red-attribution-check: c2-v200-comfort-return-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_repair_red_attribution.py source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_repair_red_attribution.py selftest
+
+check-source: c2-v200-comfort-return-repair-red-attribution-check
+
+.PHONY: c2-v200-comfort-return-final-composition-check
+c2-v200-comfort-return-final-composition-check: c2-v200-comfort-return-repair-red-attribution-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_final_composition.py source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_final_composition.py selftest
+
+check-source: c2-v200-comfort-return-final-composition-check
+
+.PHONY: c2-v200-comfort-return-final-device-result-check
+c2-v200-comfort-return-final-device-result-check: c2-v200-comfort-return-final-composition-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_final_device_result.py source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_comfort_return_final_device_result.py selftest
+
+check-source: c2-v200-comfort-return-final-device-result-check
+
+.PHONY: packed-medium-transitive-closure-selftest
+packed-medium-transitive-closure-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_packed_medium_transitive_closure.py --selftest
+
+check-source: packed-medium-transitive-closure-selftest
+
+.PHONY: c2-v200-block3-return-pricing-check
+c2-v200-block3-return-pricing-check: packed-medium-transitive-closure-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_return_pricing.py check
+
+check-source: c2-v200-block3-return-pricing-check
+
+.PHONY: c2-v200-block3-banner-only-repair-preflight-check
+c2-v200-block3-banner-only-repair-preflight-check: packed-medium-transitive-closure-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_banner_only_repair_preflight.py check
+
+check-source: c2-v200-block3-banner-only-repair-preflight-check
+
+.PHONY: c2-v200-block3-banner-repair-product-check
+c2-v200-block3-banner-repair-product-check: c2-v200-block3-banner-only-repair-preflight-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_banner_repair_product_card.py check
+
+check-source: c2-v200-block3-banner-repair-product-check
+
+.PHONY: c2-v200-block3-banner-repair-media-check
+c2-v200-block3-banner-repair-media-check: c2-v200-block3-banner-repair-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_banner_repair_device_media.py check
+
+check-source: c2-v200-block3-banner-repair-media-check
+
+.PHONY: c2-v200-block3-b31-input-attribution-check
+c2-v200-block3-b31-input-attribution-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_b31_input_attribution.py check
+
+check-source: c2-v200-block3-b31-input-attribution-check
+
+.PHONY: c2-v200-domain-tier1-pricing-check
+c2-v200-domain-tier1-pricing-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_pricing.py check
+
+check-source: c2-v200-domain-tier1-pricing-check
+
+.PHONY: c2-v200-domain-tier1-product-preflight-check
+c2-v200-domain-tier1-product-preflight-check: c2-v200-domain-tier1-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check-preflight
+
+check-source: c2-v200-domain-tier1-product-preflight-check
+
+.PHONY: c2-v200-domain-tier1-product-postlink-red-check
+c2-v200-domain-tier1-product-postlink-red-check: c2-v200-domain-tier1-product-preflight-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check-postlink-red
+
+check-source: c2-v200-domain-tier1-product-postlink-red-check
+
+.PHONY: c2-v200-domain-tier1-output-root-conversion-check
+c2-v200-domain-tier1-output-root-conversion-check: c2-v200-domain-tier1-product-postlink-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check-output-root-conversion
+
+check-source: c2-v200-domain-tier1-output-root-conversion-check
+
+.PHONY: c2-v200-domain-tier1-resume-red-check
+c2-v200-domain-tier1-resume-red-check: c2-v200-domain-tier1-output-root-conversion-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check-resume-red
+
+check-source: c2-v200-domain-tier1-resume-red-check
+
+.PHONY: c2-v200-domain-tier1-lifecycle-projection-check
+c2-v200-domain-tier1-lifecycle-projection-check: c2-v200-domain-tier1-resume-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check-lifecycle-projection
+
+check-source: c2-v200-domain-tier1-lifecycle-projection-check
+
+.PHONY: c2-v200-domain-tier1-inherited-final-gate-conversions-check
+c2-v200-domain-tier1-inherited-final-gate-conversions-check: c2-v200-domain-tier1-lifecycle-projection-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check-inherited-final-gate-conversions
+
+check-source: c2-v200-domain-tier1-inherited-final-gate-conversions-check
+
+.PHONY: c2-v200-domain-tier1-acceptance-freight-conversion-check
+c2-v200-domain-tier1-acceptance-freight-conversion-check: c2-v200-domain-tier1-inherited-final-gate-conversions-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check-acceptance-freight-conversion
+
+check-source: c2-v200-domain-tier1-acceptance-freight-conversion-check
+
+.PHONY: c2-v200-domain-tier1-product-check
+c2-v200-domain-tier1-product-check: c2-v200-domain-tier1-acceptance-freight-conversion-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py selftest
+
+check-source: c2-v200-domain-tier1-product-check
+
+.PHONY: c2-v200-domain-tier1-contract-authority-check
+c2-v200-domain-tier1-contract-authority-check: c2-v200-domain-tier1-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier1_product_card.py check-contract-authority-closure
+
+check-source: c2-v200-domain-tier1-contract-authority-check
+
+.PHONY: c2-v200-interactive-delivery-chain-pricing-check
+c2-v200-interactive-delivery-chain-pricing-check: c2-v200-domain-tier1-contract-authority-check c2-v200-block3-b31-input-attribution-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_interactive_delivery_chain_pricing.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_interactive_delivery_chain_pricing.py selftest
+
+check-source: c2-v200-interactive-delivery-chain-pricing-check
+
+.PHONY: c2-v200-domain-tier2-pricing-check
+c2-v200-domain-tier2-pricing-check: c2-v200-domain-tier1-contract-authority-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier2_pricing.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier2_pricing.py selftest
+
+check-source: c2-v200-domain-tier2-pricing-check
+
+.PHONY: c2-v200-domain-tier2-product-check
+c2-v200-domain-tier2-product-check: c2-v200-domain-tier2-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier2_product_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_domain_tier2_product_card.py selftest
+
+check-source: c2-v200-domain-tier2-product-check
+
+.PHONY: c2-v200-interactive-delivery-chain-product-check
+c2-v200-interactive-delivery-chain-product-check: c2-v200-interactive-delivery-chain-pricing-check c2-v200-domain-tier2-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_interactive_delivery_chain_product_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_interactive_delivery_chain_product_card.py selftest
+
+check-source: c2-v200-interactive-delivery-chain-product-check
+
+.PHONY: c2-v200-tier2-delivery-device-media-check
+c2-v200-tier2-delivery-device-media-check: c2-v200-interactive-delivery-chain-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_tier2_delivery_device_media.py source-check
+
+check-source: c2-v200-tier2-delivery-device-media-check
+
+.PHONY: c2-v200-tier2-hot-path-repair-preflight-check
+c2-v200-tier2-hot-path-repair-preflight-check: c2-v200-tier2-delivery-device-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_tier2_hot_path_repair_card.py check-preflight
+
+.PHONY: c2-v200-tier2-hot-path-repair-first-red-check
+c2-v200-tier2-hot-path-repair-first-red-check: c2-v200-tier2-delivery-device-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_tier2_hot_path_repair_card.py check-first-red
+
+check-source: c2-v200-tier2-hot-path-repair-first-red-check
+
+.PHONY: c2-v200-tier2-descope-product-check
+c2-v200-tier2-descope-product-check: c2-v200-tier2-hot-path-repair-first-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_tier2_descope_product_card.py check-current
+
+check-source: c2-v200-tier2-descope-product-check
+
+.PHONY: c2-v200-tier2-descope-device-media-check
+c2-v200-tier2-descope-device-media-check: c2-v200-tier2-descope-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_tier2_descope_device_media.py source-check
+
+check-source: c2-v200-tier2-descope-device-media-check
+
+.PHONY: c2-v200-block3-hot-path-repair-host-check
+c2-v200-block3-hot-path-repair-host-check: c2-v200-tier2-descope-device-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_hot_path_repair.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_hot_path_repair.py selftest
+
+check-source: c2-v200-block3-hot-path-repair-host-check
+
+.PHONY: c2-v200-block3-hot-path-repair-product-check
+c2-v200-block3-hot-path-repair-product-check: c2-v200-block3-hot-path-repair-host-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_hot_path_repair_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_hot_path_repair_card.py selftest
+
+check-source: c2-v200-block3-hot-path-repair-product-check
+
+.PHONY: c2-v200-block3-hot-path-repair-device-media-check
+c2-v200-block3-hot-path-repair-device-media-check: c2-v200-block3-hot-path-repair-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_hot_path_repair_device_media.py source-check
+
+check-source: c2-v200-block3-hot-path-repair-device-media-check
+
+.PHONY: c2-v200-block3-hot-path-repair-device-result-check
+c2-v200-block3-hot-path-repair-device-result-check: c2-v200-block3-hot-path-repair-device-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_hot_path_repair_device_result.py source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_hot_path_repair_device_result.py selftest
+
+check-source: c2-v200-block3-hot-path-repair-device-result-check
+
+.PHONY: c2-v200-release-shape-pricing-check
+c2-v200-release-shape-pricing-check: c2-v200-block3-hot-path-repair-device-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_shape_pricing.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_shape_pricing.py selftest
+
+check-source: c2-v200-release-shape-pricing-check
+
+.PHONY: c2-v200-release-strip-product-check
+c2-v200-release-strip-product-check: c2-v200-release-shape-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_strip_product_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_strip_product_card.py selftest
+
+check-source: c2-v200-release-strip-product-check
+
+.PHONY: c2-v200-release-strip-device-media-check
+c2-v200-release-strip-device-media-check: c2-v200-release-strip-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_strip_device_media.py source-check
+
+check-source: c2-v200-release-strip-device-media-check
+
+.PHONY: c2-v200-release-strip-device-result-check
+c2-v200-release-strip-device-result-check: c2-v200-release-strip-device-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_strip_device_result.py source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_strip_device_result.py selftest
+
+check-source: c2-v200-release-strip-device-result-check
+
+.PHONY: c2-v200-release-device-attribution-check
+c2-v200-release-device-attribution-check: c2-v200-release-strip-device-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_device_attributions.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_device_attributions.py selftest
+
+check-source: c2-v200-release-device-attribution-check
+
+.PHONY: c2-v200-release-card-check
+c2-v200-release-card-check: c2-v200-release-device-attribution-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_card.py selftest
+
+check-source: c2-v200-release-card-check

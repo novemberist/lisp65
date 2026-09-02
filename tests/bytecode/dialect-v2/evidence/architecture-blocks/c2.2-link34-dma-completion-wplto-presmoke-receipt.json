@@ -1,0 +1,63 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 4087,
+      "path": "config/c2-runtime-overlay-dma-completion-contract.json",
+      "sha256": "7fa45c183fa470114d0d91d8dce34deb7bb7e75d7f94aa6f7d5ebc148245fc03"
+    },
+    "contract_document": {
+      "bytes": 5251,
+      "path": "docs/planning/c2.2-runtime-overlay-dma-completion-contract.md",
+      "sha256": "07db0888da14a63b6176a60dd0c4aba3a899138ff59c87165d8ff070703bd3a8"
+    },
+    "mutations": {
+      "missing-chain": "rejected",
+      "missing-fill": "rejected",
+      "missing-memory-barrier": "rejected",
+      "missing-poll": "rejected",
+      "second-direct-trigger": "rejected",
+      "wrong-marker-address": "rejected",
+      "wrong-marker-value": "rejected"
+    },
+    "negative_hardware_first_red": {
+      "bytes": 3565,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link34-catalog-verifier-edma-completion-hardware-first-red-diagnosis.json",
+      "sha256": "ec6203f0e11399a32eb765d0268f7a27c31fe0533dce3a8f8fcb722657d82bb0"
+    },
+    "source": {
+      "bytes": 60192,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "bded1b7fd13115624e4b73a6b49884ea063b2962bf022cccee04362cfb242c50"
+    },
+    "source_gate": {
+      "consumer_seams": [
+        "island-source-crc-chunk",
+        "island-carrier-record",
+        "island-carrier-payload",
+        "catalog-directory-crc-chunk",
+        "catalog-header",
+        "record-entry",
+        "verifier-payload",
+        "application-payload",
+        "function-pointer-binding"
+      ],
+      "status": "passed-one-target-transport-nine-consumer-seams",
+      "target_trigger_count": 1
+    }
+  },
+  "diagnostic": {
+    "message": "link command failed before orphan-wrapper acceptance: exit=1",
+    "type": "RuntimeError"
+  },
+  "format": "lisp65-c2-link34-dma-completion-wplto-first-red-v1",
+  "link34_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+    "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+    "status": "untouched"
+  },
+  "next_gate": "stop; no hardware run and no product link",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: DMA-completion WPLTO pre-smoke stopped"
+}

@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-check-source-tiers-v1",
+  "version": 1,
+  "measurement_receipt": "tests/bytecode/dialect-v2/evidence/post-release/post-v190-check-source-runtime-receipt-20260830.json",
+  "policy": {
+    "selection": "Every direct check-source prerequisite measured at or above 10000 ms in the bound full run is complete-only.",
+    "complete_only_threshold_ms": 10000,
+    "complete_only_targets": [
+      "r6-g6-registered-seal-check",
+      "dialect-migration-selftest",
+      "workbench-ux-harness-selftest",
+      "c2-v126-editor-allocation-check",
+      "c2-m65-hw-check",
+      "c2-media-builder-closure-enumeration-check",
+      "c2-require-prior-append-option-a-check",
+      "c2-v180-substrate-device-result-check"
+    ],
+    "closing_certification_target": "check-source",
+    "inner_loop_is_certification": false,
+    "new_direct_targets_default_to_inner": true
+  },
+  "decision": {
+    "choice": "tiering",
+    "incremental_revalidation_rejected": "It would create a second cache-validity authority over sealed archives; the complete target already owns certification.",
+    "claim_limit": "check-source-inner is a non-certifying developer convenience. Every closing commit still runs complete check-source."
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-ship-shape-input-probe-preflight-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HOST GREEN; ONE AUTONOMOUS NON-PROMOTABLE DEVICE PROBE READY",
+  "candidate_link": 89,
+  "fixture": {
+    "project": {
+      "path": "tests/bytecode/dialect-v2/fixtures/v14-parity-toy-shape-diag/project.l65p",
+      "sha256": "287972f8037ad56d517073dad4bb92a8d3997a626d0f2c0b1c244525564fd6d8"
+    },
+    "source": {
+      "path": "tests/bytecode/dialect-v2/fixtures/v14-parity-toy-shape-diag/main.l65",
+      "sha256": "c488a63ef807d1cf735ebb1b7d550b91e6c78e7e6f63ab7b76c25184acdd2ad4"
+    },
+    "image": {
+      "path": "build/post-promotion/v14/shape-diag/v14-shape-diag.d81",
+      "bytes": 819200,
+      "sha256": "86848d1df63a35f27c38bed45953f444517e1c4f1a9c28b81515ab585570b968"
+    },
+    "runtime_elf_sha256": "003145c346cb34af2141c4a0ae86093aa7922f27f80d467e08957e9226a86452",
+    "build_receipt_sha256": "7cb1faf0ebda73c94c9e4424fc8e72daba49db4aae7a3f6f52a8789cac426792",
+    "host_execution": "passed once through the real Ship runtime lane with result t, vm_status 0 and zero input"
+  },
+  "witness_layout": {
+    "address": "0x17a0",
+    "bytes": 8,
+    "meaning": [
+      "live $D06C",
+      "live $D06D",
+      "live $D06E",
+      "shape string length",
+      "shape string byte zero",
+      "0xA5 only after m65-sprite-shape returns",
+      "unused",
+      "unused"
+    ]
+  },
+  "device_method": "The diagnostic image boots autonomously. Before m65-sprite-shape it copies five source values through the public CPU-side m65-byte-read/m65-byte-write path into ordinary RAM. No virtual or physical key is sent. The runner accepts only COMPLETE=3 or the already observed VM_TYPEERROR=0xE3, then reads ordinary RAM.",
+  "runner": {
+    "path": "scripts/c2-v14-link89-device-session-hw.sh",
+    "sha256": "466837fe5d41bcacd69e44cb0d549ff5a369e0c0a379302d377dd0a62c1c627e",
+    "action": "probe-d2-ship-inputs"
+  },
+  "pre_registered_outcomes": {
+    "pointer_invalid": "string length=63 and byte0=88 with high pointer byte nonzero or low pointer byte above 248 attributes the guard rejection to Ship live geometry",
+    "string_invalid": "valid pointer geometry with length or byte0 drift attributes the rejection to target string materialization",
+    "shape_returned": "marker 0xA5 proves m65-sprite-shape completed and moves the original type error to m65-sprite-color or later",
+    "contradiction": "valid inputs, absent marker and untouched shape slot require source/artifact instruction-edge attribution; no speculative fix"
+  },
+  "claim_limit": "A disposable diagnostic image only. It changes no Link-89 product byte, library source, Ship candidate or release artifact."
+}

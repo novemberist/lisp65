@@ -1,0 +1,692 @@
+{
+  "ELF_gate": {
+    "dispatcher_baseline_bytes": 5186,
+    "dispatcher_candidate_bytes": 5233,
+    "dispatcher_delta_bytes": 47,
+    "dispatcher_symbol": "vm_callprim",
+    "leaf_bytes": 89,
+    "leaf_nm_row": "0000fe84 00000059 T vm_c2d_byte",
+    "leaf_symbol": "vm_c2d_byte",
+    "linked_elf": {
+      "bytes": 620492,
+      "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ee3f9a2e8cb190daa1c2f7bb9bb209fda043364e284f44f3020118abc3deb96c"
+    },
+    "linked_leaf_edges": [
+      "6bb4: 20 84 fe     \tjsr\t$fe84 <vm_c2d_byte>"
+    ],
+    "linked_reader_edges": [
+      "febc: 20 db e2     \tjsr\t$e2db <c2_stream_c2d_read>"
+    ],
+    "nm_row": "00006a3f 00001471 t vm_callprim",
+    "prim_id": 67,
+    "reader_bytes": 87,
+    "reader_symbol": "c2_stream_c2d_read",
+    "retired_query_symbols": 0,
+    "status": "passed-private-Prim67-linked-C2D-byte-edge"
+  },
+  "abi_gate": {
+    "canonical_name": "%c2d-byte",
+    "ledger": "bytecode-abi-ledger: SELFTEST PASS mutations=12 transition=reserved-to-active decoder=active+tombstone+reserved emitter=fail-closed",
+    "native_registry": "v2-native-function-registry: PASS active=62 public=39 restricted=39 cases=207 engines=4 evaluations=828 registry_sha256=ad40fecbdc7dcae327502a885058f6db500f49a3e5d53f6468d3b2150a6c1e33",
+    "prim_id": 67
+  },
+  "artifact_side_completion": {
+    "hardware_runs": 0,
+    "linked_ELF_unchanged": {
+      "bytes": 620492,
+      "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ee3f9a2e8cb190daa1c2f7bb9bb209fda043364e284f44f3020118abc3deb96c"
+    },
+    "product_links": 0,
+    "source_replay": "c2-require-resolver-gate: PASS rows=2 source-mutations=22 index-mutations=29 capacity=6/6",
+    "status": "passed-no-compile-no-link-rebind"
+  },
+  "authority": {
+    "assembler_leaf": {
+      "bytes": 1775,
+      "path": "src/vm_c2d_byte.s",
+      "sha256": "28c5902f1aee0127278e8abddd4b52084503f1658489cb829f9ef3ff59f357f0"
+    },
+    "assembler_leaf_ABI_receipt": {
+      "bytes": 37201,
+      "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/c2-assembler-leaf-abi-derived-final.json",
+      "sha256": "26ea7ded3c3a11de30d0bcbd58b0b168e45e570b358512a0a03732c4cf6d3acf"
+    },
+    "bank2": {
+      "bytes": 40241,
+      "path": "build/post-promotion/require-resolver/narrow-static/v6-semantics/bank2-static-code.bin",
+      "sha256": "98bc745c78d8d2a49782df2957ffcdd888f0719aca0ef126bfc7730e12f6b36a"
+    },
+    "bytecode_abi_contract": {
+      "bytes": 2956,
+      "path": "docs/contracts/bytecode-abi.md",
+      "sha256": "cf59848091953cd2a5258698fc846b8d35966e831c89b91456f95b5926652c6d"
+    },
+    "bytecode_abi_ledger": {
+      "bytes": 10127,
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "4811cb903ef0475b3b247b97a41d78a69eb53c30accafa6cdb1be2182cc78fb4"
+    },
+    "contract": {
+      "bytes": 9766,
+      "path": "config/c2-require-resolver-contract.json",
+      "sha256": "19d0dff798d7ba9b55947657cea88fa5dcbb648de3f8cef4d3392af9adca3dfc"
+    },
+    "contract_note": {
+      "bytes": 5534,
+      "path": "docs/planning/c2.2-require-resolver-product-probe.md",
+      "sha256": "79217340052e635604704aeb65b708db360f84faabeec9e1033e38c6a7cdbccd"
+    },
+    "driver": {
+      "bytes": 56965,
+      "path": "tools/host-lisp/c2_require_resolver_wplto.py",
+      "sha256": "5cb341a20d64e5fb5d20fb6ec307d6d00b4bf42767447db2295b28344a3df56f"
+    },
+    "native_function_registry": {
+      "bytes": 13210,
+      "path": "config/v2-native-function-registry.json",
+      "sha256": "ad40fecbdc7dcae327502a885058f6db500f49a3e5d53f6468d3b2150a6c1e33"
+    },
+    "product_artifacts": {
+      "bytes": 2324,
+      "path": "build/post-promotion/require-resolver/narrow-static/product/substitution-artifacts.json",
+      "sha256": "d5022a2b3ca228017afd8f14fabdec963f201bde10c7787d70e1799a5d3a2efa"
+    },
+    "profile": {
+      "bytes": 2544,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "6aa329a9e74c899e4ccd2909fa470d4112212335ebdc1645f55be9fb5a32f466"
+    },
+    "source_index_receipt": {
+      "bytes": 8809,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-resolver-source-index-gate-receipt.json",
+      "sha256": "f28c52a317c8842af5e27c86583c6881db871d7d7605d90d2838db12b81abd41"
+    },
+    "static_header": {
+      "bytes": 293,
+      "path": "src/c2_lite_static_plane.h",
+      "sha256": "d14aeaa03b850ca9fddb49e89262d8a971696ee66592d9f9d21f1fb99d1f8183"
+    },
+    "stdlib_manifest": {
+      "bytes": 283684,
+      "path": "build/post-promotion/require-resolver/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "4d3eda8a9c348cf22c6f2c059142d5074d2957406c2f92d9b0d8ad1a586dee6f"
+    },
+    "suite": {
+      "bytes": 3206,
+      "path": "tests/bytecode/libs/p0-stdlib-require-resolver.json",
+      "sha256": "60bf88e834c38f4adabdd3d0c2098e32645769bbb7590db31ebc66d54fb63bb1"
+    },
+    "vm_byte_args_first_red_receipt": {
+      "bytes": 2781,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-resolver-vm-byte-args-wplto-first-red.json",
+      "sha256": "6cf61381bb083171b87b8100a093059961e4bb431643ea3eedab946caaa2eb72"
+    }
+  },
+  "baseline_walls": {
+    "bank0_text_headroom_bytes": 90,
+    "e000_headroom_bytes": 151,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 69
+  },
+  "capacity": {
+    "append_records": 24,
+    "pack_quantum_bytes": 256,
+    "publish_clear_bytes": 1295,
+    "publish_clear_headroom_bytes": 497,
+    "region1_rollback_sequence": [
+      "c2-append-rollback-unpublish",
+      "c2-append-rollback-wipe-plane",
+      "c2-append-rollback-wipe-chip",
+      "c2-append-rollback-wipe-attic",
+      "c2-append-rollback-finalize"
+    ],
+    "retired_sections_present": {
+      ".lisp65_rt_c2append_journal_clear": false,
+      ".lisp65_rt_c2append_publish_exports": false
+    },
+    "session_catalog_records": 51,
+    "session_family_bytes": 64926,
+    "session_family_headroom_bytes": 610,
+    "slice_cap_bytes": 1792,
+    "status": "passed-current-v4-two-region-session-aggregate"
+  },
+  "claim_limit": "WPLTO placement/capacity only; no product link, hardware, defstruct or release claim.",
+  "format": "lisp65-c2-require-resolver-WPLTO-v2",
+  "freight": {
+    "append_image_slice_baseline_bytes": 724,
+    "append_image_slice_candidate_bytes": 724,
+    "bank2_baseline_bytes": 34990,
+    "bank2_candidate_bytes": 40241,
+    "bank2_delta_bytes": 5251,
+    "entries_delta": 74,
+    "first_red_native_policy_bytes": 3491,
+    "native_policy_bytes_removed": 3444,
+    "native_policy_decisions": 0,
+    "new_session_records": 0,
+    "overlay_roundtrips": 0,
+    "private_primitive_dispatch_delta_bytes": 47,
+    "resident_wall_deltas": {
+      "bank0_text_headroom_bytes": -49,
+      "e000_headroom_bytes": -91,
+      "fixed_hot_block_headroom_bytes": 0,
+      "ordinary_bank0_bss_headroom_bytes": 0,
+      "resident_island_headroom_bytes": 0
+    },
+    "resolutions_delta": 377,
+    "retired_string_query_protocol": true,
+    "roots_delta": 57
+  },
+  "hardware_runs": 0,
+  "next_gate": "separate Class-C review before a product link or hardware",
+  "product_links": 0,
+  "promotable": false,
+  "qualification_mode": "one-product-shaped-WPLTO-no-link",
+  "recorded_on": "2026-07-27",
+  "resident_text_criterion": {
+    "baseline_text_bytes": 37926,
+    "candidate_text_bytes": 37975,
+    "delta_bytes": 49,
+    "maximum_delta_bytes": 58,
+    "minimum_noise_reserve_bytes": 32,
+    "noise_reserve_bytes": 41,
+    "passed": true
+  },
+  "session_gate": {
+    "baseline_slice_bytes": 724,
+    "manifest": {
+      "bytes": 43800,
+      "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/runtime-overlays-session-final.json",
+      "sha256": "8328bf8f590411e10631bbad7116e1e2b530b31d576ac064d31f5c06511ec303"
+    },
+    "new_records": 0,
+    "record_count": 51,
+    "record_names_identical_to_Link67": true,
+    "slice": {
+      "abi_version": 1,
+      "capability_mask": 0,
+      "crc16": 47625,
+      "end": 50730,
+      "end_symbol": "__lisp65_rt_c2append_image_end",
+      "entry": 50006,
+      "entry_offset": 0,
+      "entry_symbol": "__lisp65_rt_c2append_image_entry",
+      "file_offset": 49920,
+      "file_size": 724,
+      "flags": 6,
+      "id": 35,
+      "memory_size": 724,
+      "name": "c2-append-image",
+      "record_crc16": 35164,
+      "region_id": 0,
+      "roles": [
+        "runtime",
+        "reusable"
+      ],
+      "section": ".lisp65_rt_c2append_image",
+      "sha256": "3473c2c18a2b9c0e420dc6ac33df637ee1167383ffa0f2ee7c35cb96208b808f",
+      "slice_build_id": 51657908,
+      "source_address": 246528,
+      "start_symbol": "__lisp65_rt_c2append_image_start",
+      "vma": 50006
+    },
+    "slice_delta_bytes": 0,
+    "status": "passed-no-Session-record-or-append-slice-debit"
+  },
+  "source_index_gate": {
+    "artifacts": {
+      "D81": {
+        "bytes": 819200,
+        "path": "build/post-promotion/require-resolver/l65i-v1/require-resolver-fixture.d81",
+        "sha256": "6f309c7da7de8236b5031baf769269614716af1a0925c09b92b02cb9eb255fe2"
+      },
+      "index": {
+        "bytes": 128,
+        "path": "build/post-promotion/require-resolver/l65i-v1/l65index",
+        "sha256": "dd7e353b7c0b127f48e99eca7627d0814f984b3b81f9268acef0f539e055e2a4"
+      },
+      "libraries": [
+        {
+          "bytes": 176,
+          "path": "build/post-promotion/require-resolver/l65i-v1/room.l65s",
+          "sha256": "efb61476a83f610d20dc0d7d51b2c2c2ad607569f13a0c36414da3fc24a14d2f"
+        },
+        {
+          "bytes": 398,
+          "path": "build/post-promotion/require-resolver/l65i-v1/buffer.l65s",
+          "sha256": "2dd2244675ac5fac22e7aaee03de5ffd06a4cc16dd55a13faf3ea2dbbd7f1fed"
+        }
+      ]
+    },
+    "authority": {
+      "assembler_leaf": {
+        "bytes": 1775,
+        "path": "src/vm_c2d_byte.s",
+        "sha256": "28c5902f1aee0127278e8abddd4b52084503f1658489cb829f9ef3ff59f357f0"
+      },
+      "contract": {
+        "bytes": 9766,
+        "path": "config/c2-require-resolver-contract.json",
+        "sha256": "19d0dff798d7ba9b55947657cea88fa5dcbb648de3f8cef4d3392af9adca3dfc"
+      },
+      "gate": {
+        "bytes": 34022,
+        "path": "tools/host-lisp/c2_require_resolver_gate.py",
+        "sha256": "c4c1571d62b67d73239e4ff84408a9ed0b07b0c9b79fd8404c470b8f82ce9578"
+      },
+      "host_receipt": {
+        "bytes": 7950,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-manifest-v1-host-probe-receipt.json",
+        "sha256": "63f7eaa91e6d7f40171e1c4a37dfc066dcc0275b2f909c58b32845cdbb3c33fc"
+      },
+      "lisp": {
+        "bytes": 30131,
+        "path": "lib/stdlib-require.lisp",
+        "sha256": "aa6d2e784943e44183beecb0967f782b7ce2472d3c9e67fe50d018b3cac66d7c"
+      },
+      "note": {
+        "bytes": 5534,
+        "path": "docs/planning/c2.2-require-resolver-product-probe.md",
+        "sha256": "79217340052e635604704aeb65b708db360f84faabeec9e1033e38c6a7cdbccd"
+      },
+      "ramp": {
+        "bytes": 9803,
+        "path": "config/c2.2-workbench-era-ramp.json",
+        "sha256": "a0c68dd3a4d8470c320aab0225d2020da1a5e0eb2a62b91205c84f6ddd7eeb1f"
+      },
+      "runtime": {
+        "bytes": 155694,
+        "path": "src/c2_product_runtime.c",
+        "sha256": "9b1afffa93ffefb6eac10e1f99f3c6b7f0db572575b07b396d6ec321c354e94e"
+      },
+      "suite": {
+        "bytes": 3206,
+        "path": "tests/bytecode/libs/p0-stdlib-require-resolver.json",
+        "sha256": "60bf88e834c38f4adabdd3d0c2098e32645769bbb7590db31ebc66d54fb63bb1"
+      },
+      "vm": {
+        "bytes": 81756,
+        "path": "src/vm.c",
+        "sha256": "8632a3c2d020619f9f35e49714e8c3ce934aae0c8e0c5ebf3bf8bf119d4898f1"
+      }
+    },
+    "binary_index": {
+      "capacity_exact_meets": 6,
+      "capacity_one_byte_overflows": {
+        "bank2-one-byte-overflow": "resolve-capacity",
+        "entries-one-byte-overflow": "resolve-capacity",
+        "images-one-byte-overflow": "resolve-capacity",
+        "resolutions-one-byte-overflow": "resolve-capacity",
+        "roots-one-byte-overflow": "resolve-capacity",
+        "scratch-one-byte-overflow": "resolve-capacity"
+      },
+      "dependency_order": [
+        "room",
+        "buffer"
+      ],
+      "format": "L65I-v1",
+      "generation_idempotence": "passed-empty-partial-complete",
+      "index_crc16": "0xf005",
+      "index_identity_crc32": "0x0dfbfdbc",
+      "mutations_rejected": {
+        "artifact-identity": "index-artifact-identity",
+        "artifact-length": "index-artifact-length",
+        "artifact-zero": "index-row-zero-authority",
+        "bank2-zero": "index-row-zero-authority",
+        "dependency-count": "index-row-dependency-count",
+        "dependency-padding": "index-row-dependency-padding",
+        "dependency-self": "index-row-dependency",
+        "dependency-width": "index-widths",
+        "duplicate-identity": "index-artifact-identity",
+        "duplicate-name": "index-artifact-length",
+        "empty-name": "index-row-name",
+        "execution-source": "index-row-source",
+        "header-crc": "index-header-crc",
+        "header-reserved": "index-header-reserved",
+        "header-width": "index-widths",
+        "identity": "index-identity",
+        "images-zero": "index-row-zero-authority",
+        "magic": "index-magic",
+        "name-padding": "index-row-name",
+        "record-bytes": "index-record-bytes",
+        "record-crc": "index-record-crc",
+        "row-crc": "index-record-crc",
+        "row-reserved": "index-row-reserved",
+        "row-width": "index-widths",
+        "sector-range": "index-row-locator",
+        "track-zero": "index-row-locator",
+        "version": "index-version",
+        "zero-identity": "index-row-zero-authority",
+        "zero-rows": "index-count"
+      },
+      "rows": [
+        {
+          "artifact_bytes": 176,
+          "bank2": 52,
+          "combined_crc32": 97155614,
+          "dependencies": [],
+          "entries": 1,
+          "execution_source": 2,
+          "images": 1,
+          "name": "room",
+          "resolutions": 1,
+          "roots": 0,
+          "scratch": 8,
+          "sector": 1,
+          "track": 39
+        },
+        {
+          "artifact_bytes": 398,
+          "bank2": 104,
+          "combined_crc32": 3346070175,
+          "dependencies": [
+            0
+          ],
+          "entries": 7,
+          "execution_source": 2,
+          "images": 1,
+          "name": "buffer",
+          "resolutions": 0,
+          "roots": 0,
+          "scratch": 56,
+          "sector": 2,
+          "track": 39
+        }
+      ]
+    },
+    "claim_limit": "Source, real-artifact L65I and host semantics only; WPLTO, product link, hardware and defstruct are not claimed.",
+    "format": "lisp65-c2-require-resolver-source-index-gate-v2",
+    "hardware_runs": 0,
+    "host_first_prerequisite": {
+      "binding": "same dependency/rollback/preflight semantics are implemented by the gated Bank-2 Lisp functions",
+      "cutpoints": 12,
+      "fresh_replay": "REQUIRE V1 HOST PASS libs=2 cutpoints=12 mutations=38 resident=0 product=0",
+      "mutations": 38
+    },
+    "product_links": 0,
+    "promotable": false,
+    "recorded_on": "2026-07-27",
+    "source_gate": {
+      "arguments": [
+        "offset-low-byte",
+        "offset-high-byte"
+      ],
+      "assembler_leaf": "vm_c2d_byte",
+      "assembler_leaf_tokens": 8,
+      "bank2_decisions": [
+        "active persistent identity universe",
+        "canonical static Bank-2 edge from C2D slots 0..5",
+        "persistent Bank-2 low edge",
+        "transient C2D and Bank-2 high edges",
+        "six-currency aggregate preflight",
+        "dependency order and idempotence"
+      ],
+      "claimed_resident_state_bytes": 0,
+      "lisp_tokens": 8,
+      "native_policy_decisions": 0,
+      "new_session_records": 0,
+      "overlay_roundtrips": 0,
+      "prim_id": 67,
+      "primitive_tokens": 3,
+      "published_c2d_bytes": 33840,
+      "read_bytes": 1,
+      "retired_string_query_protocol": true,
+      "status": "passed-private-C2D-byte-primitive-bank2-orchestration"
+    },
+    "source_mutations": {
+      "active-prefix-removed": "lisp-seam",
+      "append-seam-removed": "lisp-seam",
+      "assembler-leaf-edge": "primitive-seam",
+      "byte-args-arity": "primitive-seam",
+      "byte-args-helper-removed": "primitive-seam",
+      "c2d-read-address": "primitive-seam",
+      "c2d-read-width": "primitive-seam",
+      "capacity-orchestration-removed": "lisp-seam",
+      "leaf-proof-precondition": "assembler-leaf-seam",
+      "leaf-published-high-bound": "assembler-leaf-seam",
+      "leaf-published-low-bound": "assembler-leaf-seam",
+      "leaf-reader-Z": "assembler-leaf-seam",
+      "leaf-reader-edge": "assembler-leaf-seam",
+      "leaf-size": "assembler-leaf-seam",
+      "native-policy-reintroduced": "native-policy",
+      "old-query-protocol": "retired-query-protocol",
+      "prim-id": "primitive-seam",
+      "raw-c2d-read-removed": "lisp-seam",
+      "registry-introduced": "loaded-registry",
+      "static-prefix-removed": "lisp-seam",
+      "transient-fronts-removed": "lisp-seam",
+      "typed-result": "primitive-seam"
+    },
+    "status": "passed-bank2-orchestrated-require-and-private-c2d-byte-gates",
+    "target_bank2_compile": {
+      "manifest": {
+        "bytes": 283648,
+        "path": "build/post-promotion/require-resolver/l65i-v1/stdlib-p0.manifest.json",
+        "sha256": "99dbcc2743883d11257a28383a55ad711d8487d84c19e1c21458997d3c35a2b1"
+      },
+      "status": "passed",
+      "summary": [
+        "bytecode-p0-stdlib-check: PASS suites=1 functions=333 cases=204 objects=553 code_bytes=18166 dir_bytes=3871 steps=26390",
+        "bytecode-p0-stdlib-artifacts: WROTE build/post-promotion/require-resolver/l65i-v1/stdlib-p0 objects=334 code_bytes=13827 ext_bytes=32753 dir_bytes=2338 manifest=build/post-promotion/require-resolver/l65i-v1/stdlib-p0.manifest.json disasm=build/post-promotion/require-resolver/l65i-v1/stdlib-p0.disasm.txt",
+        "bytecode-p0-stdlib-embed-check: PASS cases=204 objects=334 literal_nodes=713 literal_patches=657 steps=26390"
+      ]
+    }
+  },
+  "static_build": {
+    "compiler": [
+      "bytecode-p0-stdlib-check: PASS suites=1 functions=333 cases=204 objects=553 code_bytes=18166 dir_bytes=3871 steps=26390",
+      "bytecode-p0-stdlib-artifacts: WROTE build/post-promotion/require-resolver/narrow-static/stdlib-p0 objects=334 code_bytes=13827 ext_bytes=32753 dir_bytes=2338 manifest=build/post-promotion/require-resolver/narrow-static/stdlib-p0.manifest.json disasm=build/post-promotion/require-resolver/narrow-static/stdlib-p0.disasm.txt",
+      "bytecode-p0-stdlib-embed-check: PASS cases=204 objects=334 literal_nodes=713 literal_patches=657 steps=26390"
+    ],
+    "product": {
+      "artifacts": {
+        "initial_c2d": {
+          "bytes": 33840,
+          "path": "build/post-promotion/require-resolver/narrow-static/product/initial.c2d-v3.bin",
+          "sha256": "765027612283d8452c9c016dadd5836e7f7aa7506e557c588500c8274f5ca21d"
+        },
+        "shelf": {
+          "bytes": 83509,
+          "path": "build/post-promotion/require-resolver/narrow-static/product/product-shelf-v4-direct.bin",
+          "sha256": "5656cf4808204c5b302317c56f787563ba4dfe9934b3d52ab7b9d8775cb31889"
+        }
+      },
+      "capacity_headroom": {
+        "bank5_plane_bytes": 16976,
+        "entries": 1372,
+        "images": 58,
+        "resolutions": 1420,
+        "roots": 1196
+      },
+      "entries": 676,
+      "format": "lisp65-c2-product-substitution-artifacts-v1",
+      "images": 6,
+      "manifests": [
+        {
+          "bytes": 283684,
+          "path": "build/post-promotion/require-resolver/narrow-static/stdlib-p0.manifest.json",
+          "sha256": "4d3eda8a9c348cf22c6f2c059142d5074d2957406c2f92d9b0d8ad1a586dee6f"
+        },
+        {
+          "bytes": 302549,
+          "path": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/ide.manifest.json",
+          "sha256": "538063c5b4f24f08e4fe151068adf8951b50b1f87d2f2413e5d7b622d4eeb211"
+        },
+        {
+          "bytes": 70818,
+          "path": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/idex.manifest.json",
+          "sha256": "24011d044ee651a3d921e5d244dafba80702c8d4601608410af808d984cc14e5"
+        },
+        {
+          "bytes": 64514,
+          "path": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.manifest.json",
+          "sha256": "04eef5300ec3eff0103970c762d7b38b2210d40c305899ae8358b7721077ca45"
+        },
+        {
+          "bytes": 8086,
+          "path": "build/bytecode/dialect-v2/libs/buffer.manifest.json",
+          "sha256": "0de079b1b637ae6acef669b064a8e57de30d47d1775b13bd4bc4a4dfac7fa502"
+        },
+        {
+          "bytes": 220262,
+          "path": "build/post-promotion/f2/lcc.manifest.json",
+          "sha256": "db132d051f63afef609ea5e2f274b7a1b1089d3eed7f6d5b9ea54429ef944a60"
+        }
+      ],
+      "one_truth": {
+        "legacy_emitter_artifacts": [],
+        "session_format": "C2I-v2/L65S-v4-direct",
+        "static_format": "C2I-v2/L65S-v4-direct"
+      },
+      "product_build_id_hex": "0xf6a4c004",
+      "product_build_id_u32": 4137992196,
+      "resolutions": 2676,
+      "roots": 340,
+      "status": "static-c2-artifacts-emitted-product-link-not-run"
+    },
+    "semantics": {
+      "c2d_bytes": 33840,
+      "c2d_sha256": "13dfebd50bf95a1899289daf9cdc4005a36c8c017c21f1cdc8796ffe812d3f9a",
+      "code_bytes": 40241,
+      "code_sha256": "98bc745c78d8d2a49782df2957ffcdd888f0719aca0ef126bfc7730e12f6b36a",
+      "entries": 676,
+      "headroom_bytes": 25295,
+      "images": 6,
+      "resolutions": 2676,
+      "roots": 340
+    }
+  },
+  "static_plane_gate": {
+    "IDE_code_bytes": 11718,
+    "bank2_headroom_bytes": 25295,
+    "decoder_consumers": 2,
+    "entries": 676,
+    "images": 6,
+    "mutations_rejected": [
+      "wrong-profile-length",
+      "wrong-contract-length",
+      "wrong-header-length",
+      "decoder-private-literal",
+      "wrong-emitted-length",
+      "wrong-code-identity"
+    ],
+    "private_decoder_lengths": 0,
+    "static_code_bytes": 40241,
+    "status": "passed-canonical-L-full-static-plane-to-target-dataflow"
+  },
+  "status": "passed-bank2-orchestrated-require-product-shaped-WPLTO",
+  "walls": {
+    "bank0_text_headroom_bytes": 41,
+    "e000_headroom_bytes": 60,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 69
+  },
+  "wplto": {
+    "historical_checker_boundary": {
+      "captured_driver_log": {
+        "bytes": 1368,
+        "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/receipts/wplto-historical-driver.log",
+        "sha256": "76cc4a12bec75f0763c3689702e1a1444f1769b065f382b6f675009a10109226"
+      },
+      "classification": "qualification-model-only-not-a-product-or-link-red",
+      "current_replacement_gates": {
+        "assembler_leaf_ABI": {
+          "callsite_count": 9,
+          "unclassified_C_called_functions": []
+        },
+        "capacity": {
+          "append_records": 24,
+          "pack_quantum_bytes": 256,
+          "publish_clear_bytes": 1295,
+          "publish_clear_headroom_bytes": 497,
+          "region1_rollback_sequence": [
+            "c2-append-rollback-unpublish",
+            "c2-append-rollback-wipe-plane",
+            "c2-append-rollback-wipe-chip",
+            "c2-append-rollback-wipe-attic",
+            "c2-append-rollback-finalize"
+          ],
+          "retired_sections_present": {
+            ".lisp65_rt_c2append_journal_clear": false,
+            ".lisp65_rt_c2append_publish_exports": false
+          },
+          "session_catalog_records": 51,
+          "session_family_bytes": 64926,
+          "session_family_headroom_bytes": 610,
+          "slice_cap_bytes": 1792,
+          "status": "passed-current-v4-two-region-session-aggregate"
+        },
+        "historical_maps_replaced": [
+          "BADOPCODE retirement WPLTO crossed a bound wall or gate",
+          "Link-53 first-fault WPLTO qualification red",
+          "Link-54 phase-06a cutpoint WPLTO qualification red",
+          "Link-55 append geometry WPLTO qualification red",
+          "Link-55 append suffix/read-domain WPLTO qualification red",
+          "Link-55 cold append source-domain WPLTO qualification red",
+          "Link-55 one-quantum fusion qualification red",
+          "install-phase WPLTO crossed a bound wall or linked gate",
+          "selector tail-Z WPLTO qualification red"
+        ],
+        "pre_publish_identity": {
+          "elf": {
+            "bytes": 620492,
+            "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/lisp65-c2-substitution-linked.prg.elf",
+            "role": "elf",
+            "sha256": "ee3f9a2e8cb190daa1c2f7bb9bb209fda043364e284f44f3020118abc3deb96c"
+          },
+          "map": {
+            "bytes": 198607,
+            "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/lisp65-c2-substitution-linked.prg.map",
+            "role": "map",
+            "sha256": "90b9cbf993de84fb226da23e973bdb79493176956937decd2cabf16b6423f3ab"
+          },
+          "product": {
+            "bytes": 41566,
+            "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/lisp65-c2-substitution-linked.prg",
+            "role": "product",
+            "sha256": "5ed03028d77e88eedb2ba3abdcabbae5f8cb500e6da6b6fe6679bd1dfd69f475"
+          }
+        },
+        "pre_publish_session_regions": {
+          "region_0": {
+            "bytes": 64926,
+            "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/runtime-overlays-session-final.bin",
+            "sha256": "2ee2080f1bd64e2cf3aa4a847fcc5eeaf309c3c2ea4d1475a0b4211c0bd9bfd7"
+          },
+          "region_1": {
+            "bytes": 1956,
+            "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/wplto/runtime-overlays-session-final-region1.bin",
+            "sha256": "25db7e2cd0c02c15db8f10b29fc1827b1bd367f25c9217c44600106bbb1f58d5"
+          }
+        },
+        "sealed_role_check": "deferred-to-post-publish-public-clean-build-gate",
+        "status": "passed-current-v4-pre-publish-WPLTO-closure",
+        "walls": {
+          "bank0_text_headroom_bytes": 41,
+          "e000_headroom_bytes": 60,
+          "fixed_hot_block_headroom_bytes": 2,
+          "ordinary_bank0_bss_headroom_bytes": 137,
+          "resident_island_headroom_bytes": 69
+        }
+      },
+      "raw_error": "historical post-WPLTO qualification checker red",
+      "raw_status": "FIRST RED: historical checker stopped current-product L-full keymap WPLTO"
+    },
+    "historical_profile_label": "0xb94e retained only inside the sealed legacy profile text",
+    "linked_gate": {
+      "bytes": 17698,
+      "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/receipts/single-submit-linked-gates.json",
+      "sha256": "08e8c42c6370986ec6838e84b80f8370b238468d88dfefa63224a8ac716981f6"
+    },
+    "publish_last_authority": "0xb98a",
+    "qualification": {
+      "bytes": 29827,
+      "path": "build/post-promotion/require-resolver/private-c2d-byte-asm-leaf-product-shaped-v11/receipts/wplto-qualification.json",
+      "sha256": "4f79a11542fbf9687814b612ece3ecbc8baec828d9fa004be296c27b13f41e64"
+    },
+    "status": "passed-one-current-WPLTO-closure-at-typed-historical-qualification-boundary"
+  }
+}

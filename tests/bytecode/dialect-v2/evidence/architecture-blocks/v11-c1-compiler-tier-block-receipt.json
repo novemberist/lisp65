@@ -1,0 +1,307 @@
+{
+  "baseline": {
+    "block": "owner-authorized-1.1-E-on-1.1-A-plus-1.1-B",
+    "e_authorization": {
+      "path": "config/v11-first-class-buffer-capacity-authorization.json",
+      "sha256": "be35a03ca24e3c4360120f883173470c9929e19513daaab5ea6fea97802e42d0"
+    },
+    "e_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-first-class-buffer-block-receipt.json",
+      "sha256": "eaf167abe7e9985ef00e285130d140aeb6a55bc87861662ae68cc6ccf21f0188"
+    },
+    "released_compiler_oracle": {
+      "archive": "tests/bytecode/dialect-v2/evidence/promotions/r4-product-candidate-5942e0c.tar.gz",
+      "archive_sha256": "900c067c54aa76c5957ae51d2d78141f589186af55c3b415b73aa17d92339651",
+      "blob_member": "payload/build/bytecode/dialect-v2/workbench/stdlib-p0.blob.bin",
+      "blob_sha256": "a01b722daf01886a710284bdb59e2e47d45c1b8327498080e5eb37c2fb1f7e10",
+      "manifest_member": "payload/build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+      "manifest_sha256": "53e8fc60239ba7c694a3b3621c1250c4c89fe1ea1680a3cb57e999467dfaebba",
+      "promotion_id": "r4-product-candidate-5942e0c",
+      "source_commit": "5942e0cf81a47f762059fee99d81d27f5bbc7620"
+    }
+  },
+  "block_id": "1.1-C1-compiler-tier-deresidentization",
+  "capacity_delta": {
+    "dimensions": {
+      "bank": {
+        "baseline_post_boot_reserve_bytes": 1799,
+        "baseline_resident_prg_bytes": 39562,
+        "candidate_margin_bytes": 262,
+        "candidate_post_boot_reserve_bytes": 1798,
+        "candidate_resident_prg_bytes": 39563,
+        "delta_bytes": -1,
+        "release_target_bytes": 1536
+      },
+      "boot_overlay": {
+        "baseline_bytes": 1669,
+        "candidate_bytes": 1669,
+        "delta_bytes": 0
+      },
+      "directory": {
+        "baseline_post_align_headroom": 32,
+        "candidate_post_align_headroom": 176,
+        "delta": 144,
+        "temporary_compiler_headroom": 32
+      },
+      "ext": {
+        "baseline_standard_composition_headroom_bytes": 16384,
+        "candidate_margin_bytes": 9244,
+        "candidate_standard_composition_headroom_bytes": 25628,
+        "delta_bytes": 9244,
+        "floor_bytes": 16384,
+        "gross_exclusion_bytes": 9573,
+        "net_exclusion_bytes": 9244
+      },
+      "namepool": {
+        "baseline_headroom_bytes": 2902,
+        "candidate_headroom_bytes": 5708,
+        "delta_bytes": 2806
+      },
+      "overlay_vma": {
+        "baseline": "0xc350",
+        "candidate": "0xc352",
+        "ceiling": "0xc356",
+        "remaining_bytes": 4
+      },
+      "symbols": {
+        "baseline_headroom": 165,
+        "candidate_headroom": 394,
+        "delta": 229
+      }
+    },
+    "temporary_compile_peak": {
+      "compiler_execution_headroom_bytes": 16208,
+      "compiler_execution_used_bytes": 34608,
+      "detached_result_storage": "compacted string arena, not EXT code region",
+      "floor_policy": "The 16 KiB floor is restored and exceeded after retirement. Temporary load/execution must fit physical EXT capacity; any overflow is a design stop.",
+      "l65m_code_bytes": 9420,
+      "l65m_metadata_bytes": 13090,
+      "load_peak_headroom_bytes": 3118,
+      "load_peak_used_bytes": 47698,
+      "post_retirement_headroom_bytes": 25628,
+      "standard_composition_used_bytes": 25188
+    }
+  },
+  "capacity_delta_scope": "C1-on-owner-authorized-1.1-E-candidate",
+  "claim_limit": "This receipt proves the C1 host semantics, exact compiler equivalence, rollback classes, peak capacity and real product link. It does not promote a product set, claim hardware evidence, or authorize later wave items.",
+  "compile_equivalence": {
+    "baseline": "sealed-v1.0.1-resident-compiler",
+    "candidate": "temporary-C1-shelf-tier",
+    "claim_limit": "Host P0 executes identical compiler outputs and compares exact FASL bytes. Step counts are diagnostic only and are not device timing evidence.",
+    "compile_equal": true,
+    "compiler_private_symbols_in_outputs": [],
+    "execute_equal": true,
+    "form_cases": [
+      {
+        "baseline_steps": 909,
+        "candidate_steps": 972,
+        "compile_equal": true,
+        "compile_sha256": "1168ed0bcacec4d7424296367696d131053408977809af50eb490b1771c5d2b4",
+        "execute_equal": true,
+        "execution_result": "3",
+        "id": "expression-arithmetic",
+        "kind": "expression",
+        "performance_claim": "none-host-semantic-counter-only"
+      },
+      {
+        "baseline_steps": 2263,
+        "candidate_steps": 2326,
+        "compile_equal": true,
+        "compile_sha256": "accd0a749d395d7aed68c74107c67784dc6110d03a1cb1b085a71b5f35cf5ef5",
+        "execute_equal": true,
+        "execution_result": "(7)",
+        "id": "expression-list",
+        "kind": "expression",
+        "performance_claim": "none-host-semantic-counter-only"
+      },
+      {
+        "baseline_steps": 2900,
+        "candidate_steps": 2954,
+        "compile_equal": true,
+        "compile_sha256": "da254c641ac4304ad98fad4ecf4ca21a6ea5e5f146c64ba122c9404ffd4e36f7",
+        "execute_equal": true,
+        "execution_result": "5",
+        "id": "defun-branch",
+        "kind": "defun",
+        "performance_claim": "none-host-semantic-counter-only"
+      },
+      {
+        "baseline_steps": 1909,
+        "candidate_steps": 1963,
+        "compile_equal": true,
+        "compile_sha256": "a3e0f8e0d2a6091aa6ea6dd492cc36264c78daab7949dfaad58d3847bdad9532",
+        "execute_equal": true,
+        "execution_result": "11",
+        "id": "defun-optional",
+        "kind": "defun",
+        "performance_claim": "none-host-semantic-counter-only"
+      },
+      {
+        "baseline_steps": 1516,
+        "candidate_steps": 1570,
+        "compile_equal": true,
+        "compile_sha256": "4192872c94dc3861db227550e9e3a01e2e4ff1aa46aa17628117a40efe1791ae",
+        "execute_equal": true,
+        "execution_result": "(1 2 3)",
+        "id": "defun-rest",
+        "kind": "defun",
+        "performance_claim": "none-host-semantic-counter-only"
+      },
+      {
+        "baseline_steps": 2377,
+        "candidate_steps": 2431,
+        "compile_equal": true,
+        "compile_sha256": "3fe5478d7ba341023863c60d31ff5c73ac30bc84567c98a8979eaae7232f8115",
+        "execute_equal": "not-applicable-helper-shape",
+        "execution_result": null,
+        "id": "defun-closure",
+        "kind": "defun",
+        "performance_claim": "none-host-semantic-counter-only"
+      },
+      {
+        "baseline_steps": 1691,
+        "candidate_steps": 1727,
+        "compile_equal": true,
+        "compile_sha256": "5cbdb62e0d3403c96da4d638cf0dda2c8916847b20efcca84b560a1cc4edff0b",
+        "execute_equal": "not-applicable-helper-shape",
+        "execution_result": null,
+        "id": "defmacro-shape",
+        "kind": "defmacro",
+        "performance_claim": "none-host-semantic-counter-only"
+      }
+    ],
+    "source_fasl_cases": [
+      {
+        "baseline_steps": 4733,
+        "bytes": 70,
+        "candidate_steps": 4748,
+        "equal": true,
+        "id": "single-defun",
+        "performance_claim": "none-host-semantic-counter-only",
+        "sha256": "ead5dc357d2e5d1ab3599b015d55a2cc95c29ced0694d339aaa41d850b995e2f"
+      },
+      {
+        "baseline_steps": 10968,
+        "bytes": 128,
+        "candidate_steps": 10983,
+        "equal": true,
+        "id": "ordered-two-defuns",
+        "performance_claim": "none-host-semantic-counter-only",
+        "sha256": "243784270e914bd1f3856621ac33745fa5d097860c55c27e841aa1604551175e"
+      }
+    ]
+  },
+  "compile_performance": {
+    "buffer_to_stage_device_dma_calls_per_result": 1,
+    "claim": "The compiler's established staging emitter remains byte-oriented, but the new C1 boundary adds two bulk DMA operations, not one overlay call per emitted byte.",
+    "device_loops_in_boundary_copy": 0,
+    "per_byte_buffer_set_calls": 0,
+    "preclear_passes": 0,
+    "selected_evidence": "batched-staging-window-to-buffer-DMA-seam",
+    "stage_to_buffer_device_dma_calls_per_result": 1
+  },
+  "compiler_private_reference_gate": {
+    "compiled_output_intersection": [],
+    "export_function_after_retirement": "nil-by-lifetime-matrix",
+    "exports": [
+      "%c1-compile"
+    ],
+    "private_functions": 143,
+    "resident_directory_intersection": [],
+    "resident_export_identity_literal": "%c1-compile",
+    "resident_literal_intersection": [],
+    "status": "pass",
+    "tier_functions": 144
+  },
+  "format": "lisp65-v11-c1-compiler-tier-block-receipt-v1",
+  "implementation": {
+    "exports": [
+      "%c1-compile"
+    ],
+    "identity": "CRC32-bound L65S record plus exact generated L65M length/CRC16/blob/entry/format preflight fields; zero new symbols and name bytes are required",
+    "lifetime": "checkpoint -> exact SHA/CRC/preflight-bound load -> validate -> compile to detached Buffer/heap result -> retire tier -> install or persist result",
+    "private_functions": 143,
+    "reset": "all C1 checkpoint state is existing reset-cleared BSS; a reset is inert",
+    "rollback": "LIFO truncation restores code and directory watermarks, clears the export function, preserves later user symbol/name internings, and is idempotent",
+    "shelf_record_id": 4,
+    "shelf_role": "temporary-compiler-tier"
+  },
+  "link_attribution": {
+    "gross_resident_compiler_source_exclusion_bytes": 9573,
+    "gross_sources": [
+      "lib/lcc.lisp",
+      "lib/lcc-fasl.lisp",
+      "lib/dialect-v2/lcc-profile.lisp"
+    ],
+    "net_persistent_resident_exclusion_bytes": 9244,
+    "resident_replacement_breakdown": {
+      "candidate_eval_runtime_bytes": 1225,
+      "compile_string_rewrite_savings_bytes": -82,
+      "new_detach_and_save_seams_bytes": 174,
+      "retained_compiler_facing_entries_bytes": 237,
+      "sum_bytes": 329
+    },
+    "resident_replacement_bytes": 329,
+    "temporary_tier_code_bytes": 9420,
+    "temporary_tier_vs_gross": {
+      "new_tier_interface_entries_bytes": 160,
+      "removed_resident_facing_entries_bytes": -313,
+      "sum_bytes": 9420,
+      "unchanged_compiler_entries_bytes": 9260
+    }
+  },
+  "overlay_headroom": {
+    "base_vma_remaining_bytes": 4,
+    "buffer_alloc_slice_bytes": 1699,
+    "buffer_alloc_slice_remaining_bytes": 93,
+    "c1_lifetime_slice_bytes": 1698,
+    "c1_lifetime_slice_remaining_bytes": 94,
+    "resident_island_installer_bytes": 1792,
+    "resident_island_installer_remaining_bytes": 0
+  },
+  "owner_decision": {
+    "path": "config/v11-c1-architecture-decision.json",
+    "selected": "C1-compiler-tier-deresidentization",
+    "sha256": "e2400e6ea88ccfc47a1c6f633608f82ff41883e8a9a179e1bb7f9341e305e459",
+    "status": "owner-approved"
+  },
+  "promotion_blockers": [
+    "owner/advisor review of this passed-not-promoted C1 receipt",
+    "regular wave-level product/evidence repin and hardware acceptance",
+    "the accepted 1.1-E buffer printer limitation must be stated accurately before the wave seal"
+  ],
+  "recorded_on": "2026-07-15",
+  "recording_base_commit": "9029f67679d68a92bb3a28c880c56133b250a330",
+  "status": "passed-not-promoted",
+  "verification": {
+    "compiler_lifetime": "v11-c1-compiler-lifetime: PASS cases=10 gc=yes oom=yes malformed=yes reset=yes partial=yes user-symbols=yes abort=yes",
+    "footprint_audit": {
+      "path": "build/products/workbench/overlay-stack-guard/footprint-audit.json",
+      "sha256": "cc09ca3e77ceea4abb9aa8196c5c664a341b0b8f1cd10adbf41bd90e6344c6ab"
+    },
+    "full_product_link": "pass",
+    "hardware": "not-run",
+    "native_function_cross_parity": {
+      "evaluations": 828,
+      "missing": [],
+      "status": "pass",
+      "unclassified": []
+    },
+    "resident_prg": {
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-resident.prg",
+      "sha256": "6c420e0242d7838f28d0d976f9f6cca977b09cce36c7ee6db36a3af90d2447f8"
+    },
+    "runtime_overlays": {
+      "path": "build/products/workbench/overlay-stack-guard/runtime-overlays-manifest.json",
+      "sha256": "1ed61aa7bd4f6815a7ff5a235644f20d75b9c439b21450767b9f3e01bec3cd47"
+    },
+    "shelf_negative_matrix": "attic-library-shelf-smoke: PASS libraries=5 negative_cases=7 exact_copy=yes",
+    "workbench_artifact_differential": {
+      "artifacts": 4,
+      "cases": 353,
+      "observation_differences": 0,
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-artifact-differential-receipt.json",
+      "sha256": "955a1c5d36c6870d1af339308edd224524a04bd0b69c18e8c1608369322e4e3f"
+    }
+  }
+}

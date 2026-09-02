@@ -1,0 +1,130 @@
+{
+  "authority": {
+    "checker_first_red": {
+      "bytes": 28191,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-retirement-canonical-t-wplto-internal-structural.json",
+      "sha256": "038f51a37de4a3e97dc2f39cf0b1bf11e61c2a0c467f30db55e2d48a7c41989a"
+    },
+    "checker_first_red_receipt": {
+      "bytes": 2247,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-retirement-canonical-t-wplto-base.json",
+      "sha256": "9a15eec229fbc688dae49590b9723f1f3795ba68b2afc80d2fe4be6fa6699e44"
+    },
+    "contract": {
+      "bytes": 4525,
+      "path": "config/c2-vm-badopcode-detail-contract.json",
+      "sha256": "5859f4a1df7505b9dd69d94b836ee2ae16a787e38037ef012893c55c979a1dd2"
+    },
+    "replay_driver": {
+      "bytes": 8272,
+      "path": "tools/host-lisp/c2_lite_v6_link50_badopcode_retirement_canonical_t_replay.py",
+      "sha256": "05963926acaa906ab0edc6f25db60592ae50778ccd957e22114c17a4eda1a070"
+    },
+    "thirty_byte_first_red": {
+      "bytes": 4382,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-retirement-capacity-recovery-wplto-first-red.json",
+      "sha256": "39bd68d78963bf6977d6a72e19d1fd6f67855d1c624ea5f8426f73c5235e9e16"
+    },
+    "wplto_driver": {
+      "bytes": 7468,
+      "path": "tools/host-lisp/c2_lite_v6_link50_badopcode_retirement_canonical_t_wplto.py",
+      "sha256": "043e729d02352b4a0fc09eaf20ec7d79976a0ee797ffcaeaf019da774f3acb83"
+    }
+  },
+  "capacity": {
+    "pack_quantum_bytes": 256,
+    "publish_clear_bytes": 1220,
+    "publish_clear_headroom_bytes": 572,
+    "retired_sections_present": {
+      ".lisp65_rt_c2append_journal_clear": false,
+      ".lisp65_rt_c2append_publish_exports": false
+    },
+    "session_catalog_records": 49,
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98,
+    "slice_cap_bytes": 1792,
+    "status": "passed-final-one-record-aggregate-consolidation"
+  },
+  "class_a_checker_correction": {
+    "capacity_effect_bytes": 0,
+    "current_model": "structured section-symbol plus addend resolves uniquely to both bytes of the sized lisp_t object",
+    "old_model": "relocation target spelling must be lisp_t",
+    "product_bytes_changed": 0
+  },
+  "counters": {
+    "class_b_diagnostic_cycles": "3/3 closed",
+    "completed_latency_measurements": "0/2",
+    "line1_product_first_reds": "2/3"
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "pure_replay_compiler_runs": 0,
+    "pure_replay_linker_runs": 0,
+    "whole_program_lto_closure_links": 1
+  },
+  "format": "lisp65-c2-canonical-t-consumption-wplto-v1",
+  "frozen_identity": {
+    "elf": {
+      "bytes": 609660,
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-canonical-t-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "7e3ae570d712f2eaf22b76d74fc2c1c18210c280c4b88f7bcbcbed7a254cf5a2"
+    },
+    "map": {
+      "bytes": 201982,
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-canonical-t-wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "ccbf3f3358e3bb5fc1353afc51c2c7810048e9eeaf5af3e632e644d22ba58513"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-canonical-t-wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f24e5296a8cda430a2e2c1be71e9bfb036ece3f43ccf627c4b72ec124560791c"
+    }
+  },
+  "measured_recovery": {
+    "after_text_headroom_bytes": 53,
+    "before_text_headroom_bytes": 30,
+    "recovered_text_bytes": 23,
+    "required_text_headroom_bytes": 32
+  },
+  "next_gate": "authorized successor product link",
+  "one_truth_correction": {
+    "authority": "eval_init:lisp_t",
+    "consumer": "c2_product_install",
+    "linked_gate": {
+      "address": 47503,
+      "bytes": 2,
+      "installer_relocations": 2,
+      "installer_resolved_bytes": [
+        0,
+        1
+      ],
+      "private_facade_intern_relocations": 0,
+      "section": ".bss",
+      "symbol": "lisp_t"
+    },
+    "new_storage_bytes": 0,
+    "retired_derivation": "c2_facade_intern(\"t\")",
+    "source_gate": {
+      "authority": "eval_init:lisp_t",
+      "installer_consumers": 1,
+      "new_storage_bytes": 0,
+      "private_intern_edges": 0
+    }
+  },
+  "promotable": false,
+  "qualification_replay": {
+    "bytes": 274199,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-retirement-canonical-t-artifact-replay-receipt.json",
+    "sha256": "b5b4e27faf32a6ecc4c3f0819c301b64626fb0ac878293fd1fcb1529387a902f"
+  },
+  "recorded_on": "2026-07-22",
+  "status": "passed-WPLTO-and-pure-section-addend-replay",
+  "walls": {
+    "bank0_text_headroom_bytes": 53,
+    "e000_headroom_bytes": 58,
+    "fixed_hot_block_headroom_bytes": 33,
+    "ordinary_bank0_bss_headroom_bytes": 213,
+    "resident_island_headroom_bytes": 5
+  }
+}

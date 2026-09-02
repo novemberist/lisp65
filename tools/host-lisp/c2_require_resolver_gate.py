@@ -81,6 +81,49 @@ def bind(path: Path) -> dict[str, Any]:
     }
 
 
+def preserve_sealed_receipt(
+        path: Path, value: dict[str, Any], metadata_binding: tuple[str, ...]) -> None:
+    """Keep historical proof bytes while revalidating a live manifest.
+
+    The emitted manifest records source provenance, so a later same-size
+    banner replacement changes its digest even though this historical gate's
+    executable result is unchanged.  Only that metadata digest may differ;
+    every other receipt field, including the bound path and size, remains an
+    exact comparison.
+    """
+    if not path.is_file():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n",
+                        encoding="utf-8")
+        return
+    sealed = load(path)
+    current_binding: Any = value
+    sealed_binding: Any = sealed
+    for key in metadata_binding:
+        require(isinstance(current_binding, dict)
+                and isinstance(sealed_binding, dict)
+                and key in current_binding and key in sealed_binding,
+                "sealed manifest binding shape drift")
+        current_binding = current_binding[key]
+        sealed_binding = sealed_binding[key]
+    require(isinstance(current_binding, dict)
+            and isinstance(sealed_binding, dict)
+            and {key: current_binding.get(key) for key in ("path", "bytes")}
+                == {key: sealed_binding.get(key) for key in ("path", "bytes")},
+            "sealed manifest path/size drift")
+    normalized = copy.deepcopy(value)
+    cursor: Any = normalized
+    for key in metadata_binding[:-1]:
+        cursor = cursor[key]
+    cursor[metadata_binding[-1]] = sealed_binding
+    require(normalized["authority"]["gate"]["path"]
+            == sealed["authority"]["gate"]["path"],
+            "historical resolver gate identity drift")
+    normalized["authority"]["gate"] = sealed["authority"]["gate"]
+    require(normalized == sealed,
+            "historical resolver receipt semantic drift")
+
+
 def load(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     require(isinstance(value, dict), f"JSON object required: {path}")
@@ -938,10 +981,8 @@ def main() -> int:
             value["authority"]["note"] = bind(NOTE)
         if host is not None:
             value["authority"]["host_receipt"] = bind(HOST_RECEIPT)
-        RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-        RECEIPT.write_text(
-            json.dumps(value, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8")
+        preserve_sealed_receipt(
+            RECEIPT, value, ("target_bank2_compile", "manifest"))
         print(
             "c2-require-resolver-gate: PASS "
             f"rows={len(rows)} source-mutations={len(source_rejected)} "

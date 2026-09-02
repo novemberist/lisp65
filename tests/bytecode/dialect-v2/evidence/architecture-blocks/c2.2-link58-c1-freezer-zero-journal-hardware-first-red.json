@@ -1,0 +1,69 @@
+{
+  "captures": {
+    "bank0": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt2-NONPROMOTABLE/boot-bank0.bin",
+      "sha256": "e7053d1aacd95f728e1fec8cacdd69196a73dd36577cd64de84f49c96c6ee374"
+    },
+    "bank2": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt2-NONPROMOTABLE/boot-bank2.bin",
+      "sha256": "ceabda728319f08d33a7ff08ed9477f507d49f19edc3764db0d5cacfa3a9f40a"
+    },
+    "bank3": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt2-NONPROMOTABLE/boot-bank3.bin",
+      "sha256": "4c3c15007fd582da265bc6c4ca7a7a3f1a06ff9b7170b28391d5d9df35ff492f"
+    },
+    "bank5": {
+      "bytes": 50816,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt2-NONPROMOTABLE/boot-bank5.bin",
+      "sha256": "0323bac3a7317c8eaaddc13dc2e3a82cdcd55fc44a6fd3a5887a80e920043c62"
+    },
+    "deployment": {
+      "bytes": 6966,
+      "path": "build/c2.2/c1-freezer-hardware-link58-attempt2-NONPROMOTABLE/deployment.json",
+      "sha256": "066024b0b6227363ce08b8df1df795f05748ee74dc689d6de74852cd53eeb944"
+    }
+  },
+  "claim_limit": "Harness First Red only. No C1, product, promotion, acceptance-chain or release claim.",
+  "class_A_correction": {
+    "add_preload": {
+      "address": "0x0005c640",
+      "artifact": {
+        "bytes": 64,
+        "path": "build/c2.2/c1-freezer-hardware-link58-attempt2-NONPROMOTABLE/zero-c2j.bin",
+        "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+      }
+    },
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0,
+    "resident_bytes_changed": 0
+  },
+  "first_red": {
+    "C2J_address": "0x0005c640",
+    "C2J_bytes": 64,
+    "cause": "The harness created a 64-byte zero-C2J artifact but omitted it from the deployment preload list, so reset-stable device memory survived into the otherwise successful Link-58 boot.",
+    "observed": "0x10 repeated 64 times",
+    "product_semantics": "not reached: the fixture requires a known-zero baseline; post-boot clearing is forbidden because it would falsify that precondition"
+  },
+  "format": "lisp65-c2.2-C1-Freezer-zero-C2J-first-red-v1",
+  "hardware": {
+    "C1_cutpoints_reached": 0,
+    "boots": 1,
+    "latency_attempts_consumed": 0,
+    "ready": 1,
+    "rtov_family": 2,
+    "rtov_fault": 0
+  },
+  "next_gate": "fresh immutable deployment identity with the zero-C2J preload, then separate authorization for a qualified hardware run",
+  "product": {
+    "address": "0x00002001",
+    "bytes": 41563,
+    "path": "build/c2.2/substitution/product-link-58-matrix-addenda-fixed-block/lisp65-c2-substitution-linked.prg",
+    "sha256": "4bab8371aa54060bef4ab9493e12dd6afd230baeb83a11f07daccdaa05000e6f"
+  },
+  "promotable": false,
+  "status": "first-red-harness-omitted-zero-C2J-preload"
+}

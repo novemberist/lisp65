@@ -1,0 +1,626 @@
+{
+  "acceptance": {
+    "receipt": {
+      "bytes": 17284,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/artifact-acceptance.json",
+      "sha256": "590f42117a6908ba1a87bd83237123aab9c1aa870b2952b25938ac7bb04a9878"
+    },
+    "status": "PASS"
+  },
+  "active_frame_liveness": {
+    "ELF": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8bb00fd560ddfef9b4f1da5d6269e134de8dc6548a33e3659eb79fc580fecd45"
+    },
+    "enforcement": {
+      "hot_path_checks": 0,
+      "section": ".lisp65_c2_mapped_far_service",
+      "stack_return_offset": 7,
+      "walker_bytes": 80
+    },
+    "far_service": {
+      "capacity_bytes": 1499,
+      "free_bytes": 37,
+      "used_bytes": 1462
+    },
+    "input_counters": {
+      "commit_sites": {
+        "C2K_INPUT_EVENTS_RAW": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_capture_main",
+          "site": 64789
+        },
+        "C2K_INPUT_EVENTS_SEEN": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_capture_main",
+          "site": 64795
+        },
+        "C2K_INPUT_EVENTS_STORED": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_capture_helper",
+          "site": 65280
+        },
+        "C2K_INPUT_EVENTS_TAKEN": {
+          "opcode": "INC abs",
+          "section": ".lisp65_c2_kernal_window.input_consumer",
+          "site": 65352
+        }
+      },
+      "counter_addresses": {
+        "C2K_INPUT_EVENTS_RAW": 48380,
+        "C2K_INPUT_EVENTS_SEEN": 48381,
+        "C2K_INPUT_EVENTS_STORED": 48382,
+        "C2K_INPUT_EVENTS_TAKEN": 48383
+      },
+      "loss_wall": {
+        "dropped": 0,
+        "events": 94,
+        "seen": 94,
+        "stored": 94,
+        "taken": 94
+      },
+      "reserve_events": 13,
+      "ring_usable_events": 107
+    },
+    "population": {
+      "coverage": "exact equality with final-ELF-derived population",
+      "derived_population": [
+        {
+          "call_site": 51513,
+          "callee": "lisp_abort_symbol",
+          "caller": "c2_append_fronts_phase",
+          "generation_section": ".lisp65_rt_c2append_roots_fronts",
+          "resident_retirement_chain": [
+            {
+              "callee": "c2_product_abort_cleanup",
+              "caller": "lisp_abort_symbol",
+              "site": 11916
+            },
+            {
+              "callee": "c2_rtov_retire_continuations_facade",
+              "caller": "c2_product_abort_cleanup",
+              "site": 11937
+            },
+            {
+              "callee": "c2_rtov_retire_continuations",
+              "caller": "c2_rtov_retire_continuations_facade",
+              "site": 46030
+            }
+          ],
+          "stored_return_offset_from_walker_sp": 7
+        }
+      ],
+      "population_count": 1
+    }
+  },
+  "bound_origin_instrument": {
+    "authority": {
+      "commit": "726ed55b",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "546ff4b960d286f8468bcb09dcf1e7b1004c2bc841dc891d38ed18c813619e96"
+    },
+    "behavior": {
+      "decision_table": {
+        "all_equal_visible_differs": "edit/render semantic path",
+        "raw_above_seen": "queue drain between presence and code read",
+        "raw_below_physical": "before queue-present observation",
+        "seen_above_stored": "ring full or capture commit loss",
+        "stored_above_taken": "consumer backlog or take failure"
+      },
+      "full_ring": {
+        "backlog": 107,
+        "raw": 108,
+        "seen": 108,
+        "stored": 107,
+        "taken": 0
+      },
+      "loss_wall": {
+        "backlog": 0,
+        "raw": 94,
+        "seen": 94,
+        "stored": 94,
+        "taken": 94
+      },
+      "measurement_bound": "bound-zero activation; fewer than 256 events",
+      "run_stop": {
+        "backlog": 0,
+        "raw": 3,
+        "seen": 3,
+        "stored": 2,
+        "taken": 2
+      }
+    },
+    "claim_limit": "pre-link product-source gate; no WPLTO, media or device claim",
+    "format": "lisp65-c2.3-v1.6-input-bound-origin-instrument-v1",
+    "linked_shape": {
+      "E000_delta_bytes": 12,
+      "E000_surplus_over_floor_bytes": 3,
+      "counter_addresses": {
+        "C2K_INPUT_EVENTS_RAW": 48380,
+        "C2K_INPUT_EVENTS_SEEN": 48381,
+        "C2K_INPUT_EVENTS_STORED": 48382,
+        "C2K_INPUT_EVENTS_TAKEN": 48383
+      },
+      "counter_sites": {
+        "C2K_INPUT_EVENTS_RAW": {
+          "opcode": "INC abs",
+          "opcode_address": 13,
+          "section": ".lisp65_c2_kernal_window.input_capture_main"
+        },
+        "C2K_INPUT_EVENTS_SEEN": {
+          "opcode": "INC abs",
+          "opcode_address": 19,
+          "section": ".lisp65_c2_kernal_window.input_capture_main"
+        },
+        "C2K_INPUT_EVENTS_STORED": {
+          "opcode": "INC abs",
+          "opcode_address": 31,
+          "section": ".lisp65_c2_kernal_window.input_capture_helper"
+        },
+        "C2K_INPUT_EVENTS_TAKEN": {
+          "opcode": "INC abs",
+          "opcode_address": 63,
+          "section": ".lisp65_c2_kernal_window.input_consumer"
+        }
+      },
+      "physical_allocation_bytes": 112,
+      "ring_base": 48272,
+      "ring_index_values": 108,
+      "sections": {
+        ".lisp65_c2_kernal_window.input_capture_helper": 40,
+        ".lisp65_c2_kernal_window.input_capture_main": 28,
+        ".lisp65_c2_kernal_window.input_consumer": 70,
+        ".lisp65_c2_kernal_window.irq_handler": 74
+      },
+      "usable_events": 107
+    },
+    "linker_contract": {
+      "capture_helper_bytes": 40,
+      "consumer_maximum_bytes": 70,
+      "fixed_floor_bytes": 54,
+      "free_bytes_minimum": 57,
+      "source": "generated live linker script",
+      "surplus_watch_bytes": 3
+    },
+    "origin": {
+      "activation_sites": 1,
+      "atomicity": "IRQ capture remains disabled until final tail=0",
+      "closed_tail": "0xff",
+      "commit": "(poke 255 141 0)",
+      "phase": "Comfort activation",
+      "reset_order": [
+        "(poke 255 140 0)",
+        "(dotimes (counter 4 nil)",
+        "(poke 188 (+ 252 counter) 0))"
+      ]
+    },
+    "sources": {
+      "lib/repl-comfort.lisp": "6dc695e0ed31b05ea8c97d89b2aca4abd28cc18dda895aaed71e79eba3b8da8a",
+      "src/c2_kernal_window_equates.inc": "5740152f5cc289282dec576ce3074cb8b3268f1eb0f4ceb4a794aacbf73cb65a",
+      "src/optional/c2_kernal_input_capture.s": "eaa34ec7120dada63c9067e79e1fe42caa50abbaac308b742cffadca260e3a40",
+      "src/optional/c2_kernal_input_consumer.s": "0862de7f2ed5cee6463a36553e4d5cdc25bc040108bce15c6a4ae174cfcc3132"
+    },
+    "status": "HOST-GREEN: PRODUCT COUNTERS BOUNDED AND OWNED"
+  },
+  "execution": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "scope_acceptance_resumes": 1
+  },
+  "final_world_claims": {
+    "claim_source": "final linked ELF only",
+    "final_ELF": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8bb00fd560ddfef9b4f1da5d6269e134de8dc6548a33e3659eb79fc580fecd45"
+    },
+    "format": "lisp65-c2-v160-input-service-hybrid-final-world-v1",
+    "isolated_object_claims": 0,
+    "loss": {
+      "authority": "capture wall plus final-ELF consumer execution",
+      "capture_model": {
+        "dropped": 0,
+        "events_captured": 94,
+        "events_produced": 94,
+        "final_head": 94,
+        "final_tail": 94,
+        "maximum_ring_occupancy": 94,
+        "ordered": true,
+        "sixth_event_present": true
+      },
+      "linked_consumer_cycles": 5611,
+      "linked_dropped": 0,
+      "linked_events_drained": 94,
+      "linked_ordered": true,
+      "normalized_event_order": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        91,
+        92,
+        93,
+        94,
+        95,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "raw_event_order": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "sixth_event": 37
+    },
+    "membership": {
+      "capture_sections": {
+        ".lisp65_c2_kernal_window.input_capture_helper": 40,
+        ".lisp65_c2_kernal_window.input_capture_main": 28
+      },
+      "consumer_sha256": "050359820e4f4455f8b3ad3a88cdfe2adac51bb6d16cdb04a4996f45d003a617",
+      "counter_bytes": 4,
+      "physical_allocation_bytes": 112,
+      "ring_index_values": 108,
+      "ring_symbols": {
+        "C2K_INPUT_EVENTS_RAW": 48380,
+        "C2K_INPUT_EVENTS_SEEN": 48381,
+        "C2K_INPUT_EVENTS_STORED": 48382,
+        "C2K_INPUT_EVENTS_TAKEN": 48383,
+        "C2K_INPUT_RING_BASE": 48272,
+        "C2K_INPUT_RING_HEAD": 65420,
+        "C2K_INPUT_RING_SLOTS": 108,
+        "C2K_INPUT_RING_TAIL": 65421
+      },
+      "section": ".lisp65_c2_kernal_window.input_consumer",
+      "section_address": 65289,
+      "section_bytes": 70,
+      "symbol": "c2_kernal_input_take",
+      "symbol_address": 65289,
+      "symbol_bytes": 70,
+      "usable_ring_events": 107
+    },
+    "normalization": {
+      "a0_to_space": true,
+      "authority": "executed final-ELF c2_kernal_input_take bytes",
+      "executions": 512,
+      "maximum_linked_consumer_cycles": 78,
+      "modes": [
+        2,
+        3
+      ],
+      "parity": true,
+      "raw_inputs": 256
+    },
+    "responsiveness": {
+      "authority": "batch VM route plus executed final-ELF consumer",
+      "batch_fixture": 8,
+      "boundary_count": 6,
+      "characters": 40,
+      "dynamic_vm_steps": 8995,
+      "frames_per_character": 0.7749366666666667,
+      "heap_cells_per_character": 1,
+      "linked_native_cycles_per_character": 66,
+      "linked_native_instructions_per_character": 23,
+      "margin_percent": 29.042803497920254,
+      "screen_cells": 45,
+      "screen_cells_per_character": 1.125,
+      "service_events_per_frame": 1.2904280349792026,
+      "vm_steps_per_character": 224.875
+    },
+    "status": "PASS: HYBRID CLAIMS PROVED ON FINAL ELF",
+    "synthetic_profile_claims": 0
+  },
+  "format": "lisp65-c2-v160-bound-origin-fragmentation-resume-v1",
+  "frozen_pair_after": {
+    "ELF": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8bb00fd560ddfef9b4f1da5d6269e134de8dc6548a33e3659eb79fc580fecd45"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f43bf592ba6f245e4032f0860aa9c4ce100e6e933767d0a4cf0c355ad6770a3b"
+    }
+  },
+  "frozen_pair_before": {
+    "ELF": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8bb00fd560ddfef9b4f1da5d6269e134de8dc6548a33e3659eb79fc580fecd45"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f43bf592ba6f245e4032f0860aa9c4ce100e6e933767d0a4cf0c355ad6770a3b"
+    }
+  },
+  "next": "fresh same-world Completion and media after full-tail green",
+  "placement": {
+    "ELF": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8bb00fd560ddfef9b4f1da5d6269e134de8dc6548a33e3659eb79fc580fecd45"
+    },
+    "allocated_section_count": 9,
+    "arena": [
+      57344,
+      65408
+    ],
+    "derived_holes": [
+      [
+        64776,
+        64812
+      ],
+      [
+        65249,
+        65408
+      ]
+    ],
+    "final_free_holes": [
+      [
+        64804,
+        64812
+      ],
+      [
+        65359,
+        65408
+      ]
+    ],
+    "final_reserve_bytes": 57,
+    "fragments": {
+      ".lisp65_c2_kernal_window.input_capture_helper": {
+        "address": 65249,
+        "bytes": 40,
+        "derived_hole": [
+          65249,
+          65408
+        ],
+        "derived_hole_bytes": 159,
+        "end_exclusive": 65289,
+        "residual_bytes": 119
+      },
+      ".lisp65_c2_kernal_window.input_capture_main": {
+        "address": 64776,
+        "bytes": 28,
+        "derived_hole": [
+          64776,
+          64812
+        ],
+        "derived_hole_bytes": 36,
+        "end_exclusive": 64804,
+        "residual_bytes": 8
+      },
+      ".lisp65_c2_kernal_window.input_consumer": {
+        "address": 65289,
+        "bytes": 70,
+        "derived_hole": [
+          65249,
+          65408
+        ],
+        "derived_hole_bytes": 159,
+        "end_exclusive": 65359,
+        "residual_bytes": 49
+      }
+    },
+    "helper_call_count": 1,
+    "holes_source": "ElfTruth SHF_ALLOC complement of final linked ELF",
+    "hybrid_consumer_present": true,
+    "irq_body_authority": "owning-section-plus-unique-entry-and-call",
+    "irq_bytes": 74,
+    "irq_capture_call_count": 1,
+    "irq_entry_symbol_bytes": 0,
+    "largest_contiguous_hole_bytes": 49,
+    "longjmp_disable": {
+      "authority": "semantic-immediate-ff-store-to-ring-tail",
+      "emitted_register": "X",
+      "stores": 1
+    },
+    "main_stz_is_unconditional_prologue": true,
+    "ordinary_text_end_exclusive": 45986,
+    "ordinary_text_reserve_bytes": 14,
+    "reserve_floor_bytes": 54,
+    "reserve_source": "ElfTruth final-SHF_ALLOC arena complement",
+    "status": "passed-final-linked-ELF",
+    "surplus_over_floor_bytes": 3
+  },
+  "predecessor_Final_Red": {
+    "bytes": 11283,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-bound-origin-fragmentation-second-replacement-card-final-red.json",
+    "sha256": "678615284ac20c66e1b2235afdbaca91b013558b88065f954ca3aeeb41cefdcd"
+  },
+  "recorded_on": "2026-08-21",
+  "scope": {
+    "receipt": {
+      "bytes": 2434,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/owner-scope-result.json",
+      "sha256": "adea7d3c400ee3d72921a4518ff092df4fc233378e29c73477888da8ead48705"
+    },
+    "status": "PASS"
+  },
+  "semantic_placement_witness": {
+    "fixed_floor_bytes": 54,
+    "message_literal_is_authority": false,
+    "required_free_bytes": 57,
+    "source": "generated linker contract, not diagnostic prose"
+  },
+  "status": "PASS: V1.6 BOUND-ORIGIN FINAL WORLD CLOSED READ-ONLY"
+}

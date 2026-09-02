@@ -1,0 +1,130 @@
+{
+  "artifacts": {
+    "elf": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a481eff4acd32f04dde6660090aa2761a2f4a4b6307945cbcb2cda0f70435673"
+    },
+    "map": {
+      "bytes": 186678,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "248fc41cde951633a96d5dc0ba19dbd4de7f19ddd323678eb4bfa1291a3e6865"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "e4b36878599942ea5e8f6baadcbce1f9ba9997141454abf806b43871e812a80e"
+    },
+    "producer_log": {
+      "bytes": 288,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-card/receipts/v20-producer.log",
+      "sha256": "e594ef05dac226d9a466443e294594c4f7adddee6037b43bf2377feb8dd9e796"
+    }
+  },
+  "attempt_accounting": {
+    "device_contacts": 0,
+    "product_artifacts_emitted": true,
+    "replacement_cards_authorized": 1,
+    "replacement_cards_consumed": 1,
+    "wplto_runs": 1
+  },
+  "authority": {
+    "driver": {
+      "bytes": 13871,
+      "path": "tools/host-lisp/c2_v20_map_tuple_fix_replacement_card.py",
+      "sha256": "9b465e50a5e875676a739280cdddfec42c1d5ab818565a58611aa790d1af8855"
+    },
+    "historical_final_red": {
+      "bytes": 2581,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-map-tuple-fix-card-final-red.json",
+      "sha256": "8df43176407d923a06ac1bb5056ab514b7ee9910b2c59059cab94a4c15328b93"
+    },
+    "invocation": {
+      "bytes": 806,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-preflight/card-invocation.json",
+      "sha256": "ea5c6444ffef4f912ef9732985814f44c511feb30ddb6931a7d1444547e00784"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 44337,
+      "commit": "7b7dcc113c01455fadb7a83b6314fc5b5ac9badc",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "c0fbfe9486795c44f9d8f8b52a6574772b8f9f3b0e39a3dc0d98c7c89a39bfc9"
+    },
+    "preflight": {
+      "bytes": 2514,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-preflight/preflight.json",
+      "sha256": "2aa70450988b06293aee4d8cbe978f08a8093f517d08382c6791b5fd1050e7a6"
+    }
+  },
+  "claim_limit": "The sole replacement card is consumed; no media or device.",
+  "error": {
+    "message": "source-owner scope mutation survived: companion-define-without-trigger",
+    "type": "RuntimeError"
+  },
+  "format": "lisp65-c2.3-v20-map-tuple-replacement-final-red-v1",
+  "historical_producer_diagnostic": {
+    "message": "inherited noinit/alignment geometry drift at .noinit VMA 0xC34D",
+    "product_completed": true,
+    "promotable": false,
+    "role": "historical nonauthoritative producer qualifier"
+  },
+  "owner_disposition_required": true,
+  "read_only_post_red": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "comparison": "VMA-invariants-exact-candidate-freight-validated",
+      "fixed_boundary_symbols": 27,
+      "margins": {
+        "bank0_state": 7,
+        "ordinary_chain": 5,
+        "runtime_overlay": 6
+      }
+    },
+    "delivery_gate_control_flow": "returned before terminal post-acceptance selftest",
+    "independent_delivery_replay": "not claimed",
+    "linked_MAP_tuple": {
+      "VMA": "0xB3C2",
+      "block1_unchanged": true,
+      "bytes": "48da5aa940a282a000a3805ceaa3007afa6860",
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "first_descriptor_store": {
+        "bytes": "a9048d00c0",
+        "effect": "STA $C000 <= $04",
+        "physical_PC": "0x02B8E4"
+      },
+      "service_entry_physical": "0x02B9DC",
+      "status": "passed-primary-semantics-linked-tuple",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "low_resident_linker_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    }
+  },
+  "recorded_on": "2026-08-13",
+  "retry_authorized": false,
+  "root_cause": {
+    "class": "IN-PROCESS-OWNER-SCOPE-SELFTEST-CONTAMINATION",
+    "fresh_process_gate": "green",
+    "phase": "post-acceptance receipt assembly",
+    "producer_configured_process_gate": "source-owner scope mutation survived: companion-define-without-trigger"
+  },
+  "status": "FINAL RED: replacement card returns to owner"
+}

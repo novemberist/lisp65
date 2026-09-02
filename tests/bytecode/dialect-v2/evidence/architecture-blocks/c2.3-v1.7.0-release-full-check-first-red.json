@@ -1,0 +1,42 @@
+{
+  "format": "lisp65-c2-v170-release-full-check-first-red-v1",
+  "recorded_on": "2026-08-27",
+  "status": "FIRST RED: THREE STORED-WORLD INTEGRATION CONSUMERS",
+  "product_defect": false,
+  "members": [
+    {
+      "consumer": "c2_repl_banner_version_gate.py",
+      "expected": "WORKBENCH 1.5.0 from c2-v150-release-contract",
+      "observed": "WORKBENCH 1.7.0 from the green v1.7.0 release card",
+      "conversion": "candidate release-card authority",
+      "mutations": 4
+    },
+    {
+      "consumer": "v11_function_metadata.py",
+      "expected": "resident generated-manifest sha256 78e18ee9efc8eff9e84c7f1c1ad45c267b93a8c53ac664ca065a098f536ac70b",
+      "observed": "resident generated-manifest sha256 48ffc65c63c936a73fd3ab2c59ba99a66eb97417545795e9743892430e2f63ea",
+      "semantic_index_changed": false,
+      "conversion": "digest only the six consumed entry fields plus blob identity",
+      "mutations": 2
+    },
+    {
+      "consumer": "c2_v17_init_l65_card.py",
+      "expected": {
+        "plan_bytes": 95381,
+        "plan_sha256": "abecb3dbaf2806487293102240bbc1535d0eabb66b3c7388c17830da0995c4ea"
+      },
+      "observed": {
+        "plan_bytes": 101008,
+        "plan_sha256": "a1c5527a7038c72d0f65be2112b6417ebb05340d2c89965fbda4f557564e7f65"
+      },
+      "conversion": "evidence_era at be6c40bfe200ee486b451754a2b1a511ea46d6e4"
+    }
+  ],
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "product_links": 0,
+    "media_builds": 0,
+    "device_contacts": 0
+  },
+  "next": "full check-source twice with a byte-identical tracked tree between runs"
+}

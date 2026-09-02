@@ -1,0 +1,140 @@
+{
+  "authorities": {
+    "candidate_ELF_for_body_truth": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+    },
+    "driver": {
+      "bytes": 14688,
+      "path": "tools/host-lisp/c2_v20_map_tuple_fix.py",
+      "sha256": "854c42c6f70e03dbe1b987ff0b83276e06688b69e6792f5e0f5b8bf50b2da031"
+    },
+    "historical_attribution": {
+      "bytes": 8352,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-mapped-far-dispatch-attribution-receipt.json",
+      "sha256": "94bd84937994854ed90e76ac69d71fee2f7b792f39bb0cfdcdfb287b008c3bd3"
+    },
+    "historical_contract": {
+      "bytes": 15670,
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    },
+    "installed_payload_delivery": {
+      "bytes": 8910,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-far-payload-delivery-closure-receipt.json",
+      "sha256": "db111b95ca62bb22185a4b3831591a9fe968d62f74ec83e4223b15af2e05f254"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 43525,
+      "commit": "fbd1983ebeb98ca2dd3e3c5f1a0d1c94c1c2a35c",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "b4e7a63c0878eb9c9c242f88a7e9d9064bf7311d72a403b0a017fd5327df1e15"
+    },
+    "successor_contract": {
+      "bytes": 2008,
+      "path": "config/c2-mapped-far-map-contract-v2.json",
+      "sha256": "ac65e33b870137dad1739325b325a309481eb6d7d6659709e58edbb7dd0da2b0"
+    },
+    "trampoline_source": {
+      "bytes": 1462,
+      "path": "src/optional/c2_mapped_far_service_v2.s",
+      "sha256": "44ac718f8cd72a2f0c8357da1775c88589bb37c0660d31e29e02be974dec442d"
+    }
+  },
+  "authorization": {
+    "D1_repeat": true,
+    "D2_D5_open": false,
+    "fix": true,
+    "media_regeneration": true,
+    "one_product_card": true
+  },
+  "claim_limit": "Host/source correction and first-entry model only. The authorized product card, media regeneration and D1 have not yet run; D2-D5 remain closed.",
+  "contract_correction": {
+    "historical_source_immutable": {
+      "authority": "git-blob",
+      "bytes": 1307,
+      "commit": "eb2451bcf8d4fb8e6c060dc15e4bb79b3689e82a",
+      "path": "src/c2_mapped_far_service.s",
+      "sha256": "237ba17171877dea8d15347a295f2b6a112e394c64565b01d45274e39b03ac02"
+    },
+    "loud_and_dated": true,
+    "predecessor_tuple": {
+      "A": "0x80",
+      "X": "0x24"
+    },
+    "source_bound": true,
+    "successor_tuple": {
+      "A": "0x40",
+      "X": "0x82"
+    }
+  },
+  "decoded_mapping": {
+    "A": "0x40",
+    "X": "0x82",
+    "block_mask": "0x8",
+    "mapped_low_half_blocks": [
+      3
+    ],
+    "physical_offset": "0x24000"
+  },
+  "format": "lisp65-c2.3-v20-map-tuple-fix-v1",
+  "host_model": {
+    "block1_probe": {
+      "logical": "0x3185",
+      "physical": "0x03185",
+      "unchanged": true
+    },
+    "first_descriptor_store": {
+      "bytes": "a9048d00c0",
+      "effect": "STA $C000 <= $04",
+      "executes_under_corrected_map": true,
+      "logical_PC": "0x78E4",
+      "physical_PC": "0x02B8E4"
+    },
+    "installed_service_range": [
+      "0x02B8B2",
+      "0x02BC1C"
+    ],
+    "logical_service_entry": "0x79DC",
+    "physical_service_entry": "0x02B9DC"
+  },
+  "mutations_rejected": {
+    "alter-first-store": "contract/source decode or entry model drift",
+    "consume-card-early": "claim boundary widened",
+    "decode-old-block": "contract/source decode or entry model drift",
+    "decode-old-offset": "contract/source decode or entry model drift",
+    "erase-RTL": "primary MAP authority or decoded rule drift",
+    "erase-guide": "primary MAP authority or decoded rule drift",
+    "map-block1": "contract/source decode or entry model drift",
+    "miss-service-entry": "contract/source decode or entry model drift",
+    "open-D2-D5": "authorized boundary drift",
+    "restore-old-A": "contract/source decode or entry model drift",
+    "restore-old-X": "contract/source decode or entry model drift",
+    "silent-correction": "contract/source decode or entry model drift",
+    "skip-first-descriptor-store": "contract/source decode or entry model drift",
+    "unbound-source": "contract/source decode or entry model drift"
+  },
+  "primary_MAP_semantics": {
+    "core_RTL": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "decoded_rule": "offset20=(X[3:0]<<16)|(A<<8); low block mask=X[7:4]",
+    "guide": {
+      "bytes": 44793,
+      "path": "build/upstream-verification/mega65-user-guide/appendix-45gs02-registers.tex",
+      "sha256": "fbf997ec136de3b8d2cecb0f2f19497f2b8a26da24c68e64dd5576cf887ec121"
+    }
+  },
+  "recorded_on": "2026-08-13",
+  "source_tuple": {
+    "A": "0x40",
+    "X": "0x82",
+    "Y": "0x00",
+    "Z": "0x80"
+  },
+  "status": "PASS: primary-semantics MAP tuple corrected and modeled"
+}

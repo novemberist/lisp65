@@ -1,0 +1,154 @@
+{
+  "format": "lisp65-c2-product-link38-c2-lite-v6-hardware-line1-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "first-red-receipt-less-hardware-presmoke-stopped-before-repl",
+  "promotable": false,
+  "candidate": {
+    "product_sha256": "61f406b57eeb2e258e941be432e8f6cea797c0623f421f09cc56e91f6f1419a2",
+    "elf_sha256": "816b1eb5b0a93b7b4ed4007ded780b6d7eb3217a4170787891e37ccac6d3ff3d",
+    "structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link38-c2-lite-v6-boot-crc-abi-artifact-replay-receipt.json",
+      "bytes": 207261,
+      "sha256": "3cad09e6a609f7b7e860896bf30ba707a17acb68975b9d56d9ba1c08117f1cfc"
+    },
+    "deployment": {
+      "path": "build/c2.2/hardware-presmoke-link38-c2-lite-v6/deployment.json",
+      "bytes": 3607,
+      "sha256": "56a916950c18ce6a285517c667b2aa16bd341bda91573fafc2ff10fbc28f60b1"
+    }
+  },
+  "operator_observation": {
+    "visible": "red border; E2f runtime island invalid; redeploy",
+    "boot_to_repl": "first-red-no-repl",
+    "completed_latency_measurements": 0,
+    "latency_attempts_consumed": 0
+  },
+  "captured_runtime_state": {
+    "vm_runtime_overlay_fault": {
+      "address": "0x0078",
+      "value": 15,
+      "decoded": "VM_RUNTIME_OVERLAY_ERR_CRC"
+    },
+    "runtime_family": {
+      "address": "0x0079",
+      "value": 1,
+      "decoded": "BOOT"
+    },
+    "runtime_island_state": {
+      "address": "0x007a",
+      "value": 3,
+      "decoded": "FAILED"
+    },
+    "runtime_loaded_length": {
+      "address": "0x007b",
+      "value": 0,
+      "decoded": "fail-closed wipe complete"
+    },
+    "c2_ready": {
+      "address": "0x008c",
+      "value": 0
+    },
+    "install_context": {
+      "address": "0x006e",
+      "value": "0xf700",
+      "decoded": "nonzero authenticated slot-8 frame publication"
+    },
+    "island_target": {
+      "range": "0x1800..0x1fff",
+      "nonzero_bytes": 0,
+      "decoded": "complete fail-closed cleanup"
+    }
+  },
+  "localization": {
+    "bank3_boot_active_bytes": 16210,
+    "bank3_boot_active_mismatches": 0,
+    "bank3_boot_expected_sha256": "1745b7c6e996eadf6ebfac19fb3c533088e47f1e631b886c2323d7fedd13864c",
+    "boot_payload_crc_checks": [
+      {
+        "name": "catalog-verifier",
+        "offset": 512,
+        "bytes": 1135,
+        "expected_crc16": "0x399d",
+        "captured_bank3_crc16": "0x399d"
+      },
+      {
+        "name": "record-verifier",
+        "offset": 1792,
+        "bytes": 1454,
+        "expected_crc16": "0x3dc3",
+        "captured_bank3_crc16": "0x3dc3"
+      },
+      {
+        "name": "resident-island-installer",
+        "offset": 13056,
+        "bytes": 1287,
+        "expected_crc16": "0xa8ea",
+        "captured_bank3_crc16": "0xa8ea"
+      },
+      {
+        "name": "resident-island-image",
+        "offset": 14592,
+        "bytes": 1618,
+        "expected_crc16": "0xdc6c",
+        "captured_bank3_crc16": "0xdc6c"
+      }
+    ],
+    "proved_reached": [
+      "KERNAL ownership and published window",
+      "two-record Workbench bootstrap",
+      "Bank-3 Boot-family staging and whole-family destination identity",
+      "Boot-family selection",
+      "slot-8 catalog verifier",
+      "slot-8 record verifier and authenticated install-frame publication"
+    ],
+    "first_unproved_edge": "Bank-3 resident-island-installer payload copy to 0xc356 followed by its target CRC comparison",
+    "not_reached": [
+      "resident-island installer entry",
+      "resident-island image copy and destination CRC",
+      "C2D-v6 product decode",
+      "READY publication",
+      "REPL and all latency rows"
+    ]
+  },
+  "window_readback": {
+    "expected_sha256": "ad25daf8e58a04a2ad3cfad3dca63f4018c58bfcdfbae1a387bd211fb0847a9c",
+    "captured_sha256": "a8b9dc583d4e8f35ff2512fca7c55672f5bbf11cef78bbf1efdc6acf96f5a7f5",
+    "difference_count": 4,
+    "differences": [
+      {"address": "0xff83", "role": "frame-low", "before": 0, "after": 30},
+      {"address": "0xff86", "role": "sourceless-irq-count", "before": 0, "after": 2},
+      {"address": "0xff87", "role": "map-generation", "before": 0, "after": 1},
+      {"address": "0xff88", "role": "owned-state", "before": 0, "after": 4}
+    ],
+    "immutable_code_facade_vector_differences": 0
+  },
+  "captures": [
+    {
+      "path": "build/c2.2/hardware-presmoke-link38-c2-lite-v6/line1-first-red/low-0000-1fff.bin",
+      "bytes": 8192,
+      "sha256": "9bd9393943b67515bf93ca96a0b38097bc3cf11d307877e2b4cce7236da8aca0"
+    },
+    {
+      "path": "build/c2.2/hardware-presmoke-link38-c2-lite-v6/line1-first-red/bank0-b000-cfff.bin",
+      "bytes": 8192,
+      "sha256": "5a03c14f14377b5c3ded4d02f0c889a4d384af403d71b41fd7677177f088053f"
+    },
+    {
+      "path": "build/c2.2/hardware-presmoke-link38-c2-lite-v6/line1-first-red/chip-bank2.bin",
+      "bytes": 65536,
+      "sha256": "381f6dcfe77429547d14a4d87cfab5cf33a3d20d97072ddcbcb9ad5631872133"
+    },
+    {
+      "path": "build/c2.2/hardware-presmoke-link38-c2-lite-v6/line1-first-red/chip-bank3.bin",
+      "bytes": 65536,
+      "sha256": "42504753ce39a5ae7a4ad48376ed79631a31e9fbfcd459e1f7537926c5aa20f0"
+    },
+    {
+      "path": "build/c2.2/hardware-presmoke-link38-c2-lite-v6/line1-first-red/e000-window.bin",
+      "bytes": 8192,
+      "sha256": "a8b9dc583d4e8f35ff2512fca7c55672f5bbf11cef78bbf1efdc6acf96f5a7f5"
+    }
+  ],
+  "claim_limit": "This is a read-only, receipt-less hardware First-Red diagnosis. It is not product acceptance, latency evidence, promotion, authorization for a diagnostic patch, or authorization for a successor link.",
+  "next_gate": "Class-C review of one fixed-length, non-promotable hold-before-rtov_fail diagnostic identity that preserves the 0xc356 target and verifier frame for JTAG readback; no product link or retry is authorized by this receipt."
+}

@@ -1,0 +1,120 @@
+{
+  "format": "lisp65-c2-link28-v2-profile-data-placement-wrapper-inventory-order-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-inventory-order-only-product-link-28-blocked",
+  "authorization_accounting": {
+    "authorized_exact_warning_wrapper_probes": 1,
+    "completed_exact_warning_wrapper_probes": 1,
+    "resident_island_seed_links": 1,
+    "product_closure_links": 0,
+    "link_28_product_candidates": 0,
+    "additional_retry_or_replay_runs": 0
+  },
+  "inputs": {
+    "tool": "tools/host-lisp/c2_product_substitution_link.py",
+    "tool_sha256": "26c65e99bcb0d3c30aeb8fecebfe78f3105db1e49e96d007a19d33e4863edfe2",
+    "contract": "config/c2-kernal-unmap-contract.json",
+    "contract_sha256": "54390143a2f56ef46422c84794f6e6621d456d296cc43ea313c424098333f804",
+    "contract_document": "docs/planning/c2.2-kernal-unmap-contract.md",
+    "contract_document_sha256": "e82193359f124a803105fe6bc1d029e8d96ca6f9c59867da88084909e84a0537",
+    "section_inventory_pin": "config/c2-final-section-inventory-pin.txt",
+    "section_inventory_pin_sha256": "42d923018fbc2663ae3c19df688844a88a6db709b954dd9bb2faad4412197dee",
+    "generated_linker_sha256": "64b90e8ad7fd7c4aff3a84d7044294c235ea26efa2742ae6de1ada34f6c6018f",
+    "map_sha256": "869f4dba4c0a7df7bbbe583306be4c530758123540475b7bb17d8dea6bf1bcb3",
+    "diagnostic_record_sha256": "34af6d7c8054c28b1f13a2bd1a01f774b2dc1bc0f7fc6b1bc25aa69855e0f8a0"
+  },
+  "exact_warning_wrapper": {
+    "status": "passed",
+    "observed_diagnostic_count": 1,
+    "section": ".llvm_sympart",
+    "origin": "build/c2.2/substitution/link28-v2-profile-data-placement-probe-v4/v2-profile-data-placement-seed.prg.lto.o",
+    "report_sha256": "44f42b0de57a64917acc1650505e52f062898c6ae7d7557b5262e53db10331c3",
+    "stderr_sha256": "86a0b19a0c01bab8a4ac172567296205d0bb788c1340a5194b61d71f70ddd932",
+    "negative_matrix": {
+      "exact-single-diagnostic": "passed",
+      "zero-orphan-diagnostics": "rejected",
+      "two-orphan-diagnostics": "rejected",
+      "wrong-origin-object": "rejected",
+      "wrong-section": "rejected"
+    }
+  },
+  "produced_evidence": {
+    "final_elf": {
+      "path": "build/c2.2/substitution/link28-v2-profile-data-placement-probe-v4/v2-profile-data-placement-seed.prg.elf",
+      "bytes": 505516,
+      "sha256": "92b9eac60ba766a0ba30cee97ca34c07a28076e6e00800ca1c62a740f3acb339"
+    },
+    "saved_lto_object": {
+      "path": "build/c2.2/substitution/link28-v2-profile-data-placement-probe-v4/v2-profile-data-placement-seed.prg.lto.o",
+      "bytes": 510576,
+      "sha256": "7fd609bbffdca8ec0dcab9d53494222bfb9fa7f8dbd052864ea7ae5edb536223",
+      "mode": "0444"
+    },
+    "llvm_sympart": {
+      "final_elf_count": 1,
+      "type": "SHT_LLVM_SYMPART",
+      "bytes": 15,
+      "address": "0x0000",
+      "flags": [],
+      "runtime_load_bytes": 0,
+      "qualification": "direct read-only observation; inventory gate stopped on ordering before reporting PASS"
+    },
+    "retained_relocation_sections": {
+      "count": 57,
+      "qualification": "direct inventory observation only; downstream retention/data-reference gates not reached"
+    }
+  },
+  "first_red": {
+    "gate": "compensating final-section inventory",
+    "expected_section_count": 140,
+    "actual_section_count": 140,
+    "name_sets_equal": true,
+    "missing_sections": [],
+    "additional_sections": [],
+    "order_equal": false,
+    "first_difference": {
+      "one_based_index": 6,
+      "expected": ".basic_header",
+      "actual": ".llvm_sympart"
+    },
+    "actual_shape": ".llvm_sympart is placed after the five explicit INFO metadata sections rather than after all relocation sections",
+    "conclusion": "The gate incorrectly promoted ELF section order to identity. The authorization requires exact named membership and count; it does not make ordering semantically significant."
+  },
+  "gate_status": {
+    "exact_warning_wrapper": "passed",
+    "final_section_name_membership_and_count": "observed-exact-but-not-reported-pass",
+    "final_section_order": "first-red-overstrict-model",
+    "lto_partition_metadata_gate": "not-reached-not-passed",
+    "final_relocation_retention": "not-reached-not-passed",
+    "profile_data_reference_gate": "not-reached-not-passed",
+    "pre_ownership": "not-reached-not-passed",
+    "runtime_slice_capacity": "not-reached-not-passed",
+    "fixed_facade": "not-reached-not-passed",
+    "kernal_freedom": "not-reached-not-passed",
+    "identity": "not-reached-not-passed",
+    "hardware": "not-run"
+  },
+  "proposed_bounded_correction_not_run": {
+    "change": "compare exact section count and name set, but do not assign semantic identity to ELF section-table order",
+    "pin_update": "record the immutable final ELF's actual list order as descriptive provenance, not as an acceptance predicate",
+    "execution": "replay corrected inventory, LTO, relocation and profile-data reference gates against the existing SHA-bound ELF; no compiler or linker invocation",
+    "new_product_links": 0,
+    "reason": "The existing final ELF is sufficient evidence; rebuilding would buy no new truth and would risk LTO nondeterminism."
+  },
+  "immutable_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-v2-profile-data-placement-wrapper-inventory-order-first-red-20260720/root",
+    "files": 18,
+    "total_file_bytes": 1313079,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "76b30ab24d650c831840bd46c267c52459a2cb25540791efb71fc900aa9a65a1",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "decision": {
+    "wrapper_probe": "stopped-at-first-red",
+    "membership-only-gate-correction-replay": "not-authorized-not-run",
+    "additional_placement_link": "not-authorized-not-run",
+    "link_28": "blocked-not-run"
+  },
+  "claim_limit": "This receipt proves the exact warning wrapper passed and the resulting immutable ELF has exactly the pinned 140 section names, but records an overstrict ordering-only First Red. It does not claim a passed inventory, LTO/relocation/data-reference gate, structural closure, hardware acceptance, promotion or release."
+}

@@ -1,0 +1,80 @@
+{
+  "contract": {
+    "e000_floor_bytes": 54,
+    "hardware_runs": 1,
+    "product_links": 1,
+    "status": "passed-contract-and-hard-budget",
+    "wplto_probes": 1
+  },
+  "format": "lisp65-c2-fail-closed-blackbox-gate-v1",
+  "linked": {
+    "IRQ_delta_indices": [
+      67,
+      68
+    ],
+    "IRQ_nonterminal_delta_bytes": 0,
+    "blackbox_address": "0x222d",
+    "blackbox_bytes": 65,
+    "blackbox_section": ".text",
+    "calls_before_SEI": 0,
+    "display_seam_calls": 2,
+    "generic_fail_closed_bytes": 14,
+    "generic_fail_closed_delta_bytes": 0,
+    "irq_address": "0xe038",
+    "irq_bytes": 74,
+    "output_seam_bytes": 4,
+    "status": "passed-linked-terminal-only-blackbox",
+    "window_state_bytes": 16,
+    "window_state_growth_bytes": 0
+  },
+  "linked_ELF": {
+    "path": "build/post-release/v1.2.2/fail-closed-blackbox/wplto-v2/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "f9acf15bdd5bdbb81df7e2acecfa749342602840a38d105c7f5fcdd9bda5ce03"
+  },
+  "mutations": {
+    "names": [
+      "terminal-edge-bypasses-blackbox",
+      "capture-owned-path",
+      "capture-first-source-less-path",
+      "reason-missing",
+      "latch-missing",
+      "d01a-wrong",
+      "pc-low-offset-wrong",
+      "pc-high-offset-wrong",
+      "ethernet-missing",
+      "autoiec-missing",
+      "audiodma-missing",
+      "sei-before-last-witness",
+      "call-in-capture-prefix",
+      "branch-in-capture-prefix",
+      "dma-in-capture-prefix",
+      "direct-screen-store",
+      "one-display-cell",
+      "state-grows",
+      "generic-fail-changed"
+    ],
+    "rejected": 19,
+    "status": "passed-all-mutants-rejected",
+    "total": 19
+  },
+  "predecessor_ELF": {
+    "path": "build/post-release/link78-dirmiss-renderer/final/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "763cb2a9acd5275b618e13ce10a9f9acddbc2980a97d417b6b3f8b6e7e30c7d9"
+  },
+  "source": {
+    "DMA_before_SEI": 0,
+    "calls_before_SEI": 0,
+    "capture_prefix_instructions": 17,
+    "display_seam_calls": 2,
+    "existing_D019_witness": "C2K_UNOWNED_VIC at 0xff89",
+    "path": "src/c2_kernal_window.s",
+    "reason_code": "0xb2",
+    "sha256": "b2ecaee8fbb4d4b5af30dd13e22df69f207b6f05890f6eb4e38e8f0cd4b6a582",
+    "state_bytes": 16,
+    "state_growth_bytes": 0,
+    "status": "passed-source-terminal-only-blackbox",
+    "visible_code": "F2",
+    "witnesses": 8
+  },
+  "status": "passed"
+}

@@ -1,0 +1,154 @@
+{
+  "format": "lisp65-c2-l65r-v2-boot-branch-relocation-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: boot-exclusive relocation reclaimed 46 bytes net but resident text remains 2 bytes over its fixed handoff",
+  "scope": {
+    "branch_temperature_receipts": 1,
+    "whole_program_lto_probe_runs": 1,
+    "product_link33_attempts": 0,
+    "hardware_runs": 0,
+    "retry_authorized": false
+  },
+  "bound_evidence": {
+    "authorization_contract": {
+      "path": "config/c2-l65r-v2-branch-temperature-contract.json",
+      "sha256": "873146e171c9caf67b60e44d111925bee4409cd155321535fb4bc901be79a309"
+    },
+    "branch_temperature_attribution": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v2-branch-temperature-attribution-receipt.json",
+      "sha256": "b2b74094ce5b148fc4e8c2020eb981603be73fbd94f66d544fa2cc4ed922e56b"
+    },
+    "wplto_first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v2-boot-branch-relocation-capacity-probe-receipt.json",
+      "sha256": "3f7bd09618993fab4115e8efcbc7cb3bc193b35e022c503f1614dbf06ceda69d"
+    },
+    "wplto_map": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-boot-branch-probe/l65r-v2-boot-family-seed.prg.map",
+      "bytes": 182518,
+      "sha256": "9e365be63b4d6dce04a7d60d0314b1cdae063f8e2f140866513bbfe2fe7b804e"
+    },
+    "wplto_object": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-boot-branch-probe/l65r-v2-boot-family-seed.prg.lto.o",
+      "bytes": 568480,
+      "sha256": "7962cc37bc677badc8cd106a8517736d964d023a439195399166a8831e05686d"
+    },
+    "linker_diagnostic": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-boot-branch-probe/l65r-v2-boot-family-seed.prg.link.stderr.txt",
+      "sha256": "0f6e2c6b1809acf78e0f96bb584237bcfe7ed8ad30872c80aeb57fc44537731e"
+    },
+    "failed_candidate_source": {
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "56a32557d0bcab25cb2b9df61056a3a49fe0d9318cd965c5bcadcbba73ca58ed"
+    },
+    "rollback_product": {
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+      "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+      "status": "untouched"
+    }
+  },
+  "temperature_result": {
+    "static_boot_exclusive_dispatcher_delta_bytes": 56,
+    "resident_exec_family_before_bytes": 1353,
+    "resident_exec_family_after_bytes": 1297,
+    "resident_exec_family_reclaim_bytes": 56,
+    "whole_program_secondary_deltas": {
+      "vm_fixbinop_bytes": 2,
+      "vm_run_inner_bytes": 8,
+      "classification": "LTO closure response outside the moved branches; not an authorized byte-shaving target"
+    },
+    "net_resident_text_reclaim_bytes": 46,
+    "conclusion": "The lifetime classification is true and the move is beneficial, but gross branch bytes are not fungible with final WPLTO text bytes."
+  },
+  "capacity": {
+    "resident_text": {
+      "address": 8227,
+      "bytes": 37984,
+      "fixed_handoff": 46209,
+      "capacity_bytes": 37982,
+      "headroom_bytes": -2,
+      "predecessor_bytes": 38030,
+      "predecessor_headroom_bytes": -48
+    },
+    "ordinary_bss": {
+      "address": 47466,
+      "bytes": 1587,
+      "fixed_block_start": 49280,
+      "headroom_bytes": 227
+    },
+    "fixed_bank0_block": {
+      "bytes": 408,
+      "headroom_bytes": 33
+    },
+    "resident_island": {
+      "main_bytes": 1781,
+      "annex_bytes": 260,
+      "capacity_bytes": 2048,
+      "headroom_bytes": 7
+    },
+    "record_verifier_boot_slice": {
+      "bytes": 1411,
+      "cap_bytes": 1792,
+      "headroom_bytes": 381
+    },
+    "island_installer_boot_slice": {
+      "bytes": 1322,
+      "cap_bytes": 1792,
+      "headroom_bytes": 470
+    },
+    "e000_final_floor": {
+      "bytes": 115,
+      "status": "contract-remains-bound; final gate not reached by failed seed link"
+    }
+  },
+  "automatic_freight_triage": {
+    "source": {
+      "path": "config/c2-freight-triage.json",
+      "sha256": "6a224b2f5e22a0c558445a7b8513b7e3720235c31e140ea872bfb70aa7b41d6b"
+    },
+    "should": [
+      {
+        "item": "bitops: logand, logior, logxor, ash",
+        "candidate_presence": "not-yet-loaded",
+        "measured_resident_reclaim_bytes": 0
+      },
+      {
+        "item": "gc, room and error-string shared carrier",
+        "candidate_presence": "public C2 freight not-yet-loaded; mandatory internal collector and released error renderer are not this freight",
+        "measured_resident_reclaim_bytes": 0
+      },
+      {
+        "item": "restart-repl",
+        "candidate_presence": "not-yet-loaded",
+        "measured_resident_reclaim_bytes": 0
+      }
+    ],
+    "could": [
+      {
+        "item": "H/I/J substrate and metadata shelf delivery",
+        "candidate_presence": "new substrate not-yet-loaded; existing v1.1 IDE/IDEX/M65D conversion is MUST freight",
+        "measured_resident_reclaim_bytes": 0
+      },
+      {
+        "item": "color-RAM scroll rider",
+        "candidate_presence": "not-loaded; remains the documented v1.1 known issue",
+        "measured_resident_reclaim_bytes": 0
+      },
+      {
+        "item": "tick hook and time",
+        "candidate_presence": "not-yet-loaded",
+        "measured_resident_reclaim_bytes": 0
+      }
+    ],
+    "total_eligible_resident_reclaim_bytes": 0,
+    "result": "automatic SHOULD/COULD shedding is exhausted without touching the candidate because all lower-ranked freight is still absent"
+  },
+  "disposition": {
+    "byte_shaving": "forbidden",
+    "new_placement_attempt": "not-authorized",
+    "window_argument": "forbidden; final 115-byte floor remains closed",
+    "product_link33": "blocked-before-attempt",
+    "hardware": "not-run",
+    "next_decision": "owner selection is required because any further subtraction would remove MUST foundation or an already released v1.1 surface"
+  },
+  "claim_limit": "This diagnosis proves a two-byte resident-text First Red and exhausts the pre-ranked SHOULD/COULD freight in the current candidate. It does not authorize shedding MUST/released surface, another WPLTO run, Link 33, hardware, promotion, or acceptance."
+}

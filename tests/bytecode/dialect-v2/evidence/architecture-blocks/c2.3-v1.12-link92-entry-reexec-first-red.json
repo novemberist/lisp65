@@ -1,0 +1,17 @@
+{
+  "error": "Link-84 freight authority drift",
+  "format": "lisp65-c2.3-v1.12-link92-entry-reexec-first-red-v1",
+  "mechanism": {
+    "cause": "The inherited v1.2.1 product entrypoint checked its canonical environment before the Link-92 configure callback ran. With the environment and DRIVER still carrying their inherited values, it re-executed the v1.3 Link-84 wrapper; that wrapper correctly rejected the v1.4 profile as foreign freight.",
+    "failed_boundary": "inherited entrypoint environment bootstrap before product build directory creation",
+    "permanent_closer": "The Link-92 startup gate requires the canonical environment and all release/link/build/manifest/driver/configure bindings before P.main. A missing-environment mutation must fail."
+  },
+  "observed_on": "2026-08-07",
+  "status": "FIRST RED-attributed-pre-WPLTO-inherited-driver-reexec",
+  "wplto": {
+    "build_directory_created": false,
+    "product_builds_consumed": 0,
+    "wplto_runs_consumed": 0
+  },
+  "claim_limit": "Host entrypoint-bootstrap First Red only. No product, linker, geometry, media, device, Link-92 or release claim."
+}

@@ -1,0 +1,135 @@
+{
+  "authorities": {
+    "device": {
+      "bytes": 4067,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-durable-progress-device-receipt.json",
+      "sha256": "10eae5c566c611f3dd187a1615cbbf5ee6d0fe028d84ede9e2ed6f9413dcb36b"
+    },
+    "driver": {
+      "bytes": 12920,
+      "path": "tools/host-lisp/c2_v16_boot_durable_progress_result.py",
+      "sha256": "a6bda4e4a2dee65057adef79b1e11cf91920b744e45cecaa6ff0b11b90222210"
+    },
+    "durable_witness": {
+      "bytes": 14701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-boot-order-durable-witness-receipt.json",
+      "sha256": "5ec917daf1308ebab615b7fa73f0997b87abbe52d85ee0488ba41033b0d7cb8e"
+    },
+    "plan": {
+      "bytes": 76020,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "58cc9c6a764cef4f253ddc33b34559fd56b26fab6888c16173e17901b3a4708c"
+    },
+    "preparation": {
+      "bytes": 5930,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-durable-progress-preparation-receipt.json",
+      "sha256": "f4e17ffee7fd35c17b1da25c6e933c7700ab076a3882ef7df4bdff022f04b6a0"
+    }
+  },
+  "claim_limit": "Classification of the consumed durable-progress contact only. No product hang, allocation loop, slow progress, F018B membership, R/A/I/G result, reset, resume, measured form or new contact is claimed.",
+  "execution_witnesses": [
+    "the staged payload is byteidentical to the prepared two-byte sibling",
+    "$B5C3 read back as $D7 after all loads and before physical RUN",
+    "all three PCs are inside the bound root-scan interval",
+    "$B5C3 remains $D7 in all three stopped samples",
+    "gc_runs remains zero although the linked scan follows its increment",
+    "the final CPU state remains stopped and no measured form ran"
+  ],
+  "facts": {
+    "contradiction": {
+      "classification": "BOOT-ENTRY-IDENTITY-OR-VIEW-FIRST-RED",
+      "durable_stamp_observed": false,
+      "entry_path_reached_if_linked_identity_and_view_apply": true,
+      "gc_runs_increment_observed": false,
+      "why_double": "the sampled root-scan is post-entry and post-gc_collect increment, yet both independently bound RAM witnesses retain reset values"
+    },
+    "decision": {
+      "F018B_membership_claim": false,
+      "R_A_I_G_claim": false,
+      "X_regression": "observation only; not an atomic or monotonic oracle",
+      "allocation_GC_loop_claim": false,
+      "contact_consumed": true,
+      "new_contact_authorized": false,
+      "product_hang_claim": false,
+      "required_owner_review": "choose a launch identity/view proof that makes the entry stamp and gc_runs observations cohere before any new device contact",
+      "slow_progress_claim": false
+    },
+    "samples": {
+      "CPU_left_stopped": true,
+      "GC_context": [
+        "00002320000000000000",
+        "00002320000000000000",
+        "00002320000000000000"
+      ],
+      "PCs": [
+        "0xe1bc",
+        "0xe1c2",
+        "0xe1c2"
+      ],
+      "X_values": [
+        "0x08",
+        "0x07",
+        "0x06"
+      ],
+      "all_inside_c2_product_gc_mark_roots": true,
+      "durable_witness": [
+        "0xd7",
+        "0xd7",
+        "0xd7"
+      ],
+      "freelist_heads": [
+        "0x0000",
+        "0x0000",
+        "0x0000"
+      ],
+      "gc_runs": [
+        0,
+        0,
+        0
+      ]
+    },
+    "staging": {
+      "diagnostic_payload_readback": {
+        "bytes": 41564,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-durable-progress-appointment/diagnostic-prg-payload.bin",
+        "sha256": "cab76a6953b832969205af8a777f686380bf82efdba5c7ca7cd9529e1cfb3122"
+      },
+      "payload_byteidentical": true,
+      "prelaunch_values": [
+        "0xd7",
+        "0xd7"
+      ],
+      "prepared_diagnostic": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-durable-progress-appointment/diagnostic-link82-durable-b5c3.prg",
+        "sha256": "347ecdd0aa9d8dda70a20177b9c77409264b1102ecfd01b23ba1ab3b7c27ab59"
+      },
+      "witness_before_physical_RUN": {
+        "bytes": 1,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-durable-progress-appointment/witness-before-run.bin",
+        "sha256": "414a21e525a759e3ffeb22556be6348a92d5a13e40b61a0805f36f18c2909513"
+      },
+      "witness_before_resume": {
+        "bytes": 1,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-durable-progress-appointment/witness-before-resume.bin",
+        "sha256": "414a21e525a759e3ffeb22556be6348a92d5a13e40b61a0805f36f18c2909513"
+      }
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-D2-durable-progress-first-red-v1",
+  "recorded_on": "2026-08-05",
+  "rejected_mutations": [
+    "claim-entry-stamp",
+    "claim-gc-runs-increment",
+    "claim-product-hang",
+    "claim-allocation-loop",
+    "claim-slow-progress",
+    "claim-F018B",
+    "claim-R-A-I-G",
+    "claim-new-contact",
+    "claim-CPU-resumed",
+    "promote-X-to-oracle",
+    "drop-payload-readback"
+  ],
+  "status": "DESK-FIRST-RED-BOOT-ENTRY-IDENTITY-OR-VIEW"
+}

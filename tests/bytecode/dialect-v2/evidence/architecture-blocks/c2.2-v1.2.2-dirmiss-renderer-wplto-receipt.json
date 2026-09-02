@@ -1,0 +1,304 @@
+{
+  "authority": {
+    "attribution": {
+      "bytes": 2531,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.1-dirmiss-renderer-attribution-receipt.json",
+      "sha256": "60b74cb92ee1fec1916b0906fdabd90066c0eb23cba61fc51a4ca2f69f707845"
+    },
+    "driver": {
+      "bytes": 16410,
+      "path": "tools/host-lisp/c2_v122_dirmiss_renderer_wplto.py",
+      "sha256": "8c6d0f594043e30c87b656bed3dcfa46f87be9e3493aa6e70ae600e09a32ed09"
+    },
+    "execution_contract": {
+      "bytes": 28398,
+      "path": "config/c2-lite-execution-contract.json",
+      "sha256": "991da87c13906111ef841065323013b28a60d05e247345b65ab3a61c1fc7f500"
+    },
+    "full_name_fixture": {
+      "bytes": 20333,
+      "path": "tools/host-lisp/error_overlay_smoke.py",
+      "sha256": "fe58e449fd206b26637d7b18699c1dd5678bb0c99691af4e277228163d0d6a39"
+    },
+    "linked_ELF": {
+      "bytes": 622560,
+      "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "1e784b429f380d918078352348f6e49ed7cabe6945ce34bc07f393ef4382a314"
+    },
+    "profile": {
+      "bytes": 3962,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "37bd27f540de998a20e99bb348ae5c8bdc15b389b336b17f5aca4a7ec394a16d"
+    },
+    "renderer_source": {
+      "bytes": 4976,
+      "path": "src/l65e_bcode_ordinal.s",
+      "sha256": "81692a38bf6cffc9c9924b9542314a04b24aceb10fe30d0256bb802debc38862"
+    },
+    "static_product": {
+      "bytes": 2435,
+      "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/static-plane/narrow-static/product/substitution-artifacts.json",
+      "sha256": "72b4640be45089909a5946d5b20cc6ea23be611d50b1e8d7d2042ece0208bbae"
+    },
+    "worklist": {
+      "bytes": 4050,
+      "path": "docs/planning/1.2.2-worklist.md",
+      "sha256": "2f55a1e97db887ba1c9b5006c10cee4b787737e387a2eb37ce69081f281aabfd"
+    }
+  },
+  "capacity": {
+    "append_records": 24,
+    "pack_quantum_bytes": 256,
+    "publish_clear_bytes": 1295,
+    "publish_clear_headroom_bytes": 497,
+    "region1_rollback_sequence": [
+      "c2-append-rollback-unpublish",
+      "c2-append-rollback-wipe-plane",
+      "c2-append-rollback-wipe-chip",
+      "c2-append-rollback-wipe-attic",
+      "c2-append-rollback-finalize"
+    ],
+    "retired_sections_present": {
+      ".lisp65_rt_c2append_journal_clear": false,
+      ".lisp65_rt_c2append_publish_exports": false
+    },
+    "session_catalog_records": 52,
+    "session_family_bytes": 65423,
+    "session_family_headroom_bytes": 113,
+    "session_service_bytes": 399,
+    "session_service_records": 1,
+    "slice_cap_bytes": 1792,
+    "status": "passed-current-v4-two-region-session-aggregate"
+  },
+  "claim_limit": "One product-shaped target WPLTO plus host/ELF fixtures. No successor product link, hardware DIRMISS rendering, require, defstruct or library-era claim.",
+  "fix": {
+    "bank2_delta_bytes": 0,
+    "cold_session_slice_delta_bytes": -4,
+    "host_and_object_gate": {
+      "attribution": {
+        "bytes": 2531,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.1-dirmiss-renderer-attribution-receipt.json",
+        "sha256": "60b74cb92ee1fec1916b0906fdabd90066c0eb23cba61fc51a4ca2f69f707845"
+      },
+      "host_cases_executed": 20,
+      "output": [
+        "error-text-table: ok profile=workbench codes=63 active=44 omitted=19 bytes=803 crc16=0e96 build_id=12345678",
+        "error-overlay smoke: ok (cases=20 full-symbol=intern-renderer-missing target-mutations=5 tag-first+text+bcode12-boundaries+depth5-fixnum+textless+alloc0+busy/latch)",
+        "error-overlay MOS workbench sections: code=403 table=803 total=1206 headroom=114",
+        "error-overlay MOS symbols: 00000000 00000323 R l65e_table;                   U l65e_table; 0000014f 00000044 T l65e_emit_bcode_ordinal; 00000000 0000014f T lisp65_error_overlay_entry",
+        "error-overlay target pointer contract: ok (mutations=5 full-symbol=intern-renderer-missing)"
+      ],
+      "rendered_exactly": "undefined function: intern-renderer-missing",
+      "status": "passed-full-name-and-target-pointer-consumption",
+      "target_mutations_rejected": [
+        "restore-incidental-A-store",
+        "restore-incidental-X-store",
+        "nonzero-Z-before-name-read",
+        "wrong-name-pointer-byte",
+        "symname-call-removed"
+      ]
+    },
+    "linked_gate": {
+      "delta_bytes": -4,
+      "entry_address": "0xc356",
+      "entry_bytes": 335,
+      "instructions_after_symname": [
+        "ldz #$0",
+        "lda ($4),z"
+      ],
+      "old_entry_bytes": 339,
+      "status": "passed-linked-symname-result-consumed-directly"
+    },
+    "mechanism": "consume symname's __rc2/__rc3 pointer directly; do not overwrite it with incidental A/X",
+    "resident_delta_bytes": 0,
+    "session_slice": {
+      "bytes": 1206,
+      "delta_bytes": -4,
+      "name": "error-text-renderer",
+      "old_bytes": 1210,
+      "region_id": 0,
+      "session_manifest": {
+        "bytes": 44716,
+        "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/wplto/runtime-overlays-session-final.json",
+        "sha256": "69732e75f9f6f784e770b9c938e2d4cc5ba4e6111955fec860e7f25f5ffa8204"
+      },
+      "slot": 47,
+      "status": "passed-cold-session-L65E-delta"
+    },
+    "source_delta_bytes": -4
+  },
+  "format": "lisp65-c2.2-v1.2.2-dirmiss-renderer-WPLTO-v1",
+  "hardware_runs": 0,
+  "inherited_gates": {
+    "count": 8,
+    "equivalence_cases_executed": 447,
+    "equivalence_lanes": 11,
+    "names": [
+      "IRQ_episode",
+      "assembler_ABI_and_Z_mutations",
+      "assembler_Z_boundary",
+      "bound_artifact_source_parity_preplane",
+      "require_idempotence_fastpath",
+      "resolver_and_header",
+      "session_service_owner_lifetime",
+      "strict_interrupt_ownership"
+    ]
+  },
+  "next_gate": "Class-C Halt D: owner reviews this capacity card. Only then may one successor product link and the bundled D1/D2 hardware session be authorized.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-29",
+  "released_baseline": {
+    "artifact_set_sha256": "2115b955512a3b794f68d5f2a1d160708cb89184735b7a0984a7cfc61c38f63f",
+    "link77": {
+      "bytes": 14899,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link77-random-while-structural-receipt.json",
+      "sha256": "bcdbaa81fa81b92ca392ec0922865bfb4a9f30b5dbe6a3cfc6929ca700120b90"
+    },
+    "publication": {
+      "bytes": 5153,
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/v121-public-publication-receipt-20260729.json",
+      "sha256": "9dde19d56187d26edf0b3eb52ff52986ea9d4a9f380a5eb8b2b758f977f3037d"
+    },
+    "release": "v1.2.1"
+  },
+  "static_geometry": {
+    "bank2_headroom_bytes": 24051,
+    "bank2_sha256": "cac8e6392de04b9086f37d77b38db7a2f2fd99e904b7b985c50af93db4b16c09",
+    "bank2_static_code_bytes": 41485,
+    "direct_entry_refs": 656,
+    "entries": 696,
+    "product_build_id": "0x0957c9d5",
+    "resolutions": 2760,
+    "roots": 340
+  },
+  "status": "passed-D1-full-name-renderer-one-product-shaped-WPLTO",
+  "typed_prelink_replay": {
+    "classification": "stale inherited L65E shape authority before target link",
+    "current_slice_bytes": 1206,
+    "linked_ELF_before_replay": false,
+    "old_slice_bytes": 1210,
+    "product_bytes_changed_by_checker_update": 0,
+    "product_completed_before_replay": false,
+    "receipt": {
+      "bytes": 686,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.2-dirmiss-renderer-wplto-first-red.json",
+      "sha256": "7a96d3c1b3016a01c1f92e3e6ca26a5b2d1b46089d7bdca5c37ce44c4bc0f1bc"
+    }
+  },
+  "walls": {
+    "bank0_text_headroom_bytes": 243,
+    "e000_headroom_bytes": 54,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 50
+  },
+  "wplto": {
+    "historical_checker_boundary": {
+      "captured_driver_log": {
+        "bytes": 1355,
+        "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/receipts/wplto-historical-driver.log",
+        "sha256": "d4c1bb2de69882809beb7a1e7645c4b3920cae2a2b144a3af085e46e9a5a8612"
+      },
+      "classification": "qualification-model-only-not-a-product-or-link-red",
+      "current_replacement_gates": {
+        "assembler_leaf_ABI": {
+          "callsite_count": 9,
+          "unclassified_C_called_functions": []
+        },
+        "capacity": {
+          "append_records": 24,
+          "pack_quantum_bytes": 256,
+          "publish_clear_bytes": 1295,
+          "publish_clear_headroom_bytes": 497,
+          "region1_rollback_sequence": [
+            "c2-append-rollback-unpublish",
+            "c2-append-rollback-wipe-plane",
+            "c2-append-rollback-wipe-chip",
+            "c2-append-rollback-wipe-attic",
+            "c2-append-rollback-finalize"
+          ],
+          "retired_sections_present": {
+            ".lisp65_rt_c2append_journal_clear": false,
+            ".lisp65_rt_c2append_publish_exports": false
+          },
+          "session_catalog_records": 52,
+          "session_family_bytes": 65423,
+          "session_family_headroom_bytes": 113,
+          "session_service_bytes": 399,
+          "session_service_records": 1,
+          "slice_cap_bytes": 1792,
+          "status": "passed-current-v4-two-region-session-aggregate"
+        },
+        "historical_maps_replaced": [
+          "BADOPCODE retirement WPLTO crossed a bound wall or gate",
+          "Link-53 first-fault WPLTO qualification red",
+          "Link-54 phase-06a cutpoint WPLTO qualification red",
+          "Link-55 append geometry WPLTO qualification red",
+          "Link-55 append suffix/read-domain WPLTO qualification red",
+          "Link-55 cold append source-domain WPLTO qualification red",
+          "Link-55 one-quantum fusion qualification red",
+          "install-phase WPLTO crossed a bound wall or linked gate",
+          "selector tail-Z WPLTO qualification red"
+        ],
+        "pre_publish_identity": {
+          "elf": {
+            "bytes": 622560,
+            "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/wplto/lisp65-c2-substitution-linked.prg.elf",
+            "role": "elf",
+            "sha256": "1e784b429f380d918078352348f6e49ed7cabe6945ce34bc07f393ef4382a314"
+          },
+          "map": {
+            "bytes": 191495,
+            "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/wplto/lisp65-c2-substitution-linked.prg.map",
+            "role": "map",
+            "sha256": "2d059715c881440e1f3896e1872e57a3463fd5121f43bd75d14855406240540d"
+          },
+          "product": {
+            "bytes": 41566,
+            "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/wplto/lisp65-c2-substitution-linked.prg",
+            "role": "product",
+            "sha256": "4c8eccdc4952f8c6f0a805a85dbdac8dbee875d6446776e6f7e00357bee8f642"
+          }
+        },
+        "pre_publish_session_regions": {
+          "region_0": {
+            "bytes": 65423,
+            "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/wplto/runtime-overlays-session-final.bin",
+            "sha256": "607d4ec57e50eea0227025d00e5fb6fc77ece32cfd4eff52259e097efc172bf3"
+          },
+          "region_1": {
+            "bytes": 1956,
+            "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/wplto/runtime-overlays-session-final-region1.bin",
+            "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
+          }
+        },
+        "sealed_role_check": "deferred-to-post-publish-public-clean-build-gate",
+        "status": "passed-current-v4-pre-publish-WPLTO-closure",
+        "walls": {
+          "bank0_text_headroom_bytes": 243,
+          "e000_headroom_bytes": 54,
+          "fixed_hot_block_headroom_bytes": 2,
+          "ordinary_bank0_bss_headroom_bytes": 137,
+          "resident_island_headroom_bytes": 50
+        }
+      },
+      "raw_error": "historical post-WPLTO qualification checker red",
+      "raw_status": "FIRST RED: historical checker stopped current-product L-full keymap WPLTO"
+    },
+    "historical_profile_label": "0xb94e retained only inside the sealed legacy profile text",
+    "linked_gate": {
+      "bytes": 17682,
+      "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/receipts/single-submit-linked-gates.json",
+      "sha256": "69161a2276aad756adbe1502e4a82c7d3f9e169d48efc63a3b604100a1e6378d"
+    },
+    "publish_last_authority": "0xb98a",
+    "qualification": {
+      "bytes": 29699,
+      "path": "build/post-release/v1.2.2/dirmiss-renderer/product-shaped-wplto-v2/receipts/wplto-qualification.json",
+      "sha256": "50cc0e3f31175dc3604def8321da127c1679b1cd70dd569cd755d35d7734464a"
+    },
+    "status": "passed-one-current-WPLTO-closure-at-typed-historical-qualification-boundary"
+  },
+  "wplto_probes_consumed": 1
+}

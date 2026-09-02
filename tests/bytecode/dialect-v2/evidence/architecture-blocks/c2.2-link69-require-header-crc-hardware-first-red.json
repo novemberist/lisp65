@@ -1,0 +1,114 @@
+{
+  "format": "lisp65-c2.2-link69-require-header-crc-hardware-first-red-v1",
+  "recorded_on": "2026-07-27",
+  "status": "FIRST RED-target-L65I-header-CRC-omits-record-CRC-field",
+  "promotable": false,
+  "link_number": 69,
+  "hardware_runs": 1,
+  "hardware": {
+    "boot_watch": "(5 primitive bytecode)",
+    "require_defstruct_result": "nil",
+    "repeat_result": "nil",
+    "fail_closed": true,
+    "media_readback_byte_identical": true
+  },
+  "localization": {
+    "disk_read_sector_40_3": "t",
+    "directory_find_L65INDEX": "t",
+    "directory_entry": "(39 . 0)",
+    "l65i_parse": "nil",
+    "l65i_header": "nil",
+    "target_header_bytes": [
+      76,
+      54,
+      53,
+      73,
+      1,
+      32,
+      48,
+      8,
+      2,
+      96,
+      0,
+      218,
+      161,
+      76,
+      9,
+      108,
+      212,
+      162,
+      142,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "stored_header_crc16_low_high": [
+      162,
+      142
+    ],
+    "manual_crc_over_header_bytes_0_through_16_low_high": [
+      162,
+      142
+    ],
+    "product_parser_crc_low_high": [
+      12,
+      7
+    ],
+    "product_parser_stop_offset": 21,
+    "cause": "Header bytes 11 and 12 were consumed by %l65i-next-byte instead of %l65i-next-crc, so the target omitted the record CRC16 field from the canonical header-CRC domain."
+  },
+  "evidence": {
+    "require_screen": {
+      "path": "build/post-promotion/link69-defstruct-foundations/hardware-session/row-require-first.txt",
+      "bytes": 2241,
+      "sha256": "f3a3e115d76ad18882d852961f6f3b621af6fa11d5ceae4dad751735db3a2a0e"
+    },
+    "header_bytes_screen": {
+      "path": "build/post-promotion/link69-defstruct-foundations/hardware-session/diag-index-bytes.txt",
+      "bytes": 2241,
+      "sha256": "a493fb509c0b1ee480dc51877158ecce048fa1c14727867bb59913abd65b0b8f"
+    },
+    "canonical_crc_screen": {
+      "path": "build/post-promotion/link69-defstruct-foundations/hardware-session/diag-crc-value.txt",
+      "bytes": 2241,
+      "sha256": "9bb9d9ca529281104502e878b330941fdf5e06c7134cf309070f25a65ad12ee6"
+    },
+    "parser_offset_screen": {
+      "path": "build/post-promotion/link69-defstruct-foundations/hardware-session/diag-header-offset.txt",
+      "bytes": 2241,
+      "sha256": "434ac2edca4f8ff2a519cced5a26e857ba43c6f07cd1f9bc3e62aa26fb6aaee0"
+    },
+    "parser_crc_screen": {
+      "path": "build/post-promotion/link69-defstruct-foundations/hardware-session/diag-header-crc-after.txt",
+      "bytes": 2241,
+      "sha256": "19838773f04a052e7bb9c3f6403f26d860e4ad1ceeaf1902cd5e7a52bb8c0684"
+    },
+    "uploaded_media_readback": {
+      "path": "build/post-promotion/link69-defstruct-foundations/hardware-session/uploaded-media-readback.d81",
+      "bytes": 819200,
+      "sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+    },
+    "source_media": {
+      "path": "build/post-promotion/defstruct-v1/foundations/require-defstruct.d81",
+      "bytes": 819200,
+      "sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+    }
+  },
+  "disposition": {
+    "fix": "Consume header bytes 11 and 12 with %l65i-next-crc.",
+    "product_delta_class": "Bank-2-only two-call correction",
+    "permanent_negative": "Reject a header seal computed over a domain which omits bytes 11 and 12.",
+    "predecessor": "Link 69 remains historical First Red; no retry."
+  },
+  "claim_limit": "This receipt localizes Link 69 hardware failure only. It makes no Link 70, require success, or defstruct runtime claim."
+}

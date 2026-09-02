@@ -1,0 +1,189 @@
+{
+  "claim_limit": "The MAP claim is limited to 256 repeated four-byte CPU reads at each tested Bank-5 and Attic source base. The ring decides life versus fixed state and measures its observed interval rate; it does not by itself promote a transport or diagnose every remaining reader.",
+  "discipline": {
+    "CPU_left_stopped": true,
+    "D1_D5_executed": false,
+    "active_observations": 0,
+    "resumes": 0,
+    "same_stopped_session": true,
+    "stops": 1,
+    "target_sampler_only": true
+  },
+  "format": "lisp65-c2.3-v2.0-loading-libraries-progress-map-device-v1",
+  "inputs": {
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-loading-libraries-progress-map/contact/library-readback.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "probe": {
+      "bytes": 20568,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-map-cpu-transport-probe-receipt.json",
+      "sha256": "8c6ba278c6eb2cd044a288e43a4b4f9445e95dfd7b9babc3ab179f381c384fbb"
+    },
+    "product_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-loading-libraries-progress-map/contact/product-readback.d81",
+      "sha256": "c8deb0a60c680c420598f6b8c5ad087f1526ccde17e0880f16fa1d356be9a4b4"
+    },
+    "raw_capture": {
+      "bytes": 2743,
+      "path": "build/c2.3/v2.0-loading-libraries-progress-map/contact/raw-capture.json",
+      "sha256": "870ea22be08b0c951d50d87cae8ff9398af9c8b1545919ff6ce3530d593bd9e7"
+    },
+    "session": {
+      "bytes": 1374,
+      "path": "config/c2-v20-loading-libraries-progress-map-session.json",
+      "sha256": "bcdf64e66abc11655af9f8530239040d38457efa7d44d76e567174caa4d1f82e"
+    }
+  },
+  "mutations": {
+    "count": 14,
+    "rejected": {
+      "add-resume": "device discipline drift",
+      "add-stop": "device discipline drift",
+      "allow-active-observation": "device discipline drift",
+      "drop-slot": "progress decision drift",
+      "invent-probe-result": "probe decision drift",
+      "invent-ring-result": "progress decision drift",
+      "invent-staging-sign": "screen/code identity drift",
+      "lose-target-sampler": "device discipline drift",
+      "misbind-final-PC": "screen/code identity drift",
+      "mislabel-image-as-ordinal": "fixed phase-03/image-96/Shelf tuple drift",
+      "mislabel-transport-as-error": "fixed phase-03/image-96/Shelf tuple drift",
+      "open-D1-D5": "device discipline drift",
+      "resume-CPU": "device discipline drift",
+      "split-session": "device discipline drift"
+    }
+  },
+  "packed_stager_liveness": {
+    "actual_ELF": {
+      "bytes": 14020,
+      "path": "build/c2.3/v2.0-loading-libraries-progress-map/autoboot.c65.elf",
+      "sha256": "2c531dfac2e06161bc1274b1cf396a62b2395fa5ea918b135dd60633dc893513"
+    },
+    "error": "actual stager ELF lacks the unique liveness-prefix entry",
+    "owner_observation": "STAGING MEDIA was not visible; BUILDING HEAP and LOADING LIBRARIES were visible; no prompt followed",
+    "result": "ABSENT-IN-ACTUAL-PACKED-ELF"
+  },
+  "probe": {
+    "attic": "PASS",
+    "attic_status": "0xa5",
+    "bank5": "PASS",
+    "bank5_status": "0xa5",
+    "decision": "MAP-CPU-BANK5-AND-ATTIC-TARGET-GREEN"
+  },
+  "progress_ring": {
+    "completed": false,
+    "decision": "FIXED",
+    "expected_reads": 346298,
+    "final_frame": 8420,
+    "fixed_observation_seconds": 118.23115113728207,
+    "intervals_newest_first": [
+      {
+        "counter_delta": 0,
+        "newer_slot": 0,
+        "older_slot": 3,
+        "reads_per_second": 0.0,
+        "seconds": 39.410383712427354
+      },
+      {
+        "counter_delta": 0,
+        "newer_slot": 3,
+        "older_slot": 2,
+        "reads_per_second": 0.0,
+        "seconds": 39.410383712427354
+      },
+      {
+        "counter_delta": 0,
+        "newer_slot": 2,
+        "older_slot": 1,
+        "reads_per_second": 0.0,
+        "seconds": 39.410383712427354
+      }
+    ],
+    "newest_counter": 18,
+    "newest_descriptor_ordinal": 0,
+    "newest_entry_or_publication": 0,
+    "newest_image": 96,
+    "newest_phase": "0x03",
+    "newest_transport": {
+      "meaning": "Shelf / Attic",
+      "value": 1
+    },
+    "slots_newest_first": [
+      {
+        "age_high": 0,
+        "commit": "0xa5",
+        "counter": 18,
+        "descriptor_ordinal": 0,
+        "entry_or_publication": 0,
+        "frame_high": 32,
+        "image": 96,
+        "index": 0,
+        "phase": 3,
+        "transport": 1
+      },
+      {
+        "age_high": 8,
+        "commit": "0xa5",
+        "counter": 18,
+        "descriptor_ordinal": 0,
+        "entry_or_publication": 0,
+        "frame_high": 24,
+        "image": 96,
+        "index": 3,
+        "phase": 3,
+        "transport": 1
+      },
+      {
+        "age_high": 16,
+        "commit": "0xa5",
+        "counter": 18,
+        "descriptor_ordinal": 0,
+        "entry_or_publication": 0,
+        "frame_high": 16,
+        "image": 96,
+        "index": 2,
+        "phase": 3,
+        "transport": 1
+      },
+      {
+        "age_high": 24,
+        "commit": "0xa5",
+        "counter": 18,
+        "descriptor_ordinal": 0,
+        "entry_or_publication": 0,
+        "frame_high": 8,
+        "image": 96,
+        "index": 1,
+        "phase": 3,
+        "transport": 1
+      }
+    ]
+  },
+  "recorded_on": "2026-08-14",
+  "status": "TARGET-RESULT-BOUND",
+  "stopped_code_identity": {
+    "PC": "0xb0b1",
+    "interpretation": "single final PC sample inside phase-03 CRC computation; not by itself a loop proof",
+    "section": ".text",
+    "symbol": "crc32_update",
+    "symbol_offset": 41,
+    "symbol_start": "0xb088"
+  },
+  "tuple": {
+    "A": "0x76",
+    "B": "0x00",
+    "MAPH": "0x8000",
+    "MAPL": "0x0000",
+    "PC": "0xb0b1",
+    "SP": "0x01cf",
+    "X": "0x03",
+    "Y": "0x94",
+    "Z": "0x00",
+    "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a42304231203736203033203934203030203030203031434620383030302030303030204135303520202020303020202020203231202e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e2e2e2e6c682e0d0a2c3037373742304231202034352030412020202020454f522020202430410d0a0d0a2e",
+    "row": "B0B1 76 03 94 00 00 01CF 8000 0000 A505    00     21 ..E....C ...P 15 -  00 - .....lh.",
+    "tail": "A505    00     21 ..E....C ...P 15 -  00 - .....lh."
+  }
+}

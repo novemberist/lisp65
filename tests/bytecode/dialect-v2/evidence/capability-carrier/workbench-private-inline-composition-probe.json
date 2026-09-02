@@ -1,0 +1,174 @@
+{
+  "format": "lisp65-workbench-private-inline-composition-probe-v1",
+  "status": "passed-pinned-private-inline-eligibility",
+  "method": "each-candidate-added-individually-to-the-real-suite-and-fully-compiled",
+  "candidate_count": 25,
+  "additional_private_symbols_reclaimed": 0,
+  "eligible_but_not_applied": [
+    "m65d:%m65d-dir-target-ok-p"
+  ],
+  "suites": [
+    {
+      "id": "m65d",
+      "suite": "tests/bytecode/libs/p0-m65d-lib.json",
+      "suite_sha256": "ef71ea44b56c907c5ac80dac36827c37b40ca97c6ec81551ede5d4b3cc00bde5",
+      "existing_private_inline_functions": 13,
+      "additional_candidates": 17,
+      "rejections": {
+        "rel8": 14,
+        "code-object": 1,
+        "recursive": 1,
+        "unexpected": 0,
+        "passed": 1
+      },
+      "eligible_but_not_applied": [
+        "%m65d-dir-target-ok-p"
+      ],
+      "results": [
+        {
+          "candidate": "%m65d-set",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 155"
+        },
+        {
+          "candidate": "%m65d-mask",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 172"
+        },
+        {
+          "candidate": "%m65d-bitmap-off",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 167"
+        },
+        {
+          "candidate": "%m65d-bit-free-p",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 138"
+        },
+        {
+          "candidate": "%m65d-bam-header-ok-p",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 131"
+        },
+        {
+          "candidate": "%m65d-entry-valid-p",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 250"
+        },
+        {
+          "candidate": "%m65d-dir-scan",
+          "outcome": "recursive",
+          "diagnostic": "m65d private inline recursion: %m65d-dir-scan -> %m65d-dir-scan -> %m65d-dir-scan"
+        },
+        {
+          "candidate": "%m65d-check-old-half",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 128"
+        },
+        {
+          "candidate": "%m65d-clear",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 147"
+        },
+        {
+          "candidate": "%m65d-copy",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 133"
+        },
+        {
+          "candidate": "%m65d-claim-new",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 180"
+        },
+        {
+          "candidate": "%m65d-dir-target-ok-p",
+          "outcome": "passed",
+          "diagnostic": "candidate unexpectedly became private-inline eligible"
+        },
+        {
+          "candidate": "%m65d-dir-fill",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 142"
+        },
+        {
+          "candidate": "%m65d-commit-dir",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 173"
+        },
+        {
+          "candidate": "%m65d-old-validated",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 157"
+        },
+        {
+          "candidate": "%m65d-write-plan",
+          "outcome": "code-object",
+          "diagnostic": "%m65d-run-record: code object 434 B exceeds max_code_object_bytes 255"
+        },
+        {
+          "candidate": "%m65d-run-record",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 191"
+        }
+      ]
+    },
+    {
+      "id": "idex",
+      "suite": "tests/bytecode/libs/p0-ide-extra-lib.json",
+      "suite_sha256": "5809da74de8fd229036821839e1f4f283cad35e0b2641aa7a4967b9775b56f60",
+      "existing_private_inline_functions": 8,
+      "additional_candidates": 8,
+      "rejections": {
+        "rel8": 5,
+        "code-object": 3,
+        "recursive": 0,
+        "unexpected": 0,
+        "passed": 0
+      },
+      "eligible_but_not_applied": [],
+      "results": [
+        {
+          "candidate": "%ide-buffer-with-mark",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 153"
+        },
+        {
+          "candidate": "%ide-kill-region-lines",
+          "outcome": "code-object",
+          "diagnostic": "ide-kill-region: code object 289 B exceeds max_code_object_bytes 255"
+        },
+        {
+          "candidate": "%ide-apply-word-edit-command",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 129"
+        },
+        {
+          "candidate": "%ide-apply-region-command",
+          "outcome": "code-object",
+          "diagnostic": "%ide-apply-rare-edit-command: code object 363 B exceeds max_code_object_bytes 255"
+        },
+        {
+          "candidate": "%ide-apply-page-command",
+          "outcome": "code-object",
+          "diagnostic": "%ide-apply-rare-edit-command: code object 359 B exceeds max_code_object_bytes 255"
+        },
+        {
+          "candidate": "%ide-apply-rare-edit-command",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 228"
+        },
+        {
+          "candidate": "%ide-mini-search-submit",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 144"
+        },
+        {
+          "candidate": "%ide-execute-command-submit",
+          "outcome": "rel8",
+          "diagnostic": "branch offset out of rel8 range in if: 169"
+        }
+      ]
+    }
+  ],
+  "decision": "defer-incidental-single-symbol-reclaim-product-identity-stable"
+}

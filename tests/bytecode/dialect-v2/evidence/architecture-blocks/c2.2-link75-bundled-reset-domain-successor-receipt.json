@@ -1,0 +1,41 @@
+{
+  "authority": {
+    "C4": {
+      "bytes": 5273,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link57-destructive-restage-contract-probe-receipt.json",
+      "sha256": "db8767d2aa369f212a200584eeddfa95b00b435dd402ebc81ae1144d8e449698"
+    },
+    "superseded_deployment": {
+      "bytes": 8195,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/product-phase-deployment.json",
+      "sha256": "c167e7de34a7cafe8d9284d23d24152511770dca513ab80a2f543b458648fd96"
+    }
+  },
+  "classification": "hardware-harness-First-Red",
+  "correction": "Bind and readback-verify the complete 50816-byte reset domain; require C2J zero before the product is released.",
+  "finding": "The canonical retry rebound only the 33840-byte C2D prefix. Its post-failure [33840,50816) suffix is byte-identical to the pre-clear diagnostic snapshot, so the run violated C4 before the first append.",
+  "format": "lisp65-c2.2-link75-reset-domain-successor-receipt-v1",
+  "mutations": {
+    "nonzero-C2J": "rejected",
+    "nonzero-inactive-suffix": "rejected",
+    "prefix-only": "rejected",
+    "short-reset-domain": "rejected",
+    "wrong-prefix": "rejected"
+  },
+  "new_product_link": false,
+  "next": "Deploy this successor, prove C2J zero before start, mount the same D81, then rerun require-first.",
+  "product_delta": 0,
+  "recorded_on": "2026-07-28",
+  "reset_domain": {
+    "address": "0x00050000",
+    "bytes": 50816,
+    "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/c2d-v6-reset-domain.bin",
+    "sha256": "881cdf1b3950e8c3cd8a9bd55919fd079201d41453f4e31d580413ccd25a8d62"
+  },
+  "status": "passed-harness-reset-domain-correction-no-product-delta",
+  "successor_deployment": {
+    "bytes": 9041,
+    "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/reset-domain-successor/product-phase-deployment.json",
+    "sha256": "805950dc9a74c8347ae79ecfcf7b62b68d10378e37c97d218341e04a582110a3"
+  }
+}

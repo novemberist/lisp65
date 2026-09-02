@@ -1,0 +1,72 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1
+  },
+  "classification": {
+    "capacity_wall": true,
+    "product_backstop_semantics_exonerated": true,
+    "reason": "the five-byte gap is explicitly a validation margin, not spendable capacity",
+    "stored_world_pin": false
+  },
+  "format": "lisp65-c2-v160-execution-boundary-bss-margin-attribution-v1",
+  "inputs": {
+    "card_Final_Red": {
+      "bytes": 20852,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-execution-boundary-backstop-projection-replacement-card-final-red.json",
+      "sha256": "ca73f24d218671c0e560c0e420ccb37c0419c86a035188102ce4748ae7b87807"
+    },
+    "predecessor_map": {
+      "bytes": 191083,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/resident-island-seed.prg.map",
+      "sha256": "c27f3e7850a83a8e460a7888c371480941d6cbdb566c995d9c041e47dc158dbd"
+    },
+    "red_map": {
+      "bytes": 204002,
+      "path": "build/c2.3/v1.6-execution-boundary-backstop-projection-replacement-card/wplto/resident-island-seed.prg.map",
+      "sha256": "9a2118d46d6ab7bae13bbebb72eed868a0c1429a05eb3ffe09a93427b3128d09"
+    }
+  },
+  "mechanism": {
+    "change": "four existing private C cells were made externally global for assembler relocation",
+    "effect": "whole-program LTO BSS selection/layout grew by one real byte",
+    "linker_guards": [
+      "ordinary full-map chain drift",
+      "five-byte validation margin drifted; it is not capacity"
+    ],
+    "writer": "execution-boundary implementation"
+  },
+  "next": "reviewer/owner price decision; no third card under self-disposition",
+  "recorded_on": "2026-08-23",
+  "replacement_price_candidate": {
+    "claim_limit": "mechanism-priced only; a fresh full-LTO card requires explicit authorization",
+    "expected_BSS_delta": 0,
+    "form": "retain C internal linkage; export zero-byte global aliases from each owning object and consume only aliases in assembler",
+    "mechanism_probe": {
+      "allocated_bytes": 1,
+      "extra_alias_bytes": 0,
+      "linked_alias": "0x3000",
+      "private_cell": "0x3000",
+      "scope": "object/linker mechanism only; full-LTO price unproven"
+    }
+  },
+  "status": "ATTRIBUTED: GLOBAL VISIBILITY SPENDS ONE PROTECTED BSS MARGIN BYTE",
+  "two_worlds": {
+    "delta_bytes": 1,
+    "failed_candidate": {
+      "address": "0xb9ca",
+      "bytes": 1586,
+      "end": "0xbffc",
+      "validation_margin_to_0xc000": 4
+    },
+    "predecessor": {
+      "address": "0xb9ca",
+      "bytes": 1585,
+      "end": "0xbffb",
+      "validation_margin_to_0xc000": 5
+    }
+  }
+}

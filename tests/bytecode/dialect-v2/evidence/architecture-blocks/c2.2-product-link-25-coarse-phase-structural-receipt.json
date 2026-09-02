@@ -1,0 +1,133 @@
+{
+  "format": "lisp65-c2-product-link-25-coarse-phase-structural-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "passed-structural-hardware-not-run",
+  "authorization": {
+    "decision": "split phases 02 and 06 at semantic boundaries without changing the 1792-byte cap or moving more code into the E000 facade",
+    "capacity_probe": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link24-phase-02-06-coarse-split-capacity-probe-receipt.json",
+    "capacity_probe_sha256": "2a1b65be812b91319432be0862fcf05ff00930f80ec6f65e89c335740caeebf4"
+  },
+  "product_identity": {
+    "prg": "build/c2.2/substitution/product-link-25-coarse-phase/lisp65-c2-substitution-linked.prg",
+    "prg_sha256": "ae16e161cdf1fd8b2085e1c69acca46c6db21b38449c4feeb44ac3bb4fc9532d",
+    "elf": "build/c2.2/substitution/product-link-25-coarse-phase/lisp65-c2-substitution-linked.prg.elf",
+    "elf_sha256": "5f3ec8ec1d1e181bb20f07d3ed754da37dd38362c6f82096d32a291a978343d3",
+    "resolved_profile_sha256": "1b555179969b917c0495ba7180b44c8aee735ff3e744c2ae38c3503f48660567",
+    "product_closure_links": 1,
+    "resident_island_seed_links": 1
+  },
+  "kernal_window_identity": {
+    "bytes": 8192,
+    "crc16": "0xe4cd",
+    "sha256": "01bb28e36e30d0f36667ebc757073930a7b97ef1406090d6652f139b4b210f34",
+    "pre_link_pin_source": "build/c2.2/substitution/link24-phase-02-06-coarse-split-capacity-probe/coarse-split-capacity-seed.prg.elf",
+    "pre_link_pin_source_sha256": "883214ac518f5f6e5721da2a11dbaec631b162164b035eae0642445bd195019b",
+    "final_artifact": "build/c2.2/substitution/product-link-25-coarse-phase/c2-product-kernal-window.bin",
+    "identity_gate": "passed-byte-identical-to-pre-link-pin"
+  },
+  "semantic_split": {
+    "02a": "all shelf-to-C2D image-record cross-bindings",
+    "02b": "entry/resolution totals close, cursor reset and phase-3 publication",
+    "06a": "normalized code structure and zero literal slots",
+    "06b": "canonical export-name validation and phase-7 publication",
+    "cutpoint_markers": {
+      "02": "reserved 0x00 -> 0x2a -> 0x00",
+      "06": "reserved 0x00 -> 0x6a -> 0x00",
+      "skip_reorder_or_replay": "rejected-fail-closed"
+    },
+    "validation_removed": false,
+    "additional_e000_relocation": false,
+    "overlay_cap_changed": false
+  },
+  "decoder_slice_capacity": {
+    "cap_bytes": 1792,
+    "phase_bytes": {
+      "00": 1363,
+      "00b": 1443,
+      "01": 1691,
+      "02a": 1665,
+      "02b": 243,
+      "03": 1584,
+      "04": 1072,
+      "05": 1675,
+      "06a": 1447,
+      "06b": 1009,
+      "07": 1079,
+      "08": 1381,
+      "09": 1492,
+      "10": 1281,
+      "11": 1730,
+      "12": 1289,
+      "13": 1776
+    },
+    "phase_13_watch": {
+      "bytes": 1776,
+      "headroom_bytes": 16,
+      "status": "narrowest-phase-watch"
+    },
+    "all_slices_fit": true
+  },
+  "substitution_balance": {
+    "runtime_overlay_bank": {
+      "retired_l65m_bytes": 36744,
+      "boot_image_bytes": 12529,
+      "boot_headroom_bytes": 53007,
+      "session_image_bytes": 50334,
+      "session_headroom_bytes": 15202,
+      "families_are_lifetime_exclusive": true
+    },
+    "bank5_mutable_plane": {
+      "bytes": 33840,
+      "headroom_bytes": 31696
+    },
+    "attic_immutable_shelf_bytes": 70897,
+    "bank0": {
+      "retired_directory_projection_bytes": 697,
+      "new_kernal_facade_and_state_bytes": 826,
+      "fixed_bank0_headroom_bytes": 273,
+      "fixed_zero_page_state_bytes": 7
+    },
+    "cpu_e000_window": {
+      "gross_bytes": 8192,
+      "live_bytes": 6788,
+      "future_margin_bytes": 1404,
+      "historical_fixed_resident_deficit_bytes": 3639,
+      "relocated_c2_resident_bytes": 6608,
+      "replacement_resident_bytes": 490
+    }
+  },
+  "fresh_gates": {
+    "capacity": "passed",
+    "pre_link_window_identity": "passed",
+    "runtime_family_total_identity": "passed-45-record-occurrences",
+    "mutated_runtime_payload_negative": "rejected",
+    "publish_last_verifier_binding": "passed-30-of-32-designated-bytes",
+    "one_truth_closure": "passed-43-unique-slices-no-L65M",
+    "kernal_freedom": "passed-297-direct-window-edges-zero-violations",
+    "fixed_host_facade": "passed-12-vectors",
+    "pre_ownership": "passed-9-boot-roots-and-9-case-negative-matrix",
+    "handoff_z_and_io_personality": "passed-13-case-negative-matrix",
+    "orphan_policy": "passed-exact-five-name-allowlist"
+  },
+  "evidence": {
+    "structural_summary_sha256": "efa8f03355f6e8e491ae793c1bd58053562bedbf2c92005a804e8ed499def44b",
+    "kernal_freedom_sha256": "d04d788b417edf5195b5335d7e36063d15799eac25483dfffac3fa7934d6a993",
+    "substitution_balance_sha256": "1bf7834698149718e073c357f8ddc7f5f01d90fa33036eca9ef11f443f091432",
+    "one_truth_closure_sha256": "3829ce31caf387354b8a2398bc65cbf228ca374a6f1266bc5cf79deeee468f00",
+    "fixed_host_facade_sha256": "381980eeaad6a3c610637c0889353f35302ec49e4d1b40d48f6a07a6a5a4a930",
+    "pre_ownership_sha256": "ded573fde9ddabb19bad0a3268d466a5742188df793b4ed6f02aba8fb256696f",
+    "handoff_z_abi_sha256": "304ae8951c16e6d78ab2550318c65b53dc4f8e6c22a73c9eeb2db14501408322",
+    "runtime_family_identity_sha256": "b477c41b8d197b1a301bfbfce6057d2add0cd323974c2140a6df311ed94ee13f",
+    "publish_last_binding_sha256": "901fe31ca496a680035a903dbd67f8474153a64c8c2e5583932f0ae432edbdb6"
+  },
+  "performance": {
+    "link24_observed_cold_boot_seconds_approx": 720,
+    "link24_minimum_cursor_transport_count": 21068,
+    "link25_boot_decode_transport_count_excluding_phase13_materialization": 16,
+    "projection": "seconds-class",
+    "hardware_measurement": "not-run",
+    "performance_claim": "not-run-not-passed"
+  },
+  "next_gate": "Receipt-less hardware pre-smoke of the new whole/coarse-phase transport, followed by a measured cold-boot result.",
+  "claim_limit": "Link 25 is a structurally accepted single-product-closure candidate only. Its bytes have not run on hardware; no hardware acceptance, promotion or release claim is made."
+}

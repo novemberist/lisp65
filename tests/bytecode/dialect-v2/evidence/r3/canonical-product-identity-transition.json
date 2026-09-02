@@ -1,0 +1,52 @@
+{
+  "format": "lisp65-r3-product-identity-transition-v1",
+  "id": "r3-canonical-product-reproducibility-repin",
+  "status": "accepted",
+  "decided_on": "2026-07-13",
+  "historical_r2_identity": {
+    "product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "banked_headroom_bytes": 269,
+    "treatment": "immutable-historical-promotion-not-amended"
+  },
+  "r3_baseline_identity": {
+    "product_sha256": "da4c72a2254a98b4efa44442330e8cc1d5bdf5c8a5dd348391b8641c0892b827",
+    "artifact_set_sha256": "06bc10b9a618e89750832c9ec5b0ba12c45f696a1cbedd13955001abc28f862f",
+    "banked_headroom_bytes": 269,
+    "reproducibility_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/canonical-product-reproducibility-receipt.json",
+      "sha256": "e7c299d998804071b25b5a252cbc1bb89976f8e6590177e6a68841a0525f89dc"
+    }
+  },
+  "bank_delta": {
+    "baseline_product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "candidate_product_sha256": "da4c72a2254a98b4efa44442330e8cc1d5bdf5c8a5dd348391b8641c0892b827",
+    "baseline_banked_headroom_bytes": 269,
+    "candidate_banked_headroom_bytes": 269,
+    "delta_bytes": 0,
+    "authorization": null
+  },
+  "archive_audit": {
+    "archive": "tests/bytecode/dialect-v2/evidence/promotions/dialect-v2-ide-4c947e8.tar.gz",
+    "archive_sha256": "3f6cc11148307f896ebc5f9ea1f77b89de1575e355d3d3558999f59f8bb85797",
+    "manifest_product_bytes": "absent",
+    "embedded_d81_product_bytes": "absent",
+    "embedded_d81_contents": "libraries-and-test-slots-only",
+    "historical_binary_diff": "impossible-because-product-bytes-were-not-materialized"
+  },
+  "cause": {
+    "classification": "unsealed-live-build-state-provenance-gap",
+    "active_nondeterminism": "not-observed",
+    "evidence": [
+      "zero-relevant-product-source-diff-lines-since-4c947e8",
+      "identical-artifact-lengths-and-link-metrics",
+      "two-varied-fresh-clone-builds-byte-identical",
+      "historical-product-bytes-and-full-generated-product-inputs-not-archived"
+    ],
+    "prevention": [
+      "varied-fresh-clone-double-build-before-every-seal",
+      "reproducibility-receipt-embedded",
+      "all-promoted-product-bytes-embedded"
+    ]
+  },
+  "release_effect": "none"
+}

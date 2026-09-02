@@ -1,0 +1,81 @@
+{
+  "accounting": {
+    "Link93_forms_run": 0,
+    "defstruct_forms_run": 0,
+    "hardware_result_claims": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "bindings": {
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 16208,
+      "commit": "bf346d413092dcd6909413d02b2935769c2aacd0",
+      "path": "docs/planning/post-v1.4.0-direction-plan.md",
+      "sha256": "45420c73ecf070cd704068b24c96d27bec7cf6025f3afed79faec4b3d5303953"
+    },
+    "contract": {
+      "bytes": 845,
+      "path": "config/c2-live-repl-ftp-crossing.json",
+      "sha256": "50124f1b0f5ae92f4f1cef75b51a972a32253e3ca0bd0f0042b748eda6c544da"
+    },
+    "driver": {
+      "bytes": 14181,
+      "path": "tools/host-lisp/c2_live_repl_ftp_crossing_gate.py",
+      "sha256": "0307a019db937c47ca78ff1e5dcfaa3f2ddcaa732c9d46abf8219c329fcd4382"
+    },
+    "runners": [
+      {
+        "bytes": 7163,
+        "path": "scripts/c2-trace-core-abi-link93-hw.sh",
+        "sha256": "2a0e3204fe6ea407f8bc233feb7af6dfb9102a496bf0e5e2eb096957feb2bd8c"
+      },
+      {
+        "bytes": 7833,
+        "path": "scripts/c2-defstruct-terminal-ingress-hw.sh",
+        "sha256": "e98c6108b4c04fa917f255d33c333fcd29036d5581cf346b601c9d55d1ac26ac"
+      }
+    ]
+  },
+  "claim_limit": "Harness choreography only. The session first red ran no Link-93 form and makes no product, trace, defstruct, R/A/I/G, release or v1.5 claim.",
+  "contract": {
+    "both_media_uploaded_and_read_back_in_that_lifetime": true,
+    "freezer_return": "F3",
+    "fresh_basic_before_helper": true,
+    "ftp_helper_lifetimes_before_product_boot": 1,
+    "library_mount_after_boot": "physical-Freezer-drive-8",
+    "live_repl_ftp_policy": "forbidden",
+    "post_boot_ftp_invocations": 0,
+    "product_medium_mounted_last": true
+  },
+  "first_red": {
+    "classification": "harness-only; no Link-93 claim",
+    "forms_run": 0,
+    "library_transfer": "not-completed",
+    "mechanism": "second mega65_ftp -F attempted fastloader takeover of the live Workbench and injected GO64/Y ten times",
+    "product_medium_readback": "byteidentical-before-crossing"
+  },
+  "format": "lisp65-c2.3-live-repl-ftp-crossing-gate-v1",
+  "recorded_on": "2026-08-09",
+  "runner_audits": [
+    {
+      "ftp_helper_lifetimes": 1,
+      "library_mount_after_boot": "physical-Freezer-drive-8",
+      "library_readback": true,
+      "post_boot_ftp_invocations": 0,
+      "product_mounted_last": true,
+      "product_readback": true,
+      "runner": "scripts/c2-trace-core-abi-link93-hw.sh"
+    },
+    {
+      "ftp_helper_lifetimes": 1,
+      "library_mount_after_boot": "physical-Freezer-drive-8",
+      "library_readback": true,
+      "post_boot_ftp_invocations": 0,
+      "product_mounted_last": true,
+      "product_readback": true,
+      "runner": "scripts/c2-defstruct-terminal-ingress-hw.sh"
+    }
+  ],
+  "status": "HARNESS-FIRST-RED-ATTRIBUTED; CORRECTED-CHOREOGRAPHY-GREEN"
+}

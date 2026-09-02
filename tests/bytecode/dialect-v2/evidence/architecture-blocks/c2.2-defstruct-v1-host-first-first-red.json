@@ -1,0 +1,158 @@
+{
+  "authority": {
+    "July17_design": {
+      "bytes": 43074,
+      "path": "docs/planning/extension-libraries-design.md",
+      "sha256": "922b64aeb76b941602bc2e77430f29e43b566b492562b20c495e6b9b6a870eee"
+    },
+    "Link68": {
+      "bytes": 3819,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link68-require-resolver-structural-receipt.json",
+      "sha256": "da7580b1719f79d3074380c3c606aafb663cbe79f0b02a80c62ebdcb3aec2742"
+    },
+    "contract": {
+      "bytes": 1843,
+      "path": "config/c2-defstruct-v1-contract.json",
+      "sha256": "493b21dbf79da61c6f4b7367c9af110fce59373c05736946f9850ef7af61b3f4"
+    },
+    "driver": {
+      "bytes": 10018,
+      "path": "tools/host-lisp/c2_defstruct_v1_probe.py",
+      "sha256": "f816506842ffc97f10cbea7fc2f76483d6a66a4b8dc739b49ba356ed98b291e2"
+    },
+    "native_registry": {
+      "bytes": 13210,
+      "path": "config/v2-native-function-registry.json",
+      "sha256": "ad40fecbdc7dcae327502a885058f6db500f49a3e5d53f6468d3b2150a6c1e33"
+    },
+    "note": {
+      "bytes": 1301,
+      "path": "docs/planning/c2.2-defstruct-v1-host-first-probe.md",
+      "sha256": "9dd0cda029a262b0e9c81d758a14c3f228b45d05191da66812c2750d63b9337c"
+    },
+    "places": {
+      "bytes": 3052,
+      "path": "lib/stdlib-places.lisp",
+      "sha256": "40948f2e6e1cde2e029269a05735699d9c4fafe5dcf1eddaecc7aa75be23655c"
+    },
+    "source": {
+      "bytes": 2732,
+      "path": "lib/defstruct.lisp",
+      "sha256": "3a47c2995c9764aa863126a367e2f4807d4c16c8788172c683d965fac481f1a7"
+    },
+    "suite": {
+      "bytes": 1102,
+      "path": "tests/bytecode/libs/p0-defstruct-v1-lib.json",
+      "sha256": "484bc37d5bd4f65ef6d3b5d5aee84da609a15934168083fb98c0c30baf6393e2"
+    },
+    "surface": {
+      "bytes": 13560,
+      "path": "lib/prelude-surface.json",
+      "sha256": "47ca00b9d81486e2209696a7545d30fdc1b58ee7c13573b8ab8a5f3f1967f8ac"
+    }
+  },
+  "capacity": {
+    "not_reached": true,
+    "reason": "the real P0 compile stopped before an L65P artifact existed",
+    "resident_bytes_claimed": 0,
+    "session_records_claimed": 0
+  },
+  "claim_limit": "Host semantics and real target First Red only. Require hardware, defstruct target behavior and acceptance remain unclaimed.",
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "product_links": 0,
+    "target_library_artifacts": 0
+  },
+  "format": "lisp65-c2-defstruct-v1-host-first-first-red-v1",
+  "host_semantics": {
+    "fixture_count": 12,
+    "fixtures": {
+      "copy-distinct": true,
+      "copy-mutable-result": true,
+      "copy-source-preserved": true,
+      "functional-update-source-preserved": true,
+      "functional-update-value": true,
+      "positional-constructor": true,
+      "reader-x": true,
+      "reader-y": true,
+      "strict-arity-high-rejected": true,
+      "strict-arity-low-rejected": true,
+      "tag-negative": true,
+      "tag-positive": true
+    },
+    "generated_names": {
+      "person": [
+        "make-person",
+        "person-p",
+        "person-name",
+        "person-age",
+        "person-city",
+        "person-with-name",
+        "person-with-age",
+        "person-with-city",
+        "copy-person"
+      ],
+      "point": [
+        "make-point",
+        "point-p",
+        "point-x",
+        "point-y",
+        "point-with-x",
+        "point-with-y",
+        "copy-point"
+      ]
+    },
+    "mutation_count": 16,
+    "mutations_rejected": {
+      "conc-name-option": "rejected-options-v1",
+      "constructor-option": "rejected-options-v1",
+      "copy-aliases-top-level": "rejected",
+      "duplicate-generated-name": "rejected",
+      "gensym-public-name": "rejected",
+      "include-option": "rejected-options-v1",
+      "keyword-constructor": "rejected-positional-only",
+      "missing-setf-registration": "rejected",
+      "missing-tag": "rejected-representation",
+      "non-strict-constructor": "rejected",
+      "private-setf-registry": "rejected-one-truth",
+      "reader-off-by-one-high": "rejected",
+      "reader-off-by-one-low": "rejected",
+      "resident-dispatcher": "rejected-zero-resident-budget",
+      "update-mutates-source": "rejected-functional-update",
+      "wrong-tag": "predicate-false"
+    },
+    "status": "passed-host-expansion-and-behavior-model"
+  },
+  "next_gate": "Class-C review of the two substrate seams before any target defstruct artifact, product WPLTO or hardware-session card.",
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "review_question": {
+    "class": "Class C",
+    "decision": "Authorize one canonical callable `intern` compile-time seam and one canonical extensible stdlib-places registration mechanism, or amend defstruct v1 to omit generated public names/setf support. The probe does not choose.",
+    "recommended_direction": "Expose the already-contracted `intern` surface through the existing dialect-v2 native-function truth and extend stdlib-places itself with one registration table; do not create defstruct-private substitutes."
+  },
+  "status": "FIRST RED-host-semantics-green-target-naming-and-places-seams-absent",
+  "target_preflight": {
+    "compiler_output": [
+      "bytecode-p0-stdlib-check: FAIL: unresolved bytecode call targets: %defstruct-symbol: TAILCALL intern argc=1; %defstruct-slot-symbol: TAILCALL intern argc=1"
+    ],
+    "compiler_return_code": 1,
+    "naming_seam": {
+      "contracted_core_primitive": "intern",
+      "dialect_v2_callable_registry_entries": 0,
+      "generated_public_names_cannot_use_gensym": true,
+      "surface_declares": true
+    },
+    "places_seam": {
+      "canonical_extension_points": 0,
+      "closed_builtin_place_heads": [
+        "car",
+        "cdr",
+        "getf"
+      ],
+      "required": "%setf-register",
+      "shadow_registry_forbidden": true
+    },
+    "status": "FIRST RED-target-substrate-incomplete"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "authorization": {
+    "contract": {
+      "bytes": 2527,
+      "path": "config/c2-preinstall-island-guard-contract.json",
+      "sha256": "2dff2107381caf584b2a357205fa650786d212a770936d5e1159b1a8b5bb3248"
+    },
+    "document": {
+      "bytes": 2129,
+      "path": "docs/planning/c2.2-preinstall-island-guard-addendum.md",
+      "sha256": "331782a7d749e714490ad5d055e3586af792c0895138901b7b927503b27d0099"
+    },
+    "first_red_diagnosis": {
+      "bytes": 7182,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link31-transaction-auth-hardware-first-red-diagnosis.json",
+      "sha256": "a6c6cfbdb34817d594cd58fae43b75e694f54ad412633221a47ca60ec326703e"
+    },
+    "hardware_runs": 0,
+    "link31_structural_receipt": {
+      "bytes": 13107,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link31-transaction-auth-structural-receipt.json",
+      "sha256": "e87310d2edc321f788a63a92c977fd50d9703590078cdc01f18658f60892d339"
+    },
+    "product_links": 0
+  },
+  "claim_limit": "Host/source/ASAN/UBSAN and exact stale-Link-30 lifecycle proof only. Capacity, linked static closure, product SHA, hardware, latency, promotion and release are not claimed.",
+  "format": "lisp65-c2-preinstall-island-guard-contract-probe-v1",
+  "host_lifecycle_gate": {
+    "active_not_ready": "failed-closed-with-zero-Island-calls",
+    "binary": {
+      "bytes": 113144,
+      "path": "build/runtime-overlay-transaction-host",
+      "sha256": "95282fdb88305b68309287df3cff875b1b9e04dcd703e33444c5c6ce991b0cf9"
+    },
+    "exact_predecessor": {
+      "bytes": 1291,
+      "path": "build/c2.2/preinstall-island-guard-host/link30-resident-island.bin",
+      "sha256": "5d0141d0c78cfd29bacc993b0050c2ba5770938b36236f6c4e12bf740600b40a"
+    },
+    "postinstall_image": "matches-current-generated-Island",
+    "preinstall_transaction_context_calls": 0,
+    "status": "passed-asan-ubsan",
+    "value_string": "runtime-overlay-transaction: PASS catalog=once-per-transaction record+payload=per-slice same-generation-mutation=crc-red generation-change=reauthenticated batch-state=lifetime-exclusive stale-predecessor=exact-link30 preinstall-island-calls=0"
+  },
+  "implementation": {
+    "fixture": {
+      "bytes": 17015,
+      "path": "scripts/runtime-overlay-transaction-main.c",
+      "sha256": "e778369c60fcb60deeed26af60b21884c9e1710d39ed7da2ccdc87fd52697bd3"
+    },
+    "header": {
+      "bytes": 6371,
+      "path": "src/vm_runtime_overlay.h",
+      "sha256": "168a8113bb7bc8424cec5a919850996b2c751f2e697ed2c54ad80ca15d015182"
+    },
+    "makefile": {
+      "bytes": 76824,
+      "path": "mk/workbench.mk",
+      "sha256": "e3378964e31e66c4135a8ceacf1be8552e3fba3ba2c9f43f714f4708037babba"
+    },
+    "runtime": {
+      "bytes": 46585,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "5fbf7fc04e40c3e10c8df1c7e50e1284d79577205de4a9dc83a6e3f81fc5f71c"
+    }
+  },
+  "next_gate": "Exactly one product-shaped seed may measure capacity/placement and run the static pre-installation Island gate; any red stops before a successor product link.",
+  "recorded_on": "2026-07-20",
+  "source_gate": {
+    "checks": {
+      "active_not_ready_case": true,
+      "asan_ubsan_host_target": true,
+      "exact_stale_fixture_case": true,
+      "host_context_counter": true,
+      "lookup_and_publish_share_guard": true,
+      "not_ready_is_fail_closed": true,
+      "resident_guard_exact": true
+    },
+    "mutation_matrix": {
+      "active-not-ready": "fail-closed-zero-Island-calls",
+      "active-ready": "single-Island-call",
+      "inactive-stale": "zero-Island-calls",
+      "missing-active-guard": "rejected",
+      "missing-ready-guard": "rejected",
+      "reversed-guard-order": "rejected"
+    },
+    "status": "passed"
+  },
+  "status": "passed-host-source-mutations-capacity-not-run"
+}

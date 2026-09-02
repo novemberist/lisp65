@@ -1,0 +1,103 @@
+{
+  "accounting": {
+    "hardware_runs": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "authorities": {
+    "driver": {
+      "bytes": 14228,
+      "path": "tools/host-lisp/c2_v16_defstruct_duration_pricing.py",
+      "sha256": "0b7e36cdb5309c8f4a77fd4c8eb7241daba3970165c538e458321094715f3440"
+    },
+    "owner_commission": {
+      "bytes": 166617,
+      "commit": "518196a31131c8451de247e8e56c9d58a6b98f27",
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "a7794c4cd3927fd34e3fd5b486f2d33d0e1a59e32aaf770d49a438a96ce90a6c"
+    },
+    "phase_A_counts": {
+      "bytes": 1842382,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-a-host-reconstruction-receipt.json",
+      "sha256": "10dc7b68f9bb21afaddb96af59c54f5ac38ffdf475b0e64e97df7ea59653c4d0"
+    },
+    "physical_append_curve": {
+      "bytes": 4893,
+      "path": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-session-curve-receipt.json",
+      "sha256": "0bb578d10402614432b7e7c98608d3720964bf0bad32cbf4de61669a9dcf41ed"
+    },
+    "physical_require_wall_time": {
+      "bytes": 13165,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-phase-m1-require-latency-measurement-receipt.json",
+      "sha256": "11068e07e177a74f7bd110c2abd937124c075323b8b1e3328b442e78c1abf241"
+    },
+    "session_contract": {
+      "bytes": 1223,
+      "path": "config/c2-v16-defstruct-patience-session.json",
+      "sha256": "cce4b13acf31cebf94cbba928f518592efeb9a29229bd17b7e9dc611ba390c06"
+    },
+    "shadow_result": {
+      "bytes": 8315,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-pre-rollback-shadow-result-first-red-receipt.json",
+      "sha256": "7ef382c7564431bded4797b130d03147f91c3b2ac78b39d5fa0c15a415a5410c"
+    },
+    "target_time_calibration": {
+      "bytes": 9663,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-phase-m-hardware-receipt.json",
+      "sha256": "b821f41a37426b97c701256f0b0abebf3e76196264210c756a697c639cadc724"
+    },
+    "two_byte_DMA_measurement": {
+      "bytes": 4455,
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/v122-halt-b-preparation-receipt.json",
+      "sha256": "e38f5c3db5cbc3e24d57d1a0d8eecde582b9f31a3e0e4e0424feaa0769789ddc"
+    }
+  },
+  "bound_inputs": {
+    "append_cycle_ceiling_frames": 98,
+    "append_cycle_samples": 12,
+    "forms": 11,
+    "frame_hz": 51.96615805290813,
+    "initial_windows": 12310,
+    "persistent_appends": 9,
+    "refills": 13803,
+    "two_byte_DMA_bulk_scaling_authorized": false,
+    "two_byte_DMA_upper_bound_microseconds": 20,
+    "vm_instructions": 199573,
+    "window_event_ceiling_frames": 1,
+    "window_event_rule": "one complete calibrated target frame per initial load or refill; the two-byte DMA result is not bulk-scaled"
+  },
+  "calculation": {
+    "append_budget_frames": 882,
+    "base_frames": 26995,
+    "base_seconds": 519.4726916797596,
+    "exact_seconds": 779.2186591660865,
+    "historical_180_second_observation_below_floor": true,
+    "margin_frames": 13498,
+    "operational_floor_minutes": 13.0,
+    "operational_floor_seconds": 780,
+    "safety_margin": "50 percent, rounded upward in frames",
+    "total_frames": 40493,
+    "window_budget_frames": 26113,
+    "window_events": 26113
+  },
+  "claim_limit": "This is a conservative operational observation floor, not a measured defstruct completion time or a proof of a mathematical worst case. It does not scale the two-byte DMA result to code windows, claim completion, exonerate or condemn defstruct, change product bytes, or consume the one authorized patience contact.",
+  "contact": {
+    "authorized_by_owner_commission": true,
+    "first_observation": "single physical-screen postcondition look",
+    "incomplete_action": "one stop and existing full read set; no resume or retry",
+    "started": false,
+    "success_control": "(make-point 3 4) => (point 3 4)",
+    "zero_observation_seconds": 780
+  },
+  "cross_checks": {
+    "append_work_double_counted": true,
+    "one_frame_window_budget_over_observed_aggregate": 27.346323,
+    "physical_require_aggregate_frames_per_window_event": 0.03656798784,
+    "physical_require_seconds": 12,
+    "physical_require_window_events": 17053,
+    "reason": "the 98-frame definition-to-first-call ceiling already contains compile/window work; charging all window events as well is intentional"
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-duration-pricing-v1",
+  "recorded_on": "2026-08-06",
+  "status": "PRICED-780-SECOND-ZERO-OBSERVATION-FLOOR"
+}

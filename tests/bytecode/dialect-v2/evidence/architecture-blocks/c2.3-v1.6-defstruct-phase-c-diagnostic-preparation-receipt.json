@@ -1,0 +1,481 @@
+{
+  "bindings": {
+    "config": {
+      "bytes": 1437,
+      "path": "config/c2-v16-defstruct-phase-c-diagnostic.json",
+      "sha256": "9566f47e00a5d085a9d999bbb1171579e814238174e06db1002f02fb67f5a70b"
+    },
+    "deployment": {
+      "bytes": 8053,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/deployment.json",
+      "sha256": "2f4196ac4771457fc72ddb1e6538c37ed924046d7dca7ed46011fac03dbc7669"
+    },
+    "driver": {
+      "bytes": 50920,
+      "path": "tools/host-lisp/c2_v16_defstruct_phase_c.py",
+      "sha256": "eaee0f2c0213f0913e9dc70068d1563e7a67ab59704e089430d2e16bd33601b0"
+    },
+    "gate_wiring": {
+      "bytes": 33870,
+      "path": "mk/gates.mk",
+      "sha256": "32b526b9bd1402ad91acb4f932ade04c942dec0b52177073c821b997dccb9fa6"
+    },
+    "hardware_runner": {
+      "bytes": 9111,
+      "path": "scripts/c2-v16-defstruct-phase-c-hw.sh",
+      "sha256": "fd871a943880db65c9daeae07dd39bd32afeb6f4a2f0291d2ccb173de3df5aa4"
+    },
+    "phase_B": {
+      "bytes": 35761,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-b-guard-partition-receipt.json",
+      "sha256": "83a8328a7dc3e4c395ff42b368f79aaed8d258076efebada021736afce96428a"
+    },
+    "plan": {
+      "bytes": 58740,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "f389861ba34ff4c5655a12eff25a37d2cafdcfc8245fac09563caa1a9ca6183e"
+    }
+  },
+  "claim_limit": "One permanently non-promotable Link-82 diagnostic sibling and its quiet-session runner. No product link, WPLTO, fix or hardware result.",
+  "control": {
+    "elf": {
+      "bytes": 622552,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/control-link82.elf",
+      "sha256": "3d9e4c4e7e8d0719223561c66578fb4b24058f32e42483642322a88c4884d8d6"
+    },
+    "preloads": [
+      {
+        "address": "0x00050000",
+        "bytes": 33840,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+        "role": "c2d-v6-code-plane",
+        "sha256": "a1e17638243ed3b5c22c07a5c1f48ef55d22634b3a1051a58298816fa26b6731"
+      },
+      {
+        "address": "0x00058500",
+        "bytes": 3286,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/artifacts/bootstage.bin",
+        "role": "c2-two-record-boot-stage",
+        "sha256": "ca087e64f2cf1bcf968f287b78bdfa28adecad7f863b10f332e0c4858aa3a10f"
+      },
+      {
+        "address": "0x08000000",
+        "bytes": 65423,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/runtime-overlays-session-final.bin",
+        "role": "c2-session-family-region-0",
+        "sha256": "45e76a3f7b52ed5ae7bfd970dcd4b5ad2debe598d32ed42cb953af249871ab08"
+      },
+      {
+        "address": "0x08100000",
+        "bytes": 89491,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+        "role": "c2-product-shelf",
+        "sha256": "036c23c61606ff35593c48b4799b71486ad63689baaeffa97c1d35e02e04cb85"
+      },
+      {
+        "address": "0x08200000",
+        "bytes": 19402,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/runtime-overlays-boot-final.bin",
+        "role": "c2-boot-family",
+        "sha256": "18e3671e8bdfcd854a302bd81960afd8a8fdccced83fb9587d7d2aa127c825c0"
+      },
+      {
+        "address": "0x08300000",
+        "bytes": 1956,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/runtime-overlays-session-final-region1.bin",
+        "role": "c2-session-family-region-1",
+        "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
+      },
+      {
+        "address": "0x087fe000",
+        "bytes": 8192,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/c2-product-kernal-window.bin",
+        "role": "c2-kernal-window",
+        "sha256": "184adc1cd6ab1252b8ea9d9f4be5b726b41341489f77af2fe5e137190f1010c1"
+      }
+    ],
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/control-link82.prg",
+      "sha256": "cef92b1dace70ae700402cb37e95b755d8be5625d168dd65c2ff319176247efe"
+    },
+    "window": {
+      "bytes": 8192,
+      "path": "build/c2.2/v1.2.5-candidate-product-link82/final/c2-product-kernal-window.bin",
+      "sha256": "184adc1cd6ab1252b8ea9d9f4be5b726b41341489f77af2fe5e137190f1010c1"
+    }
+  },
+  "control_product_medium": {
+    "bytes": 819200,
+    "path": "build/c2.2/v1.2.5-candidate-media/lisp65-product.d81",
+    "sha256": "70a3b2e9e608c3fba8ec3cfcb8db7b26060bdf4e3de8629cfb25243d46eac073"
+  },
+  "diagnostic": {
+    "elf": {
+      "bytes": 620700,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.elf",
+      "sha256": "fb8d9b51a0b9f88d08c6bb22debf686576677ce595b55b296c2e7afdbac66ffd"
+    },
+    "preloads": [
+      {
+        "address": "0x00050000",
+        "bytes": 33840,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+        "role": "c2d-v6-code-plane",
+        "sha256": "a1e17638243ed3b5c22c07a5c1f48ef55d22634b3a1051a58298816fa26b6731"
+      },
+      {
+        "address": "0x00058500",
+        "bytes": 3286,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/artifacts/bootstage.bin",
+        "role": "c2-two-record-boot-stage",
+        "sha256": "ca087e64f2cf1bcf968f287b78bdfa28adecad7f863b10f332e0c4858aa3a10f"
+      },
+      {
+        "address": "0x08000000",
+        "bytes": 65423,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/runtime-overlays-session-final.bin",
+        "role": "c2-session-family-region-0",
+        "sha256": "45e76a3f7b52ed5ae7bfd970dcd4b5ad2debe598d32ed42cb953af249871ab08"
+      },
+      {
+        "address": "0x08100000",
+        "bytes": 89491,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+        "role": "c2-product-shelf",
+        "sha256": "036c23c61606ff35593c48b4799b71486ad63689baaeffa97c1d35e02e04cb85"
+      },
+      {
+        "address": "0x08200000",
+        "bytes": 19402,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/runtime-overlays-boot-final.bin",
+        "role": "c2-boot-family",
+        "sha256": "18e3671e8bdfcd854a302bd81960afd8a8fdccced83fb9587d7d2aa127c825c0"
+      },
+      {
+        "address": "0x08300000",
+        "bytes": 1956,
+        "path": "build/c2.2/v1.2.5-candidate-product-link82/final/runtime-overlays-session-final-region1.bin",
+        "role": "c2-session-family-region-1",
+        "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
+      },
+      {
+        "address": "0x087fe000",
+        "bytes": 8192,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-window.bin",
+        "role": "c2-kernal-window",
+        "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+      }
+    ],
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+      "sha256": "d95bd77c3ea0ec6d091630895e59d31ad5f6df5896292c0f20a9aadbc9ac7936"
+    },
+    "window": {
+      "bytes": 8192,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-window.bin",
+      "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+    }
+  },
+  "exact_PRG_byte_differences": [
+    {
+      "after": "203fc0eaea",
+      "before": "a2448e30d0",
+      "bytes": 5,
+      "start": "0x202c"
+    },
+    {
+      "after": "204ab4eaeaeaeaeaeaea",
+      "before": "aeddbfacdebf86048405",
+      "bytes": 10,
+      "start": "0x47c5"
+    },
+    {
+      "after": "2034b4eaea",
+      "before": "8617203b97",
+      "bytes": 5,
+      "start": "0x8eb7"
+    },
+    {
+      "after": "adf4c18d6bc0a2b38e6ac0a5898d6dc0e88e6cc0ad9bc18d6fc0e88e6ec0a9b28d69c0ad86ff8d72c0a2b78e71c0ad89ff8d74c0e88e73c0ad1ad08d76c0e88e75c0babd06018d78c0bd07018d79c0a9ba8d77c0a9b68d70c0a58f8d7cc0a2bc8e7bc0adf0b98d7ec0adf1b98d7fc0e88e7dc0a9bb8d7ac0789c1ad0a9028d20d04c31b48617a55b8d5cc0a9ad8d5bc0a9ac8d5ac0a55b4c3b97aeddbfacdebf86048405b20448ad4fc08d42c0ad50c08d43c0ad52c08d45c0ad53c08d46c0ad54c08d47c0ad56c08d49c0ad57c08d4ac0ad59c08d4cc0a9a38d41c0a9a48d44c0a9a58d48c0a9a68d4bc0a9a28d40c04cf7bf",
+      "before": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 243,
+      "start": "0xb3b0"
+    },
+    {
+      "after": "ade5bf8d4fc08d56c0ade6bf8d50c08d57c0a9a88d4ec0a9aa8d55c0add8bf8d52c0adb2b98d53c0adb3b98d54c0a9a98d51c0688d59c0a9ab8d58c0a9a78d4dc060eaeaeaeaea",
+      "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 71,
+      "start": "0xbff7"
+    },
+    {
+      "after": "a2448e30d08e7ac06055cccc56cc5758cccc59cccccc5acccc5bcc5c5dcc5ecccc5fcc60cccccc61cccc6263cc64cc65cc6667cc68cc69cc6acccc6b6ccc6dcccc",
+      "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 65,
+      "start": "0xc03f"
+    }
+  ],
+  "exact_window_byte_differences": [
+    {
+      "after": "4cb0b3eaeaeaeaeaeaeaeaeaeaea",
+      "before": "78a9008d1ad0a9028d20d04c96e0",
+      "bytes": 14,
+      "start": "0xe08b"
+    }
+  ],
+  "facts": {
+    "classification": {
+      "rows": [
+        "R",
+        "A",
+        "I",
+        "G"
+      ],
+      "synthetic_execution_witnesses": 7,
+      "unclassified_outcome_allowed": false
+    },
+    "identity": {
+      "WPLTO_runs": 0,
+      "control_byteidentical_to_Link82": true,
+      "diagnostic_identities": 1,
+      "diagnostic_promotable": false,
+      "diagnostic_window_is_only_preload_delta": true,
+      "library_medium_byteidentical": true,
+      "non_window_preloads_byteidentical": true,
+      "product_candidate_bytes_changed": 0,
+      "product_links": 0
+    },
+    "instrument": {
+      "ELF_memory_differences": [
+        {
+          "address": "0xe08b",
+          "kind": "patched-hook",
+          "ranges": [
+            {
+              "after": "4cb0b3eaeaeaeaeaeaeaeaeaeaea",
+              "before": "78a9008d1ad0a9028d20d04c96e0",
+              "bytes": 14,
+              "start": "0xe08b"
+            }
+          ],
+          "section": ".lisp65_c2_kernal_window.map_switch_and_guards"
+        },
+        {
+          "address": "0xb3b0",
+          "bytes": 243,
+          "kind": "diagnostic-only",
+          "section": ".lisp65_v16_defstruct_diagnostic_code0"
+        },
+        {
+          "address": "0xbff7",
+          "bytes": 71,
+          "kind": "diagnostic-only",
+          "section": ".lisp65_v16_defstruct_diagnostic_code1"
+        },
+        {
+          "address": "0xc03f",
+          "bytes": 65,
+          "kind": "diagnostic-only",
+          "section": ".lisp65_v16_defstruct_diagnostic_state"
+        },
+        {
+          "address": "0x2023",
+          "kind": "patched-hook",
+          "ranges": [
+            {
+              "after": "203fc0eaea",
+              "before": "a2448e30d0",
+              "bytes": 5,
+              "start": "0x202c"
+            },
+            {
+              "after": "204ab4eaeaeaeaeaeaea",
+              "before": "aeddbfacdebf86048405",
+              "bytes": 10,
+              "start": "0x47c5"
+            },
+            {
+              "after": "2034b4eaea",
+              "before": "8617203b97",
+              "bytes": 5,
+              "start": "0x8eb7"
+            }
+          ],
+          "section": ".text"
+        }
+      ],
+      "completion_metadata_is_not_oracle": true,
+      "dispatcher_side_capture": true,
+      "entry_witness": {
+        "RAM_mapping_activation_address": 8228,
+        "RAM_mapping_activation_bytes": "a22f8600a23e8601",
+        "RAM_mapping_active_before_entry_call": true,
+        "bootstrap_CPU_visible_after_RAM_mapping": true,
+        "bootstrap_uses_protected_refill_seam": false,
+        "displaced_bytes_replayed": "a2448e30d0",
+        "full_record_reset_before_defstruct": true,
+        "hook": 8236,
+        "live_monitor_breakpoint_required": false,
+        "method": "RAM-store-at-_start",
+        "nonzero_and_disjoint_from_record_values": true,
+        "routine": 49215,
+        "routine_bytes": "a2448e30d08e7ac060",
+        "stamp_address": 49274,
+        "stamp_initial": 107,
+        "stamp_offset": 59,
+        "stamp_value": 68
+      },
+      "first_error_restores_status_argument": true,
+      "hooks": [
+        {
+          "address": 8236,
+          "after": "203fc0eaea",
+          "before": "a2448e30d0",
+          "carrier": "resident-prg",
+          "name": "entry-RAM-witness-hook"
+        },
+        {
+          "address": 18373,
+          "after": "204ab4eaeaeaeaeaeaea",
+          "before": "aeddbfacdebf86048405",
+          "carrier": "resident-prg",
+          "name": "refill-dispatcher-hook"
+        },
+        {
+          "address": 36535,
+          "after": "2034b4eaea",
+          "before": "8617203b97",
+          "carrier": "resident-prg",
+          "name": "first-non-ok-hook"
+        },
+        {
+          "address": 57483,
+          "after": "4cb0b3eaeaeaeaeaeaeaeaeaeaea",
+          "before": "78a9008d1ad0a9028d20d04c96e0",
+          "carrier": "kernal-window",
+          "name": "fail-closed-record-hook"
+        }
+      ],
+      "in_stream_witness": false,
+      "last_two_completed_refill_views": true,
+      "opcode_read_before_bookkeeping": true,
+      "raw_before_tag": true,
+      "record_bytes": 65,
+      "record_fields": 29,
+      "reset_on_measured_form_entry": true,
+      "source_byte_oracle": "stopped C2D/object source bytes",
+      "stores_call_product_helpers": false,
+      "stores_can_fail": false,
+      "stores_submit_DMA": false,
+      "symbols": {
+        "lisp65_v16_defstruct_diagnostic_state": 49215,
+        "lisp65_v16_defstruct_entry_capture": 49215,
+        "lisp65_v16_defstruct_fail_capture": 46000,
+        "lisp65_v16_defstruct_first_error_capture": 46132,
+        "lisp65_v16_defstruct_refill_capture": 46154,
+        "lisp65_v16_defstruct_refill_continue": 49143
+      }
+    },
+    "placement": {
+      "code0": {
+        "bytes": 243,
+        "end_exclusive": "0xb4a3",
+        "start": "0xb3b0"
+      },
+      "code1": {
+        "bytes": 71,
+        "end_exclusive": "0xc03e",
+        "start": "0xbff7"
+      },
+      "record": {
+        "boot_prefix_bytes": 9,
+        "bytes": 65,
+        "canonical_reset_before_measured_form": 65,
+        "end_exclusive": "0xc080",
+        "ordinary_RAM": true,
+        "overlaps_ZP_window_overlay": false,
+        "start": "0xc03f"
+      },
+      "simultaneously_live_and_disjoint": true
+    },
+    "runner": {
+      "D1_buffer_peek_before_keys": true,
+      "D1_final_buffer_peek_after_keys": true,
+      "D1_hang_one_stop_packet": [
+        "queue",
+        "gc_runs",
+        "PC",
+        "buffer"
+      ],
+      "D1_monitor_reads_per_key": 0,
+      "D1_nonempty_buffer_fixture_rejected": true,
+      "D2_post_event_stops": 1,
+      "cold_reset_before_each_identity": true,
+      "complete_read_set": [
+        "65-byte record",
+        "low RAM",
+        "Bank-2 source",
+        "C2D header/rows",
+        "last-fill source bytes"
+      ],
+      "context_asserts": [
+        "fresh BASIC",
+        "Workbench prompt",
+        "C2J CLEAR",
+        "phase owner NONE",
+        "Session rows zero"
+      ],
+      "exact_media_readback": true,
+      "monitor_accesses_while_form_active": 0,
+      "quiet_forms": [
+        "(require 'defstruct)",
+        "(defstruct point x y)"
+      ],
+      "screen_accesses_while_form_active": 0,
+      "stable_reads": 3,
+      "transfer_progress_guard_seconds": 120
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-phase-c-diagnostic-preparation-v1",
+  "library_medium": {
+    "bytes": 819200,
+    "path": "build/ship-builder/v1-device-session/defstruct-media/require-defstruct-ship-session.d81",
+    "sha256": "871b90824924dacbe27f071d56b0b97488257da0c1a0b9e80f5d5eeae5f23380"
+  },
+  "media_listing_sha256": "db8e23a841415d6354f7e9705043ad92f892bc4ed3e4f07d7c1bea97d8868d19",
+  "recorded_on": "2026-08-05",
+  "status": "PREPARED-NON-PROMOTABLE-LINK82-DIAGNOSTIC",
+  "verification": {
+    "execution_witnesses": 7,
+    "mutation_count": 26,
+    "mutations_rejected": {
+      "add-second-stop": "quiet runner contract drift",
+      "admit-unclassified": "R/A/I/G execution witness drift",
+      "bootstrap-through-protected-refill": "transport-proof RAM entry witness drift",
+      "claim-WPLTO": "diagnostic identity boundary drift",
+      "claim-product-delta": "diagnostic identity boundary drift",
+      "clobber-first-error-helper-input": "diagnostic instrument semantics drift",
+      "completion-flag-oracle": "diagnostic instrument semantics drift",
+      "drop-context-assert": "quiet runner contract drift",
+      "drop-quiet-policy": "quiet form policy absent",
+      "drop-transfer-guard": "quiet runner contract drift",
+      "entry-before-complete-RAM-mapping": "transport-proof RAM entry witness drift",
+      "entry-stamp-collides-with-record-sentinel": "transport-proof RAM entry witness drift",
+      "in-stream-witness": "diagnostic instrument semantics drift",
+      "late-opcode-read": "diagnostic instrument semantics drift",
+      "live-monitor-breakpoint-entry-proof": "transport-proof RAM entry witness drift",
+      "make-promotable": "diagnostic identity boundary drift",
+      "missing-tags": "diagnostic instrument semantics drift",
+      "monitor-during-form": "quiet runner contract drift",
+      "non-simultaneous-fit": "diagnostic placement/record bounds drift",
+      "one-fill-only": "diagnostic instrument semantics drift",
+      "partial-record-reset-after-entry": "transport-proof RAM entry witness drift",
+      "record-in-overlay": "diagnostic placement/record bounds drift",
+      "screen-during-form": "quiet runner contract drift",
+      "source-derived-address": "diagnostic instrument semantics drift",
+      "zero-entry-stamp": "transport-proof RAM entry witness drift",
+      "zero-sentinel": "diagnostic instrument semantics drift"
+    }
+  }
+}

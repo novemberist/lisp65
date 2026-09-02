@@ -1,0 +1,199 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "acceptance_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "qualification_resumes_completed": 0,
+    "scope_runs": 0
+  },
+  "authority": {
+    "Final_Red": {
+      "bytes": 5153,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-ide-idle-blink-product-card-final-red.json",
+      "sha256": "58ca578cfcbb6a69cbaae37be61ba641b068b94d85674bfef4c675a248088dc4"
+    },
+    "driver": {
+      "bytes": 12706,
+      "path": "tools/host-lisp/c2_v17_ide_idle_blink_qualification_resume.py",
+      "sha256": "cb9a93ebae4a398b2b2fd925f8743f9ec2ece30bb8612cbc12f85e75fec62539"
+    },
+    "review": {
+      "authority": "git-blob",
+      "bytes": 38851,
+      "commit": "f4e3a854cf5d71e7e148718394d8fa8510202f51",
+      "path": "docs/planning/v1.7.0-pre-plan.md",
+      "sha256": "265885277dcd519a45429b1791f30b58404ae6325af92dcd213b3cd7744dfbd2"
+    }
+  },
+  "claim_limit": "Attribution only; Scope and Acceptance did not run.",
+  "completed_conversion": {
+    "semantic_no_runtime_attic": {
+      "bank2_linked_reader_targets": [
+        "c2_map_cpu_read"
+      ],
+      "bank2_loader_callsites": 1,
+      "bank3_loader_callsites": 1,
+      "checks": {
+        "hot_entry_has_no_shelf_or_dma_read": true,
+        "hot_entry_uses_bank2": true,
+        "hot_literal_has_no_shelf_read": true,
+        "native_refill_has_no_attic_completion_path": true,
+        "native_refill_uses_bank3": true,
+        "retired_runtime_retry_defines_absent": true
+      },
+      "forbidden_control_or_data_edges": [],
+      "hot_symbols": [
+        "c2_product_entry_read",
+        "c2_stream_product_materialize_entry",
+        "c2_product_entry_record",
+        "c2_product_entry_length"
+      ],
+      "mutations_rejected": [
+        "lost-bank2-expression",
+        "reintroduced-Shelf-edge",
+        "reintroduced-DMA-edge",
+        "reintroduced-Attic-completion-edge"
+      ],
+      "retained_hot_relocations_examined": 723,
+      "source_semantics": {
+        "entry": {
+          "calls": [
+            "c2_map_cpu_read",
+            "c2_product_entry_record",
+            "c2_stream_product_materialize_entry",
+            "c2_u16"
+          ],
+          "matching_readers": [
+            {
+              "address_model": "absolute-bank-base-plus-offset",
+              "bank_base": 131072,
+              "bank_ordinal": 2,
+              "constant_addends": [
+                131072
+              ],
+              "reader": "c2_map_cpu_read"
+            }
+          ]
+        },
+        "materializer": {
+          "calls": [
+            "c2_product_entry_record",
+            "c2_stream_c2d_read",
+            "hot_u16"
+          ],
+          "matching_readers": []
+        },
+        "native_refill": {
+          "calls": [
+            "c2_facade_vm_code_load",
+            "vm_code_load"
+          ],
+          "matching_readers": [
+            {
+              "address_model": "bank-ordinal-argument",
+              "bank_base": 196608,
+              "bank_ordinal": 3,
+              "constant_addends": [
+                3
+              ],
+              "reader": "c2_facade_vm_code_load"
+            }
+          ]
+        }
+      },
+      "status": "passed-source-and-linked-relocation-closure"
+    },
+    "status": "PASS"
+  },
+  "format": "lisp65-c2-v17-ide-idle-blink-qualification-resume-red-v1",
+  "frozen_pair_after": {
+    "ELF": {
+      "bytes": 647548,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r7/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c5aaccf702a655223b540e18ccb58176aa500baa37554a0d610c07c2381b6c52"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r7/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "7345e84de9e30eae3428ff2444de1c626b873109abb0f2c9dc4c6a35f03ce5d0"
+    }
+  },
+  "frozen_pair_before": {
+    "ELF": {
+      "bytes": 647548,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r7/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c5aaccf702a655223b540e18ccb58176aa500baa37554a0d610c07c2381b6c52"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r7/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "7345e84de9e30eae3428ff2444de1c626b873109abb0f2c9dc4c6a35f03ce5d0"
+    }
+  },
+  "recommended_successor": "bind the candidate-owned 52,230-byte static-plane header at both real compile_link consumers, prove the force-include path and consumed value together, then authorize a new read-only resume",
+  "recorded_on": "2026-08-26",
+  "retry_authorized": false,
+  "review_disposition_required": true,
+  "status": "QUALIFICATION RED: CARD3 BANK2 PLANE BOUND BUT NOT COMPILED",
+  "stopper": {
+    "candidate_plane": {
+      "bytes": 52230,
+      "path": "build/c2.3/v1.7-ide-idle-blink-product-preflight-r7/setup-owned/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+      "sha256": "fab4a36efbd1c671b40aa1bc614ef023bb396b12b9c8f5963857427a1b67a7bd"
+    },
+    "classification": "bound-not-consumed at real compile_link consumer",
+    "difference_bytes": 6187,
+    "observed_values": [
+      46043,
+      46043
+    ],
+    "product_defect_not_exonerated": true,
+    "real_compiler_consumption": [
+      {
+        "actual_force_include_flags": [
+          "-include",
+          "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "-include",
+          "build/c2.3/v1.7-ide-idle-blink-product-card-r7/wplto/resident-island-seed.compiler-input-assert.h"
+        ],
+        "bound_header": {
+          "bytes": 293,
+          "path": "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "sha256": "f58bc7a13282e468489945363306918e84d7fcc17c8fa064bd300fa223fb0e37"
+        },
+        "consumed_value": 46043,
+        "consumer": "c2_product_substitution_link.compile_link",
+        "receipt": {
+          "bytes": 1295,
+          "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r7/wplto/resident-island-seed.prg.compiler-input-consumption.json",
+          "sha256": "65e3246bd7ee0943763df864e1794f16448ab0329f9ca4cfce86fee3368de368"
+        },
+        "status": "passed-bound-candidate-header-consumed"
+      },
+      {
+        "actual_force_include_flags": [
+          "-include",
+          "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "-include",
+          "build/c2.3/v1.7-ide-idle-blink-product-card-r7/wplto/lisp65-c2-substitution-linked.compiler-input-assert.h"
+        ],
+        "bound_header": {
+          "bytes": 293,
+          "path": "build/c2.3/v2.0-ownership-recharter-inputs/c2_lite_static_plane.h",
+          "sha256": "f58bc7a13282e468489945363306918e84d7fcc17c8fa064bd300fa223fb0e37"
+        },
+        "consumed_value": 46043,
+        "consumer": "c2_product_substitution_link.compile_link",
+        "receipt": {
+          "bytes": 1331,
+          "path": "build/c2.3/v1.7-ide-idle-blink-product-card-r7/wplto/lisp65-c2-substitution-linked.prg.compiler-input-consumption.json",
+          "sha256": "be3c9817b8c85bde0989d15f6e7cc6e490a57d6522990c2dd693d5df41b85a12"
+        },
+        "status": "passed-bound-candidate-header-consumed"
+      }
+    ]
+  }
+}

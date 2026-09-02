@@ -1,0 +1,279 @@
+{
+  "format": "lisp65-r3-g3-g6-contract-v1",
+  "version": 1,
+  "id": "workbench-r3-g3-g6",
+  "status": "product-implemented-g3-not-run",
+  "release_effect": "none",
+  "sequence": [
+    "contract",
+    "harness-skeleton",
+    "stager-product-block",
+    "G3",
+    "R4-candidate-seal",
+    "G5",
+    "G6"
+  ],
+  "authority": {
+    "emulator": "prefilter-only",
+    "hardware": "arbiter",
+    "fidelity_tags": [
+      "emulator-valid",
+      "hardware-only"
+    ],
+    "G3_claim": "all-and-only-emulator-valid-cases-pass",
+    "G6_claim": "bound-G3-plus-all-profile-applicable-hardware-only-cases-pass-on-one-product-set-plus-explicit-profile-bound-not-applicable-cases"
+  },
+  "baseline_identity": {
+    "historical_r2_product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "r3_product_sha256": "d1fd7402879409c25217afbfc076ae7e6e94fa8bcbb76b938abe01918a9c8a99",
+    "banked_headroom_bytes": 313,
+    "bank_delta_bytes": 44,
+    "transition": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/bufsel-product-identity-transition.json",
+      "sha256": "d9686ccd7d84c18da02f30ddea60d5be790ab2f4052e1fdce819e76cf78aefac"
+    },
+    "reproducibility": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/r3-baseline-canonical-product-reproducibility-receipt.json",
+      "sha256": "b81fc4b833232e9cefdb67edd8fb905167fb61c0cc28ccd644009be2a216f68f"
+    }
+  },
+  "toolchain_bindings": {
+    "xmega65": {
+      "artifact": {
+        "path": "/home/alex/.local/bin/xmega65",
+        "sha256": "b4a9f8aaf543d3b5626cee988ecda4edb257d42a669bc8475d77ea72d63cc6f9",
+        "bytes": 95
+      },
+      "inner_artifact": {
+        "container": "arch",
+        "path": "/bin/xmega65",
+        "sha256": "affb64e0400a380e664af9be563ccce483c2db76c3f634153c3decb028e43618",
+        "bytes": 1240040
+      },
+      "build_id": "40dfef0d1d5f56be2469492715c12bdb32c75b67"
+    },
+    "rom": {
+      "path": "/home/alex/.local/share/xemu-lgb/mega65/MEGA65.ROM",
+      "sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0",
+      "bytes": 131072
+    },
+    "sd_base": {
+      "path": "/home/alex/.local/share/xemu-lgb/mega65/mega65.img",
+      "sha256": "5d5a890490a85d6f20e97d7dd50b8b5cfd16f8ac82f3749634e651a6e27b4ff0",
+      "bytes": 4294967296
+    },
+    "compiler": {
+      "invocation": "tools/llvm-mos/bin/mos-mega65-clang",
+      "resolved_binary": {
+        "path": "tools/llvm-mos/bin/clang-23",
+        "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+      },
+      "configuration": {
+        "path": "tools/llvm-mos/bin/mos-mega65.cfg",
+        "sha256": "d0ffae3fe3b6481dcddae393d2869b3d8ecc32eb322b57ded773b50ce9c876c1"
+      },
+      "version": "clang-23.0.0git-llvm-mos-c798c31416f72b395c658b5502d281a162387ab1"
+    },
+    "c1541": {
+      "artifact": {
+        "path": "/usr/bin/c1541",
+        "sha256": "382fbd79808106d87b4da58c9e76eb821a7e4111179a2efe79ee2271c466288c",
+        "bytes": 282752
+      },
+      "version": "VICE-3.10"
+    }
+  },
+  "media_model": {
+    "drive_scope": {
+      "verified_drive": 8,
+      "drive_9": "out-of-scope-explicitly-rejected",
+      "simultaneous_drives_required": false
+    },
+    "product": {
+      "disk_name": "L65SYS",
+      "disk_id": "65",
+      "role": "read-only-product",
+      "mount_write_protect": "required-only-for-physical-floppy-profile-unavailable-for-stock-core-SD-D81",
+      "package_mode": "0444",
+      "write_protect_carrier": "physical-floppy-tab-when-present-package-mode-is-host-side-only-for-SD-D81",
+      "mutable_entries": "forbidden",
+      "identity": "disk-name-plus-id-plus-packer-verified-boot-structure-marker",
+      "boot_signature": {
+        "format": "l65sys-boot-marker-v1",
+        "header_offset": 29,
+        "ascii": "L65B",
+        "bound_entries": ["autoboot.c65", "boot.id", "lisp65.prg"]
+      }
+    },
+    "work": {
+      "disk_name": "arbitrary-valid-1581-name",
+      "disk_id": "arbitrary-valid-1581-id",
+      "role": "mutable-user-work",
+      "mount_write_protect": "forbidden",
+      "identity": "disk-name-plus-id",
+      "provisioning": "shipped-preformatted-blank-L65WORK.D81",
+      "on_device_formatter": "excluded-from-1.0",
+      "additional_work_media": "any-valid-1581-media-no-rename-required",
+      "same_identity_media": "distinguished-by-fresh-mount-generation-token",
+      "name_policy": "no-allowlist-product-denylist-only"
+    },
+    "swap_flow": [
+      "boot-product-on-drive-8",
+      "stage-bank5-and-attic",
+      "chain-workbench",
+      "load-ide-idex-m65d",
+      "prompt-one-time-swap",
+      "validate-non-product-1581-media",
+      "clear-swap-latch",
+      "user-session-on-work-media"
+    ],
+    "write_defense": {
+      "identity_check": "complete-media-classification-plus-name-id-generation-and-D68B-D68F-token-before-every-write-and-directory-publish",
+      "product_identity_result": "reject-product-media-read-only-before-mutation",
+      "writable_identity_result": "allow-any-valid-non-product-1581-media",
+      "invalid_media_result": "reject-disk-invalid-before-mutation",
+      "retired_status_11": "wrong-work-media-tombstone-never-emitted",
+      "transaction_latch": "fresh-mount-generation-token-plus-disk-name-plus-id-plus-D68B-D68F-mounted-image-token",
+      "pre_transaction_change": "status-8-one-remount-retry-before-any-write",
+      "mid_transaction_change": "status-12-terminal-no-automatic-retry-explicit-user-restart",
+      "planning_read_guard": "post-capture-status-6-plus-D68B-D68F-mismatch-becomes-terminal-status-12-stable-token-preserves-status-6-zero-writes",
+      "mount_token_guard": "final-check-before-D081-trigger-postcheck-after-BUSY-and-guarded-readback",
+      "residual_window": "30-cycles-including-last-D68F-read-through-D081-store-non-atomic-Freezer-reachable",
+      "residual_window_policy": "owner-accepted-stock-core-contract-limit-no-atomicity-claim-at-most-one-foreign-sector-then-status-12",
+      "phase_oracles": "three-normal-token-change-rejections-plus-three-after-guard-one-sector-boundary-characterizations-not-safety-passes-plus-one-real-Freezer-boundary-confirmation",
+      "physical_write_protect": "independent-second-line-of-defense-only-for-physical-media-profile-explicitly-not-applicable-for-stock-core-SD-D81",
+      "directory_root": "T40-S0-link-and-header-only-first-entry-sector-at-least-3",
+      "external_integrity_oracle": "blank-create-replace-and-multisector-full-D81-two-witness-BAM-check"
+    },
+    "transaction_context": {
+      "path": "config/f011-transaction-context.json",
+      "sha256": "e5f3c4acd86773a3a1651559d09d46d71e14854f451165e4890e61d173a5c9f7"
+    }
+  },
+  "hardware_profile": {
+    "path": "config/g6-hardware-profile.json",
+    "sha256": "b0ac45e42a024b07c3fa7ce074d6246f9c198b74bff0f6eca71e7a290a5f4a75"
+  },
+  "stager_architecture": {
+    "artifact_id": "lisp65-workbench-cold-stager",
+    "role": "AUTOBOOT.C65-separate-chained-artifact",
+    "implementation_status": "product-implemented-g3-not-run",
+    "linked_into_workbench_prg": false,
+    "product_artifact_set_membership": "required",
+    "build_identity": "compiled-stager-id-equals-descriptor-record-CRC-and-binds-exact-product-PRG-catalog-and-libraries",
+    "workbench_bank0_delta_expected": 0,
+    "boot_overlay_delta_expected": 0,
+    "workbench_artifact_sha_policy": "all-existing-product-artifacts-byte-identical",
+    "ram_authority": "pre-product-may-use-unreserved-machine-ram",
+    "chain": [
+      "AUTOBOOT",
+      "stager",
+      "validate-or-restage-bank5",
+      "validate-or-restage-attic",
+      "exact-product-prg"
+    ],
+    "catalog_recovery": {
+      "valid": "skip-restage",
+      "missing": "full-restage-from-product-media",
+      "crc-invalid": "full-restage-from-product-media",
+      "after_restage": "reverify-bank5-and-attic-before-chain",
+      "retry_limit": 2,
+      "retry_exhausted": "halt",
+      "user_error": "L65SYS DISK ERROR - CHECK MEDIA",
+      "partial-restage": "forbidden",
+      "chain-before-valid": "forbidden"
+    }
+  },
+  "boot_matrix": {
+    "path": "tests/bytecode/dialect-v2/r3-boot/cases.json",
+    "sha256": "9e7af14b65729935a8983428b83ee40b121c3ce5ddf44ad535f95f475727e3c4",
+    "counts": {
+      "emulator-valid": 9,
+      "hardware-only": 6,
+      "total": 15
+    }
+  },
+  "gate_contracts": {
+    "G3": {
+      "status": "static-preflight-passed-not-run",
+      "preflight": "static-exact-15-case-matrix-before-launch",
+      "required_fidelity": "emulator-valid",
+      "forbidden_claims": [
+        "F011-timing",
+        "SD-buffer-address",
+        "DMA-timing",
+        "physical-reset-semantics"
+      ]
+    },
+    "G6": {
+      "status": "contract-only-not-run",
+      "requires": [
+        "bound-G3-receipt",
+        "R4-candidate",
+        "G5-receipt"
+      ],
+      "required_fidelity": "hardware-only-and-profile-applicable",
+      "not_applicable_policy": "manifest-bound-profile-receipt-no-synthetic-PASS",
+      "core_policy": "same-bound-core-ROM-product-set-for-all-hardware-cases",
+      "pc_free": true
+    }
+  },
+  "hardware_receipt": {
+    "required_bindings": [
+      "machine-serial",
+      "core-id",
+      "core-version",
+      "rom-sha256",
+      "product-artifact-set-sha256",
+      "product-d81-sha256",
+      "work-d81-sha256",
+      "physical-cycle-id",
+      "raw-evidence-sha256"
+    ],
+    "physical_cycle_policy": "nonempty-unique-per-power-or-reset-case",
+    "product_identity": "one-artifact-SHA-set"
+  },
+  "capacity_policy": {
+    "path": "config/block-capacity-delta-policy.json",
+    "sha256": "20302e9b1dee2a9c0b8be5f1e673e8f913aa00e1b609a9d9d15b85125d980ad7"
+  },
+  "product_block": {
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/product-block-receipt.json",
+      "binding": "generated-output-sealed-by-r4"
+    },
+    "reproducibility": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/product-block-reproducibility-receipt.json",
+      "binding": "generated-output-sealed-by-r4"
+    },
+    "harness": {
+      "path": "config/r3-g3-harness.json",
+      "binding": "generated-output-sealed-by-r4"
+    },
+    "artifact_set_sha256": "048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024",
+    "status": "product-implemented-g3-not-run",
+    "release_effect": "none"
+  },
+  "probe": {
+    "validator": {
+      "path": "tools/host-lisp/r3_g3_g6_contract.py",
+      "sha256": "e395eacfa8a863841f213875c64c69c89e84fb727ddc21f419556d19d5b86b93"
+    },
+    "runner": {
+      "path": "tools/host-lisp/r3_stager_probe.py",
+      "sha256": "96b7d7f28136fffed7f2f1997dc300fc2a32485a0e41cb9ab64e4e98f11813b1"
+    },
+    "stager_source": {
+      "path": "scripts/r3-stager-probe-main.c",
+      "sha256": "3c9974c5b08472c42045621f94ef12896228b8ff6526eb6108a9f08feb15895c"
+    },
+    "expected_status": "passed-not-implemented",
+    "claims": {
+      "separate_artifact": true,
+      "product_bank0_delta": 0,
+      "media_loader_implemented": false,
+      "G3": "not-run",
+      "G6": "not-run"
+    }
+  }
+}

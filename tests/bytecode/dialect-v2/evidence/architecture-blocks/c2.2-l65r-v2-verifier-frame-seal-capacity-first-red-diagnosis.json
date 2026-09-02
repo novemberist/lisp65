@@ -1,0 +1,98 @@
+{
+  "format": "lisp65-c2-l65r-v2-verifier-frame-seal-capacity-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: frame seal closes the installer slice but not resident text",
+  "scope": {
+    "whole_program_lto_probe_links": 1,
+    "product_closure_links": 0,
+    "link33_attempts": 0,
+    "hardware_runs": 0,
+    "retry_authorized": false
+  },
+  "semantic_result": {
+    "crc_sealed_direct_frame": "passed",
+    "sealed_domain": "all-rtov_verify_context-bytes-before-seal",
+    "writes_after_seal_before_slot8": 0,
+    "field_by_field_rebinding_count": 0,
+    "second_install_representation_count": 0,
+    "host_fail_closed_cases": 12,
+    "post_authentication_frame_mutation": "seal-broken-and-rejected-before-installation",
+    "source_gate_mutations_rejected": 5
+  },
+  "whole_program_attribution": {
+    "resident_text": {
+      "boot_family_predecessor_bytes": 38332,
+      "field_rebind_first_red_bytes": 38030,
+      "frame_seal_bytes": 38146,
+      "delta_from_field_rebind_bytes": 116,
+      "reclaimed_from_boot_family_bytes": 186,
+      "remaining_overflow_bytes": 164
+    },
+    "named_resident_functions": {
+      "vm_runtime_overlay_exec_family": {
+        "boot_family_predecessor_bytes": 1594,
+        "field_rebind_first_red_bytes": 1353,
+        "frame_seal_bytes": 1469,
+        "delta_from_field_rebind_bytes": 116
+      },
+      "vm_runtime_overlay_install_island": {
+        "boot_family_predecessor_bytes": 251,
+        "field_rebind_first_red_bytes": 190,
+        "frame_seal_bytes": 190,
+        "delta_from_field_rebind_bytes": 0
+      }
+    },
+    "installer_slice": {
+      "cap_bytes": 1792,
+      "boot_family_predecessor_bytes": 1484,
+      "field_rebind_first_red_bytes": 1958,
+      "frame_seal_bytes": 1291,
+      "headroom_bytes": 501,
+      "reclaimed_from_field_rebind_bytes": 667,
+      "delta_from_boot_family_bytes": -193,
+      "components": {
+        "rtov_island_build_id_bytes": 36,
+        "rtov_island_source_crc_bytes": 322,
+        "rtov_island_u16_bytes": 12,
+        "vm_resident_island_install_bytes": 921
+      }
+    }
+  },
+  "classification": {
+    "primary_first_red": "resident-text-over-by-164-bytes",
+    "installer_slice": "green-with-501-byte-headroom",
+    "follow_on_linker_diagnostics": [
+      "ordinary-rodata-predecessor-relation-drift",
+      "text-handoff-overlap"
+    ],
+    "interpretation": "Seal verification removed the expensive consumer-side field rebinding and made Slot 8 comfortably green. Producing the full-frame seal changed only vm_runtime_overlay_exec_family in resident text, adding 116 bytes versus the field-rebind cut. Whole-program LTO therefore leaves a 164-byte resident-text overflow even though the consumer wall is solved."
+  },
+  "evidence": {
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v2-verifier-frame-seal-capacity-probe-receipt.json",
+      "bytes": 7122,
+      "sha256": "badef4b0af31020286032f1475a21070ce219b546b355744fb8a6547480575d7"
+    },
+    "field_rebind_map": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-frame-handoff-probe/l65r-v2-boot-family-seed.prg.map",
+      "bytes": 183519,
+      "sha256": "d1c474ae3ce0d00cd879ed21e1738242e7f44babb14c020b79fe39ae0768d1ab"
+    },
+    "frame_seal_map": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-frame-seal-probe/l65r-v2-boot-family-seed.prg.map",
+      "bytes": 182050,
+      "sha256": "342eda9b97942f422d8ec3dc3acf75a98ae00185e7b625b8a65c015cddb492b6"
+    },
+    "host_stdout": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-frame-seal-probe/target-decoder-host.stdout.txt",
+      "bytes": 59,
+      "sha256": "b625eecc1aaef545401f13e97260cb843622487441fdcd998fd6b917982d3160"
+    },
+    "runtime_source_sha256": "52fcedbedc0c30760583546da27349d85301d49700b45e0d626be2b6ade27cf3"
+  },
+  "rollback_line": {
+    "link32_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "untouched"
+  },
+  "next_gate": "review required; no automatic third WPLTO probe, Link 33 or hardware run"
+}

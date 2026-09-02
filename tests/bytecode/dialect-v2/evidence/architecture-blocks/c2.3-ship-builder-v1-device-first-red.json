@@ -1,0 +1,77 @@
+{
+  "format": "lisp65-c2.3-ship-builder-v1-device-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "source_commit": "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe",
+  "status": "dependency-sharp-first-red-after-three-D1-setup-misses-and-one-D2-product-red",
+  "session_terminal_reason": "The first post-quiet screenshot after (defstruct point x y) showed the red fail-closed frame. Per the bound policy no D3 or D4 row was started afterwards.",
+  "D1": {
+    "status": "not-executed-harness-reset-choreography-first-red",
+    "rows": [
+      {
+        "id": "ship-hello",
+        "uploaded_image_sha256": "6b2435b420f84d6992bfa7a9019484235ff36887f912c090fba5b6b6885478a7",
+        "readback_sha256": "6b2435b420f84d6992bfa7a9019484235ff36887f912c090fba5b6b6885478a7"
+      },
+      {
+        "id": "ship-random-fx",
+        "uploaded_image_sha256": "cca45cc4148d4b80b67b023afbc7a7d4b79c5dd3077636c94374732444cf8cd8",
+        "readback_sha256": "cca45cc4148d4b80b67b023afbc7a7d4b79c5dd3077636c94374732444cf8cd8"
+      },
+      {
+        "id": "ship-long-runner",
+        "uploaded_image_sha256": "101049128097662ccb1b1b1264ca8e0deeb2326a9df2c5c2dfc188f293b1f3c7",
+        "readback_sha256": "101049128097662ccb1b1b1264ca8e0deeb2326a9df2c5c2dfc188f293b1f3c7"
+      }
+    ],
+    "common_observation": {
+      "runtime_span_address": "0x00000086",
+      "runtime_span_bytes": "00 02 00 00",
+      "runtime_span_sha256": "bc3817c13bc4e6f192a840895fa937d252db153efb89bb14a6c2ddf1f9c55409",
+      "screen": "BASIC 65 READY.",
+      "runtime_complete_expected_first_byte": "03",
+      "interpretation": "The FTP helper reset after mount, then the runner issued a second reset about two seconds later. Every row ended in BASIC before Runtime entry; no Ship execution result exists. This is a harness reset-choreography failure, not a product failure."
+    },
+    "claim_limit": "The byte-identical SD upload/readback is proved. Physical Ship boot, stager execution and Runtime entry are not claimed."
+  },
+  "D2": {
+    "status": "product-first-red-quiet-defstruct-does-not-complete",
+    "candidate": "released v1.2.5 Link 82",
+    "media_sha256": "871b90824924dacbe27f071d56b0b97488257da0c1a0b9e80f5d5eeae5f23380",
+    "media_readback_sha256": "871b90824924dacbe27f071d56b0b97488257da0c1a0b9e80f5d5eeae5f23380",
+    "rows": [
+      {
+        "id": "quiet-require-defstruct",
+        "form": "(require (quote defstruct))",
+        "quiet_seconds": 45,
+        "result": "t",
+        "screen_sha256": "0d32e55d48b2993dca075a1a8fa17066706b9e305aca5c3de54d6334e5029b1b",
+        "text_sha256": "7062689f741878053b39b3e0a8c05c73ecdabc1f452e6c65af4e10bd86c922b6"
+      },
+      {
+        "id": "quiet-define-point",
+        "form": "(defstruct point x y)",
+        "quiet_seconds": 180,
+        "result": "no result or prompt; first post-window observation is red fail-closed",
+        "monitor_access_during_window": 0,
+        "screen_sha256": "592b924e28c04e5d244424d7dc8358582a0e917719ed083ea2c2f6c264fd4a31",
+        "text_sha256": "4c3774e7113276aa0a6b6491d90fc77b0834901747cfb93cd7d2018f95a46794"
+      }
+    ],
+    "interpretation": "The monitor-crossing-only explanation is rejected. The form did not complete during a three-minute monitor-free interval; the first observation afterwards was fail-closed. The existing defstruct park remains a genuine product issue and no cause is inferred here."
+  },
+  "D3": {
+    "status": "not-run-session-terminal-after-D2",
+    "claim": "The parked editor quiet-typing hypothesis remains unanswered."
+  },
+  "D4": {
+    "status": "not-run-session-terminal-after-D2"
+  },
+  "bindings": {
+    "configuration_sha256": "d0fe4fd0af42c41e65e33146e40d09b531fa355ae95205815bb2098d0d388a51",
+    "preparation_sha256": "cc4676b4b4778776641d9906850e59910e5aad8abfadea99e17bb1df8a5e94eb",
+    "deployment_sha256": "e5615c9432b84528df39deb419ec57b4cad11e1fe5675a9ea81bbd6bc9431ae5",
+    "runner_sha256": "9289128b02705f76cd95959c816078a2f9bf36878cb60ffe588d3bb117eedbcd"
+  },
+  "next_gate": "Class-C Halt #1. The recommended dependency-sharp continuation is one corrected D1/D3/D4 session with the redundant post-FTP reset removed; D2 is not repeated or investigated in the Ship block.",
+  "claim_limit": "One physical session. It convicts only quiet defstruct completion and the D1 reset choreography; it makes no Ship boot, editor, D4, fix, release or promotion claim."
+}

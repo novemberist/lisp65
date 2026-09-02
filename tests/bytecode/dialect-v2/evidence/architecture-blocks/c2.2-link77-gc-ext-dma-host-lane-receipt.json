@@ -1,0 +1,184 @@
+{
+  "claim_limit": "This host lane models checked copy semantics and the boot-frozen collector state. It does not model physical DMA completion timing or reproduce the complete live C2D root plane.",
+  "classification": {
+    "algorithm": "entlastet by direct EXT reference",
+    "checked_copy_transport_semantics": "entlastet by modeled DMA lane",
+    "next_discriminator": "on target, count marked cells and cells returned to the freelist by the failing collection",
+    "remaining_boundary": "physical EXT DMA completion/read-write behavior or target-only product root state; no product fix is attributed"
+  },
+  "execution_witness": {
+    "cases": [
+      "direct-ext-reference",
+      "checked-dma-copy",
+      "modeled-dma-verification-fault"
+    ],
+    "executed_cases": 3,
+    "expected_cases": 3,
+    "positive": true
+  },
+  "fixture": {
+    "bytes": 415,
+    "path": "tests/equivalence/while-target-gc-transient.lisp",
+    "sha256": "b5dd11f1ed02d97276688b7b29f2d8a4005e4e23b2efe4febf494ce529759d40"
+  },
+  "format": "lisp65-c2.2-link77-gc-ext-dma-host-lane-receipt-v1",
+  "geometry": {
+    "boot_prefix_frozen": true,
+    "extended_cells": 1024,
+    "hot_cells": 48
+  },
+  "implementation": {
+    "collector_and_cell_access": {
+      "bytes": 48487,
+      "path": "src/mem.c",
+      "sha256": "b32dc707afe90074cfbd57bd4464b63d7b939bbead45fc35f02353836d555771"
+    },
+    "gate": {
+      "bytes": 9331,
+      "path": "tools/host-lisp/c2_phase_v_gc_ext_dma_lane.py",
+      "sha256": "8e5a79dcbba372d37073e5336fce8e05b229ff741d7262e0e682e80886702d73"
+    },
+    "harness": {
+      "bytes": 21065,
+      "path": "scripts/equivalence-main.c",
+      "sha256": "894a2532117570b5ce0c0c1322d34b15bd930b6634da1520b19a742bfb1a0b8a"
+    },
+    "legacy_gc_smoke_gate": {
+      "bytes": 224597,
+      "path": "Makefile",
+      "sha256": "3e299880e9e74cd87031b4693d048db7b6512b805c9db34b7759db187165860a"
+    },
+    "public_product_gate": {
+      "bytes": 78298,
+      "path": "mk/workbench.mk",
+      "sha256": "937c2acc8d0d331d5d8ec624443fef389fb42995aebee84bf5d0cac6520f232e"
+    },
+    "sources": [
+      {
+        "bytes": 21065,
+        "path": "scripts/equivalence-main.c",
+        "sha256": "894a2532117570b5ce0c0c1322d34b15bd930b6634da1520b19a742bfb1a0b8a"
+      },
+      {
+        "bytes": 97933,
+        "path": "src/eval.c",
+        "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+      },
+      {
+        "bytes": 39800,
+        "path": "src/compile.c",
+        "sha256": "3da34db78de348af264fea23926f58e62324ee375d17554adbc4fdca9b37baf0"
+      },
+      {
+        "bytes": 12914,
+        "path": "src/compile_repl.c",
+        "sha256": "89bb14a7cf011b26c8b377189bbd100bb9454627f2b0010673a0ab5e6456f79a"
+      },
+      {
+        "bytes": 18121,
+        "path": "src/lcc_install_overlay.c",
+        "sha256": "ecc1ae0ed344aef2f9a6fd04d7db233a20c6c20978d85c021ce5941974daae96"
+      },
+      {
+        "bytes": 84783,
+        "path": "src/vm.c",
+        "sha256": "91683fa85d714d54443f44c5d0201804fdb96ba59a382ccda58e7e98d6d6b43d"
+      },
+      {
+        "bytes": 48487,
+        "path": "src/mem.c",
+        "sha256": "b32dc707afe90074cfbd57bd4464b63d7b939bbead45fc35f02353836d555771"
+      },
+      {
+        "bytes": 12213,
+        "path": "src/symbol.c",
+        "sha256": "ea62e535251a1d74b805755b323005ba85e796a25f9899c05e78c81d58d60efd"
+      },
+      {
+        "bytes": 10451,
+        "path": "src/reader.c",
+        "sha256": "ca260a4f52fba17c9678fa6d37ee03bfdff85f344579eda378c71c03de027a86"
+      },
+      {
+        "bytes": 4609,
+        "path": "src/printer.c",
+        "sha256": "e6719802e0cc149cdcf2659d1c5768c89aa01caa36a2ede82c2b33660c9bb795"
+      },
+      {
+        "bytes": 37292,
+        "path": "src/io.c",
+        "sha256": "ac29b4248208d678b97ce9be017dc959f82e4524a7cfa742a1f427fb9c168ba7"
+      },
+      {
+        "bytes": 5402,
+        "path": "src/interrupt.c",
+        "sha256": "3daa9e790bbf95d9b1f15da688386b17831d7f9d0c95e61038399ea9d2105de0"
+      },
+      {
+        "bytes": 9084,
+        "path": "src/screen.c",
+        "sha256": "1de7069d9803484073047ea7a0a488b66971db26a80b43a634a5ddb871f09078"
+      }
+    ]
+  },
+  "lanes": {
+    "checked_dma_copy": {
+      "binary": {
+        "bytes": 137160,
+        "path": "build/post-promotion/link77-gc-ext-dma-host-lane/dma",
+        "sha256": "902badc2a0b1b569b38c43b6464306b53dc17d0016a71e96d504a46ffc31597e"
+      },
+      "result": "600",
+      "stats": {
+        "alloc_high": 284,
+        "dma_bytes": 41768,
+        "dma_faults": 0,
+        "dma_model": 1,
+        "dma_reads": 13688,
+        "dma_writes": 7774,
+        "final_free": 838,
+        "free_after": 979,
+        "free_before": 787,
+        "frozen": 107,
+        "marked": 32,
+        "mem_oom": 0,
+        "min_free_after": 979,
+        "reclaimed": 192,
+        "runs": 6
+      }
+    },
+    "direct_ext_reference": {
+      "binary": {
+        "bytes": 136936,
+        "path": "build/post-promotion/link77-gc-ext-dma-host-lane/direct",
+        "sha256": "1fc99c9785ca2cbfe23ce901deb469dee3a1ed48457a05db4964fbfab4434f42"
+      },
+      "result": "600",
+      "stats": {
+        "alloc_high": 284,
+        "dma_bytes": 0,
+        "dma_faults": 0,
+        "dma_model": 0,
+        "dma_reads": 0,
+        "dma_writes": 0,
+        "final_free": 838,
+        "free_after": 979,
+        "free_before": 787,
+        "frozen": 107,
+        "marked": 32,
+        "mem_oom": 0,
+        "min_free_after": 979,
+        "reclaimed": 192,
+        "runs": 6
+      }
+    }
+  },
+  "mutation": {
+    "faults": 21462,
+    "id": "modeled-dma-verification-fault",
+    "rejected": true,
+    "returncode": 7
+  },
+  "recorded_on": "2026-07-29",
+  "status": "passed-no-host-reproduction"
+}

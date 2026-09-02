@@ -1,0 +1,25 @@
+{
+  "format": "lisp65-c2-v1.2.5-fresh-clone-hidden-random-final-authority-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "status": "first-red-attributed-and-corrected-before-retry",
+  "promotable": false,
+  "stage": "fresh-clone-candidate-product-reproduction",
+  "symptom": {
+    "first_missing_input": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1-random-base-final-composition-revalidation-receipt.json",
+    "failed_consumer": "c2_v125_candidate_product.current_random_while_feature_gates",
+    "product_link_completed": false
+  },
+  "inventory": {
+    "current_source_producer": "c2_v124_candidate_product.run_freight_gates invokes c2_random_base_gate before the Link-82 feature gate",
+    "public_receipt": "build/post-promotion/phase-v-random-base/public-build-current-source-receipt.json",
+    "private_receipt": "c2.2-v1-random-base-final-composition-revalidation-receipt.json",
+    "root_cause": "The public build correctly generated and bound the current-source random receipt in its inherited Link-81 freight summary, but the later Link-82 final-composition check reopened the private historical receipt by a fixed path."
+  },
+  "correction": {
+    "public_mode": "Bind and validate the already executed current-source random receipt, including private_evidence_inputs=0.",
+    "private_mode": "Retain the historical final-composition receipt and its exact accepted status.",
+    "while_authority": "The four-view while gate still executes and writes its current source/artifact receipt in both modes.",
+    "product_semantics_delta": "none; public proof-authority selection only"
+  },
+  "retry_rule": "Two varied fresh public checkouts must execute the current-source random and while gates, consume no private evidence, and reproduce the sealed 19-role set before publication preparation can continue."
+}

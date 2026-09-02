@@ -1,0 +1,28 @@
+{
+  "classification": "Class-A linked-diagnostic gate correction",
+  "failure": {
+    "source_commit": "8e7aa1ea150574d06025b287792f1a4b434d4750",
+    "status": "FIRST RED: exact orphan wrapper retained the checkout-absolute origin spelling",
+    "observed": "ld.lld: warning: build/c2.2/canonical-product/wplto/resident-island-seed.prg.lto.o:(.llvm_sympart) is being placed in '.llvm_sympart'",
+    "rejected_reason": "orphan-diagnostic-wording-or-origin"
+  },
+  "fix": {
+    "rule": "The exact diagnostic gate compares the origin against the repository-relative LTO object name actually supplied to LLD. Paths outside the repository retain their literal spelling in the model selftest.",
+    "semantic_checks_unchanged": [
+      "exactly one orphan diagnostic",
+      "origin is the generated LTO object",
+      "input section is .llvm_sympart",
+      "output section is .llvm_sympart",
+      "all other orphans remain hard errors"
+    ]
+  },
+  "format": "lisp65-c2-lite-media-fresh-clone-relative-orphan-origin-first-red-v1",
+  "product_delta_bytes": 0,
+  "recorded_on": "2026-07-26",
+  "scope": {
+    "compiler_runs_caused_by_fix": 0,
+    "hardware_runs": 0,
+    "linker_runs_caused_by_fix": 0,
+    "product_bytes": 0
+  }
+}

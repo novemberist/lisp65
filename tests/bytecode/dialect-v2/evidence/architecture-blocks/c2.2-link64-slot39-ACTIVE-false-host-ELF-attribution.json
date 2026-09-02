@@ -1,0 +1,173 @@
+{
+  "answer": {
+    "product_fix_justified": false,
+    "proven": "the first ACTIVE poll itself returned false; initial argument/mode rejection is excluded",
+    "remaining_exact_partition": [
+      "the linked Bank-5 reader returned zero",
+      "the reader returned nonzero but content never matched before the 64-frame timeout"
+    ]
+  },
+  "authority": {
+    "attribution_driver": {
+      "bytes": 13527,
+      "path": "tools/host-lisp/c2_link64_slot39_active_false_attribution.py",
+      "sha256": "3d11f043e7b41e400a68713ac5d61f2d9d1e241eea691d87fbc506b34cdbb4d3"
+    },
+    "diagnostic_donor_ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "donor_generated_runtime": {
+      "bytes": 154771,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/generated-product-sources/c2_product_runtime.c",
+      "sha256": "1b5a185a94b1064b4735646a3cfdf6da2c5af11ed5c9488cc8e2e3e27fe0f4f3"
+    },
+    "earlier_threshold_run": {
+      "bytes": 6938,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-prethreshold-hardware-first-red.json",
+      "sha256": "f1979737963037e9980a0cade51cdefcd020f17df964816242e9c5710ec92ece"
+    },
+    "first_entry_receipt": {
+      "bytes": 8701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-entry-hold-hardware-receipt.json",
+      "sha256": "6c783186645d1ee1fde0c15ad88cc0bb59d610cc572a054c9b5e43f38bd901c0"
+    },
+    "hardware_First_Red": {
+      "bytes": 10646,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-ACTIVE-return-hardware-first-red.json",
+      "sha256": "19f49981131ab0e305de60bc8b1d7be436e928843987c311773919d6de966ee2"
+    },
+    "mode_length_gate": {
+      "bytes": 5287,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-c1-donor-completion-phase-context-replay-receipt.json",
+      "sha256": "497815ebde1f1d85968c78db47d6c334a44e22b2be089ec197c9832411f2d7a7"
+    },
+    "product_ELF": {
+      "bytes": 619524,
+      "path": "build/c2.2/substitution/link64-nonlto-stateless-completion-length-artifact-replay/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "968e5e7a6f745deeba10e9cf2772affb1f340b76440fde292e454091b7c83b43"
+    },
+    "product_generated_runtime": {
+      "bytes": 154771,
+      "path": "build/c2.2/substitution/link64-nonlto-stateless-completion-length-artifact-replay/generated-product-sources/c2_product_runtime.c",
+      "sha256": "1b5a185a94b1064b4735646a3cfdf6da2c5af11ed5c9488cc8e2e3e27fe0f4f3"
+    }
+  },
+  "claim_limit": "Host/ELF attribution and next-diagnostic feasibility only. C1 remains OPEN; no hardware, product, acceptance or promotion claim.",
+  "earlier_threshold_receipt_qualification": {
+    "historical_receipt_modified": false,
+    "qualification": "its non-hit is true only for that earlier execution. The current ACTIVE-return run is a separate intermittent execution, so the earlier non-hit cannot exclude timeout from the current false return."
+  },
+  "false_return_partition": {
+    "content_nonmatch_until_timeout": {
+      "CRC_call_VMA": "0xc86d",
+      "CRC_leaf": "rtov_crc_mem",
+      "excluded": false,
+      "timeout_branch_VMA": "0xc8c2",
+      "timeout_frames": 64
+    },
+    "initial_argument_or_mode_rejection": {
+      "excluded": true,
+      "false_exit_VMA": "0xc779",
+      "reason": "the entry hold proved a non-null state pointer and ACTIVE mode $a1; the 27-byte leaf maps $a1 to 64"
+    },
+    "reader_returned_zero": {
+      "excluded": false,
+      "false_exit_VMA": "0xc82e",
+      "reader_call_VMA": "0xc828",
+      "return_test_VMA": "0xc82c",
+      "static_arguments": {
+        "Bank": 5,
+        "destination": "poll-local observed[64]",
+        "length": 64,
+        "offset": "0xc640"
+      },
+      "static_bounds_result": "$c640 + 64 == $c680 == region end; accepted"
+    }
+  },
+  "format": "lisp65-c2.2-Link64-slot39-ACTIVE-false-host-ELF-attribution-v1",
+  "linked_identity": {
+    "diagnostic_donor_poll": {
+      "VMA": "0xc706",
+      "bytes": 563
+    },
+    "generated_runtime_sources_byteidentical": true,
+    "product_poll": {
+      "VMA": "0xc6ca",
+      "bytes": 563
+    },
+    "raw_difference_count": 8,
+    "raw_differences": [
+      {
+        "body_offset": "0x074",
+        "donor_byte": "0xf0",
+        "product_byte": "0xb4"
+      },
+      {
+        "body_offset": "0x129",
+        "donor_byte": "0xf0",
+        "product_byte": "0xb4"
+      },
+      {
+        "body_offset": "0x142",
+        "donor_byte": "0xec",
+        "product_byte": "0xb0"
+      },
+      {
+        "body_offset": "0x14c",
+        "donor_byte": "0x95",
+        "product_byte": "0x59"
+      },
+      {
+        "body_offset": "0x159",
+        "donor_byte": "0xc7",
+        "product_byte": "0x8b"
+      },
+      {
+        "body_offset": "0x18d",
+        "donor_byte": "0xec",
+        "product_byte": "0xb0"
+      },
+      {
+        "body_offset": "0x1bf",
+        "donor_byte": "0xe4",
+        "product_byte": "0xa8"
+      },
+      {
+        "body_offset": "0x1e0",
+        "donor_byte": "0x95",
+        "product_byte": "0x59"
+      }
+    ],
+    "semantic_body_identity": "byteidentical after the eight internal section-local target low bytes are rebased by the measured +0x3c VMA shift"
+  },
+  "next_minimal_discriminator": {
+    "after": "BNE $c82c (d0 fe)",
+    "all_capacity_deltas": 0,
+    "before": "BNE $c831 (d0 03)",
+    "executable_operand_bytes_changed": 1,
+    "hang_capture_interpretation": {
+      "stable_byteidentical_to_C2J": "reader path exonerated; CRC/seal comparison is next",
+      "stable_wrong_or_poison": "source/destination/read divergence",
+      "wrong_then_correct": "Chip-read visibility/convergence"
+    },
+    "hardware_authorized": false,
+    "instruction_VMA": "0xc82c",
+    "name": "post-reader-return plus observed-buffer hold",
+    "outcomes": {
+      "bad_bytecode": "c2_stream_c2d_read returned zero despite the linked end-of-region-equality bounds",
+      "hang": "reader returned nonzero; capture __rc0/__rc1 and __rc24/__rc25, require observed == stack_base + 10, then read 64 observed bytes three times"
+    }
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "scope": {
+    "class": "read-only-host-ELF-attribution",
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "status": "first ACTIVE false narrowed to reader-return or timeout/nonmatch"
+}

@@ -1,0 +1,508 @@
+{
+  "authority": {
+    "append_cutpoint_contract": {
+      "bytes": 4908,
+      "path": "config/c2-append-cutpoint-contract.json",
+      "sha256": "ae1b564f0cafd2e65cc6c23d510fd021b96fe2900f7b3f76b6fe94bcb77f3179"
+    },
+    "append_cutpoint_gate": {
+      "bytes": 34445,
+      "path": "tools/host-lisp/c2_append_phase_plan_gate.py",
+      "sha256": "f0b634f4d5793cabbd1593bf4303a2d95e9a85783ebb1ba869e008b4345b9a4a"
+    },
+    "canonical_product_profile": {
+      "feature_defines": [
+        "LISP65_C2_DIRECT_HOT_REFILL",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+        "LISP65_C2_TRANSACTION_AUTH",
+        "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+        "LISP65_C2_NESTED_APPEND_V5",
+        "LISP65_C2_RESIDENCY_TRIAGE",
+        "LISP65_C2_E000_REOPEN",
+        "LISP65_C2_BSS_TRIAGE",
+        "LISP65_RUNTIME_OVERLAY_FORMAT_V3",
+        "LISP65_C2_PHASE11_SPLIT",
+        "LISP65_C2_LITE_COLD_EVICTION",
+        "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+        "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+        "LISP65_C2_LITE_BANK3_STAGING",
+        "LISP65_C2_LITE_BANK2_STAGING",
+        "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+        "LISP65_C2_LITE_VM_ARITY_E000",
+        "LISP65_C2_LITE_CHIP_RAM",
+        "LISP65_C2_NUMERIC_EARLY_ERRORS",
+        "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT"
+      ],
+      "green_wplto_profile": {
+        "bytes": 8652,
+        "path": "build/c2-lite/v6-bank2-target-stage-phase02b-wplto/full-product-wplto/resolved-profile.txt",
+        "sha256": "a70b02189ca0bc6e014fbacfe23be5bc76e46e5a05db06505730f8ac0d10e9e2"
+      },
+      "link33_gap_disposition": "The Link-33 object bound the base profile only. Later C2-lite wrapper features were appended outside that object; the Link-41 driver inherited the pre-E000 wrapper and therefore omitted one already-authorized feature without tripping the base-object hash.",
+      "profile_object": {
+        "bytes": 2722,
+        "format": "lisp65-c2-lite-v6-roots-fronts-product-profile-v1",
+        "path": "config/c2-lite-v6-roots-fronts-product-profile.json",
+        "sha256": "05a6db5519e8d023bac3bbaae5770efa909f66f26204a374d33330aff09c6b53"
+      },
+      "shape": {
+        "boot_family_slice_count": 12,
+        "roots_fronts_slice_bytes": 1473,
+        "session_family_bytes": 65438,
+        "session_family_headroom_bytes": 98,
+        "session_family_slice_count": 50,
+        "unique_slice_count": 58
+      },
+      "source_gate": {
+        "driver": {
+          "bytes": 10881,
+          "path": "tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py",
+          "sha256": "cbd7056ad607982ac86be9b22ea47b6c93a194fd495db50dfde3216cb10e1d46"
+        },
+        "status": "passed-fixed-link-entry-source-gate"
+      },
+      "status": "passed-canonical-profile-and-fixed-entry-gate"
+    },
+    "class_c_first_red_diagnosis": {
+      "bytes": 4688,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-cold-cut-wplto-first-red-diagnosis.json",
+      "sha256": "0c79c8111b71ad683077e2b22526d34536143f103d62ad438ccd2de786d8dca6"
+    },
+    "driver": {
+      "bytes": 8525,
+      "path": "tools/host-lisp/c2_lite_v6_link48_append_final_hybrid_wplto.py",
+      "sha256": "357ea91f9a0fb5c28ccee8eb13c11abce89dbf94105488a1d0712135e120d8a6"
+    },
+    "final_consolidation_source": {
+      "feature": "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT",
+      "hard_completion_criteria": {
+        "bank0_text_headroom_bytes": ">=32",
+        "e000_headroom_bytes": ">=115",
+        "pack_quantum_bytes": 256,
+        "session_family_bytes": "<=65536",
+        "slice_cap_bytes": 1792
+      },
+      "phase_plan": {
+        "co_resident_publish_clear": {
+          "added_pointers": 0,
+          "added_state_bytes": 0,
+          "negative_mutations": {
+            "clear_misrouted_as_publish": "rejected",
+            "foreign_marker": "rejected",
+            "missing_marker": "rejected",
+            "publish_before_commit": "rejected",
+            "publish_twice": "rejected",
+            "replayed_marker_after_clear": "rejected"
+          },
+          "normal": {
+            "committed": true,
+            "journal": "clear",
+            "marker": 0,
+            "published": true
+          },
+          "rollback_only": {
+            "committed": false,
+            "journal": "clear",
+            "marker": 0,
+            "published": false
+          },
+          "status": "passed-one-record-two-marker-qualified-entries"
+        },
+        "cutpoints": {
+          "cutpoints": {
+            "30": [
+              30,
+              42,
+              43,
+              41
+            ],
+            "34": [
+              30,
+              34,
+              42,
+              43,
+              41
+            ],
+            "35": [
+              30,
+              34,
+              35,
+              42,
+              43,
+              41
+            ],
+            "36": [
+              30,
+              34,
+              35,
+              36,
+              42,
+              43,
+              41
+            ],
+            "37": [
+              30,
+              34,
+              35,
+              36,
+              37,
+              42,
+              43,
+              41
+            ]
+          },
+          "hardware_negative": "active C2J plus unreachable suffix rejected",
+          "negative_mutations": {
+            "forward_data_byte_to_recovery": "rejected",
+            "rollback_data_without_clear": "rejected",
+            "rollback_data_without_finalize": "rejected",
+            "rollback_data_without_unpublish": "rejected",
+            "rollback_descending_range_expansion": "rejected"
+          },
+          "status": "passed-cutpoint-and-rollback-fixture"
+        },
+        "diagnostic_retirement": {
+          "negative_mutations": {
+            "BADOPCODE_detail_dispatch_restored": "rejected-by-source-gate",
+            "DIRMISS_BCODE_removed": "rejected-by-source-gate",
+            "DIRMISS_SYMI_removed": "rejected-by-source-gate",
+            "raw_capture_restored": "rejected-by-source-gate"
+          },
+          "preserved": [
+            "VM_BADOPCODE status",
+            "DIRMISS SYMI detail",
+            "DIRMISS BCODE ordinal detail"
+          ],
+          "reason": "internal plan faults are fixture-covered; the user-facing DIRMISS name/ordinal seam remains complete",
+          "removed": [
+            "two scratch fields",
+            "resident raw capture",
+            "cold BCODE materialization",
+            "BADOPCODE detail dispatch"
+          ],
+          "status": "passed-BADOPCODE-detail-scaffold-retired-DIRMISS-preserved"
+        },
+        "end_to_end": {
+          "image": {
+            "append": {
+              "entry_ordinal": 588,
+              "entry_row_hex": "060063860900d8080100",
+              "image_row_hex": "0100000001004c020100d80800001b010000638600090000000000000ad3f62a",
+              "image_slot": 6,
+              "new_counts": [
+                7,
+                589,
+                2264,
+                283
+              ],
+              "old_counts": [
+                6,
+                588,
+                2264,
+                283
+              ]
+            },
+            "call": {
+              "literal_reads": 0,
+              "opcodes": [
+                "PUSHT",
+                "RET"
+              ],
+              "result": "T"
+            },
+            "input": {
+              "code_hex": "b50000020200002c05",
+              "entries": 1,
+              "export": "%c2h",
+              "length": 119,
+              "literals": 0
+            },
+            "publish_install": {
+              "handle": 588,
+              "symbol": "%c2h"
+            },
+            "status": "passed-byte-exact-success-oracle"
+          },
+          "phase_plan": [
+            30,
+            34,
+            35,
+            36,
+            37
+          ],
+          "rollback_cutpoints": [
+            30,
+            34,
+            35,
+            36,
+            37
+          ],
+          "status": "passed-exact-image-through-bound-phase-plan-oracle"
+        },
+        "phase_plan": {
+          "co_resident_publish_clear": {
+            "added_state_bytes": 0,
+            "logical_entries": [
+              "publish_exports",
+              "journal_clear"
+            ],
+            "physical_section": ".lisp65_rt_c2append_publish_clear",
+            "request_byte": "record[23], lifetime-disjoint from roots/fronts"
+          },
+          "effective_slots": {
+            "entries": 37,
+            "image": 36,
+            "journal_clear": 41,
+            "journal_reconstruct": 32,
+            "journal_validate": 31,
+            "journal_write": 30,
+            "publish_clear": 41,
+            "rollback_finalize": 43,
+            "rollback_prepare": 33,
+            "rollback_unpublish": 42,
+            "stage_copy": 34,
+            "stage_plane": 35
+          },
+          "forward_plan": [
+            30,
+            34,
+            35,
+            36,
+            37
+          ],
+          "range_rule": "descending fails; semantic-gap plans are data",
+          "recovery_only_slots_excluded_from_forward": [
+            31,
+            32,
+            33
+          ],
+          "representation": {
+            "bytes": 10,
+            "kind": "zero-terminated named uint8 data walked by one non-LTO Island leaf",
+            "selection": "canonical plan pointer; no duplicate selector ids",
+            "status_publication": "retired after fixture-covered diagnosis",
+            "status_transport": "generic status only; no BADOPCODE detail",
+            "walker": "c2_append_plan_walk"
+          },
+          "rollback_plan": [
+            42,
+            43,
+            41
+          ],
+          "status": "passed-source-phase-plan-and-range-inventory"
+        },
+        "status": "passed-append-cutpoint-contract"
+      },
+      "status": "passed-final-append-consolidation-source-contract"
+    },
+    "historical_rollback_first_red": {
+      "bytes": 4778,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link48-append-rollback-order-first-red.json",
+      "sha256": "12b12f5aa3a8a249a7bce86dac6be56866574c0c4237f08e39fbadae254800b6"
+    },
+    "hybrid_authority": {
+      "authorized_whole_program_lto_runs": 1,
+      "contract": {
+        "bytes": 3990,
+        "path": "config/c2-append-final-hybrid-contract.json",
+        "sha256": "0c1afeb62e54250bc55d9d52e0b00b933bff5e20406a95e4645d33be8c050e97"
+      },
+      "execution_contract": {
+        "bytes": 27190,
+        "path": "config/c2-lite-execution-contract.json",
+        "sha256": "d7365a84c8f69c1ade7ce669164530a0c056fac27ef8a92b1686dc4b136a1aa1"
+      },
+      "selected_attributed_text_bytes": 81,
+      "selected_candidate": "numeric-early-errors"
+    },
+    "link48_append_hardware_first_red": {
+      "bytes": 10154,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link48-zero-literal-append-hardware-first-red.json",
+      "sha256": "f9f17db39694c973968581ac657c1d70fda95c4dd63fc5a81f89b0088864b3a6"
+    },
+    "link48_rollback_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg",
+      "sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6",
+      "status": "untouched"
+    },
+    "link48_structural_authority": {
+      "bytes": 340673,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link48-c2-lite-v6-zero-literal-execution-structural-receipt.json",
+      "sha256": "867bd59ff9c669e98b4969062eeb0dfd39b0fb633f21dd3e19f067fedb3c7f25"
+    },
+    "numeric_early_errors": {
+      "host": {
+        "asan": "passed",
+        "binary": {
+          "bytes": 33624,
+          "path": "build/c2.2/substitution/link48-append-final-hybrid-preflight/final-wplto-early-errors/numeric-early-errors-host",
+          "sha256": "7799ec7320704013268d3a6aa4b618578e2d0017f9cae1a5f7f671cfc678b626"
+        },
+        "output_for_runtime_catalog": "E2e",
+        "status": "passed-overlay-then-numeric-fallback-host-fixture",
+        "stdout": {
+          "bytes": 58,
+          "path": "build/c2.2/substitution/link48-append-final-hybrid-preflight/final-wplto-early-errors/numeric-early-errors-host.stdout.txt",
+          "sha256": "fd39cf2e251e42174622e2aa6e340f4ad6594c49de26b4978813f81180ca12a6"
+        },
+        "ubsan": "passed"
+      },
+      "source": {
+        "contract": {
+          "bytes": 3990,
+          "path": "config/c2-append-final-hybrid-contract.json",
+          "sha256": "0c1afeb62e54250bc55d9d52e0b00b933bff5e20406a95e4645d33be8c050e97"
+        },
+        "feature": "LISP65_C2_NUMERIC_EARLY_ERRORS",
+        "fixture": {
+          "bytes": 5454,
+          "path": "scripts/error-state-main.c",
+          "sha256": "de1deac37c46fcf094481b6bdadc523f50308edc5b0461c45d2ed3097f8a253b"
+        },
+        "mutations_rejected": [
+          "definition_guard_removed",
+          "call_guard_removed",
+          "numeric_prefix_removed",
+          "wrong_owner_selection"
+        ],
+        "preserved": [
+          "overlay renderer",
+          "stable Ehh fallback",
+          "inner status identity",
+          "fail-closed control flow"
+        ],
+        "selected_attributed_text_bytes": 81,
+        "source": {
+          "bytes": 5402,
+          "path": "src/interrupt.c",
+          "sha256": "3daa9e790bbf95d9b1f15da688386b17831d7f9d0c95e61038399ea9d2105de0"
+        },
+        "status": "passed-owner-selected-numeric-early-error-source-contract"
+      }
+    },
+    "probe_profile_delta": {
+      "added_feature": "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT",
+      "base_profile": {
+        "feature_defines": [
+          "LISP65_C2_DIRECT_HOT_REFILL",
+          "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+          "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+          "LISP65_C2_TRANSACTION_AUTH",
+          "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+          "LISP65_C2_NESTED_APPEND_V5",
+          "LISP65_C2_RESIDENCY_TRIAGE",
+          "LISP65_C2_E000_REOPEN",
+          "LISP65_C2_BSS_TRIAGE",
+          "LISP65_RUNTIME_OVERLAY_FORMAT_V3",
+          "LISP65_C2_PHASE11_SPLIT",
+          "LISP65_C2_LITE_COLD_EVICTION",
+          "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+          "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+          "LISP65_C2_LITE_BANK3_STAGING",
+          "LISP65_C2_LITE_BANK2_STAGING",
+          "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+          "LISP65_C2_LITE_VM_ARITY_E000",
+          "LISP65_C2_LITE_CHIP_RAM",
+          "LISP65_C2_NUMERIC_EARLY_ERRORS",
+          "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT"
+        ],
+        "green_wplto_profile": {
+          "bytes": 8652,
+          "path": "build/c2-lite/v6-bank2-target-stage-phase02b-wplto/full-product-wplto/resolved-profile.txt",
+          "sha256": "a70b02189ca0bc6e014fbacfe23be5bc76e46e5a05db06505730f8ac0d10e9e2"
+        },
+        "link33_gap_disposition": "The Link-33 object bound the base profile only. Later C2-lite wrapper features were appended outside that object; the Link-41 driver inherited the pre-E000 wrapper and therefore omitted one already-authorized feature without tripping the base-object hash.",
+        "profile_object": {
+          "bytes": 2722,
+          "format": "lisp65-c2-lite-v6-roots-fronts-product-profile-v1",
+          "path": "config/c2-lite-v6-roots-fronts-product-profile.json",
+          "sha256": "05a6db5519e8d023bac3bbaae5770efa909f66f26204a374d33330aff09c6b53"
+        },
+        "shape": {
+          "boot_family_slice_count": 12,
+          "roots_fronts_slice_bytes": 1473,
+          "session_family_bytes": 65438,
+          "session_family_headroom_bytes": 98,
+          "session_family_slice_count": 50,
+          "unique_slice_count": 58
+        },
+        "source_gate": {
+          "driver": {
+            "bytes": 10881,
+            "path": "tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py",
+            "sha256": "cbd7056ad607982ac86be9b22ea47b6c93a194fd495db50dfde3216cb10e1d46"
+          },
+          "status": "passed-fixed-link-entry-source-gate"
+        },
+        "status": "passed-canonical-profile-and-fixed-entry-gate"
+      },
+      "feature_defines": [
+        "LISP65_C2_DIRECT_HOT_REFILL",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+        "LISP65_C2_TRANSACTION_AUTH",
+        "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+        "LISP65_C2_NESTED_APPEND_V5",
+        "LISP65_C2_RESIDENCY_TRIAGE",
+        "LISP65_C2_E000_REOPEN",
+        "LISP65_C2_BSS_TRIAGE",
+        "LISP65_RUNTIME_OVERLAY_FORMAT_V3",
+        "LISP65_C2_PHASE11_SPLIT",
+        "LISP65_C2_LITE_COLD_EVICTION",
+        "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+        "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+        "LISP65_C2_LITE_BANK3_STAGING",
+        "LISP65_C2_LITE_BANK2_STAGING",
+        "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+        "LISP65_C2_LITE_VM_ARITY_E000",
+        "LISP65_C2_LITE_CHIP_RAM",
+        "LISP65_C2_NUMERIC_EARLY_ERRORS",
+        "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT"
+      ]
+    }
+  },
+  "conditional_next_gate": "Only a resident-capacity overflow authorizes the standing small-hot-object E000 relocation probe; every other failure returns to Class-C review.",
+  "diagnostic": {
+    "message": "co-resident source contract red: ['class_c_authority']",
+    "type": "ProbeError"
+  },
+  "evidence": {
+    "fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin": {
+      "bytes": 34403,
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2-lite-dynamic.code.bin": {
+      "bytes": 84,
+      "sha256": "4af73b51d5cc56bd534f674bbc0406d63af180af99b4f09cbe404ff865f8ba8d"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2-lite-dynamic.manifest.json": {
+      "bytes": 2704,
+      "sha256": "1f7c4fff5a0aacfd4c317b19867466f4d9bc51a85ba7f41c4823d9d74b8961d9"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2d-v6-entry-emitter-host.so": {
+      "bytes": 11616,
+      "sha256": "602bd3d7a141e7a686a40d0696056d413fcea9c46acdf53e50f2802ae0a54d58"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin": {
+      "bytes": 33840,
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "latency_attempts_consumed": "0/2",
+    "product_closure_links": 0
+  },
+  "format": "lisp65-c2-lite-v6-real-abi-link48-first-red-v1",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg",
+    "sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6",
+    "status": "untouched"
+  },
+  "status": "FIRST RED: C2-lite real-ABI Link 48 stopped"
+}

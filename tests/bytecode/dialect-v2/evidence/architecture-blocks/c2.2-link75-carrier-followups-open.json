@@ -1,0 +1,45 @@
+{
+  "format": "lisp65-c2.2-link75-carrier-followups-open-v1",
+  "recorded_on": "2026-07-28",
+  "status": "OPEN-DIRMISS-renderer-vs-symname-discriminator-defstruct-not-run",
+  "dirmiss_detail": {
+    "classification": "correct-pre-symname-scratch-to-corrupt-rendered-output",
+    "fixture": "tests/equivalence/c2-dirmiss-detail-full-symbol.json",
+    "expected": "*** undefined function: intern",
+    "observed": "*** undefined function:      i",
+    "link75_reproducer": {
+      "form": "(intern-renderer-missing)",
+      "expected": "*** undefined function: intern-renderer-missing",
+      "observed": "*** undefined function:      i",
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-bound-carrier-dirmiss-hardware-first-red.json"
+    },
+    "layer_attribution": {
+      "status": "post-symname-state-unmeasured",
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-dirmiss-detail-hold-nonpromotable-receipt.json",
+      "proved_green": [
+        "context transport",
+        "VM/installer SYMI identity",
+        "Bank-5 nameoff and name bytes",
+        "correct full name already present in sym_name_scratch before symname"
+      ],
+      "interpretation_correction": "The prior symname-read-edge label was stronger than the capture. No post-return scratch was observed, so symname corruption and renderer pointer/length consumption remain disjoint candidates."
+    },
+    "class_scope": [
+      "sympool_read",
+      "nameoff_get",
+      "symval_get",
+      "symfn_get"
+    ],
+    "disposition": "Run the zero-delta post-symname-return hold first in the next otherwise-required hardware session. Correct scratch cancels all DMA work and attributes renderer consumption; damaged scratch permits the already specified DMA row in the same device appointment. No fix form is selected before the first applicable result.",
+    "static_attribution": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-symbol-read-completion-static-attribution.json",
+    "bundled_session_preparation": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-bundled-completion-preparation-receipt.json"
+  },
+  "defstruct_red_frame": {
+    "classification": "post-fix-replay-required",
+    "source_run": "Link 72 require/defstruct hardware session",
+    "known_shared_mechanism": "The expansion issued 22 intern calls while the product-bound compiler carrier lacked Prim 68.",
+    "disposition": "Remain OPEN: the Link-75 bundled session stopped First Red at the preceding DIRMISS row, so require/defstruct was not started.",
+    "closed": false
+  },
+  "claim_limit": "This record queues findings. It proves only the interval from correct pre-symname scratch to corrupt displayed output; it proves neither symname corruption, renderer corruption, normal-DMA nonconvergence nor a shared-descriptor race, and it authorizes no product fix, product link or standalone hardware trip."
+}

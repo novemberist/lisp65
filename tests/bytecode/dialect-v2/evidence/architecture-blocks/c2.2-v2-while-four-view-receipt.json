@@ -1,0 +1,190 @@
+{
+  "authority": {
+    "ABI_ledger": {
+      "bytes": 10175,
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "f85f472900059506cbed35d8320df38c1c0a2fb7fcd49d9434db1bdf2d971f23"
+    },
+    "carrier_generator": {
+      "bytes": 8220,
+      "path": "tools/host-lisp/c2_product_compiler_tier.py",
+      "sha256": "277f7d6f60a6a1abd67f161b5ac27b893eb4e4e7f3f5d429c0a7afa5697243b4"
+    },
+    "contract": {
+      "bytes": 6302,
+      "path": "config/c2-while-contract.json",
+      "sha256": "e5d30e18d363de2bab74a97498089b3a831ab30c673d688424d7ebcac6830a0c"
+    },
+    "device_LCC": {
+      "bytes": 36291,
+      "path": "lib/lcc.lisp",
+      "sha256": "e657f80c387d623c0a51d628dfae89d8cfa35cb44290c0ca32df3c34153785b2"
+    },
+    "device_LCC_profile": {
+      "bytes": 11827,
+      "path": "lib/dialect-v2/lcc-profile.lisp",
+      "sha256": "cfbea3d1749f99b04b66c3c2c9af047610edc465a47c5214426d46d8ddcc610f"
+    },
+    "gate": {
+      "bytes": 32394,
+      "path": "tools/host-lisp/c2_while_gate.py",
+      "sha256": "745212decaf64bd658b06cb2b69c9a71e895f416d5c569298f8a8a8ce99b0e76"
+    },
+    "host_compiler": {
+      "bytes": 48637,
+      "path": "tools/host-lisp/bytecode_p0_compiler.py",
+      "sha256": "e3b8e989e420478616604cef238b89a8f1e380cad62854821338653b6f4354f7"
+    },
+    "migration": {
+      "bytes": 38680,
+      "path": "config/dialect-migration-contract.json",
+      "sha256": "5f8be525cfea72c4a890f529efbf19c2a9ba841d10538cab51bae5b4ed219902"
+    },
+    "native_compiler": {
+      "bytes": 39800,
+      "path": "src/compile.c",
+      "sha256": "3da34db78de348af264fea23926f58e62324ee375d17554adbc4fdca9b37baf0"
+    },
+    "native_evaluator": {
+      "bytes": 97933,
+      "path": "src/eval.c",
+      "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+    },
+    "surface": {
+      "bytes": 12358,
+      "path": "config/dialect-v2-surface.json",
+      "sha256": "852a264ee844110e4992b691387a8e1c99466ceb95ad66b8e43495164ed67fb6"
+    }
+  },
+  "bound_device_carrier": {
+    "blob": {
+      "bytes": 7854,
+      "path": "build/post-promotion/phase-v/while/gate/carrier/lcc.blob.bin",
+      "sha256": "708304f61eaf8c76dc9c33961463a8a6d5fefdd9a835000b49caefee746f3726"
+    },
+    "byteidentical_to_host_compiler": true,
+    "carrier_compile_steps": 4568,
+    "manifest": {
+      "bytes": 228972,
+      "path": "build/post-promotion/phase-v/while/gate/carrier/lcc.manifest.json",
+      "sha256": "7996e2a714e3ef2490d296d7867fb7c98710c3d6f36f3fe7965d7ff293886519"
+    },
+    "payload_bytes": 28,
+    "payload_sha256": "a004f00c18c7b7c4664447a516fa2163a895846e921409059704a970240c540f",
+    "result": 3,
+    "status": "passed-generated-and-packed-device-carrier-plus-target-VM",
+    "target_VM_steps": 43,
+    "tier_generation": {
+      "bytes": 1313,
+      "path": "build/post-promotion/phase-v/while/gate/compiler-tier/tier-generation.json",
+      "sha256": "dfa33d915bf94d26828026ecc978c5db21bf1768db1b3ddd9ada6be8531217d9"
+    },
+    "tier_suite": {
+      "bytes": 5364,
+      "path": "build/post-promotion/phase-v/while/gate/compiler-tier/suite.json",
+      "sha256": "e9eff1bdb76094f2a05610857c537aa621e774cbf204dfd21fb3de29d1ecd893"
+    }
+  },
+  "claim_limit": "Host, native-host and packed-carrier execution plus a target window-refill model bound to src/vm.c. The authorized product link and all hardware timing/on-metal while claims remain unconsumed.",
+  "format": "lisp65-c2.2-v2-while-four-view-receipt-v1",
+  "hardware_runs": 0,
+  "host_compiler_VM": {
+    "constant_stack": [
+      {
+        "iterations": 2,
+        "logical_VM_steps": 32,
+        "max_native_stack_slots": 4
+      },
+      {
+        "iterations": 200,
+        "logical_VM_steps": 2210,
+        "max_native_stack_slots": 4
+      }
+    ],
+    "rel8": {
+      "negative_exact_while": -128,
+      "negative_overflow_rejected": "branch offset out of rel8 range in while: -129",
+      "positive_exact_note": "A valid while cannot reach forward +127 while retaining a legal backward edge; the same patcher is exercised by IF.",
+      "positive_exact_shared_patcher": 127,
+      "positive_overflow_rejected": "branch offset out of rel8 range in if: 128"
+    },
+    "status": "passed-host-compiler-VM-rel8-stack-and-streaming",
+    "streamed_backedge": {
+      "VM_CODEBUF_bytes": 128,
+      "admitted_iterations": 2,
+      "backedge_target_refills_per_admitted_iteration": 1.0,
+      "cross_window_backedges": 2,
+      "header_bytes": 7,
+      "logical_VM_steps": 176,
+      "payload_bytes": 136,
+      "payload_refills_total": 5,
+      "payload_window_bytes": 121,
+      "refills": {
+        "backedge": 2,
+        "forward_branch": 1,
+        "sequential": 2
+      }
+    }
+  },
+  "mutations_rejected": {
+    "c-compiler-dispatch": "native C compiler while seam drift",
+    "c-compiler-proper-list": "native C compiler while seam drift",
+    "carrier-execution-case": "generated compiler-tier has no executable while case",
+    "host-body-drop": "host compiler while seam drift",
+    "host-compiler-dispatch": "host compiler while seam drift",
+    "lcc-dispatch": "device LCC while/rel8 seam drift",
+    "lcc-negative-bound": "device LCC while/rel8 seam drift",
+    "lcc-positive-bound": "device LCC while/rel8 seam drift",
+    "lcc-profile": "dialect-v2 LCC profile does not classify while",
+    "migration-current": "migration inventory lacks while",
+    "migration-target": "migration inventory lacks while",
+    "surface-row": "public while surface row absent",
+    "treewalk-dispatch": "native evaluator while seam drift",
+    "treewalk-poll": "native evaluator while seam drift"
+  },
+  "native_and_device_equivalence": {
+    "allocation_GC": {
+      "both_engines_collected": true,
+      "fixture": {
+        "bytes": 298,
+        "path": "tests/equivalence/while-gc-forms.lisp",
+        "sha256": "d00bcc4d2a6e6a89af4241e48ae9cef8c6758a381449c5993ef4ae5254558b80"
+      },
+      "treewalk_and_VM_result": "9999"
+    },
+    "completion_canary": {
+      "bytes": 3553,
+      "path": "build/equivalence/equivalence-completion.json",
+      "sha256": "76ade72101f99a29d60fa9e32841fbb376e02f4f3de399a76b35b2b151ab4baa"
+    },
+    "device_LCC_rel8_function_outcomes": [
+      "127",
+      "!error",
+      "128",
+      "!error"
+    ],
+    "rel8_native_LCC_outcomes": [
+      "while-neg-exact",
+      "1",
+      "!error",
+      "while-pos-exact",
+      "1",
+      "!error"
+    ],
+    "status": "passed-treewalk-native-compiler-device-LCC-parity"
+  },
+  "next_gate": "Exactly one owner-authorized successor product link carrying the accepted random/while WPLTO identity.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-29",
+  "source_contract": {
+    "new_C2J_fields": 0,
+    "new_opcodes": 0,
+    "new_overlay_records": 0,
+    "new_roots": 0,
+    "new_runtime_state_bytes": 0,
+    "status": "passed-one-surface-five-implementation-views",
+    "treewalk_poll_cadence_admitted_iterations": 64
+  },
+  "status": "passed-four-view-while-successor-link-authorized-not-run"
+}

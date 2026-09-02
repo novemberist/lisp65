@@ -1,0 +1,142 @@
+{
+  "format": "lisp65-c2-lite-v6-link48-append-plan-leaf-wplto-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: coordinated resident-placement review required",
+  "promotable": false,
+  "classification": "product-shaped WPLTO capacity/residency First Red",
+  "authority": {
+    "link48_baseline_map": {
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/resident-island-seed.prg.map",
+      "sha256": "f990f82d02038a292f126e71c99ff53b5d48ca9ed84d66333443f1c92f006170"
+    },
+    "consumed_C_interpreter_map": {
+      "path": "build/c2.2/substitution/link48-append-data-plan-wplto/resident-island-seed.prg.map",
+      "sha256": "63ffb4cb6ab008c15916ccc7d46edff139eff14ef56cf06a4808d18824ab2fee"
+    },
+    "assembler_leaf_map": {
+      "path": "build/c2.2/substitution/link48-append-plan-leaf-wplto2/resident-island-seed.prg.map",
+      "sha256": "62fba0436e2eb7c0b9a8a291583a8e4abb13334d6a6c3b21bd5db2120de0028f"
+    },
+    "internal_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-plan-leaf-wplto2-internal.json",
+      "sha256": "b07601f3d3cb5d36efea26b07471a1359809057cf527df4669bb8d7d2eb333b8"
+    },
+    "outer_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-plan-leaf-wplto2-receipt.json",
+      "sha256": "182428145e4ce10d2866ff547a2bf898c8ba1362b702221f58610fff1d7d1c91"
+    }
+  },
+  "bank0_text": {
+    "contract_limit_exclusive": "0xb4a3",
+    "link48_baseline": {
+      "start": "0x2023",
+      "bytes": 37999,
+      "end_exclusive": "0xb492",
+      "headroom_bytes": 17
+    },
+    "consumed_C_interpreter_attempt": {
+      "bytes": 38553,
+      "headroom_bytes": -537
+    },
+    "assembler_leaf_attempt": {
+      "start": "0x2023",
+      "bytes": 38207,
+      "end_exclusive": "0xb562",
+      "headroom_bytes": -191,
+      "delta_from_link48_bytes": 208,
+      "improvement_over_C_interpreter_bytes": 346
+    },
+    "attribution": {
+      "c2_facade_target_overlay_call_family": {
+        "C_interpreter_bytes": 441,
+        "assembler_attempt_bytes": 88,
+        "delta_bytes": -353
+      },
+      "c2_append_plan_walk": {
+        "baseline_bytes": 0,
+        "assembler_attempt_bytes": 109,
+        "delta_bytes": 109
+      },
+      "c2_product_install": {
+        "baseline_bytes": 556,
+        "assembler_attempt_bytes": 659,
+        "delta_bytes": 103
+      },
+      "remaining_linkwide_LTO_delta_bytes": -4
+    }
+  },
+  "e000_window": {
+    "required_floor_bytes": 115,
+    "link48_baseline": {
+      "c2_resident_bytes": 7108,
+      "headroom_bytes": 136,
+      "spare_above_floor_bytes": 21
+    },
+    "consumed_C_interpreter_attempt": {
+      "c2_resident_bytes": 7138,
+      "headroom_bytes": 106,
+      "floor_shortfall_bytes": 9
+    },
+    "assembler_leaf_attempt": {
+      "c2_resident_bytes": 7311,
+      "delta_from_link48_bytes": 203,
+      "delta_from_C_interpreter_attempt_bytes": 173,
+      "derived_headroom_bytes": -67,
+      "floor_shortfall_bytes": 182
+    },
+    "delta_from_C_interpreter_attribution": {
+      "c2_append_overlay_call_new_bytes": 150,
+      "c2_overlay_call_growth_bytes": 27,
+      "c2_append_begin_credit_bytes": -4,
+      "total_bytes": 173
+    }
+  },
+  "secondary_map_effects": {
+    "ordinary_bss": {
+      "bytes": 1587,
+      "size_delta_from_link48_bytes": 0,
+      "link48_start": "0xb9f7",
+      "attempt_start": "0xbac2",
+      "start_shift_bytes": 203,
+      "derived_headroom_bytes": -117,
+      "classification": "predecessor-placement consequence, not BSS growth"
+    },
+    "fixed_hot_block": {
+      "map_observed_headroom_bytes": 33,
+      "size_delta_bytes": 0,
+      "gate_status": "not reached because the seed link failed"
+    },
+    "resident_island": {
+      "map_observed_headroom_bytes": 84,
+      "size_delta_bytes": 0,
+      "gate_status": "not reached because the seed link failed"
+    },
+    "session_aggregate": "not packed or measured after the failed seed link"
+  },
+  "semantic_evidence": {
+    "plan_data_bytes": 8,
+    "forward_plan": [31, 35, 36, 37, 38],
+    "rollback_plan": [43, 44, 30],
+    "source_cutpoints": "passed",
+    "assembler_leaf_source_bytes": 109,
+    "assembler_ABI_mutations": "27/27 rejected",
+    "linked_leaf_equivalence": "not reached because the link failed",
+    "product_semantics_claim": "unmeasured"
+  },
+  "execution_accounting": {
+    "authorized_WPLTO_attempts": 1,
+    "compiler_runs": 1,
+    "failed_seed_link_attempts": 1,
+    "completed_product_closure_links": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "line1_product_first_reds": "2/3 unchanged",
+    "completed_latency_measurements": "0/2 unchanged"
+  },
+  "decision_boundary": {
+    "retry": "forbidden and not performed",
+    "micro_shaving": "forbidden and not performed",
+    "product_link": "not authorized by a red WPLTO and not run",
+    "required_next_step": "Class-C coordinated residency decision for the 191-byte Bank-0 text deficit and 182-byte E000 floor deficit"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "format": "lisp65-c2-link27-v2-profile-capacity-placement-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-capacity-placement-product-link-blocked",
+  "authorization_accounting": {
+    "authorized_profile_repairs": 1,
+    "completed_profile_repairs": 1,
+    "authorized_capacity_placement_probes": 1,
+    "completed_capacity_placement_probes": 1,
+    "resident_island_seed_links": 1,
+    "product_closure_links": 0,
+    "successor_product_links": 0,
+    "retry_or_tuning_links": 0
+  },
+  "profile_parity": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v2-product-profile-parity-gate-receipt.json",
+    "receipt_sha256": "341f06fafae487f3539093038a7431f68632d2320ad631a405fe050a7a402413",
+    "status": "passed-before-capacity-probe",
+    "canonical_switches": 8,
+    "missing_switch_mutations_rejected": "8/8",
+    "overbroad_mutations_rejected": "1/1",
+    "duplicate_mutations_rejected": "1/1"
+  },
+  "probe_identity": {
+    "mode": "non-product product-shaped resident-island seed link",
+    "hardware_execution": "prohibited-not-run",
+    "resolved_profile_sha256": "3cc561d8ac30b24ded126fe62c8d2c9a9f44b7e259203d515e2d0fd430fed594",
+    "generated_linker_sha256": "358c7f914fe90632482dd42fcd761dd7b75b9d3b021e1f1fd4333d1e90acefc3",
+    "failed_linker_map_sha256": "3e7ed836e3bfaddd1307d509952a48207a3e6e2b4d54476faedaa15b03f8b1c5",
+    "link27_baseline_map": "build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.map",
+    "link27_baseline_map_sha256": "8ef33b1deac9ab4fcb3fbb3c2821eb8c57a0e0e3c8593ff59e6ea1a1f9c7bd4a",
+    "product_prg": "not-emitted",
+    "product_elf": "not-emitted"
+  },
+  "first_red": {
+    "primary_gate": "ordinary Bank-0 state overlaps fixed C2 state",
+    "ordinary_bss": {
+      "link27_start": 47270,
+      "link27_bytes": 1807,
+      "link27_end_exclusive": 49077,
+      "link27_headroom_before_fixed_c2_bytes": 203,
+      "probe_start": 47776,
+      "probe_bytes": 1827,
+      "probe_end_exclusive": 49603,
+      "start_shift_bytes": 506,
+      "size_delta_bytes": 20,
+      "end_shift_bytes": 526
+    },
+    "fixed_c2_bank0": {
+      "start": 49280,
+      "state_bytes": 408,
+      "code_start": 49688,
+      "code_bytes": 45
+    },
+    "measured_overlap_bytes": 323,
+    "dependent_linker_failures": [
+      "workbench overlay moved below the heap floor",
+      "resident/noinit state overlaps the fixed runtime-overlay VMA",
+      "ordinary Bank-0 state overlaps fixed C2 state",
+      ".bss virtual and load ranges overlap .lisp65_c2_fixed_bank0"
+    ]
+  },
+  "exact_section_deltas_from_failed_map": {
+    ".text": {
+      "link27_bytes": 37964,
+      "probe_bytes": 37808,
+      "delta_bytes": -156
+    },
+    ".rodata": {
+      "link27_bytes": 636,
+      "probe_bytes": 1142,
+      "delta_bytes": 506
+    },
+    ".bss": {
+      "link27_bytes": 1807,
+      "probe_bytes": 1827,
+      "delta_bytes": 20
+    },
+    ".lisp65_workbench_overlay": {
+      "link27_bytes": 1427,
+      "probe_bytes": 1711,
+      "delta_bytes": 284
+    }
+  },
+  "map_only_nonclaims": {
+    "runtime_slice_count_seen": 43,
+    "runtime_slice_cap_bytes": 1792,
+    "largest_runtime_slice_seen": {
+      "section": ".lisp65_rt_c2d_13",
+      "bytes": 1776,
+      "headroom_bytes": 16
+    },
+    "runtime_slices_over_cap_seen": 0,
+    "e000_size_delta_seen": 0,
+    "qualification": "These are observations from the failed linker's map, not passed post-link capacity, identity, one-truth, pre-ownership or KERNAL-freedom gates."
+  },
+  "attribution": {
+    "policy": "The eight switches form one contractual profile and were linked atomically. Exact per-switch byte attribution is not claimed because the switches are interdependent, the carrier cut removes legacy paths, and LTO coalesces their code. Isolating switches would require forbidden invalid-profile links beyond the one authorized probe.",
+    "separable_lto_observations": {
+      "carrier_cut_removals_include": [
+        ".text.apply: -4274 bytes",
+        ".text.eval_vm_bridge: -446 bytes",
+        ".rodata.apply: -104 bytes",
+        "vm_treewalk_call plus vm_treewalk_apply BSS: -4 bytes"
+      ],
+      "v2_native_and_workbench_additions_include": [
+        ".text.eval_v2_workbench_service: +2472 bytes",
+        ".text.vm_native_call: +1019 bytes",
+        ".text.vm_callprim: +959 bytes",
+        ".text.vm_run_inner: +956 bytes",
+        ".rodata.vm_native_call: +146 bytes",
+        ".rodata.vm_callprim: +110 bytes",
+        ".rodata.eval_v2_workbench_service: +32 bytes",
+        "Workbench error-symbol BSS: +18 bytes"
+      ],
+      "aggregate_result": "Despite the resident .text reduction, the +506-byte resident rodata displacement and +20-byte BSS growth consume the prior 203-byte ordinary-BSS corridor and create a 323-byte overlap."
+    }
+  },
+  "immutable_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link27-v2-profile-capacity-first-red-20260720/root",
+    "files": 11,
+    "total_file_bytes": 197049,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "517550f4b5287802e5c17a257436df12b6214280e408130714b9044c0faebeb7",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "decision": {
+    "full_profile_repair": "retained",
+    "poke_only_or_banner_rewrite": "rejected",
+    "profile_gate": "retained-and-bound-to-check-source",
+    "placement_repair": "not-authorized-not-attempted",
+    "successor_product_link": "blocked-not-run",
+    "hardware": "blocked-not-run",
+    "promotion": "blocked-not-run"
+  },
+  "claim_limit": "This first-red receipt proves that the canonical eight-switch Dialect-v2 profile is wired into the C2 compile closure and that the single authorized product-shaped capacity/placement probe fails closed with a measured 323-byte Bank-0 overlap. It does not prove a valid product link, post-link structural gates, hardware behavior, promotion or release readiness."
+}

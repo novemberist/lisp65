@@ -1,0 +1,182 @@
+{
+  "format": "lisp65-c2-product-substitution-link-18-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "status": "first-red",
+  "attempt": {
+    "name": "eighteenth-substitution-link",
+    "command_mode": "--single-link",
+    "product_closure_links": 1,
+    "resident_island_seed_materializer_links": 1,
+    "first_red_stage": "kernal-freedom-direct-edge-ownership",
+    "second_attempt_performed": false
+  },
+  "confirmed_link_18_contract": {
+    "owned_window_prelink_identity": {
+      "bytes": 8192,
+      "crc16": "0xf2ed",
+      "sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0",
+      "status": "reproduced-byte-identically"
+    },
+    "verifier_binding": {
+      "section": ".lisp65_runtime_overlay_verifier_bindings",
+      "address": "0xb86d",
+      "bytes": 32,
+      "tuple_order": [
+        "boot-catalog",
+        "boot-record",
+        "session-catalog",
+        "session-record"
+      ],
+      "changed_bytes": 30,
+      "changes_outside_section": 0,
+      "unbound_prg_sha256": "f5df6eb15c73de1e83b408aa62a0bd7580f14d9e4d297e40dd62cadde568fe1c",
+      "bound_prg_sha256": "b2566200e0441148d97138253bc77071ac95d881595ea469a063e15f20bc1ead",
+      "binding_sha256": "19161377567bc50d642289fbddaf6111af6b336d1453b699359299641d362576",
+      "status": "passed"
+    },
+    "runtime_family_total_identity": {
+      "boot_records": 9,
+      "session_records": 44,
+      "record_occurrences": 53,
+      "all_record_fields": "identical",
+      "all_payload_bytes": "identical",
+      "mutated_payload_negative": "rejected",
+      "status": "passed"
+    },
+    "capacity_local": {
+      "link_17_prg_bytes": 41542,
+      "link_18_prg_bytes": 41542,
+      "prg_delta_bytes": 0,
+      "retired_embedded_tuple_bytes": 32,
+      "non_lto_table_bytes": 32,
+      "binding_net_resident_bytes": 0,
+      "fixed_bank0_headroom_bytes": 273,
+      "full_capacity_gate": "not-run"
+    }
+  },
+  "gate_progress": {
+    "kernal_window_sha_crc_pin": "passed",
+    "pre_ownership": "passed",
+    "fixed_host_facade": "passed",
+    "verifier_publish_last": "passed",
+    "runtime_family_total_identity": "passed",
+    "one_truth": "passed",
+    "kernal_freedom": "first-red",
+    "capacity": "not-run",
+    "substitution_balance": "not-run",
+    "hardware": "not-run"
+  },
+  "first_red": {
+    "gate_message": "KERNAL freedom red: unowned window edges",
+    "reported_unique_targets": 47,
+    "diagnostic_occurrences": 113,
+    "diagnostic_opcode_set": ["JMP"],
+    "decoded_instruction_boundary_targets": 113,
+    "same_function_and_owned_executable_section_targets": 113,
+    "actual_cross_function_or_unowned_targets_observed": 0,
+    "model_error": "The gate treated only exact nm symbol starts as owned control-flow targets. LTO local basic blocks have decoded instruction addresses but no symbols.",
+    "second_model_gap": "The same unfiltered nm table admitted absolute and weak KERNAL aliases in 0xff80..0xffff as apparent ownership symbols even though they are not T/t entries in named executable owned sections.",
+    "claim": "The current gate is neither sound nor complete for direct control flow. This run observed no product escape, but KERNAL freedom remains unproved until the corrected model and its mutations pass."
+  },
+  "recommended_gate_contract": {
+    "name": "section-qualified-owned-control-flow",
+    "rules": [
+      "A direct JSR or inter-function tail JMP into the owned window lands exactly on a T/t function symbol inside a named executable owned section.",
+      "An intra-function JMP may land only on a decoded instruction boundary in the same function and the same named executable owned section.",
+      "Absolute and weak aliases and every state, vector or data section are excluded from ownership evidence.",
+      "The corrected gate replays against the SHA-bound Link-18 ELF, PRG, window and family artifacts without any new product link."
+    ],
+    "negative_cases": [
+      "same-function JMP into the middle of an instruction",
+      "JMP into owned state or data",
+      "inter-function JMP to a non-entry offset",
+      "JSR to an internal basic block"
+    ],
+    "positive_case": "compiler-generated same-function JMP to a decoded basic-block instruction boundary",
+    "authorization": "Gate implementation and artifact-only replay require review; no new link is authorized."
+  },
+  "artifact_boundary": {
+    "bound_diagnostic_prg_emitted": true,
+    "final_product_candidate_emitted": false,
+    "final_link_receipt_emitted": false,
+    "kernal_freedom_report_emitted": false,
+    "substitution_balance_emitted": false
+  },
+  "evidence": {
+    "bound_diagnostic_prg": {
+      "path": "build/c2.2/substitution/product-link-18/lisp65-c2-substitution-linked.prg",
+      "sha256": "b2566200e0441148d97138253bc77071ac95d881595ea469a063e15f20bc1ead"
+    },
+    "unbound_prg": {
+      "path": "build/c2.2/substitution/product-link-18/lisp65-c2-substitution-unbound.prg",
+      "sha256": "f5df6eb15c73de1e83b408aa62a0bd7580f14d9e4d297e40dd62cadde568fe1c"
+    },
+    "elf": {
+      "path": "build/c2.2/substitution/product-link-18/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "fbf295236919216556f0715d0904947be35be11a2bf731c6eae1f55f6bb1cf70"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/product-link-18/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "d3fa21674d3499051b01058119d988d4d0112b0601e60f14554b6301bb107832"
+    },
+    "owned_window": {
+      "path": "build/c2.2/substitution/product-link-18/c2-product-kernal-window.bin",
+      "sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0"
+    },
+    "binding": {
+      "path": "build/c2.2/substitution/product-link-18/runtime-overlay-verifier-bindings.bin",
+      "sha256": "19161377567bc50d642289fbddaf6111af6b336d1453b699359299641d362576"
+    },
+    "boot_family": {
+      "image_path": "build/c2.2/substitution/product-link-18/runtime-overlays-boot-final.bin",
+      "image_sha256": "12639887fb4f66d73a32e55ec0adae746654f06fbb9041261a4363af2c3f37ef",
+      "manifest_path": "build/c2.2/substitution/product-link-18/runtime-overlays-boot-final.json",
+      "manifest_sha256": "d31e117f5c7ffa0d85a23dc9f9ac9564b4f895c808b5b9fe21147dd06f21a5f1"
+    },
+    "session_family": {
+      "image_path": "build/c2.2/substitution/product-link-18/runtime-overlays-session-final.bin",
+      "image_sha256": "13b8c5103d64afe6ba344b093cfdc6e96d946dc7c49b4b22c54280626012438c",
+      "manifest_path": "build/c2.2/substitution/product-link-18/runtime-overlays-session-final.json",
+      "manifest_sha256": "5e3714edd2283d97f3531908bd7ec2ef7970a913d2ee7cf4602e280b4190272f"
+    },
+    "publish_last_report": {
+      "path": "build/c2.2/substitution/product-link-18/runtime-verifier-publish-last.json",
+      "sha256": "85ed530515ba5d03d93d597e3f1e0c81d1f0b214a8e3f307267e5e573e58a515"
+    },
+    "total_identity_report": {
+      "path": "build/c2.2/substitution/product-link-18/runtime-family-total-identity.json",
+      "sha256": "5e9ee4a7d5064ad5bd538d2ceecfb75e0757780033a6852350ce2156c370b120"
+    },
+    "pre_ownership_report": {
+      "path": "build/c2.2/substitution/product-link-18/pre-ownership-closure-final.json",
+      "sha256": "a89da1c62eeb92392374cd1858333350fa546baf5f324a52c3d49a8d507922d3"
+    },
+    "fixed_facade_report": {
+      "path": "build/c2.2/substitution/product-link-18/fixed-host-facade-final.json",
+      "sha256": "381980eeaad6a3c610637c0889353f35302ec49e4d1b40d48f6a07a6a5a4a930"
+    },
+    "one_truth_report": {
+      "path": "build/c2.2/substitution/product-link-18/one-truth-closure.json",
+      "sha256": "046cac12da5ef4de69eeff312090ff9a16cf88f6b59d2b7a3e15280a7be7c441"
+    },
+    "linker_script": {
+      "path": "build/c2.2/substitution/product-link-18/c2-substitution.ld",
+      "sha256": "c57ca144a1a9138cb55f14bdb44f9ace9a65beb02256d120d517118ccfe55ae5"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-18/resolved-profile.txt",
+      "sha256": "56d2fb90f1ba0b1ec546282744c4b4668dd0d62e72e44e382d6818a5d5e2ed1b"
+    }
+  },
+  "static_inputs": {
+    "link_driver_sha256": "9bdb63f7201294016628adb468695161495b82b8f25baa05378887024d9b4b8b",
+    "binding_assembly_sha256": "264c2dcd3846e4f38a6dbdd549400fd0086d0add96b6b2adcd15ea364262fe74",
+    "runtime_overlay_source_sha256": "24320ee9d6f7026dfa1531b37028989172096b0af63c5381693122f1c86bc0fa",
+    "contract_sha256_before_first_red_status_update": "324f4fae472988cf40a7773947bfcac07f90328084df98cd08a4d1afc64c383d",
+    "contract_document_sha256_before_first_red_addendum": "c916e31263184b08c332e938e78fd8a32f888fc329d2f9f3741c4577210c0fd7",
+    "driver_selftest": "passed",
+    "binding_object_geometry": "32 bytes; symbols +0/+0/+16/+32",
+    "json_python_and_whitespace_gates": "passed before the authorized link"
+  },
+  "claim_limit": "Receipt-less structural first-red. It proves one product-closure link, the pinned owned-window identity, the 32-byte publish-last verifier binding, total runtime-family identity with a rejected mutation, pre-ownership, fixed-facade and one-truth. It proves no KERNAL freedom, capacity, substitution balance, hardware behavior or promotion claim."
+}

@@ -1,0 +1,15 @@
+{
+  "format": "lisp65-c2.2-v1.2.6-editor-WPLTO-surface-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "status": "FIRST RED: renderer rewrite omitted the existing %ide-status-cached helper surface",
+  "promotable": false,
+  "target_linker_invocations": 0,
+  "wplto_probes_consumed": 0,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "failed_case": "status-cache-tracks-line",
+  "error": "undefined function %IDE-STATUS-CACHED",
+  "attribution": "The renderer correctly stopped materializing status strings per key, but the generated target-consumer suite independently exercises the pre-existing diagnostic helper. Host allocation and screen gates did not call that helper.",
+  "disposition": "Restore the helper as a compatibility query over ide-status-line while keeping it out of the render path, then regenerate the IDE plane before the still-unconsumed WPLTO.",
+  "claim_limit": "A pre-link Lisp-surface First Red only."
+}

@@ -1,0 +1,258 @@
+{
+  "authority": {
+    "Completion_First_Red": {
+      "bytes": 7083,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-full-span-completion-first-red.json",
+      "sha256": "b69dc47316a4aadfbd28b166ecd84a097f66515feff42c081048f0457545c808"
+    },
+    "completion_resume_owner": {
+      "authority": "git-blob",
+      "bytes": 112793,
+      "commit": "19131cb5a0d91044c023a9017f8a095b42e9f86f",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "847991de2e70713a39a82d05a33e0d922915cae2802f427ff7bd5f162ca11609"
+    },
+    "driver": {
+      "bytes": 32418,
+      "path": "tools/host-lisp/c2_v21_full_span_media.py",
+      "sha256": "b8a019faaaea45ef43f9fd97222e5f1e3d8e3e153f1be62d5cbe546639235dda"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 111901,
+      "commit": "957295ef3791e19757a74c22177c2265a3b5c826",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "5922a62f71cfca8c173868a722ee730af8df809a4b2197f8316919f9ef42450c"
+    },
+    "partial_cleanup": {
+      "bytes": 76433,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-full-span-partial-completion-cleanup-receipt.json",
+      "sha256": "e3ae8f04327c3b97da122a97fd589612256b0876e8b29254afb5f5e9381350b2"
+    },
+    "pipeline": {
+      "bytes": 21426,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-full-span-completion-media-pipeline-receipt.json",
+      "sha256": "22ae027399e22ec3e645e38ecbb76e2bf0dc1d8793e6dac609d2367fadf2bc8c"
+    },
+    "qualification_tail": {
+      "bytes": 21063,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-full-span-projection-artifact-replay-receipt.json",
+      "sha256": "c52994b3a29c95073f50dd518ccbc5fe68d643d8eb0b347c89267e250035bc07"
+    }
+  },
+  "claim_limit": "Host Completion/media only; D2 resume not run; D3-D5 closed.",
+  "completion": {
+    "bytes": 6159,
+    "path": "build/c2.3/v2.1-full-span-convergence-card/receipts/artifact-completion.json",
+    "sha256": "271656c11f359d8b8d2a29eb9e81d6fab00ea44ccee7a94d159d5b650891b83c"
+  },
+  "completion_reader_gate": {
+    "configuration_calls": 0,
+    "forbidden_calls": [
+      "REPLAY.configure()",
+      "CARD.configure()",
+      "CARD.linked_product()",
+      "configure_full_span_source()"
+    ],
+    "frozen_ELF_reads": 1,
+    "status": "PASS: Completion authority is read-only"
+  },
+  "completion_reader_mutations_rejected": [
+    "configure-before-read",
+    "reconstruct-through-card"
+  ],
+  "execution_accounting": {
+    "additional_WPLTO_runs": 0,
+    "additional_cards": 0,
+    "additional_product_links": 0,
+    "artifact_completions": 1,
+    "artifact_replays": 1,
+    "completion_retries_authorized": 1,
+    "completion_retries_run": 1,
+    "device_contacts": 0,
+    "library_builds": 1,
+    "shared_media_builds": 3
+  },
+  "final_artifacts": {
+    "elf": {
+      "bytes": 630572,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "85f48d6dc17ecf8bf84460b5e253ef37431ad78071a6192f08eae1780cac3993"
+    },
+    "manifest": {
+      "bytes": 28429,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/canonical-product-manifest.json",
+      "sha256": "4386fe741a7e2efd5acb074558ec60c0b8c8843f0f8f9c2c87b2ba490f7a32ff"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "65d400bc78c0d75f4788d522ecec267fabf187be122adad30e4efbae23d40772"
+    }
+  },
+  "format": "lisp65-c2.3-v2.1-full-span-completion-media-v1",
+  "frozen_after": {
+    "elf": {
+      "bytes": 630572,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "85f48d6dc17ecf8bf84460b5e253ef37431ad78071a6192f08eae1780cac3993"
+    },
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69978,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/c2-substitution.ld",
+      "sha256": "90d44d3f020c4eedd49ab0065db2e4fb40fafcede677ef8c36e93d1e777e6b84"
+    },
+    "lto": {
+      "bytes": 619872,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "e8009aee7fcd7aaffe054a17ae02baaa10a912ab351bbda071f3a99104061fbb"
+    },
+    "map": {
+      "bytes": 185205,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "fac7131eab6c2eb7c4b7a9272886da0b5c4d01db31700c9fa7c4e6b2f6ef020b"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "65d400bc78c0d75f4788d522ecec267fabf187be122adad30e4efbae23d40772"
+    },
+    "publish_last": {
+      "bytes": 1544,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/kernal-window-publish-last.json",
+      "sha256": "a7c99d63eb76c792926c64c48b32def2e51dde71ef292fc891a7d4a8d67e160b"
+    },
+    "resolved_profile": {
+      "bytes": 12579,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/resolved-profile.txt",
+      "sha256": "852e9a406306539559fdb63d30ed418a90cf3593a4c113a939053dd58e7788b0"
+    }
+  },
+  "frozen_before": {
+    "elf": {
+      "bytes": 630572,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "85f48d6dc17ecf8bf84460b5e253ef37431ad78071a6192f08eae1780cac3993"
+    },
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69978,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/c2-substitution.ld",
+      "sha256": "90d44d3f020c4eedd49ab0065db2e4fb40fafcede677ef8c36e93d1e777e6b84"
+    },
+    "lto": {
+      "bytes": 619872,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "e8009aee7fcd7aaffe054a17ae02baaa10a912ab351bbda071f3a99104061fbb"
+    },
+    "map": {
+      "bytes": 185205,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "fac7131eab6c2eb7c4b7a9272886da0b5c4d01db31700c9fa7c4e6b2f6ef020b"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "65d400bc78c0d75f4788d522ecec267fabf187be122adad30e4efbae23d40772"
+    },
+    "publish_last": {
+      "bytes": 1544,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/kernal-window-publish-last.json",
+      "sha256": "a7c99d63eb76c792926c64c48b32def2e51dde71ef292fc891a7d4a8d67e160b"
+    },
+    "resolved_profile": {
+      "bytes": 12579,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/wplto/resolved-profile.txt",
+      "sha256": "852e9a406306539559fdb63d30ed418a90cf3593a4c113a939053dd58e7788b0"
+    }
+  },
+  "hardware_handoff": {
+    "D2_resume_ready": true,
+    "D3_D5_open": false,
+    "session": {
+      "bytes": 2818,
+      "path": "config/c2-v150-v21-full-span-far-device-session.json",
+      "sha256": "6f83f03d9fe2eb164ba6b6518ea9814e29154d686f96678a8f27d8f930fffc39"
+    }
+  },
+  "manifest_projection": {
+    "candidate": {
+      "bytes": 28429,
+      "path": "build/c2.3/v2.1-full-span-convergence-card/canonical-product-manifest.json",
+      "sha256": "4386fe741a7e2efd5acb074558ec60c0b8c8843f0f8f9c2c87b2ba490f7a32ff"
+    },
+    "historical_global_rejected": true,
+    "status": "PASS: summary follows consumed candidate manifest"
+  },
+  "media": {
+    "actual_ELF_liveness": "passed-actual-linked-stager-prefix",
+    "arena_capacity_bytes": 1499,
+    "candidate_headroom_bytes": 251,
+    "delivered_bytes": 48530,
+    "fixed_size_expectation": false,
+    "library_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-full-span-media-base/library/lisp65-library.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "packed_gate_registry_complete": true,
+    "payload_bytes": 1248,
+    "product_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-full-span-media/shared-system/lisp65-product.d81",
+      "sha256": "3587fc6616a3d0f39b4fb7c7e550fd2c7066456de854fd3611bd36398e847dca"
+    },
+    "readback": "byteidentical",
+    "roles": 19,
+    "same_world": true,
+    "screen_cell_returned": true,
+    "session": {
+      "bytes": 2818,
+      "path": "config/c2-v150-v21-full-span-far-device-session.json",
+      "sha256": "6f83f03d9fe2eb164ba6b6518ea9814e29154d686f96678a8f27d8f930fffc39"
+    }
+  },
+  "mutations_rejected": [
+    "claim-link",
+    "truncate-extent",
+    "cross-world",
+    "skip-readback",
+    "restore-stray-zero",
+    "open-D3"
+  ],
+  "recorded_on": "2026-08-16",
+  "source_gate": {
+    "additional_WPLTO_runs": 0,
+    "additional_cards": 0,
+    "additional_product_links": 0,
+    "completion_authority_configuration_calls": 0,
+    "forbidden_calls": 0,
+    "status": "PASS: Link-112 downstream-only completion/media"
+  },
+  "source_mutations_rejected": [
+    "drop-replay-authority",
+    "drop-frozen-binding",
+    "reenter-card",
+    "reenter-link"
+  ],
+  "status": "PASS: Link 112 completed and same-world full-span media closed"
+}

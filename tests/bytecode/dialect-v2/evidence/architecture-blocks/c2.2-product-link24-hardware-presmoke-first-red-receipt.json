@@ -1,0 +1,64 @@
+{
+  "format": "lisp65-c2-product-link24-hardware-presmoke-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "attempt": {
+    "candidate": "link-24-ownership-io-safe-map",
+    "stage": "receipt-less-hardware-presmoke-manual-step-1",
+    "acceptance_receipt_created": false,
+    "promotion_claim": "not-run"
+  },
+  "pinned_identity": {
+    "product_prg_sha256": "b6d882f836db9504e2e22efc29e2dbcd08c9349ad89746a74126604d33c474c4",
+    "product_elf_sha256": "2a3dc5abbd6d03887cf1da4fffc18dda0f1ed9093f6842f669205dd5e698fa86",
+    "kernal_window_sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0",
+    "preload_readbacks_before_first_launch": "6/6 byte-identical"
+  },
+  "hardware_observation": {
+    "initial_screen": "appeared stopped at BASIC READY. RUN: for many minutes",
+    "eventual_screen": "Lisp65 banner and usable lisp65> prompt",
+    "approximate_cold_start": "about twelve minutes",
+    "first_red_rule": "stopped on unacceptable boot latency; no downstream hardware case was claimed"
+  },
+  "live_state": {
+    "c2_runtime_address": "0xc084",
+    "shelf_bytes": 70897,
+    "generation": 1,
+    "images": 6,
+    "entries": 588,
+    "resolutions": 2264,
+    "final_phase": 13,
+    "finished": 1,
+    "error": 0,
+    "map_operand": "0x80",
+    "irq_storm": "absent"
+  },
+  "root_cause": {
+    "class": "cursor-split-decoder-reverifies-overlay-per-record-step",
+    "mechanism": "c2_decode_from alternates cursor-sized phase residents. Every c2_overlay_call enters vm_runtime_overlay_exec_family, which wipes, verifies the catalog and record, loads and CRC-checks the payload, executes one tiny cursor unit, and wipes again.",
+    "minimum_transport_count": {
+      "formula": "6*2 + 588*2 + 588*3 + 2264*2 + 2264*2 + 2264*4 + 4",
+      "calls": 21068,
+      "note": "Lower bound excludes phase/image-transition iterations."
+    },
+    "why_it_looked_hung": "Resolution cursors advance only for matching descriptor kinds while the private local cursor scans every descriptor; screen initialization waits for all decode and publication phases."
+  },
+  "rejected_interpretations": {
+    "basic_deadlock": "rejected: C2 cursors advanced and phase 13 completed",
+    "irq_or_map_failure": "rejected: E000-only MAP kept I/O visible and no IRQ storm remained",
+    "decoder_correctness_failure": "rejected for this image: finished=1 and error=0",
+    "acceptable_product_startup": "rejected: approximately twelve minutes is incompatible with an interactive workbench"
+  },
+  "bounded_next_probe": {
+    "preferred_direction": "Restore one transport per logical decoder phase by using the already proven whole-phase implementations. Move only common product-only helpers into the fixed C2 $e000 facade/resident domain until every phase is again below the 1792-byte slice cap.",
+    "preserved_semantics": "Each logical phase retains catalog, record and payload verification once; no trusted-stage or validation weakening is permitted.",
+    "capacity_inputs": {
+      "e000_headroom_before_probe": 3417,
+      "proof_target_largest_whole_phase": 1653,
+      "proof_target_smallest_slice_headroom": 139
+    },
+    "expected_structural_dividend": "Retire cursor-split work state and decoder subphase slices; reduce boot overlay transports from more than 21,000 to approximately one per logical phase.",
+    "hard_stop": "One bounded facade/whole-phase probe with a real capacity report; any red cap or semantic gate returns for review before Link 25."
+  },
+  "claim_limit": "Receipt-less hardware diagnosis of Link 24 only. It proves eventual completion for the pinned image and an unacceptable cold-start first-red. It is not hardware acceptance, performance acceptance, product promotion or release evidence."
+}

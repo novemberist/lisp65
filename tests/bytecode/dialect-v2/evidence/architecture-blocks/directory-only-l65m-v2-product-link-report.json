@@ -1,0 +1,147 @@
+{
+  "format": "lisp65-directory-only-l65m-v2-product-link-report-v1",
+  "id": "directory-only-l65m-v2-real-product-link",
+  "status": "measured-awaiting-bank-authorization-binding",
+  "measured_on": "2026-07-13",
+  "baseline": {
+    "product_sha256": "9d8e4d0ec8886c66dbe59383d32f010b1e99706c6e8f23b0b70b15af5968aa1f",
+    "post_boot_reserve_bytes": 1971,
+    "banked_headroom_bytes": 435,
+    "overlay_vma": "0xc2a4",
+    "resident_sections_bytes": {
+      "text": 38171,
+      "rodata": 1169,
+      "bss": 2237
+    }
+  },
+  "candidate": {
+    "product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "artifacts": [
+      {
+        "role": "linked-product-elf",
+        "build_path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+        "sha256": "0519ca5e6dbd9813036ff307d351fb999c808c0cc2806ba6b8e68dc20b5e245b"
+      },
+      {
+        "role": "resident-prg",
+        "build_path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-resident.prg",
+        "sha256": "fa22cdccb8a74cb3ff6e74180efcef26c64da14384b14128584a906370d9e50b"
+      },
+      {
+        "role": "runtime-overlays",
+        "build_path": "build/products/workbench/overlay-stack-guard/lisp65-mvp-workbench.overlays.bin",
+        "sha256": "66a039d97e2238e4ea46ebcf36becdc5a5905ed97e8a74a72e2aa1cab5cb8fd0"
+      },
+      {
+        "role": "stdlib-preload",
+        "build_path": "build/products/workbench/overlay-stack-guard/stdlib-with-overlay.ext.bin",
+        "sha256": "013770308e8080d7eb42d7cf2a921d570457676d53e16c0b09022f192dfb6848"
+      },
+      {
+        "role": "resolved-profile",
+        "build_path": "build/products/workbench/overlay-stack-guard/resolved-profile.txt",
+        "sha256": "e43c448a55d24f3fbbe060433ba1e5d6ac9dbbbfa3aed375c5ecc213b8442cba"
+      }
+    ],
+    "post_boot_reserve_bytes": 1805,
+    "banked_headroom_bytes": 269,
+    "overlay_vma": "0xc34a",
+    "boot_stack_gap_bytes": 1585,
+    "runtime_gap_bytes": 3255,
+    "resident_file_end": 47755,
+    "resident_sections_bytes": {
+      "text": 38334,
+      "rodata": 1171,
+      "bss": 2238
+    }
+  },
+  "resident_delta": {
+    "text_bytes": 163,
+    "rodata_bytes": 2,
+    "bss_bytes": 1,
+    "total_bytes": 166,
+    "projected_ceiling_bytes": 96,
+    "projection_deviation_bytes": 70,
+    "treatment": "stopped-measured-and-escalated-before-ledger-or-promotion"
+  },
+  "libraries": [
+    {
+      "id": "ide",
+      "container_sha256": "8046b970370cda4786db19c1c04b5c56f770e4077e599c1fe1604b84639ddfa2",
+      "probe_byte_identity": "exact",
+      "diagnostic_map_sha256": "1e84c1a687d090bb26f10418a3b5117e9700541c8947d3beeac1c3d0477a850c"
+    },
+    {
+      "id": "idex",
+      "container_sha256": "0082bb8f3977beed1001fa88e05617b93731dfedb863a1268e849942b7d457f6",
+      "probe_byte_identity": "exact",
+      "diagnostic_map_sha256": "48c1170e5a40e6c247630ab9eac3f5f66f8a8b04f1f9cb58b15c6b5f0c2ff264"
+    }
+  ],
+  "directory_only_result": {
+    "anonymous_entries": 100,
+    "anonymous_unique_names": 99,
+    "cross_container_named_helpers": 11,
+    "net_symbol_intern_savings": 89,
+    "net_namepool_savings_bytes": 1793,
+    "resident_private_inline_reclaim": {
+      "symbols": 2,
+      "namepool_bytes": 32,
+      "ext_bytes": 24
+    },
+    "directory_slot_delta": 0,
+    "baseline_drift_since_probe": {
+      "symbols": -3,
+      "namepool_bytes": -36,
+      "accounting": "separate-from-directory-only-savings"
+    }
+  },
+  "composition": {
+    "free_symbols": 127,
+    "free_namepool_bytes": 2279,
+    "post_align_directory_slots": 32,
+    "ext_post_headroom_bytes": 16384,
+    "ext_contract_floor_bytes": 16384,
+    "result": "pass"
+  },
+  "verification": {
+    "l65m_v2_product": "pass-entries-150-anonymous-87-entry-refs-231-designator-routes-12",
+    "native_v1_loader": "pass-cases-50-valid-all-kinds-literal-depth-9",
+    "designator_matrix": "pass-4-designators-times-direct-funcall-apply",
+    "transaction_matrix": "pass-all-six-classes",
+    "stack_guard": "pass-38-overlays-control-audit-and-post-boot-reserve",
+    "diagnostic_maps": "container-sha-and-code-sha-bound",
+    "known_opens": 0
+  },
+  "source_bindings": [
+    {
+      "path": "config/directory-only-l65m-v2-contract-draft.json",
+      "sha256": "6711d7d1fca201a52aa8ee0778db731d20a5f42d7bcb9251a07a56616fb7789f"
+    },
+    {
+      "path": "config/directory-only-interlibrary-api.json",
+      "sha256": "a6dbcf9353f220da132529113879e896de1b67a4a3c3dd222c05819b83bc087e"
+    },
+    {
+      "path": "tools/host-lisp/l65m_v2_product_cases.py",
+      "sha256": "ad9e09cdbeea962e8d43d26dfcd7c283be760dd7b00aa1fd0a1161b7bf026d51"
+    },
+    {
+      "path": "scripts/l65m-v2-product-main.c",
+      "sha256": "661e84e70538f3186b0d6e96d1a04524c2760ee2939279fdbd50051691be0c4a"
+    },
+    {
+      "path": "src/l65m_validate.c",
+      "sha256": "4b9a50046fc9865028f0af4bb90f676a84f9819bf898ec5f5b45a5ebab8d1817"
+    },
+    {
+      "path": "src/l65m_commit_overlay.c",
+      "sha256": "c1120611e979245b5b4bbfd3d37840c1e901a69aab743df5c6f0dfa9a00ded63"
+    },
+    {
+      "path": "src/vm.c",
+      "sha256": "952c2d659b9f6489ab7d0412a54dcbfe636c411c6d0710aa330575456d385d93"
+    }
+  ],
+  "decision_required": "authorize-exact-166-byte-debit-or-reject-candidate"
+}

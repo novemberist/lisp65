@@ -1,0 +1,165 @@
+{
+  "Shelf": {
+    "catalog_bytes": 192,
+    "catalog_crc32_candidate": "0x5f4f3267",
+    "catalog_crc32_header": "0x5f4f3267",
+    "catalog_crc32_recomputed": "0x5f4f3267",
+    "claim_limit": "Post-stop exactness excludes a persistent bad Shelf image; it does not by itself reconstruct every transient instruction fetch.",
+    "image_count": 6,
+    "magic": "L65S",
+    "payload_offset": 224,
+    "post_stop_content_identity": "header-and-complete-catalog-exact",
+    "product_build_id": "0x0401e53e",
+    "total_bytes": 93681,
+    "version": 4
+  },
+  "authority": {
+    "candidate_ELF": {
+      "bytes": 628672,
+      "path": "build/c2.3/v2.1-product-loading-liveness-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "aef1625af9fbdb335dadeb7f97c72b27c5af8dcd4207c9e4db0d280f3dfab9dc"
+    },
+    "candidate_WPLTO": {
+      "bytes": 8556,
+      "path": "build/c2.3/v2.1-product-loading-liveness-card/receipts/wplto-raw.json",
+      "sha256": "3c5666dfb814a302b7c233f374490486478cd7150a3fa92ec517ea6e774e1894"
+    },
+    "capture": {
+      "bytes": 62285,
+      "path": "build/c2.3/v2.1-product-liveness-phase1-rescue/capture.json",
+      "sha256": "df722a89cbcf5fd0bea742240711e24477a770a4d0e6d86a30a1a51d9806acfd"
+    },
+    "device_receipt": {
+      "bytes": 62184,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-product-liveness-phase1-rescue-device-receipt.json",
+      "sha256": "06fe84037986fbdee4366fffb114fbfc0f940d564594496b597e8f00e5e6deee"
+    },
+    "reader_source": {
+      "bytes": 5574,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "0880d62000e9f21d7b6e0ccd279b47f8f0b85b57d264e939bac7dfb6cde19af5"
+    }
+  },
+  "claim_limit": "Names the phase-1 product mechanism from the captured tuple, linked reader placement and primary MAP decode. It does not use the hidden Bank-0 stack underlay as an active-frame claim and does not authorize a fix or another device contact.",
+  "classification": {
+    "decoder_fault": false,
+    "instrument_fault": false,
+    "mechanism_named": true,
+    "name": "CPU-reader MAP mask borrow contamination/self-occlusion",
+    "product_fault": true,
+    "transport_content_fault": false
+  },
+  "contact": {
+    "kind": "crossing-free-owner-observed-product-first-red",
+    "post_mount_automated_access_before_red": 0,
+    "tuple_first": {
+      "A": "0x02",
+      "B": "0x45",
+      "MAPH": "0x8000",
+      "MAPL": "0xffc0",
+      "PC": "0xe096",
+      "SP": "0x01cc",
+      "X": "0xee",
+      "Y": "0x55",
+      "Z": "0x00",
+      "suffix": "4C96E0  00     24 ..E..I.. ...P 15 -  00 - .....lh."
+    },
+    "visible": "LISP65: LOADING LIBRARIES 1; red frame"
+  },
+  "decision_table": "error=0: overlay/control-transfer fault outside decoder",
+  "discipline": {
+    "CPU_left_stopped": true,
+    "D2_D5_open": false,
+    "resumes": 0,
+    "runs": 0,
+    "stops": 1
+  },
+  "fix_boundary": {
+    "authorization": "not granted by this read-only rescue row",
+    "gate": "Decode every emitted MAP tuple and prove the actual selected window is disjoint from reader code, ZP/stack and destination; source-level intended-window checks are insufficient.",
+    "implementation": "Construct X as block-mask $40 plus only the four offset-high bits after subtraction; prove $08100000 -> MAPL $4FC0."
+  },
+  "format": "lisp65-c2.3-v2.1-phase1-rescue-result-v1",
+  "mechanism": {
+    "CPU_destination_window": "0x4000..0x5fff",
+    "captured_tuple": {
+      "A": "0xc0",
+      "MAPL": "0xffc0",
+      "X": "0xff",
+      "block_mask": "0xf",
+      "offset_units_256": "0xfc0",
+      "physical_offset_low20": "0xfc000",
+      "selected_CPU_ranges": [
+        "0x0000..0x1fff",
+        "0x2000..0x3fff",
+        "0x4000..0x5fff",
+        "0x6000..0x7fff"
+      ],
+      "selected_blocks": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "construction_defect": "The borrow-producing SBC leaves __rc18=$ff; OR #$40 cannot clear the borrowed high mask bits. X must retain only the low offset nibble before block-2 mask bit $40 is added.",
+    "control_effect": "The actual mask selects block 1, so the reader at $2277 maps away while its own MAP helper returns. The subsequent fetch is from mapped Shelf address space, not the linked reader body.",
+    "first_Shelf_source": "0x08100000",
+    "old_guard_gap": "The linked guard compared the reader only with the intended $4000..$5fff window; it never decoded the emitted runtime tuple.",
+    "reader": {
+      "CPU_block": 1,
+      "bytes": 188,
+      "end_exclusive": "0x2333",
+      "start": "0x2277",
+      "symbol": "c2_map_cpu_read"
+    },
+    "required_low20_offset": "0xfc000",
+    "required_tuple": {
+      "A": "0xc0",
+      "MAPL": "0x4fc0",
+      "X": "0x4f",
+      "block_mask": "0x4",
+      "offset_units_256": "0xfc0",
+      "physical_offset_low20": "0xfc000",
+      "selected_CPU_ranges": [
+        "0x4000..0x5fff"
+      ],
+      "selected_blocks": [
+        2
+      ]
+    }
+  },
+  "mutations": {
+    "count": 10,
+    "rejected": [
+      "call-transport-error",
+      "call-shelf-error",
+      "advance-phase",
+      "hide-actual-block1",
+      "claim-safe-actual-mask",
+      "pin-wrong-required-mapl",
+      "move-reader-out-of-block1",
+      "interpret-underlay-stack",
+      "resume-CPU",
+      "open-D2-D5"
+    ]
+  },
+  "ordinary_state": {
+    "c2_pending_roots": 0,
+    "c2_ready": 0,
+    "lisp_error_msg": "0x0000",
+    "mem_oom": 0,
+    "pending_code": 0,
+    "rtov_fault": 0
+  },
+  "recorded_on": "2026-08-15",
+  "runtime": {
+    "error": 0,
+    "finished": 0,
+    "phase": 1,
+    "reserved": 0
+  },
+  "stack_claim": "forbidden-under-selected-block-0",
+  "stack_reason": "The captured MAP mask selects block 0, so physical Bank-0 page 1 is the underlay, not a proven view of the active mapped stack.",
+  "status": "PRODUCT-FIRST-RED: MAP-MASK-SELF-OCCLUSION"
+}

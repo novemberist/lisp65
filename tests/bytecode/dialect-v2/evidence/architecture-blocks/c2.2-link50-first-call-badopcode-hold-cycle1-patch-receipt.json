@@ -1,0 +1,121 @@
+{
+  "authority": {
+    "elf": {
+      "bytes": 609696,
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "0ac6121a0e1b484efafd81334fbe5c14909b8b741e20ee1f41caa615524f7f47"
+    },
+    "map": {
+      "bytes": 201442,
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "d7a8ada85ffab8f88c79224297528c2d7da2c19c62dac7bbe9e7ecfd47d2447c"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg",
+      "sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216"
+    },
+    "source_deployment": {
+      "bytes": 3618,
+      "path": "build/c2.2/hardware-presmoke-link50-persistent-header/deployment.json",
+      "sha256": "9a2d61d22f0c47a050d4e35b06d489a2bcaa9881abb3611234d7a09b91270628"
+    },
+    "structural_receipt": {
+      "bytes": 271399,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link50-c2-lite-v6-persistent-header-artifact-replay-structural-receipt.json",
+      "sha256": "e7f47adebda448583efa6e28d86ff28bb335adf3178853b5177e736cccd36170"
+    }
+  },
+  "capacity_effect": {
+    "bank0_text_bytes": 0,
+    "e000_bytes": 0,
+    "file_bytes": 0,
+    "fixed_hot_block_bytes": 0,
+    "ordinary_bank0_bss_bytes": 0,
+    "resident_island_bytes": 0,
+    "runtime_slice_bytes": 0,
+    "session_family_bytes": 0
+  },
+  "capture_contract": {
+    "classification": {
+      "byteidentical_buffer": "runtime refill exonerated; VM cursor/dispatch",
+      "different_buffer": "Bank-2-to-vm_codebuf refill edge"
+    },
+    "live_bank2": "0x00020000..0x0002ffff",
+    "live_c2d_bank5": "0x00050000..0x0005ffff",
+    "three_time_separated_bank0_captures": true,
+    "vm_buf_off": "0xb976..0xb977",
+    "vm_codebuf": "0xbf5a..0xbf91",
+    "vm_status": "0x005b",
+    "vm_window_state": "0xbf92..0xbfa3"
+  },
+  "claim_limit": "Permanently non-promotable two-byte derivative of the SHA-bound Link-50 product. It carries no product, capacity, latency, promotion or acceptance claim.",
+  "delegation": {
+    "class": "B",
+    "cycle": 1,
+    "cycle_cap": 3,
+    "question": "first execution of a proven-valid dynamic object"
+  },
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link50-first-call-badopcode-hold-cycle1-NONPROMOTABLE/lisp65-link50-badopcode-hold-cycle1-NONPROMOTABLE.prg",
+    "sha256": "908c64f52f2279a6fc5c3f9da02ad89d61f5c9e37f3f9a0962b4e97bb3ab4860"
+  },
+  "execution_accounting": {
+    "changed_bytes": 2,
+    "compiler_runs": 0,
+    "diagnostic_instruction_patches": 1,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "promotable_candidates": 0
+  },
+  "first_red": {
+    "bytes": 3487,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link50-first-call-badopcode-hardware-first-red.json",
+    "sha256": "fbb258b781d97e0bd0e0c7b62e99018f6dbf04a6ca17006db189e87c3eeba729"
+  },
+  "format": "lisp65-c2-link50-badopcode-hold-cycle1-patch-v1",
+  "manifest": {
+    "bytes": 4478,
+    "path": "build/c2.2/substitution/link50-first-call-badopcode-hold-cycle1-NONPROMOTABLE/fixed-length-patch-manifest.json",
+    "sha256": "9b9a33befb0cf513e2c533c8bd6edbd1cb73b36e13e2cf203c036c11180b2c54"
+  },
+  "next_gate": "one announced Class-B cycle-1 hardware run",
+  "patch_gate": {
+    "after_hex": "80fe",
+    "after_semantics": "BRA $3774, hold before status clear and renderer",
+    "before_hex": "8617",
+    "before_semantics": "STX __rc21, continue to status mapping and abort",
+    "changed_bytes": 2,
+    "changed_cpu_addresses": [
+      "0x3774",
+      "0x3775"
+    ],
+    "changed_file_offsets": [
+      "0x1775",
+      "0x1776"
+    ],
+    "file_size_delta_bytes": 0,
+    "function": "vm_check_status",
+    "function_interval": "0x3766..0x37b1",
+    "instruction_address": "0x3774",
+    "instruction_file_offset": "0x1775",
+    "mutations_rejected": {
+      "extra-neighbour-byte": "rejected",
+      "only-opcode-changed": "rejected",
+      "only-operand-changed": "rejected",
+      "wrong-opcode": "rejected",
+      "wrong-relative-target": "rejected"
+    },
+    "status": "passed-exact-two-byte-badopcode-self-loop-patch"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg",
+    "sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "status": "untouched"
+  },
+  "status": "passed-nonpromotable-fixed-length-badopcode-hold"
+}

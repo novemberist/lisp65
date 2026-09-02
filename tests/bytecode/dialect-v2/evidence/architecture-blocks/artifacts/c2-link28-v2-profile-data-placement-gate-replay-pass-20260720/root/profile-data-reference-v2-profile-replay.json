@@ -1,0 +1,137 @@
+{
+  "claim_limit": "Static relocation and direct pre-handoff closure proof. Indirect runtime-computed addresses not represented by an ELF relocation and hardware execution are not claimed.",
+  "components": {
+    ".rodata.eval_v2_workbench_service": {
+      "address": 64786,
+      "bytes": 32
+    },
+    ".rodata.vm_callprim": {
+      "address": 64818,
+      "bytes": 164
+    },
+    ".rodata.vm_native_call": {
+      "address": 64982,
+      "bytes": 146
+    }
+  },
+  "covered_components": [
+    ".rodata.eval_v2_workbench_service",
+    ".rodata.vm_callprim",
+    ".rodata.vm_native_call"
+  ],
+  "format": "lisp65-c2-profile-data-reference-v1",
+  "function_interval_count": 314,
+  "geometry": {
+    "address": 64786,
+    "bytes": 342
+  },
+  "link_stage": "v2-profile-replay",
+  "matched_relocation_count": 5,
+  "matched_relocations": [
+    {
+      "addend": 0,
+      "component": ".rodata.eval_v2_workbench_service",
+      "offset": 11402,
+      "relocation_section": ".rela.text",
+      "source_function": {
+        "address": 11321,
+        "bytes": 2466,
+        "end_exclusive": 13787,
+        "name": "eval_v2_workbench_service",
+        "section": ".text"
+      },
+      "source_section": ".text",
+      "target": ".lisp65_c2_kernal_window.profile_rodata",
+      "type": "R_MOS_ADDR16"
+    },
+    {
+      "addend": 32,
+      "component": ".rodata.vm_callprim",
+      "offset": 36013,
+      "relocation_section": ".rela.text",
+      "source_function": {
+        "address": 35970,
+        "bytes": 5285,
+        "end_exclusive": 41255,
+        "name": "vm_callprim",
+        "section": ".text"
+      },
+      "source_section": ".text",
+      "target": ".lisp65_c2_kernal_window.profile_rodata",
+      "type": "R_MOS_ADDR16"
+    },
+    {
+      "addend": 166,
+      "component": ".rodata.vm_callprim",
+      "offset": 36028,
+      "relocation_section": ".rela.text",
+      "source_function": {
+        "address": 35970,
+        "bytes": 5285,
+        "end_exclusive": 41255,
+        "name": "vm_callprim",
+        "section": ".text"
+      },
+      "source_section": ".text",
+      "target": ".lisp65_c2_kernal_window.profile_rodata",
+      "type": "R_MOS_ADDR16"
+    },
+    {
+      "addend": 188,
+      "component": ".rodata.vm_callprim",
+      "offset": 37858,
+      "relocation_section": ".rela.text",
+      "source_function": {
+        "address": 35970,
+        "bytes": 5285,
+        "end_exclusive": 41255,
+        "name": "vm_callprim",
+        "section": ".text"
+      },
+      "source_section": ".text",
+      "target": ".lisp65_c2_kernal_window.profile_rodata",
+      "type": "R_MOS_ADDR16"
+    },
+    {
+      "addend": 196,
+      "component": ".rodata.vm_native_call",
+      "offset": 41982,
+      "relocation_section": ".rela.text",
+      "source_function": {
+        "address": 41346,
+        "bytes": 1019,
+        "end_exclusive": 42365,
+        "name": "vm_native_call",
+        "section": ".text"
+      },
+      "source_section": ".text",
+      "target": ".lisp65_c2_kernal_window.profile_rodata",
+      "type": "R_MOS_ADDR16"
+    }
+  ],
+  "negative_matrix": {
+    "missing-component-reference": "rejected",
+    "output-section-plus-addend-reference": "passed",
+    "overlapping-function-provenance": "rejected",
+    "post-ownership-absolute-reference": "passed",
+    "post-ownership-high-immediate-reference": "passed",
+    "post-ownership-low-immediate-reference": "passed",
+    "pre-handoff-function-reference": "rejected",
+    "unknown-source-function": "rejected",
+    "unsized-function-provenance": "rejected"
+  },
+  "owned_data_section": ".lisp65_c2_kernal_window.profile_rodata",
+  "pre_handoff_function_intervals": [
+    {
+      "address": 15839,
+      "bytes": 31,
+      "end_exclusive": 15870,
+      "name": "main",
+      "ownership_class": "main-prefix-before-ownership-call",
+      "section": ".text"
+    }
+  ],
+  "pre_handoff_references": 0,
+  "proof_model": "all retained relocations resolving through input names or the owned output-section base plus addend are bound to exactly one positive-sized section-qualified function interval and checked against explicit pre-handoff function intervals",
+  "status": "passed"
+}

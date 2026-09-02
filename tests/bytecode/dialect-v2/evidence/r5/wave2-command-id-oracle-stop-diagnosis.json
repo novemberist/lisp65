@@ -1,0 +1,49 @@
+{
+  "format": "lisp65-r5-wave2-harness-stop-diagnosis-v1",
+  "version": 1,
+  "recorded_on": "2026-07-18",
+  "status": "diagnosed-harness-command-id-oracle-drift-no-case-receipt",
+  "source_commit": "fa22c5f4996066ec447bb2b0b69d596c0ea3886e",
+  "candidate": {
+    "product_artifact_set_sha256": "6c358e79baa55999f80d1ebcd45b57234e57af8bc80bc29042e0b93915ac18a5",
+    "build_id": "d60fc5dd",
+    "candidate_manifest_sha256": "04922cad138b106fb7e48ef325aa1bf662ba5249a210e6146c66539780ea097e",
+    "test_closure_set_sha256": "8f00419fa864f43af5b793b1f5ebc4d24d9d7f5eba71546d5f3883e067d491de"
+  },
+  "trigger": {
+    "gate": "G5",
+    "run_id": "r5-run-20260718-wave2-01",
+    "case": "workbench-ux/ux-complete",
+    "phase": "find-tab",
+    "expected": "(find-file \"Find file: \" \"DEMO\")",
+    "observed": "(1002 \"Find file: \" \"DEMO\")",
+    "case_receipt": "not-emitted",
+    "raw_transcript": {
+      "path": "build/r5-global-g5/evidence/r5-run-20260718-wave2-01/workbench-ux-complete/r5-g5-ux-find-tab.txt",
+      "sha256": "0dfadc2938350ebc4cef066bea2b2e92b62f25a13f300d21ce5bc9ab6bcf7c72"
+    }
+  },
+  "diagnosis": {
+    "classification": "harness-internal-command-marker-drift-after-authorized-16-name-harvest",
+    "product_contract": "Public M-x spellings remain Strings, while internal IDE command markers are numeric IDs; find-file is 1002 and switch-buffer is 1006.",
+    "decisive_evidence": [
+      "The observed marker has the authorized ID 1002 and the exact expected prompt and selected filename.",
+      "The Wave-2 policy-name implementation receipt proves find-file -> 1002 and the absence of the revoked command symbol from the standard composition.",
+      "All preceding UX, persistence, reset, late-binding, M-x display, directory, and binary-source rejection phases passed on the same product candidate."
+    ],
+    "conclusion": "The R4 product is correct; the R5 hardware UX oracle retained the pre-harvest symbolic representation for three internal command markers."
+  },
+  "structural_fix": {
+    "harness": "find-tab, buffer-tab, and mini-history now use the authorized numeric command IDs; public M-x display strings remain unchanged.",
+    "gate": "The Wave-2 policy-name implementation gate binds all three numeric hardware oracles and rejects the former symbolic runtime-data forms.",
+    "self_test": "The Workbench UX harness test models the numeric markers and retains its dynamic-failure rejection.",
+    "product_artifact_effect": "none",
+    "required_repin": "R5 test closure and static preflight only"
+  },
+  "gate_effect": {
+    "g5": "2/14 passed before this receipt-less stop",
+    "passed_receipts": "remain valid after offline re-verification against the new harness-only closure",
+    "r4": "historical-and-still-valid",
+    "claim": "diagnosis only; no ux-complete pass and no product acceptance"
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "format": "lisp65-v11-repl-banner-product-capability-diagnosis-v1",
+  "block_id": "1.1-D-repl-banner-product-capability",
+  "status": "passed-owner-authorized-for-product-promotion",
+  "recorded_on": "2026-07-16",
+  "baseline": {
+    "commit": "ab20d49581b482e7da1457869e61544c13061c4a",
+    "capacity_authorization": {
+      "path": "config/v11-repl-banner-native-binding-capacity-authorization.json",
+      "sha256": "e4cc25db90b2747f7f40df90ddede3a0fc0bff0d512aa1a14af5a58cc9fb0732"
+    },
+    "post_boot_reserve_bytes": 1873,
+    "standard_composition_ext_headroom_bytes": 25186,
+    "symbol_headroom": 389,
+    "namepool_headroom_bytes": 5643,
+    "resident_entries_raw": 210,
+    "directory_post_align_headroom": 168,
+    "overlay_headroom_bytes": 80,
+    "boot_overlay_bytes": 1669
+  },
+  "hardware_findings": [
+    {
+      "id": "inactive-product-primitive",
+      "result": "fail-closed",
+      "observation": "The generated banner drew all 48 pre-separator runs and then stopped before the separator, subtitle and row-9 prompt.",
+      "vm_status": {
+        "value": 2,
+        "meaning": "VM_BADOPCODE",
+        "path": "build/evidence/v11-repl-banner-hardware/status/vm-status.bin",
+        "sha256": "dbc1b4c900ffe48d575b5da5c638040125f65db0fe3e24494b76ea986457d986"
+      },
+      "screenshot": {
+        "path": "build/evidence/v11-repl-banner-hardware/banner-first-prompt-ab20d49-valid-launch.png",
+        "sha256": "b4e8183e885515e57b4dc753f95f4d741a1ddf174c2d3743a231a96d17215467"
+      },
+      "screen_dump": {
+        "path": "build/evidence/v11-repl-banner-hardware/banner-failed-screen.bin",
+        "sha256": "3831cfcf2d47bc8c047206de31a19eb3af3048f05fd201cdd488408b408736"
+      }
+    },
+    {
+      "id": "charset-contract-mismatch",
+      "result": "visual-rejection",
+      "observation": "After replacing the unavailable bulk primitive, the separator, subtitle and prompt completed, but raw screen codes 77 and 78 rendered as M and N in the canonical mixed-case charset.",
+      "screenshot": {
+        "path": "build/evidence/v11-repl-banner-hardware/banner-first-prompt-product-capability-fix.png",
+        "sha256": "626e3aef9c247540a734a73c22bfe685f2d03c2f1aa990bbd5a897d56f642ead"
+      }
+    }
+  ],
+  "root_causes": [
+    {
+      "id": "profile-capability-not-reflected-by-host-oracle",
+      "summary": "The dialect registry exposes CALLPRIM 12, but the canonical Workbench enables LISP65_VM_SCREEN_PRIMS without LISP65_SCREEN_WRITE_STRING. The P0 oracle implemented the call unconditionally, so it proved a capability the product profile did not contain."
+    },
+    {
+      "id": "graphics-charset-assumed-under-mixed-case-product",
+      "summary": "The banner specification assigned diagonal graphics to screen codes 77 and 78. Those glyphs exist in the uppercase/graphics charset; the Workbench deliberately uses the mixed-case charset where the same codes are uppercase M and N."
+    }
+  ],
+  "rejected_alternative": {
+    "option": "enable LISP65_SCREEN_WRITE_STRING in the resident Workbench",
+    "result": "rejected-by-real-link",
+    "reason": "The isolated product probe violates the post-boot reserve, overlay VMA, transport-window and multiple runtime-slice stack-safe gates. Expanding the resident screen surface is not a small banner correction.",
+    "log": {
+      "path": "build/probes/v11-banner-native-screen-write-probe.log",
+      "sha256": "869d50d58efc8890ac769b9433f21bb149bde43703c7aa23ed03af5df17b7427"
+    }
+  },
+  "candidate": {
+    "mechanism": [
+      "The banner uses only screen-put-char, poke, string-ref and write-char capabilities present in the canonical Workbench.",
+      "A dedicated %banner-separator entry colors 66 cells through screen-put-char and publishes raw horizontal-line code 64 through the pinned $0800/80-column contract.",
+      "The subtitle uses 22 screen-put-char calls instead of unavailable CALLPRIM 12.",
+      "The lambda keeps the normative run coordinates but uses yellow reverse-space cells, making the glyph independent of the active charset."
+    ],
+    "persistent_entries": [
+      {"ordinal": 197, "name": "%banner-separator", "code_bytes": 89},
+      {"ordinal": 198, "name": "%banner-run", "code_bytes": 142},
+      {"ordinal": 199, "name": "%repl-banner", "code_bytes": 145}
+    ],
+    "generated_launch_binding": {
+      "macro": "LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY",
+      "value": 199,
+      "disassembly": "repl loads A=$c7 and calls vm_run_dir immediately after scr_init",
+      "magic_literal": false
+    },
+    "source_hashes": {
+      "lib/repl-banner.lisp": "8171c70fb0a7bf6dfa4f0727a9356b64f9776655a5b0a8cdd873e65553df224e",
+      "Makefile": "5882d0dd7953ed69d3bdd9019cc0b5242f1ae776769010a29145d23ad9d9378b",
+      "config/v11-surface-delivery-parity.json": "78ed6ad3fcfee4a578dfcdfec95dc94faebf3cee443ea6c2a4abd9f0d6f4988d",
+      "mk/workbench-service-inventory.mk": "7995fa60f3c8f06ba91226884f1fcde4a914c5408444aba5172778165254f38d",
+      "scripts/v11-repl-banner-vm-main.c": "cc48d3a2b261ef1d83bb70a01302aa3f438a0a098b55282e8f5ef199ac2fad22",
+      "tools/host-lisp/v11_repl_banner_visual.py": "3517187c98a3d6ecdc04a269179fce0fef7c572913e197cf3e1b3195e6759346",
+      "tools/host-lisp/v11_surface_delivery_parity.py": "49782df25d096242ad415f389c4738155762285b0269878789c992bf512a3128",
+      "tests/bytecode/stdlib/p0-stdlib-einsuite-subset.json": "7a706f1010bbc8d269567fcc26294864169ae99d700affebbec3a5a6d71aaa63",
+      "tests/bytecode/stdlib/p0-stdlib-einsuite-fasl-subset.json": "e713ad63b65342e054da416ff10ed14c024dd50d279c7bbaec413ac3342cbc95",
+      "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json": "5c135beaeb5257696c2fcb1dc0a0270ddb45ecfed0afc921415f248085868b4f"
+    }
+  },
+  "hardware_acceptance_probe": {
+    "result": "pass-owner-accepted-product-promotion-pending",
+    "screenshot": {
+      "path": "build/evidence/v11-repl-banner-hardware/banner-first-prompt-block-lambda-settled-clean.png",
+      "sha256": "7bc0ff2468c8dcbd089f000422dc62f4f607f2e7394ae04790f06ef4d3725e6c"
+    },
+    "observed": [
+      "complete yellow block lambda",
+      "complete white LISP65 wordmark",
+      "66-cell light-gray separator",
+      "WORKBENCH - DIALECT V2 subtitle",
+      "clean first prompt on row 9"
+    ],
+    "candidate_resident_prg_sha256": "b70e4ef960e840644488c7f0b348f37f95b67c08696fe270065f9a1292678b39",
+    "candidate_bank5_preload_sha256": "e8c6ce9eb79b0800fd2d59fc301e31673bdefccef5c45bd8ad56b678d3b1a930",
+    "candidate_attic_catalog_sha256": "403c0feda0c2e6d6adcc9930ca53c64a5ab2b64a687ce8618e6d7f840433718e"
+  },
+  "capacity_delta": {
+    "scope": "increment relative to the already authorized ab20d49 banner candidate",
+    "bank": {
+      "before_post_boot_reserve_bytes": 1873,
+      "after_post_boot_reserve_bytes": 1873,
+      "target_bytes": 1536,
+      "after_margin_bytes": 337,
+      "delta_bytes": 0
+    },
+    "ext": {
+      "before_standard_composition_headroom_bytes": 25186,
+      "after_standard_composition_headroom_bytes": 25161,
+      "floor_bytes": 16384,
+      "after_margin_bytes": 8777,
+      "delta_bytes": -25,
+      "authorization_status": "owner-authorized"
+    },
+    "symbols": {
+      "before_headroom": 389,
+      "after_headroom": 388,
+      "required_headroom": 32,
+      "delta": -1,
+      "authorization_status": "owner-authorized"
+    },
+    "namepool": {
+      "before_headroom_bytes": 5643,
+      "after_headroom_bytes": 5625,
+      "required_headroom_bytes": 384,
+      "delta_bytes": -18,
+      "authorization_status": "owner-authorized"
+    },
+    "directory": {
+      "before_raw_resident_entries": 210,
+      "after_raw_resident_entries": 211,
+      "before_aligned_entries": 216,
+      "after_aligned_entries": 216,
+      "before_post_align_headroom": 168,
+      "after_post_align_headroom": 168,
+      "post_align_delta": 0
+    },
+    "overlay": {
+      "before_headroom_bytes": 80,
+      "after_headroom_bytes": 80,
+      "eventqueue_projection_bytes": 68,
+      "projected_post_eventqueue_headroom_bytes": 12,
+      "delta_bytes": 0
+    },
+    "boot_overlay": {
+      "before_bytes": 1669,
+      "after_bytes": 1669,
+      "size_delta_bytes": 0
+    },
+    "composition_budget": {
+      "path": "build/evidence/v11-repl-banner-hardware/block-lambda-composition-budget.json",
+      "sha256": "2a0e12104b40eba62751c668e7987caa8d91b3675ed14d4db63183d62ba35333"
+    }
+  },
+  "verification": {
+    "visual_oracle": "pass: 235 writes, zero screen-write-string calls, 66 raw separator pokes, nine linefeeds, prompt row 9, five mutations rejected",
+    "native_c_vm": "pass: actual product capability macros, VM_CODEBUF=56, ASAN/UBSAN, nil return, status OK, prompt row 9",
+    "generated_suite": "pass: 210 functions, 194 cases, 420 objects, 10638 aggregate code bytes, 30594 steps",
+    "embedded_artifact": "pass: 211 objects, 6452 resident code bytes, 15132 external-image bytes",
+    "canonical_product_link": "pass: post-boot reserve 1873, overlay base c306, overlay headroom 80, overlay size 1669",
+    "composition_budget": "pass: EXT headroom 25161, symbols 388, namepool 5625, directory post-align headroom 168",
+    "hardware": "pass-probe: corrected candidate screenshot and status-zero memory state",
+    "profile_delivery_parity": "pass: screen-write-string is dialect-public and registry-bound but absent from the canonical Workbench manifest and product defines; screen-bulk-p fallback is resident; six negative mutations rejected"
+  },
+  "surface_followup": {
+    "end_user_claim": "docs/language-reference.md does not list screen-write-string in the released surface",
+    "dialect_contract": "config/dialect-v2-surface.json and config/dialect-v2-contract.json reserve the public dialect name for the optional m65-screen library",
+    "profile_fact": "the canonical Workbench does not define LISP65_SCREEN_WRITE_STRING and does not deliver screen-write-string in its resident manifest",
+    "permanent_gate": "config/v11-surface-delivery-parity.json now binds this profile exclusion to registry ID 12, the absent product define, the absent resident entry and the present screen-bulk-p fallback"
+  },
+  "owner_decision": {
+    "authorized_on": "2026-07-16",
+    "visual_contract": "accepted: charset-independent yellow block lambda",
+    "capacity": "authorized: incremental debits of 25 B EXT, one symbol and 18 B namepool; Bank, aligned Directory, overlay and boot-overlay size remain unchanged"
+  },
+  "promotion_conditions": [
+    "commit corrected product sources, profile-faithful VM gate, visual oracle and living specifications together",
+    "rerun canonical product and composition gates from the committed candidate",
+    "regular Wave-1 R4/R5/R6 repin and single-device G6"
+  ],
+  "claim_limit": "This receipt diagnoses both hardware findings, rejects the resident-capability expansion by a real link, proves and owner-accepts the hardware-rendered correction, authorizes its incremental capacity and closes the profile-delivery gate gap. It permits product promotion but does not seal Wave 1 or claim R4/R5/R6/G6 evidence."
+}

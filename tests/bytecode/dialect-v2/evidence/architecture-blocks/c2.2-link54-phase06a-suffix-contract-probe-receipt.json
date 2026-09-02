@@ -1,0 +1,76 @@
+{
+  "format": "lisp65-c2-lite-v6-append-suffix-read-domain-contract-probe-v1",
+  "recorded_on": "2026-07-23",
+  "status": "passed-contract-classification-before-product-fix",
+  "promotable": false,
+  "authority": {
+    "hardware_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link54-phase06a-cutpoint-hardware-first-red.json",
+      "bytes": 7512,
+      "sha256": "08cb5b0a3a258a47614bb01f60ca71ace2c20101f3b1442c9bc137765fe64ad8"
+    },
+    "contract": {
+      "path": "config/c2-append-suffix-read-domain-contract.json",
+      "bytes": 2672,
+      "sha256": "f20282928acd4226e62dd29be04e8c6230f606758562108b9ac48bf7df976add"
+    },
+    "probe_driver": {
+      "path": "tools/host-lisp/c2_append_suffix_read_domain_gate.py",
+      "bytes": 13103,
+      "sha256": "d24e8d542b4b1c49285f74514695582838714d42483ba2358ed0fd211614cdbe"
+    },
+    "decoder_before": {
+      "path": "scripts/c2-stream-decoder.c",
+      "bytes": 37158,
+      "sha256": "ae695fb21abb0e6449f39cc9a2c9fdeae28aa4c6b3abd8b9fc64b7991f9d0d1c"
+    },
+    "decoder_context_before": {
+      "path": "scripts/c2-stream-decoder.h",
+      "bytes": 6551,
+      "sha256": "5604a556669c2fcf43c691ae4298dbeefff20f960797611029c0ebc386b5688c"
+    },
+    "runtime_before": {
+      "path": "src/c2_product_runtime.c",
+      "bytes": 136762,
+      "sha256": "3ed0a6c7d1b6c6b9c96c2b9bf3ebc7bb5be8002007b958f0dec5db82cd3cb27b"
+    }
+  },
+  "observed_current_lower_bounds": {
+    "06a": "zero",
+    "06b": "zero",
+    "07": "zero",
+    "08": "zero"
+  },
+  "required_lower_bounds": {
+    "06a": "image_first",
+    "06b": "image_first",
+    "07": "image_first",
+    "08": "image_first"
+  },
+  "classification": {
+    "06a": "Only newly staged code/literal structure is unproved.",
+    "06b": "Only newly staged export spelling is unproved.",
+    "07": "resolution_cursor already begins at old_res/new_res.",
+    "08": "pair resolution must close the same suffix at resolution_count."
+  },
+  "fixture": {
+    "boot_full_staging": [0, 1, 2, 3, 4, 5],
+    "persistent_append": [6],
+    "transient_append": [63],
+    "domain_cases_passed": 8,
+    "status": "passed-boot-full-and-append-suffix-domain-matrix"
+  },
+  "range_guard_design": {
+    "before_ready": "Authenticated boot Shelf reads remain permitted.",
+    "after_ready": "Only the active append context, a Session-tagged source and a span wholly inside its authenticated transaction are permitted.",
+    "failure_order": "Every domain/range rejection dominates DMA submission.",
+    "new_state_bytes": 0
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "next_gate": "Apply the four suffix bounds and the read-domain guard, run all source mutations, then exactly one product-shaped WPLTO probe."
+}

@@ -1,0 +1,43 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: implicit Clang compilation directory remained clone-specific",
+  "source_commit": "943af8f13622fe4cac8e65a043559f0ff24dcfcb",
+  "failed_step": "complete 19-role varied-clone comparison",
+  "diagnostic": "product_build_id differed while profile_build_id was byte-identical",
+  "interpretation_correction": {
+    "supersedes_cause_only": "c2.2-c2-lite-media-fresh-clone-compile-path-first-red.json",
+    "preserved_observation": "nine C bitcode modules differed only in inline-assembly !srcloc metadata before LTO",
+    "disproved_interpretation": "checkout-absolute forced-header/include arguments were the remaining cause",
+    "proof": "Converting all checkout-owned forced-header and include-directory arguments to relative paths produced the identical pair of divergent media identities and roles."
+  },
+  "cause": "The Clang driver independently injected clone-absolute -fdebug-compilation-dir and -fcoverage-compilation-dir values into cc1. Those were the sole cc1-command differences after checkout-owned source, object, header and include arguments had become relative. llvm-mos propagated that directory-specific SourceLocation space into inline-assembly !srcloc metadata and full-LTO layout.",
+  "cc1_difference": [
+    "-fdebug-compilation-dir=/tmp/.../fresh-clone-seed-23-pago-pago-2002",
+    "-fdebug-compilation-dir=/tmp/.../fresh-clone-seed-987654329-kiritimati-2032",
+    "-fcoverage-compilation-dir=/tmp/.../fresh-clone-seed-23-pago-pago-2002",
+    "-fcoverage-compilation-dir=/tmp/.../fresh-clone-seed-987654329-kiritimati-2032"
+  ],
+  "correction": "Canonical compilation explicitly pins file, debug and coverage compilation directories to '.'. The resolved profile records deterministic_compilation_dir=. alongside the existing ordered-object, RNG, thread, llvm-link and ASLR controls.",
+  "failed_link_driver": {
+    "path": "tools/host-lisp/c2_product_substitution_link.py",
+    "bytes": 287038,
+    "sha256": "2cba3577016def394ba852b8d87272a6191c378450902d060fe1f2af28dfab5f"
+  },
+  "execution_accounting": {
+    "fresh_clones_started": 2,
+    "canonical_product_links_completed": 2,
+    "media_role_sets_completed": 2,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

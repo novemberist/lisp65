@@ -1,0 +1,94 @@
+{
+  "accounting": {
+    "contact_budget_consumed": true,
+    "hardware_contacts_this_repeat": 1,
+    "measured_forms_started": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "progress_samples_taken": 0,
+    "recontact_authorized": false,
+    "RETURN_submitted": false
+  },
+  "artifacts": {
+    "diagnostic_prg_payload_readback": {
+      "bytes": 41564,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b/diagnostic-prg-payload.bin",
+      "sha256": "bd787ed2980a1f7a293f7098ecec2f0706c27d2eddb57dcbb296a7b089d56c18"
+    },
+    "full_reset_domain_readback": {
+      "bytes": 50816,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b/preload-c2d-v6-reset-domain.bin",
+      "sha256": "086921d082eabf6c929eed59f2e652afae32afa06295cf9cbe1cfe87c849d4b1"
+    },
+    "launch_input_png": {
+      "bytes": 4711,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b/launch-input.png",
+      "sha256": "7818b9486b6f9bab11defd2c72355f1aab3729040eca11c38eb11bf7200a3dc1"
+    },
+    "launch_input_text": {
+      "bytes": 2253,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b/launch-input.txt",
+      "sha256": "51642b4b8917c66766bb14b2e04895f3642ed1ece8ffdc9defe62b0030c6a075"
+    },
+    "post_staging_ready_png": {
+      "bytes": 4726,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b/post-staging-ready.png",
+      "sha256": "ee8e9022fa1fc3fefd776bf8b270550b48eeee62f322df47449073d70bcc4427"
+    },
+    "post_staging_ready_text": {
+      "bytes": 2253,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b/post-staging-ready.txt",
+      "sha256": "51642b4b8917c66766bb14b2e04895f3642ed1ece8ffdc9defe62b0030c6a075"
+    },
+    "pre_run_c2j": {
+      "bytes": 64,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b/pre-run-c2j.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "upload_log": {
+      "bytes": 2350,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b/upload.log",
+      "sha256": "72608620faeadcc94bb1aeafeaef1b16351b7b04684b31a5248ef11f014f6636"
+    }
+  },
+  "authorities": {
+    "authorization_commit": "4d235f9129a675b752aa3ff919135ec1d69a42bd",
+    "executed_instrument_commit": "092d77030ca666a0a9462f6b4cad4e6ff81cc1c9",
+    "executed_runner": {
+      "bytes": 10688,
+      "path": "scripts/c2-v16-defstruct-vm-progress-hw.sh",
+      "sha256": "43fd140ca1a5f3b5764f363e827bb10fb94acb76be29465f289bf28ff94e76dc"
+    }
+  },
+  "claim_limit": "The complete staging ritual and C2J-CLEAR proof passed. The runner attempted to type RUN without RETURN, then stopped before RETURN because the line-verifier path was invalid after a shell helper clobbered its caller's global variable. The independently captured launch-input text is byteidentical to the pre-input READY text and contains no RUN line. This is a launch-harness First Red. It proves neither a product launch nor a product failure and makes no require, defstruct, progress, loop, performance, or R/A/I/G claim.",
+  "contact": {
+    "active_line_expected": "RUN",
+    "active_line_observed": false,
+    "launch_input_attempted": true,
+    "output_root": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-b",
+    "RETURN_submitted": false,
+    "staging": {
+      "C2J_before_RUN": "64x00",
+      "diagnostic_payload_readback": "byteidentical",
+      "full_reset_domain_bytes": 50816,
+      "preload_readbacks": "byteidentical"
+    }
+  },
+  "first_red": {
+    "actual_capture": "launch-input.txt",
+    "actual_capture_equals_pre_input_capture": true,
+    "exception": "FileNotFoundError",
+    "missing_path": "launch-input-input.txt",
+    "mechanism": "POSIX-shell function variables are global: screen() assigned name=launch-input and clobbered type_verified()'s name=launch before the assertion path was expanded.",
+    "RETURN_boundary": "not crossed"
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-vm-progress-line-verify-first-red-v1",
+  "next_method": {
+    "contact_status": "NOT-AUTHORIZED",
+    "required_fix": "Use distinct non-colliding variable names in screen() and type_verified(), brace the generated capture paths, and retain fail-closed full-line verification before every separately submitted RETURN.",
+    "required_mutation": "A screenshot helper that clobbers the caller's line identifier must fail the permanent runner gate."
+  },
+  "recorded_at": "2026-08-06T18:13:19Z",
+  "recorded_on": "2026-08-06",
+  "status": "AUTONOMOUS-LINE-VERIFY-HARNESS-FIRST-RED; RETURN-NOT-SUBMITTED; MEASURED-FORM-NOT-STARTED; RECONTACT-NOT-AUTHORIZED"
+}

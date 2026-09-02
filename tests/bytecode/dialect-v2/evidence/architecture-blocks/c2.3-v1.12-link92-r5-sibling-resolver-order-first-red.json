@@ -1,0 +1,119 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-r5-sibling-resolver-order-first-red-v1",
+  "recorded_on": "2026-08-07",
+  "status": "FIRST RED-attributed-independent-library-rows-versus-prefix-resolver-assumption",
+  "authorization": {
+    "commit": "85f14f2b",
+    "scope": "cardinality-safe L65I checker followed by a resume that rebuilds neither shared system nor base library and constructs only the defstruct sibling and aggregate manifests"
+  },
+  "completed_before_red": {
+    "cardinality_safe_index_checker": {
+      "two_or_more_rows_mutations_rejected": 32,
+      "one_row_mutations_rejected": 29,
+      "one_row_witness": "one-row-unconditional-second-row-access",
+      "gate": {
+        "path": "tools/host-lisp/c2_require_resolver_gate.py",
+        "bytes": 41991,
+        "sha256": "eeca2907a13b2189d033670b217a374e67a2ee8f4cf80fd70d821e3c8addc88f"
+      }
+    },
+    "resume_source_gate": {
+      "status": "passed-resume-only-defstruct-sibling-and-aggregates",
+      "shared_system_rebuilds": 0,
+      "base_library_rebuilds": 0,
+      "defstruct_sibling_builds": 1,
+      "existing_identity_checks": 2,
+      "mutations_rejected": [
+        "shared-system-rebuild-reintroduced",
+        "base-library-rebuild-reintroduced"
+      ]
+    },
+    "sha_fixed_inputs_unchanged": {
+      "shared_manifest": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/shared-system/candidate-manifest.json",
+        "bytes": 17164,
+        "sha256": "fd8f1ab004929a01b63da6b7d1ef8699596a6cd5746b37d4343ca0d3c1ba4cd0"
+      },
+      "base_D81": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/base/lisp65-library.d81",
+        "bytes": 819200,
+        "sha256": "3182314c3ebb1328d608dd9ca6dfc44d7e2e5c2ea64b2fe5f43e40238c726213"
+      },
+      "base_index": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/base/l65index",
+        "bytes": 80,
+        "sha256": "5f580c776b4dc360d3ac7334d1e909b17f4b5eef97e96eb51ad252659a2ed121"
+      },
+      "base_comfort": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/base/comfort.l65s",
+        "bytes": 6037,
+        "sha256": "2664acf9be74c8c90505ef5fa6e5e7a28736252303f3b3cc70ac89e53decca21"
+      }
+    },
+    "defstruct_sibling_before_gate": {
+      "D81": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/defstruct-acceptance/lisp65-library.d81",
+        "bytes": 819200,
+        "sha256": "6de86390b16837f8030222715d5c95c8e9fa998d000abcaf75e46580863c04dd"
+      },
+      "index": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/defstruct-acceptance/l65index",
+        "bytes": 128,
+        "sha256": "853605291b2f125c217fff23e53cf4913dc0ab79c3519ceae9a5d78502e52a82"
+      },
+      "comfort": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/defstruct-acceptance/comfort.l65s",
+        "bytes": 6037,
+        "sha256": "2664acf9be74c8c90505ef5fa6e5e7a28736252303f3b3cc70ac89e53decca21"
+      },
+      "defstruct": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/defstruct-acceptance/defstruct.l65s",
+        "bytes": 2877,
+        "sha256": "775e8e55e799c338ddb1719ad8f0059bf4463e731257b337762ea500742d8d7c"
+      },
+      "rows": [
+        {"ordinal": 0, "name": "comfort", "dependencies": [], "resolver_order": [0]},
+        {"ordinal": 1, "name": "defstruct", "dependencies": [], "resolver_order": [1]}
+      ]
+    }
+  },
+  "mechanism": {
+    "exception": "MediaClosureError: defstruct library resolver order drift",
+    "site": "c2_v112_candidate_media.build_library_variant resolver-order assertion",
+    "expected_by_checker": [0, 1],
+    "actual_for_defstruct": [1],
+    "cause": "The checker used list(range(len(specs))) and therefore treated every earlier L65I row as an implicit dependency. The index carries explicit dependency lists; both comfort and defstruct legally declare none, so resolving defstruct returns only its own ordinal. Row order is media placement, not dependency identity.",
+    "classification": "Post-build verifier dependency-semantics assumption, not product, L65I decoding, library bytes, shared/base identity, compiler, linker, capacity, device or release."
+  },
+  "execution_accounting": {
+    "additional_product_compiler_runs": 0,
+    "additional_product_linker_runs": 0,
+    "additional_product_cards": 0,
+    "artifact_completion_calls": 0,
+    "cold_stager_compiler_runs": 0,
+    "shared_system_rebuilds": 0,
+    "base_library_rebuilds": 0,
+    "defstruct_acceptance_media_materialized": 1,
+    "aggregate_media_manifests_completed": 0,
+    "automatic_retries": 0,
+    "hardware_runs": 0
+  },
+  "source_authority": {
+    "candidate_media": {
+      "path": "tools/host-lisp/c2_v112_candidate_media.py",
+      "bytes": 25192,
+      "sha256_at_first_red": "ec786c7b7b9a53373d6cd55a10ab31cf28b2bf7c8224ffa47e876186d72b997f"
+    },
+    "prior_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-base-index-mutation-cardinality-first-red.json",
+      "bytes": 5183,
+      "sha256": "24f9ad84a34b0b430ad31d9ef8c8181cd06da4db789b391081c6c67f7fd65d85"
+    }
+  },
+  "disposition": {
+    "state": "owner-disposition-required",
+    "no_fix_or_second_resume_performed": true,
+    "recommendation": "Replace the prefix-order assertion with the resolver contract's semantic identity: a requested row resolves itself plus only its declared transitive dependencies; each zero-dependency row in this sibling must resolve to its own ordinal. Add a mutation that reintroduces implicit-prefix expectations and fails loudly. Resume from SHA-bound shared, base and now-materialized defstruct sibling artifacts without rebuilding any of them; construct only the two variant and aggregate manifests."
+  },
+  "claim_limit": "The cardinality-safe checker is green and both library D81 byte sets exist, but the defstruct sibling resolver closure is red and no aggregate variant manifests exist. There is no two-variant closure, media-closed contract state, Phase D, Halt or release claim."
+}

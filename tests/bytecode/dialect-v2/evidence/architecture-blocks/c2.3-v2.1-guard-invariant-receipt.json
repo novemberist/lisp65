@@ -1,0 +1,95 @@
+{
+  "authority": {
+    "CPU_wrapper": {
+      "bytes": 13574,
+      "path": "tools/host-lisp/c2_v21_cpu_transport_card.py",
+      "sha256": "85ec2c51e7e7c6756ada5c5a8481d82c55d3b6b90a615ff479b818357fba6a1f"
+    },
+    "attribution": {
+      "bytes": 4923,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-wrapper-contract-replacement-card-red-attribution-receipt.json",
+      "sha256": "f4d23a885197378a702594c85930b757706a81eb4bb9148be33f117c2d956657"
+    },
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 46656,
+      "commit": "32ce1bc8ad59f13c2ca8bb24e4980d4fa574a919",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "638b11df0455826c9f9d3371a5ebc765f7c731e013b3270f3351da9d123b1a81"
+    },
+    "driver": {
+      "bytes": 10770,
+      "path": "tools/host-lisp/c2_v21_guard_invariant.py",
+      "sha256": "6d9659ace2b6cbfdb5239c0940e587db766ff3508964a29927dbba17a0052d23"
+    },
+    "final_red": {
+      "bytes": 9291,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-wrapper-contract-replacement-card-final-red.json",
+      "sha256": "3544012675b147a1c2fe082415b303b8a4c9079cd60f132db0ee2215a0bebe3a"
+    },
+    "frozen_ELF": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-wrapper-contract-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c8853d3467f1abd9f253ca8c79ad4843a34fd5e24a1d2bdff44e93cdcafd96d8"
+    },
+    "frozen_map": {
+      "bytes": 189243,
+      "path": "build/c2.3/v2.1-wrapper-contract-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "8500a88e28509b77e3ed8b0573b70d1d9c9c96d0114f35a7a255e38965831830"
+    }
+  },
+  "claim_limit": "Host-only guard correction; no product card has run.",
+  "controls": {
+    "negative_rejected": [
+      "reader-at-0x5000",
+      "reader-straddles-0x4000"
+    ],
+    "positive_accepted": {
+      "address": "0x2277",
+      "bytes": 166
+    }
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-guard-invariant-v1",
+  "mutations_rejected": [
+    "reject-priced-0x2277",
+    "accept-reader-at-0x5000",
+    "restore-high-address-proxy",
+    "hide-real-ELF-gate",
+    "spend-card",
+    "source-uses-proxy-instead-of-invariant"
+  ],
+  "real_ELF_gate": {
+    "call_seams": {
+      "c2d": "0xe2dd",
+      "shelf": "0xe79d"
+    },
+    "historical_worlds_changed": 0,
+    "mapped_window": "0x4000..0x5fff",
+    "reader": {
+      "address": "0x2277",
+      "bytes": 166,
+      "end_exclusive": "0x231d",
+      "section": ".text",
+      "section_end": "0xb398"
+    },
+    "status": "PASS: linked reader executes outside its mapped window"
+  },
+  "recorded_on": "2026-08-14",
+  "rule": "A guard asserts the invariant it protects, never a proxy.",
+  "source_gate": {
+    "guard_calls_real_invariant": true,
+    "high_address_proxy_count": 0,
+    "window": {
+      "end_exclusive": "0x6000",
+      "start": "0x4000"
+    }
+  },
+  "status": "HOST-GREEN: linked guard asserts reader/window non-overlap"
+}

@@ -1,0 +1,129 @@
+{
+  "authority": {
+    "driver": {
+      "bytes": 14970,
+      "path": "tools/host-lisp/c2_v21_map_mask_fix.py",
+      "sha256": "9ef0b02b896c60daf7d4ec4e37cc5803c2bf3bac7f9015daebcbaaf5615a48b6"
+    },
+    "first_red": {
+      "bytes": 5843,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-product-liveness-phase1-rescue-result-receipt.json",
+      "sha256": "854ca98130fbcc520f7714861fd4b46ece2b7616b76c75d021eee0f1981b4bc8"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 88012,
+      "commit": "e63e6240e680aadb6c348be010b05b74fad4b63d",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "748a03b80ff5b5149de6a916c768382742d1b0c8ee19a608f48e48208868e94e"
+    },
+    "source": {
+      "bytes": 6050,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "2ae0e027d2086a1053df2fe74eb1210758a824aadb4b52e7bf1ac71b3d13f129"
+    }
+  },
+  "claim_limit": "Host-only fix proof; the authorized card has not run.",
+  "emitted_construction": {
+    "borrow_then_mask_opcode": "a500e900290f09408500",
+    "crossing_add_uses_cmp_carry": true,
+    "crossing_inc_rmb4_same_zp": true,
+    "mask_then_borrow_opcode_count": 0,
+    "reader_object_bytes": 189
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "first_red": {
+    "actual": "0xffc0",
+    "mechanism": "CPU-reader MAP mask borrow contamination/self-occlusion",
+    "reader_start": "0x2277",
+    "required": "0x4fc0"
+  },
+  "format": "lisp65-c2.3-v2.1-map-mask-fix-v1",
+  "model": {
+    "boundary_crossings_checked": 9072,
+    "domains": {
+      "c2d-bank5": {
+        "base": "0x00050000",
+        "bytes": 50816,
+        "crossings_checked": 378,
+        "starts_checked": 386
+      },
+      "product-shelf-attic": {
+        "base": "0x08100000",
+        "bytes": 93681,
+        "crossings_checked": 693,
+        "starts_checked": 706
+      },
+      "session-attic": {
+        "base": "0x08400000",
+        "bytes": 1048576,
+        "crossings_checked": 8001,
+        "starts_checked": 8130
+      }
+    },
+    "initial_windows_checked": 9222,
+    "negative_self_covering": [
+      {
+        "A": "0xc0",
+        "MAPL": "0xffc0",
+        "X": "0xff",
+        "selected_blocks": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "A": "0xc0",
+        "MAPL": "0x2fc0",
+        "X": "0x2f",
+        "selected_blocks": [
+          1
+        ]
+      }
+    ],
+    "positive": {
+      "A": "0xc0",
+      "MAPL": "0x4fc0",
+      "X": "0x4f",
+      "selected_blocks": [
+        2
+      ]
+    },
+    "reader": {
+      "block": 1,
+      "start": "0x2277"
+    },
+    "status": "PASS: every constructed tuple selects block 2 only"
+  },
+  "mutations_rejected": [
+    "accept-ffc0",
+    "reject-4fc0",
+    "accept-arbitrary-self-cover",
+    "hide-old-opcode",
+    "drop-crossing-mask",
+    "remove-check",
+    "spend-card",
+    "restore-ffc0-borrow-order",
+    "drop-8k-crossing-mask"
+  ],
+  "placement_price": {
+    "checks_removed": 0,
+    "expected_linked_bytes": 189,
+    "expected_reserve_bytes": 1,
+    "fixed_object_bytes": 189,
+    "pre_fix_linked_bytes": 188,
+    "pre_fix_reserve_bytes": 2
+  },
+  "recorded_on": "2026-08-15",
+  "rule": "Decode the constructed runtime tuple, never design intent.",
+  "status": "HOST-GREEN: actual MAP tuple decode closes self-occlusion"
+}

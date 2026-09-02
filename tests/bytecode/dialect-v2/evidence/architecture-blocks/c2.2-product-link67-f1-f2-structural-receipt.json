@@ -1,0 +1,476 @@
+{
+  "ELF": {
+    "bytes": 619904,
+    "path": "build/post-promotion/link67-f1-f2/final/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "25e563ba41283fb1ce21624a84f618b2337f889510dee19261509dc29e465f32"
+  },
+  "authority": {
+    "F1_probe": {
+      "bytes": 8713,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-f1-published-value-call-wplto-receipt.json",
+      "sha256": "1470d136da6937e75e74276027e7d49d0b68dd29cfb3ed157aa17301078a79cb"
+    },
+    "F2_probe": {
+      "bytes": 19108,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-f2-bitops-wplto-receipt.json",
+      "sha256": "cf52673f9a43faddeec634556486370833df8d0ed77f9ed50ad2bd4d90113b8e"
+    },
+    "Halt_2": {
+      "bytes": 2682,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-phase-f-halt2-review-receipt.json",
+      "sha256": "77c8fcced4b021973825253c9976e8639ccee5e6ab7ccda88230eeb951be1584"
+    },
+    "WPLTO_internal": {
+      "bytes": 433710,
+      "path": "build/post-promotion/link67-f1-f2/receipts/wplto-internal.json",
+      "sha256": "2f9a88b887f985ccd0de1cbd6fc85f6362ac3674d54d981df226b5baa22c745c"
+    },
+    "artifact_completion": {
+      "bytes": 6040,
+      "path": "build/post-promotion/link67-f1-f2/receipts/artifact-completion.json",
+      "sha256": "f81c17d400d49d4f7efa4530c7556359ba3e5bda53635bd52c509f63f5aad0f9"
+    },
+    "artifact_completion_first_red": {
+      "bytes": 1241,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link67-f1-f2-artifact-completion-first-red.json",
+      "sha256": "53a593d30c4096c342bda020e6b28a78b4481025857d8e61d8616b9a054006c1"
+    },
+    "driver": {
+      "bytes": 18927,
+      "path": "tools/host-lisp/c2_phase_f_f1_f2_successor_link.py",
+      "sha256": "805c7abb8339bf359af881f41068fb7788b05704b87c3f83f58c4399d8cb41ed"
+    }
+  },
+  "claim_limit": "Structurally complete F1+F2 Link 67 only. S1 hardware behavior, latency, bitops-on-metal, promotion and release remain unclaimed.",
+  "execution_accounting": {
+    "artifact_completion_resume": true,
+    "artifact_resume_compiler_runs": 0,
+    "artifact_resume_linker_runs": 0,
+    "hardware_runs": 0,
+    "resident_island_seed_materializer_links": 1,
+    "whole_program_product_links": 1
+  },
+  "format": "lisp65-c2.2-product-link67-f1-f2-v1",
+  "freight": [
+    "F1",
+    "F2"
+  ],
+  "gates": {
+    "F1": {
+      "execution": {
+        "direct": [
+          {
+            "case": "nullary",
+            "compiler_calls": 0,
+            "dispatch": "funcall",
+            "install_calls": 0,
+            "result": "t",
+            "source": "(%f1-zero)"
+          },
+          {
+            "case": "fixed-fixnums",
+            "compiler_calls": 0,
+            "dispatch": "apply",
+            "install_calls": 0,
+            "result": "(7 . 8)",
+            "source": "(%f1-fixed 7 8)"
+          },
+          {
+            "case": "fixed-quotes",
+            "compiler_calls": 0,
+            "dispatch": "apply",
+            "install_calls": 0,
+            "result": "(alpha 1 2)",
+            "source": "(%f1-fixed 'alpha '(1 2))"
+          },
+          {
+            "case": "optional-missing",
+            "compiler_calls": 0,
+            "dispatch": "apply",
+            "install_calls": 0,
+            "result": "(7)",
+            "source": "(%f1-optional 7)"
+          },
+          {
+            "case": "optional-present",
+            "compiler_calls": 0,
+            "dispatch": "apply",
+            "install_calls": 0,
+            "result": "(7 . 8)",
+            "source": "(%f1-optional 7 8)"
+          },
+          {
+            "case": "rest",
+            "compiler_calls": 0,
+            "dispatch": "apply",
+            "install_calls": 0,
+            "result": "(7 8 9)",
+            "source": "(%f1-rest 7 8 9)"
+          }
+        ],
+        "equivalence": [
+          {
+            "byteidentical_object": true,
+            "case": "fixed-fixnums",
+            "compiled_result": "(7 . 8)",
+            "direct_result": "(7 . 8)"
+          },
+          {
+            "byteidentical_object": true,
+            "case": "fixed-quotes",
+            "compiled_result": "(alpha 1 2)",
+            "direct_result": "(alpha 1 2)"
+          },
+          {
+            "byteidentical_object": true,
+            "case": "optional",
+            "compiled_result": "(7)",
+            "direct_result": "(7)"
+          },
+          {
+            "byteidentical_object": true,
+            "case": "rest",
+            "compiled_result": "(7 8 9)",
+            "direct_result": "(7 8 9)"
+          }
+        ],
+        "fallback": [
+          {
+            "case": "variable",
+            "first_compiler_call_index": 8,
+            "source": "(%f1-fixed x 8)"
+          },
+          {
+            "case": "nested",
+            "first_compiler_call_index": 8,
+            "source": "(%f1-fixed (%f1-nested) 8)"
+          },
+          {
+            "case": "compound",
+            "first_compiler_call_index": 8,
+            "source": "(%f1-fixed (if t 7 8) 9)"
+          },
+          {
+            "case": "primitive",
+            "first_compiler_call_index": 3,
+            "source": "(screen-size)"
+          },
+          {
+            "case": "macro",
+            "first_compiler_call_index": 3,
+            "source": "(%f1-macro 7)"
+          },
+          {
+            "case": "undefined",
+            "first_compiler_call_index": 3,
+            "source": "(%f1-undefined 7)"
+          },
+          {
+            "case": "atom",
+            "first_compiler_call_index": 1,
+            "source": "7"
+          }
+        ],
+        "fixture_count": 18,
+        "status": "passed-executable-direct-fallback-and-equivalence-suites",
+        "wrong_arity": {
+          "compiler_calls": 0,
+          "status": "passed-VM-ArityError-without-wrapper"
+        }
+      },
+      "source": {
+        "arity_authority": "CodeObject-header-vm_arity_accepts",
+        "direct_argument_domain": [
+          "fixnum",
+          "string",
+          "nil",
+          "t",
+          "exact unary quote"
+        ],
+        "direct_operator": "published-bytecode",
+        "fallback_preserved": true,
+        "mutations_rejected": 10,
+        "new_resident_state_bytes": 0,
+        "status": "passed-exact-published-value-call-source-contract"
+      }
+    },
+    "F2": {
+      "emission": {
+        "bank2_static_code_bytes": 34990,
+        "bindings": {
+          "bank2": {
+            "bytes": 34990,
+            "path": "build/post-promotion/f2/v6-semantics/bank2-static-code.bin",
+            "sha256": "dfeb6740d122f3a0a3971e8bb885a5a76ea861c8137386b8a7bcad1640f771e2"
+          },
+          "lcc": {
+            "bytes": 220262,
+            "path": "build/post-promotion/f2/lcc.manifest.json",
+            "sha256": "db132d051f63afef609ea5e2f274b7a1b1089d3eed7f6d5b9ea54429ef944a60"
+          },
+          "product": {
+            "bytes": 2240,
+            "path": "build/post-promotion/f2/product/substitution-artifacts.json",
+            "sha256": "ce7e64b739e81e8f734839a01f9d72d924b636dd5ef108456e72f61f6fa0195c"
+          },
+          "stdlib": {
+            "bytes": 185126,
+            "path": "build/post-promotion/f2/stdlib-p0.manifest.json",
+            "sha256": "6e596b9942bd3e336cc00cb4d624b8dc0975a9551bb3b22b90a62686738eb5e2"
+          }
+        },
+        "entries": 602,
+        "images": 6,
+        "lcc_code_bytes": 7569,
+        "product_build_id": "0x864a4d53",
+        "resolutions": 2299,
+        "roots": 283,
+        "shelf_bytes": 72236,
+        "status": "passed-F1-plus-F2-single-emitter-geometry",
+        "stdlib_code_bytes": 8576
+      },
+      "execution": {
+        "dialect_v1_reserved_count": 4,
+        "dialect_v2_active_count": 4,
+        "negative_count": 8,
+        "negative_observations": [
+          {
+            "case": "count-high",
+            "status": "TypeError"
+          },
+          {
+            "case": "count-low",
+            "status": "TypeError"
+          },
+          {
+            "case": "overflow-high",
+            "status": "TypeError"
+          },
+          {
+            "case": "overflow-low",
+            "status": "TypeError"
+          },
+          {
+            "case": "wrong-type-left",
+            "status": "TypeError"
+          },
+          {
+            "case": "wrong-type-right",
+            "status": "TypeError"
+          },
+          {
+            "case": "wrong-arity-low",
+            "status": "ArityError"
+          },
+          {
+            "case": "wrong-arity-high",
+            "status": "ArityError"
+          }
+        ],
+        "positive_count": 28,
+        "positive_observations": [
+          {
+            "case": "logand",
+            "result": 42,
+            "route": "direct"
+          },
+          {
+            "case": "logand",
+            "result": 42,
+            "route": "funcall"
+          },
+          {
+            "case": "logior",
+            "result": 42,
+            "route": "direct"
+          },
+          {
+            "case": "logior",
+            "result": 42,
+            "route": "funcall"
+          },
+          {
+            "case": "logxor",
+            "result": 42,
+            "route": "direct"
+          },
+          {
+            "case": "logxor",
+            "result": 42,
+            "route": "funcall"
+          },
+          {
+            "case": "ash-left",
+            "result": 42,
+            "route": "direct"
+          },
+          {
+            "case": "ash-left",
+            "result": 42,
+            "route": "funcall"
+          },
+          {
+            "case": "ash-right",
+            "result": -42,
+            "route": "direct"
+          },
+          {
+            "case": "ash-right",
+            "result": -42,
+            "route": "funcall"
+          },
+          {
+            "case": "logand-negative",
+            "result": 42,
+            "route": "direct"
+          },
+          {
+            "case": "logand-negative",
+            "result": 42,
+            "route": "funcall"
+          },
+          {
+            "case": "logior-negative",
+            "result": -43,
+            "route": "direct"
+          },
+          {
+            "case": "logior-negative",
+            "result": -43,
+            "route": "funcall"
+          },
+          {
+            "case": "logxor-negative",
+            "result": -44,
+            "route": "direct"
+          },
+          {
+            "case": "logxor-negative",
+            "result": -44,
+            "route": "funcall"
+          },
+          {
+            "case": "ash-left-low-bound",
+            "result": -16384,
+            "route": "direct"
+          },
+          {
+            "case": "ash-left-low-bound",
+            "result": -16384,
+            "route": "funcall"
+          },
+          {
+            "case": "ash-left-high-bound",
+            "result": 16382,
+            "route": "direct"
+          },
+          {
+            "case": "ash-left-high-bound",
+            "result": 16382,
+            "route": "funcall"
+          },
+          {
+            "case": "ash-count-low-bound",
+            "result": -1,
+            "route": "direct"
+          },
+          {
+            "case": "ash-count-low-bound",
+            "result": -1,
+            "route": "funcall"
+          },
+          {
+            "case": "ash-count-high-bound",
+            "result": -16384,
+            "route": "direct"
+          },
+          {
+            "case": "ash-count-high-bound",
+            "result": -16384,
+            "route": "funcall"
+          },
+          {
+            "case": "logand",
+            "result": 42,
+            "route": "apply"
+          },
+          {
+            "case": "logior",
+            "result": 42,
+            "route": "apply"
+          },
+          {
+            "case": "logxor",
+            "result": 42,
+            "route": "apply"
+          },
+          {
+            "case": "ash",
+            "result": 42,
+            "route": "apply"
+          }
+        ],
+        "status": "passed-direct-funcall-apply-and-negative-fixtures"
+      },
+      "source": {
+        "dialect_v1": "reserved",
+        "dialect_v2": "active",
+        "mutations_rejected": 16,
+        "opcodes": {
+          "20": "LOGAND",
+          "21": "LOGIOR",
+          "22": "LOGXOR",
+          "23": "ASH"
+        },
+        "prim_ids_added": 0,
+        "resident_state_bytes": 0,
+        "status": "passed-all-eight-ABI-and-source-views"
+      }
+    },
+    "WPLTO": "passed-one-current-WPLTO-closure-at-typed-historical-qualification-boundary",
+    "all_green": true,
+    "artifact_completion": "passed-no-relink-publish-last-artifact-completion",
+    "canonical_manifest": "passed-fresh-source-product-and-post-link-completion",
+    "product_substitution_link": "passed"
+  },
+  "link_number": 67,
+  "manifest": {
+    "bytes": 353447,
+    "path": "build/post-promotion/link67-f1-f2/canonical-product-manifest.json",
+    "sha256": "8723b74406e810efaba7782f61fc795d7b147b854419ccb3664c0a8c6c78978e"
+  },
+  "next_gate": "Bind this exact product/ELF/profile and the device core/tool identities into the approved 12-row F4 S1 session, then request the single hardware start.",
+  "paper_only": [
+    "F5"
+  ],
+  "parked": [
+    "F3"
+  ],
+  "product": {
+    "bytes": 41566,
+    "path": "build/post-promotion/link67-f1-f2/final/lisp65-c2-substitution-linked.prg",
+    "sha256": "1b6fb1a524a71a63489848531b30e1d399b871ed5b863c93be7232f3362e44f3"
+  },
+  "profile": {
+    "bytes": 11336,
+    "path": "build/post-promotion/link67-f1-f2/final/resolved-profile.txt",
+    "sha256": "54f19610a51bcb853da75f7df2ec6930757f5a2dc69a5f949a83d4d3f8669859"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "static_geometry": {
+    "bank2_static_code_bytes": 34990,
+    "entries": 602,
+    "resolutions": 2299,
+    "roots": 283
+  },
+  "status": "passed-Link67-F1-F2-product-identity-hardware-not-run",
+  "walls": {
+    "bank0_text_headroom_bytes": 90,
+    "e000_headroom_bytes": 151,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 69,
+    "session_family_headroom_bytes": 610
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "format": "lisp65-c2-product-link27-hardware-presmoke-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "attempt": {
+    "candidate": "link-27-vm-gc-e000",
+    "stage": "receipt-less-hardware-presmoke",
+    "acceptance_receipt_created": false,
+    "promotion_claim": "not-run",
+    "downstream_hardware_cases": "not-run-after-first-red"
+  },
+  "pinned_identity": {
+    "product_prg": {
+      "bytes": 41542,
+      "sha256": "7303eb122a34bf2a4c49c3f9875f2eb2e3634ffff91a368f589b1abec7341fbc"
+    },
+    "product_elf": {
+      "bytes": 136284,
+      "sha256": "cb82715a6a2597aa1e3661927a9e6ca40a8975e79a6418a3960c3dafcee8aa7f"
+    },
+    "kernal_window": {
+      "bytes": 8192,
+      "sha256": "c5a426a9869e3cd8e6190b2af108482b71d1eb583096675af4cf9a565b77a83e"
+    },
+    "deployment_manifest_sha256": "a96b4f33e65f35c73598c87dd216ed0a222c71e3107db47f37358a2126c39e1d",
+    "structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link27-vm-gc-e000-structural-receipt.json",
+      "sha256": "af9b356843264af200607a4651e9d109c771b6647e064c51b9ee4dedb7682e2b"
+    },
+    "protection_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link27-vm-gc-e000-protection-receipt.json",
+      "sha256": "ce275e1e701c506045fb7dda08279c3ce47a6f4446b2d57c3469b5d86e1d65ec"
+    },
+    "preload_readbacks": "6/6 byte-identical before launch"
+  },
+  "owner_observation": {
+    "banner_and_repl_appeared": true,
+    "time_to_prompt": "approximately 30 seconds",
+    "banner_speed": "continued to draw slowly",
+    "banner_completeness": "incomplete, as in the previous first-red",
+    "prompt_position": "top of screen rather than below the banner",
+    "first_red_rule": "stopped immediately; no REPL, editor, Freezer or promotion case was claimed"
+  },
+  "hardware_state": {
+    "c2_decoder": {
+      "phase": 13,
+      "finished": 1,
+      "error": 0,
+      "generation": 1,
+      "image_count": 6,
+      "entry_count": 588,
+      "resolution_count": 2264,
+      "interpretation": "The C2 decode and publication path completed cleanly before the VM first-red."
+    },
+    "vm": {
+      "status": 2,
+      "status_name": "VM_BADOPCODE",
+      "active_ordinal": 237,
+      "active_function": "%banner-separator",
+      "code_object_magic": "0xb5",
+      "payload_length": 78,
+      "literal_count": 2,
+      "payload_window_start": 43,
+      "payload_window_length": 35,
+      "payload_window_max": 45,
+      "streaming": 1,
+      "owner_bank": 1,
+      "owner_offset": "0x00ed",
+      "exact_failing_logical_pc": "not captured",
+      "exact_failing_opcode": "not captured"
+    },
+    "gc": {
+      "gc_runs": 0,
+      "interpretation": "No collection ran before the observed stop; this presmoke did not exercise the relocated root walker."
+    },
+    "screen": {
+      "first_360_bytes_match_link25_first_red": true,
+      "link25_full_screen_sha256": "e6568cf8c71f6bdb5b5d30279154f1ebb8cc4387a65dc84fbf2cfac4bedddc07",
+      "link27_full_screen_sha256": "cc4ce42793804be8f561688908a987c5c71aa5d66069e89887973375c961b2b6",
+      "claim": "Only the first 360 bytes are byte-identical; the full 4000-byte screen captures are not claimed identical."
+    }
+  },
+  "diagnosis_correction": {
+    "previous_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link25-hardware-presmoke-first-red-receipt.json",
+      "sha256": "cc27a776a0bbc2d208b77cc48bd6b59e34ab4064cc333a5881c4910f1a8cef29"
+    },
+    "previous_claim": "Link 25 attributed VM_BADOPCODE to relative-branch C-pointer arithmetic across the streamed window.",
+    "new_evidence": "Link 27 contains the logical-u16-PC helper at 0xfb34, passes its host mutation gate, and nevertheless reproduces the same incomplete-banner state and VM_BADOPCODE in %banner-separator.",
+    "correction": "The Link-25 relative-branch diagnosis is not sufficient to explain the hardware failure and must not be treated as the proven root cause. It may have described a real defect, but it did not close this first-red.",
+    "current_root_cause": "unresolved",
+    "excluded_overclaim": [
+      "No exact failing PC or opcode was captured, so the branch helper is not blamed again.",
+      "The poke primitive is present in the source registry, ABI and target dispatch; it is not classified as a registry omission.",
+      "The available state does not distinguish a branch, stack, opcode-decode or CALLPRIM failure."
+    ]
+  },
+  "performance_observation": {
+    "link25_time_to_prompt": "approximately 60 to 68 seconds",
+    "link27_time_to_prompt": "approximately 30 seconds",
+    "interpretation": "The relocation and deduplication improved observed cold-start time, but no performance gate passes: thirty seconds and visibly slow rendering remain unacceptable, and visual correctness is red."
+  },
+  "immutable_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link27-hardware-presmoke-first-red-20260720/root",
+    "files": 15,
+    "total_file_bytes": 186916,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "87022734438a988f27c4b19d7b952fda6e0cf913ec35e2ed22b97f9b4085990d",
+    "file_mode": "0444",
+    "directory_mode": "0555",
+    "artifacts": {
+      "c2_runtime": "65c17221aeaef1185389fda5da625592e490066158bf40826553618d25c29a7b",
+      "zero_page": "71e4dd0a26e2b14b83a33a50fea1d422dd923cd4c6bc5d8e55c9720a01020e9c",
+      "vm_buffer": "bdf87ac005bb6ec421b8d9ae28343717580b4576560fefb47117093062eb85ef",
+      "vm_owner": "430e2ca27910b5ee6e0ec56a12b81325c763376cb8e25a60362dce9444424f95",
+      "gc_state": "5024b6941d2b51708c5f9878e6de41b7b58e9d483f91c3cc9dbeac95cfe1aa7c",
+      "screen": "cc4ce42793804be8f561688908a987c5c71aa5d66069e89887973375c961b2b6"
+    }
+  },
+  "bounded_next_step": {
+    "status": "not-authorized-not-run",
+    "scope": "Capture the first failing VM instruction in %banner-separator on hardware without changing the promoted product contract.",
+    "required_values": [
+      "logical payload PC and opcode immediately before the first nonzero vm_status",
+      "stack depth and current function ordinal",
+      "for a relative branch: source PC, signed delta, computed logical target, current window start and length",
+      "for CALLPRIM: primitive id and argument count"
+    ],
+    "constraints": [
+      "Use one bounded diagnostic target or an existing product-shaped diagnostic seam.",
+      "No speculative product correction before the trace identifies the failing operation.",
+      "No Link 28, promotion, hardware acceptance or G6 receipt is authorized by this record."
+    ]
+  },
+  "claim_limit": "Receipt-less hardware diagnosis of Link 27 only. It proves clean C2 completion followed by VM_BADOPCODE in %banner-separator, and it refutes the sufficiency of the prior branch-only explanation. It proves no exact root cause, hardware acceptance, promotion or release claim."
+}

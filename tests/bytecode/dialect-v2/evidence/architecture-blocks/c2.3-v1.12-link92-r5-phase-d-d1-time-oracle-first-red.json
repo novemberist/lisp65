@@ -1,0 +1,98 @@
+{
+  "actual": {
+    "q": {
+      "form": "(q->string(q*(q 1 64)(q -2 0)))",
+      "result": "\"-3.0\"",
+      "status": "passed-exact"
+    },
+    "time": {
+      "form": "(time(+ 1 2))",
+      "result": "1 3",
+      "status": "first-red-exact-zero-frame-expectation"
+    }
+  },
+  "bindings": {
+    "context_screen": {
+      "bytes": 3202,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-context.png",
+      "sha256": "3b2bfcf852228d3cf933e208ca1b7fa770e5225628188ff5b5c269a9e8f85bfd"
+    },
+    "context_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-context.txt",
+      "sha256": "ba6797106016eca8e28e37e590345ba63ee6abc92b90102fd2f7b990326ed75d"
+    },
+    "preparation": {
+      "bytes": 2847,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d1-smoke-preparation-receipt.json",
+      "sha256": "de0fba4615f587e280f8a6138d6a16d7eda30b0a20cefe39278d3a0f4ab65367"
+    },
+    "q_input_echo": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-q-input-attempt-1.txt",
+      "sha256": "07c0e6120226a6cd7a93cde50559e5d7338b552740253b4f84ef4faa9d1a4029"
+    },
+    "q_screen": {
+      "bytes": 3769,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-q.png",
+      "sha256": "d9a5ec00bd1b30467294c6e7fef8b08d21097f44dfd0ba02503bbad34ea13e97"
+    },
+    "q_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-q.txt",
+      "sha256": "85da69d2406ef8b2077a0dcbe196e54cc3ad399212d7b679be0aafa22929f365"
+    },
+    "q_timing": {
+      "bytes": 179,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-q-timing.json",
+      "sha256": "9f69aad44d6f7ce179de8984eae48f020cced44273ee784d95efc106801af533"
+    },
+    "time_input_echo": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-time-input-attempt-1.txt",
+      "sha256": "eef252c418f97ee91f8150139e93592dad88b40e51540536a5714afed67c3f53"
+    },
+    "time_screen": {
+      "bytes": 4134,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-time.png",
+      "sha256": "9df05e737258e775dd83cf5b50b94da6b0385b87b5615e827055979972da12f2"
+    },
+    "time_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-time.txt",
+      "sha256": "af625e44c2ea5f051b35904c9f9be518ab2eed9e866a0bdf2040c1c55f11cd30"
+    },
+    "time_timing": {
+      "bytes": 180,
+      "path": "build/c2.3/v1.4.0-release/phase-d/d1-smokes/D1-time-timing.json",
+      "sha256": "4a069b79bac52ed84f8659a7662ad1068bad184fb3b0dbd879b259f9610993a6"
+    }
+  },
+  "classification": {
+    "mechanism": "The D1 classifier copied the historical measured value 0 as an exact semantic expectation for the frame-count field of (time). The live result crossed one raster-frame boundary and correctly returned 1 together with the user result 3.",
+    "product_claim": "none",
+    "recommended_correction": "Validate the (time) result structurally as a nonnegative frame count followed by the exact user result 3; retain exact form echo, fail-closed-frame and prompt checks.",
+    "type": "harness-first-red-overfitted-time-oracle"
+  },
+  "execution_accounting": {
+    "D1_rows_attempted": 2,
+    "D1_rows_green": 1,
+    "D1_rows_unattempted": 1,
+    "D2_rows": 0,
+    "D3_rows": 0,
+    "hardware_contacts": 1,
+    "media_rebuilds": 0,
+    "product_rebuilds": 0
+  },
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-d1-time-oracle-first-red-v1",
+  "recorded_on": "2026-08-07",
+  "status": "first-red-d1-time-exact-zero-frame-oracle",
+  "stopped_state": {
+    "D1_q": "green",
+    "D1_strings": "not_sent",
+    "D1_time": "semantically-shaped-result-visible-but-exact-classifier-red",
+    "D2": "untouched",
+    "D3": "untouched",
+    "live_REPL": "visible-after-time-result"
+  }
+}

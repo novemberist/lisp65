@@ -1,0 +1,170 @@
+{
+  "authorities": {
+    "driver": {
+      "bytes": 23516,
+      "path": "tools/host-lisp/c2_v16_boot_durable_progress.py",
+      "sha256": "ccdfa0ec0562f3e1f90d2e4b310a178a720bbf4259bbac095ba70b574223d6d0"
+    },
+    "durable_witness": {
+      "bytes": 14701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-boot-order-durable-witness-receipt.json",
+      "sha256": "5ec917daf1308ebab615b7fa73f0997b87abbe52d85ee0488ba41033b0d7cb8e"
+    },
+    "hardware_runner": {
+      "bytes": 4455,
+      "path": "scripts/c2-v16-defstruct-durable-progress-hw.sh",
+      "sha256": "1cf53c4ee13d91a079e51eb2d5d466986cb8bf42cec8d761f12f0390903c3fb8"
+    },
+    "owner_commission": {
+      "bytes": 74338,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "f6ed94fda328af86ea86579505b527b4cbeee0042ee580409b823d5502dc3438"
+    },
+    "phase_C_deployment": {
+      "bytes": 8053,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/deployment.json",
+      "sha256": "2f4196ac4771457fc72ddb1e6538c37ed924046d7dca7ed46011fac03dbc7669"
+    }
+  },
+  "claim_limit": "One physical RUN and one read-only durable progress row for the non-promotable Link-82 diagnostic sibling. No require, defstruct, R/A/I/G result, product defect, fix, link or release is claimed.",
+  "execution_witnesses": [
+    "the derived identity differs only at $C045/$C046",
+    "the changed operand redirects STX from $C07A to owned $B5C3",
+    "the prelaunch sentinel is read back before physical RUN",
+    "ELF binds gc_runs as a two-byte monotonic collection generation",
+    "the linked entry sequence increments gc_runs with 16-bit carry",
+    "volatile $16..$1F is auxiliary context, never the sole oracle",
+    "all table rows run zero measured Lisp forms"
+  ],
+  "facts": {
+    "appointment": {
+      "CPU_side_reads": [
+        "PC",
+        "$B5C3",
+        "$003D..$003E",
+        "$B9F0..$B9F1",
+        "$0016..$001F"
+      ],
+      "R_A_I_G_claimed": false,
+      "leave_CPU_stopped_after_final_sample": true,
+      "measured_forms": 0,
+      "physical_RUN": true,
+      "samples": 3,
+      "spacing_seconds": 5.0
+    },
+    "choreography": {
+      "diagnostic_loaded_before_preloads": true,
+      "runner": {
+        "bytes": 4455,
+        "path": "scripts/c2-v16-defstruct-durable-progress-hw.sh",
+        "sha256": "1cf53c4ee13d91a079e51eb2d5d466986cb8bf42cec8d761f12f0390903c3fb8"
+      },
+      "sentinel_read_back_before_physical_RUN": true,
+      "sentinel_written_after_all_loads": true
+    },
+    "decision_table": {
+      "changing_collection_state": "TEMPORALLY-OBSERVED-PROGRESS",
+      "increasing_gc_runs_with_zero_freelist": "ALLOCATION-GC-REENTRY-LOOP",
+      "other": "FIRST-RED-UNCLASSIFIED-NO-OVERCLAIM",
+      "reset_durable_slot_after_entry": "BOOT-ENTRY-IDENTITY-OR-VIEW-FIRST-RED",
+      "stable_post_entry_non_GC_state": "POST-ENTRY-HANG-SITE",
+      "stable_single_collection_state": "STALLED-IN-SINGLE-COLLECTION"
+    },
+    "identity": {
+      "ELF": {
+        "bytes": 620700,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.elf",
+        "sha256": "fb8d9b51a0b9f88d08c6bb22debf686576677ce595b55b296c2e7afdbac66ffd"
+      },
+      "base_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-phase-c/artifacts/diagnostic-link82.prg",
+        "sha256": "d95bd77c3ea0ec6d091630895e59d31ad5f6df5896292c0f20a9aadbc9ac7936"
+      },
+      "changes": [
+        {
+          "address": "0xc045",
+          "after": "0xc3",
+          "before": "0x7a"
+        },
+        {
+          "address": "0xc046",
+          "after": "0xb5",
+          "before": "0xc0"
+        }
+      ],
+      "diagnostic_bytes_changed": 2,
+      "durable_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-durable-progress-appointment/diagnostic-link82-durable-b5c3.prg",
+        "sha256": "347ecdd0aa9d8dda70a20177b9c77409264b1102ecfd01b23ba1ab3b7c27ab59"
+      },
+      "entry_hook": "0x202c",
+      "entry_routine": "0xc03f",
+      "entry_routine_bytes": "a2448e30d08ec3b560",
+      "product_bytes_changed": 0,
+      "promotable": false
+    },
+    "progress": {
+      "auxiliary_GC_context": {
+        "address": "0x0016",
+        "bytes": 10,
+        "claim": "context only; never a standalone monotonic oracle"
+      },
+      "collection_generation": {
+        "address": "0xb9f0",
+        "bytes": 2,
+        "semantics": "monotonic increment at each gc_collect entry",
+        "symbol": "gc_runs"
+      },
+      "freelist": {
+        "address": "0x003d",
+        "bytes": 2
+      },
+      "intervals": [
+        {
+          "end_exclusive": "0x3ec2",
+          "name": "gc_collect",
+          "start": "0x38f7"
+        },
+        {
+          "end_exclusive": "0xe2dd",
+          "name": "c2_product_gc_mark_roots",
+          "start": "0xe0ba"
+        }
+      ]
+    },
+    "witness": {
+      "address": "0xb5c3",
+      "bytes": 1,
+      "entry_stamp": "0x44",
+      "owner_collision_mutations": 30,
+      "prelaunch_CPU_readback_required": true,
+      "prelaunch_reset": "0xd7",
+      "reset_file": {
+        "bytes": 1,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-durable-progress-appointment/durable-witness-reset.bin",
+        "sha256": "414a21e525a759e3ffeb22556be6348a92d5a13e40b61a0805f36f18c2909513"
+      }
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-D2-durable-progress-preparation-v1",
+  "recorded_on": "2026-08-05",
+  "rejected_mutations": [
+    "third-diagnostic-byte",
+    "old-C07A-target",
+    "promotable",
+    "product-byte-claim",
+    "witness-address",
+    "sentinel-zero",
+    "stamp-equals-reset",
+    "skip-prelaunch-readback",
+    "gc-runs-address",
+    "gc-context-as-oracle",
+    "measured-form",
+    "resume-after-final-read",
+    "drop-fourth-row",
+    "skip-prelaunch-order"
+  ],
+  "status": "HOST-GREEN; ONE DURABLE-WITNESS CONTACT AUTHORIZED"
+}

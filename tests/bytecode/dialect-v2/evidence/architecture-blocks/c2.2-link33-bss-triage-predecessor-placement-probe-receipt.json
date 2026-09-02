@@ -1,0 +1,131 @@
+{
+  "diagnostic": "fixed facade red: E000 code bypasses the fixed vectors [{'section': '.lisp65_c2_kernal_window.c2_resident', 'target': '0x1800', 'instruction': 'jsr\\t$1800'}]",
+  "evidence": {
+    "bss-triage-predecessor-placement-seed.prg": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/bss-triage-predecessor-placement-seed.prg",
+      "sha256": "3bfa2f729a8dd61848cef6e5521a9ca5a76460470e6abbf789bafa9a05e3eb72"
+    },
+    "bss-triage-predecessor-placement-seed.prg.elf": {
+      "bytes": 561084,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/bss-triage-predecessor-placement-seed.prg.elf",
+      "sha256": "daeb0936619c079016cac41f095dda77970006e4dcd97a19223cf6b2f0e3c32b"
+    },
+    "bss-triage-predecessor-placement-seed.prg.link.stderr.txt": {
+      "bytes": 865,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/bss-triage-predecessor-placement-seed.prg.link.stderr.txt",
+      "sha256": "21d86f0ec5cb0d5643337c0678c09f6ba494210447835d8661fcdb42862e41d6"
+    },
+    "bss-triage-predecessor-placement-seed.prg.link.stdout.txt": {
+      "bytes": 0,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/bss-triage-predecessor-placement-seed.prg.link.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bss-triage-predecessor-placement-seed.prg.lto.o": {
+      "bytes": 563752,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/bss-triage-predecessor-placement-seed.prg.lto.o",
+      "sha256": "9715adcec4807fefe2a3e959157c852e01a0b818812727cd2f07205f1466c414"
+    },
+    "bss-triage-predecessor-placement-seed.prg.map": {
+      "bytes": 194649,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/bss-triage-predecessor-placement-seed.prg.map",
+      "sha256": "232f3a3f5a64856bebefc7e341690ff2967d81300124d5419df34060dff1b696"
+    },
+    "handoff-z-abi-bss-triage-probe.json": {
+      "bytes": 2168,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/handoff-z-abi-bss-triage-probe.json",
+      "sha256": "2fb3b5f787cc4ed0c87058905f5432a506b48d9369f368d70c75cb9cd95b214f"
+    },
+    "pre-ownership-closure-bss-triage-probe.json": {
+      "bytes": 3087,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/pre-ownership-closure-bss-triage-probe.json",
+      "sha256": "855a1146a0123abfd9f2584c1d0a7d599873de4fcd57d6920f099a73d980a0a3"
+    },
+    "profile-data-reference-bss-triage-probe.json": {
+      "bytes": 4152,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/profile-data-reference-bss-triage-probe.json",
+      "sha256": "b32b77c715879a1a35c0d4cc226c50dbe5aca3260ef0be71ac2ca95da4cc1df9"
+    },
+    "resolved-profile.txt": {
+      "bytes": 6354,
+      "path": "build/c2.2/substitution/link33-bss-triage-predecessor-placement-probe/resolved-profile.txt",
+      "sha256": "6a84ec2cdab06a553ec1390f93c851ad8c4e852bc0708214b1029fb8a8720889"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "linker_script_parse_attempts": 1,
+    "product_closure_links": 0,
+    "successful_seed_links": 1,
+    "whole_program_lto_seed_attempts": 1
+  },
+  "final_e000_floor": "not-bound",
+  "format": "lisp65-c2-link33-bss-triage-placement-first-red-v1",
+  "fresh_gate_progress": {
+    "fixed_facade": "FIRST RED",
+    "fixed_facade_violation": {
+      "instruction": "jsr $1800",
+      "instruction_address": "0xf3ec",
+      "source_function": "c2_entry_records",
+      "source_section": ".lisp65_c2_kernal_window.c2_resident",
+      "target": "c2_product_handle_normalize",
+      "target_section": ".lisp65_resident_island"
+    },
+    "handoff_z_and_io": "passed",
+    "kernal_freedom_and_later_gates": "not-reached",
+    "ordinary_rodata_predecessor_relation": "passed",
+    "pre_ownership_including_fixed_hot_heap": "passed",
+    "profile_data_references": "passed",
+    "runtime_slice_caps": "passed-before-facade-gate",
+    "whole_program_capacity": "map-green"
+  },
+  "inventory": {
+    "bytes": 11354,
+    "path": "config/c2-link33-bss-triage-inventory.json",
+    "sha256": "18f04817f7be971176c4947f3ee14870613eca1b71a71a548739792455faed97"
+  },
+  "next_gate": "return-to-owner-review-no-retry-link-or-presmoke",
+  "recorded_on": "2026-07-21",
+  "receipt_binding_correction": {
+    "artifact_changes": 0,
+    "cause": "The first receipt-only replay ran in a fresh host process without restoring the E000-reopening probe configuration and temporarily reported 531 rather than 115 window bytes.",
+    "correction": "Rebind the same SHA-identical map/LTO/PRG/ELF evidence after configure(); the 419-byte reopening debit and 115-byte map remainder are authoritative.",
+    "extra_link_or_hardware_runs": 0
+  },
+  "rollback_line": {
+    "link32_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "untouched"
+  },
+  "status": "FIRST RED: predecessor-bound WPLTO closed every resident wall but the fixed-facade gate rejected a direct E000-to-Island call",
+  "whole_program_map_observation": {
+    "capacity_interpretation": "All measured resident walls are nonnegative, but the final E000 floor remains unbound until every post-link structural gate passes and the contract is updated.",
+    "claim_limit": "The linker emitted a complete map before the first-red gate stopped the attempt. These are map observations, not passed capacity or structural gates.",
+    "e000_actual_debit_bytes": 419,
+    "e000_floor_candidate_bytes": 115,
+    "fixed_hot_heap": {
+      "address": 49733,
+      "bytes": 240,
+      "end_exclusive": 49973,
+      "load_address": 49733
+    },
+    "headroom_bytes": {
+      "bank0_text_headroom_bytes": 41,
+      "e000_headroom_bytes": 115,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 229,
+      "resident_island_headroom_bytes": 7
+    },
+    "ordinary_rodata": {
+      "address": 46584,
+      "address_delta_from_requirement": 0,
+      "bytes": 826,
+      "end_exclusive": 47410,
+      "gate": "passed-predecessor-vma-lma-relation",
+      "load_address": 46584,
+      "load_address_delta_from_requirement": 0,
+      "required_address": 46584,
+      "required_load_address": 46584
+    },
+    "predecessor_rodata_relation": "passed"
+  }
+}

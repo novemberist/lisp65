@@ -1,0 +1,94 @@
+{
+  "format": "lisp65-c2-l65r-v2-verifier-frame-handoff-capacity-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: direct handoff is semantically green but does not close both resident walls",
+  "scope": {
+    "whole_program_lto_probe_links": 1,
+    "product_closure_links": 0,
+    "link33_attempts": 0,
+    "hardware_runs": 0,
+    "retry_authorized": false
+  },
+  "semantic_result": {
+    "direct_authenticated_frame": "passed",
+    "second_install_representation_count": 0,
+    "writes_between_authentication_and_slot8": 0,
+    "host_fail_closed_cases": 12,
+    "post_authentication_frame_mutation": "rejected-before-installation",
+    "source_gate_mutations_rejected": 4
+  },
+  "whole_program_attribution": {
+    "resident_text": {
+      "predecessor_bytes": 38332,
+      "frame_handoff_bytes": 38030,
+      "reclaimed_bytes": 302,
+      "predecessor_overflow_bytes": 350,
+      "remaining_overflow_bytes": 48
+    },
+    "named_resident_functions": {
+      "vm_runtime_overlay_exec_family": {
+        "predecessor_bytes": 1594,
+        "frame_handoff_bytes": 1353,
+        "reclaimed_bytes": 241
+      },
+      "vm_runtime_overlay_install_island": {
+        "predecessor_bytes": 251,
+        "frame_handoff_bytes": 190,
+        "reclaimed_bytes": 61
+      }
+    },
+    "installer_slice": {
+      "cap_bytes": 1792,
+      "predecessor_bytes": 1484,
+      "frame_handoff_bytes": 1958,
+      "delta_bytes": 474,
+      "overflow_bytes": 166,
+      "components": {
+        "rtov_island_build_id_bytes": 36,
+        "rtov_island_source_crc_predecessor_bytes": 366,
+        "rtov_island_source_crc_frame_handoff_bytes": 322,
+        "rtov_island_source_crc_delta_bytes": -44,
+        "rtov_island_u16_bytes": 12,
+        "vm_resident_island_install_predecessor_bytes": 1070,
+        "vm_resident_island_install_frame_handoff_bytes": 1588,
+        "vm_resident_island_install_delta_bytes": 518
+      }
+    }
+  },
+  "classification": {
+    "primary_first_red": "installer-slice-over-cap-by-166-bytes",
+    "coequal_capacity_red": "resident-text-over-by-48-bytes",
+    "follow_on_linker_diagnostics": [
+      "ordinary-rodata-predecessor-relation-drift",
+      "text-handoff-overlap"
+    ],
+    "interpretation": "The direct handoff removed the resident marshalling layer exactly where intended, but the runtime rebinding proof moved more code into the fixed installer slice than that slice can hold. The authorized cut therefore does not close capacity as a whole."
+  },
+  "evidence": {
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v2-verifier-frame-handoff-capacity-probe-receipt.json",
+      "bytes": 6820,
+      "sha256": "d778247b6728ae9d00d9793c75e117e799a5217ba0730b531724d2f5fc02a11f"
+    },
+    "predecessor_map": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-boot-family-probe/l65r-v2-boot-family-seed.prg.map",
+      "sha256": "ac2dcff8b9a165aa543474133f14a89b984d3d3a1bdd904fb610cc0e50a72f79"
+    },
+    "frame_handoff_map": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-frame-handoff-probe/l65r-v2-boot-family-seed.prg.map",
+      "bytes": 183519,
+      "sha256": "d1c474ae3ce0d00cd879ed21e1738242e7f44babb14c020b79fe39ae0768d1ab"
+    },
+    "host_stdout": {
+      "path": "build/c2.2/substitution/link33-l65r-v2-frame-handoff-probe/target-decoder-host.stdout.txt",
+      "bytes": 59,
+      "sha256": "b625eecc1aaef545401f13e97260cb843622487441fdcd998fd6b917982d3160"
+    },
+    "runtime_source_sha256": "f956b163a20ab43adb2fd795422db494e16b3dbfc4b2dd087364fcaf9dfc6c4b"
+  },
+  "rollback_line": {
+    "link32_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "untouched"
+  },
+  "next_gate": "review required; no automatic second WPLTO probe, Link 33 or hardware run"
+}

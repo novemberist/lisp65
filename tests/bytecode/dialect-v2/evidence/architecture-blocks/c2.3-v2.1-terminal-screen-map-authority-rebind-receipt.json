@@ -1,0 +1,158 @@
+{
+  "authority": {
+    "card_Final_Red": {
+      "bytes": 9883,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-terminal-screen-lease-card-final-red.json",
+      "sha256": "84c3afbd77124133ce38d0ed4befd45253accd18aab89a10468a3720b6c0b934"
+    },
+    "driver": {
+      "bytes": 8877,
+      "path": "tools/host-lisp/c2_v21_terminal_screen_map_authority_rebind.py",
+      "sha256": "19cf0a22790e8d052b010b26d77ab4f1d1f504f8e32668b45a2b10caf7c872a1"
+    },
+    "historical_MAP_mask": {
+      "bytes": 3477,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-map-mask-fix-phase9-abi-rebind-receipt.json",
+      "sha256": "06c514a29273e9e4f780ae364fc2c00dbd66f28ebaafa90bfb35a6ff4bf804dc"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 102736,
+      "commit": "9180e59a2c471d5d54ab9273b7d9e65396c6658c",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "da2aec16f1c2190b38afc27ea95925e97031cca666b8846c84e451204212413c"
+    },
+    "screen_lease": {
+      "bytes": 2881,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-terminal-screen-lease-preflight-receipt.json",
+      "sha256": "f4515a0dfff685850cbc5fdb988a9da019ac1221a78b03a7c6766d31cec7f082"
+    }
+  },
+  "claim_limit": "Authority-only successor; the historical receipt is immutable.",
+  "execution_lock": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-terminal-screen-MAP-authority-rebind-v1",
+  "mutations_rejected": [
+    "widen-source-delta",
+    "claim-map-change",
+    "alter-mask-model",
+    "drop-historical-lineage",
+    "authorize-wplto",
+    "authorize-link",
+    "consume-card"
+  ],
+  "recorded_on": "2026-08-16",
+  "semantic_equivalence": {
+    "emitted_construction": {
+      "borrow_then_mask_opcode": "a500e900290f09408500",
+      "crossing_add_uses_cmp_carry": true,
+      "crossing_inc_rmb4_same_zp": true,
+      "mask_then_borrow_opcode_count": 0,
+      "reader_object_bytes": 189
+    },
+    "historical_mutations_preserved": [
+      "accept-ffc0",
+      "reject-4fc0",
+      "accept-arbitrary-self-cover",
+      "hide-old-opcode",
+      "drop-crossing-mask",
+      "remove-check",
+      "spend-card",
+      "restore-ffc0-borrow-order",
+      "drop-8k-crossing-mask"
+    ],
+    "model": {
+      "boundary_crossings_checked": 9072,
+      "domains": {
+        "c2d-bank5": {
+          "base": "0x00050000",
+          "bytes": 50816,
+          "crossings_checked": 378,
+          "starts_checked": 386
+        },
+        "product-shelf-attic": {
+          "base": "0x08100000",
+          "bytes": 93681,
+          "crossings_checked": 693,
+          "starts_checked": 706
+        },
+        "session-attic": {
+          "base": "0x08400000",
+          "bytes": 1048576,
+          "crossings_checked": 8001,
+          "starts_checked": 8130
+        }
+      },
+      "initial_windows_checked": 9222,
+      "negative_self_covering": [
+        {
+          "A": "0xc0",
+          "MAPL": "0xffc0",
+          "X": "0xff",
+          "selected_blocks": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "A": "0xc0",
+          "MAPL": "0x2fc0",
+          "X": "0x2f",
+          "selected_blocks": [
+            1
+          ]
+        }
+      ],
+      "positive": {
+        "A": "0xc0",
+        "MAPL": "0x4fc0",
+        "X": "0x4f",
+        "selected_blocks": [
+          2
+        ]
+      },
+      "reader": {
+        "block": 1,
+        "start": "0x2277"
+      },
+      "status": "PASS: every constructed tuple selects block 2 only"
+    },
+    "placement_price": {
+      "checks_removed": 0,
+      "expected_linked_bytes": 189,
+      "expected_reserve_bytes": 1,
+      "fixed_object_bytes": 189,
+      "pre_fix_linked_bytes": 188,
+      "pre_fix_reserve_bytes": 2
+    }
+  },
+  "source_lineage": {
+    "MAP_construction_changed": false,
+    "new_immediate": "0x29",
+    "old_immediate": "0x00",
+    "post_screen": {
+      "authority": "git-blob",
+      "bytes": 6279,
+      "commit": "cbcae624016541e9774c184ac424281ca7ffa7e6",
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "23ac439dbae2655a20a3c858717aeb924ecba3d817ef6a83c43ffe166ee063ef"
+    },
+    "pre_screen": {
+      "authority": "git-blob",
+      "bytes": 6050,
+      "commit": "81d2b9cbc4133dbbdff3401a44abd3c26c90b11c",
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "2ae0e027d2086a1053df2fe74eb1210758a824aadb4b52e7bf1ac71b3d13f129"
+    },
+    "semantic_instruction_delta_bytes": 1
+  },
+  "status": "PASS: MAP authority loudly rebound across screen-only byte"
+}

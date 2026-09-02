@@ -1,0 +1,111 @@
+{
+  "case": "arity-invalid-duplicate-marker-code59",
+  "contract": {
+    "error_code": 59,
+    "prim_id": 56,
+    "sentinel": "%lcc-error-invalid-parameter-list"
+  },
+  "engines": {
+    "lisp-lcc": {
+      "coverage": "live-code-and-sentinel",
+      "expected": "!error:code=59:symbol=%lcc-error-invalid-parameter-list",
+      "lcc_parameter_path": "lcc-compile-obj",
+      "observation": "!error:code=59:symbol=%lcc-error-invalid-parameter-list",
+      "verdict": "pass"
+    },
+    "native-c-compiler-vm": {
+      "carrier_cut_surface": [
+        "surface:eval-direct=42",
+        "surface:funcall-eval=42",
+        "surface:apply-eval=42"
+      ],
+      "coverage": "live-code-and-sentinel",
+      "expected": "!error:code=59:symbol=%lcc-error-invalid-parameter-list",
+      "lcc_parameter_path": "lcc-compile-obj",
+      "observation": "!error:code=59:symbol=%lcc-error-invalid-parameter-list",
+      "verdict": "pass"
+    },
+    "native-c-treewalk": {
+      "coverage": "live-code-and-sentinel",
+      "expected": "!error:code=59:symbol=%lcc-error-invalid-parameter-list",
+      "lcc_parameter_path": "lcc-compile-obj",
+      "observation": "!error:code=59:symbol=%lcc-error-invalid-parameter-list",
+      "verdict": "pass"
+    },
+    "python-p0-compiler-vm": {
+      "coverage": "live-code-and-sentinel",
+      "expected": "!error:code=59:symbol=%lcc-error-invalid-parameter-list",
+      "lcc_parameter_path": "lcc-compile-obj",
+      "observation": "!error:code=59:symbol=%lcc-error-invalid-parameter-list",
+      "verdict": "pass"
+    }
+  },
+  "evidence_gap": null,
+  "format": "lisp65-dialect-v2-lcc-compile-error-verdict-v1",
+  "full_invalid_parameter_path_engines": [
+    "native-c-treewalk",
+    "native-c-compiler-vm",
+    "python-p0-compiler-vm",
+    "lisp-lcc"
+  ],
+  "inputs": [
+    {
+      "path": "build/bytecode/dialect-v2/workbench-service-call-inventory.json",
+      "sha256": "9d03104f051a5180b8b7025a509797a3b48fd9bb7023682301daf7d13f7258a8"
+    },
+    {
+      "path": "build/bytecode/dialect-v2/workbench/stdlib-p0.blob.bin",
+      "sha256": "2c7b580cf560dce8362103d03c56a402e880c084e4122bda6932cd1ea31e1a3e"
+    },
+    {
+      "path": "build/bytecode/dialect-v2/workbench/stdlib-p0.c",
+      "sha256": "ef4237e7ce4258d3f314ca3d8eb287015018c409297fc9a92e41bc9f6455a289"
+    },
+    {
+      "path": "build/bytecode/dialect-v2/workbench/stdlib-p0.h",
+      "sha256": "50126af28ff96db69de71b85ed62cec3b99e517dbe921a4c04a6c0f534b6c947"
+    },
+    {
+      "path": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+      "sha256": "3729e6b05e97601aed3d63d1d8f663a3e4e42f3701d97256bf041fb5ef069a71"
+    },
+    {
+      "path": "build/equivalence/dialect-v2-equivalence-check",
+      "sha256": "eeb38529cf6e31fbde43846c3ec5f6ea437e812523fe9a3a336b6a5bb7ed1a8b"
+    },
+    {
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "c51cc94bf1cfd3804a0da55f5b7f9d902e5ebf726699c52e9499da045e5e7c63"
+    },
+    {
+      "path": "config/error-code-contract.json",
+      "sha256": "345aa42fc014b90d92f4d06423e98f372cf2dad79f8631767a7436a015f3ce06"
+    },
+    {
+      "path": "lib/dialect-v2/lcc-profile.lisp",
+      "sha256": "4d898c56831e676fa308c497bc25b7fa776de4883d5e86ad2ad2c07107129882"
+    },
+    {
+      "path": "lib/lcc.lisp",
+      "sha256": "e1a737ba2ee6ab79062ff24be55517810eb0638d935204d252d9a04fa8c68d7e"
+    },
+    {
+      "path": "scripts/dialect-v2-lcc-manifest-main.c",
+      "sha256": "65dc913c2922520f2447bf4fabff8174d2005a5b8ff044785434425759bc8d40"
+    },
+    {
+      "path": "scripts/equivalence-main.c",
+      "sha256": "3966e0a86ee9da7280ebd573d05a461d129851d8004d24296797c9d90a4b25d5"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/lcc-surface/invalid-parameter-list.json",
+      "sha256": "4e35655527f6783311482b1abb732a60a31f7365e89926128c07862b66b68381"
+    }
+  ],
+  "native_carrier_cut_surface": [
+    "surface:eval-direct=42",
+    "surface:funcall-eval=42",
+    "surface:apply-eval=42"
+  ],
+  "verdict": "pass"
+}

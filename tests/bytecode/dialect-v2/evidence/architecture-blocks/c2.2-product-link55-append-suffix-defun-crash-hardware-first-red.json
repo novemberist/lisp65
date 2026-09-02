@@ -1,0 +1,100 @@
+{
+  "format": "lisp65-c2-lite-v6-link55-defun-crash-hardware-first-red-v1",
+  "recorded_on": "2026-07-23",
+  "status": "first-red-uncontrolled-hardware-crash-during-defun",
+  "promotable": false,
+  "authority": {
+    "link55_structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link55-c2-lite-v6-append-suffix-fusion-final-structural-receipt.json",
+      "bytes": 727968,
+      "sha256": "c6e2bcd8284e22289aae7ccc7471cd4622da703a3e0ebbb1b660e6fb29216c8d"
+    },
+    "deployment": {
+      "path": "build/c2.2/hardware-presmoke-link55-append-suffix-fusion/deployment.json",
+      "bytes": 3686,
+      "sha256": "bb321fbaf18f68b819c785e5d7ca5d5d2eb27afc7b283c93f47551c57a1cc8c5"
+    },
+    "product": {
+      "path": "build/c2.2/substitution/product-link-55-c2-lite-v6-append-suffix-fusion-attempt2/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "968990d2fd2904cd1d97aa16e870c3c369f3fa27d787f2894dd9db08dbd3297d"
+    },
+    "link54_rollback_product": {
+      "path": "build/c2.2/substitution/product-link-54-c2-lite-v6-phase06a-cutpoint/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "4cfc797f4ac4fac6cc4fea363ea684ea0dc8c7b395372ebc8bbfe2072fedef07",
+      "status": "untouched"
+    }
+  },
+  "deployment_readbacks": {
+    "status": "passed-six-of-six-byte-identical-before-execution",
+    "artifacts": [
+      {
+        "path": "build/c2.2/hardware-presmoke-link55-append-suffix-fusion/readback-initial.c2d-v6.bin",
+        "bytes": 33840,
+        "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link55-append-suffix-fusion/readback-boot-overlay.stage.bin",
+        "bytes": 3285,
+        "sha256": "286c213f994e341e35e9b08f02495bd69a580c1de306da308d02c4c18d822c8d"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link55-append-suffix-fusion/readback-runtime-overlays-session-final.bin",
+        "bytes": 65438,
+        "sha256": "a048e1f8fc5712fe1d24612eed24c0d3aa05584bcda2ee8fd5d107c862beb766"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link55-append-suffix-fusion/readback-product-shelf-v4-direct.bin",
+        "bytes": 70897,
+        "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link55-append-suffix-fusion/readback-runtime-overlays-boot-final.bin",
+        "bytes": 18935,
+        "sha256": "67b51e8ce9b581b925849c1ef01685478885c3bbcaa839b1fc91a512c4ae4868"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link55-append-suffix-fusion/readback-c2-product-kernal-window.bin",
+        "bytes": 8192,
+        "sha256": "4fc05562bf01fbf843371549c5fa2056f5d75a1a207ba20cd95c1c1ad8740661"
+      }
+    ]
+  },
+  "hardware_observation": {
+    "line_1_boot": "passed-banner-and-REPL-reached",
+    "first_test_form": "(defun %c2h () 't)",
+    "observed_result": "complete crash with multicolored screens and audible noise",
+    "recovery_required": "physical power cycle",
+    "normal_error_renderer_reached": false,
+    "controlled_fail_closed_return_observed": false,
+    "post_crash_capture": "unavailable-after-required-power-cycle",
+    "user_report": "Beim defun kommt es zu einem kompletten Crash mit bunten Bildschirmen und Geräuschen. Ich musste power-cyclen."
+  },
+  "classification": {
+    "class": "new-product-semantics-and-control-integrity-failure",
+    "scope": "dynamic defun append path before any completed latency measurement",
+    "not_claimed": [
+      "root cause",
+      "rollback state after the crash",
+      "window or bank corruption",
+      "latency result",
+      "hardware acceptance"
+    ],
+    "reason_for_review_halt": "The product left its normal fail-closed path and required a physical reset. Any diagnosis or product fix is Class C."
+  },
+  "execution_accounting": {
+    "hardware_runs": 1,
+    "retries": 0,
+    "additional_compiler_runs": 0,
+    "additional_linker_runs": 0,
+    "additional_product_links": 0
+  },
+  "counters": {
+    "line1_product_first_reds": "2/3 unchanged; line 1 passed",
+    "completed_latency_measurements": "0/2 unchanged",
+    "link55_double_run": "stopped before first completed defun/call measurement"
+  },
+  "next_gate": "Class-C review. No redeploy, retry, diagnostic patch, product mutation or further hardware run is authorized by this receipt.",
+  "claim_limit": "One fail-fast Link-55 hardware observation only. It proves the exact deployment readbacks and the reported uncontrolled defun crash; it proves no cause, fix, promotion, acceptance or latency."
+}

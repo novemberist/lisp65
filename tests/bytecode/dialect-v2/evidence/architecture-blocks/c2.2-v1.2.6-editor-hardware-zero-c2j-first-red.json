@@ -1,0 +1,68 @@
+{
+  "classification": "harness-first-red-before-editor-and-REPL",
+  "evidence": {
+    "c2j": {
+      "address": "0x0005c640",
+      "bytes": 64,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/boot-first-red-c2j.bin",
+      "sha256": "638d8f43c659418f592a008776d3982998183b19317d037920fd392dd7a715bc"
+    },
+    "kernal_state": {
+      "address": "0x0000ff80",
+      "bytes": 12,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/boot-first-red-kernal-state.bin",
+      "sha256": "ae8fd500c774f1724615cbcfe0bb20fd1cfc7b9e80dff52e8b13a6920392ccac"
+    },
+    "resident_readback": {
+      "address": "0x00002001",
+      "bytes": 41564,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/boot-first-red-resident.bin",
+      "sha256": "87b68133749d6783bcf0ae2c9950c327d6f3e700730649f03d41c55bca766f33"
+    },
+    "trace": {
+      "address": "0x0000c1f4",
+      "bytes": 2,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/boot-first-red-trace.bin",
+      "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+    },
+    "zp_state": {
+      "address": "0x00000089",
+      "bytes": 7,
+      "path": "build/c2.2/v1.2.6-editor-hardware/session-01/boot-first-red-zp-state.bin",
+      "sha256": "837885c8f8091aeaeb9ec3c3f85a6ff470a415e610b8ba3e49f9b33c9cf9d619"
+    }
+  },
+  "finding": {
+    "C2J_expected": "00 repeated 64 times",
+    "C2J_observed": "10 repeated 64 times",
+    "candidate_REPL_reached": false,
+    "editor_rows_started": 0,
+    "historical_class_closer": {
+      "bytes": 2841,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link58-c1-freezer-zero-journal-hardware-first-red.json",
+      "sha256": "dd3f506de021c443f1d735e78e2f5a6e63b47b20a45c2a76e6130d84e06789a2"
+    },
+    "mechanism": "A cold reset does not clear Chip RAM. The harness omitted the canonical zero-C2J preload, so the reset-stable 0x10 sentinel survived into boot exactly as in the closed Link-58 harness class.",
+    "ownership_state": {
+      "C2K_MAP_GENERATION": 1,
+      "C2K_STATE": 4,
+      "phase_owner": 0,
+      "trace": "0000"
+    },
+    "product_semantics_claimed": false
+  },
+  "format": "lisp65-c2.2-v1.2.6-editor-zero-C2J-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "remedy": {
+    "add_preload": {
+      "address": "0x0005c640",
+      "bytes": 64,
+      "content": "all zero"
+    },
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0,
+    "semantic_rows_changed": 0
+  },
+  "status": "closed-existing-zero-C2J-deployment-precondition"
+}

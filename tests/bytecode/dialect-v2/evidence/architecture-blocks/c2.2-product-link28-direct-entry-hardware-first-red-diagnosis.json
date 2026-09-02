@@ -1,0 +1,186 @@
+{
+  "format": "lisp65-c2-product-link28-direct-entry-hardware-first-red-diagnosis-v1",
+  "status": "first-red-receipt-less-hardware-presmoke-stopped",
+  "date": "2026-07-20",
+  "scope": {
+    "candidate": "build/c2.2/substitution/product-link-28/lisp65-c2-substitution-linked.prg",
+    "product_sha256": "d6308939921aa3f1bed37ff2ea710d54dd7579a1d1fac0bb9de322508eca51db",
+    "elf_sha256": "976c0a98356b430f4ec5a3dd56a23a12d2562d40dd9da6e4fb778ca1a43bc400",
+    "deployment": "build/c2.2/hardware-presmoke-link28/deployment.json",
+    "deployment_sha256": "e16665a5886fdfe4c023b61503b295f8f7ea2eb404450c78e4e699abf8f6123c",
+    "new_compiler_or_linker_runs_after_first_red": 0
+  },
+  "observation": {
+    "boot_to_repl_seconds_approx": 30,
+    "banner_render_seconds_approx": 3,
+    "banner_complete": true,
+    "prompt_position": "correctly below banner",
+    "first_form": "(+ 1 2)",
+    "observed": "*** vm: undefined function",
+    "expected": "3",
+    "sequence_stopped_immediately": true,
+    "remaining_presmoke_cases": "not-run"
+  },
+  "runtime_capture": {
+    "mode": "read-only JTAG memory snapshots after the first red",
+    "c2d_header": {
+      "magic": "C2D\\0",
+      "version": 3,
+      "generation": 1,
+      "images": 6,
+      "entries": 588,
+      "resolutions": 2264,
+      "roots": 283
+    },
+    "symbol_state": {
+      "symbols": 473,
+      "namepool_bytes": 5801,
+      "function_cells": [
+        {
+          "name": "%add-list",
+          "symbol_index": 54,
+          "value_hex": "0xc006",
+          "directory_ordinal": 3,
+          "status": "correct"
+        },
+        {
+          "name": "+",
+          "symbol_index": 379,
+          "value_hex": "0xc008",
+          "directory_ordinal": 4,
+          "status": "correct"
+        },
+        {
+          "name": "lcc-run",
+          "symbol_index": 215,
+          "value_hex": "0xc156",
+          "directory_ordinal": 171,
+          "status": "correct"
+        },
+        {
+          "name": "%c2-compile-form",
+          "symbol_index": 140,
+          "value_hex": "0xc46c",
+          "directory_ordinal": 566,
+          "status": "correct"
+        }
+      ]
+    },
+    "files": [
+      {
+        "path": "build/c2.2/hardware-presmoke-link28/first-red-runtime/zp-nsym.bin",
+        "sha256": "4ab1adeab368c0c947afef5f44fa6dda69ca792590ff14d8f6b71fc73420ed6b"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link28/first-red-runtime/bank0-counts.bin",
+        "sha256": "3358d337494ce0210c7ceed2503de4ccdeec0e25b693b8deaca5645dafc35cd6"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link28/first-red-runtime/bank5-symbol-domain.bin",
+        "sha256": "98bf39b7807f043795793e0a7913a60110843a5dd983e5da0d58223e565e7630"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link28/first-red-runtime/c2d-live.bin",
+        "sha256": "c5f91f61684492c4e7b1da7e314a86627cd9ed2afc3caf6f3f90bac347d8f01b"
+      },
+      {
+        "path": "build/c2.2/hardware-presmoke-link28/first-red-runtime/session-image-first-8k.bin",
+        "sha256": "491b3c7982a6514b44106763a70cbda21a1c0e74f9d6aa0c9123c006c689fe89"
+      }
+    ]
+  },
+  "root_cause": {
+    "contract": "A direct C2 entry reference is MK_BCODE(global_directory_ordinal), encoded as 0xc000 + 2 * global_directory_ordinal.",
+    "target_decoder_expression": "0xc000 + image_directory_base + local_entry_ordinal",
+    "target_decoder_defect": "The target adds the global ordinal without the mandatory BCODE tag scaling by two.",
+    "host_oracle_expression": "0xc000 + 2 * local_entry_ordinal",
+    "host_oracle_defect": "The host oracle applies the tag scaling but omits the image directory base.",
+    "proof_divergence": "The target and host models were independently wrong and no parity gate compared either result with MK_BCODE(global_directory_ordinal).",
+    "hardware_census": {
+      "direct_entry_references": 637,
+      "incorrect_against_contract": 637,
+      "incorrect_and_odd_fixnum_tagged": 316,
+      "by_image": {
+        "stdlib-p0": {
+          "direct_entry_references": 0,
+          "incorrect": 0,
+          "odd": 0
+        },
+        "ide": {
+          "direct_entry_references": 240,
+          "incorrect": 240,
+          "odd": 115
+        },
+        "idex": {
+          "direct_entry_references": 25,
+          "incorrect": 25,
+          "odd": 14
+        },
+        "m65d": {
+          "direct_entry_references": 84,
+          "incorrect": 84,
+          "odd": 51
+        },
+        "buffer": {
+          "direct_entry_references": 0,
+          "incorrect": 0,
+          "odd": 0
+        },
+        "lcc": {
+          "direct_entry_references": 288,
+          "incorrect": 288,
+          "odd": 136
+        }
+      }
+    },
+    "first_reachable_failure": {
+      "caller": "%c2-compile-form",
+      "global_caller_ordinal": 566,
+      "payload_offset": 1,
+      "operation": "CALL literal 0, argc 1",
+      "callee": "%lcc-consp",
+      "global_callee_ordinal": 489,
+      "resolution_ordinal": 2167,
+      "observed_value_hex": "0xc1e9",
+      "required_value_hex": "0xc3d2",
+      "observed_tag": "odd fixnum, not BCODE",
+      "error_match": "VM CALL cannot resolve the malformed literal and returns VM_DIRMISS."
+    },
+    "additional_examples": [
+      {
+        "callee": "lcc-compile-obj",
+        "global_ordinal": 563,
+        "observed_hex": "0xc233",
+        "required_hex": "0xc466"
+      },
+      {
+        "callee": "%lcc-wrap",
+        "global_ordinal": 565,
+        "observed_hex": "0xc235",
+        "required_hex": "0xc46a"
+      }
+    ],
+    "session_append": "No L65S header was present at the first session-image address after the failure, consistent with failure in the immutable compiler call graph before C2 session append publication."
+  },
+  "affected_claims": {
+    "link28_structural_receipt": "remains historical structural evidence but does not prove executable direct-entry resolution",
+    "hardware_presmoke": "failed at the first evaluated form",
+    "promotion": "blocked",
+    "c2_acceptance": "blocked",
+    "one_truth_gate": "incomplete: it excludes legacy formats but did not prove target/host/global-directory agreement for direct-entry immediates",
+    "historical_evidence": "must not be rewritten; a correction receipt must bind the new parity gate"
+  },
+  "bounded_fix_proposal": {
+    "product_change": "Encode kind-4 entry references as MK_BCODE(image_directory_base + local_entry_ordinal).",
+    "oracle_change": "Pass the image directory base into every host direct-value calculation and require the same global BCODE value.",
+    "permanent_gate": [
+      "check all direct-entry resolutions across every image, not a sample",
+      "require IS_BCODE(value) and BCODE_IDX(value) == image_directory_base + local_entry_ordinal",
+      "pin image-zero and nonzero-image cases with odd and even global ordinals",
+      "mutate omitted scaling and omitted image base independently; both must be rejected",
+      "make the first REPL arithmetic form a permanent hardware new-surface smoke"
+    ],
+    "process": "capacity/placement probe first; at most one newly authorized product link after every structural gate is green"
+  },
+  "claim_limit": "Receipt-less fail-fast hardware diagnosis only. It is not an acceptance receipt, capacity authorization, product promotion, C2 completion or release claim."
+}

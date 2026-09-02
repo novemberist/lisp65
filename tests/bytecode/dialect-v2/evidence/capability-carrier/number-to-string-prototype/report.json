@@ -1,0 +1,244 @@
+{
+  "assessment": {
+    "latency_pass": true,
+    "link_budget_pass": false,
+    "promotion_eligible": false,
+    "prototype_observation_pass": false
+  },
+  "baseline": {
+    "build": {
+      "artifact_inventory_command": [
+        "make",
+        "--no-print-directory",
+        "workbench-service-call-inventory-staging"
+      ],
+      "elapsed_ns": 5672639609,
+      "link_command": [
+        "make",
+        "--no-print-directory",
+        "WORKBENCH_PROFILE_ID=dialect-v2-capability-carrier-workbench-staging",
+        "WORKBENCH_SUITE=build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json",
+        "WORKBENCH_BYTECODE_DIR=build/bytecode/dialect-v2/workbench",
+        "WORKBENCH_STDLIB_PREFIX=build/bytecode/dialect-v2/workbench/stdlib-p0",
+        "WORKBENCH_OVERLAY_DIR=/tmp/lisp65-num2str-prototype/links/baseline",
+        "WORKBENCH_PRODUCT_ELF=/tmp/lisp65-num2str-prototype/links/baseline/lisp65-workbench-overlay-linked.prg.elf",
+        "WORKBENCH_OVERLAY_EXTRA_DEFINES=-DLISP65_STACK_GUARD -DLISP65_DIALECT_V2 -DLISP65_V2_CARRIER_CUT -DLISP65_VM_NATIVE_APPLY -DLISP65_V2_NATIVE_CAPABILITIES -DLISP65_V2_NATIVE_STRING_CAPS -DLISP65_V2_SERVICE_REGISTRY_CLOSED -DLISP65_V2_WORKBENCH_SERVICES",
+        "WORKBENCH_RUNTIME_OVERLAY_MAX_VMA=0xffff",
+        "/tmp/lisp65-num2str-prototype/links/baseline/resident-island-seed-linked.prg"
+      ],
+      "relaxed_runtime_overlay_max_vma": "0xffff",
+      "target": "resident-island-seed-linked.prg"
+    },
+    "elf": {
+      "path": "/tmp/lisp65-num2str-prototype/links/baseline/resident-island-seed-linked.prg.elf",
+      "sha256": "e00c0f8a3ba49fcf9d274d0a4d5670bab6f3c84dc3e472a73c64eecf785808ac",
+      "size_bytes": 120236
+    },
+    "label": "baseline",
+    "prototype_artifacts": {
+      "resident_manifest": {
+        "number_to_string_bytecode_definition": false,
+        "path": "/tmp/lisp65-num2str-baseline/build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+        "sha256": "e181589477113a33b866feb5140135fbbc32bfc552c7af9b9e9d7efa51760264"
+      },
+      "service_inventory": {
+        "current_misses": 0,
+        "path": "/tmp/lisp65-num2str-baseline/build/bytecode/dialect-v2/workbench-service-call-inventory.json",
+        "prim40_name": "number->string",
+        "prim40_total_calls": 4,
+        "prim40_v2_status": "active",
+        "sha256": "83c534df5f35921e1e4dc79def72de900c45cf12e1327a65d393671a146e929e",
+        "tombstone_callprims": 0,
+        "unresolved_sites": 0
+      }
+    },
+    "source": {
+      "dirty": false,
+      "head": "ca9cfb941a7db3374b7705fce1f1925e1e525643",
+      "root": "/tmp/lisp65-num2str-baseline",
+      "source_sha256": "ab45cc34f36a8bd8818b3d17b6d8f191f438bca4975af048d736437d8a32a3d7",
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_count": 0,
+      "untracked_sha256": "6ac91cab38eae269a4e6457275b3b956f615a7df03de4b1ce88f44b8110efc30"
+    },
+    "symbols": {
+      "__bss_end": "0xcc77",
+      "__heap_start": "0xcc78",
+      "__lisp65_workbench_runtime_overlay_vma": "0xcc78"
+    },
+    "toolchain": {
+      "compiler": {
+        "path": "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/clang-23",
+        "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+      },
+      "linker": {
+        "original_sha256": "a079ff5e61ad9f41226dce914421564f088dcbe89740cf2de0b1e691faa29a21",
+        "path": "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/mos-platform/mega65/lib/link.ld",
+        "relaxed_sha256": "66b0c6aa85f670b7c3b257a5474fbb7e36b4f174d465df6dd3108d7094cfec05",
+        "restored": true
+      },
+      "nm": {
+        "path": "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/llvm-nm",
+        "sha256": "2e4c324094c6bcd0845f57e9a7b1aa05033f5707dd8b803189d3c8b986b3a2fe"
+      }
+    }
+  },
+  "candidate": {
+    "build": {
+      "artifact_inventory_command": [
+        "make",
+        "--no-print-directory",
+        "workbench-service-call-inventory-staging"
+      ],
+      "elapsed_ns": 5784011881,
+      "link_command": [
+        "make",
+        "--no-print-directory",
+        "WORKBENCH_PROFILE_ID=dialect-v2-capability-carrier-workbench-staging",
+        "WORKBENCH_SUITE=build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json",
+        "WORKBENCH_BYTECODE_DIR=build/bytecode/dialect-v2/workbench",
+        "WORKBENCH_STDLIB_PREFIX=build/bytecode/dialect-v2/workbench/stdlib-p0",
+        "WORKBENCH_OVERLAY_DIR=/tmp/lisp65-num2str-prototype/links/candidate",
+        "WORKBENCH_PRODUCT_ELF=/tmp/lisp65-num2str-prototype/links/candidate/lisp65-workbench-overlay-linked.prg.elf",
+        "WORKBENCH_OVERLAY_EXTRA_DEFINES=-DLISP65_STACK_GUARD -DLISP65_DIALECT_V2 -DLISP65_V2_CARRIER_CUT -DLISP65_VM_NATIVE_APPLY -DLISP65_V2_NATIVE_CAPABILITIES -DLISP65_V2_NATIVE_STRING_CAPS -DLISP65_V2_SERVICE_REGISTRY_CLOSED -DLISP65_V2_WORKBENCH_SERVICES",
+        "WORKBENCH_RUNTIME_OVERLAY_MAX_VMA=0xffff",
+        "/tmp/lisp65-num2str-prototype/links/candidate/resident-island-seed-linked.prg"
+      ],
+      "relaxed_runtime_overlay_max_vma": "0xffff",
+      "target": "resident-island-seed-linked.prg"
+    },
+    "elf": {
+      "path": "/tmp/lisp65-num2str-prototype/links/candidate/resident-island-seed-linked.prg.elf",
+      "sha256": "801448ae672e62aab51246d403d10a278b864e8db5019e41dec500d151cdfb68",
+      "size_bytes": 120140
+    },
+    "label": "candidate",
+    "prototype_artifacts": {
+      "resident_manifest": {
+        "number_to_string_bytecode_definition": true,
+        "path": "/home/alex/Videos/lisp65-cp4-safety-20260712/build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+        "sha256": "59703a76bf604369aff7f1b3e4629d599c5d3d8c9e19a052b4d27480320b5c1f"
+      },
+      "service_inventory": {
+        "current_misses": 0,
+        "path": "/home/alex/Videos/lisp65-cp4-safety-20260712/build/bytecode/dialect-v2/workbench-service-call-inventory.json",
+        "prim40_name": "number->string",
+        "prim40_total_calls": 0,
+        "prim40_v2_status": "tombstone",
+        "sha256": "5802b88bb5408d2317156362463d299cfeac56bf87fb4e11ffe0ac81ddac3dce",
+        "tombstone_callprims": 0,
+        "unresolved_sites": 0
+      }
+    },
+    "source": {
+      "dirty": true,
+      "head": "ca9cfb941a7db3374b7705fce1f1925e1e525643",
+      "root": "/home/alex/Videos/lisp65-cp4-safety-20260712",
+      "source_sha256": "6b91dae4bfaed118e4019e6ced03eb2077ec6316c9c20bcf5889ad6774e3635e",
+      "status_sha256": "e18653d98ca9c9dec96f5c2f97beb95c2486fe5aea56be27b12d8d89997174ff",
+      "tracked_diff_sha256": "2895d596aa21c789bd1c721851ce42674233ce166ff2b3b56ece14f5e0c3c73f",
+      "untracked_count": 3,
+      "untracked_sha256": "56d80e8bf1119447aeaa926edf736501008a6f3e1544e3196e986ef2590a972e"
+    },
+    "symbols": {
+      "__bss_end": "0xcc26",
+      "__heap_start": "0xcc26",
+      "__lisp65_workbench_runtime_overlay_vma": "0xcc28"
+    },
+    "toolchain": {
+      "compiler": {
+        "path": "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/clang-23",
+        "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+      },
+      "linker": {
+        "original_sha256": "a079ff5e61ad9f41226dce914421564f088dcbe89740cf2de0b1e691faa29a21",
+        "path": "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/mos-platform/mega65/lib/link.ld",
+        "relaxed_sha256": "66b0c6aa85f670b7c3b257a5474fbb7e36b4f174d465df6dd3108d7094cfec05",
+        "restored": true
+      },
+      "nm": {
+        "path": "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/llvm-nm",
+        "sha256": "2e4c324094c6bcd0845f57e9a7b1aa05033f5707dd8b803189d3c8b986b3a2fe"
+      }
+    }
+  },
+  "format": "lisp65-v2-workbench-deresidentization-prototype-v1",
+  "id": "number-to-string-bytecode",
+  "latency": {
+    "baseline_elf_sha256": "e00c0f8a3ba49fcf9d274d0a4d5670bab6f3c84dc3e472a73c64eecf785808ac",
+    "baseline_median_total": 4183,
+    "candidate_elf_sha256": "801448ae672e62aab51246d403d10a278b864e8db5019e41dec500d151cdfb68",
+    "candidate_median_total": 4312,
+    "delta_total": 129,
+    "environment": "host P0 VM dynamic instruction trace; v1 and v2 suites use their own source worktrees and the same ABI-aware report harness",
+    "iterations_per_sample": 1,
+    "max_regression_percent": 5,
+    "measurement_command": [
+      "python3 tools/host-lisp/ide_bytecode_dynamic_report.py --suite build/bytecode/dialect-v2/suites/p0-ide-core-lib.json --out REPORT --check"
+    ],
+    "metric": "ide-render-warm-after-insert",
+    "observation": {
+      "baseline_elf_sha256": "e00c0f8a3ba49fcf9d274d0a4d5670bab6f3c84dc3e472a73c64eecf785808ac",
+      "baseline_samples": [
+        4183,
+        4183,
+        4183
+      ],
+      "candidate_elf_sha256": "801448ae672e62aab51246d403d10a278b864e8db5019e41dec500d151cdfb68",
+      "candidate_samples": [
+        4312,
+        4312,
+        4312
+      ],
+      "environment": "host P0 VM dynamic instruction trace; v1 and v2 suites use their own source worktrees and the same ABI-aware report harness",
+      "format": "lisp65-number-to-string-latency-observation-v1",
+      "iterations_per_sample": 1,
+      "max_regression_percent": 5,
+      "measurement_command": [
+        "python3 tools/host-lisp/ide_bytecode_dynamic_report.py --suite build/bytecode/dialect-v2/suites/p0-ide-core-lib.json --out REPORT --check"
+      ],
+      "metric": "ide-render-warm-after-insert",
+      "statistic": "median-total",
+      "unit": "vm-instructions",
+      "version": 1,
+      "warmup_iterations": 1
+    },
+    "passes": true,
+    "receipt_sha256": "126a89aa5932c7e19130fad6f3c6f5921fbe200538257a6bd7d6aa326ea00580",
+    "sample_count": 3,
+    "statistic": "median-total",
+    "unit": "vm-instructions",
+    "warmup_iterations": 1
+  },
+  "metrics": {
+    "baseline_bss_end": "0xcc77",
+    "baseline_heap_start": "0xcc78",
+    "baseline_runtime_overlay_vma": "0xcc78",
+    "bss_reclaim_bytes": 81,
+    "candidate_bss_end": "0xcc26",
+    "candidate_heap_start": "0xcc26",
+    "candidate_post_boot_reserve_bytes": -464,
+    "candidate_runtime_overlay_vma": "0xcc28",
+    "heap_reclaim_bytes": 82,
+    "post_boot_reserve_pass": false,
+    "post_boot_reserve_target_bytes": 1536,
+    "production_stack_top": "0xd000",
+    "runtime_overlay_vma_limit": "0xc356",
+    "runtime_overlay_vma_pass": false,
+    "runtime_stack_gap_bytes": 1450,
+    "vma_reclaim_bytes": 80
+  },
+  "policy": {
+    "abi_profile": "dialect-v2",
+    "hardware_g5_claim": "none",
+    "measurement_target": "resident-island-seed-linked.prg",
+    "product_target_built": false,
+    "promotion": false,
+    "relaxed_link": true,
+    "release_authorization": "none",
+    "shippable": false
+  },
+  "status": "relaxed-diagnostic-only",
+  "version": 1
+}

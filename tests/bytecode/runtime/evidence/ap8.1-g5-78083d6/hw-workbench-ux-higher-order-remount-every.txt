@@ -1,0 +1,27 @@
+                                                                                  
+ t                                                                                
+ lisp65> (setq x (save-buffer-to "ap6src" "ap6src"))                              
+ t                                                                                
+ lisp65> (load-file-to-buffer "ap6src" "ap6copy")                                 
+ t                                                                                
+ lisp65> (list x (ide-buffer-lines (%ide-resume-buffer "ap6copy")))               
+ (t ("(defun ap6-persisted () 612)"))                                             
+ lisp65> (m65d-remount)                                                           
+ 0                                                                                
+ lisp65> (setq x "(every (function plusp) ")                                      
+ "(every (function plusp) "                                                       
+ lisp65> (setq x (string-append x (char->string 39) "(1 2 3))"))                  
+ "(every (function plusp) '(1 2 3))"                                              
+ lisp65> (%ide-store-buffer (ide-make-buffer "h8e" (list x (string-append "(setq  
+ x " x ")"))))                                                                    
+ t                                                                                
+ lisp65> (save-buffer-to "h8e" "h8e")                                             
+ t                                                                                
+ lisp65> (load "h8e")                                                             
+ t                                                                                
+ lisp65> (load "h8e")                                                             
+ t                                                                                
+ lisp65> x                                                                        
+ t                                                                                
+ lisp65>                                                                          
+                                                                                  

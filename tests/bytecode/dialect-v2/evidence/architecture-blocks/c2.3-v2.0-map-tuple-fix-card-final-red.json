@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "producer_log": {
+      "bytes": 288,
+      "path": "build/c2.3/v2.0-map-tuple-fix-card/receipts/v20-producer.log",
+      "sha256": "e594ef05dac226d9a466443e294594c4f7adddee6037b43bf2377feb8dd9e796"
+    }
+  },
+  "attempt_accounting": {
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "product_link_attempts": 0,
+    "wplto_runs": 1
+  },
+  "authority": {
+    "driver": {
+      "bytes": 19222,
+      "path": "tools/host-lisp/c2_v20_map_tuple_fix_card.py",
+      "sha256": "80eb46aa7260684951925dff3883741116f87784d3428acef2d4867fd9f20440"
+    },
+    "invocation": {
+      "bytes": 774,
+      "path": "build/c2.3/v2.0-map-tuple-fix-card-preflight/card-invocation.json",
+      "sha256": "0e095c7bdc711923ee5eed8cebe3b0a1739806055e8461875b7d1823dc50f2df"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 43525,
+      "commit": "fbd1983ebeb98ca2dd3e3c5f1a0d1c94c1c2a35c",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "b4e7a63c0878eb9c9c242f88a7e9d9064bf7311d72a403b0a017fd5327df1e15"
+    },
+    "preflight": {
+      "bytes": 4408,
+      "path": "build/c2.3/v2.0-map-tuple-fix-card-preflight/preflight.json",
+      "sha256": "08f08fd1dd4e94a95639cd44f843287cdaadd2ff432742d2f3bb1a5b4070be0b"
+    }
+  },
+  "error": {
+    "message": "producer did not emit the linked candidate artifacts",
+    "type": "RecharterError"
+  },
+  "format": "lisp65-c2.3-v20-map-tuple-fix-card-final-red-v1",
+  "owner_disposition_required": true,
+  "post_red_closure": {
+    "driver": {
+      "bytes": 21998,
+      "path": "tools/host-lisp/c2_v20_map_tuple_fix_card.py",
+      "sha256": "78e697a0129a2b7b80057827e1385e2c096f0c2fecc0a15b8cadb873a0a1c088"
+    },
+    "real_global_ASM_inventory": {
+      "declared_functions": 29,
+      "duplicate-successor-in-global-asm-domain": "rejected",
+      "status": "passed-real-global-assembler-inventory"
+    },
+    "retry_authorized": false,
+    "status": "PASS: successor isolated behind explicit owner scope",
+    "successor_source": {
+      "bytes": 1462,
+      "path": "src/optional/c2_mapped_far_service_v2.s",
+      "sha256": "44ac718f8cd72a2f0c8357da1775c88589bb37c0660d31e29e02be974dec442d"
+    }
+  },
+  "recorded_on": "2026-08-13",
+  "retry_authorized": false,
+  "root_cause": {
+    "class": "GLOBAL-ASM-INVENTORY-DUPLICATE-SUCCESSOR",
+    "message": "assembler function declaration is not unique: vm_code_load_converged",
+    "product_artifacts_emitted": false
+  },
+  "status": "FINAL RED: corrected-tuple card returns to owner"
+}

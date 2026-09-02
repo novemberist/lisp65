@@ -1,0 +1,132 @@
+{
+  "format": "lisp65-c2.3-v1.3-backspace-inline-WPLTO-first-red-v1",
+  "recorded_on": "2026-08-01",
+  "status": "FIRST RED: forced inline removed outlining but did not restore the inherited compiler static-stack shape",
+  "promotable": false,
+  "target_linker_invocations": 1,
+  "wplto_attempt_in_v13_series": 2,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "linker_diagnostic": "C2 inherited noinit/fixed-block geometry drift",
+  "authorized_constraints": {
+    "one_canonical_destructive_del_body": true,
+    "forced_inline": true,
+    "padding_bytes": 0,
+    "required_noinit_bytes": 6,
+    "required_overlay_floor": "$C354",
+    "maximum_correction_attempts": 1
+  },
+  "host_semantics": {
+    "status": "passed",
+    "input_wait_cases": "11x2",
+    "mutations_rejected": 14,
+    "destructive_del_witnesses": [
+      "public scr_backspace",
+      "scr_putc PETSCII 20",
+      "scr_putc ASCII 127"
+    ]
+  },
+  "linked_shape_at_failure": {
+    "link83_predecessor": {
+      "scr_putc_bytes": 201,
+      "scr_backspace_bytes": 0,
+      "compiler_static_stack_noinit_bytes": 6,
+      "overlay_min_start": "$C354"
+    },
+    "first_v13_card": {
+      "scr_putc_bytes": 109,
+      "scr_backspace_bytes": 90,
+      "combined_screen_output_bytes": 199,
+      "compiler_static_stack_noinit_bytes": 3,
+      "computed_overlay_min_start": "$C350"
+    },
+    "forced_inline_card": {
+      "scr_putc_bytes": 210,
+      "scr_backspace_bytes": 0,
+      "scr_backspace_inline_bytes": 0,
+      "text_delta_from_link83_scr_putc_bytes": 9,
+      "compiler_static_stack_noinit_address": "$C34D",
+      "compiler_static_stack_noinit_bytes": 4,
+      "computed_overlay_min_start": "$C352"
+    }
+  },
+  "attribution": {
+    "forced_inline_effect": "The canonical helper no longer survives as an outlined symbol; the public wrapper is also inlined, and scr_putc owns the destructive-DEL body.",
+    "remaining_mechanism": "llvm-mos still repartitions compiler-owned static stack state: the forced-inline source produces four bytes at .noinit..Lstatic_stack. Source-level always_inline controls outlining but does not deterministically restore the six-byte inherited stack shape.",
+    "not_a_bank2_failure": true,
+    "not_a_text_capacity_failure": true,
+    "not_a_semantic_del_failure": true,
+    "no_attempt_three": true
+  },
+  "method_review_required": {
+    "question": "Choose a method that owns the target partition explicitly, or withdraw the common Workbench read-line surface; another source-shape experiment is not authorized.",
+    "candidate_classes": [
+      "a separately owned target leaf or non-LTO boundary with an explicit ABI and common semantics",
+      "an architectural change that explicitly owns compiler-stack and overlay geometry rather than inferring it from LTO",
+      "withdraw or defer the common Workbench read-line surface"
+    ],
+    "forbidden_shortcuts": [
+      "padding compiler-owned .noinit",
+      "weakening the exact fixed-block assertion",
+      "a third WPLTO source-shape attempt without owner review"
+    ]
+  },
+  "authority": {
+    "screen_driver": {
+      "path": "src/screen.c",
+      "bytes": 9680,
+      "sha256": "825b65660034e77b463b44c0f817e8c7fbba6ad6dac0d8a9cf9f0734dabd5f9b"
+    },
+    "screen_smoke": {
+      "path": "scripts/screen-smoke-main.c",
+      "bytes": 2798,
+      "sha256": "3db6fdf105e4ff7c66f7674d0ab37b9d1d50e6f4092ac46353f98864d0203347"
+    },
+    "input_wait_contract": {
+      "path": "config/c2-ship-input-wait-contract.json",
+      "bytes": 3652,
+      "sha256": "6ddef5475b11433514eac5570f36edfeca9779c4ab71131bca3c39535ba8d074"
+    },
+    "input_wait_gate": {
+      "path": "tools/host-lisp/c2_ship_input_wait_gate.py",
+      "bytes": 14535,
+      "sha256": "ee48d011fe32b1d8fa8190b703882835fa526588d18686238d646e6f34f3c03b"
+    },
+    "input_wait_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.3-ship-input-wait-host-first-receipt.json",
+      "bytes": 4620,
+      "sha256": "9a6f319ba3cfcb6a1c01b909cd6cda0099bb78719e789be4453262add8d800f6"
+    },
+    "correction_driver": {
+      "path": "tools/host-lisp/c2_v13_backspace_inline_wplto.py",
+      "bytes": 9501,
+      "sha256": "7736da35131f0018cb674b392ff069b22935563c5bf2d32e7b6e78f043c80ab8"
+    },
+    "candidate_map": {
+      "path": "build/ship-builder/v13/backspace-inline-wplto/wplto/resident-island-seed.prg.map",
+      "bytes": 175234,
+      "sha256": "737f8b3d64d36f4af835abe5a184d9ed83e9e7c0f407e400c4315f57c23109ee"
+    },
+    "candidate_lto_object": {
+      "path": "build/ship-builder/v13/backspace-inline-wplto/wplto/resident-island-seed.prg.lto.o",
+      "bytes": 619348,
+      "sha256": "d7225ea0793d7855d2fab9cfc1731c72f7d839257779e8e4ef6a0a635f3e5c44"
+    },
+    "link_stderr": {
+      "path": "build/ship-builder/v13/backspace-inline-wplto/wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 304,
+      "sha256": "da80150a4e625cb3eb13f977af15a7232fb1c9b7c60c2cc9abbfd2ec5d835b74"
+    },
+    "first_v13_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-ship-joint-wplto-first-red.json",
+      "bytes": 3870,
+      "sha256": "b6151b9608504d2c42b3f8d07cbcf5c2b1ea6967c6ffb92e351da649b5cfa7de"
+    },
+    "profile_preflight": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-ship-joint-profile-receipt.json",
+      "bytes": 3678,
+      "sha256": "bc0f8e777d697540f514f7036d059da657218d71bd23a4c3da7becf910e4249a"
+    }
+  },
+  "claim_limit": "Two failed non-promotable v1.3 WPLTO cards in total; no product link, hardware, acceptance or release claim."
+}

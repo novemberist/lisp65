@@ -1,0 +1,254 @@
+{
+  "artifacts": {
+    "baseline_resident": {
+      "code_bytes": 5922,
+      "directory_bytes": 1435,
+      "ext_bytes": 14094,
+      "objects": 205
+    },
+    "candidate_resident": {
+      "code_bytes": 5963,
+      "directory_bytes": 1449,
+      "ext_bytes": 14181,
+      "objects": 207
+    },
+    "resident_delta": {
+      "code_bytes": 41,
+      "directory_bytes": 14,
+      "ext_bytes": 87,
+      "objects": 2
+    }
+  },
+  "baseline": {
+    "block": "authorized 1.1-M composition implementation",
+    "receipt": {
+      "bytes": 11412,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-m-transactional-fasl-implementation-receipt.json",
+      "sha256": "d5fd85c35c2f77939854a751532089b24f0eade7bc6dd31f104d9f81799f8afb"
+    }
+  },
+  "build_bindings": {
+    "composition_budget": {
+      "bytes": 3085,
+      "path": "build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+      "sha256": "93e9202104fc4dc14ddf7a6a5447db7b005d6480a7b26c9dbfd11b5d9799e20f"
+    },
+    "footprint": {
+      "bytes": 615,
+      "path": "build/products/workbench/overlay-stack-guard/footprint-audit.json",
+      "sha256": "186e878271f2ee42d207e73118bced016543556b1778fb1addef84549238464f"
+    },
+    "layout": {
+      "bytes": 617,
+      "path": "build/products/workbench/overlay-stack-guard/layout.json",
+      "sha256": "f912f410c0d07e096e4acec88492aebe627ee820a47df0e3065a77305bf35669"
+    },
+    "linked_elf": {
+      "bytes": 133896,
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+      "sha256": "86929a9ce8bb09a8f208e94802d1b497bcd84a82432afe249585e8959a001f4b"
+    },
+    "observations": {
+      "bytes": 24574,
+      "path": "build/bytecode/dialect-v2/v11-g-green-observations.json",
+      "sha256": "5afe9f8f210eaed578f4d30b6babdf65fd0720672098afdc1dae7848ed056119"
+    },
+    "resident_manifest": {
+      "bytes": 136764,
+      "path": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+      "sha256": "3a1c4334458897d6b5893a41da242743a40c5c869d6702d46743d39c06936077"
+    },
+    "runtime_overlays": {
+      "bytes": 32018,
+      "path": "build/products/workbench/overlay-stack-guard/runtime-overlays-manifest.json",
+      "sha256": "d38044c1fa426533ab280fa963a31bf2fae98ce546707687216fe291d930ae83"
+    }
+  },
+  "capacity": {
+    "baseline": {
+      "bank_post_boot_reserve_bytes": 1898,
+      "boot_fastpath_verify_slice_bytes": 1783,
+      "directory_load_headroom": 177,
+      "directory_post_align_headroom": 176,
+      "ext_post_load_headroom_bytes": 25523,
+      "fixed_overlay_bytes": 1669,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 1770,
+      "installer_slice_headroom_bytes": 22,
+      "namepool_headroom_bytes": 4732,
+      "resident_island_annex_bytes": 260,
+      "resident_island_immutable_bytes": 1668,
+      "resident_island_reserve_bytes": 120,
+      "runtime_overlay_bank_bytes": 65216,
+      "runtime_overlay_bank_headroom_bytes": 320,
+      "runtime_overlay_max_slice_bytes": 1783,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "symbol_headroom": 305
+    },
+    "candidate": {
+      "bank_post_boot_reserve_bytes": 1849,
+      "boot_fastpath_verify_slice_bytes": 1806,
+      "directory_load_headroom": 177,
+      "directory_post_align_headroom": 176,
+      "ext_post_load_headroom_bytes": 25482,
+      "fixed_overlay_bytes": 1669,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 1770,
+      "installer_slice_headroom_bytes": 22,
+      "namepool_headroom_bytes": 4702,
+      "resident_island_annex_bytes": 260,
+      "resident_island_immutable_bytes": 1668,
+      "resident_island_reserve_bytes": 120,
+      "runtime_overlay_bank_bytes": 65472,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "runtime_overlay_max_slice_bytes": 1783,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "symbol_headroom": 303
+    },
+    "delta_from_1_1_m": {
+      "bank_post_boot_reserve_bytes": -49,
+      "boot_fastpath_verify_slice_bytes": 23,
+      "directory_load_headroom": 0,
+      "directory_post_align_headroom": 0,
+      "ext_post_load_headroom_bytes": -41,
+      "fixed_overlay_bytes": 0,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 0,
+      "installer_slice_headroom_bytes": 0,
+      "namepool_headroom_bytes": -30,
+      "resident_island_annex_bytes": 0,
+      "resident_island_immutable_bytes": 0,
+      "resident_island_reserve_bytes": 0,
+      "runtime_overlay_bank_bytes": 256,
+      "runtime_overlay_bank_headroom_bytes": -256,
+      "runtime_overlay_max_slice_bytes": 0,
+      "runtime_overlay_max_slice_headroom_bytes": 0,
+      "symbol_headroom": -2
+    },
+    "runtime_overlay_bank_attribution": {
+      "bank_cost_cause": "crossing one 256-byte packing boundary",
+      "baseline_boot_fastpath_allocated_bytes": 1792,
+      "candidate_boot_fastpath_allocated_bytes": 2048,
+      "observed_link_change": "after the canonical source/product-identity change, the whole-program boot-fastpath is 1806 rather than 1783 bytes; the individual 23-byte linker movement is not assigned a stronger cause without an isolated build",
+      "packing_quantum_bytes": 256,
+      "runtime_overlay_bank_cost_bytes": 256
+    }
+  },
+  "capacity_authorization": {
+    "bytes": 4179,
+    "path": "config/v11-g-green-surface-capacity-authorization.json",
+    "sha256": "4669d47a6ce1b6dab361e57903f35b8f05fa157edf24ed131787ff4b2d64501d"
+  },
+  "claim_limit": "Host semantics, product delivery, and real-link reset-vector wiring only. restart-repl device behavior remains not-run until the fresh Wave-2 G6 case.",
+  "format": "lisp65-v11-g-green-surface-implementation-receipt-v1",
+  "id": "v11-g-read-from-string-and-restart-repl",
+  "product_identity": "changes-on-promotion; fresh Wave-2 hardware evidence required",
+  "recorded_on": "2026-07-17",
+  "semantic_gates": {
+    "read_from_string_first_object": 42,
+    "read_from_string_negative_cases": {
+      "arity_extra": "ArityError",
+      "arity_zero": "ArityError",
+      "type": "TypeError"
+    },
+    "read_from_string_routes": [
+      "direct",
+      "funcall",
+      "apply"
+    ],
+    "resident_lengths": {
+      "read-from-string": 27,
+      "restart-repl": 14
+    },
+    "restart_repl_hardware": "not-run",
+    "restart_repl_host_witness": "t",
+    "restart_repl_linked_reset_vector_jump": "6c fc ff / jmp ($fffc)"
+  },
+  "source_bindings": [
+    {
+      "bytes": 1176,
+      "path": "config/v11-g-green-surface-contract.json",
+      "sha256": "a3ed5a700bd1df6cb4f6b7b78974bd9478f42d369030a5315e05411a590908a5"
+    },
+    {
+      "bytes": 904,
+      "path": "config/v11-g-word-access-tombstone.json",
+      "sha256": "fe104033583f3c0aea96895e01d43ff1964506062e914ae03bb61083037dda27"
+    },
+    {
+      "bytes": 3976,
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "3c851a168002b668376bb7dd743a80d8e1cec6c18469c88d492a53677d51337f"
+    },
+    {
+      "bytes": 72709,
+      "path": "src/vm.c",
+      "sha256": "7a0e7b6ae35ba94527ad8587f70a4b456a9cc27c402736852a14f768fd5bea74"
+    },
+    {
+      "bytes": 85570,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "9e687360447910916d1e9b5fbd2d86171b4f58eb136474da6ed43399f3236a35"
+    },
+    {
+      "bytes": 122981,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "b4243dd1fd2cabb7805a181ef094bb638fb7002338a7ff37b491989098528c0c"
+    },
+    {
+      "bytes": 4790,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+      "sha256": "36f71c66953cebb1eef1526a3b8dceb01c05cab78b3b888721ab9371ba9638b4"
+    },
+    {
+      "bytes": 2411,
+      "path": "config/dialect-v2-contract.json",
+      "sha256": "15780b2665364835738bfa998a6d9eeea069be110a83dbf31d2833b2eb19cb46"
+    },
+    {
+      "bytes": 12275,
+      "path": "config/dialect-v2-surface.json",
+      "sha256": "3c9b0722fd9f55000ede695a1163010fe59ce379fc333cc91f904bcb66b9faa4"
+    },
+    {
+      "bytes": 2818,
+      "path": "config/v11-surface-delivery-parity.json",
+      "sha256": "36a914068f955ade66c0df718bf44891c628a7ac14e75e776dcf1e98ff5e9c4d"
+    },
+    {
+      "bytes": 15701,
+      "path": "tools/host-lisp/v11_surface_delivery_parity.py",
+      "sha256": "2cbbaed570345f7ecc0db1019313f4c1cfbfdda02495708065c8d6edec1d8560"
+    },
+    {
+      "bytes": 5279,
+      "path": "docs/language-reference.md",
+      "sha256": "d4acf3598e9dda16b137b0071685d87e60711b70e94713297cf7bd2eb00f402e"
+    },
+    {
+      "bytes": 10588,
+      "path": "docs/user-guide.md",
+      "sha256": "08f1189d753e60bc0051979bd732345fed57e647c01abe5c4256e177f416bcc6"
+    },
+    {
+      "bytes": 11412,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-m-transactional-fasl-implementation-receipt.json",
+      "sha256": "d5fd85c35c2f77939854a751532089b24f0eade7bc6dd31f104d9f81799f8afb"
+    },
+    {
+      "bytes": 4179,
+      "path": "config/v11-g-green-surface-capacity-authorization.json",
+      "sha256": "4669d47a6ce1b6dab361e57903f35b8f05fa157edf24ed131787ff4b2d64501d"
+    }
+  ],
+  "status": "implemented-passed-authorized-not-wave-promoted",
+  "tombstone": {
+    "decision": "not-delivered",
+    "names": [
+      "peekw",
+      "pokew"
+    ],
+    "replacement": "Use byte-sized peek/poke operations in 1.1. Full unsigned word composition is not available because the required ash/logior bit operations are deferred with the shelf-format work to C2.2."
+  },
+  "version": 1
+}

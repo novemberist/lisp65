@@ -1,0 +1,97 @@
+{
+  "format": "lisp65-c2-badopcode-retirement-capacity-recovery-wplto-first-red-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: legitimate error-result fossil recovers four of six required Bank-0 text bytes",
+  "promotable": false,
+  "authority": {
+    "prior_capacity_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-retirement-wplto-capacity-first-red.json",
+      "sha256": "d5bd969497711a06776f0bf21ad766f95bca8df5d7985d4d3281272a8bfe31b2"
+    },
+    "retirement_contract_as_built": {
+      "path": "config/c2-vm-badopcode-detail-contract.json",
+      "sha256": "0c10495579ff61a5ac4142ea9458123167bc9e1f031e920cf65c89d685001fdf"
+    },
+    "wplto_driver": {
+      "path": "tools/host-lisp/c2_lite_v6_link50_badopcode_retirement_capacity_recovery_wplto.py",
+      "sha256": "ec1a3e5788e82572e97b3d5f4f8cfe2ed66e4dc8a8c42205064b5f91fae60456"
+    },
+    "internal_checker_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-retirement-capacity-recovery-wplto-internal-structural.json",
+      "sha256": "fe4258e02c63292ddac21b12342ecb290b9157133ee51e8c0dd8284c1eac9514"
+    }
+  },
+  "immutable_wplto_truth": {
+    "product": {
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-capacity-recovery-wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "095843c2c64be51df701fc56f6be73eb1f1a4a9dcdfd3acafc18ea4d940a407d",
+      "mode": "0444"
+    },
+    "elf": {
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-capacity-recovery-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ca008392b18c7d56bf3927f98d687fd48c10bfaad9081a57a3125bbe78160fff",
+      "mode": "0444"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/link50-badopcode-retirement-capacity-recovery-wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "62008b746e27ee36dcaa1409a8bb8dacee9c0fa87e80b8c2e543aef5fe455a67",
+      "mode": "0444"
+    }
+  },
+  "class_a_checker_result": {
+    "stale_check": "historical Link-47 exact L65E shape",
+    "current_shape": {
+      "entry_bytes": 301,
+      "bcode_ordinal_leaf_bytes": 68,
+      "table_bytes": 774,
+      "slice_bytes": 1143,
+      "slice_cap_bytes": 1320
+    },
+    "product_bytes_changed_by_replay": 0,
+    "compiler_runs_in_replay": 0,
+    "linker_runs_in_replay": 0
+  },
+  "measured_walls": {
+    "bank0_text_headroom_bytes": 30,
+    "bank0_text_noise_reserve_required_bytes": 32,
+    "bank0_text_shortfall_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 213,
+    "fixed_hot_block_headroom_bytes": 33,
+    "resident_island_headroom_bytes": 5,
+    "e000_headroom_bytes": 58,
+    "e000_floor_bytes": 54,
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98
+  },
+  "named_recovery_result": {
+    "object": "c2_product_install",
+    "removed_fossil": "non-authoritative VM result kept live across two non-OK completion edges",
+    "preserved": "inner non-OK vm_status and complete DIRMISS detail",
+    "symbol_bytes_before": 581,
+    "symbol_bytes_after": 577,
+    "measured_recovery_bytes": 4,
+    "required_recovery_bytes": 6,
+    "verdict": "legitimate but insufficient; no tolerance changed"
+  },
+  "paper_only_followup_candidate": {
+    "name": "canonical-t-cache-deduplication",
+    "site": "c2_product_install transient predicate",
+    "finding": "The function re-interns the literal t for every Append although eval_init already owns the canonical resident lisp_t object and is the sole product caller.",
+    "current_linked_sequence_bytes_before_comparison": 11,
+    "current_sequence": "load address of literal t; call c2_facade_intern; then compare",
+    "replacement": "compare definition_name with the existing canonical lisp_t cache; no new cell, root, string, facade edge or feature",
+    "minimum_additional_recovery_required_bytes": 2,
+    "status": "not implemented; fresh Class-C authorization required after this First Red"
+  },
+  "execution_accounting": {
+    "whole_program_lto_closure_links": 1,
+    "promotable_product_links": 0,
+    "hardware_runs": 0
+  },
+  "rollback_line": {
+    "link": 50,
+    "product_sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "status": "untouched"
+  },
+  "next_gate": "review the canonical-t-cache deduplication; no second WPLTO or product link is authorized"
+}

@@ -1,0 +1,918 @@
+{
+  "accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "attribution": {
+    "excluded_candidates": {
+      "A0_probe_steps": 0,
+      "directory_resolution_VM_steps": 0,
+      "heap_cell_delta": 0,
+      "native_consumer_cycle_delta": 0,
+      "screen_cell_delta": 0
+    },
+    "families": [
+      {
+        "members": {
+          "%rl-poll": 95
+        },
+        "name": "poll-wrapper-body",
+        "steps": 95
+      },
+      {
+        "members": {
+          "1-": 200,
+          "nthcdr": 425,
+          "zerop": 220
+        },
+        "name": "duplicated-state-shape-walk",
+        "steps": 845
+      },
+      {
+        "members": {
+          "%read-line-loop": -50
+        },
+        "name": "predecessor-loop-contraction",
+        "steps": -50
+      }
+    ],
+    "function_step_delta": {
+      "%read-line-loop": -50,
+      "%rl-poll": 95,
+      "1-": 200,
+      "nthcdr": 425,
+      "zerop": 220
+    },
+    "historical_price_world": {
+      "boundary_count": 6,
+      "call_edges": [
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "CALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 15,
+          "kind": "CALL",
+          "target": "nthcdr"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "CALLPRIM",
+          "target": "numberp"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%rl-put"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "CALL",
+          "target": "%rl-screen-tail"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "CALL",
+          "target": "nthcdr"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 200,
+          "kind": "CALLPRIM",
+          "target": "rplaca"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 40,
+          "kind": "CALLPRIM",
+          "target": "rplacd"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%read-line-loop"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 35,
+          "kind": "TAILCALL",
+          "target": "%rl-put"
+        },
+        {
+          "caller": "%rl-render",
+          "count": 45,
+          "kind": "CALLPRIM",
+          "target": "screen-put-char"
+        },
+        {
+          "caller": "%rl-render",
+          "count": 45,
+          "kind": "TAILCALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "%rl-screen-tail",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 155,
+          "kind": "CALL",
+          "target": "1-"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 175,
+          "kind": "CALL",
+          "target": "zerop"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 155,
+          "kind": "TAILCALL",
+          "target": "nthcdr"
+        }
+      ],
+      "characters": 40,
+      "dynamic_vm_steps": 8885,
+      "function_steps": [
+        {
+          "name": "%read-line-loop",
+          "steps": 235
+        },
+        {
+          "name": "%rl-put",
+          "steps": 3690
+        },
+        {
+          "name": "%rl-render",
+          "steps": 2135
+        },
+        {
+          "name": "%rl-screen-tail",
+          "steps": 165
+        },
+        {
+          "name": "1-",
+          "steps": 620
+        },
+        {
+          "name": "nthcdr",
+          "steps": 1340
+        },
+        {
+          "name": "zerop",
+          "steps": 700
+        }
+      ],
+      "function_world": "historical-sealed",
+      "heap_cells_per_character": 1,
+      "opcode_steps": [
+        {
+          "name": "ADD",
+          "steps": 225
+        },
+        {
+          "name": "CALL",
+          "steps": 360
+        },
+        {
+          "name": "CALLPRIM",
+          "steps": 335
+        },
+        {
+          "name": "CAR",
+          "steps": 315
+        },
+        {
+          "name": "CDR",
+          "steps": 490
+        },
+        {
+          "name": "CONS",
+          "steps": 40
+        },
+        {
+          "name": "DROP",
+          "steps": 290
+        },
+        {
+          "name": "EQ",
+          "steps": 360
+        },
+        {
+          "name": "GREATER",
+          "steps": 5
+        },
+        {
+          "name": "JFALSEREL",
+          "steps": 685
+        },
+        {
+          "name": "JMPREL",
+          "steps": 185
+        },
+        {
+          "name": "LESS",
+          "steps": 110
+        },
+        {
+          "name": "LOADL",
+          "steps": 1345
+        },
+        {
+          "name": "NOT",
+          "steps": 50
+        },
+        {
+          "name": "PUSHARG0",
+          "steps": 855
+        },
+        {
+          "name": "PUSHARG1",
+          "steps": 355
+        },
+        {
+          "name": "PUSHARG2",
+          "steps": 265
+        },
+        {
+          "name": "PUSHARGN",
+          "steps": 405
+        },
+        {
+          "name": "PUSHI8",
+          "steps": 715
+        },
+        {
+          "name": "PUSHLIT",
+          "steps": 50
+        },
+        {
+          "name": "PUSHNIL",
+          "steps": 30
+        },
+        {
+          "name": "PUSHT",
+          "steps": 40
+        },
+        {
+          "name": "RET",
+          "steps": 360
+        },
+        {
+          "name": "STOREL",
+          "steps": 600
+        },
+        {
+          "name": "SUB",
+          "steps": 165
+        },
+        {
+          "name": "TAILCALL",
+          "steps": 250
+        }
+      ],
+      "screen_cells": 45,
+      "screen_cells_per_character": 1.125,
+      "source_sha256": "8f905e4c1a630ab274c9df795d1a5766d5f9d9766313aa69bee0770e7dc1430d",
+      "vm_steps_per_character": 222.125
+    },
+    "live_red_world": {
+      "boundary_count": 6,
+      "call_edges": [
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "CALL",
+          "target": "%rl-poll"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 10,
+          "kind": "CALL",
+          "target": "nthcdr"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "CALLPRIM",
+          "target": "numberp"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%rl-put"
+        },
+        {
+          "caller": "%rl-poll",
+          "count": 10,
+          "kind": "CALL",
+          "target": "nthcdr"
+        },
+        {
+          "caller": "%rl-poll",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "CALL",
+          "target": "%rl-screen-tail"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "CALL",
+          "target": "nthcdr"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 200,
+          "kind": "CALLPRIM",
+          "target": "rplaca"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 40,
+          "kind": "CALLPRIM",
+          "target": "rplacd"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%read-line-loop"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 35,
+          "kind": "TAILCALL",
+          "target": "%rl-put"
+        },
+        {
+          "caller": "%rl-render",
+          "count": 45,
+          "kind": "CALLPRIM",
+          "target": "screen-put-char"
+        },
+        {
+          "caller": "%rl-render",
+          "count": 45,
+          "kind": "TAILCALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "%rl-screen-tail",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 205,
+          "kind": "CALL",
+          "target": "1-"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 230,
+          "kind": "CALL",
+          "target": "zerop"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 205,
+          "kind": "TAILCALL",
+          "target": "nthcdr"
+        }
+      ],
+      "characters": 40,
+      "dynamic_vm_steps": 9775,
+      "function_steps": [
+        {
+          "name": "%read-line-loop",
+          "steps": 185
+        },
+        {
+          "name": "%rl-poll",
+          "steps": 95
+        },
+        {
+          "name": "%rl-put",
+          "steps": 3690
+        },
+        {
+          "name": "%rl-render",
+          "steps": 2135
+        },
+        {
+          "name": "%rl-screen-tail",
+          "steps": 165
+        },
+        {
+          "name": "1-",
+          "steps": 820
+        },
+        {
+          "name": "nthcdr",
+          "steps": 1765
+        },
+        {
+          "name": "zerop",
+          "steps": 920
+        }
+      ],
+      "function_world": "live-artifacts",
+      "heap_cells_per_character": 1,
+      "opcode_steps": [
+        {
+          "name": "ADD",
+          "steps": 225
+        },
+        {
+          "name": "CALL",
+          "steps": 470
+        },
+        {
+          "name": "CALLPRIM",
+          "steps": 335
+        },
+        {
+          "name": "CAR",
+          "steps": 320
+        },
+        {
+          "name": "CDR",
+          "steps": 540
+        },
+        {
+          "name": "CONS",
+          "steps": 40
+        },
+        {
+          "name": "DROP",
+          "steps": 290
+        },
+        {
+          "name": "EQ",
+          "steps": 415
+        },
+        {
+          "name": "GREATER",
+          "steps": 5
+        },
+        {
+          "name": "JFALSEREL",
+          "steps": 745
+        },
+        {
+          "name": "JMPREL",
+          "steps": 180
+        },
+        {
+          "name": "LESS",
+          "steps": 110
+        },
+        {
+          "name": "LOADL",
+          "steps": 1350
+        },
+        {
+          "name": "NOT",
+          "steps": 55
+        },
+        {
+          "name": "PUSHARG0",
+          "steps": 1075
+        },
+        {
+          "name": "PUSHARG1",
+          "steps": 410
+        },
+        {
+          "name": "PUSHARG2",
+          "steps": 265
+        },
+        {
+          "name": "PUSHARGN",
+          "steps": 405
+        },
+        {
+          "name": "PUSHI8",
+          "steps": 825
+        },
+        {
+          "name": "PUSHLIT",
+          "steps": 50
+        },
+        {
+          "name": "PUSHNIL",
+          "steps": 30
+        },
+        {
+          "name": "PUSHT",
+          "steps": 40
+        },
+        {
+          "name": "RET",
+          "steps": 470
+        },
+        {
+          "name": "STOREL",
+          "steps": 605
+        },
+        {
+          "name": "SUB",
+          "steps": 215
+        },
+        {
+          "name": "TAILCALL",
+          "steps": 305
+        }
+      ],
+      "screen_cells": 45,
+      "screen_cells_per_character": 1.125,
+      "source_sha256": "bbb64bbd207a78a169337475a575cd222eeba726f93ff0b8e73e469d0aca14a1",
+      "vm_steps_per_character": 244.375
+    },
+    "named_delta_steps": 890,
+    "observed_delta_steps": 890,
+    "unexplained_steps": 0
+  },
+  "authorities": {
+    "final_red": {
+      "bytes": 7886428,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.8-capture-hybrid-product-card-r1-source-world-resume-final-red.json",
+      "sha256": "bf93d1cf2d3af595a217d4db6a5ef87c7206209b27c4796339217f09d300b196"
+    },
+    "live_red_source": {
+      "commit": "9eb6af89",
+      "sha256": "bbb64bbd207a78a169337475a575cd222eeba726f93ff0b8e73e469d0aca14a1"
+    },
+    "price_source": {
+      "commit": "870e5f53",
+      "sha256": "8f905e4c1a630ab274c9df795d1a5766d5f9d9766313aa69bee0770e7dc1430d"
+    },
+    "successor_source": {
+      "bytes": 15920,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "671b280d7e31195c22d494455d40d5e060c6f7d7b2c0f13ac8475406f6f014d8"
+    }
+  },
+  "claim_limit": "host route repair only; product pair unchanged; final status requires read-only Scope and Acceptance Resume",
+  "format": "lisp65-c2-v18-capture-hybrid-responsiveness-repair-v1",
+  "frozen_pair_after": {
+    "ELF": {
+      "bytes": 648612,
+      "path": "build/c2.3/v1.8-capture-hybrid-product-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "67f89b7354d0f473c3057508ed6a47af69edad29c0807bc1d6f031442daaceab"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.8-capture-hybrid-product-card-r1/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "4a08b5a8e2cc1eb6924af0e43201fccaeea305bc56b7aa9ab37393d2e5e26123"
+    }
+  },
+  "frozen_pair_before": {
+    "ELF": {
+      "bytes": 648612,
+      "path": "build/c2.3/v1.8-capture-hybrid-product-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "67f89b7354d0f473c3057508ed6a47af69edad29c0807bc1d6f031442daaceab"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.8-capture-hybrid-product-card-r1/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "4a08b5a8e2cc1eb6924af0e43201fccaeea305bc56b7aa9ab37393d2e5e26123"
+    }
+  },
+  "recorded_on": "2026-08-28",
+  "repair": {
+    "double_traversal_mutation": {
+      "all_three_walls_red": true,
+      "exact_predecessor": true,
+      "source_sha256": "bbb64bbd207a78a169337475a575cd222eeba726f93ff0b8e73e469d0aca14a1"
+    },
+    "kind": "route-side single traversal of the state suffix",
+    "predecessor_measurement": {
+      "dynamic_vm_steps": 9775,
+      "frames_per_character": 0.8017491666666667,
+      "heap_cells_per_character": 1,
+      "linked_native_cycles_per_character": 66,
+      "linked_native_instructions_per_character": 23,
+      "margin_percent": 24.727288979616425,
+      "screen_cells_per_character": 1.125,
+      "service_events_per_frame": 1.2472728897961642,
+      "vm_steps_per_character": 244.375,
+      "walls": {
+        "maximum_frames_per_character": false,
+        "minimum_margin_percent": false,
+        "minimum_service_events_per_frame": false
+      }
+    },
+    "predecessor_to_successor_function_step_delta": {
+      "%rl-poll": 10,
+      "1-": -200,
+      "nthcdr": -425,
+      "zerop": -220
+    },
+    "removed_dynamic_vm_steps": 835,
+    "successor_measurement": {
+      "dynamic_vm_steps": 8940,
+      "frames_per_character": 0.7730460416666667,
+      "heap_cells_per_character": 1,
+      "linked_native_cycles_per_character": 66,
+      "linked_native_instructions_per_character": 23,
+      "margin_percent": 29.358401194840432,
+      "screen_cells_per_character": 1.125,
+      "service_events_per_frame": 1.2935840119484043,
+      "vm_steps_per_character": 223.5,
+      "walls": {
+        "maximum_frames_per_character": true,
+        "minimum_margin_percent": true,
+        "minimum_service_events_per_frame": true
+      }
+    },
+    "successor_route": {
+      "boundary_count": 6,
+      "call_edges": [
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "CALL",
+          "target": "%rl-poll"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 10,
+          "kind": "CALL",
+          "target": "nthcdr"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "CALLPRIM",
+          "target": "numberp"
+        },
+        {
+          "caller": "%read-line-loop",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%rl-put"
+        },
+        {
+          "caller": "%rl-poll",
+          "count": 5,
+          "kind": "CALL",
+          "target": "nthcdr"
+        },
+        {
+          "caller": "%rl-poll",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "CALL",
+          "target": "%rl-screen-tail"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "CALL",
+          "target": "nthcdr"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 200,
+          "kind": "CALLPRIM",
+          "target": "rplaca"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 40,
+          "kind": "CALLPRIM",
+          "target": "rplacd"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%read-line-loop"
+        },
+        {
+          "caller": "%rl-put",
+          "count": 35,
+          "kind": "TAILCALL",
+          "target": "%rl-put"
+        },
+        {
+          "caller": "%rl-render",
+          "count": 45,
+          "kind": "CALLPRIM",
+          "target": "screen-put-char"
+        },
+        {
+          "caller": "%rl-render",
+          "count": 45,
+          "kind": "TAILCALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "%rl-screen-tail",
+          "count": 5,
+          "kind": "TAILCALL",
+          "target": "%rl-render"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 155,
+          "kind": "CALL",
+          "target": "1-"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 175,
+          "kind": "CALL",
+          "target": "zerop"
+        },
+        {
+          "caller": "nthcdr",
+          "count": 155,
+          "kind": "TAILCALL",
+          "target": "nthcdr"
+        }
+      ],
+      "characters": 40,
+      "dynamic_vm_steps": 8940,
+      "function_steps": [
+        {
+          "name": "%read-line-loop",
+          "steps": 185
+        },
+        {
+          "name": "%rl-poll",
+          "steps": 105
+        },
+        {
+          "name": "%rl-put",
+          "steps": 3690
+        },
+        {
+          "name": "%rl-render",
+          "steps": 2135
+        },
+        {
+          "name": "%rl-screen-tail",
+          "steps": 165
+        },
+        {
+          "name": "1-",
+          "steps": 620
+        },
+        {
+          "name": "nthcdr",
+          "steps": 1340
+        },
+        {
+          "name": "zerop",
+          "steps": 700
+        }
+      ],
+      "function_world": "live-artifacts",
+      "heap_cells_per_character": 1,
+      "opcode_steps": [
+        {
+          "name": "ADD",
+          "steps": 225
+        },
+        {
+          "name": "CALL",
+          "steps": 360
+        },
+        {
+          "name": "CALLPRIM",
+          "steps": 335
+        },
+        {
+          "name": "CAR",
+          "steps": 320
+        },
+        {
+          "name": "CDR",
+          "steps": 500
+        },
+        {
+          "name": "CONS",
+          "steps": 40
+        },
+        {
+          "name": "DROP",
+          "steps": 290
+        },
+        {
+          "name": "EQ",
+          "steps": 360
+        },
+        {
+          "name": "GREATER",
+          "steps": 5
+        },
+        {
+          "name": "JFALSEREL",
+          "steps": 690
+        },
+        {
+          "name": "JMPREL",
+          "steps": 180
+        },
+        {
+          "name": "LESS",
+          "steps": 110
+        },
+        {
+          "name": "LOADL",
+          "steps": 1360
+        },
+        {
+          "name": "NOT",
+          "steps": 55
+        },
+        {
+          "name": "PUSHARG0",
+          "steps": 860
+        },
+        {
+          "name": "PUSHARG1",
+          "steps": 355
+        },
+        {
+          "name": "PUSHARG2",
+          "steps": 265
+        },
+        {
+          "name": "PUSHARGN",
+          "steps": 405
+        },
+        {
+          "name": "PUSHI8",
+          "steps": 715
+        },
+        {
+          "name": "PUSHLIT",
+          "steps": 50
+        },
+        {
+          "name": "PUSHNIL",
+          "steps": 30
+        },
+        {
+          "name": "PUSHT",
+          "steps": 40
+        },
+        {
+          "name": "RET",
+          "steps": 360
+        },
+        {
+          "name": "STOREL",
+          "steps": 610
+        },
+        {
+          "name": "SUB",
+          "steps": 165
+        },
+        {
+          "name": "TAILCALL",
+          "steps": 255
+        }
+      ],
+      "screen_cells": 45,
+      "screen_cells_per_character": 1.125,
+      "source_sha256": "671b280d7e31195c22d494455d40d5e060c6f7d7b2c0f13ac8475406f6f014d8",
+      "vm_steps_per_character": 223.5
+    },
+    "successor_vs_price_function_step_delta": {
+      "%read-line-loop": -50,
+      "%rl-poll": 105
+    }
+  },
+  "status": "PASS: ONE ROUTE REPAIR RESTORES RESPONSIVENESS WALL"
+}

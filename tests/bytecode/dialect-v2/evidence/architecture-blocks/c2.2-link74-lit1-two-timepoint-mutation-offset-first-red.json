@@ -1,0 +1,23 @@
+{
+  "format": "lisp65-c2.2-link74-lit1-two-timepoint-mutation-offset-first-red-v1",
+  "status": "closed-checker-offset-correction-no-artifact-or-hardware-impact",
+  "recorded_on": "2026-07-28",
+  "first_red": {
+    "stage": "nonpromotable carrier mutation audit",
+    "mechanism": "The first mutation table used record-relative offsets +18 and +20 for fields 9 and 10 of <HHHHHHHHIHHII>. Their actual offsets are +20 and +22; the initial probes therefore changed slice_build_id and payload_crc while carrying payload_crc and record_crc labels.",
+    "correction": "The reusable mutation gate now restores the old payload CRC at record+20 and the old record CRC at record+22, and verify executes all five mutations on every replay."
+  },
+  "artifact_truth": {
+    "diagnostic_boot_sha256": "168ceaeac7c477839dfffae623ddecaf7c1e0ac31de54301e12025e684926082",
+    "diagnostic_product_sha256": "46ea2f089d120718bb0c92c6d348378533d2b8916ab375d4d6d5e830388b0b55",
+    "artifact_bytes_changed_by_correction": 0,
+    "identity_values_changed_by_correction": 0
+  },
+  "scope": {
+    "product_links": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "promotable": false
+  },
+  "claim_limit": "Mutation-checker correction only; no hardware or product result."
+}

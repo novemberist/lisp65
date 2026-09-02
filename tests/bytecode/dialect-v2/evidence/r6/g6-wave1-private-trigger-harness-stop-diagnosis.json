@@ -1,0 +1,58 @@
+{
+  "format": "lisp65-g6-wave1-harness-stop-diagnosis-v1",
+  "version": 1,
+  "status": "diagnosed-receiptless-harness-stop",
+  "date": "2026-07-17",
+  "case_id": "mid-write-media-swap-abort",
+  "cycle_id": "g6-wave1-20260717-midswap-06",
+  "product_artifact_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+  "preflight_sha256": "77393a50b8c19388a80b5f908fa9a63eb5f8eb7c939ff864ed0493d10549bf0f",
+  "observed": {
+    "trigger_result": "*** vm: undefined function",
+    "red_border_reached": false,
+    "freezer_opened": false,
+    "medium_b_mounted": false,
+    "transaction_started": false,
+    "write_attempted": false,
+    "case_receipt_emitted": false
+  },
+  "diagnosis": {
+    "class": "harness-procedure-drift-after-directory-only-anonymization",
+    "failed_symbol": "%m65d-set",
+    "probe": "(list (function-kind (quote %disk-byte)) (function-kind (quote %m65d-set)))",
+    "probe_result": "(primitive nil)",
+    "cause": "the historical operator trigger named private M65D helpers that are deliberately anonymous in the Wave-1 Directory-only product",
+    "product_fault": false,
+    "media_integrity_finding": false
+  },
+  "evidence": [
+    {
+      "path": "build/r6/g6/run-20260717-wave1-01/mid-write-media-swap-abort/execution-sheet.json",
+      "sha256": "4dc012cd5ea1501a5997690446ea47551982ba6cc63e7106bb467f41b3e0bddc"
+    },
+    {
+      "path": "build/r6/g6/run-20260717-wave1-01/mid-write-media-swap-abort/trigger-failure/screen.ansi.txt",
+      "sha256": "0953d60bba78d19a456813a2af1eebe817eb6f962c8cdd2c447c010ffec1bdee"
+    },
+    {
+      "path": "build/r6/g6/run-20260717-wave1-01/mid-write-media-swap-abort/trigger-failure/function-kinds-quote/function-kinds.txt",
+      "sha256": "9817adb63058c2b5bc90bf10da220fe7ba3447462342721ef2c5fa41cb6483fb"
+    },
+    {
+      "path": "build/r6/g6/run-20260717-wave1-01/mid-write-media-swap-abort/trigger-failure/private-kinds-a/private-kinds-a.txt",
+      "sha256": "fdf8ebdb2bbd3ec7ee6371207106c2db87fffb9cc7cabecd4341d1a463881224"
+    }
+  ],
+  "disposition": {
+    "attempt": "historical-diagnostic-only-not-evidence",
+    "cases_1_to_4": "remain-product-sha-valid-subject-to-offline-rebind-against-the-corrected-test-closure",
+    "case_5": "rerun-from-a-fresh-sheet-after-static-preflight-repair",
+    "required_fix": "bind-an-exact-public-m65d-save-trigger-and-reject-private-helper-use-in-static-preflight"
+  },
+  "claims": {
+    "case": "not-run",
+    "G6": "4-of-5-applicable-product-sha-valid-pending-harness-rebind",
+    "release": "not-release-capable"
+  },
+  "result": "diagnosed-not-passed"
+}

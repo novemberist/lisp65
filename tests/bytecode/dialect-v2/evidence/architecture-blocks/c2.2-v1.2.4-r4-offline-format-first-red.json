@@ -1,0 +1,23 @@
+{
+  "format": "lisp65-c2.2-v1.2.4-r4-offline-format-first-red-v1",
+  "recorded_on": "2026-07-30",
+  "status": "closed-v1.2.4-reproducibility-format-admitted",
+  "observed": "The second v1.2.4 R4 archive reached the isolated semantic verifier and was rejected as unknown reproducibility receipt format.",
+  "mechanism": "promotion_archive.py selected and validated the v1.2.4 wrapper, but promotion_archive_offline.py's C2_LITE_REPRO_FORMATS ended at v1.2.3. The generic 19-role receipt semantics themselves are unchanged.",
+  "correction": "Add only lisp65-c2-lite-v1.2.4-media-product-reproducibility-v1 to the isolated C2-lite format allowlist. The existing status, result, source-commit, varied-build, role-set and artifact-byte checks remain mandatory.",
+  "failed_archive": {
+    "path": "build/c2.2/v1.2.4-acceptance/r4/c2-lite-v1.2.4-r4-product.tar.gz",
+    "bytes": 127786959,
+    "sha256": "87d980b927ff14098b2f4251cf01bada71e4e629bd48c3814542873c843ba9bf",
+    "classification": "rejected-never-R4-authority"
+  },
+  "execution_accounting": {
+    "archives_packed": 1,
+    "archives_isolated_verified": 0,
+    "product_builds": 0,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "claim_limit": "Offline format-dispatch First Red only. The failed archive is not R4 evidence; A1 and Fresh-Clone requalification remain required before another seal."
+}

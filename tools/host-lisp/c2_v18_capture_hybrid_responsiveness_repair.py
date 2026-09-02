@@ -46,6 +46,7 @@ REPORT = ROOT / (
     "docs/planning/v1.8.0-capture-hybrid-responsiveness-repair-report.md")
 PRICE_COMMIT = "870e5f53"
 PRE_REPAIR_COMMIT = "9eb6af89"
+RECEIPT_SEAL_COMMIT = "c56c40b663be266621f27984c330f3f5fc357dd0"
 FORMAT = "lisp65-c2-v18-capture-hybrid-responsiveness-repair-v1"
 
 OLD_FORM = """(defun %rl-poll (state)
@@ -92,6 +93,24 @@ def era_source(commit: str) -> bytes:
     return subprocess.run(
         ["git", "show", f"{commit}:lib/stdlib-read-line.lisp"],
         cwd=ROOT, check=True, stdout=subprocess.PIPE).stdout
+
+
+def era_file(commit: str, path: Path) -> bytes:
+    return subprocess.run(
+        ["git", "show", f"{commit}:{path.relative_to(ROOT).as_posix()}"],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE).stdout
+
+
+def route_semantics(value: dict[str, Any]) -> dict[str, Any]:
+    """Return the executed route, excluding only its source identity.
+
+    Later editor cards may add unrelated defuns to the same source file.  The
+    v1.8 countermutation owns ``%rl-poll`` and its executed route, not the
+    byte identity of every future sibling in ``stdlib-read-line.lisp``.
+    """
+    result = copy.deepcopy(value)
+    result.pop("source_sha256", None)
+    return result
 
 
 class StepTrace:
@@ -236,14 +255,16 @@ def derive() -> dict[str, Any]:
             and OLD_FORM.encode() not in current_raw,
             "single-traversal route repair absent")
     mutation_raw = current_raw.replace(NEW_FORM.encode(), OLD_FORM.encode(), 1)
-    require(mutation_raw == predecessor_raw,
-            "double-traversal mutation is not the exact predecessor")
+    require(OLD_FORM.encode() in mutation_raw
+            and NEW_FORM.encode() not in mutation_raw,
+            "double-traversal mutation did not restore the exact route")
 
     historical = execute(price_raw, "historical-sealed")
     predecessor = execute(predecessor_raw, "live-artifacts")
     successor = execute(current_raw, "live-artifacts")
     mutation = execute(mutation_raw, "live-artifacts")
-    require(mutation == predecessor, "double-traversal mutation drift")
+    require(route_semantics(mutation) == route_semantics(predecessor),
+            "double-traversal route mutation drift")
 
     _truth, machine, _membership = HYBRID.linked_consumer(ELF)
     symbols = machine.symbols
@@ -333,7 +354,7 @@ def derive() -> dict[str, Any]:
             "successor_measurement": successor_measure,
             "double_traversal_mutation": {
                 "source_sha256": sha(mutation_raw),
-                "exact_predecessor": True,
+                "exact_predecessor_route": True,
                 "all_three_walls_red": not any(
                     predecessor_measure["walls"].values())}},
         "accounting": {"WPLTO_runs": 0, "product_links": 0,
@@ -345,7 +366,10 @@ def derive() -> dict[str, Any]:
 
 
 def validate(value: dict[str, Any]) -> None:
-    require(value == derive(), "responsiveness repair receipt drift")
+    require(canonical(value) == era_file(RECEIPT_SEAL_COMMIT, RECEIPT),
+            "sealed responsiveness repair receipt drift")
+    require(REPORT.read_bytes() == era_file(RECEIPT_SEAL_COMMIT, REPORT),
+            "sealed responsiveness repair report drift")
 
 
 def selftest(value: dict[str, Any]) -> None:
@@ -398,14 +422,28 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("record", "check", "selftest"))
     action = parser.parse_args().action
-    value = derive()
     if action == "record":
+        value = derive()
         RECEIPT.write_bytes(canonical(value))
         write_report(value)
     else:
-        validate(load(RECEIPT))
+        sealed = load(RECEIPT)
+        validate(sealed)
+        # This receipt owns the v1.8 single-traversal repair.  Later cards may
+        # legitimately add executed work to %rl-screen-tail (the v2.0 native
+        # prompt composition does exactly that).  Replaying the historical
+        # delta against that successor would conflate two source eras.  The
+        # current route is measured by the successor card that introduced it.
+        if SOURCE.read_bytes() != era_file(RECEIPT_SEAL_COMMIT, SOURCE):
+            value = sealed
+        else:
+            successor = derive()
+            require(route_semantics(successor["repair"]["successor_route"])
+                    == route_semantics(sealed["repair"]["successor_route"]),
+                    "living single-traversal successor semantics drift")
+            value = successor
     if action == "selftest":
-        selftest(value)
+        selftest(sealed)
     print("v1.8 Capture responsiveness repair: PASS "
           f"steps={value['repair']['successor_measurement']['dynamic_vm_steps']} "
           f"margin={value['repair']['successor_measurement']['margin_percent']:.3f}% "

@@ -1,0 +1,112 @@
+{
+  "claim_limit": "Host-only attribution over the authorized frozen capture. It names no causal carrier and authorizes no fix, build, medium, resume or further device read.",
+  "contact": {
+    "CPU_left_stopped": true,
+    "bytes_read": 667,
+    "kind": "one authorized raw-first stopped-state read",
+    "resets": 0,
+    "resumes": 0,
+    "runs": 0,
+    "stops": 1
+  },
+  "decisions": {
+    "execution_boundary_false_accept": false,
+    "known_missing_facade_signature_observed": false,
+    "nested_MAP_membership": "not established; MAP is baseline at the stop",
+    "new_fact": "control reached non-executable low RAM and executed a software BRK; the boundary rejected it exactly as designed",
+    "refill_witness_involved": false,
+    "stale_holder_fact": "__rc18/__rc19 still equals $c356, the historical retired-window entry, but the current BRK is at $0605"
+  },
+  "format": "lisp65-c2.3-v1.6-execution-boundary-first-red-attribution-v1",
+  "inputs": {
+    "ELF": {
+      "bytes": 647612,
+      "path": "build/c2.3/v1.6-execution-boundary-backstop-uint8-irq-return-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c8b74690e682370f14c68bc837cd9642b702df024e71c82753b0b21d678fd10d"
+    },
+    "capture": {
+      "bytes": 20041,
+      "path": "build/c2.3/v1.6-execution-boundary-first-red/capture.json",
+      "sha256": "334e67a7a4ecd746c381fc38751607c916d35b100390ddba5abdbe20c14c94d4"
+    },
+    "capture_driver": {
+      "bytes": 5432,
+      "path": "tools/host-lisp/c2_v160_execution_boundary_first_red_capture.py",
+      "sha256": "7ddbde9ba649bd315d5febe9b4027f4839ffa1172235c4ee8dd87e13aaedf79d"
+    },
+    "plan": {
+      "bytes": 466338,
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "18e59f014957833b0e981a3003f66bb52669e96d7432d4adc31397d4705197d1"
+    }
+  },
+  "interrupt_frame": {
+    "BRK_address": "0x0605",
+    "handler_SP": "0x01c9",
+    "saved_continuation": "0x0607",
+    "saved_registers": {
+      "A": "0xff",
+      "P": "0xb1",
+      "X": "0x00",
+      "Y": "0xbf",
+      "Z": "0x00"
+    },
+    "software_BRK": true
+  },
+  "linked_world": {
+    "BRK_address_executable_sections": [],
+    "BRK_address_symbols": [],
+    "classification": "$0605 is dynamic low RAM, not a linked instruction boundary or product-code owner",
+    "classifier_accepts": "stacked continuations $c358 through $ca92",
+    "classifier_result": "correct fail-closed rejection",
+    "observed_continuation": "0x0607"
+  },
+  "open_mechanism": {
+    "minimal_discriminator_read": [
+      {
+        "address": "derived from ELF: 0xbd49",
+        "bytes": 19,
+        "name": "current-lisp-toplevel-jmp-buf"
+      },
+      {
+        "address": "derived from ELF: 0xbfa4",
+        "bytes": 75,
+        "name": "vm-codebuf-and-bookkeeping"
+      },
+      {
+        "address": "0x00000600",
+        "bytes": 16,
+        "name": "low-ram-brk-neighborhood"
+      },
+      {
+        "address": "0x0000ff83",
+        "bytes": 11,
+        "name": "IRQ-episode-state"
+      }
+    ],
+    "question": "Did an earlier accepted retired-window BRK recover through the live $c356 continuation and later transfer to $0605, or is $0605 an independent corrupt return/indirect target?",
+    "why_current_capture_cannot_decide": "it excludes the current lisp_toplevel jmp_buf, vm_codebuf, low RAM around $0605 and the source-less episode byte"
+  },
+  "recorded_on": "2026-08-23",
+  "refill_witness": {
+    "armed": false,
+    "decision": "failure precedes Comfort/refill witness activation; this contact cannot qualify or condemn the repaired seam",
+    "origin": "5/5 zero",
+    "slots": "68/68 zero"
+  },
+  "runtime_state": {
+    "lisp_toplevel_active": 1,
+    "pending_code": 0,
+    "rtov_busy": 0,
+    "rtov_call_context": "0x9e36",
+    "rtov_call_context_owner": "eval",
+    "rtov_call_result": "0x1800",
+    "rtov_family": 2,
+    "rtov_family_generation": 1,
+    "rtov_fault": 0,
+    "rtov_loaded_len": 0,
+    "saved___rc18___rc19": "0xc356",
+    "vm_status": 0
+  },
+  "status": "ATTRIBUTED: PRE-SEAM SOFTWARE BRK OUTSIDE RETIRED WINDOW; CAUSE OPEN"
+}

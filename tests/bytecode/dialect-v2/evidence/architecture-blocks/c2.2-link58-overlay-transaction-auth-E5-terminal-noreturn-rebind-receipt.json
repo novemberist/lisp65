@@ -1,0 +1,88 @@
+{
+  "authorization": {
+    "contract": {
+      "bytes": 1990,
+      "path": "config/c2-overlay-transaction-auth-island-followup-contract.json",
+      "sha256": "7517af5b935e686975ab6d23f6aa4115393f2e64283b2111ce6517eae2738a10"
+    },
+    "document": {
+      "bytes": 2265,
+      "path": "docs/planning/c2.2-overlay-transaction-auth-island-followup.md",
+      "sha256": "d4dc86f25c0e8cd37e39d321dfe48d2cbb397c602a26f11ff9c5519c1c5ba777"
+    },
+    "hardware_runs": 0,
+    "historical_capacity_first_red": {
+      "bytes": 5121,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-overlay-transaction-auth-capacity-first-red-receipt.json",
+      "sha256": "e7fb37a6b5e73bd19b31965ff87bad44f51f081d582d05f608b4272a72916f9a"
+    },
+    "historical_host_semantics": {
+      "bytes": 3720,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-overlay-transaction-auth-contract-probe-receipt.json",
+      "sha256": "6d482366482b20542e4044f884677ca30cf09fcddb1b88a8064b6bdfa770cc9d"
+    },
+    "product_links": 0
+  },
+  "claim_limit": "Host/source/mutation proof only. Island size, Bank-0 BSS, E000 identity and all product structure gates are not-run. No product SHA, hardware, latency, promotion or release claim.",
+  "format": "lisp65-c2-overlay-transaction-auth-island-contract-probe-v1",
+  "host_mutation_gate": {
+    "batch_transaction_overlap": "busy-before-shared-state-change",
+    "binary": {
+      "bytes": 114488,
+      "path": "build/runtime-overlay-transaction-host",
+      "sha256": "742e22a1ebf1295eec503f58f7fb1c26fe40b825948a7c1f044dabe91892235a"
+    },
+    "catalog_authentications_for_two_slices": 1,
+    "dedicated_transaction_bss_symbols": 0,
+    "generation_change": "fresh-authentication-red",
+    "record_and_payload_checks_for_two_slices": 2,
+    "same_generation_between_transactions_mutation": "crc-red",
+    "status": "passed-asan-ubsan",
+    "value_string": "runtime-overlay-transaction: PASS catalog=once-per-transaction record+payload=per-slice same-generation-mutation=crc-red generation-change=reauthenticated batch-state=lifetime-exclusive"
+  },
+  "implementation": {
+    "fixture": {
+      "bytes": 17255,
+      "path": "scripts/runtime-overlay-transaction-main.c",
+      "sha256": "d8ee3ae2658832a162746357b293c84d6e2661d7ba4e10e372bf2420318cd8d3"
+    },
+    "header": {
+      "bytes": 8829,
+      "path": "src/vm_runtime_overlay.h",
+      "sha256": "f98f00e2d1f694d06394044c036c6b18b31f4eb4f000e68379e5a88f29ec944c"
+    },
+    "makefile": {
+      "bytes": 76824,
+      "path": "mk/workbench.mk",
+      "sha256": "e3378964e31e66c4135a8ceacf1be8552e3fba3ba2c9f43f714f4708037babba"
+    },
+    "product_integration": {
+      "bytes": 142147,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "761fa5ab3d3da4bf058f53d22c44e52e2b92e8ce57fa2b18c5cf6ec7ff4bec00"
+    },
+    "runtime": {
+      "bytes": 84058,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "48df478454a878e221d287a83e0a3917c910c89835f8f10e9258e09809631cec"
+    }
+  },
+  "next_gate": "Exactly one product-shaped seed capacity/placement probe may run; any red stops before a product link.",
+  "recorded_on": "2026-07-20",
+  "source_gate": {
+    "checks": {
+      "batch_and_transaction_reject_overlap": true,
+      "batch_releases_shared_tuple": true,
+      "catalog_context_is_island_noinline": true,
+      "host_build_uses_island_profile": true,
+      "invalidation_clears_discriminator": true,
+      "island_feature_is_explicit": true,
+      "product_entrypoints_are_single_copy": true,
+      "semantic_edges_remain": true,
+      "state_reuses_batch_tuple": true,
+      "transaction_api_has_one_named_noinline_home": true
+    },
+    "status": "passed"
+  },
+  "status": "passed-host-source-mutations-capacity-not-run"
+}

@@ -1,0 +1,19 @@
+; C64 LOAD smoke for the Mini-CLOS resident dispatch path.
+; Prerequisite: cl-compat.lsp and lib-clos.lsp already loaded.
+
+(DEFCLASS SHAPE () NAME)
+(DEFCLASS CIRCLE (SHAPE) RADIUS)
+
+(DEFMETHOD AREA ((C CIRCLE))
+  (TIMES 3 (TIMES (SLOT-VALUE C 'RADIUS) (SLOT-VALUE C 'RADIUS))))
+(DEFMETHOD KIND ((S SHAPE)) 'SHAPE)
+
+(SETQ C (MAKE-INSTANCE 'CIRCLE :RADIUS 4 :NAME 'C1))
+
+(CHECK (CLASS-OF C) 'CIRCLE)
+(CHECK (SLOT-VALUE C 'NAME) 'C1)
+(CHECK (AREA C) 48)
+(CHECK (KIND C) 'SHAPE)
+
+(CHECKREPORT)
+'CLOSOK

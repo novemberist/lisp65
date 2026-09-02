@@ -1,0 +1,124 @@
+{
+  "authority": {
+    "CPU_wrapper_at_card": {
+      "bytes": 12814,
+      "path": "tools/host-lisp/c2_v21_cpu_transport_card.py",
+      "sha256": "592ded8f47fa54d495a3698873541748a81b4301bb0cccf19d14c8eabeba9586"
+    },
+    "ELF": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-wrapper-contract-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c8853d3467f1abd9f253ca8c79ad4843a34fd5e24a1d2bdff44e93cdcafd96d8"
+    },
+    "WPLTO_internal": {
+      "bytes": 813972,
+      "path": "build/c2.3/v2.1-wrapper-contract-replacement-card/receipts/wplto-internal.json",
+      "sha256": "e70a951f711541c791097b0ceee9b45497383703d814643b78785a225aa72967"
+    },
+    "card_driver_at_card": {
+      "bytes": 16143,
+      "path": "tools/host-lisp/c2_v21_wrapper_contract_replacement_card.py",
+      "sha256": "b3a34933b1cb8bc86fa1c30917bfd1316a90652b1ff62ecec9cb38533330232c"
+    },
+    "driver": {
+      "bytes": 12212,
+      "path": "tools/host-lisp/c2_v21_wrapper_contract_replacement_red_attribution.py",
+      "sha256": "e8f31ced68f8585f2d386e3937bb28960bfda8b06ed23e8f9842449403aa1269"
+    },
+    "final_red": {
+      "bytes": 9291,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-wrapper-contract-replacement-card-final-red.json",
+      "sha256": "3544012675b147a1c2fe082415b303b8a4c9079cd60f132db0ee2215a0bebe3a"
+    },
+    "map": {
+      "bytes": 189243,
+      "path": "build/c2.3/v2.1-wrapper-contract-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "8500a88e28509b77e3ed8b0573b70d1d9c9c96d0114f35a7a255e38965831830"
+    },
+    "pricing": {
+      "bytes": 22598,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-call-seam-pricing-receipt.json",
+      "sha256": "5fde15846df57d65341eb80c3b1f16b12545fdbdcccb7cdee34532300083ee86"
+    },
+    "producer": {
+      "bytes": 2694,
+      "path": "build/c2.3/v2.1-wrapper-contract-replacement-card/producer-result.json",
+      "sha256": "7b5dcf152b5dc33854c3d749686e287e1e77e2b07c3d1e4f276a39115926fcd9"
+    },
+    "real_ABI": {
+      "bytes": 180748,
+      "path": "build/c2.3/v2.1-wrapper-contract-replacement-card/wplto/c2-asm-leaf-real-abi-callers.json",
+      "sha256": "d506e6c386e3b9bd6e685afb820b145ba75a90aa2d37bd657e85f6554c106de7"
+    },
+    "wrapper_contract": {
+      "bytes": 4587,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-postlink-wrapper-contract-receipt.json",
+      "sha256": "7d85cd03d3ce3ae3bd61a158e7f9c7b83919dc089bf5e7ab13f3110220957597"
+    }
+  },
+  "card_disposition": {
+    "completion_allowed": false,
+    "device_allowed": false,
+    "media_allowed": false,
+    "owner_disposition_required": true,
+    "retry_authorized": false
+  },
+  "card_result": {
+    "WPLTO_runs": 1,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 1,
+    "replacement_cards_consumed": 1
+  },
+  "claim_limit": "Read-only attribution of the consumed replacement card. It proves a post-link guard-domain error after green WPLTO/ABI work; it authorizes no repair, retry, completion, media or device contact.",
+  "format": "lisp65-c2.3-v2.1-wrapper-contract-replacement-red-attribution-v1",
+  "green_subresults": {
+    "WPLTO": "passed-new-c2-lite-real-abi-identity-hardware-not-run",
+    "producer": "PASS",
+    "real_ABI": "passed-all-assembler-leaf-abi-contracts",
+    "rtov_crc_callers": 10,
+    "wrapper_contract": {
+      "producer_roles": 9,
+      "uppercase_role_references": 0,
+      "wrappers_executed": 3
+    }
+  },
+  "mutations_rejected": [
+    "hide-card",
+    "blame-product",
+    "claim-overlap",
+    "erase-priced-placement",
+    "accept-high-floor",
+    "erase-wrapper-green",
+    "authorize-retry",
+    "allow-media"
+  ],
+  "recorded_on": "2026-08-14",
+  "root_cause": {
+    "accepted_safety_fact": "reader executes outside the mapped block",
+    "class": "LINKED-GUARD-PINS-READER-TO-WRONG-ADDRESS-DOMAIN",
+    "invalid_extra_predicate": "reader.value >= 0x8000",
+    "mapped_window": {
+      "end_exclusive": "0x6000",
+      "reader_overlaps": false,
+      "start": "0x4000"
+    },
+    "mechanism": "The linked guard combines the real non-overlap property with an unrelated high-memory floor. The commissioned placement has always put the reader at 0x2277, below and disjoint from the 0x4000..0x5fff mapped block; the extra floor rejects that priced placement after a successful product link.",
+    "post_link_guard_failure": true,
+    "priced_placement": {
+      "known_before_card": true,
+      "reader_address": "0x2277",
+      "reader_bytes": 166
+    },
+    "product_failure": false,
+    "reader": {
+      "address": "0x2277",
+      "bytes": 166,
+      "end_exclusive": "0x231d",
+      "section": ".text"
+    },
+    "wrapper_vocabulary_failure": false
+  },
+  "status": "ATTRIBUTED FINAL RED: linked guard pins reader to wrong address domain"
+}

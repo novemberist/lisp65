@@ -556,12 +556,12 @@ def native_prompt_final_elf() -> dict[str, Any]:
     stdlib_consumption = CARD.candidate_stdlib_consumption()
     sweep = CARD.force_include_consumption_sweep(
         static_consumption, stdlib_consumption)
+    delivered_extent_gate(CODE, load(CLIENT.PLANE_RECEIPT))
     require(ordinal == 395 and HEADER.read_text(encoding="utf-8").count(define) == 1
             and len(vm_calls) == 2 and event_calls == []
             and sizes == {"%read-line-loop": 250, "read-line": 236,
                 "%rl-screen-tail": 223, "%native-prompt": 21,
                 "%native-read-line": 16}
-            and CODE.stat().st_size == 47469
             and facade.address - (text.address + text.bytes) >= 32
             and consumption["delivered_host_wall"]["counters"]["taken"] == 94,
             "final ELF does not execute the repaired delivered consumer")
@@ -588,6 +588,14 @@ def native_prompt_final_elf() -> dict[str, Any]:
             "restore-eight-cell-public-queue-world": "rejected",
             "host-wall-green-with-taken-zero": "rejected",
             "remove-final-ring-take-edge": "rejected"}}
+
+
+def delivered_extent_gate(code: Path, plane: dict[str, Any]) -> int:
+    """Bind the delivered consumer to living Plane geometry, never v1.9 size."""
+    expected = int(plane["geometry"]["bytes"])
+    require(code.stat().st_size == expected,
+            "delivered consumer extent differs from candidate Plane authority")
+    return expected
 
 
 def final_gate() -> dict[str, Any]:

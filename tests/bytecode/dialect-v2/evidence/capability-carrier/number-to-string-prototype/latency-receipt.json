@@ -1,0 +1,18 @@
+{
+  "format": "lisp65-number-to-string-latency-observation-v1",
+  "version": 1,
+  "metric": "ide-render-warm-after-insert",
+  "unit": "vm-instructions",
+  "environment": "host P0 VM dynamic instruction trace; v1 and v2 suites use their own source worktrees and the same ABI-aware report harness",
+  "measurement_command": [
+    "python3 tools/host-lisp/ide_bytecode_dynamic_report.py --suite build/bytecode/dialect-v2/suites/p0-ide-core-lib.json --out REPORT --check"
+  ],
+  "iterations_per_sample": 1,
+  "warmup_iterations": 1,
+  "baseline_samples": [4183, 4183, 4183],
+  "candidate_samples": [4312, 4312, 4312],
+  "statistic": "median-total",
+  "max_regression_percent": 5,
+  "baseline_elf_sha256": "e00c0f8a3ba49fcf9d274d0a4d5670bab6f3c84dc3e472a73c64eecf785808ac",
+  "candidate_elf_sha256": "801448ae672e62aab51246d403d10a278b864e8db5019e41dec500d151cdfb68"
+}

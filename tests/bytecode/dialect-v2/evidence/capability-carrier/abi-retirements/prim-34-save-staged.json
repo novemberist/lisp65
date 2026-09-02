@@ -1,0 +1,54 @@
+{
+  "format": "lisp65-prim-id-retirement-evidence-v1",
+  "version": 1,
+  "id": "prim-34-save-staged",
+  "profile": "dialect-v2",
+  "prim_id": 34,
+  "canonical_name": "%save-staged",
+  "transition": "active-to-tombstone",
+  "source_commit": "938a0ce3804b88c7fc67705be6b415fb940d8cc5",
+  "prior_contracts": [
+    {
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "c6666500baa949e0410ae523d64a8b7810156d7c2a2ea0e9f016333d6ed8a27a"
+    },
+    {
+      "path": "config/v2-workbench-artifact-closure.json",
+      "sha256": "10a57261185b348fd91c1deab90065fd364ae9a9760327c68a67f72f2be63829"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-4-receipt.json",
+      "sha256": "a410dc34793bc219aafcc206f8f4ed2dfb5562441dedecf9b070c45edc302541"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-artifact-differential-receipt.json",
+      "sha256": "2edb56a55ff161e3ab7928e6cb82932117ce05fa3c21d65fbef8e042474967cc"
+    }
+  ],
+  "artifact_evidence": {
+    "manifest": {
+      "source_path": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+      "sha256": "59703a76bf604369aff7f1b3e4629d599c5d3d8c9e19a052b4d27480320b5c1f",
+      "abi_profile": "dialect-v2",
+      "artifact_role": "stdlib",
+      "name": null,
+      "blob_sha256": "8f85fd8afdce52e55a53196094854c0598e5396cb8b3ac801e0040b9d95a0786",
+      "disasm_sha256": "b1a06bad3c9dbb36352169160af98c5e7514ea9be6435a245b8d7151e8ba7afd"
+    },
+    "disassembly": {
+      "source_path": "build/bytecode/dialect-v2/workbench/stdlib-p0.disasm.txt",
+      "sha256": "b1a06bad3c9dbb36352169160af98c5e7514ea9be6435a245b8d7151e8ba7afd",
+      "callprim_id": 34,
+      "call_count": 1,
+      "observations": [
+        "compile-string:005e CALLPRIM prim=34:%save-staged argc=2"
+      ]
+    }
+  },
+  "retirement_policy": {
+    "decoder_name_retained": true,
+    "runtime_result": "bad-primitive",
+    "new_emission": "forbidden",
+    "reuse": "forbidden"
+  }
+}

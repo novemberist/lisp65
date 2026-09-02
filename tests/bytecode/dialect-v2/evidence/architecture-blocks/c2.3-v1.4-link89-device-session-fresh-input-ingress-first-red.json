@@ -1,0 +1,43 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-device-session-fresh-input-ingress-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HARNESS FIRST RED: fresh identity still lost RETURN before the fourth sprite form",
+  "candidate_link": 89,
+  "product_started": true,
+  "completed_product_rows": [
+    "fresh BASIC and exact product D81 readback",
+    "exact Bank-2 readback",
+    "two compact sprite-string setup forms",
+    "explicit 63-byte sprite-string oracle"
+  ],
+  "mechanism": "A new cold identity reduced the path to three successful preparation forms before (m65-sprite-shape 0 s). The active line was verified, but neither virtual nor physical RETURN submitted it. Synchronized PC/stack again showed the idle lisp_input_event path (PC 0xe035/E000 poll family, stack return 0x82a0, vm_status=0, gc_rootsp=0). The sprite slot remained byte-identical before and after physical RETURN. This independently confirms the REPL input-ingress failure and still does not execute the product call.",
+  "observation": {
+    "product_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-fresh-identity/D1S-product-readback.d81",
+      "bytes": 819200,
+      "sha256": "cc3509b7a6df421bb749f85dcbb77bf75d704016c0cb702b011e20c5d3b54696"
+    },
+    "bank2_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-fresh-identity/D1S-bank2.bin",
+      "bytes": 47298,
+      "sha256": "eb45f07ed2edc179812c585399aef5ee9ceb0dbdd02f1126e086e357156f4c30"
+    },
+    "active_line": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-fresh-identity/d1s-sprite-shape.png",
+      "bytes": 5811,
+      "sha256": "652e634cfd3ea8c8dd26a4786d8999950f9fab31f0aafc2b6136fd9afaf6bc15"
+    },
+    "shape_slot_before_physical_return": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-fresh-identity/d1s-shape-slot-live.bin",
+      "bytes": 64,
+      "sha256": "7b50cbe254dd39fa61a532e2a5083b3bc538410a20febbbc20bb6922cacf6639"
+    },
+    "shape_slot_after_physical_return": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-fresh-identity/d1s-shape-slot-after-physical-return.bin",
+      "bytes": 64,
+      "sha256": "7b50cbe254dd39fa61a532e2a5083b3bc538410a20febbbc20bb6922cacf6639"
+    }
+  },
+  "disposition": "Retire the multi-form D1 sprite method. Use one cold identity and one 589-character literal-free form that constructs, validates, installs, activates, moves and reads back the sprite atomically. Its exact expression is permanently executed by the m65-hw host gate before device use.",
+  "claim_limit": "A fresh-identity input-ingress failure before submission. No m65-hw product call, VIC write, Ship sample, D3, release or promotion failure is claimed."
+}

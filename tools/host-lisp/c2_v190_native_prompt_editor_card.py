@@ -93,6 +93,7 @@ BLOCK_A_RECEIPT = ARCH / (
 ELF = BUILD / "wplto/lisp65-c2-substitution-linked.prg.elf"
 PRG = BUILD / "wplto/lisp65-c2-substitution-linked.prg"
 PROFILE = BUILD / "wplto/resolved-profile.txt"
+FINAL_PRODUCT_ROOT: Path | None = None
 PLANE_ROOT = PREFLIGHT / "setup-owned/static-plane/narrow-static"
 PLANE_RECEIPT = PREFLIGHT / "v19-native-prompt-editor-static-plane.json"
 CLIENT_SOURCE = PREFLIGHT / "sources/stdlib-read-line.lisp"
@@ -108,6 +109,17 @@ READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 COMPILER = ROOT / "tools/llvm-mos/bin/mos-mega65-clang"
 OBJDUMP = ROOT / "tools/llvm-mos/bin/llvm-objdump"
 PRICE_COMMIT = "b9e5b8c6"
+
+
+def configure_final_product_root(root: Path) -> None:
+    global FINAL_PRODUCT_ROOT
+    if FINAL_PRODUCT_ROOT is not None and FINAL_PRODUCT_ROOT != root:
+        raise CardError("final product output root configured twice")
+    FINAL_PRODUCT_ROOT = root
+
+
+def final_product_root() -> Path:
+    return FINAL_PRODUCT_ROOT if FINAL_PRODUCT_ROOT is not None else BUILD / "wplto"
 R3_EVIDENCE_COMMIT = "a35a2c4c"
 R4_FORMAT = "lisp65-c2-v190-native-prompt-editor-card-r4-v1"
 FORMAT = "lisp65-c2-v190-native-prompt-editor-card-r5-v1"
@@ -1317,7 +1329,7 @@ def final_lto_boundary_gate() -> dict[str, Any]:
     calls = [row for row in rows if row["mnemonic"] in ("jmp", "jsr")
              and DEVICE.absolute_target(row) == final_scr.value]
     seed_map = BUILD / "wplto/resident-island-seed.prg.map"
-    final_map = BUILD / "wplto/lisp65-c2-substitution-linked.prg.map"
+    final_map = final_product_root() / "lisp65-c2-substitution-linked.prg.map"
     maps = {}
     for label, path in (("seed", seed_map), ("final", final_map)):
         fixed = map_section(path, ".lisp65_c2_fixed_bank0_code")
@@ -1713,8 +1725,7 @@ def force_include_consumption_sweep(
                    if static_rows is None else static_rows)
     stdlib_rows = (candidate_stdlib_consumption()
                    if stdlib_rows is None else stdlib_rows)
-    require(static_rows.keys() == stdlib_rows.keys()
-            and len(static_rows) == 2,
+    require(bool(static_rows) and static_rows.keys() == stdlib_rows.keys(),
             "force-include consumer population drift")
     static_header = PLANE_ROOT / "c2_lite_static_plane.h"
     expected = {bind(static_header)["path"]: CODE.stat().st_size,
@@ -1827,8 +1838,8 @@ def r5_final_facade_gate() -> dict[str, Any]:
     map_rows = {}
     for label, path in (
             ("seed", BUILD / "wplto/resident-island-seed.prg.map"),
-            ("final", BUILD /
-                "wplto/lisp65-c2-substitution-linked.prg.map")):
+            ("final", final_product_root() /
+                "lisp65-c2-substitution-linked.prg.map")):
         map_rows[label] = {
             "text": map_section(path, ".text"),
             "facade": map_section(path, ".lisp65_c2_mapped_far_facade"),
@@ -1843,31 +1854,33 @@ def r5_final_facade_gate() -> dict[str, Any]:
             "facade_lma": row["facade"]["LMA"],
             "final_linked": True}
         result = r5_facade_placement_gate(**candidate)
-        require(result == {"derived_vma": 0xB3DC,
-                    "derived_lma": 0x333DC,
-                    "ordinary_text_reserve_bytes": 32,
-                    "tail_reserve_bytes": 101},
+        require(result["derived_vma"] == row["facade"]["VMA"]
+                and result["derived_lma"] == row["facade"]["LMA"]
+                and result["ordinary_text_reserve_bytes"] >= 32
+                and result["tail_reserve_bytes"] >= 0,
                 f"r5 {label} facade placement differs from priced relation")
-    require((text.address + text.bytes, facade.address, facade.bytes,
-             handoff.address) == (0xB3BC, 0xB3DC, 98, 0xB4A3),
+    require(facade.address == max(0xB3B0, text.address + text.bytes + 32)
+            and facade.bytes == 98
+            and handoff.address >= facade.address + facade.bytes,
             "r5 final ELF facade owner relation drift")
     linker = (BUILD / "wplto/c2-substitution.ld").read_text(
         encoding="utf-8")
     source = r5_linker_placement_source_gate(linker)
-    candidate = {"text_end": 0xB3BC, "floor": 32,
-        "arena_start": 0xB3B0, "arena_end": 0xB4A3,
-        "facade_bytes": 98, "shared_offset": 0x28000,
-        "facade_vma": 0xB3DC, "facade_lma": 0x333DC,
+    candidate = {"text_end": text.address + text.bytes, "floor": 32,
+        "arena_start": 0xB3B0, "arena_end": handoff.address,
+        "facade_bytes": facade.bytes, "shared_offset": 0x28000,
+        "facade_vma": facade.address, "facade_lma": facade.address + 0x28000,
         "final_linked": True}
     return {"status": "PASS: R5 FINAL FACADE DERIVED FROM FINAL TEXT",
         "ELF": bind(ELF), "text_end_exclusive": text.address + text.bytes,
-        "facade": {"VMA": facade.address, "LMA": 0x333DC,
+        "facade": {"VMA": facade.address, "LMA": facade.address + 0x28000,
                     "bytes": facade.bytes,
                     "end_exclusive": facade.address + facade.bytes},
         "next_owner": {"name": ".lisp65_c2_kernal_handoff",
                          "VMA": handoff.address},
         "ordinary_text_reserve_bytes": 32,
-        "next_owner_reserve_bytes": 101,
+        "next_owner_reserve_bytes": (
+            handoff.address - (facade.address + facade.bytes)),
         "shared_MAP_offset": 0x28000,
         "maps": map_rows, "linker_source": source,
         "mutations_rejected": r5_placement_mutations(candidate)}

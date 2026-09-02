@@ -1,0 +1,87 @@
+{
+  "authority": {
+    "approval": {
+      "commit": "739c5436"
+    },
+    "checker": {
+      "bytes": 15801,
+      "path": "tools/host-lisp/c2_v150_stager_liveness_d1.py",
+      "sha256": "f5ecc22fab367d37b7fe301eec7db8ff373e47cb1c7af01fdd5bfd8e70151cf2"
+    },
+    "config": {
+      "bytes": 840,
+      "path": "config/c2-v150-link97-stager-liveness-d1.json",
+      "sha256": "ea961951c2115b8666acbef5f924c97e3658de58e5880315d518ebd3d85fc4be"
+    },
+    "first_red": {
+      "bytes": 1843,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link97-stager-liveness-d1-first-red-receipt.json",
+      "sha256": "1544b5007eb7ca66318b81d3cbb08593f616bb5472360e30a1fb6dff7aab76cd"
+    },
+    "predecessor_session_preparation": {
+      "bytes": 2589,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link97-device-session-preparation-receipt.json",
+      "sha256": "30ddc530602f1474c0c9eb5f6a91207fcdbee1eff69ed5c418195dbc945f42cf"
+    },
+    "runner": {
+      "bytes": 5314,
+      "path": "scripts/c2-v150-link97-stager-liveness-d1-hw.sh",
+      "sha256": "e0e07ba1b95f052196d38ca8761a5225002a140eca0d65eeffe2b7db23e8afda"
+    },
+    "successor_media": {
+      "bytes": 5212,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link97-stager-liveness-media-receipt.json",
+      "sha256": "c6ac97752bc9af943b99b06fd6623f4101082cfeef7c4b1687aae22878b781a4"
+    }
+  },
+  "claim_limit": "Fresh physical D1 preparation only. D2-D5 remain closed until the owner confirms all three visible signs and terminal state.",
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "forms": 0,
+    "hardware_contacts": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v150-link97-stager-liveness-d1-preparation-v1",
+  "mutations_rejected": [
+    "drop-staging-sign",
+    "shorten-access-free-window",
+    "reuse-predecessor-medium",
+    "open-D2-before-D1",
+    "observe-liveness-window",
+    "skip-product-readback",
+    "skip-library-readback",
+    "omit-staging-owner-confirmation"
+  ],
+  "path_binding_gate": {
+    "binding": {
+      "bytes": 840,
+      "path": "config/c2-v150-link97-stager-liveness-d1.json",
+      "sha256": "ea961951c2115b8666acbef5f924c97e3658de58e5880315d518ebd3d85fc4be"
+    },
+    "relative_fixture": "config/c2-v150-link97-stager-liveness-d1.json",
+    "result": "passed-relative-and-absolute-same-artifact"
+  },
+  "recorded_on": "2026-08-11",
+  "required_terminal_state": [
+    "WORKBENCH 1.5.0",
+    "lisp65>"
+  ],
+  "required_visible_liveness": [
+    "LISP65: STAGING MEDIA",
+    "LISP65: BUILDING HEAP",
+    "LISP65: LOADING LIBRARIES"
+  ],
+  "runner_gate": {
+    "D2_D5_actions": 0,
+    "access_free_seconds": 45,
+    "owner_visible_signs": 3,
+    "post_boot_FTP": 0,
+    "pre_terminal_device_accesses": 0,
+    "result": "passed"
+  },
+  "status": "V150-LINK97-STAGER-LIVENESS-D1-PREPARED-NOT-RUN",
+  "unlock": {
+    "D1_repeat": true,
+    "D2_D5": false
+  }
+}

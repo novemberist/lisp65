@@ -1,0 +1,133 @@
+{
+  "artifacts": {
+    "ELF": {
+      "bytes": 631164,
+      "path": "build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "219c36dedbdc1e4c47bcfeed512788e3f5b3acaab8494ec360a334c0e0dc288e"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "dc940dc623d3df472133627c7ea1a6b30b400b5461a601c8c1e88d0aaa427829"
+    }
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1
+  },
+  "equate_owner_result": {
+    "authority": "ElfTruth over the final linked candidate",
+    "C2K_FRAME_LO": {
+      "binding": "Global",
+      "count": 1,
+      "section": "Absolute",
+      "value": 65411
+    },
+    "all_16_split_equates_have_exactly_one_owner": true,
+    "duplicate_names": [],
+    "mutation": "duplicate-C2K-FRAME-LO",
+    "mutation_rejected": true,
+    "status": "passed"
+  },
+  "linked_R1_classification": {
+    "abort_body": {
+      "bytes": 134,
+      "section": ".lisp65_c2_mapped_far_service",
+      "vma": 32146
+    },
+    "capture_freight_bytes": 0,
+    "capture_sections": [],
+    "facade_bytes": 98,
+    "facade_entry_bytes": 9,
+    "facade_padding_bytes": 10,
+    "far_service_bytes": 1382,
+    "foreground_callers": [
+      "c2_product_abort_cleanup"
+    ],
+    "mapped_abort_reachable_from_normal_far_roots": false,
+    "post_capture_free_bytes": 195,
+    "reserve_floor_bytes": 54,
+    "service_headroom_bytes": 117,
+    "status": "passed-read-only-classification-after-the-card-red"
+  },
+  "stopping_gate": {
+    "actual_row_hex": "030101845400cb080100",
+    "claim_limit": "The linked gate persisted the actual row and the mismatch, but not its computed expected row. This receipt therefore binds a zero-literal witness drift, not its cause.",
+    "gate": "c2_zero_literal_execution_gate.linked_gate",
+    "message": "linked C2D zero-literal witness drift: 030101845400cb080100",
+    "stage": "post-link replacement-gate chain",
+    "status": "FIRST RED"
+  },
+  "authority": {
+    "driver": {
+      "bytes": 5288,
+      "path": "tools/host-lisp/c2_v160_abort_driver_relocation_equate_owner_card.py",
+      "sha256": "36262db85f8daeaeb1436528684a25567731f8ee29a9ff212632cb1c8d8805cd"
+    },
+    "preflight": {
+      "bytes": 10928,
+      "path": "build/c2.3/v1.6-abort-driver-relocation-equate-owner-preflight/preflight.json",
+      "sha256": "ebab996c32f9bccfec4f1a8c3eb018b92a50a236f515fc7bbfe14798bad79785"
+    }
+  },
+  "equate_owner_authority": {
+    "bytes": 56395,
+    "commit": "8e3b5bb4f5c6f9d4311d6aa8b094573a6f2dfbbf",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "bbef18f48d0df5867dff657688f907a6b0cf14300684c2ed10e45fa8c92c89b6"
+  },
+  "error": {
+    "message": "R1 child _produce red:\nc2-lite-v6-real-abi-direct-entry-contract: PASS refs=674 fixnums=0 target-negatives=4\nruntime-overlay-bank: PREPARE build_id=0x8cfc5d11 profile=c2-product-substitution-v1 header=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/runtime-overlay.prepare-standard.h\nresident-island-prepare: PASS capacity=2048 sentinel=1536 build_id=8cfc5d11\nerror-text-table: ok profile=workbench codes=63 active=44 omitted=19 bytes=803 crc16=13e5 build_id=8cfc5d11\nbuild/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/generated-product-sources/c2_product_runtime.c:973:26: warning: unused function 'c2_entry_records' [-Wunused-function]\n  973 | C2_COLD_ENTRY_FN uint8_t c2_entry_records(\n      |                          ^~~~~~~~~~~~~~~~\nbuild/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/generated-product-sources/c2_product_runtime.c:1076:26: warning: unused function 'c2_export_name' [-Wunused-function]\n 1076 | C2_APPEND_INLINE uint8_t c2_export_name(\n      |                          ^~~~~~~~~~~~~~\n2 warnings generated.\nsrc/eval.c:99:12: warning: unused function 'cadr' [-Wunused-function]\n   99 | static obj cadr(obj o) { return car(cdr(o)); }\n      |            ^~~~\nsrc/eval.c:272:17: warning: unused function 'hilo' [-Wunused-function]\n  272 | static unsigned hilo(obj hi, obj lo) {\n      |                 ^~~~\nsrc/eval.c:125:12: warning: variable 'k_lcc_invalid_parameter_list' set but not used [-Wunused-but-set-global]\n  125 | static obj k_lcc_invalid_parameter_list;\n      |            ^\n3 warnings generated.\nsrc/vm_boot_overlay.c:199:16: warning: unused function 'ov_wipe_target' [-Wunused-function]\n  199 | static uint8_t ov_wipe_target(void) {\n      |                ^~~~~~~~~~~~~~\n1 warning generated.\nbuild/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/generated-product-sources/vm_runtime_overlay.c:1020:13: warning: unused function 'rtov_read_region' [-Wunused-function]\n 1020 | static void rtov_read_region(\n      |             ^~~~~~~~~~~~~~~~\n1 warning generated.\nld.lld: warning: build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/resident-island-seed.prg.lto.o:(.llvm_sympart) is being placed in '.llvm_sympart'\nresident-island-materialize: PASS address=0x1800 length=1738 crc16=0xcb8c\nbuild/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/generated-product-sources/c2_product_runtime.c:973:26: warning: unused function 'c2_entry_records' [-Wunused-function]\n  973 | C2_COLD_ENTRY_FN uint8_t c2_entry_records(\n      |                          ^~~~~~~~~~~~~~~~\nbuild/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/generated-product-sources/c2_product_runtime.c:1076:26: warning: unused function 'c2_export_name' [-Wunused-function]\n 1076 | C2_APPEND_INLINE uint8_t c2_export_name(\n      |                          ^~~~~~~~~~~~~~\n2 warnings generated.\nsrc/eval.c:99:12: warning: unused function 'cadr' [-Wunused-function]\n   99 | static obj cadr(obj o) { return car(cdr(o)); }\n      |            ^~~~\nsrc/eval.c:272:17: warning: unused function 'hilo' [-Wunused-function]\n  272 | static unsigned hilo(obj hi, obj lo) {\n      |                 ^~~~\nsrc/eval.c:125:12: warning: variable 'k_lcc_invalid_parameter_list' set but not used [-Wunused-but-set-global]\n  125 | static obj k_lcc_invalid_parameter_list;\n      |            ^\n3 warnings generated.\nsrc/vm_boot_overlay.c:199:16: warning: unused function 'ov_wipe_target' [-Wunused-function]\n  199 | static uint8_t ov_wipe_target(void) {\n      |                ^~~~~~~~~~~~~~\n1 warning generated.\nbuild/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/generated-product-sources/vm_runtime_overlay.c:1020:13: warning: unused function 'rtov_read_region' [-Wunused-function]\n 1020 | static void rtov_read_region(\n      |             ^~~~~~~~~~~~~~~~\n1 warning generated.\nld.lld: warning: build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/lisp65-c2-substitution-linked.prg.lto.o:(.llvm_sympart) is being placed in '.llvm_sympart'\nruntime-overlay-bank: PACK profile=c2-product-substitution-v1 slices=11 image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/runtime-overlays-boot-unbound.bin\nruntime-overlay-bank: PACK profile=c2-product-substitution-v1 slices=52 image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/runtime-overlays-session-unbound.bin\nruntime-overlay-bank: PACK profile=c2-product-substitution-v1 slices=11 image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/runtime-overlays-boot-final.bin\nruntime-overlay-bank: PACK profile=c2-product-substitution-v1 slices=52 image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-abort-driver-relocation-equate-owner-card/wplto/runtime-overlays-session-final.bin\nTraceback (most recent call last):\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_rtov_crc_real_abi_successor_link.py\", line 284, in build\n    replacement = BASE_LINK.replacement_gates(product, elf, prelink)\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_final_island_identity_successor_link.py\", line 179, in replacement\n    value = old[\"replacement\"](product, elf, host)\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_export_symbol_domain_successor_link.py\", line 193, in replacement\n    value = old[\"replacement\"](product, elf, host)\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py\", line 162, in replacement\n    value = old[\"replacement\"](product, elf, host)\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link47_l65e_transient_successor_link.py\", line 124, in replacement\n    transient_linked = TRANSIENT.linked_gate(elf)\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link48_zero_literal_successor_link.py\", line 125, in transient_linked\n    value[\"zero_literal_execution\"] = ZERO.linked_gate(elf, c2d)\n                                      ~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_zero_literal_execution_gate.py\", line 474, in linked_gate\n    require(\n    ~~~~~~~^\n        row == target_row\n        ^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n            resolution_limit=int(witness[\"resolution_limit\"])) == 38,\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n            f\"linked C2D zero-literal witness drift: {row.hex()}\")\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_zero_literal_execution_gate.py\", line 59, in require\n    raise GateError(message)\nc2_zero_literal_execution_gate.GateError: linked C2D zero-literal witness drift: 030101845400cb080100\nv1.6 R1 equate owner: FIRST RED: post-configuration real source list omitted the CPU owner\n",
+    "type": "CardError"
+  },
+  "family_delegation_ended": true,
+  "file_membership_R1_Final_Red": {
+    "bytes": 12160,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-abort-driver-relocation-file-membership-card-final-red.json",
+    "sha256": "c285281a6ff1f3e30abe381063e7d18d330f5a0ba68d9fd249b7b74cdf352ab5"
+  },
+  "file_membership_authority": {
+    "bytes": 56395,
+    "commit": "8e3b5bb4f5c6f9d4311d6aa8b094573a6f2dfbbf",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "bbef18f48d0df5867dff657688f907a6b0cf14300684c2ed10e45fa8c92c89b6"
+  },
+  "format": "lisp65-c2-v160-abort-driver-relocation-equate-owner-card-v1-final-red",
+  "input_fidelity_reopen_parked": true,
+  "next": "owner disposition required; no retry, Completion, media, or device",
+  "owner_disposition_required": true,
+  "predecessor_Final_Red": {
+    "bytes": 12160,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-abort-driver-relocation-file-membership-card-final-red.json",
+    "sha256": "c285281a6ff1f3e30abe381063e7d18d330f5a0ba68d9fd249b7b74cdf352ab5"
+  },
+  "recorded_on": "2026-08-19",
+  "replacement_R1_Final_Red": {
+    "bytes": 12160,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-abort-driver-relocation-file-membership-card-final-red.json",
+    "sha256": "c285281a6ff1f3e30abe381063e7d18d330f5a0ba68d9fd249b7b74cdf352ab5"
+  },
+  "replacement_authority": {
+    "bytes": 56395,
+    "commit": "8e3b5bb4f5c6f9d4311d6aa8b094573a6f2dfbbf",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "bbef18f48d0df5867dff657688f907a6b0cf14300684c2ed10e45fa8c92c89b6"
+  },
+  "retry_authorized": false,
+  "second_replacement_R1_Final_Red": {
+    "bytes": 12160,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-abort-driver-relocation-file-membership-card-final-red.json",
+    "sha256": "c285281a6ff1f3e30abe381063e7d18d330f5a0ba68d9fd249b7b74cdf352ab5"
+  },
+  "second_replacement_authority": {
+    "bytes": 56395,
+    "commit": "8e3b5bb4f5c6f9d4311d6aa8b094573a6f2dfbbf",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "bbef18f48d0df5867dff657688f907a6b0cf14300684c2ed10e45fa8c92c89b6"
+  },
+  "status": "FINAL RED: R1 EQUATE-OWNER CARD RETURNS TO OWNER"
+}

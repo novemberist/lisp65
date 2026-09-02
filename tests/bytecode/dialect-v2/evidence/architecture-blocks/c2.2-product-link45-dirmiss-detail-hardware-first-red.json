@@ -1,0 +1,85 @@
+{
+  "format": "lisp65-c2-lite-v6-link45-dirmiss-detail-hardware-first-red-v1",
+  "status": "first-red-non-symbol-detail-not-rendered",
+  "date": "2026-07-22",
+  "candidate": {
+    "link": 45,
+    "product_sha256": "13aca84db1dda3e109ed4f578b9027e731df25c8d99c97a04c4b6fc95f5af6c2",
+    "product_path": "build/c2.2/substitution/product-link-45-c2-lite-v6-dirmiss-detail-e000-evacuation/lisp65-c2-substitution-linked.prg",
+    "structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link45-c2-lite-v6-dirmiss-detail-e000-evacuation-structural-receipt.json",
+      "sha256": "906648cc9eacbd748c61b444af45906425047dc50de913d49773e28b1c869599"
+    },
+    "deployment": {
+      "path": "build/c2.2/hardware-presmoke-link45-dirmiss-detail/deployment.json",
+      "sha256": "faad7fdc234128a0e324b1ad98920a0f3b6cfeb9051c4ba15525f34456cf02ca"
+    }
+  },
+  "hardware_result": {
+    "form": "(list (peek 255 132) (peek 255 131) (peek 255 132))",
+    "observed": "*** vm: undefined function",
+    "first_deviation": true,
+    "screen": {
+      "png": {
+        "path": "build/c2.2/hardware-presmoke-link45-dirmiss-detail/first-red/after-dirmiss.png",
+        "sha256": "25475fbb0c4e030e592f8b985f1300eb747aa4ed5a79799cd3eb9353af2cd3be"
+      },
+      "text": {
+        "path": "build/c2.2/hardware-presmoke-link45-dirmiss-detail/first-red/after-dirmiss.txt",
+        "sha256": "2e9ac876464053c2b84724b5b260e1c5d9687f840b4831f269144b8cd65f8f78"
+      },
+      "ansi": {
+        "path": "build/c2.2/hardware-presmoke-link45-dirmiss-detail/first-red/after-dirmiss.ansi.txt",
+        "sha256": "1f645ad1cf711e64fd5b71689e1dcfac70411d0448425bb4d0a7f0289df0d49f"
+      }
+    }
+  },
+  "read_only_post_error_state": {
+    "c2_ready": {
+      "vma": "0x008c",
+      "value": 0,
+      "artifact": "build/c2.2/hardware-presmoke-link45-dirmiss-detail/first-red/c2-ready.bin",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "vm_status": {
+      "vma": "0x005d",
+      "value": 0,
+      "artifact": "build/c2.2/hardware-presmoke-link45-dirmiss-detail/first-red/vm-status.bin",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "pending_code": {
+      "vma": "0x0036",
+      "value": 0,
+      "artifact": "build/c2.2/hardware-presmoke-link45-dirmiss-detail/first-red/pending-code.bin",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "pending_symbol": {
+      "vma": "0xba18",
+      "value": 0,
+      "artifact": "build/c2.2/hardware-presmoke-link45-dirmiss-detail/first-red/pending-symbol.bin",
+      "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+    },
+    "interpretation": "The ordinary abort boundary cleared the sticky VM status and both existing pending cells; the C2 transaction is fail-closed and no stale diagnostic detail survived the renderer."
+  },
+  "bounded_conclusion": {
+    "proved": [
+      "Link 45 booted through the Workbench banner and reached the REPL",
+      "the failing dynamic form still produced VM_DIRMISS",
+      "the terminal detail was not classified as SYMI",
+      "the terminal cleanup left no sticky status or pending detail",
+      "the C2 transaction left READY clear"
+    ],
+    "not_proved": [
+      "whether the non-SYMI detail was BCODE or NIL",
+      "which of the direct-entry, OP_CLOSURE, OP_CALL or OP_TAILCALL producers supplied it",
+      "the failing BCODE ordinal"
+    ],
+    "contract_gap": "The approved v1 seam deliberately maps BCODE and NIL to the same generic numeric error. It therefore cannot fulfill the hardware localization objective when the real failure is in the non-SYMI detail domain."
+  },
+  "counters": {
+    "class_b_diagnostic_cycles": "3/3",
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  },
+  "claim_limit": "Hardware First Red and read-only post-error state only. This is not a diagnosis of the failing ordinal, a product fix, promotion, acceptance or release."
+}

@@ -1,0 +1,175 @@
+{
+  "choreography": {
+    "fresh_BASIC_first": true,
+    "one_form_per_submission": true,
+    "optional_library_media": "none",
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_uploaded_and_read_back_before_boot": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "documented Tier-2 descope behavior and Tier-1 domain discipline",
+      "resident matcher and blink on native line editor and IDE",
+      "lossless delivered input across forced collection",
+      "physical single-key feel in the repaired delivered state"
+    ],
+    "excludes": [
+      "Comfort",
+      "release",
+      "publish"
+    ]
+  },
+  "decision_table": {
+    "all-five-groups-green": "Tier 2 and resident interactive delivery hardware-accepted",
+    "claim-expansion": "forbidden during device session",
+    "daily-use-blocker": "at most one repair round for the affected block, otherwise descope",
+    "rare-or-cosmetic": "Known Issue and v2.0 register row"
+  },
+  "format": "lisp65-c2-v200-block3-hot-path-repair-device-session-v1",
+  "media": {
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-block3-hot-path-repair-device-media/shared-system/lisp65-product.d81",
+      "remote_name": "V20B3R.D81",
+      "sha256": "5cd1c79d4348bbae099aeffb16b6fbb7347e945e0899981a8866f8efc3ab0320"
+    }
+  },
+  "recorded_on": "2026-09-01",
+  "rows": [
+    {
+      "actions": [
+        "submit (car 1)",
+        "submit (length \"abc\")"
+      ],
+      "expect": [
+        "nil (documented v2.0 inconsistency)",
+        "domain error names string-length, then one live prompt"
+      ],
+      "id": "T2D-1-documented-domain-behavior"
+    },
+    {
+      "actions": [
+        "in the native line editor match parentheses and quotes; move the cursor away; test string/comment delimiters and over-close",
+        "repeat matcher cases in IDE and scroll one long line",
+        "observe idle blink on both surfaces; type during blink-off; place cursor on a matched delimiter"
+      ],
+      "expect": [
+        "one current match and no stale or false match",
+        "IDE semantics match and never freeze",
+        "typing restores cursor immediately and blink preserves the match attribute"
+      ],
+      "id": "B3-2-matcher-and-blink"
+    },
+    {
+      "actions": [
+        "submit the collection controller and wait for its blank nested row",
+        "during ordinary passes, judge each physical key against v1.9 feel",
+        "six times type the 32-character pattern; after each pass delete four counted groups of eight until blank",
+        "use ordinary pace for passes 1-2 and fast pace for passes 3-6",
+        "type abcdefg, press Return and touch no further key",
+        "stop once while wait is active and read BCFC..BCFF raw-first"
+      ],
+      "collection": {
+        "controller": "(progn (setq s (read-line)) (print (string-length s)) (wait 16383))",
+        "delete_events_per_pass": 32,
+        "event_arithmetic": {
+          "counter_width_bits": 8,
+          "delete": 192,
+          "expected_each_modulo_256": 136,
+          "physical": 392,
+          "printable": 199,
+          "return": 1,
+          "wraps": 1
+        },
+        "final_text": "abcdefg",
+        "heap_cells_per_printable": 1,
+        "numeric_oracle": 7,
+        "nursery_cells": 192,
+        "pace": {
+          "passes_1_to_2": "ordinary",
+          "passes_3_to_6": "fast"
+        },
+        "passes": 6,
+        "pattern": "01234567012345670123456701234567",
+        "printable_insertions": 199,
+        "proof": "199 * 1 > 192; at least one collection while Capture is armed"
+      },
+      "expect": [
+        "single-key echo feels like v1.9; any visible latency is red",
+        "every token is exact and deletion 32 empties each pass",
+        "visible numeric oracle is 7",
+        "raw=seen=stored=taken=136 (88 hex), all nonzero"
+      ],
+      "id": "A-3-forced-collection"
+    },
+    {
+      "actions": [
+        "boot only the product medium",
+        "confirm INIT.L65 absence path",
+        "submit (>= nil 32) and observe recovery"
+      ],
+      "expect": [
+        "banner and live native lisp65> with matcher/blink",
+        "no optional-library dependency and absent INIT.L65 is silent",
+        "A0 error recovery returns to one live prompt practically immediately"
+      ],
+      "id": "BOOT-4-no-optional-libraries"
+    },
+    {
+      "D5": {
+        "minimum_free_name_bytes": 384,
+        "minimum_free_symbol_slots": 32,
+        "projection_only": {
+          "free_name_bytes": 1068,
+          "free_symbol_slots": 71
+        }
+      },
+      "actions": [
+        "define (defun v20-perf-probe (x) (+ x 1))",
+        "run the four bound time forms",
+        "read final D5 counters"
+      ],
+      "expect": [
+        "each performance form is at most two frames",
+        "D5 is at least 32 slots and 384 name bytes"
+      ],
+      "id": "D5-5-performance",
+      "performance_forms": [
+        {
+          "form": "(time (car (cdr (list 1 2))))",
+          "max_frames": 2,
+          "value": "2"
+        },
+        {
+          "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+          "max_frames": 2,
+          "value": "(9 2)"
+        },
+        {
+          "form": "(time (string-ref \"abc\" 1))",
+          "max_frames": 2,
+          "value": "98"
+        },
+        {
+          "form": "(time (v20-perf-probe 41))",
+          "max_frames": 2,
+          "value": "42"
+        }
+      ]
+    }
+  ],
+  "status": "ready-owner-v2.0-block3-hot-path-repair-contact",
+  "stopped_read": {
+    "input_counters": {
+      "address": "0xBCFC",
+      "bytes": 4,
+      "layout": [
+        "raw",
+        "seen",
+        "stored",
+        "taken"
+      ]
+    }
+  }
+}

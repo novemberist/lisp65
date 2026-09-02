@@ -1,0 +1,176 @@
+{
+  "assembled_price": {
+    "classification_interval": {
+      "equivalent_opcode_interval": "[0xc356,0xca91)",
+      "stacked_return_exclusive": "0xca93",
+      "stacked_return_inclusive": "0xc358"
+    },
+    "classifier_E000_bytes": 69,
+    "cleanup_free_landing_ordinary_text_bytes": 29,
+    "gross_new_code_bytes": 98,
+    "hot_path_tax": "source-less IRQ/BRK path only; zero ordinary-call tax",
+    "new_state_bytes": 0
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 319862,
+    "commit": "d4506df259194312af70ede50c17bcb58a4c0b06",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "3de440b2d0b387d7d119c751ab9a26cea15735fc999c397afe7824acf7187f6e"
+  },
+  "capacity": {
+    "E000_fixed_floor": 54,
+    "E000_required_free_with_watch": 57,
+    "current_E000_free_total": 57,
+    "current_E000_largest_contiguous_hole": 49,
+    "current_ordinary_text_free": 14,
+    "required_next_price": "relocate/reclaim an always-visible E000 tenant and a low-text tenant, or co-design a smaller landing; floor and margins remain non-budgets",
+    "verdict": "DOES NOT FIT: classifier exceeds the largest E000 hole and no E000 aggregate byte is freight; landing exceeds ordinary-text reserve"
+  },
+  "capture_decision": {
+    "lifecycle": {
+      "c2_ready": 1,
+      "phase_owner": 2,
+      "rtov_busy": 0,
+      "rtov_loaded_len": 0
+    },
+    "primary_error": "LISP65_ERR_UNDEFINED_FUNCTION (0x1c)",
+    "software_BRK": {
+      "B": 1,
+      "live_byte": "0x00",
+      "opcode_address": "0xc8b6",
+      "stacked_P": "0x32",
+      "stacked_continuation": "0xc8b8"
+    },
+    "terminal": "c2_kernal_fail_closed+0x0b@0xe096",
+    "trigger": "(requre 'v16core)"
+  },
+  "carrier_attribution": {
+    "carrier_class": "already-consumed CPU transfer/return carrier",
+    "evidence_boundary": "0xc8b5 is absent from the stopped stack; the transfer consumed it before the BRK frame was created",
+    "named_value": "0xc8b5",
+    "retirement_order": {
+      "abort_driver_to_overlay": [
+        32222
+      ],
+      "cleanup_to_abort_driver": [
+        11974
+      ],
+      "cleanup_to_retirement": [
+        11937
+      ],
+      "lisp_abort_to_cleanup": [
+        11916
+      ]
+    },
+    "sole_static_origin_meaning": "legitimate internal JMP in the reserve-transient-code overlay, not an illegal caller",
+    "static_origins": [
+      {
+        "opcode": 76,
+        "opcode_address": 51179,
+        "relocation": 51180,
+        "section": ".lisp65_rt_c2append_reserve_transient_code",
+        "target": 51381
+      }
+    ],
+    "storage_owner_at_stop": null,
+    "storage_owner_claim": "UNRECOVERABLE FROM THE AUTHORIZED ROW",
+    "why_population_failed": "the one-shot pre-wipe walker reasons about retained storage classes, while control transfer is an event whose carrier may already be consumed; cleanup also executes transported phases after that one sanitation pass",
+    "why_value": "the observed BRK begins at 0xc8b6; an RTS-style carrier contains target-minus-one, 0xc8b5"
+  },
+  "carrier_specific_fix_price": {
+    "next_instrument_if_still_required": "pre-transfer trace at every dynamic control-transfer producer, which is strictly broader and costlier than the constructive BRK backstop",
+    "reason": "the value was consumed before capture and no storage owner remains; assigning a writer or stack offset would be a guess",
+    "verdict": "NOT HONESTLY PRICEABLE FROM THIS EVIDENCE"
+  },
+  "claim_limit": "Host-only attribution and assembled price. The dynamic storage writer of the consumed 0xc8b5 carrier is not recoverable from the authorized row; no fix/card/link/media/device action is authorized.",
+  "classifier_model": {
+    "cases": [
+      {
+        "expected": "recover-cleanup-free",
+        "name": "observed-retired-window-BRK",
+        "observed": "recover-cleanup-free"
+      },
+      {
+        "expected": "existing-source-less/fail-closed-policy",
+        "name": "hardware-IRQ-same-PC",
+        "observed": "existing-source-less/fail-closed-policy"
+      },
+      {
+        "expected": "existing-source-less/fail-closed-policy",
+        "name": "live-window-genuine-BRK",
+        "observed": "existing-source-less/fail-closed-policy"
+      },
+      {
+        "expected": "existing-source-less/fail-closed-policy",
+        "name": "below-window",
+        "observed": "existing-source-less/fail-closed-policy"
+      },
+      {
+        "expected": "recover-cleanup-free",
+        "name": "window-first-byte",
+        "observed": "recover-cleanup-free"
+      },
+      {
+        "expected": "recover-cleanup-free",
+        "name": "window-last-byte",
+        "observed": "recover-cleanup-free"
+      },
+      {
+        "expected": "existing-source-less/fail-closed-policy",
+        "name": "above-window",
+        "observed": "existing-source-less/fail-closed-policy"
+      },
+      {
+        "expected": "existing-source-less/fail-closed-policy",
+        "name": "no-toplevel",
+        "observed": "existing-source-less/fail-closed-policy"
+      }
+    ],
+    "recovery_cases": 3,
+    "unchanged_policy_cases": 5
+  },
+  "execution": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v1.6-retired-window-carrier-inversion-study-v1",
+  "inputs": {
+    "ELF": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "8bb00fd560ddfef9b4f1da5d6269e134de8dc6548a33e3659eb79fc580fecd45"
+    },
+    "capture": {
+      "bytes": 69280,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-device-contact/misspelled-require-first-red-stopped-state/capture.json",
+      "sha256": "b7cfbffcc2196aacad872a45be33a254db5657515c89180a2a4dec88ecffc6aa"
+    }
+  },
+  "inversion_decision": {
+    "answer": "YES",
+    "classifier": {
+      "B_bit": 1,
+      "all_other_BRKs_and_source_less_IRQs": "unchanged fail-closed",
+      "opcode_interval": "[0xc356,0xca91)",
+      "retired_registry": "rtov_busy == 0 && rtov_loaded_len == 0",
+      "toplevel_active_required": true
+    },
+    "complete_backstop_domain": "every executed stale byte in the zero-filled retired interval becomes BRK and therefore presents a hardware frame independent of its former carrier",
+    "first_line": "keep carrier prevention, but do not let its population claim completeness",
+    "not_sufficient": "the existing one-byte RTS stub assumes a valid caller frame and is not a safe arbitrary-transfer landing",
+    "recovery": "rewrite the stacked continuation to a low, always-visible landing; preserve a pending error, synthesize E3e only when none exists, and enter longjmp without invoking cleanup again"
+  },
+  "recorded_on": "2026-08-21",
+  "status": "ATTRIBUTED TO CONSUMED TRANSFER; CONSTRUCTIVE BACKSTOP RECOMMENDED",
+  "walls": [
+    "genuine BRK in live overlay remains fail-closed",
+    "BRK outside the exact overlay interval remains fail-closed",
+    "hardware source-less IRQ behavior remains unchanged",
+    "recovery never calls c2_product_abort_cleanup recursively",
+    "existing pending error identity is preserved",
+    "final classification derives interval and state addresses from ElfTruth"
+  ]
+}

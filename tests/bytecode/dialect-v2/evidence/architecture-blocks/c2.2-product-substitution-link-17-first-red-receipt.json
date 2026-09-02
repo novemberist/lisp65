@@ -1,0 +1,177 @@
+{
+  "format": "lisp65-c2-product-substitution-link-17-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "status": "first-red",
+  "attempt": {
+    "name": "seventeenth-substitution-link",
+    "command_mode": "--prepare-smoke",
+    "first_red_stage": "runtime-family-binding-identity-after-smoke-relink",
+    "second_attempt_performed": false
+  },
+  "confirmed_link_17_fix": {
+    "c2e_cons_code": {
+      "section": ".lisp65_c2_fixed_bank0_code",
+      "start": "0xc21d",
+      "bytes": 40,
+      "end_exclusive": "0xc245"
+    },
+    "session_emitter_code_in_e000_bytes": 0,
+    "session_emitter_state": {
+      "start": "0xf137",
+      "bytes": 346
+    },
+    "facade_vector": {
+      "symbol": "c2_facade_c2e_cons",
+      "address": "0xb5ab",
+      "changed": false
+    },
+    "fixed_bank0_code_bytes": 45,
+    "fixed_bank0_headroom_bytes": 273,
+    "pre_ownership_gate": "passed",
+    "fixed_host_facade_gate": "passed",
+    "window_direct_low_edges_outside_facade": 0,
+    "historical_negative_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-link-16-first-red-receipt.json"
+  },
+  "local_capacity_delta": {
+    "fixed_bank0_code_bytes": 40,
+    "owned_e000_live_bytes": -40,
+    "smoke_prg_bytes_vs_link_16": 40,
+    "link_16_smoke_prg_bytes": 41502,
+    "link_17_smoke_prg_bytes": 41542,
+    "fixed_bank0_headroom_before_bytes": 313,
+    "fixed_bank0_headroom_after_bytes": 273,
+    "full_capacity_gate": "not-run"
+  },
+  "first_red": {
+    "class": "runtime-family-binding-relink-identity-drift",
+    "gate_message": "runtime family binding drift after relink",
+    "stable_geometry": {
+      "boot_family_bytes": 12273,
+      "boot_records": 9,
+      "session_family_bytes": 58270,
+      "session_records": 44,
+      "file_offsets_changed": 0,
+      "file_sizes_changed": 0,
+      "entry_offsets_changed": 0
+    },
+    "changed_crc_record_occurrences": {
+      "boot": [
+        {"id": 0, "name": "catalog-verifier", "bootstrap": 60568, "smoke": 38263},
+        {"id": 7, "name": "c2-decode-03", "bootstrap": 32605, "smoke": 30927},
+        {"id": 8, "name": "resident-island-installer", "bootstrap": 20700, "smoke": 19471}
+      ],
+      "session": [
+        {"id": 0, "name": "catalog-verifier", "bootstrap": 60568, "smoke": 38263},
+        {"id": 22, "name": "c2-emit-name", "bootstrap": 13681, "smoke": 39203},
+        {"id": 23, "name": "c2-emit-literal-prep", "bootstrap": 21695, "smoke": 17010},
+        {"id": 24, "name": "c2-emit-literal-atom", "bootstrap": 16858, "smoke": 24401},
+        {"id": 33, "name": "c2-append-stage", "bootstrap": 19452, "smoke": 25017},
+        {"id": 35, "name": "c2-append-entries", "bootstrap": 44314, "smoke": 47430},
+        {"id": 36, "name": "c2-append-header", "bootstrap": 55422, "smoke": 52186},
+        {"id": 39, "name": "c2-append-rollback", "bootstrap": 8707, "smoke": 17864}
+      ]
+    },
+    "header_difference": {
+      "fields": [
+        "LISP65_RUNTIME_OVERLAY_CATALOG_VERIFIER_CRC16",
+        "LISP65_RUNTIME_OVERLAY_BOOT_CATALOG_VERIFIER_CRC16"
+      ],
+      "bootstrap_bound": "0xec98",
+      "smoke_derived": "0x9577"
+    },
+    "diagnosis_limit": "The prepared sentinel-to-real binding change is an input to the second whole-program LTO link, and target/output-path LTO allocation may also contribute. This receipt proves the resulting cycle is not identity-stable; it does not attribute every changed byte to one compiler decision."
+  },
+  "gate_strength_finding": {
+    "current_gate": "bind_family_header compares only the generated verifier-header tuples",
+    "observed_gap": "The header mismatch exposed the catalog-verifier drift, but ten unique slice payloads changed across the two manifests.",
+    "required_strengthening": "Any replacement gate must compare every boot and session record field and payload CRC, not only the four bootstrap verifier tuples."
+  },
+  "artifact_boundary": {
+    "resident_island_seed_emitted": true,
+    "runtime_overlay_bootstrap_emitted": true,
+    "boot_and_session_bootstrap_families_packed": true,
+    "smoke_binary_emitted": true,
+    "boot_and_session_smoke_families_packed": true,
+    "smoke_binary_is_product_candidate": false,
+    "final_product_candidate_emitted": false,
+    "pre_ownership_gate": "passed",
+    "fixed_host_facade_gate": "passed",
+    "runtime_family_binding_gate": "first-red",
+    "identity_gate": "not-run",
+    "capacity_gate": "not-run",
+    "one_truth_gate": "not-run",
+    "kernal_freedom_gate": "not-run"
+  },
+  "evidence": {
+    "smoke_binary": {
+      "path": "build/c2.2/substitution/product-link-17/lisp65-c2-reslice-smoke.prg",
+      "sha256": "9dbf4c359cbb814bf85d10ada9f41d279062e5f6b60c7497ca278922a2a590c8"
+    },
+    "smoke_map": {
+      "path": "build/c2.2/substitution/product-link-17/lisp65-c2-reslice-smoke.prg.map",
+      "sha256": "a9a5a5668aafd9b17d663af0ee56de304df69d8e0782d1ad86165352b723e163"
+    },
+    "pre_ownership_report": {
+      "path": "build/c2.2/substitution/product-link-17/pre-ownership-closure-smoke.json",
+      "sha256": "54687758e6e0c343297662b917385a29833e6e33cf758dc806a32b95c410e778"
+    },
+    "fixed_facade_report": {
+      "path": "build/c2.2/substitution/product-link-17/fixed-host-facade-smoke.json",
+      "sha256": "2046e1851fad6c4a3095b400a1b9f9708fd88ce34f3597ec8e1cb82a083f06c2"
+    },
+    "boot_bootstrap_manifest": {
+      "path": "build/c2.2/substitution/product-link-17/runtime-overlays-boot-bootstrap.json",
+      "sha256": "e22a08c23d037e703c5af423b7d5b0fd516da1db39c34085a3ebfd8ee39d0baa"
+    },
+    "boot_smoke_manifest": {
+      "path": "build/c2.2/substitution/product-link-17/runtime-overlays-boot-smoke.json",
+      "sha256": "45f550470ac9f2b7de0359abd95e6434082833b8d897bbab3f4ed54751a29987"
+    },
+    "session_bootstrap_manifest": {
+      "path": "build/c2.2/substitution/product-link-17/runtime-overlays-session-bootstrap.json",
+      "sha256": "38a72c6fd58c6ea037b02024e4a6d207c11234e644418ea0d7d3eeb465aa5753"
+    },
+    "session_smoke_manifest": {
+      "path": "build/c2.2/substitution/product-link-17/runtime-overlays-session-smoke.json",
+      "sha256": "c854e75859f79c6335fda8bed0a2104863353f92ebbb8cbe73df5d723edc7ebe"
+    },
+    "generated_linker_script": {
+      "path": "build/c2.2/substitution/product-link-17/c2-substitution.ld",
+      "sha256": "66f23552f07f1a0d3852dbd2a9b223e709fbe15cfb21bbb98a3ef51cc6f146e6"
+    }
+  },
+  "static_inputs": {
+    "session_emitter_source_sha256": "cdd2c7c5dc79f85e6324927646edc789a6f31f3ac46b15c12201489c2d4be637",
+    "resolved_profile_sha256": "77b2fc68ac678c9e16aa4d0df442bf239dbfd729bdce86409ff6776f889c195f",
+    "link_driver_sha256": "6a1b88ea6a73a93d465f1a5c953b047f41144bbbf94201499ffce3550914b632",
+    "contract_sha256_before_first_red_status_update": "dc5657ebab847f3418568b04c5dd57fee3974c7b10bde51b86790167567ddb60",
+    "contract_document_sha256": "8787083cef397669271173bcd94cb6b82b7b9c1de016b2f573ae8c2f23426af9",
+    "driver_selftest": "passed",
+    "json_python_and_whitespace_gates": "passed before the authorized link"
+  },
+  "recommended_next_contract": {
+    "name": "single-link-post-link-verifier-binding",
+    "design": [
+      "Move the four eight-byte verifier tuples into one explicitly named 32-byte non-LTO binding section; product code sees only its external fixed-layout symbols.",
+      "Build and LTO-link the code closure exactly once with a fixed-size placeholder table.",
+      "Pack all runtime slices from that single ELF, derive the four tuples, then patch only the named 32-byte table as a publish-last data operation without relinking code.",
+      "Prove pre/post patch differences are confined to the binding section and that every patched tuple equals the corresponding manifest record.",
+      "Repack and compare every boot/session record and payload CRC; any non-table code or slice drift is a hard error."
+    ],
+    "negative_cases": [
+      "binding section absent, moved or not exactly 32 bytes",
+      "patch touches a byte outside the binding section",
+      "tuple does not match its manifest record",
+      "any boot or session record field or payload changes after binding"
+    ],
+    "capacity_expectation": "resident bytes neutral: the dedicated 32-byte table replaces the existing four tuples; exact real-link attribution remains mandatory",
+    "rejected": [
+      "iterate CRC bindings until an accidental fixed point appears",
+      "accept stable sizes while ignoring changed payload CRCs",
+      "weaken the binding identity gate",
+      "run another whole-program LTO pass merely to change tuple data"
+    ],
+    "authorization": "The binding-table contract/probe and any fresh substitution link require review."
+  },
+  "claim_limit": "Receipt-less diagnostic first-red only. It proves the c2e-cons relocation, pre-ownership and fixed-facade gates, and an unstable bootstrap-to-bound runtime-family relink; it proves no final identity, capacity, one-truth, KERNAL freedom, hardware behavior or promotion claim."
+}

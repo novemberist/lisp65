@@ -1,0 +1,241 @@
+{
+  "format": "lisp65-c2-product-substitution-link-11-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "attempt": {
+    "authorization": "Bind the E000 window only after both runtime families are fully bound, then run exactly one fixed-width identity-header closure link under first-red",
+    "prepare_command": "python3 tools/host-lisp/c2_product_substitution_link.py --out build/c2.2/substitution/product-link-11 --prepare-smoke",
+    "final_command": "python3 tools/host-lisp/c2_product_substitution_link.py --out build/c2.2/substitution/product-link-11 --final-from-prepared",
+    "pipeline_stage_reached": "final identity-header closure KERNAL-window byte-identity gate",
+    "status": "failed-not-promoted",
+    "first_red_policy": "honored",
+    "automatic_further_attempt_allowed": false,
+    "prepare_smoke_status": "passed",
+    "diagnostic_final_link_compiled": true,
+    "diagnostic_final_prg_emitted": true,
+    "diagnostic_final_elf_emitted": true,
+    "product_promoted": false,
+    "final_runtime_family_pack": "not-run-after-first-red",
+    "one_truth_gate": "not-reached",
+    "kernal_freedom_gate": "not-reached",
+    "substitution_balance": "not-claimable",
+    "hardware": "not-run"
+  },
+  "authorized_binding_order_result": {
+    "status": "passed-before-first-red",
+    "seed_window_bound": false,
+    "bootstrap_window_bound": false,
+    "runtime_families_bound_before_window": true,
+    "runtime_family_reverification_before_window": "passed",
+    "window_binding_source": "fully bound lisp65-c2-reslice-smoke closure",
+    "identity_header_fixed_bytes": 420,
+    "claim": "The free ordering correction was exercised exactly once; its final reproduction check failed and it is not a permitted retry path."
+  },
+  "successful_smoke_families": {
+    "boot": {
+      "image": {
+        "path": "build/c2.2/substitution/product-link-11/runtime-overlays-boot-smoke.bin",
+        "bytes": 12271,
+        "sha256": "619f48c07d3f86ff93ec8ade616a6228f73becc631b6b9b7e6b5dc7b9a4cd087"
+      },
+      "manifest": {
+        "path": "build/c2.2/substitution/product-link-11/runtime-overlays-boot-smoke.json",
+        "bytes": 7834,
+        "sha256": "f6431cfe594a512d5e33d24a8b62a849843798b00b7d5606517452011edd959b"
+      },
+      "slice_count": 9,
+      "maximum_slice_bytes": 1691,
+      "unchanged_slice_limit_bytes": 1792,
+      "slice_headroom_bytes": 101
+    },
+    "session": {
+      "image": {
+        "path": "build/c2.2/substitution/product-link-11/runtime-overlays-session-smoke.bin",
+        "bytes": 58019,
+        "sha256": "98f102d6855e0fdbf960180d0e5807866638b421d0085e256e1e4d98809e7133"
+      },
+      "manifest": {
+        "path": "build/c2.2/substitution/product-link-11/runtime-overlays-session-smoke.json",
+        "bytes": 32828,
+        "sha256": "adea2026e14a736c57c6bb377c991892792add3d28febee6db663872b58bc02f"
+      },
+      "slice_count": 44,
+      "maximum_slice_bytes": 1732,
+      "unchanged_slice_limit_bytes": 1792,
+      "slice_headroom_bytes": 60
+    }
+  },
+  "first_red": {
+    "gate": "bound KERNAL-window byte identity after the fixed-width identity-header closure",
+    "diagnostic": "RuntimeError: C2 KERNAL window drift after its binding link",
+    "bound_smoke_window": {
+      "path": "build/c2.2/substitution/product-link-11/c2-product-kernal-window.bin",
+      "bytes": 8192,
+      "sha256": "53341cd4f2af78c60822257c63b87b2a31256786ceb5cf756c9b9efae661115f"
+    },
+    "identity_header_closure_window": {
+      "path": "build/c2.2/substitution/product-link-11/c2-product-kernal-window.tmp.bin",
+      "bytes": 8192,
+      "sha256": "a428d38f5a1e7e301d8390f2a9184d15f6a5541c8dd8edf296298e0111a0b808"
+    },
+    "differing_bytes": 15,
+    "finding": "The generated header has fixed textual size and both links have identical aggregate .text, low-section and E000-section sizes and VMAs. Nevertheless, changing the identity constants makes whole-program allocation reorder individual low functions and zero-page objects. The E000 resident code therefore still changes through its direct absolute operands. Ordering cannot close this cross-domain coupling.",
+    "classification": "structural E000-to-moving-Bank0 ABI coupling; the pre-authorized fixed-facade fallback is now required",
+    "next_action": "Return for review with a priced facade model. No facade implementation or twelfth link is authorized by this receipt."
+  },
+  "identity_drift_attribution": {
+    "aggregate_layout": {
+      "smoke_text_bytes": 37982,
+      "identity_closure_text_bytes": 37982,
+      "text_delta_bytes": 0,
+      "low_section_vmas_identical": true,
+      "low_section_sizes_identical": true,
+      "window_section_vmas_identical": true,
+      "window_section_sizes_identical": true,
+      "c2_resident_vma": "0xe070",
+      "c2_resident_bytes": 4294,
+      "window_live_bytes": 4428,
+      "window_unused_bytes": 3764
+    },
+    "binary_relation": {
+      "all_differences_inside_c2_resident": true,
+      "other_window_section_differences": 0,
+      "old_minus_new_modulo_256": {
+        "2": 11,
+        "254": 4
+      }
+    },
+    "named_changed_references": {
+      "function_call_operands": {
+        "str_open": 1,
+        "str_putc": 1,
+        "intern": 2,
+        "gc_collect": 1,
+        "car": 1,
+        "cdr": 2
+      },
+      "sym_name_scratch_pointer_immediates": 3,
+      "str_building_zero_page_operands": 4
+    },
+    "claim_limit": "Read-only attribution of a red link. Stable aggregate sizes do not imply stable cross-domain operands."
+  },
+  "priced_fixed_facade_fallback": {
+    "status": "priced-not-implemented",
+    "all_real_window_to_low_call_targets": [
+      "vm_code_load",
+      "c2_dma",
+      "c2_overlay_call_family",
+      "c2e_cons",
+      "c2e_overlay",
+      "car",
+      "cdr",
+      "gc_collect",
+      "str_open",
+      "str_putc",
+      "intern",
+      "vm_runtime_overlay_select_family"
+    ],
+    "fixed_jump_vectors": 12,
+    "bytes_per_jump_vector": 3,
+    "gross_fixed_bank0_vector_bytes": 36,
+    "funding_move": {
+      "symbol": "c2_kernal_event_poll",
+      "current_low_bytes": 46,
+      "destination": "owned fixed E000 window",
+      "safety_precondition": "Only called after c2_kernal_take_ownership has published and mapped the window",
+      "gross_e000_debit_bytes": 46
+    },
+    "modeled_net_deltas_before_real_link": {
+      "bank0_bytes": 10,
+      "bank0_sign": "credit",
+      "e000_unused_bytes_before": 3764,
+      "e000_unused_bytes_after": 3718,
+      "runtime_slice_bytes": 0,
+      "interactive_compilation_removed": false
+    },
+    "fixed_data_abi": {
+      "additional_payload_bytes": 0,
+      "existing_bank0_payload_to_rehome_under_fixed_named_sections_bytes": 754,
+      "existing_zero_page_payload_to_pin_bytes": 7,
+      "bank0_members": [
+        "c2_committed_roots",
+        "c2_decode_active",
+        "c2_runtime",
+        "c2_edma_job",
+        "c2e",
+        "lisp65_c2_phase_scratch",
+        "sym_name_scratch"
+      ],
+      "zero_page_members": [
+        "c2_phase_owner",
+        "c2_pending_roots",
+        "c2_ready",
+        "str_building",
+        "mem_oom"
+      ],
+      "rule": "The window may address only fixed ABI locations. Moving implementation targets appear only inside the low fixed jump vectors; existing mutable data is relocated, not duplicated."
+    },
+    "required_real_link_gates": [
+      "all twelve window-to-low calls target only the fixed vector section",
+      "no direct window operand names a moving low or zero-page implementation symbol",
+      "fixed data sections are non-overlapping and complete",
+      "gross and net Bank0 deltas are measured; modeled credit is not assumed",
+      "E000 window identity reproduces exactly across its binding closure",
+      "all runtime slices remain at or below 1792 bytes",
+      "one-truth and KERNAL-freedom gates pass"
+    ],
+    "authorization_status": "not-authorized-by-this-receipt"
+  },
+  "diagnostic_artifacts": {
+    "smoke_prg": {
+      "path": "build/c2.2/substitution/product-link-11/lisp65-c2-reslice-smoke.prg",
+      "bytes": 39078,
+      "sha256": "9fc3da085f3730e8d15d2f5eb9e27c10dd427d4a7984f6212b593993d4aaa4fa"
+    },
+    "smoke_elf": {
+      "path": "build/c2.2/substitution/product-link-11/lisp65-c2-reslice-smoke.prg.elf",
+      "bytes": 139092,
+      "sha256": "c785ca3a6c4a749b8c2de291013603468f5a7c0027e18dd23f415cf00cd88f1d"
+    },
+    "identity_closure_prg": {
+      "path": "build/c2.2/substitution/product-link-11/lisp65-c2-substitution-linked.prg",
+      "bytes": 39078,
+      "sha256": "0d569388afbb458b78b101f45a48f514fc4fa104771f7965d4ce63f8270a81fd"
+    },
+    "identity_closure_elf": {
+      "path": "build/c2.2/substitution/product-link-11/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 139092,
+      "sha256": "ca326bc110daab049e83c4c0443954b60bd8e512f27faf819fbed06773be8931"
+    },
+    "linker": {
+      "path": "build/c2.2/substitution/product-link-11/c2-substitution.ld",
+      "bytes": 40026,
+      "sha256": "2660170cfe3894bad45a1d83e96ade36cb867081aa9bef9aede76a55c5f5e7dc"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-11/resolved-profile.txt",
+      "bytes": 3939,
+      "sha256": "68929f0c3e9c0f7694d5e6cc0dab4cf89e50415d92df69d769a4ff32fca565e4"
+    },
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "bytes": 54472,
+      "sha256": "34b18641e0e3e4e2719f733870afb1755279018fe04e18704c30747a489c97fc"
+    }
+  },
+  "static_verification": {
+    "python_compile": "passed",
+    "projection_selftest": "passed",
+    "git_diff_check": "passed"
+  },
+  "preserved_constraints": {
+    "runtime_slice_limit_bytes": 1792,
+    "runtime_slice_limit_relaxed": false,
+    "orphan_handling": "error",
+    "orphan_allowlist_wildcards": 0,
+    "interactive_compilation_present_in_sources": true,
+    "legacy_l65m_path_reintroduced": false,
+    "single_c2_emitter_decoder_rule_preserved_in_sources": true,
+    "product_bytes_promoted": false,
+    "no_relink_after_first_red": true
+  }
+}

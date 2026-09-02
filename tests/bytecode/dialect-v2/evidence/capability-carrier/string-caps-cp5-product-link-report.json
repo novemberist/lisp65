@@ -1,0 +1,78 @@
+{
+  "format": "lisp65-v2-string-caps-cp5-product-link-report-v1",
+  "status": "g5-pending-fresh",
+  "profile": "dialect-v2-capability-carrier-workbench-staging",
+  "source_baseline_commit": "83aaa99",
+  "measurement": {
+    "kind": "full-stack-guarded-workbench-product-link",
+    "runtime_overlay_vma": "0xc22c",
+    "runtime_overlay_vma_max": "0xc356",
+    "runtime_overlay_vma_headroom_bytes": 298,
+    "runtime_overlay_vma_delta_vs_2397_baseline_bytes": 306,
+    "runtime_overlay_vma_delta_vs_2175_candidate_bytes": 84,
+    "post_boot_reserve_bytes": 2091,
+    "post_boot_reserve_hard_min_bytes": 1536,
+    "post_boot_reserve_hard_headroom_bytes": 555,
+    "post_boot_reserve_cp5_target_bytes": 2091,
+    "post_boot_reserve_cp5_shortfall_bytes": 0,
+    "post_boot_reserve_delta_vs_2397_baseline_bytes": -306,
+    "post_boot_reserve_delta_vs_2175_candidate_bytes": -84,
+    "boot_stack_gap_bytes": 1952,
+    "deployed_bank0_delta_vs_accepted_v2_fasl_baseline_bytes": -1956,
+    "slot_delta": 0,
+    "island_bytes_delta": 0,
+    "layout_change": false
+  },
+  "verdict": {
+    "physical_link": "passed",
+    "runtime_overlay_vma_budget": "passed",
+    "post_boot_hard_minimum": "passed",
+    "deployed_bank0_net_negative": "passed",
+    "banked_abi_1_1_headroom": "release-blocker-spent-84-bytes-555-bytes-remain-banked",
+    "checkpoint_4": "reclosed-with-generated-designator-dispatch-and-composition-construction-gate",
+    "checkpoint_5": "pending-fresh-g5",
+    "g5": "must-run-completely-from-start-on-this-binary"
+  },
+  "interpretation": {
+    "prior_product_value_bytes": 2175,
+    "release_blocker_capacity_cost_bytes": 84,
+    "product_value_bytes": 2091,
+    "product_scope": "full-stack-guarded-workbench-product",
+    "stub_projection_correction_factor_bytes": 279,
+    "stub_projection_policy": "future-seed-stub-projections-must-subtract-the-known-product-graph-correction-factor",
+    "policy": "the-full-product-link-is-authoritative-and-2091-bytes-is-the-post-composition-reclosure-value",
+    "banking_policy": "84-bytes-were-spent-as-an-explicit-release-blocker-exception;the-remaining-555-bytes-stay-banked-until-g5-and-then-require-one-probe-per-abi-1-1-item"
+  },
+  "prior_g5_failure": {
+    "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/g5-restart-symbol-capacity-failure-receipt.json",
+    "sha256": "820aa65d08530293817b1a8c23061b2aec3904d95a0db1cb695fe0c2645660cb",
+    "effect": "historical-trigger-only-no-evidence-reuse"
+  },
+  "composition_capacity": {
+    "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-library-composition-capacity-receipt.json",
+    "sha256": "874cd8388bdad1aa9842e83c1d876a6b5d44bf89803d344dbf5629e915f5ab47",
+    "required_libraries": ["ide", "idex", "m65d"],
+    "post_composition_user_symbol_margin": 39,
+    "post_composition_user_directory_margin": 32,
+    "post_composition_user_namepool_margin_bytes": 490
+  },
+  "cp4_reclosure": {
+    "registry": "config/v2-native-function-registry.json",
+    "native_primitive_count": 15,
+    "generated_dispatch_count": 15,
+    "explicit_exclusion_count": 2,
+    "routes": ["direct", "funcall", "apply"],
+    "engines": 4,
+    "evaluations": 180,
+    "boundp_prim_id": 57
+  },
+  "artifacts": [
+    {"id": "workbench-elf", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf", "sha256": "72ef2993872e48f1bfdd8e886a7e23055eda48fc80635e33b4986ee40b014df9"},
+    {"id": "workbench-resident-prg", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/lisp65-workbench-resident.prg", "sha256": "82c3e868b438209e69024abb5da18212d726404dd0731091b443579cc9a949f9"},
+    {"id": "workbench-preload", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/stdlib-with-overlay.ext.bin", "sha256": "69d38aa798d7f256e78e75d132e028d5eaa89b52152f10bdd461220b0f590e10"},
+    {"id": "workbench-runtime-overlays", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/lisp65-mvp-workbench.overlays.bin", "sha256": "67ad234530285d812b4756300df22889bc69f0f535e04b4af28cea66a1d845c1"},
+    {"id": "workbench-runtime-overlays-manifest", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/runtime-overlays-manifest.json", "sha256": "eb8399c74accc377e93bbff2e5cec531f42b6e4ce095f2e80d025abc258c8172"},
+    {"id": "workbench-resolved-profile", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/resolved-profile.txt", "sha256": "5ede475dd1d93b7a35693183363600795ddd8cbdb64a9a965b31b8001ffd58ba"},
+    {"id": "workbench-footprint-audit", "path": "build/products/workbench-v2-composition-cap-final/overlay-stack-guard/footprint-audit.json", "sha256": "0d3bb9b04e9a5c2882580c165dd8ad06d74a0017c023439a67b01f5c1f7b23b6"}
+  ]
+}

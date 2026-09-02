@@ -1,0 +1,69 @@
+{
+  "format": "lisp65-c2-top-level-frame-attribution-hardware-receipt-v1",
+  "recorded_on": "2026-07-23",
+  "status": "passed-nonpromotable-attribution; full-plane-CRC hypothesis rejected; serial transient transaction identified",
+  "promotable": false,
+  "product": {
+    "path": "build/c2.2/substitution/link57-top-level-frame-attribution-wplto4/lisp65-c2-substitution-linked.prg",
+    "bytes": 41542,
+    "sha256": "15ddeb91c366bae47f4115cba6fa11a0c3023c27cbfb3a61cadefb36a9bd75a5"
+  },
+  "deployment": {
+    "path": "build/c2.2/hardware-link57-top-level-frame-attribution2-NONPROMOTABLE/deployment.json",
+    "authority_path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link57-top-level-frame-attribution-deployment2-authority.json",
+    "authority_sha256": "9c96185d7b85bfef61ad181a18b8a30cd9008244978bab1c855dce42b54afee9",
+    "preload_readbacks": "6/6 byteidentical",
+    "hardware_runs": 1,
+    "latency_attempts_consumed": 0
+  },
+  "stations": [
+    "emit_final_crc",
+    "append_envelope",
+    "reserve_transient_bounds",
+    "stage_copy",
+    "stage_plane",
+    "decode_04",
+    "decode_06a",
+    "decode_09",
+    "decode_12",
+    "append_header",
+    "inner_vm",
+    "rollback_prepare",
+    "rollback_unpublish",
+    "rollback_finalize",
+    "journal_clear"
+  ],
+  "captures": {
+    "cold": {
+      "path": "build/c2.2/hardware-link57-top-level-frame-attribution2-NONPROMOTABLE/run/after-cold-c1e5-c1f3.bin",
+      "sha256": "c4ad392ed253c4243bb792797e4daf76b089477d78c9052a43d9cc7f550657ef",
+      "bytes_hex": "74767b808185898e9495969a9d9e9f",
+      "consecutive_frame_deltas": [2, 5, 5, 1, 4, 4, 5, 6, 1, 1, 4, 3, 1, 1],
+      "first_to_last_frames": 43,
+      "expression_result": "t"
+    },
+    "warm": {
+      "path": "build/c2.2/hardware-link57-top-level-frame-attribution2-NONPROMOTABLE/run/after-warm-c1e5-c1f3.bin",
+      "sha256": "f137e8f8cfdf664932ac234159fcd06e422ae1a21ad6b05bba8e61b699eb5a00",
+      "bytes_hex": "5153585d5f62666c717273777a7b7d",
+      "consecutive_frame_deltas": [2, 5, 5, 2, 3, 4, 6, 5, 1, 1, 4, 3, 1, 2],
+      "first_to_last_frames": 44,
+      "expression_result": "t"
+    }
+  },
+  "conclusions": {
+    "cold_warm_shape": "identical within one frame",
+    "largest_single_station_gap_frames": 6,
+    "whole_plane_crc_dominates": false,
+    "single_station_dominates": false,
+    "dominant_class": "the complete transient compile/append/install/rollback ceremony is repeated for every top-level call",
+    "remaining_unstamped_frames": "17/18 frames occur before final emitter CRC or after journal clear in the compiler/REPL envelope",
+    "targeted_fix": "a published nullary bytecode call bypasses transient compilation and invokes its canonical function-cell binding directly"
+  },
+  "accounting": {
+    "latency_measurements_completed": "1/2",
+    "this_diagnostic_consumed_measurements": 0,
+    "promotable_product_links": 0,
+    "diagnostic_product_links": 1
+  }
+}

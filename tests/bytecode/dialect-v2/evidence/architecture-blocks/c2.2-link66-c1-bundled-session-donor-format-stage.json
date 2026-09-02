@@ -1,0 +1,140 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 9218,
+      "path": "config/c2-two-region-session-store-contract.json",
+      "sha256": "412e241e2635f3e7a61968e866d8e97e7ad577921d213f2fefdd7c44644c14b7"
+    },
+    "emitter": {
+      "bytes": 100711,
+      "path": "tools/host-lisp/runtime_overlay_bank.py",
+      "sha256": "1ae0b34d76b3dc918481f632045329eb0149aea29fcf00e67eb22641b969ff95"
+    },
+    "gate": {
+      "bytes": 25780,
+      "path": "tools/host-lisp/c2_l65r_v4_two_region_gate.py",
+      "sha256": "5436fcbbd682971fa0a188f34acb45ee783cdbf25c861045f12b97e401a0549a"
+    },
+    "product_link": {
+      "bytes": 281714,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "96d20d718ad81824363be8150c3fbe26583c80fb126939893718174c1106d944"
+    },
+    "target_decoder": {
+      "bytes": 91634,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "c7215d56d8ab2d97956287d5bbd8e29e2dcd421128b8632b69702e256b85f854"
+    }
+  },
+  "canonical_fixture": {
+    "header_bytes": 32,
+    "main_image_bytes": 273,
+    "overflow_image_bytes": 23,
+    "record_bytes": 32,
+    "record_crc_nonzero": true,
+    "record_regions": [
+      0,
+      1
+    ],
+    "record_source_addresses": [
+      134217984,
+      376064
+    ]
+  },
+  "format": "lisp65-c2-l65r-v4-two-region-contract-receipt-v1",
+  "mutation_count": 13,
+  "mutations": {
+    "main-as-overflow": "source-address",
+    "overflow-as-main": "source-address",
+    "overflow-capacity": "bank-overflow",
+    "overflow-truncated": "overflow-binding",
+    "region-without-record-crc": "record-crc",
+    "source-reserved-byte": "bad-region",
+    "unknown-region": "bad-region",
+    "v3-as-v4": "bad-version",
+    "v4-as-v3": "bad-version",
+    "wrong-source-bank": "source-address",
+    "wrong-source-low": "source-address",
+    "wrong-source-megabyte": "source-address",
+    "zero-record-crc": "record-crc-zero"
+  },
+  "post_shelf_region1_stage": {
+    "READY_after_reject": 0,
+    "authority": {
+      "bytes": 4911,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link61-region1-stage-hardware-first-red.json",
+      "sha256": "e0b7e414c826909a732d902606fea3add5547806d12ba39c9ab97b44dd26e6f9"
+    },
+    "destination": "Bank5:0xbd00",
+    "different_bytes": 1908,
+    "durable_source": "0x08300000",
+    "family_after_reject": 0,
+    "fault": "VM_RUNTIME_OVERLAY_ERR_FAMILY_STAGE",
+    "negative_target_crc16": "0xa942",
+    "required_target_crc16": "0x66c6",
+    "status": "passed-Link61-shelf-prefix-is-publication-negative-fixture"
+  },
+  "recorded_on": "2026-07-24",
+  "stage_source_authority": {
+    "hot_record_verifier_region_dispatch": "absent",
+    "hot_record_verifier_source_bounds_reconstruction": "absent",
+    "mutations": {
+      "emitter-source-comparison-removed": "rejected",
+      "family-published-before-target-crc": "rejected",
+      "manifest-crc-not-consumed": "rejected",
+      "record-crc-binding-moved": "rejected",
+      "region1-source-aliased-to-product-shelf": "rejected",
+      "runtime-region-dispatch-restored": "rejected",
+      "session-overflow-copy-removed": "rejected",
+      "session-overflow-proof-removed": "rejected"
+    },
+    "publication_order": "emitter-bounds -> record-CRC -> final-manifest-binding -> target-family-CRC -> region1-target-CRC -> VERIFIED",
+    "status": "passed-emitter-bound-record-and-target-stage-composite-proof"
+  },
+  "status": "passed-strict-v4-two-region-format-and-mutations",
+  "strict_asymmetry": {
+    "accepted_versions": [
+      4
+    ],
+    "dual_decoder": false,
+    "one_emitter": true
+  },
+  "v4_installer_frame_seal": {
+    "asan": "passed",
+    "fixture": {
+      "bytes": 16366,
+      "path": "scripts/c2-l65r-v2-product-main.c",
+      "sha256": "8f78cc391c326a4133b9279d6324cd932aa50c893d9d6d67acabb4de5fb9f914"
+    },
+    "negative_binary": {
+      "bytes": 121208,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-link66-c1-bundled-session-donor-format-stage/v4-old-order-negative",
+      "sha256": "3e61dbede1adc1a415cd30c4f2a09eba1bb0e0b7b0eb73564fb8ed604cbc9ec1"
+    },
+    "negative_source": {
+      "bytes": 91634,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-link66-c1-bundled-session-donor-format-stage/vm_runtime_overlay.seal-before-transform.c",
+      "sha256": "5d4e6fc75ecc3060e403a937347fcf1e7d0c465ca58e799da76079df6c93f22e"
+    },
+    "negative_stderr": {
+      "bytes": 623,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-link66-c1-bundled-session-donor-format-stage/negative.stderr.txt",
+      "sha256": "83ebca71ec16cd23ec2eba0b4a50cc7b871eb45dc6a6e8307b7bef8d43216d5d"
+    },
+    "old_order_mutation": "reproduced-binding-red-before-READY",
+    "positive_binary": {
+      "bytes": 121184,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-link66-c1-bundled-session-donor-format-stage/v4-final-frame-positive",
+      "sha256": "8ecc8680513c556b31054e73678de2a8b320fdaac958ea01608dddb94c50f342"
+    },
+    "positive_cases": 14,
+    "positive_stdout": {
+      "bytes": 86,
+      "path": "build/c2.2/l65r-v4-frame-seal-gates/c2.2-link66-c1-bundled-session-donor-format-stage/positive.stdout.txt",
+      "sha256": "bdec5f5025d67ad5c76346d05adf3b181b1023e5f077b90d6cda150e5e0aa46a"
+    },
+    "sealed_representation": "final-v4-absolute-source-frame",
+    "status": "passed-verifier-transform-seal-installer-through-path",
+    "ubsan": "passed"
+  }
+}

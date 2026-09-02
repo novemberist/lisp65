@@ -1,0 +1,23 @@
+{
+  "format": "lisp65-c2.2-v1.2.4-r4-offline-verifier-first-red-v1",
+  "recorded_on": "2026-07-30",
+  "status": "closed-unrelated-branch-edit-in-offline-verifier",
+  "observed": "The first v1.2.4 R4 archive was packed, then isolated verification raised NameError: bindings is not defined in verify_product_materialization.",
+  "mechanism": "While adding the v1.2.4 R4 binding case, a broad patch changed the fallback else in verify_product_materialization into a Link-80 binding test. That function has no bindings variable; the intended Link-80 branch in verify_c2_lite_product_candidate was also present and correct.",
+  "correction": "Restore the reproducibility-format fallback to else. The Link-80 and Link-81 binding dispatch remains only in verify_c2_lite_product_candidate.",
+  "failed_archive": {
+    "path": "build/c2.2/v1.2.4-acceptance/r4/c2-lite-v1.2.4-r4-product.tar.gz",
+    "bytes": 127786988,
+    "sha256": "1fd8eacbc5ac10294b20ed5feeccd80e01a5a5ca9a5ec848529d827bc1ad8bd7",
+    "classification": "rejected-never-R4-authority"
+  },
+  "execution_accounting": {
+    "archives_packed": 1,
+    "archives_isolated_verified": 0,
+    "product_builds": 0,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "claim_limit": "Offline-verifier harness First Red only. The failed archive is not R4 evidence and must be replaced after A1 and Fresh-Clone requalification of the corrected source commit."
+}

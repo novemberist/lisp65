@@ -1,0 +1,71 @@
+{
+  "format": "lisp65-c2-lite-v6-two-record-hardware-first-red-v1",
+  "recorded_on": "2026-07-21",
+  "status": "first-red",
+  "attempt": {
+    "candidate": "c2-lite-v6-bank3-stage-artifact-candidate-replay5",
+    "stage": "receipt-less-hardware-presmoke-line-1-replay-with-corrected-two-record-stage",
+    "hardware_observation": "red border; BASIC remains at ready. run:",
+    "acceptance_receipt_created": false,
+    "completed_latency_measurements": 0,
+    "latency_slot_use": "0/2; line 1 did not complete",
+    "downstream_presmoke_lines": "not-run"
+  },
+  "pinned_identity": {
+    "product_prg_sha256": "62f556dfcdeec59783cc2adec16afc3ccb5f618a24b17898c1162f81c1c1b954",
+    "product_elf_sha256": "dceb9505a8d74efae3af4b4e3583c06f3c085ddbc7f80e0426980a83d21351e2",
+    "product_map_sha256": "7a43bbbb97be106fa64038e8a83746e542879ac565fe40a9437bb576dea2f721",
+    "structural_receipt_sha256": "e852ffd7ceeeee4a689790b0ee50c966a470bc1e14a82087844556b0533fd0e8",
+    "deployment_sha256": "56c79b9fc311a055e36c9fe38fd77d2b19064584b7460e1b11b88c39d1c33f26",
+    "two_record_stage_sha256": "0f6cd76d96de6164fa91b9715a70aba9bdb0479aa4d618b82b49e0497a697a26",
+    "workbench_payload_sha256": "07fdea73ca31ac6bc8d4efe48463150f1bfef43b70ace4ecb0d1e078e934d2b7",
+    "workbench_payload_crc16": "0xa0f8",
+    "preload_readbacks_before_launch": "6/6 byte-identical"
+  },
+  "corrected_harness_result": {
+    "stage_format": "L65O-v1-fixed-two-record-bootstrap",
+    "stage_bytes": 3285,
+    "record_1": "Bank-3 boot stager, VMA 0xc356, entry 0xc368, payload 1494 bytes, CRC16 0x7ae5",
+    "record_2": "Workbench overlay, VMA 0xc356, entry 0xc860, payload 1731 bytes, CRC16 0xa0f8",
+    "conclusion": "The corrected two-record stage was accepted. This failure is later than the prior one-record harness first red."
+  },
+  "read_only_failure_capture": {
+    "screen_png_sha256": "340622e3bb9dcc9a7a21655abe7bb273998662d67c6f4130a9635b8873c6e529",
+    "low_0000_0200_sha256": "58b78b1775472a37d66cbcc33db92abde8dd42b753078f5c6273c7f17921a67f",
+    "bank0_b000_ca00_sha256": "8568d82f7dddcf5acd8c43e4a9d877db28b2655674c845fffa0b3c0a6581244b",
+    "bank0_ca00_ca20_sha256": "4871669635b335baca78ad2fc5dc74594473c970a69ace003a7b23852e7f418b",
+    "bank2_code_plane_sha256": "67e4d743417f053da7381d119ac21cc0291cd14ec31b35cd1892f5a16f880913",
+    "bank3_boot_family_sha256": "d03d72dc5d49b3a0f20a82e9fa3e7da5cb23b05c7ee09326d5e0d05222a22179",
+    "pending_code_at_0x0036": "0x23 (LISP65_ERR_STDLIB_BOOT_OVERLAY)",
+    "pending_symbol_at_0xba18": "0x0000",
+    "lisp_error_msg_at_0xc024": "0xb9c9 (numeric_error_sentinel installed by the outer generic abort)",
+    "c2_ready_at_0x008c": "0x00",
+    "rtov_fault_at_0x0078": "0x00",
+    "rtov_family_at_0x0079": "0x81 (BOOT | VERIFIED)",
+    "status_caveat": "vm_boot_overlay_status is not evidence after return to BASIC because the firmware reuses low memory."
+  },
+  "cutpoint_proof": {
+    "bank3": "The full 16210-byte Bank-3 boot family is byte-identical to the pinned source; Record 1 ran through family staging.",
+    "bank2": "The first 1731 bytes are byte-identical to the Workbench payload; Record 2 was parsed, authenticated and copied to unpublished Bank 2.",
+    "bank0": "All 1731 Workbench bytes at 0xc356..0xca18 are byte-identical, proved by the 1706-byte b000..c9ff capture plus the independently captured final 25 bytes at ca00..ca18.",
+    "wipe": "The Workbench range is not wiped, so the commit leaf returned before its wipe phase.",
+    "entry_error": "No inner error survived; main installed the outer generic 0x23 code. This excludes the pre-entry and post-entry lisp_error_msg branches as the first red.",
+    "unique_failed_check": "After the successful Bank-2-to-Bank-0 copy and before entry or wipe, the only remaining fail-closed return with no inner error is the commit leaf's destination CRC comparison."
+  },
+  "root_cause": {
+    "class": "handwritten-assembly-to-C-ABI-argument-order-mismatch",
+    "callee": "uint16_t ov_crc16(const uint8_t *p, uint16_t n)",
+    "proven_llvm_mos_abi": "The compiler-generated call in vm_install_staged_boot_overlay places p in __rc2/__rc3 and n in A/X; the ov_crc16 prologue consumes that layout.",
+    "faulty_commit_call": "At 0x2297..0x22a3, vm_boot_overlay_chain_commit places n=0x06c3 in __rc2/__rc3 and p=0xc356 in A/X.",
+    "effect": "ov_crc16 reads from the length value as an address and treats the Workbench VMA as the length, so the comparison with the correct expected CRC 0xa0f8 must fail even though the copied payload is correct.",
+    "why_the_generic_error_appears": "The commit leaf leaves VM_BOOT_OVERLAY_ERR_CRC without setting a Lisp error. vm_install_staged_boot_overlay returns nonzero, and main therefore records LISP65_ERR_STDLIB_BOOT_OVERLAY (0x23)."
+  },
+  "required_class_c_correction": {
+    "product_change": "At the sole assembly callsite, place Workbench VMA 0xc356 in __rc2/__rc3 and Workbench length 0x06c3 in A/X before jsr ov_crc16.",
+    "capacity_expectation": "The corrected call uses the same instruction count and operand widths; expected text and capacity delta is exactly 0 bytes, to be confirmed by WPLTO and the real link.",
+    "permanent_gate": "Bind the assembly-to-C ABI at the structured relocation/dataflow level: pointer operand must reach __rc2/__rc3, length must reach A/X, and swapped-argument plus one-byte argument mutations must fail. CRC parity must include the actual 1731-byte Workbench payload.",
+    "next_product_step": "Capacity/gate probe, then a separately authorized promotable successor link with all gates fresh.",
+    "next_hardware_step": "A fresh receipt-less presmoke restarts at line 1; no hardware green or latency result is inherited."
+  },
+  "claim_limit": "This receipt binds one hardware first red and its read-only diagnosis. It proves the corrected two-record harness and identifies a product ABI-call defect. It is not hardware acceptance, promotion, release evidence or authority to modify product bytes."
+}

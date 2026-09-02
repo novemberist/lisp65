@@ -1,0 +1,309 @@
+{
+  "baseline": {
+    "product_artifact_set_sha256": "5c7c17f8b441f8acd4f5d57ac9dd17db852f1884f7450611985e13489cc0ffb6",
+    "receipt": {
+      "bytes": 1167,
+      "path": "tests/bytecode/dialect-v2/evidence/r4/wave2-product-candidate-seal-receipt.json",
+      "sha256": "21a57bf83e50dfc1be42eb321e01b779629af0f036cba825fefe7edd0fdce454"
+    },
+    "source_commit": "4694dc24936f899eb333686c59b8a179e8dd0a71"
+  },
+  "candidate": {
+    "artifacts": [
+      {
+        "bytes": 39454,
+        "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-resident.prg",
+        "sha256": "99a727f518ee945b01d0f14eeaffdcef2efe0a8dbb02a2b771f85d9f1d7e10a1"
+      },
+      {
+        "bytes": 1669,
+        "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay.bin",
+        "sha256": "60b3452806d91a8ef35e54b1548b67ec526c307bf4f012da9721173a88430bed"
+      },
+      {
+        "bytes": 65472,
+        "path": "build/products/workbench/overlay-stack-guard/lisp65-mvp-workbench.overlays.bin",
+        "sha256": "3dc4cdf8800da53c3b9364c526fe3218dab46129f2cbe21d93021e02b46e9318"
+      },
+      {
+        "bytes": 65090,
+        "path": "build/bytecode/dialect-v2/shelf/library-shelf.bin",
+        "sha256": "61bb41fa89cd11c29a05afd72fe81e705264383d742515a5e07ac15ed700ad3b"
+      }
+    ],
+    "product_identity": "not-pinned-before-owner-review",
+    "source": "uncommitted-working-tree-at-8477e44e31cb9dfb7199a2b1ffcf935f221c3659"
+  },
+  "capacity": {
+    "baseline_wave2": {
+      "bank_post_boot_reserve_bytes": 1907,
+      "boot_fastpath_verify_slice_bytes": 1806,
+      "codebuf_headroom": 0,
+      "directory_load_headroom": 177,
+      "directory_post_align_headroom": 176,
+      "ext_code_peak_headroom": 16967,
+      "ext_code_post_headroom": 25498,
+      "fixed_overlay_bytes": 1669,
+      "fixed_overlay_headroom_bytes": 0,
+      "installer_slice_bytes": 1770,
+      "installer_slice_headroom_bytes": 22,
+      "namepool_headroom_bytes": 4897,
+      "resident_island_bytes": 1668,
+      "resident_island_reserve_bytes": 120,
+      "runtime_overlay_bank_bytes": 65472,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "runtime_overlay_max_slice_bytes": 1783,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "shelf_bytes": 65168,
+      "shelf_headroom_bytes": 367,
+      "symbol_headroom": 320
+    },
+    "candidate_without_color_scroll": {
+      "bank_post_boot_reserve_bytes": 1907,
+      "boot_fastpath_verify_slice_bytes": 1806,
+      "codebuf_headroom": 0,
+      "directory_load_headroom": 169,
+      "directory_post_align_headroom": 168,
+      "ext_code_peak_headroom": 16731,
+      "ext_code_post_headroom": 26232,
+      "fixed_overlay_bytes": 1669,
+      "fixed_overlay_headroom_bytes": 0,
+      "installer_slice_bytes": 1770,
+      "installer_slice_headroom_bytes": 22,
+      "namepool_headroom_bytes": 5079,
+      "resident_island_bytes": 1668,
+      "resident_island_reserve_bytes": 120,
+      "runtime_overlay_bank_bytes": 65472,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "runtime_overlay_max_slice_bytes": 1783,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "shelf_bytes": 65090,
+      "shelf_headroom_bytes": 445,
+      "symbol_headroom": 334
+    },
+    "delta": {
+      "bank_post_boot_reserve_bytes": 0,
+      "boot_fastpath_verify_slice_bytes": 0,
+      "codebuf_headroom": 0,
+      "directory_load_headroom": -8,
+      "directory_post_align_headroom": -8,
+      "ext_code_peak_headroom": -236,
+      "ext_code_post_headroom": 734,
+      "fixed_overlay_bytes": 0,
+      "fixed_overlay_headroom_bytes": 0,
+      "installer_slice_bytes": 0,
+      "installer_slice_headroom_bytes": 0,
+      "namepool_headroom_bytes": 182,
+      "resident_island_bytes": 0,
+      "resident_island_reserve_bytes": 0,
+      "runtime_overlay_bank_bytes": 0,
+      "runtime_overlay_bank_headroom_bytes": 0,
+      "runtime_overlay_max_slice_bytes": 0,
+      "runtime_overlay_max_slice_headroom_bytes": 0,
+      "shelf_bytes": -78,
+      "shelf_headroom_bytes": 78,
+      "symbol_headroom": 14
+    }
+  },
+  "claim_limit": "Host semantics, generated-source parity, isolated color-scroll mechanics, the exhausted one-attempt shaving outcome and a real product link without the color-scroll rider only. No hardware behavior, promotion, G5, G6, seal or release claim is made.",
+  "release_known_issue": {
+    "id": "banner-colors-persist-after-scrolling",
+    "classification": "display-only-no-data-or-program-state-effect",
+    "cause": "the-v11-screen-driver-scrolls-character-data-but-not-color-ram",
+    "cure": "C2-runtime-layout-evolution",
+    "screen_clear_workaround": "rejected-scr-clear-does-not-reset-color-ram",
+    "user_text": "The boot banner's colored cells (yellow lambda, gray rule) keep their color when the screen scrolls; white text scrolling through rows 0-8 appears color-masked. Display-only: no data or program state is affected. Cause: the screen driver scrolls character data but not color RAM; the fix requires the C2 runtime-layout evolution and ships with it."
+  },
+  "color_scroll_rider": {
+    "bounded_attempt_rule": "one resident attempt, one structural runtime-overlay alternative, one owner-authorized near-boundary shaving attempt and one separately authorized hardened retry; the retry stops permanently at its first red hard gate, with no third round",
+    "binding_gate": {
+      "status": "passed-c2-deferred-gate-infrastructure",
+      "claim": "The v1.1 product does not activate the rider. A future required profile fails closed on a missing define or an empty/unsafe section; the linker fragment remains outside the canonical 44-slice layout until C2 declares the slice.",
+      "bindings": [
+        {
+          "bytes": 3069,
+          "path": "tools/host-lisp/v11_color_scroll_binding.py",
+          "sha256": "5d85c652cd56950b50ed013814cf49357d98105418b24b8cb0d85d14cace42e6"
+        },
+        {
+          "bytes": 1173,
+          "path": "scripts/lisp65-screen-scroll-rider-gate.ld",
+          "sha256": "a4056830de70c922e9ccd67499b76fa13ebea2e4bde2265eaaeb0044d90229f6"
+        },
+        {
+          "bytes": 9071,
+          "path": "src/screen.c",
+          "sha256": "acd9f3f039ad75404aaea68441395177ed2b0b1a81ac2c8e1173d6d72f9be803"
+        },
+        {
+          "bytes": 4078,
+          "path": "src/screen_scroll_overlay.c",
+          "sha256": "cabbda46d59f7ffe4cb43a2d8fa9bb5fd0bd539ec874622d9f8e10abeecc9608"
+        }
+      ],
+      "selftest": "pass-mutations-2"
+    },
+    "isolated_mechanics": {
+      "hardware_prg": {
+        "bytes": 2868,
+        "path": "build/lisp65-mega65-hw-edma-screen-smoke.prg",
+        "sha256": "4cb3ffbc317fcd062c420e33756d0329c634132f2f953852b5bb5163bb97ebac"
+      },
+      "hardware_run": "not-run",
+      "host_oracle": "17/17-pass-screen-and-color-row-copy-plus-default-fill"
+    },
+    "resident_attempt": {
+      "failure": "resident BSS end 0xc4a8 exceeds fixed runtime-overlay VMA 0xc356",
+      "overrun_bytes": 338,
+      "result": "hard-gate-fail-fully-rolled-back"
+    },
+    "runtime_overlay_attempt": {
+      "attempted_slice": "44:screen-color-scroll:runtime+reusable",
+      "baseline_bank_bytes": 65472,
+      "baseline_headroom_bytes": 64,
+      "existing_last_slice": {
+        "end_offset": 65472,
+        "file_offset": 63744,
+        "file_size": 1728,
+        "id": 43
+      },
+      "failure": "runtime-overlay-bank bank-overflow; next payload begins at the aligned 65536-byte boundary",
+      "minimum_reclaim_for_one_allocation_quantum_bytes": 192,
+      "minimum_payload_capacity_at_next_offset": 0,
+      "next_aligned_payload_offset": 65536,
+      "payload_alignment_bytes": 256,
+      "qualification": "192 bytes is only the structural threshold that exposes one 256-byte allocation quantum; the rider's final payload still requires a fresh real link after an authorized capacity plan",
+      "result": "hard-gate-fail-fully-rolled-back"
+    },
+    "shaving_attempt": {
+      "authorized_slice_ids": [
+        1,
+        6,
+        13,
+        14,
+        21,
+        30,
+        32,
+        33
+      ],
+      "candidate_observations": [
+        {
+          "baseline_file_size": 796,
+          "candidate_file_size": 796,
+          "id": 21,
+          "name": "l65m-phase-19",
+          "packed_quantum_recovered": 0
+        },
+        {
+          "baseline_file_size": 1037,
+          "candidate_file_size": 957,
+          "id": 32,
+          "name": "lcc-install-02",
+          "packed_quantum_recovered": 256
+        }
+      ],
+      "changes_rolled_back": true,
+      "behavior_parity": "not-applicable-no-shave-retained-after-hard-gate",
+      "failed_link_assertion": "runtime overlay color-safe screen scroll exceeds its stack-safe window",
+      "failure_class": "integration-hard-gate-empty-rider-section",
+      "map_observation": "the attempted .lisp65_rt_screen_scroll section had size 0 at VMA 0xc356",
+      "result": "failed-auto-fallback-to-c2-no-second-attempt",
+      "root_cause": "the recursive canonical product target supplied an explicit extra-define set that did not inherit LISP65_SCREEN_EDMA_SCROLL",
+      "scope_observed": "only audit slice 21 and audit slice 32 were changed; no non-audit slice was shaved",
+      "surplus_policy": "the 256-byte candidate recovery was not retained after the failed rider link",
+      "varied_relink_stability": "not-applicable-no-shave-retained-after-hard-gate"
+    },
+    "authorized_retry": {
+      "authorization": "owner-plus-review-2026-07-18-option-a-one-new-attempt",
+      "attempted_scope": [
+        "reapply only the proven slice-32 write-offset shave",
+        "make the rider define mandatory",
+        "reject an empty rider section",
+        "run the riderless-define negative test",
+        "link once with all budgets",
+        "then prove four-engine parity and varied double-link stability"
+      ],
+      "prelink_semantics": "lcc-install-overlay-smoke-pass-25/25",
+      "observed_slice_32_candidate_bytes": 957,
+      "first_red_gate": {
+        "gate": "runtime-overlay-bank lint-layout",
+        "diagnostic": "linker binding for slice 44 is missing 'ASSERT(SIZEOF(.lisp65_rt_screen_scroll) > 0 && SIZEOF(.lisp65_rt_screen_scroll) <= 1792'",
+        "failure_class": "layout-contract-hard-gate-before-product-link",
+        "cause": "the hardened conditional empty-section assertion did not match the runtime-bank linter's exact mandatory slice-assert grammar"
+      },
+      "product_link": "not-run-after-first-red-hard-gate",
+      "riderless_define_negative": "not-run-after-first-red-hard-gate",
+      "four_engine_parity": "not-applicable-no-shave-retained-after-first-red-hard-gate",
+      "varied_double_link_stability": "not-applicable-no-shave-retained-after-first-red-hard-gate",
+      "changes_rolled_back": true,
+      "surplus_policy": "the diagnostic 256-byte recovery was rolled back and remains unbooked",
+      "result": "failed-final-fallback-to-c2-no-third-round",
+      "earned_binding_gate": "retained in C2-deferred form: mandatory-define source guard, conditional nonempty-section linker assertion and mutation-tested host gate"
+    },
+    "post_fallback_gate_packaging": {
+      "canonical_linker_result": "dormant undeclared rider member rejected by runtime-overlay layout-members gate",
+      "resolution": "move the conditional rider section/assertion into a C2-only linker fragment; keep the canonical v1.1 linker at exactly 44 declared members",
+      "classification": "fallback packaging, not a third product-integration attempt"
+    },
+    "status": "final-fallback-to-c2-after-authorized-retry-hard-gate"
+  },
+  "format": "lisp65-v11-l-lite-probe-receipt-v1",
+  "gates": {
+    "canonical_product_link_without_color_scroll": "pass",
+    "color_scroll_product_delivery": "final-fallback-to-c2-after-authorized-retry-hard-gate",
+    "fail_fast_contract": "pass-new-first-6-dry-classes-3-receiptless",
+    "generated_keymap": "pass-bindings-41-mx-5-outputs-6",
+    "hardware": "not-run",
+    "ide_host_oracle": "pass-87/87",
+    "p0_ide_differential": "pass-suites-2-functions-187-cases-163-objects-350",
+    "product_profile_color_scroll": "disabled-after-automatic-c2-fallback"
+  },
+  "id": "v11-l-lite-keymap-and-color-scroll-probe",
+  "recorded_on": "2026-07-18",
+  "source_of_truth": {
+    "config": {
+      "bytes": 9039,
+      "path": "config/v11-l-lite-keymap.json",
+      "sha256": "fd5616d330a461c0ef5790995bf73a8a656b8f9ba871ac461ca64664dd3d6284"
+    },
+    "generated_outputs": [
+      {
+        "bytes": 2253,
+        "path": "lib/ide-keymap-generated.lisp",
+        "sha256": "8b094ab943fc484c54853264ada8edfe2cb35039864b310b3d9f5b4ed0bdab96"
+      },
+      {
+        "bytes": 9779,
+        "path": "lib/tests/ide-keymap-eval-cases.generated.json",
+        "sha256": "5458505c547cbbf8b24ec336083e21ef9f304fdff7cdb2b50895289d734326a9"
+      },
+      {
+        "bytes": 9694,
+        "path": "tests/bytecode/libs/p0-ide-keymap-cases.generated.json",
+        "sha256": "945daffcda8fd2c51ad34b8dc1cc29f1a2bbaa1b7dc3df416f7555f751fe6b1b"
+      },
+      {
+        "bytes": 1021,
+        "path": "tests/bytecode/libs/p0-ide-keymap-extra-cases.generated.json",
+        "sha256": "d454d74112e8118881b210edad457d948412cc2efd841e3bac13f1ad97d1c4ce"
+      },
+      {
+        "bytes": 15015,
+        "path": "tests/bytecode/dialect-v2/ide/l-lite-hardware-cases.generated.json",
+        "sha256": "337214fba63af8afbf2bc087ff23a5b0e262ff6957f786cc6485bc95a3bb1c33"
+      },
+      {
+        "bytes": 2521,
+        "path": "docs/generated/ide-keymap.md",
+        "sha256": "83e93b40a10b918e8aa7d88272b329328faee33b85909ffdc7c0029ad398d014"
+      }
+    ],
+    "generator": {
+      "bytes": 18445,
+      "path": "tools/host-lisp/v11_l_lite_keymap.py",
+      "sha256": "3a65a16a8bb03d03c954052bb6741ac47dfc0b9131d9335f9c1bf8cd26a0f646"
+    }
+  },
+  "status": "core-probe-passed-color-rider-deferred-to-c2",
+  "version": 1
+}

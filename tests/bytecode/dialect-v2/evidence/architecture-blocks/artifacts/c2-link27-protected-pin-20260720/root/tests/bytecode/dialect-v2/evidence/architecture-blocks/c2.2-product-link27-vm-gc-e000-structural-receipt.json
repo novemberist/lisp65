@@ -1,0 +1,219 @@
+{
+  "format": "lisp65-c2.2-product-link27-vm-gc-e000-structural-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "passed-structural-hardware-not-run",
+  "authorization": {
+    "scope": "One E000/facade placement probe followed by at most one Link 27 for the Link-26 VM and GC correctness cargo",
+    "critical_pre_ownership_question": "Neither the logical-PC helper nor the C2 root walker may be reachable before KERNAL ownership",
+    "facade_contract_change": "Append one fixed gc_mark vector, growing the facade from 12 to 13 vectors without moving the first 12",
+    "stop_on_any_red_gate": true,
+    "authorized_product_link_count": 1,
+    "actual_product_link_count": 1
+  },
+  "inputs": {
+    "link26_first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link26-vm-gc-capacity-first-red-receipt.json",
+      "sha256": "7eae74979cbe743908b9051ec40fa307eab901423bbd3def268190f34e4955af"
+    },
+    "placement_probe_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link27-vm-gc-e000-placement-probe-receipt.json",
+      "sha256": "5ca8f8b1233025469cc96df9fe803d4bf7e33862acb82cbd99c6ea2fc549f11b"
+    },
+    "placement_probe_product_links": 0,
+    "kernal_contract": {
+      "path": "config/c2-kernal-unmap-contract.json",
+      "sha256": "7d223c38b0d5006d909fa37ddc691aa58c03ca7ded5954ffb8ba5d9ca71c57ed"
+    }
+  },
+  "product_identity": {
+    "prg": {
+      "path": "build/c2.2/substitution/product-link-27-vm-gc-e000/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "7303eb122a34bf2a4c49c3f9875f2eb2e3634ffff91a368f589b1abec7341fbc"
+    },
+    "elf": {
+      "path": "build/c2.2/substitution/product-link-27-vm-gc-e000/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 136284,
+      "sha256": "cb82715a6a2597aa1e3661927a9e6ca40a8975e79a6418a3960c3dafcee8aa7f"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-27-vm-gc-e000/resolved-profile.txt",
+      "bytes": 5194,
+      "sha256": "3d56553c07d17945e7dc68c2b187e61a3501ebe26ba4ad2107c7342e74108986"
+    },
+    "product_closure_links": 1,
+    "resident_island_seed_links": 1
+  },
+  "deployment_artifact_identity": {
+    "kernal_window": {
+      "bytes": 8192,
+      "crc16": "0xbbdd",
+      "sha256": "c5a426a9869e3cd8e6190b2af108482b71d1eb583096675af4cf9a565b77a83e"
+    },
+    "boot_runtime_family": {
+      "bytes": 12529,
+      "sha256": "4418602716ff90daee5dc91c093fd54e75d74a49fdb34420a357915c867bd49f"
+    },
+    "session_runtime_family": {
+      "bytes": 50334,
+      "sha256": "8bd15c921f340005dde7d4a514939cba13e0caa37e85e4dd65938b94b78885df"
+    },
+    "immutable_shelf": {
+      "bytes": 70897,
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+    },
+    "initial_c2d": {
+      "bytes": 33840,
+      "sha256": "0a0ddf0168028bae27e7cd6fdc687fe8ca3a3f4940cdf70dae844c0bd5c1c185"
+    }
+  },
+  "link26_to_link27_attribution": {
+    "failed_link26_seed_bank0_text_delta_bytes": 733,
+    "link27_seed_bank0_text": {
+      "link25_bytes": 37956,
+      "link27_bytes": 37964,
+      "delta_bytes": 8,
+      "corridor_relief_vs_link26_bytes": 725
+    },
+    "link27_final_bank0_text": {
+      "link25_bytes": 37960,
+      "link27_bytes": 37974,
+      "delta_bytes": 14,
+      "headroom_to_fixed_handoff_bytes": 16
+    },
+    "vm_logical_pc_fix": {
+      "link26_failed_seed_bank0_delta_bytes": 599,
+      "link27_seed_bank0_vm_run_inner_delta_bytes": 306,
+      "link27_e000_logical_pc_helper_bytes": 132,
+      "link27_seed_total_placed_delta_bytes": 438,
+      "total_footprint_recovered_vs_link26_bytes": 161,
+      "bank0_corridor_relieved_vs_link26_bytes": 293,
+      "final_product_vm_run_inner_bytes": 7035,
+      "final_product_vm_run_inner_delta_vs_link25_bytes": 310,
+      "mechanism": "Both relative-branch opcodes share one logical-u16-PC dispatch seam; the non-inline streamed-window target helper lives in the owned E000 window."
+    },
+    "gc_root_walk_fix": {
+      "link26_failed_seed_bank0_delta_bytes": 136,
+      "link27_bank0_gc_collect_delta_bytes": -294,
+      "link27_e000_root_walker_bytes": 547,
+      "link27_e000_checkpoint_delta_bytes": -3,
+      "link27_total_placed_delta_bytes": 250,
+      "total_footprint_change_vs_link26_bytes": 114,
+      "bank0_corridor_relieved_vs_link26_bytes": 430,
+      "mechanism": "The 32-byte block walker lives in the owned E000 window and reaches the one Bank-0 gc_mark implementation only through the appended fixed facade vector."
+    },
+    "other_seed_lto_effects_bytes": -4,
+    "facade_growth_bytes": 3,
+    "e000_growth_bytes": 676,
+    "combined_seed_placed_growth_bytes": 687,
+    "combined_placed_recovery_vs_link26_bytes": 46,
+    "arithmetic": "Seed Bank0: +306 - 294 - 4 = +8; E000: +132 + 547 - 3 = +676; facade: +3; all placed domains: 8 + 676 + 3 = 687, which is 46 bytes below Link 26's 733-byte resident growth while removing 725 bytes from the nonfungible Bank0 corridor."
+  },
+  "capacity": {
+    "cpu_e000_window": {
+      "gross_bytes": 8192,
+      "link25_live_bytes": 6788,
+      "link25_margin_bytes": 1404,
+      "link27_live_bytes": 7464,
+      "link27_margin_bytes": 728,
+      "margin_trend_bytes": [
+        3417,
+        1404,
+        728
+      ],
+      "trend_note": "The E000 window is a pinned contract surface, not a general overflow pool; every future resident addition requires a separately measured authorization."
+    },
+    "bank0_fixed_block": {
+      "state_bytes": 408,
+      "code_bytes": 45,
+      "headroom_bytes": 273
+    },
+    "bank5_mutable_plane": {
+      "bytes": 33840,
+      "headroom_bytes": 31696
+    },
+    "runtime_overlay_bank": {
+      "boot_bytes": 12529,
+      "boot_headroom_bytes": 53007,
+      "session_bytes": 50334,
+      "session_headroom_bytes": 15202,
+      "families_are_lifetime_exclusive": true
+    }
+  },
+  "fixed_facade_contract": {
+    "vector_count_before": 12,
+    "vector_count_after": 13,
+    "bytes_before": 36,
+    "bytes_after": 39,
+    "first_twelve_addresses_changed": false,
+    "new_vector": {
+      "name": "c2_facade_gc_mark",
+      "address": "0xb5c6",
+      "bytes": 3
+    },
+    "subsequent_fixed_addresses": {
+      "io_reveal": "0xb5c9",
+      "map_switch": "0xb5d4",
+      "handoff_state": "0xb5e0"
+    },
+    "identity_gate": "passed"
+  },
+  "critical_pre_ownership_proof": {
+    "status": "passed",
+    "pre_handoff_fixed_domain_consumer_count": 0,
+    "post_handoff_helpers": {
+      "c2_product_gc_mark_roots": "0xf366",
+      "vm_logical_relative_target": "0xfb34"
+    },
+    "source_order": "c2_kernal_take_ownership-before-overlay-install-c2_product_prepare_boot-c2_product_boot-and-repl",
+    "negative_matrix": {
+      "pre-handoff-edge-to-c2-root-walker": "rejected",
+      "pre-handoff-edge-to-vm-logical-pc-helper": "rejected",
+      "pre-handoff-edge-to-kernal-window": "rejected",
+      "pre-handoff-operand-to-fixed-state": "rejected",
+      "overlay-install-before-ownership": "rejected",
+      "prepare-before-ownership": "rejected",
+      "boot-before-ownership": "rejected",
+      "repl-before-ownership": "rejected",
+      "boot-edge-to-session-code": "rejected",
+      "boot-edge-to-c2e-cons-vector": "rejected",
+      "boot-operand-to-session-state": "rejected",
+      "same-vma-section-identity": "passed"
+    },
+    "claim": "The Handoff is structurally before the first VM execution and before any boot path that can invoke the GC root walker; neither relocated helper is reachable while firmware still owns E000."
+  },
+  "fresh_gates": {
+    "identity": "passed",
+    "capacity": "passed",
+    "one_truth_closure": "passed-43-unique-slices-no-L65M",
+    "kernal_freedom": "passed-319-direct-window-edges-zero-violations",
+    "fixed_host_facade": "passed-13-vectors",
+    "pre_ownership": "passed-zero-pre-handoff-consumers-and-12-case-matrix",
+    "handoff_z_and_io_personality": "passed",
+    "runtime_family_total_identity": "passed-45-record-occurrences",
+    "mutated_runtime_payload_negative": "rejected",
+    "publish_last_verifier_binding": "passed-30-of-32-designated-bytes",
+    "vm_stream_branch_safety": "passed-2-mutations-rejected",
+    "gc_operational_binding": "passed-4-mutations-rejected",
+    "orphan_policy": "passed-exact-five-name-allowlist"
+  },
+  "evidence": {
+    "structural_summary_sha256": "3560bb0051ad0ff0723cc5d0a2a5ccc58616e8c5f7324e4378df2601d4e0068a",
+    "kernal_freedom_sha256": "0c95999fc45b085ac35036c73a654e140029455d05891e8c23b54cc1cd9e3e8a",
+    "substitution_balance_sha256": "409337a92da01d912ad6e670643c17df5d496ad1a1b01a2a9652a19920cf6377",
+    "one_truth_closure_sha256": "3829ce31caf387354b8a2398bc65cbf228ca374a6f1266bc5cf79deeee468f00",
+    "fixed_host_facade_sha256": "43774211ea2a6728d56fd2ed923d43002e8b8bcba14808139d45fef115c6eec9",
+    "pre_ownership_sha256": "4750235a1624c1e3f966d66d632b3c12fac1c7eb76f9ce550f95b58f0865f44f",
+    "handoff_z_abi_sha256": "29e77093e6b5b60085941ac59b52bd392d143382f22e17c84eb553f6217351a4",
+    "runtime_family_identity_sha256": "b477c41b8d197b1a301bfbfce6057d2add0cd323974c2140a6df311ed94ee13f",
+    "publish_last_binding_sha256": "6a104a910cd0b2180ebd1f82b285e69177d5cc12046c3cf68eaba25ac162e428"
+  },
+  "remaining_claims": {
+    "artifact_protection": "not-run",
+    "hardware_presmoke": "not-run",
+    "promotion": "not-run",
+    "release": "not-run"
+  },
+  "next_gate": "Make the Link-27 structural evidence immutable, prepare the six-artifact SHA-bound deployment, then run the receipt-less hardware pre-smoke and stop on the first deviation.",
+  "claim_limit": "Link 27 is a structurally passed single-product-closure candidate. Its bytes have not run on hardware; no hardware acceptance, promotion or release claim is made."
+}

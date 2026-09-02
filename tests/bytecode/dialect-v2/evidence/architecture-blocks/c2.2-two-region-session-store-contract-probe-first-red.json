@@ -1,0 +1,268 @@
+{
+  "aggregate_construction": {
+    "finalize_semantic_split_quantum_debit": 256,
+    "main_region_headroom_bytes": 98,
+    "moved_packed_bytes": 1792,
+    "projected_main_region_bytes": 65438,
+    "proposed_region1_members": [
+      {
+        "name": "rollback-unpublish",
+        "packed_bytes": 768,
+        "raw_bytes": 758,
+        "temperature": "abort-only"
+      },
+      {
+        "name": "rollback-wipes",
+        "packed_bytes": 1024,
+        "qualification": "sum of the three measured wipe bodies; the real split must remeasure its phase wrapper under WPLTO",
+        "raw_model_bytes": 919,
+        "temperature": "abort-only"
+      }
+    ],
+    "region1_cap_bytes": 2032,
+    "region1_next_aligned_headroom_bytes": 240,
+    "region1_used_span_bytes": 1687,
+    "rule": "The serial resident driver loads both region-1 phases. Neither overlay calls another overlay. Exact split sizes and the 98-byte main reserve require the later product WPLTO.",
+    "seal_probe_session_bytes": 66974,
+    "status": "arithmetically feasible; not yet a WPLTO claim"
+  },
+  "authority": {
+    "baseline_session_manifest": {
+      "bytes": 38162,
+      "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-recovery-wplto/runtime-overlays-session-unbound.json",
+      "sha256": "36df05043a764106a61834bbb526ecf62edad17e2b1f7707df7a01c5826077f8"
+    },
+    "c2_runtime": {
+      "bytes": 150578,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "cd6aa9dd49c14417e7fab93f41c38dd67e1ad2d70684bd1da56fec2000d04ec5"
+    },
+    "c2_runtime_header": {
+      "bytes": 26073,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "ed30634f1cda34b2cfb4d0ddf03c6b036e9f58c81c0235675988fdaa9d2620be"
+    },
+    "contract": {
+      "bytes": 1904,
+      "path": "config/c2-two-region-session-store-contract-probe.json",
+      "sha256": "252b58f13f2f4edd315d8a09dea70aa2853f68a26b84866b05b993091b03f3c3"
+    },
+    "contract_document": {
+      "bytes": 5200,
+      "path": "docs/planning/c2.2-two-region-session-store-contract-probe.md",
+      "sha256": "2b20e18cc38056c76ad592df862fe578925aa83c3c1f323fec37464a59b4d485"
+    },
+    "emitter": {
+      "bytes": 26026,
+      "path": "src/c2_session_emitter.c",
+      "sha256": "0c0d55b1fb7470a2119503f53595b9c25f21b1bf160881f40360a08aa4ba01d7"
+    },
+    "initial_c2d_v6": {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-recovery-wplto/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "672c260c530b61aff12f35864b2fd3a3adf250da78bf32aad5ab649e2022f1bf"
+    },
+    "l65r_host_tool": {
+      "bytes": 83685,
+      "path": "tools/host-lisp/runtime_overlay_bank.py",
+      "sha256": "cde6f447877444658e15cf130e4297420995420a1d0e3214434b7b19819dac97"
+    },
+    "l65r_target_decoder": {
+      "bytes": 84128,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "98b54da8b1d2a1685e62c6482fcb38f9557f166b6055e2f2d3b5af20e7e982b5"
+    },
+    "probe": {
+      "bytes": 22297,
+      "path": "tools/host-lisp/c2_two_region_session_store_probe.py",
+      "sha256": "a6d6370b363ea32b5845706874ce319d8e52fdccefd221edc7b8a3521bf721ba"
+    },
+    "rollback_attribution": {
+      "bytes": 9218,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cpu-chip-write-completion-rollback-finalize-attribution-first-red.json",
+      "sha256": "89bde07b9dca749a5b552bb9f583ca7e614596a7f67a1abc2c6694801f8564cf"
+    },
+    "workbench_map": {
+      "bytes": 22860,
+      "path": "config/workbench.mk",
+      "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+    }
+  },
+  "bank5_geometry": {
+    "c2d_growth_floor_bytes": 14544,
+    "c2j": [
+      50752,
+      50816
+    ],
+    "canonical_c2d": [
+      0,
+      33840
+    ],
+    "current_entry_count": 590,
+    "effective_worst_case_composition_delta": -25,
+    "emitter_roots": [
+      50416,
+      50752
+    ],
+    "explanation": "Only 192 bytes of the old suffix were uncommitted at the full 2048-row export-plan cap. The region therefore consumes 1840 bytes of potential export scratch. Under one exported row and one root per appended entry, the practical ceiling falls by 25 entries because roots previously bound first.",
+    "export_plan_record_bytes": 8,
+    "export_plan_rows": 1818,
+    "external_symbol_arena_start": 50816,
+    "old_zero_suffix": [
+      33840,
+      50816
+    ],
+    "overflow_region": {
+      "alignment": 256,
+      "bank": 5,
+      "base": 48384,
+      "bytes": 2032,
+      "cap": "hard; no third region",
+      "end_exclusive": 50416
+    },
+    "remaining_root_ordinals": 1253,
+    "verdict": "green with the explicit 14544-byte growth floor",
+    "worst_case_dynamic_export_rows": 1228
+  },
+  "claim_limit": "Contract geometry, format impossibility and host model only. No product format, packing, closure, capacity or hardware claim.",
+  "current_l65r_v3": {
+    "all_capability_masks_zero": true,
+    "catalog_version": 3,
+    "entry_bytes": 32,
+    "host_versions": [
+      1,
+      2,
+      3
+    ],
+    "region_field": false,
+    "target_rejects_bytes_24_through_31": true,
+    "verdict": "FIRST RED: strict L65R-v3 binds one family-wide storage base; bytes 24..31 are required zero by the product decoder"
+  },
+  "decision": {
+    "WPLTO_runs": 0,
+    "format_implemented": false,
+    "hardware_runs": 0,
+    "next_review": "Explicit Class-C choice: authorize strict L65R-v4 with the same 32-byte header/record widths and region byte at offset 24, or reject the two-region Session store.",
+    "product_links": 0,
+    "product_sources_changed": false,
+    "split_implemented": false
+  },
+  "dma_transport": {
+    "class": "Chip-Bank-5 to Bank-0 overlay VMA",
+    "existing_read_seam": "c2_stream_c2d_read -> c2_facade_vm_code_load",
+    "new_hardware_assumption": false,
+    "proof_limit": "The transport class is already product/hardware exercised. A successor product gate must still prove that every region-1 record selects this seam and no Attic fallback remains.",
+    "same_transport_primitive_as_c2d": true,
+    "source_bank": 5,
+    "source_interval": [
+      "0xbd00",
+      "0xc4f0"
+    ]
+  },
+  "format": "lisp65-c2-two-region-session-store-contract-probe-v1",
+  "promotable": false,
+  "proposed_strict_l65r_v4": {
+    "dual_decoder": false,
+    "entry_bytes": 32,
+    "header_bytes": 32,
+    "header_reserved_u32_proposal": "bind the used byte span of region 1; base and hard cap remain generated contract constants",
+    "mutation_count": 9,
+    "mutations": [
+      {
+        "name": "region-bit-without-record-reseal",
+        "reason": "record CRC mismatch",
+        "rejected": true
+      },
+      {
+        "name": "unknown-region-2",
+        "reason": "unknown region",
+        "rejected": true
+      },
+      {
+        "name": "reserved-region-byte",
+        "reason": "region reserved bytes",
+        "rejected": true
+      },
+      {
+        "name": "unaligned-overflow-offset",
+        "reason": "payload alignment",
+        "rejected": true
+      },
+      {
+        "name": "overflow-end-plus-one",
+        "reason": "overflow region bounds",
+        "rejected": true
+      },
+      {
+        "name": "slice-over-1792",
+        "reason": "slice size",
+        "rejected": true
+      },
+      {
+        "name": "main-offset-below-catalog-payload",
+        "reason": "main payload floor",
+        "rejected": true
+      },
+      {
+        "name": "main-end-plus-one",
+        "reason": "main region bounds",
+        "rejected": true
+      },
+      {
+        "name": "zero-file-size",
+        "reason": "slice size",
+        "rejected": true
+      }
+    ],
+    "offset_semantics": "u16 relative to the selected region",
+    "record_region": {
+      "bytes": 1,
+      "offset": 24,
+      "record_crc_covers_region": true,
+      "reserved_zero": [
+        25,
+        32
+      ],
+      "values": {
+        "0": "Bank-3 main Session store",
+        "1": "Bank-5 overflow region"
+      }
+    },
+    "status": "model green; Class-C format decision required",
+    "v3_input": "rejected"
+  },
+  "recorded_on": "2026-07-24",
+  "rollback_line": "Link 59 remains untouched.",
+  "separate_walls": {
+    "e000": {
+      "coldest_candidate": {
+        "bytes": 29,
+        "disposition": "not presently relocatable",
+        "reason": "It is the resident serial overlay driver. Moving it into either Session region would make an overlay call overlays; moving it to ordinary text transfers 29 bytes into an already-red currency.",
+        "symbol": "c2_append_run_rollback_plan",
+        "temperature": "abort-only"
+      },
+      "deficit_bytes": 28,
+      "other_candidates": [
+        {
+          "bytes": 47,
+          "reason_rejected": "shared resident emitter-state owner; moving it into an emitter phase creates an overlay-to-overlay edge for existing callers",
+          "symbol": "c2_session_emit_reset",
+          "temperature": "interactive-compile cold"
+        },
+        {
+          "bytes": 513,
+          "reason_rejected": "transaction owner and multi-phase serial driver; not a leaf-shaped window tenant",
+          "symbol": "c2_append_begin",
+          "temperature": "append cold"
+        }
+      ],
+      "verdict": "No legal 28-byte evacuation exists under the present walls and no-overlay-calls-overlay invariant."
+    },
+    "ordinary_text": {
+      "deficit_after_vm_ext_write_candidate_bytes": 17,
+      "status": "OPEN; no second named fund was found in this probe"
+    }
+  },
+  "status": "FIRST RED: geometry and a strict width-neutral v4 model are feasible, but the current strict L65R-v3 product format has no region identity"
+}

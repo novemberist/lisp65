@@ -1,0 +1,190 @@
+{
+  "claim_limit": "No product link authorization or hardware claim.",
+  "diagnostic": {
+    "message": "link command failed before orphan-wrapper acceptance: exit=1",
+    "type": "RuntimeError"
+  },
+  "first_red_measurement": {
+    "baseline": {
+      "map": "build/c2.2/substitution/product-link-35-dma-completion-first-status/resident-island-seed.prg.map",
+      "sha256": "ddec66d7aaad9775b12ca230defcc5becdcf5d993035abf53b67bcc0070869d1"
+    },
+    "generic_convergence_first_red": {
+      "map": "build/c2.2/substitution/l65r-v3-crc-convergence-wplto/resident-island-seed.prg.map",
+      "sha256": "c9ec79e8fa808134636c74ecd439e09976aacf7d9740ff9f801dbd74c17f52f6"
+    },
+    "source": {
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "52a483c2bd91fb01efdb3911eed7b0e916aa8d389a282d8aedc8dc9dc599b9ec"
+    },
+    "resident": {
+      "bank0_text": {
+        "baseline_bytes": 38007,
+        "generic_probe_bytes": 38453,
+        "temperature_probe_bytes": 38261,
+        "generic_delta_bytes": 446,
+        "temperature_delta_bytes": 254,
+        "credit_vs_generic_bytes": 192,
+        "handoff_anchor": "0xb4a3",
+        "temperature_end_exclusive": "0xb598",
+        "overlap_bytes": 245
+      },
+      "named_temperature_attribution_bytes": {
+        "hot_shared_crc_retry_driver": 181,
+        "cold_island_crc_byte_helper_leaked_resident": 38,
+        "remaining_net_profile_status_and_lto_delta": 35
+      },
+      "handoff": {
+        "baseline_bytes": 289,
+        "generic_probe_bytes": 305,
+        "temperature_probe_bytes": 289,
+        "delta_vs_baseline_bytes": 0,
+        "credit_vs_generic_bytes": 16
+      },
+      "ordinary_bss": {
+        "baseline_bytes": 1588,
+        "temperature_probe_bytes": 1592,
+        "delta_bytes": 4,
+        "baseline_vma": "0xb99e",
+        "temperature_vma": "0xbab9",
+        "positional_shift_bytes": 283,
+        "overlap_fixed_block_bytes": 113
+      },
+      "rodata": {
+        "baseline_bytes": 826,
+        "temperature_probe_bytes": 864,
+        "delta_bytes": 38,
+        "baseline_vma": "0xb61a",
+        "temperature_vma": "0xb70f"
+      }
+    },
+    "cold_boot_slices": {
+      "catalog_verifier": {
+        "baseline_bytes": 1156,
+        "generic_probe_bytes": 1243,
+        "temperature_probe_bytes": 1609,
+        "delta_vs_baseline_bytes": 453,
+        "headroom_under_1792": 183
+      },
+      "record_verifier": {
+        "baseline_bytes": 1411,
+        "generic_probe_bytes": 1395,
+        "temperature_probe_bytes": 1639,
+        "delta_vs_baseline_bytes": 228,
+        "headroom_under_1792": 153
+      },
+      "island_installer": {
+        "baseline_bytes": 1336,
+        "generic_probe_bytes": 1546,
+        "temperature_probe_bytes": 2004,
+        "delta_vs_baseline_bytes": 668,
+        "over_1792_bytes": 212
+      }
+    },
+    "classification": "temperature-split-reduced-generic-residency-but-did-not-close-resident-or-island-capacity",
+    "e000_gate": "not reached; zero-delta requirement remains unproven and unchanged"
+  },
+  "temperature_attribution": {
+    "resident_hot": [
+      "catalog-verifier-payload",
+      "record-verifier-payload",
+      "application-payload"
+    ],
+    "catalog_slice_cold": [
+      "catalog-header",
+      "catalog-directory-chunks"
+    ],
+    "record_slice_cold": [
+      "requested-record-entry"
+    ],
+    "island_slice_cold": [
+      "island-carrier-record",
+      "island-source-crc-chunks",
+      "island-carrier-destination"
+    ]
+  },
+  "evidence": {
+    "c2-kernal-window.generated.h": {
+      "bytes": 420,
+      "sha256": "bd66bd08f065add45708fc3943bdd9e6cc50d4dc44bed94de862899d008dbfc7"
+    },
+    "c2-substitution.ld": {
+      "bytes": 58347,
+      "sha256": "938b11fe2c43d5dba500932396d0cef149d0e64c1726b2759d9795f1a657cf71"
+    },
+    "error-text-table.bin": {
+      "bytes": 772,
+      "sha256": "d98eba701b558ade9e5dd61389a2c85f86d378ce7bb1d663a40118df45c9fcf3"
+    },
+    "error-text-table.h": {
+      "bytes": 11472,
+      "sha256": "37348e844b88f875fac071ccc54f2f70bd5cf9e3923a4f0d452159a9fb8a6f4e"
+    },
+    "fresh-v5-prelink-gates/c2-runtime.o": {
+      "bytes": 157784,
+      "sha256": "87535293160f96917bf434e0b09b9ae409419c166101deb54a4524aaae8edb5e"
+    },
+    "fresh-v5-prelink-gates/interrupt.o": {
+      "bytes": 5352,
+      "sha256": "7f2ad17c0047c8983d9ef8c78a20f1d87de0a3900835521bbcab1bf3cd7095f5"
+    },
+    "l65r-v3-convergence-host": {
+      "bytes": 112824,
+      "sha256": "da425108dfdcfe24ca8ed5ad5fb4684a41ccbe5123e160cebab140bf341c24be"
+    },
+    "l65r-v3-convergence-host.stdout.txt": {
+      "bytes": 56,
+      "sha256": "1950759af820a5635fe35651f4190eb9dfc2106ae978c4192c68e4197f272481"
+    },
+    "resident-island-seed.prg.link.stderr.txt": {
+      "bytes": 2159,
+      "sha256": "f90456cb95a891fa7f8a1c351595289be0307d14ed398a824479fc863806e5b3"
+    },
+    "resident-island-seed.prg.link.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "resident-island-seed.prg.lto.o": {
+      "bytes": 576540,
+      "sha256": "11f958e99c55d0143c36a330143b5ea928d6f10c47bfd415ca0f26f81663e82e"
+    },
+    "resident-island-seed.prg.map": {
+      "bytes": 186808,
+      "sha256": "efd1edeb6ca6b4ab2c6790731990f64ec152c59c660843b0ecb8fb1d9c42c428"
+    },
+    "resident-island.prepare.h": {
+      "bytes": 10249,
+      "sha256": "e3c73d0ab07406973aea86cecd47ed7648a3edfe1eb938e820304f7c8977c980"
+    },
+    "resolved-profile.txt": {
+      "bytes": 6403,
+      "sha256": "19be4957bebb1756f6a74d699865666ad342fb97c4cc457139df3dbdc05ed18a"
+    },
+    "runtime-overlay.prepare-standard.h": {
+      "bytes": 1266,
+      "sha256": "aba0838a242916002cb409280798f42f8d262dfb5912d9e322a2ba30a7116170"
+    },
+    "runtime-overlay.prepare.h": {
+      "bytes": 2267,
+      "sha256": "b53f3d3c9daa95e7dc5c9b94019253f3bc690f3643ab417df79371482c3bb81c"
+    },
+    "stage-config.h": {
+      "bytes": 238,
+      "sha256": "375794273ef736dc0b865ed0c7d960f0bf5e55d7efecc20289c20b31dc404aff"
+    },
+    "v2-product-profile-parity.json": {
+      "bytes": 1762,
+      "sha256": "2d2b3ad38eb71ef493b077c67d15ff85210f69d5a1723b860a858f5bdb2cea2a"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_candidates": 0,
+    "whole_program_lto_closure_links": 0
+  },
+  "format": "lisp65-l65r-v3-crc-convergence-temperature-wplto-first-red-v1",
+  "next_gate": "Class-C triage: the 254-byte resident remainder exceeds the available text/fixed reserves and the cold Island slice exceeds its 1792-byte ceiling by 212 bytes; no placement attempt is authorized",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: L65R-v3 CRC-convergence WPLTO probe stopped"
+}

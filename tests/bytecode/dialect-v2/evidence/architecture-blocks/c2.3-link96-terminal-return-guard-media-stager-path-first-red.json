@@ -1,0 +1,29 @@
+{
+  "format": "lisp65-c2.3-link96-terminal-guard-media-stager-path-first-red-v1",
+  "recorded_on": "2026-08-11",
+  "status": "FIRST RED: successor stager emitted through import-time default path",
+  "error": "autoboot.c65 absent from the Link-96 successor media directory",
+  "product_links": 0,
+  "product_media_completed": false,
+  "library_media_completed": false,
+  "partial_before_red": {
+    "boot_descriptor": {
+      "path": "build/c2.3/terminal-return-guard-link96-media-first-red-import-time-stager/shared-system/boot.id",
+      "bytes": 432,
+      "sha256": "5b32cdca1bbfdff1def8c2dbc3988c3cbabd4f54c22c2933049131656597304a"
+    },
+    "reset_domain": {
+      "path": "build/c2.3/terminal-return-guard-link96-media-first-red-import-time-stager/shared-system/c2d-v6-reset-domain.bin",
+      "bytes": 50816,
+      "sha256": "90e84f17227b7971f471231a58d4619809dfad587c39aa93ccecf7e9d9bbdc99"
+    }
+  },
+  "broken_producer": {
+    "path": "tools/host-lisp/c2_lite_media_product.py",
+    "bytes": 50944,
+    "sha256": "30264ece730b55a92582311c68efce8ae11c8869e0ce2af94a39fc953c7b0546"
+  },
+  "mechanism": "compile_stager default arguments captured BUILD/STAGER/STAGER_MAP at module import instead of consuming the live successor bindings",
+  "repair": "the sole production call passes BUILD, STAGER and STAGER_MAP explicitly; a mutation restores the import-time-default call and fails",
+  "claim_limit": "Media-builder First Red only. No product byte, product link, completed D81, hardware or point claim."
+}

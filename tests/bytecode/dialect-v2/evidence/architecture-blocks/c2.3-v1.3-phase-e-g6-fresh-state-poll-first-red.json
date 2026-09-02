@@ -1,0 +1,34 @@
+{
+  "format": "lisp65-c2.3-v1.3-phase-e-G6-fresh-state-poll-first-red-v1",
+  "status": "FIRST RED CORRECTED BEFORE MEDIA TRANSPORT",
+  "recorded_on": "2026-08-03",
+  "source_commit": "176f0d6520319d0f992eea05eeb28a21e489d36b",
+  "phase": "S-E-G6-case-2-entry",
+  "trigger": {
+    "command": "python3 tools/host-lisp/c2_v130_g6.py boot",
+    "message": "G6 media transport did not begin from asserted fresh BASIC state"
+  },
+  "observation": {
+    "classification": "acceptance-harness-single-snapshot-before-BASIC-ready",
+    "screen_state": "BASIC 65 banner visible; READY prompt not yet rendered",
+    "fresh_reset_sha256": "d2d586dfa8fa483b5d48f6fa758afaef3bdd6549576462abd6bbc9e6c08de4ac",
+    "fresh_state_png_sha256": "319f93bedafd07edc80417861610685ed1089c00650db75c505785cdbc266a19",
+    "fresh_state_text_sha256": "2657fccc9d4b930bfa19e2ffaf7f559bcc021f0929419446e846d21a7bbf8fd8",
+    "upload_log_exists": false
+  },
+  "correction": {
+    "form": "poll the screenshot gate for at most 30 seconds after cold reset",
+    "required_state": "BASIC 65 plus READY and no lisp65 prompt",
+    "fail_closed_screen_check_each_poll": true,
+    "corrected_tool_sha256": "ab15cbf429d8e4e208a1c63e0f3757db6b2a80cb1ec59d58eaf23f9f70e65a0c"
+  },
+  "execution_accounting": {
+    "product_media_uploaded": false,
+    "product_started": false,
+    "G6_case_consumed": false,
+    "product_builds": 0,
+    "product_links": 0,
+    "product_byte_changes": 0
+  },
+  "claim_limit": "The receipt closes only the pre-transport single-snapshot harness assumption. It carries no G6, promotion or release claim."
+}

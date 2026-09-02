@@ -1,0 +1,196 @@
+{
+  "active_load": {
+    "D700_submit_reached": false,
+    "bounded_execution_interval": "after PHA $A1BB and before PLA $A1CE",
+    "content_completion_signal_possible": false,
+    "exact_C2D_offset_destination_length_recoverable": false,
+    "exact_parameter_claim_required_for_submit_decision": false,
+    "linked_path": {
+      "D700_submit_PC": "0xFFD0",
+      "DMA_facade_jump_PC": "0xA1DA",
+      "PHA_PC": "0xA1BB",
+      "PLA_PC": "0xA1CE",
+      "c2d_adapter_tail_hex": "a905a6048608a6058609a60a8604a6068605a6078606a60b20c4b5a2018a60",
+      "stack_sequence": [
+        {
+          "PC": "0xE30F",
+          "effect": "C2D source-bank argument A=$05",
+          "instruction": "LDA #$05"
+        },
+        {
+          "PC": "0xE327",
+          "effect": "push return word $E329",
+          "instruction": "JSR $B5C4"
+        },
+        {
+          "PC": "0xB5C4",
+          "effect": "facade changes neither A nor SP",
+          "instruction": "JMP $A1B7"
+        },
+        {
+          "PC": "0xA1B7..0xA1B8",
+          "effect": "balanced temporary; A remains $05",
+          "instruction": "PHX; PLY"
+        },
+        {
+          "PC": "0xA1BB",
+          "effect": "push bank argument $05",
+          "instruction": "PHA"
+        },
+        {
+          "PC": "0xA1CE",
+          "effect": "first instruction that removes saved $05",
+          "instruction": "PLA"
+        },
+        {
+          "PC": "0xA1DA",
+          "effect": "DMA facade is reachable only after PLA",
+          "instruction": "JMP $B5C7"
+        },
+        {
+          "PC": "0xFFD0",
+          "effect": "first and only F018B submit",
+          "instruction": "STA $D700"
+        }
+      ],
+      "submit_is_downstream_of_PLA": true,
+      "symbols": {
+        "c2_facade_c2_dma": "0xB5C7",
+        "c2_facade_target_c2_dma": "0xFF90",
+        "c2_facade_vm_code_load": "0xB5C4",
+        "c2_stream_c2d_read": "0xE2DD",
+        "vm_code_load": "0xA1B7"
+      },
+      "vm_code_load_hex": "da7aa60448a505850aa506850b6407a5088505a5098506688504a50a8508a50b8509984cc7b5"
+    },
+    "logical_VM_owner_ordinal": 696,
+    "logical_owner_authority": "target-owned progress producer at the last completed dispatch",
+    "stack": {
+      "JSR_return_address": "0x0196",
+      "JSR_return_word": "0xE329",
+      "interpretation": "$05 is the A=$05 C2D bank argument held by vm_code_load PHA; $E329 is the immediately underlying active JSR word",
+      "pre_BRK_SP": "0x94",
+      "saved_bank_address": "0x0195",
+      "saved_bank_value": "0x05"
+    },
+    "submit_return_reached": false,
+    "transport": "C2D bank-5 read through vm_code_load/F018B",
+    "window_class": "no new VM code window materialized; in-flight internal C2D read"
+  },
+  "authorities": {
+    "diagnostic_ELF": {
+      "bytes": 620936,
+      "path": "build/c2.3/defstruct-terminal-ingress-sister-link92/artifacts/diagnostic-terminal-ingress.elf",
+      "sha256": "73ebdc557926b2d16c73ab1f71094f60cd7f8be46d0aa233ed14cf0bc79ac192"
+    },
+    "owner_commission": {
+      "authority": "git-blob",
+      "bytes": 62229,
+      "commit": "17e68e8ea9861f435194f2cd401afa185d3792ab",
+      "path": "docs/planning/post-v1.4.0-direction-plan.md",
+      "sha256": "356c0955b82ab80a5a76a7a7a7156b8419346124fb920869326545354990e7bf"
+    },
+    "stack_rescue": {
+      "bytes": 12979,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-brk-stack-rescue-receipt.json",
+      "sha256": "ecbe808b5fa8d58febe79ff98cc299dc8897e224ccf1f17d8ff8b593e41e4967"
+    },
+    "terminal_device": {
+      "bytes": 10944,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-terminal-ingress-device-receipt.json",
+      "sha256": "c69f1ee1402dd1d3d1ef65206c5b25bb6eaf8afd9dbeba1efb3b48b32c8255d9"
+    },
+    "terminal_result": {
+      "bytes": 6189,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-terminal-ingress-result-receipt.json",
+      "sha256": "b3fddd79fcca6b41973ffc1d09ceab3919cdb40950d37526e5af212077a3a334"
+    }
+  },
+  "claim_limit": "This desk result refutes F018B completion/visibility as the mechanism of the active load on the surviving stack. It does not turn the two one-byte views into full-window evidence, does not exclude an earlier partial-tail visibility defect, does not identify the destroyed immediate RTS/RTI edge, and authorizes no fix, link or device contact.",
+  "coverage": {
+    "active_load_is_later_unstored_activation": true,
+    "active_load_is_one_of_retained_completed_views": false,
+    "active_load_is_unstored_completed_refill": false,
+    "reason": "the current activation is absent from the post-success ring because it escaped before DMA submission, not because a completed load went unobserved",
+    "retained_completed_views": [
+      {
+        "cursor": 29,
+        "expected": 62,
+        "fetched": 62,
+        "owner_ordinal": 656,
+        "source_object_sha256": "42bed936b5584b9ae8506bc0e1a7ed005073d4047c8403aff6a3fea698aac492"
+      },
+      {
+        "cursor": 10,
+        "expected": 12,
+        "fetched": 12,
+        "owner_ordinal": 696,
+        "source_object_sha256": "ea05387f6be2e967537506f46c03e1689169edabca54593016097d905a37738a"
+      }
+    ]
+  },
+  "decision": {
+    "F018B_membership_for_active_load": "REFUTED",
+    "F018B_membership_for_any_earlier_partial_tail": "UNPROVEN",
+    "device_contact_authorized": false,
+    "fix_authorized": false,
+    "local_mechanism_boundary": "control escaped while vm_code_load held its bank argument on the hardware stack, before PLA and before F018B submission",
+    "ownership_recharter_new_decision_basis_established": false,
+    "product_bytes_changed": 0
+  },
+  "delivered_old_content_check": {
+    "candidate": "whole prior buffer survives the last completed owner-696 fill",
+    "candidate_rejected": true,
+    "claim": "the delivered immediate-prior whole-window candidate is inconsistent at byte zero; the one-byte oracle does not prove the rest of the consumed span",
+    "new_source_first_byte": "0x0C",
+    "partial_tail_visibility_excluded": false,
+    "prior_first_byte": "0x3E",
+    "target_post_fill_first_byte": "0x0C"
+  },
+  "format": "lisp65-c2.3-post-v1.4-defstruct-f018b-coverage-v1",
+  "host_narrative": {
+    "active_load_post_return_stale_execution_modeled": false,
+    "causal_chain": [
+      {
+        "holds": false,
+        "stage": "active C2D load submitted"
+      },
+      {
+        "holds": false,
+        "stage": "submission consumed as content completion"
+      },
+      {
+        "holds": false,
+        "stage": "stale active-load bytes executed"
+      },
+      {
+        "holds": false,
+        "stage": "stale active-load route reaches $BF71"
+      }
+    ],
+    "reason": "there is no active-load submit or return from which post-return stale execution could begin; inventing window bytes would violate the commission"
+  },
+  "recorded_on": "2026-08-10",
+  "specified_final_evidence_row": {
+    "authorized_by_this_result": false,
+    "commit_rule": "tag last; completion metadata is never oracle",
+    "decision": {
+      "FFFF_full_match_then_same_pre-submit_escape": "F018B membership refuted for the retained-to-active chain; continue at the local pre-submit control/interrupt edge",
+      "difference": "F018B membership proven for that completed fill"
+    },
+    "fields": [
+      "commit-tag",
+      "owner-ordinal",
+      "window-base",
+      "consumed-byte-count",
+      "first-difference-index-or-FFFF",
+      "source-byte",
+      "window-byte"
+    ],
+    "observation_timing": "before the first opcode of the refilled span executes",
+    "oracle": "exhaustive source-vs-window comparison over the consumed span",
+    "purpose": "close only the residual partial-tail question for the completed fill immediately preceding the escape",
+    "writer": "target-owned post-refill/pre-dispatch code"
+  },
+  "status": "ACTIVE-LOAD-PRE-SUBMIT; F018B-ACTIVE-LOAD-MEMBERSHIP-REFUTED; FULL-CONSUMED-SPAN-ROW-SPECIFIED"
+}

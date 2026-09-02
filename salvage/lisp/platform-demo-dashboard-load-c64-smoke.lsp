@@ -1,0 +1,15 @@
+; Grafischer C64-SAVE-Format-Smoke fuer platform-demo:demo-dashboard.
+; DEMO-DASHBOARD selbst kommt aus platform-demo.lsp; diese kurzen Stubs ersetzen
+; die langen Platform-Zeichner nur fuer den LOAD-Smoke.
+
+(DE H (A B V) (COND ((LESSP A B) (POKE A V) (H (ADD1 A) B V))))
+(DE BM () (PROG NIL (POKE 53265 59) (POKE 53272 24) (RETURN T)))
+(DE CLEAR-SCREEN (C) (PROG NIL (POKE 53280 6) (POKE 53281 0) (RETURN T)))
+(DE DRAW-RECTANGLE (X0 Y0 X1 Y1 C)
+  (PROG NIL (H 10152 10280 255) (H 1269 1285 16) (RETURN T)))
+(DE FILL-RECTANGLE (X0 Y0 X1 Y1 C)
+  (PROG NIL (H 10832 10960 255) (H 1354 1370 32) (RETURN T)))
+(DE DRAW-BARS (HEIGHTS X0 YBASE W COLOR)
+  (PROG NIL (H 11136 11240 255) (H 1392 1405 112) (RETURN T)))
+(DE LINE-GRAPH (POINTS COLOR)
+  (PROG NIL (H 11464 11568 255) (H 1433 1446 80) (BM) (RETURN T)))

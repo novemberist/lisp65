@@ -1,0 +1,186 @@
+{
+  "attempt": {
+    "build_stage": "authorized-final-bounded-reslice-resident-island-seed-link",
+    "date": "2026-07-19",
+    "first_red_policy": "stopped-before-hardware-smoke-and-before-final-product-link",
+    "further_automatic_attempt_allowed": false,
+    "product_bytes_emitted": 0,
+    "status": "failed-not-promoted"
+  },
+  "baseline": {
+    "fixed_runtime_overlay_vma": 50006,
+    "map": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.map",
+    "resident": {
+      "bss_bytes": 2246,
+      "bss_end": 49891,
+      "data_bytes": 20,
+      "rodata_bytes": 1152,
+      "strict_headroom_before_overlay_bytes": 114,
+      "text_bytes": 38243
+    },
+    "resident_c2_text_bytes_at_initial_first_red": 18172
+  },
+  "candidate_partial_link": {
+    "map": {
+      "bytes": 104584,
+      "path": "build/c2-product-link-split8/resident-island-seed.prg.map",
+      "sha256": "4f3afae23f562efef0dbeb8d278a6cd9fc678ba1c4c49e658abcdd0d235143b1"
+    },
+    "resident": {
+      "bss_bytes": 2726,
+      "bss_delta_bytes": 480,
+      "bss_end": 53054,
+      "data_bytes": 24,
+      "data_delta_bytes": 4,
+      "minimum_relief_for_strict_overlay_fit_bytes": 3049,
+      "rodata_bytes": 639,
+      "rodata_delta_bytes": -513,
+      "text_bytes": 41438,
+      "text_delta_bytes": 3195,
+      "total_section_delta_bytes": 3166
+    },
+    "resident_c2_named_sections": {
+      "bss_bytes_including_decoder_work": 906,
+      "rodata_bytes": 50,
+      "text_bytes": 4657,
+      "text_reduction_from_initial_first_red_bytes": 13515,
+      "total_bytes": 5613,
+      "scope_note": "Named sections exclude C2 branches inlined by LTO into existing product functions; the resident section delta and BSS-end assertion are authoritative."
+    }
+  },
+  "format": "lisp65-c2-product-substitution-residency-model-first-red-receipt-v1",
+  "gates": {
+    "bank0_resident_fit": {
+      "bss_end": 53054,
+      "fixed_overlay_vma": 50006,
+      "minimum_relief_bytes": 3049,
+      "status": "failed"
+    },
+    "c2_append_slice_fit": {
+      "aggregate_bytes": 12211,
+      "failed_slice_count": 0,
+      "largest_slice": {
+        "bytes": 1699,
+        "headroom_bytes": 93,
+        "name": "publish_cells"
+      },
+      "slice_count": 11,
+      "status": "passed"
+    },
+    "c2_decoder_slice_fit": {
+      "aggregate_bytes": 28460,
+      "failed_slice_count": 0,
+      "largest_slice": {
+        "bytes": 1732,
+        "headroom_bytes": 60,
+        "name": "phase_08"
+      },
+      "slice_count": 24,
+      "status": "passed"
+    },
+    "c2_emitter_slice_fit": {
+      "aggregate_bytes": 9343,
+      "failed_slice_count": 0,
+      "largest_slice": {
+        "bytes": 1566,
+        "headroom_bytes": 226,
+        "name": "literal_atom"
+      },
+      "slice_count": 8,
+      "status": "passed"
+    },
+    "exclusive_work_state": {
+      "gate": "tools/host-lisp/c2_phase_scratch_gate.py",
+      "literal_cursor_mutations_rejected": 5,
+      "overlapping_owner_acquire": "rejected",
+      "reentrant_same_owner_acquire": "rejected",
+      "status": "passed",
+      "wrong_owner_release": "rejected"
+    },
+    "hardware_smoke": {
+      "reason": "no runnable smoke artifact may be produced while resident and runtime-bank gates are red",
+      "status": "not-run"
+    },
+    "one_truth_closure": {
+      "status": "not-run-link-failed-before-final-closure"
+    },
+    "runtime_bank_fit": {
+      "all_individual_slices_fit": true,
+      "capacity_bytes": 65536,
+      "note": "The pack step was not run after the resident first-red; the exact 256-byte packing arithmetic over the linked section sizes is already red.",
+      "projected_overflow_bytes": 256,
+      "raw_payload_bytes": 58916,
+      "rounded_payload_bytes": 65792,
+      "slice_count": 50,
+      "status": "failed-before-pack"
+    },
+    "substitution_balance": {
+      "status": "not-claimable-link-failed-before-final-artifacts"
+    }
+  },
+  "inputs": {
+    "cursor_contract": {
+      "path": "src/c2_literal_cursor.h",
+      "sha256": "2d9a9b9ffe2efb983cb666d59f95d4ca313edd6a10a353da2e68a600927a24c2"
+    },
+    "emitter": {
+      "path": "src/c2_session_emitter.c",
+      "sha256": "07f400fbec53216b1f389c0aa2277f72a4611dc18edff907d0d40d5314524b50"
+    },
+    "lifetime_gate": {
+      "path": "tools/host-lisp/c2_phase_scratch_gate.py",
+      "sha256": "d6bada021ef21869008e2d946b38e29be52f66644b23af836bd11919b32cc4eb"
+    },
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "adc651c7833ca2a2ef738cbe6f13e772aab9ac7a84ce572f5cb24bbaa9a89ea8"
+    },
+    "linker": {
+      "path": "build/c2-product-link-split8/c2-substitution.ld",
+      "sha256": "84b8a4e464090a575f2543d160ca0aac725bc70da3d06df9bdf2f709614c8bb3"
+    },
+    "product_runtime": {
+      "path": "src/c2_product_runtime.c",
+      "sha256": "7fe1bf1238265011f2e023a1a5f31eb1dff5898e65e13e0775d7c8d41a30c07c"
+    },
+    "resolved_profile": {
+      "path": "build/c2-product-link-split8/resolved-profile.txt",
+      "sha256": "f1b20d30b42a04e5a497be23b6f218e37a587d1d301c95b641418f4b82ce3f9b"
+    },
+    "shared_scratch": {
+      "path": "src/c2_phase_scratch.c",
+      "sha256": "62bae4b223d83cb0d20cc9755b9c81a8636bb656724cb3a3220c573be52661ba"
+    }
+  },
+  "result": {
+    "architecture_observation": {
+      "boot_only_decoder_phases": [
+        "00",
+        "01",
+        "02a",
+        "02b",
+        "03"
+      ],
+      "boot_only_raw_bytes": 6605,
+      "boot_only_rounded_storage_bytes": 7168,
+      "current_call_graph": "product boot enters at phase 0; every session append enters at phase 4",
+      "lifetime_substitution_headroom_after_known_deficits_bytes": 3863,
+      "status": "measured-architecture-candidate-not-authorized-not-implemented",
+      "suggested_model": "Boot-only validation residents and post-boot emitter/append residents share physical overlay storage across the proven product-boot publication boundary."
+    },
+    "authorized_constraints_preserved": {
+      "interactive_compilation_present": true,
+      "legacy_l65m_path_present": false,
+      "slice_cap_bytes": 1792,
+      "slice_cap_relaxed": false
+    },
+    "direct_bank0_to_runtime_slice_relocation": {
+      "minimum_additional_deficit_before_quantization_or_transport_code_bytes": 3305,
+      "reason": "Bank 0 requires at least 3,049 bytes of relief while the runtime bank is already 256 bytes over capacity.",
+      "status": "arithmetically-infeasible-under-current-two-container-model"
+    },
+    "owner_decision_required": true,
+    "residency_model_assumption": "failed",
+    "summary": "All 43 C2 operation slices fit and shared-state overlap is constructively rejected. The remaining failure is architectural: Bank 0 needs 3,049 bytes of relief while the runtime bank is already 256 bytes over capacity."
+  }
+}

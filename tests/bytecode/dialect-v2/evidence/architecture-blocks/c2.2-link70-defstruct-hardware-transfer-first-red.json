@@ -1,0 +1,30 @@
+{
+  "format": "lisp65-c2.2-link70-defstruct-hardware-transfer-first-red-v1",
+  "recorded_on": "2026-07-27",
+  "status": "harness-FIRST-RED-serial-FTP-timeout-before-product-start",
+  "promotable": false,
+  "candidate_link": 70,
+  "classification": "hardware-tooling-only",
+  "observation": {
+    "stage": "D81 upload before product deployment",
+    "timeout_seconds": 360,
+    "uploaded_readback_created": false,
+    "subsequent_core_identity_read_timeout_seconds": 20,
+    "product_started": false,
+    "product_rows_run": 0
+  },
+  "evidence": {
+    "empty_upload_log": {
+      "path": "build/post-promotion/link70-defstruct-header-crc/hardware-session/media-upload.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "observations": {
+      "path": "build/post-promotion/link70-defstruct-header-crc/hardware-session/observed-rows.json",
+      "status": "hardware-not-started",
+      "rows": 0
+    }
+  },
+  "disposition": "Power-cycle the unresponsive serial/JTAG endpoint, then resume the same prepared session. Do not rebuild, relink, or count a product hardware run.",
+  "claim_limit": "No Link-70 product behavior was exercised."
+}

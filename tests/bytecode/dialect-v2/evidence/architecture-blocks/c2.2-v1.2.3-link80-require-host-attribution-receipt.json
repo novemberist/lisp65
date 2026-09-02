@@ -1,0 +1,284 @@
+{
+  "H0_artifact_binding": {
+    "D81_sha256": "779713f4ce3723072ad649683463791d9bc82777a13daa4b5d85e38428ad5b22",
+    "D81_source_and_uploaded_readback_byteidentical": true,
+    "defstruct_resolve_order": [
+      0,
+      1
+    ],
+    "index": {
+      "header_crc16": "0x8ea2",
+      "identity_crc32": "0xd46c094c",
+      "place_row_crc16": "0x3294",
+      "records_crc16": "0xa1da"
+    },
+    "place": {
+      "artifact_bytes": 1925,
+      "combined_crc32": "0x485a1ce2",
+      "dependencies": [],
+      "locator": [
+        39,
+        1
+      ],
+      "resolve_order": [
+        0
+      ]
+    },
+    "product_build_id": "0x7356f9e6",
+    "status": "H0-disproved-no-media-or-index-lock-mismatch",
+    "visible_locators": {
+      "defstruct": [
+        39,
+        9
+      ],
+      "l65index": [
+        39,
+        0
+      ],
+      "place": [
+        39,
+        1
+      ]
+    }
+  },
+  "H1_exact_success_path": {
+    "appends": [
+      {
+        "after": [
+          7,
+          712,
+          2810,
+          340,
+          42266
+        ],
+        "before": [
+          6,
+          696,
+          2760,
+          340,
+          41485
+        ],
+        "combined_crc32": 1213865186,
+        "handles": [
+          696,
+          697,
+          698,
+          699,
+          700,
+          701,
+          702,
+          703,
+          704,
+          705,
+          706,
+          707,
+          708,
+          709,
+          710,
+          711
+        ],
+        "image_slot": 6,
+        "library": "place",
+        "source_slot": 0
+      }
+    ],
+    "disk_sector_reads": 2,
+    "final_counts": {
+      "code_bytes": 42266,
+      "entries": 712,
+      "images": 7,
+      "resolutions": 2810,
+      "roots": 340
+    },
+    "loader_attempts": [
+      {
+        "library": "place",
+        "result": "published",
+        "sector": 1,
+        "track": 39
+      }
+    ],
+    "prim67_reads": 439,
+    "prim67_trace_sha256": "6f9f58bf27c857f4ec89c264593bd7dde63be3a38f2ddff6e971c2c6585586d2",
+    "prim67_unique_offsets": 157,
+    "result": "t",
+    "second_require": {
+      "additional_loader_attempts": 0,
+      "additional_prim67_reads": 19,
+      "c2d_and_code_byteidentical": true,
+      "result": "t",
+      "steps": 2084
+    },
+    "steps": 139510
+  },
+  "H2_linked_target_boundary": {
+    "available_hardware_evidence": "The screen proves only the final Lisp nil and 272 elapsed frames; no post-row C2D header/image readback or Prim18 return witness was captured.",
+    "commission_cycle": 3,
+    "disposition": "The Class-B three-cycle budget is exhausted without an attributed product mechanism. No fix, link or hardware retry is authorized; Phase E remains closed and the residual target runtime boundary returns for owner disposition.",
+    "false_result_boundaries": [
+      {
+        "boundary": "Prim18 stage/append",
+        "outcome": "io_disk_stage_chain or c2_product_append_staged returns zero; %disk-load-lib returns nil before the Lisp post-publication identity check"
+      },
+      {
+        "boundary": "transaction terminator",
+        "outcome": "c2_append_begin may have completed, but a non-OK vm_runtime_overlay_transaction_end forces the native wrapper result to zero"
+      },
+      {
+        "boundary": "post-publication identity read",
+        "outcome": "Prim18 returns t, but the target C2D readback does not show the requested combined identity to %require-identity-loaded-p/%require-fast-note"
+      }
+    ],
+    "linked_symbols": {
+      "c2_append_begin": {
+        "address": "0xe7e4",
+        "bytes": 513,
+        "section": ".lisp65_c2_kernal_window.c2_resident"
+      },
+      "c2_product_append_staged": {
+        "address": "0x24cb",
+        "bytes": 116,
+        "section": ".text"
+      },
+      "c2_stream_c2d_read": {
+        "address": "0xe2dd",
+        "bytes": 87,
+        "section": ".lisp65_c2_kernal_window.c2_resident"
+      },
+      "disk_chain_to_scratch": {
+        "address": "0x845b",
+        "bytes": 324,
+        "section": ".text"
+      },
+      "vm_callprim": {
+        "address": "0x6aa0",
+        "bytes": 4855,
+        "section": ".text"
+      },
+      "vm_runtime_overlay_transaction_begin": {
+        "address": "0xfcc0",
+        "bytes": 89,
+        "section": ".lisp65_c2_kernal_window.reopen_gap0"
+      },
+      "vm_runtime_overlay_transaction_end": {
+        "address": "0xffd4",
+        "bytes": 28,
+        "section": ".lisp65_c2_kernal_window.reopen_gap2"
+      }
+    },
+    "source_dataflow_checks": {
+      "Prim18_stages_then_appends": true,
+      "append_result_saved_across_transaction_end": true,
+      "published_identity_from_authenticated_L65S": true,
+      "require_checks_loader_then_published_identity": true,
+      "require_success_rechecks_requested_identity": true
+    },
+    "status": "bounded-target-runtime-seam-no-static-discriminator-left"
+  },
+  "attribution": {
+    "H0_index_lock_or_media_mismatch": "disproved",
+    "H1_real_Link80_Lisp_resolver_result": "t",
+    "H1_repeat_result": "t",
+    "class_B_disposition": "budget exhausted; no mechanism-attributed product fix",
+    "hardware_observation": "nil after 272 frames",
+    "logical_parser_resolver_and_publication_model": "entlastet-hostseitig",
+    "remaining_boundary": "target Prim-18 loader/publication return or the post-publication C2D identity scan on real 45GS02"
+  },
+  "authority": {
+    "D81": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/require-defstruct-link78-bound.d81",
+      "sha256": "779713f4ce3723072ad649683463791d9bc82777a13daa4b5d85e38428ad5b22"
+    },
+    "defstruct_L65S": {
+      "bytes": 2659,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/defstruct.l65s",
+      "sha256": "bc982e1cee8d67bdbba7f509c66b1601f9ee345771e05ca627957249c5a0fbd1"
+    },
+    "driver": {
+      "bytes": 17636,
+      "path": "tools/host-lisp/c2_v123_link80_require_attribution.py",
+      "sha256": "1ec6f8e9b5861991b4eb7803f172958994bca3f3f40a1c243dd13629e4421310"
+    },
+    "index": {
+      "bytes": 128,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/l65index",
+      "sha256": "10c651d6065a16ae882d04f40aa97fe0cc467213f6ed6d390f43db3fcb94a8bf"
+    },
+    "linked_ELF": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "687134067263173763a6777859d3e2404cb44ba2fb483f30ddab87df7e5afede"
+    },
+    "place_L65S": {
+      "bytes": 1925,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/place.l65s",
+      "sha256": "404f80302fe09a0380b71d96b021a3edaf9e04023f7bd9db773a5c8048c263a4"
+    },
+    "product_manifest": {
+      "bytes": 18077,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/canonical-product-manifest.json",
+      "sha256": "0751145a4176a01af7dcfed598e1e456e78d7ca964f5e0d4e9db01a6ccdf2ff7"
+    },
+    "require_source": {
+      "bytes": 32628,
+      "path": "lib/stdlib-require.lisp",
+      "sha256": "e803ada023204c0da9a95c0df18f3a9cbe3ea9afcd7edaa7b6cf5fb02ecd6924"
+    },
+    "runtime_source": {
+      "bytes": 155694,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "9b1afffa93ffefb6eac10e1f99f3c6b7f0db572575b07b396d6ec321c354e94e"
+    },
+    "static_bank2": {
+      "bytes": 41485,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+      "sha256": "c193033d5f1e318b5c6b67e94b045e6848ebb57bef7e091abd3bf818dda3cf31"
+    },
+    "static_c2d": {
+      "bytes": 33840,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "7d222751a991f989943968b106b18e2af521de08fb7240afd3575f9191f7b424"
+    },
+    "stdlib": {
+      "bytes": 293446,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/static-plane/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "9596d88047bc362f57122a29093075b484ecf5a8ccff0896ce6576d09f53e903"
+    },
+    "uploaded_D81_readback": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/uploaded-media-readback.d81",
+      "sha256": "779713f4ce3723072ad649683463791d9bc82777a13daa4b5d85e38428ad5b22"
+    },
+    "vm_source": {
+      "bytes": 83904,
+      "path": "src/vm.c",
+      "sha256": "31f00ad3d4df9311ff59ab9e1f34cb76cd837ea6c25a94c9d0f93d1fd4b85695"
+    }
+  },
+  "claim_limit": "The exact compiled Link-80 Lisp parser/resolver and every Prim-67 decision execute in the host VM against exact C2D and hardware-uploaded D81 bytes. Prim 18 publishes through the existing target-shaped C2D-v6 model; this does not execute physical DMA, the linked 45GS02 loader, IRQ or target ABI behavior.",
+  "commission": {
+    "class": "B",
+    "cycles_completed": 3,
+    "limit": "at most three attribution cycles",
+    "product_fix_authorized": false
+  },
+  "fixture_hygiene": {
+    "corrected_first_counts": [
+      6,
+      696,
+      2760,
+      340,
+      41485
+    ],
+    "correction": "Seed images/entries/resolutions/roots/code/build ID from the exact Link-80 C2D header and Bank-2 image before making any H1 claim.",
+    "first_execution_rejected": "The inherited Link-75 runner initially mixed Link-80 C2D bytes with Link-75 in-memory geometry counters."
+  },
+  "format": "lisp65-c2-v1.2.3-link80-require-host-attribution-v1",
+  "hardware_runs": 0,
+  "product_delta_bytes": 0,
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-30",
+  "status": "passed-H0-binding-and-H1-exact-Link80-host-success"
+}

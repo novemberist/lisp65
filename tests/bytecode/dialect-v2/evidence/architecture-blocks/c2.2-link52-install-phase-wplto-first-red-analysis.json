@@ -1,0 +1,98 @@
+{
+  "format": "lisp65-c2-install-phase-wplto-first-red-analysis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: cold phase discriminator exceeds the Bank-0 text corridor before the product link",
+  "classification": "Class C capacity and scope review required",
+  "authority": {
+    "link51_product_sha256": "22ab996f5c14db54a7449c0fbcecd22ec4c0d806f72803eb7c49eb953c271629",
+    "hardware_capture_sha256": "a5e0e0facef24a8d6d6d3d00a6892f8652aa50c358c314799ef8d62bd8a3587a",
+    "link50_link51_comparison_sha256": "b8ef6d88ed0bc67f3dcf81046e072a8ebf091a08f76acf1c2a7692645f49677f",
+    "contract_sha256": "89fda24d605b9c25583f02ade36b57275c0eecc123a23602348b35cc794fd252"
+  },
+  "source_result": {
+    "status": "passed",
+    "phase_cases": 13,
+    "mutations_rejected": 10,
+    "storage": "last two bytes of the existing 304-byte phase scratch",
+    "new_bss_bytes": 0,
+    "new_gc_roots": 0,
+    "renderer_change": false,
+    "badopcode_detail_change": false,
+    "refill_boundary_flag": "not claimed; immediate adjacency cannot be proved without restoring hot logical-cursor liveness"
+  },
+  "whole_program_lto": {
+    "runs": 1,
+    "lto_object": {
+      "path": "build/c2.2/substitution/link52-install-phase-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 608300,
+      "sha256": "191336f4ec4ce21f6ae44205ca8ef5022f01ebe24a2fdd0126ce58d64063e7d6"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/link52-install-phase-wplto/resident-island-seed.prg.map",
+      "bytes": 188409,
+      "sha256": "d9a3faceec4a9f7c8da6e73c30846a72d9b3a285a3ec2f8947d1b031ef1ad232"
+    },
+    "linker_diagnostic": {
+      "path": "build/c2.2/substitution/link52-install-phase-wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 2412,
+      "sha256": "0ae2175af7273c7a27bfe1327c144a83a274660a8e951854617551359bf18caa"
+    }
+  },
+  "measured_text": {
+    "handoff_anchor": "0xb4a3",
+    "link51_text_bytes": 37973,
+    "link51_headroom_bytes": 43,
+    "required_noise_reserve_bytes": 32,
+    "spendable_before_probe_bytes": 11,
+    "probe_text_delta_bytes": 78,
+    "probe_headroom_bytes": -35,
+    "recovery_required_for_zero_bytes": 35,
+    "recovery_required_for_contract_reserve_bytes": 67,
+    "linker_text_range": "0x2023..0xb4c5",
+    "linker_handoff_range": "0xb4a3..0xb5c3"
+  },
+  "attribution": [
+    {
+      "symbol": "c2_product_install",
+      "link51_bytes": 564,
+      "probe_bytes": 633,
+      "delta_bytes": 69,
+      "reason": "first-origin phase state and the shared failure boundary remained live across the cold install/rollback control flow"
+    },
+    {
+      "symbol": "c2_install_phase_mark",
+      "link51_bytes": 0,
+      "probe_bytes": 9,
+      "delta_bytes": 9,
+      "reason": "the sole named tag-plus-phase tail writer"
+    }
+  ],
+  "claim_limits": {
+    "all_other_walls": "not qualified because the fail-closed linker stopped at the text corridor",
+    "linked_phase_gate": "not reached",
+    "product_identity": "not created",
+    "hardware": "not run"
+  },
+  "execution_accounting": {
+    "whole_program_lto_closure_links": 1,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "completed_latency_measurements": 0
+  },
+  "rollback_line": {
+    "link": 51,
+    "product_sha256": "22ab996f5c14db54a7449c0fbcecd22ec4c0d806f72803eb7c49eb953c271629",
+    "status": "untouched"
+  },
+  "review_boundary": {
+    "reason": "only 11 of the 43 text-headroom bytes are spendable while retaining the mandatory 32-byte noise reserve; the approved discriminator measured 78 bytes",
+    "not_authorized": [
+      "WPLTO retry",
+      "product link",
+      "micro-shaving",
+      "text noise reserve reduction",
+      "floor or anchor change"
+    ],
+    "required_next_decision": "reduce the discriminator contract or authorize a named resident-content substitution of at least 67 bytes"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "format": "lisp65-c2.2-product-substitution-link-22-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "attempt": {
+    "candidate": "link-22-ownership-order",
+    "stage": "static-pre-ownership-closure-gate",
+    "hardware_execution": "not-run",
+    "acceptance_receipt_created": false,
+    "promotion_claim": "not-run"
+  },
+  "partial_identity": {
+    "product_prg_sha256": "18f18135c9a8229f2ea7412bc5d61c81db87ccf907678a973250deb5f4f2fd1d",
+    "product_elf_sha256": "ed994956054c33c20898d57df32c4e0941cec5b1488c3daacbacf9c82f427406"
+  },
+  "first_red": {
+    "gate": "pre-ownership closure and source-order gate",
+    "finding": "vm_install_staged_boot_overlay remained before c2_kernal_take_ownership",
+    "hidden_path": "vm_install_staged_boot_overlay -> shelf_crc32 -> c2_stream_shelf_read",
+    "effect": "The replacement candidate would still consume fixed C2 domains before ownership even though the explicit C2 prepare/boot calls had moved."
+  },
+  "root_cause": {
+    "class": "incomplete-consumer-inventory-at-ownership-boundary",
+    "mechanism": "The first ordering fix moved only the visibly C2-named consumers. The staged boot overlay is also a C2 shelf consumer in the product cut."
+  },
+  "required_fix_and_gate": {
+    "product_fix": "Move ownership before the complete staged-overlay operation, not merely before c2_product_prepare_boot and c2_product_boot.",
+    "permanent_gate": "Generate the fixed-domain consumer closure from the linked product and bind the source-order boundary; mutations for late ownership and newly added pre-handoff consumers must fail.",
+    "hardware_recheck": "Only a fully gated fresh candidate may reach the receipt-less hardware pre-smoke."
+  },
+  "claim_limit": "Static first-red only. Link 22 did not complete the structural report set and never reached hardware, promotion or acceptance."
+}

@@ -1,0 +1,234 @@
+{
+  "authorities": {
+    "ROM_contract": {
+      "bytes": 11018,
+      "path": "config/r3-g3-g6-contract.json",
+      "sha256": "5c8e224184d7a54d0d818b77b90a50604b33966bbb3c8f1489524064fcc17681"
+    },
+    "bootstrap_repair": {
+      "bytes": 11331,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-bootstrap-romc-repair-receipt.json",
+      "sha256": "59664c1447e6f1087024fa8c514e826e8e3ca55c0b94dfc1fdea12083e090f1a"
+    },
+    "configured_ROM": {
+      "bytes": 131072,
+      "path": "/home/alex/.local/share/xemu-lgb/mega65/MEGA65.ROM",
+      "sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0"
+    },
+    "device": {
+      "bytes": 15930,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mapping-aware-full-ladder-device-receipt.json",
+      "sha256": "70289c531a6bd882322ec0635e1140d1e8395310d7c765e53ff2b18963b6b47e"
+    },
+    "diagnostic_ELF": {
+      "bytes": 620700,
+      "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-link82-romc-safe.elf",
+      "sha256": "f35da58a7be356244415ca4b99b7cbb6311669026e53de5b02e868e8b8ff2142"
+    },
+    "driver": {
+      "bytes": 30547,
+      "path": "tools/host-lisp/c2_v16_gc_address_caller_attribution.py",
+      "sha256": "4ab51360f19e30eaeaa0f61d93c58ee770c17872bdb7ba8b5077ec13489537ed"
+    },
+    "healthy_control": {
+      "bytes": 2429,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-launch-boundary-control-device-receipt.json",
+      "sha256": "fe5e918571fc984cfb91604ab4c0f5c4e2f0feed3acf2d32b2df72dbcb87436e"
+    },
+    "owner_commission": {
+      "authority": "git-blob",
+      "bytes": 118530,
+      "commit": "9c7276e1",
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "d58c17e6a8602cd600383ed74a5b8516c477a49d0de0e479ef78cccbb3d3165a"
+    },
+    "primary_core_CPU": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "primary_core_machine": {
+      "bytes": 42027,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/machine_container.vhdl",
+      "sha256": "867a383d78f8644be15eaa929ee0634f6c7169fbf8adeb566456b7e88d4bec3f"
+    },
+    "primary_core_monitor": {
+      "bytes": 60075,
+      "path": "build/upstream-verification/mega65-core/src/monitor/monitor.a65",
+      "sha256": "d7fd09c2a43332a9967310d3043f72de99eb2cf26c89d539f3df5ec6e39208bc"
+    },
+    "prior_view_gate": {
+      "bytes": 15400,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mapping-aware-data-boot-gc-receipt.json",
+      "sha256": "c51eb539a7016cb35046c36f40aa00182a51146ce3fcd50b81fd7ffadfe668b0"
+    },
+    "source_main": {
+      "bytes": 9508,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/source/src/main.c",
+      "sha256": "fd3aa5721306cbc8346e6070f780e0690bf4e859c38bba2c5388c8ddc184276d"
+    },
+    "source_mem": {
+      "bytes": 48487,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/source/src/mem.c",
+      "sha256": "b32dc707afe90074cfbd57bd4464b63d7b939bbead45fc35f02353836d555771"
+    },
+    "source_overlay": {
+      "bytes": 17137,
+      "path": "build/c2.3/v1.6-defstruct-phase-c/source/src/vm_boot_overlay.c",
+      "sha256": "78572685b2810b483fea1c32f93e70218ec6e203b89993ac39b3b57408ed6916"
+    }
+  },
+  "claim_limit": "Desk-only address-mode and linked-caller attribution. It proves the physical ZP reads correct, explains gc_runs==0 as BASIC-ROM-backed RMW, and names alloc+$59 as the unique legal linked entry under the captured state. Page-1 return bytes were not captured, and the cause of the missing mem_init effects remains open. No device action, R/A/I/G result, product defect, fix, product byte, link or recontact is claimed.",
+  "execution_witnesses": [
+    "three sampled opcodes bind only ZP state targets under MAPL=0/B=0",
+    "configured BASIC ROM contains $FF at logical $B9F0",
+    "primary core resolves RMW read through BASIC ROM and write to RAM",
+    "INC $B9F0 therefore writes the observed $00 underlay value",
+    "active resident text has exactly four direct GC calls",
+    "captured gc_frozen/str_top state excludes three of those calls",
+    "the inactive buffer overlay and uncalled facade cannot own this entry",
+    "alloc+$59 is the sole linked legal entry consistent with the packet",
+    "healthy control and diagnostic bootstrap equivalence exclude an allocating delta"
+  ],
+  "facts": {
+    "address_arbiter": {
+      "ZP_translation": "MAPL selects no low block and B=0; $0005/$0006/$0018 and $0039..$0048 resolve to physical Bank-0 at the same address",
+      "captured_mapping": {
+        "B": "0x00",
+        "CPU_port_LHC": "111",
+        "MAPH": "0x8000",
+        "MAPL": "0x0000"
+      },
+      "sample_instructions": [
+        {
+          "PC": "0x3b19",
+          "addressing": "ZP",
+          "bytes": "a518",
+          "instruction": "LDA $18",
+          "physical_target_under_captured_mapping": "0x00000018",
+          "state_target": "$0018"
+        },
+        {
+          "PC": "0x3b0d",
+          "addressing": "ZP",
+          "bytes": "8406",
+          "instruction": "STY $06",
+          "physical_target_under_captured_mapping": "0x00000006",
+          "state_target": "$0006"
+        },
+        {
+          "PC": "0x3a8e",
+          "addressing": "ZP",
+          "bytes": "8505",
+          "instruction": "STA $05",
+          "physical_target_under_captured_mapping": "0x00000005",
+          "state_target": "$0005"
+        }
+      ],
+      "translation_authority_result": "CORRECT-NO-REPAIR"
+    },
+    "boot_delta_reconciliation": {
+      "bootstrap_end_state_except_witness": "byte/semantic equivalent",
+      "diagnostic": "entry witness executed; later, an allocation reached alloc+0x59 with no surviving evidence of the healthy mem_init state",
+      "diagnostic_delta_allocates": false,
+      "first_observed_semantic_boundary": "at the sampled allocator entry, the diagnostic run reaches a consumer with freelist NIL and the healthy EXT-freelist effects absent",
+      "healthy_control": "physical lisp65> with 341 allocations and no GC",
+      "remaining_boundary": "whether vm_workbench_boot_overlay_entry/eval_init failed to establish the freelist or later target state/timing corrupted it; the enumerated diagnostic source delta does not explain the split",
+      "upstream_cause_named": false
+    },
+    "captured_allocator_state": {
+      "alloc_high": "0x0000",
+      "allocs_since_gc": "0x0000",
+      "classification": "UNINITIALIZED-OR-CORRUPTED-ALLOCATOR-STATE",
+      "freelist": "0x0000",
+      "gc_badobj": "0x5302",
+      "gc_frozen": "0x0000",
+      "str_top": "0x0000",
+      "why": "freelist, alloc_high, gc_frozen, allocs_since_gc and str_top are zero while gc_badobj is already $5302; this cannot be the healthy post-mem_init 341-allocation state"
+    },
+    "gc_runs_RMW": {
+      "conclusion": "physical gc_runs==0 is the expected post-increment underlay value; it does not contradict a real gc_collect entry",
+      "configured_ROM_read_byte": "0xff",
+      "instruction": "$393A: INC $B9F0",
+      "read_view": "BASIC ROM physical $002B9F0",
+      "write_view": "Bank-0 RAM physical $0000B9F0",
+      "written_byte": "0x00"
+    },
+    "linked_caller_partition": {
+      "dynamic_claim_limit": "The packet omitted Page-1 stack bytes. The result names the unique linked legal edge consistent with the captured state; it does not claim a sampled return address or exclude an illegal/wild transfer.",
+      "dynamic_return_address_captured": false,
+      "excluded_edges": [
+        {
+          "callsite": "0x3705",
+          "excluded_by": "gc_frozen == 0",
+          "owner": "alloc nursery edge"
+        },
+        {
+          "callsite": "0x957c",
+          "excluded_by": "str_top == 0 < STR_MAX_BYTES",
+          "owner": "str_open arena-overflow edge"
+        },
+        {
+          "callsite": "0x9663",
+          "excluded_by": "str_top == 0 < STR_ARENA_SIZE",
+          "owner": "str_putc arena-full edge"
+        },
+        {
+          "callsite": "0xc474",
+          "excluded_by": "inactive overlapping overlay; active workbench overlay has no edge",
+          "owner": ".lisp65_rt_buffer_alloc overlay"
+        },
+        {
+          "callsite": "0xb5d9",
+          "excluded_by": "no linked active caller",
+          "owner": "c2_facade_gc_collect ABI tail"
+        }
+      ],
+      "resident_direct_calls": [
+        "0x3705",
+        "0x3717",
+        "0x957c",
+        "0x9663"
+      ],
+      "unique_legal_edge_under_captured_state": {
+        "callee": "gc_collect",
+        "callsite": "0x3717",
+        "predicate": "freelist == NIL",
+        "symbol": "alloc+0x59"
+      }
+    },
+    "scope": {
+      "R_A_I_G": null,
+      "contact_authorized": false,
+      "device_actions": 0,
+      "fix": null,
+      "hardware_contacts": 0,
+      "link": null,
+      "measured_forms": 0,
+      "product_bytes": 0
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-gc-address-caller-attribution-v1",
+  "recorded_on": "2026-08-05",
+  "rejected_mutations": [
+    "map-ZP-through-high-window",
+    "nonzero-B-register",
+    "treat-gc-runs-as-plain-store",
+    "read-gc-runs-from-RAM",
+    "change-BASIC-ROM-byte",
+    "claim-gc-runs-zero-means-no-entry",
+    "drop-alloc-empty-edge",
+    "select-nursery-edge",
+    "select-str-open-edge",
+    "select-str-putc-edge",
+    "activate-buffer-overlay",
+    "invent-facade-caller",
+    "claim-dynamic-return-address",
+    "claim-healthy-post-mem-init-state",
+    "claim-diagnostic-delta-allocates",
+    "name-upstream-boot-cause",
+    "claim-R-A-I-G",
+    "authorize-contact"
+  ],
+  "status": "HOST-GREEN; ADDRESS-VIEW-CORRECT; UNIQUE-LEGAL-CALLER-ALLOC+0x59; UPSTREAM-BOOT-CAUSE-OPEN"
+}

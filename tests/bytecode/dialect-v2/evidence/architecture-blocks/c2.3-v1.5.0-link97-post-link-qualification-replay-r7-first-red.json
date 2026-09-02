@@ -1,0 +1,114 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "artifact_completions": 0,
+    "artifact_only_replays_authorized": 1,
+    "artifact_only_replays_consumed": 1,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "media_builds": 0
+  },
+  "boundary": {
+    "ambient_closure_validated": true,
+    "artifact_completion_started": false,
+    "capacity_identity_validated": true,
+    "content_map_validation_completed": false,
+    "content_map_validation_started": true,
+    "real_ABI_gate_started": false,
+    "replacement_gate_started": false,
+    "replay_internal_written": false,
+    "replay_profile_written": true
+  },
+  "claim_limit": "One consumed r7 artifact-only replay. The artifact-bound ambient and capacity closures are green; content-map authority validation is red. No replacement-gate, completion, product receipt, medium, device, Halt or release claim exists.",
+  "disposition": {
+    "automatic_retry_authorized": false,
+    "completion_or_media_authorized": false,
+    "owner_question": "Park, or explicitly authorize a semantic-preserving content-map source-authority rebind and separately authorize any later artifact-only replay?"
+  },
+  "execution_authority": {
+    "ambient_closure": {
+      "bytes": 8427,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link97-qualification-ambient-closure-receipt.json",
+      "sha256": "73783bcc1d5bf1383659a7d04b68a0d9fc88c923cb43828cc97ebf3569053ffd"
+    },
+    "authorization_commit": "f1560759",
+    "candidate_profile": {
+      "bytes": 6490,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/post-link-qualification-replay-r7/candidate-profile.json",
+      "sha256": "34917ab0da48fec4bde21374a387458763db3bf49381bc4e23bc9204d36242f1"
+    },
+    "capacity_identity": {
+      "bytes": 23506,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link97-capacity-identity-inversion-receipt.json",
+      "sha256": "b844f1e07c96ce801c5b4d7c9a86f6a13b13723e38264cb223a062220fa60afe"
+    },
+    "content_map": {
+      "bytes": 113748,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link97-nine-slice-content-map-receipt.json",
+      "sha256": "66bf1f7fd59ea5ed1d6d941d7062c498cee35462e06f3bf6b7f61c6b0bf7cf07"
+    },
+    "prepared_HEAD": "93303a02fbec1f40bd1e9c220bd665cabdc9c9b1",
+    "recorder": {
+      "bytes": 9305,
+      "path": "tools/host-lisp/c2_v150_replay_r7_first_red.py",
+      "sha256": "163a262a417915d2f6b71a688ab3d0bb19b8a08abd7fecedd35e8b2c2d896b4b"
+    }
+  },
+  "format": "lisp65-c2.3-v150-link97-post-link-replay-r7-first-red-v1",
+  "frozen_artifacts_after_stop": {
+    "ELF": {
+      "bytes": 623428,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "104f6fc4217fa9d803bfb675cabf46c38deb246cad17502a51e9aadeba95c84c"
+    },
+    "driver_log": {
+      "bytes": 500,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/receipts/wplto-historical-driver.log",
+      "sha256": "f4a4454d6ce8093e1339563442218068f52163ba029fd30a438a855f7e1bc8e1"
+    },
+    "map": {
+      "bytes": 178516,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "983595e360f2d6d3d11a5e944009f25ff492b5a02659431f3d7f7761df9af281"
+    },
+    "product": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f7a9d536e65a7ab89bb2534678f8cdea08fce50d8500a126f452d1525e3c497e"
+    },
+    "wplto_base_result": {
+      "bytes": 4454,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/receipts/wplto-base-result.json",
+      "sha256": "cd51294e5f75f1d33ae74a9875de22ef4ebbf3006ba8722878d838cd7c213440"
+    },
+    "wplto_internal": {
+      "bytes": 52800,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/receipts/wplto-internal.json",
+      "sha256": "064d27992b7d85c44c79214cde4ab885771d8991a80d0aedbc971255afc273b8"
+    }
+  },
+  "mechanism": {
+    "classification": "pre-replacement-stale-content-map-source-authority",
+    "execution_replacement_source": {
+      "bytes": 23535,
+      "path": "tools/host-lisp/c2_lite_v6_boot_crc_abi_successor_link.py",
+      "sha256": "8e46c19dcfd9399d53b36a46180146e0adf337dd0b8582f0a27d323e03779324"
+    },
+    "failure": "content-map authority drift",
+    "recorded_replacement_source": {
+      "bytes": 22553,
+      "path": "tools/host-lisp/c2_lite_v6_boot_crc_abi_successor_link.py",
+      "sha256": "349bf9437e13c582565a88d1e88809d80338c531475debf9c76d633c564a85f3"
+    },
+    "statement": "The r7 replay validated the new ambient and capacity closures, then the pre-existing nine-slice content-map receipt rejected the replacement-gate source changed by the authorized inversion. No semantic content-map row, replacement gate or artifact completion was reached."
+  },
+  "mutations_rejected": [
+    "claim-retry",
+    "claim-replacement",
+    "claim-completion",
+    "erase-consumption"
+  ],
+  "recorded_on": "2026-08-11",
+  "status": "FIRST RED; OWNER-DISPOSITION-REQUIRED; AUTHORIZED-REPLAY-CONSUMED"
+}

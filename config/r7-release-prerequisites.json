@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-r7-release-prerequisites-v1",
+  "version": 1,
+  "status": "closed-ready-for-R7",
+  "items": [
+    {
+      "id": "public-manifest-role-paths",
+      "status": "closed",
+      "finding": "R6 records local ROM and SD-base paths under /home/alex",
+      "exit": "public Ship manifest uses role names instead of home-directory paths while retaining exact SHAs"
+    },
+    {
+      "id": "packed-on-source-commit-time",
+      "status": "closed",
+      "finding": "R6 pins packed_on by contract rather than deriving it from wall clock, but does not yet derive it from the source commit timestamp",
+      "exit": "R7 packer derives packed_on deterministically from the bound source commit timestamp and proves a cross-midnight double pack"
+    }
+  ],
+  "evidence": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/r7/public-manifest-prerequisites-receipt.json",
+    "receipt_sha256": "95a3b216a76e53ced43abcb1ff03b859bfdea2633e23518cd2dc161ff20303e8",
+    "manifest": "tests/bytecode/dialect-v2/evidence/r7/public-manifest-prerequisites.json",
+    "manifest_sha256": "b21df10257621134a1b36b432f54d34475ff3b1ffeaf6935fdb2f7561f91627f"
+  },
+  "G6_effect": "none",
+  "R7_effect": "prerequisites-satisfied-release-promotion-still-required"
+}

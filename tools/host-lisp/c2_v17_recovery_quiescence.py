@@ -251,14 +251,46 @@ def final_gate(elf: Path, plane: Path) -> dict[str, Any]:
     # The claim is zero *added* quiescence state, not identity with an older
     # whole-program allocation. Later candidates may legitimately reclaim or
     # repack unrelated state. Addresses/sections remain LTO placement choices.
-    def state_population(image: ElfTruth) -> set[tuple[str, int]]:
-        return {(row.name, row.bytes) for row in image.symbols
-                if row.section in state_sections and row.bytes > 0}
+    def state_population(image: ElfTruth) -> list[tuple[str, str, int, int]]:
+        return [(row.name, row.section, row.value, row.bytes)
+                for row in image.symbols
+                if row.section in state_sections and row.bytes > 0]
+
+    def allocation_delta(
+            old: list[tuple[str, str, int, int]],
+            current: list[tuple[str, str, int, int]],
+            ) -> tuple[list[tuple[str, int]], list[tuple[str, int]],
+                       list[tuple[str, str, int, int]]]:
+        old_identities = {(name, size) for name, _section, _address, size in old}
+        current_identities = {
+            (name, size) for name, _section, _address, size in current}
+        added_rows = [row for row in current
+                      if (row[0], row[3]) not in old_identities]
+        aliases = []
+        added_allocations = []
+        for row in added_rows:
+            name, section, address, size = row
+            peers = [peer for peer in current if peer[0] != name
+                     and peer[1:] == (section, address, size)
+                     and (peer[0], peer[3]) in old_identities]
+            if peers:
+                aliases.append((name, peers[0][0], address, size))
+            else:
+                added_allocations.append((name, size))
+        removed = sorted(old_identities - current_identities)
+        return sorted(added_allocations), removed, sorted(aliases)
 
     old_population = state_population(baseline)
     population = state_population(truth)
-    added_state = sorted(population - old_population)
-    removed_state = sorted(old_population - population)
+    added_state, removed_state, aliases = allocation_delta(
+        old_population, population)
+    synthetic_old = [("owner", ".bss", 0x1000, 8)]
+    require(allocation_delta(synthetic_old, synthetic_old + [
+                ("alias", ".bss", 0x1000, 8)])[0] == []
+            and allocation_delta(synthetic_old, synthetic_old + [
+                ("allocation", ".bss", 0x1008, 8)])[0]
+                == [("allocation", 8)],
+            "state owner/alias sharp-direction selftest red")
     require(not added_state and all(state[name] <= old_state[name]
                                     for name in state_sections),
             "quiescence feature allocated product state")
@@ -296,12 +328,17 @@ def final_gate(elf: Path, plane: Path) -> dict[str, Any]:
         "control_flow": calls,
         "state_bytes": {"candidate": state, "baseline": old_state,
                         "added_named_allocations": added_state,
+                        "zero_byte_aliases": aliases,
                         "removed_named_allocations": removed_state,
                         "new_state_bytes": 0,
                         "whole_program_delta": {
                             name: state[name] - old_state[name]
                             for name in state_sections},
-                        "authority": "candidate-minus-baseline named allocations"},
+                        "authority": ("candidate owner addresses; an alias is "
+                                      "zero-byte only when a predecessor identity "
+                                      "owns the same current interval"),
+                        "mutations_rejected": {
+                            "alias-with-own-address": True}},
         "ordinary_text": {
             "start": text_section.address,
             "end_exclusive": text_section.address + text_section.bytes,

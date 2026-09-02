@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 from copy import deepcopy
-from datetime import date
 import hashlib
 import json
 from pathlib import Path
@@ -19,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 
 from elf_truth import ElfTruth  # noqa: E402
+from evidence_era import stable_recorded_on  # noqa: E402
 import c2_product_substitution_link as PRODUCT  # noqa: E402
 import c2_stack_overlay_ownership as OWN  # noqa: E402
 
@@ -431,7 +431,7 @@ def mutation_selftest(facts: dict[str, Any]) -> dict[str, str]:
     return rejected
 
 
-def build_receipt() -> dict[str, Any]:
+def build_receipt(output_receipt: Path | None = None) -> dict[str, Any]:
     contract, map_contract, abi_successor = effective_contract()
     require(
         map_contract.get("format") == "lisp65-c2-mapped-far-map-contract-v2"
@@ -599,7 +599,8 @@ def build_receipt() -> dict[str, Any]:
         + equivalence["execution_witness"]["total"])
     return {
         "format": "lisp65-c2-mapped-far-service-ownership-gate-v1",
-        "recorded_on": date.today().isoformat(),
+        "recorded_on": stable_recorded_on(
+            output_receipt or ROOT / "build/c2-mapped-far-service-receipt.json"),
         "status": "PASS",
         "claim": (
             "Host/source/final-micro-ELF architecture ownership only; no "
@@ -648,7 +649,7 @@ def main() -> int:
     parser.add_argument("--receipt", type=Path)
     args = parser.parse_args()
     try:
-        receipt = build_receipt()
+        receipt = build_receipt(args.receipt)
         if args.receipt:
             args.receipt.parent.mkdir(parents=True, exist_ok=True)
             args.receipt.write_bytes(canonical(receipt))

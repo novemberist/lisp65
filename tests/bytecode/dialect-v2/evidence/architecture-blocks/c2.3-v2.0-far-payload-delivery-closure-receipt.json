@@ -1,0 +1,252 @@
+{
+  "attempt_accounting": {
+    "additional_WPLTO_runs": 0,
+    "additional_product_cards": 0,
+    "additional_product_links": 0,
+    "artifact_completions": 0,
+    "cold_stager_compiler_runs": 1,
+    "hardware_runs": 0,
+    "library_builds": 0,
+    "media_readbacks": 1,
+    "shared_system_builds": 1
+  },
+  "authority": {
+    "attribution": {
+      "bytes": 8676,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-mapped-far-return-attribution-receipt.json",
+      "sha256": "95bfbb6e54b56130cbdb9be71f1e0818a10628316617a02443df4b9a46192f03"
+    },
+    "frozen_linked_ELF": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-crc-carveout-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+    },
+    "frozen_product_manifest": {
+      "bytes": 23750,
+      "path": "build/c2.3/v2.0-crc-carveout-card/canonical-product-manifest.json",
+      "sha256": "4d1352efeb8bdc898f0793df752129b6c6d87bcd3fe16a9dfbbc5801b6f00c8f"
+    },
+    "owner_approval": {
+      "authority": "git-blob",
+      "bytes": 38140,
+      "commit": "6f3831d5cd97b6ba64e9ceecf40d7ab5bb152ae9",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "32aa7ddffd90ff0f3ac168553f01a5501ecdaf74ebac592871d37e85cfd1eb28"
+    },
+    "predecessor_media": {
+      "bytes": 6123,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-crc-carveout-media-liveness-closure-receipt.json",
+      "sha256": "2991ca54bffd4a429157fbf178a5bd8f673c721fdde156698332debf00e32f2a"
+    },
+    "producer": {
+      "bytes": 27540,
+      "path": "tools/host-lisp/c2_v20_far_payload_delivery.py",
+      "sha256": "a40c6ce59dd81e932fcbc9a5acf6712a217d28721b01c2730aff9472ddc8ec3f"
+    }
+  },
+  "claim_limit": "Media-only delivery closure. No relink, WPLTO, card, artifact completion or hardware run occurred. D1 is authorized but has not run; D2-D5 remain closed.",
+  "extent_identity_mutations_rejected": [
+    "truncated-payload-extent",
+    "gap-before-payload",
+    "payload-byte-differs-from-linked-ELF"
+  ],
+  "format": "lisp65-c2.3-v20-far-payload-delivery-closure-v1",
+  "hardware_handoff": {
+    "D1_repeat_authorized": true,
+    "D2_D5_open": false,
+    "conditions": {
+      "byteidentical_media_readback": true,
+      "extent_and_identity_gate": true,
+      "regular_pipeline_delivery": true
+    },
+    "session": {
+      "bytes": 2811,
+      "path": "config/c2-v150-v20-far-payload-device-session.json",
+      "sha256": "a2b1665094b7a1df5634dfb5b25d456a04929c38234dcae4bebb5822c33ad29a"
+    }
+  },
+  "library": {
+    "D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-crc-carveout-media/library/lisp65-library.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "readback": "predecessor-bound",
+    "rebuilt": false
+  },
+  "materialization": {
+    "delivered_bytes": 48156,
+    "delivered_sha256": "94479944eb6f8ece405be2902a424961b72e1936534ecd6acb0e8a2287a9c4ec",
+    "gate": {
+      "delivered_end_exclusive": "0x0002bc1c",
+      "destination": "0x00020000",
+      "gaps": 0,
+      "identity_mismatches": 0,
+      "media_role": "c2-bank2-static-code-plane",
+      "payload_count": 1,
+      "payloads": [
+        {
+          "bytes": 874,
+          "end_exclusive": 179228,
+          "name": ".lisp65_c2_mapped_far_service",
+          "sha256": "2e948761a4c7f012687a6ad4519ae10d52ee87e14a10f8025837078f0c69c096",
+          "start": 178354
+        }
+      ],
+      "result": "passed-contiguous-extent-and-linked-ELF-identity"
+    },
+    "padding_start": "0x0002b3db",
+    "payload_bytes": 874,
+    "payload_start": "0x0002b8b2",
+    "source_bank2": {
+      "bytes": 46043,
+      "path": "build/c2.3/v2.0-crc-carveout-card/final/fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin",
+      "role": "c2-bank2-static-code-plane",
+      "sha256": "a241a8c23a5cc8d7f7525ed2f1f522ca41f103c28928a2636a58c1972ba7e7de"
+    },
+    "source_bytes_preserved": 46043,
+    "zero_padding_bytes": 1239
+  },
+  "mutations_rejected": [
+    "claim-card",
+    "claim-link",
+    "promote-predecessor",
+    "shrink-delivered-extent",
+    "hide-identity-mismatch",
+    "omit-packed-gate",
+    "skip-readback",
+    "rebuild-library",
+    "cross-world",
+    "open-D2-D5"
+  ],
+  "packed_artifact_gate_registry": {
+    "complete": true,
+    "executed": [
+      "autoboot.c65.elf",
+      "lisp65-product.d81/CODE.BIN"
+    ],
+    "registered": [
+      "autoboot.c65.elf",
+      "lisp65-product.d81/CODE.BIN"
+    ],
+    "results": {
+      "autoboot.c65.elf": {
+        "elf": {
+          "bytes": 14128,
+          "path": "build/c2.3/v2.0-far-payload-delivery/shared-system/autoboot.c65.elf",
+          "sha256": "56bb8a66fa0fefb4617954a7415cfa64320631ee408cf786578d745a05d4c471"
+        },
+        "first_io_enable_store": "0x215f",
+        "main_vma": "0x20b3",
+        "oracle": "linked-main execution prefix, not source or micro-fixture",
+        "result": "passed-actual-linked-stager-prefix",
+        "screen_bytes_hex": "4c49535036353a2053544147494e47204d4544494120202020202020",
+        "screen_row": 8
+      },
+      "lisp65-product.d81/CODE.BIN": {
+        "delivered_end_exclusive": "0x0002bc1c",
+        "destination": "0x00020000",
+        "gaps": 0,
+        "identity_mismatches": 0,
+        "media_role": "c2-bank2-static-code-plane",
+        "packed_D81": {
+          "bytes": 819200,
+          "path": "build/c2.3/v2.0-far-payload-delivery/shared-system/lisp65-product.d81",
+          "sha256": "d2ab92b14140caab5f3ca87b51fa8e4ab65183b387d6fe76ee4ae1588fcd1130"
+        },
+        "packed_member": "CODE.BIN",
+        "packed_member_sha256": "94479944eb6f8ece405be2902a424961b72e1936534ecd6acb0e8a2287a9c4ec",
+        "payload_count": 1,
+        "payloads": [
+          {
+            "bytes": 874,
+            "end_exclusive": 179228,
+            "name": ".lisp65_c2_mapped_far_service",
+            "sha256": "2e948761a4c7f012687a6ad4519ae10d52ee87e14a10f8025837078f0c69c096",
+            "start": 178354
+          }
+        ],
+        "result": "passed-contiguous-extent-and-linked-ELF-identity"
+      }
+    }
+  },
+  "pair_identity": {
+    "index_rows": 4,
+    "library_build_ids": {
+      "defstruct": "0x0401e53e",
+      "inspect": "0x0401e53e",
+      "place": "0x0401e53e",
+      "string-extra": "0x0401e53e"
+    },
+    "mounted_C2D_sha256": "3010ec3807409338d119c57444c960d67f306a5b978ac346d5ed7ab119beee29",
+    "product_build_id": "0x0401e53e",
+    "result": "same-world-pair",
+    "row_names": [
+      "string-extra",
+      "inspect",
+      "place",
+      "defstruct"
+    ]
+  },
+  "predecessor_retirement": {
+    "current_authority": false,
+    "reason": "Bank-2 role ended before the linked far-service LMA"
+  },
+  "producer_gate": {
+    "WPLTO_runs": 0,
+    "artifact_completions": 0,
+    "library_media_builds": 0,
+    "product_cards": 0,
+    "product_links": 0,
+    "registered_packed_artifact_gates": [
+      "autoboot.c65.elf",
+      "lisp65-product.d81/CODE.BIN"
+    ],
+    "result": "passed-media-only-regular-pipeline-delivery",
+    "shared_media_builds": 1
+  },
+  "producer_mutations_rejected": [
+    "omit-payload-materialization",
+    "drop-stager-opt-in",
+    "omit-packed-gates",
+    "reenter-completion",
+    "rebuild-library"
+  ],
+  "recorded_on": "2026-08-12",
+  "shared_system": {
+    "artifact_count": 19,
+    "artifact_set_sha256": "048f244f2a60c4e8b1f2defd2428865b2c16f6f61718a7459df3e59a7fe6b446",
+    "autoboot": {
+      "bytes": 6227,
+      "path": "build/c2.3/v2.0-far-payload-delivery/shared-system/autoboot.c65",
+      "sha256": "9b11b47f6faae193bbaf74fb9ba0dc24cb22c35f67b2c0d415255e4b10114b7b"
+    },
+    "autoboot_ELF": {
+      "bytes": 14128,
+      "path": "build/c2.3/v2.0-far-payload-delivery/shared-system/autoboot.c65.elf",
+      "sha256": "56bb8a66fa0fefb4617954a7415cfa64320631ee408cf786578d745a05d4c471"
+    },
+    "boot_id": {
+      "bytes": 432,
+      "path": "build/c2.3/v2.0-far-payload-delivery/shared-system/boot.id",
+      "sha256": "21fa486d2bebd3db9b235a74d6b80e9e370fd26c598c9bde1120fd98f682c9a3"
+    },
+    "manifest": {
+      "bytes": 16905,
+      "path": "build/c2.3/v2.0-far-payload-delivery/shared-system/candidate-manifest.json",
+      "sha256": "4a3ed3ce78ae108dc460c1e1a1d5a30c115a79e5172f43093d9f0ecb17ef2193"
+    },
+    "product_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-far-payload-delivery/shared-system/lisp65-product.d81",
+      "sha256": "d2ab92b14140caab5f3ca87b51fa8e4ab65183b387d6fe76ee4ae1588fcd1130"
+    },
+    "readback": "byteidentical",
+    "work_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-far-payload-delivery/shared-system/lisp65-work.d81",
+      "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3"
+    }
+  },
+  "status": "V20-MAPPED-FAR-PAYLOAD-DELIVERED; D1-REPEAT-AUTHORIZED"
+}

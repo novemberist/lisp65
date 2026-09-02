@@ -1,0 +1,245 @@
+{
+  "attribution": {
+    "disproved": [
+      "failure before the first ACTIVE poll",
+      "success of the first ACTIVE poll followed by a later header-phase failure",
+      "a static producer/target C2J seal divergence at first entry"
+    ],
+    "next_step": "host/ELF dataflow attribution inside c2_completion_poll; no further hardware or product change before a concrete sub-path is named",
+    "not_yet_proven": [
+      "whether the false return originates in the Bank-5 target read, the CRC comparison, or timeout/control flow",
+      "whether the observed buffer ever equalled the landed C2J during the failed poll"
+    ],
+    "proven": [
+      "the exact nonpromotable carrier was uploaded byte-identically",
+      "the first Slot-39 entry was ACTIVE/PREPARED with matching producer and target C2J seals before the poll",
+      "the first ACTIVE completion poll returned false; its success branch was not taken",
+      "rollback completed fail-closed to a usable REPL",
+      "the postmortem rollback C2J remains byte-stable and matches its producer seal while IRQ frames continue"
+    ]
+  },
+  "authority": {
+    "candidate_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-slot39-active-return-hold-NONPROMOTABLE/runtime-overlays-session-link64-slot39-active-return-hold.bin",
+      "sha256": "69d1d3c33afcc32452d90962d09b56407230d97d1834d064df4568c1ee4400d6"
+    },
+    "deployed_carrier_readback": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/deploy-readback-runtime-overlays-session-link64-slot39-active-return-hold.bin",
+      "sha256": "69d1d3c33afcc32452d90962d09b56407230d97d1834d064df4568c1ee4400d6"
+    },
+    "deployment": {
+      "bytes": 3830,
+      "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/deployment.json",
+      "sha256": "2e44dea03ec3fa96d657d4bb1559dbdfdccf9e1c5c601a8495df3a3d0a3f0cd2"
+    },
+    "diagnostic_patch": {
+      "bytes": 3710,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-active-return-hold-nonpromotable-receipt.json",
+      "sha256": "64d78d9b3ce73bf9ffa08f0033acadbdbb23d95aaaa87a9d396a4a2f5d2c06c5"
+    },
+    "entry_state_receipt": {
+      "bytes": 8701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-entry-hold-hardware-receipt.json",
+      "sha256": "6c783186645d1ee1fde0c15ad88cc0bb59d610cc572a054c9b5e43f38bd901c0"
+    },
+    "hardware_driver": {
+      "bytes": 4583,
+      "path": "scripts/c2-link64-slot39-active-return-hold-hw.sh",
+      "sha256": "14431a99d0869ad49d388aab3d7231849b4b74bcaee78ef993d3851d990e74da"
+    },
+    "receipt_driver": {
+      "bytes": 10549,
+      "path": "tools/host-lisp/c2_link64_slot39_active_return_first_red.py",
+      "sha256": "c72c8093d3621c91fa027c71fc89b0d0b4b481df4aea5713b12fb4135b556d4a"
+    }
+  },
+  "claim_limit": "Binary first-poll return attribution only. C1 remains OPEN; no matrix-gate, acceptance-chain, promotion or release claim.",
+  "diagnostic_lifecycle": {
+    "eligible_for_promotion": false,
+    "identity": "69d1d3c33afcc32452d90962d09b56407230d97d1834d064df4568c1ee4400d6",
+    "state": "discarded-after-capture"
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "diagnostic_hardware_runs": 1,
+    "latency_attempts_consumed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-Link64-slot39-ACTIVE-return-hardware-first-red-v1",
+  "hardware_First_Red": {
+    "binary_discriminator": {
+      "answer": "first ACTIVE c2_completion_poll returned false",
+      "failure_outcome": "bad bytecode and REPL return",
+      "observed_outcome": "bad bytecode and REPL return",
+      "patched_instruction": "BNE $c3e9",
+      "success_outcome": "self-loop/hang"
+    },
+    "postmortem": {
+      "c2_ready": 0,
+      "completion_mode": "0xa3 (ROLLBACK)",
+      "frame_progressed_across_captures": true,
+      "journal_result": "2 (PREPARED)",
+      "producer_C2J_seal": "0x2801",
+      "seal_matches": true,
+      "target_C2J_crc16": "0x2801"
+    },
+    "screen": {
+      "bytes": 3880,
+      "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/screen.png",
+      "sha256": "89d662a044ab47763583165687ca5366e42787f64e7c7c5896f43db043fccc92"
+    },
+    "screen_status": "*** vm: bad bytecode",
+    "submitted_form": "(defun %c1e () (quote t))",
+    "usable_REPL_returned": true
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "stable_witnesses": {
+    "c2j": {
+      "byteidentical_across_three": true,
+      "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+    },
+    "completion-record": {
+      "byteidentical_across_three": true,
+      "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+    },
+    "runtime-zp": {
+      "byteidentical_across_three": true,
+      "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+    },
+    "trace": {
+      "byteidentical_across_three": true,
+      "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+    }
+  },
+  "status": "FIRST RED: first ACTIVE completion poll returned false",
+  "time_separated_postmortem_captures": [
+    {
+      "c2_ready": 0,
+      "captured_at_utc": "2026-07-26T12:21:18.505472Z",
+      "completion_mode": "0xa3",
+      "current_frame": "0x13d4",
+      "frame": {
+        "address": "0x0000ff83",
+        "bytes": 5,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-1/frame.bin",
+        "sha256": "18307b7bee41d4e5d9eddc22b3919099850d435220a02c36cc4abd76ce548d2f"
+      },
+      "index": 1,
+      "journal_result": 2,
+      "phase_trace": {
+        "address": "0x0000c1f0",
+        "bytes": 8,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-1/trace.bin",
+        "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+      },
+      "producer_seal": "0x2801",
+      "record": {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-1/completion-record.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      },
+      "runtime_ZP": {
+        "address": "0x00000070",
+        "bytes": 48,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-1/runtime-zp.bin",
+        "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+      },
+      "seal_matches": true,
+      "target_C2J": {
+        "address": "0x0005c640",
+        "bytes": 64,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-1/c2j.bin",
+        "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+      },
+      "target_C2J_crc16": "0x2801"
+    },
+    {
+      "c2_ready": 0,
+      "captured_at_utc": "2026-07-26T12:21:20.353652Z",
+      "completion_mode": "0xa3",
+      "current_frame": "0x1430",
+      "frame": {
+        "address": "0x0000ff83",
+        "bytes": 5,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-2/frame.bin",
+        "sha256": "847875e172bc499e16e38fcc6db64422b5825a3038a15c1277791fb8d50ef6f1"
+      },
+      "index": 2,
+      "journal_result": 2,
+      "phase_trace": {
+        "address": "0x0000c1f0",
+        "bytes": 8,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-2/trace.bin",
+        "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+      },
+      "producer_seal": "0x2801",
+      "record": {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-2/completion-record.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      },
+      "runtime_ZP": {
+        "address": "0x00000070",
+        "bytes": 48,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-2/runtime-zp.bin",
+        "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+      },
+      "seal_matches": true,
+      "target_C2J": {
+        "address": "0x0005c640",
+        "bytes": 64,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-2/c2j.bin",
+        "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+      },
+      "target_C2J_crc16": "0x2801"
+    },
+    {
+      "c2_ready": 0,
+      "captured_at_utc": "2026-07-26T12:21:25.202123Z",
+      "completion_mode": "0xa3",
+      "current_frame": "0x151e",
+      "frame": {
+        "address": "0x0000ff83",
+        "bytes": 5,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-3/frame.bin",
+        "sha256": "75a5edc936c4c561d2694d2cce33855468abc588ed140f8a8c4c1aa62ead62c3"
+      },
+      "index": 3,
+      "journal_result": 2,
+      "phase_trace": {
+        "address": "0x0000c1f0",
+        "bytes": 8,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-3/trace.bin",
+        "sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+      },
+      "producer_seal": "0x2801",
+      "record": {
+        "address": "0x0000c17c",
+        "bytes": 32,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-3/completion-record.bin",
+        "sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf"
+      },
+      "runtime_ZP": {
+        "address": "0x00000070",
+        "bytes": 48,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-3/runtime-zp.bin",
+        "sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47"
+      },
+      "seal_matches": true,
+      "target_C2J": {
+        "address": "0x0005c640",
+        "bytes": 64,
+        "path": "build/c2.2/hardware-link64-slot39-active-return-hold-NONPROMOTABLE/returned-first-red/capture-3/c2j.bin",
+        "sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225"
+      },
+      "target_C2J_crc16": "0x2801"
+    }
+  ]
+}

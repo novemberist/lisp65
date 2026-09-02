@@ -1,0 +1,159 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "acceptance_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "scope_runs": 0
+  },
+  "authority": {
+    "budget": {
+      "WPLTO_runs": 1,
+      "device_contacts": 0,
+      "media_builds": 0,
+      "product_links": 1
+    },
+    "decision": {
+      "bytes": 1038,
+      "path": "config/c2-v190-native-prompt-editor-card.json",
+      "sha256": "d4ed919067772e2b3d04cdecf93215edde147dc354039b714e10ce375f20b7aa"
+    },
+    "predecessor_pair": {
+      "ELF_sha256": "0c3282c9625e47f9549833c9f0382a2ba26fc967f8dafc473d382c47c80fee82",
+      "PRG_sha256": "13eb21566cc89e954bc50d5bb62b56aa8879c728cbcf845a221514192da177f0"
+    },
+    "pricing": {
+      "bytes": 17227,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-pricing-receipt.json",
+      "sha256": "a44f76bde4a9d5fb302d2a3f191529064129e6b2991f8328415afea82492dd4d"
+    },
+    "r2_frozen_unqualified_pair": {
+      "ELF_sha256": "0c0a8b22e2df384801df1aea1bfebed31865690497de344415a0a2d1dd1ff7f9",
+      "PRG_sha256": "361afb888ee2d7124c24ea3fbafd5a70d9f4be78e28c180977ee7ddcfee3e4bc"
+    },
+    "r3_decision": {
+      "bytes": 1275,
+      "path": "config/c2-v190-native-prompt-editor-card-r3.json",
+      "sha256": "605d8d77b09e052bfd9fa706afd0d3710c3c32c7749704cc3fbf4160ea12a82c"
+    },
+    "r3_link_red_attribution": {
+      "bytes": 58833,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r3-link-red-attribution.json",
+      "sha256": "ef974a27081c61a00467c0c3f56a81c2d8e20a705ffead8457dc36d41365f610"
+    },
+    "r4_decision": {
+      "bytes": 1294,
+      "path": "config/c2-v190-native-prompt-editor-card-r4.json",
+      "sha256": "372b0c378ab5883971ae965baf3023cfa7aff5867baa27512961ee26a04eb457"
+    },
+    "r4_link_red_attribution": {
+      "bytes": 65663,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r4-link-red-attribution.json",
+      "sha256": "8891b7e515be0cf7e19481b458da5a65bb1ac0d6a0d97dcdba9e6872d7603887"
+    },
+    "r5_decision": {
+      "bytes": 1551,
+      "path": "config/c2-v190-native-prompt-editor-card-r5.json",
+      "sha256": "b21a749402c4145523e3a86ede27c5e436616316f0b751a23213b255389a5c83"
+    },
+    "r5_placement_price": {
+      "bytes": 7430,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r5-placement-pricing.json",
+      "sha256": "65dec8cd0ccffee56d8d4aacfc6cb120e7ed7feb544c4ebaf0d4f7270b3ea58c"
+    },
+    "selected_variant": "B-light"
+  },
+  "format": "lisp65-c2-v190-native-prompt-editor-card-r5-v1-preflight",
+  "inherited_B_light_preflight": {
+    "bytes": 21965,
+    "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/preflight.json",
+    "sha256": "f0e3709f6fa42285484accd1b1742621e66a619c18a36aad87681dd29d2cd664"
+  },
+  "inherited_boundary_preflight": {
+    "bytes": 6532,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r4-preflight.json",
+    "sha256": "756f72811ee0a2ba305b52dbfc15b560422d334480e544c6ea4e5b599db4bc8f"
+  },
+  "next": "commit this preflight, then spend exactly one r5 WPLTO/link",
+  "placement_source": {
+    "forbidden_pins": [
+      "ADDR(.lisp65_c2_mapped_far_facade) == 0xb3b0",
+      "ADDR(.text) + SIZEOF(.text) <= 0xb3b0"
+    ],
+    "mutations_rejected": {
+      "move-vma-without-lma": "r5 derived facade linker authority absent",
+      "remove-final-text-floor": "r5 derived facade linker authority absent",
+      "remove-tail-owner-bound": "r5 derived facade linker authority absent",
+      "restore-fixed-b3b0": "r5 derived facade linker authority absent"
+    },
+    "relations": [
+      ".lisp65_c2_mapped_far_facade MAX(0xb3b0, ADDR(.text) + SIZEOF(.text) + 32) : AT((MAX(0xb3b0, ADDR(.text) + SIZEOF(.text) + 32)",
+      "ADDR(.lisp65_c2_mapped_far_facade) == MAX(0xb3b0, ADDR(.text) + SIZEOF(.text) + 32)",
+      "ADDR(.lisp65_c2_mapped_far_facade) -\n            (ADDR(.text) + SIZEOF(.text)) >= 32",
+      "LOADADDR(.lisp65_c2_mapped_far_facade) -\n            ADDR(.lisp65_c2_mapped_far_facade) ==\n                __lisp65_c2_mapped_shared_offset",
+      "SIZEOF(.lisp65_c2_mapped_far_facade) == 98",
+      "SIZEOF(.lisp65_c2_mapped_far_facade) <= 0xb4a3"
+    ],
+    "source_sha256": "c5ac28e97f478eee33e8fefd041d3a3bebea76165f2fc1d88681c5899dfee7ce",
+    "status": "PASS: R5 DERIVED FACADE AUTHORITY MATERIALIZED"
+  },
+  "priced_final_world": {
+    "derived_lma": 209884,
+    "derived_vma": 46044,
+    "end_lma_exclusive": 209982,
+    "end_vma_exclusive": 46142,
+    "ordinary_text_reserve_bytes": 32,
+    "tail_reserve_bytes": 101,
+    "vma_and_lma_shift_bytes": 44
+  },
+  "real_stdlib_header_consumer": {
+    "materialized": {
+      "actual_force_include_flags": [
+        "-include",
+        "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+        "-include",
+        "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/real-stdlib-consumer-probe.stdlib-input-assert.h"
+      ],
+      "bound_header": {
+        "bytes": 3401,
+        "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+        "sha256": "79f177db731fdd0e26d28b22471d1204e2521bae115320461b0e5524433e43cf"
+      },
+      "compile_time_assertion": {
+        "bytes": 236,
+        "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/real-stdlib-consumer-probe.stdlib-input-assert.h",
+        "sha256": "8b1b70a28a8a706d617acb9a67218fdf412bb62d639c7ff7cc8d09270959d812"
+      },
+      "consumed_value": 239,
+      "consumer": "c2_product_substitution_link.compile_link",
+      "force_include_order": [
+        "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+        "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/real-stdlib-consumer-probe.stdlib-input-assert.h"
+      ],
+      "format": "lisp65-real-stdlib-input-consumption-v1",
+      "historical_same_basename_accepted": false,
+      "macro": "LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY",
+      "materialized_header": {
+        "bytes": 3401,
+        "path": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.h",
+        "sha256": "79f177db731fdd0e26d28b22471d1204e2521bae115320461b0e5524433e43cf"
+      },
+      "materialized_value": 239,
+      "status": "passed-bound-candidate-stdlib-header-consumed",
+      "target": "build/c2.3/v1.9-native-prompt-editor-card-r1-preflight/real-stdlib-consumer-probe.prg"
+    },
+    "mutations_rejected": {
+      "candidate-path-historical-banner-value": "materialized stdlib header path/value diverged from candidate",
+      "historical-header-path": "bound candidate stdlib header escaped the real compiler flags"
+    },
+    "native_entry_proven_by_exact_header_binding": true,
+    "ordinals": {
+      "native_read_line": 395,
+      "repl_banner": 239
+    },
+    "status": "PASS: REAL COMPILER CONSUMES CANDIDATE STDLIB HEADER"
+  },
+  "recorded_on": "2026-08-29",
+  "status": "PASS: R5 DERIVED FACADE ARMED 0/1"
+}

@@ -1,0 +1,209 @@
+{
+  "authorities": {
+    "MEGA65_core_RTL": {
+      "bytes": 517477,
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "MEGA65_user_guide": {
+      "bytes": 44793,
+      "path": "build/upstream-verification/mega65-user-guide/appendix-45gs02-registers.tex",
+      "sha256": "fbf997ec136de3b8d2cecb0f2f19497f2b8a26da24c68e64dd5576cf887ec121"
+    },
+    "candidate_ELF": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+    },
+    "chipset_reference_PDF": {
+      "bytes": 5243367,
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220"
+    },
+    "commission": {
+      "authority": "git-blob",
+      "bytes": 42079,
+      "commit": "12fed5ed895c2f6e4847259659724b56338b3f3c",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "820918d010b6e228bd9316bbaeffa12214b8f8ba19c5114f9972614a997478fa"
+    },
+    "device_result": {
+      "bytes": 7410,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-far-payload-device-receipt.json",
+      "sha256": "c295b5445b50dafbd50d62f52c53c22ef0d6dc9dfd99d6c301b6a9b074155939"
+    },
+    "driver": {
+      "bytes": 22064,
+      "path": "tools/host-lisp/c2_v20_mapped_far_dispatch_attribution.py",
+      "sha256": "5e88c98e5637158cd0302b2e5609949aac8d464a85eccd292f57df9f1af0b422"
+    },
+    "facade_source": {
+      "bytes": 1307,
+      "path": "src/c2_mapped_far_service.s",
+      "sha256": "237ba17171877dea8d15347a295f2b6a112e394c64565b01d45274e39b03ac02"
+    },
+    "installation_result": {
+      "bytes": 6164,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-far-payload-installation-receipt.json",
+      "sha256": "d408268817e78a58d865c741964449a380e626e1453f76474ba2dcaa83d48ff6"
+    },
+    "opcode_table": {
+      "bytes": 3628,
+      "path": "build/upstream-verification/mega65-user-guide/instruction_sets/4510.opc",
+      "sha256": "20ab38fd9ebbaba020d99f1a444661c310a3d621a61dab55d0122cc4335a2449"
+    },
+    "ownership_contract": {
+      "bytes": 15670,
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    },
+    "upstream_commits": {
+      "core": "a9158930665763c592d004c895d52eff4a9eefc3",
+      "user_guide": "2d0c444a7f086fcc6c4aed9bbaf5ccc17a19ef60"
+    }
+  },
+  "captured_and_linked_tuple": {
+    "ELF_register_tuple": {
+      "A": "0x80",
+      "X": "0x24",
+      "Y": "0x00",
+      "Z": "0x80"
+    },
+    "monitor_field": "MAPL=0x2480",
+    "note": "the monitor field is bound as observed; normative bit meaning comes from the delivered A/X operands and primary MAP sources"
+  },
+  "claim_limit": "Host/ELF attribution of the delivered tuple and captured state only. No source fix, card, device contact, D2-D5, product-wide correctness, release, or complete unintended dynamic trace claim.",
+  "disposition": {
+    "D2_D5_open": false,
+    "card_authorized": false,
+    "device_contact_authorized": false,
+    "fix_authorized": false
+  },
+  "first_call_model": {
+    "actual_target_low20": "0x079DC",
+    "caller_BRK_low20": "0x4B185",
+    "caller_expected_low20": "0x03185",
+    "captured_BRK_consistency": "the active wrong map replaces nameoff_get's linked STA opcode at $3185; B=1 and continuation $3187 are the resulting software-BRK signature",
+    "descriptor_all_zero_consistency": "the service entry was skipped, so no descriptor initializer ran",
+    "expected_target_low20": "0x2B9DC",
+    "first_fetch_contradiction": "expected service 0x85; fetched .text 0xEB",
+    "model_boundary": "the first wrong fetch and both translated/untranslated targets are exact; the intervening unintended instruction trace is not claimed or needed for the mechanism",
+    "service_VMA": "0x79DC",
+    "service_entry_reached": false
+  },
+  "format": "lisp65-c2.3-v20-mapped-far-dispatch-attribution-v1",
+  "linked_dispatch": {
+    "BRK_site": {
+      "linked_nameoff_bytes": "8504a001",
+      "linked_opcode": "0x85 (STA zp)",
+      "logical_opcode_address": "0x3185",
+      "stacked_continuation": "0x3187"
+    },
+    "caller_chain": [
+      "nameoff_get: JSR $B3E4 at $3180",
+      "c2_dma_read_or_abort: JSR $B3B0 at $B405",
+      "vm_code_load_converged: JSR enter; JSR $79DC; JMP leave"
+    ],
+    "facade": {
+      "VMA": "0xB3B0",
+      "bytes": "20c2b320dc794cd5b3",
+      "sequence": [
+        "JSR $B3C2",
+        "JSR $79DC",
+        "JMP $B3D5"
+      ]
+    },
+    "first_far_entry": {
+      "first_wrong_opcode": "0xEB (ROW $A67A)",
+      "intended_physical": "0x0002B9DC",
+      "logical_VMA": "0x79DC",
+      "ordinary_bytes": "eb7aa619a51820cdb5aad0034cfc7aa6",
+      "ordinary_text_owner": "vm_callprim",
+      "service_bytes": "850a860ba504850ca505850da506850e"
+    },
+    "map_trampoline": {
+      "VMA": "0xB3C2",
+      "bytes": "48da5aa980a224a000a3805ceaa3007afa6860",
+      "register_sequence": [
+        "LDA #$80",
+        "LDX #$24",
+        "LDY #$00",
+        "LDZ #$80",
+        "MAP",
+        "EOM"
+      ]
+    }
+  },
+  "mapping_decode": {
+    "actual": {
+      "A": "0x80",
+      "X": "0x24",
+      "block_mask": "0x2",
+      "mapped_CPU_ranges": [
+        "0x2000-0x3FFF"
+      ],
+      "mapped_low_half_blocks": [
+        1
+      ],
+      "offset_units_256": "0x480",
+      "physical_offset": "0x48000"
+    },
+    "actual_effect": "only block 1 ($2000-$3FFF) is mapped by +$48000; block 3 ($6000-$7FFF), containing the far-service VMA, is not mapped",
+    "contract_error": "the contract transposed the A/X responsibilities: it treated A's upper nibble as the mask and X as offset bits 12..19",
+    "correct_low_tuple": {
+      "A": "0x40",
+      "X": "0x82"
+    },
+    "intended": {
+      "A": "0x40",
+      "X": "0x82",
+      "block_mask": "0x8",
+      "mapped_CPU_ranges": [
+        "0x6000-0x7FFF"
+      ],
+      "mapped_low_half_blocks": [
+        3
+      ],
+      "offset_units_256": "0x240",
+      "physical_offset": "0x24000"
+    },
+    "intended_relation": "0x6000 + 0x24000 = 0x0002A000"
+  },
+  "mechanism": "MAPPED-FAR-LOW-HALF-MAP-TUPLE-TRANSPOSED",
+  "mutations_rejected": {
+    "authorize-contact": "attribution widened into implementation or contact",
+    "authorize-fix": "attribution widened into implementation or contact",
+    "claim-full-dynamic-trace": "first-call model or boundary drift",
+    "claim-service-entry": "first-call model or boundary drift",
+    "decode-block3": "MAP decode or tuple diagnosis drift",
+    "decode-offset-24000": "MAP decode or tuple diagnosis drift",
+    "erase-primary-RTL": "primary or candidate authority drift",
+    "erase-supersession": "claim limit or supersession drift",
+    "leave-caller-unmapped": "first-call model or boundary drift",
+    "map-first-call-to-service": "first-call model or boundary drift",
+    "open-D2-D5": "attribution widened into implementation or contact",
+    "preserve-transposed-tuple": "MAP decode or tuple diagnosis drift",
+    "rename-wrong-owner": "linked dispatch identity drift",
+    "replace-linked-trampoline": "linked dispatch identity drift"
+  },
+  "next": "owner disposition over correction of the low-half tuple to A=$40, X=$82, with a linked-image MAP decode/pairing gate",
+  "primary_MAP_semantics": {
+    "address_resolution": "selected block: inherited MB-low prefix plus low-20 offset+logical address; unselected block: ordinary logical address",
+    "block_index": "CPU address bits 14..13",
+    "normative_decode": "low offset = ((X & 0x0f) << 16) | (A << 8); low block mask = X >> 4; mask bit n selects CPU block n",
+    "opcode_0xEB": "ROW $nnnn"
+  },
+  "recorded_on": "2026-08-13",
+  "root_cause_named": true,
+  "status": "PASS: mapped-far dispatch mechanism named",
+  "supersessions": [
+    {
+      "claim": "contracted tuple maps CPU block 3 to $02A000-$02BFFF",
+      "status": "false under primary MAP semantics"
+    },
+    {
+      "claim": "captured MAPL=$2480 proves a service exit left block 3 mapped",
+      "status": "withdrawn; it proves the transposed entry tuple remained active"
+    }
+  ]
+}

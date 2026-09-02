@@ -1,0 +1,26 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-device-session-helper-scope-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HARNESS FIRST RED: capture helper overwrote its caller's context prefix",
+  "candidate_link": 89,
+  "hardware_contact": 1,
+  "product_started": false,
+  "product_rows_executed": 0,
+  "mechanism": "POSIX shell function variables share their caller's scope. capture_screen changed prefix from D1 to D1-fresh-basic; the following assertion therefore looked for D1-fresh-basic-fresh-basic.png although the correct fresh-BASIC capture existed.",
+  "observation": {
+    "actual_capture": {
+      "path": "build/post-promotion/v14/link89-device-session/run/D1-fresh-basic.png",
+      "bytes": 4200,
+      "sha256": "bfcc0e61472a4af65a638c6062feaabf112571a4c6e6dc940f9795c2c2b0c4c0"
+    },
+    "actual_text": {
+      "path": "build/post-promotion/v14/link89-device-session/run/D1-fresh-basic.txt",
+      "bytes": 2253,
+      "sha256": "42010f5272dcb05fd8f3be727d718b3079f5f69bc42eda55e4ed5850a5f0794c"
+    },
+    "incorrect_expected_path": "build/post-promotion/v14/link89-device-session/run/D1-fresh-basic-fresh-basic.png",
+    "device_state": "fresh BASIC after cold reset"
+  },
+  "disposition": "Run every stateful session helper in a subshell so its temporary variables cannot mutate the caller's context. Repeat the unchanged D1 row from a fresh cold reset.",
+  "claim_limit": "A pre-product harness failure only. No Link-89 graphics, sprite, SID, Ship, require, q, time, read-line or release claim."
+}

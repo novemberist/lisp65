@@ -1,0 +1,909 @@
+{
+  "format": "lisp65-v2-primitive-view-cross-parity-v1",
+  "status": "passed",
+  "registry": "config/v2-native-function-registry.json",
+  "registry_sha256": "6f38436decf1be3d3d780bffa80daedec2405c3ba34142b7cd4d27ec4a7a3a05",
+  "active_callprims": 61,
+  "public_designators": 39,
+  "public_active_callprims": 23,
+  "opcode_designators": [
+    {
+      "name": "+",
+      "route_kind": "fold-identity",
+      "tree_id": "P_ADD",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "*",
+      "route_kind": "fold-identity",
+      "tree_id": "P_MUL",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "-",
+      "route_kind": "fold-required",
+      "tree_id": "P_SUB",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "/",
+      "route_kind": "fold-required",
+      "tree_id": "P_DIV",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "car",
+      "route_kind": "opfn",
+      "tree_id": "P_CAR",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "cdr",
+      "route_kind": "opfn",
+      "tree_id": "P_CDR",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "consp",
+      "route_kind": "opfn",
+      "tree_id": "P_CONSP",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "cons",
+      "route_kind": "opfn",
+      "tree_id": "P_CONS",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "eq",
+      "route_kind": "opfn",
+      "tree_id": "P_EQ",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "eql",
+      "route_kind": "opfn",
+      "tree_id": "P_EQL",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "=",
+      "route_kind": "opfn",
+      "tree_id": "P_NUMEQ",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "<",
+      "route_kind": "opfn",
+      "tree_id": "P_LT",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": ">",
+      "route_kind": "opfn",
+      "tree_id": "P_GT",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "mod",
+      "route_kind": "opfn",
+      "tree_id": "P_MOD",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": "<=",
+      "route_kind": "opfn",
+      "tree_id": "P_LE",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    },
+    {
+      "name": ">=",
+      "route_kind": "opfn",
+      "tree_id": "P_GE",
+      "apply": true,
+      "function_kind": true,
+      "compile_repl": true
+    }
+  ],
+  "intrinsic_aliases": [
+    {
+      "name": "not",
+      "kind": "opfn",
+      "value": 4,
+      "restricted_views": [
+        "callprim",
+        "function-kind"
+      ],
+      "reason": "compiler-intrinsic-compatibility-alias"
+    },
+    {
+      "name": "null",
+      "kind": "opfn",
+      "value": 4,
+      "restricted_views": [
+        "callprim",
+        "function-kind"
+      ],
+      "reason": "bytecode-library-function-with-compiler-intrinsic-fast-path"
+    }
+  ],
+  "explicit_restrictions": 38,
+  "unclassified": [],
+  "missing_from_callprim": [],
+  "missing_from_compile_repl": [],
+  "missing_public_apply": [],
+  "missing_public_function_kind": [],
+  "rows": [
+    {
+      "name": "stringp",
+      "prim_id": 0,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "string-length",
+      "prim_id": 3,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "string-ref",
+      "prim_id": 4,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "symbolp",
+      "prim_id": 5,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "numberp",
+      "prim_id": 6,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "apply",
+      "prim_id": 7,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "funcall",
+      "prim_id": 8,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "screen-size",
+      "prim_id": 9,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "screen-clear",
+      "prim_id": 10,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "screen-put-char",
+      "prim_id": 11,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "screen-write-string",
+      "prim_id": 12,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "read-key",
+      "prim_id": 13,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "removed-v2-compatibility-name-use-key-event-mode-1"
+    },
+    {
+      "name": "poll-key",
+      "prim_id": 14,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "removed-v2-compatibility-name-use-key-event-mode-0"
+    },
+    {
+      "name": "%disk-read-sector",
+      "prim_id": 15,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-disk-capability"
+    },
+    {
+      "name": "%disk-byte",
+      "prim_id": 16,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-disk-capability"
+    },
+    {
+      "name": "%disk-load-file",
+      "prim_id": 17,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-disk-capability"
+    },
+    {
+      "name": "%disk-load-lib",
+      "prim_id": 18,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-disk-capability"
+    },
+    {
+      "name": "symbol-value",
+      "prim_id": 19,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "set-symbol-value",
+      "prim_id": 20,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-compiler-service-public-v2-name-is-set"
+    },
+    {
+      "name": "%disk-poke",
+      "prim_id": 21,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-disk-capability"
+    },
+    {
+      "name": "%disk-write-sector",
+      "prim_id": 22,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-disk-capability"
+    },
+    {
+      "name": "nreverse",
+      "prim_id": 23,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "rplaca",
+      "prim_id": 24,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "rplacd",
+      "prim_id": 25,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "%string-codes",
+      "prim_id": 28,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-codec-capability"
+    },
+    {
+      "name": "%string-from-codes",
+      "prim_id": 29,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-codec-capability"
+    },
+    {
+      "name": "%cs-read-open",
+      "prim_id": 30,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-compiler-service"
+    },
+    {
+      "name": "%fasl-read-form",
+      "prim_id": 31,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-compiler-service"
+    },
+    {
+      "name": "%fasl-stage",
+      "prim_id": 32,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-compiler-service"
+    },
+    {
+      "name": "%fasl-stage-get",
+      "prim_id": 33,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-compiler-service"
+    },
+    {
+      "name": "%set-macro",
+      "prim_id": 35,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-compiler-service"
+    },
+    {
+      "name": "function-kind",
+      "prim_id": 36,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "workbench-introspection-service-not-public-dialect-function"
+    },
+    {
+      "name": "gensym",
+      "prim_id": 37,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "lcc-install",
+      "prim_id": 38,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-compiler-commit-service"
+    },
+    {
+      "name": "macroexpand-1",
+      "prim_id": 39,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "workbench-compiler-service-not-public-dialect-function"
+    },
+    {
+      "name": "prin1",
+      "prim_id": 41,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "symbol-count",
+      "prim_id": 42,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "workbench-capacity-service-not-public-dialect-function"
+    },
+    {
+      "name": "symbol-max",
+      "prim_id": 43,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "workbench-capacity-service-not-public-dialect-function"
+    },
+    {
+      "name": "symbol-name",
+      "prim_id": 44,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "workbench-compiler-service-not-public-dialect-function"
+    },
+    {
+      "name": "write-char",
+      "prim_id": 45,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "%fasl-error-entries-overflow",
+      "prim_id": 46,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%fasl-error-nodes-overflow",
+      "prim_id": 47,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%fasl-error-not-a-defun",
+      "prim_id": 48,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%fasl-error-output-overflow",
+      "prim_id": 49,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%fasl-error-patches-overflow",
+      "prim_id": 50,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%fasl-error-strings-overflow",
+      "prim_id": 51,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%fasl-error-too-many-helpers",
+      "prim_id": 52,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%fasl-error-unsupported-literal",
+      "prim_id": 53,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%fasl-error-window-overflow",
+      "prim_id": 54,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%lcc-error-do-body-too-big",
+      "prim_id": 55,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "%lcc-error-invalid-parameter-list",
+      "prim_id": 56,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "boundp",
+      "prim_id": 57,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "%list-malformed-error",
+      "prim_id": 58,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "internal-error-service"
+    },
+    {
+      "name": "set",
+      "prim_id": 59,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "key-event",
+      "prim_id": 60,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "peek",
+      "prim_id": 61,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "poke",
+      "prim_id": 62,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
+    },
+    {
+      "name": "%buffer-read",
+      "prim_id": 63,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": false
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "prebuilt-shelf-only-first-class-buffer-carrier"
+    },
+    {
+      "name": "%buffer-write",
+      "prim_id": 64,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": false
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "prebuilt-shelf-only-first-class-buffer-carrier"
+    },
+    {
+      "name": "%buffer-alloc",
+      "prim_id": 65,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": false
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "prebuilt-shelf-only-first-class-buffer-carrier"
+    },
+    {
+      "name": "%c1-control",
+      "prim_id": 66,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": false
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "prebuilt-shelf-only-temporary-compiler-lifetime-carrier"
+    }
+  ],
+  "gate_sources": {
+    "callprim": "config/bytecode-abi-ledger.json + src/vm.c",
+    "apply": "src/v2_native_function_dispatch.h + generated T_PRIM classification in src/eval.c",
+    "function-kind": "registry-gated src/eval.c defprim table + generated T_PRIM classification",
+    "compile-repl": "src/v2_native_function_dispatch.h consumed by src/compile.c",
+    "python-p0": "tools/host-lisp/v2_native_function_views_generated.py",
+    "lisp-lcc": "lib/dialect-v2/lcc-profile.lisp"
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "format": "lisp65-post-v1.2-housekeeping-build-lane-receipt-v1",
+  "version": 1,
+  "recorded_on": "2026-07-30",
+  "source_state": {
+    "branch": "codex/post-1.0-docs-cleanup",
+    "implementation_commit": "647541f6bde71c7d4e12975ad011703458d5de26",
+    "predecessor_comment_link_commit": "0570de4bf07b0a79a0d00358e3c805f257c877d7"
+  },
+  "scope": {
+    "handover": {
+      "bytes_before_this_append": 5326,
+      "path": "docs/planning/housekeeping-handover-2026-07-30.md",
+      "sha256_before_this_append": "93178d1c1e3596c7398bf1c70c351986e699869b1682f4e1c99e81207d04f486"
+    },
+    "items": [
+      "H-C1 dead-source archive disposition",
+      "H-C4 linked no-dual-decoder proof",
+      "H-F2 fresh-checkout reproduction against the sealed v1.2.2 role set"
+    ],
+    "owner_items_not_touched": [
+      "661 MB under ~/Videos/lisp65-backups/",
+      "materialization of the four R6/G6 archives"
+    ],
+    "hardware_runs": 0,
+    "promotion_runs": 0,
+    "release_changes": 0
+  },
+  "H-C1": {
+    "status": "closed-no-further-move-under-citation-and-live-input-rules",
+    "linked_product_elf": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.2-candidate-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "dbc501c4769f3c9270c67a59c3d66c6fd6fdc515060fe5dd5afd4fc7a4ecc577"
+    },
+    "elf_non_linkage": {
+      "vm_l65m_batch_repeat_symbol_count": 0,
+      "l65m_runtime_section_count": 0,
+      "l65s_runtime_section_count": 0
+    },
+    "move_blockers": {
+      "source": "src/l65m_batch_repeat.s",
+      "active_make_or_profile_files": 2,
+      "active_config_contracts": 1,
+      "immutable_evidence_receipts_citing_old_path": 49,
+      "all_repository_files_citing_old_path_excluding_build_and_git": 54,
+      "reason": "The file is excluded from the final C2-lite closure but remains an input to the generic workbench build and permanent gates. Moving it would break active inputs and immutable receipt citations."
+    },
+    "already_archived": [
+      "tests/fixtures/legacy/m65d/alloc-two-sector.lisp",
+      "tests/fixtures/legacy/m65d/alloc-variable-chain.lisp"
+    ],
+    "files_moved_in_this_lane": 0
+  },
+  "H-C4": {
+    "status": "passed-and-permanent",
+    "gate": "c2-linked-format-decoder-closure-check",
+    "wired_into": "workbench-product after canonical product construction",
+    "implementation_commit": "647541f6bde71c7d4e12975ad011703458d5de26",
+    "contract": {
+      "bytes": 2365,
+      "path": "config/c2-linked-format-decoder-closure.json",
+      "sha256": "81388943bea42befc8df1e5ac55930ef4ca6c8531813934d9e1a4909349c0e33"
+    },
+    "tool": {
+      "bytes": 14148,
+      "path": "tools/host-lisp/c2_linked_format_decoder_closure.py",
+      "sha256": "7ece43f399731c479abba6adc8ea3d70dcf5f69f411fb90abc9b005d1d8e8cca"
+    },
+    "generated_receipt": {
+      "bytes": 5516,
+      "path": "build/c2.2/v1.2.2-candidate-product/receipts/linked-format-decoder-closure.json",
+      "sha256": "f2489c61a2356cc36cbd4b5a0cf3515867c67e7d90eb6c9e80878f6b6abee9b7"
+    },
+    "current_versions": {
+      "L65S": 4,
+      "C2I": 2,
+      "C2D": 6,
+      "L65R": 4
+    },
+    "linked_inventory": {
+      "c2_phase_symbols_exactly_once": 20,
+      "c2_phase_sections_exactly_once": 20,
+      "l65r_verifiers_exactly_once": 2,
+      "retired_linked_identities": 0
+    },
+    "retired_format_versions_structurally_excluded": 10,
+    "mutations_rejected": 8,
+    "result": "one-strict-decoder-per-format-in-final-linked-product"
+  },
+  "H-F2": {
+    "status": "FIRST RED",
+    "green_condition_met": false,
+    "command": "python3 tools/host-lisp/c2_lite_public_clean_build.py qualify --source-repository . --source-commit 647541f6 --output build/post-release/housekeeping/h-f2-clean-build-receipt.json --llvm-mos-root tools/llvm-mos",
+    "checkout": {
+      "id": "public-clean-a",
+      "kind": "fresh-no-local-detached-public-checkout",
+      "source_commit": "647541f6bde71c7d4e12975ad011703458d5de26",
+      "environment": {
+        "PYTHONHASHSEED": "23",
+        "SOURCE_DATE_EPOCH": "1009843200",
+        "TZ": "Pacific/Pago_Pago"
+      }
+    },
+    "execution_witness": {
+      "equivalence_lanes": 11,
+      "equivalence_cases": 447,
+      "equivalence_canary": "COMPLETE",
+      "linked_format_mutations": 8
+    },
+    "built_candidate_artifact_set_sha256": "f40f958ffa87c845ea487d21e901ba63dd1db23e6c58fb6965b35130fbd9fb74",
+    "sealed_v1_2_2_artifact_set_sha256": "359809d4a6b3bde95b9624f375ae38c32446ea54024a58691e07eb4673bcf7de",
+    "first_mismatching_role": "linked-product-elf",
+    "fail_fast": "The first clean checkout completed the product and media build, then the permanent sealed-role comparison stopped. A second varied checkout was correctly not consumed after the first red.",
+    "classification": "The comment-only Lisp changes preserve the executable carrier and Bank-2 static plane but intentionally change the raw-source-bound product identity. The published v1.2.2 seal cannot be inherited.",
+    "prior_detailed_role_comparison": {
+      "bytes": 7036,
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/post-v1.2-lisp-comment-translation-link-receipt-20260730.json",
+      "sha256": "d8fd82090ec06016e2ffc710fb7b13a1aca302ac68a31c5268915aae5b159a92"
+    },
+    "effect": "No authority repin, second product identity, acceptance run, promotion, public sync, tag, release or hardware claim."
+  },
+  "verification": {
+    "linked_format_gate": "PASS formats=L65S-v4,C2I-v2,C2D-v6,L65R-v4 phases=20 retired=10 mutations=8",
+    "elf_truth_migration": "PASS consumers=6 private-in-governed=0 ungoverned-probes-pinned=58 present=58",
+    "equivalence_chain": "PASS lanes=11 executed=447 canary=COMPLETE",
+    "fresh_checkout": "FIRST RED at sealed role linked-product-elf after complete candidate build"
+  },
+  "claim_limit": "This receipt closes the implementation-lane disposition only. H-F2 is not green, the post-comment candidate is not accepted or promotable, and no published v1.2.2 authority is amended.",
+  "status": "H-C1-disposed-H-C4-passed-H-F2-first-red"
+}

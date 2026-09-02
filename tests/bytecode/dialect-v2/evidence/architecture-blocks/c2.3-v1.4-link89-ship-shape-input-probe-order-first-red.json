@@ -1,0 +1,28 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-ship-shape-input-probe-order-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HARNESS FIRST RED: INPUT PROBE READ VIC-IV REGISTERS BEFORE THE PRODUCT UNLOCK",
+  "candidate_link": 89,
+  "observation": {
+    "runtime_state": "0xE3",
+    "runtime_sha256": "f00b4fdf08045320c1acc9d442ed6ba6e0c8cec6ffa5b30ab310ca58028d6575",
+    "witness_hex": "f80f003f5816b002",
+    "witness_sha256": "65b8d98ad069fb3dff68ddfb3c3808c280449d78bd8dc3fffed962364b68b963",
+    "decoded_pre_unlock_values": {
+      "pointer_registers": [248, 15, 0],
+      "shape_length": 63,
+      "shape_byte_zero": 88
+    },
+    "shape_slot_sha256": "7b50cbe254dd39fa61a532e2a5083b3bc538410a20febbbc20bb6922cacf6639",
+    "pointer_table_sha256": "78dddb0dfb7089605f0e2a4efef6c4a33d10171a34694fff4a97b8122e1df1e9"
+  },
+  "mechanism": "The fixture copied $D06C-$D06E before calling m65-sprite-shape. The product function first writes $47/$53 to $D02F and only then reads those VIC-IV registers. Therefore the recorded pointer bytes are not the values consumed by the guard, and the apparently valid inputs cannot support the pre-registered contradiction outcome.",
+  "product_claim": "none; the byte-identical parity-toy still has a deterministic target VM_TYPEERROR, but this probe does not localize it",
+  "correction": {
+    "fixture": "tests/bytecode/dialect-v2/fixtures/v14-parity-toy-shape-diag2/main.l65",
+    "image_sha256": "42c0f81353467817e89b21f613b850ffc35dd2078ee88bdddabdefa9d1b79d67",
+    "host_execution": "passed once",
+    "rule": "mirror the production unlock/read order and record sprite-number, string and pointer-geometry predicates before the call"
+  },
+  "claim_limit": "A sequencing defect in a disposable diagnostic fixture. No product byte, Link-89 candidate or release artifact changed."
+}

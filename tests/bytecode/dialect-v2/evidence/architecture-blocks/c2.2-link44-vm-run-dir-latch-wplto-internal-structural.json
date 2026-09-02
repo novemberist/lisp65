@@ -1,0 +1,646 @@
+{
+  "authority": {
+    "canonical_profile": {
+      "bytes": 2722,
+      "features": [
+        "LISP65_C2_DIRECT_HOT_REFILL",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+        "LISP65_C2_TRANSACTION_AUTH",
+        "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+        "LISP65_C2_NESTED_APPEND_V5",
+        "LISP65_C2_RESIDENCY_TRIAGE",
+        "LISP65_C2_E000_REOPEN",
+        "LISP65_C2_BSS_TRIAGE",
+        "LISP65_RUNTIME_OVERLAY_FORMAT_V3",
+        "LISP65_C2_PHASE11_SPLIT",
+        "LISP65_C2_LITE_COLD_EVICTION",
+        "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+        "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+        "LISP65_C2_LITE_BANK3_STAGING",
+        "LISP65_C2_LITE_BANK2_STAGING",
+        "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+        "LISP65_C2_LITE_VM_ARITY_E000",
+        "LISP65_C2_LITE_CHIP_RAM"
+      ],
+      "path": "config/c2-lite-v6-roots-fronts-product-profile.json",
+      "sha256": "05a6db5519e8d023bac3bbaae5770efa909f66f26204a374d33330aff09c6b53"
+    },
+    "driver": {
+      "bytes": 21694,
+      "path": "tools/host-lisp/c2_lite_v6_link44_vm_run_dir_latch.py",
+      "sha256": "8842bbf92a3662d3ac637b73be2aeec6e3e4d2e20f0ec6b680b7f47221af8463"
+    },
+    "dynamic_top_level_first_red": {
+      "bytes": 10174,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link44-c2-lite-v6-dynamic-top-level-hardware-first-red.json",
+      "sha256": "affae865a776faf2cbd69d5df929d488a3ca2021eb0861d0aed1c9c0bcfe2332"
+    },
+    "full_latch_capacity_first_red": {
+      "bytes": 5074,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-dynamic-lookup-latch-wplto-first-red-diagnosis.json",
+      "sha256": "8a6d9ddf8d5442f28eda694a704fa5e687c27c15054582f3ebd659cf5739f057"
+    },
+    "link44_rollback": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+      "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+      "status": "untouched"
+    },
+    "link44_structure": {
+      "bytes": 285685,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link44-c2-lite-v6-bank2-target-stage-replay-structural-receipt.json",
+      "sha256": "f358d14604eac270d78e407dec9ecf43559267b1344d371ee92fb95189504ede"
+    },
+    "one_site_source_gate": {
+      "instrumented_sites": 1,
+      "mutations_rejected": {
+        "context-store-removed": "rejected",
+        "helper-reintroduced": "rejected",
+        "lookup-store-removed": "rejected",
+        "second-site": "rejected",
+        "second-state": "rejected",
+        "valid-bit-removed": "rejected",
+        "wrong-family": "rejected",
+        "wrong-site": "rejected"
+      },
+      "new_state_bytes": 0,
+      "new_string_bytes": 0,
+      "renderer": "none; JTAG only",
+      "site": 1,
+      "site_name": "vm_run_dir-entry-length",
+      "status": "passed-one-site-jtag-raw-vm-run-dir-latch-source-gate",
+      "tuple": {
+        "vmr_hdrlen": "raw signed int directory ordinal, little-endian",
+        "vmr_poff_high": "0x82 = valid bit plus Session family 2",
+        "vmr_poff_low": "site = 1"
+      }
+    }
+  },
+  "conditional_next_gate": "Only a resident-capacity overflow authorizes the standing small-hot-object E000 relocation probe; every other failure returns to Class-C review.",
+  "diagnostic": {
+    "message": "one-site cut changed an uninstrumented VM/renderer function",
+    "type": "GateError"
+  },
+  "evidence": {
+    "c2-asm-leaf-abi-dataflow-gate.json": {
+      "bytes": 11513,
+      "sha256": "98a60fd40cd3d499ed5bf6a666dd85e44838fd50cf801a0761626d51972ac5f5"
+    },
+    "c2-crc-asm-leaf-gate.json": {
+      "bytes": 1276,
+      "sha256": "a8ca4487fe0ecec506994996f2085513c84538d70c0edd5fc5210a14d92f78eb"
+    },
+    "c2-crc-asm-leaf-workbench-gate.json": {
+      "bytes": 1398,
+      "sha256": "fba54d4de635caa2077b9b9c6be66b4a3697666a8f92a59fffa5d081921147ef"
+    },
+    "c2-crc-codegen-gate.json": {
+      "bytes": 1041,
+      "sha256": "b3405d4bac6bdb670fb658acd1f77b86d015b7c401889fde4dc0a7d94665000d"
+    },
+    "c2-f011-mount-window-gate.json": {
+      "bytes": 762,
+      "sha256": "f67dc32a3891bbe8d426304ff47f5c4bbc4248032c8f48a0c67e10098473ca5b"
+    },
+    "c2-kernal-window.generated.h": {
+      "bytes": 420,
+      "sha256": "e96335cc5db4c63afda88bda9e506d1fa5be5bf314b4abb0cdfbd579fda58fd1"
+    },
+    "c2-product-kernal-window.bin": {
+      "bytes": 8192,
+      "sha256": "f71633590dc3fac1a6a1fe9abf856466ab26b646b286cc0c20461505d4d46d33"
+    },
+    "c2-substitution.ld": {
+      "bytes": 64000,
+      "sha256": "ac3c6f47d27894d62ebb5d39ebbd701f921654f30ba3d1a27463c20983129838"
+    },
+    "error-text-table.bin": {
+      "bytes": 774,
+      "sha256": "37606dd5b0c1b15ee9ef859e02704200cdf684484450e0b059a09ba236ac3eb0"
+    },
+    "error-text-table.h": {
+      "bytes": 11576,
+      "sha256": "85415eca1bab797098266550d2b59845b664a559d2bb999a17a55596591e481f"
+    },
+    "exact-orphan-wrapper-lisp65-c2-substitution-linked.prg.json": {
+      "bytes": 1070,
+      "sha256": "c1338fecfb150c2140b890be9c978c38f644131cfc3824f3e29e24dd43717906"
+    },
+    "exact-orphan-wrapper-resident-island-seed.prg.json": {
+      "bytes": 1052,
+      "sha256": "2e4a6d29746b7874acff78008d3df5173afcc0c09232668668b1bb0434090a46"
+    },
+    "final-section-inventory-lisp65-c2-substitution-linked.prg.json": {
+      "bytes": 49159,
+      "sha256": "0a42160d37b762f98a264dba23d195dd054be2f089d2ea30de619eef4547f7f1"
+    },
+    "final-section-inventory-resident-island-seed.prg.json": {
+      "bytes": 49150,
+      "sha256": "0d722913e233e5a607a44c5f6e6d94dbce44bda6909bea2e8d5c1a12cbd8b638"
+    },
+    "fixed-host-facade-final.json": {
+      "bytes": 2449,
+      "sha256": "2e023b37269e7cca6e18da5c7371b753986295432b0a3698df794d9df10b4903"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/banner-return-removed.c": {
+      "bytes": 13544,
+      "sha256": "067c4498c44e8f23b09039c5014ebecef1e4ab7b49542bb1e6fc4638965def7f"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/banner-status-discarded.c": {
+      "bytes": 13523,
+      "sha256": "47fc930e78e45999db8451295fd3bbbf7ae39dbef3a200d2f93206172d903b9d"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/banner-text-truth-reintroduced.c": {
+      "bytes": 13525,
+      "sha256": "ba5d4681b6b9c2351244bbb136ac1b660d3a6ea8a4b8068215b6ec39f6925a15"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/record-cutpoint-replayed.c": {
+      "bytes": 36273,
+      "sha256": "de41a02b7d1f8ae360255e2d678f94bc985e18d4e7a735c4ef018056356bf736"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/stage-call-removed.c": {
+      "bytes": 129010,
+      "sha256": "df77a9157e4d90c58fa568057b74b3335aac7c7496f52f394399eb1d363d9ec5"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/stage-cutpoint-replayed.c": {
+      "bytes": 36273,
+      "sha256": "9d6bfc269019606cf26439d4e52ece6a6bc0a8ba7cc15a61dd188582f6439c57"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/static-plane-close-bypassed.c": {
+      "bytes": 36256,
+      "sha256": "aba0ab0c07f9ecd4e6663290d42831343e5e8327b9e54f0a9ebeb150252c0c5b"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/target-bank-changed.c": {
+      "bytes": 36276,
+      "sha256": "d8b1d684fcfb23a448a0aa11892edbb9f678d8cb77f2084b8eb7ccd4118cfc58"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/target-crc-bypassed.c": {
+      "bytes": 36260,
+      "sha256": "dc25e5d29f4625482998a7e9ee0dd64d410cd2e778eedcce749a84b03747dfec"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/target-cross-binding-bypassed.c": {
+      "bytes": 36252,
+      "sha256": "aa69ef5b513d2b4e6b328b410ae8daa02c80ed167c176a6e9260ee5bac8de038"
+    },
+    "fresh-c2-lite-prelink-gates/export-symbol-domain/export-symbol-domain-host": {
+      "bytes": 15504,
+      "sha256": "dfa0ab15109807ed7dde06a48d181b08fbb45a66d98640e5bc8a35e907bdfaf2"
+    },
+    "fresh-c2-lite-prelink-gates/export-symbol-domain/export-symbol-domain-host.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fresh-c2-lite-prelink-gates/export-symbol-domain/export-symbol-domain-host.stdout.txt": {
+      "bytes": 92,
+      "sha256": "68c326536c4cbc60e9b2378aece9d6ce2edfab24b1ad0afa70d44adc241da74e"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/family-slot-derived-host": {
+      "bytes": 115256,
+      "sha256": "cf0bf2495fe89e057f231adcd8daceb57c5d6fc7a96af23bf0922ef1f49f2258"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/family-slot-derived-host.stdout.txt": {
+      "bytes": 86,
+      "sha256": "a361a1801027d8fc7542e0848e68611bcf652e810c5ec7c1dfb8098a13409be6"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-boot-receives-session-batch-policy": {
+      "bytes": 115272,
+      "sha256": "8befcacc5eaf8debfe085c48d11731e100b346ff4a3428c1733e1d5e8c7aa58d"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-boot-receives-session-batch-policy.c": {
+      "bytes": 83763,
+      "sha256": "93e2412dcf6bf7f7dee77c8a40253249dccf0790d0c48478d2acd9366bbe02f7"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-boot-receives-session-batch-policy.log.txt": {
+      "bytes": 78,
+      "sha256": "5de99547c2d595a484c85ccd2099bd045a1f9e13b8050cd0b06d89072dc8fa4c"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-family-blind-installer-special": {
+      "bytes": 115272,
+      "sha256": "baf12e88ce68c13af55b2eca22876a232b83f37acd111c68f8dd4fe83e658553"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-family-blind-installer-special.c": {
+      "bytes": 83997,
+      "sha256": "834a5e9dd6d184dd518fc70ea389bc65ba43615898b9e568550c997f8c452eae"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-family-blind-installer-special.log.txt": {
+      "bytes": 81,
+      "sha256": "0379efdbdf25b1dba8dee145fd3ed283e0c8a4c3f6c1a7e06e3355b21b42aa12"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-installer-loses-explicit-family-seam": {
+      "bytes": 115280,
+      "sha256": "e80cd0862009ef6cd316f3a4d6b137d240245a47a8c95a389778982165af4fa9"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-installer-loses-explicit-family-seam.c": {
+      "bytes": 84004,
+      "sha256": "39040281d5104bc20f2af12d5ec14f003b5fb50c544e1225d8e43ff2e0d7e6f2"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-installer-loses-explicit-family-seam.log.txt": {
+      "bytes": 72,
+      "sha256": "1b79cde5c1eb5c6aebee5ac9f686d67860af3fad635115fb7f698dc1030d5a20"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-session-accepts-boot-record": {
+      "bytes": 115016,
+      "sha256": "747a149e8c2fdcf21aeef96bbe8514727aa320a9b349635fc297fe568d83bdb4"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-session-accepts-boot-record.c": {
+      "bytes": 83877,
+      "sha256": "6cddf1d2edf957e2e2fe5c856d59900d1369dd33f065f53153782738909fa456"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-session-accepts-boot-record.log.txt": {
+      "bytes": 4914,
+      "sha256": "73a3a0f8564f1d970f079013e8afc8cd076076762f37569434d2c687f9c294c4"
+    },
+    "fresh-c2-lite-prelink-gates/roots-fronts/roots-fronts-cutpoints": {
+      "bytes": 20168,
+      "sha256": "a3e5db9eab55e8e95ef74850a1eb33d03cb43449976729d5fc07c60484a8c4e6"
+    },
+    "fresh-c2-lite-prelink-gates/roots-fronts/roots-fronts-cutpoints.stdout.txt": {
+      "bytes": 127,
+      "sha256": "cafc031cb2e6fcb9ef3878edcb4ff68541bbfd4e05b78ee5b88d93afc7be3e9a"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/coresident-cutpoints": {
+      "bytes": 14344,
+      "sha256": "aebd1fb65a4eaed39258410c9a9d5d96120c3bd224b00f739cb229b8c9c353aa"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/coresident-cutpoints.stdout.txt": {
+      "bytes": 106,
+      "sha256": "e2163c53a436304288be62434a816fc4203dba0d35bbd623394601b4f717c4f2"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/semantic-split-cutpoints": {
+      "bytes": 14320,
+      "sha256": "40942575e9ad0df44389f23b65870ef4751faa1cc0fbed93d270e1928bae952e"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/semantic-split-cutpoints.stdout.txt": {
+      "bytes": 99,
+      "sha256": "38292e22905b1621fbb40c3a744693a0c6098345bf8299ff9af8d8337cb94171"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/bank2-static-code.bin": {
+      "bytes": 34403,
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/c2-lite-dynamic.code.bin": {
+      "bytes": 84,
+      "sha256": "4af73b51d5cc56bd534f674bbc0406d63af180af99b4f09cbe404ff865f8ba8d"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/c2-lite-dynamic.manifest.json": {
+      "bytes": 2735,
+      "sha256": "f30cb7e50f746bd1a130a4f23dabe8ea742141c8ce0a8a842226864ee9507ed4"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/c2d-v6-entry-emitter-host.so": {
+      "bytes": 11616,
+      "sha256": "602bd3d7a141e7a686a40d0696056d413fcea9c46acdf53e50f2802ae0a54d58"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/initial.c2d-v6.bin": {
+      "bytes": 33840,
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin": {
+      "bytes": 34403,
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2-lite-dynamic.code.bin": {
+      "bytes": 84,
+      "sha256": "4af73b51d5cc56bd534f674bbc0406d63af180af99b4f09cbe404ff865f8ba8d"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2-lite-dynamic.manifest.json": {
+      "bytes": 2701,
+      "sha256": "acedbbad508837e1e7b483120adc792b80da371f34cf0fd115512d70068d1c15"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2d-v6-entry-emitter-host.so": {
+      "bytes": 11616,
+      "sha256": "602bd3d7a141e7a686a40d0696056d413fcea9c46acdf53e50f2802ae0a54d58"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin": {
+      "bytes": 33840,
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    "fresh-v5-b2-prelink-gates/c2-lite-current-b2-prelink.json": {
+      "bytes": 4343,
+      "sha256": "6ac0dbf056a5c4712c6a865aef24a8f389276a952f772508825c4e1724abddce"
+    },
+    "generated-direct-entry-gate/c2-direct-entry-contract-host": {
+      "bytes": 13784,
+      "sha256": "30946bbf68894b15f618afeb7a81a4a2b3af0137f2fe2a2f19e3876f27c458f3"
+    },
+    "generated-direct-entry-gate/normalized-direct-entry-plane.bin": {
+      "bytes": 5246,
+      "sha256": "8f36b2333d84d206face6b25c1a287fb946e191871d4f7e1b9551f5d9b900304"
+    },
+    "generated-direct-entry-gate/target-resolved-direct-entry-plane.bin": {
+      "bytes": 5246,
+      "sha256": "d7be1903d5792cce00b719721972f1073eeb2e11b52ad07a54db01c33ae7bf37"
+    },
+    "generated-product-sources/c2-stream-decoder.c": {
+      "bytes": 36598,
+      "sha256": "ddbcbc585fa41b6ffc93679ebe0b8c3fc27388110d99dce6a7d0fd6b4ee2b4bf"
+    },
+    "generated-product-sources/c2-stream-init.c": {
+      "bytes": 310,
+      "sha256": "706b39a032572ace9460e555e45e02c64f08b784d4d5ba91f7a914a990d0d58a"
+    },
+    "generated-product-sources/c2-stream-phase-00.c": {
+      "bytes": 57,
+      "sha256": "19ae4e96f3e4bb904c24c33d7ce3d385edd4cfa7e0781a318f437c5472a3ad75"
+    },
+    "generated-product-sources/c2-stream-phase-00b.c": {
+      "bytes": 58,
+      "sha256": "51f13be0111906cab8684eefc99512fe8165354dcfa0fe6759466dc4384198b5"
+    },
+    "generated-product-sources/c2-stream-phase-01.c": {
+      "bytes": 57,
+      "sha256": "8490454e4f62b691ffd5b1cac42af2eba24bdd9fa116210b1c8667e3fc2ca267"
+    },
+    "generated-product-sources/c2-stream-phase-02a.c": {
+      "bytes": 58,
+      "sha256": "981df649ab6ce6a461b4aa11da15a85eeff659b76822a64b812116c95a152e29"
+    },
+    "generated-product-sources/c2-stream-phase-02b.c": {
+      "bytes": 58,
+      "sha256": "d5f499dd7a66a84406a8e479d94e47dd0879e87b19ebd9721fd5e104fb4e6ef9"
+    },
+    "generated-product-sources/c2-stream-phase-03.c": {
+      "bytes": 57,
+      "sha256": "4b34f04d815306a3ab32c6b7a17ffe6d6baab3a0ff75a32c572c76441ceffa3a"
+    },
+    "generated-product-sources/c2-stream-phase-03b.c": {
+      "bytes": 58,
+      "sha256": "1529c8bfdd42d951f7d87d64f893901260860fcda6df269212f1534024b99165"
+    },
+    "generated-product-sources/c2-stream-phase-04.c": {
+      "bytes": 57,
+      "sha256": "4b4009fa90367f5eddad4005dbd791c05bb7dff5d5441b5b9a7546e1836fbdb9"
+    },
+    "generated-product-sources/c2-stream-phase-05a.c": {
+      "bytes": 58,
+      "sha256": "bb2761c099c7bc4f4c6d11187a40bcffb05ed3e646038f08fc750110371450ea"
+    },
+    "generated-product-sources/c2-stream-phase-05b.c": {
+      "bytes": 58,
+      "sha256": "93f8d5f6f1fa208457de7e6d5e0914def72a724a06e8b39b646c50ef0b992375"
+    },
+    "generated-product-sources/c2-stream-phase-06a.c": {
+      "bytes": 58,
+      "sha256": "59d5e60b9844ffe11ae489a6b234eba08078145dee67b5165985e022a0b7ac57"
+    },
+    "generated-product-sources/c2-stream-phase-06b.c": {
+      "bytes": 58,
+      "sha256": "1491302046f8d90ecfc55e5302c160ab9d3818d67a13250281693d9566ff3e07"
+    },
+    "generated-product-sources/c2-stream-v2-decoder.c": {
+      "bytes": 27376,
+      "sha256": "ad3549245c562c17ba07af5900eecdef4254d81872de49933c33d8fcf0e9fe30"
+    },
+    "generated-product-sources/c2-stream-v2-phase-07.c": {
+      "bytes": 63,
+      "sha256": "d8f1bcb0ab4ecaa16eb9e264d93b52f654252fded7d34604bf42702929c88e09"
+    },
+    "generated-product-sources/c2-stream-v2-phase-08.c": {
+      "bytes": 63,
+      "sha256": "368887762d51ecd1d57e7ecbbedeac3f63a460e40103dce81df86502e07e452d"
+    },
+    "generated-product-sources/c2-stream-v2-phase-09.c": {
+      "bytes": 63,
+      "sha256": "7a86ebdc833548c108109d2ae37a53e025228d06bb3239cc245d833c1a9062d8"
+    },
+    "generated-product-sources/c2-stream-v2-phase-10.c": {
+      "bytes": 64,
+      "sha256": "0eed6be784711c5fc7f1a509308c2d5544c9c10bea7b054983db3b91c8a16647"
+    },
+    "generated-product-sources/c2-stream-v2-phase-11a.c": {
+      "bytes": 64,
+      "sha256": "178f00aa156819966e591b8ed0ea69c0fd0b87ab2d265ba4c7e3941d8a5c05ab"
+    },
+    "generated-product-sources/c2-stream-v2-phase-11b.c": {
+      "bytes": 64,
+      "sha256": "142135a6a2d89de240a84ccd1c8b511a2ba93f5919e2b282324ec8862768e29b"
+    },
+    "generated-product-sources/c2-stream-v2-phase-12.c": {
+      "bytes": 64,
+      "sha256": "88fb0ec64d09e73de4e4eb1ff4dd477de982c8bd7e3d76fd87d1e81ce29e13bb"
+    },
+    "generated-product-sources/c2-stream-v2-phase-13.c": {
+      "bytes": 64,
+      "sha256": "7936273fe746f8b9d9e4a983e010f74f529013f7ccc97f03a1328aa868eb6827"
+    },
+    "generated-product-sources/c2_hot_literal.c": {
+      "bytes": 2212,
+      "sha256": "0c0a1bb489ffdffada3fef03a4ce97f813805a586e9368738c84487776f45125"
+    },
+    "generated-product-sources/c2_product_runtime.c": {
+      "bytes": 128700,
+      "sha256": "6b4cea6695cb077a77ba4515eeee91d4a9ae2b2fcda5b0594fdaa6a268a2959e"
+    },
+    "generated-product-sources/vm_runtime_overlay.c": {
+      "bytes": 82632,
+      "sha256": "8a1cb8a486ad347fee9460b7a9b3f771fc37cac819ab3f90d990cac4ffbbcf09"
+    },
+    "handoff-z-abi-final.json": {
+      "bytes": 2157,
+      "sha256": "cf6a8d7c5ecf42ddedba1d140d699540f8ad015a0fe7d8946ea41dadd227d39b"
+    },
+    "kernal-freedom-link.json": {
+      "bytes": 6849,
+      "sha256": "40b0e0c3d72aa9bb07c643cd034f5bd82f7c2742468343fb595b3b76b26457d6"
+    },
+    "kernal-window-publish-last.json": {
+      "bytes": 1548,
+      "sha256": "f17f627e677bb408061e770997c011e0178d81a1643af795e85e63e511cdbf20"
+    },
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41542,
+      "sha256": "d0acc0b7b9490d5de59d4c43ac00d01cec24536327cf8c628c77b574c5a16b6b"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 608032,
+      "sha256": "879f74d00f12be6df4148c3a04f03f80a4f01a3c3460627c570fc49312655ee0"
+    },
+    "lisp65-c2-substitution-linked.prg.link.stderr.txt": {
+      "bytes": 1737,
+      "sha256": "1b637169fe5c2c86eefc7d2beb656f776d9e6098bdf90a84c1bcedae37cbb1c1"
+    },
+    "lisp65-c2-substitution-linked.prg.link.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 607800,
+      "sha256": "0e39814fea0b5be0de9462767a580bc60296209315870356a2899bfd62a3ff31"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 193654,
+      "sha256": "b73d7e3dda1bd72231725ee33c20a4c4271abb170e020923f113176bdb2d4bd6"
+    },
+    "lisp65-c2-substitution-unbound.prg": {
+      "bytes": 41542,
+      "sha256": "d283d71b305e53aa5b36b626b4735c211a25985a5832f7f940539989f75cafd2"
+    },
+    "lisp65-c2-substitution-window-bound.prg": {
+      "bytes": 41542,
+      "sha256": "d8ca9d53be9489c27100a53344ab27e4e5487a6c68720912e6f9bf18e8e6a892"
+    },
+    "lto-partition-metadata-lisp65-c2-substitution-linked.prg.json": {
+      "bytes": 1456,
+      "sha256": "a14717434acad43ce47dd5791b26ac75322fb7eab1ffb6335b9a6d590fd9f56f"
+    },
+    "lto-partition-metadata-resident-island-seed.prg.json": {
+      "bytes": 1429,
+      "sha256": "e567bb9067cf2a09c76b892091a52f7f69bd52513e6d7a3a0ad7fe6e60f3d352"
+    },
+    "one-truth-closure.json": {
+      "bytes": 254,
+      "sha256": "a86728cf0c75b7d62f1b7fa648d8a04576448109efdae23ffa317dcc5f7d7849"
+    },
+    "pre-ownership-closure-final.json": {
+      "bytes": 3316,
+      "sha256": "bd9fc9d0a90541da9f76c684a254907f9c023c756ddadb3af1c109045501500b"
+    },
+    "product-substitution-link.json": {
+      "bytes": 2101,
+      "sha256": "7725aef81cd62349411d45b2fe582b5dbcdae07ddc0e0dd9f9b205d6c8d6f06d"
+    },
+    "profile-data-reference-final.json": {
+      "bytes": 4141,
+      "sha256": "6e117bf5fa21782fdabe3beb56f10abb101ecf714976fcc5212bd8f91636abb5"
+    },
+    "resident-island-seed.prg": {
+      "bytes": 41542,
+      "sha256": "1e34dd0c72d2e9bffcb8ff3bd23fa5cb00b9141e7fcb2d4aee7d609227ab45d2"
+    },
+    "resident-island-seed.prg.elf": {
+      "bytes": 608032,
+      "sha256": "ce5aceed6bda685a0ab6cc313ef15f53b42889fc8c63dcbf5a768f9f24056b6b"
+    },
+    "resident-island-seed.prg.link.stderr.txt": {
+      "bytes": 1728,
+      "sha256": "184b24783233a9563707415cae5a95def48b2a538d1f7b87479acc00ce697537"
+    },
+    "resident-island-seed.prg.link.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "resident-island-seed.prg.lto.o": {
+      "bytes": 607788,
+      "sha256": "9ae884bc4e0234844b59bab722a0876cec6ada42193bdc5bc5dea63a59a5892d"
+    },
+    "resident-island-seed.prg.map": {
+      "bytes": 189148,
+      "sha256": "85659e747276d3a4f576aece4b0aa3f3a78209a31a2ade9fdb6a16b078083310"
+    },
+    "resident-island.h": {
+      "bytes": 10777,
+      "sha256": "6fe07b347a5b5b17a3e73787e3ebc8ca8e7072d402424aa354ed3cc7f85115fd"
+    },
+    "resident-island.prepare.h": {
+      "bytes": 10249,
+      "sha256": "b0e4cd7762dda4605551e966fe428092dab15e320e04ae4fc8d024a635394602"
+    },
+    "resolved-profile.txt": {
+      "bytes": 10085,
+      "sha256": "6e33bd3fb8853610f4557943542baa601ffd27e27a92e3453335b61845d90608"
+    },
+    "runtime-family-total-identity.json": {
+      "bytes": 377,
+      "sha256": "30b2771859314aa698d2d45eb3be8d209647506be173ee94aea9c16f05cefb87"
+    },
+    "runtime-overlay-boot-final.h": {
+      "bytes": 1266,
+      "sha256": "7569d62f7987660aa5677ee03aa6b35fd63361bf9e7ca8a20d438396ed319f90"
+    },
+    "runtime-overlay-boot-unbound.h": {
+      "bytes": 1266,
+      "sha256": "7569d62f7987660aa5677ee03aa6b35fd63361bf9e7ca8a20d438396ed319f90"
+    },
+    "runtime-overlay-session-final.h": {
+      "bytes": 1266,
+      "sha256": "6eee8d7871b250282b1e231e3a9a95a1eacc59c2506c95728298e44193e0153d"
+    },
+    "runtime-overlay-session-unbound.h": {
+      "bytes": 1266,
+      "sha256": "6eee8d7871b250282b1e231e3a9a95a1eacc59c2506c95728298e44193e0153d"
+    },
+    "runtime-overlay-verifier-bindings.bin": {
+      "bytes": 40,
+      "sha256": "1289509f2e0865e6db529fb8edbc3e62be8b8667bd37496426695b7d1e3149f4"
+    },
+    "runtime-overlay.prepare-standard.h": {
+      "bytes": 1266,
+      "sha256": "93421b3bb68a2f93ecd1b2c8756e3fa5e47d377dbd80b5679eea30e51c93b2fd"
+    },
+    "runtime-overlay.prepare.h": {
+      "bytes": 2267,
+      "sha256": "a15409710cb11e2db32a554f041e0f938c6e7737c9df65e67745a7257318d6cd"
+    },
+    "runtime-overlays-boot-final.bin": {
+      "bytes": 18770,
+      "sha256": "071efda514c0c00ed35d53a393dc938e59681e66debdeee74303383f11383d2b"
+    },
+    "runtime-overlays-boot-final.json": {
+      "bytes": 10283,
+      "sha256": "f488c5e1f08ea7b7b20ebbf9c6680a4fc88e76d1da0fff39d1c48405d4474b13"
+    },
+    "runtime-overlays-boot-unbound.bin": {
+      "bytes": 18770,
+      "sha256": "071efda514c0c00ed35d53a393dc938e59681e66debdeee74303383f11383d2b"
+    },
+    "runtime-overlays-boot-unbound.json": {
+      "bytes": 10287,
+      "sha256": "4cbfd87ad8f84726c91c371a800a128e6b6cfecfda68ffee3f578e09b50e1a74"
+    },
+    "runtime-overlays-final.bin": {
+      "bytes": 65438,
+      "sha256": "1596d7208cbb0fe34a6166b2d92cd6d90fb32936d7a222d63e7e9fc3e5750ce5"
+    },
+    "runtime-overlays-session-final.bin": {
+      "bytes": 65438,
+      "sha256": "1596d7208cbb0fe34a6166b2d92cd6d90fb32936d7a222d63e7e9fc3e5750ce5"
+    },
+    "runtime-overlays-session-final.json": {
+      "bytes": 39744,
+      "sha256": "d17cf41f091c085de5973ee77a0aae23afe9b5eee32083a2095f4a8916dbaacc"
+    },
+    "runtime-overlays-session-unbound.bin": {
+      "bytes": 65438,
+      "sha256": "1596d7208cbb0fe34a6166b2d92cd6d90fb32936d7a222d63e7e9fc3e5750ce5"
+    },
+    "runtime-overlays-session-unbound.json": {
+      "bytes": 39748,
+      "sha256": "a5840637d2ebd5fd67c7cde669facdd273d61363bbce1ab01c267b3ee51d3310"
+    },
+    "runtime-verifier-publish-last.json": {
+      "bytes": 721,
+      "sha256": "9b83857b1b49d55616864d13d1a3cd919d7f3cb7db632aa9f4c754b9a03d71ee"
+    },
+    "stage-config.h": {
+      "bytes": 238,
+      "sha256": "39eb57b392d03d243409f5e7f41d8f1219abc8cfd58e4a3338a0a9475ab4f5c0"
+    },
+    "substitution-balance.json": {
+      "bytes": 5567,
+      "sha256": "ec65c229aa1207adb57f6445520b01fd7cc4ca0bd2778992ac5dd92e7504d898"
+    },
+    "total-publish-last-domain.json": {
+      "bytes": 1543,
+      "sha256": "f4dbabd0be514e8e898c7ee0f73654ece7ba25adb940479628a1753fc8b53bce"
+    },
+    "v2-product-profile-parity.json": {
+      "bytes": 1762,
+      "sha256": "2d2b3ad38eb71ef493b077c67d15ff85210f69d5a1723b860a858f5bdb2cea2a"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "latency_attempts_consumed": "0/2",
+    "product_closure_links": 1
+  },
+  "format": "lisp65-c2-lite-v6-real-abi-link44-first-red-v1",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+    "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+    "status": "untouched"
+  },
+  "status": "FIRST RED: C2-lite real-ABI Link 44 stopped"
+}

@@ -1,0 +1,335 @@
+{
+  "affected_claims": {
+    "c2_acceptance": "blocked",
+    "hardware_presmoke": "correctness first case passed, latency first red stopped the run",
+    "link29_structural_receipt": "remains valid structural evidence; hardware is still pending",
+    "performance": "not passed and no tolerance is inferred",
+    "promotion": "blocked"
+  },
+  "bounded_fix_proposal": {
+    "capacity_gate_before_product_link": {
+      "bank0_text_headroom_bytes": 174,
+      "e000_contingency_bytes": 386,
+      "fixed_bank0_headroom_bytes": 273,
+      "ordinary_bank0_bss_headroom_bytes": 19,
+      "phase13_current_bytes": 1776,
+      "phase13_current_headroom_bytes": 16,
+      "record_verifier_bytes_for_later_transaction_option": 1326,
+      "resident_island_current_bytes": 655,
+      "resident_island_headroom_bytes": 1393,
+      "rule": "any negative unapproved drift stops before a product link"
+    },
+    "checks_preserved": [
+      "entry literal-count and range bounds",
+      "descriptor read and kind-dependent root indirection",
+      "root ordinal bounds and nonzero even heap-pointer validation",
+      "generation-bound directory/image/entry lookup",
+      "no persistent hot cache and no skipped append validation"
+    ],
+    "deferred_until_measured": "Do not redesign the 27-call append transport in the same attempt. If the direct hot-refill repair leaves perceptible latency, its separately measured residual becomes a new review point rather than hidden scope growth.",
+    "hardware_measurements_required": [
+      "boot-to-prompt and banner-completion frames",
+      "two consecutive (+ 1 2) forms, product time separated from harness time",
+      "nested compiled call that forces caller-buffer restoration",
+      "C2D counts before and after repeated transient forms"
+    ],
+    "one_truth_cut": "Make the refill seam materialize hot literals directly from the already decoded, generation-bound C2D resolution/root planes using the existing c2_stream_product_child_value helper. Refactor phase 13 to delegate to the same helper so product refill and proof phase do not duplicate descriptor semantics.",
+    "permanent_gates": [
+      "cross-check direct refill and phase 13 for all 588 current entries",
+      "nested-call caller restoration with non-empty literals",
+      "mutated descriptor, resolution, root ordinal and heap value all fail closed",
+      "source gate forbids a second hand-written literal-resolution formula"
+    ],
+    "successor_limit": "After a green product-shaped capacity/placement probe, at most one separately authorized successor product link and the same receipt-less hardware presmoke."
+  },
+  "claim_limit": "Receipt-less hardware first-red diagnosis and exact static lower-bound accounting. It is not a performance acceptance, capacity authorization, product link, promotion or release claim. Dynamic phase-13 call counts are intentionally not claimed.",
+  "format": "lisp65-c2-product-link29-latency-hardware-first-red-diagnosis-v1",
+  "inputs": {
+    "boot_family_manifest": {
+      "bytes": 7828,
+      "path": "build/c2.2/substitution/product-link-29-direct-entry-encoding/runtime-overlays-boot-final.json",
+      "sha256": "b9687ab10f64811d583f89e9f75a87c7d71c8e3695e9fe1d84036e58353a0689"
+    },
+    "immutable_shelf": {
+      "bytes": 70897,
+      "path": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+    },
+    "initial_c2d": {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/initial.c2d-v3.bin",
+      "sha256": "0a0ddf0168028bae27e7cd6fdc687fe8ca3a3f4940cdf70dae844c0bd5c1c185"
+    },
+    "overlay_transport": {
+      "bytes": 38264,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "24320ee9d6f7026dfa1531b37028989172096b0af63c5381693122f1c86bc0fa"
+    },
+    "phase13": {
+      "bytes": 21417,
+      "path": "scripts/c2-stream-v2-decoder.c",
+      "sha256": "f7cab493f6d2ade747ffd5bebb00ff21d7db6cb39a5c8a2968dbe94c138a22ec"
+    },
+    "product_runtime": {
+      "bytes": 54984,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "7f6ee26def31f417453cb39407b7f3d7b4ac6b522e0e875a7e40103acca6f03c"
+    },
+    "session_family_manifest": {
+      "bytes": 27268,
+      "path": "build/c2.2/substitution/product-link-29-direct-entry-encoding/runtime-overlays-session-final.json",
+      "sha256": "3eb7e692027f2ab1fa9c513b9cc4d6daf1679c85141f1c1f93748c422dc144c9"
+    },
+    "vm": {
+      "bytes": 78563,
+      "path": "src/vm.c",
+      "sha256": "3ef56f65fc772bf0e027e7910d493050b603be5a91f5973dc21a52d3b3cbad33"
+    }
+  },
+  "observation": {
+    "banner_completion_seconds_approx": 5,
+    "boot_to_repl_seconds_approx": 30,
+    "correctness_correction": "passed-first-arithmetic-smoke",
+    "first_form": "(+ 1 2)",
+    "first_result": "3",
+    "first_result_latency_seconds_approx": 5,
+    "latency": "failed-no-warm-speedup",
+    "remaining_presmoke_cases": "not-run",
+    "second_form": "(+ 1 2)",
+    "second_result": "3",
+    "second_result_latency_seconds_approx": 5,
+    "sequence_stopped_immediately": true
+  },
+  "recorded_on": "2026-07-20",
+  "root_cause": {
+    "not_the_direct_entry_fix": "The direct-entry correction is functionally successful: both forms return 3. Its phase-12 scan affects cold decode and one suffix decode per append, whereas the same five-second symptom appears during static banner execution.",
+    "primary": "The hot-window refill seam routes literal materialization through a complete runtime-overlay authentication on every qualifying code-object load. That transport reloads and CRC-checks the catalog verifier, rechecks the complete 36-record directory, reloads and CRC-checks the record verifier, then reloads, CRC-checks and wipes phase 13. Static banner execution exercises this path without any session append, independently isolating it from append publication.",
+    "secondary_floor": "A minimal anonymous one-function install performs at least 27 additional full overlay authentications. This is real but cannot by itself explain the slow static banner; it must be remeasured after the hot-refill defect is removed.",
+    "why_second_call_is_not_warm": "Transient append is intentionally rolled back and vm_codebuf is a single-owner 128-byte cache clobbered by nested calls; no cross-form literal-window cache exists."
+  },
+  "runtime_capture": {
+    "file": {
+      "bytes": 33840,
+      "path": "build/c2.2/hardware-presmoke-link29-direct-entry-encoding/first-red-latency/c2d-after-two-identical-forms.bin",
+      "sha256": "a321dcf5f9ae162323a1a6184e3721616c756daeb1cf16bf97b3918ced7c72d2"
+    },
+    "header": {
+      "entries": 588,
+      "generation": 1,
+      "images": 6,
+      "resolutions": 2264,
+      "roots": 283,
+      "total_bytes": 33840,
+      "version": 3
+    },
+    "interpretation": "Both anonymous session images completed rollback. Counts equal the six-image static baseline, so the repeated latency is not session-plane growth or leakage.",
+    "mode": "read-only C2D snapshot after both identical forms"
+  },
+  "scope": {
+    "candidate_product_sha256": "01c6b8ff25072349e353973c0e66f239eb89efc30de4ac742bd19ef54a9bdb0c",
+    "deployment": {
+      "bytes": 2693,
+      "path": "build/c2.2/hardware-presmoke-link29-direct-entry-encoding/deployment.json",
+      "sha256": "3d059ac8eb7bd0b5ba41ef8402a50b78f738f14d6b2fa5e0da5313924cbdf11f"
+    },
+    "new_product_links_after_first_red": 0,
+    "product_source_changes_after_first_red": 0,
+    "structural_receipt": {
+      "bytes": 6040,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link29-direct-entry-encoding-structural-receipt.json",
+      "sha256": "70b3c1213bc3632d8d55ca4a24abc12a980525bb873ffa2d7108b742417800b3"
+    }
+  },
+  "static_transport_accounting": {
+    "cold_decode_before_any_bytecode_execution": {
+      "boot_family": {
+        "excluded_from_model": [
+          "compiler VM execution and all phase-13 hot-literal refills",
+          "phase-internal C2D, Shelf and Session DMA reads",
+          "reader, printer, screen and VM dispatch work",
+          "emitter literal traversal and additional emitted functions"
+        ],
+        "minimum_cpu_byte_visits_crc_plus_wipe": 70365,
+        "minimum_crc_input_bytes": 24735,
+        "minimum_wipe_memset_bytes": 22815,
+        "minimum_wipe_verify_bytes": 22815,
+        "overlay_calls": 6,
+        "repeated_catalog_directory_crc_bytes": 1728,
+        "repeated_catalog_header_crc_bytes": 192,
+        "repeated_verifier_payload_bytes": 14826,
+        "target_payload_bytes": 7989
+      },
+      "overlay_calls_total": 16,
+      "session_family": {
+        "excluded_from_model": [
+          "compiler VM execution and all phase-13 hot-literal refills",
+          "phase-internal C2D, Shelf and Session DMA reads",
+          "reader, printer, screen and VM dispatch work",
+          "emitter literal traversal and additional emitted functions"
+        ],
+        "minimum_cpu_byte_visits_crc_plus_wipe": 127646,
+        "minimum_crc_input_bytes": 50442,
+        "minimum_wipe_memset_bytes": 38602,
+        "minimum_wipe_verify_bytes": 38602,
+        "overlay_calls": 10,
+        "repeated_catalog_directory_crc_bytes": 11520,
+        "repeated_catalog_header_crc_bytes": 320,
+        "repeated_verifier_payload_bytes": 24710,
+        "target_payload_bytes": 13892
+      }
+    },
+    "hot_refill_literal_census": {
+      "entries": 588,
+      "entries_with_nonempty_literal_tables": 485,
+      "key_entries": [
+        {
+          "code_bytes": 89,
+          "image": 0,
+          "literal_words": 2,
+          "name": "%banner-separator",
+          "ordinal": 237
+        },
+        {
+          "code_bytes": 142,
+          "image": 0,
+          "literal_words": 3,
+          "name": "%banner-run",
+          "ordinal": 238
+        },
+        {
+          "code_bytes": 145,
+          "image": 0,
+          "literal_words": 3,
+          "name": "%repl-banner",
+          "ordinal": 239
+        },
+        {
+          "code_bytes": 76,
+          "image": 0,
+          "literal_words": 3,
+          "name": "lcc-run",
+          "ordinal": 171
+        },
+        {
+          "code_bytes": 71,
+          "image": 5,
+          "literal_words": 6,
+          "name": "%c2-compile-form",
+          "ordinal": 566
+        }
+      ],
+      "literal_words": 1931,
+      "maximum_literal_words_per_entry": 23,
+      "per_image": [
+        {
+          "entries": 250,
+          "entries_with_literals": 186,
+          "image": 0,
+          "literal_words": 372
+        },
+        {
+          "entries": 155,
+          "entries_with_literals": 139,
+          "image": 1,
+          "literal_words": 682
+        },
+        {
+          "entries": 32,
+          "entries_with_literals": 31,
+          "image": 2,
+          "literal_words": 199
+        },
+        {
+          "entries": 39,
+          "entries_with_literals": 37,
+          "image": 3,
+          "literal_words": 123
+        },
+        {
+          "entries": 7,
+          "entries_with_literals": 0,
+          "image": 4,
+          "literal_words": 0
+        },
+        {
+          "entries": 105,
+          "entries_with_literals": 92,
+          "image": 5,
+          "literal_words": 555
+        }
+      ]
+    },
+    "minimum_anonymous_single_function_install": {
+      "excluded_from_model": [
+        "compiler VM execution and all phase-13 hot-literal refills",
+        "phase-internal C2D, Shelf and Session DMA reads",
+        "reader, printer, screen and VM dispatch work",
+        "emitter literal traversal and additional emitted functions"
+      ],
+      "minimum_cpu_byte_visits_crc_plus_wipe": 329607,
+      "minimum_crc_input_bytes": 131181,
+      "minimum_wipe_memset_bytes": 99213,
+      "minimum_wipe_verify_bytes": 99213,
+      "overlay_calls": 27,
+      "repeated_catalog_directory_crc_bytes": 31104,
+      "repeated_catalog_header_crc_bytes": 864,
+      "repeated_verifier_payload_bytes": 66717,
+      "target_payload_bytes": 32496
+    },
+    "minimum_install_schedule": [
+      "c2-emit-prepare",
+      "c2-emit-name",
+      "c2-emit-literal-append",
+      "c2-emit-code",
+      "c2-emit-final-meta",
+      "c2-emit-final-crc",
+      "c2-append-envelope",
+      "c2-append-crc",
+      "c2-append-metadata",
+      "c2-append-capacity",
+      "c2-append-stage",
+      "c2-append-image",
+      "c2-append-entries",
+      "c2-decode-04",
+      "c2-decode-05",
+      "c2-decode-06a",
+      "c2-decode-06b",
+      "c2-decode-07",
+      "c2-decode-08",
+      "c2-decode-09",
+      "c2-decode-10",
+      "c2-decode-11",
+      "c2-decode-12",
+      "c2-append-header",
+      "c2-append-publish-names",
+      "c2-append-publish-cells",
+      "c2-append-rollback"
+    ],
+    "phase13_dynamic_multiplicity": "Every C2 object load whose initial/refill span overlaps a non-empty literal table calls the full phase-13 transport. Nested calls overwrite vm_codebuf; BUF_ENSURE_MINE then reloads and may rematerialize the caller. The exact dynamic count was not instrumented in Link 29 and is deliberately not fabricated.",
+    "phase13_per_hot_refill": {
+      "excluded_from_model": [
+        "compiler VM execution and all phase-13 hot-literal refills",
+        "phase-internal C2D, Shelf and Session DMA reads",
+        "reader, printer, screen and VM dispatch work",
+        "emitter literal traversal and additional emitted functions"
+      ],
+      "minimum_cpu_byte_visits_crc_plus_wipe": 13925,
+      "minimum_crc_input_bytes": 5431,
+      "minimum_wipe_memset_bytes": 4247,
+      "minimum_wipe_verify_bytes": 4247,
+      "overlay_calls": 1,
+      "repeated_catalog_directory_crc_bytes": 1152,
+      "repeated_catalog_header_crc_bytes": 32,
+      "repeated_verifier_payload_bytes": 2471,
+      "target_payload_bytes": 1776
+    },
+    "source_contract": {
+      "catalog_verifier_runs_for_every_exec": true,
+      "hot_refill_routes_through_phase13": true,
+      "nested_call_restores_caller_buffer": true,
+      "payload_crc_runs_for_every_exec": true,
+      "window_wiped_after_every_exec": true
+    }
+  },
+  "status": "first-red-receipt-less-hardware-presmoke-stopped"
+}

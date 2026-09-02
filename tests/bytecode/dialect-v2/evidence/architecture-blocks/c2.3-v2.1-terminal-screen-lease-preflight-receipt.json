@@ -1,0 +1,100 @@
+{
+  "authority": {
+    "driver": {
+      "bytes": 10869,
+      "path": "tools/host-lisp/c2_v21_terminal_screen_lease.py",
+      "sha256": "25f9cfbf7c9296ff0c41d5c3bf6ac18fecbcac215b2664e4a3a2aed33873c80a"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 101768,
+      "commit": "81d2b9cbc4133dbbdff3401a44abd3c26c90b11c",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "4d3e07d345ca3b820f31b46c82aa1e8924a08af55c57ff041cf09626b9763486"
+    },
+    "predecessor_media": {
+      "bytes": 21510,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-abi-completion-media-receipt.json",
+      "sha256": "94f7d5627465ddd9fb9c7455649ddc51647b18ab51c75d052111c3804f47d57d"
+    },
+    "repl": {
+      "bytes": 13504,
+      "path": "src/repl.c",
+      "sha256": "146ca95cd81c65b40b20252ca77b98356a7be37f47c2d147dc9d703418b71ee1"
+    },
+    "source": {
+      "bytes": 6279,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "23ac439dbae2655a20a3c858717aeb924ecba3d817ef6a83c43ffe166ee063ef"
+    }
+  },
+  "card_lock": {
+    "WPLTO_runs": 0,
+    "cards_authorized": 1,
+    "cards_consumed": 0,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "claim_limit": "Host preflight only; the one product card has not run.",
+  "format": "lisp65-c2.3-v2.1-terminal-screen-lease-preflight-v1",
+  "implementation": {
+    "active_phase_codes": {
+      "0x00": "0x30",
+      "0x01": "0x31",
+      "0x02": "0x32",
+      "0x03": "0x33",
+      "0x04": "0x34",
+      "0x05": "0x35",
+      "0x06": "0x36",
+      "0x07": "0x37",
+      "0x08": "0x38",
+      "0x09": "0x39",
+      "0x0a": "0x01",
+      "0x0b": "0x02",
+      "0x0c": "0x03",
+      "0xfe": "0x20",
+      "0xff": "0x20"
+    },
+    "instruction_delta_bytes": 0,
+    "post_phase_code": "0x20",
+    "post_phase_visible": false,
+    "progress_bytes": "ad0000c90d9002a929c90ab00469308002e9098d3a0b",
+    "progress_offset": 12,
+    "reader_bytes": 189,
+    "screen": {
+      "address": "0x0b3a",
+      "column": 26,
+      "row": 10
+    },
+    "state_bytes": 0,
+    "status": "PASS: phase ordinal owns its cell only during phases 0..a"
+  },
+  "mutations_rejected": {
+    "receipt": [
+      "restore-visible-zero",
+      "claim-late-liveness",
+      "move-cell",
+      "spend-card",
+      "claim-device"
+    ],
+    "source": [
+      "restore-post-phase-zero",
+      "emit-visible-post-phase-digit",
+      "drop-phase-end-clamp",
+      "move-owned-cell"
+    ]
+  },
+  "recorded_on": "2026-08-16",
+  "status": "HOST-GREEN: terminal ordinal cell returned before prompt",
+  "terminal_order": {
+    "order": [
+      "scr_init",
+      "banner-vm-read",
+      "prompt"
+    ],
+    "required_banner_read_effect": "screen-code 0x20 at 0x0b3a",
+    "status": "PASS: final banner read is between clear and prompt"
+  }
+}

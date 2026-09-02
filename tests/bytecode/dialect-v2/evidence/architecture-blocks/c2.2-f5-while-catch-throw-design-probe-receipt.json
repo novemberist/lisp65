@@ -1,0 +1,86 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 4350,
+      "path": "config/c2-control-flow-repair-decision.json",
+      "sha256": "370249d1d7e0cd4fdf5a08d59632f70fe20bde55763459f10745ec3398164cf0"
+    },
+    "device_compiler": {
+      "bytes": 39110,
+      "path": "src/compile.c",
+      "sha256": "9f9c8d31b6753a0dbd9508d39ac13af100e3d63d49b6636f7f41f3990aa5a7b5"
+    },
+    "gate": {
+      "bytes": 9432,
+      "path": "tools/host-lisp/c2_f5_control_flow_decision_gate.py",
+      "sha256": "9abb05539a3397e056b592187e8dd90f9ef186a297335a2664f5c0b91d4cc16b"
+    },
+    "host_compiler": {
+      "bytes": 47304,
+      "path": "tools/host-lisp/bytecode_p0_compiler.py",
+      "sha256": "3b40d1aa369a9d956d329f139d10d33078da557b69804ca6f8679bdcf0e29b26"
+    },
+    "interrupt": {
+      "bytes": 5402,
+      "path": "src/interrupt.c",
+      "sha256": "3daa9e790bbf95d9b1f15da688386b17831d7f9d0c95e61038399ea9d2105de0"
+    },
+    "note": {
+      "bytes": 4849,
+      "path": "docs/planning/c2.2-f5-while-vs-catch-throw-contract-probe.md",
+      "sha256": "b8dbf40c476fa6a507a32b4a6e2b8a9134b8e57cfa98ba6c32c854927ebfed2c"
+    },
+    "repl": {
+      "bytes": 13564,
+      "path": "src/repl.c",
+      "sha256": "fd1277f65dfc0e4c025fa36a0b588841d02ed88808d8300b3562a237de210031"
+    },
+    "runtime_h": {
+      "bytes": 26846,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "cdd55726f639d7cf012ecc45f4f4b72113f9bd7037e1070e39b293f0b64ddab4"
+    },
+    "unwind_contract": {
+      "bytes": 9229,
+      "path": "config/c2-nested-append-unwind-contract.json",
+      "sha256": "d0bf8f6fa27cce6dcd621cebc9e17d5656e9eb60a5675515a6798d400b66988d"
+    },
+    "vm_c": {
+      "bytes": 81530,
+      "path": "src/vm.c",
+      "sha256": "bfea77857871c4d4cb585297b2739c2e9f37a878ebead1972f9951096358827a"
+    },
+    "vm_h": {
+      "bytes": 6949,
+      "path": "src/vm.h",
+      "sha256": "49f390e8fa714c89030ea4f551e7985bdfc214229a34ca4674cfd7df1166675f"
+    }
+  },
+  "claim_limit": "Paper decision only. No language surface, product byte, capacity, hardware or performance claim.",
+  "decision": {
+    "compiler_loop_witnesses": [
+      "device-dotimes",
+      "device-dolist",
+      "host-dotimes",
+      "host-dolist"
+    ],
+    "existing_branch_opcodes": [
+      28,
+      29
+    ],
+    "hardware_runs": 0,
+    "mutations_rejected": 10,
+    "new_product_bytes": 0,
+    "selected": "while",
+    "status": "passed-real-C2-lite-unwind-and-compiler-evidence",
+    "taxonomy": "one control-flow repair",
+    "top_level_longjmp_count": 1,
+    "top_level_setjmp_count": 1
+  },
+  "format": "lisp65-c2.2-f5-control-flow-design-probe-receipt-v1",
+  "hardware_runs": 0,
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "status": "passed-owner-accepted-paper-decision"
+}

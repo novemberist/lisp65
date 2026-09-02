@@ -1,0 +1,322 @@
+{
+  "authorities": {
+    "driver": {
+      "bytes": 14861,
+      "path": "tools/host-lisp/c2_v16_control_shaped_discriminator.py",
+      "sha256": "e5ac7666e984e9bb8ace58547718fde4ff8b594904453a69a91a465b65e2dd91"
+    },
+    "preparation": {
+      "bytes": 4350,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-control-shaped-preparation-receipt.json",
+      "sha256": "6f9b005309ddb6ca2ae91ebebc1c87d9522c5a11846a478d24990b410c76105c"
+    }
+  },
+  "claim_limit": "One owner-authorized control-shaped diagnostic launch with no prelaunch monitor crossing, a 27.653-second quiet floor and three CPU-view samples. No measured form, R/A/I/G row, product fix, Link or release is authorized.",
+  "device": "/dev/ttyUSB1",
+  "format": "lisp65-c2.3-v1.6-D2-control-shaped-device-v1",
+  "recorded_on": "2026-08-05",
+  "result": {
+    "CPU_left_stopped": true,
+    "R_A_I_G_claimed": false,
+    "all_state_reads_CPU_view": true,
+    "classification": "VIEW-OR-OWNER-FIRST-RED",
+    "code_owner_bound_before_interpretation": true,
+    "first_observation_quiet_seconds": 27.653066410988686,
+    "measured_forms_run": 0,
+    "prelaunch_monitor_crossing": false
+  },
+  "samples": [
+    {
+      "E000_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "80288adff724a20fdd6deef005ca10f8",
+          "diagnostic-E000-window": "068a69008507a41fb1048504a001b106"
+        },
+        "logical_address": "0xe1b8",
+        "matches": [],
+        "observed": "f724a20fdd54eef005ca10f88018a5d1",
+        "selected_owner": "unresolved",
+        "symbol_interpretation_allowed": false,
+        "unique": false
+      },
+      "GC_context": "00002320000000000000",
+      "KERNAL_BASIC_idle": {
+        "E000_owner_is_MEGA65_ROM": false,
+        "PC_in_bound_KERNAL_descending_X_loop": true,
+        "PC_owner_is_MEGA65_ROM": false,
+        "entry_reset": true,
+        "entry_stamped": false
+      },
+      "PC": "0xe1c2",
+      "captured_at_utc": "2026-08-05T15:06:05Z",
+      "code_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "eef005ca10f88018a5d1d012bd001085",
+          "diagnostic-E000-window": "8504a001b106aaa50420e8b518a51f69"
+        },
+        "logical_address": "0xe1c2",
+        "matches": [],
+        "observed": "10f88018a5d1d012bd001085d118a900",
+        "selected_owner": "unresolved",
+        "symbol_interpretation_allowed": false,
+        "unique": false
+      },
+      "durable_witness": "0xd7",
+      "freelist_head": "0x0000",
+      "gc_runs": 0,
+      "mapping": {
+        "MAPH": "0x8300",
+        "MAPL": "0x82a0",
+        "raw_tail": "00     21 ..E....C ...P 15 -  00 - ..c..lh."
+      },
+      "raw": {
+        "E000_owner": {
+          "command": "m0777e1b8",
+          "logical": "0xe1b8",
+          "raw_hex": "6d30373737653162380d0a3a30373737453142383a46373234413230464444353445454630303543413130463838303138413544310d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "GC_context": {
+          "command": "m07770016",
+          "logical": "0x0016",
+          "raw_hex": "6d30373737303031360d0a3a30373737303031363a30303030323332303030303030303030303030303733323530303030303046300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "PC_owner": {
+          "command": "m0777e1c2",
+          "logical": "0xe1c2",
+          "raw_hex": "6d30373737653163320d0a3a30373737453143323a31304638383031384135443144303132424430303130383544313138413930300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "freelist": {
+          "command": "m0777003d",
+          "logical": "0x003d",
+          "raw_hex": "6d30373737303033640d0a3a30373737303033443a30303030303030303030303030303230303046363430463730303030303030300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "gc_runs": {
+          "command": "m0777b9f0",
+          "logical": "0xb9f0",
+          "raw_hex": "6d30373737623966300d0a3a30373737423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "witness": {
+          "command": "m0777b5c3",
+          "logical": "0xb5c3",
+          "raw_hex": "6d30373737623563330d0a3a30373737423543333a44373443423741313443393046463443373332343443314443323443313332340d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        }
+      },
+      "registers": {
+        "A": "0xff",
+        "B": "0x00",
+        "MAPH": "0x8300",
+        "MAPL": "0x82a0",
+        "PC": "0xe1c2",
+        "SP": "0x01e7",
+        "X": "0x08",
+        "Y": "0x00",
+        "Z": "0x83",
+        "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45314332204646203038203030203833203030203031453720383330302038324130202020202020202020303020202020203231202e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e632e2e6c682e0d0a2c303737374531433220203130204638202020202042504c20202024453142430d0a0d0a2e",
+        "row": "E1C2 FF 08 00 83 00 01E7 8300 82A0         00     21 ..E....C ...P 15 -  00 - ..c..lh.",
+        "tail": "00     21 ..E....C ...P 15 -  00 - ..c..lh."
+      },
+      "sample": 1
+    },
+    {
+      "E000_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "80288adff724a20fdd6deef005ca10f8",
+          "diagnostic-E000-window": "068a69008507a41fb1048504a001b106"
+        },
+        "logical_address": "0xe1b8",
+        "matches": [],
+        "observed": "f724a20fdd54eef005ca10f88018a5d1",
+        "selected_owner": "unresolved",
+        "symbol_interpretation_allowed": false,
+        "unique": false
+      },
+      "GC_context": "00002320000000000000",
+      "KERNAL_BASIC_idle": {
+        "E000_owner_is_MEGA65_ROM": false,
+        "PC_in_bound_KERNAL_descending_X_loop": false,
+        "PC_owner_is_MEGA65_ROM": false,
+        "entry_reset": true,
+        "entry_stamped": false
+      },
+      "PC": "0xe18f",
+      "captured_at_utc": "2026-08-05T15:06:15Z",
+      "code_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "ac0ad68d19d6c9fff0eaa2008e1911c9",
+          "diagnostic-E000-window": "861ba900a61d8619a61a861ea61ad003"
+        },
+        "logical_address": "0xe18f",
+        "matches": [],
+        "observed": "a9ff801aad19d6ac0ad68d19d6c9fff0",
+        "selected_owner": "unresolved",
+        "symbol_interpretation_allowed": false,
+        "unique": false
+      },
+      "durable_witness": "0xd7",
+      "freelist_head": "0x0000",
+      "gc_runs": 0,
+      "mapping": {
+        "MAPH": "0x8300",
+        "MAPL": "0x82a0",
+        "raw_tail": "D004    00     23 ..E...ZC ...P 15 -  00 - ..c..lh."
+      },
+      "raw": {
+        "E000_owner": {
+          "command": "m0777e1b8",
+          "logical": "0xe1b8",
+          "raw_hex": "6d30373737653162380d0a3a30373737453142383a46373234413230464444353445454630303543413130463838303138413544310d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "GC_context": {
+          "command": "m07770016",
+          "logical": "0x0016",
+          "raw_hex": "6d30373737303031360d0a3a30373737303031363a30303030323332303030303030303030303030303733323530303030303046300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "PC_owner": {
+          "command": "m0777e18f",
+          "logical": "0xe18f",
+          "raw_hex": "6d30373737653138660d0a3a30373737453138463a41394646383031414144313944364143304144363844313944364339464646300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "freelist": {
+          "command": "m0777003d",
+          "logical": "0x003d",
+          "raw_hex": "6d30373737303033640d0a3a30373737303033443a30303030303030303030303030303230303046363430463730303030303030300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "gc_runs": {
+          "command": "m0777b9f0",
+          "logical": "0xb9f0",
+          "raw_hex": "6d30373737623966300d0a3a30373737423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "witness": {
+          "command": "m0777b5c3",
+          "logical": "0xb5c3",
+          "raw_hex": "6d30373737623563330d0a3a30373737423543333a44373443423741313443393046463443373332343443314443323443313332340d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        }
+      },
+      "registers": {
+        "A": "0x00",
+        "B": "0x00",
+        "MAPH": "0x8300",
+        "MAPL": "0x82a0",
+        "PC": "0xe18f",
+        "SP": "0x01e7",
+        "X": "0x00",
+        "Y": "0x00",
+        "Z": "0x83",
+        "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45313846203030203030203030203833203030203031453720383330302038324130204430303420202020303020202020203233202e2e452e2e2e5a43202e2e2e50203135202d20203030202d202e2e632e2e6c682e0d0a2c30373737453138462020413920464620202020204c4441202020232446460d0a0d0a2e",
+        "row": "E18F 00 00 00 83 00 01E7 8300 82A0 D004    00     23 ..E...ZC ...P 15 -  00 - ..c..lh.",
+        "tail": "D004    00     23 ..E...ZC ...P 15 -  00 - ..c..lh."
+      },
+      "sample": 2
+    },
+    {
+      "E000_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "80288adff724a20fdd6deef005ca10f8",
+          "diagnostic-E000-window": "068a69008507a41fb1048504a001b106"
+        },
+        "logical_address": "0xe1b8",
+        "matches": [],
+        "observed": "f724a20fdd54eef005ca10f88018a5d1",
+        "selected_owner": "unresolved",
+        "symbol_interpretation_allowed": false,
+        "unique": false
+      },
+      "GC_context": "00002320000000000000",
+      "KERNAL_BASIC_idle": {
+        "E000_owner_is_MEGA65_ROM": false,
+        "PC_in_bound_KERNAL_descending_X_loop": true,
+        "PC_owner_is_MEGA65_ROM": false,
+        "entry_reset": true,
+        "entry_stamped": false
+      },
+      "PC": "0xe1bf",
+      "captured_at_utc": "2026-08-05T15:06:25Z",
+      "code_owner": {
+        "candidate_bytes": {
+          "MEGA65-ROM": "0fdd6deef005ca10f88018a5d1d012bd",
+          "diagnostic-E000-window": "1fb1048504a001b106aaa50420e8b518"
+        },
+        "logical_address": "0xe1bf",
+        "matches": [],
+        "observed": "f005ca10f88018a5d1d012bd001085d1",
+        "selected_owner": "unresolved",
+        "symbol_interpretation_allowed": false,
+        "unique": false
+      },
+      "durable_witness": "0xd7",
+      "freelist_head": "0x0000",
+      "gc_runs": 0,
+      "mapping": {
+        "MAPH": "0x8300",
+        "MAPL": "0x82a0",
+        "raw_tail": "DD54EE  00     A1 N.E....C ...P 15 -  00 - ..c..lh."
+      },
+      "raw": {
+        "E000_owner": {
+          "command": "m0777e1b8",
+          "logical": "0xe1b8",
+          "raw_hex": "6d30373737653162380d0a3a30373737453142383a46373234413230464444353445454630303543413130463838303138413544310d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "GC_context": {
+          "command": "m07770016",
+          "logical": "0x0016",
+          "raw_hex": "6d30373737303031360d0a3a30373737303031363a30303030323332303030303030303030303030303733323530303030303046300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "PC_owner": {
+          "command": "m0777e1bf",
+          "logical": "0xe1bf",
+          "raw_hex": "6d30373737653162660d0a3a30373737453142463a46303035434131304638383031384135443144303132424430303130383544310d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "freelist": {
+          "command": "m0777003d",
+          "logical": "0x003d",
+          "raw_hex": "6d30373737303033640d0a3a30373737303033443a30303030303030303030303030303230303046363430463730303030303030300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "gc_runs": {
+          "command": "m0777b9f0",
+          "logical": "0xb9f0",
+          "raw_hex": "6d30373737623966300d0a3a30373737423946303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        },
+        "witness": {
+          "command": "m0777b5c3",
+          "logical": "0xb5c3",
+          "raw_hex": "6d30373737623563330d0a3a30373737423543333a44373443423741313443393046463443373332343443314443323443313332340d0a0d0a2e",
+          "view": "CPU-resolved-0x0777xxxx"
+        }
+      },
+      "registers": {
+        "A": "0xff",
+        "B": "0x00",
+        "MAPH": "0x8300",
+        "MAPL": "0x82a0",
+        "PC": "0xe1bf",
+        "SP": "0x01e7",
+        "X": "0x0b",
+        "Y": "0x00",
+        "Z": "0x83",
+        "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a45314246204646203042203030203833203030203031453720383330302038324130204444353445452020303020202020204131204e2e452e2e2e2e43202e2e2e50203135202d20203030202d202e2e632e2e6c682e0d0a2c303737374531424620204630203035202020202042455120202024453143360d0a0d0a2e",
+        "row": "E1BF FF 0B 00 83 00 01E7 8300 82A0 DD54EE  00     A1 N.E....C ...P 15 -  00 - ..c..lh.",
+        "tail": "DD54EE  00     A1 N.E....C ...P 15 -  00 - ..c..lh."
+      },
+      "sample": 3
+    }
+  ],
+  "status": "VIEW-OR-OWNER-FIRST-RED"
+}

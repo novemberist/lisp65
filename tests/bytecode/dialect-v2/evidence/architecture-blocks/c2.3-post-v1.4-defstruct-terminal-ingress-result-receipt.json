@@ -1,0 +1,162 @@
+{
+  "A": {
+    "C2J": "CLEAR",
+    "captured_slot": 39,
+    "phase_owner": "NONE",
+    "reason": "Slot 39 is barred from forward-failure use by the bound provenance correction; the cleanup-state witnesses are clean",
+    "selected": false,
+    "slot_provenance": "rollback/stale/success-ambiguous"
+  },
+  "G": {
+    "first_error": "unreached",
+    "gc_runs": 5,
+    "mem_oom": 0,
+    "selected": false
+  },
+  "I": {
+    "D019": 0,
+    "D01A_oracle": "(raw & 0x1f) == 0x01",
+    "D01A_programmable_mask": 31,
+    "D01A_programmable_value": 1,
+    "D01A_raw": 225,
+    "attribution": "source-less interrupt/guard-input edge",
+    "episode_latch": 1,
+    "historical_exact_comparison": "D01A == 0x01 (superseded for readback)",
+    "interrupted_return_PC": 49011,
+    "oracle_counterexamples": {
+      "historical_unmasked_raw_equals_1": false,
+      "widened_mask_0x3f_accepts_E1": false
+    },
+    "return_PC_symbolic_owner": null,
+    "selected": true,
+    "source_less_entry": 2,
+    "tagged": true
+  },
+  "R": {
+    "claim_scope": "only the two retained completed refill views",
+    "reason": "both retained views equal the independent captured source oracle",
+    "retained_completed_views": [
+      {
+        "C2D_entry": {
+          "code_length": 45,
+          "code_offset": 38470,
+          "generation": 1,
+          "image_slot": 5,
+          "literal_count": 3,
+          "ordinal": 656,
+          "raw_hex": "050346962d006e090100",
+          "resolution_base": 2414
+        },
+        "completion_metadata_used_as_oracle": false,
+        "cursor": 29,
+        "expected": 62,
+        "fetched": 62,
+        "header_bytes": 13,
+        "object_sha256": "42bed936b5584b9ae8506bc0e1a7ed005073d4047c8403aff6a3fea698aac492",
+        "oracle": "captured-C2D-entry-plus-captured-Bank2-object",
+        "owner_bank_tag": 1,
+        "owner_ordinal": 656,
+        "view": "previous-fill",
+        "window_base": 29
+      },
+      {
+        "C2D_entry": {
+          "code_length": 37,
+          "code_offset": 41166,
+          "generation": 1,
+          "image_slot": 5,
+          "literal_count": 2,
+          "ordinal": 696,
+          "raw_hex": "0502cea025000f0a0100",
+          "resolution_base": 2575
+        },
+        "completion_metadata_used_as_oracle": false,
+        "cursor": 10,
+        "expected": 12,
+        "fetched": 12,
+        "header_bytes": 11,
+        "object_sha256": "ea05387f6be2e967537506f46c03e1689169edabca54593016097d905a37738a",
+        "oracle": "captured-C2D-entry-plus-captured-Bank2-object",
+        "owner_bank_tag": 1,
+        "owner_ordinal": 696,
+        "view": "last-fill",
+        "window_base": 10
+      }
+    ],
+    "selected": false
+  },
+  "authorities": {
+    "VIC_IV_RTL": {
+      "commit": "f9385701f67c4cd28a92f6af27ad7abe601699e6",
+      "lines": "1768-1777",
+      "permalink": "https://github.com/MEGA65/mega65-core/blob/f9385701f67c4cd28a92f6af27ad7abe601699e6/src/vhdl/viciv.vhdl#L1768-L1777",
+      "readback_semantics": "bits 7..5 are hard-wired one; bits 4..0 are the programmable IRQ mask domain",
+      "register": "$D01A",
+      "repository": "MEGA65/mega65-core"
+    },
+    "completion_edge_desk_result": {
+      "bytes": 19039,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-completion-edge-receipt.json",
+      "sha256": "a830d7fdb996fff11ec9f080cce9178592d9bc5bb9ec2d0effe45d7a2248bcbc"
+    },
+    "device_capture": {
+      "bytes": 10944,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-terminal-ingress-device-receipt.json",
+      "sha256": "c69f1ee1402dd1d3d1ef65206c5b25bb6eaf8afd9dbeba1efb3b48b32c8255d9"
+    },
+    "diagnostic_sister": {
+      "bytes": 19897,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-terminal-ingress-sister-receipt.json",
+      "sha256": "8270c660532fbe48234347d029f51e8cd95c392de26011f12114c2fc051db57f"
+    },
+    "historical_phase_B_partition": {
+      "bytes": 35761,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-b-guard-partition-receipt.json",
+      "sha256": "83a8328a7dc3e4c395ff42b368f79aaed8d258076efebada021736afce96428a"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 41688,
+      "commit": "95049ced29d08fac8031faa472ffbaf6ab51ab00",
+      "path": "docs/planning/post-v1.4.0-direction-plan.md",
+      "sha256": "bc1df9b00ab12aed1a91e4ff76e81d144c404b0f246a5672aa0d3557769f24b8"
+    },
+    "slot39_provenance_correction": {
+      "bytes": 8533,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-slot39-provenance-correction-receipt.json",
+      "sha256": "cdb733ace97a1596891ce6110268ab93d4c2ebd2e083a191809907fbcbc4ab3a"
+    }
+  },
+  "claim_limit": "This replay selects the Phase-B I row after correcting only the D01A readback oracle. It identifies the source-less interrupt/guard-input edge, not the electrical or software origin of that IRQ, not a symbolic owner for return PC $BF73, and not a fix. R is excluded only for the two retained completed refill views; Slot 39 remains provenance-ambiguous.",
+  "decision": {
+    "R_A_I_G": "I",
+    "device_recontact_authorized": false,
+    "fix_authorized": false,
+    "mechanism_boundary": "second source-less IRQ episode at terminal ingress",
+    "precedence": [
+      "R",
+      "A",
+      "G",
+      "I"
+    ],
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2.3-post-v1.4-defstruct-terminal-ingress-result-v1",
+  "progress": {
+    "dispatch_counter": 36110,
+    "interpretation": "terminal record committed before the first scheduled ring sample; the missing ring samples do not override the tagged terminal ingress",
+    "owner_ordinal": 696,
+    "ring_slots_committed": 0
+  },
+  "recorded_on": "2026-08-10",
+  "status": "I-SOURCELESS-IRQ-TERMINAL-INGRESS",
+  "unchanged_capture_replay": {
+    "CPU_left_stopped": true,
+    "PC": "0xb431",
+    "capture_bytes_modified": 0,
+    "entry_witness": "0x44",
+    "hardware_recontacts": 0,
+    "record_sha256": "e3dfa941c5e0124bd7bfdbc1b1a444285e218941b2889637ccdac8465b07c95e",
+    "stable_reads": 3
+  }
+}

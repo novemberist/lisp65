@@ -1,0 +1,251 @@
+{
+  "answer": {
+    "89_frame_target_envelope": "not-attributable-from-current-authorities",
+    "cut_recommendation": "none: no target phase dominates by accepted evidence; retain the counters as the precondition for any future phase-timed or product-shaped replay",
+    "host_lane_by_modeled_EXT_job_count": {
+      "phase": "sweep",
+      "share": 1.0
+    },
+    "reason": "The host lane now separates and counts the real collector's work terms, but it does not reproduce the live target C2D root graph, symbol EXT tables, or target arena contents. Accepted hardware evidence provides only the whole 89-frame endpoint and two phase lower bounds. Assigning frames to a host-shaped phase would be an invented timing model.",
+    "target_proven_lower_bound_by_job_count": {
+      "phase": "symbols",
+      "share": 0.8333333333333334
+    }
+  },
+  "authority": {
+    "Link66": {
+      "bytes": 6856,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link66-bundled-hardware-measurements-receipt.json",
+      "sha256": "93396a7f6fe423837c9ae7e38380b6045853acdca9808e3950a8c617f9ac0d8e"
+    },
+    "collector": {
+      "bytes": 48379,
+      "path": "src/mem.c",
+      "sha256": "2e3ad39bc2b4322e20495b711df3853fa22eee36979b08cbaf8046e65937ae51"
+    },
+    "collector_header": {
+      "bytes": 7838,
+      "path": "src/mem.h",
+      "sha256": "e6f5c8340a66a08faf9aea835bff89c1a8cade5388a4aa6541f8851e4ad8091f"
+    },
+    "driver": {
+      "bytes": 17561,
+      "path": "tools/host-lisp/c2_v122_g2_gc_work_attribution.py",
+      "sha256": "8d4a448ca95eaea0e79ccd90ef8a619b624f4bdace35a68f4352e94e83651d69"
+    },
+    "final_G5": {
+      "bytes": 13913,
+      "path": "build/c2.2/acceptance/g5/replay-v11-hybrid-dma/session-01/g5-hardware-receipt.json",
+      "sha256": "d317833ccd68d129493e824c1a89995b819ddc6464ce4f50534f1fb46cd8dbc0"
+    },
+    "final_G5_counters": {
+      "bytes": 439,
+      "path": "build/c2.2/acceptance/g5/replay-v11-hybrid-dma/session-01/g5/counters/after_gc_envelope.txt",
+      "sha256": "8c384bb995355410304fc5aa8928645a6ffbfcae5f5f7e57da56e8f007512932"
+    },
+    "fixture": {
+      "bytes": 415,
+      "path": "tests/equivalence/while-target-gc-transient.lisp",
+      "sha256": "b5dd11f1ed02d97276688b7b29f2d8a4005e4e23b2efe4febf494ce529759d40"
+    },
+    "harness": {
+      "bytes": 21069,
+      "path": "scripts/equivalence-main.c",
+      "sha256": "64443908d247af96c1761b15b1cba59b0a3f98be298cc17bb32ad06053f92ad5"
+    },
+    "prior_operation_ledger": {
+      "bytes": 10250,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-phase-m2-gc-envelope-attribution-receipt.json",
+      "sha256": "55ebcf422334ddea85d778792fd8bbd7a69be11bed8fa3136165db42fb483efa"
+    },
+    "product_define_authorities": [
+      {
+        "bytes": 22860,
+        "path": "config/workbench.mk",
+        "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+      },
+      {
+        "bytes": 77926,
+        "path": "mk/workbench.mk",
+        "sha256": "67382a5592ca57c6bf9c702d659fdc2ce487df22696eaf428802344ffda6a1f1"
+      }
+    ]
+  },
+  "claim_limit": "Counts are exact for the final collection of the host fixture and the checked-copy EXT model. They are not target cycle timings. Only 88/89 whole-collection frames, 96 C2D root block reads, 480 symbol-value reads and the resulting >=576-job lower bound are bound to hardware. Unknown target phase work remains unknown.",
+  "execution_witness": {
+    "collections_per_lane": 6,
+    "executed_lanes": 3,
+    "expected_lanes": 3,
+    "host_only_define_absent_from_product_build": true,
+    "lanes": [
+      "direct-EXT-reference",
+      "checked-copy-EXT-model",
+      "phase-collapse-mutation"
+    ],
+    "phase_collapse_mutation_rejected": true,
+    "phase_counters_nonzero": true
+  },
+  "format": "lisp65-c2.2-v1.2.2-g2-gc-work-attribution-v1",
+  "hardware_runs": 0,
+  "host_lane_last_collection": {
+    "modeled_EXT_jobs_all_six_collections": 970,
+    "modeled_EXT_jobs_all_six_collections_by_phase": {
+      "arena": 0,
+      "roots": 0,
+      "sweep": 970,
+      "symbols": 0,
+      "trace": 0
+    },
+    "modeled_EXT_jobs_by_phase": {
+      "arena": 0,
+      "roots": 0,
+      "sweep": 177,
+      "symbols": 0,
+      "trace": 0
+    },
+    "modeled_EXT_jobs_in_collection": 177,
+    "modeled_EXT_jobs_outside_gc_collect": 20492,
+    "modeled_job_count_dominant_phase": "sweep",
+    "modeled_job_count_dominant_share": 1.0,
+    "observer_correction": "The historical aggregate includes six collections plus free-before/free-after/final freelist walks and ordinary workload access. Cumulative buckets now close that aggregate; last-collection buckets reset after its first observer and close before its later observers.",
+    "semantics": {
+      "alloc_high": 284,
+      "final_free": 838,
+      "free_after": 979,
+      "free_before": 787,
+      "frozen": 107,
+      "marked": 32,
+      "mem_oom": 0,
+      "min_free_after": 979,
+      "reclaimed": 192,
+      "runs": 6
+    },
+    "shape_note": "This fixture's final collection has no live runtime EXT trace interval and no arena bytes to copy; its 177 modeled cell-heap jobs are therefore all dead-EXT sweep writes. Symbol tables and C2D roots are not resident in the host lane's modeled EXT array and are bound separately below.",
+    "work": {
+      "arena_copy_bytes": 0,
+      "arena_copy_jobs": 0,
+      "arena_dma_bytes": 0,
+      "arena_dma_reads": 0,
+      "arena_dma_writes": 0,
+      "arena_mark_attempts": 0,
+      "arena_mark_walk_visits": 0,
+      "arena_marked_slots": 32,
+      "arena_new_marks": 0,
+      "arena_slots": 1071,
+      "arena_total_dma_bytes": 0,
+      "arena_total_dma_reads": 0,
+      "arena_total_dma_writes": 0,
+      "outside_dma_bytes": 5242,
+      "outside_dma_reads": 2054,
+      "outside_dma_writes": 630,
+      "outside_mark_attempts": 0,
+      "outside_mark_walk_visits": 0,
+      "outside_new_marks": 0,
+      "outside_total_dma_bytes": 39828,
+      "outside_total_dma_reads": 13688,
+      "outside_total_dma_writes": 6804,
+      "roots_dma_bytes": 0,
+      "roots_dma_reads": 0,
+      "roots_dma_writes": 0,
+      "roots_mark_attempts": 6,
+      "roots_mark_walk_visits": 0,
+      "roots_new_marks": 1,
+      "roots_total_dma_bytes": 0,
+      "roots_total_dma_reads": 0,
+      "roots_total_dma_writes": 0,
+      "shadow_roots": 6,
+      "sweep_dma_bytes": 354,
+      "sweep_dma_reads": 0,
+      "sweep_dma_writes": 177,
+      "sweep_ext_reclaimed": 177,
+      "sweep_ext_visits": 177,
+      "sweep_hot_reclaimed": 15,
+      "sweep_hot_visits": 47,
+      "sweep_mark_attempts": 0,
+      "sweep_mark_walk_visits": 0,
+      "sweep_new_marks": 0,
+      "sweep_total_dma_bytes": 1940,
+      "sweep_total_dma_reads": 0,
+      "sweep_total_dma_writes": 970,
+      "symbol_function_reads": 95,
+      "symbol_rows": 95,
+      "symbol_value_reads": 95,
+      "symbols_dma_bytes": 0,
+      "symbols_dma_reads": 0,
+      "symbols_dma_writes": 0,
+      "symbols_mark_attempts": 285,
+      "symbols_mark_walk_visits": 0,
+      "symbols_new_marks": 0,
+      "symbols_total_dma_bytes": 0,
+      "symbols_total_dma_reads": 0,
+      "symbols_total_dma_writes": 0,
+      "trace_dma_bytes": 0,
+      "trace_dma_reads": 0,
+      "trace_dma_writes": 0,
+      "trace_ext_visits": 0,
+      "trace_hot_visits": 329,
+      "trace_mark_attempts": 276,
+      "trace_mark_walk_visits": 0,
+      "trace_new_marks": 31,
+      "trace_passes": 7,
+      "trace_total_dma_bytes": 0,
+      "trace_total_dma_reads": 0,
+      "trace_total_dma_writes": 0
+    }
+  },
+  "product_delta_bytes": 0,
+  "product_links": 0,
+  "recorded_on": "2026-07-29",
+  "status": "passed-host-work-attribution-no-cut-authorized",
+  "target_binding": {
+    "observations": {
+      "Link66": {
+        "collections": 1,
+        "frames": 88,
+        "root_block_reads": 96
+      },
+      "final_G5": {
+        "collections": 1,
+        "frames": 89,
+        "root_block_reads": 96,
+        "symbols": 480
+      }
+    },
+    "proven_DMA_job_lower_bound": {
+      "composition": {
+        "Bank5_symval_2_byte_reads": 480,
+        "C2D_root_32_byte_reads": 96
+      },
+      "dominant_known_term": {
+        "claim_limit": "dominant only inside the 576-job proven lower bound, not inside the 89-frame envelope",
+        "jobs": 480,
+        "phase": "symbols",
+        "share_of_proven_lower_bound": 0.8333333333333334
+      },
+      "jobs": 576,
+      "not_included": [
+        "pointer-valued symfn reads",
+        "C2D-root graph traversal",
+        "EXT fixed-point traversal",
+        "string-arena transfers",
+        "EXT sweep writes",
+        "observer or evaluator work outside gc_collect"
+      ]
+    },
+    "target_phase_frames": {
+      "arena": null,
+      "roots": null,
+      "sweep": null,
+      "symbols": null,
+      "trace": null,
+      "whole_collection_authority": 89
+    },
+    "target_phase_jobs": {
+      "arena": null,
+      "roots": 96,
+      "sweep": null,
+      "symbols": 480,
+      "trace": null
+    }
+  }
+}

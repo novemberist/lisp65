@@ -1,0 +1,70 @@
+{
+  "format": "lisp65-v11-c1-final-link-allocation-determinism-diagnosis-v1",
+  "version": 1,
+  "recorded_on": "2026-07-16",
+  "status": "structurally-fixed-repeated-final-links-byte-identical-not-promoted",
+  "trigger": {
+    "gate": "r3-product-varied-double-build",
+    "stage": "second fresh clone",
+    "failure": "final product ELF identity drift with identical source, headers, flags and toolchain",
+    "observed_variants": [
+      {
+        "elf_bytes": 133760,
+        "elf_sha256": "a8b98f16d31931404eb47f066a9a91dd3c5afc8d1999e105b2d04387a6469b03",
+        "resident_island_installer_bytes": 1759,
+        "anonymous_noinit_bytes": 2
+      },
+      {
+        "elf_bytes": 133764,
+        "elf_sha256": "70eb3ada0ca425a7c90927c74e9397e3cc9fa2795202f5ff5a5fa0848ad6a48c",
+        "resident_island_installer_bytes": 1765,
+        "anonymous_noinit_bytes": 4
+      }
+    ],
+    "repeated_reproduction": "Eight retained-clone final links alternated between the two code shapes; this was real whole-program allocation nondeterminism, not ELF metadata drift."
+  },
+  "root_cause": {
+    "component": "vm_resident_island_install",
+    "mechanism": "LLVM-MOS was free to preserve the installer context and copy-target pointers either in zero page or in anonymous .noinit storage across memcpy and CRC calls.",
+    "effect": "The choice changed the installer by six bytes, shifted the following image, and changed the complete product ELF despite identical inputs.",
+    "prior_gate_limit": "Binding the packed runtime-overlay bank to one final ELF proved package consistency but could not make that final ELF reproducible."
+  },
+  "structural_fix": {
+    "implementation": "The boot installer now uses the two already-existing runtime call slots for its context and target. Installer accesses use volatile lvalues so both cross-call values are reloaded from named storage; the resident batch path retains its original non-volatile code shape.",
+    "lifetime_proof": "Installation finishes before the resident island becomes ready; batch execution requires the ready state. Installer and batch use of the shared slots cannot overlap.",
+    "permanent_gate": "workbench-runtime-overlay-package-verify requires rtov_call_context and rejects every final product ELF whose __lisp65_workbench_noinit_end differs from __bss_end.",
+    "failure_class_closed": "The allocator can no longer invent anonymous cross-call storage for either installer pointer."
+  },
+  "verification": {
+    "host_runtime_overlay": "PASS reusable+batch+45 fail-closed cases",
+    "gate_negative_proof": "A context-only intermediate fix still allowed the copy target to spill into two anonymous .noinit bytes; the new structural gate rejected that real product link before the target slot was bound explicitly.",
+    "exact_relinks": {
+      "count": 8,
+      "environment": "same final generated bindings, forced complete final relink each time",
+      "elf_sha256": "4b085446ab305293c7fb05191cdb115575fef81cf246841dfcf2749b1ba0dc1c",
+      "prg_sha256": "2696d10dc77c8bbc07491551320e214b4e929138314ea10ecccfb34d62bca6d6",
+      "all_byte_identical": true,
+      "anonymous_noinit_bytes_each": 0
+    },
+    "final_overlay_binding": "PASS: all 44 final-ELF slices exactly match the 65472-byte packed image and manifest",
+    "fresh_clone_varied_double_build": "required after commit before R3 promotion"
+  },
+  "capacity_delta": {
+    "resident_island_installer_hard_limit_bytes": 1792,
+    "previous_owner_authorized_bytes": 1765,
+    "previous_owner_authorized_headroom_bytes": 27,
+    "fixed_bytes": 1743,
+    "fixed_headroom_bytes": 49,
+    "headroom_credit_bytes": 22,
+    "resident_island_payload_bytes": 1531,
+    "resident_island_payload_delta_bytes": 0,
+    "runtime_overlay_bank_bytes": 65472,
+    "runtime_overlay_bank_delta_bytes": 0,
+    "bank_post_boot_reserve_bytes": 1802,
+    "ext_standard_composition_headroom_bytes": 25073,
+    "boot_overlay_bytes": 1669,
+    "overlay_vma_headroom_bytes": 0,
+    "other_dimensions": "unchanged"
+  },
+  "claim_limit": "This diagnosis proves the local structural allocation fix, the zero-anonymous-spill gate, eight exact final relinks, unchanged behavior in the runtime-overlay host matrix and a 22-byte installer-slice headroom credit. It does not replace the canonical varied fresh-clone double build, promote a product set, or claim R3/R4/R5/R6/G5/G6 acceptance."
+}

@@ -1,0 +1,107 @@
+{
+  "authorities": {
+    "driver": {
+      "bytes": 14861,
+      "path": "tools/host-lisp/c2_v16_control_shaped_discriminator.py",
+      "sha256": "e5ac7666e984e9bb8ace58547718fde4ff8b594904453a69a91a465b65e2dd91"
+    },
+    "handover": {
+      "bytes": 5043,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-physical-run-handover-desk-receipt.json",
+      "sha256": "9669dc1988bd959c23f17e0d484a981cc473d2ef2c5a259f54d9eba887cf3ae4"
+    },
+    "owner": {
+      "bytes": 94910,
+      "path": "git:aab22b3c8ab63c6d33d415007aa76f7e850c1d7d:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "3492bfd2720e2113bb10d7190eedb80094d364d97dd4233666cb683965fa948c"
+    },
+    "quiet_preparation": {
+      "bytes": 8335,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-corrected-view-quiet-preparation-receipt.json",
+      "sha256": "33caa36d28b9b8804d12e78347abc5b9e2faf04d50658cb9ae1b89e58f68107a"
+    },
+    "quiet_result": {
+      "bytes": 5334,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-corrected-view-quiet-result-receipt.json",
+      "sha256": "b2dc562176498d8d7ae43964e64c67c53072607e9d13112f686493b125670b7e"
+    },
+    "runner": {
+      "bytes": 4320,
+      "path": "scripts/c2-v16-defstruct-control-shaped-hw.sh",
+      "sha256": "def72ea0eb95d9ff07e312f18ea2ff278a88ccba20a5cf60bfe7ad8efa20e12c"
+    }
+  },
+  "claim_limit": "One owner-authorized control-shaped diagnostic launch with no prelaunch monitor crossing, a 27.653-second quiet floor and three CPU-view samples. No measured form, R/A/I/G row, product fix, Link or release is authorized.",
+  "facts": {
+    "choreography": {
+      "R_A_I_G_claimed": false,
+      "authorized": true,
+      "capture_schedule": {
+        "first_device_access_after_sleep": true,
+        "ordered_steps": [
+          "owner-RUN",
+          "quiet-start",
+          "27.653-second-sleep",
+          "serial-open",
+          "monitor-sync",
+          "t1"
+        ]
+      },
+      "cold_reset": true,
+      "control_shaped_before_owner_RUN": true,
+      "first_observation_quiet_seconds": 27.653,
+      "leave_CPU_stopped": true,
+      "measured_forms": 0,
+      "physical_RUN": true,
+      "prelaunch_monitor_crossing": false,
+      "runner_source_proof": {
+        "owner_launch_is_next_device_action": true,
+        "post_READY_pre_owner_monitor_calls": 0
+      },
+      "sample_offsets_seconds": [
+        27.653,
+        32.653,
+        37.653
+      ],
+      "samples": 3
+    },
+    "decision_table": {
+      "ambiguous_view_or_owner": "VIEW-OR-OWNER-FIRST-RED",
+      "no_prompt_clean_witness_D7": "TARGET-SIDE-LAUNCH-DIFFERENCE-DESK-RETURN",
+      "owner_prompt_plus_witness_44": "PRELAUNCH-MONITOR-CROSSING-CAUSAL"
+    },
+    "identity": {
+      "diagnostic_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-closing-session/d2-corrected-view-quiet-appointment/diagnostic-link82-corrected-view-b5c3.prg",
+        "sha256": "347ecdd0aa9d8dda70a20177b9c77409264b1102ecfd01b23ba1ab3b7c27ab59"
+      },
+      "entry_witness": {
+        "address": "0xb5c3",
+        "entered": "0x44",
+        "reset": "0xd7"
+      },
+      "product_bytes_changed": 0,
+      "promotable": false
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-D2-control-shaped-preparation-v1",
+  "mutations_rejected": {
+    "claim-R-A-I-G": "control-shaped choreography drift",
+    "drop-sample": "control-shaped choreography drift",
+    "drop-table-row": "decision table drift",
+    "early-t1-source-order": "monitor entered before quiet floor",
+    "erase-control-shape": "control-shaped choreography drift",
+    "inject-prelaunch-after-READY": "monitor crossing exists after READY gate and before owner RUN",
+    "measured-form": "control-shaped choreography drift",
+    "prelaunch-monitor": "control-shaped choreography drift",
+    "product-byte": "diagnostic identity boundary drift",
+    "promotable": "diagnostic identity boundary drift",
+    "resume-final": "control-shaped choreography drift",
+    "revoke": "control-shaped choreography drift",
+    "short-quiet": "control-shaped choreography drift",
+    "virtual-RUN": "control-shaped choreography drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "HOST-GREEN; ONE CONTROL-SHAPED CONTACT AUTHORIZED"
+}

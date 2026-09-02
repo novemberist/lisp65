@@ -1,0 +1,177 @@
+{
+  "artifact": {
+    "artifact_objects": 10,
+    "bank2_headroom_after_bytes": 12431,
+    "bank2_headroom_before_bytes": 18238,
+    "code_bytes": 713,
+    "directory_bytes": 70,
+    "external_bytes": 5807,
+    "functions": 10,
+    "macro_entries": [
+      "trace",
+      "untrace"
+    ],
+    "minimum_preserved_headroom_bytes": 8192,
+    "resident_delta_bytes": 0,
+    "source_cases": 13,
+    "source_steps": 7480
+  },
+  "authorities": {
+    "budget": {
+      "bytes": 4922,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-parity-pilot-profile-receipt.json",
+      "sha256": "43a6686d0efb4a12131bfeb091a5e4caf7d4330413a1b1b3725a5695ebf2da9f"
+    },
+    "contract": {
+      "bytes": 1949,
+      "path": "config/comfort-track-contract.json",
+      "sha256": "e6fdf0e9db8adaa2a1ae6409de469d84dd0713868641d4c5b1ba85af1b3048f3"
+    },
+    "function_cell_runtime": {
+      "bytes": 12213,
+      "path": "src/symbol.c",
+      "sha256": "ea62e535251a1d74b805755b323005ba85e796a25f9899c05e78c81d58d60efd"
+    },
+    "generated_who_calls": {
+      "bytes": 3388,
+      "path": "lib/comfort-who-calls-generated.lisp",
+      "sha256": "a920c3c5f2f2ef2fb302c667253b0864d291de7205d5d707cd31f3f24bd37c98"
+    },
+    "p0_compiler": {
+      "bytes": 48637,
+      "path": "tools/host-lisp/bytecode_p0_compiler.py",
+      "sha256": "e3b8e989e420478616604cef238b89a8f1e380cad62854821338653b6f4354f7"
+    },
+    "p0_stdlib_runner": {
+      "bytes": 130108,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "94d2d3afbf6e48b09b875950c6f07f323b5aea4bc43afd0be225a67c93c0013b"
+    },
+    "public_surface": {
+      "bytes": 12358,
+      "path": "config/dialect-v2-surface.json",
+      "sha256": "852a264ee844110e4992b691387a8e1c99466ceb95ad66b8e43495164ed67fb6"
+    },
+    "source:comfort-strings.lisp": {
+      "bytes": 964,
+      "path": "lib/comfort-strings.lisp",
+      "sha256": "cf9a2eb3a4e649a633bd03c067bdf73842d38cceeedfd68f02019fed2a078124"
+    },
+    "source:comfort-trace.lisp": {
+      "bytes": 2167,
+      "path": "lib/comfort-trace.lisp",
+      "sha256": "6142c39935295839208c99b876d86511340f497396cc8cd030d40fa4ae1f0273"
+    },
+    "source:comfort-who-calls-generated.lisp": {
+      "bytes": 3388,
+      "path": "lib/comfort-who-calls-generated.lisp",
+      "sha256": "a920c3c5f2f2ef2fb302c667253b0864d291de7205d5d707cd31f3f24bd37c98"
+    },
+    "suite": {
+      "bytes": 2327,
+      "path": "tests/bytecode/libs/p0-comfort-track.json",
+      "sha256": "6ffd97783025c1e332f05ecaaafee2e8446d5601b12b7878a23faea77f74aae7"
+    },
+    "treewalk_function_semantics": {
+      "bytes": 97933,
+      "path": "src/eval.c",
+      "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+    }
+  },
+  "claim_limit": "Host-only Bank-2 development material. No release, device, packaging, or public-surface claim; delivery waits for a normal release block.",
+  "format": "lisp65-comfort-track-host-first-receipt-v1",
+  "mutations": {
+    "all_rejected": true,
+    "cases": {
+      "artifact:trace-macro-flag-cleared": "comfort artifact macro flags drift",
+      "budget:one-byte-over-preserved-floor": "comfort Bank-2 freight exceeds its host-only budget",
+      "scope:device_contacts": "comfort scope broadened",
+      "scope:execution": "comfort scope broadened",
+      "scope:packaging_deferred_to_release_block": "comfort scope broadened",
+      "scope:placement": "comfort scope broadened",
+      "scope:public_surface_claim": "comfort scope broadened",
+      "scope:release_claim": "comfort scope broadened",
+      "scope:resident_delta_bytes": "comfort scope broadened",
+      "strings:tombstone-used": "comfort source used a dialect-v2 converter tombstone",
+      "trace:original-not-captured": "trace does not capture the original function cell exactly once",
+      "trace:wrapper-resolves-name": "trace wrapper does not call the captured callable",
+      "untrace:wrong-cell-restored": "untrace does not restore the captured function-cell value",
+      "who-calls:edge-removed": "who-calls graph has an empty row",
+      "who-calls:generated-source-edited": "who-calls generated source drift",
+      "who-calls:generic-symbol-inference": "who-calls edge authority drift",
+      "who-calls:unproven-edge-added": "who-calls generated source drift"
+    },
+    "count": 17
+  },
+  "recorded_on": "2026-08-06",
+  "scope": {
+    "authority": {
+      "bytes": 12358,
+      "path": "config/dialect-v2-surface.json",
+      "sha256": "852a264ee844110e4992b691387a8e1c99466ceb95ad66b8e43495164ed67fb6"
+    },
+    "deferred_names_absent": [
+      "capitalize",
+      "string-split",
+      "trace",
+      "untrace",
+      "who-calls"
+    ],
+    "device_contacts": 0,
+    "public_names_before": 130,
+    "public_surface_claim": false,
+    "release_claim": false
+  },
+  "sources": {
+    "converter_tombstones_used": false,
+    "definition_count": 10,
+    "definitions": [
+      "%comfort-callers-index",
+      "%comfort-string-split-from",
+      "%comfort-trace-install-form",
+      "%comfort-trace-remove",
+      "%comfort-trace-wrapper-form",
+      "capitalize",
+      "string-split",
+      "trace",
+      "untrace",
+      "who-calls"
+    ]
+  },
+  "status": "passed-host-only-development-material",
+  "trace_untrace": {
+    "captured_callable_apply": true,
+    "original_function_captures": 1,
+    "registry_rooted": true,
+    "restore_installs": 1,
+    "trace_expansion_sha256": "d5bf724a05808057d472e570bcd3bbe55804719cf916e259c45ddc8ea220c7fc",
+    "untrace_expansion_sha256": "51602a23569a68b13d61c02a8808b4886c6ec69b00380abb28de48afca4c4eaa",
+    "wrapped_name_apply": false,
+    "wrapper_installs": 1
+  },
+  "who_calls": {
+    "generated_rows": 50,
+    "generated_source_exact": true,
+    "generic_kind8_inference": false,
+    "manifests": {
+      "tests/bytecode/dialect-v2/fixtures/v130-static-inputs/idex.manifest.json": {
+        "bytes": 70458,
+        "entry_ref_nodes": 25,
+        "entry_refs": 25,
+        "path": "tests/bytecode/dialect-v2/fixtures/v130-static-inputs/idex.manifest.json",
+        "sha256": "168b17833fa832e651826fc4e3ff66e9eff363bf27aa49a3a36c2f434fba4770"
+      },
+      "tests/bytecode/dialect-v2/fixtures/v130-static-inputs/m65d.manifest.json": {
+        "bytes": 64154,
+        "entry_ref_nodes": 84,
+        "entry_refs": 84,
+        "path": "tests/bytecode/dialect-v2/fixtures/v130-static-inputs/m65d.manifest.json",
+        "sha256": "f68b989f9d51e2b39ed728d64f88408ef7855751d1ddc3c3231c149b72d9dbfa"
+      }
+    },
+    "raw_entry_refs": 109,
+    "targets": 50,
+    "unique_edges": 109,
+    "unique_entry_ref_nodes": 109
+  }
+}

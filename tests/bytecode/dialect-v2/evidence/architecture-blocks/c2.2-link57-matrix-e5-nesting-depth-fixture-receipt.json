@@ -1,0 +1,139 @@
+{
+  "authorities": {
+    "approved_addenda": {
+      "bytes": 14097,
+      "path": "config/c2-cross-invariant-c2.2-open-addenda.json",
+      "sha256": "73aa314bc1a8f9dceaa3e0ce144262335dd197503ea11afca2356d5b67671777"
+    },
+    "error_codes": {
+      "bytes": 3395,
+      "path": "src/error_codes.h",
+      "sha256": "15dd67e06cbbe829760298e19487e436abf25f5ddc84c2cf27c327336fe1aa8d"
+    },
+    "error_registry": {
+      "bytes": 19099,
+      "path": "config/error-texts.json",
+      "sha256": "383853ab05fae714ee8b183ea5d68978e12aa0eaee30919e4b38d845372f2594"
+    },
+    "host_renderer": {
+      "bytes": 8497,
+      "path": "src/error_overlay.c",
+      "sha256": "396645d2ef249fbde300533743916d973ac634112b3a561a42990af2591e8fef"
+    },
+    "line_review_receipt": {
+      "bytes": 10329,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cross-invariant-b3-c3-d3-e5-contract-review-receipt.json",
+      "sha256": "1d3e203390460efb08a8d479b0dc753a742afb6ff5346c78c2446dfa5a7708c8"
+    },
+    "link57_pre-E5_error_table": {
+      "bytes": 11576,
+      "path": "build/c2.2/substitution/product-link-57-keymap-nullary-fast-path2/error-text-table.h",
+      "sha256": "1aea3833862203b5d9d2683e7dba12386c6eb04868cfef719bb34b1b87378371"
+    },
+    "mos_renderer": {
+      "bytes": 4568,
+      "path": "src/l65e_bcode_ordinal.s",
+      "sha256": "fa5561f2b715112894bf206f1d65d63d90a090335fe84f29e0987ad094720be0"
+    },
+    "product_runtime": {
+      "bytes": 141472,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "5e69f5e2ba5565fe93daeb2342534e57f475ffc3df03d194d7629ce1ba09bb85"
+    }
+  },
+  "cases": [
+    {
+      "error": null,
+      "repl_followup": "t",
+      "state_equal": true,
+      "target_depth": 1
+    },
+    {
+      "error": null,
+      "repl_followup": "t",
+      "state_equal": true,
+      "target_depth": 2
+    },
+    {
+      "error": null,
+      "repl_followup": "t",
+      "state_equal": true,
+      "target_depth": 3
+    },
+    {
+      "error": null,
+      "repl_followup": "t",
+      "state_equal": true,
+      "target_depth": 4
+    },
+    {
+      "error": [
+        63,
+        5
+      ],
+      "repl_followup": "t",
+      "state_equal": true,
+      "target_depth": 5
+    }
+  ],
+  "claim_limit": "Proves E5's append-only identity, closed detail union, refusal order and byte-identical host postcondition. E5 remains OPEN until the real-eval hardware fixture is green on the successor identity. No acceptance or promotion is claimed.",
+  "execution": {
+    "MOS_object_compiles": 2,
+    "hardware_runs": 0,
+    "host_model_cases": 5,
+    "product_links": 0,
+    "renderer_host_runs": 1,
+    "whole_program_lto_runs": 0
+  },
+  "failure_order": [
+    "authenticated-depth-read",
+    "depth-five-status-and-detail",
+    "return-before-journal-or-plane-mutation",
+    "normal-L65E-error-boundary"
+  ],
+  "format": "lisp65-c2.2-matrix-e5-nesting-depth-fixture-v1",
+  "hardware_fixture": {
+    "form": "real eval nests to five; catch code63/detail5; then t",
+    "status": "pending-bundled-acceptance-run"
+  },
+  "mutations": {
+    "change-existing-error-number": "rejected",
+    "collapse-depth-five-to-LISP65_ERR_LCC_INSTALL": "rejected",
+    "collapse-depth-five-to-VM_BADOPCODE": "rejected",
+    "leave-READY-zero": "rejected",
+    "leave-one-C2D-byte-changed": "rejected",
+    "omit-detail": "rejected",
+    "publish-journal-before-depth-check": "rejected",
+    "reuse-an-existing-error-code": "rejected"
+  },
+  "recorded_on": "2026-07-23",
+  "registry": {
+    "code_limit": 64,
+    "detail": {
+      "kind": "fixnum",
+      "value": 5
+    },
+    "numeric_fallback": "E3f",
+    "previous_codes_unchanged": 62,
+    "stable_code": 63
+  },
+  "renderer": {
+    "negative_details": [
+      "NIL",
+      "Fixnum4",
+      "Fixnum6",
+      "SYMI5"
+    ],
+    "output": [
+      "error-text-table: ok profile=workbench codes=63 active=44 omitted=19 bytes=803 crc16=0e96 build_id=12345678",
+      "error-overlay smoke: ok (tag-first+text+symbol+bcode12-boundaries+depth5-fixnum+textless+alloc0+busy/latch)",
+      "error-overlay MOS workbench sections: code=401 table=803 total=1204 headroom=116",
+      "error-overlay MOS symbols: 00000000 00000323 R l65e_table;                   U l65e_table; 0000014d 00000044 T l65e_emit_bcode_ordinal; 00000000 0000014d T lisp65_error_overlay_entry"
+    ],
+    "positive": "code63 + Fixnum5 -> eval: nesting depth exceeded 5",
+    "status": "passed-host-and-MOS-renderer"
+  },
+  "row": "E5",
+  "status": "passed-product-shaped-host-awaiting-real-eval-hardware",
+  "value_string": "E5=host-green depths=1..4 depth5=E3f/detail5 state=byte-identical mutations=8/8 renderer=host+MOS hardware=pending acceptance=blocked"
+}

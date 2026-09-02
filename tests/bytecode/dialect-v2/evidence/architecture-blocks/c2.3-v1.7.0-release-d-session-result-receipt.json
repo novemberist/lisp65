@@ -1,0 +1,115 @@
+{
+  "authority": {
+    "release_commit": "ebc10b64",
+    "session": {
+      "bytes": 3234,
+      "path": "config/c2-v170-release-d-session.json",
+      "sha256": "f0f96f897e0a367d554c984c207c417e6a982573c3e47b899ebdb99176d62695"
+    }
+  },
+  "choreography": {
+    "automated_device_access_after_boot_before_final_stop": 0,
+    "complete_deploy_and_readback_cycles": 1,
+    "deployment_invocations": 2,
+    "deployment_note": "the first pre-boot deployment invocation was owner-interrupted and restarted; it produced no qualified readback or boot observation",
+    "final_physical_bank0_captures": 1,
+    "final_resume": false,
+    "owner_keyboard_only": true,
+    "product_mounted_last": true
+  },
+  "D5": {
+    "capture": {
+      "bytes": 65536,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-v170-release-d-session-20260827/final-physical-bank0.bin",
+      "sha256": "13cbbf5ba31757cfb91d110c91e6cf97c223837e42d1dc4d4e095799059f2b3c"
+    },
+    "ELF_derived_addresses": {
+      "npool": "0xBE1A",
+      "nsym": "0x005B"
+    },
+    "free": {
+      "namepool_bytes": 1506,
+      "symbol_slots": 113
+    },
+    "limits": {
+      "namepool_bytes": 10208,
+      "symbols": 752
+    },
+    "minimum_free": {
+      "namepool_bytes": 384,
+      "symbol_slots": 32
+    },
+    "observed": {
+      "npool": 8702,
+      "nsym": 639
+    },
+    "status": "PASS: RELEASE-TERMINAL D5 HEADROOM GREEN"
+  },
+  "execution_accounting": {
+    "device_contacts": 1,
+    "forms_submitted": 5,
+    "new_media_builds": 0,
+    "new_product_cards": 0,
+    "new_product_links": 0,
+    "new_WPLTO_runs": 0
+  },
+  "format": "lisp65-c2-v170-release-d-session-result-v1",
+  "media_readback": {
+    "library": {
+      "remote_name": "V170L.D81",
+      "sha256": "9df3628a4ca155ea6b009128950e1aa0bb20664bcab7bf11c6b34bf3504c4558"
+    },
+    "product": {
+      "remote_name": "V170P.D81",
+      "sha256": "1ced465143d8698cac851f671497e273137ad3e49f18a37ad67def7d4045beee"
+    }
+  },
+  "next": "owner Ship halt",
+  "recorded_on": "2026-08-27",
+  "rows": [
+    {
+      "id": "D-boot-and-init-absence",
+      "observation": "WORKBENCH 1.7.0 and native REPL visible; no INIT.L65 output or error",
+      "result": "PASS"
+    },
+    {
+      "form": "(defun v17-perf-probe (x) (+ x 1))",
+      "id": "D-setup-published-call",
+      "observation": "v17-perf-probe",
+      "result": "PASS"
+    },
+    {
+      "form": "(time (car (cdr (list 1 2))))",
+      "frames": 0,
+      "id": "D-list-read",
+      "observation": "0 2",
+      "result": "PASS",
+      "value": "2"
+    },
+    {
+      "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+      "frames": 0,
+      "id": "D-list-write",
+      "observation": "0 (9 2)",
+      "result": "PASS",
+      "value": "(9 2)"
+    },
+    {
+      "form": "(time (string-ref \"abc\" 1))",
+      "frames": 0,
+      "id": "D-string-op",
+      "observation": "0 98",
+      "result": "PASS",
+      "value": "98"
+    },
+    {
+      "form": "(time (v17-perf-probe 41))",
+      "frames": 0,
+      "id": "D-published-call",
+      "observation": "0 42",
+      "result": "PASS",
+      "value": "42"
+    }
+  ],
+  "status": "PASS: V1.7.0 RELEASE D-SESSION HARDWARE GREEN; OWNER-SHIP-PENDING"
+}

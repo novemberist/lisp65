@@ -1,0 +1,24 @@
+{
+  "format": "lisp65-c2.2-link75-bound-carrier-postlink-selector-first-red-v1",
+  "recorded_on": "2026-07-28",
+  "status": "FIRST RED: postlink-checker-reapplied-order-sensitive-profile-selector",
+  "classification": "class-A-checker-lifecycle-only",
+  "product_semantic_delta_bytes": 0,
+  "execution_accounting": {
+    "whole_program_product_links": 0,
+    "artifact_completion_compiler_runs": 0,
+    "artifact_completion_linker_runs": 0,
+    "hardware_runs": 0
+  },
+  "observed": {
+    "error": "require-resolver profile selector order drift",
+    "stage": "wrapper-only final replay after Link-75 artifact completion",
+    "product_link_receipt_already_written": true
+  },
+  "cause": {
+    "mechanism": "The inherited Link-75 link action had already configured the order-sensitive Prim-67 then Prim-68 profile geometry in-process. The wrapper invoked the same configurator again before its final read-only replay.",
+    "fix": "Reuse the configured state immediately after a completed link action; initialize it once only when resuming the final replay in a fresh process."
+  },
+  "first_red_rule": "No WPLTO, product link, or artifact completion is repeated. Only the read-only final gate replay resumes.",
+  "claim_limit": "Checker lifecycle stop only; no product or hardware claim."
+}

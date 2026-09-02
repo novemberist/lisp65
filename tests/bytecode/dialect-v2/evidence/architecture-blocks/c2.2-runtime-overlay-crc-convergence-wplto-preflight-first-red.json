@@ -1,0 +1,86 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 7945,
+      "path": "config/c2-runtime-overlay-dma-completion-contract.json",
+      "sha256": "368175100ddc139571b63121e47445d9efec2d58fb45177cb4787ab3b6ea8437"
+    },
+    "contract_receipt": {
+      "bytes": 3893,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-runtime-overlay-crc-convergence-contract-probe-receipt.json",
+      "sha256": "1bf274abde97194f77533508636384bc273ad0eb9e5d2e7d7db3e60cb3d9b59d"
+    },
+    "implementation_source": {
+      "bytes": 60748,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "e5ab68b345a1b59cde0c55dd429119244800dd24e8d6c70a2e35aca9f1159332"
+    }
+  },
+  "capacity": {
+    "all_bound_walls": "n/a",
+    "e000_delta_bytes": "n/a",
+    "status": "not-reached"
+  },
+  "claim_limit": "Source/contract preflight only. No compiler, product link, capacity claim, product identity, or hardware execution.",
+  "conflict": {
+    "consequence": "Only the first selected record can be captured during the successful aggregate pass. A later distinct slot would either retain an unproved read or re-run the directory, silently undoing transaction amortization.",
+    "contract_claim": "Seam 3 removes the standalone selected-record read and uses no second record buffer.",
+    "missing_proof_material": "The transaction cache retains three catalog scalars, not the 32-byte record or a per-record content digest.",
+    "product_invariant": "After the first append member authenticates the family, later members start at verifier index 1 and deliberately skip the directory pass.",
+    "two_call_model": {
+      "cached_fields": [
+        "payload_off_u16",
+        "image_limit_u16",
+        "count_u8"
+      ],
+      "first_slot": {
+        "directory_pass_visits_selected_record": true,
+        "first_verifier_index": 0,
+        "transaction_trusted_on_entry": false
+      },
+      "record_bytes_required": 32,
+      "record_digest_in_l65r_entry": false,
+      "second_distinct_slot": {
+        "authenticated_expected_record_bytes_available": false,
+        "directory_pass_visits_selected_record": false,
+        "first_verifier_index": 1,
+        "transaction_trusted_on_entry": true
+      }
+    }
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "product_bytes_emitted": 0,
+    "product_closure_links": 0,
+    "whole_program_lto_runs": 0
+  },
+  "format": "lisp65-c2-crc-convergence-wplto-preflight-first-red-v1",
+  "next_gate": "Class-C contract decision; product link and hardware remain blocked",
+  "recorded_on": "2026-07-21",
+  "rejected_silent_workarounds": [
+    {
+      "option": "re-run-full-directory-for-every-record",
+      "reason": "Restores a proof but removes the approved once-per-transaction authentication and reintroduces hot-path DMA/CRC work."
+    },
+    {
+      "option": "cache-all-records-or-add-second-buffer",
+      "reason": "Violates the zero-extra-buffer contract and requires a new placement/capacity decision."
+    },
+    {
+      "option": "compile-generated-record-copy",
+      "reason": "Creates a second metadata truth unless the format gains an explicitly bound per-record digest/index."
+    }
+  ],
+  "review_options": [
+    "add an emissions-derived per-record digest/index to the trusted transaction metadata",
+    "retain the standalone read and define a different content-bound completion proof",
+    "amend the transaction-amortization contract and accept a measured directory reproof cost"
+  ],
+  "rollback": {
+    "probe_define_present": false,
+    "status": "complete-before-receipt",
+    "timeout_status_present": false
+  },
+  "status": "FIRST RED: selected-record capture conflicts with the trusted transaction fast path before WPLTO"
+}

@@ -1,0 +1,225 @@
+{
+  "attribution": {
+    "bound_rom": {
+      "getin": "FFE4 -> RAM vector 032A -> F31C -> E158",
+      "queue": [
+        "D610 ASCII/top event",
+        "D619 PETSCII/dequeue",
+        "D60A metadata"
+      ],
+      "scnkey_required_for_getin_call": false
+    },
+    "mechanism": "Ship delegates its first timing service and its later input service to inherited KERNAL state after a media stager entered under SEI; unlike Workbench it has no owned initialization or readback contract. The host hides this gap with a synthetic advancing clock and synthetic input.",
+    "ship": {
+      "boot_contract": "stager enters under SEI; Runtime performs one CLI but neither establishes nor verifies KERNAL IRQ/vector/jiffy/input state",
+      "elf": {
+        "callprim60_edge": "0x650f",
+        "lisp_poll": "0x2188",
+        "main": "0x73a8",
+        "stager_chain": "0x3647",
+        "start": "0x2026"
+      },
+      "first_target_service": "wait -> logical FF84/FF83 -> KERNAL A1/A2 jiffy",
+      "later_input": "CALLPRIM 60 -> lisp_poll($91) -> GETIN($FFE4)"
+    },
+    "workbench": {
+      "boot_contract": "masks inherited sources, installs the product E000 window, owns VIC raster IRQ, then enables IRQs",
+      "elf": {
+        "main": "0xa4af",
+        "ownership": "0xb4a3",
+        "queue_driver": "0xe000"
+      },
+      "frame_clock": "product-owned FF83/FF84 raster counter",
+      "input": "CALLPRIM 60 -> lisp_input_event -> E000 D60A/D619 queue"
+    }
+  },
+  "bindings": {
+    "bound_rom": {
+      "bytes": 131072,
+      "path": "/home/alex/.local/share/xemu-lgb/mega65/MEGA65.ROM",
+      "sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0"
+    },
+    "driver": {
+      "bytes": 23371,
+      "path": "tools/host-lisp/c2_v13_link85_ship_input_boot_attribution.py",
+      "sha256": "8fe6b14454c38705c7a9009f7c20c6a91bab4c2ab01881ee8f277dc6752182b7"
+    },
+    "eval": {
+      "bytes": 97933,
+      "path": "src/eval.c",
+      "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+    },
+    "fleet": {
+      "bytes": 2084,
+      "path": "build/ship-builder/v13/final-fleet-bank2/fleet-receipt.json",
+      "sha256": "d5c2f6d6d3d78dbea4c2e19f8f4e495ff5251eb30797e4c8b65d4f0216bb7737"
+    },
+    "human_first_red": {
+      "bytes": 4554,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link85-interactive-human-device-first-red-receipt.json",
+      "sha256": "0257833b3a9645f092e28de043507fa28c0ac8a4796ab8fb61e2db0e8a0ed36d"
+    },
+    "interactive_closure": {
+      "bytes": 4219,
+      "path": "build/ship-builder/v13/final-fleet-bank2/interactive.closure.json",
+      "sha256": "37653bb25b1e932d6c0977989ee743b6ce133368697c1746c676a2533d32100e"
+    },
+    "interactive_source": {
+      "bytes": 408,
+      "path": "examples/ship/interactive/main.l65",
+      "sha256": "7fe4df415baa0f076d8cfbd0514710c1b17064d5d5cb6706456b4e9551a79288"
+    },
+    "interrupt": {
+      "bytes": 5402,
+      "path": "src/interrupt.c",
+      "sha256": "3daa9e790bbf95d9b1f15da688386b17831d7f9d0c95e61038399ea9d2105de0"
+    },
+    "owner_review": {
+      "bytes": 28054,
+      "path": "docs/planning/1.3-link84-closing-first-red-review.md",
+      "sha256": "be01fe04692506ba9f6bcbef569ab7fe1bddfa301677646d72e19ed3b0f409b9"
+    },
+    "prior_method_reading": {
+      "bytes": 4203,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link85-interactive-method-host-reading-receipt.json",
+      "sha256": "68ff9f36c920c95ac927d64b6be3e624fbb020107408d438e432c82763d90bd7"
+    },
+    "rom_contract": {
+      "bytes": 11018,
+      "path": "config/r3-g3-g6-contract.json",
+      "sha256": "5c8e224184d7a54d0d818b77b90a50604b33966bbb3c8f1489524064fcc17681"
+    },
+    "ship_chain": {
+      "bytes": 1199,
+      "path": "scripts/c2-lite-cold-stager-chain.s",
+      "sha256": "23b7a17b554dc1eed18254ee0b718cda4144c7d6a626b6b31c6ba40a45f6a9a4"
+    },
+    "ship_elf": {
+      "bytes": 39392,
+      "path": "build/ship-builder/v13/final-fleet-bank2/interactive.runtime.elf",
+      "sha256": "0463d62418fb469817cc30dbb7e63e146866f7314e71ec86b3f5e4914054b3c2"
+    },
+    "ship_io": {
+      "bytes": 3012,
+      "path": "products/runtime-core/ship_io.c",
+      "sha256": "460bbc82d949dd3b42f1b98ab80e3ab8bbd83d29bf819ebb5db92876874c603a"
+    },
+    "ship_main": {
+      "bytes": 5535,
+      "path": "products/runtime-core/main.c",
+      "sha256": "b85e758bb728bd47b5e0d50d8519f916eebcd869bf40d7ff651d5242038b427f"
+    },
+    "ship_stager": {
+      "bytes": 33222,
+      "path": "scripts/r3-cold-stager-main.c",
+      "sha256": "c5442ef0b69befa5e7f3a268caa9747c5977e273b67821f9214afa895f59d2ef"
+    },
+    "stager_elf": {
+      "bytes": 12400,
+      "path": "build/ship-builder/v13/final-fleet-bank2/interactive.stager.elf",
+      "sha256": "415591086cb0f89c9bc21055258acfd008bd415d65654c253a99f8c9afab6eaf"
+    },
+    "time_library": {
+      "bytes": 1420,
+      "path": "lib/stdlib-time.lisp",
+      "sha256": "82ad7be3de1c32ced8a04d0a0196a7f1315b9145490b6c3e3eb9ecfb04a73057"
+    },
+    "vm": {
+      "bytes": 84783,
+      "path": "src/vm.c",
+      "sha256": "91683fa85d714d54443f44c5d0201804fdb96ba59a382ccda58e7e98d6d6b43d"
+    },
+    "wait_library": {
+      "bytes": 426,
+      "path": "lib/stdlib-wait.lisp",
+      "sha256": "99228eb2a178360e242ca4627c6b1f4fa0e3922633f5393f98a83b885b67e0a8"
+    },
+    "workbench_elf": {
+      "bytes": 622560,
+      "path": "build/c2.3/v1.3.0-candidate-product-link85-r1/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "569187ae75b14f4ecf072580eea34fe217ebab14d2b6466e177f60c10e9da0f9"
+    },
+    "workbench_main": {
+      "bytes": 9508,
+      "path": "src/main.c",
+      "sha256": "fd3aa5721306cbc8346e6070f780e0690bf4e859c38bba2c5388c8ddc184276d"
+    },
+    "workbench_ownership": {
+      "bytes": 5952,
+      "path": "src/c2_kernal_runtime.c",
+      "sha256": "03f59be39a58b98470a93dbc50398d54bc510f0a89dd48fbbf006f849a726f96"
+    },
+    "workbench_queue": {
+      "bytes": 4076,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81"
+    }
+  },
+  "candidate_link": 85,
+  "claim_limit": "This host/ELF attribution proves the composition and its missing boot-service ownership contract. It does not claim whether the observed target was stopped in wait or later in GETIN, and it changes no product.",
+  "correction_to_prior_boundary": {
+    "prior_claim": "runtime-state-2-means-waiting-for-key-event",
+    "reason": "State 2 is stored before vm_run_dir. The exact sample executes (wait 1) before (read-line), so the physical observation does not prove that CALLPRIM 60 or GETIN was reached.",
+    "result": "refuted"
+  },
+  "coverage": {
+    "executions": 3,
+    "mutation_results": {
+      "hardware-state-complete": "rejected",
+      "host-clock-target-claim": "rejected",
+      "read-line-before-wait": "rejected",
+      "rom-getin-vector": "rejected",
+      "rom-getin-worker": "rejected",
+      "rom-queue-register": "rejected",
+      "ship-entry-not-sei": "rejected",
+      "ship-missing-cli": "rejected",
+      "ship-private-irq-write": "rejected",
+      "ship-scnkey-call": "rejected",
+      "ship-stkey-address": "rejected",
+      "state-two-is-phase-witness": "rejected",
+      "workbench-no-ownership": "rejected",
+      "workbench-wrong-queue": "rejected"
+    },
+    "mutations": 14,
+    "samples_using_wait": [
+      "interactive"
+    ],
+    "standalone_samples": 4,
+    "standalone_target_wait_proof_before_this_attribution": 0
+  },
+  "format": "lisp65-c2.3-v1.3-link85-ship-input-boot-host-elf-attribution-v1",
+  "product_bytes_changed": 0,
+  "product_links_created": 0,
+  "recorded_on": "2026-08-02",
+  "service_order_model": {
+    "dead_jiffy_with_Ada": {
+      "input_consumed": 0,
+      "output": "",
+      "runtime_state": 2,
+      "stage": "wait-before-read-line"
+    },
+    "live_jiffy_no_key": {
+      "input_consumed": 0,
+      "output": "",
+      "runtime_state": 2,
+      "stage": "read-line"
+    },
+    "live_jiffy_with_Ada": {
+      "input_consumed": 4,
+      "output": "Ada\nHello, Ada!\n",
+      "runtime_state": 3,
+      "stage": "complete"
+    }
+  },
+  "status": "ATTRIBUTED-SHIP-INHERITED-KERNAL-SERVICE-CONTRACT-UNPROVED",
+  "stkey_disposition": {
+    "reason": "$91 is explicitly documented as the wrong MEGA65 STKEY assumption, but seeing $7f would longjmp to boot-error state rather than leave the observed state 2. It must be fixed or replaced before Ship RUN/STOP can be claimed, but it does not explain this exact stable observation.",
+    "status": "real-latent-defect-not-primary-attribution"
+  },
+  "target_boundary": {
+    "hardware_authorized": false,
+    "product_fix_authorized": false,
+    "smallest_discriminator": "On the unchanged failed image, read A1/A2 twice across at least one raster interval. Unchanged => wait/jiffy boundary; advancing => wait is exonerated and GETIN/key-event becomes the live boundary. Also bind D01A and RAM vectors 0314/032A in the same read-only capture.",
+    "static_result": "The missing ownership/verification contract is attributed; the physical First Red cannot distinguish a frozen inherited jiffy from a later GETIN/input failure because it never witnessed read-line entry."
+  }
+}

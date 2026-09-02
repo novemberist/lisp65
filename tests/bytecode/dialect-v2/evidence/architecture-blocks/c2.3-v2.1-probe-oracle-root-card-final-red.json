@@ -1,0 +1,67 @@
+{
+  "artifacts": {
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-probe-oracle-root-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-probe-oracle-root-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69978,
+      "path": "build/c2.3/v2.1-probe-oracle-root-card/wplto/c2-substitution.ld",
+      "sha256": "90d44d3f020c4eedd49ab0065db2e4fb40fafcede677ef8c36e93d1e777e6b84"
+    },
+    "resolved_profile": {
+      "bytes": 12483,
+      "path": "build/c2.3/v2.1-probe-oracle-root-card/wplto/resolved-profile.txt",
+      "sha256": "751bc0ff9e4cb5ea1601bafea3e02eb3d68d2a6e9605ea90d4d8fa7e4e2cd8c1"
+    }
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1
+  },
+  "authority": {
+    "driver": {
+      "bytes": 22188,
+      "path": "tools/host-lisp/c2_v21_probe_oracle_root_card.py",
+      "sha256": "f812bf091640496d1258c018891bc8a39128796ac7956aa829e4ae08e24582f6"
+    },
+    "fix": {
+      "bytes": 7063,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-probe-oracle-root-fix-receipt.json",
+      "sha256": "7d77e1456227d54b700b38510012b5aa797d638ff6c2ae11e06a7ede255ab654"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 122123,
+      "commit": "20a5f4ec6d9dfa1ec54d2cd90c60ecfd238720fe",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "d85284629c5c0de21ff996d593ded78675fe18620d5c8d7ea129ce2107308efb"
+    },
+    "preflight": {
+      "bytes": 6656,
+      "path": "build/c2.3/v2.1-probe-oracle-root-preflight/preflight.json",
+      "sha256": "f5b05b4d41367244441fff1adbcab38f42974f34382a790cbfa7b1a9c80e02aa"
+    }
+  },
+  "claim_limit": "The sole card is consumed; no Completion or media.",
+  "error": {
+    "message": "fresh probe-oracle root child _produce red:\nc2-lite-v6-real-abi-direct-entry-contract: PASS refs=674 fixnums=0 target-negatives=4\nruntime-overlay-bank: PREPARE build_id=0x751bc0ff profile=c2-product-substitution-v1 header=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v2.1-probe-oracle-root-card/wplto/runtime-overlay.prepare-standard.h\nresident-island-prepare: PASS capacity=2048 sentinel=1536 build_id=751bc0ff\nerror-text-table: ok profile=workbench codes=63 active=44 omitted=19 bytes=803 crc16=7d6d build_id=751bc0ff\nbuild/c2.3/v2.1-probe-oracle-root-card/wplto/generated-product-sources/c2_product_runtime.c:973:26: warning: unused function 'c2_entry_records' [-Wunused-function]\n  973 | C2_COLD_ENTRY_FN uint8_t c2_entry_records(\n      |                          ^~~~~~~~~~~~~~~~\nbuild/c2.3/v2.1-probe-oracle-root-card/wplto/generated-product-sources/c2_product_runtime.c:1076:26: warning: unused function 'c2_export_name' [-Wunused-function]\n 1076 | C2_APPEND_INLINE uint8_t c2_export_name(\n      |                          ^~~~~~~~~~~~~~\n2 warnings generated.\nsrc/eval.c:99:12: warning: unused function 'cadr' [-Wunused-function]\n   99 | static obj cadr(obj o) { return car(cdr(o)); }\n      |            ^~~~\nsrc/eval.c:272:17: warning: unused function 'hilo' [-Wunused-function]\n  272 | static unsigned hilo(obj hi, obj lo) {\n      |                 ^~~~\nsrc/eval.c:125:12: warning: variable 'k_lcc_invalid_parameter_list' set but not used [-Wunused-but-set-global]\n  125 | static obj k_lcc_invalid_parameter_list;\n      |            ^\n3 warnings generated.\nsrc/vm_boot_overlay.c:199:16: warning: unused function 'ov_wipe_target' [-Wunused-function]\n  199 | static uint8_t ov_wipe_target(void) {\n      |                ^~~~~~~~~~~~~~\n1 warning generated.\nbuild/c2.3/v2.1-probe-oracle-root-card/wplto/generated-product-sources/vm_runtime_overlay.c:1020:13: warning: unused function 'rtov_read_region' [-Wunused-function]\n 1020 | static void rtov_read_region(\n      |             ^~~~~~~~~~~~~~~~\n1 warning generated.\nld.lld: warning: build/c2.3/v2.1-probe-oracle-root-card/wplto/resident-island-seed.prg.lto.o:(.llvm_sympart) is being placed in '.llvm_sympart'\nld.lld: error: mapped far facade escaped its resident wall\nmos-mega65-clang: error: ld.lld command failed with exit code 1 (use -v to see invocation)\nTraceback (most recent call last):\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_rtov_crc_real_abi_successor_link.py\", line 233, in build\n    P.single_link(\n    ~~~~~~~~~~~~~^\n        OUT, probe_definitions=features,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<13 lines>...\n            \"final_e000_floor_bytes=115\",\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n            \"green_inheritance=none\"))\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_final_island_identity_successor_link.py\", line 220, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_export_symbol_domain_successor_link.py\", line 215, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py\", line 199, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link47_l65e_transient_successor_link.py\", line 178, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link48_zero_literal_successor_link.py\", line 145, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link49_append_final_hybrid_facade16_successor_link.py\", line 308, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link50_persistent_header_successor_link.py\", line 214, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link50_badopcode_retirement_wplto.py\", line 141, in nonpromotable_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_v150_candidate_product.py\", line 278, in v150_single_link\n    return inherited(\n        out, probe_definitions=features,\n    ...<8 lines>...\n        ),\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_top_level_macro_redispatch_link94.py\", line 426, in service_single_link\n    return inherited_single_link(\n        out,\n    ...<7 lines>...\n        ),\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_defstruct_foundations_wplto.py\", line 175, in service_single_link\n    return inherited_single_link(\n        out,\n    ...<7 lines>...\n        ),\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_require_resolver_wplto.py\", line 209, in resolver_single_link\n    return original_single_link(\n        out,\n    ...<8 lines>...\n        ),\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_f1_published_value_call_wplto.py\", line 380, in f1_single_link\n    return original_single_link(\n        out,\n    ...<3 lines>...\n        extra_contract_lines=extra_contract_lines,\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_product_substitution_link.py\", line 6808, in single_link\n    seed = compile_link(out, \"resident-island-seed.prg\", common, artifacts,\n                        probe_definitions=probe_definitions)\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_product_substitution_link.py\", line 2876, in compile_link\n    run_link_with_exact_orphan_wrapper(out, target, command)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_product_substitution_link.py\", line 1087, in run_link_with_exact_orphan_wrapper\n    raise RuntimeError(\n        f\"link command failed before orphan-wrapper acceptance: \"\n        f\"exit={completed.returncode}\")\nRuntimeError: link command failed before orphan-wrapper acceptance: exit=1\nprobe-oracle root card: FINAL RED: producer did not emit the linked candidate artifacts\n",
+    "type": "CardError"
+  },
+  "format": "lisp65-c2.3-v2.1-probe-oracle-root-final-red-v1",
+  "owner_disposition_required": true,
+  "recorded_on": "2026-08-16",
+  "retry_authorized": false,
+  "status": "FINAL RED: probe-oracle root card returns to owner"
+}

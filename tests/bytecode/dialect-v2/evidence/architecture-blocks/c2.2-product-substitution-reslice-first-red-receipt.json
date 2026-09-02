@@ -1,0 +1,142 @@
+{
+  "attempt": {
+    "build_stage": "resident-island-seed-link-after-rollback-cutpoint-reslice",
+    "date": "2026-07-19",
+    "first_red_policy": "stopped-before-hardware-smoke-and-before-final-product-link",
+    "product_bytes_emitted": 0,
+    "status": "failed-not-promoted"
+  },
+  "baseline": {
+    "resident": {
+      "bss_bytes": 2246,
+      "data_bytes": 20,
+      "rodata_bytes": 1152,
+      "text_bytes": 38243
+    },
+    "resident_c2_text_bytes_at_prior_first_red": 18172
+  },
+  "candidate_partial_link": {
+    "map": {
+      "bytes": 103579,
+      "path": "build/c2-product-link-split7/resident-island-seed.prg.map",
+      "sha256": "870eeef027914ecd3e1756e1af7496f9119673c780d309ea53c7693fa878016c"
+    },
+    "resident": {
+      "bss_bytes": 2956,
+      "bss_delta_bytes": 710,
+      "data_bytes": 24,
+      "data_delta_bytes": 4,
+      "known_total_delta_bytes": 5404,
+      "rodata_bytes": 623,
+      "rodata_delta_bytes": -529,
+      "text_bytes": 43462,
+      "text_delta_bytes": 5219
+    },
+    "resident_c2_named_sections": {
+      "bss_bytes": 961,
+      "rodata_bytes": 34,
+      "text_bytes": 5853,
+      "total_bytes": 6848,
+      "text_reduction_from_prior_c2_text_bytes": 12319,
+      "scope_note": "Named C2 sections exclude C2 code inlined by LTO into existing product functions; the resident section deltas above are authoritative for fit."
+    }
+  },
+  "format": "lisp65-c2-product-substitution-reslice-first-red-receipt-v1",
+  "gates": {
+    "bank0_resident_fit": {
+      "linker_overflow_bytes": 2044,
+      "prior_linker_overflow_bytes": 11836,
+      "status": "failed"
+    },
+    "c2_append_slice_fit": {
+      "aggregate_bytes": 10020,
+      "failed_slice_count": 0,
+      "largest_slice": {
+        "bytes": 1698,
+        "headroom_bytes": 94,
+        "name": "publish_cells"
+      },
+      "slice_count": 10,
+      "status": "passed"
+    },
+    "c2_decoder_slice_fit": {
+      "aggregate_bytes": 28460,
+      "failed_slice_count": 0,
+      "largest_slice": {
+        "bytes": 1732,
+        "headroom_bytes": 60,
+        "name": "phase_08"
+      },
+      "slice_count": 24,
+      "status": "passed"
+    },
+    "c2_emitter_slice_fit": {
+      "aggregate_bytes": 9117,
+      "failed_slice_count": 1,
+      "limit_bytes": 1792,
+      "outlier": {
+        "bytes": 2763,
+        "entry_function_bytes": 1267,
+        "excess_bytes": 971,
+        "name": "literal_prep",
+        "same_section_helper_bytes": 1496
+      },
+      "slice_count": 7,
+      "status": "failed"
+    },
+    "hardware_smoke": {
+      "reason": "no runnable smoke artifact may be produced while layout gates are red",
+      "status": "not-run"
+    },
+    "one_truth_closure": {
+      "status": "not-run-link-failed-before-final-closure"
+    },
+    "runtime_bank_projection": {
+      "note": "Projection only; pack did not run because literal_prep exceeded its cap.",
+      "raw_payload_bytes": 56499,
+      "rounded_payload_bytes": 62976,
+      "rounded_reserve_bytes": 2560,
+      "slice_count": 48,
+      "status": "not-claimable-before-cap-fit"
+    },
+    "substitution_balance": {
+      "status": "not-claimable-link-failed-before-final-artifacts"
+    }
+  },
+  "inputs": {
+    "decoder": {
+      "path": "src/c2_product_decoder.c",
+      "sha256": "375b8f085288ac51c3b5bed8fefe5879acea121b4899ba6e5ecb11f8391f6927"
+    },
+    "emitter": {
+      "path": "src/c2_session_emitter.c",
+      "sha256": "a5f54e639fc52007cfa125bab9a6483f11eea6ef96651ec3835be13002bcd8ec"
+    },
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "482417c6b3a5990de18dec1a391878a7ca4663e1d663741c1783274cdf442e0b"
+    },
+    "linker": {
+      "path": "build/c2-product-link-split7/c2-substitution.ld",
+      "sha256": "bf312ef1840283946a0fc1c98101bfaf1cf538c3940835e8b88c4c8021c65504"
+    },
+    "product_runtime": {
+      "path": "src/c2_product_runtime.c",
+      "sha256": "6ebb8e8228d90a4dd406bd387ff1270d5ab86b4766095a9c149b2191ee4bb8dd"
+    },
+    "resolved_profile": {
+      "path": "build/c2-product-link-split7/resolved-profile.txt",
+      "sha256": "5ae11f0b7a7ada571900560ec2463c5a98aa96b725b5dbcb9134a84a79a5c3bc"
+    }
+  },
+  "result": {
+    "authorized_constraints_preserved": {
+      "interactive_compilation_present": true,
+      "legacy_l65m_path_present": false,
+      "slice_cap_bytes": 1792,
+      "slice_cap_relaxed": false
+    },
+    "decision_required": true,
+    "summary": "Rollback-cutpoint slicing removed 12,319 named resident text bytes and closed every decoder and append slice, but one emitter slice and the resident fit remain red."
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "format": "lisp65-c2.3-v1.6-refill-boundary-witness-pricing-v1",
+  "recorded_on": "2026-08-22",
+  "status": "PRICED: FULL-PAYLOAD TWO-SLOT WITNESS FITS WITH ONE COLD RELOCATION",
+  "authority": {
+    "owner": {
+      "authority": "git-blob",
+      "commit": "8c0bbbd4b4258b2124553b4b3e07f2c613d481de",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "bytes": 376929,
+      "sha256": "a74ab830016b193597ba133a4faab274c81114c8a2140924fa800acf0cda02ab"
+    },
+    "candidate_ELF": {
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/canonical-product/final/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 632960,
+      "sha256": "347a2e6b4070a9f9e02c21216d59c5c18f66015373bbe93df14027eba0107c42"
+    },
+    "predecessor": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-refill-irq-state-intersection.json",
+      "bytes": 12925,
+      "sha256": "b155f6700f17766d78d482cfa8c9f2e26526cf0f31523606228984617fda46a1"
+    },
+    "first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-display-entry-first-red-attribution.json",
+      "bytes": 4366,
+      "sha256": "c0a1e27ae2f72f2ed7a8bc3ffcb64ded8fa98dffc2e9c919cc7ad195475a38ec"
+    },
+    "capacity_authority": {
+      "path": "build/c2.3/v1.6-display-ownership-device-preparation/canonical-product/final/fixed-host-facade-c2-lite-canonical.json",
+      "bytes": 12393,
+      "sha256": "7e5dec30222923787e12099f850a1d7d1089f554fb50cb07909169a796ef1612"
+    },
+    "boot_order_source": {
+      "path": "src/main.c",
+      "bytes": 9508,
+      "sha256": "fd3aa5721306cbc8346e6070f780e0690bf4e859c38bba2c5388c8ddc184276d"
+    },
+    "cold_body_source": {
+      "path": "src/vm_runtime_overlay.c",
+      "bytes": 92078,
+      "sha256": "785233a990f3cbb272f668b6799cac79e3f2ca263b2ec78af327be4763acb2dd"
+    },
+    "pricing_tool": {
+      "path": "tools/host-lisp/c2_v160_refill_boundary_witness_pricing.py",
+      "bytes": 23474,
+      "sha256": "0976ab7d037b3d6c78466e5f0d7ec44d264931c29cef5468e9f0af259966d7dd"
+    }
+  },
+  "target_seam": {
+    "window_id": 765,
+    "logical_offset": 69,
+    "length": 21,
+    "source": "Same-World %repl-step manifest/runtime directory"
+  },
+  "storage": {
+    "owner": "repl.buf lifetime alias while native REPL is inactive",
+    "repl_buf": {
+      "start": "$BC87",
+      "bytes": 192
+    },
+    "active_input_ring": {
+      "start": "$BC90",
+      "end_exclusive": "$BD00"
+    },
+    "free_alias_bytes": 80,
+    "trace_prefix": {
+      "start": "$BC87",
+      "bytes": 5,
+      "fields": [
+        "next",
+        "sequence",
+        "wraps",
+        "active",
+        "origin_commit"
+      ]
+    },
+    "trace_slots": {
+      "start": "$BD00",
+      "count": 2,
+      "bytes_each": 34,
+      "bytes": 68
+    },
+    "unclaimed_alias_bytes": 7,
+    "new_resident_state_bytes": 0
+  },
+  "slot_schema": [
+    "commit",
+    "sequence",
+    "window-id:u16",
+    "offset:u16",
+    "length:u16",
+    "result",
+    "start-frame:u16",
+    "end-frame:u16",
+    "payload[21]"
+  ],
+  "origin_and_wrap": {
+    "origin": {
+      "next": 34,
+      "sequence": 3,
+      "wraps": 1,
+      "active": 0,
+      "origin_commit": 165
+    },
+    "committed_after_three_records": [
+      {
+        "sequence": 2,
+        "payload_sha256": "9aca8841e1af3e61913efd6cd4acfea2eea0a43de3e039fcc6aad0362f591cda"
+      },
+      {
+        "sequence": 3,
+        "payload_sha256": "b483d51e6029d906b39df76ea2c0ec26e5a304b3e9075c0846590f586657f25a"
+      }
+    ],
+    "wrap_policy": "two slots overwrite oldest; sequence and wrap are uint8 modulo 256; the contact must stop before 256 wraps",
+    "torn_last_slot_rejected": true
+  },
+  "emitted_prices": {
+    "cold_relocation_stub_bytes": 9,
+    "first_last_body_bytes": 179,
+    "full_payload_body_bytes": 205,
+    "measurement": "standalone mos45gs02 assembly, no product link"
+  },
+  "alternatives": {
+    "first_last": {
+      "body_bytes": 179,
+      "trace_alias_bytes": 35,
+      "verdict": "REJECTED: MIDDLE-BYTE DIFFERENCE SURVIVES",
+      "control": {
+        "same_edges": true,
+        "different_middle": true
+      }
+    },
+    "crc16": {
+      "verdict": "REJECTED FOR THIS WITNESS: EXTRA 168-BIT-STEP LATENCY",
+      "reason": "the existing CRC16 leaf is source-authoritative but adds eight bit rounds per byte at the seam whose timing remains open"
+    },
+    "new_resident_ring": {
+      "verdict": "DOMINATED",
+      "bytes": 73,
+      "reason": "the proven repl.buf lifetime alias supplies all 73 bytes"
+    }
+  },
+  "winner": {
+    "observation": "full 21-byte payload snapshot",
+    "request": "window id, logical offset and length recorded per refill",
+    "result": "return status, start/end frame and exact observed payload",
+    "trace_alias_bytes": 73,
+    "new_resident_state_bytes": 0,
+    "cold_relocation": {
+      "symbol": "vm_runtime_overlay_install_island",
+      "body_bytes": 211,
+      "ordinary_stub_bytes": 9,
+      "ordinary_net_reclaim_bytes": 202,
+      "incoming_edges": [
+        "$A5EA"
+      ],
+      "temperature": "one runtime-overlay island-install edge; no refill/key/eval edge",
+      "availability": "the sole main call follows c2_product_prepare_boot; the second arena must be materialized in the same Bank-2 static plane before that call",
+      "mapped_callees": [
+        "$290D",
+        "$B347",
+        "$C245"
+      ],
+      "callee_visibility": "all outside mapped CPU block 3"
+    },
+    "witness_body_bytes": 205,
+    "mapped_diagnostic_arena": "$7E8D..$7FFF",
+    "mapped_diagnostic_capacity_bytes": 371,
+    "mapped_diagnostic_used_bytes": 211,
+    "mapped_diagnostic_headroom_bytes": 160,
+    "ordinary_text_headroom_before_bytes": 6,
+    "ordinary_text_headroom_after_bytes": 3,
+    "ordinary_text_net_growth_bytes": 3,
+    "ordinary_text_headroom_delta_bytes": -3,
+    "existing_far_service_delta_bytes": 0,
+    "E000_delta_bytes": 0,
+    "resident_island_delta_bytes": 0,
+    "callsite_form": "retarget only the existing WIN_ENSURE product-read JSR to the ordinary trace wrapper; no callsite growth",
+    "timing_price": "one target-filtered wrapper call plus a 21-byte linear snapshot; no CRC loop and no IRQ-path work"
+  },
+  "implementation_gates_if_authorized": [
+    "cold relocation stub is exactly 9 bytes and preserves the mapped-far ABI",
+    "the 211-byte cold body lies wholly in the derived $7E8D..$7FFF second arena",
+    "the second arena is materialized with the Bank-2 static plane before the sole main call",
+    "its sole caller and all three callees retain visibility under the MAP tuple",
+    "only the WIN_ENSURE product-read edge is retargeted",
+    "origin is published atomically while capture is closed",
+    "slot commit is written last; torn slot is rejected",
+    "two-slot wrap and uint8 sequence/wrap interpretation are receipt-bound",
+    "payload bytes compare exactly with the Same-World medium"
+  ],
+  "removal_or_retention": {
+    "recommendation": "REMOVE AFTER ATTRIBUTION",
+    "removal_cost": "restore one JSR target and the cold mover's ordinary body; remove its 9-byte stub, the witness body and Comfort-origin pokes; repl.buf alias returns without migration",
+    "retention_case": "weak: this is seam-specific forensic telemetry, consumes mapped Bank-2 code and adds work to a hot refill; unlike input counters it has no standing user-health meaning"
+  },
+  "decision_power": {
+    "result_zero_or_uncommitted": "refill returned failure or never completed",
+    "committed_payload_differs": "refill returned bytes different from Same-World source",
+    "committed_payload_matches": "content is correct; start/end frame ordering leaves a time-shaped target-only failure"
+  },
+  "card_lock": {
+    "product_sources_changed": 0,
+    "WPLTO_runs": 0,
+    "product_links": 0,
+    "media_builds": 0,
+    "device_contacts": 0
+  },
+  "claim_boundary": "Pricing only. The emitted micro-sections establish byte cost, not product correctness. No witness, fix, link, medium or device contact is authorized by this receipt.",
+  "mutations_rejected": [
+    "claim-new-state",
+    "accept-first-last",
+    "erase-origin",
+    "spend-link",
+    "overstate-ordinary-headroom"
+  ]
+}

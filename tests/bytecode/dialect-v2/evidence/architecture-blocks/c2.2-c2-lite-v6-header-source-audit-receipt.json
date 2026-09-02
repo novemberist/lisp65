@@ -1,0 +1,334 @@
+{
+  "authority": {
+    "catalog_correction": {
+      "bytes": 19923,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link40-c2d-v6-catalog-identity-rebind-receipt.json",
+      "sha256": "c505b792421353f940af7c9da8c18afc038ea51d93b508b9018bf584cf237be8"
+    },
+    "corrected_c2d": {
+      "bytes": 33840,
+      "path": "build/c2.2/c2d-v6-catalog-identity-rebind-link40/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    "product_identity": {
+      "bytes": 2104,
+      "path": "build/c2.2/substitution/substitution-artifacts.json",
+      "sha256": "e204a6c28234ac2b80e4e2324e27cafd919677992fcbc18ca0adcc297bf8c512"
+    },
+    "product_shelf": {
+      "bytes": 70897,
+      "path": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+    }
+  },
+  "claim_limit": "Paper/source audit of the complete C2D-v6 header and every current product header writer. It changes no product or deployment byte.",
+  "decoder_cross_binding": {
+    "c2d_build_id_to_product": true,
+    "c2d_catalog_crc_to_shelf_header": true,
+    "shelf_header_crc_to_recomputed_catalog": true,
+    "source": {
+      "bytes": 32149,
+      "path": "scripts/c2-stream-decoder.c",
+      "sha256": "217269c50c88410edc70febba8d8e20ea3b5baf039236f5fb3c0fe2b12be5ace"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "product_bytes_changed": 0,
+    "product_compiler_runs": 0,
+    "product_linker_runs": 0,
+    "product_links": 0
+  },
+  "field_source_audit": {
+    "canonical_identity_fields": [
+      "immutable_image_count",
+      "product_shelf_catalog_crc32",
+      "product_build_id_u32"
+    ],
+    "covered_byte_count": 48,
+    "field_count": 23,
+    "fields": [
+      {
+        "bytes": 4,
+        "detail": "C2D NUL",
+        "field": "magic",
+        "offset": 0,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 1,
+        "detail": "C2D-v6",
+        "field": "version",
+        "offset": 4,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 1,
+        "detail": "48",
+        "field": "header_bytes",
+        "offset": 5,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 1,
+        "detail": "32",
+        "field": "image_record_bytes",
+        "offset": 6,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 1,
+        "detail": "10",
+        "field": "entry_record_bytes",
+        "offset": 7,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "derived from active transient entries; zero in pristine plane",
+        "field": "transient_entry_watermark",
+        "offset": 8,
+        "source": "legitimate-local-state"
+      },
+      {
+        "bytes": 2,
+        "detail": "nonzero session generation, invalidated before restage",
+        "field": "session_generation",
+        "offset": 10,
+        "source": "legitimate-local-state"
+      },
+      {
+        "bytes": 2,
+        "detail": "active emitted C2D image records",
+        "field": "image_count",
+        "offset": 12,
+        "source": "legitimate-local-derivative"
+      },
+      {
+        "bytes": 2,
+        "detail": "64",
+        "field": "image_capacity",
+        "offset": 14,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "active emitted C2D entry records",
+        "field": "entry_count",
+        "offset": 16,
+        "source": "legitimate-local-derivative"
+      },
+      {
+        "bytes": 2,
+        "detail": "2048",
+        "field": "entry_capacity",
+        "offset": 18,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "active emitted resolution words",
+        "field": "resolution_count",
+        "offset": 20,
+        "source": "legitimate-local-derivative"
+      },
+      {
+        "bytes": 2,
+        "detail": "4096",
+        "field": "resolution_capacity",
+        "offset": 22,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "active emissions-derived canonical roots",
+        "field": "root_count",
+        "offset": 24,
+        "source": "legitimate-local-derivative"
+      },
+      {
+        "bytes": 2,
+        "detail": "1536",
+        "field": "root_capacity",
+        "offset": 26,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "48",
+        "field": "images_offset",
+        "offset": 28,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "2096",
+        "field": "entries_offset",
+        "offset": 30,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "22576",
+        "field": "resolutions_offset",
+        "offset": 32,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "30768",
+        "field": "roots_offset",
+        "offset": 34,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "33840",
+        "field": "total_bytes",
+        "offset": 36,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "consumed from self-verified L65S-v4 shelf header",
+        "field": "immutable_image_count",
+        "offset": 38,
+        "source": "canonical-authority"
+      },
+      {
+        "bytes": 4,
+        "detail": "consumed from and recomputed over the L65S-v4 catalog",
+        "field": "product_shelf_catalog_crc32",
+        "offset": 40,
+        "source": "canonical-authority"
+      },
+      {
+        "bytes": 4,
+        "detail": "consumed from substitution authority and cross-bound to shelf",
+        "field": "product_build_id_u32",
+        "offset": 44,
+        "source": "canonical-authority"
+      }
+    ],
+    "legitimate_local_fields": [
+      "transient_entry_watermark",
+      "session_generation",
+      "image_count",
+      "entry_count",
+      "resolution_count",
+      "root_count"
+    ],
+    "private_identity_derivations": [],
+    "status": "passed-all-48-header-bytes-accounted"
+  },
+  "format": "lisp65-c2-lite-v6-header-source-audit-v1",
+  "product_writer_checks": {
+    "canonical_field_assignment_count": 0,
+    "current_source": {
+      "allowed_direct_assignment_offsets": {
+        "active_counts": [
+          12,
+          13,
+          16,
+          17,
+          20,
+          21,
+          24,
+          25
+        ],
+        "watermark": [
+          8,
+          9
+        ]
+      },
+      "append_preserves_canonical_fields": true,
+      "canonical_field_assignments": [],
+      "header_write_calls": 7,
+      "restage_preserves_canonical_fields": true,
+      "rollback_preserves_canonical_fields": true,
+      "source": {
+        "bytes": 125994,
+        "path": "src/c2_product_runtime.c",
+        "sha256": "09bbbb6c2a2d762f3b6189909d526a6c54bbb5077978768d3e845081b5bcbda7"
+      }
+    },
+    "identity_fields_preserved_byte_for_byte_after_pristine_emission": true,
+    "linked_link40_generated_source": {
+      "allowed_direct_assignment_offsets": {
+        "active_counts": [
+          12,
+          13,
+          16,
+          17,
+          20,
+          21,
+          24,
+          25
+        ],
+        "watermark": [
+          8,
+          9
+        ]
+      },
+      "append_preserves_canonical_fields": true,
+      "canonical_field_assignments": [],
+      "header_write_calls": 7,
+      "restage_preserves_canonical_fields": true,
+      "rollback_preserves_canonical_fields": true,
+      "source": {
+        "bytes": 125683,
+        "path": "build/c2.2/substitution/product-link-40-c2-lite-v6-real-abi-e000/generated-product-sources/c2_product_runtime.c",
+        "sha256": "1e6e7dc3fc6ce7081e1b47689247cc435b3aad59164e7be254dbdc41d1d7a055"
+      }
+    }
+  },
+  "recorded_on": "2026-07-22",
+  "status": "passed-all-header-fields-and-product-writers-accounted",
+  "writer_inventory": [
+    {
+      "canonical_fields": "consumed from self-verified shelf authority",
+      "operation": "constructs all 48 bytes",
+      "writer": "pristine host C2D-v6 emitter"
+    },
+    {
+      "direct_write_offsets": [
+        8,
+        9
+      ],
+      "operation": "authenticated predecessor copy; watermark only",
+      "writer": "c2_product_prepare_boot"
+    },
+    {
+      "direct_write_offsets": [
+        8,
+        9,
+        12,
+        13,
+        16,
+        17,
+        20,
+        21,
+        24,
+        25
+      ],
+      "operation": "authenticated predecessor copy; watermark or active counts",
+      "writer": "c2_append_header_phase"
+    },
+    {
+      "direct_write_offsets": [
+        8,
+        9,
+        12,
+        13,
+        16,
+        17,
+        20,
+        21,
+        24,
+        25
+      ],
+      "operation": "restore authenticated snapshot; watermark or active counts",
+      "writer": "append rollback paths"
+    }
+  ]
+}

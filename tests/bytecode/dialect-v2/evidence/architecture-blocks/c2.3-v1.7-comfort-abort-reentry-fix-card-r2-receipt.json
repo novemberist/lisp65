@@ -1,0 +1,1951 @@
+{
+  "acceptance": {
+    "bytes": 17838,
+    "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/artifact-acceptance.json",
+    "sha256": "df91946a05b73d2751a5774568417876cec5a6058a8fc476b5fe498b8c0bb95e"
+  },
+  "artifacts_after": {
+    "ELF": {
+      "bytes": 647588,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f5a9c160ef68bcb595e3cf8e522f8510312ba7c26cc7580f5991e326308e3a8b"
+    },
+    "lto": {
+      "bytes": 620108,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "143b7b3ce63be851cb3d8ecf03841cec98f773f6118d32deb1351df18ac84447"
+    },
+    "map": {
+      "bytes": 194102,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "d026126ac97a4a88a2652bf3e49c7fd02be3aebeda3de622d1a1b7ece500a8fb"
+    }
+  },
+  "artifacts_before": {
+    "ELF": {
+      "bytes": 647588,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "f5a9c160ef68bcb595e3cf8e522f8510312ba7c26cc7580f5991e326308e3a8b"
+    },
+    "lto": {
+      "bytes": 620108,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "143b7b3ce63be851cb3d8ecf03841cec98f773f6118d32deb1351df18ac84447"
+    },
+    "map": {
+      "bytes": 194102,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "d026126ac97a4a88a2652bf3e49c7fd02be3aebeda3de622d1a1b7ece500a8fb"
+    }
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "acceptance_runs": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 1,
+    "scope_runs": 1
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 20835,
+    "commit": "f48a12a8",
+    "path": "docs/planning/v1.7.0-pre-plan.md",
+    "sha256": "87b75f994959287bb52ecf7a6d1405a18304812de1c410a7094e734e58216450"
+  },
+  "configuration": {
+    "abort_reentry_fix": {
+      "device_contacts": 0,
+      "media_builds": 0,
+      "models": {
+        "historical_order": {
+          "events": [
+            "sanitize",
+            "retire-wipe",
+            "transport-before-longjmp"
+          ],
+          "ready": 0,
+          "soft_sp": 51456,
+          "status": "ERR_STACK"
+        },
+        "nested_depth_three": {
+          "events": [
+            "sanitize",
+            "retire-wipe",
+            "longjmp-restore",
+            "journal-validate",
+            "journal-reconstruct",
+            "fronts",
+            "rollback-prepare",
+            "journal-write",
+            "rollback-plan",
+            "fronts",
+            "rollback-prepare",
+            "journal-write",
+            "rollback-plan",
+            "fronts",
+            "rollback-prepare",
+            "journal-write",
+            "rollback-plan",
+            "fronts",
+            "rollback-prepare",
+            "done"
+          ],
+          "journal_depth": 3,
+          "ready": 1,
+          "soft_sp": 53232,
+          "status": "OK"
+        },
+        "zero_depth": {
+          "events": [
+            "sanitize",
+            "retire-wipe",
+            "longjmp-restore",
+            "journal-validate",
+            "journal-reconstruct",
+            "fronts",
+            "rollback-prepare",
+            "done"
+          ],
+          "journal_depth": 0,
+          "ready": 1,
+          "soft_sp": 53232,
+          "status": "OK"
+        }
+      },
+      "mutations": [
+        {
+          "name": "transport-restored-to-pre-longjmp-half",
+          "rejected": "transported cleanup survived before longjmp"
+        },
+        {
+          "name": "post-longjmp-recovery-removed",
+          "rejected": "restored-stack recovery is not the first abort-landing work"
+        },
+        {
+          "name": "recovery-delayed-past-error-clear",
+          "rejected": "restored-stack recovery is not the first abort-landing work"
+        }
+      ],
+      "status": "PASS: ABORT LANDING IS TWO STAGE"
+    },
+    "active_registries": [
+      {
+        "allocated": [
+          ".lisp65_c2_kernal_window.input_capture_main",
+          ".lisp65_c2_kernal_window.input_capture_helper",
+          ".lisp65_c2_kernal_window.input_consumer"
+        ],
+        "placement_gate": "candidate-predecessor-end",
+        "registration": {
+          "allocated": [
+            ".lisp65_c2_kernal_window.input_capture_main",
+            ".lisp65_c2_kernal_window.input_capture_helper",
+            ".lisp65_c2_kernal_window.input_consumer"
+          ],
+          "authority": "build-feature-and-source-membership",
+          "feature": "LISP65_V160_INPUT_CAPTURE",
+          "hybrid_feature": "LISP65_V160_INPUT_HYBRID",
+          "hybrid_selected": true,
+          "hybrid_source": "src/optional/c2_kernal_input_consumer.s",
+          "names": [
+            ".lisp65_c2_kernal_window.input_capture_main",
+            ".lisp65_c2_kernal_window.input_capture_helper",
+            ".lisp65_c2_kernal_window.input_consumer",
+            ".rela.lisp65_c2_kernal_window.input_capture_main",
+            ".rela.lisp65_c2_kernal_window.input_capture_helper",
+            ".rela.lisp65_c2_kernal_window.input_consumer"
+          ],
+          "relocations": [
+            ".rela.lisp65_c2_kernal_window.input_capture_main",
+            ".rela.lisp65_c2_kernal_window.input_capture_helper",
+            ".rela.lisp65_c2_kernal_window.input_consumer"
+          ],
+          "selected": true,
+          "source": "src/optional/c2_kernal_input_capture.s"
+        },
+        "registry": "input-fidelity"
+      },
+      {
+        "allocated": [
+          ".lisp65_c2_mapped_product_cold"
+        ],
+        "placement_gate": "mapped-arena-contract",
+        "registration": {
+          "allocated": [
+            ".lisp65_c2_mapped_product_cold"
+          ],
+          "authority": "PRODUCT_COLD_BUILD_CONFIGURATION",
+          "capacity_bytes": 371,
+          "cpu_start": 32397,
+          "feature": "LISP65_C2_PRODUCT_COLD_DISK_CHAIN",
+          "names": [
+            ".lisp65_c2_mapped_product_cold",
+            ".rela.lisp65_c2_mapped_product_cold"
+          ],
+          "physical_start": 179853,
+          "relocations": [
+            ".rela.lisp65_c2_mapped_product_cold"
+          ],
+          "selected": true,
+          "source": "src/optional/c2_product_cold_disk_chain.s"
+        },
+        "registry": "product-cold-disk-chain"
+      }
+    ],
+    "capture": {
+      "capture": {
+        "already_active": false,
+        "feature": "LISP65_V160_INPUT_CAPTURE",
+        "sections": [
+          ".lisp65_c2_kernal_window.input_capture_main",
+          ".lisp65_c2_kernal_window.input_capture_helper"
+        ],
+        "source": "src/optional/c2_kernal_input_capture.s"
+      },
+      "hybrid": {
+        "already_active": true,
+        "feature": "LISP65_V160_INPUT_HYBRID",
+        "section": ".lisp65_c2_kernal_window.input_consumer"
+      }
+    },
+    "compiler_sources": [
+      "src/buffer_overlay.c",
+      "src/c2_hot_literal.c",
+      "src/c2_kernal_runtime.c",
+      "src/c2_phase_scratch.c",
+      "src/c2_platform_dma.c",
+      "src/c2_product_runtime.c",
+      "src/c2_session_emitter.c",
+      "src/compile.c",
+      "src/compile_repl.c",
+      "src/error_overlay.c",
+      "src/eval.c",
+      "src/intern_service_overlay.c",
+      "src/interrupt.c",
+      "src/io.c",
+      "src/main.c",
+      "src/mem.c",
+      "src/printer.c",
+      "src/reader.c",
+      "src/repl.c",
+      "src/screen.c",
+      "src/screen_scroll_overlay.c",
+      "src/symbol.c",
+      "src/vm.c",
+      "src/vm_boot_overlay.c",
+      "src/vm_runtime_overlay.c",
+      "scripts/c2-stream-init.c",
+      "scripts/c2-stream-phase-00.c",
+      "scripts/c2-stream-phase-00b.c",
+      "scripts/c2-stream-phase-01.c",
+      "scripts/c2-stream-phase-02a.c",
+      "scripts/c2-stream-phase-02b.c",
+      "scripts/c2-stream-phase-03.c",
+      "scripts/c2-stream-phase-04.c",
+      "scripts/c2-stream-phase-05.c",
+      "scripts/c2-stream-phase-06a.c",
+      "scripts/c2-stream-phase-06b.c",
+      "scripts/c2-stream-v2-phase-07.c",
+      "scripts/c2-stream-v2-phase-08.c",
+      "scripts/c2-stream-v2-phase-09.c",
+      "scripts/c2-stream-v2-phase-10.c",
+      "scripts/c2-stream-v2-phase-11.c",
+      "scripts/c2-stream-v2-phase-12.c",
+      "scripts/c2-stream-v2-phase-13.c",
+      "src/mega65_math.s",
+      "src/f011_guarded_write.s",
+      "src/runtime_overlay_verifier_bindings.s",
+      "src/c2_kernal_facade.s",
+      "src/c2_kernal_map.s",
+      "src/c2_kernal_window.s",
+      "src/optional/c2_kernal_input_capture.s",
+      "src/rtov_crc_mem.s",
+      "src/c2_completion_mode_length.s",
+      "src/lisp65_ash_tagged.s",
+      "src/l65e_bcode_ordinal.s",
+      "src/c2_append_plan_walk.s",
+      "src/c2_mapped_far_service.s",
+      "src/c2_mapped_far_convergence.s",
+      "src/optional/c2_kernal_input_consumer.s",
+      "src/optional/c2_product_cold_disk_chain.s"
+    ],
+    "features": [
+      "LISP65_CODE_WINDOW_CONVERGENCE",
+      "LISP65_DMA_CONTENT_CONVERGENCE",
+      "LISP65_C2_ASM_CONVERGENCE",
+      "LISP65_V160_INPUT_CAPTURE",
+      "LISP65_V160_INPUT_HYBRID",
+      "LISP65_C2_PRODUCT_COLD_DISK_CHAIN"
+    ],
+    "library_adapter_closure": {
+      "cases": 9,
+      "declaring_suite": {
+        "bytes": 3534,
+        "path": "tests/bytecode/libs/p0-repl-comfort.json",
+        "sha256": "d059bc9ef0e0264e319a346a59253d66cf46fe170b5386adccece18a98a59420"
+      },
+      "functions": 4,
+      "mutation": {
+        "name": "omit-explicit-resident-suite-binding",
+        "rejected": "[Errno 2] No such file or directory: '/home/alex/Videos/lisp65-cp4-safety-20260712/p0-repl-comfort-resident.json'"
+      },
+      "resident_suite": {
+        "bytes": 285,
+        "path": "tests/bytecode/libs/p0-repl-comfort-resident.json",
+        "sha256": "7b4c92bbbc803ce84760f803975d3f97841f3c61342afabc953be716b8fad4e6"
+      },
+      "resolved_path": "/home/alex/Videos/lisp65-cp4-safety-20260712/tests/bytecode/libs/p0-repl-comfort-resident.json",
+      "status": "PASS: REAL CONSUMER RESOLVES DECLARING-SUITE PATH"
+    },
+    "phase1b": {
+      "capacity": {
+        "bias_adjusted_free": {
+          "namepool_bytes": 581,
+          "symbol_slots": 32
+        },
+        "minimum": {
+          "namepool_bytes": 384,
+          "symbol_slots": 32
+        }
+      },
+      "device_contacts": 0,
+      "display": {
+        "composed_framebuffer": {
+          "active_row": "l65> (list 1 3)",
+          "left_scroll_prefix": "l65> cdea",
+          "maximum_characters": 250,
+          "prompt_boundary": "l65> a",
+          "result_row": "(1 3)",
+          "result_tail_blank": true,
+          "visible_text_columns": 74
+        },
+        "status": "PASS: COMFORT DISPLAY HAS ONE OWNER AND DEFINED HANDOFF"
+      },
+      "host": {
+        "case_registry_mutations_rejected": {
+          "add-unregistered-case": "Comfort required-case registry drift",
+          "remove-required-empty-boundary": "Comfort required-case registry drift"
+        },
+        "contract_mutations_rejected": {
+          "claim-hardware": "Comfort placement/claim wall drift",
+          "erase-slot-cost": "bias-adjusted Comfort symbol arithmetic drift",
+          "grow-history-silently": "Comfort semantic contract drift",
+          "hide-private-helper": "bias-adjusted Comfort symbol arithmetic drift",
+          "inflate-prior-slot": "bias-adjusted Comfort symbol arithmetic drift",
+          "lower-symbol-floor": "bias-adjusted Comfort symbol arithmetic drift",
+          "omit-NUL-price": "bias-adjusted Comfort symbol arithmetic drift",
+          "replace-eval-path": "Comfort semantic contract drift",
+          "skip-D5": "Comfort executable/release gate wall drift",
+          "weaken-overclose": "Comfort semantic contract drift"
+        },
+        "executable_mutation": "rejected-by-executable-overclose-case",
+        "pricing": {
+          "bias_adjusted_free": {
+            "namepool_bytes": 581,
+            "symbol_slots": 32
+          },
+          "bias_adjusted_margin": {
+            "namepool_bytes": 197,
+            "symbol_slots": 0
+          },
+          "new_namepool_bytes": 13
+        },
+        "source": {
+          "evaluation_path": [
+            "read-from-string",
+            "lcc-run"
+          ],
+          "functions": [
+            "%repl-read",
+            "%repl-prompt",
+            "%repl-step",
+            "repl"
+          ],
+          "keymap_bindings": 12,
+          "native_fallback": true,
+          "shared_scanner": true,
+          "static_cases": 9
+        }
+      },
+      "media_builds": 0,
+      "product_primitive_delta": 0,
+      "variant": "B-shipped-fallback"
+    },
+    "product_cold_successor": {
+      "allocated": [
+        ".lisp65_c2_mapped_product_cold"
+      ],
+      "authority": "PRODUCT_COLD_BUILD_CONFIGURATION",
+      "capacity_bytes": 371,
+      "cpu_start": 32397,
+      "feature": "LISP65_C2_PRODUCT_COLD_DISK_CHAIN",
+      "names": [
+        ".lisp65_c2_mapped_product_cold",
+        ".rela.lisp65_c2_mapped_product_cold"
+      ],
+      "physical_start": 179853,
+      "relocations": [
+        ".rela.lisp65_c2_mapped_product_cold"
+      ],
+      "selected": true,
+      "source": "src/optional/c2_product_cold_disk_chain.s"
+    },
+    "removed": {
+      "feature": "LISP65_C2_REFILL_BOUNDARY_WITNESS",
+      "section": ".lisp65_c2_mapped_diagnostic",
+      "source": "src/optional/c2_refill_boundary_witness.s",
+      "trace_origin_tokens": [
+        "Diagnostic refill-trace origin",
+        "(poke 188 138 255)",
+        "(poke 188 135 0)",
+        "(poke 188 136 0)",
+        "(poke 188 137 0)",
+        "(poke 188 139 165)"
+      ]
+    },
+    "rule": "diagnostic freight lives in diagnostic worlds; acceptance runs product world",
+    "world": "product"
+  },
+  "final_product": {
+    "DMA": {
+      "ELF": {
+        "bytes": 647588,
+        "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+      },
+      "classified_raw_read_callers": [
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_boot_family_impl",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "ov_bank_crc16",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "vm_boot_overlay_chain_prepare",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_session_family_impl",
+          "section": ".lisp65_rt_bank3_stage_session",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_session_overflow",
+          "section": ".lisp65_rt_bank3_stage_session",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_phase02a_record_read",
+          "section": ".lisp65_rt_c2d_02a",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_stream_phase_03b",
+          "section": ".lisp65_rt_c2d_03b",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "rtov_read",
+          "section": ".text",
+          "sink": "c2_facade_vm_code_load"
+        }
+      ],
+      "instrument": {
+        "neutral": true,
+        "present": false,
+        "product_entry_edges": 0,
+        "raw_DMA_edges": 0,
+        "raw_read_edges": 0
+      },
+      "linked_MAP_CPU_callers": [
+        {
+          "function": "c2_dma_read_or_abort",
+          "section": ".lisp65_c2_mapped_far_facade"
+        },
+        {
+          "function": "c2_map_cpu_selector",
+          "section": ".text"
+        },
+        {
+          "function": "c2_product_entry_read",
+          "section": ".text"
+        },
+        {
+          "function": "ext_dma_read_or_abort",
+          "section": ".text"
+        }
+      ],
+      "linked_raw_read_callers": [
+        {
+          "function": "c2_lite_stage_boot_family_impl",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "ov_bank_crc16",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "vm_boot_overlay_chain_prepare",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "c2_lite_stage_session_family_impl",
+          "section": ".lisp65_rt_bank3_stage_session"
+        },
+        {
+          "function": "c2_lite_stage_session_overflow",
+          "section": ".lisp65_rt_bank3_stage_session"
+        },
+        {
+          "function": "c2_phase02a_record_read",
+          "section": ".lisp65_rt_c2d_02a"
+        },
+        {
+          "function": "c2_stream_phase_03b",
+          "section": ".lisp65_rt_c2d_03b"
+        },
+        {
+          "function": "rtov_read",
+          "section": ".text"
+        }
+      ],
+      "product_entry": {
+        "MAP_CPU_edges": 1,
+        "raw_DMA_edges": 0,
+        "raw_read_edges": 0,
+        "section": ".text"
+      },
+      "unsafe_content_DMA_count": 0,
+      "unsafe_content_DMA_surfaces": []
+    },
+    "abort_reentry_fix": {
+      "device_contacts": 0,
+      "final_elf": {
+        "call_targets": {
+          "c2_product_abort_cleanup": [
+            "c2_rtov_retire_continuations_facade",
+            "rtov_wipe"
+          ],
+          "c2_product_abort_recover": [
+            "c2_abort_driver_facade"
+          ],
+          "lisp_abort_symbol": [
+            "c2_product_abort_cleanup",
+            "longjmp"
+          ],
+          "repl": [
+            "setjmp",
+            "__lisp65_c2_mapped_product_cold_end",
+            "c2_product_abort_recover",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "lisp_abort_code",
+            "scr_cursor",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "kb_cursor_off",
+            "__lisp65_c2_mapped_product_cold_end",
+            "scr_cursor",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "kb_cursor_off",
+            "__lisp65_c2_mapped_product_cold_end",
+            "lisp65_hw_udivhi3",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "lisp_abort_code",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "lisp65_hw_mulhi3",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "vm_run_dir",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end",
+            "__lisp65_c2_mapped_product_cold_end"
+          ]
+        },
+        "elf": {
+          "bytes": 647588,
+          "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+          "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+        },
+        "status": "PASS: FINAL ELF CONSUMES TWO-STAGE LANDING"
+      },
+      "media_builds": 0,
+      "models": {
+        "nested_depth_three": {
+          "events": [
+            "sanitize",
+            "retire-wipe",
+            "longjmp-restore",
+            "journal-validate",
+            "journal-reconstruct",
+            "fronts",
+            "rollback-prepare",
+            "journal-write",
+            "rollback-plan",
+            "fronts",
+            "rollback-prepare",
+            "journal-write",
+            "rollback-plan",
+            "fronts",
+            "rollback-prepare",
+            "journal-write",
+            "rollback-plan",
+            "fronts",
+            "rollback-prepare",
+            "done"
+          ],
+          "journal_depth": 3,
+          "ready": 1,
+          "soft_sp": 53232,
+          "status": "OK"
+        },
+        "zero_depth": {
+          "events": [
+            "sanitize",
+            "retire-wipe",
+            "longjmp-restore",
+            "journal-validate",
+            "journal-reconstruct",
+            "fronts",
+            "rollback-prepare",
+            "done"
+          ],
+          "journal_depth": 0,
+          "ready": 1,
+          "soft_sp": 53232,
+          "status": "OK"
+        }
+      },
+      "source": {
+        "landing_order": [
+          "setjmp-restored",
+          "C2J-recover",
+          "render-original-error",
+          "clear-error"
+        ],
+        "post_longjmp": [
+          "C2J-validate",
+          "rollback-if-active"
+        ],
+        "pre_longjmp": [
+          "continuation-sanitize",
+          "overlay-retire-wipe"
+        ],
+        "status": "PASS: ABORT LANDING IS TWO STAGE"
+      },
+      "status": "PASS: TWO-STAGE ABORT REENTRY PROVED IN FINAL ELF"
+    },
+    "diagnostic_freight_absent": true,
+    "display": {
+      "result_tail_blank": true,
+      "status": "PASS: COMFORT DISPLAY HAS ONE OWNER AND DEFINED HANDOFF"
+    },
+    "execution_backstop": {
+      "E000_delta_bytes": 0,
+      "cases": [
+        {
+          "case": "retired-window-BRK",
+          "recover": true
+        },
+        {
+          "case": "hardware-IRQ",
+          "recover": false
+        },
+        {
+          "case": "live-overlay",
+          "recover": false
+        },
+        {
+          "case": "outside-window",
+          "recover": false
+        },
+        {
+          "case": "no-toplevel",
+          "recover": false
+        }
+      ],
+      "claim": "every retired-window BRK reaches prompt recovery; all other source-less IRQs remain fail-closed",
+      "classifier": {
+        "bytes": 60,
+        "section": ".text"
+      },
+      "cleanup_free_landing": {
+        "bytes": 32,
+        "section": ".text"
+      },
+      "mapped_far_service": {
+        "bytes": 1488,
+        "capacity_bytes": 1499,
+        "free_bytes": 11
+      },
+      "ordinary_free_bytes": 211,
+      "overlay_interval": {
+        "bytes": 1851,
+        "end": "0xca91",
+        "source": "final ELF symbols",
+        "start": "0xc356"
+      },
+      "protected_BSS": {
+        "address": "0xb9ca",
+        "bytes": 1585,
+        "end": "0xbffb",
+        "validation_margin_bytes": 5
+      },
+      "recovery_sanitization": {
+        "dominates_longjmp": true,
+        "entry": {
+          "bytes": 9,
+          "section": ".text"
+        },
+        "normal_retirement_uses_shared_walker": true,
+        "recovery_reaches_frame_walker": false,
+        "retirement": {
+          "bytes": 41,
+          "section": ".lisp65_c2_mapped_far_service"
+        },
+        "shared_saved_CSR_walker": {
+          "bytes": 43,
+          "pairs": 7,
+          "section": ".lisp65_c2_mapped_far_service"
+        }
+      },
+      "status": "PASS: V1.6 EXECUTION BOUNDARY BACKSTOP",
+      "top_level_active": {
+        "address": "0x0054",
+        "declared_type": "uint8_t",
+        "emitted_bytes": 1
+      },
+      "transitive_MAP_gate": {
+        "mapped_roots": [
+          "c2_abort_driver",
+          "c2_mapped_far_physical_read_converged",
+          "c2_mapped_far_vm_code_load_converged",
+          "c2_rtov_retire_continuations",
+          "c2_rtov_sanitize_saved_csrs",
+          "disk_chain_to_scratch_far",
+          "rtov_transaction_context_if_ready_far"
+        ],
+        "mapped_sections": [
+          ".lisp65_c2_mapped_far_service",
+          ".lisp65_c2_mapped_product_cold"
+        ],
+        "status": "PASS: NO MAPPED BODY REACHES MAP ENTER/LEAVE",
+        "tenant_count": 7,
+        "tenants": [
+          "c2_abort_driver",
+          "c2_mapped_far_physical_read_converged",
+          "c2_mapped_far_vm_code_load_converged",
+          "c2_rtov_retire_continuations",
+          "c2_rtov_sanitize_saved_csrs",
+          "disk_chain_to_scratch_far",
+          "rtov_transaction_context_if_ready_far"
+        ],
+        "violations": [],
+        "wrappers": [
+          {
+            "body_roots": [
+              "c2_abort_driver"
+            ],
+            "wrapper": "c2_abort_driver_facade"
+          },
+          {
+            "body_roots": [
+              "c2_mapped_far_physical_read_converged"
+            ],
+            "wrapper": "c2_physical_read_converged"
+          },
+          {
+            "body_roots": [
+              "c2_rtov_retire_continuations"
+            ],
+            "wrapper": "c2_rtov_retire_continuations_facade"
+          },
+          {
+            "body_roots": [
+              "c2_rtov_sanitize_saved_csrs"
+            ],
+            "wrapper": "c2_rtov_sanitize_recovery"
+          },
+          {
+            "body_roots": [
+              "disk_chain_to_scratch_far"
+            ],
+            "wrapper": "disk_chain_to_scratch"
+          },
+          {
+            "body_roots": [
+              "rtov_transaction_context_if_ready_far"
+            ],
+            "wrapper": "rtov_transaction_context_if_ready"
+          },
+          {
+            "body_roots": [
+              "c2_mapped_far_vm_code_load_converged"
+            ],
+            "wrapper": "vm_code_load_converged"
+          }
+        ]
+      },
+      "zero_byte_aliases": {
+        "c2_backstop_pending_code": {
+          "additional_allocated_addresses": [],
+          "additional_allocated_bytes": 0,
+          "address": "0x0038",
+          "alias_symbol_bytes": 1,
+          "owner": "pending_code",
+          "owner_address": "0x0038",
+          "owner_address_is_unique": true,
+          "owner_symbol_bytes": 1,
+          "same_address": true
+        },
+        "c2_backstop_pending_symbol": {
+          "additional_allocated_addresses": [],
+          "additional_allocated_bytes": 0,
+          "address": "0xb9e7",
+          "alias_symbol_bytes": 2,
+          "owner": "pending_symbol",
+          "owner_address": "0xb9e7",
+          "owner_address_is_unique": true,
+          "owner_symbol_bytes": 2,
+          "same_address": true
+        },
+        "c2_backstop_rtov_busy": {
+          "additional_allocated_addresses": [],
+          "additional_allocated_bytes": 0,
+          "address": "0x0078",
+          "alias_symbol_bytes": 1,
+          "owner": "rtov_busy",
+          "owner_address": "0x0078",
+          "owner_address_is_unique": true,
+          "owner_symbol_bytes": 1,
+          "same_address": true
+        },
+        "c2_backstop_rtov_loaded_len": {
+          "additional_allocated_addresses": [],
+          "additional_allocated_bytes": 0,
+          "address": "0x0079",
+          "alias_symbol_bytes": 2,
+          "owner": "rtov_loaded_len",
+          "owner_address": "0x0079",
+          "owner_address_is_unique": true,
+          "owner_symbol_bytes": 2,
+          "same_address": true
+        }
+      }
+    },
+    "hybrid": {
+      "claim_source": "final linked ELF only",
+      "final_ELF": {
+        "bytes": 647588,
+        "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+      },
+      "format": "lisp65-c2-v160-input-service-hybrid-final-world-v1",
+      "isolated_object_claims": 0,
+      "loss": {
+        "authority": "capture wall plus final-ELF consumer execution",
+        "capture_model": {
+          "dropped": 0,
+          "events_captured": 94,
+          "events_produced": 94,
+          "final_head": 94,
+          "final_tail": 94,
+          "maximum_ring_occupancy": 94,
+          "ordered": true,
+          "sixth_event_present": true
+        },
+        "linked_consumer_cycles": 5611,
+        "linked_dropped": 0,
+        "linked_events_drained": 94,
+        "linked_ordered": true,
+        "normalized_event_order": [
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          91,
+          92,
+          93,
+          94,
+          95,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ],
+        "raw_event_order": [
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ],
+        "sixth_event": 37
+      },
+      "membership": {
+        "capture_sections": {
+          ".lisp65_c2_kernal_window.input_capture_helper": 40,
+          ".lisp65_c2_kernal_window.input_capture_main": 28
+        },
+        "consumer_sha256": "050359820e4f4455f8b3ad3a88cdfe2adac51bb6d16cdb04a4996f45d003a617",
+        "counter_bytes": 4,
+        "physical_allocation_bytes": 112,
+        "ring_index_values": 108,
+        "ring_symbols": {
+          "C2K_INPUT_EVENTS_RAW": 48380,
+          "C2K_INPUT_EVENTS_SEEN": 48381,
+          "C2K_INPUT_EVENTS_STORED": 48382,
+          "C2K_INPUT_EVENTS_TAKEN": 48383,
+          "C2K_INPUT_RING_BASE": 48272,
+          "C2K_INPUT_RING_HEAD": 65420,
+          "C2K_INPUT_RING_SLOTS": 108,
+          "C2K_INPUT_RING_TAIL": 65421
+        },
+        "section": ".lisp65_c2_kernal_window.input_consumer",
+        "section_address": 65289,
+        "section_bytes": 70,
+        "symbol": "c2_kernal_input_take",
+        "symbol_address": 65289,
+        "symbol_bytes": 70,
+        "usable_ring_events": 107
+      },
+      "normalization": {
+        "a0_to_space": true,
+        "authority": "executed final-ELF c2_kernal_input_take bytes",
+        "executions": 512,
+        "maximum_linked_consumer_cycles": 78,
+        "modes": [
+          2,
+          3
+        ],
+        "parity": true,
+        "raw_inputs": 256
+      },
+      "responsiveness": {
+        "authority": "batch VM route plus executed final-ELF consumer",
+        "batch_fixture": 8,
+        "boundary_count": 6,
+        "characters": 40,
+        "dynamic_vm_steps": 8885,
+        "frames_per_character": 0.7711554166666668,
+        "heap_cells_per_character": 1,
+        "linked_native_cycles_per_character": 66,
+        "linked_native_instructions_per_character": 23,
+        "margin_percent": 29.675546379809937,
+        "screen_cells": 45,
+        "screen_cells_per_character": 1.125,
+        "service_events_per_frame": 1.2967554637980994,
+        "vm_steps_per_character": 222.125
+      },
+      "status": "PASS: HYBRID CLAIMS PROVED ON FINAL ELF",
+      "synthetic_profile_claims": 0
+    },
+    "mapped_product_cold": {
+      "address": "0x7e8d",
+      "bytes": 324,
+      "capacity_bytes": 371,
+      "free_bytes": 47
+    },
+    "nested_MAP": {
+      "mapped_roots": [
+        "c2_abort_driver",
+        "c2_mapped_far_physical_read_converged",
+        "c2_mapped_far_vm_code_load_converged",
+        "c2_rtov_retire_continuations",
+        "c2_rtov_sanitize_saved_csrs",
+        "disk_chain_to_scratch_far",
+        "rtov_transaction_context_if_ready_far"
+      ],
+      "mapped_sections": [
+        ".lisp65_c2_mapped_far_service",
+        ".lisp65_c2_mapped_product_cold"
+      ],
+      "status": "PASS: NO MAPPED BODY REACHES MAP ENTER/LEAVE",
+      "tenant_count": 7,
+      "tenants": [
+        "c2_abort_driver",
+        "c2_mapped_far_physical_read_converged",
+        "c2_mapped_far_vm_code_load_converged",
+        "c2_rtov_retire_continuations",
+        "c2_rtov_sanitize_saved_csrs",
+        "disk_chain_to_scratch_far",
+        "rtov_transaction_context_if_ready_far"
+      ],
+      "violations": [],
+      "wrappers": [
+        {
+          "body_roots": [
+            "c2_abort_driver"
+          ],
+          "wrapper": "c2_abort_driver_facade"
+        },
+        {
+          "body_roots": [
+            "c2_mapped_far_physical_read_converged"
+          ],
+          "wrapper": "c2_physical_read_converged"
+        },
+        {
+          "body_roots": [
+            "c2_rtov_retire_continuations"
+          ],
+          "wrapper": "c2_rtov_retire_continuations_facade"
+        },
+        {
+          "body_roots": [
+            "c2_rtov_sanitize_saved_csrs"
+          ],
+          "wrapper": "c2_rtov_sanitize_recovery"
+        },
+        {
+          "body_roots": [
+            "disk_chain_to_scratch_far"
+          ],
+          "wrapper": "disk_chain_to_scratch"
+        },
+        {
+          "body_roots": [
+            "rtov_transaction_context_if_ready_far"
+          ],
+          "wrapper": "rtov_transaction_context_if_ready"
+        },
+        {
+          "body_roots": [
+            "c2_mapped_far_vm_code_load_converged"
+          ],
+          "wrapper": "vm_code_load_converged"
+        }
+      ]
+    },
+    "phase1b": {
+      "capacity": {
+        "bias_adjusted_free": {
+          "namepool_bytes": 581,
+          "symbol_slots": 32
+        },
+        "minimum": {
+          "namepool_bytes": 384,
+          "symbol_slots": 32
+        },
+        "namepool_margin_bytes": 197,
+        "slot_margin": 0
+      },
+      "claims": {
+        "balanced_history_cursor_cases": 9,
+        "claim_world": "final linked ELF plus product-profile library artifact",
+        "display": "one owner and defined handoff",
+        "loss": "94/94 ordered, zero dropped",
+        "normalization": "512/512 final-linked consumer executions"
+      },
+      "device_contacts": 0,
+      "fallback_responsiveness": {
+        "bulk_reference": {
+          "characters": 40,
+          "first_boundary_step": 3852,
+          "last_boundary_step": 12797,
+          "screen_put_char_calls_total": 200,
+          "stationary_screen_cells": 45,
+          "stationary_steps": 8945,
+          "stationary_vm_steps_per_character": 223.625
+        },
+        "forty_character_prompt_amortized_frames_per_character": 0.7743179166666666,
+        "forty_character_prompt_amortized_margin_percent": 29.145920361092003,
+        "forty_character_prompt_amortized_service_events_per_frame": 1.29145920361092,
+        "one_time_prompt_delta_vm_steps": 32,
+        "prior_final_world_reference_frames_per_character": 0.7711554166666668,
+        "product_fallback": {
+          "characters": 40,
+          "first_boundary_step": 3884,
+          "last_boundary_step": 12829,
+          "screen_put_char_calls_total": 205,
+          "stationary_screen_cells": 45,
+          "stationary_steps": 8945,
+          "stationary_vm_steps_per_character": 223.625
+        },
+        "stationary_frames_per_character": 0.7732179166666666,
+        "stationary_margin_percent": 29.329646719903792,
+        "stationary_service_events_per_frame": 1.293296467199038,
+        "wall": {
+          "calibration_cycles_per_vm_step": 1100,
+          "collection_frames": 89,
+          "cycles_per_frame": 800000,
+          "fixture_batch": 8,
+          "maximum_frames_per_character": 0.8,
+          "minimum_margin_percent": 25.0,
+          "minimum_service_events_per_frame": 1.25,
+          "nursery_cells": 192,
+          "screen_cell_cycles": 1500
+        }
+      },
+      "library": {
+        "adapter_closure": {
+          "cases": 9,
+          "declaring_suite": {
+            "bytes": 3534,
+            "path": "tests/bytecode/libs/p0-repl-comfort.json",
+            "sha256": "d059bc9ef0e0264e319a346a59253d66cf46fe170b5386adccece18a98a59420"
+          },
+          "functions": 4,
+          "resident_suite": {
+            "bytes": 285,
+            "path": "tests/bytecode/libs/p0-repl-comfort-resident.json",
+            "sha256": "7b4c92bbbc803ce84760f803975d3f97841f3c61342afabc953be716b8fad4e6"
+          },
+          "resolved_path": "/home/alex/Videos/lisp65-cp4-safety-20260712/tests/bytecode/libs/p0-repl-comfort-resident.json",
+          "resume": "read-only-existing-product-profile-artifact",
+          "status": "PASS: REAL CONSUMER RESOLVES DECLARING-SUITE PATH"
+        },
+        "blob": {
+          "bytes": 815,
+          "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/library/repl-comfort.blob.bin",
+          "sha256": "911653530f52979a92da462ad354d1fa9cc783e42d97ee955d870297a3c16fe5"
+        },
+        "code_bytes": 815,
+        "delivered_callprims": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83
+        ],
+        "directory": {
+          "bytes": 28,
+          "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/library/repl-comfort.dir.bin",
+          "sha256": "7125917be61cbdcadc27fc95e3876714052146f79a8970910f7918c7824c1c46"
+        },
+        "largest_code_object_bytes": 251,
+        "manifest": {
+          "bytes": 17077,
+          "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/library/repl-comfort.manifest.json",
+          "sha256": "f7f29694922cf2c747265132b618fe059541547461c7aa26dcfbd97ab5172600"
+        },
+        "objects": 4,
+        "observations": {
+          "bytes": 3583,
+          "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/library/observations.json",
+          "sha256": "b549cb7031f426300f73879d321d10f07d91ec9541b9ef4031919638c324ae6d"
+        },
+        "suite": {
+          "bytes": 881,
+          "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/library/product-profile-suite.json",
+          "sha256": "ef5dda5148cebd5d6db9eac2cfd23b3ac98c11e145085a518e31d565f884f5ef"
+        }
+      },
+      "media_builds": 0,
+      "product_callprim_profile": {
+        "delivered_ids": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83
+        ],
+        "table_entries": 84,
+        "table_start": "0xfd4c",
+        "tombstone_target": "0x6c85",
+        "tombstoned_ids": [
+          1,
+          2,
+          12,
+          26,
+          27,
+          40
+        ]
+      },
+      "status": "PASS: VARIANT B COMFORT SET PROVED ON FINAL PRODUCT WORLD"
+    },
+    "profile": {
+      "features": [
+        "LISP65_C2_DIRECT_HOT_REFILL",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+        "LISP65_C2_TRANSACTION_AUTH",
+        "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+        "LISP65_C2_NESTED_APPEND_V5",
+        "LISP65_C2_RESIDENCY_TRIAGE",
+        "LISP65_C2_E000_REOPEN",
+        "LISP65_C2_BSS_TRIAGE",
+        "LISP65_RUNTIME_OVERLAY_FORMAT_V4",
+        "LISP65_C2_PHASE11_SPLIT",
+        "LISP65_C2_LITE_COLD_EVICTION",
+        "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+        "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+        "LISP65_C2_LITE_BANK3_STAGING",
+        "LISP65_C2_LITE_BANK2_STAGING",
+        "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+        "LISP65_C2_LITE_VM_ARITY_E000",
+        "LISP65_C2_LITE_CHIP_RAM",
+        "LISP65_C2_APPEND_PLAN_FACADE",
+        "LISP65_C2_NUMERIC_EARLY_ERRORS",
+        "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT",
+        "LISP65_C2_TWO_REGION_SESSION_STORE",
+        "LISP65_C2_LITE_V6_JOURNAL_PREPARE_CORESIDENT",
+        "LISP65_C2_TERMINAL_RETURN_GUARD",
+        "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+        "LISP65_CODE_WINDOW_CONVERGENCE",
+        "LISP65_C2_MAP_CPU_TRANSPORT",
+        "LISP65_C2_REQUIRE_RESOLVER",
+        "LISP65_C2_PRODUCT_COLD_DISK_CHAIN",
+        "LISP65_C2_RTOV_CONTINUATION_LIVENESS",
+        "LISP65_V160_INPUT_CAPTURE",
+        "LISP65_V160_INPUT_HYBRID"
+      ],
+      "objects": [
+        "000-buffer_overlay.c.o",
+        "001-c2_hot_literal.c.o",
+        "002-c2_kernal_runtime.c.o",
+        "003-c2_phase_scratch.c.o",
+        "004-c2_platform_dma.c.o",
+        "005-c2_product_runtime.c.o",
+        "006-c2_session_emitter.c.o",
+        "007-compile.c.o",
+        "008-compile_repl.c.o",
+        "009-error_overlay.c.o",
+        "010-eval.c.o",
+        "011-intern_service_overlay.c.o",
+        "012-interrupt.c.o",
+        "013-io.c.o",
+        "014-main.c.o",
+        "015-mem.c.o",
+        "016-printer.c.o",
+        "017-reader.c.o",
+        "018-repl.c.o",
+        "019-screen.c.o",
+        "020-screen_scroll_overlay.c.o",
+        "021-symbol.c.o",
+        "022-vm.c.o",
+        "023-vm_boot_overlay.c.o",
+        "024-vm_runtime_overlay.c.o",
+        "025-c2-stream-init.c.o",
+        "026-c2-stream-phase-00.c.o",
+        "027-c2-stream-phase-00b.c.o",
+        "028-c2-stream-phase-01.c.o",
+        "029-c2-stream-phase-02a.c.o",
+        "030-c2-stream-phase-02b.c.o",
+        "031-c2-stream-phase-03.c.o",
+        "032-c2-stream-phase-03b.c.o",
+        "033-c2-stream-phase-04.c.o",
+        "034-c2-stream-phase-05a.c.o",
+        "035-c2-stream-phase-05b.c.o",
+        "036-c2-stream-phase-06a.c.o",
+        "037-c2-stream-phase-06b.c.o",
+        "038-c2-stream-v2-phase-07.c.o",
+        "039-c2-stream-v2-phase-08.c.o",
+        "040-c2-stream-v2-phase-09.c.o",
+        "041-c2-stream-v2-phase-10.c.o",
+        "042-c2-stream-v2-phase-11a.c.o",
+        "043-c2-stream-v2-phase-11b.c.o",
+        "044-c2-stream-v2-phase-12.c.o",
+        "045-c2-stream-v2-phase-13.c.o",
+        "046-mega65_math.s.o",
+        "047-f011_guarded_write.s.o",
+        "048-runtime_overlay_verifier_bindings.s.o",
+        "049-c2_kernal_facade.s.o",
+        "050-c2_kernal_map.s.o",
+        "051-c2_kernal_window.s.o",
+        "052-c2_kernal_input_capture.s.o",
+        "053-rtov_crc_mem.s.o",
+        "054-c2_completion_mode_length.s.o",
+        "055-lisp65_ash_tagged.s.o",
+        "056-l65e_bcode_ordinal.s.o",
+        "057-c2_append_plan_walk.s.o",
+        "058-vm_c2d_byte.s.o",
+        "059-c2_journal_prepare_select.s.o",
+        "060-c2_mapped_far_service_liveness_v4.s.o",
+        "061-c2_mapped_far_convergence_full_span.s.o",
+        "062-c2_mapped_far_facade_padding_liveness_v3.s.o",
+        "063-c2_map_cpu_read.s.o",
+        "064-c2_kernal_input_consumer.s.o",
+        "065-c2_product_cold_disk_chain.s.o",
+        "066-c2_lite_bank3_stage_entry.s.o",
+        "067-c2_boot_chain_commit.s.o",
+        "068-c2_kernal_facade_reopen.s.o"
+      ],
+      "real_consumer": "resolved profile plus canonical object inventory",
+      "sources": [
+        "src/buffer_overlay.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2_hot_literal.c",
+        "src/c2_kernal_runtime.c",
+        "src/c2_phase_scratch.c",
+        "src/c2_platform_dma.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2_product_runtime.c",
+        "src/c2_session_emitter.c",
+        "src/compile.c",
+        "src/compile_repl.c",
+        "src/error_overlay.c",
+        "src/eval.c",
+        "src/intern_service_overlay.c",
+        "src/interrupt.c",
+        "src/io.c",
+        "src/main.c",
+        "src/mem.c",
+        "src/printer.c",
+        "src/reader.c",
+        "src/repl.c",
+        "src/screen.c",
+        "src/screen_scroll_overlay.c",
+        "src/symbol.c",
+        "src/vm.c",
+        "src/vm_boot_overlay.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/vm_runtime_overlay.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-init.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-00.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-00b.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-01.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-02b.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-03.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-03b.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-04.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-05a.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-05b.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-06a.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-phase-06b.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-v2-phase-07.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-v2-phase-08.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-v2-phase-09.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-v2-phase-10.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-v2-phase-11a.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-v2-phase-11b.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-v2-phase-12.c",
+        "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/generated-product-sources/c2-stream-v2-phase-13.c",
+        "src/mega65_math.s",
+        "src/f011_guarded_write.s",
+        "src/runtime_overlay_verifier_bindings.s",
+        "src/c2_kernal_facade.s",
+        "src/c2_kernal_map.s",
+        "src/c2_kernal_window.s",
+        "src/optional/c2_kernal_input_capture.s",
+        "src/rtov_crc_mem.s",
+        "src/c2_completion_mode_length.s",
+        "src/lisp65_ash_tagged.s",
+        "src/l65e_bcode_ordinal.s",
+        "src/c2_append_plan_walk.s",
+        "src/vm_c2d_byte.s",
+        "src/c2_journal_prepare_select.s",
+        "src/optional/c2_mapped_far_service_liveness_v4.s",
+        "src/optional/c2_mapped_far_convergence_full_span.s",
+        "src/optional/c2_mapped_far_facade_padding_liveness_v3.s",
+        "src/optional/c2_map_cpu_read.s",
+        "src/optional/c2_kernal_input_consumer.s",
+        "src/optional/c2_product_cold_disk_chain.s",
+        "src/c2_lite_bank3_stage_entry.s",
+        "src/c2_boot_chain_commit.s",
+        "src/c2_kernal_facade_reopen.s",
+        "src/c2_kernal_window_equates.inc"
+      ]
+    },
+    "queue_single_owner": {
+      "armed_state": "0xFF8D",
+      "consumers": [
+        {
+          "armed_state_before": true,
+          "call_address": "0x47f8",
+          "matrix_before": true,
+          "owner": "vm_run_inner"
+        },
+        {
+          "armed_state_before": false,
+          "call_address": "0x83dc",
+          "matrix_before": false,
+          "owner": "lisp_input_event"
+        }
+      ],
+      "dominated_calls": 1,
+      "matrix_pending": "0xFF8A",
+      "mutations": {
+        "blanket_requirement": "rejected",
+        "unguarded_evaluator_edge": "rejected"
+      },
+      "queue_poll_calls": 2,
+      "rule": "only evaluator drain requires capture domination; public key-event remains legitimate"
+    },
+    "selector_bypass": {
+      "ELF": {
+        "bytes": 647588,
+        "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "86f93483800ebf2b9b29e88752cb8fbbd4632ba52ee2fc94e16fb2ba3bbec9f4"
+      },
+      "classified_raw_read_callers": [
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_boot_family_impl",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "ov_bank_crc16",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "vm_boot_overlay_chain_prepare",
+          "section": ".lisp65_boot_bank3_stage",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_session_family_impl",
+          "section": ".lisp65_rt_bank3_stage_session",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_lite_stage_session_overflow",
+          "section": ".lisp65_rt_bank3_stage_session",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_phase02a_record_read",
+          "section": ".lisp65_rt_c2d_02a",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "c2_stream_phase_03b",
+          "section": ".lisp65_rt_c2d_03b",
+          "sink": "c2_facade_vm_code_load"
+        },
+        {
+          "classification": "immutable-delivery-CRC",
+          "function": "rtov_read",
+          "section": ".text",
+          "sink": "c2_facade_vm_code_load"
+        }
+      ],
+      "instrument": {
+        "neutral": true,
+        "present": false,
+        "product_entry_edges": 0,
+        "raw_DMA_edges": 0,
+        "raw_read_edges": 0
+      },
+      "linked_MAP_CPU_callers": [
+        {
+          "function": "c2_dma_read_or_abort",
+          "section": ".lisp65_c2_mapped_far_facade"
+        },
+        {
+          "function": "c2_map_cpu_selector",
+          "section": ".text"
+        },
+        {
+          "function": "c2_product_entry_read",
+          "section": ".text"
+        },
+        {
+          "function": "ext_dma_read_or_abort",
+          "section": ".text"
+        }
+      ],
+      "linked_raw_read_callers": [
+        {
+          "function": "c2_lite_stage_boot_family_impl",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "ov_bank_crc16",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "vm_boot_overlay_chain_prepare",
+          "section": ".lisp65_boot_bank3_stage"
+        },
+        {
+          "function": "c2_lite_stage_session_family_impl",
+          "section": ".lisp65_rt_bank3_stage_session"
+        },
+        {
+          "function": "c2_lite_stage_session_overflow",
+          "section": ".lisp65_rt_bank3_stage_session"
+        },
+        {
+          "function": "c2_phase02a_record_read",
+          "section": ".lisp65_rt_c2d_02a"
+        },
+        {
+          "function": "c2_stream_phase_03b",
+          "section": ".lisp65_rt_c2d_03b"
+        },
+        {
+          "function": "rtov_read",
+          "section": ".text"
+        }
+      ],
+      "product_entry": {
+        "MAP_CPU_edges": 1,
+        "direct_MAP_CPU_edges": 1,
+        "raw_DMA_edges": 0,
+        "raw_read_edges": 0,
+        "section": ".text",
+        "selector_edges": 0
+      },
+      "selector_retirement": {
+        "current_fallback_callers": 0,
+        "current_linked_reason_to_retain_fallback": false,
+        "current_reader_callers": 2,
+        "decision": "no current linked caller needs the fallback; retirement is priceable as a separate ABI-reviewed change, not implemented by this card",
+        "selector_body_bytes_reclaimable": 40
+      },
+      "selector_totality": {
+        "actual_callers": [
+          {
+            "address": "0xe326",
+            "admitted": true,
+            "hardware_pushed_return": "0xe328",
+            "kind": "JSR",
+            "owner": "c2_stream_c2d_read",
+            "section": ".lisp65_c2_kernal_window.c2_resident",
+            "selected_address": "0x22e5",
+            "selected_sink": "c2_map_cpu_read",
+            "target_identity": [
+              ".lisp65_c2_host_facade",
+              46571
+            ]
+          },
+          {
+            "address": "0xe84b",
+            "admitted": true,
+            "hardware_pushed_return": "0xe84d",
+            "kind": "JSR",
+            "owner": "c2_stream_shelf_read",
+            "section": ".lisp65_c2_kernal_window.c2_resident",
+            "selected_address": "0x22e5",
+            "selected_sink": "c2_map_cpu_read",
+            "target_identity": [
+              ".lisp65_c2_host_facade",
+              46571
+            ]
+          }
+        ],
+        "admitted_hardware_pushed_returns": [
+          "0xe328",
+          "0xe84d"
+        ],
+        "fallback_sink": "vm_runtime_overlay_exec",
+        "fixed_vector": "0xb5eb",
+        "reader_sink": "c2_map_cpu_read",
+        "selector": {
+          "address": "0x23a2",
+          "bytes": 40
+        },
+        "violations": []
+      },
+      "unsafe_content_DMA_count": 0,
+      "unsafe_content_DMA_surfaces": []
+    }
+  },
+  "format": "lisp65-c2-v17-comfort-abort-reentry-fix-card-r2-v1",
+  "invocation": {
+    "bytes": 460,
+    "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2-preflight/candidate-invocation.json",
+    "sha256": "5972d3cfb7a832d8aea81bbc9def9b423e50c30ef981bfda830b227367772086"
+  },
+  "media_authorized": false,
+  "next": "full check-source self-certification, then fresh same-world media",
+  "preflight": {
+    "bytes": 12492,
+    "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2-preflight/preflight.json",
+    "sha256": "41c3a9d517ef54236091d4c648261bf188cdf402a1b205cea6b195be58588074"
+  },
+  "processes": [
+    {
+      "WPLTO_runs": 0,
+      "action": "read-only-final-gate-resume",
+      "product_links": 0,
+      "status": "PASS"
+    }
+  ],
+  "producer": {
+    "bytes": 12028,
+    "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/producer-result.json",
+    "sha256": "03131bfabf55725fca625928c161cc55f432d0cd529c71d606a3985eb32ec9d0"
+  },
+  "recorded_on": "2026-08-25",
+  "resume": {
+    "read_only": true,
+    "reason": "private final-gate symbol was inlined by LTO",
+    "same_ELF_PRG_pair": true
+  },
+  "scope": {
+    "bytes": 3260,
+    "path": "build/c2.3/v1.7-comfort-abort-reentry-fix-r2/owner-scope-result.json",
+    "sha256": "7052aebf5e3ced9a38a8c52008bbe4cccfc90178e0b00c04abf532452a9250e5"
+  },
+  "status": "PASS: V1.7 COMFORT ABORT REENTRY TWO-STAGE FINAL GREEN"
+}

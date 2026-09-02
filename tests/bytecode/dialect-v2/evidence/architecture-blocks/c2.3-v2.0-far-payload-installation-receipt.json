@@ -1,0 +1,170 @@
+{
+  "authority": {
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 40396,
+      "commit": "5960d2c7f8570801b213e5d2f1a8642f520413fe",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "75029f751bd268e0ae206d0599df2499d68299d685c24f59d4d84b2a2791086e"
+    },
+    "capture": {
+      "bytes": 5501,
+      "path": "build/c2.3/v2.0-far-payload-d1-hw/far-lma-installation/capture.json",
+      "sha256": "dd9dfbc97e6ffb4f4636daf078b8aca481c7b4b05a59ce296139220a2459dcb1"
+    },
+    "capture_driver": {
+      "bytes": 14282,
+      "path": "tools/host-lisp/c2_v20_far_payload_installation_capture.py",
+      "sha256": "90c9c7c2bc8d88c1a0ddfff4398e03ac38e0e036ec62e774519dd0e9f963e1fe"
+    },
+    "delivered_Bank2": {
+      "bytes": 48156,
+      "path": "build/c2.3/v2.0-far-payload-delivery/product-inputs/bank2-static-code.bin",
+      "sha256": "94479944eb6f8ece405be2902a424961b72e1936534ecd6acb0e8a2287a9c4ec"
+    },
+    "far_service": {
+      "bytes": 874,
+      "section": ".lisp65_c2_mapped_far_service",
+      "sha256": "2e948761a4c7f012687a6ad4519ae10d52ee87e14a10f8025837078f0c69c096"
+    },
+    "frozen_candidate_ELF": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-crc-carveout-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
+    },
+    "prior_result": {
+      "bytes": 7410,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-far-payload-device-receipt.json",
+      "sha256": "0303351b6b420b5fcbe59500aca040c4ee419706b16606ef87e094033bbc87ba"
+    },
+    "product_D81_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-far-payload-d1-hw/product-readback.d81",
+      "sha256": "d2ab92b14140caab5f3ca87b51fa8e4ab65183b387d6fe76ee4ae1588fcd1130"
+    },
+    "result_driver": {
+      "bytes": 10420,
+      "path": "tools/host-lisp/c2_v20_far_payload_installation_result.py",
+      "sha256": "3cd5d6def9e632bb44cbf92a60bac2104533bd2cb9180504e21786a805c1263c"
+    }
+  },
+  "claim_limit": "The three ELF-bound target-RAM probes prove the sampled far-service LMA bytes are installed.  They do not prove all 874 target bytes, service entry, descriptor initialization, product fault, fix, D2-D5, resume, or release readiness.",
+  "decision": {
+    "old_extent_successor_is_bound_zero_padding": true,
+    "old_extent_tail_matches": true,
+    "result": "head, midpoint-containing row, and tail of the far-service LMA are byteidentical to the frozen linked ELF on target RAM",
+    "selected_row": "PRESENT",
+    "service_probe_matches": 3,
+    "service_probe_rows": 3,
+    "staging_length_mechanism": "REFUTED"
+  },
+  "discipline": {
+    "CPU_left_stopped": true,
+    "D2_D5_executed": false,
+    "memory_rows": 5,
+    "resets": 0,
+    "resumes": 0,
+    "runs": 0,
+    "stops": 0,
+    "tuple_and_SHA_first": true
+  },
+  "exonerations": [
+    "the medium-to-target stager did not stop at the old 46043-byte extent",
+    "the sampled far-service target-RAM extent is not absent"
+  ],
+  "format": "lisp65-c2.3-v20-far-payload-installation-result-v1",
+  "next": "Host/ELF attribution of the caller dispatch into the mapped far-service window, starting from captured MAPL=0x2480; no further device contact.",
+  "open_boundary": "The descriptor remains all-zero and no service-entry witness exists. Presence in target RAM does not prove that caller dispatch entered the service or that every unsampled target byte is identical.",
+  "physical_reads": [
+    {
+      "byteidentical": true,
+      "bytes": 16,
+      "expected_hex": "2b3c0502333a0c390c2b3e0502390b05",
+      "name": "old-extent-tail",
+      "observed_hex": "2b3c0502333a0c390c2b3e0502390b05",
+      "observed_sha256": "5c5dd6f8da7b4b6316c94d1043bf01e29df9a43101507a9769e3986b1842eca9",
+      "physical_address": "0x0002b3cb"
+    },
+    {
+      "byteidentical": true,
+      "bytes": 16,
+      "expected_hex": "00000000000000000000000000000000",
+      "name": "old-extent-after",
+      "observed_hex": "00000000000000000000000000000000",
+      "observed_sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+      "physical_address": "0x0002b3db"
+    },
+    {
+      "byteidentical": true,
+      "bytes": 16,
+      "expected_hex": "ad84ff8521ad83ffa8ad84ffc521d0f0",
+      "name": "far-service-head",
+      "observed_hex": "ad84ff8521ad83ffa8ad84ffc521d0f0",
+      "observed_sha256": "1d1f90d9f19aae149bf2967c8ba0d61b066d5b184568e1585ed5393d86da49ea",
+      "physical_address": "0x0002b8b2"
+    },
+    {
+      "byteidentical": true,
+      "bytes": 16,
+      "expected_hex": "1b4a4a4a4a851da51c0a0a0a0a051d91",
+      "name": "far-service-middle",
+      "observed_hex": "1b4a4a4a4a851da51c0a0a0a0a051d91",
+      "observed_sha256": "0a0c6e54ad270bb6ea4a06d85b042a533418a898f75441f67f867e35ce3413a2",
+      "physical_address": "0x0002ba60"
+    },
+    {
+      "byteidentical": true,
+      "bytes": 16,
+      "expected_hex": "c511d0d44c197c4c4c7ba90060a90160",
+      "name": "far-service-tail",
+      "observed_hex": "c511d0d44c197c4c4c7ba90060a90160",
+      "observed_sha256": "5e04187e03be2052ce934b79c6905cf97fb011fd4b5842d66a0fcea82db0d7d9",
+      "physical_address": "0x0002bc0c"
+    }
+  ],
+  "recorded_on": "2026-08-13",
+  "status": "FAR-LMA-PRESENT; SERVICE-ENTRY-UNPROVEN",
+  "tuple": {
+    "A": "0x02",
+    "B": "0x00",
+    "MAPH": "0x8000",
+    "MAPL": "0x2480",
+    "PC": "0xe099",
+    "SP": "0x01c9",
+    "X": "0x00",
+    "Y": "0xb4",
+    "Z": "0x00"
+  },
+  "tuple_identity": {
+    "accepted_pipeline_PC": [
+      "0xe096",
+      "0xe097",
+      "0xe098",
+      "0xe099"
+    ],
+    "instruction": "JMP $E096",
+    "pipeline_PC": "0xe099",
+    "pre_read_first_reds": [
+      {
+        "PC": "0xe098",
+        "cause": "single-byte PC pin",
+        "memory_reads": 0
+      },
+      {
+        "PC": "0xe099",
+        "cause": "post-operand pipeline PC omitted",
+        "memory_reads": 0
+      }
+    ],
+    "stable_fields": {
+      "A": "0x02",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x2480",
+      "SP": "0x01c9",
+      "X": "0x00",
+      "Y": "0xb4",
+      "Z": "0x00"
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 69611,
+    "commit": "b83f419e3498a073e690e9d99f2745fcbdbc5082",
+    "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+    "sha256": "7fcdc9ae2b089e440d750a5636ee51edca6ee0e0dd43b6612237c7784a4c1b76"
+  },
+  "claim_limit": "Desk attribution and price only; no stager fix, product card, medium or device contact is authorized by this receipt.",
+  "decision": {
+    "current_evidence": "WRITE-VS-READBACK-UNDECIDED",
+    "next_target_evidence": "separately authorized poison/MAP/legacy-readback row",
+    "ordinary_product_passes_exonerate_write": false,
+    "product_relevance": true
+  },
+  "evidence": {
+    "breadcrumb": {
+      "bytes": 3934,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-loading-libraries-stage-breadcrumb-contact-receipt.json",
+      "sha256": "8224d0736f2849406dba588e3a248455256eb48da9e60d46ad67aca08aa87b7d"
+    },
+    "historical_L10": {
+      "known_convergence_point_ms": 714,
+      "receipt": {
+        "bytes": 9663,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-phase-m-hardware-receipt.json",
+        "sha256": "b821f41a37426b97c701256f0b0abebf3e76196264210c756a697c639cadc724"
+      },
+      "scope": "read-side historical evidence; not a write-side attribution"
+    },
+    "independent_observer": {
+      "fact": "MAP CPU reads of Attic base passed 256 repeated reads",
+      "receipt": {
+        "bytes": 6434,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-loading-libraries-progress-map-device-receipt.json",
+        "sha256": "78ae6a3e6f9b9de0af712958a3fd26d45341568dc908b4d2cae7436df392a40d"
+      }
+    },
+    "observed_boundary": {
+      "destination": "0x08000000",
+      "payload_bytes_committed": 0,
+      "role": 4,
+      "running_crc": "0xffffffff",
+      "sector_ordinal": 0,
+      "timeout_wraps": 192
+    }
+  },
+  "format": "lisp65-c2.3-v2.1-attic-write-convergence-attribution-v1",
+  "implementation": {
+    "causal_limit": "one timeout proves the combined write/readback boundary only; a pass can also consume matching pre-existing Attic bytes",
+    "comparison": "Bank-0 readback bytes == sector_payload bytes",
+    "initial_submission": {
+      "descriptor_0": "Bank-0 sector_payload -> 28-bit Attic target",
+      "descriptor_1": "same Attic target -> Bank-0 readback",
+      "relationship": "one Enhanced-DMA chain"
+    },
+    "not_poisoned": "Attic target",
+    "poisoned_before_submission": "Bank-0 readback buffer only (0xA5)",
+    "retry_submission": "Attic target -> Bank-0 readback only"
+  },
+  "inputs": {
+    "driver": {
+      "bytes": 15140,
+      "path": "tools/host-lisp/c2_v21_attic_write_convergence_attribution.py",
+      "sha256": "9d50082393f4077cc0179eb1e1d782ea54fc7015be8fb24e286620ddebd7947a"
+    },
+    "stager": {
+      "bytes": 40754,
+      "path": "scripts/r3-cold-stager-main.c",
+      "sha256": "045d6f27f9b727c383dba681dad2218ac8ff0761bb1e53819d667afc08cc9ebb"
+    }
+  },
+  "mutations": [
+    "claim-write-convicted",
+    "exonerate-from-old-pass",
+    "drop-product-relevance",
+    "poison-only-readback",
+    "skip-poison-observation",
+    "reuse-source-as-poison",
+    "invent-write-timeout-price",
+    "authorize-device"
+  ],
+  "permanent_rule": "A matching target comparison proves an effective write only after a distinguishing target precondition has itself been observed.",
+  "price": {
+    "causal_poison_first_product_protocol": {
+      "CPU_bytes_compared_per_successful_sector": 508,
+      "enhanced_DMA_jobs_per_sector": 2,
+      "extra_DMA_jobs_vs_success_floor": 0,
+      "new_static_buffer_bytes": 0,
+      "per_sector": [
+        "fill existing 254-byte Bank-0 readback buffer with bytewise complement of this sector payload",
+        "D705-write poison to the exact Attic destination",
+        "MAP-CPU-read the exact destination until every poison byte is visible",
+        "D705-write payload to the exact Attic destination",
+        "MAP-CPU-read until every payload byte is visible"
+      ],
+      "role4_CPU_byte_comparisons_floor": 130846,
+      "role4_jobs": 516,
+      "why_causal": "the complement differs at every byte, so payload acceptance cannot be satisfied by target history"
+    },
+    "current_success_floor": {
+      "enhanced_DMA_jobs_per_sector": 2,
+      "note": "one write plus one chained D705 readback; retries excluded",
+      "role4_jobs": 516
+    },
+    "one_contact_attribution_extension": {
+      "additional_DMA_jobs_per_sector_when_enabled": 1,
+      "after_payload_MAP_success": "submit the legacy Attic-to-Bank-0 readback once and retain both observer results",
+      "decision_table": {
+        "payload_seen_by_MAP_legacy_readback_mismatch": "D705 readback visibility failure",
+        "payload_seen_by_both": "intermittent boundary did not reproduce",
+        "poison_never_seen_by_MAP": "Attic write-side failure",
+        "poison_seen_payload_never_seen_by_MAP": "payload write-side failure"
+      },
+      "scope": "evidence option only; not required by the product protocol"
+    },
+    "role4": {
+      "bytes": 65423,
+      "logical_sectors": 258,
+      "maximum_sector_bytes": 254
+    },
+    "timeout": {
+      "must_be_separately_repriced": true,
+      "reason": "714 ms is read evidence and cannot price a cold Attic write",
+      "standing_bound_wraps_per_stage": 192
+    }
+  },
+  "recorded_on": "2026-08-15",
+  "source_mutations": [
+    "retry-resubmits-write",
+    "no-chained-readback",
+    "no-readback-poison"
+  ],
+  "status": "HOST-ATTRIBUTED-COMBINED-BOUNDARY; POISON-FIRST-PRICED"
+}

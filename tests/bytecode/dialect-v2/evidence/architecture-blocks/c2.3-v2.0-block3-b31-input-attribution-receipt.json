@@ -1,0 +1,294 @@
+{
+  "accepted_predecessor": {
+    "bindings": [
+      {
+        "bytes": 8192,
+        "path": "build/c2.3/v1.9.0-release-card-r1-preflight/sources/stdlib-read-line.lisp",
+        "sha256": "b1e2a3f75553228b71c82cc993be16c93707977da19d87255a659740cac9fc3e"
+      },
+      {
+        "bytes": 6980,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-blocks-ab-display-r7-device-result-receipt.json",
+        "sha256": "63389df8bdbae18261f1c4dfeae8c70c4a293158159ca13181232ed79785beae"
+      }
+    ],
+    "device_row": {
+      "id": "ABR7-2-native-prompt-editor",
+      "observations": [
+        "Left/insert produced (1 2 3)",
+        "C-b/C-f C-a/C-e Backspace C-d and boundary sequence produced abc",
+        "reader: invalid token absent"
+      ],
+      "result": "PASS"
+    },
+    "route": "%read-line-loop -> %rl-render(row=-1) -> key-event 2"
+  },
+  "attribution": {
+    "blink_role": "the idle rewrite introduced the mode-0 seam; scanner/blink work never receives a key",
+    "classification": "product input-consumption wiring defect plus host fixture-fidelity gap",
+    "named_mechanism": "armed-ring/public-queue source split",
+    "not_generic_keyboard_failure": true,
+    "not_service_time": true,
+    "sequence": [
+      "read-line writes $00 to C2K_INPUT_RING_TAIL and arms capture",
+      "the raster IRQ becomes the sole physical-queue owner",
+      "the IRQ acknowledges the physical event and stores it in the private ring",
+      "%rl-poll calls key-event mode 0 and observes the now-empty public queue",
+      "the first event remains in the ring; no dispatch occurs and the prompt appears frozen"
+    ]
+  },
+  "authority": {
+    "bytes": 2603,
+    "commit": "d38ea2e3",
+    "path": "docs/planning/v2.0.0-pre-plan.md",
+    "right": "host-only attribution; zero device contacts, WPLTOs, links or repairs",
+    "section": "## Owner decision \u2014 v2.0 reshaped; the delivery chain becomes the target \u2014 2026-09-01",
+    "sha256": "42ff3193fbc81451c15a7b351efa31f93c210b39872d53f669031524cac62786"
+  },
+  "bindings": [
+    {
+      "bytes": 1277086,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-block3-banner-repair-product-card-r2-receipt.json",
+      "sha256": "0315b33d21cb2cbb72dd7b1d165e6a41ee4582dd37447be5b8c065b4a63fb09f"
+    },
+    {
+      "bytes": 2172,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-block3-banner-repair-device-result-receipt.json",
+      "sha256": "b81b171eed7b07abd9c8b0418f0937512a1d8750c3a2ebe077bebb0843608a04"
+    },
+    {
+      "bytes": 6000,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-block3-banner-only-repair-preflight.json",
+      "sha256": "734821dce67d25e31427b6df260058823b14a7075187ec28373a833ccb0ff6a7"
+    }
+  ],
+  "claim_limit": {
+    "does_not": [
+      "repair Block 3",
+      "reopen interactive freight",
+      "authorize WPLTO, link, medium or device contact"
+    ],
+    "next": "input to the commissioned interactive delivery-chain block",
+    "proves": "mechanism for the deterministic B3-1 repaired-world device freeze"
+  },
+  "device_observation": {
+    "evidence": "before the matcher form could be entered, the visible REPL accepted no physical-keyboard input",
+    "id": "B3-1-line-editor-matcher",
+    "result": "FIRST RED: DAILY-USE INPUT FREEZE"
+  },
+  "emitted_route": {
+    "bindings": [
+      {
+        "bytes": 289046,
+        "path": "build/c2.3/v2.0-block3-banner-only-repair-preflight/stdlib-p0.disasm.txt",
+        "sha256": "b886427e41be8280da498747f89a99f72c0a36709cca0869f2e7a462b7dd81bc"
+      },
+      {
+        "bytes": 382399,
+        "path": "build/c2.3/v2.0-block3-banner-repair-product-card-r2-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.manifest.json",
+        "sha256": "26297a8ed04fac433b224a4a26f0b043d9a9a936ac43c6a0175a9f2c36465b58"
+      },
+      {
+        "bytes": 13898,
+        "path": "build/c2.3/v2.0-block3-banner-repair-product-card-r2/wplto/resolved-profile.txt",
+        "sha256": "26c2f86b87addb373530a11016eeb42710727e0756358917329201ab7b253468"
+      },
+      {
+        "bytes": 16637,
+        "path": "lib/stdlib-read-line.lisp",
+        "sha256": "fb591696927f735b180e420112f1340815a4579d40e293551dcc76ae59d945ed"
+      }
+    ],
+    "poll": {
+      "bytecode_offset": "0x002c/0x002e",
+      "consumer": "public hardware queue",
+      "entry": {
+        "blob_offset": 19464,
+        "code_flags": 2,
+        "ext_addr": "0x054c08",
+        "flags": 0,
+        "kind": "function",
+        "length": 197,
+        "lit_count": 9,
+        "lit_first": 918,
+        "literals": [
+          {
+            "symbol": "nthcdr"
+          },
+          {
+            "symbol": "%rl-render"
+          },
+          {
+            "symbol": "%rl-clear"
+          },
+          {
+            "symbol": "%cursor-blink"
+          },
+          {
+            "symbol": "%rl-start"
+          },
+          {
+            "symbol": "%rl-scan"
+          },
+          {
+            "symbol": "%rl-close"
+          },
+          {
+            "symbol": "%rl-open"
+          },
+          {
+            "symbol": "%rl-paint"
+          }
+        ],
+        "name": "%rl-poll",
+        "name_obj": "0x032a"
+      },
+      "mode": 0
+    },
+    "profile_features": [
+      "LISP65_V160_INPUT_CAPTURE",
+      "LISP65_V160_INPUT_HYBRID"
+    ],
+    "read_line": {
+      "arm_write": "$FF8D := $00",
+      "closed_marker": "$FF",
+      "entry": {
+        "blob_offset": 21321,
+        "code_flags": 3,
+        "ext_addr": "0x055349",
+        "flags": 0,
+        "kind": "function",
+        "length": 118,
+        "lit_count": 6,
+        "lit_first": 1007,
+        "literals": [
+          255,
+          141,
+          140,
+          188,
+          252,
+          {
+            "symbol": "%rl-session"
+          }
+        ],
+        "name": "read-line",
+        "name_obj": "0x033c"
+      }
+    }
+  },
+  "format": "lisp65-c2-v200-block3-b31-input-attribution-v1",
+  "frozen_pair": {
+    "ELF": {
+      "bytes": 636152,
+      "path": "build/c2.3/v2.0-block3-banner-repair-product-card-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "75f5700343d27dc68a4e46e67c663d75ee148b3cb37a1a805cea093f49442a83"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/c2.3/v2.0-block3-banner-repair-product-card-r2/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "89963ac6178dd752b7aef5b852a7518d06f7eb576234e2811455999fa4b0c995"
+    }
+  },
+  "host_false_green": {
+    "binding": {
+      "bytes": 99812,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "9ba92b487f820f8bb40839e7c5db06c77c783c38641c55d068fb0ca58f0fb2e8"
+    },
+    "mechanism": "mode-0 key-event consumes the fixture key_events list directly; asynchronous target IRQ queue-to-ring transfer is only modeled at an explicit peek seam",
+    "observed_false_green": {
+      "banner_row": "WORKBENCH 1.9.0",
+      "handoff_reached": true,
+      "row_24": "lisp65> abc",
+      "surface_sha256": "b2c51b092ae147b18e7e8c7157af27ffff45f49ac286f4be94a85b6a40074b80"
+    }
+  },
+  "ownership_execution": {
+    "candidate": {
+      "counters": {
+        "raw": 1,
+        "seen": 1,
+        "stored": 1,
+        "taken": 0
+      },
+      "input": "PETSCII $41",
+      "irq_capture_before_poll": true,
+      "mode": 0,
+      "physical_queue": [],
+      "result": null,
+      "ring": [
+        65
+      ]
+    },
+    "host_without_async_irq_arbitration": {
+      "counters": {
+        "raw": 0,
+        "seen": 0,
+        "stored": 0,
+        "taken": 0
+      },
+      "input": "PETSCII $41",
+      "irq_capture_before_poll": false,
+      "mode": 0,
+      "physical_queue": [],
+      "result": 65,
+      "ring": []
+    },
+    "mutations_rejected": [
+      "claim-mode-0-consumes-the-armed-ring",
+      "claim-host-key-event-list-models-target-IRQ-arbitration",
+      "claim-input-freeze-is-a-blink-service-time-stall"
+    ],
+    "sharp_countermutation_key_event_0_to_2": {
+      "counters": {
+        "raw": 1,
+        "seen": 1,
+        "stored": 1,
+        "taken": 1
+      },
+      "input": "PETSCII $41",
+      "irq_capture_before_poll": true,
+      "mode": 2,
+      "physical_queue": [],
+      "result": 97,
+      "ring": []
+    }
+  },
+  "recorded_on": "2026-09-01",
+  "status": "PASS: B3-1 ATTRIBUTED TO ARMED-RING/PUBLIC-QUEUE SOURCE SPLIT",
+  "target_contract": {
+    "armed_owner": "IRQ capture is the sole physical-queue consumer",
+    "bindings": [
+      {
+        "bytes": 105226,
+        "path": "src/vm.c",
+        "sha256": "401215f971f80e7d9e1920e739b07c3a37b63709a9fca368b79c1fc6e778bee2"
+      },
+      {
+        "bytes": 2859,
+        "path": "src/optional/c2_kernal_input_capture.s",
+        "sha256": "66c40172c56a01b204fccc1d63ad4e052ef2ecd640681f2b1323212662aecd0e"
+      },
+      {
+        "bytes": 1083,
+        "path": "src/optional/c2_kernal_input_consumer.s",
+        "sha256": "0862de7f2ed5cee6463a36553e4d5cdc25bc040108bce15c6a4ae174cfcc3132"
+      },
+      {
+        "bytes": 6580,
+        "path": "src/interrupt.c",
+        "sha256": "8f68517539d3e62590abb42125909fdbc7fb13b737c495bd7542d7394bbfafec"
+      }
+    ],
+    "private_ring_modes": [
+      2,
+      3
+    ],
+    "public_modes": [
+      0,
+      1
+    ],
+    "taken_witness": "C2K_INPUT_EVENTS_TAKEN increments only in c2_kernal_input_take",
+    "transfer": "$D60A/$D619 -> C2K_INPUT_RING_BASE"
+  }
+}

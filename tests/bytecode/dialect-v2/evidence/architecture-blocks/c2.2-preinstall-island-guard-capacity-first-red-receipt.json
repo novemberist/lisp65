@@ -1,0 +1,143 @@
+{
+  "format": "lisp65-c2-preinstall-island-guard-capacity-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "FIRST RED: static installer root absent after LTO; successor product link blocked",
+  "authorization": {
+    "contract": {
+      "bytes": 2527,
+      "path": "config/c2-preinstall-island-guard-contract.json",
+      "sha256": "2dff2107381caf584b2a357205fa650786d212a770936d5e1159b1a8b5bb3248"
+    },
+    "document": {
+      "bytes": 2129,
+      "path": "docs/planning/c2.2-preinstall-island-guard-addendum.md",
+      "sha256": "331782a7d749e714490ad5d055e3586af792c0895138901b7b927503b27d0099"
+    },
+    "host_lifecycle_receipt": {
+      "bytes": 3838,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-preinstall-island-guard-contract-probe-receipt.json",
+      "sha256": "c97210eb09387bdd0fc7d22bab3e7d1c32b7c0a30e48e5d1e300bbe36b9831f1"
+    },
+    "product_shaped_seed_links": 1,
+    "product_closure_links": 0,
+    "hardware_runs": 0
+  },
+  "host_lifecycle_result": {
+    "status": "passed",
+    "asan_ubsan": "passed",
+    "exact_link30_predecessor_bytes": 1291,
+    "exact_link30_predecessor_sha256": "5d0141d0c78cfd29bacc993b0050c2ba5770938b36236f6c4e12bf740600b40a",
+    "preinstall_transaction_context_calls": 0,
+    "active_transaction_before_ready": "failed-closed-with-zero-Island-calls",
+    "ordinary_transaction_semantics": "passed"
+  },
+  "probe_identity": {
+    "seed_prg": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/preinstall-island-capacity-probe/overlay-transaction-auth-capacity-seed.prg",
+      "sha256": "3ae0f90545c25b23960979782dd5a9fc26c0b8003901db476d635ef941181896"
+    },
+    "seed_elf": {
+      "bytes": 506872,
+      "path": "build/c2.2/substitution/preinstall-island-capacity-probe/overlay-transaction-auth-capacity-seed.prg.elf",
+      "sha256": "6949bc255671675ec10ce60c858e78bc5f2126d704871e5655091513bada366f"
+    },
+    "seed_map": {
+      "bytes": 173971,
+      "path": "build/c2.2/substitution/preinstall-island-capacity-probe/overlay-transaction-auth-capacity-seed.prg.map",
+      "sha256": "ded8ee98e9012b3e60b23a71cd826846750a634f47cc3f4b189c6283c01e7211"
+    },
+    "base_capacity_report": {
+      "bytes": 9786,
+      "path": "build/c2.2/substitution/preinstall-island-capacity-probe/overlay-transaction-auth-island-capacity-probe.json",
+      "sha256": "303fdc7cdaa328d21411adfa01a6403f53998541d66f79c2c4bcdb0870a7de4b"
+    },
+    "link31_seed_baseline": {
+      "bytes": 506592,
+      "path": "build/c2.2/substitution/product-link-31-transaction-auth/resident-island-seed.prg.elf",
+      "sha256": "1e2c4a40c05c26c6c74d014179814776b3404ba5919f5de7c74adb899a76235d"
+    }
+  },
+  "capacity_against_link31": {
+    "bank0_text": {
+      "link31_headroom_bytes": 72,
+      "probe_headroom_bytes": 8,
+      "delta_headroom_bytes": -64,
+      "attribution": {
+        "rtov_transaction_context_if_ready_bytes": 41,
+        "lookup_and_publish_callsite_guard_bytes": 23
+      }
+    },
+    "bank0_ordinary_bss": {
+      "link31_headroom_bytes": 19,
+      "probe_headroom_bytes": 19,
+      "delta_headroom_bytes": 0
+    },
+    "resident_island": {
+      "link31_headroom_bytes": 108,
+      "probe_headroom_bytes": 108,
+      "delta_headroom_bytes": 0
+    },
+    "runtime_overlay_seed_slices": {
+      "all_deltas_against_link31_seed": 0,
+      "largest_section": ".lisp65_rt_c2d_11",
+      "largest_bytes": 1730,
+      "seed_headroom_bytes": 62,
+      "carried_link31_product_minimum_headroom_bytes": 10,
+      "claim_limit": "The probe is a seed link; the 10-byte product-slice reserve is historical Link-31 evidence and is not repinned here."
+    },
+    "cpu_e000_window": {
+      "delta_bytes": 0,
+      "future_margin_bytes": 386,
+      "growth_policy": "closed-to-new-tenants"
+    },
+    "runtime_overlay_bank": {
+      "boot_headroom_bytes": 51871,
+      "session_headroom_bytes": 16482
+    },
+    "bank0_fixed_block_headroom_bytes": 273
+  },
+  "completed_fresh_gates_before_stop": {
+    "v2_profile_parity": "passed",
+    "handoff_z_and_io": "passed",
+    "pre_ownership_e000": "passed",
+    "profile_data_references": "passed-five-relocations",
+    "fixed_facade": "passed-thirteen-vectors",
+    "kernal_freedom": "passed-314-edges",
+    "direct_hot_materializer": "passed",
+    "retained_link29_seams": "passed",
+    "all_capacity_hard_floors": "passed-before-static-gate"
+  },
+  "first_red": {
+    "gate": "static pre-installation resident-Island closure",
+    "exact_error": "pre-install Island symbol inventory incomplete",
+    "missing_symbol": "vm_runtime_overlay_install_island",
+    "present_symbols": {
+      "vm_runtime_overlay_exec_family": {
+        "address": "0xaa7f",
+        "bytes": 1299,
+        "section": ".text"
+      },
+      "rtov_transaction_context_if_ready": {
+        "address": "0xb034",
+        "bytes": 41,
+        "section": ".text"
+      },
+      "rtov_transaction_context": {
+        "address": "0x1cd1",
+        "bytes": 211,
+        "section": ".lisp65_resident_island"
+      }
+    },
+    "diagnosis": "Whole-program LTO inlined vm_runtime_overlay_install_island into main. The runtime guard and exact stale-Island lifecycle proof are green, but the requested installer-reachable closure has no stable linked root. Treating all of main as the installer closure would mix post-install code and make the proof depend on optimizer layout.",
+    "claim_boundary": "The static pre-installation Island gate is not passed. Runtime correctness is not inferred from the green host fixture."
+  },
+  "recommended_next_cut": {
+    "change": "Make vm_runtime_overlay_install_island a named non-inlined Bank-0 lifecycle boundary, then rerun one capacity/static probe against that boundary.",
+    "reason": "A stable installer root turns the user-authorized closure rule into a link-level invariant instead of an LTO-dependent source convention.",
+    "capacity_risk": "Only 8 Bank-0 text bytes remain in this failed seed. The no-inline boundary must be measured; any negative headroom is a triage stop, not grounds to relax a floor.",
+    "alternative_rejected": "Do not bless an ad-hoc main instruction range: it would be a brittle proof boundary whose identity changes with LTO ordering."
+  },
+  "claim_limit": "Receipt for one owner-authorized product-shaped capacity/static probe stopped at first red. It is not a product closure, product SHA, hardware run, promotion, capacity authorization or release claim.",
+  "next_gate": "Review is required before adding the non-inline lifecycle boundary or running another seed. No successor product link is authorized."
+}

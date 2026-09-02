@@ -1,0 +1,185 @@
+{
+  "actual_writer": {
+    "destination": "build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/c2-asm-leaf-abi.json",
+    "destination_parent_mode": "0555",
+    "destination_parent_owner": "producer-owned frozen WPLTO root",
+    "function": "audit_elf",
+    "mechanism": "A qualification-owned ABI report was scheduled after the producer sealed WPLTO, while its path remained inside that producer-owned immutable root.",
+    "module": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+    "operation": "out.write_text(...) ",
+    "scheduled_phase": "after scope and acceptance"
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "cards_authorized": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "driver": {
+      "bytes": 13016,
+      "path": "tools/host-lisp/c2_v160_hybrid_abi_output_eacces_attribution.py",
+      "sha256": "885cfba044c04da6d724662312b86bc032b6259bcd31002bed556e2fe7797c05"
+    },
+    "reviewer": {
+      "authority": "git-blob",
+      "bytes": 180027,
+      "commit": "84b5eff916deace0725fca78a7972eafd2698dbf",
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "615c9c5b71c8b1309572e2abdcad6932d14af1ac7ba8a5df3c40cfd2434aa458"
+    }
+  },
+  "claim_correction": "The EACCES pathname names Path.write_text's output target; it was never placed in the program or driver position.",
+  "claim_limit": "Host-only read of frozen Final-Red evidence and sources plus one ABI-gate control against the same ELF into a temporary writable directory; no configuration, card, WPLTO, link, media or device.",
+  "consumer_roles": {
+    "adapter_projection_role_inversion": false,
+    "all_roles_match": true,
+    "argument_ordering_error": false,
+    "configuration_role_write": false,
+    "expected": {
+      "ELF_input": "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "JSON_output": "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/c2-asm-leaf-abi.json",
+      "driver": "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "program": "/usr/bin/python3"
+    },
+    "observed": {
+      "ELF_input": "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "JSON_output": "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/c2-asm-leaf-abi.json",
+      "driver": "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "program": "/usr/bin/python3"
+    },
+    "sources": {
+      "ABI_gate": {
+        "bytes": 71502,
+        "path": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+        "sha256": "4bd845e99d146a64b873519701beaaaca42d87c773f2ebfb02fa5cfa40bb000c"
+      },
+      "bindings": {
+        "consumer_command": {
+          "line": 415,
+          "roles": [
+            "python",
+            "gate-driver",
+            "--elf",
+            "ELF",
+            "--out",
+            "ABI_REPORT"
+          ],
+          "source": "tools/host-lisp/c2_v160_input_fidelity_reopen_card.py"
+        },
+        "output_path": {
+          "expression": "BUILD / \"wplto/c2-asm-leaf-abi.json\"",
+          "line": 39,
+          "source": "tools/host-lisp/c2_v160_input_fidelity_reopen_card.py"
+        },
+        "report_writer": {
+          "function": "audit_elf",
+          "line": 1356,
+          "operation": "Path.write_text",
+          "source": "tools/host-lisp/c2_asm_leaf_abi_gate.py"
+        }
+      },
+      "outer_driver": {
+        "bytes": 8333,
+        "path": "tools/host-lisp/c2_v160_input_service_hybrid_longjmp_replacement_card.py",
+        "sha256": "f17f945c7760c07b898e52f3456f16ac9114bb31c7bcea4d45b8c6cd2f9d9cd9"
+      },
+      "phase_order": [
+        "produce-and-seal",
+        "scope",
+        "acceptance",
+        "host-derivation",
+        "ABI-report-write"
+      ],
+      "phase_order_source_offsets": {
+        "ABI_report": 18188,
+        "acceptance": 17765,
+        "host_derivation": 17900,
+        "produce": 17559,
+        "scope": 17741
+      },
+      "real_card_consumer": {
+        "bytes": 22982,
+        "path": "tools/host-lisp/c2_v160_input_fidelity_reopen_card.py",
+        "sha256": "9ecbf99ac1b40e6c87ca6833c5d505b51ef8f3a593cf8c23cabcf8c2e7041dab"
+      }
+    }
+  },
+  "decision": {
+    "classification": "known-family",
+    "family": "phase-owned-output / guard-belongs-to-owning-phase",
+    "hybrid_proofs_reexamined": false,
+    "next": "known-family self-disposition under the standing decision tree",
+    "product_finding": false,
+    "self_disposition_budget_reset": true,
+    "standing_rule": "A phase writes only its owned outputs; read-only qualification never writes beneath a producer-owned frozen root.",
+    "successor_cards_authorized_by_this_attribution": 0
+  },
+  "format": "lisp65-c2-v160-hybrid-abi-output-eacces-attribution-v1",
+  "frozen_evidence_after": {
+    "ELF": {
+      "bytes": 631632,
+      "path": "build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "37f1ceb1812909df103cbc880d46cae59c87b3d6ca806728dbe65e58c0c5a9c9"
+    },
+    "Final_Red": {
+      "bytes": 9283,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-input-service-hybrid-longjmp-card-final-red.json",
+      "sha256": "1c67df9ef204da78bb454a5873c37a3732f180cfee15ca9e6c82b863aed8457d"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "1c9ce216904916fc091146b127015ee4e24b91ee6e794f75b52af8a14de1d525"
+    }
+  },
+  "frozen_evidence_before": {
+    "ELF": {
+      "bytes": 631632,
+      "path": "build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "37f1ceb1812909df103cbc880d46cae59c87b3d6ca806728dbe65e58c0c5a9c9"
+    },
+    "Final_Red": {
+      "bytes": 9283,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-input-service-hybrid-longjmp-card-final-red.json",
+      "sha256": "1c67df9ef204da78bb454a5873c37a3732f180cfee15ca9e6c82b863aed8457d"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-input-service-hybrid-longjmp-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "1c9ce216904916fc091146b127015ee4e24b91ee6e794f75b52af8a14de1d525"
+    }
+  },
+  "hypotheses": {
+    "JSON_path_executed": {
+      "evidence": "expected and observed executable roles are identical",
+      "result": "refuted"
+    },
+    "late_write_into_frozen_producer_root": {
+      "evidence": "source order + audit_elf writer + WPLTO mode 0555",
+      "result": "proved"
+    },
+    "product_or_ABI_failure": {
+      "evidence": "same frozen ELF passes the real gate to writable output",
+      "result": "refuted"
+    }
+  },
+  "mutations_rejected": {
+    "frozen-root-claimed-writable": "rejected",
+    "json-output-as-driver": "rejected",
+    "json-output-as-program": "rejected",
+    "late-writer-moved-before-seal": "rejected"
+  },
+  "recorded_on": "2026-08-20",
+  "same_ELF_writable_output_control": {
+    "ELF_sha256": "37f1ceb1812909df103cbc880d46cae59c87b3d6ca806728dbe65e58c0c5a9c9",
+    "output_owner": "temporary qualification-owned writable directory",
+    "report_bytes": 211113,
+    "report_sha256": "990439a0abb75c035fa30816ced3d5983485f152bc236264587d7b30a33096f5",
+    "returncode": 0,
+    "status": "passed-all-assembler-leaf-abi-contracts"
+  },
+  "status": "ATTRIBUTED: ABI REPORT WRITE TARGET WAS ALREADY SEALED"
+}

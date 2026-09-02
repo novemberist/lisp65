@@ -1,0 +1,53 @@
+{
+  "adjudication": {
+    "after": {
+      "bytes": 65536,
+      "path": "build/post-promotion/link72-stz-semantics/hardware-session-attempt3/first-repeat-after-bank5.bin",
+      "sha256": "2914567671c09d10c6e910ca8155bc3d8328ad26b4a5555e559bd30a0b7e44a1"
+    },
+    "allowed_transient_cells": {
+      "*require-order*": {
+        "Bank5_offset": "0xf0b2",
+        "after_obj": "0x0502",
+        "before_obj": "0x07d8",
+        "symbol_index": 297
+      },
+      "*require-visited*": {
+        "Bank5_offset": "0xf0ae",
+        "after_obj": "0x0500",
+        "before_obj": "0x07d6",
+        "symbol_index": 295
+      },
+      "*require-visiting*": {
+        "Bank5_offset": "0xf0b0",
+        "after_obj": "0x0000",
+        "before_obj": "0x0000",
+        "symbol_index": 296
+      }
+    },
+    "before": {
+      "bytes": 65536,
+      "path": "build/post-promotion/link72-stz-semantics/hardware-session-attempt3/first-repeat-before-bank5.bin",
+      "sha256": "2236d0e2e309ee48e7f83d71ef28424f0af247d7161b6b4d78414aa5faa4e116"
+    },
+    "changed_offsets": [
+      "0xf0ae",
+      "0xf0af",
+      "0xf0b2",
+      "0xf0b3"
+    ],
+    "comparison": "byte-identical-complete-Bank5-except-three-named-resolver-transient-value-cells",
+    "contracted_immutable_bytes": 65530,
+    "id": "first-repeat",
+    "status": "passed-generation-idempotence-no-product-state-drift"
+  },
+  "first_red": {
+    "oracle": "byte-identical-complete-Bank5",
+    "reason": "Bank 5 also owns Lisp symbol-value cells; the resolver rebuilds three explicitly temporary plan values while deriving loaded identity from unchanged C2D rows."
+  },
+  "format": "lisp65-c2.2-require-idempotence-oracle-first-red-v1",
+  "new_product_links": 0,
+  "product_bytes_changed": 0,
+  "recorded_on": "2026-07-27",
+  "status": "resolved-harness-overreach-product-state-byte-identical"
+}

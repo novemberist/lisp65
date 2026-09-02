@@ -1,0 +1,75 @@
+{
+  "capacity": {
+    "all_other_resident_walls": "unchanged",
+    "diagnostic_bank0_text_debit_vs_link34_bytes": 44,
+    "diagnostic_bank0_text_headroom_bytes": 11,
+    "new_state_bytes": 0
+  },
+  "claim_limit": "One non-promotable diagnostic hardware run. This receipt localizes the transport ordering failure; it is not a product fix, product acceptance, promotion or authorization for a successor link.",
+  "diagnosis": {
+    "not_yet_proved": "the exact target completion primitive/barrier and its capacity cost",
+    "proved": [
+      "the first verifier transfer is not fully/stably visible to the CPU when its first CRC starts",
+      "the CPU-visible payload continues changing across the two sequential CRC traversals",
+      "stable mapping/aliasing divergence is not the observed failure mode",
+      "the original payload-CRC failure is real and occurs before verifier entry"
+    ],
+    "source_fact": "rtov_read publishes the Enhanced-DMA descriptor and immediately returns after the trigger sequence; it contains no explicit software completion observation before the caller starts CRC",
+    "strong_inference": "Enhanced-DMA completion/visibility ordering is missing at the rtov_read-to-CRC boundary"
+  },
+  "error_path_followup": {
+    "implementation": "deferred until the diagnosis is reviewed",
+    "required_product_rule": "the first innermost status wins; outer layers may enrich it but must never replace it"
+  },
+  "evidence": {
+    "capacity_probe": {
+      "bytes": 6002,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-observed-crc-double-wplto-probe-receipt.json",
+      "sha256": "66dd5f35ebb3f24eb58861a1e6c2c317be174c675d501c018b2ef5cf4a4e7fbf"
+    },
+    "diagnostic_link": {
+      "bytes": 6863,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-observed-crc-diagnostic-link-receipt.json",
+      "sha256": "4db71f5cb6225b222e5565a9f1aaf40c920933312890af9e43daec76c0e9a544"
+    },
+    "diagnostic_source": {
+      "bytes": 58503,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "45c2544e76dfca131f65eade2cb6f3ef89f056245cddfd30cd974c74e11f4c33"
+    },
+    "hardware_result": {
+      "bytes": 2054,
+      "path": "build/c2.2/link34-observed-crc-hardware/hardware-result.json",
+      "sha256": "c4b82a8c0928d89220a9a8a5fab4174ce942a0a68c9a956d224df2c082595029"
+    },
+    "link34_rollback_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+      "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+      "status": "untouched"
+    }
+  },
+  "execution_accounting": {
+    "capture_evaluation_replays": 1,
+    "diagnostic_hardware_runs": 1,
+    "product_presmoke_retries": 0,
+    "promotable_product_links": 0
+  },
+  "format": "lisp65-c2-link34-edma-completion-first-red-v1",
+  "next_gate": "review completion/barrier contract and first-status-wins fix; no automatic product change or additional hardware run",
+  "observation": {
+    "destination": "0xc356",
+    "expected_crc16": "0xb47f",
+    "first_cpu_crc16": "0x8e92",
+    "intervening_mapping_change": false,
+    "intervening_software_write": false,
+    "length_bytes": 1156,
+    "same_address_and_length": true,
+    "same_routine": "rtov_crc_mem assembler leaf",
+    "second_cpu_crc16": "0xe092",
+    "second_read_is_immediate": true
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: first verifier EDMA payload changes across immediate sequential CPU CRCs"
+}

@@ -1,0 +1,99 @@
+{
+  "format": "lisp65-v2-lcc-installer-gateway-stop-report-v1",
+  "version": 1,
+  "id": "lcc-installer-four-command-gateway",
+  "status": "rejected-net-negative",
+  "decision": {
+    "promotion": false,
+    "shippable": false,
+    "product_source_retained": false,
+    "prim_38": "remains-active-in-dialect-v2",
+    "prim_57": "remains-reserved",
+    "layout_changes": 0,
+    "runtime_slot_changes": 0,
+    "island_bytes_consumed": 0
+  },
+  "prototype_contract": {
+    "public_coordinator": "lcc-install-strict-arity-2-bank5-codeobject",
+    "private_gateway": "%lcc-install-gateway",
+    "proposed_prim_id": 57,
+    "gateway_arity": 5,
+    "commands": ["begin", "step", "finish", "fuel-abort"],
+    "fuel_steps": 48,
+    "resident_requirements": [
+      "lcc_resident_work",
+      "lcc_install_gateway_abort_cleanup",
+      "lcc_dispatch_phase",
+      "transient-vm-run-and-pop"
+    ]
+  },
+  "prototype_sources": {
+    "baseline_commit": "b0d6b07fbb1613153a0970402508efae98c362ba",
+    "candidate_resolved_profile_sha256": "6b4e3b775233e4202bf2f31d17ac2aa9d9ec160dc22a7e1948917962dda6fbd5",
+    "candidate_input_sha256": {
+      "src/eval.c": "df2c7681aac34397f027013c62e0894f6ffcf67e1468752359493def30b488dd",
+      "src/interrupt.c": "832490b261c2b6857649a5d836997664811ec4446bd6cb5b277457f99f12dc9f",
+      "src/lcc_install_overlay.c": "d43495383e69fc769f6dc739175c752949e40ac9ba6cb60e9beb779f2f4f71eb",
+      "src/lcc_install_overlay.h": "5d5403f52ff9e9d120eb85ac250d0d99f26ae3a18bd6e252cc4a8126f939068a",
+      "src/vm.c": "1dd165a5f2325df2fbe133914e21f2dca73c8c03c68ffff9be66c0ff5a6a1da9"
+    }
+  },
+  "artifact_observation": {
+    "manifest_sha256": "5744573a37b875518e11574d0c33fbd80b7b377fa257732b7047d1b870cff79d",
+    "blob_sha256": "b3863ed27693622b7d95e4bac027fc162ded12ea55ae67452cb968948c98d45d",
+    "disassembly_sha256": "3ec02d69e9ec08ba6396447a99be5a27bb35c31c4cd53239082a341312401ba8",
+    "public_coordinator_code_bytes": 121,
+    "public_coordinator_literal_count": 2,
+    "callprim_38_calls": 0,
+    "callprim_57_calls": 4,
+    "total_callprim_calls": 466,
+    "total_directory_calls": 1804,
+    "unresolved_calls": 0,
+    "tombstone_calls": 0
+  },
+  "link_measurement": {
+    "metric": "same-head-real-mos-lto-icf-relaxed-link",
+    "baseline": {
+      "elf_sha256": "4ea8f1169988c1e83335ed0b3ba104d0f9a50bdf54a47201ba5bc1a07b292322",
+      "elf_bytes": 119340,
+      "bss_end": "0xc9ce",
+      "heap_start": "0xc9ce",
+      "runtime_overlay_vma": "0xc9d0"
+    },
+    "candidate": {
+      "elf_sha256": "fdcec979b95dcc421c2612fbe8689e95d92e990d6633322c108c1cdf5a9b4d7f",
+      "elf_bytes": 119768,
+      "bss_end": "0xcbb4",
+      "heap_start": "0xcbb4",
+      "runtime_overlay_vma": "0xcbb6"
+    },
+    "net_reclaim_bytes": {
+      "bss": -486,
+      "heap": -486,
+      "runtime_overlay_vma": -486
+    },
+    "candidate_gap_bytes": {
+      "runtime_overlay_vma": 2144,
+      "post_boot_reserve": 1886
+    },
+    "platform_linker_restored": true
+  },
+  "symbol_delta_bytes": {
+    "eval_v2_workbench_service": 344,
+    "lcc_install_gateway_abort_cleanup": 89,
+    "vm_callprim": 46,
+    "lcc_resident_work": 4,
+    "lcc_install_phase_02": 15,
+    "lcc_install_phase_01": -10,
+    "eval_init": -15,
+    "workbench_boot_name_lcc_install": -12,
+    "lcc_cons_p": -60
+  },
+  "conclusion": {
+    "projected_net_reclaim_bytes": "450..650",
+    "measured_net_reclaim_bytes": -486,
+    "reason": "the existing coordinator was already folded into the resident service; command validation, persistent session state, abort cleanup and five-argument dispatch cost more than the displaced loop",
+    "next_step": "new-architecture-decision-required",
+    "layout_or_island_fallback_approved": false
+  }
+}

@@ -1,0 +1,372 @@
+{
+  "authorities": {
+    "driver": {
+      "bytes": 13898,
+      "path": "tools/host-lisp/c2_v16_preinstaller_micro_ladder_contact.py",
+      "sha256": "07ddd1154b1d52fa97b48d39a0bc422edbfaef6a603928c4750d192f5c2d683b"
+    },
+    "preparation": {
+      "bytes": 5679,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-preinstaller-micro-ladder-preparation-receipt.json",
+      "sha256": "6f8ddecf410de644bb718c374e1a6cb0c8192ddafaf85cfae6d9142249afd7e3"
+    },
+    "runner": {
+      "bytes": 4840,
+      "path": "scripts/c2-v16-defstruct-preinstaller-micro-ladder-hw.sh",
+      "sha256": "91ba2ff1ebbe5488fbb3e3b8c5dcfb2a5d1d2f516e66dd7aa20889936d3f67a5"
+    },
+    "stage": {
+      "bytes": 157,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-preinstaller-micro-ladder-contact/stage.json",
+      "sha256": "54e12dd78c285d5587a55088bb085199b25545b10f5a4395fc3eedbcb93e055f"
+    }
+  },
+  "claim_limit": "One owner-authorized non-promotable diagnostic contact. No product bytes, mem_init answer, R/A/I/G row, fix, Link or release.",
+  "code_identity": {
+    "CPU_view": true,
+    "owner": {
+      "candidate_bytes": {
+        "micro-ladder-diagnostic-PRG": "d0606baaa8a3805ceaa3006000000000"
+      },
+      "logical_address": "0xb5fd",
+      "matches": [],
+      "observed": "9002e623a623a00060a54f054ef0f5a5",
+      "selected_owner": "unresolved",
+      "symbol_interpretation_allowed": false,
+      "unique": false
+    },
+    "reads": [
+      {
+        "command": "m0777b5fd",
+        "logical": "0xb5fd",
+        "raw_hex": "6d30373737623566640d0a3a30373737423546443a39303032453632334136323341303030363041353446303534454630463541350d0a0d0a2e",
+        "view": "CPU-resolved-0x0777xxxx"
+      }
+    ]
+  },
+  "format": "lisp65-c2.3-v1.6-preinstaller-micro-ladder-device-v1",
+  "ladder": {
+    "classification": "OWNERSHIP-FAIL-CLOSED-EXIT",
+    "decision_table": {
+      "enter-absent": "LOCAL-CRT-INIT-BOUNDARY",
+      "enter-set,return-absent": "CHROUT-NONRETURN-OR-MAP-NOT-RESTORED",
+      "installer-enter-set,ov_started=0": "INSTALLER-PROLOGUE-BEFORE-ARM",
+      "ov_started=1": "HAND-OFF-TO-EXISTING-STATUS-TABLE",
+      "ownership-enter-set,return-tag-absent": "OWNERSHIP-IN-FLIGHT-BOUNDARY",
+      "ownership-return-raw!=0,installer-enter-absent": "POST-OWNERSHIP-PRE-INSTALLER",
+      "ownership-return-raw=0": "OWNERSHIP-FAIL-CLOSED-EXIT",
+      "return-set,ownership-enter-absent": "MAIN-PREFIX-BOUNDARY"
+    },
+    "raw_hex": "0ee1e2e300d5"
+  },
+  "quiet": {
+    "floor_seconds": 27.653,
+    "observed_seconds": 27.653067042003386
+  },
+  "raw": {
+    "C2J": {
+      "hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "reads": [
+        {
+          "address": "0x0005c640",
+          "command": "m0005c640",
+          "raw_hex": "6d30303035633634300d0a3a30303035433634303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-Bank5-C2J"
+        },
+        {
+          "address": "0x0005c650",
+          "command": "m0005c650",
+          "raw_hex": "6d30303035633635300d0a3a30303035433635303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-Bank5-C2J"
+        },
+        {
+          "address": "0x0005c660",
+          "command": "m0005c660",
+          "raw_hex": "6d30303035633636300d0a3a30303035433636303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-Bank5-C2J"
+        },
+        {
+          "address": "0x0005c670",
+          "command": "m0005c670",
+          "raw_hex": "6d30303035633637300d0a3a30303035433637303a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-Bank5-C2J"
+        }
+      ]
+    },
+    "boot_witness": {
+      "hex": "44",
+      "reads": [
+        {
+          "command": "m0000b5c3",
+          "logical_address": "0xb5c3",
+          "physical_RAM_address": "0x0000b5c3",
+          "raw_hex": "6d30303030623563330d0a3a30303030423543333a34343443423741313443393046463443373332343443314443323443313332340d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "health": {
+      "hex": "00000000",
+      "reads": [
+        {
+          "command": "m0000008c",
+          "logical_address": "0x008c",
+          "physical_RAM_address": "0x0000008c",
+          "raw_hex": "6d30303030303038630d0a3a30303030303038433a30303030303030303430464638303030303030303030303130303030303330300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "phase": {
+      "hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "reads": [
+        {
+          "command": "m0000c0c6",
+          "logical_address": "0xc0c6",
+          "physical_RAM_address": "0x0000c0c6",
+          "raw_hex": "6d30303030633063360d0a3a30303030433043363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c0d6",
+          "logical_address": "0xc0d6",
+          "physical_RAM_address": "0x0000c0d6",
+          "raw_hex": "6d30303030633064360d0a3a30303030433044363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c0e6",
+          "logical_address": "0xc0e6",
+          "physical_RAM_address": "0x0000c0e6",
+          "raw_hex": "6d30303030633065360d0a3a30303030433045363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c0f6",
+          "logical_address": "0xc0f6",
+          "physical_RAM_address": "0x0000c0f6",
+          "raw_hex": "6d30303030633066360d0a3a30303030433046363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c106",
+          "logical_address": "0xc106",
+          "physical_RAM_address": "0x0000c106",
+          "raw_hex": "6d30303030633130360d0a3a30303030433130363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c116",
+          "logical_address": "0xc116",
+          "physical_RAM_address": "0x0000c116",
+          "raw_hex": "6d30303030633131360d0a3a30303030433131363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c126",
+          "logical_address": "0xc126",
+          "physical_RAM_address": "0x0000c126",
+          "raw_hex": "6d30303030633132360d0a3a30303030433132363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c136",
+          "logical_address": "0xc136",
+          "physical_RAM_address": "0x0000c136",
+          "raw_hex": "6d30303030633133360d0a3a30303030433133363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c146",
+          "logical_address": "0xc146",
+          "physical_RAM_address": "0x0000c146",
+          "raw_hex": "6d30303030633134360d0a3a30303030433134363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c156",
+          "logical_address": "0xc156",
+          "physical_RAM_address": "0x0000c156",
+          "raw_hex": "6d30303030633135360d0a3a30303030433135363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c166",
+          "logical_address": "0xc166",
+          "physical_RAM_address": "0x0000c166",
+          "raw_hex": "6d30303030633136360d0a3a30303030433136363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c176",
+          "logical_address": "0xc176",
+          "physical_RAM_address": "0x0000c176",
+          "raw_hex": "6d30303030633137360d0a3a30303030433137363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c186",
+          "logical_address": "0xc186",
+          "physical_RAM_address": "0x0000c186",
+          "raw_hex": "6d30303030633138360d0a3a30303030433138363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c196",
+          "logical_address": "0xc196",
+          "physical_RAM_address": "0x0000c196",
+          "raw_hex": "6d30303030633139360d0a3a30303030433139363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1a6",
+          "logical_address": "0xc1a6",
+          "physical_RAM_address": "0x0000c1a6",
+          "raw_hex": "6d30303030633161360d0a3a30303030433141363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1b6",
+          "logical_address": "0xc1b6",
+          "physical_RAM_address": "0x0000c1b6",
+          "raw_hex": "6d30303030633162360d0a3a30303030433142363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1c6",
+          "logical_address": "0xc1c6",
+          "physical_RAM_address": "0x0000c1c6",
+          "raw_hex": "6d30303030633163360d0a3a30303030433143363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1d6",
+          "logical_address": "0xc1d6",
+          "physical_RAM_address": "0x0000c1d6",
+          "raw_hex": "6d30303030633164360d0a3a30303030433144363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c1e6",
+          "logical_address": "0xc1e6",
+          "physical_RAM_address": "0x0000c1e6",
+          "raw_hex": "6d30303030633165360d0a3a30303030433145363a30303030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "phase_owner": {
+      "hex": "00",
+      "reads": [
+        {
+          "command": "m00000089",
+          "logical_address": "0x0089",
+          "physical_RAM_address": "0x00000089",
+          "raw_hex": "6d30303030303038390d0a3a30303030303038393a30303030303030303030303030303430464638303030303030303030303130300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "record": {
+      "hex": "a90085028ec3b560ccda48a2008004da48a205a53d9d83b5a53e9d84b5a5399d85b5a53a9d86b58a1869a19d82b5e000f00568fa4cff2d68fa4cfdc36ccc6dcccc",
+      "reads": [
+        {
+          "command": "m0000c03f",
+          "logical_address": "0xc03f",
+          "physical_RAM_address": "0x0000c03f",
+          "raw_hex": "6d30303030633033660d0a3a30303030433033463a41393030383530323845433342353630434344413438413230303830303444410d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c04f",
+          "logical_address": "0xc04f",
+          "physical_RAM_address": "0x0000c04f",
+          "raw_hex": "6d30303030633034660d0a3a30303030433034463a34384132303541353344394438334235413533453944383442354135333939440d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c05f",
+          "logical_address": "0xc05f",
+          "physical_RAM_address": "0x0000c05f",
+          "raw_hex": "6d30303030633035660d0a3a30303030433035463a38354235413533413944383642353841313836394131394438324235453030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c06f",
+          "logical_address": "0xc06f",
+          "physical_RAM_address": "0x0000c06f",
+          "raw_hex": "6d30303030633036660d0a3a30303030433036463a46303035363846413443464632443638464134434644433336434343364443430d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        },
+        {
+          "command": "m0000c07f",
+          "logical_address": "0xc07f",
+          "physical_RAM_address": "0x0000c07f",
+          "raw_hex": "6d30303030633037660d0a3a30303030433037463a43433030303030303030303030303030303030303030303030303030303030300d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "state": {
+      "hex": "0ee1e2e300d5",
+      "reads": [
+        {
+          "command": "m0000b58c",
+          "logical_address": "0xb58c",
+          "physical_RAM_address": "0x0000b58c",
+          "raw_hex": "6d30303030623538630d0a3a30303030423538433a30454531453245333030443538443843423532304432464641394531384438440d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    },
+    "status": {
+      "hex": "0000",
+      "reads": [
+        {
+          "command": "m00000074",
+          "logical_address": "0x0074",
+          "physical_RAM_address": "0x00000074",
+          "raw_hex": "6d30303030303037340d0a3a30303030303037343a30303030303030303030303030303637303030353830303030304641354443320d0a0d0a2e",
+          "view": "physical-bank0-RAM-underlay"
+        }
+      ]
+    }
+  },
+  "recorded_on": "2026-08-06",
+  "result": {
+    "CPU_left_stopped": true,
+    "R_A_I_G": null,
+    "classification": "OWNERSHIP-FAIL-CLOSED-EXIT",
+    "measured_forms": 0,
+    "mem_init_answer": null,
+    "physical_RUNs": 1,
+    "product_fault": null,
+    "stops": 1
+  },
+  "state": {
+    "C2J_nonzero_bytes": 0,
+    "boot_witness": "0x44",
+    "first_error_hex": "0000",
+    "health_hex": "00000000",
+    "phase_owner": "0x00",
+    "status_hex": "0000"
+  },
+  "status": "OWNERSHIP-FAIL-CLOSED-EXIT",
+  "tuple_first": {
+    "confirmed_before_data_reads": true,
+    "registers": {
+      "A": "0x80",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC": "0xb5fd",
+      "SP": "0x01f6",
+      "X": "0x03",
+      "Y": "0x02",
+      "Z": "0x00",
+      "raw_hex": "720d0a0d0a50432020204120205820205920205a202042202053502020204d415048204d41504c204c4153542d4f5020496e2020202020502020502d464c41475320202052475020755320494f20777320682052454341384c48430d0a42354644203830203033203032203030203030203031463620383030302030303030203835323220202020303020202020203834204e2e2e2e2e492e2e202e2e2e50203135202d20203030202d202e2e632e2e6c68630d0a2c303737374235464420203930203032202020202042434320202024423630310d0a0d0a2e",
+      "row": "B5FD 80 03 02 00 00 01F6 8000 0000 8522    00     84 N....I.. ...P 15 -  00 - ..c..lhc",
+      "tail": "8522    00     84 N....I.. ...P 15 -  00 - ..c..lhc"
+    }
+  }
+}

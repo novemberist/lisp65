@@ -1,0 +1,156 @@
+{
+  "acceptance": {
+    "Halt_A": "REACHED-UNDER-OWNER-ITEM1-ONLY-DISPOSITION",
+    "cursor_navigation": "PASS",
+    "item_1": "ACCEPTED",
+    "ordinary_rate_v1.5_regression": "PASS",
+    "public_input_first_red": "FIXED-ON-DEVICE"
+  },
+  "authority": {
+    "media_preparation": {
+      "bytes": 11970,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-item1-only-media-r1-public2-receipt.json",
+      "sha256": "168579a0ade360b1da63f47c73e2a361a66ed703c54f49b3cb131b4ca476b679"
+    },
+    "recorder": {
+      "bytes": 30943,
+      "path": "tools/host-lisp/c2_v160_item1_only_media.py",
+      "sha256": "3e568aeccdb1a94277430b884d5f1d8342c92cb4b74571d01f792fae67f85c41"
+    },
+    "session": {
+      "bytes": 3048,
+      "path": "config/c2-v160-item1-only-r1-public2-session.json",
+      "sha256": "294ab20164258aa8779cec8a4ea0598fa6693b37672b36fd385691eeb4aa94a4"
+    }
+  },
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "device": "/dev/ttyUSB1",
+    "fresh_basic_first": true,
+    "hangs": 0,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "owner_observed": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true,
+    "red_frames": 0
+  },
+  "claim_limit": {
+    "accepts": [
+      "v1.6-item-1-cursor-navigation"
+    ],
+    "excludes": [
+      "v1.6-item-2-comfort-repl",
+      "lossless-input",
+      "D5-headroom",
+      "release-acceptance",
+      "v1.6-item-3",
+      "v1.6-item-4"
+    ],
+    "green_consequence": "item 1 accepted; Halt A follows"
+  },
+  "delivered_identity": {
+    "accepted_pair": {
+      "ELF": {
+        "bytes": 646192,
+        "path": "build/c2.3/v1.6-item1-only-candidate-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "82bc474e61a0ba4691abe52c3f0c8fcf6e26335f533df2d59ddd3ab2f3eba489"
+      },
+      "PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-item1-only-candidate-r1/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "4d80051c80473e26f3a8b4582d8e0200ec9d15e5e6faa4e1cd7984e6a97b4f6c"
+      }
+    },
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-item1-only-media-r1-public2/library/lisp65-library.d81",
+      "sha256": "caa08cc36931cc758c0a1fd68102b7042263c39d982bed5b60145ea3b4b9208b"
+    },
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-item1-only-media-r1-public2/deploy-readback/V16I1QL.D81",
+      "sha256": "caa08cc36931cc758c0a1fd68102b7042263c39d982bed5b60145ea3b4b9208b"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-item1-only-media-r1-public2/shared-system/lisp65-product.d81",
+      "sha256": "bb1d8c382da435da9d7f17eb5cfe1bd77568a781b1b7d9283293904532713395"
+    },
+    "product_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-item1-only-media-r1-public2/deploy-readback/V16I1Q.D81",
+      "sha256": "bb1d8c382da435da9d7f17eb5cfe1bd77568a781b1b7d9283293904532713395"
+    }
+  },
+  "format": "lisp65-c2-v160-item1-only-r1-public2-device-result-v1",
+  "mutations_rejected": [
+    "change-first-red-result",
+    "drop-mixed-binding",
+    "change-mixed-result",
+    "lose-left-boundary",
+    "erase-real-abort",
+    "claim-red-frame",
+    "withdraw-item-1",
+    "expand-to-comfort"
+  ],
+  "next": "D5-headroom-without-repl-comfort-then-release-ladder",
+  "recorded_on": "2026-08-24",
+  "results": {
+    "abort_recovery": {
+      "error_probe": {
+        "form": "(>= nil 32)",
+        "result": "*** vm: type error"
+      },
+      "non_error_probe": {
+        "classification": "valid dialect semantics; not an abort",
+        "form": "(car 1)",
+        "result": "nil"
+      },
+      "returned_to_native_prompt": true
+    },
+    "boot": {
+      "library_mount_returned": true,
+      "native_prompt": "lisp65>",
+      "require_v16core": "t"
+    },
+    "deletion_and_boundaries": {
+      "bindings": [
+        "Delete",
+        "C-d"
+      ],
+      "left_boundary_noop": true,
+      "result": "abcd",
+      "right_boundary_noop": true
+    },
+    "endpoints": {
+      "bindings": [
+        "C-a",
+        "C-e"
+      ],
+      "result": "abcd"
+    },
+    "first_red_retest": {
+      "first_printable_byte_accepted": true,
+      "insertion_overwrite": false,
+      "result": "abcde",
+      "stimulus": "read-line; type abde; Left twice; insert c"
+    },
+    "mixed_navigation": {
+      "bindings": [
+        "Left",
+        "Right",
+        "C-b",
+        "C-f"
+      ],
+      "result": "abcdef"
+    },
+    "native_echo": {
+      "form": "(list 1 3)",
+      "result": "(1 3)"
+    }
+  },
+  "status": "PASS: V1.6 ITEM 1 HARDWARE ACCEPTED; HALT A REACHED"
+}

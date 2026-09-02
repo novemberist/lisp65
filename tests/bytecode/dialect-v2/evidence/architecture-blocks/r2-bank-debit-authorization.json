@@ -1,0 +1,34 @@
+{
+  "format": "lisp65-bank-debit-authorization-v1",
+  "id": "r2-system-runtime-120-byte-debit",
+  "status": "authorized",
+  "authorized_on": "2026-07-13",
+  "timing": "retroactive-one-time-procedural-repair",
+  "scope": "system-runtime-r2-product-link-delta-only",
+  "baseline": {
+    "commit": "0b801717f5bb9c6c78865dcbb117142af24972e4",
+    "post_boot_reserve_bytes": 2091,
+    "banked_headroom_bytes": 555
+  },
+  "candidate": {
+    "commit": "65c28c479306c56a23b3b11c014fbc11ae4d5bc1",
+    "post_boot_reserve_bytes": 1971,
+    "banked_headroom_bytes": 435
+  },
+  "authorized_debit_bytes": 120,
+  "attribution": {
+    "resident_text_bytes": 94,
+    "resident_rodata_bytes": 26,
+    "boot_overlay_bytes": 81,
+    "classification": "release-critical-r2-correctness-semantics-and-migration-support"
+  },
+  "evidence": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/r2-stack-guard-diagnosis.json",
+    "sha256": "6ffdcde45fb30cb11d5a27834ee2afc481513a9a8447fd36f9509858860f8796"
+  },
+  "decision": {
+    "accepted_bank_bytes": 435,
+    "reclaim_required": false,
+    "precedent": "none-future-debits-require-prior-authorization"
+  }
+}

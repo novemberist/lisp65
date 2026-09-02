@@ -1,0 +1,129 @@
+{
+  "cases": [
+    {
+      "decision": null,
+      "id": "defparameter-always-evaluates-init",
+      "result_sha256": "274b60382983398b0057006b3f33ce024de67a418f621c3b5e25b1d308903af8",
+      "verdict": "accept"
+    },
+    {
+      "decision": null,
+      "id": "defparameter-overwrites-reloaded-value",
+      "result_sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:defparameter-defvar-surface",
+      "id": "defvar-bound-skips-init",
+      "result_sha256": "6749e679b696ca5bfc84a72b2b1d8612302b4fd0b3604af7fc9285b89a0a7cfa",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:defparameter-defvar-surface",
+      "id": "defvar-extra-init-arity",
+      "result_sha256": "55cb5ef899c6b9c945b81a50c853729e10eb3af3e541b24739e3b4c9f6ed6578",
+      "verdict": "accept"
+    },
+    {
+      "decision": null,
+      "id": "defvar-no-init-leaves-unbound",
+      "result_sha256": "fc3bee9829f9fad00b814ee21fedf92f009bb7848191ad82db7b87d860be1ae5",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:defparameter-defvar-surface",
+      "id": "defvar-reload-preserves-current-value",
+      "result_sha256": "19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:do-removal",
+      "id": "do-public-form-removed",
+      "result_sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+      "verdict": "accept"
+    },
+    {
+      "decision": null,
+      "id": "dolist-survives-do-removal",
+      "result_sha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683",
+      "verdict": "accept"
+    },
+    {
+      "decision": null,
+      "id": "dotimes-survives-do-removal",
+      "result_sha256": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5",
+      "verdict": "accept"
+    },
+    {
+      "decision": null,
+      "id": "mod-negative-keeps-divisor-sign",
+      "result_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:not-equal-binary-arity",
+      "id": "not-equal-apply-arity-one",
+      "result_sha256": "e3b98a4da31a127d4bde6e43033f66ba274cab0eb7eb1c70ec41402bf6273dd8",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:not-equal-binary-arity",
+      "id": "not-equal-arity-one",
+      "result_sha256": "e3b98a4da31a127d4bde6e43033f66ba274cab0eb7eb1c70ec41402bf6273dd8",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:not-equal-binary-arity",
+      "id": "not-equal-arity-three",
+      "result_sha256": "e3b98a4da31a127d4bde6e43033f66ba274cab0eb7eb1c70ec41402bf6273dd8",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:not-equal-binary-arity",
+      "id": "not-equal-arity-zero",
+      "result_sha256": "e3b98a4da31a127d4bde6e43033f66ba274cab0eb7eb1c70ec41402bf6273dd8",
+      "verdict": "accept"
+    },
+    {
+      "decision": null,
+      "id": "not-equal-binary-distinct",
+      "result_sha256": "e3b98a4da31a127d4bde6e43033f66ba274cab0eb7eb1c70ec41402bf6273dd8",
+      "verdict": "accept"
+    },
+    {
+      "decision": null,
+      "id": "not-equal-binary-equal",
+      "result_sha256": "5da3a4c7f117944275b4c8629c4916403625d5a4a6573a01ecb03f0e9d2edbe6",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:not-equal-binary-arity",
+      "id": "not-equal-funcall-arity-three",
+      "result_sha256": "e3b98a4da31a127d4bde6e43033f66ba274cab0eb7eb1c70ec41402bf6273dd8",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:remainder-v2-surface",
+      "id": "remainder-negative-keeps-dividend-sign",
+      "result_sha256": "cf3bae39dd692048a8bf961182e6a34dfd323eeb0748e162eaf055107f1cb873",
+      "verdict": "accept"
+    },
+    {
+      "decision": "decision:remainder-v2-surface",
+      "id": "remainder-public-funcall-removed",
+      "result_sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+      "verdict": "accept"
+    }
+  ],
+  "engine": "native-c-treewalk",
+  "family": "prelude-control",
+  "fixture_sha256": "c21f6e00bb13a442e29c9563f3f686df9ee11d21b296cf71e1a4ee01745af8db",
+  "format": "lisp65-dialect-v2-family-verdict-v1",
+  "profile": "dialect-v1",
+  "provenance": {
+    "binary_sha256": "2b2ac35873b8bbba65a78177c6f7ef96df683336f8d77e46f98a007c05b34015",
+    "build_profile_sha256": "a73dc9ad0e1dd708a4c5e83a445d3805f33b5fb5d5b0728fb70c43be3166c27d",
+    "preload_sha256": "1479adfd4b7666e636ccc10ac868b956c198c5e0643c7cc5df2869df02f529e7",
+    "source_commit": "f6527d25e2035eae5a98dae7431d641515e2fd2e"
+  }
+}

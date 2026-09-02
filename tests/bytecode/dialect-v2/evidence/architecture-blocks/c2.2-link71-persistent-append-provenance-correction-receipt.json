@@ -1,0 +1,67 @@
+{
+  "authority": {
+    "original_First_Red": {
+      "bytes": 4691,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link71-place-persistent-append-header-hardware-first-red.json",
+      "sha256": "0fa41e04c7fd9b76e91679dc9f91a9675a7cdff58f5a4ca5ba145554872c6adc"
+    },
+    "phase_scratch": {
+      "address": "0x0000c0c6",
+      "bytes": 304,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/diag-load-place-phase-scratch.bin",
+      "sha256": "d26c0d61210ab6b510639e843fe99731774d2d9625ee632c34283e6a7861c888"
+    },
+    "slot39_nonpromotable_screen": {
+      "bytes": 2247,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot39-failure-hold-NONPROMOTABLE/failure-hold-screen.txt",
+      "sha256": "6fbbfe8dbb7d33079ac6f41c43bae443fc4cced80225dee6f868607fe3d15dfe"
+    },
+    "source": {
+      "bytes": 155694,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "9b1afffa93ffefb6eac10e1f99f3c6b7f0db572575b07b396d6ec321c354e94e"
+    }
+  },
+  "corrected_interpretation": {
+    "append_state": {
+      "committed": 1,
+      "meaning": "the persistent C2D header was published before the failure",
+      "staged": 1
+    },
+    "first_locked_trace": {
+      "inner_or_lock": "0x81",
+      "slot_decimal": 39,
+      "slot_hex": "0x27",
+      "meaning": "the rollback plan first re-enters the header record, whose unconditional stamp writes Slot 39; rollback_unpublish then locks that already-written value"
+    },
+    "slot39_diagnostic": {
+      "instrumented_error_edges": 9,
+      "error_hold_reached": false,
+      "success_path_reached": true,
+      "qualification": "the nonpromotable CRC solver occupied a post-success jump operand, so reaching it corrupted the diagnostic screen; that carrier is discarded and makes no product claim"
+    },
+    "verdict": "The original trace does not identify the primary failure as Slot 39. Header/commit is positively entlasted. The remaining failure lies after the header in the persistent publication path, whose next record is Slot 40."
+  },
+  "execution_accounting": {
+    "new_product_links": 0,
+    "product_bytes_changed": 0,
+    "additional_hardware_sessions": 1
+  },
+  "format": "lisp65-c2.2-Link71-persistent-append-provenance-correction-v1",
+  "recorded_on": "2026-07-27",
+  "status": "accepted-correction-Slot39-was-rollback-provenance-Slot40-publication-remains-open",
+  "supersession": {
+    "historical_receipt_preserved": true,
+    "retracted_claims": [
+      "the first locked product failure is Session slot 39",
+      "the persistent append fails in the header phase"
+    ],
+    "retained_claims": [
+      "Link 71 reaches a clean REPL",
+      "the L65I parser accepts the canonical index",
+      "the direct place artifact reproduces the failure",
+      "rollback restores the baseline C2D counts and READY remains one"
+    ]
+  },
+  "claim_limit": "This receipt corrects failure provenance only. Link 71 require/defstruct remains unqualified."
+}

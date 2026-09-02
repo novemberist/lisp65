@@ -1,0 +1,120 @@
+{
+  "format": "lisp65-c2-product-link28-window-identity-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-prelink-window-identity-link-28-blocked",
+  "authorization_accounting": {
+    "authorized_link_28_attempts": 1,
+    "completed_link_28_attempts": 1,
+    "resident_island_seed_links": 1,
+    "product_closure_links": 1,
+    "retries": 0,
+    "gate_resumes": 0,
+    "additional_link_28_attempts": 0
+  },
+  "inputs": {
+    "tool": "tools/host-lisp/c2_product_substitution_link.py",
+    "tool_sha256": "8624f9f21579df3932ccbf5030bb6fcd1b349024781eb6fb43f6c97aebbcd925",
+    "contract": "config/c2-kernal-unmap-contract.json",
+    "contract_sha256": "546c8fc63cf3ea297b80015d56ad272bb1e2097d35778abb4ed450f5292bed17",
+    "contract_document": "docs/planning/c2.2-kernal-unmap-contract.md",
+    "contract_document_sha256": "6e4ef6c3329d154cea6bfe488da6ac5bcf7fca34e6119da1f97a4e46c521ed0a",
+    "section_inventory_pin": "config/c2-final-section-inventory-pin.txt",
+    "section_inventory_pin_sha256": "3e644eb6f892e31baca3167b040ad3a5f60f148f1d3b2dae523ddb26da0bd6a3",
+    "profile_data_gate_replay_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link28-v2-profile-data-placement-gate-replay-receipt.json",
+    "profile_data_gate_replay_receipt_sha256": "c70f89d6bfd64875fde03417b3e18149a589f0a3d174cec57a618e49db5e8e93",
+    "resolved_profile_sha256": "59878262a1f0cfee742ab284b658a4f5cf6d0283e1ab8afe4301d33ce346ae30",
+    "v2_product_profile_parity_sha256": "2d2b3ad38eb71ef493b077c67d15ff85210f69d5a1723b860a858f5bdb2cea2a"
+  },
+  "outputs_before_first_red": {
+    "resident_island": {
+      "address": "0x1800",
+      "bytes": 395,
+      "crc16": "0x155d",
+      "materialized_header_sha256": "7288c2b6741db17cf81393d092849cc84c56632423e3b16affebc524b3c425d6"
+    },
+    "seed_link": {
+      "prg_sha256": "e8c3cee02b0fa40dee8f28d33731b902b282ed2d79ac3ef6692ad7b4a1cd9176",
+      "elf_sha256": "6692b0c13c5e12ee8cfaa2cfb0e8c1e585b784529d31a729d34c8668d2fd3549",
+      "lto_object_sha256": "5e8611fdf27e87010b5931a07d97b26058700a57cf2b38a61acc24ce19c9556b",
+      "window_sha256": "f2d76d7ff6d490d8e69797047485d43e0cd79e5083e490907cb298d18db95ef6",
+      "window_crc16": "0xa6c9"
+    },
+    "product_link": {
+      "prg_sha256": "692729011bca541c82af4698f65d79396e16c47d18bda6479102b4758420442f",
+      "elf_sha256": "976c0a98356b430f4ec5a3dd56a23a12d2562d40dd9da6e4fb778ca1a43bc400",
+      "lto_object_sha256": "0041f4f8f6c31818d73da29a5a239932e9d5daf64edc6105e6f0127524b85b6c",
+      "window_sha256": "2406ebb832aa05c8a694084935941735e8f16db01bd5a078033a46265de426dd",
+      "window_crc16": "0xacdc"
+    }
+  },
+  "passed_before_first_red": {
+    "v2_product_profile_parity": "passed-both-links",
+    "exact_lto_orphan_warning_wrapper": "passed-both-links",
+    "final_section_inventory": "passed-exact-140-name-membership-and-count-both-links",
+    "lto_partition_metadata": "passed-both-links",
+    "final_relocation_sections": 57,
+    "product_link_reports": {
+      "exact_warning_wrapper_sha256": "594edb303887ec68e1a5984fb15d51c5b591f47cff52bfa5ab1e36c6e69be090",
+      "final_section_inventory_sha256": "e03a11bcb59c97f9b759d121213ba0b717d0816a5b72e82b6bdd31761afc27d1",
+      "lto_partition_metadata_sha256": "e7810936c3938d0209f31b71f9de1b1e89f736698662a543f2784c71adc9fd7a"
+    }
+  },
+  "first_red": {
+    "gate": "pre-link whole-KERNAL-window identity",
+    "expected": {
+      "bytes": 8192,
+      "crc16": "0xfc2b",
+      "sha256": "70b5562c9f75a1f5f18face3068096203a6d365c1015cc269d8015f8e1cf10ce"
+    },
+    "actual": {
+      "bytes": 8192,
+      "crc16": "0xacdc",
+      "sha256": "2406ebb832aa05c8a694084935941735e8f16db01bd5a078033a46265de426dd"
+    },
+    "localization": {
+      "changed_bytes": 167,
+      "first_changed_window_offset": "0x1d14",
+      "last_changed_window_offset": "0x1e66",
+      "changed_bytes_outside_profile_data": 0,
+      "profile_data_interval": "0xfd12..0xfe67",
+      "profile_data_bytes": 342,
+      "changed_u16_values": 163
+    },
+    "root_cause": "All drift lies in the three moved compiler-generated service-dispatch tables. They are runtime-immutable but contain direct link-resolved Bank-0 function addresses, so LTO changes their bytes between the replay seed, the current resident-island seed, and the materialized final product link. The existing pre-link whole-window identity contract therefore cannot bind this link-dependent data.",
+    "classification": "identity-contract incompatibility, not a placement or data-reference safety failure",
+    "diagnosis_sha256": "2ec1de6ab2f8970b586deb7cb42d008945bc3136f7061f044e86363024808b9b"
+  },
+  "not_reached_not_passed": [
+    "handoff-z-and-io",
+    "pre-ownership",
+    "Link-28 profile-data function provenance",
+    "fixed facade",
+    "runtime-family capacity",
+    "one-truth closure",
+    "KERNAL freedom",
+    "substitution balance",
+    "hardware"
+  ],
+  "bounded_followup_directions_not_authorized": {
+    "recommended_for_review": "Bind the final product-linked window through a designated non-LTO publish-last verifier record, with exact permitted-byte bounds and mutation tests, instead of requiring a link-dependent pointer table to reproduce a pre-link seed.",
+    "stable_projection": "Replace the direct pointers with stable IDs or fixed vectors, costed before implementation.",
+    "resident_reclaim": "Return the tables to Bank 0 and obtain the missing 323 bytes elsewhere, reopening the capacity decision."
+  },
+  "immutable_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-window-identity-first-red-20260720/root",
+    "files": 35,
+    "total_file_bytes": 2612821,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "5e7b9e53d79a885b72c16e0f510c66178ee3432c95a1a7da794d513e41a6c25e",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "decision": {
+    "link_28": "stopped-at-first-red",
+    "retry": "not-authorized-not-run",
+    "gate_resume": "not-authorized-not-run",
+    "hardware": "blocked-not-run",
+    "promotion": "blocked-not-run"
+  },
+  "claim_limit": "This receipt proves the one authorized Link 28 attempt emitted one resident-island seed and one product closure, passed profile, orphan, inventory and LTO-metadata gates, then stopped because the final 8192-byte KERNAL window did not reproduce the pre-link replay pin. It makes no structural closure, capacity, hardware, promotion, or release claim."
+}

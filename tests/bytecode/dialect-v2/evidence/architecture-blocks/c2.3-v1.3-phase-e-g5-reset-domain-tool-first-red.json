@@ -1,0 +1,35 @@
+{
+  "format": "lisp65-c2.3-v1.3-phase-e-G5-reset-domain-tool-first-red-v1",
+  "status": "FIRST RED CORRECTED BEFORE HARDWARE",
+  "recorded_on": "2026-08-03",
+  "source_commit": "c81f0292472dffa2faa4c3a9111a09e50c4f61d3",
+  "phase": "S-E-R5-to-G5-preparation",
+  "trigger": {
+    "command": "scripts/c2-v130-g5-hw.sh prepare",
+    "message": "materialized R5 role drift: c2d-v6-code-plane"
+  },
+  "cause": {
+    "classification": "acceptance-tool-path-model-stale-after-full-reset-domain-fix",
+    "old_assumption": "product/09-initial.c2d-v6.bin",
+    "sealed_v1_3_role": "product/09-c2d-v6-reset-domain.bin",
+    "sealed_v1_3_bytes": 50816,
+    "sealed_v1_3_sha256": "26bec13fc2ace4f4f9a27128212e03ff98cb4400a5f845d1cc6219108d7ee3f8",
+    "detail": "The shared v1.2.1 G5 preparer still named the pre-Link-85 code-plane file. R5 correctly materialized the complete Bank-5 reset domain required by Link 88 under the new filename and the same artifact role."
+  },
+  "correction": {
+    "form": "release-specific C2D product filename bound by the v1.3 wrapper",
+    "shared_tool_sha256": "a449fc94f4141b1ef0f5b6525d9d1500a9fbc886e8e43f3c49274c58a5d0bc3e",
+    "v1_3_wrapper_sha256": "b1275573ff6114941ab0216627509a6423612277e9a8669c42af9ed0ff555a2c",
+    "r5_preflight_sha256": "7c7493e0986318981b256281eaa12e8a1ab6a3d98c36a24a5e55677e90e389d9",
+    "g5_runbook_sha256": "a983cf40b14610ee67302d19a28077ad710b45dfdddef3c2f2a83d0da6861008",
+    "verification": "PREPARED set=072ca89affc35bdf0e20cab382e8bd4a9df64babf535e23f6b2e268962daed1f hardware=not-run; VERIFY PASS"
+  },
+  "execution_accounting": {
+    "hardware_started": false,
+    "product_builds": 0,
+    "product_links": 0,
+    "product_byte_changes": 0,
+    "acceptance_case_consumed": false
+  },
+  "claim_limit": "This receipt closes only the stale G5 materialization pathname. It carries no hardware, G5, R6, G6, promotion or release claim."
+}

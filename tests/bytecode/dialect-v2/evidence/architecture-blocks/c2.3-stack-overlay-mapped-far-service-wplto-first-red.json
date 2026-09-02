@@ -1,0 +1,164 @@
+{
+  "artifacts": {
+    "canonical_lto_object": {
+      "bytes": 627172,
+      "path": "build/post-promotion/v15/mapped-far-ownership-wplto/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "0946a95b951faf6bdb9eeaa761c316ee7fe23299ffb0b624fc75e8fd7ae5b3f2"
+    },
+    "generated_linker": {
+      "bytes": 68177,
+      "path": "build/post-promotion/v15/mapped-far-ownership-wplto/wplto/c2-substitution.ld",
+      "sha256": "c682dd7faf13e304dba2bcaa8b4f850e25b3895af79083e0f89500270cde9cd6"
+    },
+    "seed_link_map": {
+      "bytes": 183623,
+      "path": "build/post-promotion/v15/mapped-far-ownership-wplto/wplto/resident-island-seed.prg.map",
+      "sha256": "be8186f274124042b90bc7ae760bb2a4290f0528cb62ae9a7c4f81547a566378"
+    },
+    "seed_link_stderr": {
+      "bytes": 779,
+      "path": "build/post-promotion/v15/mapped-far-ownership-wplto/wplto/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "36542298caecf7fc1a0ad278a137e7df7fc03674d934dc3d851946eb85a1fa9f"
+    }
+  },
+  "authority": {
+    "contract": {
+      "bytes": 15638,
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "a84415a4a2dfc9283f6389a160db3a39a084f8e86bb9339d09e649e3a51c9b9c"
+    },
+    "driver": {
+      "bytes": 20136,
+      "path": "tools/host-lisp/c2_stack_overlay_mapped_far_wplto.py",
+      "sha256": "826bdce6998a31b77260a15495e8de8fdcdef90487805f19009eb6093eb11574"
+    },
+    "ownership_gate": {
+      "bytes": 5393,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-stack-overlay-mapped-far-service-ownership-gate-receipt.json",
+      "sha256": "34c79011570aefd69fe0a85c55a65638fc19d48dfa660222efdfa77615868ec7"
+    }
+  },
+  "claim_limit": "Exact First Red from the sole commissioned Phase-D WPLTO. No retry, address negotiation, product identity, Link 91, hardware or parity-surface claim.",
+  "compiler_invocations": 1,
+  "failure_stage": "seed-link",
+  "format": "lisp65-c2.3-stack-overlay-mapped-far-WPLTO-first-red-v2",
+  "fresh_ship_witness": {
+    "image": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v15/mapped-far-ownership-preflight/parity-toy.d81",
+      "sha256": "ba27cdeda79fb80f9b4991120e786386ef43a498a7a71a95644ec8a410e39dac"
+    },
+    "media_members_verified": 9,
+    "receipt": {
+      "bytes": 3377,
+      "path": "build/post-promotion/v15/mapped-far-ownership-preflight/parity-toy.receipt.json",
+      "sha256": "8fb8051c95ee8ddd47ac8dc4c9cb2f7a4a2dba0817e6636fbb29f3905ebd1beb"
+    },
+    "runtime": {
+      "bytes": 41144,
+      "path": "build/post-promotion/v15/mapped-far-ownership-preflight/parity-toy.runtime.elf",
+      "sha256": "4eeb83f27a8aed0354c97d904c92a9111e4e73a1928f08095bd2a926549a00a9"
+    },
+    "stager": {
+      "bytes": 13760,
+      "path": "build/post-promotion/v15/mapped-far-ownership-preflight/parity-toy.stager.elf",
+      "sha256": "09dccf827567ff4dab0f23b5c50077798563d6a6b327d8e928f67203b095df73"
+    },
+    "status": "passed-host-execution-and-media-verification"
+  },
+  "hardware_runs": 0,
+  "linker_errors": [
+    "workbench overlay overlaps resident BSS",
+    "workbench overlay moved below the heap floor",
+    "workbench overlay leaves too little post-boot reserve",
+    "ordinary Bank-0 state overlaps fixed C2 state",
+    "mapped far body escaped its Bank-2 owner",
+    "C2 inherited noinit/fixed-block geometry drift",
+    "ordinary rodata predecessor/VMA/LMA relation drift",
+    "section '.lisp65_c2_convergence_zp' overflowed region 'zp' by 2 bytes"
+  ],
+  "linker_invocations": 1,
+  "live_set": {
+    "facade": {
+      "bytes": 98,
+      "capacity_bytes": 243,
+      "end": "0xb412",
+      "headroom_bytes": 145,
+      "start": "0xb3b0",
+      "status": "exact-contract-fit"
+    },
+    "far_service": {
+      "actual_bytes": 1433,
+      "actual_cpu_end": "0x7e4b",
+      "actual_cpu_start": "0x78b2",
+      "actual_physical_end": "0x02be4b",
+      "actual_physical_start": "0x02b8b2",
+      "contract_bytes": 1499,
+      "contract_cpu_end": "0x7e8d",
+      "contract_physical_end": "0x02be8d",
+      "delta_bytes": -66,
+      "status": "contract-size-drift"
+    },
+    "fixed_c2_bank0_state": {
+      "bytes": 717,
+      "end": "0xc34d",
+      "ordinary_bss_overlap_bytes": 717,
+      "start": "0xc080"
+    },
+    "heap_start": {
+      "actual": "0xc7d6",
+      "baseline": "0xc353",
+      "drift_bytes": 1155
+    },
+    "ordinary_bank0_bss": {
+      "bytes": 1585,
+      "end": "0xc4c1",
+      "limit": "0xc080",
+      "overshoot_bytes": 1089,
+      "start": "0xbe90"
+    },
+    "ordinary_text": {
+      "bytes": 37744,
+      "delta_from_link90_bytes": -29,
+      "end": "0xb393",
+      "start": "0x2023",
+      "status": "no-existing-text-displacement"
+    },
+    "overlay_floor": {
+      "actual": "0xca41",
+      "contract": "0xc354",
+      "drift_bytes": 1773
+    },
+    "owned_state": {
+      "bytes": 66,
+      "end": "0xc042",
+      "ordinary_bss_overlap_bytes": 66,
+      "start": "0xc000"
+    },
+    "static_stack": {
+      "actual_bytes": 6,
+      "capacity_bytes": 12,
+      "start": "0xc074",
+      "status": "individual-fit"
+    },
+    "toolchain_noinit": {
+      "actual_bytes": 0,
+      "actual_start": "0xc7d6",
+      "contract_bytes": 6,
+      "contract_start": "0xc34d",
+      "start_drift_bytes": 1161
+    },
+    "zero_page": {
+      "available_end": "0x0090",
+      "owned_end": "0x0092",
+      "owned_start": "0x0090",
+      "overflow_bytes": 2
+    }
+  },
+  "next_gate": "Halt 2 red disposition; the one-card budget is exhausted.",
+  "product_links": 0,
+  "recorded_on": "2026-08-04",
+  "retry_authorized": false,
+  "status": "FIRST RED: sole mapped-far ownership WPLTO failed simultaneous-live geometry",
+  "wplto_probes_consumed": 1
+}

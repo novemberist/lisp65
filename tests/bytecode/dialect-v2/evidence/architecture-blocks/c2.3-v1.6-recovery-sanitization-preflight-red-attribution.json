@@ -1,0 +1,76 @@
+{
+  "attempt_accounting": {
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "preflight_invocations": 2,
+    "preserved_process_roots": [
+      "build/c2.3/v1.6-execution-boundary-recovery-sanitization-process",
+      "build/c2.3/v1.6-execution-boundary-recovery-sanitization-process-first-preflight-partial-20260824"
+    ],
+    "product_WPLTO_runs": 0,
+    "product_links": 0,
+    "why_second": "first background console did not return its terminal Red"
+  },
+  "authority": {
+    "commit": "66ff6c737e5fe9d72ab262ba3689c53fbff9fff0",
+    "review_plan": {
+      "bytes": 472604,
+      "path": "docs/planning/v1.6.0-freight-work-plan.md",
+      "sha256": "61355771024b9f9fbe68fa80195725b6b53656328fce5dfc5aac4ac36c006b2c"
+    }
+  },
+  "claim_limit": "Host-only attribution of the pre-card gate Red. No gate conversion, successor card, WPLTO, link, medium or device contact is authorized by this result.",
+  "decision": {
+    "class": "stored-world owner projection",
+    "product_defect": false,
+    "reason": "the authorized split moved the seven-pair saved-CSR scan to one shared owner; the active-frame body retains all four stack access/write witnesses exactly once",
+    "required_successor": "convert the active-frame gate from section == walker == 80 to component ownership: the active-frame walker proves its stack semantics while the shared sanitizer and its two consumers prove the recovery contract"
+  },
+  "drift": {
+    "difference": {
+      "active_frame_owner_bytes": "-39 (80 -> 41)",
+      "active_frame_semantic_access_delta": 0,
+      "new_shared_saved_CSR_owner_bytes": 43,
+      "section_bytes": "+4 (80 -> 84)"
+    },
+    "expected_pre_split_world": {
+      "active_frame_stack_access_counts": {
+        "read_stack_return_high": 1,
+        "read_stack_return_low": 1,
+        "write_stack_return_high": 1,
+        "write_stack_return_low": 1
+      },
+      "active_frame_walker_bytes": 80,
+      "far_liveness_section_bytes": 80,
+      "shared_saved_CSR_walker": "absent in predecessor world"
+    },
+    "observed_recovery_sanitization_world": {
+      "active_frame_stack_access_counts": {
+        "read_stack_return_high": 1,
+        "read_stack_return_low": 1,
+        "write_stack_return_high": 1,
+        "write_stack_return_low": 1
+      },
+      "active_frame_walker_bytes": 41,
+      "far_liveness_section_bytes": 84,
+      "ordinary_recovery_entry_bytes": 9,
+      "shared_saved_CSR_walker_bytes": 43
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-recovery-sanitization-preflight-red-attribution-v1",
+  "inputs": {
+    "active_frame_gate": {
+      "bytes": 15586,
+      "path": "tools/host-lisp/c2_v160_active_frame_liveness.py",
+      "sha256": "bdd5e310427edafd49d90cc704ee0b48d30f5293f0e6664d9efe8127c4b9ec75"
+    },
+    "candidate_liveness_source": {
+      "bytes": 5473,
+      "path": "src/optional/c2_mapped_far_service_liveness_v4.s",
+      "sha256": "4b92b2839a685edbb033679cde2ccfe6e78216184267835514c279b3d521c16a"
+    }
+  },
+  "recorded_on": "2026-08-24",
+  "status": "ATTRIBUTED: ACTIVE-FRAME GATE PINS PRE-SPLIT OWNER SHAPE"
+}

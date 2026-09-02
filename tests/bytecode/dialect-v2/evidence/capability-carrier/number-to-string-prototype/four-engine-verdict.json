@@ -1,0 +1,40 @@
+{
+  "binary": {
+    "path": "build/equivalence/dialect-v2-equivalence-check",
+    "sha256": "eeb38529cf6e31fbde43846c3ec5f6ea437e812523fe9a3a336b6a5bb7ed1a8b"
+  },
+  "case": "number-to-string-fixnum-min",
+  "expected": "\"-16384\"",
+  "format": "lisp65-dialect-v2-number-to-string-four-engine-verdict-v1",
+  "inputs": [
+    {
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "b379bc3c4027d88e6a45c16c6120b37778341eafdb2f0b1d6477d2502a84e8bb"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/number-to-string/cases.json",
+      "sha256": "66ae698ebf1c8740ca2fe674c347c7aee57a8dc8bcaa4849414277bbfff73dbd"
+    },
+    {
+      "path": "tools/host-lisp/dialect_v2_lcc_surface.py",
+      "sha256": "f3b6a52064298a8fa3c8b1294b60ae34ee1f1745aa87acc4f0d0be6c28f6e5db"
+    },
+    {
+      "path": "tools/host-lisp/dialect_v2_prelude_control.py",
+      "sha256": "0c127fe2b6758582c3e0b2a516bb2ad89853d5e4de7129a16c362d9a0752762b"
+    },
+    {
+      "path": "tools/host-lisp/v2_workbench_codemod.py",
+      "sha256": "5994e87ca66569df51d6966e668aaf0b6ae467e9c8f57d2f3c25e95b3175783c"
+    }
+  ],
+  "observations": {
+    "lisp-lcc": "\"-16384\"",
+    "native-c-compiler-vm": "\"-16384\"",
+    "native-c-treewalk": "\"-16384\"",
+    "python-p0-compiler-vm": "\"-16384\""
+  },
+  "profile": "dialect-v2",
+  "result": "passed",
+  "version": 1
+}

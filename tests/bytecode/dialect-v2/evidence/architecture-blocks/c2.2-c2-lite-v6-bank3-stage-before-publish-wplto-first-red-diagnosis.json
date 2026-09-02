@@ -1,0 +1,137 @@
+{
+  "format": "lisp65-c2-lite-bank3-stage-before-publish-wplto-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "first-red-diagnosed-placement-and-residency-only",
+  "scope": {
+    "whole_program_lto_probes": 1,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "promotable": false
+  },
+  "authorities": {
+    "link37_baseline_map": {
+      "path": "build/c2.2/substitution/product-link-37-c2-lite-v6-artifact-resume2/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 192747,
+      "sha256": "a8c05b8c1d288dff2566ad592d5d73cf1a2d41d2e3f84b5cdea3ebb736500bae"
+    },
+    "failed_wplto_map": {
+      "path": "build/c2-lite/v6-bank3-stage-before-publish-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "bytes": 194338,
+      "sha256": "cb8f36ee6af19eff4bc1847d710132dc6513ad506c39ddf6ec9dde78d49ac7de"
+    },
+    "failed_wplto_lto_object": {
+      "path": "build/c2-lite/v6-bank3-stage-before-publish-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.lto.o",
+      "bytes": 595108,
+      "sha256": "2f3e28470d0001d3f49ecb7d62a2537e83abdee34bc265b9f99ebe0c18ea9be1"
+    },
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank3-stage-before-publish-wplto-receipt.json",
+      "bytes": 10476,
+      "sha256": "dab18e209bdb8f87081175361a19edbb9ea6ea1153726ba5e27b6ac990395bdf"
+    }
+  },
+  "prelink_results": {
+    "stage_state_machine": {
+      "status": "passed",
+      "cases": 8
+    },
+    "source_contract": {
+      "status": "passed",
+      "checks": 10,
+      "mutations_rejected": 4
+    },
+    "compiler_and_lto": "completed",
+    "final_link": "failed-before-orphan-wrapper-and-before-family-pack",
+    "post_link_binding": "not-run"
+  },
+  "measured_deltas_from_link37": {
+    "ordinary_bank0_text": {
+      "baseline_bytes": 37946,
+      "probe_bytes": 38165,
+      "delta_bytes": 219,
+      "baseline_headroom_to_handoff_bytes": 70,
+      "probe_overflow_into_handoff_bytes": 149,
+      "attribution": {
+        "vm_runtime_overlay_stage_begin": 139,
+        "vm_runtime_overlay_stage_verified": 44,
+        "vm_runtime_overlay_stage_fail": 13,
+        "three_resident_stage_functions_total": 196,
+        "specific_status_main_branch": 10,
+        "specific_status_renderer_growth": 34,
+        "other_lto_net": -21
+      }
+    },
+    "workbench_boot_overlay": {
+      "baseline_bytes": 1731,
+      "probe_bytes": 2361,
+      "delta_bytes": 630,
+      "boot_stage_wrapper_and_body_bytes": 618,
+      "baseline_headroom_to_boot_slice_limit_bytes": 35,
+      "projected_overflow_at_link37_geometry_bytes": 595
+    },
+    "decoder_phase_03": {
+      "baseline_bytes": 1584,
+      "probe_bytes": 2285,
+      "delta_bytes": 701,
+      "slice_cap_bytes": 1792,
+      "over_cap_bytes": 493,
+      "session_stage_body_bytes": 610,
+      "remaining_phase03_growth_bytes": 91
+    },
+    "ordinary_rodata": {
+      "baseline_bytes": 897,
+      "probe_bytes": 941,
+      "delta_bytes": 44
+    },
+    "publish_last_binding_table": {
+      "baseline_bytes": 32,
+      "probe_bytes": 40,
+      "delta_bytes": 8
+    },
+    "ordinary_bank0_bss": {
+      "payload_delta_bytes": 0,
+      "baseline_start": "0xb9bd",
+      "probe_start": "0xba86",
+      "positional_shift_bytes": 201,
+      "probe_overlap_with_fixed_block_bytes": 57
+    },
+    "unchanged_walls": {
+      "fixed_hot_block_bytes": 408,
+      "kernal_window_c2_resident_bytes": 6716,
+      "e000_headroom_bytes": 528
+    }
+  },
+  "root_cause": {
+    "classification": "cold-code-placement-and-resident-control-footprint",
+    "semantic_failure": false,
+    "bank3_capacity_failure": false,
+    "details": [
+      "The Boot staging body was added to a Workbench overlay with only 35 bytes of Link-37 boot-slice headroom.",
+      "The Session staging body was co-resident with phase 03 and exceeded the 1792-byte slice cap by 493 bytes.",
+      "Three boot-only staging-state transitions were emitted as 196 bytes of ordinary resident text.",
+      "The BSS, noinit, heap-floor and predecessor assertions are positional consequences of the resident-text and rodata displacement; BSS payload did not grow."
+    ]
+  },
+  "recommended_next_cut": {
+    "status": "requires-class-c-review",
+    "steps": [
+      "Give Boot staging its own cold pre-family boot-loader record instead of co-residing with eval_init in the Workbench overlay.",
+      "Split Session staging after phase 03 into its own final Boot-family slice; the resident driver calls phase 03, then the staging slice, then publishes the Session binding.",
+      "Fold stage-begin, verified and fail transitions into the two cold staging bodies and retain resident only the existing family/generation bytes plus the verified-state check at select_family.",
+      "Keep the 40-byte publish-last table and the specific family-stage status; rerun one WPLTO across every wall and both family packs."
+    ],
+    "projected_resident_effect_after_cold_transition_move": {
+      "text_delta_vs_link37_bytes": 23,
+      "text_headroom_bytes": 47,
+      "ordinary_bss_headroom_before_alignment_bytes": 92,
+      "claim": "arithmetic projection only; a fresh WPLTO is the authority"
+    }
+  },
+  "claim_limit": "The stage state model and source ordering passed, but no final ELF, family pack, post-link tuple, product link, hardware run, latency result, promotion or acceptance is claimed.",
+  "rollback_line": {
+    "product": "Link 35",
+    "link37": "historical hardware first red",
+    "status": "untouched"
+  },
+  "next_gate": "Class-C review before any placement correction or second WPLTO"
+}

@@ -1,0 +1,7 @@
+(setq x "(every (function plusp) ")
+(setq x (string-append x (char->string 39) "(1 2 3))"))
+(%ide-store-buffer (ide-make-buffer "h8e" (list x (string-append "(setq x " x ")"))))
+(save-buffer-to "h8e" "h8e")
+(load "h8e")
+(load "h8e")
+x

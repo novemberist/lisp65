@@ -1,0 +1,84 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 7148,
+      "path": "config/c2-two-region-session-store-contract.json",
+      "sha256": "1809a5d4e38be18349ad94172af24579043a55cae2235f9222f15a3ce7e725d3"
+    },
+    "emitter": {
+      "bytes": 100373,
+      "path": "tools/host-lisp/runtime_overlay_bank.py",
+      "sha256": "faac20ce59059f18f01ee3d62f4d25ecc2bbd109818260e53604ef6ce84aa12b"
+    },
+    "gate": {
+      "bytes": 15920,
+      "path": "tools/host-lisp/c2_l65r_v4_two_region_gate.py",
+      "sha256": "c08f824c1cfd11f89b43516f0c26b9628be9dc99e20d6ffdda7394574b6ff8d7"
+    },
+    "product_link": {
+      "bytes": 271675,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "61fe564439eba980aa088f000198a811dd6f83162de921b6774a33f49fa3b510"
+    },
+    "target_decoder": {
+      "bytes": 91002,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "fac6da4acd3d7d6a04a94e116322807ea597e8edee3054d7dbed779b104695a1"
+    }
+  },
+  "canonical_fixture": {
+    "header_bytes": 32,
+    "main_image_bytes": 273,
+    "overflow_image_bytes": 23,
+    "record_bytes": 32,
+    "record_crc_nonzero": true,
+    "record_regions": [
+      0,
+      1
+    ],
+    "record_source_addresses": [
+      134217984,
+      376064
+    ]
+  },
+  "format": "lisp65-c2-l65r-v4-two-region-contract-receipt-v1",
+  "mutation_count": 13,
+  "mutations": {
+    "main-as-overflow": "source-address",
+    "overflow-as-main": "source-address",
+    "overflow-capacity": "bank-overflow",
+    "overflow-truncated": "overflow-binding",
+    "region-without-record-crc": "record-crc",
+    "source-reserved-byte": "bad-region",
+    "unknown-region": "bad-region",
+    "v3-as-v4": "bad-version",
+    "v4-as-v3": "bad-version",
+    "wrong-source-bank": "source-address",
+    "wrong-source-low": "source-address",
+    "wrong-source-megabyte": "source-address",
+    "zero-record-crc": "record-crc-zero"
+  },
+  "recorded_on": "2026-07-24",
+  "stage_source_authority": {
+    "hot_record_verifier_region_dispatch": "absent",
+    "hot_record_verifier_source_bounds_reconstruction": "absent",
+    "mutations": {
+      "emitter-source-comparison-removed": "rejected",
+      "family-published-before-target-crc": "rejected",
+      "manifest-crc-not-consumed": "rejected",
+      "record-crc-binding-moved": "rejected",
+      "runtime-region-dispatch-restored": "rejected",
+      "session-overflow-proof-removed": "rejected"
+    },
+    "publication_order": "emitter-bounds -> record-CRC -> final-manifest-binding -> target-family-CRC -> region1-target-CRC -> VERIFIED",
+    "status": "passed-emitter-bound-record-and-target-stage-composite-proof"
+  },
+  "status": "passed-strict-v4-two-region-format-and-mutations",
+  "strict_asymmetry": {
+    "accepted_versions": [
+      4
+    ],
+    "dual_decoder": false,
+    "one_emitter": true
+  }
+}

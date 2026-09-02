@@ -1,0 +1,81 @@
+{
+  "attribution": {
+    "alignment_delta_bytes": 9,
+    "bank_debit_bytes": 172,
+    "guard_path_bytes": 380,
+    "named_symbol_delta_bytes": 163,
+    "reconciliation": "guard-paths-minus-vm-callprim-credit-plus-alignment-equals-resident-delta-and-bank-debit",
+    "resident_delta_bytes": 172,
+    "symbol_changes": [
+      {
+        "baseline_bytes": 0,
+        "candidate_bytes": 115,
+        "delta_bytes": 115,
+        "name": "f011_issue_write_guarded"
+      },
+      {
+        "baseline_bytes": 0,
+        "candidate_bytes": 5,
+        "delta_bytes": 5,
+        "name": "io_disk_transaction_capture_mount_token"
+      },
+      {
+        "baseline_bytes": 0,
+        "candidate_bytes": 142,
+        "delta_bytes": 142,
+        "name": "io_disk_write_sector_guarded"
+      },
+      {
+        "baseline_bytes": 0,
+        "candidate_bytes": 62,
+        "delta_bytes": 62,
+        "name": "lisp65_f011_mount_token_op"
+      },
+      {
+        "baseline_bytes": 0,
+        "candidate_bytes": 56,
+        "delta_bytes": 56,
+        "name": "lisp65_f011_scratch_buffer"
+      },
+      {
+        "baseline_bytes": 6938,
+        "candidate_bytes": 6721,
+        "delta_bytes": -217,
+        "name": "vm_callprim"
+      }
+    ],
+    "vm_callprim_consolidation_credit_bytes": 217
+  },
+  "baseline": {
+    "archive": {
+      "bytes": 125297756,
+      "path": "tests/bytecode/dialect-v2/evidence/promotions/r4-product-candidate-07de3cf.tar.gz",
+      "sha256": "478607d976109d4577c42cbb3c1bb1e65891b711935686afd1486240972d3541"
+    },
+    "banked_headroom_bytes": 553,
+    "elf_member": "payload/build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+    "elf_sha256": "d56c93e9088d26a6b91b46e4293481b5f18144b5fc1ec6f0a379714e69ad7830",
+    "product_artifact_set_sha256": "44163b315c17ea2915be9929108db513d73315927dc9ac15043a0daa59d5a6d9",
+    "runtime_overlay_vma": "0xc22e"
+  },
+  "candidate": {
+    "banked_headroom_bytes": 381,
+    "canonical_receipt": {
+      "bytes": 4640,
+      "path": "tests/bytecode/dialect-v2/evidence/r3/canonical-product-reproducibility-receipt.json",
+      "sha256": "b945f5390a91a34c649e9e537d7f7361271a708b4029829f0291c98983528bb2"
+    },
+    "elf_path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+    "elf_sha256": "3eb924c602efbedce64dcbe8adf1c23425ccca2d8451e4579938f2c981bf9ad9",
+    "product_artifact_set_sha256": "8b144cc044ad96926b6c0b024d2e3a631019631b8ea718843b330130b4c4239d",
+    "product_sha256": "958fb68fd643015e079107305ef443345a4b6552717fe7d26c7e342780cae661",
+    "runtime_overlay_vma": "0xc2da"
+  },
+  "format": "lisp65-media-guard-bank-attribution-v1",
+  "id": "mid-transaction-media-guard-bank-debit",
+  "measured_on": "2026-07-14",
+  "metric": "paired-real-linked-product-elf-named-symbol-delta",
+  "result": "bank-debit-fully-attributed",
+  "status": "pass",
+  "version": 1
+}

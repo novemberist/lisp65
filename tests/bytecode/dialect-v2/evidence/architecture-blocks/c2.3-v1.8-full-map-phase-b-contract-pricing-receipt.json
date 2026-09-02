@@ -1,0 +1,1289 @@
+{
+  "authorities": {
+    "contract": {
+      "bytes": 10635,
+      "path": "config/c2-full-map-ownership-contract.json",
+      "sha256": "6bf412202fc7b2b6b04780da8766056a2c785026a5425376c5402601a76c751c"
+    },
+    "phase_a": {
+      "bytes": 65087,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.8-full-map-phase-a-closure-receipt.json",
+      "sha256": "b1fcacf4b0aa276b67e271ce1b10bc681b58381e0adf4a9ecd9076431d66e2ce"
+    },
+    "plan": {
+      "bytes": 20103,
+      "path": "docs/planning/1.8-full-map-ownership-work-plan.md",
+      "sha256": "f92210d7e30667d20f991921592d6982657eba67bf42feaafca39f7ca4b68993"
+    },
+    "stack_overlay_contract": {
+      "bytes": 15670,
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    },
+    "state_contract": {
+      "bytes": 6445,
+      "path": "config/c2-state-ownership-contract.json",
+      "sha256": "d3aab71ef52a8b52b6302eb2b7ca932860f230b7f0d27289a0aaa1a040bb06f0"
+    },
+    "tool": {
+      "bytes": 19904,
+      "path": "tools/host-lisp/c2_v18_full_map_phase_b.py",
+      "sha256": "3f07804dcd8c01e4f58f08943082a9435395248bcd127e74b78b2e1dff8bd7b6"
+    }
+  },
+  "candidate_selection": {
+    "auto_selected": true,
+    "candidate_rows_priced": 1,
+    "fitting_rows": 1,
+    "halt1_required": false,
+    "rejected_before_pricing_as_non_rows": [
+      "inherited-placement-plus-assertions",
+      "six-byte-ordinary-noinit-duplicate-owner",
+      "consume-five-byte-margin",
+      "change-alignment-to-gain-space",
+      "padding-tenant",
+      "partition-steering",
+      "reorder-bindings-or-data-without-semantic-need"
+    ],
+    "second_honest_row": "absent-no-artifact-requires-different-order-or-startup-semantics",
+    "selected_id": "owned-sequential-crt-chain-empty-noinit"
+  },
+  "claim": "Full-map placement and startup-range contract only; no linker implementation, product build, WPLTO, device, semantic, Link-91 or release claim.",
+  "execution_witness": {
+    "candidate_rows_fit": 1,
+    "candidate_rows_priced": 1,
+    "compiler_invocations": 0,
+    "hardware_runs": 0,
+    "linker_invocations": 0,
+    "mutations_rejected": 14,
+    "phase_a_map_members_owned_once": 84,
+    "phase_a_outputs_owned_once": 7,
+    "wplto_invocations": 0
+  },
+  "fixed_simultaneous_live_ledger": [
+    {
+      "capacity_bytes": 243,
+      "capacity_end_exclusive": "0xb4a3",
+      "demand_bytes": 98,
+      "end_exclusive": "0xb412",
+      "owner": "mapped-far-resident-facade",
+      "start": "0xb3b0"
+    },
+    {
+      "demand_bytes": 20,
+      "end_exclusive": "0xb61d",
+      "owner": "c2-handoff-state-predecessor",
+      "start": "0xb609"
+    },
+    {
+      "demand_bytes": 66,
+      "end_exclusive": "0xc042",
+      "owner": "code-window-convergence-state",
+      "start": "0xc000"
+    },
+    {
+      "demand_bytes": 0,
+      "end_exclusive": "0xc074",
+      "gap_bytes": 50,
+      "owner": "unallocated-convergence-stack-gap",
+      "start": "0xc042"
+    },
+    {
+      "capacity_bytes": 12,
+      "demand_bytes": 6,
+      "end_exclusive": "0xc080",
+      "initialization": "independent-noload-transient",
+      "owner": "llvm-mos-static-stack-arena",
+      "start": "0xc074"
+    },
+    {
+      "demand_bytes": 717,
+      "end_exclusive": "0xc34d",
+      "owner": "c2-fixed-bank0-state",
+      "start": "0xc080"
+    },
+    {
+      "demand_bytes": 0,
+      "end_exclusive": "0xc34d",
+      "initialization": "preserve-empty-range",
+      "owner": "ordinary-bank0-noinit-empty",
+      "start": "0xc34d"
+    },
+    {
+      "demand_bytes": 0,
+      "end_exclusive": "0xc353",
+      "gap_bytes": 6,
+      "owner": "former-noinit-named-gap",
+      "start": "0xc34d"
+    },
+    {
+      "demand_bytes": 0,
+      "end_exclusive": "0xc354",
+      "gap_bytes": 1,
+      "owner": "heap-alignment-gap",
+      "start": "0xc353"
+    },
+    {
+      "demand_bytes": 0,
+      "end_exclusive": "0xc354",
+      "owner": "heap-boundary",
+      "start": "0xc354"
+    },
+    {
+      "capacity_bytes": 1792,
+      "floor": "0xc354",
+      "observed_bytes": 1734,
+      "owner": "runtime-overlay",
+      "start": "0xc356"
+    },
+    {
+      "capacity_bytes": 1499,
+      "cpu_start": "0x78b2",
+      "demand_bytes": 874,
+      "owner": "mapped-bank2-far-service",
+      "owner_cpu_end_exclusive": "0x7e8d",
+      "owner_physical_end_exclusive": "0x0002be8d",
+      "physical_start": "0x0002b8b2",
+      "service_cpu_end_exclusive": "0x7c1c",
+      "service_physical_end_exclusive": "0x0002bc1c"
+    }
+  ],
+  "format": "lisp65-c2.3-v1.8-full-map-phase-b-pricing-v1",
+  "generated_linker_requirements": {
+    "each_allocatable_input_owners": 1,
+    "final_section_inventory_additions": [
+      {
+        "address": "0x0087",
+        "bytes": 2,
+        "name": ".lisp65_c2_convergence_zp",
+        "required_flags": [
+          "SHF_ALLOC",
+          "SHF_WRITE"
+        ]
+      },
+      {
+        "address": "0xb3b0",
+        "bytes": 98,
+        "name": ".lisp65_c2_mapped_far_facade",
+        "required_flags": [
+          "SHF_ALLOC",
+          "SHF_EXECINSTR"
+        ]
+      },
+      {
+        "address": "0x78b2",
+        "bytes": 874,
+        "name": ".lisp65_c2_mapped_far_service",
+        "required_flags": [
+          "SHF_ALLOC",
+          "SHF_EXECINSTR"
+        ]
+      },
+      {
+        "address": "0xc000",
+        "bytes": 66,
+        "name": ".lisp65_c2_convergence_state",
+        "required_flags": [
+          "SHF_ALLOC",
+          "SHF_WRITE"
+        ]
+      },
+      {
+        "address": "0xc074",
+        "bytes": 6,
+        "name": ".lisp65_c2_static_stack",
+        "required_flags": [
+          "SHF_ALLOC",
+          "SHF_WRITE"
+        ]
+      },
+      {
+        "address": "0x0000",
+        "bytes": 252,
+        "name": ".rela.lisp65_c2_mapped_far_facade",
+        "required_flags": [
+          "SHF_INFO_LINK"
+        ]
+      },
+      {
+        "address": "0x0000",
+        "bytes": 3132,
+        "name": ".rela.lisp65_c2_mapped_far_service",
+        "required_flags": [
+          "SHF_INFO_LINK"
+        ]
+      }
+    ],
+    "insert_after_ordinary_chain_allowed": false,
+    "mechanism": "replace-inherited-output-stanzas",
+    "ordinary_output_instances": 1,
+    "predecessor_preservation": {
+      "basic_header_vma": "0x2001",
+      "rule": "Explicit later VMAs may not let lld move the already-proven PRG header, ZP initializer LMA or text predecessor; these are preservation constants, not a new layout row.",
+      "text_bytes": 37744,
+      "text_end_exclusive": "0xb3b0",
+      "text_vma": "0x2023",
+      "zp_data_bytes": 12,
+      "zp_data_lma": "0x2017"
+    },
+    "profile_rodata_exclusions": [
+      ".rodata.eval_v2_workbench_service",
+      ".rodata.vm_callprim",
+      ".rodata.vm_native_call"
+    ],
+    "static_stack_exclusion": ".noinit..Lstatic_stack",
+    "unknown_allocatable_orphans_allowed": 0
+  },
+  "input_ownership": [
+    {
+      "bytes": 6,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/.canonical-objects-resident-island-seed/062-c2_boot_chain_commit.s.o",
+        ".rodata.vm_boot_overlay_chain_expected"
+      ],
+      "input_section": ".rodata.vm_boot_overlay_chain_expected",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "tools/llvm-mos/mos-platform/common/lib/libcrt.a(const.S.obj)",
+        ".rodata"
+      ],
+      "input_section": ".rodata",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 8,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.lisp65_buffer_overlay_read_entry"
+      ],
+      "input_section": ".rodata.lisp65_buffer_overlay_read_entry",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 132,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.vm_run_inner"
+      ],
+      "input_section": ".rodata.vm_run_inner",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 46,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.vm_fixbinop"
+      ],
+      "input_section": ".rodata.vm_fixbinop",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 12,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.print_obj"
+      ],
+      "input_section": ".rodata.print_obj",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 22,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.read_expr_1"
+      ],
+      "input_section": ".rodata.read_expr_1",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 8,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_header_phase"
+      ],
+      "input_section": ".rodata.c2_append_header_phase",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 20,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_abort_control_phase"
+      ],
+      "input_section": ".rodata.c2_append_abort_control_phase",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 18,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_stream_phase_08"
+      ],
+      "input_section": ".rodata.c2_stream_phase_08",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_dma_verify_marker"
+      ],
+      "input_section": ".rodata.c2_dma_verify_marker",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_edma_probe_marker"
+      ],
+      "input_section": ".rodata.c2_edma_probe_marker",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 7,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.lisp65_c2_append_stage_plan"
+      ],
+      "input_section": ".rodata.lisp65_c2_append_stage_plan",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 5,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.lisp65_c2_append_persistent_publish_plan"
+      ],
+      "input_section": ".rodata.lisp65_c2_append_persistent_publish_plan",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 9,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.lisp65_c2_append_rollback_plan"
+      ],
+      "input_section": ".rodata.lisp65_c2_append_rollback_plan",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 33,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_product_static_image_named.names"
+      ],
+      "input_section": ".rodata.c2_product_static_image_named.names",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 16,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_stage_plane_zero.zeros"
+      ],
+      "input_section": ".rodata.c2_append_stage_plane_zero.zeros",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 16,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_rollback_zero_plane.zeros"
+      ],
+      "input_section": ".rodata.c2_append_rollback_zero_plane.zeros",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 16,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_rollback_zero_chip_code.zeros"
+      ],
+      "input_section": ".rodata.c2_append_rollback_zero_chip_code.zeros",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 16,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_rollback_zero_attic.zeros"
+      ],
+      "input_section": ".rodata.c2_append_rollback_zero_attic.zeros",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 482,
+      "identity": [
+        "<lto-internal>",
+        ".rodata.str1.1"
+      ],
+      "input_section": ".rodata.str1.1",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata..L.str.5.196"
+      ],
+      "input_section": ".rodata..L.str.5.196",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 3,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata..Lswitch.table.vm_runtime_overlay_install_island"
+      ],
+      "input_section": ".rodata..Lswitch.table.vm_runtime_overlay_install_island",
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "bytes": 40,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/.canonical-objects-resident-island-seed/048-runtime_overlay_verifier_bindings.s.o",
+        ".lisp65_runtime_overlay_verifier_bindings"
+      ],
+      "input_section": ".lisp65_runtime_overlay_verifier_bindings",
+      "output": ".lisp65_runtime_overlay_verifier_bindings",
+      "owner": "runtime-overlay-verifier-table"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".data.vm_buf_off"
+      ],
+      "input_section": ".data.vm_buf_off",
+      "output": ".data",
+      "owner": "ordinary-bank0-data"
+    },
+    {
+      "bytes": 20,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".data.rtov_edma_job"
+      ],
+      "input_section": ".data.rtov_edma_job",
+      "output": ".data",
+      "owner": "ordinary-bank0-data"
+    },
+    {
+      "bytes": 9,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/.canonical-objects-resident-island-seed/047-f011_guarded_write.s.o",
+        ".bss.f011_guard"
+      ],
+      "input_section": ".bss.f011_guard",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 12,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.c2_dma_list"
+      ],
+      "input_section": ".bss.c2_dma_list",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.cs_idx"
+      ],
+      "input_section": ".bss.cs_idx",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.k_bytecode"
+      ],
+      "input_section": ".bss.k_bytecode",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.k_primitive"
+      ],
+      "input_section": ".bss.k_primitive",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.k_closure"
+      ],
+      "input_section": ".bss.k_closure",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.k_macro"
+      ],
+      "input_section": ".bss.k_macro",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.eval.k_lccrun"
+      ],
+      "input_section": ".bss.eval.k_lccrun",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.pending_symbol"
+      ],
+      "input_section": ".bss.pending_symbol",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.disk_source_pos"
+      ],
+      "input_section": ".bss.disk_source_pos",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.disk_source_len"
+      ],
+      "input_section": ".bss.disk_source_len",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.ext_stg1"
+      ],
+      "input_section": ".bss.ext_stg1",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.ext_stg"
+      ],
+      "input_section": ".bss.ext_stg",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.gc_runs"
+      ],
+      "input_section": ".bss.gc_runs",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 512,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.markstack"
+      ],
+      "input_section": ".bss.markstack",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 134,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.marks"
+      ],
+      "input_section": ".bss.marks",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 12,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.ext_dl"
+      ],
+      "input_section": ".bss.ext_dl",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.str_stg1"
+      ],
+      "input_section": ".bss.str_stg1",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rd_sf"
+      ],
+      "input_section": ".bss.rd_sf",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rd_sc"
+      ],
+      "input_section": ".bss.rd_sc",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rd_sn"
+      ],
+      "input_section": ".bss.rd_sn",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 192,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.repl.buf"
+      ],
+      "input_section": ".bss.repl.buf",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 19,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.lisp_toplevel"
+      ],
+      "input_section": ".bss.lisp_toplevel",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.gensym.tag"
+      ],
+      "input_section": ".bss.gensym.tag",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 94,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.symbnd"
+      ],
+      "input_section": ".bss.symbnd",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 94,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.symfnptr"
+      ],
+      "input_section": ".bss.symfnptr",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.npool"
+      ],
+      "input_section": ".bss.npool",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 376,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.namelen4"
+      ],
+      "input_section": ".bss.namelen4",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_upvals"
+      ],
+      "input_section": ".bss.vm_upvals",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_workbench_error_symbols.1"
+      ],
+      "input_section": ".bss.vm_workbench_error_symbols.1",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_workbench_error_symbols.4"
+      ],
+      "input_section": ".bss.vm_workbench_error_symbols.4",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_workbench_error_symbols.9"
+      ],
+      "input_section": ".bss.vm_workbench_error_symbols.9",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_k_key"
+      ],
+      "input_section": ".bss.vm_k_key",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_k_shift"
+      ],
+      "input_section": ".bss.vm_k_shift",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_k_meta"
+      ],
+      "input_section": ".bss.vm_k_meta",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 56,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_codebuf"
+      ],
+      "input_section": ".bss.vm_codebuf",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_buf_bank"
+      ],
+      "input_section": ".bss.vm_buf_bank",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_hdrlen"
+      ],
+      "input_section": ".bss.vmr_hdrlen",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_littab"
+      ],
+      "input_section": ".bss.vmr_littab",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_code"
+      ],
+      "input_section": ".bss.vmr_code",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_poff"
+      ],
+      "input_section": ".bss.vmr_poff",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_plen"
+      ],
+      "input_section": ".bss.vmr_plen",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_pwmax"
+      ],
+      "input_section": ".bss.vmr_pwmax",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_win"
+      ],
+      "input_section": ".bss.vmr_win",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_winlen"
+      ],
+      "input_section": ".bss.vmr_winlen",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_streaming"
+      ],
+      "input_section": ".bss.vmr_streaming",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_run_inner.poll_"
+      ],
+      "input_section": ".bss.vm_run_inner.poll_",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.lisp_error_msg"
+      ],
+      "input_section": ".bss.lisp_error_msg",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_call_result"
+      ],
+      "input_section": ".bss.rtov_call_result",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_batch_entry"
+      ],
+      "input_section": ".bss.rtov_batch_entry",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_batch_crc"
+      ],
+      "input_section": ".bss.rtov_batch_crc",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_fault"
+      ],
+      "input_section": ".bss.rtov_fault",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 1,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_family"
+      ],
+      "input_section": ".bss.rtov_family",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_family_generation"
+      ],
+      "input_section": ".bss.rtov_family_generation",
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "bytes": 6,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".noinit..Lstatic_stack"
+      ],
+      "input_section": ".noinit..Lstatic_stack",
+      "output": ".lisp65_c2_static_stack",
+      "owner": "llvm-mos-static-stack"
+    },
+    {
+      "bytes": 32,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.eval_v2_workbench_service"
+      ],
+      "input_section": ".rodata.eval_v2_workbench_service",
+      "output": ".lisp65_c2_kernal_window.profile_rodata",
+      "owner": "named-kernal-profile-rodata"
+    },
+    {
+      "bytes": 168,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.vm_callprim"
+      ],
+      "input_section": ".rodata.vm_callprim",
+      "output": ".lisp65_c2_kernal_window.profile_rodata",
+      "owner": "named-kernal-profile-rodata"
+    },
+    {
+      "bytes": 148,
+      "identity": [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.vm_native_call"
+      ],
+      "input_section": ".rodata.vm_native_call",
+      "output": ".lisp65_c2_kernal_window.profile_rodata",
+      "owner": "named-kernal-profile-rodata"
+    }
+  ],
+  "input_routing": [
+    {
+      "demand_bytes": 348,
+      "matches_exact": [
+        ".rodata.eval_v2_workbench_service",
+        ".rodata.vm_callprim",
+        ".rodata.vm_native_call"
+      ],
+      "output": ".lisp65_c2_kernal_window.profile_rodata",
+      "owner": "named-kernal-profile-rodata"
+    },
+    {
+      "demand_bytes": 879,
+      "excludes_exact": [
+        ".rodata.eval_v2_workbench_service",
+        ".rodata.vm_callprim",
+        ".rodata.vm_native_call"
+      ],
+      "matches": [
+        ".rodata",
+        ".rodata.*"
+      ],
+      "output": ".rodata",
+      "owner": "ordinary-bank0-rodata"
+    },
+    {
+      "demand_bytes": 40,
+      "matches_exact": [
+        ".lisp65_runtime_overlay_verifier_bindings"
+      ],
+      "output": ".lisp65_runtime_overlay_verifier_bindings",
+      "owner": "runtime-overlay-verifier-table"
+    },
+    {
+      "demand_bytes": 22,
+      "matches": [
+        ".data",
+        ".data.*"
+      ],
+      "output": ".data",
+      "owner": "ordinary-bank0-data"
+    },
+    {
+      "demand_bytes": 1585,
+      "matches": [
+        ".bss",
+        ".bss.*"
+      ],
+      "output": ".bss",
+      "owner": "ordinary-bank0-bss"
+    },
+    {
+      "demand_bytes": 6,
+      "matches_exact": [
+        ".noinit..Lstatic_stack"
+      ],
+      "output": ".lisp65_c2_static_stack",
+      "owner": "llvm-mos-static-stack"
+    },
+    {
+      "demand_bytes": 0,
+      "excludes_exact": [
+        ".noinit..Lstatic_stack"
+      ],
+      "matches": [
+        ".noinit",
+        ".noinit.*"
+      ],
+      "output": ".noinit",
+      "owner": "ordinary-bank0-noinit-empty"
+    }
+  ],
+  "oracle_policy": {
+    "addresses": "Every expected address is a Phase-A fact or an already accepted 1.5/1.7 contract constant; the generated linker source under test is never an oracle.",
+    "fit": "All ordinary outputs, fixed state, zero page, facade, far body, heap and runtime overlay form one simultaneous-live price.",
+    "five_byte_margin": "0xbffb..0xc000 is validation margin, not allocatable capacity or feature budget.",
+    "source_under_test_is_oracle": false,
+    "unknown_allocatable_input": "fail-closed"
+  },
+  "price": {
+    "candidate_id": "owned-sequential-crt-chain-empty-noinit",
+    "fixed_families": {
+      "facade": "98/243",
+      "far": "874/1499",
+      "overlay": "1734/1792",
+      "stack": "6/12",
+      "zero_page": "110/110"
+    },
+    "heap_overlay_relation": {
+      "heap_start": "0xc354",
+      "overlay_floor": "0xc354",
+      "overlay_start": "0xc356",
+      "valid": true
+    },
+    "ordinary_chain": {
+      "demand_bytes": 2526,
+      "demand_end_exclusive": "0xbffb",
+      "fits": true,
+      "margin_allocatable": false,
+      "margin_bytes": 5,
+      "next_owner_start": "0xc000",
+      "start": "0xb61d"
+    },
+    "simultaneous_live_fit": true,
+    "status": "green"
+  },
+  "recorded_on": "2026-08-05",
+  "release_line_consequence_on_green_card": {
+    "future_feature_placement": "bank2-or-cold",
+    "margin_bytes_available_to_freight": 0,
+    "ordinary_bank0_state": "frozen"
+  },
+  "selected_layout": {
+    "crt_ranges": {
+      "bss_bytes": 1585,
+      "bss_end_exclusive": "0xbffb",
+      "bss_start": "0xb9ca",
+      "data_bytes": 22,
+      "data_end_exclusive": "0xb9ca",
+      "data_load_start": "0xb9b4",
+      "data_start": "0xb9b4",
+      "ordinary_noinit_bytes": 0,
+      "ordinary_noinit_end_exclusive": "0xc34d",
+      "ordinary_noinit_start": "0xc34d"
+    },
+    "id": "owned-sequential-crt-chain-empty-noinit",
+    "margin": {
+      "allocatable": false,
+      "bytes": 5,
+      "end_exclusive": "0xc000",
+      "start": "0xbffb"
+    },
+    "ordering": [
+      ".rodata",
+      ".lisp65_runtime_overlay_verifier_bindings",
+      ".data",
+      ".bss"
+    ],
+    "ordinary_outputs": [
+      {
+        "alignment": 1,
+        "demand_bytes": 879,
+        "end_exclusive": "0xb98c",
+        "initialization": "immutable-load-image",
+        "maximum_bytes": 879,
+        "output": ".rodata",
+        "owner": "ordinary-bank0-rodata",
+        "start": "0xb61d",
+        "vma_lma_relation": "equal"
+      },
+      {
+        "alignment": 1,
+        "demand_bytes": 40,
+        "end_exclusive": "0xb9b4",
+        "initialization": "immutable-load-image",
+        "maximum_bytes": 40,
+        "output": ".lisp65_runtime_overlay_verifier_bindings",
+        "owner": "runtime-overlay-verifier-table",
+        "start": "0xb98c",
+        "vma_lma_relation": "equal"
+      },
+      {
+        "alignment": 1,
+        "demand_bytes": 22,
+        "end_exclusive": "0xb9ca",
+        "initialization": "copy-load-range-to-vma-range",
+        "maximum_bytes": 22,
+        "output": ".data",
+        "owner": "ordinary-bank0-data",
+        "start": "0xb9b4",
+        "vma_lma_relation": "equal"
+      },
+      {
+        "alignment": 1,
+        "demand_bytes": 1585,
+        "end_exclusive": "0xbffb",
+        "initialization": "zero-complete-range",
+        "maximum_bytes": 1585,
+        "output": ".bss",
+        "owner": "ordinary-bank0-bss",
+        "start": "0xb9ca",
+        "vma_lma_relation": "noload"
+      }
+    ],
+    "status": "green-auto-selected"
+  },
+  "status": "PASS: one-of-one honest rows fits and is auto-selected",
+  "zero_page_ledger": [
+    {
+      "capacity_bytes": 101,
+      "demand_bytes": 101,
+      "end_exclusive": "0x87",
+      "owner": "ordinary-zero-page",
+      "start": "0x22"
+    },
+    {
+      "capacity_bytes": 2,
+      "demand_bytes": 2,
+      "end_exclusive": "0x89",
+      "owner": "code-window-convergence-zp",
+      "start": "0x87"
+    },
+    {
+      "capacity_bytes": 7,
+      "demand_bytes": 7,
+      "end_exclusive": "0x90",
+      "owner": "c2-fixed-zero-page",
+      "start": "0x89"
+    }
+  ]
+}

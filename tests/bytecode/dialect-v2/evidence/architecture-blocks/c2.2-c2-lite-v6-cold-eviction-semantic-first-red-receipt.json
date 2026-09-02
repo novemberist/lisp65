@@ -1,0 +1,84 @@
+{
+  "format": "lisp65-c2-lite-v6-cold-eviction-semantic-first-red-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: cold publication is not yet C2D-v6 product semantics",
+  "scope": {
+    "additional_compiler_runs": 0,
+    "additional_linker_runs": 0,
+    "hardware_runs": 0,
+    "product_links": 0,
+    "promotable": false
+  },
+  "green_capacity_truth": {
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-cold-eviction-wplto-pure-replay-receipt.json",
+      "bytes": 7055,
+      "sha256": "3b329c1763e0e9561783ea13c85a622398818ee193b265a8e6553a6cffb89d26"
+    },
+    "e000_headroom_bytes": 1000,
+    "required_e000_floor_bytes": 115,
+    "anchor_overlap_bytes": 0,
+    "bank0_text_headroom_bytes": 86,
+    "ordinary_bank0_bss_headroom_bytes": 144,
+    "fixed_hot_block_headroom_bytes": 33,
+    "resident_island_headroom_bytes": 170,
+    "largest_slice_bytes": 1768,
+    "slice_cap_bytes": 1792,
+    "cold_resident_credit_bytes": 1218,
+    "retired_final_symbols": [
+      "c2_stream_product_child_value",
+      "c2_entry_records",
+      "c2_source_read"
+    ],
+    "claim_limit": "These capacity, placement and closure measurements remain valid for the immutable nonpromotable WPLTO artifact; they do not prove cold publication semantics."
+  },
+  "first_product_semantic_failure": {
+    "static_image_provenance": {
+      "artifact": {
+        "path": "build/c2-lite/product-shaped-v6-probe/initial.c2d-v6.bin",
+        "bytes": 33840,
+        "sha256": "6d0a9517d09502da1e2d0115c1d0c6f9e9c4f5edea2a08ebf1287026b0f33992"
+      },
+      "images_checked": 6,
+      "metadata_offset_zero": 6,
+      "metadata_length_zero": 6,
+      "contract_source": "tools/host-lisp/c2_lite_v6_product_probe.py:image_v6",
+      "failure": "c2_append_publish_plan_phase treats C2D image bytes 23..27 as a live C2I metadata locator, but the approved v6 host emitter deliberately records 0/0 cold provenance there. The first plan read therefore targets the shelf header, not a C2I-v2 header."
+    },
+    "ready_boundary": {
+      "failure": "c2_product_boot publishes c2_ready before c2_publish_exports_from. A replacement that reopens C2I/Attic during export publication would violate the approved after-READY no-runtime-Attic rule even if a locator existed."
+    },
+    "dynamic_entry_emission": {
+      "source": {
+        "path": "src/c2_product_runtime.c",
+        "bytes": 99949,
+        "sha256": "1e63affaf763b176e1832264931b22fed8f2c8a09d3c986e8eaa873a2fe554bc"
+      },
+      "observed_layout": "row[1]=0; row[2..3]=local entry ordinal",
+      "required_v6_layout": "row[1]=literal count; row[2..3]=Bank-2 code offset",
+      "failure": "The real append slice still emits the pre-v6 directory row. The host V6Plane model is correct, but generated product append code does not yet consume that one-emitter truth."
+    }
+  },
+  "classification": {
+    "class": "C",
+    "reason": "The next correction changes product publication order and the C2D-v6 emitter contract; it is not a harness replay or placement-only adjustment.",
+    "first_red_observed_before_product_link": true,
+    "capacity_or_floor_failure": false
+  },
+  "recommended_contract_direction": [
+    "Derive the export publication plan while the cold C2I source is already verified and before READY/header publication; do not reopen a discarded locator afterward.",
+    "Make the real static and dynamic product emitters write the exact C2D-v6 execution entry from the same emitter truth as the green host model.",
+    "Publish the C2D header/handle watermark last and export cells after it without any after-READY Attic/C2I read.",
+    "Prove the static six-image and dynamic append paths against real v6 records before another WPLTO attempt."
+  ],
+  "wplto_artifact": {
+    "path": "build/c2-lite/v6-cold-eviction-wplto-probe/full-product-wplto/generated-product-sources/c2_product_runtime.c",
+    "bytes": 99638,
+    "sha256": "2a0f1c73a71d17aa5baec782d8deba1cf33ad8a2c07cfd45f692284fd3f59d7f"
+  },
+  "rollback_line": {
+    "product": "Link 35",
+    "status": "untouched"
+  },
+  "next_gate": "Class-C review of cold-plan capture and the real C2D-v6 product emitter; no retry, product link or hardware run."
+}

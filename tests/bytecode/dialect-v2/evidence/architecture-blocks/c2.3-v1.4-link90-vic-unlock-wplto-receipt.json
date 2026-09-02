@@ -1,0 +1,286 @@
+{
+  "authority": {
+    "attribution": {
+      "bytes": 5585,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link89-vic-unlock-tailcall-attribution.json",
+      "sha256": "7ac2d5689ca71a2e8ab6856a2b8d5eec32901a41ac25e4c3732e9b9f6ed771fd"
+    },
+    "driver": {
+      "bytes": 10702,
+      "path": "tools/host-lisp/c2_v14_link90_vic_unlock_wplto.py",
+      "sha256": "38be30f5b20f343fe866854f40551fc41d1deb14abd05e9f11b445ecdf08626e"
+    },
+    "fixed_parity_toy": {
+      "bytes": 3361,
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.receipt.json",
+      "sha256": "4f28fc396c72f51c34268b1c94c7c9eb1350e5c5164931cb573755f93b1d40cf"
+    },
+    "ide_manifest": {
+      "bytes": 342211,
+      "path": "build/bytecode/dialect-v2/libs/ide.manifest.json",
+      "sha256": "3a2ae3728e7da6c0a697d2c33a9dfbfac1ca4eedce2277ed20530a6d8e62d0bb"
+    },
+    "input_wait_contract": {
+      "bytes": 4412,
+      "path": "config/c2-ship-input-wait-contract.json",
+      "sha256": "6d3103de066ad94aab55e45eaef953768eec879bea80289c262433a301dc62bb"
+    },
+    "linked_ELF": {
+      "bytes": 622588,
+      "path": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "aff30032a82a6e3ff0d71a13dc945507e987446f2deee300a1dd6f722f8ef8f4"
+    },
+    "m65_contract": {
+      "bytes": 5920,
+      "path": "config/c2-m65-hw-contract.json",
+      "sha256": "3f9bbcd508bff79872bbcaa61b69b3069b73e74b3f09204862c95621a16f61b7"
+    },
+    "m65_hw": {
+      "bytes": 2930,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-m65-hw-host-first-receipt.json",
+      "sha256": "85ed93e336e17c09e4dd88ab6296bc75586d18a20a047bda942ecd62aa9e9eee"
+    },
+    "profile": {
+      "bytes": 5851,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "d28f35ef30f424e2b165928466126bca87fe927663f493a9570226367aecf462"
+    },
+    "q_contract": {
+      "bytes": 4351,
+      "path": "config/c2-q-contract.json",
+      "sha256": "4f884536eceb1a8852df8a92c57d5827904084f4fe7c9c94e9ec64e9f16b602e"
+    },
+    "ship_contract": {
+      "bytes": 2612,
+      "path": "config/ship-builder-v1.json",
+      "sha256": "27eaf09d076b9638a11df128fed749535a13387dd5f03e2baca66d9e4e5a4a14"
+    },
+    "static_product": {
+      "bytes": 2343,
+      "path": "build/post-promotion/v14/link90-vic-unlock-wplto/static-plane/narrow-static/product/substitution-artifacts.json",
+      "sha256": "0e8e3ce7107a1d7dea047bee18b9181236a649c9770cac5c75c36ea5fc779ffc"
+    },
+    "stdlib_manifest": {
+      "bytes": 370624,
+      "path": "build/post-promotion/v14/m65-hw/host-first/m65-hw.manifest.json",
+      "sha256": "ece55f4369f87b50625df8dfe37e44977f3d85043bf30bb5d375bc515d44b9bc"
+    }
+  },
+  "capacity": {
+    "append_records": 24,
+    "pack_quantum_bytes": 256,
+    "publish_clear_bytes": 1295,
+    "publish_clear_headroom_bytes": 497,
+    "region1_rollback_sequence": [
+      "c2-append-rollback-unpublish",
+      "c2-append-rollback-wipe-plane",
+      "c2-append-rollback-wipe-chip",
+      "c2-append-rollback-wipe-attic",
+      "c2-append-rollback-finalize"
+    ],
+    "retired_sections_present": {
+      ".lisp65_rt_c2append_journal_clear": false,
+      ".lisp65_rt_c2append_publish_exports": false
+    },
+    "session_catalog_records": 52,
+    "session_family_bytes": 65423,
+    "session_family_headroom_bytes": 113,
+    "session_service_bytes": 399,
+    "session_service_records": 1,
+    "slice_cap_bytes": 1792,
+    "status": "passed-current-v4-two-region-session-aggregate"
+  },
+  "claim_limit": "One non-promotable correction WPLTO and a host-executed fixed Ship sample; no successor identity or fixed-target claim.",
+  "format": "lisp65-c2.3-v1.4-link90-vic-unlock-WPLTO-v1",
+  "hardware_runs": 0,
+  "host_gate_summaries": {
+    "editor": "c2-v126-editor-allocation: PASS keys=165 mutations=6",
+    "input_wait": "c2-ship-input-wait-gate: PASS cases=11x2 mutations=14 keys=266 max-cells/key=4 bank2=+451 resident=+0 native=+0",
+    "m65_hw": "c2-m65-hw: PASS public=15 cases=13x2 mutations=10 bank2=1768/2048 headroom=280 resident=+0",
+    "q": "c2-q-gate: PASS oracle=36x2 io=38 mutations=12 bank2=+1451 headroom=22600 resident=+0",
+    "ship_contract": "ship-builder selftest: PASS mutations=9",
+    "ship_fleet": "ship-builder fleet: PASS samples=5 fixed-parity-toy=1 media-members=54",
+    "surface": "v11-surface-delivery-parity: PASS bound_names=105 names=*,+,-,/,/=,1+,1-,<,<=,=,>,>=,append,apply,assoc,atom,boundp,car,cdr,char-downcase,char-upcase,cons,consp,count,edit,eq,eql,equal,eval,every,filter,find,funcall,function-kind,int->q,key-event,length,list,load-lib,load-libs,m65-bit-clear,m65-bit-set,m65-bit-test,m65-byte-read,m65-byte-write,m65-draw-fill,m65-draw-line,m65-draw-plot,m65-sid-voice,m65-sprite-color,m65-sprite-enable,m65-sprite-position,m65-sprite-shape,m65-word-read,m65-word-write,mapc,mapcar,member,minusp,mod,not,nth,nthcdr,null,numberp,plusp,position,q,q*,q+,q-,q->int,q->string,q/,random,random-seed,read-from-string,read-line,reduce,reverse,search,set,some,string-append,string-downcase,string-equal,string-length,string-prefix-p,string-ref,string-suffix-p,string-trim,string-upcase,string<,string=,stringp,substring,symbol-name,symbol-value,symbolp,terpri,time,wait,write,write-char,zerop"
+  },
+  "inherited_native_geometry": {
+    "noinit_address": "0xc34d",
+    "noinit_bytes": 6,
+    "overlay_floor": "0xc354",
+    "status": "restored-exactly"
+  },
+  "native_primitive_delta": 0,
+  "next_gate": "one Link 90 and one autonomous parity-toy target boot",
+  "predecessor": {
+    "bytes": 12539,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-parity-pilot-wplto-receipt.json",
+    "sha256": "e2d219dc169f3d3a98d4200e49c834f20ab9ae9b5c0b85cde4dfc0d10ac9381a"
+  },
+  "product_links": 0,
+  "profile_preflight": {
+    "bytes": 5657,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link90-vic-unlock-profile-receipt.json",
+    "sha256": "d4602761230a59a242d0f801ed072bfb226019b62bd056f5c1012c8ca344a7c4"
+  },
+  "promotable": false,
+  "recorded_on": "2026-08-03",
+  "resident_delta_bytes": 0,
+  "static_geometry": {
+    "bank2_headroom_bytes": 18254,
+    "bank2_sha256": "f09a167b31e5a78dfd02195a3d49e5af0e26bb1b3343a14b986ca8f538edf846",
+    "bank2_static_code_bytes": 47282,
+    "delta": {
+      "bank2_code_bytes": 1768,
+      "direct_entry_refs": 0,
+      "entries": 30,
+      "resolution_words": 84,
+      "roots": 0,
+      "stdlib_kind4_literal_nodes": 68
+    },
+    "direct_entry_refs": 710,
+    "entries": 787,
+    "product_build_id": "0x293611ce",
+    "resolutions": 3031,
+    "roots": 350
+  },
+  "status": "passed-v1.4-link90-vic-unlock-one-product-shaped-WPLTO",
+  "target_stdlib_header": {
+    "manifest": {
+      "bytes": 370624,
+      "path": "build/post-promotion/v14/m65-hw/host-first/m65-hw.manifest.json",
+      "sha256": "ece55f4369f87b50625df8dfe37e44977f3d85043bf30bb5d375bc515d44b9bc"
+    },
+    "source": {
+      "bytes": 3294,
+      "path": "build/post-promotion/v14/m65-hw/host-first/m65-hw.h",
+      "sha256": "8e3fb0c2be265245af6ba6d7cb882a64a9ebd5faff79de7514c06bbc4befd2d9"
+    },
+    "status": "passed-selected-manifest-header-to-target-include",
+    "target": {
+      "bytes": 3294,
+      "path": "build/post-promotion/v14/link90-vic-unlock-wplto/static-plane/narrow-static/workbench/stdlib-p0.h",
+      "sha256": "8e3fb0c2be265245af6ba6d7cb882a64a9ebd5faff79de7514c06bbc4befd2d9"
+    }
+  },
+  "wall_headroom_delta_from_link89": {
+    "bank0_text_headroom_bytes": 0,
+    "e000_headroom_bytes": 0,
+    "fixed_hot_block_headroom_bytes": 0,
+    "ordinary_bank0_bss_headroom_bytes": 0,
+    "resident_island_headroom_bytes": 0
+  },
+  "walls": {
+    "bank0_text_headroom_bytes": 243,
+    "e000_headroom_bytes": 54,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 50
+  },
+  "wplto": {
+    "historical_checker_boundary": {
+      "captured_driver_log": {
+        "bytes": 1337,
+        "path": "build/post-promotion/v14/link90-vic-unlock-wplto/receipts/wplto-historical-driver.log",
+        "sha256": "b17226475bcabaefcc9385579675c7f9776d4df2563664099cc5056a11381bc9"
+      },
+      "classification": "qualification-model-only-not-a-product-or-link-red",
+      "current_replacement_gates": {
+        "assembler_leaf_ABI": {
+          "callsite_count": 9,
+          "unclassified_C_called_functions": []
+        },
+        "capacity": {
+          "append_records": 24,
+          "pack_quantum_bytes": 256,
+          "publish_clear_bytes": 1295,
+          "publish_clear_headroom_bytes": 497,
+          "region1_rollback_sequence": [
+            "c2-append-rollback-unpublish",
+            "c2-append-rollback-wipe-plane",
+            "c2-append-rollback-wipe-chip",
+            "c2-append-rollback-wipe-attic",
+            "c2-append-rollback-finalize"
+          ],
+          "retired_sections_present": {
+            ".lisp65_rt_c2append_journal_clear": false,
+            ".lisp65_rt_c2append_publish_exports": false
+          },
+          "session_catalog_records": 52,
+          "session_family_bytes": 65423,
+          "session_family_headroom_bytes": 113,
+          "session_service_bytes": 399,
+          "session_service_records": 1,
+          "slice_cap_bytes": 1792,
+          "status": "passed-current-v4-two-region-session-aggregate"
+        },
+        "historical_maps_replaced": [
+          "BADOPCODE retirement WPLTO crossed a bound wall or gate",
+          "Link-53 first-fault WPLTO qualification red",
+          "Link-54 phase-06a cutpoint WPLTO qualification red",
+          "Link-55 append geometry WPLTO qualification red",
+          "Link-55 append suffix/read-domain WPLTO qualification red",
+          "Link-55 cold append source-domain WPLTO qualification red",
+          "Link-55 one-quantum fusion qualification red",
+          "install-phase WPLTO crossed a bound wall or linked gate",
+          "selector tail-Z WPLTO qualification red"
+        ],
+        "pre_publish_identity": {
+          "elf": {
+            "bytes": 622588,
+            "path": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/lisp65-c2-substitution-linked.prg.elf",
+            "role": "elf",
+            "sha256": "aff30032a82a6e3ff0d71a13dc945507e987446f2deee300a1dd6f722f8ef8f4"
+          },
+          "map": {
+            "bytes": 181495,
+            "path": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/lisp65-c2-substitution-linked.prg.map",
+            "role": "map",
+            "sha256": "105231c815a7515408fb8b72318e2dc7f0edb74c91867b130a047a30e8207f14"
+          },
+          "product": {
+            "bytes": 41566,
+            "path": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/lisp65-c2-substitution-linked.prg",
+            "role": "product",
+            "sha256": "f46f5fd5360ba4f171d1d45a013dc678f815f6fccf50cb646f3bb7f2b6403eb4"
+          }
+        },
+        "pre_publish_session_regions": {
+          "region_0": {
+            "bytes": 65423,
+            "path": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/runtime-overlays-session-final.bin",
+            "sha256": "0f96b7e841573584d9b61dc12b44679a12eeb1d7d5e0b00c050bbbab02c508f5"
+          },
+          "region_1": {
+            "bytes": 1956,
+            "path": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/runtime-overlays-session-final-region1.bin",
+            "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
+          }
+        },
+        "sealed_role_check": "deferred-to-post-publish-public-clean-build-gate",
+        "status": "passed-current-v4-pre-publish-WPLTO-closure",
+        "walls": {
+          "bank0_text_headroom_bytes": 243,
+          "e000_headroom_bytes": 54,
+          "fixed_hot_block_headroom_bytes": 2,
+          "ordinary_bank0_bss_headroom_bytes": 137,
+          "resident_island_headroom_bytes": 50
+        }
+      },
+      "raw_error": "historical post-WPLTO qualification checker red",
+      "raw_status": "FIRST RED: historical checker stopped current-product L-full keymap WPLTO"
+    },
+    "historical_profile_label": "0xb94e retained only inside the sealed legacy profile text",
+    "linked_gate": {
+      "bytes": 17789,
+      "path": "build/post-promotion/v14/link90-vic-unlock-wplto/receipts/single-submit-linked-gates.json",
+      "sha256": "a40021964a828c7cb9637e0ce7f197ed536b57dbc29909d3cb2ac3ccce1a9146"
+    },
+    "publish_last_authority": "0xb98a",
+    "qualification": {
+      "bytes": 29555,
+      "path": "build/post-promotion/v14/link90-vic-unlock-wplto/receipts/wplto-qualification.json",
+      "sha256": "ec3ef094e6174ce5258ee883c4bc2fe29b4b656efb5547c269f393c334620b03"
+    },
+    "status": "passed-one-current-WPLTO-closure-at-typed-historical-qualification-boundary"
+  },
+  "wplto_probes_consumed": 1
+}

@@ -1,0 +1,191 @@
+{
+  "format": "lisp65-c2-lite-v6-vm-dirmiss-detail-wplto-capacity-first-red-v1",
+  "recorded_on": "2026-07-22",
+  "status": "first-red-capacity-review-required",
+  "promotable": false,
+  "authorization": {
+    "class": "C",
+    "authorized": "contract, mutations and one product-shaped WPLTO probe",
+    "not_authorized": [
+      "promotable_product_link",
+      "hardware_run",
+      "placement_or_contract_change"
+    ]
+  },
+  "contract_result": {
+    "status": "passed-before-WPLTO",
+    "producer_count": 6,
+    "status_write_sites": 1,
+    "transport": "ordinary obj return value plus vm_status; existing pending_symbol only at terminal abort",
+    "new_bss_contract_bytes": 0,
+    "new_gc_roots": 0,
+    "c2j_bytes": 0,
+    "mutations_rejected": {
+      "bcode-rendered-as-symbol": "rejected",
+      "consumer-drops-detail": "rejected",
+      "discard-inner-callprim": "rejected",
+      "omit-compile-defun": "rejected",
+      "omit-compile-inner-helper": "rejected",
+      "omit-op-call": "rejected",
+      "omit-op-closure": "rejected",
+      "omit-op-tailcall": "rejected",
+      "omit-vm-run-dir": "rejected",
+      "op-call-detail-nil": "rejected",
+      "op-tailcall-detail-nil": "rejected",
+      "overwrite-inner-op-call": "rejected",
+      "second-status-writer": "rejected",
+      "stale-global-detail": "rejected",
+      "symbol-render-bypassed": "rejected"
+    },
+    "mutation_count": 15
+  },
+  "first_red": {
+    "gate": "resident Bank-0 text versus fixed Handoff anchor",
+    "linker_diagnostics": [
+      "ordinary rodata predecessor/VMA/LMA relation drift",
+      ".text overlaps .lisp65_c2_kernal_handoff"
+    ],
+    "baseline": {
+      "text_start": "0x2023",
+      "text_bytes": 37981,
+      "text_end_exclusive": "0xb480",
+      "handoff_start": "0xb4a3",
+      "text_headroom_bytes": 35
+    },
+    "probe": {
+      "text_start": "0x2023",
+      "text_bytes": 38070,
+      "text_end_inclusive": "0xb4d8",
+      "text_end_exclusive": "0xb4d9",
+      "handoff_start": "0xb4a3",
+      "text_growth_bytes": 89,
+      "overlap_bytes": 54,
+      "headroom_bytes": -54
+    },
+    "minimum_resident_relief_to_fit_bytes": 54,
+    "resident_relief_to_restore_32_byte_noise_reserve": 86
+  },
+  "resident_text_attribution": [
+    {
+      "symbol": "vm_check_status",
+      "baseline_bytes": 15,
+      "probe_bytes": 74,
+      "delta_bytes": 59,
+      "temperature": "cold terminal error boundary"
+    },
+    {
+      "symbol": "vm_run_dir",
+      "baseline_bytes": 137,
+      "probe_bytes": 202,
+      "delta_bytes": 65,
+      "temperature": "runtime direct-entry boundary"
+    },
+    {
+      "symbol": "vm_run_inner",
+      "baseline_bytes": 7975,
+      "probe_bytes": 7934,
+      "delta_bytes": -41,
+      "temperature": "hot VM dispatch"
+    },
+    {
+      "symbol": "eval_vm_native_apply_checked",
+      "baseline_bytes": 259,
+      "probe_bytes": 263,
+      "delta_bytes": 4,
+      "temperature": "runtime checked boundary"
+    },
+    {
+      "symbol": "vm_dirmiss_detail",
+      "baseline_bytes": 0,
+      "probe_bytes": 5,
+      "delta_bytes": 5,
+      "temperature": "cold producer seam"
+    },
+    {
+      "symbol": "vm_key_event",
+      "delta_bytes": -4,
+      "temperature": "unrelated WPLTO movement"
+    },
+    {
+      "symbol": "eval_v2_workbench_service",
+      "delta_bytes": -3,
+      "temperature": "unrelated WPLTO movement"
+    },
+    {
+      "symbol": "vm_fixbinop",
+      "delta_bytes": 2,
+      "temperature": "unrelated WPLTO movement"
+    },
+    {
+      "symbol": "vm_callprim",
+      "delta_bytes": 2,
+      "temperature": "nested-detail propagation movement"
+    }
+  ],
+  "attribution_check": {
+    "listed_delta_sum_bytes": 89,
+    "measured_text_growth_bytes": 89,
+    "closes": true
+  },
+  "other_observations_from_failed_map": {
+    "ordinary_bss_size_baseline_bytes": 1587,
+    "ordinary_bss_size_probe_bytes": 1587,
+    "rodata_size_baseline_bytes": 947,
+    "rodata_size_probe_bytes": 947,
+    "claim": "sizes only; their wall gates and every later replacement gate were not reached and are not claimed green"
+  },
+  "execution_accounting": {
+    "contract_source_selftests": 1,
+    "mutations": 15,
+    "whole_program_lto_closure_links": 1,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "retries": 0
+  },
+  "budgets": {
+    "class_b_diagnostic_cycles": "3/3 exhausted",
+    "line1_product_first_reds": "2/3 unchanged",
+    "completed_latency_measurements": "0/2 unchanged"
+  },
+  "evidence": {
+    "approved_contract": {
+      "path": "config/c2-vm-dirmiss-detail-contract.json",
+      "sha256": "17b50b2cd151f485025d33149ab2cd94c10479aaf1259005427797385d08c9e2"
+    },
+    "approved_review": {
+      "path": "docs/planning/c2.2-link44-permanent-dirmiss-diagnostic-review.md",
+      "sha256": "57be32bea2d6e0d2b4bfdaadce70e1861db5d5c0c0b5a5d259a75aec533d8c1d"
+    },
+    "driver": {
+      "path": "tools/host-lisp/c2_lite_v6_link44_dirmiss_detail_wplto.py",
+      "sha256": "b88cfb44e748a92f1c8daae6801250b3868a2871a49edc4aba655d0344bb7bf7"
+    },
+    "baseline_map": {
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "c5b5d5b1fd3e5b2509fe8a3f0207f326d297b60099f0e75bf4eb388569b3b5d9"
+    },
+    "failed_probe_map": {
+      "path": "build/c2.2/substitution/link44-dirmiss-detail-wplto/resident-island-seed.prg.map",
+      "sha256": "e290ad5e95e74d309c4b39a6ed2efe80b54e9c8d5f6f02acad440464a66258e6"
+    },
+    "linker_stderr": {
+      "path": "build/c2.2/substitution/link44-dirmiss-detail-wplto/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "ff8cbc236a4a594774c8e57919f37921ea7e93e238f16bb71747459392f5f7ff"
+    },
+    "internal_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-dirmiss-detail-wplto-internal-structural.json",
+      "sha256": "f4b6c1f6276e7112022b51962ca17f1ba3e2a5d3aec198b99d3c08a1d2fa6659"
+    },
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-dirmiss-detail-wplto-receipt.json",
+      "sha256": "19594ecbc0cc8af5f65178d41d86e820620d81a7cf8b8fb4309891dc9793ecf2"
+    }
+  },
+  "rollback_line": {
+    "link": 44,
+    "product_sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+    "status": "untouched"
+  },
+  "claim_limit": "The status-plus-detail source contract and mutation matrix passed. The one WPLTO attempt failed at the first resident text wall. No other wall, linked seam, full structural replay, product candidate, hardware behavior, rendered symbol or latency is claimed.",
+  "next_gate": "Class-C review of the measured 54-byte Bank-0 deficit; no automatic placement or product-link step"
+}

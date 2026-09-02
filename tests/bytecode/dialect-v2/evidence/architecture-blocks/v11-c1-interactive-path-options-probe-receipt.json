@@ -1,0 +1,236 @@
+{
+  "format": "lisp65-v11-c1-interactive-path-options-probe-receipt-v1",
+  "version": 1,
+  "status": "measured-restore-capacity-red-owner-decision-required",
+  "recorded_on": "2026-07-16",
+  "recording_base_commit": "350166c77208b5b6f598eedef20a799784bce703",
+  "scope": "Read-only timing decomposition plus build-only and hardware-only probes for the three owner-requested C1 directions. No capacity delta is authorized and no probe implementation is promoted.",
+  "input_claim_correction": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-lease-trusted-stage-probe-receipt.json",
+    "receipt_sha256": "2e3b9622928bba3fd15c8edff4e8770f75f1b5c929b751d56f92fe5b5a55d47a",
+    "load_lib_bar": "passed: 6.0 seconds is within the 6.9-second limit",
+    "single_form_bar": "the 260-ms definitions-free warm path was owner-accepted on 2026-07-16; the later 1900-ms definition-to-first-call path reopens the interactive bar",
+    "correction": "The earlier 2-to-3-second external JTAG samples mixed product and harness time, but they also pointed at a real unmeasured path. The 260-ms result is valid only while the compiler tier remains loaded. The exact post-definition first-call cycle is now measured in product time at 1900 ms, so the combined two-part performance bar does not pass."
+  },
+  "warm_path_decomposition": {
+    "candidate": {
+      "path": "build/products/workbench/c1-phase-probe-11",
+      "resident_prg_sha256": "9a11fab4aee751c304a144cf682b5d510468a0a855dd2cf1fa9e198d42b5be15",
+      "preload_sha256": "e8b0680045632d37f177d89a4838d749e99ad2244bbeb26c16443526f967081b",
+      "runtime_overlays_sha256": "afda9e3c80ccb1b1681f656c231a013195a2127f9b3f563907d7533025e0a7bb",
+      "footprint_audit_sha256": "22acc4b8f44ca3f54566b0ea167d744bc6e2b65ad7e89d760e4fb1e369d6397e"
+    },
+    "clock": {
+      "source": "in-product frame counter read immediately around the measured operation",
+      "milliseconds_per_frame": 20,
+      "resolution_milliseconds": 20
+    },
+    "samples": [
+      {
+        "id": "warm-nested-eval",
+        "result": "(42 207 220)",
+        "frames": 13,
+        "milliseconds": 260,
+        "text": "build/hw/v11-c1-warm-decompose/warm-nested-eval.txt",
+        "text_sha256": "be345212900ab3ae1f64e81040cb453246c3c1f3d1ccb74e3a1a7c33a414d50b",
+        "screenshot_sha256": "fd86c6e83dad223cb45a31afd028673579a79c9aab470b562d73caf4554dfc5e"
+      },
+      {
+        "id": "warm-compile-only",
+        "result": "(t 9 10)",
+        "frames": 1,
+        "milliseconds": 20,
+        "text": "build/hw/v11-c1-warm-decompose/warm-compile-only.txt",
+        "text_sha256": "490cee1b9bf4bc38fd2fe0d98510dbdf80ac7b8a593819476e398be7fb1b076a",
+        "screenshot_sha256": "1cae727666af20137fc0bbae957ba0a64c20caf8268f226554c4a7c44080d66e"
+      },
+      {
+        "id": "warm-install-and-run",
+        "result": "(42 164 173)",
+        "frames": 9,
+        "milliseconds": 180,
+        "text": "build/hw/v11-c1-warm-decompose/warm-install-run.txt",
+        "text_sha256": "b68f075d7711a2f2493bb5382e3847dd9b7cdb9c06bee092deacf97e72a2b654",
+        "screenshot_sha256": "08dacf7b58ccb849e9383bd6fb1cc60d2f2b7bfafd8f88e2de6cafea2216c52e"
+      },
+      {
+        "id": "definition-retires-tier",
+        "result": "(c1tmp nil 116 130)",
+        "frames": 14,
+        "milliseconds": 280,
+        "compiler_kind_after": "nil",
+        "text": "build/hw/v11-c1-warm-decompose/defun-retires.txt",
+        "text_sha256": "eeb57792db06910d7d8bb2fc7b30252c94162e0782a5aa874ecf9291bc75afc0",
+        "screenshot_sha256": "17f0cd5ab6b8bf58fdf710a8ada5e3b9128ea0b31cc02d2f8273bce4aab90991"
+      },
+      {
+        "id": "next-definition-after-retirement",
+        "result": "(c1tmp2 nil 165 179)",
+        "frames": 14,
+        "milliseconds": 280,
+        "compiler_kind_after": "nil",
+        "text": "build/hw/v11-c1-warm-decompose/defun-cold-reload.txt",
+        "text_sha256": "5a0eb21df3725b0232519ae44f27ad09d416d5dae14f04050543919f9d044ffa",
+        "screenshot_sha256": "24ae802b435c921ef5d1c94ebd8c1e613006b63b26ed08a4f64d6e847e3e0112"
+      },
+      {
+        "id": "direct-resident-equivalent-compile-install-run",
+        "result": "(42 103 113)",
+        "frames": 10,
+        "milliseconds": 200,
+        "text": "build/hw/v11-c1-warm-decompose/direct-resident-equivalent.txt",
+        "text_sha256": "c7ca20a9aad20b051403831265680186ffd82a667b02fd2862d5ab81ad263db9",
+        "screenshot_sha256": "31474785e2e679b37d6e45613232b0d50c2985efeaa0d6087feeeb3042dbf707"
+      }
+    ],
+    "derived": {
+      "warm_nested_minus_direct_frames": 3,
+      "warm_nested_minus_direct_milliseconds": 60,
+      "warm_nested_minus_direct_percent": 30,
+      "reload_overhead_observation": "Superseded: both definition samples were compiled as part of an outer form before their inner timers began. They measured the already-loaded inner compile/install path and omitted the top-level reload after retirement.",
+      "phase_observation": "Compile-only while the tier is loaded is one frame and install-and-run is nine frames. A separate post-definition first-call probe is required to include the identity-bound reload/commit."
+    }
+  },
+  "lifo_hypothesis": {
+    "result": "confirmed-for-persistent-definitions-rejected-as-universal-explanation",
+    "source_rule": "defun and defmacro retire the compiler tier before persistent installation; helper-bearing expressions also retire before installation; a simple expression with no persistent helper can retain the tier",
+    "hardware_confirmation": "Both definition samples return compiler function-kind nil after installation, while the warm simple-expression path retains and reuses the compiler.",
+    "conclusion": "Persistent result installation structurally breaks the lease for definitions under the current shared LIFO region. Definitions-free expressions retain the tier, but the first expression after a definition must reload it and is a separate product-critical latency path."
+  },
+  "option_1_tier_independent_installation": {
+    "full_independent_state_probe": {
+      "result": "strict-link-rejected",
+      "baseline_map": "build/products/workbench/c1-phase-probe-11/resident-island-seed-linked.prg.map",
+      "probe_map": "build/products/workbench/c1-detached-install-probe/resident-island-seed-linked.prg.map",
+      "probe_map_sha256": "c5f8bba1d3d41ac00ecdf74fcc3e85ceb2b41ab9893505e08a765b0067bb93fb",
+      "baseline_data_and_bss_start": "0xba88",
+      "probe_data_and_bss_start": "0xbaec",
+      "resident_code_growth_bytes": 100,
+      "baseline_bss_bytes": 2244,
+      "probe_bss_bytes": 2246,
+      "bss_growth_bytes": 2,
+      "baseline_bss_end": "0xc34c",
+      "fixed_overlay_start": "0xc356",
+      "probe_bss_end": "0xc3b2",
+      "fixed_overlay_overlap_bytes": 92,
+      "relaxed_map": "build/products/workbench/c1-detached-install-relaxed-probe/resident-island-seed-linked.prg.map",
+      "relaxed_map_sha256": "f4c5579fe7527ed3b4be0695b4f2e41d80ce59f016dcbac8de52b49e28acfa11",
+      "relaxed_result": "links only by moving the overlay start to 0xc3b2 and therefore violates the fixed 0xc356 overlay ABI ceiling"
+    },
+    "shared_top_down_allocator_probe": {
+      "intent": "Reuse the existing downward transient allocator for compiled definitions so a top-level definition can stay above a retired compiler tier without resident growth.",
+      "build_result": "strict real product build passed after the ordinary bootstrap/final fixed-point iteration",
+      "capacity": {
+        "bank_delta_bytes": 0,
+        "ext_delta_bytes": 0,
+        "symbol_delta": 0,
+        "namepool_delta_bytes": 0,
+        "directory_delta": 0,
+        "boot_overlay_delta_bytes": 0,
+        "runtime_overlay_image_delta_bytes": 0,
+        "lcc_install_01_slice_delta_bytes": 15,
+        "runtime_overlay_bank_margin_bytes": 64
+      },
+      "candidate": {
+        "path": "build/products/workbench/c1-detached-install-keep-lease-v2-probe",
+        "resident_prg_bytes": 39561,
+        "resident_prg_sha256": "c0b93dec1ea6ca345cb6453419973c4faacdcd452f281eca2cd986a5199d8b49",
+        "boot_overlay_bytes": 1669,
+        "boot_overlay_sha256": "8c81d3d1f065c15f1bd1631ee15f69afad3a05f6e3724688fac05543ee7e0de5",
+        "preload_bytes": 17047,
+        "preload_sha256": "c67314522173e54ceb9cc5c25e7c6ba56661d12dafe1815bbaca03f0cd21bb57",
+        "runtime_overlays_bytes": 65472,
+        "runtime_overlays_sha256": "39e431052bc3f4f52fa38ab13a8f1914f4a4d23c7cf1d620c5de762d9159c06b",
+        "footprint_audit_sha256": "22acc4b8f44ca3f54566b0ea167d744bc6e2b65ad7e89d760e4fb1e369d6397e",
+        "resolved_profile_sha256": "804d3fbbf17be5b52bbedb5f22c2eb6b71bfcad668667030bf6c7f269ebb304d",
+        "runtime_manifest_sha256": "36525a878975fd5cda79c89d0d07def10864e36c1dfbde559a9b2a5289756cb5"
+      },
+      "hardware": [
+        {
+          "id": "required-nested-eval-definition",
+          "result": "vm: bad bytecode",
+          "text": "build/hw/v11-c1-install-region/defun-keeps-lease.txt",
+          "text_sha256": "c04c2fc8352b24083ec52f693beed9c553e3781c25ff3f5dc5b47e5f698a3d15",
+          "screenshot_sha256": "04a05f01dc0d171174e4b8fded1fefcf469dcc6c1b3108590cbffedfaf61b82d"
+        },
+        {
+          "id": "direct-top-level-definition",
+          "result": "c1a",
+          "text": "build/hw/v11-c1-install-region/direct-defun.txt",
+          "text_sha256": "addd5fbdaee864f6dadcc4b10b7c01f5a483ed1abbda2e5f053e5ec510747f",
+          "screenshot_sha256": "7311adcdeab50b9c41b2f4dcb41a5ce288571f2e154700fdb835d99bfc6be428"
+        },
+        {
+          "id": "direct-definition-and-compiler-remain-live",
+          "result": "(bytecode 42)",
+          "text": "build/hw/v11-c1-install-region/lease-and-definition-live.txt",
+          "text_sha256": "fba84d1f5bbdc1a437ff3ad422c14e24fa3bb5925fc39e6a5bff7ef7bd4371df",
+          "screenshot_sha256": "ca6c9f1d01333466fadfca80e2ccda7dd41139a608c433ad789308e9cd34d93f"
+        }
+      ],
+      "result": "rejected: the required nested eval entry seam corrupts bytecode even though a direct top-level definition works and retains the compiler",
+      "rollback": "The build-only allocator and codemod branches were completely removed after the hardware rejection. The device was restored to the exact c1-phase-probe-11 candidate."
+    },
+    "conclusion": "No admissible Option-1 price exists under the current fixed overlay contract. Separate allocator state costs 100 resident bytes plus 2 BSS bytes and overlaps the overlay by 92 bytes; the size-neutral shared-stack variant is semantically red. A fixed EXT partition, compaction, or another installation ABI would be a new architecture probe, not an authorized continuation of this one."
+  },
+  "option_2_resident_compiler_arithmetic": {
+    "inputs": {
+      "capacity_authorization": "config/v11-repl-banner-product-capability-capacity-authorization.json",
+      "capacity_authorization_sha256": "b66d0572ba8984c193f7872c7b6ba520bc76659d8109aaaa980e8cd244e73b32",
+      "standard_composition_ext_headroom_bytes": 25161,
+      "ext_floor_bytes": 16384,
+      "current_margin_bytes": 8777,
+      "compiler_contract": "build/bytecode/dialect-v2/libs/lcc-contract.json",
+      "compiler_contract_sha256": "90733d63179c2140011aa6f347a605a6785eac1d6ceb756105f1d6e917c97eb2",
+      "loaded_compiler_blob_bytes": 9420,
+      "gross_source_exclusion_bytes": 9573,
+      "compiler_symbols": 131,
+      "compiler_namepool_bytes": 1298,
+      "compiler_directory_entries": 144,
+      "current_free_symbols": 297,
+      "current_free_namepool_bytes": 4594,
+      "current_free_directory_entries": 168
+    },
+    "authoritative_runtime_result": {
+      "post_resident_compiler_ext_headroom_bytes": 15741,
+      "floor_deficit_bytes": 643,
+      "remaining_symbols": 166,
+      "remaining_namepool_bytes": 3296,
+      "remaining_directory_entries": 24
+    },
+    "gross_source_cross_check": {
+      "post_resident_compiler_ext_headroom_bytes": 15588,
+      "floor_deficit_bytes": 796
+    },
+    "peak_note": "The earlier 3118-byte temporary-load headroom proves that a compiler load can physically fit at peak. It does not satisfy the persistent 16384-byte user-capacity floor.",
+    "conclusion": "Option 2 is inadmissible without at least 643 bytes of separate structural EXT recovery. Symbols, namepool, and directory remain positive; EXT alone blocks the default inversion."
+  },
+  "definition_cycle_reopening": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-definition-call-reopening-probe-receipt.json",
+    "receipt_sha256": "c224f4000d78b096e7d31bb1548831fa5aa7fedc9f005c1d18b7aeb564868925",
+    "candidate_resident_prg_sha256": "9a11fab4aee751c304a144cf682b5d510468a0a855dd2cf1fa9e198d42b5be15",
+    "definition_to_first_call_frames": 95,
+    "definition_to_first_call_milliseconds": 1900,
+    "immediately_following_warm_call_frames": 10,
+    "immediately_following_warm_call_milliseconds": 200,
+    "resolution": "The trusted-stage discriminator remains valid after retirement and skips L65M preflight. The remaining cost is the generic verify/materialize/patch/publish commit, not an expired content-identity grant.",
+    "effect": "The prior owner decision and capacity authorization are suspended; no promotion may consume this receipt as a performance PASS."
+  },
+  "bounded_identity_restore": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-identity-restore-capacity-probe-receipt.json",
+    "receipt_sha256": "eaa7f48cb9678a5abff29660df3c4c2270d92d289ea3227bea1a1f7e2d22d527",
+    "result": "capacity-red-rolled-back",
+    "blocking_measurements": "l65m-commit-00 is 1895 B and C1 lifetime is 1908 B against independent 1792-B limits; l65m-commit-01 also adds a 512-B packed allocation to a runtime bank with only 64 B free",
+    "attempt_policy": "the one authorized bounded attempt is exhausted; no continuation sweep",
+    "next_step": "owner choice between a dated 1.90-second 1.1 exception with C2 named for 1.2, and C1 rollback with immediate C2 replanning"
+  },
+  "decision_input": {
+    "option_1": "not currently admissible: the true independent region misses the fixed overlay by 92 bytes and the size-neutral shared-region prototype fails the nested eval seam",
+    "option_2": "not currently admissible: a permanently loaded compiler leaves 15741 bytes and violates the EXT floor by 643 bytes",
+    "option_3": "C1 rollback plus C2 replanning is the only already-enumerated direction that does not require a new capacity or allocator architecture, but the rollback costs for filter and banner remain as previously recorded",
+    "measurement_correction": "The 60-ms delta is valid for definitions-free warm nested entry only. The core definition-to-first-call cycle is separately product-measured at 1900 ms and was missing from the evaluated set.",
+    "owner_resolution": "The earlier retention decision is superseded by the performance reopening, and the one bounded restore attempt is capacity-red. C1 promotion and the exact measured capacity deltas remain suspended pending the owner's explicit exception-or-rollback decision.",
+    "follow_up": "Overlay is frozen at zero bytes and the runtime-overlay bank is effectively frozen with 64 bytes remaining. Wave 3 cannot start 1.1-L until structural overlay relief is measured and authorized."
+  },
+  "claim_limit": "This receipt proves the stated definitions-free timing decomposition, LIFO classification, two rejected Option-1 probes and Option-2 capacity arithmetic. Its earlier combined performance conclusion is superseded by the bound 1900-ms definition-call measurement, and the linked bounded restore is capacity-red. It does not support promotion or capacity authorization and does not promote product bytes, preserve the stopped G5 run, or claim R4/R5/R6/G6 acceptance."
+}

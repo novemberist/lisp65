@@ -1,0 +1,101 @@
+{
+  "format": "lisp65-c2.3-v1.3-phase-e-string-surface-first-red-v1",
+  "status": "FIRST RED",
+  "recorded_on": "2026-08-03",
+  "source_commit": "8d570777195bd7b6093c49c9f525dadeddcf6cfe",
+  "phase": "S-E-documentation-before-acceptance",
+  "trigger": {
+    "authority": "docs/planning/1.3-ship-builder-extended-halt1-review.md",
+    "requirement": "Publish sixteen named string functions and bind them through surface-delivery parity with zero freight delta."
+  },
+  "link88": {
+    "stdlib_manifest": {
+      "path": "build/ship-builder/v13/input-wait-host-first/candidate/stdlib-p0.manifest.json",
+      "sha256": "09ff330b73bfe964cc3e1922e9f7993133a657d642745887a46b49945a0097f4"
+    },
+    "candidate_manifest": {
+      "path": "build/c2.3/v1.3.0-candidate-media-link88-r1/candidate-manifest.json",
+      "sha256": "7de29c7d33278496f94c215070becb44bdfdec06dc02d633c2fd63dcb153ad39"
+    },
+    "product_d81": {
+      "path": "build/c2.3/v1.3.0-candidate-media-link88-r1/lisp65-product.d81",
+      "sha256": "7c07f6130f404b540dd3e4228b1c51139b3a012a8f00ddcaf313561c570fee38",
+      "packaged_dynamic_libraries": ["IDE", "IDEX", "M65D"],
+      "STRX_packaged": false
+    }
+  },
+  "required_names": [
+    "char-downcase",
+    "char-upcase",
+    "list->string",
+    "string->list",
+    "string-append",
+    "string-downcase",
+    "string-equal",
+    "string-left-trim",
+    "string-prefix-p",
+    "string-right-trim",
+    "string-suffix-p",
+    "string-trim",
+    "string-upcase",
+    "string<",
+    "string=",
+    "substring"
+  ],
+  "delivered_and_parity_bound": [
+    "char-downcase",
+    "char-upcase",
+    "string-append",
+    "string-downcase",
+    "string-equal",
+    "string-prefix-p",
+    "string-suffix-p",
+    "string-trim",
+    "string-upcase",
+    "string<",
+    "string=",
+    "substring"
+  ],
+  "contradictions": [
+    {
+      "names": ["string->list", "list->string"],
+      "classification": "normatively absent from Dialect V2",
+      "authority": {
+        "contract": "tests/bytecode/dialect-v2/strings/README.md",
+        "contract_sha256": "c67dcabee51e148e538d6c1a50290ec384403478c357aa47eaf6e0ef9c217894",
+        "decision_fixture": "tests/bytecode/dialect-v2/strings/r2-decisions.json",
+        "decision_fixture_sha256": "b7b0a9ef1889a42f3c934e2b8fedb18166d4475005e048a46ee20806f6a0d7bf"
+      },
+      "detail": "The v2 contract calls both former public converters removed names and keeps their former primitive identities unavailable as public designators. A prior hardware fixture was already corrected because list->string was unexported."
+    },
+    {
+      "names": ["string-left-trim", "string-right-trim"],
+      "classification": "pilot-only and not packaged in Link 88",
+      "authority": {
+        "pilot_suite": "tests/bytecode/libs/p0-strings-extra-lib.json",
+        "pilot_suite_sha256": "052d3a1faf5688edac34f7bb451f67f4b39ea87f2413b049c921634d00b521b5",
+        "source": "lib/stdlib-strings-polish.lisp",
+        "source_sha256": "9d8bae264d320b35f6e62073a43a226b8ae19a28dd39df61a4d311e841ce63b9"
+      },
+      "detail": "The two pilot definitions depend on the two removed public converters and the STRX pilot is absent from the Link-88 product D81. Advertising them would require product freight and a new link, contradicting the zero-freight Phase-E condition."
+    }
+  ],
+  "gate_observation": {
+    "command": "python3 tools/host-lisp/v11_surface_delivery_parity.py",
+    "first_red_missing": [
+      "list->string",
+      "string->list",
+      "string-left-trim",
+      "string-right-trim"
+    ],
+    "honest_narrowed_reference": "PASS bound_names=90",
+    "selftest": "PASS mutations=9"
+  },
+  "disposition": {
+    "acceptance_chain_started": false,
+    "product_bytes_changed": false,
+    "link_created": false,
+    "publication_started": false,
+    "reason": "The release cannot simultaneously retain Link-88 bytes, claim zero freight delta, and advertise four names that the bound dialect/product does not deliver."
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "authority": {
+    "ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "contract": {
+      "bytes": 13883,
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "sha256": "77e3e9be995d9e529cafb5a350ee8b80d2999fe5aad165181243696a95108cf8"
+    },
+    "gate": {
+      "bytes": 19757,
+      "path": "tools/host-lisp/c2_completion_retry_length_elf_gate.py",
+      "sha256": "618b4cc6597ca83defdac73958e6ab61a6fbcc6495bc76311e3a18f10ce6116e"
+    }
+  },
+  "format": "lisp65-c2-stateless-completion-length-ELF-gate-v3",
+  "recorded_on": "2026-07-26",
+  "result": {
+    "helper": {
+      "address": "0xc356",
+      "bytes": 27,
+      "section": ".lisp65_rt_c2append_header",
+      "symbol": "c2_completion_mode_length"
+    },
+    "linked_dataflow": {
+      "helper": {
+        "C2J_constant": 64,
+        "Publish_constant": 48,
+        "address": "0xc356",
+        "bytes": 27,
+        "nested_calls": 0
+      },
+      "poll": {
+        "address": "0xc706",
+        "bytes": 563,
+        "canonical_mode_zero_page": "0x1f",
+        "initial_validation_call": "0xc773",
+        "nested_reader_call": "0xc828",
+        "pre_DMA_call": "0xc815",
+        "pre_compare_call": "0xc833",
+        "pre_poison_call": "0xc7e6",
+        "pre_poison_mode_setup": "0xc7e4",
+        "retry_edge": {
+          "address": "0xc8c4",
+          "target": "0xc7e4"
+        }
+      },
+      "rematerialization_call_count": 3,
+      "retired_record_27_address": "0xc197",
+      "retired_record_27_references": 0,
+      "structured_call_edges": [
+        {
+          "call_address": "0xc773",
+          "relocation_offset": "0xc774",
+          "source_section": ".lisp65_rt_c2append_header",
+          "target": "c2_completion_mode_length",
+          "type": "R_MOS_ADDR16"
+        },
+        {
+          "call_address": "0xc7e6",
+          "relocation_offset": "0xc7e7",
+          "source_section": ".lisp65_rt_c2append_header",
+          "target": "c2_completion_mode_length",
+          "type": "R_MOS_ADDR16"
+        },
+        {
+          "call_address": "0xc815",
+          "relocation_offset": "0xc816",
+          "source_section": ".lisp65_rt_c2append_header",
+          "target": "c2_completion_mode_length",
+          "type": "R_MOS_ADDR16"
+        },
+        {
+          "call_address": "0xc833",
+          "relocation_offset": "0xc834",
+          "source_section": ".lisp65_rt_c2append_header",
+          "target": "c2_completion_mode_length",
+          "type": "R_MOS_ADDR16"
+        }
+      ]
+    },
+    "mutation_count": 9,
+    "mutations_rejected": [
+      "pre-poison-rematerialization-removed",
+      "pre-DMA-rematerialization-removed",
+      "pre-compare-rematerialization-removed",
+      "retry-bypasses-rematerialization",
+      "canonical-mode-store-diverges",
+      "retry-mode-reload-diverges",
+      "Publish-length-changed",
+      "C2J-length-changed",
+      "record27-authority-reintroduced"
+    ],
+    "phase_call_contexts": {
+      "call_count": 5,
+      "calls": [
+        {
+          "address": "0xc3e3",
+          "derived_lengths": [
+            64
+          ],
+          "expected": "NULL",
+          "modes": [
+            "0xa1"
+          ],
+          "role": "C2J_ACTIVE_bookend"
+        },
+        {
+          "address": "0xc42c",
+          "derived_lengths": [
+            64
+          ],
+          "expected": "NULL",
+          "modes": [
+            "0xa3"
+          ],
+          "role": "C2J_ROLLBACK_bookend"
+        },
+        {
+          "address": "0xc455",
+          "derived_lengths": [
+            64
+          ],
+          "expected": "NULL",
+          "modes": [
+            "0xa4"
+          ],
+          "role": "C2J_CLEAR_bookend"
+        },
+        {
+          "address": "0xc4a9",
+          "derived_lengths": [
+            64
+          ],
+          "expected": "NULL",
+          "modes": [
+            "0xa3"
+          ],
+          "role": "pre_publish_payload_fence"
+        },
+        {
+          "address": "0xc5f0",
+          "derived_lengths": [
+            48
+          ],
+          "expected": "w->new_header",
+          "modes": [
+            "0xa2"
+          ],
+          "role": "published_header_target_proof"
+        }
+      ],
+      "lowering_shape": "instrumented-split-ACTIVE-and-ROLLBACK",
+      "phase_address": "0xc371",
+      "phase_symbol": "c2_append_header_phase",
+      "poll_target": "0xc706",
+      "semantic_role_count": 4
+    },
+    "phase_mutation_count": 6,
+    "phase_mutations_rejected": [
+      "ACTIVE-mode-swapped",
+      "ROLLBACK-mode-swapped",
+      "CLEAR-mode-swapped",
+      "payload-fence-mode-swapped",
+      "header-mode-swapped",
+      "header-expected-pointer-store-removed"
+    ],
+    "poll": {
+      "address": "0xc706",
+      "bytes": 563,
+      "section": ".lisp65_rt_c2append_header",
+      "symbol": "c2_completion_poll"
+    },
+    "reader": {
+      "address": "0xe691",
+      "bytes": 87,
+      "symbol": "c2_stream_c2d_read"
+    },
+    "status": "passed-linked-stateless-mode-derived-completion-length"
+  },
+  "status": "passed-linked-stateless-mode-derived-completion-length"
+}

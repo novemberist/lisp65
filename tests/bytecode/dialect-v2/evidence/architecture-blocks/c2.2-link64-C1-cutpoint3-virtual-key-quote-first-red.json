@@ -1,0 +1,66 @@
+{
+  "authority": {
+    "control_capture": {
+      "bytes": 2,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-NONPROMOTABLE/cutpoint-3/hold-before-control.bin",
+      "sha256": "9b4fb24edd6d1d8830e272398263cdbf026b97392cc35387b991dc0248a628f9"
+    },
+    "corrected_harness": {
+      "bytes": 7268,
+      "path": "scripts/c2-c1-freezer-hw.sh",
+      "sha256": "66c5b5f31207d10ab054203d12564ef8e2ccd6c3329b66491a9db6c49eeeedbd"
+    },
+    "deployment": {
+      "bytes": 9732,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-NONPROMOTABLE/deployment.json",
+      "sha256": "233854694abb0c09eb0c9931dc6ab00734c9e08d8ec650c14d686baae1555661"
+    },
+    "product_sha256": "13c82707ae1797885ff2ddeb7bff62198bf897a9163ed63b7531df8212d49b2c",
+    "receipt_driver": {
+      "bytes": 4165,
+      "path": "tools/host-lisp/c2_link64_c1_quote_transport_first_red.py",
+      "sha256": "cf3525a83095e54454814353b775d2bb1c0b369a84a7365da6998f5f9eaee543"
+    },
+    "screen_image": {
+      "bytes": 3821,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-NONPROMOTABLE/cutpoint-3/first-red-screen.png",
+      "sha256": "080d949e5863e741ab193e9f51eac8dd5a76814741fc71b81206ae8785e0360e"
+    },
+    "screen_text": {
+      "bytes": 2241,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-NONPROMOTABLE/cutpoint-3/first-red-screen.txt",
+      "sha256": "f44bf31bc039a08677d96d1aa5f68884b5c30b724b1d08e7482c71e4ad35bca9"
+    }
+  },
+  "claim_limit": "Harness First Red only. No C1, matrix, promotion or acceptance claim.",
+  "classification": "hardware-harness-only",
+  "correction": {
+    "compiler_or_linker_runs": 0,
+    "product_bytes_changed": 0,
+    "rule": "The m65 apostrophe path is not an input authority; quoted t uses the semantically identical long form.",
+    "semantic_delta": 0,
+    "transport_form": "(defun %c1e () (quote t))"
+  },
+  "execution_accounting": {
+    "automatic_hardware_retries": 0,
+    "cutpoint_3_results_consumed": 0,
+    "cutpoint_4_results_consumed": 0,
+    "hardware_runs": 1
+  },
+  "format": "lisp65-c2.2-link64-C1-quote-transport-first-red-v1",
+  "next_gate": "separately authorized hardware attempt with the corrected transport form; Cutpoints 3 and 4 remain OPEN",
+  "observed": {
+    "Freezer_roundtrips": 0,
+    "contract_form": "(defun %c1e () 't)",
+    "control_bytes": [
+      "0x03",
+      "0x00"
+    ],
+    "cutpoint_reached": false,
+    "screen_form": "(defun %c1e () t)",
+    "screen_status": "*** vm: bad bytecode"
+  },
+  "product_semantics_finding": "none",
+  "recorded_on": "2026-07-25",
+  "status": "FIRST RED: virtual-key transport dropped Lisp apostrophe"
+}

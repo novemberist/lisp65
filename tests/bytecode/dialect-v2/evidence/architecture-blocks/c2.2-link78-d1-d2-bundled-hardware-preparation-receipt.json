@@ -1,0 +1,100 @@
+{
+  "D2_stop_rule": "Any unexpected D2 result returns the observation to Class C without a device-side diagnostic, capture campaign or retry.",
+  "candidate": {
+    "elf_sha256": "763cb2a9acd5275b618e13ce10a9f9acddbc2980a97d417b6b3f8b6e7e30c7d9",
+    "link": 78,
+    "product_sha256": "77f1c734e0818e5765d893627e4f7f514d62ca312a22b8123ead5d1c3ab40c36"
+  },
+  "deployment": {
+    "bytes": 5925,
+    "path": "build/post-release/link78-dirmiss-renderer/d1-d2-bundled-session/deployment.json",
+    "sha256": "18aeb750eace2e859c01436f37618c74170cdcfdb69b7a7b554c6e1cdc3f5f97"
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-link78-d1-d2-hardware-preparation-v1",
+  "groups": {
+    "D1": [
+      "complete missing name",
+      "live REPL after diagnostic"
+    ],
+    "D2": [
+      "require defstruct",
+      "define point",
+      "construct point"
+    ]
+  },
+  "harness_corrections": [
+    {
+      "change": "The D2 stop distinguishes an observed red fail-closed frame from an ordinary polling timeout and binds core/media/preload readbacks in the terminal receipt.",
+      "driver": {
+        "bytes": 27025,
+        "path": "tools/host-lisp/c2_v122_link78_d1_d2_hw.py",
+        "sha256": "40dc06dc99e84ea408c18e9c62f8acef6ca02d2f911a8cc5b4def180d0974928"
+      },
+      "hardware_actions": 0,
+      "hardware_script": {
+        "bytes": 5529,
+        "path": "scripts/c2-v122-link78-d1-d2-hw.sh",
+        "sha256": "6eb4189564d553e78b932a35d3f03a7c31cc2b8bca02ca196770154d28ddc613"
+      },
+      "kind": "receipt-and-classification-only",
+      "product_delta_bytes": 0,
+      "product_redeployments": 0
+    }
+  ],
+  "media_rebind": {
+    "D81": {
+      "bytes": 819200,
+      "path": "build/post-release/link78-dirmiss-renderer/d1-d2-bundled-session/library-media/require-defstruct-link78-bound.d81",
+      "sha256": "241122c07bf0b3bd5f3ebe7098c1a8b039c0aa442544cde6c943aed193b30f82"
+    },
+    "D81_changed_bytes": 8,
+    "L65I": "byte-identical-to-predecessor-media",
+    "code_and_C2I": "byte-identical-to-predecessor-media",
+    "defstruct": {
+      "bytes": 2659,
+      "path": "build/post-release/link78-dirmiss-renderer/d1-d2-bundled-session/library-media/defstruct.l65s",
+      "sha256": "0086a3035e16b3fa62f7dbc9bca385b1708b8dc7823185c94595eed9dd00591f"
+    },
+    "envelope_changed_offsets": {
+      "defstruct": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "place": [
+        22,
+        23,
+        24,
+        25
+      ]
+    },
+    "index": {
+      "bytes": 128,
+      "path": "build/post-release/link78-dirmiss-renderer/d1-d2-bundled-session/library-media/l65index",
+      "sha256": "10c651d6065a16ae882d04f40aa97fe0cc467213f6ed6d390f43db3fcb94a8bf"
+    },
+    "index_mutations_rejected": 32,
+    "place": {
+      "bytes": 1925,
+      "path": "build/post-release/link78-dirmiss-renderer/d1-d2-bundled-session/library-media/place.l65s",
+      "sha256": "50407ade5e514d49a93a1737080aff3279ee7184530d94192f88ab8b50c08d78"
+    },
+    "product_build_id": "0x0957c9d5",
+    "record_identity": "SESS",
+    "source_media": {
+      "bytes": 819200,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/library-media-successor/require-defstruct-link75-bound.d81",
+      "sha256": "b022e919d4347bc6f0a20df3a39584a076e35caf4042ac9b6d5af92d90ede34f"
+    }
+  },
+  "next_gate": "one physical device session in exact row order",
+  "recorded_on": "2026-07-29",
+  "status": "passed-Link78-D1-D2-one-session-preparation-hardware-not-run"
+}

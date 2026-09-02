@@ -1,0 +1,268 @@
+{
+  "format": "lisp65-c2-two-region-session-store-residency-attribution-v1",
+  "recorded_on": "2026-07-24",
+  "status": "region1-membership-applied; text-and-E000-attributed-without-placement-change",
+  "region1_owner_decision": {
+    "members": [
+      "rollback_wipe_plane",
+      "rollback_wipe_chip",
+      "rollback_wipe_attic"
+    ],
+    "excluded": {
+      "rollback_unpublish": "metadata control remains in the main Session region"
+    },
+    "measured_packing": {
+      "region1_bytes": 1956,
+      "region1_capacity_bytes": 2032,
+      "region1_headroom_bytes": 76,
+      "region0_bytes": 65182,
+      "region0_capacity_bytes": 65536,
+      "region0_headroom_bytes": 354
+    },
+    "implementation": {
+      "contract": {
+        "path": "config/c2-two-region-session-store-contract.json",
+        "sha256": "1f2edfcfb14e35852b71fc4a801013d2e03bb8d9156cc69969b4f346a93269df"
+      },
+      "driver": {
+        "path": "tools/host-lisp/c2_two_region_session_store_wplto.py",
+        "sha256": "c6004328408566817a9e8dc8dea86380296c5b6850ea17caf86c39fb0ac28e03"
+      },
+      "contract_memo": {
+        "path": "docs/planning/c2.2-two-region-session-store-contract.md",
+        "sha256": "e176bab4323abae709b40fcbece9db1592f57f24f38b99665f06b6deedd42181"
+      },
+      "new_WPLTO_runs": 0,
+      "new_product_links": 0,
+      "hardware_runs": 0
+    }
+  },
+  "text_attribution": {
+    "authority": {
+      "pre_v4_object": {
+        "path": "build/c2.2/substitution/cpu-chip-write-completion-c2j-seal-wplto/resident-island-seed.prg.lto.o",
+        "sha256": "67966ec5c8b836e27930604bc8be7e939f80a00271052e0618deb3a6482853bf"
+      },
+      "pre_v4_map": {
+        "path": "build/c2.2/substitution/cpu-chip-write-completion-c2j-seal-wplto/resident-island-seed.prg.map",
+        "sha256": "a55b296d3f8c2c06a55cdc77d2111086db58f634ab4f8a935f906ecdcc441e14"
+      },
+      "v4_object": {
+        "path": "build/c2.2/substitution/two-region-session-store-l65r-v4-wplto-replay3/resident-island-seed.prg.lto.o",
+        "sha256": "ca6e07e111bf10c49608ca72fcce902efd099f34e591605c7a31f7035544cf51"
+      },
+      "v4_map": {
+        "path": "build/c2.2/substitution/two-region-session-store-l65r-v4-wplto-replay3/resident-island-seed.prg.map",
+        "sha256": "1b43aece250ef34d33860369020b4750ede8fdfeb51c79ef3ed1097bbcc68d33"
+      }
+    },
+    "geometry": {
+      "text_start": "0x2023",
+      "handoff_anchor": "0xb4a3",
+      "available_text_bytes": 38016,
+      "pre_v4_text_bytes": 38034,
+      "pre_v4_end_exclusive": "0xb4b5",
+      "pre_v4_overhang_bytes": 18,
+      "pre_v4_relief_including_32_byte_noise_reserve": 50,
+      "v4_text_bytes": 38125,
+      "v4_end_exclusive": "0xb510",
+      "v4_overhang_bytes": 109,
+      "v4_net_delta_bytes": 91,
+      "total_required_relief_including_32_byte_noise_reserve": 141
+    },
+    "complete_ordinary_text_delta": [
+      {
+        "section": ".text.vm_runtime_overlay_exec_family",
+        "before_bytes": 1297,
+        "after_bytes": 1382,
+        "delta_bytes": 85,
+        "cause": "L65R-v4 carries region_id through the authenticated verifier frame, validates region-qualified bounds and selects the Region-0/Region-1 payload source at the serial load seam.",
+        "temperature": "mixed: the dispatcher is hot for every overlay invocation; its Region-1 arm is abort-only cold",
+        "residency_requirement": "The source selection occurs before the target overlay exists. Under no-overlay-calls-overlay, the dispatch seam itself must remain resident.",
+        "available_homes": {
+          "boot_family": "excluded: Region 1 contains Session rollback records",
+          "session_overlay": "excluded for the loader itself: it cannot load the phase that must load it",
+          "resident_island": "current measured headroom is 9 bytes, insufficient for the 85-byte delta",
+          "structural_candidate": "separate the rare Region-1 branch from the generic Region-0 fast path behind a resident/pinned seam; no such split was attempted"
+        }
+      },
+      {
+        "section": ".text.main",
+        "before_bytes": 642,
+        "after_bytes": 681,
+        "delta_bytes": 39,
+        "cause": "Three explicit serial c2_overlay_call sites were added for wipe-plane, wipe-chip and wipe-attic on the direct install failure path.",
+        "temperature": "abort-only cold",
+        "residency_requirement": "The serial driver must issue the calls, but three separately materialized call sequences are not intrinsically required.",
+        "available_homes": {
+          "boot_family": "excluded: dynamic Session append rollback",
+          "session_overlay": "excluded as a caller by the no-overlay-calls-overlay rule",
+          "structural_candidate": "reuse the existing rollback plan/plan-walker seam so the wipe trio remains data rather than three resident call sequences; no consolidation was attempted"
+        }
+      },
+      {
+        "section": ".text.vm_ext_write",
+        "before_bytes": 33,
+        "after_bytes": 0,
+        "delta_bytes": -33,
+        "cause": "The named vm_ext_write fossil was removed and the chip wipe consumes the existing DMA facade directly.",
+        "temperature": "retired",
+        "residency_requirement": "none"
+      }
+    ],
+    "delta_checksum": {
+      "gross_added_bytes": 124,
+      "named_recovery_bytes": 33,
+      "net_added_bytes": 91,
+      "matches_output_text_delta": true,
+      "unattributed_LTO_delta_bytes": 0
+    },
+    "correctly_nonresident_v4_growth": [
+      {
+        "section": ".lisp65_rt_bank3_stage_session",
+        "delta_bytes": 644,
+        "temperature": "pre-Session staging",
+        "placement": "cold staging slice; not ordinary resident text"
+      },
+      {
+        "section": ".lisp65_rt_rtov_catalog",
+        "delta_bytes": 90,
+        "temperature": "catalog verification",
+        "placement": "overlay"
+      },
+      {
+        "section": ".lisp65_rt_rtov_record",
+        "delta_bytes": 181,
+        "temperature": "record verification",
+        "placement": "overlay"
+      }
+    ],
+    "conclusion": "The 141-byte requirement consists of 50 inherited bytes and 91 net v4 bytes. The v4 portion is exactly 85 bytes of mixed-temperature generic dispatch plus 39 bytes of abort-only serial calls minus the delivered 33-byte fossil recovery."
+  },
+  "E000_attribution": {
+    "v4_delta": {
+      "bytes": 0,
+      "byteidentical_sections_against_pre_v4": {
+        ".lisp65_c2_kernal_window.c2_resident": {
+          "bytes": 7203,
+          "sha256": "969045f5ea453d4a535050f6cdf16c6dbda3f2ab36889548a78193023ed31211"
+        },
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "bytes": 128,
+          "sha256": "aea62b80236574eefc541bd5b4032cc841dc4993a69d5bf33cfcb10270018b18"
+        },
+        ".lisp65_c2_kernal_window.session_emitter_state": {
+          "bytes": 10,
+          "sha256": "01d448afd928065458cf670b60f5a594d735af0172c8d67f22a81680132681ca"
+        }
+      }
+    },
+    "geometry": {
+      "reopen_gap0": {
+        "start": "0xfcbe",
+        "bytes": 128,
+        "end_exclusive": "0xfd3e"
+      },
+      "session_emitter_state": {
+        "start": "0xfd22",
+        "bytes": 10,
+        "end_exclusive": "0xfd2c"
+      },
+      "profile_rodata": {
+        "start": "0xfd2c",
+        "bytes": 342,
+        "end_exclusive": "0xfe82"
+      },
+      "total_positional_deficit_bytes": 28,
+      "maximum_credit_if_session_emitter_state_moves": 10,
+      "residual_deficit_after_state_move_bytes": 18,
+      "reason": "After the ten-byte state leaves, reopen_gap0 would still occupy 0xfd2c..0xfd3d, which belongs to the fixed profile-rodata chain."
+    },
+    "session_emitter_state": {
+      "symbol": "c2e",
+      "bytes": 10,
+      "fields": [
+        {
+          "name": "code_cursor",
+          "bytes": 2
+        },
+        {
+          "name": "entry_count",
+          "bytes": 2
+        },
+        {
+          "name": "literal_count",
+          "bytes": 2
+        },
+        {
+          "name": "string_bytes",
+          "bytes": 2
+        },
+        {
+          "name": "active",
+          "bytes": 1
+        },
+        {
+          "name": "failed",
+          "bytes": 1
+        }
+      ],
+      "ELF_reference_inventory": {
+        "relocations": 111,
+        "functions": 12,
+        "resident_emitter_API_relocations": 14,
+        "emitter_overlay_relocations": 97,
+        "emitter_overlay_sections": 8,
+        "non_emitter_relocations": 0,
+        "runtime_refill_lookup_GC_or_IRQ_consumers": 0
+      },
+      "resident_consumers": [
+        {
+          "name": "c2_session_emit_reset",
+          "bytes": 47,
+          "role": "opens the exclusive emitter phase-scratch lifetime and initializes all ten bytes"
+        },
+        {
+          "name": "c2_session_emit_add",
+          "bytes": 505,
+          "role": "reads active/failed/counts and serially drives the emitter overlays"
+        }
+      ],
+      "overlay_consumers": [
+        "c2_session_emit_prepare_phase",
+        "c2_session_emit_name_phase",
+        "c2_session_emit_literal_prep_phase",
+        "c2_session_emit_literal_atom_phase",
+        "c2_session_emit_literal_append_phase",
+        "c2_session_emit_code_phase",
+        "c2_session_emit_final_meta_phase",
+        "c2_session_emit_final_crc_phase"
+      ],
+      "temperature": "transaction-local cold outside compilation/append, but densely accessed inside one emitter transaction",
+      "lifetime": "from c2_session_emit_reset phase-scratch acquisition through c2_session_emit_finalize release; disjoint from the following append transaction",
+      "movement_assessment": {
+        "movable_in_principle": true,
+        "direct_Bank5_per_field_access": "structurally possible through c2_stream_c2d_read/write but unattractive: 111 static field-reference sites would become transport consumers",
+        "fixed_phase_scratch_headroom": "zero: the 304-byte phase scratch is already part of the exactly full 0xc080..0xc217 fixed block, so a plain ten-byte append is forbidden",
+        "natural_candidate": "prove a ten-byte lifetime union inside the existing c2e_work_state, or keep the tuple in Bank-5 scratch and bulk-transfer it only at emitter phase boundaries; neither form may materialize 111 per-field DMA calls",
+        "implemented": false,
+        "capacity_effect_if_successful": "at most 10 E000 bytes; 18 bytes remain a separate geometry/scope question"
+      }
+    },
+    "conclusion": "The state is not hot Session state and has no non-emitter consumer, so its current permanent E000 residence is not semantically mandatory. Moving it cannot by itself close the 28-byte deficit."
+  },
+  "discipline": {
+    "new_WPLTO_runs": 0,
+    "new_product_links": 0,
+    "hardware_runs": 0,
+    "text_relocation_attempts": 0,
+    "E000_state_move_attempts": 0,
+    "slice_split_attempts": 0,
+    "automatic_retries": 0
+  },
+  "required_review": {
+    "text": "Choose a structural treatment for the 85-byte mixed-temperature loader delta and the 39-byte abort-only call materialization; the inherited 50-byte requirement remains visible.",
+    "E000": "The emitter tuple may legitimately yield ten bytes, preferably through the existing exclusive phase scratch. A distinct 18-byte floor-versus-scope decision remains even if that move succeeds."
+  },
+  "claim_limit": "Read-only attribution plus the owner-approved Region-1 membership edit. No placement implementation, fresh WPLTO capacity result, product link, hardware behavior, C1 closure, matrix-gate fall or acceptance-chain claim."
+}

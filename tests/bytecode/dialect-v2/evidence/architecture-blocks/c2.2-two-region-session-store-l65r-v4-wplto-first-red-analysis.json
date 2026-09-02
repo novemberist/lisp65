@@ -1,0 +1,183 @@
+{
+  "format": "lisp65-c2-two-region-session-store-l65r-v4-wplto-first-red-analysis-v1",
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: strict-v4 semantics pass; product-shaped placement does not close",
+  "classification": [
+    "session-region-selection-over-capacity",
+    "resident-bank0-text-overflow",
+    "E000-floor-geometry-deficit"
+  ],
+  "completed_contract_work": {
+    "L65R": {
+      "version": 4,
+      "record_bytes": 32,
+      "region_id_offset": 24,
+      "accepted_versions": [
+        4
+      ],
+      "dual_decoder": false,
+      "one_emitter": true,
+      "unknown_region_is_format_error": true,
+      "mutation_count": 10,
+      "status": "passed"
+    },
+    "two_region_geometry": {
+      "region0_capacity_bytes": 65536,
+      "region1_bank": 5,
+      "region1_start": "0xbd00",
+      "region1_end_exclusive": "0xc4f0",
+      "region1_capacity_bytes": 2032,
+      "C2D_append_scratch_floor_bytes": 14544,
+      "third_region": "forbidden",
+      "overflow_policy": "automatic-scope-triage"
+    },
+    "deliberate_capacity_price": {
+      "dynamic_entry_delta_rows_worst_case": -25,
+      "remaining_dynamic_export_rows": 1818,
+      "root_ceiling": 1536
+    },
+    "write_completion_source_model": {
+      "status": "passed",
+      "mutation_count": 21,
+      "converged_points_per_transaction": 4,
+      "private_completion_helpers": 0,
+      "C2J_identity": "emission-bound CRC16 seal over the complete 64-byte record"
+    }
+  },
+  "measured_WPLTO": {
+    "object": {
+      "path": "build/c2.2/substitution/two-region-session-store-l65r-v4-wplto-replay3/resident-island-seed.prg.lto.o",
+      "sha256": "ca6e07e111bf10c49608ca72fcce902efd099f34e591605c7a31f7035544cf51"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/two-region-session-store-l65r-v4-wplto-replay3/resident-island-seed.prg.map",
+      "sha256": "1b43aece250ef34d33860369020b4750ede8fdfeb51c79ef3ed1097bbcc68d33"
+    },
+    "linker_stderr": {
+      "path": "build/c2.2/substitution/two-region-session-store-l65r-v4-wplto-replay3/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "194c6fc062f6a3ad54d96d6e44108d0aa81f5fac022d414300b4264df3511ccc"
+    },
+    "profile": {
+      "path": "build/c2.2/substitution/two-region-session-store-l65r-v4-wplto-replay3/resolved-profile.txt",
+      "sha256": "4a532b061931f67b89301868edd4ba0034c16be384f2ed06c4e0da1297608201"
+    },
+    "whole_program_LTO_closure_links": 1,
+    "completed_promotable_product_links": 0,
+    "hardware_runs": 0
+  },
+  "slice_cap": {
+    "cap_bytes": 1792,
+    "status": "passed-for-all-new-and-grown-rollback-slices",
+    "measured_bytes": {
+      "journal_prepare": 1674,
+      "header": 1466,
+      "publish_clear": 1295,
+      "rollback_unpublish": 758,
+      "rollback_wipe_plane": 954,
+      "rollback_wipe_chip": 506,
+      "rollback_wipe_attic": 420,
+      "rollback_finalize": 267
+    }
+  },
+  "session_region_first_red": {
+    "attempted_region1_members": [
+      "rollback_unpublish",
+      "rollback_wipe_plane",
+      "rollback_wipe_chip",
+      "rollback_wipe_attic"
+    ],
+    "packing": {
+      "rollback_unpublish": {
+        "offset": 0,
+        "bytes": 758
+      },
+      "rollback_wipe_plane": {
+        "offset": 768,
+        "bytes": 954
+      },
+      "rollback_wipe_chip": {
+        "offset": 1792,
+        "bytes": 506
+      },
+      "rollback_wipe_attic": {
+        "offset": 2304,
+        "bytes": 420
+      },
+      "used_bytes": 2724,
+      "capacity_bytes": 2032,
+      "deficit_bytes": 692
+    },
+    "region0_counterfactual_bytes": 64414,
+    "region0_counterfactual_headroom_bytes": 1122,
+    "note": "The strict-v4 format and two-region geometry are viable; the attempted cold-freight membership is not."
+  },
+  "feasible_region_membership_not_applied": {
+    "recommended": {
+      "region1_members": [
+        "rollback_wipe_plane",
+        "rollback_wipe_chip",
+        "rollback_wipe_attic"
+      ],
+      "reason": "These are the three physical wipe bodies; unpublish remains with normal Session metadata control.",
+      "region1_bytes": 1956,
+      "region1_headroom_bytes": 76,
+      "region0_bytes": 65182,
+      "region0_headroom_bytes": 354
+    },
+    "capacity_preserving_alternative": {
+      "region1_members": [
+        "rollback_unpublish",
+        "rollback_wipe_plane"
+      ],
+      "region1_bytes": 1722,
+      "region1_headroom_bytes": 310,
+      "region0_bytes": 65438,
+      "region0_headroom_bytes": 98
+    },
+    "execution_claim": "Read-only packing arithmetic over the measured WPLTO section sizes and the SHA-bound Link-59 predecessor manifest; neither assignment was built or linked after First Red."
+  },
+  "resident_currency_first_reds": {
+    "bank0_text": {
+      "start": "0x2023",
+      "bytes": 38125,
+      "end_exclusive": "0xb510",
+      "handoff_anchor": "0xb4a3",
+      "overhang_bytes": 109,
+      "required_noise_headroom_bytes": 32,
+      "total_required_relief_bytes": 141,
+      "status": "red"
+    },
+    "E000_window": {
+      "reopen_gap0_start": "0xfcbe",
+      "reopen_gap0_bytes": 128,
+      "reopen_gap0_end_exclusive": "0xfd3e",
+      "session_emitter_state_start": "0xfd22",
+      "session_emitter_state_bytes": 10,
+      "positional_deficit_bytes": 28,
+      "required_floor_bytes": 54,
+      "status": "red-separate-class-C-figure"
+    },
+    "ordinary_rodata": {
+      "status": "red-consequence",
+      "reason": "The E000 overlap prevents the predecessor/VMA/LMA relation from closing."
+    },
+    "named_text_recovery": {
+      "vm_ext_write_symbol_present": false,
+      "status": "the authorized fossil removal landed, but it does not close the net v4 resident-text growth"
+    }
+  },
+  "first_red_discipline": {
+    "automatic_retry": false,
+    "region_membership_reassignment_applied": false,
+    "window_change_attempted": false,
+    "text_shaving_attempted": false,
+    "promotable_product_candidate_emitted": false,
+    "link59_rollback_line_modified": false
+  },
+  "required_review": {
+    "region_membership": "Approve the measured wipe-triple assignment or select the capacity-preserving alternative.",
+    "bank0_text": "109 bytes of actual text overhang plus the contractual 32-byte noise headroom require 141 bytes of named relief; no LTO retry is authorized.",
+    "E000_window": "The fresh map confirms the previously isolated 28-byte deficit. It is returned as its own Class-C figure exactly as commissioned."
+  },
+  "claim_limit": "Strict-v4 contract/source semantics and one product-shaped WPLTO map only. No green aggregate, final E000 floor, promotable product link, C1 closure, matrix-gate fall, hardware behavior, promotion, or acceptance-chain claim."
+}

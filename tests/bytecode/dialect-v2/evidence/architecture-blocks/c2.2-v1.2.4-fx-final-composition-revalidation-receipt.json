@@ -1,0 +1,158 @@
+{
+  "artifacts": {
+    "baseline": {
+      "code_bytes": 14805,
+      "manifest": {
+        "bytes": 304074,
+        "path": "build/post-promotion/v124/fx/host-first/base/stdlib-p0.manifest.json",
+        "sha256": "61b578b80bd26d731980dfc489fcd3369e394cfbf61ba2ebe8186b070a5bd157"
+      },
+      "objects": 350
+    },
+    "candidate": {
+      "code_bytes": 16256,
+      "manifest": {
+        "bytes": 329518,
+        "path": "build/post-promotion/v124/fx/host-first/candidate/stdlib-p0.manifest.json",
+        "sha256": "31d88a8ad4313d85431f8545af0ac039ac058c0f9f26259f6424aba223fdccff"
+      },
+      "objects": 376
+    },
+    "delta": {
+      "bank2_code_bytes": 1451,
+      "directory_bytes": 182,
+      "objects": 26,
+      "resident_bytes": 0,
+      "resolution_words": 71
+    },
+    "execution": {
+      "artifact_cases_total": 259,
+      "independent_oracle_cases_per_lane": 36,
+      "math_io_witness_rows": 38,
+      "observations": {
+        "bytes": 34586,
+        "path": "build/post-promotion/v124/fx/host-first/candidate/observations.json",
+        "sha256": "2403667ba0148d4c6bf24289d3684cdd1b2ec2e51ea3c976326a0509718ff51b"
+      },
+      "source_cases_total": 259,
+      "source_stdout": [
+        "bytecode-p0-stdlib-check: PASS suites=1 functions=375 cases=259 objects=650 code_bytes=21907 dir_bytes=4550 steps=68451",
+        "bytecode-p0-stdlib-artifacts: WROTE build/post-promotion/v124/fx/host-first/candidate/stdlib-p0 objects=376 code_bytes=16256 ext_bytes=38370 dir_bytes=2632 manifest=build/post-promotion/v124/fx/host-first/candidate/stdlib-p0.manifest.json disasm=build/post-promotion/v124/fx/host-first/candidate/stdlib-p0.disasm.txt",
+        "bytecode-p0-stdlib-embed-check: PASS cases=259 objects=376 literal_nodes=846 literal_patches=790 steps=68451"
+      ],
+      "tracked_fx_cases_per_lane": 12
+    },
+    "projected_post_Link80": {
+      "bank2_headroom_bytes": 22600,
+      "bank2_static_code_bytes": 42936,
+      "direct_entry_refs": 656,
+      "entries": 722,
+      "entry_headroom": 1326,
+      "resolution_headroom": 1265,
+      "resolutions": 2831,
+      "root_headroom": 1196,
+      "roots": 340
+    }
+  },
+  "authority": {
+    "base_suite": {
+      "bytes": 1726,
+      "path": "tests/bytecode/libs/p0-stdlib-random-base.json",
+      "sha256": "e0cf8deb82d41a44f013632f923d76c61237436ecc4d7573f4519faad7824722"
+    },
+    "contract": {
+      "bytes": 4101,
+      "path": "config/c2-fx-contract.json",
+      "sha256": "bd65f05c176481918e2c80d503ceb98b6530cbd3b3789926bbed0b4801ae0b57"
+    },
+    "design": {
+      "bytes": 3092,
+      "path": "docs/planning/c2.2-v1.2.4-fx-host-first.md",
+      "sha256": "1b2dfa7df89132d73212ea7111c333203222ca8cc3e034a35d064256722e96ec"
+    },
+    "gate": {
+      "bytes": 24560,
+      "path": "tools/host-lisp/c2_v124_fx_gate.py",
+      "sha256": "37fc88e63ee3530ec7aac01461dba6a4dfc8024118a6a040d5c43ada954e0458"
+    },
+    "host_vm": {
+      "bytes": 88857,
+      "path": "tools/host-lisp/bytecode_p0.py",
+      "sha256": "18290568c7217f1597505664f6bfdcab8d55e31a3f7d5254a9eea612af7f8389"
+    },
+    "profile": {
+      "bytes": 4487,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "1abcc4e01d0103b8466f4abec90698404f082df472c6e1b6129678fcc5c715ea"
+    },
+    "source": {
+      "bytes": 5898,
+      "path": "lib/stdlib-fx.lisp",
+      "sha256": "f1e2bc9f71bf7a5a5f65fcac1128621a97518373bed721b972df3d3d73afd56b"
+    },
+    "stdlib_runner": {
+      "bytes": 124923,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "72f72f2bae171ca95b9b2ea83eaefeaadb40811500ecd5451a59b6bc703d49de"
+    },
+    "suite": {
+      "bytes": 2753,
+      "path": "tests/bytecode/libs/p0-stdlib-fx-base.json",
+      "sha256": "2e027b9ec2fedb1958a4affcb9b4d7a0ee6033e87845b070c7f7c741a9fdc75f"
+    }
+  },
+  "claim_limit": "Independent host arithmetic, source/artifact P0 execution over a modeled math register file and projected capacity only; no target register or on-metal fx claim.",
+  "composition": {
+    "original_receipt": {
+      "bytes": 5568,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-fx-host-first-receipt.json",
+      "sha256": "3875f93709221f81997d5fecf62a40f3ddb7e2b81d5fa80d935f3d9233f80397"
+    },
+    "post_time_receipt": {
+      "bytes": 5900,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-fx-post-time-revalidation-receipt.json",
+      "sha256": "c98a4dac837b65b6f04722e110870653061c70cc55ea8370c3b464f0c6fb4acd"
+    },
+    "product_build_id": "0x15da63c2",
+    "release_banner": "WORKBENCH 1.2.4",
+    "successor": "time"
+  },
+  "format": "lisp65-c2.2-v1.2.4-fx-host-first-receipt-v1",
+  "hardware_runs": 0,
+  "mutations_rejected": {
+    "built-but-not-executed": "fx execution witness absent: fx-multiply-main",
+    "legacy-source-reintroduced": "fx revived its legacy implementation or require dependency",
+    "math-inside-multiply-transaction": "arithmetic entered the shared math-unit transaction",
+    "parked-defstruct-dependency": "fx base-composition suite drift",
+    "require-dependency": "fx revived its legacy implementation or require dependency",
+    "resident-byte": "fx placement contract drift",
+    "scale-256": "fx semantic contract drift",
+    "truncate-rounding": "fx semantic contract drift",
+    "wrong-fraction-contract-byte": "fx math-register contract drift",
+    "wrong-fraction-high-byte": "fx result-register read drift",
+    "wrong-product-low-byte": "fx result-register read drift"
+  },
+  "next_gate": "Exactly one non-promotable WPLTO capacity card, then Phase M confirms the target register layout before any product link.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-30",
+  "source_contract": {
+    "private_functions": 18,
+    "public_functions": [
+      "fx",
+      "int->fx",
+      "fx->int",
+      "fx+",
+      "fx-",
+      "fx*",
+      "fx/",
+      "fx->string"
+    ],
+    "require_dependency": false,
+    "resident_delta_bytes": 0,
+    "runtime_overlay_records": 0,
+    "status": "passed-Q8.7-source-and-transaction-contract",
+    "transaction_input_writes": 8
+  },
+  "status": "passed-fx-host-reference-in-final-v1.2.4-composition"
+}

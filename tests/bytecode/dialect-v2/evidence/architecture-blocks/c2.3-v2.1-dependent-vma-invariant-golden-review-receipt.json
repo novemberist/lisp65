@@ -1,0 +1,322 @@
+{
+  "authority": {
+    "candidate_v2_1_elf": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-postlink-schema-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "7614e99db91ee6e91038c29ab74e6b2d67cf9f3ffa2566ed3dc902c0480c72d7"
+    },
+    "dependency_attribution": {
+      "bytes": 10487,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-reopen-gap-dependency-attribution-receipt.json",
+      "sha256": "2f02c95be3e25f590a74c9371c36cbb26cec0136c2a0b857d2d4cedc79871179"
+    },
+    "invariant_gate": {
+      "bytes": 31796,
+      "path": "tools/host-lisp/c2_v21_dependency_invariant_golden.py",
+      "sha256": "ee14071a096d9b1c2f21ed62d4a08500bb799eb77308c81d60daa862d6912a9a"
+    },
+    "owner_reclassification": {
+      "authority": "git-blob",
+      "bytes": 55719,
+      "commit": "301290876bcef67f88660c5b4fc8198030576b89",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "c47bb32fd32f67bc6f926a5f86c6b723a5a2fbe01600cf71ee7e676fccdf1f16"
+    },
+    "postlink_schema_card_final_red": {
+      "bytes": 4400,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-postlink-schema-replacement-card-final-red.json",
+      "sha256": "d13ba8d827a7a0aaf48ccdc2eb1ea11206eeee5acaef62425eff80e41037aa50"
+    },
+    "predecessor_vma_golden": {
+      "bytes": 29428,
+      "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-owned-vma-invariants-v3.json",
+      "sha256": "3b7d35e34f1199b03e58eeb9be3da7e45aaeb87b67a652c32751761df1398dfa"
+    },
+    "predecessor_vma_golden_review": {
+      "bytes": 15082,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-vma-invariant-golden-review-receipt.json",
+      "sha256": "edd2649efc865adfdc0c6f65ba5065f933c34e66ee0d797fef2872f81de2834e"
+    },
+    "reference_v2_0_elf": {
+      "bytes": 628736,
+      "path": "build/c2.3/v2.0-source-oracle-replacement3-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bfdad683c3fd0f4aa158770cab30c357d6bacdafa35a92f97fadcaaafd194b6a"
+    }
+  },
+  "card_lock": {
+    "card_authorized_by_this_receipt": false,
+    "review_accepted": false,
+    "wplto_allowed": false
+  },
+  "claim": "Host-only review package for 101 dependent fixed VMAs and two candidate-derived predecessor-end VMAs. No WPLTO, card, Completion, media, device or release claim.",
+  "dependent_vma_golden": {
+    "bytes": 30406,
+    "capacity_arenas": 11,
+    "dependent_fixed_vmas": 101,
+    "dependent_free_derived_vmas": 2,
+    "fixed_boundary_symbols": 27,
+    "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-dependent-vma-invariants-v4.json",
+    "sha256": "28190ae2e5c3f02b229a3cea257ef3ca5b98f76ac19b35ef77f1f48dc318f1f3",
+    "stored_gap0_vma": false,
+    "stored_gap1_vma": false,
+    "stored_gap2_vma": "0xff90"
+  },
+  "execution_witness": {
+    "candidate_mutations": 7,
+    "cards_consumed": 0,
+    "completion_runs": 0,
+    "dependent_address_comparisons": 2,
+    "device_contacts": 0,
+    "fresh_wplto": 0,
+    "golden_mutations": 10,
+    "media_builds": 0,
+    "world_layout_extractions": 2
+  },
+  "format": "lisp65-c2.3-v2.1-dependent-vma-golden-review-v1",
+  "mutations_rejected": {
+    "candidate": {
+      "derived-section-absent": "candidate fixed-plus-derived section closure drift",
+      "gap0-breaks-predecessor-end": "candidate derived VMA violates predecessor end: .lisp65_c2_kernal_window.reopen_gap0",
+      "gap0-predecessor-size-unfollowed": "candidate derived VMA violates predecessor end: .lisp65_c2_kernal_window.reopen_gap0",
+      "gap1-breaks-predecessor-end": "candidate derived VMA violates predecessor end: .lisp65_c2_kernal_window.reopen_gap1",
+      "gap2-anchor-moved": "candidate dependent-address invariants differ from Golden",
+      "other-fixed-vma-moved": "candidate dependent-address invariants differ from Golden",
+      "uncontracted-section-added": "candidate fixed-plus-derived section closure drift"
+    },
+    "golden": {
+      "capacity-wall-moved": "inherited capacity arena authority drift",
+      "criterion-dimmed": "dependent-address policy or authority drift",
+      "dependency-authority-changed": "dependent-address policy or authority drift",
+      "dependent-anchor-demoted": "dependent fixed-VMA closure drift",
+      "dependent-free-address-promoted": "dependent fixed-VMA closure drift",
+      "derived-order-source-reverted": "VMA/LMA order derivation partition drift",
+      "derived-predecessor-changed": "derived predecessor relation drift: .lisp65_c2_kernal_window.reopen_gap0",
+      "derived-relation-dimmed": "derived predecessor relation drift: .lisp65_c2_kernal_window.reopen_gap0",
+      "derived-vma-frozen": "derived VMA contains a frozen address or loses metadata",
+      "fixed-boundary-moved": "fixed boundary closure drift"
+    }
+  },
+  "permanent_policy": {
+    "criterion": "invariants-are-addresses-with-dependents",
+    "derived": "addresses-that-merely-arise",
+    "gap0_validation": "end-of-c2_resident",
+    "gap1_validation": "end-of-profile_rodata",
+    "gap2_validation": "fixed-0xff90"
+  },
+  "recorded_on": "2026-08-14",
+  "review_question": "Accept the dependent-address SHA-bound Golden once. Only a later reviewer acceptance may unlock exactly one replacement card under the unchanged producer and qualification authorities.",
+  "status": "PASS: awaiting one-time dependent-VMA Golden review",
+  "world_probe": {
+    "candidate_v2_1": {
+      "allocatable_sections": 103,
+      "candidate_lma_order_sha256": "ca9e277c780ff51d60a1426ccab86e95f8b76e7d1639a0a3d8a805ae60e3657e",
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 24,
+          "candidate_max_end_exclusive": 45976,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 625,
+          "candidate_max_end_exclusive": 31772,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-invariants-plus-derived-vmas-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_freight_sha256": "3c9484a8822d03779db468ffb6eb85af9c068f2f7b236de5d224e1ae32ca51d7",
+      "derived_vma_order_sha256": "86173f419915bef751c5663be20b6928a23934b5e3b7f7e8d497b14764e1b9df",
+      "derived_vma_projection_sha256": "6846c2d4a9b62ce418e487d3cb6d06fda667756a27060f90a3977e24fc3f0b72",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 27,
+      "fixed_projection_sha256": "d40021000355a89478697dc681a92f36a0f7cde16ed18a6b3e8d5a1e5e3c0209"
+    },
+    "different_valid_derived_projection": true,
+    "lesson": "Both worlds satisfy one dependent-address authority. The changed gap0 value is accepted only because the independent dependency attribution classifies its predecessor-end relation; world agreement is not the classifier.",
+    "reference_v2_0": {
+      "allocatable_sections": 103,
+      "candidate_lma_order_sha256": "ca9e277c780ff51d60a1426ccab86e95f8b76e7d1639a0a3d8a805ae60e3657e",
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 140,
+          "candidate_max_end_exclusive": 45860,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 625,
+          "candidate_max_end_exclusive": 31772,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-invariants-plus-derived-vmas-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_freight_sha256": "ab64fe07c1dfd4efaa41fc5b7a305ebd5d69e901284474b32859d2322d7c6c0b",
+      "derived_vma_order_sha256": "86173f419915bef751c5663be20b6928a23934b5e3b7f7e8d497b14764e1b9df",
+      "derived_vma_projection_sha256": "b020b0de1450a785988d0d57e5d40b87dd8de0efa6318bbb886dcf34e7332e10",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64688,
+          "vma": 64688
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 27,
+      "fixed_projection_sha256": "d40021000355a89478697dc681a92f36a0f7cde16ed18a6b3e8d5a1e5e3c0209"
+    },
+    "shared_fixed_projection": true
+  }
+}

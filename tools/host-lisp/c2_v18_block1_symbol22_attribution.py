@@ -20,6 +20,7 @@ import bytecode_p0_stdlib as STD  # noqa: E402
 import c2_full_emission as F  # noqa: E402
 import c2_lite_v6_product_probe as V6  # noqa: E402
 import c2_product_session_host as SESSION  # noqa: E402
+from evidence_era import era_bind, era_blob  # noqa: E402
 
 
 PLANE = ROOT / ("build/c2.3/v1.7-ide-idle-blink-product-preflight-r10/"
@@ -37,6 +38,7 @@ VM_C = ROOT / "src/vm.c"
 NATIVE_DISPATCH = ROOT / "src/v2_native_function_dispatch.h"
 OUT = ROOT / ("tests/bytecode/dialect-v2/evidence/architecture-blocks/"
               "c2.3-v1.8-block1-symbol22-host-attribution.json")
+SEAL_ERA = "df9601005001c50bfc106f8e97bb03067c2034d5"
 
 ERR_TOO_MANY_SYMBOLS = 34
 SYMBOL_NAME_MAX = 33
@@ -298,6 +300,11 @@ def execute_first_left(host: SESSION.ProductSessionHost) -> dict[str, Any]:
 
 
 def derive() -> dict[str, Any]:
+    sealed_symbol_source = era_blob(
+        SEAL_ERA, SYMBOL_C.relative_to(ROOT).as_posix()).decode()
+    require("static obj new_symbol(const char *name)" in sealed_symbol_source
+            and "LISP65_ERR_TOO_MANY_SYMBOLS" in sealed_symbol_source,
+            "sealed Block-1 symbol writer seam drift")
     control = positive_control()
     sealed = load(SEALED)
     capacity = sealed["primary_error"]["capacity"]
@@ -353,8 +360,9 @@ def derive() -> dict[str, Any]:
         "authority": {"sealed_first_red": bind(SEALED), "c2d": bind(C2D),
                       "code": bind(CODE), "static_artifacts": bind(STATIC_ARTIFACTS),
                       "library_manifest": bind(LIBRARY_MANIFEST),
-                      "symbol_c": bind(SYMBOL_C), "symbol_h": bind(SYMBOL_H),
-                      "vm_c": bind(VM_C),
+                      "symbol_c": era_bind(SEAL_ERA, SYMBOL_C),
+                      "symbol_h": bind(SYMBOL_H),
+                      "vm_c": era_bind(SEAL_ERA, VM_C),
                       "native_dispatch": bind(NATIVE_DISPATCH)},
         "positive_control": control,
         "static_entries_loaded": len(static), "library_append": append,

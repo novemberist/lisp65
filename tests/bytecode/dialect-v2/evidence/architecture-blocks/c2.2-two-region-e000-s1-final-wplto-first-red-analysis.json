@@ -1,0 +1,65 @@
+{
+  "format": "lisp65-c2-two-region-E000-S1-final-WPLTO-first-red-analysis-v1",
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: prelink profile compile stopped on three dormant historical batch-tuple objects",
+  "promotable": false,
+  "authority": {
+    "final_map_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-e000-s1-final-wplto-receipt.json",
+      "bytes_before_accounting_correction": 4267,
+      "sha256_before_accounting_correction": "a0e94d8f842f3f158d98d5e06773c2341adb08ac46634946819ec1bb3b6af8e7"
+    },
+    "internal_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-e000-s1-final-wplto-internal.json",
+      "bytes": 12288,
+      "sha256": "be48c997060842f9b7ee483b8b0f78937ad07e279fcca80189e5ec3dc3d7d0d9"
+    },
+    "source_at_first_red": {
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "93ed7e49a515edc1657c23c99dde4597981068095b41f739b7b8fd23772b4ba2"
+    }
+  },
+  "failure": {
+    "phase": "C2-lite prelink profile compilation before Whole-Program LTO closure",
+    "compiler_policy": "-Werror=unused-variable",
+    "objects": [
+      {
+        "name": "rtov_batch_entry",
+        "bytes": 2
+      },
+      {
+        "name": "rtov_batch_crc",
+        "bytes": 2
+      },
+      {
+        "name": "rtov_batch_slot_id",
+        "bytes": 1
+      }
+    ],
+    "cause": "E000-S1 retired the batch consumers; this narrower prelink feature set enables neither the split-installer handoff nor transaction-auth tuple reuse, so the unconditional declarations have no consumer",
+    "classification": "compile-time lifetime guard omission; no map or product measurement exists"
+  },
+  "recommended_narrow_correction": {
+    "rtov_batch_entry_and_crc": "declare only for LISP65_RTOV_ISLAND_SPLIT_PROBE or LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+    "rtov_batch_slot_id": "declare only for transaction-auth tuple reuse, the fixed retry probe, or the non-transaction-auth C1 abort result",
+    "product_semantics": "unchanged",
+    "expected_current_product_capacity_delta": 0,
+    "proof_required": "source-feature matrix plus the still-unconsumed final Whole-Program map"
+  },
+  "unreached": {
+    "whole_program_LTO_closure": true,
+    "map": true,
+    "walls": true,
+    "region_packing": true,
+    "product_link": true,
+    "hardware": true
+  },
+  "execution_accounting": {
+    "final_map_driver_attempts": 1,
+    "whole_program_LTO_closure_links": 0,
+    "automatic_retries": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0
+  },
+  "claim_limit": "Compile First Red and narrow correction recommendation only. No WPLTO wall, Link 60, C1, matrix or hardware claim."
+}

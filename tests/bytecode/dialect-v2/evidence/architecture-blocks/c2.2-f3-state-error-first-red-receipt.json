@@ -1,0 +1,67 @@
+{
+  "format": "lisp65-c2-f3-state-error-first-red-receipt-v1",
+  "recorded_on": "2026-07-27",
+  "status": "parked-at-hard-cold-slice-cap-before-product-link",
+  "promotable": false,
+  "hardware_runs": 0,
+  "product_links": 0,
+  "decision": {
+    "result": "park-entire-gc-room-error-trio-for-halt-2",
+    "reason": "The required single shared carrier compiled to 2552 bytes against the existing 1792-byte stack-safe Buffer-read cap. The contract prohibits a resident dispatcher and the Phase-F rule prohibits negotiating walls for F3.",
+    "followup_attempts": 0,
+    "f1_and_f2_affected": false
+  },
+  "semantic_probe": {
+    "source_mutations_rejected": 19,
+    "positive_routes": 9,
+    "negative_cases": 6,
+    "error_renderer_bytes": 1309,
+    "error_renderer_cap_bytes": 1320,
+    "error_renderer_headroom_bytes": 11
+  },
+  "capacity_attribution": {
+    "section": ".lisp65_rt_buffer_read",
+    "section_bytes": 2552,
+    "hard_cap_bytes": 1792,
+    "over_cap_bytes": 760,
+    "f2_baseline_section_bytes": 1166,
+    "f3_delta_bytes": 1386,
+    "symbols": {
+      "buffer_room_bytes": 951,
+      "lisp65_buffer_overlay_read_entry_bytes": 1444,
+      "other_section_bytes": 157
+    },
+    "resident_demand_claim": "none; the hard cold-slice gate stopped before a complete WPLTO map",
+    "resident_walls_changed": "not claimed"
+  },
+  "first_red": {
+    "stage": "resident-island-seed link",
+    "diagnostic": "buffer reader exceeds its stack-safe window",
+    "linked_product_emitted": false,
+    "map": {
+      "path": "build/post-promotion/f3/product-shaped/wplto/resident-island-seed.prg.map",
+      "bytes": 168942,
+      "sha256": "36d2e6293731a63f26b9f707d39665547b020b755b51cec71ee5354fa62f049b"
+    },
+    "lto_object": {
+      "path": "build/post-promotion/f3/product-shaped/wplto/resident-island-seed.prg.lto.o",
+      "bytes": 622920,
+      "sha256": "89095b44337bb923979ebc5e326c17c846934e5a9c0147b400a3a9d559a27a22"
+    }
+  },
+  "authority": {
+    "contract": {
+      "path": "config/c2-state-error-carrier-contract.json",
+      "sha256": "008f841c3516395667c991b7bfa6c1b7fce740655a0b37cb54e4117a33dac9ce"
+    },
+    "contract_note": {
+      "path": "docs/planning/c2.2-f3-state-error-carrier-contract.md",
+      "sha256": "77284f1bee32e25604ea8e491f2e6014afd9122c5c903fa84f9c7c826ce356df"
+    },
+    "gate": {
+      "path": "tools/host-lisp/c2_state_error_carrier_gate.py",
+      "sha256": "cc559af0af89db219f0a340a7273d12cf199b0cb8c5a4f781534c357e11fc2c1"
+    }
+  },
+  "claim_limit": "F3 semantic and failed WPLTO-capacity evidence only. No product delivery, resident-wall result, product link, hardware result or promotion is claimed."
+}

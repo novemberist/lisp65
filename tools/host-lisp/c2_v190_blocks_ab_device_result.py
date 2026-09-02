@@ -17,6 +17,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v190_blocks_ab_acceptance_media as MEDIA  # noqa: E402
+from evidence_era import era_bind  # noqa: E402
 from elf_truth import ElfTruth  # noqa: E402
 
 
@@ -38,6 +39,7 @@ ELF = MEDIA.WPLTO / "lisp65-c2-substitution-linked.prg.elf"
 READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 LISTS = ROOT / "lib/dialect-v2/lists-core.lisp"
 VM = ROOT / "src/vm.c"
+EVIDENCE_ERA = "d38ea2e3"
 STATUS = (
     "PASS: DEVICE ROWS GREEN; FORCED-COLLECTION DEVICE SUBCLAIM REVIEW-PENDING")
 
@@ -185,7 +187,7 @@ def derive() -> dict[str, Any]:
             "incorrect_public_form": "(length string)",
             "correct_public_form": "(string-length string)",
             "list_length_authority": bind(LISTS),
-            "string_length_authority": bind(VM),
+            "string_length_authority": era_bind(EVIDENCE_ERA, VM),
             "correction_rule": "a withdrawn device stimulus carries no acceptance weight and no unobserved collection claim"},
         "D5": {"status": "PASS: RELEASE-TERMINAL D5 HEADROOM GREEN",
             "captures": {"nsym": bind(NSYM_CAPTURE),

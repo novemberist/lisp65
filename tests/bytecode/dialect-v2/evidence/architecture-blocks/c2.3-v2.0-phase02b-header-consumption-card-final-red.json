@@ -1,0 +1,60 @@
+{
+  "artifact_count": 0,
+  "artifacts": {},
+  "attempt_accounting": {
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 0,
+    "wplto_runs": 0
+  },
+  "authority": {
+    "attribution": {
+      "bytes": 10680,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-link105-phase02b-extent-attribution-receipt.json",
+      "sha256": "a24c53aa7abe96d154eed49e7376ae898d1ee9cf965d314545fb52c846d47608"
+    },
+    "invocation": {
+      "bytes": 727,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-preflight/card-invocation.json",
+      "sha256": "8f385a8dcf781f2861cd2b8f6cbd744f9b26af8df068429097cd03bf2d58edd3"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 63079,
+      "commit": "b21fbc4942ab6bc7becc39e41b467d6e1eeef0c9",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "dec9b4dfec0c26ed67743d866358c195fe05630005d89e53dd808c4f4d745f30"
+    },
+    "preflight": {
+      "bytes": 2790,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-preflight/preflight.json",
+      "sha256": "2b61d1a5648c7a6aab4598efdea41a9841039760442e548137e091222e61c0ea"
+    },
+    "producer_driver": {
+      "bytes": 20378,
+      "path": "tools/host-lisp/c2_v20_phase02b_header_consumption_card.py",
+      "sha256": "c9e77b9c8000bd7ac4435f0afc287b27881df53b87a4eb5d75601b64ff08a0c1"
+    }
+  },
+  "claim_limit": "Pre-WPLTO wrapper setup failure only. The candidate-header consumption fix was not executed, no product artifact exists, and no completion, media or device action ran. Phase 02a remains exonerated; D2-D5 remain closed and the CPU remains stopped.",
+  "error": {
+    "message": "module 'c2_v20_source_oracle_replacement3_card' has no attribute 'configure_previous'",
+    "type": "AttributeError"
+  },
+  "final_red_recorder": {
+    "failure": "the automatic recorder traversed the same broken configure_chain adapter while enumerating absent artifacts",
+    "recovery": "this receipt binds the already persisted invocation and preflight; it does not execute or retry the card"
+  },
+  "format": "lisp65-c2.3-v20-phase02b-header-consumption-card-final-red-v1",
+  "owner_disposition_required": true,
+  "recorded_on": "2026-08-13",
+  "retry_authorized": false,
+  "root_cause": {
+    "class": "WRAPPER-ADAPTER-LAYER-NAME-ERROR",
+    "mechanism": "the Link-106 wrapper called configure_previous on the imported replacement-III driver; that module exports configure_chain and owns its own predecessor adapter internally",
+    "narrow_repair": "call the imported replacement-III configure_chain adapter; do not alter the candidate-header consumer fix, producer, acceptance authorities or product freight"
+  },
+  "status": "FINAL RED: header-consumption card stopped before WPLTO"
+}

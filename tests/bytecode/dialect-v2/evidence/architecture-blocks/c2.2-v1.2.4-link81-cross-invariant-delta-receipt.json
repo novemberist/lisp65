@@ -1,0 +1,554 @@
+{
+  "bindings": {
+    "fresh_irq": {
+      "bytes": 4236,
+      "path": "build/c2.2/v1.2.4/a2/interrupt-ownership-link81.json",
+      "sha256": "74e6bdf651cbc6dfbc4603c164d9658824f26556aa90ea36dac9260e67ae78ff"
+    },
+    "fx": {
+      "bytes": 6202,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-fx-final-composition-revalidation-receipt.json",
+      "sha256": "253cf154a2cb9f2f5884a65005b86be0d545e8c00e00b754adafdb1139683105"
+    },
+    "link81": {
+      "bytes": 3708,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-phase-e-link81-receipt.json",
+      "sha256": "754709b4614bbad7188f8afd90b9179568a70d56edb55e3a293a1b572af7a0f8"
+    },
+    "link81_elf": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.4-candidate-product-link81/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "7d380f08c24b9f6bebb0d4863b56bf4a8bfaa1982484902857689936c178a222"
+    },
+    "owner_disposition_plan": {
+      "bytes": 11700,
+      "commit": "2fbd895a",
+      "path": "docs/planning/1.2.4-work-plan.md",
+      "sha256": "f70ae2ecb1ad1bc02d20e8a9a26b977fc6b4131265f0151c10ff91a611730749"
+    },
+    "phase_m": {
+      "bytes": 9663,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-phase-m-hardware-receipt.json",
+      "sha256": "b821f41a37426b97c701256f0b0abebf3e76196264210c756a697c639cadc724"
+    },
+    "reviewed_Link80_delta": {
+      "bytes": 22588,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.3-link80-cross-invariant-delta-receipt.json",
+      "sha256": "c74bc630483cb6d3f3752295cc93bde139dd535954821d38eadc984be71fef10"
+    },
+    "time": {
+      "bytes": 5367,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-time-final-composition-revalidation-receipt.json",
+      "sha256": "87270c601f2e1b77ab76404b1d4786e0848adbb00a62beff0a64c537e41c2485"
+    },
+    "verifier": {
+      "bytes": 10461,
+      "path": "tools/host-lisp/c2_v124_matrix_delta.py",
+      "sha256": "c9810dc360325b5af7000ed1aa0e6988c5acfb9732d6265f177796fecab5646a"
+    }
+  },
+  "candidate": "Link 81",
+  "claim_limit": "A Link-81 v1.2.4 delta review only. Phase-M hardware is feature history, not fresh G5/G6 acceptance. C1/E3/E4 remain explicit C2.3 deferrals; no promotion, tag, release or public push.",
+  "format": "lisp65-v1.2.4-link81-cross-invariant-delta-v1",
+  "fresh_execution_witness": {
+    "fx_source_and_artifact_oracle": "36x2",
+    "interrupt_ownership_mutations": 16,
+    "time_source_and_artifact_oracle": "12x2"
+  },
+  "hardware_claim_boundary": {
+    "fresh_v1.2.4_G5_G6_still_required": true,
+    "fx_target_smoke": "passed",
+    "phase_m_is_feature_history": true,
+    "time_target_hz": 51.96615805290813
+  },
+  "method": {
+    "baseline_rows": 25,
+    "explicit_not_rederived_count": 22,
+    "no_silent_inheritance": true,
+    "rederived_count": 3,
+    "rederived_rows": [
+      "A2",
+      "A3",
+      "D1"
+    ]
+  },
+  "recorded_on": "2026-07-30",
+  "rows": [
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "GC \u00d7 open overlay transaction",
+      "id": "A1",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "fx",
+        "link81",
+        "phase_m",
+        "terminal",
+        "time"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "GC \u00d7 transient high-edge",
+      "delta_surface": "fx Q8.7 arithmetic -> serialized math unit",
+      "finding": "fx adds Bank-2 orchestration only. The math transaction uses fixed I/O registers, allocates no heap cell while the unit is live and introduces no root or transient high-edge state.",
+      "fresh_facts": {
+        "bank2_delta_bytes": 1451,
+        "new_roots": 0,
+        "resident_delta_bytes": 0,
+        "target_smoke": "multiply-divide-half-away-passed"
+      },
+      "id": "A2",
+      "proof_boundary": "Fresh source/artifact equivalence and target math smoke; no claim about unrelated heap transports.",
+      "reason": "No Link-80 v1.2.3 source, state, control, storage, ownership or publication edge reaches this crossing. Its reviewed terminal C2.2 disposition is retained and is explicitly not presented as fresh Link-80 proof.",
+      "review": "re-derived-against-Link81-v1.2.4-delta",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "fresh_irq",
+        "fx",
+        "link77",
+        "link80",
+        "link80_hardware",
+        "link81",
+        "matrix",
+        "phase_m",
+        "time",
+        "while"
+      ],
+      "baseline_Link57_status": "EXCLUDED",
+      "crossing": "GC \u00d7 hot code window / refill",
+      "delta_surface": "fx/time Bank-2 code -> streamed code window",
+      "finding": "Both additions are immutable Bank-2 code and retain the existing refill seam. They add no moving object, direct entry reference or root visible to GC.",
+      "fresh_facts": {
+        "bank2_headroom_bytes": 22318,
+        "bank2_static_code_bytes": 43218,
+        "new_direct_entry_refs": 0,
+        "new_roots": 0
+      },
+      "id": "A3",
+      "proof_boundary": "Structural non-moving-code exclusion, not a loop-refill latency claim.",
+      "review": "re-derived-against-Link81-v1.2.4-delta",
+      "status": "EXCLUDED",
+      "terminal_C2_2_status": "EXCLUDED"
+    },
+    {
+      "authorities": [
+        "fastpath",
+        "fresh_irq",
+        "link80",
+        "link80_hardware",
+        "matrix"
+      ],
+      "baseline_Link57_status": "EXCLUDED",
+      "crossing": "GC \u00d7 C2D publication (steps 5\u20137)",
+      "delta_surface": "require fast path -> published C2D identity reads",
+      "finding": "The fast path is a serialized read-only decision before the parser. It neither opens a publication transaction nor writes C2D; every miss enters the unchanged slow path.",
+      "fresh_facts": {
+        "fallback_directions": 5,
+        "loader_attempts_on_hit": 0
+      },
+      "id": "A4",
+      "proof_boundary": "Excludes the new fast path from the GC/publication crossing. It does not re-prove the unchanged slow publication path.",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "EXCLUDED",
+      "terminal_C2_2_status": "EXCLUDED"
+    },
+    {
+      "authorities": [
+        "fresh_irq",
+        "interrupt_source",
+        "link77",
+        "link80",
+        "link80_hardware",
+        "unwind",
+        "while"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "longjmp \u00d7 open transaction",
+      "delta_surface": "while non-local exit -> central abort landing",
+      "finding": "while adds only JFALSEREL/JMPREL control flow and no abort landing, C2J field, root or resident state. Errors and longjmp continue through the one implemented abort cleanup.",
+      "fresh_facts": {
+        "unwind_cases": 48,
+        "while_new_opcodes": 0,
+        "while_new_resident_state_bytes": 0
+      },
+      "id": "B1",
+      "proof_boundary": "Fresh delta proof plus the existing 48-case central-unwind fixture; no new Link-77 open-transaction hardware claim.",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "fresh_irq",
+        "hardware",
+        "interrupt_source",
+        "link77",
+        "link80",
+        "link80_hardware",
+        "unwind"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "RUN/STOP break \u00d7 open transaction",
+      "delta_surface": "RUN/STOP inside while -> central abort landing",
+      "finding": "Link 77 physically aborts an active while through RUN/STOP and returns to a working REPL. The event consumer still calls the same C2J cleanup before longjmp; the delta adds no second abort path.",
+      "fresh_facts": {
+        "abort_landing_implementations": 1,
+        "hardware_result": "*** stopped (run/stop)",
+        "post_abort_repl_result": "3"
+      },
+      "id": "B2",
+      "proof_boundary": "Hardware proves Link-77 ordinary RUN/STOP delivery and REPL survival. Byte-identical open-transaction restoration remains the previously reviewed central-landing proof; this receipt does not claim a fresh Link-77 transaction capture.",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "RUN/STOP break \u00d7 DMA transport in flight",
+      "id": "B3",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "longjmp \u00d7 island installer",
+      "id": "B4",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "Error inside publish-last seam",
+      "id": "B5",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "Freezer \u00d7 open transaction",
+      "deferred_scope": "C2.3-explicit-unchanged",
+      "id": "C1",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "DOCUMENTED-C2.3-DEFERRED",
+      "terminal_C2_2_status": "DOCUMENTED-C2.3-DEFERRED"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "Freezer \u00d7 E000 window (full product)",
+      "id": "C2",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "Freezer \u00d7 handoff state machine",
+      "id": "C3",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "Cold reset \u00d7 partially published C2D",
+      "id": "C4",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "fastpath",
+        "fresh_irq",
+        "link77",
+        "link80",
+        "link80_hardware",
+        "matrix"
+      ],
+      "baseline_Link57_status": "EXCLUDED",
+      "crossing": "Attic tenant staleness \u00d7 session directory",
+      "delta_surface": "require fast path -> C2D index/identity reads",
+      "finding": "The fast path reads only the published C2D index and identity through Prim 67. It introduces no source locator and no runtime Attic edge; misses fall back before any library load.",
+      "fresh_facts": {
+        "repeat_prim67_reads": 26,
+        "repeat_read_reduction_percent": 93.2292
+      },
+      "id": "C5",
+      "proof_boundary": "Structural source-domain exclusion. It makes no physical one-byte-DMA timing claim.",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "EXCLUDED",
+      "terminal_C2_2_status": "EXCLUDED"
+    },
+    {
+      "authorities": [
+        "fresh_irq",
+        "fx",
+        "hardware",
+        "irq",
+        "link80",
+        "link80_hardware",
+        "link81",
+        "phase_m",
+        "time",
+        "window_source"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "Owned IRQ \u00d7 publication window",
+      "delta_surface": "time -> product-owned raster frame counter",
+      "finding": "time atomically reads the already-owned frame counter. It neither changes IRQ masks nor acknowledges, enables or publishes an interrupt source.",
+      "fresh_facts": {
+        "hardware_hz": 51.96615805290813,
+        "interrupt_gate_mutations": 16,
+        "interrupt_masks": 3,
+        "resident_delta_bytes": 0
+      },
+      "id": "D1",
+      "proof_boundary": "Fresh Link-81 IRQ ownership ELF gate plus Phase-M calibration; cartridge storms remain unsupported.",
+      "review": "re-derived-against-Link81-v1.2.4-delta",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "fresh_irq",
+        "irq",
+        "link77",
+        "link80",
+        "link80_hardware",
+        "runtime_source"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "Owned IRQ \u00d7 island install / handoff",
+      "delta_surface": "new interrupt-source masks -> island install/handoff ordering",
+      "finding": "SEI precedes personality selection; masks and readbacks precede window publication; raster enable and CLI remain last. The relocated CRC is boot-only, has one pre-ownership caller and is unreachable after ownership.",
+      "fresh_facts": {
+        "boot_crc_post_ownership_reachable": false,
+        "raster_enable_and_CLI_last": true,
+        "readbacks_before_window_publish": true,
+        "source_masks": 3
+      },
+      "id": "D2",
+      "proof_boundary": "Fresh linked-ELF ordering and closure proof. It does not expand the externally supported interrupt profile.",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "b3_d3",
+        "fresh_irq",
+        "hardware",
+        "irq",
+        "link80",
+        "link80_hardware",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "Typed queue overflow \u00d7 break delivery",
+      "delta_surface": "interrupt ownership delta -> typed-queue break source",
+      "finding": "The Link-77 policy changes only pre-publication source masks. It leaves the matrix edge, pending/held latch, one queue consumer and source-less episode guard unchanged; the reviewed five-event queue-full model still rejects all sixteen source/model mutations.",
+      "fresh_facts": {
+        "handler_changed": false,
+        "hardware_queue_full_run": false,
+        "ordinary_link80_run_stop": "passed",
+        "post_abort_repl_result": "3",
+        "queue_model_events": 5,
+        "second_keymap": "absent"
+      },
+      "id": "D3",
+      "proof_boundary": "Preserves the terminal C2.2 structural disposition and adds ordinary Link-77 RUN/STOP hardware confirmation. It does not rewrite history as a physical queue-full run on Link 77; none was performed in this delta review.",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "fastpath",
+        "fresh_irq",
+        "link77",
+        "link80",
+        "link80_hardware"
+      ],
+      "baseline_Link57_status": "EXCLUDED",
+      "crossing": "Generation change \u00d7 hot cache",
+      "delta_surface": "require idempotence cache -> generation/identity change",
+      "finding": "The cache is not a loaded-library authority. A hit requires the current generation, all five count/front values, the canonical index lock and the complete ordered persistent C2D identity; every mismatch takes the slow path.",
+      "fresh_facts": {
+        "fallback_directions": 5,
+        "hardware_LA_markers_17_20_read": false,
+        "hardware_repeat_results": [
+          "t",
+          "t"
+        ],
+        "hardware_repeat_row_byteidentical": true,
+        "repeat_VM_step_reduction_percent": 97.9598,
+        "repeat_prim67_reduction_percent": 93.2292
+      },
+      "id": "E1",
+      "proof_boundary": "All five generation/identity mismatches take the slow path in the host mutation suite. On hardware a cold-start repeat returned t with a byte-identical published row; the LA phase markers were not read and are not claimed.",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "EXCLUDED",
+      "terminal_C2_2_status": "EXCLUDED"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "EXCLUDED",
+      "crossing": "Generation wrap (u16) \u00d7 fail-closed path",
+      "id": "E2",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "EXCLUDED",
+      "terminal_C2_2_status": "EXCLUDED"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "restart-repl (C2.3) \u00d7 transient high-edge",
+      "deferred_scope": "C2.3-explicit-unchanged",
+      "id": "E3",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "DOCUMENTED-C2.3-DEFERRED",
+      "terminal_C2_2_status": "DOCUMENTED-C2.3-DEFERRED"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "restart-repl (C2.3) \u00d7 open transaction",
+      "deferred_scope": "C2.3-explicit-unchanged",
+      "id": "E4",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "DOCUMENTED-C2.3-DEFERRED",
+      "terminal_C2_2_status": "DOCUMENTED-C2.3-DEFERRED"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "Bounded nesting (4) \u00d7 user-visible error",
+      "id": "E5",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "C2D growth \u00d7 Bank-5 ceiling",
+      "id": "F1",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "PROVEN",
+      "crossing": "Transient edge growth \u00d7 collision with persistent edge",
+      "id": "F2",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    },
+    {
+      "authorities": [
+        "baseline",
+        "terminal"
+      ],
+      "baseline_Link57_status": "OPEN",
+      "crossing": "Name pool / symbol growth \u00d7 session appends",
+      "id": "F3",
+      "reason": "No Link-81 fx/time source, state, storage, ownership or publication edge reaches this crossing. Its reviewed C2.2 disposition is retained and is not presented as fresh proof.",
+      "review": "not-rederived-Link81-v1.2.4-delta-disjoint",
+      "status": "PROVEN",
+      "terminal_C2_2_status": "PROVEN"
+    }
+  ],
+  "status": "passed-Link81-fx-time-delta-review-no-new-open-row",
+  "summary": {
+    "DOCUMENTED_C2_3_DEFERRED": 3,
+    "EXCLUDED": 5,
+    "PROVEN": 17,
+    "acceptance_chain": "A2-green-A3-still-requires-fresh-chain",
+    "matrix_gate": "remains-fallen-for-C2.2",
+    "new_OPEN_rows": 0
+  },
+  "version": 1
+}

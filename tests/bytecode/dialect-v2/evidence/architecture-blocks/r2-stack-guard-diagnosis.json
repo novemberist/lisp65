@@ -1,0 +1,72 @@
+{
+  "format": "lisp65-r2-stack-guard-diagnosis-v1",
+  "id": "r2-stack-guard-baseline",
+  "status": "diagnosed-open",
+  "observed_on": "2026-07-13",
+  "toolchain_sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c",
+  "default_target": {
+    "command": "make workbench-overlay-stack-guard",
+    "profile": "mvp-vm-stdlib-einsuite-core-workbench",
+    "baseline_commit": "0b801717f5bb9c6c78865dcbb117142af24972e4",
+    "current_commit": "65c28c479306c56a23b3b11c014fbc11ae4d5bc1",
+    "result": "failed-identically",
+    "errors": [
+      "workbench runtime-overlay VMA exceeds the product Bank-0 ceiling",
+      "workbench runtime-overlay transport window exceeds its stack-safe limit",
+      "runtime overlay l65m-16 exceeds its stack-safe window",
+      "runtime overlay l65c-03 exceeds its stack-safe window"
+    ],
+    "metrics": {
+      "runtime_overlay_vma": "0xc3a6",
+      "runtime_overlay_vma_limit": "0xc356",
+      "vma_deficit_bytes": 80,
+      "transport_deficit_bytes": 80,
+      "l65m_16_deficit_bytes": 17,
+      "l65c_03_deficit_bytes": 36
+    },
+    "diagnosis": "the default canonical target still selects the generic pre-v2 Workbench profile instead of the promoted v2 product profile"
+  },
+  "bound_v2_target": {
+    "command": "make v2-capability-carrier-internal-g5-workbench-link",
+    "profile": "dialect-v2-capability-carrier-workbench-staging",
+    "baseline": {
+      "commit": "0b801717f5bb9c6c78865dcbb117142af24972e4",
+      "result": "passed",
+      "runtime_overlay_vma": "0xc22c",
+      "post_boot_reserve_bytes": 2091,
+      "banked_headroom_bytes": 555,
+      "boot_stack_gap_bytes": 1952
+    },
+    "current": {
+      "commit": "65c28c479306c56a23b3b11c014fbc11ae4d5bc1",
+      "result": "passed",
+      "runtime_overlay_vma": "0xc2a4",
+      "post_boot_reserve_bytes": 1971,
+      "banked_headroom_bytes": 435,
+      "boot_stack_gap_bytes": 1751
+    },
+    "delta": {
+      "runtime_overlay_vma_bytes": 120,
+      "post_boot_reserve_bytes": -120,
+      "banked_headroom_bytes": -120,
+      "boot_stack_gap_bytes": -201,
+      "resident_text_bytes": 94,
+      "resident_rodata_bytes": 26,
+      "boot_overlay_bytes": 81
+    },
+    "attribution": {
+      "vm_callprim_text_bytes": 94,
+      "eval_init_overlay_bytes": 45,
+      "new_boot_name_helpers_bytes": 36,
+      "apply_dispatch_rodata_bytes": 6,
+      "classification": "system-runtime-candidate-product-cost-not-measured-before-promotion"
+    }
+  },
+  "conclusion": {
+    "system_runtime_default_target_delta_bytes": 0,
+    "default_target_owner_class": "canonical-product-profile-binding",
+    "bank_delta_owner_class": "system-runtime-promotion-budget-audit",
+    "directory_only_probe_baseline": "bound-v2-target-only-until-default-target-is-repaired",
+    "bank_555_claim": "withdrawn-pending-explicit-resolution"
+  }
+}

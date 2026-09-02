@@ -1,0 +1,60 @@
+{
+  "format": "lisp65-promotion-archive-policy-v4",
+  "version": 4,
+  "status": "active",
+  "rule": "promotion-equals-sealing",
+  "scope": "all-future-block-family-product-candidate-and-hardware-acceptance-promotions",
+  "archive_requirements": [
+    "varied-environment-fresh-clone-double-build-receipt-embedded",
+    "promoted-product-bytes-embedded-no-external-binding",
+    "all-mutable-promotion-evidence-embedded-or-content-bound",
+    "stdlib-only-offline-verifier-embedded",
+    "isolated-verification-without-repository-or-network",
+    "source-commit-and-archive-sha-registered",
+    "source-commit-already-reachable-from-recorded-private-remote-head",
+    "archive-published-as-sha-bound-private-release-asset-not-git-or-lfs"
+  ],
+  "product_materialization": {
+    "pre_seal_gate": "varied-environment-fresh-clone-double-build-required",
+    "receipt": "embedded-and-source-commit-bound",
+    "artifact_bytes": "every-receipt-product-artifact-embedded",
+    "external_product_bindings": "forbidden"
+  },
+  "hardware_acceptance": {
+    "kind": "hardware-acceptance",
+    "input": "registered-sealed-product-candidate",
+    "product_sha_changes": 0,
+    "evidence": "sha-bound-case-receipts-with-cycle-ids",
+    "coverage": "exactly-once-per-required-case",
+    "final_one_ceremony_rerun": "permanently-unnecessary",
+    "claim_boundary": "hardware-gates-not-in-archive-remain-not-run"
+  },
+  "immutability": {
+    "sealed_archive": "append-only-never-amend",
+    "errata": "new-document-referring-to-sealed-archive",
+    "replacement": "new-promotion-id-and-new-archive"
+  },
+  "live_tree_policy": {
+    "register_gate": "validate-entry-against-sha-bound-release-asset-inventory",
+    "historical_archive_content": "not-revalidated-by-live-gates",
+    "current_sources": "validated-by-current-independent-gates"
+  },
+  "remote_source_binding": {
+    "required_for_new_promotions": true,
+    "field": "remote_source_binding.remote_head",
+    "gate": "source-commit-is-remote-ancestor",
+    "historical_archives_without_field": "accepted-as-pre-policy",
+    "mandatory_manifest_versions": {
+      "hardware_acceptance": 2,
+      "promotion": "lisp65-promotion-archive-v3"
+    },
+    "offline_negative_gate": "missing-or-malformed-binding-rejected"
+  },
+  "archive_transport": {
+    "authority": "config/evidence-archive-assets.json",
+    "git": "forbidden",
+    "git_lfs": "forbidden",
+    "local_materialization": "ignored-cache-verified-before-use",
+    "remote_mutation": "new-asset-name-and-new-promotion-id-never-clobber-sealed-bytes"
+  }
+}

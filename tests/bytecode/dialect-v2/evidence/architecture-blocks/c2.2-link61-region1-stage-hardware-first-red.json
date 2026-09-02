@@ -1,0 +1,111 @@
+{
+  "authority": {
+    "Link61_product": {
+      "bytes": 41566,
+      "path": "build/c2.2/substitution/product-link-61-v4-final-frame-seal/lisp65-c2-substitution-linked.prg",
+      "sha256": "c4dc74a7729778ad79a1990bf88a25d7803040740bf626c15b08dc2a85607b9b"
+    },
+    "Link61_structural_receipt": {
+      "bytes": 10737,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link61-v4-frame-seal-structural-receipt.json",
+      "sha256": "bc7e2bd130530b9d2c8fa3381a0141006b79a8c57d7dd09b06f13fe9b1ff0a54"
+    },
+    "deployment": {
+      "bytes": 9578,
+      "path": "build/c2.2/c1-freezer-hardware-link61-cutpoints3-4-NONPROMOTABLE/deployment.json",
+      "sha256": "da811050075278ff53135d66f231a92a5ea8db54d1f9447e815aad93b87c99bb"
+    },
+    "driver": {
+      "bytes": 7799,
+      "path": "tools/host-lisp/c2_link61_region1_stage_hardware_first_red.py",
+      "sha256": "c96b4f547181eb4d1ae36dd97df285d64a65dd3614db6c1aae13ddbdf1624f8d"
+    },
+    "nonpromotable_C1_carrier_receipt": {
+      "bytes": 7306,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link61-c1-freezer-carrier-nonpromotable-receipt.json",
+      "sha256": "ee36a854d39f046531660c06cddc6b8db1b9ecb697a962d425075a5aceabf2ec"
+    }
+  },
+  "captures": {
+    "post_failure_bank0": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link61-cutpoints3-4-NONPROMOTABLE/boot-bank0.bin",
+      "sha256": "7366bb3f31ec846231ac0da096a73fab9266a9db2f5f510d63f2e67e05bcb5b1"
+    },
+    "post_failure_bank3": {
+      "bytes": 65536,
+      "path": "build/c2.2/c1-freezer-hardware-link61-cutpoints3-4-NONPROMOTABLE/boot-bank3.bin",
+      "sha256": "c554f7ed71991d81cfb6fe066c4266bc0e437d47c399d0e89f7bfe0b2c9ad853"
+    },
+    "post_failure_bank5": {
+      "bytes": 50816,
+      "path": "build/c2.2/c1-freezer-hardware-link61-cutpoints3-4-NONPROMOTABLE/boot-bank5.bin",
+      "sha256": "9d09eecb16b9fbc69b3e7a6b37fd5561dcb8a3dbc8d0d1db6f6fd647f40be60e"
+    },
+    "screen": {
+      "bytes": 2637,
+      "path": "build/c2.2/c1-freezer-hardware-link61-cutpoints3-4-NONPROMOTABLE/boot-screen.png",
+      "sha256": "eea9cc406a555c871025f73f523693ea62da9794881e5ac0be5bbbecc011faff"
+    },
+    "screen_text": {
+      "bytes": 2241,
+      "path": "build/c2.2/c1-freezer-hardware-link61-cutpoints3-4-NONPROMOTABLE/boot-screen.txt",
+      "sha256": "98c33986378f2cc2d2f9c4f61cbd28457664449613ab2173fd9cbe80a18e76b5"
+    },
+    "uploaded_region1_readback": {
+      "bytes": 1956,
+      "path": "build/c2.2/c1-freezer-hardware-link61-cutpoints3-4-NONPROMOTABLE/deploy-readback-runtime-overlays-session-c1-freezer-link61-region1.bin",
+      "sha256": "38e5771ab7f6840d487715d473a63b8e3ea268a23c6993928be7535152ad7b6b"
+    }
+  },
+  "claim_limit": "Hardware First Red before C1. No Cutpoint, matrix, promotion, acceptance-chain, or release claim.",
+  "classification": {
+    "carrier_specific": false,
+    "product_question": "Region 1 needs a durable source and a post-shelf stage into Bank 5 before Session-family target verification.",
+    "reason": "The diagnostic Region-1 image is byte-identical to the Link-61 product Region-1 image; the conflicting lifetime and address are shared by both."
+  },
+  "format": "lisp65-c2.2-Link61-v4-region1-stage-hardware-first-red-v1",
+  "hardware": {
+    "C1_cutpoints_reached": 0,
+    "c2_ready": 0,
+    "device_runs": 1,
+    "latency_attempts_consumed": 0,
+    "rtov_family": 0,
+    "rtov_fault": 23,
+    "rtov_fault_address": "0xbfdb",
+    "rtov_fault_name": "VM_RUNTIME_OVERLAY_ERR_FAMILY_STAGE",
+    "screen": "E3e runtime family staging failed; redeploy"
+  },
+  "next_gate": "Class-C review of post-shelf Region-1 staging, followed by a fresh product-shaped WPLTO probe and successor link.",
+  "promotable": false,
+  "proof": {
+    "ordering": [
+      "JTAG upload placed Region-1 byte-identically at Bank 5",
+      "boot shelf staging reused Bank 5 0xbd00 for its L65S prefix",
+      "Session main staged byte-identically into Bank 3",
+      "Region-1 target CRC rejected the overwritten Bank-5 bytes",
+      "publication remained fail-closed"
+    ],
+    "region1_address": "0x0005bd00",
+    "region1_at_failure": {
+      "byteidentical_to_boot_shelf_prefix": true,
+      "crc16": "0xa942",
+      "different_bytes": 1908,
+      "sha256": "1b9f80c8b03a9e48f04049cd2b56af67c0db3b877ce75d20b6379387f827c603"
+    },
+    "region1_bytes": 1956,
+    "session_main_after_stage": {
+      "byteidentical": true,
+      "bytes": 64926,
+      "crc16": "0x4e98"
+    },
+    "upload_readback": {
+      "byteidentical": true,
+      "crc16": "0x66c6",
+      "expected_sha256": "38e5771ab7f6840d487715d473a63b8e3ea268a23c6993928be7535152ad7b6b",
+      "readback_sha256": "38e5771ab7f6840d487715d473a63b8e3ea268a23c6993928be7535152ad7b6b"
+    }
+  },
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: Session Region-1 source overwritten before stage proof"
+}

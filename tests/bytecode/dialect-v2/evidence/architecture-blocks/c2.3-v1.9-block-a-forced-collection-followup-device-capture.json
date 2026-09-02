@@ -1,0 +1,38 @@
+{
+  "format": "lisp65-c2-v190-block-a-forced-collection-followup-device-capture-v2",
+  "recorded_on": "2026-08-30",
+  "device": "/dev/ttyUSB1",
+  "transport": "m65-over-JTAG",
+  "owner_observation": {
+    "bound_steps_1_to_4_completed": true,
+    "numeric_oracle_visible": 7,
+    "state_at_capture": "wait-active; no live prompt",
+    "state_observed_after_monitor_exit": {
+      "evaluation_output": "(7 nil)",
+      "live_prompt_returned": true,
+      "active_cursor_visible": true,
+      "interpretation": "the bounded wait completed and evaluation returned normally"
+    }
+  },
+  "capture": {
+    "command": "m65 -l /dev/ttyUSB1 -H --memsave 0x0000bcfc:0x0000bd00=counters.bin",
+    "address_start": "0xBCFC",
+    "bytes": 4,
+    "raw_bytes_hex": "02 02 02 00",
+    "raw_binary_sha256": "fb3b9929cf13b5b12928daa5549ea81d85818010cc3bf94aec02a92e95c9b165",
+    "decoded": {
+      "raw": 2,
+      "seen": 2,
+      "stored": 2,
+      "taken": 0
+    }
+  },
+  "choreography": {
+    "stop_requests": 1,
+    "reads": 1,
+    "explicit_resume_commands": 0,
+    "CPU_left_stopped_after_monitor_exit": false,
+    "post_monitor_execution_observed": true,
+    "keyboard_events_after_oracle": 0
+  }
+}

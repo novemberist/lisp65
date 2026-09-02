@@ -1,0 +1,106 @@
+{
+  "format": "lisp65-c2-handoff-reanchor-wplto-preinstall-gate-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED DIAGNOSED: gate model rejects contract-permitted Island manufacturing writes",
+  "scope": {
+    "whole_program_lto_probe_attempts": 1,
+    "product_closure_links": 0,
+    "link33_attempts": 0,
+    "hardware_runs": 0,
+    "retry_authorized": false
+  },
+  "identity": {
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-probe-receipt.json",
+      "sha256": "8332fabca7ee785dffaa9b980cca3bbf1f0d3e1204387845263d4a66411dafec"
+    },
+    "immutable_placement_elf": {
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/l65r-v2-boot-family-placement.prg.elf",
+      "bytes": 565544,
+      "sha256": "c82b9bd0763e1c515e083c615b7f35742b571a262e75b03649a5798382110d2b"
+    },
+    "immutable_placement_map": {
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/l65r-v2-boot-family-placement.prg.map",
+      "bytes": 183516,
+      "sha256": "3c756c120f3f2d3227e30efacbc91ae148f62d28a29860f8122efd38f334fcf4"
+    },
+    "link32_rollback": {
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+      "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+      "status": "untouched"
+    }
+  },
+  "contract_reading": {
+    "invariant": "Before READY, predecessor Island bytes may not be executed or consumed as Island-owned data.",
+    "explicit_permission": "The installer may write and verify the $1800..$1fff destination while manufacturing the current Island.",
+    "gate_model_error": "The linked gate rejects every retained Island data reference without classifying writes that manufacture or wipe the destination. Its machine rule is therefore stricter than, and inconsistent with, the written invariant."
+  },
+  "linked_first_red": {
+    "installer": {
+      "name": "vm_runtime_overlay_install_island",
+      "address": "0xb097",
+      "bytes": 190
+    },
+    "reported_relocations": 6,
+    "classification": "three address-construction pairs for zero-fill calls; no Island data read and no unguarded Island call",
+    "zero_wipes": [
+      {
+        "role": "erase arbitrary predecessor before installation",
+        "target_relocations": ["0xb0ca:R_MOS_ADDR16_LO", "0xb0ce:R_MOS_ADDR16_HI"],
+        "target": "$1800",
+        "fill": 0,
+        "length": 2048,
+        "call": "0xb0da -> __memset"
+      },
+      {
+        "role": "wipe after transport failure",
+        "target_relocations": ["0xb0f6:R_MOS_ADDR16_LO", "0xb0fa:R_MOS_ADDR16_HI"],
+        "target": "$1800",
+        "fill": 0,
+        "length": 2048,
+        "call": "0xb104 -> __memset"
+      },
+      {
+        "role": "wipe after installer-result failure",
+        "target_relocations": ["0xb118:R_MOS_ADDR16_LO", "0xb11c:R_MOS_ADDR16_HI"],
+        "target": "$1800",
+        "fill": 0,
+        "length": 2048,
+        "call": "0xb126 -> __memset"
+      }
+    ],
+    "control_flow": {
+      "status_before_data-reference_failure": "passed exact two guarded Island edges",
+      "transaction_edge": "rtov_transaction_context_if_ready -> rtov_transaction_context",
+      "batch_edge": "vm_runtime_overlay_exec_family -> rtov_run_batch"
+    }
+  },
+  "immutable_map_observations_not_acceptance": {
+    "bank0_text_headroom_bytes": 42,
+    "requested_standing_text_reserve_bytes": 32,
+    "ordinary_bank0_bss_headroom_bytes": 195,
+    "fixed_hot_block_headroom_bytes": 273,
+    "resident_island_headroom_bytes": 7,
+    "e000_headroom_bytes": 115,
+    "boot_slice_minimum_headroom_bytes": 11,
+    "session_slice_minimum_headroom_bytes": 31,
+    "handoff_address": "$b4a3",
+    "facade_address": "$b5c4",
+    "verifier_binding_address": "$b954",
+    "claim_limit": "These values are read-only observations from the stopped WPLTO artifacts. The WPLTO remains red until an authorized corrected gate replay reaches and passes every remaining check."
+  },
+  "recommended_bounded_continuation": {
+    "kind": "contract-and-gate correction followed by pure replay of the immutable ELF",
+    "contract_rule": "Reject every pre-READY Island execution or consumption edge. Permit only machine-proven destination-manufacturing writes from the named installer.",
+    "positive_machine_rule": "Each permitted reference must be one member of a complete LO/HI pair targeting __lisp65_resident_island_start with addend zero and must feed a zero-valued, 2048-byte __memset of the complete Island destination.",
+    "negative_matrix": [
+      "Island target used by any non-memset operation is rejected",
+      "wrong destination, nonzero addend or incomplete LO/HI pair is rejected",
+      "nonzero fill or length other than 2048 is rejected",
+      "additional unmatched Island reference is rejected",
+      "existing unguarded control-edge mutation remains rejected"
+    ],
+    "execution_limit": "No compiler, linker, product link or hardware run. Replay only against the SHA-bound read-only placement ELF; no second WPLTO attempt.",
+    "next_gate": "owner/review authorization of this narrow correction and pure replay"
+  }
+}

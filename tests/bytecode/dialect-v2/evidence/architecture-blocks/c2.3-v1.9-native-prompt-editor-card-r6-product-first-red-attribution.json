@@ -1,0 +1,145 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "acceptance_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 1,
+    "qualification_resumes": 0,
+    "scope_runs": 0
+  },
+  "authority": {
+    "preflight": {
+      "bytes": 10888,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r6-preflight2.json",
+      "sha256": "324c725c287f4cc99f415141cf176be559675218f8f587f2af53ab1f15c1f773"
+    },
+    "r6_decision": {
+      "bytes": 1844,
+      "path": "config/c2-v190-native-prompt-editor-card-r6.json",
+      "sha256": "f356dc87739b38b13f856e342f13dfbbdd8fb8537badef7229dc2c9d884613eb"
+    }
+  },
+  "first_red": {
+    "bytes": 12550,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r6-product-first-red.json",
+    "sha256": "cdd2cb6e6c0c799410f9dd31f30b5a04428bb8de0e64f586c536200271139cf2"
+  },
+  "first_writer_consumer": {
+    "consumer": "c2_v160_r1_graph_conversions.linked_gate",
+    "conversion": "derive facade from current ELF and placement policy",
+    "expected_by_consumer": {
+      "facade_VMA": "0xb3b0"
+    },
+    "observed_in_candidate": {
+      "facade_VMA": "0xb3dc",
+      "next_owner_reserve_bytes": 101,
+      "ordinary_reserve_bytes": 32,
+      "text_end": "0xb3bc"
+    },
+    "writer": "candidate-derived r5 facade placement"
+  },
+  "format": "lisp65-c2-v190-native-prompt-editor-card-r6-v1-product-red-attribution-v1",
+  "frozen_pair": {
+    "ELF": {
+      "bytes": 635492,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r6/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "f0ba5a4506f1d3fc85e2e13fd6db53a2bb8f93a62a7edf7560c8d7d1263d7d7f"
+    },
+    "PRG": {
+      "bytes": 41564,
+      "path": "build/c2.3/v1.9-native-prompt-editor-card-r6/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "3b16887b3699b5d861682b590ed24d600231cdda2598705f97b8600ad10de6b6"
+    }
+  },
+  "pair_disposition": "FROZEN-QUALIFICATION-ELIGIBLE",
+  "product_defect": false,
+  "product_gate": {
+    "BSS": {
+      "address": "0xb9ca",
+      "bytes": 1584,
+      "end": "0xbffa",
+      "validation_margin_bytes": 6
+    },
+    "boundary": "PASS: NON-INLINE BOUNDARY EFFECTIVE IN FINAL ELF",
+    "fixed_code_final_bytes": 67,
+    "fixed_code_seed_bytes": 67,
+    "quiescence_state": {
+      "added_named_allocations": [],
+      "authority": "candidate-minus-baseline named allocations",
+      "baseline": {
+        ".bss": 1585,
+        ".zp.bss": 77
+      },
+      "candidate": {
+        ".bss": 1584,
+        ".zp.bss": 77
+      },
+      "new_state_bytes": 0,
+      "removed_named_allocations": [
+        [
+          "cursor_on",
+          1
+        ]
+      ],
+      "whole_program_delta": {
+        ".bss": -1,
+        ".zp.bss": 0
+      }
+    },
+    "status": "PASS: NATIVE PROMPT AND EDITOR COMPOSED"
+  },
+  "read_only_pin_sweep": [
+    {
+      "before": "1585 bytes / 5-byte margin exact",
+      "candidate": "1584 bytes / 6-byte margin",
+      "checker": "execution-boundary protected BSS",
+      "property": "end below $c000 with at least five-byte margin"
+    },
+    {
+      "before": "whole .bss/.zp.bss equality",
+      "candidate": "cursor_on removed; zero added named allocations",
+      "checker": "recovery-quiescence zero-state",
+      "property": "candidate-minus-baseline allocation population adds zero"
+    },
+    {
+      "before": "text <= $b3aa against $b3b0 facade",
+      "candidate": "text $b3bc; derived facade $b3dc; reserve 32",
+      "checker": "capture ordinary-text reserve",
+      "property": "current text-to-current-facade reserve >= 6"
+    },
+    {
+      "before": "definition-time r5 ELF plus basename/key spellings",
+      "candidate": "r6 ELF and emitted .prg receipts; seed/final owners",
+      "checker": "B-light current-artifact adapters",
+      "property": "active caller artifact and two real consumer receipts"
+    },
+    {
+      "before": "5/65 byte exact codegen form",
+      "candidate": "3/51 byte form with one resolved edge",
+      "checker": "non-inline boundary",
+      "property": "distinct emitted functions, resolved edge, no overlap"
+    },
+    {
+      "before": "equal program-header populations",
+      "candidate": "95 -> 96 after derived facade segment",
+      "checker": "complete product program headers",
+      "property": "named removed/added multiset with zero unexplained"
+    }
+  ],
+  "recorded_on": "2026-08-29",
+  "resume_right": "read-only attribution, Scope and Acceptance over the same SHA-bound pair; no WPLTO or link",
+  "sharp_mutations": {
+    "BSS-margin-spent": "rejected",
+    "boundary-removed-overlap": "rejected",
+    "force-include-path-value-divergence": "rejected",
+    "new-quiescence-state-allocation": "rejected",
+    "ordinary-reserve-spent": "rejected",
+    "unexplained-fixed-section-growth": {
+      "hot-bss-overlap": "fixed-code section/member/envelope relation drift",
+      "unexplained-member-shift": "fixed-code member address is not candidate-derived",
+      "unexplained-section-growth": "fixed-code section/member/envelope relation drift"
+    }
+  },
+  "status": "ATTRIBUTED: R6 PRODUCT GREEN; POST-LINK PINS CONVERTED"
+}

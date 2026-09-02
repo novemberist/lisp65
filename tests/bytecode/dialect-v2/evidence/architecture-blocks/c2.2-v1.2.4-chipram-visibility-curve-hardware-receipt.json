@@ -1,0 +1,138 @@
+{
+  "authority": {
+    "G5_receipt": {
+      "bytes": 13192,
+      "path": "build/c2.2/v1.2.4-acceptance/r5/hardware-session-01/g5-hardware-receipt.json",
+      "sha256": "f7f1d58d3a2fe319ceda75450efb20906f447997af724c28fb2effda31f2ccbc"
+    },
+    "deployment": {
+      "bytes": 2552,
+      "path": "build/post-promotion/v124/chipram-visibility/preparation/deployment.json",
+      "sha256": "79f65ae37076823846bd04e8d05ccd8e2c9ccb5339805ff3ca16bc7df1a8e693"
+    },
+    "preparation": {
+      "bytes": 4289,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-chipram-visibility-curve-preparation-receipt.json",
+      "sha256": "b0f36de318952dfabdf8ebc8d05d005f79a812520c3847475d0816d327440bc0"
+    }
+  },
+  "claim_limit": "One cold-reset target session, four raster-timed snapshots and 20 immediate cycles over the unpublished Link-81 Bank-5 append scratch. All-exact is bounded exoneration only; mismatch is a prepared Class-C item, never an acceptance failure.",
+  "classification": "bounded-exoneration-chipram-L10-variant-curve20",
+  "evidence": {
+    "bank5-after.bin": {
+      "bytes": 65536,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/bank5-after.bin",
+      "sha256": "25b31d86292f78d05be3589c21d0f50fe21563c4dad49146e63614898bca2652"
+    },
+    "bank5-before.bin": {
+      "bytes": 65536,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/bank5-before.bin",
+      "sha256": "2a44b65bbfe2b80aaf0d0e1f96481ee956ec47783e52e810bab387c011f487f0"
+    },
+    "c2d-header.bin": {
+      "bytes": 48,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/c2d-header.bin",
+      "sha256": "cda169c143cccf4e6a7226318f4585646dfe81075816e87b793ee845e12356f2"
+    },
+    "c2j-after.bin": {
+      "bytes": 64,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/c2j-after.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "c2j-before.bin": {
+      "bytes": 64,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/c2j-before.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "curve.bin": {
+      "bytes": 1024,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/curve.bin",
+      "sha256": "6ba12ccf52a6793d155366196b084aa95e68b72448a7add3630a2417ef758c08"
+    },
+    "mailbox.bin": {
+      "bytes": 256,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/mailbox.bin",
+      "sha256": "d82f60bdb0404f19574634385cb03751a42c1c6c9134de340d17a854652fdcd2"
+    },
+    "phase-owner-after.bin": {
+      "bytes": 1,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/phase-owner-after.bin",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "phase-owner-before.bin": {
+      "bytes": 1,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/phase-owner-before.bin",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "place-row.bin": {
+      "bytes": 32,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/place-row.bin",
+      "sha256": "66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925"
+    },
+    "require-trace.bin": {
+      "bytes": 2,
+      "path": "build/post-promotion/v124/chipram-visibility/hardware-session-01/require-trace.bin",
+      "sha256": "fc686c314491e1f68bf1899fc54b2327353c44dd1ab4ed56538ef623edd1e866"
+    }
+  },
+  "format": "lisp65-c2.2-v1.2.4-chipram-visibility-curve-v1",
+  "measurement": {
+    "changed_Bank5_bytes": 256,
+    "changed_offsets_max": 34095,
+    "changed_offsets_min": 33840,
+    "curve_expected_crc16": 28052,
+    "curve_mismatch_points": 0,
+    "curve_observed_crc16": [
+      28052,
+      28052,
+      28052,
+      28052
+    ],
+    "curve_snapshots_exact": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "first_failure_byte": 255,
+    "first_failure_iteration": 255,
+    "immediate_mismatch_cycles": 0,
+    "immediate_repetitions": 20,
+    "repeat_observation_hash": 22945
+  },
+  "policy": {
+    "G5_acceptance_rows_repeated": false,
+    "acceptance_criterion": false,
+    "can_make_chain_red": false,
+    "halt_2_review_required": true,
+    "post_release_soak_still_required": true,
+    "same_Link81_candidate_as_G5": true,
+    "supplemental_cold_reset_contacts_after_G5": 1
+  },
+  "recorded_on": "2026-07-30",
+  "require_peek_map": {
+    "header": {
+      "address": 327680,
+      "matches_accepted_G5_C2D": true,
+      "sha256": "cda169c143cccf4e6a7226318f4585646dfe81075816e87b793ee845e12356f2"
+    },
+    "place_row": {
+      "address": 327920,
+      "matches_accepted_G5_C2D": true,
+      "sha256": "66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925"
+    },
+    "trace": {
+      "address": 49652,
+      "claim": "observational-after-standalone-measurement",
+      "hex": "4242"
+    }
+  },
+  "safety": {
+    "Bank5_changes_confined_to_unpublished_scratch": true,
+    "C2J_CLEAR_before_after": true,
+    "phase_owner_NONE_before_after": true,
+    "published_C2D_byteidentical": true
+  },
+  "status": "completed-measurement-valid",
+  "version": 1
+}

@@ -1,0 +1,108 @@
+{
+  "ELF_feasibility": {
+    "branch_predicate": "the high byte of the non-NULL phase-scratch context differs from zero; the self-loop is therefore entered before mode read",
+    "capture_authorities": [
+      "c2_append_state.record[24..31] at $c17c",
+      "target C2J[64] at $0005c640",
+      "phase trace at $c1f0"
+    ],
+    "completion_record_untouched_before_hold": true,
+    "header_address": "0xc371",
+    "header_bytes": 917,
+    "header_symbol": "c2_append_header_phase",
+    "hold_address": "0xc3a2",
+    "instruction": "BNE $c3ad -> BNE $c3a2",
+    "register_liveness_assumptions": 0,
+    "trace_stamped_before_hold": true
+  },
+  "authority": {
+    "donor_ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "donor_completion_role_replay": {
+      "bytes": 5287,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-c1-donor-completion-phase-context-replay-receipt.json",
+      "sha256": "497815ebde1f1d85968c78db47d6c334a44e22b2be089ec197c9832411f2d7a7"
+    },
+    "driver": {
+      "bytes": 13003,
+      "path": "tools/host-lisp/c2_link64_slot39_entry_hold.py",
+      "sha256": "c44f7c009eed86258a61248a67240658842855c339f4e6f03f0737573680c671"
+    },
+    "prethreshold_First_Red": {
+      "bytes": 6938,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-prethreshold-hardware-first-red.json",
+      "sha256": "f1979737963037e9980a0cade51cdefcd020f17df964816242e9c5710ec92ece"
+    },
+    "source_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-link64-stage-bound.bin",
+      "sha256": "bb436ba264065ec49a76dc90f60b9226f1d59065d51ef181e9454990cc40ce1b"
+    },
+    "source_deployment": {
+      "bytes": 10049,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt4-NONPROMOTABLE/deployment.json",
+      "sha256": "aec06ae9fdafb74298389ab356c7dc51bff4f66c170152878d8e0518bfbeb27d"
+    }
+  },
+  "candidate": {
+    "carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-slot39-entry-hold-NONPROMOTABLE/runtime-overlays-session-link64-slot39-entry-hold.bin",
+      "sha256": "5535f11c4e68333202eeedb9d7c94682aed63f088f4de3e7d27d3c25eed34479"
+    },
+    "identity_separate_from_Link64": true,
+    "lifecycle": "discard after one diagnostic capture",
+    "manifest": {
+      "bytes": 1606,
+      "path": "build/c2.2/substitution/link64-slot39-entry-hold-NONPROMOTABLE/manifest.json",
+      "sha256": "f698ea918ebe86fbe4f86fb037068f212f277858434f4fe18ac297e12f6d35df"
+    }
+  },
+  "claim_limit": "Feasibility and nonpromotable diagnostic artifact only. No product, C1, matrix, acceptance or release claim.",
+  "construction": {
+    "all_capacity_deltas": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2.2-Link64-slot39-entry-hold-feasibility-v1",
+  "patch_and_rebinding": {
+    "after_hex": "d0fe",
+    "all_changed_file_offsets": [
+      55117,
+      56547,
+      56548
+    ],
+    "before_hex": "d009",
+    "carrier_size_delta": 0,
+    "derived_identity_bytes_changed": 2,
+    "directory_crc16": "0x564d",
+    "executable_operand_bytes_changed": 1,
+    "family_crc16": "0x472a",
+    "header_crc16": "0xb8dd",
+    "instruction_VMA": "0xc3a2",
+    "instruction_file_offset": 55116,
+    "mutation_count": 5,
+    "mutations_rejected": [
+      "opcode",
+      "operand",
+      "payload-CRC",
+      "record-CRC",
+      "family-tail"
+    ],
+    "payload_crc16": "0x2ef7",
+    "record_crc16": "0x8364",
+    "section": ".lisp65_rt_c2append_header",
+    "slot": 39,
+    "status": "passed-one-byte-entry-hold-and-complete-v4-rebinding"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "status": "ready-nonpromotable-first-entry-hold"
+}

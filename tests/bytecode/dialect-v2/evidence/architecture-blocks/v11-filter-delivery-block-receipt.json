@@ -1,0 +1,233 @@
+{
+  "format": "lisp65-v11-filter-delivery-block-receipt-v1",
+  "block_id": "1.1-filter-resident-delivery",
+  "status": "passed-not-promoted",
+  "recorded_on": "2026-07-16",
+  "source_commit": "257042b700dd5722195b001b573764f397b39df7",
+  "baseline": {
+    "block": "owner-authorized-buffer-printer-candidate",
+    "source_commit": "4820050a676142f9bfde7ed887d4dea70529afea",
+    "capacity_authorization": {
+      "path": "config/v11-buffer-printer-capacity-authorization.json",
+      "sha256": "4a7d098a86cfcccef89eeee08b1ba4e3286fb3a157a52bbf941b2dca52243d56"
+    },
+    "probe_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-buffer-printer-fix-probe-receipt.json",
+      "sha256": "f11af3955cf2080b68cbf74b2f09c009642006efbfc2502f9abe4fe3ee49e4a0"
+    },
+    "reconstructed_artifacts": {
+      "method": "detached temporary worktree at the authorized source commit",
+      "resident_manifest_sha256": "160db6c4cacec210f44f11bb6e3a6f4014adcff3e893db0388573cb572c5d01d",
+      "resident_external_image_sha256": "cdcb6a5f51c264249512de8fd4f2b8b911c34a818fcee5017a60e192e7daaff8",
+      "composition_budget_sha256": "4c968f4957dbcd07f45c54fbde4acfc94a9c9c35e4505e13e14d2247b62c6b28"
+    },
+    "resident_code_bytes": 5985,
+    "resident_external_image_bytes": 14171,
+    "resident_metadata_bytes": 8186,
+    "resident_entries": 205,
+    "post_boot_reserve_bytes": 1795,
+    "standard_composition_ext_headroom_bytes": 25628,
+    "standard_composition_symbol_headroom": 394,
+    "standard_composition_namepool_headroom_bytes": 5708,
+    "standard_composition_directory_post_align_headroom": 176,
+    "overlay_base": "0xc354",
+    "overlay_ceiling": "0xc356",
+    "overlay_headroom_bytes": 2,
+    "boot_overlay_bytes": 1669,
+    "boot_overlay_sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0"
+  },
+  "implementation": {
+    "public_name": "filter",
+    "canonical_source": {
+      "path": "lib/dialect-v2/lists-core.lisp",
+      "sha256": "d12cb14b4563c5281c0de626bc0b3edb31fc4eafb877ccf175271cad24767c45"
+    },
+    "generated_source": "build/bytecode/dialect-v2/sources/lib/dialect-v2/lists-core.lisp",
+    "selection_rule": "extract exactly the three canonical defuns; no copied implementation is maintained",
+    "functions": [
+      {
+        "name": "%v2-reverse-into",
+        "code_bytes": 24,
+        "blob_offset": 5985
+      },
+      {
+        "name": "%v2-filter-into",
+        "code_bytes": 52,
+        "blob_offset": 6009
+      },
+      {
+        "name": "filter",
+        "code_bytes": 15,
+        "blob_offset": 6061
+      }
+    ],
+    "persistent_code_debit_bytes": 91,
+    "product_case_contract": {
+      "path": "config/v11-filter-product-cases.json",
+      "sha256": "31be7f3e4bcdf3adb6d4e0437815807bec67df6710605304ea5159d8b003862f",
+      "routes": [
+        "apply",
+        "direct",
+        "funcall"
+      ]
+    }
+  },
+  "surface_delivery_parity": {
+    "result": "pass",
+    "claims": [
+      "eval",
+      "filter"
+    ],
+    "contract": {
+      "path": "config/v11-surface-delivery-parity.json",
+      "sha256": "ff08f449bfb83c32c3351e206138be8c1c45adc720b7eeb46b92cc75248d2386"
+    },
+    "gate": {
+      "path": "tools/host-lisp/v11_surface_delivery_parity.py",
+      "sha256": "7862b364508a2f5b514c53c87dc41b11e2a0ae8e7dd480e5067c99f88dff7f1b"
+    },
+    "surface_sha256": "83268ac24c7143b4881c23ff602ad71ce3602417609532b3bda2341f92f970ec",
+    "dialect_contract_sha256": "1f9d166f9187bf2ff63f2064d2940fca0e30e3474f774e028b6c736c502e6f45",
+    "language_reference_sha256": "25a07361564ceb5d865ea6bbd61a3c94aa66eaf1afb196863ec362eec20cfaf3",
+    "eval_resolution": "The v2 capability contract declares eval public and its migration decision is resolved; the product manifest already delivered it. The new parity gate closes the stale public-surface omission without changing eval code."
+  },
+  "capacity_delta_scope": "filter-delivery-on-owner-authorized-buffer-printer-candidate",
+  "capacity_delta": {
+    "dimensions": {
+      "bank": {
+        "baseline_post_boot_reserve_bytes": 1795,
+        "candidate_post_boot_reserve_bytes": 1795,
+        "release_target_bytes": 1536,
+        "candidate_margin_bytes": 259,
+        "delta_bytes": 0,
+        "authorization": null
+      },
+      "ext": {
+        "baseline_standard_composition_headroom_bytes": 25628,
+        "candidate_standard_composition_headroom_bytes": 25537,
+        "floor_bytes": 16384,
+        "delta_bytes": -91,
+        "candidate_margin_bytes": 9153,
+        "authorization": null,
+        "authorization_status": "required-before-promotion"
+      },
+      "symbols": {
+        "baseline_headroom": 394,
+        "candidate_headroom": 391,
+        "required_headroom": 32,
+        "delta": -3,
+        "authorization": null,
+        "authorization_status": "required-before-promotion"
+      },
+      "namepool": {
+        "baseline_headroom_bytes": 5708,
+        "candidate_headroom_bytes": 5668,
+        "required_headroom_bytes": 384,
+        "delta_bytes": -40,
+        "authorization": null,
+        "authorization_status": "required-before-promotion"
+      },
+      "directory": {
+        "baseline_resident_entries": 205,
+        "candidate_resident_entries": 208,
+        "raw_delta": 3,
+        "baseline_post_align_headroom": 176,
+        "candidate_post_align_headroom": 176,
+        "post_align_delta": 0,
+        "reason": "The three new resident entries consume existing eight-entry alignment slack."
+      },
+      "overlay_vma": {
+        "baseline": "0xc354",
+        "candidate": "0xc354",
+        "ceiling": "0xc356",
+        "delta_bytes": 0,
+        "candidate_headroom_bytes": 2,
+        "authorization": null
+      },
+      "boot_overlay": {
+        "baseline_bytes": 1669,
+        "candidate_bytes": 1669,
+        "delta_bytes": 0,
+        "baseline_sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0",
+        "candidate_sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0"
+      },
+      "resident_external_image": {
+        "baseline_code_bytes": 5985,
+        "candidate_code_bytes": 6076,
+        "code_delta_bytes": 91,
+        "baseline_metadata_bytes": 8186,
+        "candidate_metadata_bytes": 8314,
+        "metadata_delta_bytes": 128,
+        "baseline_total_bytes": 14171,
+        "candidate_total_bytes": 14390,
+        "total_delta_bytes": 219,
+        "accounting_note": "Only the 91 code bytes remain in EXT after boot. The 128 metadata bytes are reclaimed after installation and therefore do not reduce post-composition EXT headroom."
+      }
+    }
+  },
+  "candidate_artifacts": {
+    "codemod_receipt": {
+      "path": "build/bytecode/dialect-v2/codemod-receipt.json",
+      "sha256": "436c8eefe975a2d521bcbea21acc605e39bfe80ea6855f5ea36e03a7aebfe59d"
+    },
+    "resident_manifest": {
+      "path": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+      "sha256": "516f5c6052c310c4a536bc3544d51c79e44e5f83b074a32320714250e39d1ccd"
+    },
+    "resident_external_image": {
+      "path": "build/bytecode/dialect-v2/workbench/stdlib-p0.ext.bin",
+      "sha256": "273dfef098e59ccb2ccc594165e219b2ca866be58b5b02194d70e59589812c58"
+    },
+    "composition_budget": {
+      "path": "build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+      "sha256": "d0ad2e4942daba5c4c0b8536c486535b8c9e266c654025b9f79a424e815cd80b"
+    }
+  },
+  "real_link": {
+    "profile_build_id": "c2d025ca",
+    "resolved_profile_sha256": "c2d025ca5c671275565e28cf3ef312c7056b265feac3077a799917b721458c98",
+    "footprint_audit_sha256": "0e416049c3707afebd5bf7bfdc6215b436ec2a2f4ba751be931b7c6a4fdcd781",
+    "linked_prg": {
+      "bytes": 44628,
+      "sha256": "e253109a4b81964a9fe1c3a8c21cd974a4e151ebfd1e6d2ed1e0a00a40010c0a"
+    },
+    "resident_prg": {
+      "bytes": 39566,
+      "sha256": "970a2ffe6960c6165ce28565cc759609f9cc78884094cfbb45590c4cb19b1971"
+    },
+    "boot_overlay": {
+      "bytes": 1669,
+      "sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0"
+    },
+    "runtime_overlays_manifest_sha256": "85dd085bebd10e7d2609a4c82e2d46fe8c1b5ef9bfb96f08976a9c501e7395f4",
+    "runtime_overlays_image_sha256": "5e2bb22dcda56ce1effce563c6a9a008accdcdca60ddb52d9d386e4fe0b4f076",
+    "identity_note": "Resident and runtime-overlay SHAs move because the resident blob and propagated build identity move; Bank and overlay layout metrics remain unchanged."
+  },
+  "verification": {
+    "canonical_lists_fixture": "pass: 43 cases x 4 engines = 172 runs",
+    "lists_type_error_fixture": "pass: 11 cases x 4 engines",
+    "product_route_cases": {
+      "direct": "(2 3)",
+      "funcall": "(2 3)",
+      "apply": "(2 3)"
+    },
+    "workbench_differential": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-filter-workbench-differential-receipt.json",
+      "sha256": "af378453d2f727d792699d12167480b30a81b2958a0f547391f202b36aa96068",
+      "artifacts": 4,
+      "baseline_cases_unchanged": 353,
+      "intentional_additions": 3,
+      "total_cases": 356,
+      "observation_differences": 0
+    },
+    "surface_delivery_parity": "pass: eval,filter",
+    "canonical_product_link": "pass-with-pinned-overlay-ceiling",
+    "footprint_audit": "pass",
+    "hardware": "not-run"
+  },
+  "promotion_blockers": [
+    "owner authorization of the measured 91-byte EXT debit, three-symbol debit and 40-byte name-pool debit",
+    "regular wave-level product and evidence repin plus hardware acceptance"
+  ],
+  "claim_limit": "This receipt proves canonical resident delivery of filter, exact direct/funcall/apply product observations, unchanged legacy Workbench observations, public-surface parity for eval/filter, and the real-link capacity result at source commit 257042b. It does not authorize the measured capacity debits, promote a wave product set, authorize the banner block, or claim hardware evidence."
+}

@@ -1,0 +1,64 @@
+{
+  "authority": {
+    "boot_screen": {
+      "bytes": 2253,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt2-NONPROMOTABLE/boot-screen.txt",
+      "sha256": "5d33d5c5c831d023116a4e11931fe1adce34d248bf2c62a1e5f295db6258fca2"
+    },
+    "corrected_harness": {
+      "bytes": 8092,
+      "path": "scripts/c2-c1-freezer-hw.sh",
+      "sha256": "d9250412d2182bd291856e4a68580ca7cef9f5ec6708ef4aa6ec17bb655e995c"
+    },
+    "deployment": {
+      "bytes": 9915,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt2-NONPROMOTABLE/deployment.json",
+      "sha256": "ef104b35eac6de3d5e7ab2804fccd40a861bb51456f64ee115cf3ba0d89a070b"
+    },
+    "late_screen": {
+      "bytes": 2253,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt2-NONPROMOTABLE/boot-late-screen.txt",
+      "sha256": "5d33d5c5c831d023116a4e11931fe1adce34d248bf2c62a1e5f295db6258fca2"
+    },
+    "product_sha256": "13c82707ae1797885ff2ddeb7bff62198bf897a9163ed63b7531df8212d49b2c",
+    "receipt_driver": {
+      "bytes": 3870,
+      "path": "tools/host-lisp/c2_link64_c1_autorun_first_red.py",
+      "sha256": "f10b06c96d6f141b00a0551a724815174183334440f1e8acda0d9ebe251c1d55"
+    },
+    "screen_image": {
+      "bytes": 5140,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt2-NONPROMOTABLE/boot-screen.png",
+      "sha256": "03d7b4019c0876b3ed1aa656a0832545a3534398210ab27a8c2da43e5ec70cd0"
+    }
+  },
+  "claim_limit": "Loader-harness First Red only. C1 and the matrix remain OPEN.",
+  "classification": "hardware-loader-harness-only",
+  "correction": {
+    "action": "inject exactly one explicit RETURN",
+    "action_on_running_product": "none",
+    "compiler_or_linker_runs": 0,
+    "predicate": "standalone run: present and lisp65> absent",
+    "product_bytes_changed": 0
+  },
+  "execution_accounting": {
+    "automatic_hardware_retries": 0,
+    "cutpoint_3_results_consumed": 0,
+    "cutpoint_4_results_consumed": 0,
+    "hardware_runs": 1
+  },
+  "format": "lisp65-c2.2-link64-C1-pending-autorun-first-red-v1",
+  "next_gate": "separately authorized attempt 3 with quote-safe form and predicate-guarded autorun RETURN",
+  "observed": {
+    "BASIC_ready": true,
+    "Freezer_roundtrips": 0,
+    "REPL_visible": false,
+    "cutpoint_armed": false,
+    "pending_command": "run:",
+    "stable_late_capture": true
+  },
+  "product_entered": false,
+  "product_semantics_finding": "none",
+  "recorded_on": "2026-07-25",
+  "status": "FIRST RED: m65 autorun command lacked final RETURN"
+}

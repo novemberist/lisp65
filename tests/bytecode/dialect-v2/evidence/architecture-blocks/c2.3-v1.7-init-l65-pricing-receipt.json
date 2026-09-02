@@ -1,0 +1,288 @@
+{
+  "all_mutations_rejected": [
+    "hook-before-setjmp",
+    "missing-file-treated-as-error",
+    "failure-returns-from-repl",
+    "retry-init-after-abort",
+    "later-form-masks-earlier-vm-error",
+    "external-entry-not-published",
+    "external-caller-loses-final-static-owner"
+  ],
+  "authority": {
+    "A0_product_receipt": {
+      "bytes": 54297,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-recovery-quiescence-card-r3-a0-receipt.json",
+      "sha256": "d361e44fade9cba20477a121e5cbdc42ca39b3d9d62bd4157d867063c2bec1ad"
+    },
+    "compile_repl": {
+      "bytes": 12914,
+      "path": "src/compile_repl.c",
+      "sha256": "89bb14a7cf011b26c8b377189bbd100bb9454627f2b0010673a0ab5e6456f79a"
+    },
+    "contract": {
+      "bytes": 1614,
+      "path": "config/c2-v17-init-l65-pricing-contract.json",
+      "sha256": "a99a17f714b038e00aac93f39a004e2fbcad645f7f793748a3d12644f8abdb53"
+    },
+    "load_library": {
+      "bytes": 2790,
+      "path": "lib/stdlib-load.lisp",
+      "sha256": "de5a35c2c37cc2b1515410d19e6c0095579f21a1b05e7d87a039ce7e9dabb859"
+    },
+    "pre_plan": {
+      "bytes": 88588,
+      "path": "docs/planning/v1.7.0-pre-plan.md",
+      "sha256": "171607df6c08f49b8f10d89bcd295f7546485db47ed1c92576ade5f65a798bb5"
+    },
+    "pricing_tool": {
+      "bytes": 24017,
+      "path": "tools/host-lisp/c2_v17_init_l65_pricing.py",
+      "sha256": "f991b0f32524b47cf92c68811c5cd60a3e5da22d2bab6c5fa96ad913ea186ced"
+    },
+    "repl": {
+      "bytes": 14544,
+      "path": "src/repl.c",
+      "sha256": "095c9aaa80b3c5da55887295a9ede634039971d72d31a6afcce6919e65bc08b9"
+    },
+    "vm": {
+      "bytes": 105101,
+      "path": "src/vm.c",
+      "sha256": "8eff780e7aa017a54ffb9334edb851dda352655d53d3eb29335349c766686de9"
+    }
+  },
+  "bank2_price": {
+    "baseline": {
+      "code_bytes": 15491,
+      "objects": 352,
+      "repl_banner_bytes": 145
+    },
+    "candidate": {
+      "code_bytes": 15501,
+      "objects": 352,
+      "repl_banner_bytes": 155,
+      "repl_banner_sha256": "005370e65226cfbc10be859b983d5091db51d5395fdfd6786d8a5ded54391e45"
+    },
+    "delta": {
+      "code_bytes": 10,
+      "new_product_name_bytes": 0,
+      "new_product_symbol_slots": 0,
+      "objects": 0,
+      "repl_banner_bytes": 10
+    }
+  },
+  "boot_semantics": {
+    "error_destination": "native lisp65>",
+    "init_attempts_per_boot": 1,
+    "mutations_rejected": [
+      "hook-before-setjmp",
+      "missing-file-treated-as-error",
+      "failure-returns-from-repl",
+      "retry-init-after-abort",
+      "later-form-masks-earlier-vm-error"
+    ],
+    "scenarios": {
+      "absent": [
+        "setjmp",
+        "active",
+        "screen",
+        "init-absent",
+        "banner",
+        "lisp65>"
+      ],
+      "load-error": [
+        "setjmp",
+        "active",
+        "screen",
+        "init-load-error",
+        "longjmp",
+        "error",
+        "lisp65>"
+      ],
+      "reader-error": [
+        "setjmp",
+        "active",
+        "screen",
+        "init-reader-error",
+        "longjmp",
+        "error",
+        "lisp65>"
+      ],
+      "run-stop": [
+        "setjmp",
+        "active",
+        "screen",
+        "init-run-stop",
+        "longjmp",
+        "error",
+        "lisp65>"
+      ],
+      "valid": [
+        "setjmp",
+        "active",
+        "screen",
+        "init-evaluated",
+        "banner",
+        "lisp65>"
+      ],
+      "vm-error": [
+        "setjmp",
+        "active",
+        "screen",
+        "init-vm-error",
+        "longjmp",
+        "error",
+        "lisp65>"
+      ]
+    }
+  },
+  "budgets": {
+    "WPLTO": 0,
+    "device_contacts": 0,
+    "media": 0,
+    "product_links": 0
+  },
+  "claim_limit": "Host-only price and executable boundary proof. No product repair, WPLTO, link, medium, device result, prompt swap, or Comfort reopen.",
+  "composed_capacity_projection": {
+    "MAP_congruence_required": false,
+    "aggregate_free_bytes": 17671,
+    "bank_start": 131072,
+    "candidate_static_plane_bytes": 46053,
+    "candidate_static_plane_end_exclusive": 177125,
+    "gap_to_next_owner_bytes": 1229,
+    "largest_contiguous_hole_bytes": 16431,
+    "next_mapped_owner_start": 178354,
+    "overlaps": []
+  },
+  "external_library_append": {
+    "after": {
+      "code_bytes": 46059,
+      "entries": 756,
+      "images": 7,
+      "resolutions": 2930,
+      "roots": 352
+    },
+    "authority": {
+      "bank2_code": {
+        "bytes": 46043,
+        "path": "build/c2.3/v1.7-recovery-quiescence-card-r3-a0/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+        "sha256": "a241a8c23a5cc8d7f7525ed2f1f522ca41f103c28928a2636a58c1972ba7e7de"
+      },
+      "initial_c2d": {
+        "bytes": 33840,
+        "path": "build/c2.3/v1.7-recovery-quiescence-card-r3-a0/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+        "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+      },
+      "stdlib_manifest": {
+        "bytes": 304496,
+        "path": "build/c2.3/v1.7-recovery-quiescence-card-r3-a0/static-plane/narrow-static/stdlib-p0.manifest.json",
+        "sha256": "59d9861104e37a25790f6d59fe22e23a5e9378298a008703b0e7db83daba2eb9"
+      }
+    },
+    "before": {
+      "code_bytes": 46043,
+      "entries": 755,
+      "images": 6,
+      "resolutions": 2929,
+      "roots": 352
+    },
+    "execution": {
+      "calls": [
+        {
+          "argc": 2,
+          "caller": "%init-external-proof",
+          "kind": "TAILCALL",
+          "pc": 4,
+          "resolved": true,
+          "target": "list"
+        }
+      ],
+      "entry": "%init-external-proof",
+      "result_obj": "0x0566",
+      "result_text": "(17 65)",
+      "steps": 5
+    },
+    "mutations": [
+      {
+        "exception": "SessionHostError",
+        "name": "external-entry-not-published",
+        "result": "rejected"
+      },
+      {
+        "exception": "VMError",
+        "name": "external-caller-loses-final-static-owner",
+        "result": "rejected"
+      }
+    ],
+    "published_handle": 755,
+    "static_directory_entries_loaded": 352,
+    "status": "PASS: EXTERNAL APPEND RESOLVES OVER FINAL STATIC PLANE"
+  },
+  "format": "lisp65-c2-v17-init-l65-pricing-receipt-v1",
+  "implementation_obligations": [
+    "final linked resident delta is <= 0",
+    "candidate banner remains one object below 255 bytes",
+    "missing INIT.L65 is silent and attempted once",
+    "reader/load/evaluation/RUN-STOP errors end at live native lisp65>",
+    "stream loader cannot mask an earlier VM error with a later form",
+    "external append fixture runs over the candidate final static plane",
+    "composed Bank-2 owner map remains disjoint",
+    "full double-green check-source closure before media"
+  ],
+  "recorded_on": "2026-08-27",
+  "resident_price": {
+    "candidate_total_bytes": 99,
+    "compiler": {
+      "bytes": 78628536,
+      "path": "tools/llvm-mos/bin/clang-23",
+      "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+    },
+    "exact_isolated_function_bytes": {
+      "price_banner_new": 16,
+      "price_banner_old": 41,
+      "price_load_new": 27,
+      "price_load_old": 25,
+      "price_stream_new": 56,
+      "price_stream_old": 49
+    },
+    "implementation_bar": "final linked resident delta <= 0; isolated target prices are a forecast and confer no byte credit",
+    "old_total_bytes": 115,
+    "projected_delta_bytes": -16
+  },
+  "selected_form": {
+    "canonical_prompt_swap": false,
+    "comfort_dependency": false,
+    "expression": "(load \"init.l65\")",
+    "name": "banner-owned Bank-2 native init hook",
+    "new_named_helpers": [],
+    "new_product_name_bytes": 0,
+    "new_product_symbol_slots": 0,
+    "new_resident_state_bytes": 0
+  },
+  "source_seam": {
+    "absence_authority": "delivered Lisp load returns NIL when name absent",
+    "attempt_guard": "existing if (!aborted) banner guard",
+    "current_order": [
+      "setjmp",
+      "active",
+      "screen",
+      "banner",
+      "prompt"
+    ],
+    "necessary_resident_conversions": [
+      "banner VM error returns through lisp_abort_code",
+      "load_source_stream stops after first VM error",
+      "found-but-unloadable source raises existing LOAD_OPEN error 18"
+    ],
+    "selected_hook": "%repl-banner first form"
+  },
+  "status": "PASS: NATIVE INIT.L65 HOOK PRICED; IMPLEMENTATION NOT OPEN",
+  "symbol_capacity": {
+    "baseline_free_name_bytes": 1413,
+    "baseline_free_slots": 105,
+    "candidate_free_name_bytes": 1413,
+    "candidate_free_slots": 105,
+    "floor_name_bytes": 384,
+    "floor_slots": 32,
+    "note": "init.l65 is a bytecode string literal, not a name-pool symbol"
+  }
+}

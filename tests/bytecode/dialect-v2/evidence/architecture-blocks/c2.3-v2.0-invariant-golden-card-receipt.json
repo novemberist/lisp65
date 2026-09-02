@@ -1,0 +1,202 @@
+{
+  "acceptance": {
+    "allocatable_sections": 103,
+    "capacity_arenas": 11,
+    "capacity_measurements": [
+      {
+        "candidate_headroom_bytes": 0,
+        "candidate_max_end_exclusive": 8215,
+        "end_exclusive": 8215,
+        "id": "basic-header",
+        "start": 8193
+      },
+      {
+        "candidate_headroom_bytes": 0,
+        "candidate_max_end_exclusive": 144,
+        "end_exclusive": 144,
+        "id": "ordinary-zero-page",
+        "start": 34
+      },
+      {
+        "candidate_headroom_bytes": 140,
+        "candidate_max_end_exclusive": 45860,
+        "end_exclusive": 46000,
+        "id": "ordinary-text",
+        "start": 8227
+      },
+      {
+        "candidate_headroom_bytes": 625,
+        "candidate_max_end_exclusive": 31772,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      },
+      {
+        "candidate_headroom_bytes": 5,
+        "candidate_max_end_exclusive": 49147,
+        "end_exclusive": 49152,
+        "id": "low-resident-and-ordinary-chain",
+        "start": 46000
+      },
+      {
+        "candidate_headroom_bytes": 7,
+        "candidate_max_end_exclusive": 49997,
+        "end_exclusive": 50004,
+        "id": "owned-bank0-state",
+        "start": 49152
+      },
+      {
+        "candidate_headroom_bytes": 879,
+        "candidate_max_end_exclusive": 51857,
+        "end_exclusive": 52736,
+        "id": "workbench-boot-overlay",
+        "start": 50006
+      },
+      {
+        "candidate_headroom_bytes": 6,
+        "candidate_max_end_exclusive": 51792,
+        "end_exclusive": 51798,
+        "id": "runtime-overlay-slices",
+        "start": 50006
+      },
+      {
+        "candidate_headroom_bytes": 50,
+        "candidate_max_end_exclusive": 8142,
+        "end_exclusive": 8192,
+        "id": "resident-island",
+        "start": 6144
+      },
+      {
+        "candidate_headroom_bytes": 16,
+        "candidate_max_end_exclusive": 65520,
+        "end_exclusive": 65536,
+        "id": "kernal-window",
+        "start": 57344
+      },
+      {
+        "candidate_headroom_bytes": 0,
+        "candidate_max_end_exclusive": 65536,
+        "end_exclusive": 65536,
+        "id": "kernal-vectors",
+        "start": 65530
+      }
+    ],
+    "comparison": "invariants-exact-derived-freight-validated",
+    "derived_boundary_symbols": 1,
+    "derived_freight_sha256": "b91affef58029dd3aa2a055cbbb4dc9d9ccc7aad1fdb3b58e9abc0ea6d2ffab5",
+    "fixed_boundary_symbols": 27,
+    "invariant_projection_sha256": "f75326245a7e15448174056eefd49cbec20a88a84b3394289521a75067f15603",
+    "load_order_entries": 89,
+    "operations": 1,
+    "other_acceptance_operations": 0
+  },
+  "artifacts": {
+    "elf": {
+      "bytes": 643260,
+      "path": "build/c2.3/v2.0-invariant-golden-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "0ec0924e739b6e1d5cc15d5359c822f5426404277b0c90e3362743ead822b62f"
+    },
+    "linker": {
+      "bytes": 69243,
+      "path": "build/c2.3/v2.0-invariant-golden-card/wplto/c2-substitution.ld",
+      "sha256": "a979c9209296a9169d42424595978bcf0a482da2339afd33a2885b85a2302d1c"
+    },
+    "lto": {
+      "bytes": 620832,
+      "path": "build/c2.3/v2.0-invariant-golden-card/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "e2ae5443cdceeb8718fc1d402596f36c1e62f6fdd467cbc1fbf5ac83de490277"
+    },
+    "map": {
+      "bytes": 181356,
+      "path": "build/c2.3/v2.0-invariant-golden-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "c695e965227858c673d3ac9f3b53f013b01726f0b94840f75f87b85d01fa7da5"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.0-invariant-golden-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "70f859096cba3bde085817909658e2e63c79fb9a89936e62a678291549da049a"
+    }
+  },
+  "attempt_accounting": {
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "device_contacts": 0,
+    "product_link_attempts": 1,
+    "wplto_runs": 1
+  },
+  "authority": {
+    "driver": {
+      "bytes": 22242,
+      "path": "tools/host-lisp/c2_v20_invariant_golden_card.py",
+      "sha256": "ddc35e4879fc89a80f53424dc450bc6e98f04d2d91904bfedcf6fbfaa69168e0"
+    },
+    "invariant_golden": {
+      "bytes": 32150,
+      "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-owned-invariants-v2.json",
+      "sha256": "ed12b83b4913923eb4ed3a1977008d70edc7f1c8d4f1da9a13f007a69d390e0d"
+    },
+    "invocation": {
+      "bytes": 795,
+      "path": "build/c2.3/v2.0-invariant-golden-card-preflight/card-invocation.json",
+      "sha256": "7f8170649395206039e24b1b3987ab21d6b6088df895789035f2a656d5a588d4"
+    },
+    "preflight": {
+      "bytes": 4283,
+      "path": "build/c2.3/v2.0-invariant-golden-card-preflight/preflight.json",
+      "sha256": "855bcfd21bb9cfffe41d332aff5e561388af25c90bf518723c617a6921315af5"
+    },
+    "review_package": {
+      "bytes": 11737,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-invariant-golden-review-receipt.json",
+      "sha256": "005f507e343db3df335e93ce5e66887b5a3a023a92104ef9fda6a6356f4137d1"
+    },
+    "reviewer_acceptance": {
+      "bytes": 10080,
+      "git_commit": "bf195e3202c904810d6986df20bd8df762747fab",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "2f464ec2404b88d03abd056f65b1c6ea23d31796708b280b66e37d090dda0e4e"
+    }
+  },
+  "claim_limit": "One host-only product card accepted solely by invariant geometry plus candidate-derived freight validation; no media, device, release, publication or parity claim.",
+  "format": "lisp65-c2.3-v20-invariant-golden-card-v1",
+  "next_gate": "Fresh v1.5 D1-D5 device session, v1.5 release and separate parity-chain owner decision.",
+  "producer": {
+    "historical_return_nonauthoritative": 2,
+    "log": {
+      "bytes": 288,
+      "path": "build/c2.3/v2.0-invariant-golden-card/receipts/v20-producer.log",
+      "sha256": "e594ef05dac226d9a466443e294594c4f7adddee6037b43bf2377feb8dd9e796"
+    },
+    "mechanical_completion_only": true,
+    "resolved_profile": {
+      "bytes": 12319,
+      "path": "build/c2.3/v2.0-invariant-golden-card/wplto/resolved-profile.txt",
+      "sha256": "49150fc9d38d7807b402f4628f31805ea64e79235999813d0983fac7e2891670"
+    },
+    "source_unchanged": {
+      "bytes": 24636,
+      "path": "tools/host-lisp/c2_v20_ownership_recharter.py",
+      "sha256": "3675cefc0403dcdcf0eba9c83ea6298a3d18e52009b802976bbe30cfcff8aa04"
+    },
+    "target_stdlib_header": {
+      "manifest": {
+        "bytes": 346106,
+        "path": "build/c2.3/v1.5.0-release-preflight/static-plane/narrow-static/stdlib-p0.manifest.json",
+        "sha256": "97fddc4431f978803d5e27a462dec52e2cad81549dfcef8e6b2634613bb165a2"
+      },
+      "source": {
+        "bytes": 3364,
+        "path": "build/c2.3/v1.5.0-release-preflight/static-plane/narrow-static/stdlib-p0.h",
+        "sha256": "06f40f7951b0a5cbd7f27ad0769dbe5d271cecc73aae87d578929c4b0e72f936"
+      },
+      "status": "passed-selected-manifest-header-to-target-include",
+      "target": {
+        "bytes": 3364,
+        "path": "build/c2.3/v2.0-invariant-golden-card/static-plane/narrow-static/workbench/stdlib-p0.h",
+        "sha256": "06f40f7951b0a5cbd7f27ad0769dbe5d271cecc73aae87d578929c4b0e72f936"
+      }
+    }
+  },
+  "recorded_on": "2026-08-12",
+  "status": "PASS: owned v1.5 plus F018B candidate satisfies invariant golden"
+}

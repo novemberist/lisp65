@@ -1,0 +1,30 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-split-restart-calendar-first-red-v1",
+  "recorded_on": "2026-08-08",
+  "status": "first-red-historical-receipt-calendar-recomputation",
+  "authorization": {
+    "split_restart_commit": "a1cf5b9b",
+    "owner_signal": "bereit",
+    "scope": "D1 split-media restart preparation before any device contact"
+  },
+  "first_red": {
+    "command": "python3 tools/host-lisp/c2_v112_phase_d_boot_choreography.py check",
+    "message": "boot choreography preparation receipt drift",
+    "device_touched": false,
+    "d1_captures_created": false,
+    "product_or_media_changed": false
+  },
+  "observed_delta": {
+    "json_pointer": "/recorded_on",
+    "persisted": "2026-08-07",
+    "recomputed": "2026-08-08"
+  },
+  "persisted_authority_before_repair": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-boot-choreography-diff-receipt.json",
+    "bytes": 6624,
+    "sha256": "85066d5af958b7bcadb67cdd4064fe5807c854cf9529f347ade98f348f1a6884"
+  },
+  "attribution": "The checker recomputed a historical receipt's recorded_on field from the wall clock. Media identity, choreography, authorization, bindings and every semantic field were byteidentical after excluding that single calendar field.",
+  "repair": "Keep recorded_on bound to the historical preparation date and reject any reintroduced date.today() projection with a permanent source mutation.",
+  "claim_limit": "Host receipt-authority First Red only. No hardware contact, D1 result, product byte, medium, D3, D2, selector, Halt, Phase E or release claim."
+}

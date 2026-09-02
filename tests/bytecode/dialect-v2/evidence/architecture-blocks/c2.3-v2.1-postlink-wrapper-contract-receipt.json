@@ -1,0 +1,153 @@
+{
+  "authority": {
+    "attribution": {
+      "bytes": 7239,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-expectation-shape-card-red-attribution-receipt.json",
+      "sha256": "5a61525ff678af0f5b742815fb466cfa42b2ee6e3a790fca67a58d46b16a2f40"
+    },
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 44050,
+      "commit": "34e92a148b191a7dffc1b9c4fe7f915f78ca5c8d",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "0f1b8bdcdb3fe8b3f79e04f4d8188a40b44e1cc8cd5cf03f6a44d9b520f4838c"
+    },
+    "driver": {
+      "bytes": 14877,
+      "path": "tools/host-lisp/c2_v21_postlink_wrapper_contract.py",
+      "sha256": "08685260c66abbc078281ce4a731217c6387ff57cd9b86e247597dd97433b51f"
+    },
+    "final_red": {
+      "bytes": 8697,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-expectation-shape-card-final-red.json",
+      "sha256": "5d4fb87f62ef71e1e03679da95a56a57921b84219baea3f3789a5298294dfb25"
+    }
+  },
+  "claim_limit": "Host-only wrapper conformance; no product card has run.",
+  "contract_gate": {
+    "WPLTO_runs": 0,
+    "producer_roles": [
+      "elf",
+      "generated_decoder",
+      "generated_phase02a",
+      "linker",
+      "lto",
+      "map",
+      "prg",
+      "publish_last",
+      "resolved_profile"
+    ],
+    "product_links": 0,
+    "status": "PASS: complete post-link chain executed against typed paths",
+    "wrapper_count": 3,
+    "wrappers_inner_to_outer": [
+      {
+        "executed_contract": {
+          "accessed_roles": [
+            "elf",
+            "map"
+          ],
+          "resolved_values": [
+            "/synthetic/producer/elf",
+            "/synthetic/producer/map"
+          ]
+        },
+        "execution_order": 0,
+        "source": {
+          "bytes": 12814,
+          "path": "tools/host-lisp/c2_v21_cpu_transport_card.py",
+          "sha256": "592ded8f47fa54d495a3698873541748a81b4301bb0cccf19d14c8eabeba9586"
+        },
+        "static_contract": {
+          "adapter": "postlink_artifacts",
+          "direct_producer_lookups": 0,
+          "producer_calls_adapter": true,
+          "roles": [
+            "elf",
+            "map"
+          ]
+        },
+        "wrapper": "cpu-transport"
+      },
+      {
+        "executed_contract": {
+          "accessed_roles": [
+            "elf"
+          ],
+          "resolved_values": [
+            "/synthetic/producer/elf"
+          ]
+        },
+        "execution_order": 1,
+        "source": {
+          "bytes": 28123,
+          "path": "tools/host-lisp/c2_v21_text_recovery_card.py",
+          "sha256": "4e3ead6879d7f0ec53c596ebc3cd73573eeed135dd382c54c91d7e61750fb902"
+        },
+        "static_contract": {
+          "adapter": "postlink_artifacts",
+          "direct_producer_lookups": 0,
+          "producer_calls_adapter": true,
+          "roles": [
+            "elf"
+          ]
+        },
+        "wrapper": "text-recovery"
+      },
+      {
+        "executed_contract": {
+          "accessed_roles": [
+            "elf"
+          ],
+          "resolved_values": [
+            "/synthetic/producer/elf"
+          ]
+        },
+        "execution_order": 2,
+        "source": {
+          "bytes": 28349,
+          "path": "tools/host-lisp/c2_v21_text_recovery_replacement_card.py",
+          "sha256": "590148d7ca291a69fd41fa7838f795aa1d375a14a33c45298985a49d8da768cf"
+        },
+        "static_contract": {
+          "adapter": "postlink_artifacts",
+          "direct_producer_lookups": 0,
+          "producer_calls_adapter": true,
+          "roles": [
+            "elf"
+          ]
+        },
+        "wrapper": "text-recovery-replacement"
+      }
+    ]
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-postlink-wrapper-contract-v1",
+  "mutations_rejected": {
+    "contract": [
+      "uppercase-role:cpu-transport",
+      "uppercase-role:text-recovery",
+      "uppercase-role:text-recovery-replacement",
+      "wrapper-accesses-role-outside-contract",
+      "producer-bypasses-adapter:cpu-transport",
+      "producer-bypasses-adapter:text-recovery",
+      "producer-bypasses-adapter:text-recovery-replacement"
+    ],
+    "receipt": [
+      "hide-wrapper",
+      "accept-uppercase-role",
+      "spend-card",
+      "run-WPLTO",
+      "weaken-rule"
+    ]
+  },
+  "recorded_on": "2026-08-14",
+  "rule": "A card is a product experiment, not a plumbing test.",
+  "status": "HOST-GREEN: post-link wrapper contract conformance"
+}

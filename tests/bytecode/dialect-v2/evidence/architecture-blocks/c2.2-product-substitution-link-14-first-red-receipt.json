@@ -1,0 +1,107 @@
+{
+  "format": "lisp65-c2-product-substitution-link-14-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "status": "first-red",
+  "attempt": {
+    "name": "fourteenth-substitution-link",
+    "command_mode": "--prepare-smoke",
+    "first_red_stage": "runtime-overlay-bootstrap-link",
+    "second_attempt_performed": false
+  },
+  "confirmed_link_14_layout_inputs": {
+    "handoff": {
+      "contract_start": "0xb481",
+      "bytes": 289,
+      "contract_end_exclusive": "0xb5a2"
+    },
+    "owned_e000_session_emitter_code": {
+      "start": "0xe09e",
+      "bytes": 40,
+      "end_exclusive": "0xe0c6"
+    },
+    "owned_e000_session_emitter_state": {
+      "start": "0xf15f",
+      "bytes": 346,
+      "end_exclusive": "0xf2b9"
+    },
+    "fixed_bank0_state": {
+      "start": "0xc080",
+      "bytes": 408,
+      "end_exclusive": "0xc218",
+      "headroom_to_runtime_overlay_bytes": 318
+    },
+    "meaning": "The failed-link map reflects every authorized Link-14 placement change. These map facts do not constitute a linked product or a passed structural gate."
+  },
+  "first_red": {
+    "class": "ordinary-text-contract-handoff-overlap",
+    "linker_diagnostics": [
+      "section .text file range overlaps with .lisp65_c2_kernal_handoff",
+      "section .text virtual address range overlaps with .lisp65_c2_kernal_handoff",
+      "section .text load address range overlaps with .lisp65_c2_kernal_handoff"
+    ],
+    "ordinary_text": {
+      "start": "0x2023",
+      "bytes": 37985,
+      "end_exclusive": "0xb484"
+    },
+    "handoff": {
+      "start": "0xb481",
+      "bytes": 289,
+      "end_exclusive": "0xb5a2"
+    },
+    "overlap_bytes": 3,
+    "projection_delta_bytes": 10,
+    "projection_reference": "The Link-13 receipt projected ordinary text ending at 0xb47a, leaving seven bytes before 0xb481. The real Link-14 runtime-bootstrap link ended at 0xb484 instead, invalidating that projection by ten bytes and producing a three-byte overlap.",
+    "meaning": "The historical handoff position and fixed facade leave no unallocated byte between the 289-byte handoff and 0xb5a2. At least three bytes must leave the ordinary-text interval before a fresh link can be authorized; moving or overlapping the pinned handoff would violate the accepted layout contract."
+  },
+  "artifact_boundary": {
+    "resident_island_seed_link_completed": true,
+    "resident_island_seed_is_product_candidate": false,
+    "runtime_overlay_bootstrap_emitted": false,
+    "product_bytes_emitted": 0,
+    "product_candidate_emitted": false,
+    "identity_gate": "not-run",
+    "capacity_gate": "not-run",
+    "pre_ownership_gate": "not-run",
+    "fixed_host_facade_gate": "not-run",
+    "one_truth_gate": "not-run",
+    "kernal_freedom_gate": "not-run"
+  },
+  "map_evidence": {
+    "failed_link_map": {
+      "path": "build/c2.2/substitution/product-link-14/runtime-overlay-bootstrap.prg.map",
+      "sha256": "02150895e2d75947ba00741434e15a61cb5daf3b1c22716eefff0e85fcae488f"
+    },
+    "resident_island_seed": {
+      "path": "build/c2.2/substitution/product-link-14/resident-island-seed.prg",
+      "sha256": "5851bb0ebd8b924f8c1d31f8510c0b02be14128a2ae131f67bff1431ac1360aa"
+    },
+    "resident_island_seed_map": {
+      "path": "build/c2.2/substitution/product-link-14/resident-island-seed.prg.map",
+      "sha256": "3e160cbfaa39972f11d5046ac7060b8618fb7fab7cc8abe3e1210d8bd97654f8"
+    },
+    "generated_linker_script": {
+      "path": "build/c2.2/substitution/product-link-14/c2-substitution.ld",
+      "sha256": "c77a99aa86abc129c4e8db047ca5348607466c4254054a6e2b83d253c97b7833"
+    }
+  },
+  "static_inputs": {
+    "session_emitter_source_sha256": "77a046053d4b455893767cfb0b7a7a4eb6c8c2684f8a70995308aa21b2b0c6af",
+    "link_driver_sha256": "c187b872210ff7066e731ba97ae5d102958680cc05b86596c5b266ec29cab20c",
+    "contract_sha256_before_first_red_status_update": "3bf8211403513ce24ba8b2a29daaa2b7d105ea81f1cdb87b68aa13d4a4a311a3",
+    "contract_document_sha256": "0206520c283045e2f4491907b8d0e4d8a9b1d77689f1446e8ed91614d2457500",
+    "driver_selftest": "passed",
+    "json_python_and_whitespace_gates": "passed before the authorized link"
+  },
+  "recommended_next_decision": {
+    "required_effect": "Remove or relocate at least three real bytes from the ordinary-text interval below 0xb481 while preserving the pinned handoff, facade and all ownership boundaries.",
+    "not_authorized": [
+      "move the handoff from 0xb481",
+      "overlap the handoff with ordinary text or the fixed facade",
+      "rerun Link 14 with an unreviewed micro-shrink",
+      "weaken a linker assertion or structural gate"
+    ],
+    "authorization": "Any concrete relocation or shrink and any fresh substitution link require review."
+  },
+  "claim_limit": "Receipt-less diagnostic first-red only. The map proves the three-byte collision and the attempted Link-14 placements; it proves no runtime bootstrap, product link, capacity, fixed-facade closure, pre-ownership separation, one-truth, KERNAL freedom, hardware behavior or promotion claim."
+}

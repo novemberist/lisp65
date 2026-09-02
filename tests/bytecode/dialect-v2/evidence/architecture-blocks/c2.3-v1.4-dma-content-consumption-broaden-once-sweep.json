@@ -1,0 +1,366 @@
+{
+  "authorities": {
+    "contract": {
+      "bytes": 7320,
+      "path": "config/c2-dma-content-consumption-sweep.json",
+      "sha256": "28810a9d3f904b399819c8aa4cfe5e59838f6fc4baa1e2b9d13a2b148285c8bd"
+    },
+    "driver": {
+      "bytes": 9403,
+      "path": "tools/host-lisp/c2_dma_content_consumption_sweep.py",
+      "sha256": "948ce8ace33f0cb8bc27a6406ff51ac4e8bb274c0e35947fedb7e163fa3ed4d9"
+    },
+    "elf:ship-runtime": {
+      "bytes": 41084,
+      "path": "build/post-promotion/v14/link91-content-convergence-preflight7/parity-toy.runtime.elf",
+      "sha256": "064be7622e21acacd110bf5d9e34c174ae59cd16a474c4c52eae6497b9cbd70c"
+    },
+    "elf:ship-stager": {
+      "bytes": 13760,
+      "path": "build/post-promotion/v14/link91-content-convergence-preflight7/parity-toy.stager.elf",
+      "sha256": "55707fc1b9239473c67abeed4ab440f47ab22d99bb86f23d7841d7d0be3cbf59"
+    },
+    "elf:workbench": {
+      "bytes": 622588,
+      "path": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "aff30032a82a6e3ff0d71a13dc945507e987446f2deee300a1dd6f722f8ef8f4"
+    },
+    "source:scripts/c2-lite-cold-stager-chain.s": {
+      "bytes": 3039,
+      "path": "scripts/c2-lite-cold-stager-chain.s",
+      "sha256": "2288fb1a59aa3491e46b0bbaa073c502d33c39623a2836eb14a090a700b684af"
+    },
+    "source:scripts/r3-cold-stager-main.c": {
+      "bytes": 40754,
+      "path": "scripts/r3-cold-stager-main.c",
+      "sha256": "045d6f27f9b727c383dba681dad2218ac8ff0761bb1e53819d667afc08cc9ebb"
+    },
+    "source:src/c2_kernal_runtime.c": {
+      "bytes": 5933,
+      "path": "src/c2_kernal_runtime.c",
+      "sha256": "7264b2cb879a4d7842e4b8dd83efd0de3914a0b347d2fb4d0d3521129e871180"
+    },
+    "source:src/c2_platform_dma.c": {
+      "bytes": 10853,
+      "path": "src/c2_platform_dma.c",
+      "sha256": "3dcb76e9072868c890513471d7d4e0c16f7803853968f91d4f52e7fb0b0ea8d6"
+    },
+    "source:src/c2_product_runtime.c": {
+      "bytes": 168045,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "7e2e6eefa18a151795924189db9818c1db656c8d7105083e27d5c2e72e3dbdc3"
+    },
+    "source:src/mem.c": {
+      "bytes": 49881,
+      "path": "src/mem.c",
+      "sha256": "eed1a86672a92efdfed914f03272708d2ee7a0ec7fa3950e91a640c9062faba0"
+    },
+    "source:src/vm_embed.c": {
+      "bytes": 44844,
+      "path": "src/vm_embed.c",
+      "sha256": "6322ddde4d5f9be3d504b716a7bcfadf56bd32e7e3d144097d954748a9032b81"
+    },
+    "source:src/vm_runtime_overlay.c": {
+      "bytes": 92183,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "b70f032a8e78c0474b8079d71b1dbd6543b44ee83816d02176f00863cdbc70d2"
+    }
+  },
+  "claim_limit": {
+    "hardware_contacts": 0,
+    "product_link_built": false,
+    "scope": "linked Link-90 predecessor Workbench plus fixed pre-Link-91 Ship Runtime/stager; three predecessor gaps are bound to their source fixes and require the authorized WPLTO"
+  },
+  "counts": {
+    "content_consumed_gaps": 0,
+    "independently_protected_or_verifier": 11,
+    "linked_submission_sites": 13,
+    "predecessor_sites_fixed_in_source": 3,
+    "raw_fire_and_forget_or_deferred": 2
+  },
+  "format": "lisp65-c2-dma-content-consumption-sweep-receipt-v1",
+  "gaps": [],
+  "inventory": [
+    {
+      "address": 9080,
+      "address_hex": "$2378",
+      "classification": "fire-and-forget-or-deferred-content",
+      "evidence": {
+        "all": [
+          "static void ext_dma_read_or_abort(",
+          "vm_code_load_converged(source_bank, source, length, destination)",
+          "void    ext_set_type(uint16_t i,uint8_t t)"
+        ],
+        "path": "src/mem.c"
+      },
+      "image": "ship-runtime",
+      "oracle": "raw site remains only for writes/copies; every CPU read enters the converged seam",
+      "ordinal": 0,
+      "owner": "ext_dma",
+      "owner_address": 9028,
+      "owner_bytes": 56,
+      "register": "$D700",
+      "section": ".text"
+    },
+    {
+      "address": 29514,
+      "address_hex": "$734A",
+      "classification": "fire-and-forget-or-deferred-content",
+      "evidence": {
+        "all": [
+          "uint8_t vm_code_load_converged(",
+          "vm_dma_source_byte(bank, (uint16_t)(off + i), &expected)",
+          "if (!vm_code_load_converged(SYMVAL_EXT_BANK,"
+        ],
+        "path": "src/vm_embed.c"
+      },
+      "image": "ship-runtime",
+      "oracle": "raw site is primary copy or write; all CPU consumers require the independent verifier",
+      "ordinal": 0,
+      "owner": "vm_dma",
+      "owner_address": 29462,
+      "owner_bytes": 56,
+      "register": "$D700",
+      "section": ".text"
+    },
+    {
+      "address": 29795,
+      "address_hex": "$7463",
+      "classification": "verification-transport",
+      "evidence": {
+        "all": [
+          "vm_dma_source_byte(bank, (uint16_t)(off + i), &expected)",
+          "while (observed[i] != expected)",
+          "VM_CODE_CONVERGENCE_TIMEOUT_FRAMES"
+        ],
+        "path": "src/vm_embed.c"
+      },
+      "image": "ship-runtime",
+      "oracle": "source-derived-first-difference-convergence",
+      "ordinal": 0,
+      "owner": "vm_code_load_converged",
+      "owner_address": 29518,
+      "owner_bytes": 442,
+      "register": "$D700",
+      "section": ".text"
+    },
+    {
+      "address": 9683,
+      "address_hex": "$25D3",
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "edma_copy(R3_PRODUCT_STAGE",
+          "rd16(verify_buffer) != R3_PRODUCT_LOAD",
+          "return;"
+        ],
+        "path": "scripts/r3-cold-stager-main.c"
+      },
+      "image": "ship-stager",
+      "oracle": "independent-fixed-content-readback-fail-closed",
+      "ordinal": 0,
+      "owner": "main",
+      "owner_address": 8339,
+      "owner_bytes": 1659,
+      "register": "$D705",
+      "section": ".text"
+    },
+    {
+      "address": 12472,
+      "address_hex": "$30B8",
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "c2_chip_stage_copy_readback",
+          "c2_target_readback[poll] != sector_payload[poll]",
+          "while (wraps < 192u)",
+          "C2_V21_TRACE_CONVERGENCE_TIMEOUT"
+        ],
+        "path": "scripts/r3-cold-stager-main.c"
+      },
+      "image": "ship-stager",
+      "oracle": "independent-target-readback-byte-convergence",
+      "ordinal": 0,
+      "owner": "disk_record",
+      "owner_address": 11084,
+      "owner_bytes": 2163,
+      "register": "$D700",
+      "section": ".text"
+    },
+    {
+      "address": 12681,
+      "address_hex": "$3189",
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "c2_attic_stage_copy_readback",
+          "c2_target_readback[poll] != sector_payload[poll]",
+          "while (wraps < 192u)",
+          "C2_V21_TRACE_CONVERGENCE_TIMEOUT"
+        ],
+        "path": "scripts/r3-cold-stager-main.c"
+      },
+      "image": "ship-stager",
+      "oracle": "independent-target-readback-byte-convergence",
+      "ordinal": 0,
+      "owner": "disk_record",
+      "owner_address": 11084,
+      "owner_bytes": 2163,
+      "register": "$D705",
+      "section": ".text"
+    },
+    {
+      "address": 12731,
+      "address_hex": "$31BB",
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "c2_attic_retry_readback",
+          "c2_target_readback[poll] != sector_payload[poll]",
+          "while (wraps < 192u)",
+          "C2_V21_TRACE_CONVERGENCE_TIMEOUT"
+        ],
+        "path": "scripts/r3-cold-stager-main.c"
+      },
+      "image": "ship-stager",
+      "oracle": "independent-target-readback-byte-convergence",
+      "ordinal": 1,
+      "owner": "disk_record",
+      "owner_address": 11084,
+      "owner_bytes": 2163,
+      "register": "$D705",
+      "section": ".text"
+    },
+    {
+      "address": 13942,
+      "address_hex": "$3676",
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "R3_CRC_EXPECT_0",
+          "cmp\tR3_CRC_EXPECT_0",
+          "cmp\t#ASM_R3_CHAIN_CRC_ATTEMPTS",
+          "sta\t$d020"
+        ],
+        "path": "scripts/c2-lite-cold-stager-chain.s"
+      },
+      "image": "ship-stager",
+      "oracle": "manifest CRC32 versus complete CPU-visible product payload; bounded fail closed",
+      "ordinal": 0,
+      "owner": "r3_chain_begin",
+      "owner_address": 13921,
+      "owner_bytes": 211,
+      "register": "$D700",
+      "section": ".r3_chain_trampoline"
+    },
+    {
+      "address": 11397,
+      "address_hex": "$2C85",
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "LISP65_RTOV_COMPLETION_TIMEOUT_FRAMES",
+          "rtov_crc_converge",
+          "VM_RUNTIME_OVERLAY_ERR_COMPLETION_TIMEOUT"
+        ],
+        "path": "src/vm_runtime_overlay.c"
+      },
+      "image": "workbench",
+      "oracle": "independent-destination-crc-convergence",
+      "ordinal": 0,
+      "owner": "vm_runtime_overlay_exec_family",
+      "owner_address": 10271,
+      "owner_bytes": 1262,
+      "register": "$D705",
+      "section": ".text"
+    },
+    {
+      "address": 12999,
+      "address_hex": "$32C7",
+      "classification": "predecessor-content-consumed-source-fixed",
+      "evidence": {
+        "all": [
+          "static void ext_dma_read_or_abort(",
+          "vm_code_load_converged(source_bank, source, length, destination)",
+          "uint8_t ext_type(uint16_t i){ ext_dma_read_or_abort("
+        ],
+        "path": "src/mem.c"
+      },
+      "image": "workbench",
+      "oracle": "all CPU-consumed EXT reads route through the shared source-derived first-difference primitive before Link 91",
+      "ordinal": 0,
+      "owner": "ext_dma",
+      "owner_address": 12935,
+      "owner_bytes": 68,
+      "register": "$D700",
+      "section": ".text"
+    },
+    {
+      "address": 46462,
+      "address_hex": "$B57E",
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "c2k_crc16",
+          "C2_KERNAL_WINDOW_CRC16",
+          "return 0u;"
+        ],
+        "path": "src/c2_kernal_runtime.c"
+      },
+      "image": "workbench",
+      "oracle": "independent-cpu-visible-crc-fail-closed",
+      "ordinal": 0,
+      "owner": "c2k_copy",
+      "owner_address": 46369,
+      "owner_bytes": 97,
+      "register": "$D705",
+      "section": ".lisp65_c2_kernal_handoff"
+    },
+    {
+      "address": 61037,
+      "address_hex": "$EE6D",
+      "classification": "predecessor-content-consumed-source-fixed",
+      "evidence": {
+        "all": [
+          "uint8_t C2_PHYSICAL_READ_CONVERGED_IMPL(",
+          "c2_physical_source_byte(source + i, &expected)",
+          "while (observed[i] != expected)",
+          "C2_DMA_CONTENT_TIMEOUT_FRAMES"
+        ],
+        "path": "src/c2_product_runtime.c"
+      },
+      "image": "workbench",
+      "oracle": "one D705 source-derived first-difference discriminator followed by one primary copy before Link 91",
+      "ordinal": 0,
+      "owner": "c2_product_physical_copy",
+      "owner_address": 60896,
+      "owner_bytes": 145,
+      "register": "$D705",
+      "section": ".lisp65_c2_kernal_window.c2_resident"
+    },
+    {
+      "address": 65488,
+      "address_hex": "$FFD0",
+      "classification": "predecessor-content-consumed-source-fixed",
+      "evidence": {
+        "all": [
+          "uint8_t C2_VM_CODE_LOAD_CONVERGED_IMPL(",
+          "c2_dma_source_byte(bank, (uint16_t)(offset + i), &expected)",
+          "while (observed[i] != expected)",
+          "C2_DMA_CONTENT_TIMEOUT_FRAMES"
+        ],
+        "path": "src/c2_platform_dma.c"
+      },
+      "image": "workbench",
+      "oracle": "one D700 source-derived first-difference discriminator followed by one primary copy before Link 91",
+      "ordinal": 0,
+      "owner": "c2_facade_target_c2_dma",
+      "owner_address": 65424,
+      "owner_bytes": 68,
+      "register": "$D700",
+      "section": ".lisp65_c2_kernal_window.reopen_gap2"
+    }
+  ],
+  "recorded_on": "2026-08-30",
+  "status": "PASS"
+}

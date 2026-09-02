@@ -1,0 +1,188 @@
+{
+  "below_queue_diff": {
+    "arm_readback_list": [],
+    "core_interpretation": "The pinned core enqueues a physical key on a hardware key_valid edge. Physical input and the default scan-rate are enabled by reset; the producer is not a KERNAL or product IRQ service.",
+    "reason_no_list": "No second inherited subsystem has been established. Inventing D612 or D618 writes would be a speculative product change, not a diff.",
+    "result": "no-workbench-only-keyboard-source-arm-sequence-found",
+    "ship_elf_accesses": [],
+    "workbench_elf_accesses": [
+      {
+        "address": "0xd60a",
+        "direction": "read",
+        "instruction": "lda",
+        "pc": "0xe014",
+        "section": ".lisp65_c2_kernal_window.typed_queue_driver"
+      },
+      {
+        "address": "0xd619",
+        "direction": "read",
+        "instruction": "lda",
+        "pc": "0xe01c",
+        "section": ".lisp65_c2_kernal_window.typed_queue_driver"
+      },
+      {
+        "address": "0xd619",
+        "direction": "write",
+        "instruction": "sta",
+        "pc": "0xe01f",
+        "section": ".lisp65_c2_kernal_window.typed_queue_driver"
+      }
+    ]
+  },
+  "bindings": {
+    "core_iomapper": {
+      "bytes": 81537,
+      "path": "build/post-v1.2.4/upstream-recheck/mega65-core/src/vhdl/iomapper.vhdl",
+      "sha256": "942a08a4622001048c38b065bee11edf1e4926f2db29dfc03f67bb7257db4bba"
+    },
+    "core_uart": {
+      "bytes": 53983,
+      "path": "build/post-v1.2.4/upstream-recheck/mega65-core/src/vhdl/c65uart.vhdl",
+      "sha256": "3679b4cce25823c3f813cdfa8fdc0038c9cfbbadfe86fb960e3db373670915b6"
+    },
+    "driver": {
+      "bytes": 18583,
+      "path": "tools/host-lisp/c2_v13_link86_queue_capture_view_attribution.py",
+      "sha256": "5ed4fed2c5a5218f759fab4a5c34c6c8b33ade5e7f3732012b98a11cc5fcc468"
+    },
+    "g6_precedent": {
+      "bytes": 56805,
+      "path": "tools/host-lisp/c2_lite_g6.py",
+      "sha256": "ad16c06c42fa1735103e3fa91b0bfa147044a8176c5f76cf8b59432dbe60a2ae"
+    },
+    "m65_binary": {
+      "bytes": 286728,
+      "path": "tools/m65tools/m65",
+      "sha256": "158c932c07a82771704c86e8ee79700c992e150fe0cd64b2ba99b10071233bc4"
+    },
+    "prior_closer": {
+      "bytes": 7070,
+      "path": "tools/host-lisp/c2_v13_link86_queue_discriminator_close.py",
+      "sha256": "1ee97601ba99b0ce59349d2bb285eae66bd71b2aee1b8e2935eab7a256b4133c"
+    },
+    "prior_queue_receipt": {
+      "bytes": 3925,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link86-physical-key-queue-discriminator-receipt.json",
+      "sha256": "dec37c41ac6143642fb8352030a908b20cd9c332a063df98c733a46cb658b277"
+    },
+    "session": {
+      "bytes": 4589,
+      "path": "scripts/c2-v13-link86-queue-discriminator-hw.sh",
+      "sha256": "3c6e414d944b6ac7b74c24b8e54c5dd2b58b2cfb79590a9657d3ab3343b96b01"
+    },
+    "ship_elf": {
+      "bytes": 39536,
+      "path": "build/ship-builder/v13/link86-final-5a7c0d18/interactive.runtime.elf",
+      "sha256": "6a256512378142ece82ca6405cbf01a60f7c01f2312a84b9eb4f37969d26a0b4"
+    },
+    "ship_main": {
+      "bytes": 5644,
+      "path": "products/runtime-core/main.c",
+      "sha256": "c90ec1821d0387a40c782f3ef19872e362686a6a3fdaca1f27e744b9915ff7f2"
+    },
+    "workbench_elf": {
+      "bytes": 622560,
+      "path": "build/c2.3/v1.3.0-candidate-product-link86-r1/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "cf8d4c9bb6404f9df3a47241628793206a90a60946202647e9a631d2ef6e5245"
+    },
+    "workbench_main": {
+      "bytes": 9508,
+      "path": "src/main.c",
+      "sha256": "fd3aa5721306cbc8346e6070f780e0690bf4e859c38bba2c5388c8ddc184276d"
+    },
+    "workbench_owner": {
+      "bytes": 5933,
+      "path": "src/c2_kernal_runtime.c",
+      "sha256": "7264b2cb879a4d7842e4b8dd83efd0de3914a0b347d2fb4d0d3521129e871180"
+    },
+    "workbench_queue": {
+      "bytes": 4076,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81"
+    }
+  },
+  "candidate_link": 86,
+  "claim_limit": "Host/source/ELF attribution only. It invalidates the interpretation of the prior two RAM bytes; it does not infer live queue state, name an input mechanism, authorize a product fix, create a link or consume a hardware contact.",
+  "correction": {
+    "correct_claim": "The two files contain zero bytes from the monitor's RAM view under the mapped I/O page. They make no claim about live D60A/D619. The GETIN-consumer branch and the hardware-queue branch are both open.",
+    "historical_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link86-physical-key-queue-discriminator-receipt.json",
+    "history_policy": "preserved and explicitly superseded; not rewritten",
+    "superseded_claim": "The two zero bytes prove that the live D60A/D619 queue was empty, therefore GETIN was refuted and queue production was dead."
+  },
+  "external_authority": {
+    "m65_source": {
+      "bytes": 93308,
+      "path": "mega65-tools@c5bf0ccd7ec6398290176f8af928d0780482577f:src/tools/m65.c",
+      "sha256": "2b4e0fb94b79320cc7071142a9b44092f5c07395a5142d30d1d50e12d81b7c4c"
+    },
+    "m65common_source": {
+      "bytes": 58348,
+      "path": "mega65-tools@c5bf0ccd7ec6398290176f8af928d0780482577f:src/tools/m65common.c",
+      "sha256": "3aae4002e3c6a36b1dbbac5534b7e611fe48f85bd59ee1efecc5564898eda722"
+    },
+    "mega65_core_commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+    "mega65_tools_commit": "c5bf0ccd7ec6398290176f8af928d0780482577f"
+  },
+  "facts": {
+    "broaden_once_activated": false,
+    "capture": {
+      "api": "m65 --memsave",
+      "implementation": "memory_save->fetch_ram->monitor-m/M",
+      "live_queue_observed": false,
+      "view": "RAM-under-mapped-I/O-not-live-I/O"
+    },
+    "core": {
+      "cpu-irq-service-required": false,
+      "physical-source-reset-enabled": true,
+      "producer": "hardware-key-valid-edge",
+      "queue-state-register": "0xd60a",
+      "scan-rate-reset": "0xff"
+    },
+    "prior_interpretation": {
+      "bytes": [
+        0,
+        0
+      ],
+      "getin_refuted": false,
+      "queue_empty_claim": "invalidated",
+      "queue_production_dead": false
+    },
+    "static_diff": {
+      "both_unlock-mega65-io": true,
+      "ship-private-queue-arm-registers": [],
+      "workbench-private-queue-arm-registers": [],
+      "workbench-queue-consumer": [
+        "0xd60a-read",
+        "0xd619-read-write"
+      ]
+    }
+  },
+  "format": "lisp65-c2.3-v1.3-link86-queue-capture-view-attribution-v1",
+  "hardware_contacts": 0,
+  "owner_boundary": {
+    "broaden_once_disposition": "not-triggered-capture-premise-invalid",
+    "fix_authorized": false,
+    "mechanism_named": false,
+    "smallest_valid_discriminator": "Read D60A/D619 through a target-CPU/native-I/O witness and copy the result into ordinary RAM before using monitor memsave. This requires a new non-promotable diagnostic identity or equivalent owner-authorized target witness; no hardware retry is claimed here."
+  },
+  "product_bytes_changed": 0,
+  "product_links_created": 0,
+  "recorded_on": "2026-08-02",
+  "status": "FIRST-RED-PRIOR-QUEUE-DISCRIMINATOR-READ-RAM-NOT-LIVE-IO",
+  "verification": {
+    "executions": 1,
+    "mutation_count": 10,
+    "mutations_rejected": {
+      "activate-broaden-once": "broaden-once activated from an invalid I/O observation",
+      "disable-physical-source-default": "pinned core queue producer drift",
+      "invent-ship-arm-register": "Workbench/Ship below-queue diff drift",
+      "invent-workbench-arm-register": "Workbench/Ship below-queue diff drift",
+      "keep-dead-producer": "prior interpretation was not withdrawn completely",
+      "keep-empty-claim": "prior interpretation was not withdrawn completely",
+      "keep-getin-refutation": "prior interpretation was not withdrawn completely",
+      "make-producer-irq-owned": "pinned core queue producer drift",
+      "pretend-live-queue-observed": "capture-view classification drift",
+      "pretend-native-io-view": "capture-view classification drift"
+    }
+  }
+}

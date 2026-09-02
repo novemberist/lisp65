@@ -1,0 +1,137 @@
+{
+  "artifacts": {
+    "baseline": {
+      "code_bytes": 14316,
+      "directory_bytes": 2373,
+      "manifest": {
+        "bytes": 293105,
+        "path": "build/post-promotion/phase-v/random-base/gate/base/stdlib-p0.manifest.json",
+        "sha256": "3693c4f9140e8f8cd11e1ad3af8eb621dadceafef8e0d7384a6b3ee0b0e61894"
+      },
+      "objects": 339
+    },
+    "candidate": {
+      "code_bytes": 14805,
+      "directory_bytes": 2450,
+      "manifest": {
+        "bytes": 304140,
+        "path": "build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.manifest.json",
+        "sha256": "f04c10bcebcb28dfa9d8707b58b369b4992ceff6947785c6d48f7de27ae5d2c4"
+      },
+      "objects": 350
+    },
+    "candidate_observation": {
+      "bytes": 25115,
+      "path": "build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.observations.json",
+      "sha256": "128097198f7aa9bb42b0a168edf51713e54eec0366bcfc545c6f17ba9006d830"
+    },
+    "candidate_stdout": [
+      "bytecode-p0-stdlib-check: PASS suites=1 functions=349 cases=211 objects=576 code_bytes=19388 dir_bytes=4032 steps=51350",
+      "bytecode-p0-stdlib-artifacts: WROTE build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0 objects=350 code_bytes=14805 ext_bytes=35231 dir_bytes=2450 manifest=build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.manifest.json disasm=build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.disasm.txt",
+      "bytecode-p0-stdlib-embed-check: PASS cases=211 objects=350 literal_nodes=775 literal_patches=719 steps=51350"
+    ],
+    "delta": {
+      "bank2_code_bytes": 489,
+      "directory_bytes": 77,
+      "objects": 11,
+      "resident_bytes": 0,
+      "resolution_words": 31
+    },
+    "projected_post_Link76": {
+      "bank2_headroom_bytes": 24301,
+      "bank2_static_code_bytes": 41235,
+      "entries": 693,
+      "entry_headroom": 1355,
+      "resolution_headroom": 1354,
+      "resolutions": 2742,
+      "root_headroom": 1196,
+      "roots": 340
+    }
+  },
+  "authority": {
+    "baseline_suite": {
+      "bytes": 3402,
+      "path": "tests/bytecode/libs/p0-stdlib-require-resolver.json",
+      "sha256": "98bd2834f99cee247ade79c7001d0dac984cfd25b46b42e8fbfbec8c9861c95a"
+    },
+    "contract": {
+      "bytes": 2380,
+      "path": "config/c2-random-contract.json",
+      "sha256": "d6aa1460fb3275d1be0379947d981214a7cde3e2656879c63b7bfe4b475b4e22"
+    },
+    "gate": {
+      "bytes": 17257,
+      "path": "tools/host-lisp/c2_random_base_gate.py",
+      "sha256": "ed2eaac032546d4487580865ef8892f91588d8df34fbe896a1c25e00fb43e782"
+    },
+    "product_profile": {
+      "bytes": 4487,
+      "path": "config/c2-l-full-product-profile.json",
+      "sha256": "1abcc4e01d0103b8466f4abec90698404f082df472c6e1b6129678fcc5c715ea"
+    },
+    "source": {
+      "bytes": 2853,
+      "path": "lib/stdlib-random.lisp",
+      "sha256": "389225da8fddb04294b8a7ea925f216df748be7ea5d1f2348a36231820a26f9d"
+    },
+    "suite": {
+      "bytes": 1726,
+      "path": "tests/bytecode/libs/p0-stdlib-random-base.json",
+      "sha256": "e0cf8deb82d41a44f013632f923d76c61237436ecc4d7573f4519faad7824722"
+    }
+  },
+  "claim_limit": "Host compiler/VM execution and a Link-76-relative Bank-2/C2D capacity projection only. No product link, target timing, hardware entropy-quality or on-metal random claim.",
+  "composition": {
+    "original_receipt": {
+      "bytes": 4645,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1-random-base-host-first-receipt.json",
+      "sha256": "6741d86cb7daf8c0ee8f06fcab73ec70a029be0f30dac5074c0a8ae1f0e5e4b7"
+    },
+    "post_time_receipt": {
+      "bytes": 4973,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1-random-base-post-time-revalidation-receipt.json",
+      "sha256": "d441e2630e45597c16a303ee720c327afd154353c7ad58c525fa7e5d6400e3ce"
+    },
+    "product_build_id": "0x15da63c2",
+    "release_banner": "WORKBENCH 1.2.4",
+    "successors": [
+      "fx",
+      "time"
+    ]
+  },
+  "format": "lisp65-c2.2-v1-random-base-host-first-receipt-v1",
+  "hardware_runs": 0,
+  "mutations_rejected": {
+    "consuming-key-seed": "random source seam drift",
+    "cursor-not-advanced": "random source seam drift",
+    "lag-24-index-30": "random source seam drift",
+    "native-state": "random placement contract drift",
+    "overflow-safe-add-removed": "random source seam drift",
+    "parked-defstruct-dependency": "random suite/composition drift",
+    "plain-modulo-bias": "random source seam drift",
+    "require-dependency": "random introduced require/input-consuming/shadow-registry dependency",
+    "state-width-54": "random source seam drift"
+  },
+  "next_gate": "Owner review of the V2 while contract at Halt #3; one later product-shaped link and the final bundled hardware session.",
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-28",
+  "source_contract": {
+    "lags": [
+      24,
+      55
+    ],
+    "private_functions": 9,
+    "public_functions": [
+      "random",
+      "random-seed"
+    ],
+    "range_size": 16384,
+    "require_dependency": false,
+    "resident_delta_bytes": 0,
+    "runtime_overlay_records": 0,
+    "state_slots": 55,
+    "status": "passed-source-contract-and-base-composition"
+  },
+  "status": "passed-random-base-in-final-v1.2.4-composition"
+}

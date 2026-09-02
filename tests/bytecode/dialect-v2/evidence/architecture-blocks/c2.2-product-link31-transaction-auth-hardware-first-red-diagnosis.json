@@ -1,0 +1,126 @@
+{
+  "affected_claims": {
+    "hardware_presmoke": "first red before a REPL prompt; latency forms not-run",
+    "link31_structural_receipt": "remains valid structural evidence; hardware is not passed",
+    "performance": "not measured and no limit result is inferred",
+    "promotion": "blocked"
+  },
+  "bounded_fix_proposal": {
+    "capacity_gate_before_product_link": {
+      "bank0_text_headroom_bytes": 72,
+      "e000_headroom_bytes": 386,
+      "ordinary_bank0_bss_headroom_bytes": 19,
+      "resident_island_headroom_bytes": 108,
+      "runtime_island_slice_headroom_bytes": 10,
+      "rule": "any red or unapproved negative drift stops before a successor product link"
+    },
+    "cut": "Keep transaction trust in the resident Island, but invoke rtov_transaction_context only after the Bank-0 discriminator proves that a transaction is active. The boot-time installer transaction is inactive and must complete catalog, record and payload verification without any call into $1800..$1fff. Publishing authenticated catalog outputs is guarded by the same condition.",
+    "permanent_gates": [
+      "the Island installer succeeds when $1800 contains the exact predecessor Link-30 Island rather than the current Island",
+      "the pre-installation closure reaches no resident-Island target before rtov_island_state becomes READY",
+      "an active transaction before Island readiness fails closed rather than calling stale low-memory bytes",
+      "ordinary transaction authentication still runs once per transaction and record/payload checks remain per slice",
+      "all Link-31 structural and capacity gates run fresh before at most one separately authorized successor product link"
+    ],
+    "successor_limit": "One host/lifecycle plus product-shaped capacity/placement probe first. A successor product link and repeat of this receipt-less hardware presmoke require separate authorization after that probe is green."
+  },
+  "claim_limit": "This immutable diagnosis binds one receipt-less Link-31 hardware first red and read-only post-stop memory/disassembly evidence. It is not hardware acceptance, promotion, capacity authorization or permission to implement the proposed follow-up.",
+  "format": "lisp65-c2-product-link31-transaction-auth-hardware-first-red-diagnosis-v1",
+  "hardware_observation": {
+    "boot_poll": {
+      "distinct_ascii_screen_hashes": 1,
+      "distinct_png_hashes": 2,
+      "last_ascii_sha256": "fef699d963a7a30755ba58bf29e8da0ef3366c45e0315633f268dfc562379c45",
+      "last_png_sha256": "b607fcee2be6be84b9a5644939b8fd7d021dd694fd693e9de75fddc5168f1b0e",
+      "limit_seconds": 120,
+      "samples": 120,
+      "stable_display": "BASIC READY / RUN with no Lisp65 banner or REPL prompt"
+    },
+    "candidate_started": true,
+    "latency_forms": "not-run because the boot guard failed first",
+    "preload_readback": "all six preloads compared byte-identically before start",
+    "result": "FIRST RED: no REPL within 120 seconds"
+  },
+  "recorded_on": "2026-07-20",
+  "root_cause": {
+    "exact_control_flow": "Link 31 vm_runtime_overlay_exec_family unconditionally executes JSR $1cd1 to rtov_transaction_context while verifying every overlay, including the boot-time Island installer slot. A second unconditional call publishes catalog output after the catalog verifier.",
+    "lifecycle_violation": "$1cd1 is part of the new Link-31 resident Island, but vm_runtime_overlay_install_island has not copied or verified that Island yet. The installer therefore consumes the versioned low-memory target before publishing it.",
+    "observed_predecessor_dispatch": "The reset preserved the Link-30 Island at $1800. In Link 30, $1cd1 is vm_runtime_overlay_exec_batch_island, not rtov_transaction_context. With rtov_busy already set, that stale function dispatches recursively into the old overlay executor rather than returning a transaction-cache selector.",
+    "why_host_gates_missed_it": "Host tests call the resident-Island C function from ordinary host text, so function availability is not tied to whether the target Island bytes have been installed. Structural gates pinned the final Island and calls but did not model the pre-installation lifetime of the Island target."
+  },
+  "runtime_state": {
+    "bank0_bss": {
+      "dump": {
+        "bytes": 16,
+        "path": "build/c2.2/hardware-presmoke-link31-transaction-auth/diagnosis/bss-c060-c070.bin",
+        "sha256": "5e2838423b39f9cf87ca1c735a9eea9fd9275511f0d4e3c83b4b58a3cacd1d80"
+      },
+      "rtov_family": 1,
+      "rtov_family_generation": 0,
+      "rtov_island_state": 1,
+      "rtov_island_state_name": "INSTALLING"
+    },
+    "zero_page": {
+      "dump": {
+        "bytes": 32,
+        "path": "build/c2.2/hardware-presmoke-link31-transaction-auth/diagnosis/zp-70-90.bin",
+        "sha256": "2805487d608465184baec24727b55b43834e4a7a3bc89478af4408309960037c"
+      },
+      "rtov_busy": 1,
+      "rtov_fault": 0,
+      "rtov_loaded_len": 0
+    }
+  },
+  "scope": {
+    "candidate_product_sha256": "bfa76fe560979ae59cedd2128300c3761de56f45039f3be24f5ed228cdda23e2",
+    "deployment": {
+      "bytes": 2890,
+      "path": "build/c2.2/hardware-presmoke-link31-transaction-auth/deployment.json",
+      "sha256": "856065284afb73962bdfb816c3b7bf5566d4ba0fce93bfc2dc98c61c91fbe011"
+    },
+    "new_product_links_after_first_red": 0,
+    "product_source_changes_after_first_red": 0,
+    "remaining_hardware_cases": "not-run",
+    "structural_receipt": {
+      "bytes": 13107,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link31-transaction-auth-structural-receipt.json",
+      "sha256": "e87310d2edc321f788a63a92c977fd50d9703590078cdc01f18658f60892d339"
+    }
+  },
+  "stale_island_evidence": {
+    "actual_target": {
+      "bytes": 1680,
+      "path": "build/c2.2/hardware-presmoke-link31-transaction-auth/diagnosis/island.bin",
+      "sha256": "74b70fd277b8d7e994f57d4ed3e295818f8dada166fcb0de4c5863cd1a5f2c4"
+    },
+    "actual_target_equals_link31": false,
+    "actual_target_prefix_equals_complete_link30_island": true,
+    "different_bytes_against_link31": 468,
+    "link30_island": {
+      "bytes": 1291,
+      "payload_sha256": "5d0141d0c78cfd29bacc993b0050c2ba5770938b36236f6c4e12bf740600b40a"
+    },
+    "link31_island": {
+      "bytes": 1680,
+      "payload_sha256": "8e5a496d5f60da96c9e5c3f7dafa534f8937f7ad7a3382a6bfba674c6fadedb0"
+    }
+  },
+  "static_evidence": {
+    "link30_stale_target_disassembly": {
+      "bytes": 1340,
+      "path": "build/c2.2/hardware-presmoke-link31-transaction-auth/diagnosis/stale-link30-target.disasm.txt",
+      "sha256": "f0fd368351b682a3ceb226b710fdcf58cad485a20e172492b38c429948b1ac80"
+    },
+    "link31_preinstall_calls_disassembly": {
+      "bytes": 1436,
+      "path": "build/c2.2/hardware-presmoke-link31-transaction-auth/diagnosis/preinstall-island-call.disasm.txt",
+      "sha256": "74b97b2db0bbaf5d6bf5215b92f6195aed302e3dc54dbb7062790ba6de5ca173"
+    },
+    "source": {
+      "bytes": 45130,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "b037be3a550e53bfaebf0c0d54ecc66b6f46decf8df400dd8ec9f428bfe4ec8f"
+    }
+  },
+  "status": "first-red-receipt-less-hardware-presmoke-stopped"
+}

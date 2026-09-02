@@ -1,0 +1,287 @@
+{
+  "answer": {
+    "common_emitter_append_failure_seam_reached": false,
+    "cycle2_disposition": "The cycle-2 defun-time BADOPCODE did not reproduce. It remains a bound hardware observation, but cannot honestly be assigned to a deterministic service substep from these runs.",
+    "definition_published": true,
+    "original_execution_question": "The newly published %c2h was deliberately not called in this final diagnostic cycle, so the original first-call BADOPCODE remains a separate unresolved product question.",
+    "proof": "The patched common seam would execute SEI and loop forever. Instead the REPL rendered %c2h; C2D advanced exactly to one new image and entry, Entry 588 and its nine Bank-2 bytes are exact, the transaction journal is empty and READY remains one.",
+    "service_substeps": "Transaction begin, emitter reset/add/finalize, append begin and persistent transaction end all succeeded in this run."
+  },
+  "authorization": {
+    "bytes": 4542,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-defun-service-hold-cycle3-patch-receipt.json",
+    "sha256": "c627913d61d12ff1e4e623ed0f23410df3da9cd2591490e4b5f1e5cc9a02e420"
+  },
+  "budgets": {
+    "class_b_first-execution-diagnostic": "3/3 consumed; exhausted",
+    "completed_latency_measurements": "0/2 unchanged",
+    "line1_product_first_reds": "2/3 unchanged"
+  },
+  "captures": {
+    "bank0": [
+      {
+        "active_owner": {
+          "active_owner_cache_exact": true,
+          "bank_tag": 1,
+          "c2d_entry": {
+            "code_length": 76,
+            "code_offset": 3899,
+            "generation": 1,
+            "image_slot": 0,
+            "literal_count": 3,
+            "ordinal": 171,
+            "raw_hex": "00033b0f4c00ad000100",
+            "resolution_base": 173
+          },
+          "header": {
+            "bytes": 13,
+            "code_pointer": "0xbf67",
+            "expected_scalar_hex": "b50101023f0003",
+            "littab_pointer": "0xbf61",
+            "materialized_literal_table_hex": "18e11ae11ce1",
+            "scalar_bytes": 7,
+            "scalar_exact": true,
+            "scalar_hex": "b50101023f0003"
+          },
+          "object_hex": "b50101023f00030000000000000b3c00013a010b361d070b3406011e1c012b1d0d0b353439012b3d26023d2302050b361d070b3406021e1c012b1d0939010b35343d26020539012c3d260205",
+          "object_name": "lcc-run",
+          "object_sha256": "a1df2dba815c518fe7489cefc6550ff0865c0954928bdfcb37e5ca4277880fee",
+          "ordinal": 171,
+          "payload": {
+            "expected_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "held_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "length": 63,
+            "offset": 13,
+            "streaming": 1,
+            "window_exact": true,
+            "window_length": 18,
+            "window_max": 43,
+            "window_start": 45
+          }
+        },
+        "address": "0x00000000",
+        "bytes": 65536,
+        "capture": 1,
+        "elapsed_ms": 1215,
+        "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/held-bank0-1.bin",
+        "product_state": {
+          "c2_journal_count": 0,
+          "c2_ready": 1,
+          "c2e_hex": "49000100000006000000",
+          "phase_owner": 0,
+          "vm_status": 0
+        },
+        "sha256": "22d6ff91a6354f125e62a435467bc265e799072a198ea2cb9cb26cf735f1c64d"
+      },
+      {
+        "active_owner": {
+          "active_owner_cache_exact": true,
+          "bank_tag": 1,
+          "c2d_entry": {
+            "code_length": 76,
+            "code_offset": 3899,
+            "generation": 1,
+            "image_slot": 0,
+            "literal_count": 3,
+            "ordinal": 171,
+            "raw_hex": "00033b0f4c00ad000100",
+            "resolution_base": 173
+          },
+          "header": {
+            "bytes": 13,
+            "code_pointer": "0xbf67",
+            "expected_scalar_hex": "b50101023f0003",
+            "littab_pointer": "0xbf61",
+            "materialized_literal_table_hex": "18e11ae11ce1",
+            "scalar_bytes": 7,
+            "scalar_exact": true,
+            "scalar_hex": "b50101023f0003"
+          },
+          "object_hex": "b50101023f00030000000000000b3c00013a010b361d070b3406011e1c012b1d0d0b353439012b3d26023d2302050b361d070b3406021e1c012b1d0939010b35343d26020539012c3d260205",
+          "object_name": "lcc-run",
+          "object_sha256": "a1df2dba815c518fe7489cefc6550ff0865c0954928bdfcb37e5ca4277880fee",
+          "ordinal": 171,
+          "payload": {
+            "expected_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "held_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "length": 63,
+            "offset": 13,
+            "streaming": 1,
+            "window_exact": true,
+            "window_length": 18,
+            "window_max": 43,
+            "window_start": 45
+          }
+        },
+        "address": "0x00000000",
+        "bytes": 65536,
+        "capture": 2,
+        "elapsed_ms": 2930,
+        "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/held-bank0-2.bin",
+        "product_state": {
+          "c2_journal_count": 0,
+          "c2_ready": 1,
+          "c2e_hex": "49000100000006000000",
+          "phase_owner": 0,
+          "vm_status": 0
+        },
+        "sha256": "06c91a7e89d4294dac2b2b8b8c5c8db3d800d883867db0f333efd84918b7f4e7"
+      },
+      {
+        "active_owner": {
+          "active_owner_cache_exact": true,
+          "bank_tag": 1,
+          "c2d_entry": {
+            "code_length": 76,
+            "code_offset": 3899,
+            "generation": 1,
+            "image_slot": 0,
+            "literal_count": 3,
+            "ordinal": 171,
+            "raw_hex": "00033b0f4c00ad000100",
+            "resolution_base": 173
+          },
+          "header": {
+            "bytes": 13,
+            "code_pointer": "0xbf67",
+            "expected_scalar_hex": "b50101023f0003",
+            "littab_pointer": "0xbf61",
+            "materialized_literal_table_hex": "18e11ae11ce1",
+            "scalar_bytes": 7,
+            "scalar_exact": true,
+            "scalar_hex": "b50101023f0003"
+          },
+          "object_hex": "b50101023f00030000000000000b3c00013a010b361d070b3406011e1c012b1d0d0b353439012b3d26023d2302050b361d070b3406021e1c012b1d0939010b35343d26020539012c3d260205",
+          "object_name": "lcc-run",
+          "object_sha256": "a1df2dba815c518fe7489cefc6550ff0865c0954928bdfcb37e5ca4277880fee",
+          "ordinal": 171,
+          "payload": {
+            "expected_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "held_window_hex": "1d0939010b35343d26020539012c3d260205",
+            "length": 63,
+            "offset": 13,
+            "streaming": 1,
+            "window_exact": true,
+            "window_length": 18,
+            "window_max": 43,
+            "window_start": 45
+          }
+        },
+        "address": "0x00000000",
+        "bytes": 65536,
+        "capture": 3,
+        "elapsed_ms": 4646,
+        "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/held-bank0-3.bin",
+        "product_state": {
+          "c2_journal_count": 0,
+          "c2_ready": 1,
+          "c2e_hex": "49000100000006000000",
+          "phase_owner": 0,
+          "vm_status": 0
+        },
+        "sha256": "520294d74aee024ea1ade4fafc45699426a433e2d6fc9728d5b24d7d989a6862"
+      }
+    ],
+    "bank0_variance_offsets": [
+      "0x0017",
+      "0x01d2",
+      "0x01d3",
+      "0x01d4",
+      "0x01d6",
+      "0x01d7",
+      "0x01d8",
+      "0xff83"
+    ],
+    "bank2": {
+      "address": "0x00020000",
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/held-bank2.bin",
+      "sha256": "7e0850c45444ed5b5f2a3d29d3b61414fb19026cc0ab89b13a29934dd18d1cd1"
+    },
+    "bank5": {
+      "address": "0x00050000",
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/held-bank5.bin",
+      "sha256": "d4df0470b2260be7aea51488d25a74e1b189533658fa24316fbb8645229d7523"
+    },
+    "timing": {
+      "bytes": 1516,
+      "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/capture-timing.json",
+      "sha256": "d735563637faba4481fe63d309618ecea36980705f9c7e9462197d9e2bcf0f07"
+    },
+    "variance_class": "normal IRQ/hardware-stack motion after a successful REPL return; all product witnesses are stable"
+  },
+  "claim_limit": "This nonpromotable final-cycle result proves one successful defun and excludes the instrumented service failure seam in that run. It does not prove first-call execution, latency, promotion or acceptance, and it authorizes no fourth diagnostic patch cycle.",
+  "delegation": {
+    "class": "B",
+    "cycle": 3,
+    "cycle_cap": 3
+  },
+  "deployment": {
+    "bytes": 3912,
+    "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/deployment.json",
+    "sha256": "27dee4e5de2467c8debe8391932afca6adc05c6a97261f0edf6bc248975b69bc"
+  },
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link50-defun-service-hold-cycle3-NONPROMOTABLE/lisp65-link50-defun-service-hold-cycle3-NONPROMOTABLE.prg",
+    "sha256": "e4c8ad9441b214405ac03dd17048733d38a2d9882d882ad5be6da913a3e20c06"
+  },
+  "disposition": "Class-B budget exhausted. Any further diagnosis requires a new Class-C product/contract decision; the diagnostic identity remains isolated and permanently nonpromotable.",
+  "execution_accounting": {
+    "changed_bytes": 3,
+    "compiler_runs": 0,
+    "completed_latency_attempts": 0,
+    "diagnostic_instruction_patches": 1,
+    "hardware_runs": 1,
+    "linker_runs": 0,
+    "read_only_post_defun_captures": 5,
+    "remaining_autonomous_cycles": 0
+  },
+  "format": "lisp65-c2-link50-defun-service-hold-cycle3-hardware-v1",
+  "operator_observation": {
+    "additional_forms_submitted": 0,
+    "ansi": {
+      "bytes": 72279,
+      "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/after-defun.ansi.txt",
+      "sha256": "3a492cf78519a6f4e43a13c15dcb41f0bbf654358f5e6af3b28d5d1a5ea9f93b"
+    },
+    "input": "(defun %c2h () 't)",
+    "rendered_result": "%c2h",
+    "screenshot": {
+      "bytes": 3711,
+      "path": "build/c2.2/hardware-link50-defun-service-hold-cycle3/after-defun.png",
+      "sha256": "9894cae903749ab16cc171ce04b3857a6eb6906ec41dcaa4fabb77d807d386d4"
+    }
+  },
+  "promotable": false,
+  "published_object": {
+    "bank2_code_hex": "b50000020200002c05",
+    "c2d_v6_header": {
+      "entry_count": 589,
+      "generation": 1,
+      "image_count": 7,
+      "resolution_count": 2264,
+      "root_count": 283,
+      "transient_watermark": 4096
+    },
+    "entry_588": {
+      "code_length": 9,
+      "code_offset": 34403,
+      "generation": 1,
+      "image_slot": 6,
+      "literal_count": 0,
+      "ordinal": 588,
+      "raw_hex": "060063860900d8080100",
+      "resolution_base": 2264
+    }
+  },
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-50-c2-lite-v6-persistent-header/lisp65-c2-substitution-linked.prg",
+    "sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "status": "untouched"
+  },
+  "status": "answered-no-service-failure-definition-published"
+}

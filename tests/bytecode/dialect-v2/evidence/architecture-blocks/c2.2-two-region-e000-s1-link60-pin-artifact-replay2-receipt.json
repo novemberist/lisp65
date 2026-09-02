@@ -1,0 +1,191 @@
+{
+  "claim_limit": "The WPLTO map and runtime-family packing are measured green. The product remains unpromotable and unpatched at the verifier table; Link 60 and hardware are blocked by First Red.",
+  "class_A_fixed_leaf_correction": {
+    "cause": "the final linker expresses rtov_fault references as the .bss section symbol plus addend, not as the object name",
+    "correction": "resolve each structured relocation through exactly one positive-sized Object interval",
+    "mutations_rejected": 5,
+    "product_bytes_changed": 0,
+    "resolved_data_targets": [
+      "rtov_fault",
+      "rtov_fault",
+      "rtov_fault"
+    ]
+  },
+  "class_A_source_address_parser_correction": {
+    "accepted_domain": "0x00000000..0x0fffffff",
+    "cause": "the v4 main/overflow source-base CLI options reused the 16-bit runtime-overlay VMA parser",
+    "correction": "source bases use an independent 28-bit DMA-domain parser; the common execution VMA remains bounded by MAX_VMA",
+    "product_bytes_changed": 0,
+    "rejected_value_before": "0x08200000"
+  },
+  "e000_geometry": {
+    "profile_rodata": {
+      "address": 64812,
+      "bytes": 342
+    },
+    "session_emitter_state": {
+      "address": 64802,
+      "bytes": 0
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "product_links": 0,
+    "read_only_tool_invocations": [
+      "llvm-readobj",
+      "llvm-nm",
+      "python3",
+      "llvm-nm",
+      "python3"
+    ],
+    "replay_compiler_runs": 0,
+    "replay_linker_runs": 0,
+    "source_WPLTO_closure_links": 1
+  },
+  "first_red": {
+    "bytes": 40,
+    "classification": "contract/pin authority; not E000 geometry and not a Class-A checker exception",
+    "contract_surface": "runtime-overlay publish-last identity table",
+    "delta_bytes": 36,
+    "historical_active_pin": "0xb94e",
+    "measured_address": "0xb972",
+    "required_decision": "owner-authorized B94E-to-B972 re-pin before artifact-side publish-last completion",
+    "section": ".lisp65_runtime_overlay_verifier_bindings"
+  },
+  "fixed_geometry": {
+    "elf": "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/two-region-session-store-e000-s1-final-wplto4/lisp65-c2-substitution-linked.prg.elf",
+    "fixed_code": {
+      "address": 49688,
+      "bytes": 69,
+      "end_exclusive": 49757
+    },
+    "format": "lisp65-c2-fixed-block-rtov-fail-gate-v1",
+    "hot_bss": {
+      "address": 49757,
+      "bytes": 240,
+      "contract_end_exclusive": 50004,
+      "end_exclusive": 49997,
+      "following_noinit": {
+        "address": 49997,
+        "bytes": 6,
+        "end_exclusive": 50003
+      },
+      "headroom_to_overlay_bytes": 2
+    },
+    "leaf": {
+      "address": 49733,
+      "bytes": 24,
+      "name": "rtov_fail",
+      "outgoing_absolute_data_edges": [
+        {
+          "addend": 1579,
+          "offset": 49736,
+          "relocation_symbol": ".bss",
+          "resolved_value": 49115,
+          "section": ".bss",
+          "target": "rtov_fault",
+          "type": "R_MOS_ADDR16"
+        },
+        {
+          "addend": 1579,
+          "offset": 49745,
+          "relocation_symbol": ".bss",
+          "resolved_value": 49115,
+          "section": ".bss",
+          "target": "rtov_fault",
+          "type": "R_MOS_ADDR16"
+        },
+        {
+          "addend": 1579,
+          "offset": 49752,
+          "relocation_symbol": ".bss",
+          "resolved_value": 49115,
+          "section": ".bss",
+          "target": "rtov_fault",
+          "type": "R_MOS_ADDR16"
+        }
+      ],
+      "outgoing_control_edges": [
+        {
+          "addend": 34943,
+          "offset": 49739,
+          "relocation_symbol": ".text",
+          "resolved_value": 43170,
+          "section": ".text",
+          "target": "rtov_wipe",
+          "type": "R_MOS_ADDR16"
+        }
+      ],
+      "section": ".lisp65_c2_fixed_bank0_code"
+    },
+    "status": "passed-fixed-block-rtov-fail-identity-and-fixed-target"
+  },
+  "format": "lisp65-c2-link60-pin-artifact-replay-v1",
+  "frozen_identity": {
+    "elf": {
+      "bytes": 619416,
+      "path": "build/c2.2/substitution/two-region-session-store-e000-s1-final-wplto4/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c17b25793e839a8e17fb308d9224108168fc1f956688d9bfa3a4325e33a509b8"
+    },
+    "map": {
+      "bytes": 204768,
+      "path": "build/c2.2/substitution/two-region-session-store-e000-s1-final-wplto4/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "3e855f39cb634b15f889d97903560d21ee9efd8d0747307a447b11c0f2b96426"
+    },
+    "product": {
+      "bytes": 41566,
+      "path": "build/c2.2/substitution/two-region-session-store-e000-s1-final-wplto4/lisp65-c2-substitution-linked.prg",
+      "sha256": "84e52380477cc59a09ebe6185f8c9c69d9854f06cfca58ea946b4bb45c717917"
+    },
+    "source_first_red": {
+      "bytes": 24524,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-e000-s1-final-wplto4-internal.json",
+      "sha256": "ad1153f165aced65015876201e5469de7b9e2d69dc182db7d9c63d263075d0b6"
+    }
+  },
+  "immutable_source_tree": {
+    "byte_and_mode_identity": "unchanged",
+    "files": 111
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "replay_report": {
+    "bytes": 6138,
+    "path": "build/c2.2/substitution/two-region-session-store-e000-s1-link60-pin-artifact-replay2/artifact-replay-report.json",
+    "sha256": "19760bd1bfb25579810a8f523235966b2482876e7c56569dc3810c0cb36df3e5"
+  },
+  "runtime_families": {
+    "all_slices_under_1792": true,
+    "boot_bytes": 17733,
+    "region1_slices": [
+      {
+        "bytes": 954,
+        "id": 42,
+        "name": "c2-append-rollback-wipe-plane"
+      },
+      {
+        "bytes": 506,
+        "id": 43,
+        "name": "c2-append-rollback-wipe-chip"
+      },
+      {
+        "bytes": 420,
+        "id": 44,
+        "name": "c2-append-rollback-wipe-attic"
+      }
+    ],
+    "session_main_bytes": 64926,
+    "session_main_headroom_bytes": 610,
+    "session_overflow_capacity_bytes": 2032,
+    "session_overflow_headroom_bytes": 76,
+    "session_overflow_used_bytes": 1956
+  },
+  "status": "FIRST RED: all walls and two-region geometry pass; publish-last verifier table requires owner re-pin",
+  "walls": {
+    "bank0_text_headroom_bytes": 134,
+    "e000_headroom_bytes": 151,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 161,
+    "resident_island_headroom_bytes": 443
+  }
+}

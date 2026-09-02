@@ -1,0 +1,121 @@
+{
+  "format": "lisp65-workbench-removable-class-sweep-v1",
+  "version": 1,
+  "status": "measurement-complete-no-promotion",
+  "source_commit": "bb889020ec5a401db8344e17a85b169d7103757d",
+  "method": {
+    "build": "real-mos-lto-icf-relaxed-workbench-link",
+    "isolation": "temporary-detached-worktrees",
+    "metric": "marginal-runtime-overlay-vma-and-heap-start-drop",
+    "candidate_values": "upper-bounds-before-semantic-replacement",
+    "product_tree_modified": false,
+    "layout_modified": false
+  },
+  "accepted_baseline": {
+    "elf_sha256": "4ea8f1169988c1e83335ed0b3ba104d0f9a50bdf54a47201ba5bc1a07b292322",
+    "elf_bytes": 119340,
+    "bss_end": "0xc9ce",
+    "heap_start": "0xc9ce",
+    "runtime_overlay_vma": "0xc9d0",
+    "runtime_overlay_vma_limit": "0xc356",
+    "post_boot_reserve_bytes": 136,
+    "post_boot_reserve_target_bytes": 1536
+  },
+  "candidates": [
+    {
+      "id": "string-builders-prim-26-27",
+      "boundary": "atomic-slice-and-concat-builders-only-codecs-28-29-retained",
+      "candidate_elf_sha256": "eb29d6f3d588a6151414d2438c8fe830d165e96328d8d4cae9652da17e789f42",
+      "candidate_bss_end": "0xbfe1",
+      "candidate_heap_start": "0xbfe2",
+      "candidate_runtime_overlay_vma": "0xbfe2",
+      "bss_reclaim_bytes": 2541,
+      "heap_reclaim_bytes": 2540,
+      "vma_reclaim_bytes": 2542,
+      "product_call_inventory": {"prim_26": 0, "prim_27": 0, "prim_28": 48, "prim_29": 27},
+      "hard_link": {
+        "passed": true,
+        "elf_sha256": "c885140ebf004dbe01a544f7c8580b1ddeda3ef4776881c5001db0d5f8edffe7",
+        "vma_headroom_below_limit_bytes": 884,
+        "post_boot_reserve_bytes": 2676,
+        "reserve_headroom_above_target_bytes": 1140
+      },
+      "latency_risk": "low-for-current-workbench-closure",
+      "correctness_risk": "high-contract-change",
+      "promotion": false,
+      "reason": "diagnostic-stub-breaks-the-pinned-atomic-builder-contract"
+    },
+    {
+      "id": "interactive-lcc-install-coordinator",
+      "boundary": "public-lcc-install-service-replaced-by-nil-stub",
+      "candidate_elf_sha256": "5b18b4a7f6b9cbddaf425bc7e95b2eaf877d57bdb0b1da63d40d380e96a7bb9d",
+      "candidate_bss_end": "0xc5ad",
+      "candidate_heap_start": "0xc5ae",
+      "candidate_runtime_overlay_vma": "0xc5ae",
+      "bss_reclaim_bytes": 1057,
+      "heap_reclaim_bytes": 1056,
+      "vma_reclaim_bytes": 1058,
+      "latency_risk": "not-applicable-service-removed",
+      "correctness_risk": "critical-compile-install-path-lost",
+      "closes_current_budget": false,
+      "promotion": false
+    },
+    {
+      "id": "repl-comfort-leaves",
+      "boundary": "line-editor-history-banner-only-reader-eval-printer-retained",
+      "baseline_elf_sha256": "d1b448b023d0b5ac8e6433de4285fcda18dc2c4da317bae31d43d4cf34925510",
+      "candidate_elf_sha256": "cd9c91d7d204d6f9cae9b7c34cb597671e89d52cbb4e856d3d4e47ce28eaca0a",
+      "candidate_bss_end": "0xc803",
+      "candidate_heap_start": "0xc804",
+      "candidate_runtime_overlay_vma": "0xc804",
+      "bss_reclaim_bytes": 459,
+      "heap_reclaim_bytes": 458,
+      "vma_reclaim_bytes": 460,
+      "latency_risk": "low",
+      "correctness_risk": "medium-high-user-experience-regression",
+      "lost_behavior": ["echo", "backspace", "history", "clear-and-ide-toggle", "startup-banner"],
+      "promotion": false
+    },
+    {
+      "id": "boot-lifetime-cluster",
+      "boundary": "boot-trust-anchor-and-coordinator",
+      "old_nonfunctional_ceiling_bytes": 1371,
+      "functional_diagnostic_vma_reclaim_bytes": 110,
+      "functional_diagnostic_heap_reclaim_bytes": 108,
+      "promotable_planning_bytes": 0,
+      "latency_risk": "low",
+      "correctness_risk": "critical-boot-diagnostics-and-trust-order",
+      "status": "rejected-non-independent",
+      "reason": "installer-verifies-the-overlay-before-execution-and-cannot-reside-in-its-own-unverified-payload"
+    }
+  ],
+  "rejected_measurements": [
+    {
+      "id": "empty-repl-entry",
+      "vma_reclaim_bytes": 30340,
+      "status": "invalid-boundary",
+      "reason": "removed-the-only-runtime-root-and-triggered-whole-program-dead-stripping"
+    }
+  ],
+  "layout_context": {
+    "resident_island_capacity_bytes": 2048,
+    "resident_island_code_bytes": 1108,
+    "resident_island_annex_bytes": 260,
+    "resident_island_free_bytes": 680,
+    "previous_932_byte_value": "obsolete-before-annex",
+    "slot_37_contract_cap_bytes": 1396,
+    "slot_37_measured_payload_bytes": 1369,
+    "proposed_1024_byte_cap": "not-an-independent-reclaim-and-does-not-fit-current-payload"
+  },
+  "recommendation": {
+    "id": "split-string-builders-from-codecs",
+    "decision_status": "architecture-approval-required",
+    "retain_prim_ids": [28, 29],
+    "retire_to_permanent_tombstones_if-approved": [26, 27],
+    "defer_atomic-builder-contract_to": "buffer-and-string-construction-block",
+    "new_runtime_slots": 0,
+    "permanent_island_bytes": 0,
+    "slice_cap_change": false,
+    "v1_1_reserve_preserved": true
+  }
+}

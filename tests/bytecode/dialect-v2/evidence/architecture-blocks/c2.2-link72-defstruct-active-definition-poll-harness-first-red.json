@@ -1,0 +1,34 @@
+{
+  "format": "lisp65-c2.2-link72-active-definition-poll-harness-first-red-v1",
+  "recorded_on": "2026-07-27",
+  "status": "resolved-harness-crossed-documented-C2.3-boundary",
+  "candidate": {
+    "link": 72,
+    "product_sha256": "dd11737e6baf8073a088eefd642782d789b69c40b9aabb8caed91ce9561cb857"
+  },
+  "first_red": {
+    "row": "define-point",
+    "form": "(defstruct point x y)",
+    "screen_result": "form echo present; no product result before harness timeout",
+    "harness_behavior": "the exact-result poll requested one JTAG screenshot per second while the persistent definition was active",
+    "stable_PC": "0xe096",
+    "PC_meaning": "c2_kernal_fail_closed self-loop",
+    "C2K_SOURCELESS_IRQS": 1,
+    "mechanism": "repeated JTAG/Freezer-class intervention without an intervening owned raster crossed the documented unsupported active-definition boundary and correctly reached the second-source-less fail-closed path"
+  },
+  "adjudication": {
+    "product_semantics": "not accused",
+    "known_issue": "config/v12-known-issues.json#c2.2-freezer-during-active-definition",
+    "correction": "submit from a verified idle prompt, then perform no screenshot or monitor access for a bounded quiet completion interval",
+    "quiet_wait_seconds": 90,
+    "new_product_links": 0,
+    "product_bytes_changed": 0
+  },
+  "evidence": {
+    "screen": "build/post-promotion/link72-stz-semantics/hardware-session/row-define-point.txt",
+    "late_screen": "build/post-promotion/link72-stz-semantics/hardware-session/row-define-point-late.txt",
+    "status_bytes": "build/post-promotion/link72-stz-semantics/hardware-session/row-define-point-late-status.bin",
+    "PC_samples": "build/post-promotion/link72-stz-semantics/hardware-session/define-point-live-pc.json"
+  },
+  "claim_limit": "Harness-only First Red. It neither proves nor disproves defstruct execution and changes no product artifact."
+}

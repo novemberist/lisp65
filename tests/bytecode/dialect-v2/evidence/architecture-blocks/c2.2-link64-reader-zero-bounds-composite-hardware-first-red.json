@@ -1,0 +1,121 @@
+{
+  "attribution": {
+    "disproved_in_this_episode": [
+      "offset bounds rejection",
+      "length bounds rejection",
+      "any other zero return from c2_stream_c2d_read"
+    ],
+    "proven": [
+      "the final Bank-3 store is byteidentical to the composite carrier carrying the zero-exit self-loop",
+      "all four live bounds-edge holds remained installed",
+      "no hold fired, so the reader returned nonzero",
+      "bad bytecode therefore arose in content comparison or timeout handling after the successful read",
+      "rollback remained fail-closed and restored a usable REPL"
+    ],
+    "remaining_product_question": "which post-read condition makes the successful ACTIVE completion poll fail: observed-target CRC/seal mismatch or the 64-frame timeout path"
+  },
+  "authority": {
+    "candidate_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-reader-zero-bounds-composite-NONPROMOTABLE/runtime-overlays-session-reader-zero-bounds.bin",
+      "sha256": "6136ff43b11d994e30671df7ad4ffe388c638fe6cd1819a29b0ac82e24e899ff"
+    },
+    "capture_driver": {
+      "bytes": 2270,
+      "path": "scripts/c2-link64-reader-zero-bounds-composite-capture.sh",
+      "sha256": "14896f3e65915ba5d08705829cdbcc5dcfc329270215521eb785e5da1c3e52c8"
+    },
+    "composite_contract": {
+      "bytes": 5874,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-reader-zero-bounds-composite-nonpromotable-receipt.json",
+      "sha256": "f2a32b74d4af9e17bf88ae5796d3eec1a04be21d5c6b1c9d9d66a2211ae41669"
+    },
+    "deployment": {
+      "bytes": 5756,
+      "path": "build/c2.2/hardware-link64-reader-zero-bounds-composite-NONPROMOTABLE/deployment.json",
+      "sha256": "c4f9d3be0f4e2be02fe1d1b0fb1f8c668b5d4f6d11ca826ee32e83f206faca2c"
+    },
+    "evaluator": {
+      "bytes": 9352,
+      "path": "tools/host-lisp/c2_link64_reader_zero_bounds_composite_first_red.py",
+      "sha256": "8894fa05013d714b6da32f2aced67be46aab3452f8ea8df2ff47b828eb95240b"
+    }
+  },
+  "binary_discriminator": {
+    "answer": "c2_stream_c2d_read returned nonzero; the completion poll failed after the reader return",
+    "bounds_reject_outcome": "self-loop at one of four live $e691 reject edges",
+    "observed_outcome": "bad bytecode and REPL return",
+    "other_reader_zero_outcome": "self-loop at carrier $c82e",
+    "reader_success_later_failure_outcome": "bad bytecode and REPL return"
+  },
+  "claim_limit": "The reader-return question is closed for this episode. The post-read product-semantic question requires Class-C review; C1 remains OPEN.",
+  "diagnostic_lifecycle": {
+    "eligible_for_promotion": false,
+    "state": "discarded-after-final-cycle"
+  },
+  "execution_accounting": {
+    "commissioned_diagnostic_cycles_consumed": "3/3",
+    "compiler_runs": 0,
+    "diagnostic_hardware_runs": 1,
+    "latency_attempts_consumed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-Link64-reader-zero-bounds-composite-hardware-first-red-v1",
+  "hardware_evidence": {
+    "bank3_store_matches_composite_carrier": true,
+    "bounds_holds_persisted_after_failure": true,
+    "carrier_zero_exit_patch": "JMP $c82e self-loop",
+    "postmortem": {
+      "c2_ready": 0,
+      "completion_mode": "0xa3 (ROLLBACK)",
+      "frames_progressed": true,
+      "journal_result": "2 (PREPARED)",
+      "last_slot": 39,
+      "producer_C2J_seal": "0x2801",
+      "runtime_slot39_fully_wiped": true,
+      "seal_matches_after_rollback": true,
+      "target_C2J_crc16": "0x2801"
+    },
+    "zero_exit_was_not_taken": true
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "stable_witnesses": {
+    "bank3_sha256": "a8fb30e7ea63a46e6dd85cae8fc40e202b965c448acc0f348ad339a6e3c70f69",
+    "byteidentical_across_three": true,
+    "c2j_sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225",
+    "completion-record_sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf",
+    "reader-code_sha256": "b9e59c74ee7ba3d988bdf67f5efc4e49ffbbd37ecc59884ae2038d9a87fe5675",
+    "runtime-slot39_sha256": "103c1589c122f64eb66366106f64e7dbbb5b394c2773839e79efaed465a20529",
+    "runtime-zp_sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47",
+    "trace_sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+  },
+  "status": "FIRST RED: reader succeeded; completion failed later",
+  "time_separated_captures": [
+    {
+      "bank3_carrier_byteidentical": true,
+      "bounds_holds_still_installed": true,
+      "captured_at_utc": "2026-07-26T13:39:59.576095580Z",
+      "current_frame": "0x3e2b",
+      "index": 1,
+      "slot39_fully_wiped": true
+    },
+    {
+      "bank3_carrier_byteidentical": true,
+      "bounds_holds_still_installed": true,
+      "captured_at_utc": "2026-07-26T13:40:02.993866998Z",
+      "current_frame": "0x3ed2",
+      "index": 2,
+      "slot39_fully_wiped": true
+    },
+    {
+      "bank3_carrier_byteidentical": true,
+      "bounds_holds_still_installed": true,
+      "captured_at_utc": "2026-07-26T13:40:09.410711476Z",
+      "current_frame": "0x400d",
+      "index": 3,
+      "slot39_fully_wiped": true
+    }
+  ]
+}

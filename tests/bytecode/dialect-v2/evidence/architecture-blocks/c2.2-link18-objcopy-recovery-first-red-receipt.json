@@ -1,0 +1,58 @@
+{
+  "format": "lisp65-c2-link18-objcopy-recovery-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-negative-evidence",
+  "incident": {
+    "cause": "llvm-objcopy --dump-section was invoked without an explicit output object and normalized the SHA-bound Link-18 ELF in place",
+    "expected_link18_elf_sha256": "fbf295236919216556f0715d0904947be35be11a2bf731c6eae1f55f6bb1cf70",
+    "observed_contaminated_elf_sha256": "35a1bb161abbade68633dfddfe142ddcd0504d23177fbea0cda946a0d7d95b83",
+    "unmodified_link18_product_sha256": "b2566200e0441148d97138253bc77071ac95d881595ea469a063e15f20bc1ead",
+    "damage_boundary": "One Link-18 evidence ELF was lost. The Link-18 product PRG and the prior structural conclusion were not modified. No hardware access occurred."
+  },
+  "authorized_recovery": {
+    "attempts_permitted": 1,
+    "attempts_performed": 1,
+    "first_pin_checked": "product PRG SHA-256",
+    "expected_product_sha256": "b2566200e0441148d97138253bc77071ac95d881595ea469a063e15f20bc1ead",
+    "observed_product_sha256": "d2f3301882cea9ac9b00e6a9ef1acf256d9954bff2ca60a50faf05c8bb363320",
+    "result": "first-red; original Link-18 directory restored automatically",
+    "second_reconstruction_performed": false
+  },
+  "archived_negative_evidence": [
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link18-recovery-first-red-20260720/link18-objcopy-contaminated.elf",
+      "bytes": 141028,
+      "sha256": "35a1bb161abbade68633dfddfe142ddcd0504d23177fbea0cda946a0d7d95b83",
+      "role": "objcopy-contaminated-link18-elf"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link18-recovery-first-red-20260720/link18-recovery-first-red.prg",
+      "bytes": 41542,
+      "sha256": "d2f3301882cea9ac9b00e6a9ef1acf256d9954bff2ca60a50faf05c8bb363320",
+      "role": "single-authorized-recovery-product-first-red"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link18-recovery-first-red-20260720/link18-recovery-first-red.elf",
+      "bytes": 141604,
+      "sha256": "435a45f7e518dba20db642fb45f721fe85d90fde1271aa20e7393ba30b7109ff",
+      "role": "single-authorized-recovery-supporting-elf"
+    }
+  ],
+  "class_closure": {
+    "presmoke_extraction_rule": "Copy every pinned ELF to a disposable file and provide llvm-objcopy with an explicit normalized output object.",
+    "presmoke_tool": {
+      "path": "tools/host-lisp/c2_product_hw_presmoke.py",
+      "bytes": 14565,
+      "sha256": "33510f437712850682fbe3473601c1c2f879c03c95d52b9c3280a5494342c78d"
+    },
+    "valid_pin_rule": "Pinned build evidence is read-only; all extraction and inspection that can write operates on disposable copies."
+  },
+  "successor_truth": {
+    "link": 19,
+    "product_sha256": "1fb99ddbbc7fe011efc6b28c7c4e61adf7ced4258d2e9939ececbaaad526517e",
+    "pin_receipt_sha256": "bc766e553bbb1fe50f7253c5a9b2d16ac2b573c672bf95de273b56a18dfa50cf",
+    "replay_receipt_sha256": "0e50c80be08208ed6824d3b5bcdd4f0e6866960fef05419778dfe861cbad6c18",
+    "inheritance": "none"
+  },
+  "claim_limit": "Negative evidence for the Link-18 pin-artifact loss and the one authorized failed reconstruction. It makes no Link-18 recovery, hardware, promotion, acceptance or release claim. Link 19 is a new truth with no inherited green."
+}

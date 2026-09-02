@@ -1,0 +1,132 @@
+{
+  "format": "lisp65-c2-link28-v2-profile-data-reference-gate-replay-first-red-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red-profile-data-reference-model-product-link-28-blocked",
+  "authorization_accounting": {
+    "authorized_membership_only_gate_replays": 1,
+    "completed_membership_only_gate_replays": 1,
+    "compiler_invocations": 0,
+    "linker_invocations": 0,
+    "new_seed_links": 0,
+    "new_product_links": 0,
+    "link_28_product_candidates": 0,
+    "corrected_data_reference_replays": 0
+  },
+  "inputs": {
+    "tool": "tools/host-lisp/c2_product_substitution_link.py",
+    "tool_sha256": "f27ec4425c4a2b359d6dcbfb010955e3ed3112e6cd08310e65bcb44a8b715a5b",
+    "contract": "config/c2-kernal-unmap-contract.json",
+    "contract_sha256": "a144265e8048ea5655c2f4d5b4a3c0d209b27effd9e6ac025c035532a9573392",
+    "contract_document": "docs/planning/c2.2-kernal-unmap-contract.md",
+    "contract_document_sha256": "fa3b6729290e6b9caffbd62c44b3c979b0fd606d4f1621eb1aea5cbb982d44d3",
+    "section_inventory_pin": "config/c2-final-section-inventory-pin.txt",
+    "section_inventory_pin_sha256": "3e644eb6f892e31baca3167b040ad3a5f60f148f1d3b2dae523ddb26da0bd6a3",
+    "authorization_receipt_sha256": "62270e98037f936bb24b246b7dc3da4a735027a2821b8215fd80d8a81e3cf1e9"
+  },
+  "immutable_source": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-v2-profile-data-placement-wrapper-inventory-order-first-red-20260720/root",
+    "canonical_tree_sha256": "76b30ab24d650c831840bd46c267c52459a2cb25540791efb71fc900aa9a65a1",
+    "elf_sha256": "92b9eac60ba766a0ba30cee97ca34c07a28076e6e00800ca1c62a740f3acb339",
+    "lto_object_sha256": "7fd609bbffdca8ec0dcab9d53494222bfb9fa7f8dbd052864ea7ae5edb536223",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "passed_before_first_red": {
+    "final_section_inventory": {
+      "status": "passed-exact-count-and-name-set",
+      "expected": 140,
+      "actual": 140,
+      "missing": 0,
+      "additional": 0,
+      "order": "recorded-as-provenance-only",
+      "report_sha256": "0b9bf703d53270a9cc99cde377afe9d164a808076b099ec183f8c78ddf934114"
+    },
+    "lto_partition_metadata": {
+      "status": "passed",
+      "final_relocation_sections": 57,
+      "report_sha256": "ebc0453cdb59394b36cf90c73a788eb9d2c48025ba7b327b476b731d0914efdc"
+    },
+    "provisional_kernal_window": {
+      "bytes": 8192,
+      "sha256": "70b5562c9f75a1f5f18face3068096203a6d365c1015cc269d8015f8e1cf10ce",
+      "identity_status": "provisional-unpinned-hardware-prohibited"
+    },
+    "handoff_z_and_io": {
+      "status": "passed",
+      "report_sha256": "57810a3f02919cbf19c96c5aaa7bc97b96571abe8266a7f96f3db886f1ea7edf"
+    },
+    "pre_ownership": {
+      "status": "passed-under-existing-control-flow-model",
+      "pre_handoff_closure_function_count": 0,
+      "report_sha256": "631a1cf3d8cf39116fc606cc271faad8ac0aba411af664bb36cb328af0502445"
+    }
+  },
+  "first_red": {
+    "gate": "profile-data reference provenance",
+    "reported_violations": [
+      "moved-profile-data-component-has-no-retained-reference:.rodata.eval_v2_workbench_service",
+      "moved-profile-data-component-has-no-retained-reference:.rodata.vm_callprim",
+      "moved-profile-data-component-has-no-retained-reference:.rodata.vm_native_call"
+    ],
+    "root_cause_1": "The five retained references name the merged output section .lisp65_c2_kernal_window.profile_rodata plus addends 0x0000, 0x0020, 0x00a6, 0x00bc and 0x00c4. The gate only resolved named symbols or the three original input-section names.",
+    "root_cause_2": "Resolving that output-section base covers all 3 components, but each relocation source is then reported only as merged .text. The current gate treats the whole .text section as pre-handoff instead of mapping source addresses to containing functions.",
+    "conclusion": "The retained relocations exist, but the current proof model cannot establish their required function-level post-ownership provenance. This is an unproved property, not a product-data-reference violation and not a PASS."
+  },
+  "read_only_diagnosis_not_a_gate_pass": {
+    "retained_relocation_records_total": 30075,
+    "profile_reference_records": 5,
+    "component_coverage_after_output_section_resolution": "3/3",
+    "containing_symbols": [
+      "eval_v2_workbench_service",
+      "vm_callprim",
+      "vm_callprim",
+      "vm_callprim",
+      "vm_native_call"
+    ],
+    "source_addresses": ["0x2c8a", "0x8cad", "0x8cbc", "0x93e2", "0xa3fe"],
+    "diagnosis_sha256": "4b4d9a71ee1aaf664aeecc6787422263c37c06f2fba69de3415b138a5a073c86",
+    "claim_limit": "Symbol containment is observed from llvm-nm/addr2line only; the function-level ownership gate has not been implemented or passed."
+  },
+  "required_bounded_gate_correction_not_run": {
+    "output_target_resolution": "treat the pinned profile output section address plus relocation addend as the component target",
+    "source_provenance": "map every matched relocation address to exactly one sized function symbol",
+    "ownership_boundary": "compare the containing function against explicit pre-handoff closure ranges and the main-prefix cutpoint emitted by the pre-ownership gate",
+    "fail_closed_cases": [
+      "pre-handoff function reference",
+      "unknown source address",
+      "overlapping function ranges",
+      "unsized function provenance",
+      "missing component coverage"
+    ],
+    "execution": "after review, replay gates only against the same immutable ELF; no compiler or linker invocation"
+  },
+  "gate_status": {
+    "inventory_membership_and_count": "passed",
+    "lto_partition_metadata": "passed",
+    "final_relocations_retained": "passed-presence-only",
+    "handoff_z_and_io": "passed",
+    "pre_ownership_control_flow": "passed-existing-model",
+    "profile_data_reference_provenance": "first-red-not-passed",
+    "fixed_facade": "not-reached-not-passed",
+    "runtime_slice_capacity": "not-reached-not-passed",
+    "kernal_freedom": "not-reached-not-passed",
+    "identity": "not-reached-not-passed",
+    "hardware": "not-run"
+  },
+  "immutable_replay_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-v2-profile-data-reference-gate-replay-first-red-20260720/root",
+    "files": 7,
+    "total_file_bytes": 46330,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "c6fa800c286616ed097376b71680ccacebfa600f8b432bb706ad363e654728bc",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "decision": {
+    "membership_only_replay": "stopped-at-first-red",
+    "function-provenance-gate-correction": "not-authorized-not-run",
+    "additional_seed_or_product_link": "not-authorized-not-run",
+    "link_28": "blocked-not-run"
+  },
+  "claim_limit": "This receipt proves a zero-link replay passed exact section membership, LTO metadata presence, relocation-section retention, handoff ABI and the existing pre-ownership control-flow gate, then stopped at an insufficient data-reference provenance model. It makes no profile-data safety PASS, structural closure, hardware acceptance, promotion or release claim."
+}

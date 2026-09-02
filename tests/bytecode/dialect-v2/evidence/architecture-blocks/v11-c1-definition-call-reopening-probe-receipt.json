@@ -1,0 +1,131 @@
+{
+  "format": "lisp65-v11-c1-definition-call-reopening-probe-receipt-v1",
+  "version": 1,
+  "status": "performance-reopened-restore-capacity-red-owner-decision-required",
+  "recorded_on": "2026-07-16",
+  "scope": "Diagnostic physical-MEGA65 reproduction of the owner-reported definition-to-first-call latency on the exact Probe-11 candidate. This is not G5 evidence and authorizes no product or capacity promotion.",
+  "candidate": {
+    "path": "build/products/workbench/c1-phase-probe-11",
+    "resident_prg_sha256": "9a11fab4aee751c304a144cf682b5d510468a0a855dd2cf1fa9e198d42b5be15",
+    "preload_sha256": "e8b0680045632d37f177d89a4838d749e99ad2244bbeb26c16443526f967081b",
+    "runtime_overlays_sha256": "afda9e3c80ccb1b1681f656c231a013195a2127f9b3f563907d7533025e0a7bb",
+    "attic_shelf_sha256": "042c95f9eab0d8f9259f1ba67547051c252fb21ffc7977a4d9a4857c060617cf"
+  },
+  "owner_sequence": {
+    "forms": [
+      "(+ 1 2)",
+      "(+ 1 2)",
+      "(defun test () (quote t))",
+      "(test)",
+      "(test)"
+    ],
+    "results": [
+      "3",
+      "3",
+      "test",
+      "t",
+      "t"
+    ],
+    "external_measurements": [
+      {
+        "id": "cold-expression",
+        "device-submit-to-result-seconds": 4,
+        "harness-wall-seconds": 4.39,
+        "timing": "build/hw/v11-c1-owner-cycle/01-cold-timing.json",
+        "timing_sha256": "e7ed07fd75e00e6998c1f67f69f6511f94fe06165ff2c9511d898167940c6958",
+        "transcript_sha256": "fe8f5da77403d11de5ce26d4a18b2fe8e95cf007eba18ab3c2e01c9de85e909f"
+      },
+      {
+        "id": "warm-expression",
+        "device-submit-to-result-seconds": 2,
+        "harness-wall-seconds": 3.03,
+        "timing": "build/hw/v11-c1-owner-cycle/02-warm-timing.json",
+        "timing_sha256": "08f0e55756ebf27a3cdcae32d1560938f4a3dd480f830fe5c38b28c79054eafe",
+        "transcript_sha256": "6e0b66aa5c640bf556a61fbb7875f7b2f8b22963849ceb6a00bf4234a2514506"
+      },
+      {
+        "id": "definition",
+        "device-submit-to-result-seconds": 2,
+        "harness-wall-seconds": 3.83,
+        "timing": "build/hw/v11-c1-owner-cycle/03-defun-timing.json",
+        "timing_sha256": "d869e88f7541fbe1daa7e55b69aa29d336d979c790cf1d6004a3fb854e37dff6",
+        "transcript_sha256": "c87e60f6c32195ff11744f1fa2c0320597e3f42957e5d1d42b1123d954348ccc"
+      },
+      {
+        "id": "first-call-after-definition",
+        "device-submit-to-result-seconds": 3,
+        "harness-wall-seconds": 4.35,
+        "timing": "build/hw/v11-c1-owner-cycle/04-first-call-timing.json",
+        "timing_sha256": "11431b2988ef57c03fb578339ac2b72e582fa7c5bd5287c519e0e64641713ced",
+        "transcript_sha256": "b865c47bd606d85638387fa039cf3b03d3e7d5e583ae36b7088c0c647b630a9e"
+      },
+      {
+        "id": "second-call-after-definition",
+        "device-submit-to-result-seconds": 2,
+        "harness-wall-seconds": 2.99,
+        "timing": "build/hw/v11-c1-owner-cycle/05-second-call-timing.json",
+        "timing_sha256": "ce875a1b3e47668dd0f5618575935e641700fba530a2a6f91a6ee9ea08c23f52",
+        "transcript_sha256": "0e3dbc318389a20ec66b2da571b617bbf00b7cd27ba3dff57e36e12452b0351d"
+      }
+    ],
+    "claim_limit": "The external values include verified typing, screen capture, polling and transport. They reproduce the user-visible ordering but are not used as product-latency measurements."
+  },
+  "in_product_frame_measurements": {
+    "clock": "$D7FA frame counter, 20 ms per frame, modulo 256",
+    "definition_then_first_call": {
+      "form": "(progn (eval (quote (defun z () (quote t)))) (let ((a (peek 215 250))) (let ((r (eval (quote (z))))) (list r a (peek 215 250)))))",
+      "result": "(t 237 76)",
+      "frames": 95,
+      "milliseconds": 1900,
+      "transcript": "build/hw/v11-c1-owner-cycle/07-definition-call-frames.txt",
+      "transcript_sha256": "b21eaafa73e79286e553eabdb1f01018fba24378f5932727066d7b234ff66645",
+      "screenshot_sha256": "37dd3abb8ec8bc8395a57bcd8a6ecc11b044d68ac542292aa6f0baabbde4ba93"
+    },
+    "immediately_following_warm_call": {
+      "form": "(let ((a (peek 215 250))) (let ((r (eval (quote (z))))) (list r a (peek 215 250))))",
+      "result": "(t 108 118)",
+      "frames": 10,
+      "milliseconds": 200,
+      "transcript": "build/hw/v11-c1-owner-cycle/08-warm-call-frames.txt",
+      "transcript_sha256": "3cc0a7b696da75eb2764a390d534ae50ee119394c4173953b1bd355aa96675b5",
+      "screenshot_sha256": "2fbfd0827d017177d544888dfb63ca6c593ae21d4b2ba0d27d87f47db3a6faee"
+    },
+    "result": "owner observation confirmed: the first compile/call after a persistent definition is 95 frames or 1.90 seconds; the next warm call is 10 frames or 0.20 seconds"
+  },
+  "prior_claim_correction": {
+    "previous_accepted_scope": "The 260-ms result remains valid only for a definitions-free warm nested eval whose compiler tier is already present.",
+    "measurement_hole": "The previous 280-ms next-definition probe started its timer inside an outer form that had already been compiled. It therefore omitted the top-level compiler reload after the previous definition retired the tier.",
+    "withdrawn_claim": "A trusted-stage reload after foreign allocation is below 20-ms resolution.",
+    "corrected_claim": "Compile-only time while the tier is loaded is below 20-ms resolution; a complete identity-bound reload after retirement is not."
+  },
+  "diagnosis": {
+    "trust_state": "The shelf catalog and exact copied-image attestation still select WORK_TRUSTED_STAGE after retirement. Allocation history does not invalidate content identity.",
+    "fastpath_scope": "WORK_TRUSTED_STAGE replaces L65M preflight phases 00-03 with the generated plan and capacity check. It does not bypass the generic commit.",
+    "remaining_work": "The commit still verifies the staged/source image and re-materializes, patches and republishes the 9,420-byte compiler, its 663 patches and 144 directory entries.",
+    "phase_consistency": "Existing phase evidence attributes about 2.10 s to full preflight and about 1.36 s to generic commit. The observed 1.90-s post-definition cycle is consistent with preflight skipped but commit plus compile/install retained.",
+    "conclusion": "The contradiction is not an expired trust discriminator. The previous interpretation confused compile-only time with full reload/commit time."
+  },
+  "gate_change": {
+    "permanent_case": "definition -> retirement -> first call",
+    "source": "scripts/hw-workbench-overlay-stack-smoke.sh",
+    "verifier": "tools/host-lisp/v11_c1_repl_latency.py",
+    "policy": "fail closed until config/v11-c1-architecture-decision.json contains an owner-bound definition_call_max_frames value",
+    "current_result": "red-restore-capacity-failed-owner-decision-required"
+  },
+  "next_probe": {
+    "preferred": "Measure an identity-bound specialized restore/cache that reuses a previously validated and patched compiler image without the generic materialize/publish path.",
+    "required_properties": [
+      "exact shelf/container identity binding",
+      "no stale post-reset pointers or directory ordinals",
+      "fail-closed fallback on identity or capacity drift",
+      "no heap/root growth across repeated definition cycles",
+      "real Bank, EXT, overlay and runtime-overlay deltas"
+    ],
+    "result": "completed-capacity-red-no-hardware-run",
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-identity-restore-capacity-probe-receipt.json",
+    "receipt_sha256": "eaa7f48cb9678a5abff29660df3c4c2270d92d289ea3227bea1a1f7e2d22d527",
+    "attempt_policy": "the one bounded attempt is consumed; no further restore tuning is authorized",
+    "fallback": "Return to the owner for the explicit choice between a dated 1.90-second 1.1 exception with C2 named for 1.2, and C1 rollback with immediate C2 replanning; do not resume promotion on the 1.90-s cycle without that decision."
+  },
+  "claim_limit": "This receipt proves the measured latency and corrects the earlier scope claim. The linked bounded restore probe is capacity-red. Neither receipt proves a fix, sets an acceptable definition-cycle threshold, authorizes the suspended capacity deltas, promotes product bytes, preserves the stopped G5 run, or claims R4/R5/R6/G6 acceptance."
+}

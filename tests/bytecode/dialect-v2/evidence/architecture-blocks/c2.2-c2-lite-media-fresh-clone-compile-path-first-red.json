@@ -1,0 +1,69 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: compiler implicit-include paths changed linked product bytes",
+  "source_commit": "a0e965e374e4079ec6cd86010837f0e2f07b2c8e",
+  "failed_step": "complete 19-role varied-clone comparison",
+  "diagnostic": "product_build_id differed while profile_build_id was byte-identical",
+  "axes": [
+    {
+      "id": "fresh-clone-seed-23-pago-pago-2002",
+      "artifact_set_sha256": "105aadc28a9e4383130c7bf52c7373a3c5d576a80e3061166bbe0821a5814193",
+      "product_build_id": "db584bdb",
+      "profile_build_id": "b93bf6d1"
+    },
+    {
+      "id": "fresh-clone-seed-987654329-kiritimati-2032",
+      "artifact_set_sha256": "e54358ce332e8e52920399bafa6eb3320a852773714c0fa88ea1c277b786878c",
+      "product_build_id": "e053abd1",
+      "profile_build_id": "b93bf6d1"
+    }
+  ],
+  "cause": "The deterministic-object branch compiled relative source and object names but passed forced headers and include directories as checkout-absolute paths. Clang encoded the implicit-include buffer length in inline-assembly !srcloc metadata. The 40-byte clone-name length difference changed nine C bitcode modules, their combined module, LTO layout and ten derived media roles.",
+  "representative_bitcode_diff": {
+    "module": "010-eval.c.o",
+    "source_filename_both_axes": "src/eval.c",
+    "semantic_IR_difference": "none observed",
+    "metadata": "!srcloc !13",
+    "first_axis_values": [
+      2147748284,
+      2147748351,
+      2147748375
+    ],
+    "second_axis_values": [
+      2147748324,
+      2147748391,
+      2147748415
+    ],
+    "delta": 40
+  },
+  "differing_C_bitcode_modules": 9,
+  "differing_media_roles": 10,
+  "correction": "The product link driver supplies all checkout-owned forced-header and include-directory arguments relative to the repository root. The existing relative source/object ordering, fixed RNG, single LLVM module, one LTO thread and ASLR-off controls remain unchanged.",
+  "failed_canonical_builder": {
+    "path": "tools/host-lisp/c2_lite_canonical_product.py",
+    "bytes": 48689,
+    "sha256": "32b84b269ec672c1038cfbaf6fc02bf14792522c13718604a0beb9b557f53441"
+  },
+  "failed_link_driver": {
+    "path": "tools/host-lisp/c2_product_substitution_link.py",
+    "bytes": 286730,
+    "sha256": "4a7e1249a307bf3b5d1bbdd298c2faef10b8334025b0dfb8e6d0e01aa9a18f57"
+  },
+  "execution_accounting": {
+    "fresh_clones_started": 2,
+    "canonical_product_links_completed": 2,
+    "media_role_sets_completed": 2,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

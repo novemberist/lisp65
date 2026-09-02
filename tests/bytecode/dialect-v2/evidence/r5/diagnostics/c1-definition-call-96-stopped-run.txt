@@ -1,0 +1,26 @@
+
+
+
+
+
+
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                                             WORKBENCH - DIALECT V2
+
+ lisp65> (if (= (+ 20 22) 42) "overlay-c1-first-form-42" "overlay-c1-first-form-f
+ ail")
+ "overlay-c1-first-form-42"
+ lisp65> (+ 20 22)
+ 42
+ lisp65> (if (= (+ 20 22) 42) "overlay-arith-42" "overlay-arith-fail")
+ "overlay-arith-42"
+ lisp65> (let((a(peek 215 250)))(let((x(%c1-compile 0(quote(+ 20 22))nil)))(let((
+ r(lcc-install x(quote t))))(list r a(peek 215 250)))))
+ (42 226 236)
+ lisp65> (let((a(peek 215 250)))(let((r(eval(quote(+ 20 22)))))(list r a(peek 215
+  250))))
+ (42 197 209)
+ lisp65> (progn(eval(quote(defun %c1l()(quote t))))(let((a(peek 215 250)))(let((r
+ (eval(quote(%c1l)))))(list r a(peek 215 250)))))
+ (t 29 125)
+ lisp65>

@@ -1,0 +1,181 @@
+{
+  "format": "lisp65-c2-product-link28-post-link-publish-last-structural-receipt-v1",
+  "recorded_on": "2026-07-20",
+  "status": "passed-structural-closure-hardware-pending",
+  "execution_accounting": {
+    "inherited_authorized_resident_island_seed_links": 1,
+    "inherited_authorized_product_closure_links": 1,
+    "artifact_only_publish_last_replays": 1,
+    "artifact_replay_compiler_invocations": 0,
+    "artifact_replay_linker_invocations": 0,
+    "additional_seed_links": 0,
+    "additional_product_links": 0
+  },
+  "inputs": {
+    "tool": "tools/host-lisp/c2_product_substitution_link.py",
+    "tool_sha256": "fa911efa93dc1a0c890851179191f1b543a3af0651b228a13be31a39c9a7705c",
+    "hardware_presmoke_tool": "tools/host-lisp/c2_product_hw_presmoke.py",
+    "hardware_presmoke_tool_sha256": "3387418ad3085056817d38f39a21aab0099ec779633a8b47ec952a472021c747",
+    "contract": "config/c2-kernal-unmap-contract.json",
+    "contract_sha256": "55297791332b6d1e78f2157a462a9d16e3de80cd5e5d1d1b3d804b5878178510",
+    "contract_document": "docs/planning/c2.2-kernal-unmap-contract.md",
+    "contract_document_sha256": "24f550b6d8bb192962e3215bde1251ba46f3851253a8984329147c61a98ed0c0",
+    "first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link28-window-identity-first-red-receipt.json",
+    "first_red_receipt_sha256": "01e8f132b4e8830e1954354ee760330ea2dec3fffdb8c4f20229f1a2cd33396a",
+    "unbound_product_sha256": "692729011bca541c82af4698f65d79396e16c47d18bda6479102b4758420442f",
+    "product_elf_sha256": "976c0a98356b430f4ec5a3dd56a23a12d2562d40dd9da6e4fb778ca1a43bc400"
+  },
+  "post_link_window_identity": {
+    "status": "passed",
+    "source": "the sole final Link 28 ELF",
+    "bytes": 8192,
+    "crc16": "0xacdc",
+    "sha256": "2406ebb832aa05c8a694084935941735e8f16db01bd5a078033a46265de426dd",
+    "binding_operands": [
+      {
+        "name": "kernal-window-crc-high",
+        "address": "0xb4aa",
+        "file_offset": 38059,
+        "compiled_value": "0xfc",
+        "published_value": "0xac"
+      },
+      {
+        "name": "kernal-window-crc-low",
+        "address": "0xb4ae",
+        "file_offset": 38063,
+        "compiled_value": "0x2b",
+        "published_value": "0xdc"
+      }
+    ],
+    "actual_changed_bytes": 2,
+    "mutation_outside_two_byte_domain": "rejected",
+    "mutated_published_crc": "rejected",
+    "report_sha256": "1937ce1a68f1b77e092ab5d683cf48e4158d787d42207102c75b06ed2636bc4a"
+  },
+  "complete_post_link_mutation_domain": {
+    "status": "passed",
+    "declared_bytes": 34,
+    "actual_changed_bytes": 32,
+    "actual_change_explanation": "Both CRC operands and 30 of the 32 runtime-verifier placeholder bytes changed; two verifier bytes already equaled their published values. The entire 34-byte domain remains contractually reserved.",
+    "domains": [
+      {
+        "name": "runtime-overlay-verifier-bindings",
+        "address": "0xb914",
+        "file_offset": 39189,
+        "bytes": 32,
+        "changed_bytes": 30
+      },
+      {
+        "name": "kernal-window-crc-high",
+        "address": "0xb4aa",
+        "file_offset": 38059,
+        "bytes": 1,
+        "changed_bytes": 1
+      },
+      {
+        "name": "kernal-window-crc-low",
+        "address": "0xb4ae",
+        "file_offset": 38063,
+        "bytes": 1,
+        "changed_bytes": 1
+      }
+    ],
+    "address_correction": "The runtime verifier table is at 0xb914 in Link 28; 0xb86d was its historical Link 19 address.",
+    "changes_outside_declared_domains": 0,
+    "mutation_outside_34_byte_domain": "rejected",
+    "mutated_kernal_crc_operand": "rejected",
+    "window_bound_intermediate_sha256": "ed1913107f99e664c63d8548cdf6cb952eb2383e30676857e352d08c4d9df1bb",
+    "final_bound_product_sha256": "d6308939921aa3f1bed37ff2ea710d54dd7579a1d1fac0bb9de322508eca51db",
+    "report_sha256": "ac4f1770a55897e7c48bf435fc78c71d7df6eb0fb69da1a5229824e42263bd6a",
+    "runtime_verifier_report_sha256": "e5d968076812ba9ddf697c8147721ad3a494a16f5216567378f776ebf7e8b5bf"
+  },
+  "structural_gates": {
+    "identity": "passed",
+    "capacity": "passed",
+    "one_truth": "passed",
+    "kernal_freedom": "passed",
+    "fixed_host_facade": "passed",
+    "pre_ownership": "passed",
+    "handoff_z_and_io": "passed",
+    "profile_data_reference_provenance": {
+      "status": "passed",
+      "matched_relocations": 5,
+      "covered_components": "3/3",
+      "pre_handoff_references": 0
+    },
+    "runtime_family_total_identity": {
+      "status": "passed",
+      "boot_records": 9,
+      "session_records": 36,
+      "record_occurrences": 45,
+      "mutated_payload": "rejected"
+    },
+    "owned_control_flow_edges": 319,
+    "unowned_window_targets": 0,
+    "legacy_sources_symbols_or_magic": 0,
+    "reports": {
+      "structural_closure": "fbafb2426acdfa574936caccb370ac27f920b51fe873d19a7c479e64371808bd",
+      "handoff_z_and_io": "29e77093e6b5b60085941ac59b52bd392d143382f22e17c84eb553f6217351a4",
+      "pre_ownership": "8ec49229367a5866a61c53e17f15930e05026c382c219763f3542878f3f0eec4",
+      "profile_data_references": "4ce46b78b74cefb87c5ede22a771a5293362b42c56b30a24c9276a9b66281e49",
+      "fixed_facade": "43774211ea2a6728d56fd2ed923d43002e8b8bcba14808139d45fef115c6eec9",
+      "one_truth": "3829ce31caf387354b8a2398bc65cbf228ca374a6f1266bc5cf79deeee468f00",
+      "kernal_freedom": "e5744fa4743701229636dd4fb6f062a365e4ee311fa3f9046a0e1b73f5ea72e9",
+      "substitution_balance": "dfb4780d9b78f1a57d4759f0fe57d3d72d5505543c3304f5a1603c071675aca4",
+      "runtime_family_identity": "b477c41b8d197b1a301bfbfce6057d2add0cd323974c2140a6df311ed94ee13f"
+    }
+  },
+  "capacity": {
+    "ordinary_bank0_bss_headroom_bytes": 19,
+    "fixed_bank0_headroom_bytes": 273,
+    "e000_window": {
+      "gross_bytes": 8192,
+      "live_bytes": 7806,
+      "future_contingency_margin_bytes": 386,
+      "growth_policy": "closed-to-new-tenants"
+    },
+    "bank5_mutable_plane": {
+      "used_bytes": 33840,
+      "headroom_bytes": 31696
+    },
+    "runtime_overlay_bank": {
+      "boot_image_bytes": 12529,
+      "boot_headroom_bytes": 53007,
+      "session_image_bytes": 50334,
+      "session_headroom_bytes": 15202,
+      "largest_slice_bytes": 1776,
+      "slice_cap_bytes": 1792
+    },
+    "immutable_shelf_bytes": 70897,
+    "post_link_binding_net_resident_bytes": 0
+  },
+  "candidate": {
+    "product": "build/c2.2/substitution/product-link-28/lisp65-c2-substitution-linked.prg",
+    "product_bytes": 41542,
+    "product_sha256": "d6308939921aa3f1bed37ff2ea710d54dd7579a1d1fac0bb9de322508eca51db",
+    "elf": "build/c2.2/substitution/product-link-28/lisp65-c2-substitution-linked.prg.elf",
+    "elf_sha256": "976c0a98356b430f4ec5a3dd56a23a12d2562d40dd9da6e4fb778ca1a43bc400",
+    "generated_window_header_sha256": "dab1ed7c0e72fdabf034727d2904012e111aa25596f5cf7527a93f93deee2cb6"
+  },
+  "immutable_evidence": {
+    "root": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-post-link-publish-last-pass-20260720/root",
+    "files": 60,
+    "total_file_bytes": 2949609,
+    "canonical_tree_hash_rule": "SHA-256 over sorted lines '<file-sha256>  <path-relative-to-archive-root>\\n'",
+    "canonical_tree_sha256": "735b6faebf9f5b6adeccaacbc6dda4cd2e1f690352da7f3bb6f684768e27287d",
+    "file_mode": "0444",
+    "directory_mode": "0555"
+  },
+  "next_gate": {
+    "step": "receipt-less fail-fast hardware presmoke of the post-link-bound candidate",
+    "required_surfaces": [
+      "handoff and post-copy CRC acceptance",
+      "typed Control-Space and Meta-X queue events",
+      "RUN/STOP and frame continuity",
+      "Freezer roundtrip with post-link E000 identity"
+    ],
+    "hardware": "not-run",
+    "promotion": "blocked-pending-hardware"
+  },
+  "claim_limit": "This receipt proves structural and capacity closure of the already-linked Link 28 product after a zero-link publish-last replay whose complete mutable product domain is exactly 34 named bytes. Hardware execution, promotion and release readiness are not claimed."
+}

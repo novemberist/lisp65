@@ -1,0 +1,191 @@
+{
+  "authority": {
+    "dependent_vma_golden": {
+      "bytes": 30406,
+      "path": "tests/bytecode/dialect-v2/golden-layout/c2-full-map-dependent-vma-invariants-v4.json",
+      "sha256": "28190ae2e5c3f02b229a3cea257ef3ca5b98f76ac19b35ef77f1f48dc318f1f3"
+    },
+    "historical_attribution": {
+      "bytes": 10487,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-reopen-gap-dependency-attribution-receipt.json",
+      "sha256": "2f02c95be3e25f590a74c9371c36cbb26cec0136c2a0b857d2d4cedc79871179"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 61478,
+      "commit": "2a327257d769572beadbc335ceaaccf497699f0b",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "979b181cd619051e63f65823168bed0bcf9e97b3eca4f0f23e8d9d0fb58001e9"
+    }
+  },
+  "claim_limit": "Loud source-inventory rebind only. The reviewed Golden and historical attribution remain byteidentical; no product, media, device, card or release claim is added.",
+  "current_attribution_sha256": "105369e81e811970fdc836a18545b7a200f113b3be6f3d40fc25d5ee8521d408",
+  "format": "lisp65-c2.3-v2.1-reopen-gap-attribution-rebind-20260815-v1",
+  "mutations": [
+    "change-gap0",
+    "change-gap2",
+    "claim-device",
+    "drop-diagnostic-exclusion",
+    "rewrite-history"
+  ],
+  "recorded_on": "2026-08-15",
+  "result": {
+    "device_contacts": 0,
+    "gap0": "derived",
+    "gap1": "derived",
+    "gap2": "fixed",
+    "historical_receipt_changed": false,
+    "semantic_conclusion": "byteidentical"
+  },
+  "semantic_projection": {
+    "absolute_runtime_consumers": [],
+    "attribution": {
+      "anchor_or_padding_supported": false,
+      "fixed_address_dependency_found": false,
+      "golden_mismatch_class": "snapshot-vma-promoted-to-invariant",
+      "mechanism": "reopen_gap0 is the linker-derived end of c2_resident. Its three product callers relocate against the function symbol, the packed window derives the byte offset from the candidate VMA, and no active product/build/hardware/format contract mentions either 0xfcb0 or 0xfcaf as a required address.",
+      "outcome": "NOT-DEPENDED-UPON",
+      "reclassification_supported": true
+    },
+    "linker_classification": {
+      "gap0": {
+        "fixed_numeric_start": false,
+        "lma_source": "window-origin-plus-candidate-vma-offset",
+        "vma_source": "end-of-c2_resident"
+      },
+      "gap1": {
+        "fixed_numeric_start": false,
+        "lma_source": "window-origin-plus-candidate-vma-offset",
+        "vma_source": "end-of-profile_rodata"
+      },
+      "gap2": {
+        "fixed_numeric_start": true,
+        "lma_source": "explicit-window-offset-0x1f90",
+        "vma_source": "explicit-0xff90"
+      }
+    },
+    "media_format": {
+      "fixed_gap0_offset_field": false,
+      "section_bytes_match_at_derived_offset": true,
+      "section_lma": 269487,
+      "section_offset": 7343,
+      "section_offset_source": "candidate-gap0-vma-minus-0xe000",
+      "window_bytes": 8192,
+      "window_vma": "0xe000..0xffff"
+    },
+    "mutations_rejected": [
+      "promote-symbolic-call-to-absolute",
+      "hide-symbol-consumer",
+      "claim-active-fcb0-pin",
+      "hide-predecessor-derivation",
+      "promote-gap1-to-anchor",
+      "demote-explicit-gap2",
+      "authorize-padding",
+      "edit-golden-without-review",
+      "authorize-card",
+      "allow-media"
+    ],
+    "sibling_gap0": {
+      "class": "candidate-derived-predecessor-end",
+      "fixed_address_dependent": false,
+      "recommended_golden_class": "derived-vma"
+    },
+    "sibling_gap1": {
+      "class": "candidate-derived-predecessor-end",
+      "fixed_address_dependent": false,
+      "recommendation": "same derived class as gap0; historical diagnostic pins remain bound to their own artifact worlds",
+      "recommended_golden_class": "derived-vma",
+      "world_local_diagnostic_mentions": [
+        {
+          "line": 154,
+          "path": "tools/host-lisp/c2_defstruct_link71_c2d_byte_return_hold.py",
+          "text": "\"call\": \"0x7782 JSR 0xfe88 vm_c2d_byte\","
+        },
+        {
+          "line": 85,
+          "path": "tools/host-lisp/c2_v20_loading_libraries_progress_ring.py",
+          "text": "PRODUCER_C2D = 0xFE88"
+        },
+        {
+          "line": 895,
+          "path": "tools/host-lisp/c2_v20_loading_libraries_progress_ring.py",
+          "text": "\"producer_carrier\": [\"0xfe88\", \"0xfee1\"],"
+        }
+      ]
+    },
+    "sibling_gap2": {
+      "active_exact_mentions": [
+        {
+          "line": 143,
+          "path": "tools/host-lisp/c2_defstruct_f018b_coverage.py",
+          "text": "\"c2_facade_target_c2_dma\": 0xFF90,"
+        },
+        {
+          "line": 176,
+          "path": "tools/host-lisp/c2_link64_completion_poison_operand_attribution.py",
+          "text": "and dma.value == 0xff90 and dma.bytes == 68 and dma.section == REOPEN"
+        },
+        {
+          "line": 327,
+          "path": "tools/host-lisp/c2_link64_completion_poison_operand_attribution.py",
+          "text": "\"$ff90 writes the 12-byte job address to $d702/$d701/$d700 \""
+        },
+        {
+          "line": 67,
+          "path": "tools/host-lisp/c2_lite_v6_link44_op_closure_cycle3_feasibility.py",
+          "text": "DMA_WRITER_ADDRESS = 0xFF90"
+        },
+        {
+          "line": 2312,
+          "path": "tools/host-lisp/c2_product_substitution_link.py",
+          "text": ".lisp65_c2_kernal_window.reopen_gap2 0xff90 :"
+        }
+      ],
+      "class": "explicit-fixed-window-offset",
+      "fixed_address_dependent": true,
+      "recommended_golden_class": "unchanged-fixed-vma",
+      "same_situation_as_gap0": false
+    },
+    "status": "ATTRIBUTED: reopen_gap0 has no fixed-address dependent",
+    "symbolic_runtime_consumers": [
+      {
+        "caller": "c2_product_append_staged",
+        "relocation_offset": 9664,
+        "relocation_type": "R_MOS_ADDR16",
+        "resolved_target": 64687,
+        "source_section": ".text",
+        "target_kind": "section-symbol",
+        "target_symbol": "vm_runtime_overlay_transaction_begin"
+      },
+      {
+        "caller": "c2_product_install",
+        "relocation_offset": 9872,
+        "relocation_type": "R_MOS_ADDR16",
+        "resolved_target": 64687,
+        "source_section": ".text",
+        "target_kind": "section-symbol",
+        "target_symbol": "vm_runtime_overlay_transaction_begin"
+      },
+      {
+        "caller": "c2_product_install",
+        "relocation_offset": 10115,
+        "relocation_type": "R_MOS_ADDR16",
+        "resolved_target": 64687,
+        "source_section": ".text",
+        "target_kind": "section-symbol",
+        "target_symbol": "vm_runtime_overlay_transaction_begin"
+      }
+    ]
+  },
+  "source_scan": {
+    "current_tracked_files": 1923,
+    "diagnostic_sources_excluded": [
+      "config/c2-v21-loading-libraries-stage-breadcrumb-contact.json",
+      "tools/host-lisp/c2_v21_dependency_invariant_golden.py",
+      "tools/host-lisp/c2_v21_loading_libraries_progress_rebind.py",
+      "tools/host-lisp/c2_v21_loading_libraries_stage_breadcrumb_contact.py"
+    ],
+    "historical_tracked_files": 1904
+  },
+  "status": "PASS: LOUD DATED REOPEN-GAP ATTRIBUTION REBIND"
+}

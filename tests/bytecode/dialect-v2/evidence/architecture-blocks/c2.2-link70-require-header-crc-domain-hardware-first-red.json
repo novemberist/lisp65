@@ -1,0 +1,107 @@
+{
+  "format": "lisp65-c2.2-link70-require-header-crc-domain-hardware-first-red-v1",
+  "recorded_on": "2026-07-27",
+  "status": "FIRST RED-target-L65I-header-CRC-domain-omits-fixed-header-fields",
+  "promotable": false,
+  "link_number": 70,
+  "hardware_runs": 1,
+  "hardware": {
+    "boot_watch": "(5 primitive bytecode)",
+    "require_defstruct_result": "nil",
+    "fail_closed": true,
+    "media_readback_byte_identical": true
+  },
+  "localization": {
+    "disk_read_sector_40_3": "t",
+    "directory_find_L65INDEX": "t",
+    "directory_entry": "(39 . 0)",
+    "l65i_header": "nil",
+    "target_header_bytes": [
+      76,
+      54,
+      53,
+      73,
+      1,
+      32,
+      48,
+      8,
+      2,
+      96,
+      0,
+      218,
+      161,
+      76,
+      9,
+      108,
+      212,
+      162,
+      142,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "stored_header_crc16_low_high": [
+      162,
+      142
+    ],
+    "canonical_crc_over_header_bytes_0_through_16_low_high": [
+      162,
+      142
+    ],
+    "product_parser_crc_low_high": [
+      34,
+      230
+    ],
+    "product_parser_stop_offset": 21,
+    "cause": "Link 70 folded magic, record CRC16 and identity but still consumed version, header width, row width, dependency width and row count outside the CRC accumulator. Its private domain yielded 0xe622 instead of the canonical 0x8ea2 over bytes 0 through 16."
+  },
+  "evidence": {
+    "require_screen": {
+      "path": "build/post-promotion/link70-defstruct-header-crc/hardware-session/row-require-first.txt",
+      "bytes": 2241,
+      "sha256": "bae30f13b286fd3d45c1d81d38d0d874c8a83039a351d43500e94bc5928dd195"
+    },
+    "header_screen": {
+      "path": "build/post-promotion/link70-defstruct-header-crc/hardware-session/diag70-header.txt",
+      "bytes": 2241,
+      "sha256": "28acab87257b502f6b397cf2519c1f06177220c01036c39a1aefd87b86184a31"
+    },
+    "parser_state_screen": {
+      "path": "build/post-promotion/link70-defstruct-header-crc/hardware-session/diag70-header-state.txt",
+      "bytes": 2241,
+      "sha256": "bcef4df768cbb4dc7d7e817c009748374b80bf4c2997908e0b1dffe1e2a5bd0c"
+    },
+    "uploaded_media_readback": {
+      "path": "build/post-promotion/link70-defstruct-header-crc/hardware-session/uploaded-media-readback.d81",
+      "bytes": 819200,
+      "sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+    },
+    "source_media": {
+      "path": "build/post-promotion/defstruct-v1/foundations/require-defstruct.d81",
+      "bytes": 819200,
+      "sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+    }
+  },
+  "disposition": {
+    "fix": "Consume every sealed header byte 0 through 16 through the CRC-folding reader; stored seal bytes 17 and 18 remain outside the domain.",
+    "changed_calls_from_link70": 5,
+    "product_delta_class": "Bank-2-only canonical-domain correction",
+    "permanent_negatives": [
+      "Reject Link 69's magic-plus-identity private domain.",
+      "Reject Link 70's magic-plus-record-CRC-plus-identity private domain.",
+      "Reject any header seal omitting one of the five fixed header fields."
+    ],
+    "predecessor": "Link 70 remains historical First Red; no retry."
+  },
+  "claim_limit": "This receipt localizes Link 70 hardware failure only. It makes no Link 71, require success, or defstruct runtime claim."
+}

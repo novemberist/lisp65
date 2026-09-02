@@ -1,0 +1,286 @@
+{
+  "authority": {
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 60364,
+      "commit": "6c5d0cb1137d1e9cdeb82c4af04837f1b5295538",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "1c1bf837ff61a38d63e9b35a1f3bf53f6d295738b1fe6f0267648963e5d4d7f8"
+    },
+    "candidate_elf": {
+      "bytes": 628736,
+      "path": "build/c2.3/v2.0-source-oracle-replacement3-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bfdad683c3fd0f4aa158770cab30c357d6bacdafa35a92f97fadcaaafd194b6a"
+    },
+    "driver": {
+      "bytes": 16295,
+      "path": "tools/host-lisp/c2_v20_link105_phase02a_dynamic_rescue.py",
+      "sha256": "4e24dffe40825f1a07af91313390eb5c2a9d02c42cc3a260bd32dc3696bbfea3"
+    },
+    "first_red": {
+      "bytes": 22915,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-source-oracle-link105-phase02a-capture-first-red.json",
+      "sha256": "9ff6fc39cc9fda80cc9711d2aece29ad472e66e20acbf09fd6a3123cb29c103b"
+    },
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-source-oracle-d1/library-readback.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "mutations_rejected": [
+      "add-stop",
+      "add-resume",
+      "add-run",
+      "open-D2-D5",
+      "omit-runtime",
+      "omit-source",
+      "widen-source",
+      "interpret-before-persist",
+      "inject-stop-command"
+    ],
+    "product_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-source-oracle-d1/product-readback.d81",
+      "sha256": "c7e3e5bcd9a252bceb0f38f277901776840c29ff60e6e537c9cd0018f8e18b2e"
+    },
+    "row": {
+      "bytes": 1019,
+      "path": "config/c2-v20-link105-phase02a-dynamic-rescue-row.json",
+      "sha256": "a18cfb7eac20b2b9599436f7113636aac98fe0df3811d71f1839d889d783729f"
+    },
+    "shelf_truth": {
+      "bytes": 93681,
+      "path": "build/c2.3/v2.0-source-oracle-replacement3-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+      "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+    },
+    "static_checkpoint": {
+      "bytes": 16070,
+      "path": "build/c2.3/v2.0-source-oracle-d1/phase02a-link105-row/static-checkpoint.json",
+      "sha256": "ee3226904a09dec32e33d6ddf913d961082167fc761e68249f729a4ae01dfe47"
+    }
+  },
+  "claim_limit": "This closes only the authorized Link-105 dynamic rescue row. It does not authorize a static-plane correction, resume, reset, repeat boot, fix, card, media, D2-D5 or release.",
+  "classification": {
+    "claim": "candidate-local phase-02b static-plane extent mismatch",
+    "different_site": true,
+    "exact_first_phase02b_branch": "not retained; the final extent mismatch is independently guaranteed and sufficient to reject this candidate",
+    "late_convergence_beyond_64_frames": false,
+    "mechanism": "the six candidate C2D code rows form a continuous 46043-byte plane, but the linked phase-02b contract pins 45939 bytes; phase-02b therefore cannot complete even with perfect reads",
+    "runtime_cutpoint": "phase=2,error=C2_STREAM_ERR_C2D,reserved=0x2a; phase-02a completed and phase-02b failed",
+    "wrong_oracle_sourcing": false,
+    "wrong_source_row": false
+  },
+  "discipline": {
+    "CPU_left_stopped": true,
+    "D2_D5_executed": false,
+    "additional_stops": 0,
+    "dynamic_raw_persisted_before_interpretation": true,
+    "resets": 0,
+    "resumes": 0,
+    "runs": 0
+  },
+  "format": "lisp65-c2.3-v20-link105-phase02a-dynamic-rescue-v1",
+  "host_attribution": {
+    "c2d_delivery_truth": {
+      "bytes": 33840,
+      "path": "build/c2.3/v2.0-source-oracle-replacement3-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+    },
+    "candidate_decoder": {
+      "bytes": 41388,
+      "path": "build/c2.3/v2.0-source-oracle-replacement3-card/final/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "fb5f0a9c8cccb33cdea5ec04df817647c95dd5d9b7e5db9586f0a83979e7c6fc"
+    },
+    "result_binder": {
+      "bytes": 20292,
+      "path": "tools/host-lisp/c2_v20_link105_phase02a_dynamic_rescue.py",
+      "sha256": "3de57f911e294883ae64b95444c97a37e6f0127241ec9ab8487596c0f6b3b904"
+    },
+    "static_plane_contract": {
+      "bytes": 293,
+      "path": "src/c2_lite_static_plane.h",
+      "sha256": "3c97cc22b1a53ac781614ae8c9ab8c56998ac44c6ca824fa41f857e8495bdf59"
+    }
+  },
+  "phase02b_extent": {
+    "c2d_rows": [
+      {
+        "continuous": true,
+        "expected_target": 0,
+        "length": 17238,
+        "row": 0,
+        "target": 0
+      },
+      {
+        "continuous": true,
+        "expected_target": 17238,
+        "length": 13544,
+        "row": 1,
+        "target": 17238
+      },
+      {
+        "continuous": true,
+        "expected_target": 30782,
+        "length": 2940,
+        "row": 2,
+        "target": 30782
+      },
+      {
+        "continuous": true,
+        "expected_target": 33722,
+        "length": 4083,
+        "row": 3,
+        "target": 33722
+      },
+      {
+        "continuous": true,
+        "expected_target": 37805,
+        "length": 104,
+        "row": 4,
+        "target": 37805
+      },
+      {
+        "continuous": true,
+        "expected_target": 37909,
+        "length": 8134,
+        "row": 5,
+        "target": 37909
+      }
+    ],
+    "deficit_bytes": 104,
+    "delivery_code_bytes": 46043,
+    "entry_totals_equal_at_stop": true,
+    "linked_contract_code_bytes": 45939,
+    "resolution_totals_equal_at_stop": true
+  },
+  "raw_checkpoint": {
+    "bytes": 6166,
+    "path": "build/c2.3/v2.0-source-oracle-d1/phase02a-link105-row/dynamic-rescue/raw-checkpoint.json",
+    "sha256": "d3ba8a4b0e1078dd35f459751ebdf2db0cc3153e678f771d80cac3e205beb4ee"
+  },
+  "raw_reads": [
+    {
+      "address": "0x0000c080",
+      "bytes": 50,
+      "monitor_rows": [
+        {
+          "command": "m0000c080",
+          "consumed_bytes": 16,
+          "consumed_offset": 0,
+          "raw_hex": "6d30303030633038300d0a3a30303030433038303a30303030383443304631364430313030363733323446354633303834303130300d0a0d0a2e",
+          "returned_address": "0x0000c080",
+          "returned_hex": "000084c0f16d010067324f5f30840100"
+        },
+        {
+          "command": "m0000c090",
+          "consumed_bytes": 16,
+          "consumed_offset": 0,
+          "raw_hex": "6d30303030633039300d0a3a30303030433039303a30363030463330323731304233303030333030383330353833303738363030310d0a0d0a2e",
+          "returned_address": "0x0000c090",
+          "returned_hex": "0600f302710b30003008305830786001"
+        },
+        {
+          "command": "m0000c0a0",
+          "consumed_bytes": 16,
+          "consumed_offset": 0,
+          "raw_hex": "6d30303030633061300d0a3a30303030433041303a46333032373130423030303030303030303031303030303030303030303230300d0a0d0a2e",
+          "returned_address": "0x0000c0a0",
+          "returned_hex": "f302710b000000000010000000000200"
+        },
+        {
+          "command": "m0000c0a2",
+          "consumed_bytes": 2,
+          "consumed_offset": 14,
+          "raw_hex": "6d30303030633061320d0a3a30303030433041323a37313042303030303030303030303130303030303030303030323030303332410d0a0d0a2e",
+          "returned_address": "0x0000c0a2",
+          "returned_hex": "710b000000000010000000000200032a"
+        }
+      ],
+      "name": "c2-runtime-and-cutpoint",
+      "observed_hex": "000084c0f16d010067324f5f308401000600f302710b30003008305830786001f302710b000000000010000000000200032a",
+      "view": "physical-bank0"
+    },
+    {
+      "address": "0x081000c0",
+      "bytes": 32,
+      "monitor_rows": [
+        {
+          "command": "m081000c0",
+          "consumed_bytes": 16,
+          "consumed_offset": 0,
+          "raw_hex": "6d30383130303063300d0a3a30383130303043303a36433633363330303030303030303030463539343030433631463444353030310d0a0d0a2e",
+          "returned_address": "0x081000c0",
+          "returned_hex": "6c63630000000000f59400c61f4d5001"
+        },
+        {
+          "command": "m081000d0",
+          "consumed_bytes": 16,
+          "consumed_offset": 0,
+          "raw_hex": "6d30383130303064300d0a3a30383130303044303a41343144414235393034384634414143383638434333463241364133303130300d0a0d0a2e",
+          "returned_address": "0x081000d0",
+          "returned_hex": "a41dab59048f4aac868cc3f2a6a30100"
+        }
+      ],
+      "name": "selected-shelf-source-row",
+      "observed_hex": "6c63630000000000f59400c61f4d5001a41dab59048f4aac868cc3f2a6a30100",
+      "view": "physical-28-bit"
+    }
+  ],
+  "recorded_on": "2026-08-13",
+  "runtime": {
+    "c2d_bytes": 33840,
+    "catalog_crc32": 1599025767,
+    "committed_roots": 0,
+    "decode_active": 49284,
+    "entries_offset": 2096,
+    "entry_count": 755,
+    "entry_cursor": 755,
+    "entry_first": 4096,
+    "error": 3,
+    "finished": 0,
+    "generation": 1,
+    "image_count": 6,
+    "image_first": 0,
+    "images_offset": 48,
+    "phase": 2,
+    "reserved": 42,
+    "resolution_count": 2929,
+    "resolution_cursor": 2929,
+    "resolution_first": 0,
+    "resolutions_offset": 22576,
+    "root_count": 352,
+    "root_cursor": 0,
+    "root_first": 0,
+    "roots_offset": 30768,
+    "shelf_bytes": 93681
+  },
+  "status": "PHASE02A-EXONERATED; PHASE02B-STATIC-EXTENT-CONTRACT-MISMATCH",
+  "tuple": {
+    "A": "0x02",
+    "B": "0x00",
+    "MAPH": "0x8000",
+    "MAPL": "0x0000",
+    "PC": "0xe096",
+    "SP": "0x01e4",
+    "X": "0x64",
+    "Y": "0x01",
+    "Z": "0x00",
+    "suffix": "4C96E0  00     04 .....I.. ...P 15 -  00 - ..c..lhc"
+  },
+  "unlock": {
+    "D1": false,
+    "D2_D5": false
+  },
+  "verifier": {
+    "actual_expected_crc16": "0xe3f7",
+    "configured_timeout_frames": 64,
+    "expected_matches_physical_source": true,
+    "phase02a_completed_within_each_64_frame_bound": true,
+    "physical_source_crc16": "0xe3f7",
+    "physical_source_matches_delivery_truth": true,
+    "row": 5,
+    "site": "inner D705 Shelf cross-read",
+    "stopped_target_crc16": "0xe3f7",
+    "target_converged_by_stopped_read": true
+  }
+}

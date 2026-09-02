@@ -1,0 +1,62 @@
+{
+  "format": "lisp65-r2-canonical-stack-guard-resolution-v1",
+  "id": "r2-canonical-stack-guard-profile-binding",
+  "status": "resolved",
+  "resolved_on": "2026-07-13",
+  "source_commit": "62c5c4ba4d7a7b4176717d78cf8f24309c80cc91",
+  "targets": [
+    {
+      "command": "make workbench-overlay-stack-guard",
+      "artifact_root": "build/products/workbench/overlay-stack-guard",
+      "profile": "dialect-v2-capability-carrier-workbench-staging",
+      "result": "passed",
+      "resolved_profile_sha256": "c5933c1665ee64ddc8ab499e53fa66bc0a01a3b4b9da055a92f4f1f20115d4cb",
+      "artifact_set_sha256": "9d8e4d0ec8886c66dbe59383d32f010b1e99706c6e8f23b0b70b15af5968aa1f",
+      "artifacts": [
+        {"id": "product-elf", "sha256": "a138165cff9b8d7ed0b015f339834d5bd7d757c6a0d3f448c36c0034d985ac22"},
+        {"id": "resident-prg", "sha256": "019bafa46b8d04f7b1971a2945159314b2e8571cabe963d3b78909da19cd7fe7"},
+        {"id": "runtime-overlays", "sha256": "7a28e140daeba42a9360571bc065b3b447e5fa8835826aade2147ca3844eb3d8"},
+        {"id": "stdlib-preload", "sha256": "650b9e0629946b92eaf1c3b5a4332958f8224bec4d86d680aca9572a39955531"}
+      ],
+      "metrics": {
+        "runtime_overlay_vma": "0xc2a4",
+        "post_boot_reserve_bytes": 1971,
+        "banked_headroom_bytes": 435,
+        "boot_stack_gap_bytes": 1751
+      }
+    },
+    {
+      "command": "make v2-capability-carrier-internal-g5-workbench-link",
+      "artifact_root": "build/products/workbench/overlay-stack-guard",
+      "profile": "dialect-v2-capability-carrier-workbench-staging",
+      "result": "passed",
+      "resolved_profile_sha256": "c5933c1665ee64ddc8ab499e53fa66bc0a01a3b4b9da055a92f4f1f20115d4cb",
+      "artifact_set_sha256": "9d8e4d0ec8886c66dbe59383d32f010b1e99706c6e8f23b0b70b15af5968aa1f",
+      "artifacts": [
+        {"id": "product-elf", "sha256": "a138165cff9b8d7ed0b015f339834d5bd7d757c6a0d3f448c36c0034d985ac22"},
+        {"id": "resident-prg", "sha256": "019bafa46b8d04f7b1971a2945159314b2e8571cabe963d3b78909da19cd7fe7"},
+        {"id": "runtime-overlays", "sha256": "7a28e140daeba42a9360571bc065b3b447e5fa8835826aade2147ca3844eb3d8"},
+        {"id": "stdlib-preload", "sha256": "650b9e0629946b92eaf1c3b5a4332958f8224bec4d86d680aca9572a39955531"}
+      ],
+      "metrics": {
+        "runtime_overlay_vma": "0xc2a4",
+        "post_boot_reserve_bytes": 1971,
+        "banked_headroom_bytes": 435,
+        "boot_stack_gap_bytes": 1751
+      }
+    }
+  ],
+  "bank_delta": {
+    "baseline_product_sha256": "9d8e4d0ec8886c66dbe59383d32f010b1e99706c6e8f23b0b70b15af5968aa1f",
+    "candidate_product_sha256": "9d8e4d0ec8886c66dbe59383d32f010b1e99706c6e8f23b0b70b15af5968aa1f",
+    "baseline_banked_headroom_bytes": 435,
+    "candidate_banked_headroom_bytes": 435,
+    "delta_bytes": 0,
+    "authorization": null
+  },
+  "conclusion": {
+    "artifact_identity": "exact",
+    "canonical_profile_binding": "closed",
+    "r4_deadline": "met-before-r4-sealing"
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "candidate": {
+    "elf": {
+      "bytes": 597864,
+      "path": "build/c2.2/substitution/c2-lite-v6-bank3-stage-artifact-candidate-replay5/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "dceb9505a8d74efae3af4b4e3583c06f3c085ddbc7f80e0426980a83d21351e2"
+    },
+    "map": {
+      "bytes": 199146,
+      "path": "build/c2.2/substitution/c2-lite-v6-bank3-stage-artifact-candidate-replay5/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "7a43bbbb97be106fa64038e8a83746e542879ac565fe40a9437bb576dea2f721"
+    },
+    "new_identity": true,
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/c2-lite-v6-bank3-stage-artifact-candidate-replay5/lisp65-c2-substitution-linked.prg",
+      "sha256": "62f556dfcdeec59783cc2adec16afc3ccb5f618a24b17898c1162f81c1c1b954"
+    },
+    "resolved_profile": {
+      "bytes": 8471,
+      "path": "build/c2.2/substitution/c2-lite-v6-bank3-stage-artifact-candidate-replay5/resolved-profile.txt",
+      "sha256": "533c193dd5938ab637b299fbc853792de7ee5f0bb6ef552342285cae8ff38494"
+    }
+  },
+  "claims_not_run": [
+    "C2-lite product Boot with the corrected two-record deployment",
+    "cold and warm latency",
+    "Chip refill timing",
+    "GC block reads",
+    "Freezer identity",
+    "nested eval",
+    "RUN/STOP rollback",
+    "generation invalidation",
+    "promotion",
+    "acceptance"
+  ],
+  "class_a_harness_correction": {
+    "compiler_runs": 0,
+    "first_record": {
+      "build_id": "0x533c193d",
+      "entry": "0xc368",
+      "header_bytes": 18,
+      "magic": "L65O",
+      "payload_bytes": 1494,
+      "payload_crc16": "0x7ae5",
+      "record_offset": 0,
+      "version": 1,
+      "vma": "0xc356"
+    },
+    "fixed_deployment": {
+      "bytes": 3629,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay6-two-record/deployment.json",
+      "sha256": "958a7c8b8369ad690b9fed25ed5ac298c6143ea667b2a3e9bd04b6653edeace0"
+    },
+    "fixed_stage": {
+      "bytes": 3285,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay6-two-record/boot-overlay.stage.bin",
+      "sha256": "0f6cd76d96de6164fa91b9715a70aba9bdb0479aa4d618b82b49e0497a697a26"
+    },
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "padding_bytes": 24,
+    "product_byte_changes": 0,
+    "second_record": {
+      "build_id": "0x533c193d",
+      "entry": "0xc860",
+      "header_bytes": 18,
+      "magic": "L65O",
+      "payload_bytes": 1731,
+      "payload_crc16": "0xa0f8",
+      "record_offset": 1536,
+      "version": 1,
+      "vma": "0xc356"
+    },
+    "status": "passed-prepare-and-verify-hardware-not-run",
+    "total_bytes": 3285
+  },
+  "diagnosis": {
+    "cause": "The pre-smoke harness still emitted the historical one-record Workbench package. The current product loader requires the fixed two-record chain: Bank-3 Boot stager first, aligned Workbench successor second. It therefore rejected the first descriptor before any Bank-3 family or READY publication.",
+    "class": "hardware-presmoke-deployment-harness-version-drift",
+    "old_emitted_record": {
+      "build_id": "0x533c193d",
+      "entry": "0xc860",
+      "header_bytes": 18,
+      "magic": "L65O",
+      "payload_bytes": 1731,
+      "payload_crc16": "0xa0f8",
+      "record_offset": 0,
+      "version": 1,
+      "vma": "0xc356"
+    },
+    "product_expected_first_record": {
+      "entry": "0xc368",
+      "payload_bytes": 1494,
+      "role": "bank3-boot-stager"
+    },
+    "product_semantics_implicated": false
+  },
+  "evidence": {
+    "authorization": {
+      "bytes": 15786,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank3-stage-artifact-completion-replay5-structural-receipt.json",
+      "sha256": "e852ffd7ceeeee4a689790b0ee50c966a470bc1e14a82087844556b0533fd0e8"
+    },
+    "bank0": {
+      "bytes": 4352,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/line1-first-red/bank0-b000-c100.bin",
+      "sha256": "2559361a4856ca86b2183ee69f935a566f72bbd73d4955684bd7a1c1ad1d94cf"
+    },
+    "bank2": {
+      "bytes": 34403,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/line1-first-red/bank2-code-plane.bin",
+      "sha256": "d3636cf634534b15ec1f453a519a62ff1e066c2337e8228bf12bf684bcb8b379"
+    },
+    "bank3": {
+      "bytes": 16210,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/line1-first-red/bank3-boot-family.bin",
+      "sha256": "fc4a1195ff8cea5e19aacc281b833ca8c65a96662e03967b5c74060e33a210e1"
+    },
+    "deployment_readbacks": [
+      {
+        "bytes": 33840,
+        "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/readback-initial.c2d-v6.bin",
+        "sha256": "6d0a9517d09502da1e2d0115c1d0c6f9e9c4f5edea2a08ebf1287026b0f33992"
+      },
+      {
+        "bytes": 1749,
+        "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/readback-boot-overlay.stage.bin",
+        "sha256": "b077d611a094be3bb8bd2273b5a49a32f492bfef9675b3fec59e511e890d4fda"
+      },
+      {
+        "bytes": 65438,
+        "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/readback-runtime-overlays-session-final.bin",
+        "sha256": "c14c900db9ed9e4c92eb5aaf4a1391143eca5ffc10cce34ff7740e0de03a5dcb"
+      },
+      {
+        "bytes": 70897,
+        "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/readback-product-shelf-v4-direct.bin",
+        "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+      },
+      {
+        "bytes": 16210,
+        "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/readback-runtime-overlays-boot-final.bin",
+        "sha256": "d03d72dc5d49b3a0f20a82e9fa3e7da5cb23b05c7ee09326d5e0d05222a22179"
+      },
+      {
+        "bytes": 8192,
+        "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/readback-c2-product-kernal-window.bin",
+        "sha256": "00886f4747f8aab0c3fbac3568b12e62f30965dfe2852f49b3c586dc04e9263a"
+      }
+    ],
+    "failed_deployment": {
+      "bytes": 3092,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/deployment.json",
+      "sha256": "f7c4072d841ab48fec32a1fa36f618a99f1f3d2ba230405000b9ea95def1ea5e"
+    },
+    "failed_stage": {
+      "bytes": 1749,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/boot-overlay.stage.bin",
+      "sha256": "b077d611a094be3bb8bd2273b5a49a32f492bfef9675b3fec59e511e890d4fda"
+    },
+    "low_memory": {
+      "bytes": 512,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/line1-first-red/low-0000-0200.bin",
+      "sha256": "b62f809e3232fadb2e3caf2d507aba1fcee3263441ece79c5a3271c05d9dabff"
+    },
+    "screen": {
+      "bytes": 5365,
+      "path": "build/c2.2/hardware-presmoke-c2-lite-bank3-replay5/line1-first-red/screen.png",
+      "sha256": "99f7d3bee84ae982467240575cf176ba0c6e64802c88a7da06359164ad94105e"
+    }
+  },
+  "format": "lisp65-c2-lite-v6-bank3-presmoke-harness-first-red-v1",
+  "hardware": {
+    "all_six_preloads_byte_identical": true,
+    "c2_ready": 0,
+    "completed_latency_measurements": 0,
+    "line_reached": 1,
+    "operator_observation": "red frame; BASIC remains at READY/RUN and never enters Lisp",
+    "published_family": 0,
+    "runs": 1,
+    "two_attempt_rule_slots_consumed": 0
+  },
+  "next_gate": "Review authorization for one hardware line-1 replay using the already prepared and SHA-bound two-record deployment; no latency slot has been consumed.",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "first-red-line1-old-one-record-deployment-harness"
+}

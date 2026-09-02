@@ -1,0 +1,67 @@
+{
+  "format": "lisp65-v11-c1-definition-call-session-curve-receipt-v1",
+  "version": 1,
+  "status": "diagnostic-curve-complete-current-96-frame-session-pin-red",
+  "recorded_on": "2026-07-17",
+  "scope": "Twelve consecutive definition-to-first-call cycles on one physical-MEGA65 session, correlated with read-only counters after every cycle. This is diagnostic evidence, not a G5 case receipt or a performance PASS.",
+  "candidate": {
+    "product_artifact_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+    "manifest_sha256": "431f218e20681bad3f8a78a24d09620b0d3b17c86b137062e97c5b954b415acd",
+    "elf_sha256": "bc49dc97cda1c445708651299a41bc62bb0c3ebc8aa2521fd8d1e116c6ea8893"
+  },
+  "method": {
+    "clock": "$D7FA, 50 Hz, 20 ms per frame",
+    "cycles": 12,
+    "forms": "constant-size fresh defun followed by its first call; no user form between cycles",
+    "counter_method": "ELF-resolved JTAG memsave while the REPL was idle after each timed cycle",
+    "instrumentation_limit": "Counter reads occur between cycles and may alter frame phase. The timed interval is entirely on-device and excludes every counter read.",
+    "raw_curve_sha256": "97da0dce1ab293878d9aaf748e552ba8745873de1d1cf6358ba97f4a7ec299b7",
+    "curve_tool_sha256": "6145463d80957601f4bf118b65cc73c35ea891f9b45168413251bf3a0de516c5",
+    "counter_tool_sha256": "d5374a1837aa2deb102a64dc709f373dbc84e71532dbd414e3b9bbdf4aba0b2e"
+  },
+  "samples": [
+    {"cycle": 1, "frames": 95, "nsym": 332, "npool": 3609, "dir_n": 360, "ext_code_hw": 16148, "gc_runs": 9},
+    {"cycle": 2, "frames": 97, "nsym": 333, "npool": 3616, "dir_n": 360, "ext_code_hw": 16157, "gc_runs": 12},
+    {"cycle": 3, "frames": 95, "nsym": 334, "npool": 3623, "dir_n": 368, "ext_code_hw": 16166, "gc_runs": 14},
+    {"cycle": 4, "frames": 97, "nsym": 335, "npool": 3630, "dir_n": 368, "ext_code_hw": 16175, "gc_runs": 17},
+    {"cycle": 5, "frames": 96, "nsym": 336, "npool": 3637, "dir_n": 368, "ext_code_hw": 16184, "gc_runs": 19},
+    {"cycle": 6, "frames": 95, "nsym": 337, "npool": 3644, "dir_n": 368, "ext_code_hw": 16193, "gc_runs": 22},
+    {"cycle": 7, "frames": 96, "nsym": 338, "npool": 3651, "dir_n": 368, "ext_code_hw": 16202, "gc_runs": 24},
+    {"cycle": 8, "frames": 96, "nsym": 339, "npool": 3658, "dir_n": 368, "ext_code_hw": 16211, "gc_runs": 27},
+    {"cycle": 9, "frames": 98, "nsym": 340, "npool": 3665, "dir_n": 368, "ext_code_hw": 16220, "gc_runs": 30},
+    {"cycle": 10, "frames": 95, "nsym": 341, "npool": 3672, "dir_n": 368, "ext_code_hw": 16229, "gc_runs": 32},
+    {"cycle": 11, "frames": 98, "nsym": 342, "npool": 3679, "dir_n": 376, "ext_code_hw": 16238, "gc_runs": 35},
+    {"cycle": 12, "frames": 96, "nsym": 343, "npool": 3686, "dir_n": 376, "ext_code_hw": 16247, "gc_runs": 37}
+  ],
+  "analysis": {
+    "frames": [95, 97, 95, 97, 96, 95, 96, 96, 98, 95, 98, 96],
+    "distribution": {"95": 4, "96": 4, "97": 2, "98": 2},
+    "minimum_frames": 95,
+    "maximum_frames": 98,
+    "mean_frames": 96.1666666667,
+    "median_frames": 96,
+    "population_standard_deviation_frames": 1.0671873729,
+    "least_squares_frames_per_cycle": 0.0909090909,
+    "least_squares_slope_95_percent_interval": [-0.1172708140, 0.2990889958],
+    "pearson_r_cycle_vs_frames": 0.2940654708,
+    "pearson_r_directory_vs_frames": 0.2705008904,
+    "pearson_r_gc_runs_vs_frames": 0.3150699494,
+    "gc_delta_observation": "Five cycles with two additional GC runs average 95.6 frames; six cycles with three additional GC runs average 96.833 frames. The sample is diagnostic and does not establish causality.",
+    "directory_observation": "Directory grows by eight at cycles 3 and 11, which measure 95 and 98 frames respectively; a directory-bound step is not supported.",
+    "session_growth_observation": "Symbols grow by one, namepool by seven bytes and persistent EXT by nine bytes every cycle, but elapsed time does not grow monotonically. The fitted slope interval includes zero.",
+    "outlier_observation": "The earlier 110-frame value did not recur in this twelve-cycle series and remains unexplained; it may not be used as a safety or performance claim."
+  },
+  "classification": {
+    "owner_curve_case": "bimodal-or-noisy-without-demonstrated-session-state-correlation",
+    "monotonic_growth": false,
+    "second_cycle_plateau": false,
+    "current_96_frame_session_pin": "red: cycles 2, 4, 9 and 11 exceed it",
+    "performance_bar": "not-passed; dated C2/1.2 limitation remains in force",
+    "bounded_next_step": "One optimization probe may target the measured constant reload/commit cost. It must preserve validation semantics, remain within all frozen capacity dimensions, and rerun this full curve; no threshold repin follows from this receipt."
+  },
+  "claims": {
+    "G5": "not-run(0/14); no case receipt exists",
+    "promotion": "blocked",
+    "release": "not-release-capable"
+  }
+}

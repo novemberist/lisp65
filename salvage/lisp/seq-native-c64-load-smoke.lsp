@@ -1,0 +1,11 @@
+; C64 LOAD variant of seq-native-smoke.lsp.
+
+(DE POSP (X) (GREATERP X 0))
+
+(CHECK (SORT (QUOTE (3 1 2)) (QUOTE LESSP)) (QUOTE (1 2 3)))
+(CHECK (FINDIF (QUOTE POSP) (LIST (DIFFERENCE 0 1) 2 3)) 2)
+(CHECK (SUBSEQ (QUOTE (A B C D)) 1 3) (QUOTE (B C)))
+(CHECK (REMOVEDUPS (QUOTE (A B A C))) (QUOTE (A B C)))
+(CHECK (REMOVEDUPS (QUOTE ((A) (A) (B)))) (QUOTE ((A) (A) (B))))
+
+(CHECKREPORT)

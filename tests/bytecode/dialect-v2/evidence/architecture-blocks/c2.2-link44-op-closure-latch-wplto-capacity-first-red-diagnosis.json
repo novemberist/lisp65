@@ -1,0 +1,143 @@
+{
+  "format": "lisp65-c2-lite-v6-link44-op-closure-latch-wplto-capacity-first-red-v1",
+  "recorded_on": "2026-07-22",
+  "status": "first-red-class-b-capacity-review-required",
+  "promotable": false,
+  "diagnostic_scope": {
+    "commissioned_question": "sequential JTAG-raw one-site lookup latch after the silent vm_run_dir cycle",
+    "site": 2,
+    "site_name": "OP_CLOSURE-target",
+    "tuple": {
+      "vmr_hdrlen": "raw target obj, little-endian",
+      "vmr_poff": "0x8202: valid bit, Session family, site 2"
+    },
+    "new_state_bytes": 0,
+    "new_string_bytes": 0,
+    "source_mutations_rejected": 8,
+    "source_gate": "passed",
+    "completed": "one product-shaped WPLTO seed-link attempt",
+    "not_run": [
+      "nonpromotable site-2 diagnostic link",
+      "site-2 hardware run",
+      "site-3 instrumentation"
+    ]
+  },
+  "capacity_first_red": {
+    "fixed_handoff_start": "0xB4A3",
+    "authoritative_link44_final_text": {
+      "start": "0x2023",
+      "size_bytes": 37981,
+      "exclusive_end": "0xB480",
+      "inclusive_end": "0xB47F",
+      "headroom_before_handoff_bytes": 35
+    },
+    "link44_seed_text": {
+      "start": "0x2023",
+      "size_bytes": 37991,
+      "exclusive_end": "0xB48A",
+      "inclusive_end": "0xB489",
+      "headroom_before_handoff_bytes": 25,
+      "seed_overhead_vs_final_link_bytes": 10
+    },
+    "site2_failed_seed_text": {
+      "start": "0x2023",
+      "size_bytes": 38022,
+      "exclusive_end": "0xB4A9",
+      "inclusive_end": "0xB4A8",
+      "growth_vs_link44_final_text_bytes": 41,
+      "growth_vs_link44_seed_text_bytes": 31,
+      "overlap_with_handoff_bytes": 6,
+      "overlap_address_interval": "0xB4A3..0xB4A8"
+    },
+    "inclusive_exclusive_correction": "The preliminary commentary said five bytes. The linker ranges are inclusive; B4A3 through B4A8 contains six bytes. Both the final-link comparison (41 required, 35 free) and seed-to-seed comparison (31 required, 25 free) yield the same six-byte overlap.",
+    "linker_failures": [
+      "ordinary rodata predecessor/VMA/LMA relation drift",
+      ".text file range overlaps .lisp65_c2_kernal_handoff",
+      ".text VMA range overlaps .lisp65_c2_kernal_handoff",
+      ".text LMA range overlaps .lisp65_c2_kernal_handoff"
+    ],
+    "classification": "The intended one-site diagnostic is not capacity-neutral on this WPLTO geometry. This crosses the Class-B zero-impact boundary and escalates to Class C."
+  },
+  "execution_accounting": {
+    "class_b_cycles_consumed": 1,
+    "class_b_cycle_limit": 3,
+    "site1_hardware_runs": 1,
+    "site2_hardware_runs": 0,
+    "product_links_completed_for_site2": 0,
+    "line1_product_first_red_budget": "2/3 unchanged",
+    "latency_measurements": "0/2 unchanged"
+  },
+  "rollback": {
+    "link44_product": {
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+      "status": "untouched and authoritative"
+    },
+    "site2_diagnostic_identity": "not created",
+    "hardware": "not contacted"
+  },
+  "evidence": {
+    "link44_final_map": {
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 205204,
+      "sha256": "c5b5d5b1fd3e5b2509fe8a3f0207f326d297b60099f0e75bf4eb388569b3b5d9"
+    },
+    "link44_seed_map": {
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/resident-island-seed.prg.map",
+      "bytes": 200702,
+      "sha256": "f6ad06f08d3ab7b9019c26afcec07e8e198c7fba695b4dd5fde7eb021c6d49e6"
+    },
+    "failed_site2_seed_map": {
+      "path": "build/c2.2/substitution/link44-op-closure-latch-wplto/resident-island-seed.prg.map",
+      "bytes": 189111,
+      "sha256": "b9f67d7068b895577a485da445b9cf1e67b4b0f972b6540841090c8155c1f62e"
+    },
+    "failed_site2_lto_object": {
+      "path": "build/c2.2/substitution/link44-op-closure-latch-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 607960,
+      "sha256": "657d5677f726804c2b7f5b2d3f851074295bbd9562c753e1a297d0e27e02c841"
+    },
+    "failed_site2_link_stderr": {
+      "path": "build/c2.2/substitution/link44-op-closure-latch-wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 2421,
+      "sha256": "f56e109b479b6d59334de824ac72a7746795e8c5eab96ead5bf2bffeea933e15"
+    },
+    "site2_internal_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-op-closure-latch-wplto-internal-structural.json",
+      "bytes": 20018,
+      "sha256": "bb4c2e99d7246534231dbaffea99c8b6afa847913382bfc0d37fb304343d2037"
+    },
+    "site2_first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-op-closure-latch-wplto-receipt.json",
+      "bytes": 849,
+      "sha256": "95a8331908212ba1992eb1a0064e098f9112f643e48de3e1193292482fcc97e1"
+    },
+    "site2_driver": {
+      "path": "tools/host-lisp/c2_lite_v6_link44_op_closure_latch.py",
+      "bytes": 19360,
+      "sha256": "1f8d5abce0443c61842fb2ebca5d5b444711c229f573362fb3004a5396f4de2c"
+    },
+    "site1_interpretation_correction": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-vm-run-dir-latch-hardware-cycle1-interpretation-correction.json",
+      "bytes": 1389,
+      "sha256": "c5649f1566a277328a59a52a1d0e056fe9458c0e11ae3ef36f26be4c9a7bf76b"
+    }
+  },
+  "decision_required": {
+    "class": "C",
+    "reason": "Any continuation must change diagnostic form or placement because the requested source-form latch crosses a fixed capacity boundary.",
+    "bounded_options": [
+      "authorize a proven fixed-length post-link diagnostic patch at the OP_CLOSURE failure edge, if a size-preserving instruction span can be established",
+      "authorize an explicit diagnostic-only placement or evacuation plan with full WPLTO accounting"
+    ],
+    "prohibited_without_review": [
+      "micro-shaving",
+      "moving the Handoff anchor",
+      "using LTO retries as a size lottery",
+      "advancing to site 3",
+      "running hardware"
+    ]
+  },
+  "next_gate": "stop for Class-C review"
+}

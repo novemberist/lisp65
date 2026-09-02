@@ -1,0 +1,235 @@
+{
+  "bindings": {
+    "compiler_wrapper": {
+      "bytes": 766,
+      "path": "scripts/c2-v14-link90-vm-debug-cc.sh",
+      "sha256": "ce3aff7fa0f220eee45c1acdfc11a2f932b446b414c913299e9d3c23ad06952a"
+    },
+    "config": {
+      "bytes": 1885,
+      "path": "config/c2-v14-link90-vm-debug-identity.json",
+      "sha256": "b9ee35c1a1ba7f3ea70cf9911fad87e6480b86b5058bdd5ee6c5ac58dee81192"
+    },
+    "deployment": {
+      "bytes": 2164,
+      "path": "build/post-promotion/v14/link90-vm-debug-identity/deployment.json",
+      "sha256": "c3137a86acf6322171dcf0f2e3387db870a6ccd4cde8d01d2fabd268ef258cc6"
+    },
+    "driver": {
+      "bytes": 24316,
+      "path": "tools/host-lisp/c2_v14_link90_vm_debug_identity.py",
+      "sha256": "0b561986f37daff895f9263603df0ff456d77fe8701017e753577c7b72e56012"
+    },
+    "hardware_script": {
+      "bytes": 3718,
+      "path": "scripts/c2-v14-link90-vm-debug-hw.sh",
+      "sha256": "4f38048b6e6bf2e141dd38767bd351a55d01bf044acd78092e6eb2eab34d5299"
+    },
+    "owner_review": {
+      "bytes": 10827,
+      "path": "docs/planning/1.4-parity-pilot-work-plan.md",
+      "sha256": "38d8de23d253db3311f68d44990dab1dde333a056d53837dcc8e609f0ccf47d0"
+    },
+    "runtime_main": {
+      "bytes": 6714,
+      "path": "products/runtime-core/main.c",
+      "sha256": "3c58508db97f86b0993c418cc7c61c4e10d69bfa5c638622201ec4286ca57a48"
+    },
+    "ship_builder": {
+      "bytes": 52043,
+      "path": "tools/host-lisp/ship_builder.py",
+      "sha256": "fc5e9ab08a181804e89576a211791ebc3cd7fe0646341af8cea670656ee286ad"
+    },
+    "vm": {
+      "bytes": 84867,
+      "path": "src/vm.c",
+      "sha256": "2587037d5dd994b4b9f55ca505920c63ddb7305c0edf504b827e4526dd3eb505"
+    }
+  },
+  "candidate_link": 90,
+  "claim_limit": "Host/ELF preparation only. The ordinary Runtime ELF is byteidentical to Link 90 and the product candidate is unchanged. No device result yet.",
+  "control": {
+    "byteidentical_to_link90_runtime_elf": true,
+    "image": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v14/link90-vm-debug-identity/control/parity-toy.d81",
+      "sha256": "e0f5b15228d67b1f2d0f69d523c224943d2d0bdf87985a502e4e9e466cf8bf28"
+    },
+    "runtime_elf": {
+      "bytes": 40116,
+      "path": "build/post-promotion/v14/link90-vm-debug-identity/control/parity-toy.runtime.elf",
+      "sha256": "dcb415da6379d0fc68185a4a486ab07a72442524bbefbca0fc7b3cffda8e841f"
+    }
+  },
+  "diagnostic": {
+    "build_output": "ship-builder build: PASS image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/post-promotion/v14/link90-vm-debug-identity/diagnostic/parity-toy.d81 sha256=b2e3d8b02744a0c1b5464863cc9a8dc20221abd3336f607f9d12d32bf8e88e3c",
+    "image": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v14/link90-vm-debug-identity/diagnostic/parity-toy.d81",
+      "sha256": "b2e3d8b02744a0c1b5464863cc9a8dc20221abd3336f607f9d12d32bf8e88e3c"
+    },
+    "io_accesses": [
+      {
+        "address": "0xd06c",
+        "direction": "read",
+        "instruction": "ldx",
+        "pc": "0x7e82",
+        "section": ".text"
+      },
+      {
+        "address": "0xd06d",
+        "direction": "read",
+        "instruction": "ldx",
+        "pc": "0x7e88",
+        "section": ".text"
+      },
+      {
+        "address": "0xd06e",
+        "direction": "read",
+        "instruction": "ldx",
+        "pc": "0x7e8e",
+        "section": ".text"
+      }
+    ],
+    "runtime_elf": {
+      "bytes": 41356,
+      "path": "build/post-promotion/v14/link90-vm-debug-identity/diagnostic/parity-toy.runtime.elf",
+      "sha256": "7ea19371e406b04984ac25b448506822391443dacaad1bfad2444ac624b81961"
+    },
+    "symbols": [
+      {
+        "address": "0x0000005b",
+        "bytes": 2,
+        "name": "vm_dbg_pc",
+        "section": ".zp.bss"
+      },
+      {
+        "address": "0x00008ae7",
+        "bytes": 1,
+        "name": "vm_dbg_op",
+        "section": ".bss"
+      },
+      {
+        "address": "0x0000005d",
+        "bytes": 1,
+        "name": "vm_dbg_bank",
+        "section": ".zp.bss"
+      },
+      {
+        "address": "0x00008ae5",
+        "bytes": 2,
+        "name": "vm_dbg_off",
+        "section": ".bss"
+      },
+      {
+        "address": "0x0000900f",
+        "bytes": 1,
+        "name": "lisp65_v14_sprite_fault_d06c",
+        "section": ".bss"
+      },
+      {
+        "address": "0x00009010",
+        "bytes": 1,
+        "name": "lisp65_v14_sprite_fault_d06d",
+        "section": ".bss"
+      },
+      {
+        "address": "0x00009011",
+        "bytes": 1,
+        "name": "lisp65_v14_sprite_fault_d06e",
+        "section": ".bss"
+      },
+      {
+        "address": "0x00009012",
+        "bytes": 1,
+        "name": "lisp65_v14_sprite_fault_sampled",
+        "section": ".bss"
+      },
+      {
+        "address": "0x00000086",
+        "bytes": 1,
+        "name": "lisp65_runtime_state",
+        "section": ".zp.bss"
+      },
+      {
+        "address": "0x0000008b",
+        "bytes": 1,
+        "name": "vm_status",
+        "section": ".zp.bss"
+      }
+    ]
+  },
+  "facts": {
+    "contact": {
+      "hardware_contacts": 1,
+      "physical_keys": 0,
+      "screen_polls_during_execution": 0,
+      "virtual_keys": 0
+    },
+    "diagnostic_runtime_contract": {
+      "actual_stack_heap_bytes": 16364,
+      "post_boot_reserve_param": 8160,
+      "product_wall_changed": false
+    },
+    "fault_capture": {
+      "fields": [
+        "pc",
+        "op",
+        "bank",
+        "off"
+      ],
+      "natural_vm_error": true,
+      "ordinary_ram": true
+    },
+    "identity": {
+      "diagnostic_identities": 1,
+      "product_candidate_bytes_changed": 0,
+      "product_links": 0,
+      "promotable": false
+    },
+    "vic_sampler": {
+      "after_vm_error": true,
+      "cpu_reads": [
+        "0xd06c",
+        "0xd06d",
+        "0xd06e"
+      ],
+      "io_writes": [],
+      "sample_latch": true
+    }
+  },
+  "format": "lisp65-c2.3-v1.4-link90-vm-debug-preparation-v1",
+  "recorded_on": "2026-08-03",
+  "reference_candidate": {
+    "image": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.d81",
+      "sha256": "640d115e01d238413821ab9cf5b59056abf553e96e27cf0c64d8db75ef8a2bde"
+    },
+    "runtime_elf": {
+      "bytes": 40116,
+      "path": "build/post-promotion/v14/sample-fleet-host-link90/parity-toy.runtime.elf",
+      "sha256": "dcb415da6379d0fc68185a4a486ab07a72442524bbefbca0fc7b3cffda8e841f"
+    },
+    "unchanged_after_build": true
+  },
+  "status": "PREPARED-NON-PROMOTABLE-VM-DEBUG-IDENTITY",
+  "verification": {
+    "executions": 2,
+    "mutation_count": 12,
+    "mutations_rejected": {
+      "add-vic-write": "VIC CPU sampler semantics drift",
+      "add-virtual-key": "device contact boundary drift",
+      "capture-watchdog-only": "VM fault-capture semantics drift",
+      "claim-product-delta": "diagnostic identity boundary drift",
+      "claim-product-link": "diagnostic identity boundary drift",
+      "claim-product-wall-change": "diagnostic-only runtime reserve proof drift",
+      "drop-d06c": "VIC CPU sampler semantics drift",
+      "drop-fault-pc": "VM fault-capture semantics drift",
+      "erase-diagnostic-reserve": "diagnostic-only runtime reserve proof drift",
+      "make-promotable": "diagnostic identity boundary drift",
+      "poll-screen": "device contact boundary drift",
+      "sample-before-error": "VIC CPU sampler semantics drift"
+    }
+  }
+}

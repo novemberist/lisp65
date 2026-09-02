@@ -1,0 +1,526 @@
+{
+  "attribution": {
+    "D2_postcondition": {
+      "namepool_bytes": 10019,
+      "namepool_headroom": 189,
+      "symbol_headroom": 42,
+      "symbols": 710
+    },
+    "D3_pre_place": {
+      "namepool_bytes": 10029,
+      "namepool_headroom": 179,
+      "symbol_headroom": 41,
+      "symbols": 711
+    },
+    "counter_addresses": {
+      "npool": "0xBE14",
+      "nsym": "0x005F"
+    },
+    "excluded_first_limit": "MAX_SYM: 32 symbol slots remain at failure",
+    "first_failure": {
+      "before": {
+        "namepool_bytes": 10205,
+        "namepool_headroom": 3,
+        "symbols": 720
+      },
+      "cost": 18,
+      "domain": "place.literal_nodes",
+      "name": "%setf-expand-list",
+      "ordinal": 33,
+      "result": "rejected-before-write"
+    },
+    "hardware_baseline": {
+      "link92_after_inspect_and_string_extra": {
+        "namepool_bytes": 9646,
+        "symbols": 690
+      }
+    },
+    "limits": {
+      "namepool_bytes": 10208,
+      "symbols": 752
+    },
+    "mechanism": "simultaneous-live D2 freight leaves 179 name bytes before D3; the place dependency interns nine additional names, leaving three bytes, then new_symbol rejects the 18-byte %setf-expand-list record before any pool write",
+    "missing_release_gate": {
+      "bound_setting": "symbol_space_is_not_an_input = true",
+      "required_scope": "simultaneous-live runtime symbols and name bytes for the ordered release-session freight",
+      "source": "tools/host-lisp/c2_v150_release_preflight.py"
+    },
+    "observed": {
+      "npool": 10205,
+      "symbol_count": 720
+    },
+    "place_intern_events": [
+      {
+        "after": {
+          "namepool_bytes": 10035,
+          "symbols": 712
+        },
+        "before": {
+          "namepool_bytes": 10029,
+          "namepool_headroom": 179,
+          "symbols": 711
+        },
+        "cost": 6,
+        "domain": "place.literal_nodes",
+        "name": "%putf",
+        "ordinal": 0,
+        "result": "interned"
+      },
+      {
+        "after": {
+          "namepool_bytes": 10055,
+          "symbols": 713
+        },
+        "before": {
+          "namepool_bytes": 10035,
+          "namepool_headroom": 173,
+          "symbols": 712
+        },
+        "cost": 20,
+        "domain": "place.literal_nodes",
+        "name": "%setf-registry-find",
+        "ordinal": 1,
+        "result": "interned"
+      },
+      {
+        "after": {
+          "namepool_bytes": 10077,
+          "symbols": 714
+        },
+        "before": {
+          "namepool_bytes": 10055,
+          "namepool_headroom": 153,
+          "symbols": 713
+        },
+        "cost": 22,
+        "domain": "place.literal_nodes",
+        "name": "*setf-place-registry*",
+        "ordinal": 2,
+        "result": "interned"
+      },
+      {
+        "after": {
+          "namepool_bytes": 10098,
+          "symbols": 715
+        },
+        "before": {
+          "namepool_bytes": 10077,
+          "namepool_headroom": 131,
+          "symbols": 714
+        },
+        "cost": 21,
+        "domain": "place.literal_nodes",
+        "name": "*setf-place-pending*",
+        "ordinal": 4,
+        "result": "interned"
+      },
+      {
+        "after": {
+          "namepool_bytes": 10116,
+          "symbols": 716
+        },
+        "before": {
+          "namepool_bytes": 10098,
+          "namepool_headroom": 110,
+          "symbols": 715
+        },
+        "cost": 18,
+        "domain": "place.literal_nodes",
+        "name": "*setf-place-open*",
+        "ordinal": 6,
+        "result": "interned"
+      },
+      {
+        "after": {
+          "namepool_bytes": 10135,
+          "symbols": 717
+        },
+        "before": {
+          "namepool_bytes": 10116,
+          "namepool_headroom": 92,
+          "symbols": 716
+        },
+        "cost": 19,
+        "domain": "place.literal_nodes",
+        "name": "%setf-place-setter",
+        "ordinal": 15,
+        "result": "interned"
+      },
+      {
+        "after": {
+          "namepool_bytes": 10167,
+          "symbols": 718
+        },
+        "before": {
+          "namepool_bytes": 10135,
+          "namepool_headroom": 73,
+          "symbols": 717
+        },
+        "cost": 32,
+        "domain": "place.literal_nodes",
+        "name": "%places-error-unsupported-place",
+        "ordinal": 19,
+        "result": "interned"
+      },
+      {
+        "after": {
+          "namepool_bytes": 10191,
+          "symbols": 719
+        },
+        "before": {
+          "namepool_bytes": 10167,
+          "namepool_headroom": 41,
+          "symbols": 718
+        },
+        "cost": 24,
+        "domain": "place.literal_nodes",
+        "name": "%setf-expand-registered",
+        "ordinal": 29,
+        "result": "interned"
+      },
+      {
+        "after": {
+          "namepool_bytes": 10205,
+          "symbols": 720
+        },
+        "before": {
+          "namepool_bytes": 10191,
+          "namepool_headroom": 17,
+          "symbols": 719
+        },
+        "cost": 14,
+        "domain": "place.literal_nodes",
+        "name": "%places-consp",
+        "ordinal": 32,
+        "result": "interned"
+      },
+      {
+        "before": {
+          "namepool_bytes": 10205,
+          "namepool_headroom": 3,
+          "symbols": 720
+        },
+        "cost": 18,
+        "domain": "place.literal_nodes",
+        "name": "%setf-expand-list",
+        "ordinal": 33,
+        "result": "rejected-before-write"
+      }
+    ],
+    "simultaneous_live_projection": {
+      "D2_without_defstruct_chain": {
+        "namepool_bytes": 10019,
+        "namepool_headroom": 189,
+        "symbol_headroom": 42,
+        "symbols": 710
+      },
+      "all_shipped_library_roles_without_session_fixture": {
+        "namepool_bytes": 10812,
+        "namepool_headroom": -604,
+        "symbol_headroom": 0,
+        "symbols": 752
+      },
+      "defstruct_chain_without_inspect_or_string_extra": {
+        "namepool_bytes": 9488,
+        "namepool_headroom": 720,
+        "symbol_headroom": 72,
+        "symbols": 680
+      },
+      "exact_D2_D3_session_freight": {
+        "namepool_bytes": 10826,
+        "namepool_headroom": -618,
+        "symbol_headroom": -2,
+        "symbols": 754
+      },
+      "fit_only_minimum_delta": {
+        "namepool_bytes": 618,
+        "symbols": 2,
+        "warning": "fit-only, not a user-headroom recommendation"
+      },
+      "full_session_without_inspect": {
+        "namepool_bytes": 9566,
+        "namepool_headroom": 642,
+        "symbol_headroom": 66,
+        "symbols": 686
+      }
+    },
+    "stages": [
+      {
+        "added": {
+          "namepool_bytes": 1260,
+          "symbols": 68
+        },
+        "added_names": [
+          "%comfort-callers-index",
+          "%function-cell",
+          "%ide-apply-page-command",
+          "%ide-apply-rare-edit-command",
+          "%ide-apply-region-command",
+          "%ide-apply-word-edit-command",
+          "%ide-buffer-with-mark",
+          "%ide-execute-command-submit",
+          "%ide-kill-region-lines",
+          "%ide-mini-search-submit",
+          "%ide-page-rows",
+          "%ide-region-bounds",
+          "%ide-region-parts",
+          "%ide-region-parts-tail",
+          "%ide-search-lines",
+          "%ide-search-lines-from",
+          "%ide-word-scan",
+          "%inspect-trace-arguments",
+          "%inspect-trace-binding",
+          "%inspect-trace-call",
+          "%inspect-trace-finish",
+          "%inspect-trace-form",
+          "%inspect-trace-original",
+          "%inspect-trace-prepare",
+          "%inspect-trace-remove",
+          "%inspect-untrace",
+          "%m65d-bam-change",
+          "%m65d-bam-find",
+          "%m65d-bam-header-ok-p",
+          "%m65d-bam-validate-tracks",
+          "%m65d-before-write",
+          "%m65d-bit-free-p",
+          "%m65d-bitmap-off",
+          "%m65d-blocks-for",
+          "%m65d-chain-state",
+          "%m65d-check-old-half",
+          "%m65d-claim-new",
+          "%m65d-clear",
+          "%m65d-commit-dir",
+          "%m65d-copy",
+          "%m65d-count-free",
+          "%m65d-dir-entries",
+          "%m65d-dir-fill",
+          "%m65d-dir-scan",
+          "%m65d-dir-write-name",
+          "%m65d-entry-valid-p",
+          "%m65d-mask",
+          "%m65d-media-detail",
+          "%m65d-media-kind",
+          "%m65d-name-chars-ok-p",
+          "%m65d-old-validated",
+          "%m65d-pair-member-p",
+          "%m65d-read-old-chain",
+          "%m65d-release-half",
+          "%m65d-run",
+          "%m65d-run-authorized",
+          "%m65d-run-record",
+          "%m65d-run-source",
+          "%m65d-set",
+          "%m65d-write-chain",
+          "%m65d-write-plan",
+          "*inspect-trace-bindings*",
+          "inspect",
+          "trace",
+          "trace-enter",
+          "trace-exit",
+          "untrace",
+          "who-calls"
+        ],
+        "after": {
+          "namepool_bytes": 9941,
+          "symbols": 704
+        },
+        "before": {
+          "namepool_bytes": 8681,
+          "symbols": 636
+        },
+        "stage": "D2 require inspect"
+      },
+      {
+        "added": {
+          "namepool_bytes": 64,
+          "symbols": 4
+        },
+        "added_names": [
+          "%comfort-string-split-from",
+          "capitalize",
+          "string-extra",
+          "string-split"
+        ],
+        "after": {
+          "namepool_bytes": 10005,
+          "symbols": 708
+        },
+        "before": {
+          "namepool_bytes": 9941,
+          "symbols": 704
+        },
+        "stage": "D2 require string-extra"
+      },
+      {
+        "added": {
+          "namepool_bytes": 14,
+          "symbols": 2
+        },
+        "added_names": [
+          "trace-probe",
+          "x"
+        ],
+        "after": {
+          "namepool_bytes": 10019,
+          "symbols": 710
+        },
+        "before": {
+          "namepool_bytes": 10005,
+          "symbols": 708
+        },
+        "stage": "D2 define trace-probe"
+      },
+      {
+        "added": {
+          "namepool_bytes": 10,
+          "symbols": 1
+        },
+        "added_names": [
+          "defstruct"
+        ],
+        "after": {
+          "namepool_bytes": 10029,
+          "symbols": 711
+        },
+        "before": {
+          "namepool_bytes": 10019,
+          "symbols": 710
+        },
+        "stage": "D3 reader interns defstruct"
+      }
+    ],
+    "static_delta": {
+      "added": [
+        "%c2-direct-expression",
+        "%c2-direct-expression-p",
+        "%c2-run-expanded",
+        "%c2-top-level-expand",
+        "%c2-top-level-macro-p",
+        "%c2-top-level-run-forms"
+      ],
+      "net": {
+        "namepool_bytes": 86,
+        "symbols": 3
+      },
+      "removed": [
+        "%c1-compile-form",
+        "%lcc-consp",
+        "lcc-compile-obj"
+      ]
+    }
+  },
+  "authority": {
+    "c2_decoder": {
+      "bytes": 21690,
+      "path": "src/c2_product_decoder.c",
+      "sha256": "e26eecd457d81cc6477c2bbf9c7b2c8bda10d64a140c9d4a86bbfc83137888c3"
+    },
+    "checker": {
+      "bytes": 20860,
+      "path": "tools/host-lisp/c2_v150_link97_symbol_capacity_attribution.py",
+      "sha256": "7b686495b6d7026587402b78f8fb525421fb78e6949393fc2e7d61a6a38a79aa"
+    },
+    "defstruct": {
+      "bytes": 33757,
+      "path": "build/post-promotion/v110-performance/defstruct-candidate.manifest.json",
+      "sha256": "c5faf5b1a9a05a47740be20d18dc876ae9a9f53bc2b9f9961d22025e9259c478"
+    },
+    "inspect": {
+      "bytes": 60176,
+      "path": "build/c2.3/trace-core-abi/inspect.manifest.json",
+      "sha256": "a04bbff04f3f2cdc5e6e6cf6c3c4002b6b5b8da9c79eaff7d71131ece7a4b946"
+    },
+    "link92_namepool": {
+      "bytes": 10208,
+      "path": "build/c2.3/v1.4.0-release/phase-d-split/d3-descope/d3-final-namepool.bin",
+      "sha256": "79994b07d1d148430f5a754a4cf6041496719e23fe4df1d20403ff772d989522"
+    },
+    "link92_nsym": {
+      "bytes": 2,
+      "path": "build/c2.3/v1.4.0-release/phase-d-split/d3-descope/d3-final-nsym.bin",
+      "sha256": "345dff73e9baa678c7645447f2f801cbadba21eb2cb840dd32d105a848030cae"
+    },
+    "link92_static": {
+      "bytes": 2335,
+      "path": "build/c2.3/v1.4.0-release/phase-c/profile-preflight-r5/static-plane/narrow-static/product/substitution-artifacts.json",
+      "sha256": "18e937193ed948b7676eb86bf8ecc3bd01ef3e8e93184ea8afdf1400a640bedd"
+    },
+    "link97_static": {
+      "bytes": 2340,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/static-plane/narrow-static/product/substitution-artifacts.json",
+      "sha256": "93fba0e2d6e96e6e895e74a8b29d85304d8c97be6edaa3d33a9c976612772550"
+    },
+    "media": {
+      "bytes": 8066,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link97-media-closure-receipt.json",
+      "sha256": "08c65cde7815713fea8e71d22ddc9582f7d0d6319d159ae34be1e734c5bc4fed"
+    },
+    "old_inspect": {
+      "bytes": 47439,
+      "path": "build/post-promotion/v112/inspect/inspect.manifest.json",
+      "sha256": "0cce97f32d681aed6da18eddf7c5f8c1a1922eb38e234879244287ad2d9c61cb"
+    },
+    "place": {
+      "bytes": 23090,
+      "path": "build/post-promotion/defstruct-v1/foundations/place.manifest.json",
+      "sha256": "224b0b1155bd9bd8307b29774ac714c8cc96dc39d3309832a32555eedfc6bf1a"
+    },
+    "product_ELF": {
+      "bytes": 623428,
+      "path": "build/c2.3/v1.5.0-candidate-product-link97/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "104f6fc4217fa9d803bfb675cabf46c38deb246cad17502a51e9aadeba95c84c"
+    },
+    "release_preflight": {
+      "bytes": 15555,
+      "path": "tools/host-lisp/c2_v150_release_preflight.py",
+      "sha256": "138e4f7d8b57825863cbc67bd318f85306489e58258907f0dfdbed129bb21430"
+    },
+    "rows": {
+      "bytes": 4245,
+      "path": "config/c2-v150-link97-device-rows.json",
+      "sha256": "8e519cd8723c92027970cceb1fae157dd27c6f153574054c888038415c314de3"
+    },
+    "stopped_bank0": {
+      "bytes": 49152,
+      "path": "build/c2.3/v1.5.0-link97-symbol-capacity-first-red/bank0-underlay.bin",
+      "sha256": "5db00fcf3e3653da1dbe144308be7bad4bb559759f590bfb7994258f748fa084"
+    },
+    "stopped_namepool": {
+      "bytes": 10208,
+      "path": "build/c2.3/v1.5.0-link97-symbol-capacity-first-red/namepool.bin",
+      "sha256": "d6047390e606b6b8899418ccb5912203bebcd5e598aceb5d9dab56f954bf5db2"
+    },
+    "string_extra": {
+      "bytes": 9675,
+      "path": "build/post-promotion/v112/string-extra/string-extra.manifest.json",
+      "sha256": "bb847fa89168aeef1adf8787f0cdcfc991f2665173778441946c246c0b397059"
+    },
+    "symbol_allocator": {
+      "bytes": 12213,
+      "path": "src/symbol.c",
+      "sha256": "ea62e535251a1d74b805755b323005ba85e796a25f9899c05e78c81d58d60efd"
+    }
+  },
+  "claim_limit": "The Link-97 D3 First Red is attributed to simultaneous-live namepool exhaustion while materializing place literal node 33. No fix, freight choice, new product build, media, D3 retry, D4, D5, Halt or release is authorized.",
+  "execution_accounting": {
+    "device_memory_ranges_read": 2,
+    "failed_read_only_REPL_probes": 5,
+    "forms_retried": 0,
+    "media_builds": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v150-link97-d3-symbol-capacity-first-red-v1",
+  "mutations_rejected": [
+    "drop-hardware-baseline",
+    "wrong-link92-nsym",
+    "individual-library-only",
+    "skip-place-dependency",
+    "blame-symbol-table",
+    "accept-next-name",
+    "change-failure-name",
+    "ignore-physical-D2-freight"
+  ],
+  "recorded_on": "2026-08-11",
+  "status": "D3-NAMEPOOL-EXHAUSTION-ATTRIBUTED"
+}

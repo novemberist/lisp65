@@ -1,0 +1,105 @@
+{
+  "authority": {
+    "ELF": null,
+    "base_result": {
+      "bytes": 4167,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-e000-s1-final-wplto-base-result.json",
+      "sha256": "dfb012d693b3cc9175d9a6d8035c041fc7f08faf5e3d80551cb62dcc24427480"
+    },
+    "completion_source_gate": {
+      "bytes": 3422,
+      "path": "build/c2.2/two-region-session-store/e000-s1-final-write-completion-source-gate.json",
+      "sha256": "dd634426f3615f1606d915c5425dc8fe19ca094c37e31b86608aeb2c7d476343"
+    },
+    "contract": {
+      "bytes": 6538,
+      "path": "config/c2-two-region-session-store-contract.json",
+      "sha256": "eb51a44b64db7633525c3845fb97cdc9d6edc58645b7e741d82dc55c4b7b6b94"
+    },
+    "driver": {
+      "bytes": 11143,
+      "path": "tools/host-lisp/c2_two_region_e000_s1_final_wplto.py",
+      "sha256": "27744a79cc3fd3805cdf72b00a24e96fdf9c9ffc8f328bcd8aa52789fff46257"
+    },
+    "emitter_union_gate": {
+      "bytes": 1529,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-e000-s1-final-emitter-union-gate.json",
+      "sha256": "835f717a44be58256a19586cc14b8fbc17b913741889500178fa6fd4c9777dfe"
+    },
+    "format_and_stage_gate": {
+      "bytes": 2824,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-e000-s1-final-format-and-stage-gate.json",
+      "sha256": "2fa14f753284ce75e92875c1aaf49834c49ea94f237907e1b493f873901a9dd8"
+    },
+    "map": null,
+    "preinstall_source_host_gate": {
+      "bytes": 3256,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-e000-s1-final-preinstall-source-host-gate.json",
+      "sha256": "abb9864c731c56fb0caed424a3e9b2f01109758e2b3f788bbe0dac9eb6b63f94"
+    }
+  },
+  "claim_limit": "Exactly one product-shaped WPLTO map. No product identity, hardware, C1 closure, matrix fall or acceptance-chain claim.",
+  "decisions": {
+    "E000_S1": {
+      "deliberate_cost": "cold batch operations are slower",
+      "replacement": "complete authenticated single-record path per repeat",
+      "retired_symbols": [
+        "rtov_run_batch",
+        "vm_runtime_overlay_exec_batch_island"
+      ]
+    },
+    "record_verifier": {
+      "composite_authority": "emitter bounds + record CRC + final manifest binding + target family CRC before VERIFIED",
+      "private_region_source_reconstruction": "absent"
+    }
+  },
+  "execution_accounting": {
+    "automatic_retries": 0,
+    "final_map_driver_attempts": 1,
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "whole_program_LTO_closure_links": 0
+  },
+  "format": "lisp65-c2-two-region-E000-S1-final-WPLTO-v1",
+  "gates": {
+    "all_fresh_green": false,
+    "base_WPLTO": "FIRST RED: product-shaped two-region package did not close",
+    "format_and_stage": "passed-strict-v4-two-region-format-and-mutations",
+    "preinstall_static": null,
+    "preinstall_static_exception": null,
+    "stage_source_authority": {
+      "hot_record_verifier_region_dispatch": "absent",
+      "hot_record_verifier_source_bounds_reconstruction": "absent",
+      "mutations": {
+        "emitter-source-comparison-removed": "rejected",
+        "family-published-before-target-crc": "rejected",
+        "manifest-crc-not-consumed": "rejected",
+        "record-crc-binding-moved": "rejected",
+        "runtime-region-dispatch-restored": "rejected",
+        "session-overflow-proof-removed": "rejected"
+      },
+      "publication_order": "emitter-bounds -> record-CRC -> final-manifest-binding -> target-family-CRC -> region1-target-CRC -> VERIFIED",
+      "status": "passed-emitter-bound-record-and-target-stage-composite-proof"
+    }
+  },
+  "next_gate": "First-Red review; no product link or hardware",
+  "promotable": false,
+  "recorded_on": "2026-07-24",
+  "regions": {
+    "main_bytes": null,
+    "main_headroom_bytes": null,
+    "overflow_headroom_bytes": null,
+    "overflow_slices": [],
+    "overflow_used_bytes": null,
+    "status": "red"
+  },
+  "status": "FIRST RED: final E000-S1 map or qualification did not close",
+  "wall_requirements": {
+    "E000_floor_bytes": 54,
+    "bank0_text_noise_headroom_bytes": 32,
+    "fixed_hot_block_headroom_bytes": 0,
+    "ordinary_bank0_bss_headroom_bytes": 0,
+    "resident_island_headroom_bytes": 0
+  },
+  "walls": null
+}

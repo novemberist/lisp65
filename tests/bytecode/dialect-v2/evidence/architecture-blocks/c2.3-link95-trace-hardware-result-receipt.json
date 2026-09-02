@@ -1,0 +1,206 @@
+{
+  "authority": {
+    "result_checker": {
+      "bytes": 11516,
+      "path": "tools/host-lisp/c2_link95_trace_hardware_result.py",
+      "sha256": "185dd20f0480eebce3aa3c7aecc1497b3534d4b1108bfba8e3020dda2533b3b1"
+    },
+    "same_world_media": {
+      "bytes": 8055,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-world-bound-media-closure-receipt.json",
+      "sha256": "eda3386e3fb375bcc5dcff508ea542ad694707cff430d0272a1b244a907af74d"
+    },
+    "screen_checker": {
+      "bytes": 21241,
+      "path": "tools/host-lisp/repl_screen_check.py",
+      "sha256": "805fb04f3578aef8caa7ba5a6e2635eb625f726a9b493cf79be64ac1dcd9c30e"
+    },
+    "session_contract": {
+      "bytes": 2610,
+      "path": "config/c2-packed-callee-link95-world-bound-device-session.json",
+      "sha256": "b4b03671737809661af54d344d08510869379fbf7906be04a213e6e8e1cebe45"
+    }
+  },
+  "claim_limit": "Link-95 inspect/trace/untrace hardware acceptance only. The defstruct sister, trailing peeks, release and v1.5 scope remain unclaimed.",
+  "execution_accounting": {
+    "defstruct_forms": 0,
+    "hardware_contacts": 1,
+    "physical_forms": 6,
+    "replay_device_accesses": 0
+  },
+  "format": "lisp65-c2.3-link95-trace-hardware-result-v1",
+  "harness_first_red": {
+    "additional_device_accesses": 0,
+    "classification": "whole-screen-negative-assert",
+    "mechanism": "The shell grep searched the full 25-row screen and found trace output belonging to the earlier intentionally traced call. The latest restored-call segment contains only 5.",
+    "product_result_affected": false,
+    "replay_source": "same-bound-capture"
+  },
+  "media_readback": {
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/packed-callee-link95-world-bound-device-session/library-readback.d81",
+      "sha256": "62754eed4936804dddf961076fb5ae578a38aac00d0740e02d587a1e12b881d1"
+    },
+    "library_source": {
+      "bytes": 819200,
+      "path": "build/c2.3/packed-callee-link95-world-bound-media/trace-library/lisp65-library.d81",
+      "sha256": "62754eed4936804dddf961076fb5ae578a38aac00d0740e02d587a1e12b881d1"
+    },
+    "product_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/packed-callee-link95-world-bound-device-session/product-readback.d81",
+      "sha256": "b58d41997e8a2e78f8f79065029097b9bcb03d136cab202f01e2cc9b5c2f951d"
+    },
+    "product_source": {
+      "bytes": 819200,
+      "path": "build/c2.3/packed-callee-link95-world-bound-media/shared-system/lisp65-product.d81",
+      "sha256": "b58d41997e8a2e78f8f79065029097b9bcb03d136cab202f01e2cc9b5c2f951d"
+    },
+    "result": "byteidentical"
+  },
+  "mutation_contract": [
+    "drop-row",
+    "wrong-restored-result",
+    "allow-current-trace-enter",
+    "allow-current-trace-exit",
+    "reject-historical-trace-enter",
+    "claim-second-contact",
+    "claim-defstruct",
+    "replace-product-readback",
+    "replace-library-readback",
+    "drop-same-world-authority"
+  ],
+  "next": "authorized-defstruct-terminal-ingress-sister",
+  "recorded_on": "2026-08-10",
+  "restoration": {
+    "original_BCODE_restored": true,
+    "result": "5",
+    "trace_output_after_final_form": false
+  },
+  "rows": [
+    {
+      "forbidden_in_latest_segment": [],
+      "form": "(require (quote inspect))",
+      "id": "require-inspect",
+      "latest_visible_results": [
+        "t"
+      ],
+      "quiet_floor_seconds": 180,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 3599,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-require-inspect.png",
+        "sha256": "724476a5dab1fea152819f10d339e61451f4e073d2d271a491a5cc26af345ced"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-require-inspect.txt",
+        "sha256": "e3aabf62fe84fa4a712ade5051a3069cfde913eae2f0d7cc0846c9a900c5cc75"
+      }
+    },
+    {
+      "forbidden_in_latest_segment": [],
+      "form": "(defun trace-probe (x) (+ x 1))",
+      "id": "define-probe",
+      "latest_visible_results": [
+        "trace-probe"
+      ],
+      "quiet_floor_seconds": 180,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 4153,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-define-probe.png",
+        "sha256": "774101fd62571ff1d1bb8684f1e8937669b43fbecba84ca1fc23a605f7d9c936"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-define-probe.txt",
+        "sha256": "a8c966b221d02772a64b954d83777c24ad7895ea97f3a558d09261db7ae95e47"
+      }
+    },
+    {
+      "forbidden_in_latest_segment": [],
+      "form": "(trace trace-probe)",
+      "id": "install-trace",
+      "latest_visible_results": [
+        "trace-probe"
+      ],
+      "quiet_floor_seconds": 180,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 4563,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-install-trace.png",
+        "sha256": "e2e73f0f7ec6d5f3f0995bd6dd8ad4aa1eb0ef08e38c0945f29b098d3dfb92e4"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-install-trace.txt",
+        "sha256": "e5d2195492d9e402ac66d6782664fd3870e31827c3d2bf7e0ff10d9c7bd2b5fc"
+      }
+    },
+    {
+      "forbidden_in_latest_segment": [],
+      "form": "(trace-probe 4)",
+      "id": "traced-call",
+      "latest_visible_results": [
+        "(trace-enter trace-probe 4)",
+        "(trace-exit trace-probe 5)",
+        "5"
+      ],
+      "quiet_floor_seconds": 30,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 5323,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-traced-call.png",
+        "sha256": "2622f41a88207befb3a2e5c29d9e62023a99664b99787efb8421b0f285f18823"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-traced-call.txt",
+        "sha256": "d6b758d095bb07bfdea44ad34ac7894b684135af61d80274684b283523653e7d"
+      }
+    },
+    {
+      "forbidden_in_latest_segment": [],
+      "form": "(untrace trace-probe)",
+      "id": "remove-trace",
+      "latest_visible_results": [
+        "trace-probe"
+      ],
+      "quiet_floor_seconds": 120,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 5712,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-remove-trace.png",
+        "sha256": "3d8c4b7c84ec4c787a1efb1ca047697aa333b79d1f742a98f872e886ddecda76"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-remove-trace.txt",
+        "sha256": "663754e4dc717ed87b8fe7553c61dcac92e708a3326665764dc184b29f5489f4"
+      }
+    },
+    {
+      "forbidden_in_latest_segment": [],
+      "form": "(trace-probe 4)",
+      "id": "restored-call",
+      "latest_visible_results": [
+        "5"
+      ],
+      "quiet_floor_seconds": 30,
+      "result": "passed",
+      "screen_image": {
+        "bytes": 6015,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-restored-call.png",
+        "sha256": "d3b3aa724aa1d4e9252a2f97ef8866ee70d8724cfc096d638f3164396b62932a"
+      },
+      "screen_text": {
+        "bytes": 2241,
+        "path": "build/c2.3/packed-callee-link95-world-bound-device-session/row-restored-call.txt",
+        "sha256": "ba759f1db243ac92ca7dc1e5cb975a78a18e438328e64c2256862c27106098c8"
+      }
+    }
+  ],
+  "status": "LINK95-TRACE-HARDWARE-GREEN; DEFSTRUCT-SISTER-PENDING"
+}

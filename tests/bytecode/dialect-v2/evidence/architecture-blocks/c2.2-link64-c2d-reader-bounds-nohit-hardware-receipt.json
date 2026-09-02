@@ -1,0 +1,119 @@
+{
+  "answer": {
+    "exact_meet_comparison_exonerated": true,
+    "interpretation": "The intermittent reader-zero outcome did not recur. This episode reached fail-closed bad bytecode through a later or different false path; it supplies no runtime operand value and does not contradict the earlier reader-return discriminator.",
+    "prior_reader_zero_episode_reproduced": false,
+    "runtime_bounds_rejection_observed": false
+  },
+  "authority": {
+    "capture_driver": {
+      "bytes": 6005,
+      "path": "scripts/c2-link64-c2d-reader-bounds-hold-hw.sh",
+      "sha256": "bda443b49da5c4b201c80d8776e602fd98cbbb77ba746cba1757b1c5e6bf1f18"
+    },
+    "deployment": {
+      "bytes": 6177,
+      "path": "build/c2.2/hardware-link64-c2d-reader-bounds-hold-NONPROMOTABLE/deployment.json",
+      "sha256": "43818d3835382dfd4400352ded866ed80027105d49fe0b69e047b8d9b4dd20a4"
+    },
+    "evaluator": {
+      "bytes": 8032,
+      "path": "tools/host-lisp/c2_link64_c2d_reader_bounds_nohit.py",
+      "sha256": "e6eb2ee5d29fd65fd8009fbe4cb8251c8e89e3f6b3d9cb574d9680ecb6ab7863"
+    },
+    "host_ELF_attribution": {
+      "bytes": 8182,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-c2d-reader-operand-bounds-host-ELF-attribution.json",
+      "sha256": "4708cae753899c679b37451b064954d9b0c6bfb35048d8c3f3ba86abc32f613a"
+    },
+    "patched_reader": {
+      "address": "0x0000e691",
+      "bytes": 87,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/c2-stream-c2d-read-bounds-holds.bin",
+      "sha256": "b9e59c74ee7ba3d988bdf67f5efc4e49ffbbd37ecc59884ae2038d9a87fe5675"
+    }
+  },
+  "claim_limit": "One no-hit episode only. The intermittent reader-zero cause remains open; C1 remains OPEN.",
+  "diagnostic_lifecycle": {
+    "eligible_for_promotion": false,
+    "state": "discarded-after-no-hit"
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "diagnostic_hardware_runs": 1,
+    "latency_attempts_consumed": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-Link64-c2d-reader-bounds-nohit-hardware-v1",
+  "hardware_outcome": {
+    "postmortem": {
+      "c2_ready": 0,
+      "completion_mode": "0xa3 (ROLLBACK)",
+      "frames_progressed": true,
+      "journal_result": "2 (PREPARED)",
+      "last_slot": 39,
+      "phase_trace": [
+        6,
+        0,
+        0,
+        0,
+        39,
+        0,
+        37,
+        99
+      ],
+      "producer_C2J_seal": "0x2801",
+      "runtime_slot39_fully_wiped": true,
+      "seal_matches": true,
+      "target_C2J_crc16": "0x2801"
+    },
+    "reader_bounds_holds": {
+      "any_hold_taken": false,
+      "count": 4,
+      "installed_before_form": true,
+      "persisted_byteidentically_after_failure": true
+    },
+    "screen": {
+      "bytes": 3880,
+      "path": "build/c2.2/hardware-link64-c2d-reader-bounds-hold-NONPROMOTABLE/reader-bounds-screen.png",
+      "sha256": "89d662a044ab47763583165687ca5366e42787f64e7c7c5896f43db043fccc92"
+    },
+    "screen_status": "*** vm: bad bytecode",
+    "submitted_form": "(defun %c1e () (quote t))"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "stable_witnesses": {
+    "byteidentical_across_three": true,
+    "c2j_sha256": "5749fc617dae707a3761608778394372d8eac631298358203fdcd7fc09e65225",
+    "completion-record_sha256": "b55f9a04b5908a5cc87f5c74e7c8d7a34511558c8df24f0e279db8c0e36ffaaf",
+    "reader-code_sha256": "b9e59c74ee7ba3d988bdf67f5efc4e49ffbbd37ecc59884ae2038d9a87fe5675",
+    "runtime-slot39_sha256": "103c1589c122f64eb66366106f64e7dbbb5b394c2773839e79efaed465a20529",
+    "runtime-zp_sha256": "c4f73eb54177006e39bd37f12ae1ff264bbe4dd133c59cbc42db1a0819bb8f47",
+    "trace_sha256": "db4281c0f24d2ff94a5436bb6631afca727b397077252635038f6bca469434ed"
+  },
+  "status": "NO HIT: no C2D-reader bounds rejection in this episode",
+  "time_separated_captures": [
+    {
+      "captured_at_utc": "2026-07-26T13:03:31.590853286Z",
+      "current_frame": "0x17ac",
+      "index": 1,
+      "reader_holds_still_installed": true,
+      "slot39_fully_wiped": true
+    },
+    {
+      "captured_at_utc": "2026-07-26T13:03:33.810593178Z",
+      "current_frame": "0x1816",
+      "index": 2,
+      "reader_holds_still_installed": true,
+      "slot39_fully_wiped": true
+    },
+    {
+      "captured_at_utc": "2026-07-26T13:03:39.033583010Z",
+      "current_frame": "0x1917",
+      "index": 3,
+      "reader_holds_still_installed": true,
+      "slot39_fully_wiped": true
+    }
+  ]
+}

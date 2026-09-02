@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import date
 import hashlib
 import json
 from pathlib import Path
@@ -16,6 +15,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 from elf_truth import ElfTruth, ElfTruthError  # noqa: E402
+from evidence_era import stable_recorded_on  # noqa: E402
 
 
 READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
@@ -103,7 +103,7 @@ def executable_hits(path: Path, opcodes: dict[str, str]) -> list[dict[str, Any]]
 def main() -> int:
     receipt: dict[str, Any] = {
         "format": "lisp65-c2-dma-content-consumption-sweep-receipt-v1",
-        "recorded_on": date.today().isoformat(),
+        "recorded_on": stable_recorded_on(RECEIPT),
         "status": "FIRST-RED",
     }
     try:

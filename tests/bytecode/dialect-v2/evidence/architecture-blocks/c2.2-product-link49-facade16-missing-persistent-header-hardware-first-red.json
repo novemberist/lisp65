@@ -1,0 +1,191 @@
+{
+  "accounting": {
+    "additional_hardware_inputs_after_first_deviation": 0,
+    "compiler_runs_during_read_only_diagnosis": 0,
+    "completed_latency_measurements": "0/2 unchanged",
+    "line_1_product_first_red_budget": "2/3 unchanged",
+    "line_1_status": "passed",
+    "linker_runs_during_read_only_diagnosis": 0,
+    "product_bytes_changed_during_read_only_diagnosis": 0
+  },
+  "candidate": {
+    "deployment": {
+      "bytes": 3687,
+      "path": "build/c2.2/hardware-presmoke-link49-facade16/deployment.json",
+      "sha256": "8607a8956a4644b75c4b54220121fd27c619d251b78cdd8c486007a055baaf2c"
+    },
+    "elf": {
+      "bytes": 609604,
+      "path": "build/c2.2/substitution/product-link-49-c2-lite-v6-append-final-hybrid-facade16/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "73d23101529d9ba54d0e26d0b12f89615f0a13839de1e8ceaec2fc70a54ded53"
+    },
+    "link": 49,
+    "map": {
+      "bytes": 206603,
+      "path": "build/c2.2/substitution/product-link-49-c2-lite-v6-append-final-hybrid-facade16/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "6ca693f2f2fa314977c3e1f8efde4f0d8827d87c0a4631b9ea7ff3c4c76806bb"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-49-c2-lite-v6-append-final-hybrid-facade16/lisp65-c2-substitution-linked.prg",
+      "sha256": "115c8996bb5c4cf0059c5cd088b0190d486d83734a332251f55cc9ccc9da2e34"
+    },
+    "structural_receipt": {
+      "bytes": 268499,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link49-c2-lite-v6-append-final-hybrid-facade16-artifact-replay2-structural-receipt.json",
+      "sha256": "4d0426393755013c93222fb2f7515e108f57a20dac43c7e85867a0c64f8e2673"
+    }
+  },
+  "claim_boundary": {
+    "not_proved": [
+      "a product fix for the missing header phase",
+      "a completed definition",
+      "any cold or warm latency value",
+      "promotion or acceptance"
+    ],
+    "proved": [
+      "Link 49 passes hardware line 1 with banner and REPL",
+      "Bank 2 remains byte-identical to the Link-49 authority",
+      "the dynamic zero-literal append decoder completes phase 13",
+      "the persistent forward path deterministically omits header slot 40",
+      "the corrected rollback plan clears C2J and wipes the suffix"
+    ]
+  },
+  "classification": "Class C: persistent append omits the header/commit phase before export publication; rollback is complete",
+  "finding": "The new facade vector and plan-walker ABI are not the hardware failure. The walker completed the named stage plan, and the real decoder completed phase 13. The persistent post-decode sequence then skips slot 40, while the next phase requires the commit bit that only slot 40 sets. The exact hardware signature is staged=1, committed=0, followed by a fully successful rollback.",
+  "format": "lisp65-c2-lite-v6-link49-missing-persistent-header-hardware-first-red-v1",
+  "hardware_result": {
+    "definition": {
+      "form": "(defun %c2h()(quote t))",
+      "observed": "*** vm: bad bytecode",
+      "screen": {
+        "bytes": 3862,
+        "path": "build/c2.2/hardware-presmoke-link49-facade16/definition/definition_setup.png",
+        "sha256": "4d8fc02fed2ca4c6ae1b92993a3701f13a199885dfa70111f2bcf019349d2a3c"
+      },
+      "status": "first-red-before-completed-latency-measurement",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link49-facade16/definition/definition_setup.txt",
+        "sha256": "1fd6f363ea2096be9e0634675c87205f131cbce56ee71deb4fda8fae9e1c5b70"
+      }
+    },
+    "line_1": {
+      "screen": {
+        "bytes": 3265,
+        "path": "build/c2.2/hardware-presmoke-link49-facade16/line1/screen.png",
+        "sha256": "7bc0ff2468c8dcbd089f000422dc62f4f607f2e7394ae04790f06ef4d3725e6c"
+      },
+      "status": "passed"
+    }
+  },
+  "next_action": "Class-C review. No source fix, product link, replay, further hardware input, promotion, or acceptance is authorized here.",
+  "read_only_localization": {
+    "append": {
+      "committed": 0,
+      "entries": 1,
+      "flags": 0,
+      "length": 119,
+      "literals": 0,
+      "new_counts": [
+        7,
+        589,
+        2264,
+        283
+      ],
+      "old_counts": [
+        6,
+        588,
+        2264,
+        283
+      ],
+      "roots": 0,
+      "staged": 1
+    },
+    "captures": {
+      "bank2": {
+        "bytes": 34403,
+        "path": "build/c2.2/hardware-presmoke-link49-facade16/first-red/bank2-static-code.bin",
+        "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+      },
+      "bank2_authority": {
+        "bytes": 34403,
+        "path": "build/c2.2/substitution/product-link-49-c2-lite-v6-append-final-hybrid-facade16/fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin",
+        "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+      },
+      "c2d_plus_journal": {
+        "bytes": 50816,
+        "path": "build/c2.2/hardware-presmoke-link49-facade16/first-red/bank5-c2d-region-live.bin",
+        "sha256": "5329bab293e51de6c0d6588efcecb5489378259e2e5be5d6cd4e5348b9b4e5a3"
+      },
+      "low64k": {
+        "bytes": 65536,
+        "path": "build/c2.2/hardware-presmoke-link49-facade16/first-red/low64k.bin",
+        "sha256": "505f56e262b018f8b88d9043fc976466b32f3ccaf9b1a0560dfb395be44edfff"
+      }
+    },
+    "decoder": {
+      "append_context": {
+        "entry_count": 589,
+        "entry_first": 588,
+        "error": 0,
+        "finished": 1,
+        "image_count": 7,
+        "image_first": 6,
+        "phase": 13,
+        "resolution_count": 2264,
+        "resolution_first": 2264,
+        "root_count": 283,
+        "root_first": 283
+      },
+      "status": "passed-through-phase-13"
+    },
+    "linked_forward_plan": [
+      30,
+      34,
+      35,
+      36,
+      37,
+      0
+    ],
+    "rollback": {
+      "c2j_zero_bytes": 64,
+      "ready": 1,
+      "resident_journal_count": 0,
+      "restored_runtime": {
+        "c2d_bytes": 33840,
+        "catalog_crc32": "0x3d6302f3",
+        "entry_count": 588,
+        "error": 0,
+        "finished": 1,
+        "generation": 1,
+        "image_count": 6,
+        "phase": 13,
+        "resolution_count": 2264,
+        "root_count": 283,
+        "shelf_bytes": 70897
+      },
+      "status": "passed-complete-on-hardware",
+      "suffix_entry_zero": true,
+      "suffix_image_zero": true
+    },
+    "source_dataflow_proof": {
+      "deterministic_failure": "publish exports observes committed=0 and returns C2_STREAM_ERR_STATE",
+      "header_is_only_commit_writer": true,
+      "missing_phase": {
+        "slot": 40,
+        "symbol": "c2_append_header_phase"
+      },
+      "persistent_sequence": [
+        "decoder phases 4..13",
+        "publish-plan scan",
+        "publish-plan resolve",
+        "publish exports"
+      ],
+      "publish_exports_requires_committed": true
+    }
+  },
+  "recorded_on": "2026-07-22",
+  "status": "first-red-product-semantics-review-required",
+  "value_string": "link49=115c8996bb5c4cf0059c5cd088b0190d486d83734a332251f55cc9ccc9da2e34 line1=pass definition=FIRST-RED-VM_BADOPCODE decoder=phase13/finished1/error0 append=staged1/committed0 missing-header-slot=40 publish=state-reject rollback=complete ready=1 c2j=zero suffix=zero line1-budget=2/3 latency=0/2 acceptance=blocked"
+}

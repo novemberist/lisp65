@@ -1,0 +1,69 @@
+{
+  "format": "lisp65-v11-c1-definition-call-crc-nibble-negative-probe-receipt-v1",
+  "version": 1,
+  "status": "hardware-red-fully-rolled-back",
+  "recorded_on": "2026-07-17",
+  "scope": "The single bounded post-curve optimization attempt. The probe preserves CRC16-CCITT semantics but replaces the bit-at-a-time update in the generic L65M commit verifier with a 16-entry nibble table. It is diagnostic only and is not G5 evidence.",
+  "baseline": {
+    "product_artifact_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+    "session_curve_receipt": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-session-curve-receipt.json",
+    "frames": [95, 97, 95, 97, 96, 95, 96, 96, 98, 95, 98, 96],
+    "l65m_commit_00_bytes": 1403,
+    "l65m_commit_00_sha256": "f653260007c9c5c6c99524103f2fc3e719e74bb4e8dedc290ee29e0b89ad0fcd"
+  },
+  "probe": {
+    "build_directory": "build/products/workbench/c1-crc-nibble-probe",
+    "resolved_profile_sha256": "96bafb8e1a4e14fa1540ac37475e340fce7116c64f2884801a36eb06f5f6b38e",
+    "resident_prg": {"bytes": 39471, "sha256": "ce31320c62c58bf102ddcfb9cb67e4cd252d5496cca3bea60857ac0922100d18"},
+    "preload": {"bytes": 17303, "sha256": "969d1f080131bb05c0ecca606727170b77ebd4f9e4d155e0b8efeb62717f7f47"},
+    "runtime_overlays": {"bytes": 65472, "sha256": "d7a4321e9ba96d3b08518ee1b6c52e05aa11da0282b974f19fb868e452a567ad"},
+    "boot_overlay": {"bytes": 1669, "sha256": "5062938211aac1ace2de3349e84699d020f86584690b95c54c126a7f161a0371"},
+    "elf_sha256": "4657a152517faa4056f3847292d41f73155b0c5130297b336df9be9af3105a5a",
+    "runtime_manifest_sha256": "2b52c8ca0ff122b5404f83e0745211278e5d2e7f4f32cdca13697509cd4655ca",
+    "footprint_audit_sha256": "1e97685f42b2bbbea4015b44f3117edbc205f40f9a5f78c3255d04a41d58d467"
+  },
+  "capacity_delta": {
+    "bank_bytes": 0,
+    "ext_bytes": 0,
+    "boot_overlay_bytes": 0,
+    "runtime_overlay_bank_bytes": 0,
+    "runtime_overlay_bank_remaining_bytes": 64,
+    "l65m_commit_00_bytes": 78,
+    "l65m_commit_00_before_bytes": 1403,
+    "l65m_commit_00_after_bytes": 1481,
+    "l65m_commit_00_remaining_to_current_1536_byte_page_bytes": 55,
+    "overlay_vma_bytes": 0
+  },
+  "correctness": {
+    "crc_equivalence": "PASS: all 65536 initial CRC values times eight boundary bytes plus 100000 random CRC/byte pairs",
+    "native_loader": "PASS cases=50 commit=valid-all-kinds depth=valid-literal-depth-9",
+    "native_loader_binary_sha256": "e2eff9e63203f913c3e65f2a4c26d3627073d5758baa1f3e0d78411a655e24ad",
+    "v2_product": "PASS late-bound sequence and transaction matrix",
+    "v2_product_binary_sha256": "adc407817e6014e03a8e3981bac57a8900a5f39486b6be2cdf8a5d6205b696f6",
+    "real_link": "PASS post_boot_reserve=1890 boot_stack_gap=1573 runtime_stack_gap=3340"
+  },
+  "hardware": {
+    "device": "physical MEGA65, exact probe artifacts above",
+    "form": "constant-size fresh defun followed by its first call",
+    "result": "(t 247 93)",
+    "elapsed_frames": 102,
+    "nominal_milliseconds": 2040,
+    "baseline_range_frames": [95, 98],
+    "outcome": "red on the first cycle; the twelve-cycle repeat was not run because the optimization already regressed the measured path",
+    "transcript_sha256": "79cdba8d3f0b59569a7e5ea0c98c416c5bec41fb30d6b57ecef76e1d5b7d0b82",
+    "screenshot_sha256": "18cb1aab545c4058c947b4dce2fccd9de2c65907ecedbb2310b5ea1243c590ed"
+  },
+  "rollback": {
+    "source": "complete",
+    "src_l65m_commit_overlay_c": "byte-identical to the Git index after rollback",
+    "scripts_lisp65_mega65_workbench_overlay_ld": "byte-identical to the Git index after rollback",
+    "partial_probe_changes_retained": false,
+    "attempt_policy": "The one bounded optimization attempt is consumed; no nibble-table tuning or threshold change follows from this probe."
+  },
+  "claims": {
+    "performance_bar": "not-passed",
+    "G5": "not-run(0/14); no case receipt exists",
+    "promotion": "blocked",
+    "release": "not-release-capable"
+  }
+}

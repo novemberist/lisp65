@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-c2-lite-v6-link38-direct-entry-count-clarification-v1",
+  "recorded_on": "2026-07-21",
+  "status": "passed-reporting-field-clarification-product-unchanged",
+  "source_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link38-c2-lite-v6-boot-crc-abi-artifact-replay-receipt.json",
+    "sha256": "3cad09e6a609f7b7e860896bf30ba707a17acb68975b9d56d9ba1c08117f1cfc"
+  },
+  "field": "direct_entry_v6.bcode_negative_classes",
+  "recorded_value": 5,
+  "correct_value": 4,
+  "explanation": "The recorded value counted all five matrix rows, including the canonical-mk-bcode positive control. Four rows are negative mutations and all four are rejected; the replay gate already required exactly four rejected results before passing.",
+  "matrix": {
+    "canonical-mk-bcode": "passed",
+    "missing-tag-scale-fixnum": "rejected",
+    "missing-image-base": "rejected",
+    "below-bcode-domain": "rejected",
+    "above-bcode-domain": "rejected"
+  },
+  "scope": {
+    "product_bytes_changed": 0,
+    "capacity_effect_bytes": 0,
+    "compiler_runs": 0,
+    "product_links": 0,
+    "hardware_runs": 0
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "format": "lisp65-c2.2-link74-lit1-two-timepoint-preflight-first-red-v1",
+  "status": "closed-checker-source-correction-no-product-impact",
+  "product_link": 74,
+  "first_red": {
+    "stage": "new discriminator prequalification gate",
+    "message": "KeyError: pc",
+    "mechanism": "Both patch-provenance checks read pc from their nested patch objects although pc is owned by each enclosing checkpoint object. The first correction exposed the identical second occurrence at the PRG offset proof.",
+    "correction": "Read each checkpoint pc from its enclosing checkpoint object and use those two values for the resident-island and PRG relative-offset proofs."
+  },
+  "scope": {
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "diagnostic_artifacts_built": 0,
+    "promotable": false
+  },
+  "claim_limit": "Checker-source correction only. No discriminator or hardware result is claimed by this receipt."
+}

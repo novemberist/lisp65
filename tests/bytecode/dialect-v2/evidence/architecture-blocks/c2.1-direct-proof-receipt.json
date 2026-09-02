@@ -1,0 +1,106 @@
+{
+  "bindings": {
+    "core_contract": {
+      "bytes": 9568,
+      "path": "config/c2-address-identity-contract.json",
+      "sha256": "ede5e7112d7ad057a021623c0728450213ad5c80027f1f084c33f0927b614346"
+    },
+    "equivalence_binary": {
+      "bytes": 127440,
+      "path": "build/equivalence/dialect-v2-equivalence-check",
+      "sha256": "c29dc59ae8d5a0f09a37aa408bf0943f81d52642c2ec44a8049e4cf99a21ff4f"
+    },
+    "four_engine_fixture": {
+      "bytes": 971,
+      "path": "tests/bytecode/dialect-v2/c2/cases.json",
+      "sha256": "c49b48cbef811064d13afcea2ffae68172b62a47af22d23cdde252be49b6f66b"
+    },
+    "metadata_envelope": {
+      "bytes": 5448,
+      "path": "config/c2-metadata-envelope-proposal.json",
+      "sha256": "6571d7d25762f9b4fb47d8200fac969c59e6aba2d94753e5af116573ef68bc30"
+    },
+    "target": {
+      "bytes": 1846,
+      "path": "config/c2.1-direct-proof.json",
+      "sha256": "43d0a7014e947b632a7e2733c7bddeb269eacc62c01deeeda15f5c987e8705e7"
+    },
+    "verifier": {
+      "bytes": 27712,
+      "path": "tools/host-lisp/c2_direct_proof.py",
+      "sha256": "17695a5ec0f3fe9a1d55b29d93833bf91bd5853fdc564efa11bcb49aa291c150"
+    }
+  },
+  "capacity_delta": {
+    "bank0": "not-linked",
+    "boot_overlay": "not-linked",
+    "ext": "not-linked",
+    "installer_slice": "not-linked",
+    "product_bytes": 0,
+    "resident_island": "not-linked",
+    "runtime_overlay_bank": "not-linked"
+  },
+  "claim_limit": "This receipt proves exact owner-approved C2I emission/decoding, immutable host-model execution and semantic route parity in four engines. It does not prove the target decoder, Enhanced-DMA timing, reset hardware, capacity or a product.",
+  "direct_image_execution": {
+    "maximum_call_depth": 2,
+    "routes": {
+      "apply": 42,
+      "closure": 42,
+      "direct": 42,
+      "funcall": 42,
+      "tail-call": 42
+    },
+    "steps": 39,
+    "window_bytes": 8,
+    "window_refills": 22
+  },
+  "format": "lisp65-c2.1-direct-proof-receipt-v1",
+  "image": {
+    "code_bytes": 95,
+    "code_sha256": "20849d9fd9b0b41ef97fba458f33d2c39f28c4c653965abf223959e63e64456b",
+    "entry_count": 6,
+    "image_sha256": "41a3b12f463f56c70c3f1a8857c04fbdfd42a4d3da5f59bcfc2ebac3ae7d56e5",
+    "immutable_after_execution": true,
+    "literal_count": 5,
+    "metadata_bytes": 160,
+    "metadata_sha256": "d02048faadf96a2309e906e9663b6272c1ac09e451fa9174ea25d458baad43d2"
+  },
+  "next_authorized_action": "Implement the independent target-side decoder/refill proof and the full negative/reset matrix, then stop before any product or capacity claim.",
+  "recorded_on": "2026-07-19",
+  "semantic_four_engine_closure": {
+    "cases_per_engine": 5,
+    "engines": [
+      {
+        "cases": 5,
+        "forms": 7,
+        "id": "native-c-treewalk",
+        "status": "passed"
+      },
+      {
+        "cases": 5,
+        "forms": 7,
+        "id": "native-c-compiler-vm",
+        "status": "passed"
+      },
+      {
+        "cases": 5,
+        "forms": 7,
+        "helpers": 3,
+        "id": "python-p0-compiler-vm",
+        "p0_steps": 42,
+        "status": "passed"
+      },
+      {
+        "cases": 5,
+        "forms": 7,
+        "id": "lisp-lcc",
+        "status": "passed"
+      }
+    ],
+    "evaluations": 20,
+    "forms_per_engine": 7,
+    "relationship": "The four engines execute the source-level route semantics; the exact C2 image is independently emitted, decoded and executed above. No claim says that the legacy engines decode C2I bytes."
+  },
+  "status": "host-proof-passed-device-link-not-run",
+  "version": 1
+}

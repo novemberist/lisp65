@@ -1,0 +1,104 @@
+{
+  "format": "lisp65-c2-link34-dma-completion-wplto-capacity-first-red-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: completion boundary lowers the final E000 floor by one byte",
+  "promotable": false,
+  "scope": {
+    "whole_program_lto_attempts": 1,
+    "completed_seed_links": 0,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "retries": 0
+  },
+  "semantic_preflight": {
+    "source_inventory": "passed-one-target-transport-nine-consumer-seams",
+    "negative_mutations_rejected": 7,
+    "bound_hardware_negative": [
+      "0x8e92",
+      "0xe092"
+    ],
+    "expected_crc16": "0xb47f"
+  },
+  "wplto_measurement": {
+    "bank0_text": {
+      "link34_headroom_bytes": 55,
+      "probe_headroom_bytes": 8,
+      "delta_bytes": -47,
+      "rtov_read_bytes_before": 70,
+      "rtov_read_bytes_after": 100,
+      "direct_function_delta_bytes": 30,
+      "status": "fits"
+    },
+    "ordinary_bank0_bss": {
+      "link34_headroom_bytes": 195,
+      "probe_headroom_bytes": 174,
+      "delta_bytes": -21,
+      "descriptor_growth_bytes": 20,
+      "completion_marker_bytes": 1,
+      "status": "fits"
+    },
+    "fixed_hot_block": {
+      "link34_headroom_bytes": 33,
+      "probe_headroom_bytes": 33,
+      "delta_bytes": 0,
+      "status": "fits"
+    },
+    "resident_island": {
+      "link34_headroom_bytes": 7,
+      "probe_headroom_bytes": 7,
+      "delta_bytes": 0,
+      "status": "fits"
+    },
+    "e000": {
+      "link34_final_floor_bytes": 115,
+      "probe_projected_floor_bytes": 114,
+      "delta_bytes": -1,
+      "changed_section": ".lisp65_c2_kernal_window.reopen_gap0",
+      "changed_section_bytes_before": 128,
+      "changed_section_bytes_after": 129,
+      "all_other_window_sections": "byte-count unchanged",
+      "status": "FIRST RED"
+    }
+  },
+  "diagnosis": {
+    "direct_completion_placement": "Bank-0 text plus ordinary data/BSS; it does not intentionally enter E000",
+    "blocking_effect": "the Whole-Program LTO perturbation grows reopen_gap0 by one byte, violating the owner-bound 115-byte final floor",
+    "not_allowed": [
+      "lower the final E000 floor",
+      "micro-shave a proved E000 resident",
+      "retry for favorable LTO ordering",
+      "run the hardware pre-smoke",
+      "build the combined product fix"
+    ],
+    "bounded_next_option": "move trigger, marker poll and interrupt-state preservation into one named, sized, non-LTO assembler leaf; keep the two-job descriptor and central rtov_read boundary, then run one fresh WPLTO placement probe with E000 delta exactly zero",
+    "claim_limit": "The non-LTO leaf is a review option, not an authorized retry. Its effect on global LTO and every wall remains unproved."
+  },
+  "artifacts": {
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-wplto-presmoke-receipt.json",
+      "sha256": "2bda14161179ac63a405f4b3b9564f3fd9f4f64df3d30067e5e61bd4936a497a"
+    },
+    "probe_map": {
+      "path": "build/c2.2/substitution/link34-dma-completion-presmoke/resident-island-seed.prg.map",
+      "sha256": "d55cee6a2a3cbc26f5d3bb94fa429a04ea9957e1ce35acb8c579eff0192e7e66"
+    },
+    "probe_lto_object": {
+      "path": "build/c2.2/substitution/link34-dma-completion-presmoke/resident-island-seed.prg.lto.o",
+      "sha256": "1a392013ff91d70b1a7e08044cdaf7d9163e0024911f012679ce06a2005da993"
+    },
+    "linker_diagnostic": {
+      "path": "build/c2.2/substitution/link34-dma-completion-presmoke/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "11caa3f70ba2f4340682139e69a375ef2473346a7ad6449be92afe7520624e87"
+    },
+    "link34_baseline_map": {
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/resident-island-seed.prg.map",
+      "sha256": "62f0e783412d12bdea7ca95324a4a26484e24b3c638d04798f739e81fa35dffd"
+    },
+    "link34_rollback_product": {
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+      "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+      "status": "untouched"
+    }
+  },
+  "next_gate": "review required; no automatic follow-up"
+}

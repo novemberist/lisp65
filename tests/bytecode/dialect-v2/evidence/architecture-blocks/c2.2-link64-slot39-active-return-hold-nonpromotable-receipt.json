@@ -1,0 +1,99 @@
+{
+  "ELF_feasibility": {
+    "dataflow": "c2_completion_poll return in A; TAY sets Z; BNE is taken iff the first ACTIVE poll returned nonzero",
+    "external_register_capture_required": false,
+    "header_address": "0xc371",
+    "header_symbol": "c2_append_header_phase",
+    "hold_address": "0xc3e9",
+    "instruction": "BNE $c3ee -> BNE $c3e9",
+    "outcomes": {
+      "bad_bytecode": "first ACTIVE completion poll returned failure",
+      "hangs": "first ACTIVE completion poll returned success"
+    }
+  },
+  "authority": {
+    "donor_ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "driver": {
+      "bytes": 18899,
+      "path": "tools/host-lisp/c2_link64_slot39_active_return_hold.py",
+      "sha256": "008c704347bd3e82d37d051adb8dd996c1b4d9505ac6eac3dcce1c2cc6a030c7"
+    },
+    "entry_hold_hardware_receipt": {
+      "bytes": 8701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-entry-hold-hardware-receipt.json",
+      "sha256": "6c783186645d1ee1fde0c15ad88cc0bb59d610cc572a054c9b5e43f38bd901c0"
+    },
+    "source_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-link64-stage-bound.bin",
+      "sha256": "bb436ba264065ec49a76dc90f60b9226f1d59065d51ef181e9454990cc40ce1b"
+    },
+    "source_deployment": {
+      "bytes": 10049,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt4-NONPROMOTABLE/deployment.json",
+      "sha256": "aec06ae9fdafb74298389ab356c7dc51bff4f66c170152878d8e0518bfbeb27d"
+    }
+  },
+  "candidate": {
+    "carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-slot39-active-return-hold-NONPROMOTABLE/runtime-overlays-session-link64-slot39-active-return-hold.bin",
+      "sha256": "69d1d3c33afcc32452d90962d09b56407230d97d1834d064df4568c1ee4400d6"
+    },
+    "identity_separate_from_Link64": true,
+    "lifecycle": "discard after one diagnostic outcome",
+    "manifest": {
+      "bytes": 1647,
+      "path": "build/c2.2/substitution/link64-slot39-active-return-hold-NONPROMOTABLE/manifest.json",
+      "sha256": "932c4b9d099df50280ee6d078f33f3d85bc671a05c74828bca8f676070b63eb3"
+    }
+  },
+  "claim_limit": "Nonpromotable binary discriminator only. C1 remains OPEN.",
+  "construction": {
+    "all_capacity_deltas": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2.2-Link64-slot39-ACTIVE-return-hold-patch-v1",
+  "patch_and_rebinding": {
+    "after_hex": "d0fe",
+    "all_changed_file_offsets": [
+      55188,
+      56547,
+      56548
+    ],
+    "before_hex": "d003",
+    "carrier_size_delta": 0,
+    "derived_identity_bytes_changed": 2,
+    "directory_crc16": "0x564d",
+    "executable_operand_bytes_changed": 1,
+    "family_crc16": "0x472a",
+    "header_crc16": "0xb8dd",
+    "instruction_VMA": "0xc3e9",
+    "instruction_file_offset": 55187,
+    "mutation_count": 5,
+    "mutations_rejected": [
+      "opcode",
+      "operand",
+      "payload-CRC",
+      "record-CRC",
+      "family-tail"
+    ],
+    "payload_crc16": "0x2ef7",
+    "record_crc16": "0x8364",
+    "section": ".lisp65_rt_c2append_header",
+    "slot": 39,
+    "status": "passed-one-byte-ACTIVE-return-hold-and-complete-v4-rebinding"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "status": "ready-nonpromotable-ACTIVE-return-discriminator"
+}

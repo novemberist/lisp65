@@ -1,0 +1,136 @@
+{
+  "accounting": {
+    "completed_latency_measurements": "0/2 unchanged",
+    "hardware_runs": 0,
+    "line_1_product_first_red_budget": "2/3 unchanged",
+    "product_links": 0,
+    "whole_program_lto_runs": 0
+  },
+  "authority": {
+    "failed_wplto_map": {
+      "path": "build/c2.2/substitution/link48-append-plan-leaf-wplto2/resident-island-seed.prg.map",
+      "sha256": "62fba0436e2eb7c0b9a8a291583a8e4abb13334d6a6c3b21bd5db2120de0028f"
+    },
+    "link48_map": {
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/resident-island-seed.prg.map",
+      "sha256": "f990f82d02038a292f126e71c99ff53b5d48ca9ed84d66333443f1c92f006170"
+    }
+  },
+  "failed_wplto_temperature_attribution": {
+    "bank0_text_delta_bytes": 208,
+    "bank0_text_objects": [
+      {
+        "delta_bytes": 109,
+        "object": "c2_append_plan_walk",
+        "temperature": "resident serial boundary, called only during append but cannot itself be an overlay phase",
+        "verdict": "resident-island citizen; canonical plan pointer removes the duplicate selector representation"
+      },
+      {
+        "delta_bytes": 103,
+        "object": "c2_product_install",
+        "temperature": "mixed; successful install/call handoff remains resident, append failure publication is cold",
+        "verdict": "cold detail policy removed; the function now returns the already-published detail through the existing vm_check_status seam"
+      },
+      {
+        "delta_bytes": -4,
+        "object": "all other Bank-0 text",
+        "temperature": "unchanged mixed resident population",
+        "verdict": "no placement action"
+      }
+    ],
+    "e000_delta_bytes": 203,
+    "e000_objects": [
+      {
+        "delta_bytes": 150,
+        "object": "c2_append_overlay_call",
+        "temperature": "append-only error policy",
+        "verdict": "retired; terminal status publication moved to the final publish_exports phase"
+      },
+      {
+        "delta_bytes": 27,
+        "object": "c2_overlay_call append dispatch growth",
+        "temperature": "generic Session seam contaminated by append-only dispatch",
+        "verdict": "retired; the seam calls the single generic family facade directly"
+      },
+      {
+        "delta_bytes": 26,
+        "object": "remaining E000 LTO movement",
+        "temperature": "not independently attributable before the new truth build",
+        "verdict": "no guessed credit; the one authorized WPLTO run decides"
+      }
+    ]
+  },
+  "format": "lisp65-c2-lite-v6-link48-append-temperature-residency-design-v1",
+  "island_trade": {
+    "baseline_headroom_bytes": 84,
+    "incoming": {
+      "isolated_assembler_bytes": 75,
+      "object": "c2_append_plan_walk",
+      "section": ".lisp65_resident_island"
+    },
+    "projected_headroom_bytes": 9,
+    "reason": "the walker is the one genuine resident boundary: it serially loads overlay phases and therefore cannot itself become one",
+    "swap_required": false
+  },
+  "new_source_contract": {
+    "cold_terminal_boundary": {
+      "normal_role": "publish verified export plan and finish append publication",
+      "object": "c2_append_publish_exports_phase",
+      "phase": "final publish_exports Session phase",
+      "terminal_failure_role": "after the explicit rollback plan, convert the first raw slot/status pair into one tagged BCODE detail",
+      "transition_bytes": "the existing two exclusive append-scratch bytes plus the existing main_ordinal result pointer; no new resident cell, BSS object or root"
+    },
+    "plans": {
+      "representation": "two canonical zero-terminated linked byte arrays",
+      "rollback": [43, 44, 30, 0],
+      "stage": [31, 35, 36, 37, 38, 0],
+      "walker_abi": "plan pointer A/X, context __rc2/__rc3, result A"
+    },
+    "resident_minimum": [
+      "the existing family/generation/publish ownership state",
+      "one generic Session overlay seam",
+      "the first raw inner-error transport guarded by the append scratch identity",
+      "the Island plan walker"
+    ]
+  },
+  "pack_quantum_projection": {
+    "publish_exports_baseline_payload_bytes": 971,
+    "publish_exports_paid_slack_bytes": 53,
+    "rule": "no credit is booked; the final WPLTO map must prove that terminal publication fits without increasing the Session aggregate",
+    "session_aggregate_baseline_bytes": 65438,
+    "session_aggregate_reserve_bytes": 98
+  },
+  "recorded_on": "2026-07-22",
+  "source_state": {
+    "append_contract": {
+      "path": "config/c2-append-cutpoint-contract.json",
+      "sha256": "359ccd7a58daa6dcdf1466563bb67ec57db74729bcbad55aa59505213733fc62"
+    },
+    "append_gate": {
+      "path": "tools/host-lisp/c2_append_phase_plan_gate.py",
+      "sha256": "1fcedcdf44dd5e38212deb0f284082d0ad2ab89fe052086fc58bf44870ddaf47"
+    },
+    "append_runtime": {
+      "path": "src/c2_product_runtime.c",
+      "sha256": "8c1f5e1ef3a6e00d0aec4bb76b6a7c481d6368e66670344b6c66bd2bab435fe5"
+    },
+    "nested_append_prelink_gate": {
+      "path": "tools/host-lisp/c2_nested_append_v5_prelink.py",
+      "sha256": "4ae3fc63739a8567c08613498e678e23e56d60268e697cd63b9d3ff3a2bb3dcf"
+    },
+    "leaf_abi_gate": {
+      "path": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "sha256": "8824d97efedc682784d10d47c4345261dba9f05106c5b55542745945f5f4eaaa"
+    },
+    "plan_walker": {
+      "path": "src/c2_append_plan_walk.s",
+      "sha256": "4c521a7067e531397186047a800fbcc625b5a855c199c39519d8d54fa886f929"
+    },
+    "status_consumer": {
+      "path": "src/eval.c",
+      "sha256": "962bf651b98bc30d1df3ec55de5eb6a9fd691ccc2479a3f1b4607d33a02c8290"
+    }
+  },
+  "status": "passed-temperature-and-residency-design-awaiting-one-WPLTO-truth-run",
+  "stop_rule": "If the cleanly separated design leaves any genuine hot remainder beyond the measured walls, stop and return that number to Class-C review; no fifth placement attempt, shaving, retry or floor negotiation."
+}

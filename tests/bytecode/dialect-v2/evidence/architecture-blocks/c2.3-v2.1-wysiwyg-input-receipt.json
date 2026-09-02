@@ -1,0 +1,127 @@
+{
+  "authority": {
+    "checker": {
+      "bytes": 13459,
+      "path": "tools/host-lisp/c2_v21_wysiwyg_input.py",
+      "sha256": "a7244c47c1e284b4da452ae2cc97c328bc1ca0fe27f15f9dbf27803cc1c03c4a"
+    },
+    "origin": {
+      "bytes": 12280,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-a0-origin-attribution-receipt.json",
+      "sha256": "11476fb19ba607b7a4d1181038fd1eacfa1e0e082be940d11b0cbfe08028faf3"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 175628,
+      "commit": "01914313473568e9584e31caa2212b24f87ebff8",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "f5484a413a824cbf514ffe9fc4b2d00449f87cc37ff27075323eee4e6d57f783"
+    },
+    "prior_attribution": {
+      "bytes": 16307,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-reader-caller-path-attribution-receipt.json",
+      "sha256": "9b68fea726f18fcc1ba186d983c6626787721ab12f995fb3a3f69de4ce54c969"
+    },
+    "reader": {
+      "bytes": 10451,
+      "path": "src/reader.c",
+      "sha256": "ca260a4f52fba17c9678fa6d37ee03bfdff85f344579eda378c71c03de027a86"
+    },
+    "repl": {
+      "bytes": 13866,
+      "path": "src/repl.c",
+      "sha256": "d3d7ef514615c4975f7994b48d3705e68706815e84019b05eecd776fc449effd"
+    },
+    "screen": {
+      "bytes": 9084,
+      "path": "src/screen.c",
+      "sha256": "1de7069d9803484073047ea7a0a488b66971db26a80b43a634a5ddb871f09078"
+    }
+  },
+  "claim_limit": "Host qualification of the physical input boundary only. No WPLTO, product link, media build, device contact, or D2 claim.",
+  "contract": {
+    "a0_normalized_before_echo": true,
+    "a0_normalized_before_store": true,
+    "device_code_type": "uint8_t",
+    "host_EOF_type": "int",
+    "media_format_changed": false,
+    "site": "src/repl.c:read_line DEVICE_KB ordinary-byte boundary",
+    "stored_file_reader_changed": false,
+    "unhandled_controls": "lisp_abort_code(LISP65_ERR_READER_INVALID_TOKEN)"
+  },
+  "control_rejection": {
+    "rejected_hex": "011080919f",
+    "sample_hex": "011080919f",
+    "silent_drop_allowed": false,
+    "visible_error_code": "LISP65_ERR_READER_INVALID_TOKEN"
+  },
+  "format": "lisp65-c2.3-v2.1-wysiwyg-input-v1",
+  "historical_regressions": {
+    "Link112": {
+      "a0_offset_zero_based": 21,
+      "canonical_object_bytes": 12,
+      "captured_hex": "28646566756e20746573742d70726f626520287829a0282b207820312929",
+      "compile": {
+        "encoded_hex": "b50100020500000b01010205",
+        "flags": 2,
+        "install_name": "test-probe",
+        "literal_count": 0,
+        "literals": [],
+        "nargs": 1,
+        "nlocals": 0,
+        "payload_hex": "0b01010205"
+      },
+      "normalized_ascii": "(defun test-probe (x) (+ x 1))",
+      "normalized_hex": "28646566756e20746573742d70726f62652028782920282b207820312929"
+    },
+    "Link113": {
+      "a0_offset_zero_based": 22,
+      "canonical_object_bytes": 12,
+      "captured_hex": "28646566756e2074726163652d70726f626520287829a0282b207820312929",
+      "compile": {
+        "encoded_hex": "b50100020500000b01010205",
+        "flags": 2,
+        "install_name": "trace-probe",
+        "literal_count": 0,
+        "literals": [],
+        "nargs": 1,
+        "nlocals": 0,
+        "payload_hex": "0b01010205"
+      },
+      "normalized_ascii": "(defun trace-probe (x) (+ x 1))",
+      "normalized_hex": "28646566756e2074726163652d70726f62652028782920282b207820312929"
+    }
+  },
+  "mutations_rejected": [
+    "normalize-after-echo",
+    "normalize-after-store",
+    "accept-invisible-a0",
+    "silent-control-drop",
+    "wrong-visible-error",
+    "miss-one-control",
+    "link112-poison-object",
+    "link113-poison-object",
+    "noncanonical-size",
+    "change-reader-rules",
+    "change-stored-files",
+    "change-media",
+    "add-product-source",
+    "authorize-two-cards",
+    "consume-card-in-preflight",
+    "device-contact-in-preflight",
+    "erase-device-byte-type"
+  ],
+  "recorded_on": "2026-08-17",
+  "scope": {
+    "device_contacts": 0,
+    "media_bytes_unchanged_by_this_gate": true,
+    "product_cards_authorized": 1,
+    "product_cards_consumed": 0,
+    "product_source_delta": [
+      "src/repl.c"
+    ],
+    "reader_rules_unchanged": true,
+    "stored_files_unchanged": true
+  },
+  "status": "PASS: A0-TO-SPACE; UNMAPPABLE-CONTROLS-VISIBLE; TWO-CAPTURES-CANONICAL"
+}

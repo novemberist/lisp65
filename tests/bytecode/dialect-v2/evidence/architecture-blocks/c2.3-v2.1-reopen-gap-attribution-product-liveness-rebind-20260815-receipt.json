@@ -1,0 +1,206 @@
+{
+  "authority": {
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 69611,
+      "commit": "b83f419e3498a073e690e9d99f2745fcbdbc5082",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "7fcdc9ae2b089e440d750a5636ee51edca6ee0e0dd43b6612237c7784a4c1b76"
+    },
+    "previous_rebind": {
+      "bytes": 7191,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-reopen-gap-attribution-rebind-20260815-receipt.json",
+      "sha256": "f21f156cf4d6d0e764436d8d020251314f428953ffc42014995468e2625faf86"
+    }
+  },
+  "claim_limit": "Loud source-closure rebind only. Product-liveness source and desk evidence add no card, medium, device or release authority.",
+  "format": "lisp65-c2.3-v2.1-reopen-gap-product-liveness-rebind-v1",
+  "inputs": {
+    "attic_attribution": {
+      "bytes": 15140,
+      "path": "tools/host-lisp/c2_v21_attic_write_convergence_attribution.py",
+      "sha256": "9d50082393f4077cc0179eb1e1d782ea54fc7015be8fb24e286620ddebd7947a"
+    },
+    "gates": {
+      "bytes": 122605,
+      "path": "mk/gates.mk",
+      "sha256": "52214451581160c461d80840e708d7540a15536cc9ed4dbf9fb990dc4944bb8a"
+    },
+    "product_liveness": {
+      "bytes": 15117,
+      "path": "tools/host-lisp/c2_v21_product_loading_liveness.py",
+      "sha256": "9d5a6f5c02bf2ed03f9bdb8bbe025b0e5a07c41319625a320b43c363c86253b1"
+    },
+    "product_reader": {
+      "bytes": 5574,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "0880d62000e9f21d7b6e0ccd279b47f8f0b85b57d264e939bac7dfb6cde19af5"
+    }
+  },
+  "mutations": [
+    "rewrite-history",
+    "change-gap0",
+    "drop-bound-input",
+    "claim-device"
+  ],
+  "recorded_on": "2026-08-15",
+  "result": {
+    "device_contacts": 0,
+    "gap0": "derived",
+    "gap1": "derived",
+    "gap2": "fixed",
+    "historical_receipts_changed": false,
+    "semantic_conclusion": "byteidentical"
+  },
+  "semantic_projection": {
+    "absolute_runtime_consumers": [],
+    "attribution": {
+      "anchor_or_padding_supported": false,
+      "fixed_address_dependency_found": false,
+      "golden_mismatch_class": "snapshot-vma-promoted-to-invariant",
+      "mechanism": "reopen_gap0 is the linker-derived end of c2_resident. Its three product callers relocate against the function symbol, the packed window derives the byte offset from the candidate VMA, and no active product/build/hardware/format contract mentions either 0xfcb0 or 0xfcaf as a required address.",
+      "outcome": "NOT-DEPENDED-UPON",
+      "reclassification_supported": true
+    },
+    "linker_classification": {
+      "gap0": {
+        "fixed_numeric_start": false,
+        "lma_source": "window-origin-plus-candidate-vma-offset",
+        "vma_source": "end-of-c2_resident"
+      },
+      "gap1": {
+        "fixed_numeric_start": false,
+        "lma_source": "window-origin-plus-candidate-vma-offset",
+        "vma_source": "end-of-profile_rodata"
+      },
+      "gap2": {
+        "fixed_numeric_start": true,
+        "lma_source": "explicit-window-offset-0x1f90",
+        "vma_source": "explicit-0xff90"
+      }
+    },
+    "media_format": {
+      "fixed_gap0_offset_field": false,
+      "section_bytes_match_at_derived_offset": true,
+      "section_lma": 269487,
+      "section_offset": 7343,
+      "section_offset_source": "candidate-gap0-vma-minus-0xe000",
+      "window_bytes": 8192,
+      "window_vma": "0xe000..0xffff"
+    },
+    "mutations_rejected": [
+      "promote-symbolic-call-to-absolute",
+      "hide-symbol-consumer",
+      "claim-active-fcb0-pin",
+      "hide-predecessor-derivation",
+      "promote-gap1-to-anchor",
+      "demote-explicit-gap2",
+      "authorize-padding",
+      "edit-golden-without-review",
+      "authorize-card",
+      "allow-media"
+    ],
+    "sibling_gap0": {
+      "class": "candidate-derived-predecessor-end",
+      "fixed_address_dependent": false,
+      "recommended_golden_class": "derived-vma"
+    },
+    "sibling_gap1": {
+      "class": "candidate-derived-predecessor-end",
+      "fixed_address_dependent": false,
+      "recommendation": "same derived class as gap0; historical diagnostic pins remain bound to their own artifact worlds",
+      "recommended_golden_class": "derived-vma",
+      "world_local_diagnostic_mentions": [
+        {
+          "line": 154,
+          "path": "tools/host-lisp/c2_defstruct_link71_c2d_byte_return_hold.py",
+          "text": "\"call\": \"0x7782 JSR 0xfe88 vm_c2d_byte\","
+        },
+        {
+          "line": 85,
+          "path": "tools/host-lisp/c2_v20_loading_libraries_progress_ring.py",
+          "text": "PRODUCER_C2D = 0xFE88"
+        },
+        {
+          "line": 895,
+          "path": "tools/host-lisp/c2_v20_loading_libraries_progress_ring.py",
+          "text": "\"producer_carrier\": [\"0xfe88\", \"0xfee1\"],"
+        }
+      ]
+    },
+    "sibling_gap2": {
+      "active_exact_mentions": [
+        {
+          "line": 143,
+          "path": "tools/host-lisp/c2_defstruct_f018b_coverage.py",
+          "text": "\"c2_facade_target_c2_dma\": 0xFF90,"
+        },
+        {
+          "line": 176,
+          "path": "tools/host-lisp/c2_link64_completion_poison_operand_attribution.py",
+          "text": "and dma.value == 0xff90 and dma.bytes == 68 and dma.section == REOPEN"
+        },
+        {
+          "line": 327,
+          "path": "tools/host-lisp/c2_link64_completion_poison_operand_attribution.py",
+          "text": "\"$ff90 writes the 12-byte job address to $d702/$d701/$d700 \""
+        },
+        {
+          "line": 67,
+          "path": "tools/host-lisp/c2_lite_v6_link44_op_closure_cycle3_feasibility.py",
+          "text": "DMA_WRITER_ADDRESS = 0xFF90"
+        },
+        {
+          "line": 2312,
+          "path": "tools/host-lisp/c2_product_substitution_link.py",
+          "text": ".lisp65_c2_kernal_window.reopen_gap2 0xff90 :"
+        }
+      ],
+      "class": "explicit-fixed-window-offset",
+      "fixed_address_dependent": true,
+      "recommended_golden_class": "unchanged-fixed-vma",
+      "same_situation_as_gap0": false
+    },
+    "status": "ATTRIBUTED: reopen_gap0 has no fixed-address dependent",
+    "symbolic_runtime_consumers": [
+      {
+        "caller": "c2_product_append_staged",
+        "relocation_offset": 9664,
+        "relocation_type": "R_MOS_ADDR16",
+        "resolved_target": 64687,
+        "source_section": ".text",
+        "target_kind": "section-symbol",
+        "target_symbol": "vm_runtime_overlay_transaction_begin"
+      },
+      {
+        "caller": "c2_product_install",
+        "relocation_offset": 9872,
+        "relocation_type": "R_MOS_ADDR16",
+        "resolved_target": 64687,
+        "source_section": ".text",
+        "target_kind": "section-symbol",
+        "target_symbol": "vm_runtime_overlay_transaction_begin"
+      },
+      {
+        "caller": "c2_product_install",
+        "relocation_offset": 10115,
+        "relocation_type": "R_MOS_ADDR16",
+        "resolved_target": 64687,
+        "source_section": ".text",
+        "target_kind": "section-symbol",
+        "target_symbol": "vm_runtime_overlay_transaction_begin"
+      }
+    ]
+  },
+  "source_scan": {
+    "current_tracked_files": 1926,
+    "diagnostic_sources_excluded": [
+      "config/c2-v21-loading-libraries-stage-breadcrumb-contact.json",
+      "tools/host-lisp/c2_v21_dependency_invariant_golden.py",
+      "tools/host-lisp/c2_v21_loading_libraries_progress_rebind.py",
+      "tools/host-lisp/c2_v21_loading_libraries_stage_breadcrumb_contact.py"
+    ],
+    "previous_tracked_files": 1923
+  },
+  "status": "PASS: LOUD PRODUCT-LIVENESS SOURCE-CLOSURE REBIND"
+}

@@ -1,0 +1,57 @@
+{
+  "authority": {
+    "Final_Red": {
+      "bytes": 2891,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-root-padding-separate-target-continuation-final-red.json",
+      "sha256": "18d6cbea58958aea025be50179d26f932129f31e20d69d07dc86432dbebaaede"
+    },
+    "driver": {
+      "bytes": 7160,
+      "path": "tools/host-lisp/c2_v21_root_padding_separate_target_red_attribution.py",
+      "sha256": "aca4959ef25aa75d04493798fa26fd5518f9d9c892afae2c24b2b014172f0734"
+    }
+  },
+  "claim_limit": "Read-only attribution. No input reference, materialization, link, Completion, medium or device action is authorized.",
+  "classification": {
+    "materializer_red": false,
+    "pre_materialization_harness_red": true,
+    "product_red": false,
+    "seed_red": false
+  },
+  "disposition": {
+    "narrow_repair": "Construct the input reference with os.path.relpath(source, start=target.parent), mutation-test sibling paths, then decide whether one replacement bounded run is authorized.",
+    "owner_required": true,
+    "retry_authorized": false
+  },
+  "execution_accounting": {
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "final_product_links": 0,
+    "media_builds": 0,
+    "new_WPLTO_card_runs": 0
+  },
+  "format": "lisp65-c2.3-v2.1-separate-target-red-attribution-v1",
+  "mechanism": {
+    "class": "REFERENCE-RELATIVIZATION-API-DOMAIN",
+    "failed_operation": "create-first-input-reference",
+    "final_artifacts_present": [],
+    "final_link_started": false,
+    "materialization_started": false,
+    "resident_island_header_present": false,
+    "source_evidence_mode": "0555",
+    "source_evidence_unchanged": true,
+    "source_expression": "source.relative_to(path.parent)",
+    "target_directory_created_by_single_owner": true,
+    "why": "Path.relative_to() requires containment; source and target are siblings. A relative symlink requires os.path.relpath()."
+  },
+  "mutations_rejected": [
+    "claim-materialization",
+    "claim-link",
+    "blame-product",
+    "blame-seed",
+    "hide-immutability",
+    "authorize-retry"
+  ],
+  "recorded_on": "2026-08-17",
+  "status": "ATTRIBUTED FINAL RED: REFERENCE-RELATIVIZATION-API-DOMAIN"
+}

@@ -10,26 +10,30 @@
 (defun %frame-low ()
   (peek 255 131))
 
-(defun %cursor-blink (state force)
-  (let* ((idle (car (nthcdr 10 state)))
-         (blink (car idle))
-         (position (car (nthcdr 3 state)))
-         (start (car (nthcdr 5 state)))
-         (cursor (car (cdr state)))
-         (now (%frame-low))
-         (elapsed (mod (- now (car blink)) 256))
-         (visible (if force 't
-                      (if (>= elapsed 32) (not (cdr blink)) (cdr blink)))))
-    (if (and (not force) (< elapsed 32))
-        nil
+(defun %cursor-blink (cursor position start row idle force)
+  (let* ((blink (car idle)))
+    (if force
         (progn
-          (rplaca blink now)
-          (rplacd blink visible)
-          (screen-put-char (- position start) (car (nthcdr 7 state))
-                           (if (cdr cursor) (car (cdr cursor)) 32)
-                           (if visible 129
-                               (if (car (nthcdr 10 idle)) 7 1)))
-          nil))))
+          (rplaca blink (%frame-low))
+          (rplacd blink 't)
+          (screen-put-char (- position start) row
+                           (if (cdr cursor) (car (cdr cursor)) 32) 129)
+          nil)
+        (let* ((now (%frame-low))
+               (elapsed (mod (- now (car blink)) 256))
+               (visible (if (>= elapsed 32) (not (cdr blink)) (cdr blink))))
+          (if (< elapsed 32)
+              nil
+              (progn
+                (rplaca blink now)
+                (rplacd blink visible)
+                (screen-put-char (- position start) row
+                                 (if (cdr cursor) (car (cdr cursor)) 32)
+                                 (if visible 129
+                                     (if (car (cdr (cdr (cdr (cdr (cdr
+                                         (cdr (cdr (cdr (cdr (cdr idle)))))))))))
+                                         7 1)))
+                nil))))))
 
 ; Derive a new line-editor job without scanning a code unit.  Ordinary cells
 ; settle immediately; only a delimiter enters the prefix pass.
@@ -135,24 +139,22 @@
               (%sexp-paint a b c d e f g 0)))))
 
 ; Clear the surface-owned pair at an input handoff or unmatched completion.
-(defun %rl-clear (state dirty)
-  (let* ((idle (car (nthcdr 10 state)))
-         (active (car (nthcdr 7 idle)))
-         (pair-a (car (nthcdr 8 idle)))
-         (pair-b (car (nthcdr 9 idle)))
+(defun %rl-clear (codes cursor position start columns row idle event)
+  (let* ((i7 (cdr (cdr (cdr (cdr (cdr (cdr (cdr idle))))))))
+         (active (car i7))
+         (pair-a (car (cdr i7)))
+         (pair-b (car (cdr (cdr i7))))
          (old (if (= active 1) pair-a (if (= active 2) pair-b nil)))
-         (codes (cdr (car state)))
-         (position (car (nthcdr 3 state)))
-         (start (car (nthcdr 5 state)))
-         (row (car (nthcdr 7 state))))
+         (marked (cdr (cdr (cdr i7)))))
     (progn
       (if old
           (%rl-idle 3 codes old nil start row
-                    (car (nthcdr 6 state)) position nil) nil)
-      (rplaca (nthcdr 7 idle) 0)
-      (rplaca (nthcdr 10 idle) nil)
-      (if dirty (rplaca (cdr idle) -1) nil)
-      (if old 't nil))))
+                    columns position nil) nil)
+      (rplaca i7 0)
+      (rplaca marked nil)
+      (if event (rplaca (cdr idle) -1) nil)
+      (if event (%cursor-blink cursor position start row idle 't) nil)
+      (if event event (if old 't nil)))))
 
 ; Install one completed partner result (ANSWER is partner+1).
 (defun %rl-paint (state answer)
@@ -176,37 +178,46 @@
 
 ; Card-2 polling owner.  States without slot 10 are parked Comfort/history
 ; callers and retain their prior scalar or blocking input path.
+(defun %rl-wait (state s1 s3 s5 s7 idle)
+  (let* ((phase (car (cdr idle)))
+         (painted
+          (if (< phase 0)
+              (%rl-start state)
+              (if (= phase 1)
+                  (%rl-scan state)
+                  (if (> phase 1)
+                      (let* ((answer
+                              (if (= (mod phase 2) 0)
+                                  (%rl-close state)
+                                  (%rl-open state))))
+                        (if answer
+                            (if (= answer 0)
+                                (%rl-clear (cdr (car state))
+                                           (car s1) (car s3) (car s5)
+                                           (car (cdr s5)) (car s7) idle nil)
+                                (%rl-paint state answer))
+                            nil))
+                      nil)))))
+    (progn (%cursor-blink (car s1) (car s3) (car s5)
+                          (car s7) idle painted)
+           nil)))
+
 (defun %rl-poll (state)
-  (let* ((tail (nthcdr 8 state))
+  (let* ((s1 (cdr state))
+         (s3 (cdr (cdr s1)))
+         (s5 (cdr (cdr s3)))
+         (s7 (cdr (cdr s5)))
+         (tail (cdr s7))
          (idle (car (cdr (cdr tail)))))
     (if (not idle)
         (if tail
             (%rl-render nil 0 0 0 0 -1)
             (key-event 1))
-        (let* ((event (key-event 0)))
+        (let* ((event (key-event 2)))
           (if event
-              (progn
-                (%rl-clear state 't)
-                (%cursor-blink state 't)
-                event)
-              (let* ((phase (car (cdr idle)))
-                     (painted
-                      (if (< phase 0)
-                          (%rl-start state)
-                          (if (= phase 1)
-                              (%rl-scan state)
-                              (if (> phase 1)
-                                  (let* ((answer
-                                          (if (= (mod phase 2) 0)
-                                              (%rl-close state)
-                                              (%rl-open state))))
-                                    (if answer
-                                        (if (= answer 0)
-                                            (%rl-clear state nil)
-                                            (%rl-paint state answer))
-                                        nil))
-                                  nil)))))
-                (progn (%cursor-blink state painted) nil)))))))
+              (%rl-clear (cdr (car state)) (car s1) (car s3) (car s5)
+                         (car (cdr s5)) (car s7) idle event)
+              (%rl-wait state s1 s3 s5 s7 idle))))))
 
 (defun %rl-render (codes index column stop cursor row)
   (if (= row -1)
@@ -223,19 +234,20 @@
 
 (defun %rl-screen-tail (codes index column stop cursor row)
   (if (= row -2)
-      (progn
-        (write-char 19)
-        (dotimes (line stop nil) (write-char 17)))
-      (let* ((prompted (< row -2)))
+      (let ((text "lisp65> "))
+        (dotimes (at 8 nil)
+          (screen-put-char at stop (string-ref text at) 1)))
+      (let* ((native (< row -34))
+             (prompted (< row -2))
+             (actual-row (if native (- 0 (+ row 34)) (- 0 (+ row 2)))))
         (if (and prompted (= cursor -1))
-            (%rl-render nil 0 0 (car (screen-size)) -2
-                        (- 0 (+ row 2)))
+            (%rl-render nil 0 0 (car (screen-size)) -2 actual-row)
             (if (and prompted (< column 0))
                 (%rl-screen-tail (if codes (cdr codes) nil)
                                  (+ index 1) (+ column 1) stop cursor row)
-                (let* ((origin (if prompted 5 0)))
+                (let* ((origin (if native 8 (if prompted 5 0))))
                   (%rl-render codes index (+ column origin) (+ stop origin)
-                              cursor (if prompted (- 0 (+ row 2)) row))))))))
+                              cursor (if prompted actual-row row))))))))
 
 (defun %rl-cut (state before removed)
   (let* ((head (car state))
@@ -369,15 +381,34 @@
                   (%string-from-codes codes)))
               (%rl-dispatch command state))))))
 
-(defun read-line ()
+(defun %native-prompt (row)
+  (%rl-screen-tail nil 0 0 row nil -2))
+
+(defun %native-read-line () (read-line (quote native)))
+
+(defun %rl-session (native)
   (let* ((size (screen-size))
-         (columns (car size))
-         (row (- (car (cdr size)) 1))
+         (full-columns (car size))
+         (screen-row (- (car (cdr size)) 1))
+         (columns (if native (- full-columns 8) full-columns))
+         (row (if native (- 0 (+ screen-row 34)) screen-row))
          (head (cons 0 nil))
          (blink (cons (%frame-low) 't))
          (idle (list blink -1 0 0 0 nil 0 0
                      (cons 0 0) (cons 0 0) nil))
          (state (list head head head 0 0 0 columns row nil nil idle)))
     (progn
+      (if native (%native-prompt screen-row) nil)
       (%rl-screen-tail nil 0 0 columns 0 row)
       (%read-line-loop state))))
+
+(defun read-line (&rest prompt)
+  (progn
+    (poke 255 141 255)
+    (poke 255 140 0)
+    (dotimes (counter 4 nil) (poke 188 (+ 252 counter) 0))
+    (poke 255 141 0)
+    (let* ((answer (%rl-session (if prompt 't nil))))
+      (progn
+        (poke 255 141 255)
+        answer))))

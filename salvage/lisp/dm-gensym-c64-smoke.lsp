@@ -1,0 +1,7 @@
+; Native C64 DM+GENSYM hygiene smoke.
+
+(DE RG (G) (LIST (QUOTE RETURN) (LIST (QUOTE TIMES) G G)))
+(DE SG (G L) (LIST (QUOTE SETQ) G (CADR L)))
+(DE MG (G L) (LIST (QUOTE PROG) (LIST G) (SG G L) (RG G)))
+(DM HS L (MG (GENSYM) L))
+(DE DMG () (PROG NIL (SETQ G 99) (RETURN (LIST (HS 8) (HS 5) G))))

@@ -1,0 +1,105 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-d1-autoboot-first-red-v1",
+  "recorded_on": "2026-08-07",
+  "status": "first-red-d1-autoboot-not-entered",
+  "authorization": {
+    "phase_c_authority_commit": "12e4a70f",
+    "owner_signal": "bereit",
+    "scope": "Phase D in the bound D1, D3, cold-reset, D2 order"
+  },
+  "candidate_authority": {
+    "media_readback_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-two-variant-media-readback-receipt.json",
+      "bytes": 4474,
+      "sha256": "cc347e712d3d79cce115321face4181942ccf4c1aed3f50c36c88a1896cab5c3"
+    },
+    "shared_product_D81": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/shared-system/lisp65-product.d81",
+      "bytes": 819200,
+      "sha256": "ed4e5c7281913e351550f10533a585c2516a7a0a4214a66cf93cf35252aee306"
+    }
+  },
+  "contact": {
+    "device": "/dev/ttyUSB1",
+    "sequence": [
+      "cold reset",
+      "upload shared Link-92-r5 product D81 as V14L92.D81",
+      "read the uploaded D81 back",
+      "request mount of V14L92.D81 through the FTP command stream",
+      "allow the FTP tool's terminal reset and exit",
+      "observe no monitor or input traffic for 30 seconds",
+      "take exactly one banner screenshot"
+    ],
+    "owner_input": "none",
+    "monitor_crossings_after_mount": 0,
+    "first_observation_floor_seconds": 30,
+    "first_observations": 1
+  },
+  "transfer_evidence": {
+    "upload_log": {
+      "path": "build/c2.3/v1.4.0-release/phase-d/run/D1-upload.log",
+      "bytes": 2485,
+      "sha256": "ab55c31cff7474a09c25d1f0bae8eb078d08a9d649342d7e0a1c1817f4c82830",
+      "observed": "819200 bytes uploaded, 819200 bytes downloaded; FTP tool reports its terminal reset and exit",
+      "claim_limit": "The command stream requested mount, but this log contains no independent proof that the mount or AUTOBOOT took effect."
+    },
+    "device_readback": {
+      "path": "build/c2.3/v1.4.0-release/phase-d/run/D1-product-readback.d81",
+      "bytes": 819200,
+      "sha256": "ed4e5c7281913e351550f10533a585c2516a7a0a4214a66cf93cf35252aee306",
+      "byteidentical_to_shared_product_D81": true
+    }
+  },
+  "first_observation": {
+    "screenshot": {
+      "path": "build/c2.3/v1.4.0-release/phase-d/run/D1-banner.png",
+      "bytes": 4142,
+      "sha256": "43f893952297ee2ecd0cd021cbd5cd820876d8168fb14205718038e599c23482"
+    },
+    "decoded_screen": {
+      "path": "build/c2.3/v1.4.0-release/phase-d/run/D1-banner.txt",
+      "bytes": 2253,
+      "sha256": "e67395e47656b9ae6c706cb5654f7bf242aa51d78a61b075192a024e357f7f4e"
+    },
+    "visible_state": "MEGA65/C65 BASIC 65 welcome screen",
+    "workbench_1_4_0_banner_visible": false,
+    "lisp65_prompt_visible": false,
+    "ready_prompt_visible": false,
+    "classification": "D1 setup First Red before product acceptance"
+  },
+  "attribution_boundary": {
+    "proven": [
+      "the exact closed shared product medium reached the SD-card file and read back byteidentically",
+      "the first allowed post-reset observation did not show WORKBENCH 1.4.0 or lisp65",
+      "no D1 smoke, D3 freight row or D2 conditional row ran"
+    ],
+    "not_proven": [
+      "that the FTP mount request became the active boot medium",
+      "that AUTOBOOT entered the Link-92-r5 product",
+      "that any Link-92-r5 product byte executed",
+      "that the product boot path failed"
+    ],
+    "mechanism": "unattributed mount/AUTOBOOT launch-choreography boundary",
+    "product_claim": "none"
+  },
+  "execution_accounting": {
+    "hardware_contacts": 1,
+    "d1_setup_attempts": 1,
+    "d1_product_rows": 0,
+    "d3_rows": 0,
+    "d2_rows": 0,
+    "forms_typed": 0,
+    "product_rebuilds": 0,
+    "media_rebuilds": 0,
+    "additional_links": 0,
+    "automatic_retries": 0
+  },
+  "disposition": {
+    "phase_d": "halted-before-D1-product-row",
+    "phase_e": "closed",
+    "halt_1": "not_reached",
+    "recontact_authorized": false,
+    "recommended_next_step": "Bind a Link-92-specific Phase-D launch runner and dry-run that proves the exact medium identity, mount/reset semantics, absence of a redundant post-mount reset, the first-observation floor, and a fail-closed WORKBENCH 1.4.0 banner assertion before asking for another contact."
+  },
+  "claim_limit": "This receipt is a setup/harness First Red only. It binds a byteidentical medium transfer and a non-entered AUTOBOOT observation; it makes no product, D1, D3, D2, selector, Halt, Phase E or release claim."
+}

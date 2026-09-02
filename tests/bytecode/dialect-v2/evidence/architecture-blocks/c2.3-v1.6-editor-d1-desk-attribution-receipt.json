@@ -1,0 +1,89 @@
+{
+  "attribution": {
+    "mechanism_claim": "unacknowledged virtual-key delivery remains the first unresolved boundary",
+    "named_site": "c2_kernal_event_poll no-event return at $E033..$E037",
+    "owner_claim_correction": "The quiet row refutes monitor-crossing as a necessary cause, but it does not convert m65 submission into hardware arrival. The stopped state is idle, not stuck.",
+    "register_disposition": "Do not close as a product-stall witness; retain the known issue, but record D1 as transport-unproven partial delivery."
+  },
+  "authorities": {
+    "historical_same-signature_receipt": {
+      "bytes": 5655,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-hang-triggered-device-receipt.json",
+      "sha256": "ba3e6bbdef234d722c7455601eae7ceca931dc3e34ffacb6e2ecb729816dbaf0"
+    },
+    "link88_ELF": {
+      "bytes": 622560,
+      "path": "build/c2.3/v1.3.0-candidate-product-link88-r1/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c44fada3f183d528515836eb1f361809a1d36b61a93a2e248e9e9bbd05875be7"
+    },
+    "owner_commission": {
+      "bytes": 31889,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "273038d81fd7be3eb0e85d34134791916dc9c9ce0a6fc6e8094250e5ede6c0d4"
+    },
+    "phase_D": {
+      "bytes": 4245,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-d-device-first-red-receipt.json",
+      "sha256": "51c7a71146cf5d4408328e73f79f98ab974a41f71d198e0f0045db225692902b"
+    },
+    "tool": {
+      "bytes": 17406,
+      "path": "tools/host-lisp/c2_v16_phase_d_desk_attribution.py",
+      "sha256": "da230db2a3756d6cadbdea0aa8db414f1babb9d32bc37aa280de78863007db43"
+    }
+  },
+  "claim_limit": "Artifact/stopped-state attribution only. No device, product byte, fix, GC mechanism or per-key arrival claim.",
+  "evidence_reading": {
+    "gc_note": "gc_runs=9 is cumulative; treating it as a delta would invent a collection witness.",
+    "not_proven": [
+      "arrival of each of the 64 submitted keys at $D60A/$D619",
+      "a GC transition during the measured interval (no pre-key gc_runs value exists)",
+      "a CPU hang or spin inside the collector",
+      "which of the two linked event-poll callers owned the sampled frame (stack bytes were not captured)"
+    ],
+    "proven": [
+      "56 of 64 virtual-key submissions persisted in measure3",
+      "the hardware queue was empty at the one stop",
+      "the sampled CPU was returning 'no event' from the product event poll",
+      "zero monitor traffic occurred during the 64-key interval"
+    ]
+  },
+  "format": "lisp65-c2.3-v1.6-editor-D1-desk-attribution-v1",
+  "linked_truth": {
+    "PC": "0xe035",
+    "gc_collect": {
+      "PC_inside": false,
+      "bytes": 1483,
+      "start": "0x38f7"
+    },
+    "gc_runs": {
+      "address": "0xb9f0",
+      "value": 9
+    },
+    "instruction": "LDZ #$00",
+    "offset": 53,
+    "path": "LDA #$00; LDZ #$00; RTS \u2014 ordinary no-event return",
+    "possible_callers_not_distinguished_without_stack": [
+      {
+        "start": "0x8251",
+        "symbol": "lisp_input_event"
+      },
+      {
+        "start": "0x43bf",
+        "symbol": "vm_run_inner"
+      }
+    ],
+    "symbol": "c2_kernal_event_poll",
+    "symbol_bytes": 56,
+    "symbol_start": "0xe000"
+  },
+  "precedent": {
+    "PC": "c2_kernal_event_poll+0",
+    "bound_reading": "setup/input-delivery failure, not a product GC stall",
+    "gc_delta": 1,
+    "partial_fill": "13/34",
+    "queue": "empty"
+  },
+  "recorded_on": "2026-08-04",
+  "status": "D1-PC-attributed-product-stall-not-proven"
+}

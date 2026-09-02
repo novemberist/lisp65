@@ -1,0 +1,73 @@
+{
+  "format": "lisp65-remote-source-binding-implementation-receipt-v1",
+  "version": 1,
+  "status": "passed",
+  "recorded_on": "2026-07-18",
+  "source_commit": "07fded0b28d65342c0c2c06dfd7c85178b786ebf",
+  "remote_source_binding": {
+    "format": "lisp65-evidence-remote-source-binding-v1",
+    "version": 1,
+    "remote": "github",
+    "branch_ref": "refs/heads/codex/post-1.0-docs-cleanup",
+    "remote_head": "07fded0b28d65342c0c2c06dfd7c85178b786ebf",
+    "remote_transport_head": "07fded0b28d65342c0c2c06dfd7c85178b786ebf",
+    "source_commit": "07fded0b28d65342c0c2c06dfd7c85178b786ebf",
+    "source_transport_commit": "07fded0b28d65342c0c2c06dfd7c85178b786ebf",
+    "relation": "source-commit-is-remote-ancestor"
+  },
+  "authorities": [
+    {
+      "path": "config/promotion-archive-policy.json",
+      "sha256": "dc1cc99cf735e4b165f2c9a6d9ae413ddc76a8c97ec67731e10e11733a8d6af0"
+    },
+    {
+      "path": "tools/host-lisp/promotion_archive.py",
+      "sha256": "e2c102b004dfc06dc427f880efb43032f799b08b939bf230955318ae93df8f31"
+    },
+    {
+      "path": "tools/host-lisp/promotion_archive_offline.py",
+      "sha256": "d0d4907b2a2339ff6a5cf854c23991bd4cc7bd20eca5f87fafc805faf6ebe06a"
+    },
+    {
+      "path": "tools/host-lisp/r6_g6_seal.py",
+      "sha256": "e9db81f0109602b83ccf4341b12a83de89d10f1a998573f7ef45fc2359477e7d"
+    },
+    {
+      "path": "tools/host-lisp/r6_g6_seal_offline.py",
+      "sha256": "8d9151e5780745234b134ae933fb2410240de503b5235eb47c227dca3d2d1646"
+    },
+    {
+      "path": "tools/host-lisp/remote_source_binding.py",
+      "sha256": "9a9ad304fcd6a8974ebbb4ecc3ba4eef3bcf77799e65866954c99d4d825eddd1"
+    }
+  ],
+  "emission": {
+    "promotion_manifest": "lisp65-promotion-archive-v3",
+    "hardware_acceptance_manifest_version": 2,
+    "field": "remote_source_binding.remote_head",
+    "source_must_already_be_remote": true
+  },
+  "negative_tests": {
+    "promotion_missing_binding_rejected": true,
+    "promotion_malformed_head_rejected": true,
+    "g6_missing_binding_rejected": true,
+    "g6_malformed_head_rejected": true,
+    "historical_promotion_v2_without_binding_accepted": true,
+    "historical_g6_v1_without_binding_accepted": true
+  },
+  "transport_gates": {
+    "git_blob_limit_bytes": 50000000,
+    "archive_suffix_rejected_from_index_and_history": ".tar.gz",
+    "pre_commit_hook_sha256": "2403fedb176dce82dbda0acaab818e8fd25b31c3916de0464e80bc685ef6c7bd",
+    "pre_push_hook_sha256": "05a9bc7da0789edc78175c94cd8a8ce4fbbf5c3d7a3ce67946204de693c3b6a1",
+    "verified_push_script_sha256": "6a242e7a3cbd303553c35798ed2be9002c31e1dab99b71aa2bb23f1f38e5f7b7",
+    "branch_ref_equality": "passed",
+    "complete_tag_ref_equality": "passed",
+    "tag_count": 4
+  },
+  "immutability": {
+    "historical_archives_amended": 0,
+    "historical_missing_fields": "accepted-only-in-pre-policy-manifest-versions"
+  },
+  "result": "passed"
+}

@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: physical keymap gate required an untracked MEGA65-core checkout",
+  "source_commit": "ca858da44cf940cf6cd45ad902b820e25fddbc17",
+  "axis": "fresh-clone-seed-23-pago-pago-2002",
+  "failed_step": "L-full queue-to-product-action source gate inside WPLTO",
+  "diagnostic": "FileNotFoundError: build/upstream-verification/mega65-core/src/vhdl/matrix_to_ascii.vhdl",
+  "cause": "The physical keymap proof used a local upstream-verification checkout. The product repository pinned the core commit and full-source SHA values in receipts, but did not carry the exact source excerpts consumed by the gate.",
+  "correction": "Version the minimal Matrix/I/O-mapper/UART proof excerpts together with the upstream commit and all nine full-source SHA-256 identities. When the full pinned checkout is present, the gate cross-checks every excerpt against it; Fresh Clone consumes the tracked snapshot and runs the same semantic and mutation checks.",
+  "execution_accounting": {
+    "fresh_clones_started": 1,
+    "product_links_completed": 0,
+    "media_packages": 0,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

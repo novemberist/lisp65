@@ -1,0 +1,402 @@
+{
+  "capacity": {
+    "attic_immutable": {
+      "shelf_bytes": 70897
+    },
+    "bank0": {
+      "fixed_bank0_code_bytes": 45,
+      "fixed_bank0_headroom_bytes": 273,
+      "fixed_bank0_state_bytes": 408,
+      "fixed_host_vector_bytes": 36,
+      "fixed_zero_page_state_bytes": 7,
+      "new_kernal_facade_and_state_bytes": 818,
+      "retired_directory_projection_bytes": 697
+    },
+    "bank5_mutable_plane": {
+      "c2d_bytes": 33840,
+      "capacity_bytes": 65536,
+      "headroom_bytes": 31696
+    },
+    "cpu_e000_window": {
+      "actual_future_margin_bytes": 3417,
+      "actual_live_window_bytes": 4775,
+      "contract_future_margin_bytes": 4071,
+      "fixed_resident_deficit_bytes": 3639,
+      "gross_window_bytes": 8192,
+      "relocated_c2_resident_bytes": 4595,
+      "replacement_categories": {
+        "alignment_and_vectors": 22,
+        "frame_source": 9,
+        "irq_handler": 45,
+        "map_switch_and_guards": 316,
+        "nmi_and_freezer_return": 9,
+        "post_startup_output_seam": 4,
+        "typed_queue_driver": 77
+      },
+      "replacement_resident_bytes": 482
+    },
+    "publish_last_binding": {
+      "net_resident_bytes": 0,
+      "non_lto_table_bytes": 32,
+      "retired_embedded_tuple_bytes": 32
+    },
+    "runtime_overlay_bank": {
+      "boot_image_bytes": 12273,
+      "families_are_lifetime_exclusive": true,
+      "retired_l65m_bytes": 36744,
+      "session_image_bytes": 58270
+    }
+  },
+  "claim_limit": "Fresh Link-19 structural pin only. No Link-18 green is inherited. Artifact replay, hardware acceptance, promotion and release remain not-run.",
+  "control_flow_ownership": {
+    "audited_pre_main_chrout_edges": 1,
+    "direct_window_edges": 275,
+    "entry_edges": 161,
+    "executable_sections": [
+      ".lisp65_c2_kernal_window.c2_resident",
+      ".lisp65_c2_kernal_window.event_poll",
+      ".lisp65_c2_kernal_window.frame_source",
+      ".lisp65_c2_kernal_window.irq_handler",
+      ".lisp65_c2_kernal_window.map_switch_and_guards",
+      ".lisp65_c2_kernal_window.nmi_and_freezer_return",
+      ".lisp65_c2_kernal_window.post_startup_output_seam",
+      ".lisp65_c2_kernal_window.typed_queue_driver"
+    ],
+    "ignored_absolute_or_weak_alias_count": 95,
+    "matrix": {
+      "absolute-weak-alias-disguised-exit": "rejected",
+      "inter-function-non-entry-offset": "rejected",
+      "jsr-to-internal-basic-block": "rejected",
+      "owned-state-or-data-target": "rejected",
+      "same-function-mid-instruction": "rejected",
+      "same-function-symbol-less-basic-block": "passed"
+    },
+    "model": "section-qualified-function-and-instruction-boundary-v1",
+    "owned_function_entries": {
+      "57344": "c2_kernal_window_poll",
+      "57375": "c2_kernal_frame_tick",
+      "57384": "c2_kernal_irq_handler",
+      "57429": "c2_kernal_nmi_handler",
+      "57438": "c2_kernal_fail_closed",
+      "57452": "c2_kernal_output_cell",
+      "57456": "c2_kernal_event_poll",
+      "57502": "c2_stream_shelf_read",
+      "57711": "c2_dma_copy",
+      "57856": "c2_stream_c2d_read",
+      "57943": "c2_stream_c2d_write",
+      "58037": "c2_stream_name_value",
+      "58870": "c2_stream_gc_checkpoint",
+      "58999": "c2_product_entry_length",
+      "59175": "c2_entry_records",
+      "59823": "c2_source_read",
+      "59937": "c2_overlay_call",
+      "59966": "c2_decode_from",
+      "60756": "c2_header_counts",
+      "60798": "c2_append_begin",
+      "61113": "c2_session_emit_reset",
+      "61160": "c2_session_emit_add",
+      "61665": "c2_session_emit_finalize"
+    },
+    "same_function_basic_block_jumps": 113,
+    "violations": []
+  },
+  "evidence_object_count": 43,
+  "evidence_objects": [
+    {
+      "bytes": 420,
+      "path": "build/c2.2/substitution/product-link-19/c2-kernal-window.generated.h",
+      "role": "link19:c2-kernal-window.generated.h",
+      "sha256": "4f1b4f2185e762be3ce03518b5050fcbfee13c95ff167cf7a7f4c3a8f09c1d31"
+    },
+    {
+      "bytes": 8192,
+      "path": "build/c2.2/substitution/product-link-19/c2-product-kernal-window.bin",
+      "role": "link19:c2-product-kernal-window.bin",
+      "sha256": "2deab00a303df6bea6cadb56736a655dd74b276e209c5735b452dfdd4bcfa2c0"
+    },
+    {
+      "bytes": 46900,
+      "path": "build/c2.2/substitution/product-link-19/c2-substitution.ld",
+      "role": "link19:c2-substitution.ld",
+      "sha256": "c57ca144a1a9138cb55f14bdb44f9ace9a65beb02256d120d517118ccfe55ae5"
+    },
+    {
+      "bytes": 1542,
+      "path": "build/c2.2/substitution/product-link-19/eighteenth-substitution-link.json",
+      "role": "link19:eighteenth-substitution-link.json",
+      "sha256": "bf99bf858f9dcc19b524d56a189619c08e2ea3102664ea5988a9c0e2e0f648d4"
+    },
+    {
+      "bytes": 770,
+      "path": "build/c2.2/substitution/product-link-19/error-text-table.bin",
+      "role": "link19:error-text-table.bin",
+      "sha256": "12010ac63d737c3c0c646e5ec8d55e2c03fdc500a40608d8947841f480269de5"
+    },
+    {
+      "bytes": 11362,
+      "path": "build/c2.2/substitution/product-link-19/error-text-table.h",
+      "role": "link19:error-text-table.h",
+      "sha256": "72e7aed8501e3b2f24bad5174a8c5478f93dba7dfe9ade3358a6ae043621b622"
+    },
+    {
+      "bytes": 1835,
+      "path": "build/c2.2/substitution/product-link-19/fixed-host-facade-final.json",
+      "role": "link19:fixed-host-facade-final.json",
+      "sha256": "381980eeaad6a3c610637c0889353f35302ec49e4d1b40d48f6a07a6a5a4a930"
+    },
+    {
+      "bytes": 4397,
+      "path": "build/c2.2/substitution/product-link-19/kernal-freedom-link.json",
+      "role": "link19:kernal-freedom-link.json",
+      "sha256": "30e93381145c9124c6ae6495152687f3ce0431025fb26af40d611efc6b825b9b"
+    },
+    {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-19/lisp65-c2-substitution-linked.prg",
+      "role": "link19:lisp65-c2-substitution-linked.prg",
+      "sha256": "1fb99ddbbc7fe011efc6b28c7c4e61adf7ced4258d2e9939ececbaaad526517e"
+    },
+    {
+      "bytes": 141604,
+      "path": "build/c2.2/substitution/product-link-19/lisp65-c2-substitution-linked.prg.elf",
+      "role": "link19:lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "4eb98e1f05ac889b43f58a0899da5da09d7b29a0fbe858be9d22b15f4bd85bf1"
+    },
+    {
+      "bytes": 118408,
+      "path": "build/c2.2/substitution/product-link-19/lisp65-c2-substitution-linked.prg.map",
+      "role": "link19:lisp65-c2-substitution-linked.prg.map",
+      "sha256": "a216f3eff2100ad16c72941975b6eb5b509d44376a3cf3a8dbeffb0f84969206"
+    },
+    {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-19/lisp65-c2-substitution-unbound.prg",
+      "role": "link19:lisp65-c2-substitution-unbound.prg",
+      "sha256": "a842bfc37e2cbcc6650c8391923dee0c3bf74f91d15441b9ccbaec284ba20434"
+    },
+    {
+      "bytes": 253,
+      "path": "build/c2.2/substitution/product-link-19/one-truth-closure.json",
+      "role": "link19:one-truth-closure.json",
+      "sha256": "046cac12da5ef4de69eeff312090ff9a16cf88f6b59d2b7a3e15280a7be7c441"
+    },
+    {
+      "bytes": 2021,
+      "path": "build/c2.2/substitution/product-link-19/pre-ownership-closure-final.json",
+      "role": "link19:pre-ownership-closure-final.json",
+      "sha256": "a89da1c62eeb92392374cd1858333350fa546baf5f324a52c3d49a8d507922d3"
+    },
+    {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-19/resident-island-seed.prg",
+      "role": "link19:resident-island-seed.prg",
+      "sha256": "f5d3c8f6d151ecb8cbb986d667f2cfdcd4b04dd1536b4b5c088d3cdbcce9c4dd"
+    },
+    {
+      "bytes": 142740,
+      "path": "build/c2.2/substitution/product-link-19/resident-island-seed.prg.elf",
+      "role": "link19:resident-island-seed.prg.elf",
+      "sha256": "3eb08ca677c120bc2ada506c1056f0ef60ee769745bdb782168f1ccc464e46a6"
+    },
+    {
+      "bytes": 115999,
+      "path": "build/c2.2/substitution/product-link-19/resident-island-seed.prg.map",
+      "role": "link19:resident-island-seed.prg.map",
+      "sha256": "23350c4367ad7f511e662f93b43783ce764c1e1844a2538ab7802681457dbb61"
+    },
+    {
+      "bytes": 2976,
+      "path": "build/c2.2/substitution/product-link-19/resident-island.h",
+      "role": "link19:resident-island.h",
+      "sha256": "8a83e097a4f049e11f3ca59a4ba480b34b9bd860f83cc56a1f78dcf3cbe5c699"
+    },
+    {
+      "bytes": 10249,
+      "path": "build/c2.2/substitution/product-link-19/resident-island.prepare.h",
+      "role": "link19:resident-island.prepare.h",
+      "sha256": "fb5f1fcb8a627ecec9e133eaf9a9da794eb90474b6b81fbec65c0e31971e0c23"
+    },
+    {
+      "bytes": 4318,
+      "path": "build/c2.2/substitution/product-link-19/resolved-profile.txt",
+      "role": "link19:resolved-profile.txt",
+      "sha256": "56d2fb90f1ba0b1ec546282744c4b4668dd0d62e72e44e382d6818a5d5e2ed1b"
+    },
+    {
+      "bytes": 376,
+      "path": "build/c2.2/substitution/product-link-19/runtime-family-total-identity.json",
+      "role": "link19:runtime-family-total-identity.json",
+      "sha256": "5e9ee4a7d5064ad5bd538d2ceecfb75e0757780033a6852350ce2156c370b120"
+    },
+    {
+      "bytes": 1216,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlay-boot-final.h",
+      "role": "link19:runtime-overlay-boot-final.h",
+      "sha256": "b7f7227ea51d55ccc82ff289a9767aa7113fad488747e26d16bbd441fe2f7b2e"
+    },
+    {
+      "bytes": 1216,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlay-boot-unbound.h",
+      "role": "link19:runtime-overlay-boot-unbound.h",
+      "sha256": "b7f7227ea51d55ccc82ff289a9767aa7113fad488747e26d16bbd441fe2f7b2e"
+    },
+    {
+      "bytes": 1216,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlay-session-final.h",
+      "role": "link19:runtime-overlay-session-final.h",
+      "sha256": "61d935a83e1e5b83894f88d4ee00414d733dc03290b102791b6bb4304407c507"
+    },
+    {
+      "bytes": 1216,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlay-session-unbound.h",
+      "role": "link19:runtime-overlay-session-unbound.h",
+      "sha256": "61d935a83e1e5b83894f88d4ee00414d733dc03290b102791b6bb4304407c507"
+    },
+    {
+      "bytes": 32,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlay-verifier-bindings.bin",
+      "role": "link19:runtime-overlay-verifier-bindings.bin",
+      "sha256": "b1dcb06d3779f8ef2d649e1265b3d1a299dbbdc7b9ed9f6079eacc4d5ddd378a"
+    },
+    {
+      "bytes": 1216,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlay.prepare-standard.h",
+      "role": "link19:runtime-overlay.prepare-standard.h",
+      "sha256": "31ee6739e2c88a477d0f0f0af1d77b9a21495130f5f9ecaa567da1987769595b"
+    },
+    {
+      "bytes": 2217,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlay.prepare.h",
+      "role": "link19:runtime-overlay.prepare.h",
+      "sha256": "66c256e704fe8835949b99e5f721e1fadb4d1d42736430762201c4ea4ab880c9"
+    },
+    {
+      "bytes": 12273,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-boot-final.bin",
+      "role": "link19:runtime-overlays-boot-final.bin",
+      "sha256": "77274026e9ce238d0740762285391e7f33530eee785c94d2d2a265499882a2ce"
+    },
+    {
+      "bytes": 7839,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-boot-final.json",
+      "role": "link19:runtime-overlays-boot-final.json",
+      "sha256": "4365967b88014bb38c40aba291ba19dc875b7e483e92b0d421a55c34ececac03"
+    },
+    {
+      "bytes": 12273,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-boot-unbound.bin",
+      "role": "link19:runtime-overlays-boot-unbound.bin",
+      "sha256": "77274026e9ce238d0740762285391e7f33530eee785c94d2d2a265499882a2ce"
+    },
+    {
+      "bytes": 7843,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-boot-unbound.json",
+      "role": "link19:runtime-overlays-boot-unbound.json",
+      "sha256": "1ee355ed1c9c78751622f2aa674c9990d1979e679b41d93b7f5f8960184e452e"
+    },
+    {
+      "bytes": 58270,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-final.bin",
+      "role": "link19:runtime-overlays-final.bin",
+      "sha256": "1cc05140fdacbd9bd06faee157ce3d2a03c5a0747a6cdaa85e2b151f32055a81"
+    },
+    {
+      "bytes": 58270,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-session-final.bin",
+      "role": "link19:runtime-overlays-session-final.bin",
+      "sha256": "1cc05140fdacbd9bd06faee157ce3d2a03c5a0747a6cdaa85e2b151f32055a81"
+    },
+    {
+      "bytes": 32830,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-session-final.json",
+      "role": "link19:runtime-overlays-session-final.json",
+      "sha256": "8aa8b64adf4d35c9a3991972f4c167f12a53cd60d54b392737600293b140e296"
+    },
+    {
+      "bytes": 58270,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-session-unbound.bin",
+      "role": "link19:runtime-overlays-session-unbound.bin",
+      "sha256": "1cc05140fdacbd9bd06faee157ce3d2a03c5a0747a6cdaa85e2b151f32055a81"
+    },
+    {
+      "bytes": 32834,
+      "path": "build/c2.2/substitution/product-link-19/runtime-overlays-session-unbound.json",
+      "role": "link19:runtime-overlays-session-unbound.json",
+      "sha256": "ebd5c55e9906b6a98ec2a568a5cb786af7b0b2d1f2b8781d2a1ba8bbafe473d6"
+    },
+    {
+      "bytes": 623,
+      "path": "build/c2.2/substitution/product-link-19/runtime-verifier-publish-last.json",
+      "role": "link19:runtime-verifier-publish-last.json",
+      "sha256": "acc696337058bece6df8d5cfce26ab5bb46688ab9709e8e520cf748a33235b8d"
+    },
+    {
+      "bytes": 238,
+      "path": "build/c2.2/substitution/product-link-19/stage-config.h",
+      "role": "link19:stage-config.h",
+      "sha256": "330eef5aef083610e1472651c26e7afb19ade40d085defc5ae4956b87becd8b2"
+    },
+    {
+      "bytes": 3402,
+      "path": "build/c2.2/substitution/product-link-19/substitution-balance.json",
+      "role": "link19:substitution-balance.json",
+      "sha256": "2ecfd223f5fab64126bd5322b48dbd24afd84452d4056762af1be0cb5227c4d4"
+    },
+    {
+      "bytes": 2104,
+      "path": "build/c2.2/substitution/substitution-artifacts.json",
+      "role": "c2-substitution-artifact-manifest",
+      "sha256": "e204a6c28234ac2b80e4e2324e27cafd919677992fcbc18ca0adcc297bf8c512"
+    },
+    {
+      "bytes": 70897,
+      "path": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+      "role": "immutable-c2-shelf",
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+    },
+    {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/initial.c2d-v3.bin",
+      "role": "initial-c2d-mutable-plane",
+      "sha256": "0a0ddf0168028bae27e7cd6fdc687fe8ca3a3f4940cdf70dae844c0bd5c1c185"
+    }
+  ],
+  "format": "lisp65-c2-product-substitution-link-pin-v1",
+  "gate_driver": {
+    "bytes": 100669,
+    "path": "tools/host-lisp/c2_product_substitution_link.py",
+    "role": "link-and-structural-gate-driver",
+    "sha256": "6589b06892737b34165f05ad25fff18f13024cb62646d706582a8a39a299cc36"
+  },
+  "inheritance": "none; every Link-19 structural and capacity gate ran fresh",
+  "link_counts": {
+    "product_closure": 1,
+    "resident_island_seed": 1
+  },
+  "link_number": 19,
+  "product_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-19/lisp65-c2-substitution-linked.prg",
+    "role": "link19-product-prg",
+    "sha256": "1fb99ddbbc7fe011efc6b28c7c4e61adf7ced4258d2e9939ececbaaad526517e"
+  },
+  "recorded_on": "2026-07-20",
+  "remaining_claims": {
+    "artifact_replay": "not-run",
+    "hardware": "not-run",
+    "promotion": "not-run",
+    "release": "not-run"
+  },
+  "status": "pinned-structural-hardware-not-run",
+  "structural_gates": {
+    "capacity": "passed",
+    "fixed_host_facade": "passed",
+    "identity": "passed",
+    "kernal_freedom": "passed",
+    "mutated_payload_negative": "rejected",
+    "one_truth": "passed",
+    "pre_ownership": "passed",
+    "runtime_family_total_identity": "passed",
+    "substitution_balance": "passed"
+  }
+}

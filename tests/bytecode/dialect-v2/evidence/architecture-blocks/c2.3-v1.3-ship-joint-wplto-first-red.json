@@ -1,0 +1,89 @@
+{
+  "format": "lisp65-c2.3-v1.3-ship-joint-WPLTO-first-red-v1",
+  "recorded_on": "2026-08-01",
+  "status": "FIRST RED: destructive-DEL support changed the inherited compiler static-stack shape",
+  "promotable": false,
+  "target_linker_invocations": 1,
+  "product_links": 0,
+  "hardware_runs": 0,
+  "linker_diagnostic": "C2 inherited noinit/fixed-block geometry drift",
+  "static_plane": {
+    "status": "passed-before-link",
+    "bank2_static_code_bytes": 45318,
+    "bank2_delta_bytes": 255,
+    "bank2_headroom_bytes": 20218,
+    "entries": 755,
+    "resolutions": 2944,
+    "roots": 350,
+    "direct_entry_refs": 710,
+    "product_build_id": "0x11a456ca"
+  },
+  "linked_shape_at_failure": {
+    "predecessor": {
+      "scr_putc_bytes": 201,
+      "scr_backspace_bytes": 0,
+      "combined_screen_output_bytes": 201,
+      "compiler_static_stack_noinit_bytes": 6,
+      "overlay_min_start": "$C354"
+    },
+    "candidate": {
+      "scr_putc_bytes": 109,
+      "scr_backspace_bytes": 90,
+      "combined_screen_output_bytes": 199,
+      "combined_text_delta_bytes": -2,
+      "compiler_static_stack_noinit_bytes": 3,
+      "computed_overlay_min_start": "$C350"
+    },
+    "fixed_contract": {
+      "noinit_address": "$C34D",
+      "noinit_bytes": 6,
+      "overlay_min_start": "$C354"
+    }
+  },
+  "attribution": {
+    "mechanism": "The new scr_putc-to-scr_backspace edge changes the LTO partition: scr_backspace becomes a separate 90-byte function, scr_putc shrinks by 92 bytes, and llvm-mos reduces .noinit..Lstatic_stack from 6 to 3 bytes. Text does not overflow; the exact inherited noinit/overlay-VMA contract rejects the changed compiler stack shape before any product candidate can link.",
+    "not_a_bank2_failure": true,
+    "not_a_text_capacity_failure": true,
+    "not_a_product_or_hardware_result": true
+  },
+  "host_freight": {
+    "q": "passed source/artifact oracle and 12 mutations",
+    "read_line_wait": "passed 11 source/artifact cases and 12 mutations",
+    "editor": "permanent Link-83 allocation gate retained",
+    "ship_samples": "4/4 host Runtime executions; 36/36 media members",
+    "interactive_witness": "input=4 output=16 result=0x002a"
+  },
+  "decision_required": {
+    "question": "Authorize one newly carded DEL implementation that preserves the exact inherited noinit/overlay geometry, or remove Workbench read-line from v1.3 freight.",
+    "no_retry_without_owner": true,
+    "forbidden_shortcut": "Do not weaken the exact noinit assertion or silently pad compiler-owned stack state."
+  },
+  "authority": {
+    "candidate_map": {
+      "path": "build/ship-builder/v13/joint-product-shaped-wplto/wplto/resident-island-seed.prg.map",
+      "bytes": 177877,
+      "sha256": "30aa1826960e3f9820f1734d316f6d9f597634ae9e4ad46cbafcfde7f1e9989f"
+    },
+    "predecessor_map": {
+      "path": "build/post-promotion/v126/editor/product-shaped-wplto/wplto/resident-island-seed.prg.map",
+      "bytes": 179212,
+      "sha256": "55b0daf9259e8895f59dbba0881326b7373b8557e9cc24aed63e96355df545d3"
+    },
+    "link_stderr": {
+      "path": "build/ship-builder/v13/joint-product-shaped-wplto/wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 308,
+      "sha256": "a0e53e80221adf1b757551dc907c3d38f2979772f54b644115b3c121cd09e88f"
+    },
+    "profile_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-ship-joint-profile-receipt.json",
+      "bytes": 3678,
+      "sha256": "bc0f8e777d697540f514f7036d059da657218d71bd23a4c3da7becf910e4249a"
+    },
+    "fleet_receipt": {
+      "path": "build/ship-builder/v1-fleet-final/fleet-receipt.json",
+      "bytes": 2084,
+      "sha256": "c0eb7172ad4e1d9adec0892f9f08b97ff79af29c5c41a841df5eb688c3fa2812"
+    }
+  },
+  "claim_limit": "One non-promotable product-shaped WPLTO First Red. No successor product identity, hardware, acceptance or release claim."
+}

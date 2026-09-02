@@ -1,0 +1,2194 @@
+{
+  "authorities": {
+    "failed_whole_product_lto": {
+      "bytes": 619828,
+      "path": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "37ac6cec3234e2cfe2a246f0bfe86f6651ec9ac2007e4dec7bf9478bec5148e6"
+    },
+    "link90_final_elf": {
+      "bytes": 622588,
+      "path": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "aff30032a82a6e3ff0d71a13dc945507e987446f2deee300a1dd6f722f8ef8f4"
+    },
+    "phase_a_tool": {
+      "bytes": 24697,
+      "path": "tools/host-lisp/c2_v18_full_map_phase_a.py",
+      "sha256": "ca7d67a11ad82c0e32119cc5a626b473beaa97fde6aa7791180615b9c508496d"
+    },
+    "v15_contract": {
+      "bytes": 15670,
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    },
+    "v17_contract": {
+      "bytes": 6445,
+      "path": "config/c2-state-ownership-contract.json",
+      "sha256": "d3aab71ef52a8b52b6302eb2b7ca932860f230b7f0d27289a0aaa1a040bb06f0"
+    },
+    "v17_first_red": {
+      "bytes": 2441,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-state-owned-mapped-far-product-card-first-red.json",
+      "sha256": "a7cd0433d1cde6cde81ac253d5a4844d57b7b3d94d033cec66c36abb5e404794"
+    },
+    "v17_first_red_artifacts": [
+      {
+        "bytes": 499,
+        "path": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.link.stderr.txt",
+        "sha256": "691ee34922da4688f8a0741eba6d03d777cfd9d20f992098083cc305f57570c6"
+      },
+      {
+        "bytes": 184720,
+        "path": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.map",
+        "sha256": "61db28a850e927fcebce59238480b23481f988615943b87af58062c8158f6845"
+      },
+      {
+        "bytes": 68176,
+        "path": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/c2-substitution.ld",
+        "sha256": "90103632c924c311a7d93cb6f9e4352159e598ee4ba60e83a0e8bbf2087efd04"
+      }
+    ],
+    "v17_phase_a": {
+      "bytes": 34296,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-state-ownership-phase-a-inventory-receipt.json",
+      "sha256": "36ca85eff18c8f8b59a33ee4b69f3026303a90a26ae2d16217d323b5842ab9b5"
+    },
+    "work_plan": {
+      "bytes": 13956,
+      "path": "docs/planning/1.8-full-map-ownership-work-plan.md",
+      "sha256": "c1716be384e985a4b4b52ef2cfb7519b2fa93ecd535058d17e6469ea087c0840"
+    }
+  },
+  "authority_correction": {
+    "failed_lto_path_present_in_first_red_artifacts": false,
+    "finding": "The 1.7 First-Red receipt SHA-bound map, linker and stderr, but not the failed whole-product LTO object. Phase A binds that preserved object for the first time; the earlier plan wording 'SHA-bound LTO object' was too broad."
+  },
+  "baseline_delta": {
+    ".bss_bytes": 2,
+    ".data_bytes": 0,
+    ".noinit_bytes": -6,
+    ".rodata_bytes": 2
+  },
+  "claim": "Read-only inventory and arithmetic closure only; no compiler, linker, WPLTO, product identity, device, layout selection or semantic change claim.",
+  "execution_witness": {
+    "compiler_invocations": 0,
+    "crt_symbols_read": 19,
+    "hardware_runs": 0,
+    "linker_invocations": 0,
+    "lto_allocatable_chain_inputs_enumerated": 80,
+    "map_members_enumerated": 84,
+    "map_outputs_enumerated": 7,
+    "mutations_rejected": 8,
+    "ordinary_members_enumerated": 79,
+    "profile_members_enumerated": 3,
+    "wplto_invocations": 0
+  },
+  "failed_lto_chain_inputs": [
+    {
+      "bytes": 8,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.lisp65_buffer_overlay_read_entry",
+      "owner": "ordinary-rodata",
+      "section_index": 41
+    },
+    {
+      "bytes": 132,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.vm_run_inner",
+      "owner": "ordinary-rodata",
+      "section_index": 166
+    },
+    {
+      "bytes": 46,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.vm_fixbinop",
+      "owner": "ordinary-rodata",
+      "section_index": 172
+    },
+    {
+      "bytes": 168,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.vm_callprim",
+      "owner": "named-profile-rodata",
+      "section_index": 188
+    },
+    {
+      "bytes": 148,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.vm_native_call",
+      "owner": "named-profile-rodata",
+      "section_index": 198
+    },
+    {
+      "bytes": 32,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.eval_v2_workbench_service",
+      "owner": "named-profile-rodata",
+      "section_index": 216
+    },
+    {
+      "bytes": 12,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.print_obj",
+      "owner": "ordinary-rodata",
+      "section_index": 240
+    },
+    {
+      "bytes": 22,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.read_expr_1",
+      "owner": "ordinary-rodata",
+      "section_index": 264
+    },
+    {
+      "bytes": 8,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_append_header_phase",
+      "owner": "ordinary-rodata",
+      "section_index": 328
+    },
+    {
+      "bytes": 20,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_append_abort_control_phase",
+      "owner": "ordinary-rodata",
+      "section_index": 348
+    },
+    {
+      "bytes": 18,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_stream_phase_08",
+      "owner": "ordinary-rodata",
+      "section_index": 430
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_dma_verify_marker",
+      "owner": "ordinary-rodata",
+      "section_index": 459
+    },
+    {
+      "bytes": 12,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.c2_dma_list",
+      "owner": "ordinary-bss",
+      "section_index": 460
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_edma_probe_marker",
+      "owner": "ordinary-rodata",
+      "section_index": 464
+    },
+    {
+      "bytes": 7,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.lisp65_c2_append_stage_plan",
+      "owner": "ordinary-rodata",
+      "section_index": 470
+    },
+    {
+      "bytes": 5,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.lisp65_c2_append_persistent_publish_plan",
+      "owner": "ordinary-rodata",
+      "section_index": 471
+    },
+    {
+      "bytes": 9,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.lisp65_c2_append_rollback_plan",
+      "owner": "ordinary-rodata",
+      "section_index": 472
+    },
+    {
+      "bytes": 33,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_product_static_image_named.names",
+      "owner": "ordinary-rodata",
+      "section_index": 473
+    },
+    {
+      "bytes": 16,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_append_stage_plane_zero.zeros",
+      "owner": "ordinary-rodata",
+      "section_index": 479
+    },
+    {
+      "bytes": 16,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_append_rollback_zero_plane.zeros",
+      "owner": "ordinary-rodata",
+      "section_index": 480
+    },
+    {
+      "bytes": 16,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_append_rollback_zero_chip_code.zeros",
+      "owner": "ordinary-rodata",
+      "section_index": 481
+    },
+    {
+      "bytes": 16,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata.c2_append_rollback_zero_attic.zeros",
+      "owner": "ordinary-rodata",
+      "section_index": 482
+    },
+    {
+      "bytes": 482,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_MERGE",
+        "SHF_STRINGS"
+      ],
+      "input_section": ".rodata.str1.1",
+      "owner": "ordinary-rodata",
+      "section_index": 483
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.cs_idx",
+      "owner": "ordinary-bss",
+      "section_index": 485
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.k_bytecode",
+      "owner": "ordinary-bss",
+      "section_index": 486
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.k_primitive",
+      "owner": "ordinary-bss",
+      "section_index": 487
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.k_closure",
+      "owner": "ordinary-bss",
+      "section_index": 488
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.k_macro",
+      "owner": "ordinary-bss",
+      "section_index": 489
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.eval.k_lccrun",
+      "owner": "ordinary-bss",
+      "section_index": 490
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.pending_symbol",
+      "owner": "ordinary-bss",
+      "section_index": 492
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.disk_source_pos",
+      "owner": "ordinary-bss",
+      "section_index": 493
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.disk_source_len",
+      "owner": "ordinary-bss",
+      "section_index": 494
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.ext_stg1",
+      "owner": "ordinary-bss",
+      "section_index": 495
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.ext_stg",
+      "owner": "ordinary-bss",
+      "section_index": 496
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.gc_runs",
+      "owner": "ordinary-bss",
+      "section_index": 499
+    },
+    {
+      "bytes": 512,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.markstack",
+      "owner": "ordinary-bss",
+      "section_index": 500
+    },
+    {
+      "bytes": 134,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.marks",
+      "owner": "ordinary-bss",
+      "section_index": 501
+    },
+    {
+      "bytes": 12,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.ext_dl",
+      "owner": "ordinary-bss",
+      "section_index": 504
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.str_stg1",
+      "owner": "ordinary-bss",
+      "section_index": 505
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata..L.str.5.196",
+      "owner": "ordinary-rodata",
+      "section_index": 506
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rd_sf",
+      "owner": "ordinary-bss",
+      "section_index": 507
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rd_sc",
+      "owner": "ordinary-bss",
+      "section_index": 508
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rd_sn",
+      "owner": "ordinary-bss",
+      "section_index": 509
+    },
+    {
+      "bytes": 192,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.repl.buf",
+      "owner": "ordinary-bss",
+      "section_index": 510
+    },
+    {
+      "bytes": 19,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.lisp_toplevel",
+      "owner": "ordinary-bss",
+      "section_index": 511
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.gensym.tag",
+      "owner": "ordinary-bss",
+      "section_index": 512
+    },
+    {
+      "bytes": 94,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.symbnd",
+      "owner": "ordinary-bss",
+      "section_index": 514
+    },
+    {
+      "bytes": 94,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.symfnptr",
+      "owner": "ordinary-bss",
+      "section_index": 515
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.npool",
+      "owner": "ordinary-bss",
+      "section_index": 516
+    },
+    {
+      "bytes": 376,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.namelen4",
+      "owner": "ordinary-bss",
+      "section_index": 517
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_upvals",
+      "owner": "ordinary-bss",
+      "section_index": 518
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_workbench_error_symbols.1",
+      "owner": "ordinary-bss",
+      "section_index": 520
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_workbench_error_symbols.4",
+      "owner": "ordinary-bss",
+      "section_index": 521
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_workbench_error_symbols.9",
+      "owner": "ordinary-bss",
+      "section_index": 522
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_k_key",
+      "owner": "ordinary-bss",
+      "section_index": 523
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_k_shift",
+      "owner": "ordinary-bss",
+      "section_index": 524
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_k_meta",
+      "owner": "ordinary-bss",
+      "section_index": 525
+    },
+    {
+      "bytes": 56,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_codebuf",
+      "owner": "ordinary-bss",
+      "section_index": 526
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_buf_bank",
+      "owner": "ordinary-bss",
+      "section_index": 527
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".data.vm_buf_off",
+      "owner": "ordinary-data",
+      "section_index": 528
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_hdrlen",
+      "owner": "ordinary-bss",
+      "section_index": 530
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_littab",
+      "owner": "ordinary-bss",
+      "section_index": 531
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_code",
+      "owner": "ordinary-bss",
+      "section_index": 532
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_poff",
+      "owner": "ordinary-bss",
+      "section_index": 533
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_plen",
+      "owner": "ordinary-bss",
+      "section_index": 534
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_pwmax",
+      "owner": "ordinary-bss",
+      "section_index": 535
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_win",
+      "owner": "ordinary-bss",
+      "section_index": 536
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_winlen",
+      "owner": "ordinary-bss",
+      "section_index": 537
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vmr_streaming",
+      "owner": "ordinary-bss",
+      "section_index": 538
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.vm_run_inner.poll_",
+      "owner": "ordinary-bss",
+      "section_index": 539
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.lisp_error_msg",
+      "owner": "ordinary-bss",
+      "section_index": 540
+    },
+    {
+      "bytes": 20,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".data.rtov_edma_job",
+      "owner": "ordinary-data",
+      "section_index": 542
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rtov_call_result",
+      "owner": "ordinary-bss",
+      "section_index": 543
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rtov_batch_entry",
+      "owner": "ordinary-bss",
+      "section_index": 544
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rtov_batch_crc",
+      "owner": "ordinary-bss",
+      "section_index": 545
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rtov_fault",
+      "owner": "ordinary-bss",
+      "section_index": 546
+    },
+    {
+      "bytes": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rtov_family",
+      "owner": "ordinary-bss",
+      "section_index": 547
+    },
+    {
+      "bytes": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".bss.rtov_family_generation",
+      "owner": "ordinary-bss",
+      "section_index": 548
+    },
+    {
+      "bytes": 3,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "input_section": ".rodata..Lswitch.table.vm_runtime_overlay_install_island",
+      "owner": "ordinary-rodata",
+      "section_index": 549
+    },
+    {
+      "bytes": 6,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "input_section": ".noinit..Lstatic_stack",
+      "owner": "compiler-static-stack",
+      "section_index": 552
+    }
+  ],
+  "failed_output_chain": [
+    {
+      "alignment": 1,
+      "bytes": 879,
+      "end_exclusive": "0xbc23",
+      "lma": "0xb8b4",
+      "member_bytes": 879,
+      "members": [
+        {
+          "alignment": 1,
+          "bytes": 6,
+          "input_section": ".rodata.vm_boot_overlay_chain_expected",
+          "lma": "0xb8b4",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/.canonical-objects-resident-island-seed/062-c2_boot_chain_commit.s.o",
+          "vma": "0xb8b4"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".rodata",
+          "lma": "0xb8ba",
+          "output": ".rodata",
+          "source": "tools/llvm-mos/mos-platform/common/lib/libcrt.a(const.S.obj)",
+          "vma": "0xb8ba"
+        },
+        {
+          "alignment": 1,
+          "bytes": 8,
+          "input_section": ".rodata.lisp65_buffer_overlay_read_entry",
+          "lma": "0xb8bb",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb8bb"
+        },
+        {
+          "alignment": 1,
+          "bytes": 132,
+          "input_section": ".rodata.vm_run_inner",
+          "lma": "0xb8c3",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb8c3"
+        },
+        {
+          "alignment": 1,
+          "bytes": 46,
+          "input_section": ".rodata.vm_fixbinop",
+          "lma": "0xb947",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb947"
+        },
+        {
+          "alignment": 1,
+          "bytes": 12,
+          "input_section": ".rodata.print_obj",
+          "lma": "0xb975",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb975"
+        },
+        {
+          "alignment": 1,
+          "bytes": 22,
+          "input_section": ".rodata.read_expr_1",
+          "lma": "0xb981",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb981"
+        },
+        {
+          "alignment": 1,
+          "bytes": 8,
+          "input_section": ".rodata.c2_append_header_phase",
+          "lma": "0xb997",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb997"
+        },
+        {
+          "alignment": 1,
+          "bytes": 20,
+          "input_section": ".rodata.c2_append_abort_control_phase",
+          "lma": "0xb99f",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb99f"
+        },
+        {
+          "alignment": 1,
+          "bytes": 18,
+          "input_section": ".rodata.c2_stream_phase_08",
+          "lma": "0xb9b3",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb9b3"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".rodata.c2_dma_verify_marker",
+          "lma": "0xb9c5",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb9c5"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".rodata.c2_edma_probe_marker",
+          "lma": "0xb9c6",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb9c6"
+        },
+        {
+          "alignment": 1,
+          "bytes": 7,
+          "input_section": ".rodata.lisp65_c2_append_stage_plan",
+          "lma": "0xb9c7",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb9c7"
+        },
+        {
+          "alignment": 1,
+          "bytes": 5,
+          "input_section": ".rodata.lisp65_c2_append_persistent_publish_plan",
+          "lma": "0xb9ce",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb9ce"
+        },
+        {
+          "alignment": 1,
+          "bytes": 9,
+          "input_section": ".rodata.lisp65_c2_append_rollback_plan",
+          "lma": "0xb9d3",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb9d3"
+        },
+        {
+          "alignment": 1,
+          "bytes": 33,
+          "input_section": ".rodata.c2_product_static_image_named.names",
+          "lma": "0xb9dc",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb9dc"
+        },
+        {
+          "alignment": 1,
+          "bytes": 16,
+          "input_section": ".rodata.c2_append_stage_plane_zero.zeros",
+          "lma": "0xb9fd",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xb9fd"
+        },
+        {
+          "alignment": 1,
+          "bytes": 16,
+          "input_section": ".rodata.c2_append_rollback_zero_plane.zeros",
+          "lma": "0xba0d",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xba0d"
+        },
+        {
+          "alignment": 1,
+          "bytes": 16,
+          "input_section": ".rodata.c2_append_rollback_zero_chip_code.zeros",
+          "lma": "0xba1d",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xba1d"
+        },
+        {
+          "alignment": 1,
+          "bytes": 16,
+          "input_section": ".rodata.c2_append_rollback_zero_attic.zeros",
+          "lma": "0xba2d",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xba2d"
+        },
+        {
+          "alignment": 1,
+          "bytes": 482,
+          "input_section": ".rodata.str1.1",
+          "lma": "0xba3d",
+          "output": ".rodata",
+          "source": "<lto-internal>",
+          "vma": "0xba3d"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".rodata..L.str.5.196",
+          "lma": "0xbc1f",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc1f"
+        },
+        {
+          "alignment": 1,
+          "bytes": 3,
+          "input_section": ".rodata..Lswitch.table.vm_runtime_overlay_install_island",
+          "lma": "0xbc20",
+          "output": ".rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc20"
+        }
+      ],
+      "output": ".rodata",
+      "vma": "0xb8b4"
+    },
+    {
+      "alignment": 1,
+      "bytes": 40,
+      "end_exclusive": "0xbc4b",
+      "lma": "0xbc23",
+      "member_bytes": 40,
+      "members": [
+        {
+          "alignment": 1,
+          "bytes": 40,
+          "input_section": ".lisp65_runtime_overlay_verifier_bindings",
+          "lma": "0xbc23",
+          "output": ".lisp65_runtime_overlay_verifier_bindings",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/.canonical-objects-resident-island-seed/048-runtime_overlay_verifier_bindings.s.o",
+          "vma": "0xbc23"
+        }
+      ],
+      "output": ".lisp65_runtime_overlay_verifier_bindings",
+      "vma": "0xbc23"
+    },
+    {
+      "alignment": 1,
+      "bytes": 22,
+      "end_exclusive": "0xbc61",
+      "lma": "0xbc4b",
+      "member_bytes": 22,
+      "members": [
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".data.vm_buf_off",
+          "lma": "0xbc4b",
+          "output": ".data",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc4b"
+        },
+        {
+          "alignment": 1,
+          "bytes": 20,
+          "input_section": ".data.rtov_edma_job",
+          "lma": "0xbc4d",
+          "output": ".data",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc4d"
+        }
+      ],
+      "output": ".data",
+      "vma": "0xbc4b"
+    },
+    {
+      "alignment": 1,
+      "bytes": 1585,
+      "end_exclusive": "0xc292",
+      "lma": "0xbc61",
+      "member_bytes": 1585,
+      "members": [
+        {
+          "alignment": 1,
+          "bytes": 9,
+          "input_section": ".bss.f011_guard",
+          "lma": "0xbc61",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/.canonical-objects-resident-island-seed/047-f011_guarded_write.s.o",
+          "vma": "0xbc61"
+        },
+        {
+          "alignment": 1,
+          "bytes": 12,
+          "input_section": ".bss.c2_dma_list",
+          "lma": "0xbc6a",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc6a"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.cs_idx",
+          "lma": "0xbc76",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc76"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.k_bytecode",
+          "lma": "0xbc78",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc78"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.k_primitive",
+          "lma": "0xbc7a",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc7a"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.k_closure",
+          "lma": "0xbc7c",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc7c"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.k_macro",
+          "lma": "0xbc7e",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc7e"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.eval.k_lccrun",
+          "lma": "0xbc80",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc80"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.pending_symbol",
+          "lma": "0xbc82",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc82"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.disk_source_pos",
+          "lma": "0xbc84",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc84"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.disk_source_len",
+          "lma": "0xbc85",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc85"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.ext_stg1",
+          "lma": "0xbc86",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc86"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.ext_stg",
+          "lma": "0xbc87",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc87"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.gc_runs",
+          "lma": "0xbc89",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc89"
+        },
+        {
+          "alignment": 1,
+          "bytes": 512,
+          "input_section": ".bss.markstack",
+          "lma": "0xbc8b",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbc8b"
+        },
+        {
+          "alignment": 1,
+          "bytes": 134,
+          "input_section": ".bss.marks",
+          "lma": "0xbe8b",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbe8b"
+        },
+        {
+          "alignment": 1,
+          "bytes": 12,
+          "input_section": ".bss.ext_dl",
+          "lma": "0xbf11",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbf11"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.str_stg1",
+          "lma": "0xbf1d",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbf1d"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.rd_sf",
+          "lma": "0xbf1e",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbf1e"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.rd_sc",
+          "lma": "0xbf20",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbf20"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.rd_sn",
+          "lma": "0xbf21",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbf21"
+        },
+        {
+          "alignment": 1,
+          "bytes": 192,
+          "input_section": ".bss.repl.buf",
+          "lma": "0xbf22",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbf22"
+        },
+        {
+          "alignment": 1,
+          "bytes": 19,
+          "input_section": ".bss.lisp_toplevel",
+          "lma": "0xbfe2",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbfe2"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.gensym.tag",
+          "lma": "0xbff5",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbff5"
+        },
+        {
+          "alignment": 1,
+          "bytes": 94,
+          "input_section": ".bss.symbnd",
+          "lma": "0xbff7",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xbff7"
+        },
+        {
+          "alignment": 1,
+          "bytes": 94,
+          "input_section": ".bss.symfnptr",
+          "lma": "0xc055",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc055"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.npool",
+          "lma": "0xc0b3",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc0b3"
+        },
+        {
+          "alignment": 1,
+          "bytes": 376,
+          "input_section": ".bss.namelen4",
+          "lma": "0xc0b5",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc0b5"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vm_upvals",
+          "lma": "0xc22d",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc22d"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vm_workbench_error_symbols.1",
+          "lma": "0xc22f",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc22f"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vm_workbench_error_symbols.4",
+          "lma": "0xc231",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc231"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vm_workbench_error_symbols.9",
+          "lma": "0xc233",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc233"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vm_k_key",
+          "lma": "0xc235",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc235"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vm_k_shift",
+          "lma": "0xc237",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc237"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vm_k_meta",
+          "lma": "0xc239",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc239"
+        },
+        {
+          "alignment": 1,
+          "bytes": 56,
+          "input_section": ".bss.vm_codebuf",
+          "lma": "0xc23b",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc23b"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.vm_buf_bank",
+          "lma": "0xc273",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc273"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vmr_hdrlen",
+          "lma": "0xc274",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc274"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vmr_littab",
+          "lma": "0xc276",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc276"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vmr_code",
+          "lma": "0xc278",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc278"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vmr_poff",
+          "lma": "0xc27a",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc27a"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vmr_plen",
+          "lma": "0xc27c",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc27c"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vmr_pwmax",
+          "lma": "0xc27e",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc27e"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vmr_win",
+          "lma": "0xc280",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc280"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.vmr_winlen",
+          "lma": "0xc282",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc282"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.vmr_streaming",
+          "lma": "0xc284",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc284"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.vm_run_inner.poll_",
+          "lma": "0xc285",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc285"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.lisp_error_msg",
+          "lma": "0xc286",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc286"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.rtov_call_result",
+          "lma": "0xc288",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc288"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.rtov_batch_entry",
+          "lma": "0xc28a",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc28a"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.rtov_batch_crc",
+          "lma": "0xc28c",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc28c"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.rtov_fault",
+          "lma": "0xc28e",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc28e"
+        },
+        {
+          "alignment": 1,
+          "bytes": 1,
+          "input_section": ".bss.rtov_family",
+          "lma": "0xc28f",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc28f"
+        },
+        {
+          "alignment": 1,
+          "bytes": 2,
+          "input_section": ".bss.rtov_family_generation",
+          "lma": "0xc290",
+          "output": ".bss",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc290"
+        }
+      ],
+      "output": ".bss",
+      "vma": "0xbc61"
+    },
+    {
+      "alignment": 1,
+      "bytes": 0,
+      "end_exclusive": "0xc5a7",
+      "lma": "0xc5a7",
+      "member_bytes": 0,
+      "members": [],
+      "output": ".noinit",
+      "vma": "0xc5a7"
+    },
+    {
+      "alignment": 1,
+      "bytes": 6,
+      "end_exclusive": "0xc07a",
+      "lma": "0xc074",
+      "member_bytes": 6,
+      "members": [
+        {
+          "alignment": 1,
+          "bytes": 6,
+          "input_section": ".noinit..Lstatic_stack",
+          "lma": "0xc074",
+          "output": ".lisp65_c2_static_stack",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xc074"
+        }
+      ],
+      "output": ".lisp65_c2_static_stack",
+      "vma": "0xc074"
+    },
+    {
+      "alignment": 1,
+      "bytes": 348,
+      "end_exclusive": "0xfe88",
+      "lma": "0x041d2c",
+      "member_bytes": 348,
+      "members": [
+        {
+          "alignment": 1,
+          "bytes": 32,
+          "input_section": ".rodata.eval_v2_workbench_service",
+          "lma": "0x041d2c",
+          "output": ".lisp65_c2_kernal_window.profile_rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xfd2c"
+        },
+        {
+          "alignment": 1,
+          "bytes": 168,
+          "input_section": ".rodata.vm_callprim",
+          "lma": "0x041d4c",
+          "output": ".lisp65_c2_kernal_window.profile_rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xfd4c"
+        },
+        {
+          "alignment": 1,
+          "bytes": 148,
+          "input_section": ".rodata.vm_native_call",
+          "lma": "0x041df4",
+          "output": ".lisp65_c2_kernal_window.profile_rodata",
+          "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+          "vma": "0xfdf4"
+        }
+      ],
+      "output": ".lisp65_c2_kernal_window.profile_rodata",
+      "vma": "0xfd2c"
+    }
+  ],
+  "failed_relations": {
+    "actual_overlay_vma": "0xc356",
+    "crt_symbols": {
+      "__bss_end": "0xc292",
+      "__bss_size": "0x0631",
+      "__bss_start": "0xbc61",
+      "__data_end": "0xbc61",
+      "__data_load_start": "0xbc4b",
+      "__data_size": "0x0016",
+      "__data_start": "0xbc4b",
+      "__heap_start": "0xc5a7",
+      "__lisp65_workbench_noinit_end": "0xc5a7"
+    },
+    "derivation": "failed-map-output-VMA-LMA-size-plus-CRT-expressions",
+    "overlay_below_live_heap_bytes": 593,
+    "overlay_floor": "0xc354"
+  },
+  "format": "lisp65-c2.3-v1.8-full-map-phase-a-closure-v1",
+  "input_closure": {
+    "ordinary_member_bytes": 2486,
+    "ordinary_member_ids": [
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/.canonical-objects-resident-island-seed/062-c2_boot_chain_commit.s.o",
+        ".rodata.vm_boot_overlay_chain_expected"
+      ],
+      [
+        "tools/llvm-mos/mos-platform/common/lib/libcrt.a(const.S.obj)",
+        ".rodata"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.lisp65_buffer_overlay_read_entry"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.vm_run_inner"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.vm_fixbinop"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.print_obj"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.read_expr_1"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_header_phase"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_abort_control_phase"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_stream_phase_08"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_dma_verify_marker"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_edma_probe_marker"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.lisp65_c2_append_stage_plan"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.lisp65_c2_append_persistent_publish_plan"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.lisp65_c2_append_rollback_plan"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_product_static_image_named.names"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_stage_plane_zero.zeros"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_rollback_zero_plane.zeros"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_rollback_zero_chip_code.zeros"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata.c2_append_rollback_zero_attic.zeros"
+      ],
+      [
+        "<lto-internal>",
+        ".rodata.str1.1"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata..L.str.5.196"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".rodata..Lswitch.table.vm_runtime_overlay_install_island"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".data.vm_buf_off"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".data.rtov_edma_job"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/.canonical-objects-resident-island-seed/047-f011_guarded_write.s.o",
+        ".bss.f011_guard"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.c2_dma_list"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.cs_idx"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.k_bytecode"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.k_primitive"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.k_closure"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.k_macro"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.eval.k_lccrun"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.pending_symbol"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.disk_source_pos"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.disk_source_len"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.ext_stg1"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.ext_stg"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.gc_runs"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.markstack"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.marks"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.ext_dl"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.str_stg1"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rd_sf"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rd_sc"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rd_sn"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.repl.buf"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.lisp_toplevel"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.gensym.tag"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.symbnd"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.symfnptr"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.npool"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.namelen4"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_upvals"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_workbench_error_symbols.1"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_workbench_error_symbols.4"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_workbench_error_symbols.9"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_k_key"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_k_shift"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_k_meta"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_codebuf"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_buf_bank"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_hdrlen"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_littab"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_code"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_poff"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_plen"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_pwmax"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_win"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_winlen"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vmr_streaming"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.vm_run_inner.poll_"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.lisp_error_msg"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_call_result"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_batch_entry"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_batch_crc"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_fault"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_family"
+      ],
+      [
+        "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        ".bss.rtov_family_generation"
+      ]
+    ],
+    "ordinary_members": 79,
+    "profile_rodata_bytes": 348,
+    "profile_rodata_inputs": [
+      ".rodata.eval_v2_workbench_service",
+      ".rodata.vm_callprim",
+      ".rodata.vm_native_call"
+    ],
+    "unknown_allocatable_ordinary_inputs": []
+  },
+  "link90_baseline": {
+    "crt_symbols": {
+      "__bss_end": "0xbff7",
+      "__bss_size": "0x062f",
+      "__bss_start": "0xb9c8",
+      "__data_end": "0xb9c8",
+      "__data_load_start": "0xb9b2",
+      "__data_size": "0x0016",
+      "__data_start": "0xb9b2",
+      "__heap_start": "0xc354",
+      "__lisp65_workbench_noinit_end": "0xc353",
+      "__lisp65_workbench_overlay_min_start": "0xc354",
+      "__lisp65_workbench_overlay_start": "0xc356",
+      "__lisp65_workbench_runtime_overlay_vma": "0xc356"
+    },
+    "outputs": [
+      {
+        "bytes": 877,
+        "end_exclusive": "0xb98a",
+        "lma": "0xb61d",
+        "output": ".rodata",
+        "vma": "0xb61d"
+      },
+      {
+        "bytes": 40,
+        "end_exclusive": "0xb9b2",
+        "lma": "0xb98a",
+        "output": ".lisp65_runtime_overlay_verifier_bindings",
+        "vma": "0xb98a"
+      },
+      {
+        "bytes": 22,
+        "end_exclusive": "0xb9c8",
+        "lma": "0xb9b2",
+        "output": ".data",
+        "vma": "0xb9b2"
+      },
+      {
+        "bytes": 1583,
+        "end_exclusive": "0xbff7",
+        "lma": "0xb9c8",
+        "output": ".bss",
+        "vma": "0xb9c8"
+      },
+      {
+        "bytes": 6,
+        "end_exclusive": "0xc353",
+        "lma": "0xc34d",
+        "output": ".noinit",
+        "vma": "0xc34d"
+      },
+      {
+        "bytes": 1732,
+        "end_exclusive": "0xca1a",
+        "lma": "0xc356",
+        "output": ".lisp65_workbench_overlay",
+        "vma": "0xc356"
+      }
+    ],
+    "semantics": {
+      "bss": "zero __bss_start..__bss_end",
+      "data": "copy LMA __data_load_start to VMA __data_start..end",
+      "noinit": "preserve .noinit; excluded from BSS zero range"
+    }
+  },
+  "noinit_static_stack_closure": {
+    "alignment_gap": {
+      "bytes": 1,
+      "end_exclusive": "0xc354",
+      "start": "0xc353"
+    },
+    "claim_correction": "0xc353 is Link-90 __lisp65_workbench_noinit_end; __heap_start and the contracted overlay floor are 0xc354.",
+    "compiler_stack_bytes": 6,
+    "compiler_stack_input": [
+      {
+        "alignment": 1,
+        "bytes": 6,
+        "input_section": ".noinit..Lstatic_stack",
+        "lma": "0xc074",
+        "output": ".lisp65_c2_static_stack",
+        "source": "build/post-promotion/v17/state-owned-mapped-far-wplto/wplto/resident-island-seed.prg.lto.o",
+        "vma": "0xc074"
+      }
+    ],
+    "compiler_stack_output": ".lisp65_c2_static_stack",
+    "compiler_stack_vma": "0xc074",
+    "ordinary_noinit_demand_bytes": 0,
+    "ordinary_noinit_inputs": [],
+    "reclaimed_named_gap": {
+      "bytes": 6,
+      "end_exclusive": "0xc353",
+      "purpose": "former-noinit-interval-after-static-stack-extraction",
+      "start": "0xc34d"
+    }
+  },
+  "oracle_policy": {
+    "expected_address_source": "accepted-plan-constants-and-artifacts",
+    "five_bytes": "simultaneous-live-margin-not-feature-budget",
+    "linker_under_test_is_oracle": false
+  },
+  "phase_b_inputs": {
+    "heap_start_contract": "0xc354",
+    "layouts_may_be_priced": 2,
+    "noinit_must_not_duplicate_static_stack": true,
+    "ordinary_bank0_state_frozen_on_green_card": true,
+    "overlay_floor_contract": "0xc354"
+  },
+  "recorded_on": "2026-08-04",
+  "sequential_capacity_indicator": {
+    "disposition": "confirmed-margin-not-budget",
+    "end_exclusive": "0xbffb",
+    "margin_bytes": 5,
+    "next_owner_start": "0xc000",
+    "next_simultaneous_live_owner": ".lisp65_c2_convergence_state",
+    "outputs": [
+      {
+        "alignment": 1,
+        "bytes": 879,
+        "end_exclusive": "0xb98c",
+        "output": ".rodata",
+        "start": "0xb61d"
+      },
+      {
+        "alignment": 1,
+        "bytes": 40,
+        "end_exclusive": "0xb9b4",
+        "output": ".lisp65_runtime_overlay_verifier_bindings",
+        "start": "0xb98c"
+      },
+      {
+        "alignment": 1,
+        "bytes": 22,
+        "end_exclusive": "0xb9ca",
+        "output": ".data",
+        "start": "0xb9b4"
+      },
+      {
+        "alignment": 1,
+        "bytes": 1585,
+        "end_exclusive": "0xbffb",
+        "output": ".bss",
+        "start": "0xb9ca"
+      }
+    ],
+    "predecessor": ".lisp65_c2_kernal_state",
+    "predecessor_end": "0xb61d"
+  },
+  "status": "PASS: ordinary-chain truth closed from artifacts"
+}

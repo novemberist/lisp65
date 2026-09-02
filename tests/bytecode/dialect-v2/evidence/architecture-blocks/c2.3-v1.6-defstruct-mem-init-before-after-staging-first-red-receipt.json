@@ -1,0 +1,82 @@
+{
+  "authorities": {
+    "capture_first_red": {
+      "bytes": 2021,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-capture-first-red.json",
+      "sha256": "f206fc665bf3dbf585450f710afc251ef6579cd7c9079d4d560139fc2ffcc57b"
+    },
+    "device": {
+      "bytes": 17362,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-mem-init-before-after-device-receipt.json",
+      "sha256": "f663fa1338f5dbdcd531d128909d8423838ded3e25fd686214cfb48bfb13e205"
+    },
+    "driver": {
+      "bytes": 34213,
+      "path": "git:ce46e229a07a93199ddf5b16da1e8963bfa32580:tools/host-lisp/c2_v16_mem_init_before_after_contact.py",
+      "sha256": "0a871034cfa8ff44ffc80a3e2ba21648a3dc48a219ea24c3022153361a0259eb"
+    },
+    "full_reset_domain": {
+      "bytes": 6017,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link85-full-reset-domain-host-receipt.json",
+      "sha256": "1c02df13fda2dcc71868351f308cc89f4fc88fa2f6991fda9229bc41700dc077"
+    }
+  },
+  "claim_limit": "The consumed contact proves one parser First Red and a prefix-only staging precondition failure with non-CLEAR C2J. It does not answer the mem_init before/after question, name a product fault, classify R/A/I/G or authorize another contact.",
+  "facts": {
+    "consumed_authority": "git:7864ee131364620794eae7f5e2fe80e6e0c5812a",
+    "contact": {
+      "additional_RUNs_or_stops": 0,
+      "physical_RUNs": 1,
+      "same_stop_recovery_reads": true,
+      "stops": 1
+    },
+    "disposition": {
+      "R_A_I_G": null,
+      "mem_init_binary_answer": null,
+      "product_fault": null,
+      "recontact_authorized": false,
+      "required_before_recontact": "stage and independently read back the complete 50,816-byte identity-matched reset domain; assert C2J CLEAR before RUN"
+    },
+    "staging_first_red": {
+      "C2J": "64 copies of 0x10",
+      "after_tag_reached": false,
+      "before_tag_reached": false,
+      "boot_entry_reached": true,
+      "classification": "PREFIX-ONLY-STAGING-LEFT-NONCLEAR-C2J; MEM_INIT QUESTION UNREACHED",
+      "required_reset_domain_bytes": 50816,
+      "runner_wrote_or_asserted_C2J_CLEAR": false,
+      "staged_C2D_bytes": 33840
+    },
+    "stopped_state": {
+      "PC": "0xb434",
+      "boot_witness": "0x44",
+      "claim": "entry snapshot only; no failing guard edge inferred",
+      "first_error_payload": "0000",
+      "symbol": "lisp65_v16_defstruct_first_error_capture"
+    },
+    "tool_first_red": {
+      "cause": "value-only mapping tail rejected for missing labels",
+      "mapping_was": {
+        "MAPH": "0x8000",
+        "MAPL": "0x0000"
+      },
+      "product_claim": null
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-mem-init-before-after-staging-first-red-v1",
+  "mutations_rejected": {
+    "mutation-01": "contact accounting drift",
+    "mutation-02": "tool first-red claim drift",
+    "mutation-03": "staging first-red drift",
+    "mutation-04": "staging first-red drift",
+    "mutation-05": "staging first-red drift",
+    "mutation-06": "staging first-red drift",
+    "mutation-07": "stopped-state claim drift",
+    "mutation-08": "result disposition drift",
+    "mutation-09": "result disposition drift",
+    "mutation-10": "result disposition drift",
+    "mutation-11": "result disposition drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "SETUP-FIRST-RED; MEM_INIT BINARY QUESTION UNMEASURED"
+}

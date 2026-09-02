@@ -1,0 +1,84 @@
+{
+  "authority": {
+    "historical_review_receipt": {
+      "bytes": 15082,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-vma-invariant-golden-review-receipt.json",
+      "sha256": "edd2649efc865adfdc0c6f65ba5065f933c34e66ee0d797fef2872f81de2834e"
+    },
+    "live_reconstructed_review": {
+      "bytes": 15082,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-vma-invariant-golden-review-receipt.json",
+      "sha256": "f791bc5f8a6a5367815b3ce2c726df30a374eb8a6da0673298822b28d22d2487"
+    },
+    "owner_authorization": {
+      "authority": "git-blob",
+      "bytes": 19612,
+      "commit": "428edb5e4a34378c060f95d891347a1229bad85a",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "9cb4e9d4f35f45be11b0b008d4240a768a728b5abba6e6ebe415b321a463e365"
+    },
+    "predecessor_rebind": {
+      "bytes": 2911,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-vma-invariant-golden-review-rebind-2026-08-13.json",
+      "sha256": "bc728fee82df25b7bb1893d0f8d3a8a60055bb01e291654a1a7985b1731cb480"
+    },
+    "rebind_driver": {
+      "bytes": 7743,
+      "path": "tools/host-lisp/c2_v20_vma_golden_review_rebind_20260814.py",
+      "sha256": "0dc753b79df4a1ef883a257787b9f243e033caf53d6651b55ac2cf22f97e1d91"
+    }
+  },
+  "change": {
+    "closer_gate": {
+      "after": {
+        "bytes": 337100,
+        "path": "tools/host-lisp/c2_product_substitution_link.py",
+        "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+      },
+      "before": {
+        "bytes": 330871,
+        "path": "tools/host-lisp/c2_product_substitution_link.py",
+        "sha256": "2df283182551d70a0acaf6e7a98af595034ab33b29b870bc40420b0ed7930231"
+      }
+    },
+    "fields": [
+      "authority.closer_gate",
+      "authority.invariant_gate"
+    ],
+    "invariant_gate": {
+      "after": {
+        "bytes": 27474,
+        "path": "tools/host-lisp/c2_v20_vma_invariant_golden.py",
+        "sha256": "46af625c38ecdaf83f9531b8d4561babca22385afce3bff40ec2f5d590e2a405"
+      },
+      "before": {
+        "bytes": 26631,
+        "path": "tools/host-lisp/c2_v20_vma_invariant_golden.py",
+        "sha256": "0f28f49e98b29da309abeefbf8b7f01e2be9002bab0554b40f0c8247b7300bb5"
+      }
+    }
+  },
+  "claim_limit": "This dated rebind changes only live tool-authority bindings of the unchanged VMA golden review. It authorizes no card, replay, completion, media, device, D1-D5, release or parity action.",
+  "format": "lisp65-c2.3-v20-vma-golden-review-rebind-v2",
+  "mutations_rejected": [
+    "erase-loud-status",
+    "move-golden",
+    "move-world-probe",
+    "move-closer-proof",
+    "claim-product-change",
+    "claim-card",
+    "hide-gate-rebind"
+  ],
+  "recorded_on": "2026-08-14",
+  "semantic_preservation": {
+    "all_other_fields_equal": true,
+    "cards_consumed": 0,
+    "closer_crc_proof_equal": true,
+    "device_contacts": 0,
+    "golden_sha256": "3b7d35e34f1199b03e58eeb9be3da7e45aaeb87b67a652c32751761df1398dfa",
+    "product_artifacts_changed": false,
+    "world_probe_equal": true,
+    "wplto_runs": 0
+  },
+  "status": "PASS: loud semantic-preserving live-authority rebind"
+}

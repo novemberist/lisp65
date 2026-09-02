@@ -1,0 +1,113 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1,
+    "replacement_cards_authorized": 1,
+    "replacement_cards_consumed": 1
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-local-return-identity-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "d329a868b5c82062f85b55040475ffab56d756053511fa813943770f7e8119cd"
+    },
+    "card_driver": {
+      "bytes": 28157,
+      "path": "tools/host-lisp/c2_v21_local_return_identity_card.py",
+      "sha256": "4a3dfcbceb65bc049bcaac5c285434c0a743a51828553d2ba28bf817c25391ae"
+    },
+    "driver": {
+      "bytes": 11761,
+      "path": "tools/host-lisp/c2_v21_local_return_identity_red_attribution.py",
+      "sha256": "07b9c7c911561ddf1cb37004e88f06a8a15555fbb3270ef6fb01d777d438dc50"
+    },
+    "final_red": {
+      "bytes": 10840,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-local-return-identity-card-final-red.json",
+      "sha256": "c944799474b6dfcc63a329a19a0016900286bc890c42290aac5a4bc2365a3a40"
+    },
+    "legacy_consumer": {
+      "bytes": 12715,
+      "path": "tools/host-lisp/c2_lite_v6_link50_persistent_header_successor_link.py",
+      "sha256": "00de1236e73c6d888edde7ec354fec84bcc6f9e1a078c493ea4f49721e2eac10"
+    },
+    "modern_contract": {
+      "bytes": 29952,
+      "path": "tools/host-lisp/c2_v150_qualification_ambient_closure.py",
+      "sha256": "56cf329fc81a8b149bb6af36b4cf37b68fa15a9e04ddb4bfc6d6fa50ff85dd76"
+    },
+    "predecessor_attribution": {
+      "bytes": 4403,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-text-recovery-replacement-card-red-attribution-receipt.json",
+      "sha256": "adbef6addc20781799c89f0dc5eae7fba7118e92b4fdf78f55bfeab9ee2d1f4b"
+    }
+  },
+  "authorized_fix_result": {
+    "c2d": {
+      "emitted_bytes": "20ebb5aa",
+      "entry": "0xe2dd",
+      "entry_offset": 75,
+      "function": "c2_stream_c2d_read",
+      "hardware_pushed_return": "0xe328"
+    },
+    "identity_depends_on_global_return_label": false,
+    "ownership_violations": 0,
+    "return_labels_global": 0,
+    "same_function_basic_block_jumps": 181,
+    "selector_operands_match": true,
+    "shelf": {
+      "emitted_bytes": "20ebb58510",
+      "entry": "0xe79d",
+      "entry_offset": 176,
+      "function": "c2_stream_shelf_read",
+      "hardware_pushed_return": "0xe84d"
+    },
+    "status": "GREEN"
+  },
+  "card_disposition": {
+    "completion_promotion_allowed": false,
+    "device_allowed": false,
+    "media_allowed": false,
+    "owner_disposition_required": true,
+    "replacement_card_consumed": true,
+    "retry_authorized": false
+  },
+  "claim_limit": "Read-only attribution of the consumed card. Local identities, ownership and candidate publish-last are green; no retry, media, device or release claim is authorized.",
+  "format": "lisp65-c2.3-v2.1-local-return-red-attribution-v1",
+  "green_substance": {
+    "candidate_completion_address": "0xb98c",
+    "candidate_completion_bytes": 40,
+    "cold_helper_bytes": 63,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "publish_last_status": "passed",
+    "resident_reserve_bytes": 24
+  },
+  "mutations_rejected": [
+    "restore-global-label",
+    "hide-selector-match",
+    "blame-ownership",
+    "blame-local-identity",
+    "erase-pin-difference",
+    "authorize-retry",
+    "allow-media",
+    "claim-device"
+  ],
+  "new_final_red": {
+    "call_form": "stage_product_gate(elf)",
+    "candidate_address": "0xb98c",
+    "class": "QUALIFICATION-STAGE-HISTORICAL-VERIFIER-BASE",
+    "consumer": "c2_lite_v6_link50_persistent_header_successor_link.corrected_replacement",
+    "difference_bytes": 65,
+    "implicit_expected_address": "0xb9cd",
+    "local_return_identity_implicated": false,
+    "mechanism": "The legacy replacement-stage consumer invoked the Bank-3 stage gate without the candidate verifier-base argument; its captured 0xb9cd default rejected the correct 0xb98c section.",
+    "modern_contract_call_form": "stage_product_gate(elf, verifier_base=verifier_base)",
+    "ownership_model_implicated": false,
+    "product_geometry_implicated": false
+  },
+  "recorded_on": "2026-08-14",
+  "status": "ATTRIBUTED FINAL RED: legacy qualification stage pins verifier base"
+}

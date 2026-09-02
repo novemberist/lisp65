@@ -1,0 +1,39 @@
+{
+  "format": "lisp65-c2-link59-c1-freezer-recovery-replay-first-red-v1",
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: historical Workbench-size pin stopped read-only replay",
+  "failure": {
+    "message": "Workbench payload extraction drift",
+    "historical_expected_bytes": 1731,
+    "structured_ELF_section_bytes": 1718,
+    "classification": "checker authority drift after the authorized canonical-t consolidation"
+  },
+  "correction": {
+    "scope": "checker only",
+    "old_rule": "extracted bytes == ELF section bytes == historical 1731",
+    "new_rule": "extracted bytes == structured ELF section bytes > 0; linked CRC witness length equals that same current section length",
+    "semantic_guards_retained": [
+      "structured ELF section identity",
+      "full payload extraction",
+      "descriptor CRC parity",
+      "linked CRC-leaf parity"
+    ]
+  },
+  "immutable_subject": {
+    "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-recovery-wplto/lisp65-c2-substitution-linked.prg.elf",
+    "bytes": 612192,
+    "sha256": "8c8adc0519c4077e5a71768a708aa56c0df49e8f6b00e639b5795e5b4725b5ee"
+  },
+  "historical_checker_before_correction": {
+    "path": "tools/host-lisp/c2_lite_v6_boot_crc_abi_wplto.py",
+    "bytes": 11431,
+    "sha256": "d8c940a708e33391fddf4c612573bf10f3053101b7abfae1ef18729daacc1467"
+  },
+  "execution_accounting": {
+    "additional_compiler_runs": 0,
+    "additional_product_links": 0,
+    "hardware_runs": 0,
+    "read_only_replays_stopped": 1
+  },
+  "claim_limit": "No capacity, product-link, hardware, C1, or matrix-gate claim."
+}

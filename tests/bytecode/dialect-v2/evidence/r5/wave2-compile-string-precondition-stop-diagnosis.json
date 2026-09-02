@@ -1,0 +1,87 @@
+{
+  "format": "lisp65-r5-wave2-harness-stop-diagnosis-v1",
+  "version": 1,
+  "recorded_on": "2026-07-18",
+  "status": "diagnosed-harness-precondition-drift-no-case-receipt",
+  "source_commit": "42bad441505e7507522707972ca415f13a598770",
+  "candidate": {
+    "product_artifact_set_sha256": "6c358e79baa55999f80d1ebcd45b57234e57af8bc80bc29042e0b93915ac18a5",
+    "build_id": "d60fc5dd",
+    "candidate_manifest_path": "build/r5-global-g5/candidate.json",
+    "candidate_manifest_sha256": "349412ccc99928836daaab81e0aa9565e42259b894374afc4ed585e4050c0745",
+    "test_closure_set_sha256": "be6624db5d3bd6c41e679e9b84937bf040cce7741e076e806b30398df7bc4d91"
+  },
+  "trigger": {
+    "gate": "G5",
+    "run_id": "r5-run-20260718-wave2-01",
+    "case": "workbench-ux/overlay-stack-guard",
+    "phase": "c1-seam-compile-string",
+    "expected": "overlay-c1-seam-compile-string-ok",
+    "observed": "compile-string raised vm: undefined function",
+    "passed_before_stop": [
+      "c1-seam-lcc-run",
+      "c1-seam-eval",
+      "c1-seam-eval-buffer"
+    ],
+    "case_receipt": "not-emitted",
+    "raw_transcript": {
+      "path": "build/r5-global-g5/evidence/r5-run-20260718-wave2-01/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-seam-compile-string.txt",
+      "sha256": "6e830f7dfff0db00ca1b0e17161d95b023c2cc0714fe2cfe0066908bcc372259"
+    }
+  },
+  "diagnosis": {
+    "classification": "harness-precondition-drift-after-1.1-M-transactional-FASL-cut",
+    "product_contract": "compile-string delegates persistence to m65d-save; the standard composition must load M65D before the media swap and establish the new mount generation before the transaction",
+    "stale_harness_behavior": "the C1 entry-seam case loaded IDE only and invoked compile-string without loading M65D or calling m65d-remount",
+    "first_control": {
+      "forms": [
+        "(load-lib \"m65d\")",
+        "(compile-string \"(defun c1-seam-cs2 () 42)\" \"c1sem2\")"
+      ],
+      "observed": "M65D loaded; compile-string returned nil; compile-error was save failed; m65d-status was 8",
+      "meaning": "the missing function was m65d-save and the remaining failure was the deliberately fail-closed remount requirement",
+      "transcripts": [
+        {
+          "path": "build/r5-global-g5/diagnostics/wave2-compile-string-precondition/m65d-precondition.txt",
+          "sha256": "023d2f5d1729fbf43d9a6caabd8a118b048a2b6fbda3d5eb1556f14892796e94"
+        },
+        {
+          "path": "build/r5-global-g5/diagnostics/wave2-compile-string-precondition/status-after-precondition.txt",
+          "sha256": "6565fca81d35df0b5a46b71fbf4d49d80e1955a74c53c0eaf32979050fee2f29"
+        }
+      ]
+    },
+    "decisive_control": {
+      "forms": [
+        "(m65d-remount)",
+        "(compile-string \"(defun c1-seam-cs3 () 42)\" \"c1sem3\")",
+        "(load-lib \"c1sem3\")",
+        "(c1-seam-cs3)"
+      ],
+      "observed": "compile-string-remount-pass with result 42",
+      "transcript": {
+        "path": "build/r5-global-g5/diagnostics/wave2-compile-string-precondition/m65d-remount-precondition.txt",
+        "sha256": "ff1a0bce8796a15c2557ad2359b754100763013f2a64add436cc908604a5e302"
+      }
+    },
+    "conclusion": "The sealed R4 product bytes are correct. The R5 test closure failed to carry the already-pinned M65D load-and-remount precondition into the generated compile-string seam case."
+  },
+  "structural_fix": {
+    "single_source": "config/v11-c1-entry-seams.json",
+    "required_prefix": [
+      "(load-lib \"m65d\")",
+      "(m65d-remount)"
+    ],
+    "gate": "tools/host-lisp/v11_c1_entry_seams.py rejects the compile-string seam unless that exact prefix precedes the transaction",
+    "negative_mutation": "removing the remount form is rejected",
+    "product_artifact_effect": "none",
+    "required_repin": "R5 test closure and static preflight only"
+  },
+  "gate_effect": {
+    "g5": "0/14 passed",
+    "r4": "historical-and-still-valid",
+    "r5": "static-closure-repin-required-before-retry",
+    "resume": "no passed case exists to reuse; rerun starts with the missing first case after the new static preflight",
+    "claim": "diagnosis only; no G5 pass and no product acceptance"
+  }
+}

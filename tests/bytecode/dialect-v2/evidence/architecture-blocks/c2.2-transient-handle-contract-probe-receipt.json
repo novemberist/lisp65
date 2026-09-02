@@ -1,0 +1,275 @@
+{
+  "bindings": {
+    "addendum": {
+      "bytes": 4031,
+      "path": "docs/planning/c2.2-transient-handle-contract.md",
+      "sha256": "33df3e2dced5478be118dc317c9efbc2b62c69be76b4381cdfbce21aa9201fa4"
+    },
+    "capacity_first_red_receipt": {
+      "bytes": 9642,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-nested-append-capacity-placement-first-red-receipt.json",
+      "sha256": "338f62f74dfdb88b36d9678c839cfe2269e4bb029aa9116730935576a94e753b"
+    },
+    "contract": {
+      "bytes": 6136,
+      "path": "config/c2-transient-handle-contract.json",
+      "sha256": "54fc7e230451b1dbce9f21e58539ed84d08cfef1841096e59cbb29ddc7d7a94b"
+    },
+    "link32_elf": {
+      "bytes": 507128,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c63ef2252ff0d181ea6153dadaba9cfa1f4f3b8c45fb847d3cd6c9879f0d40b0"
+    },
+    "link32_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+      "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a"
+    },
+    "link32_session_manifest": {
+      "bytes": 27300,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/runtime-overlays-session-final.json",
+      "sha256": "c1cf2f8f5fbfa38e71b4123a1eecd44b20bba0e31556e562f885034acfb24db8"
+    },
+    "nested_append_contract": {
+      "bytes": 9229,
+      "path": "config/c2-nested-append-unwind-contract.json",
+      "sha256": "d0bf8f6fa27cce6dcd621cebc9e17d5656e9eb60a5675515a6798d400b66988d"
+    },
+    "nested_append_contract_receipt": {
+      "bytes": 15025,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-nested-append-unwind-contract-probe-receipt.json",
+      "sha256": "bd2a0ebbc3ac08c07108c238a33426bd65c0e6e9e33563d024e6a751b36a0381"
+    },
+    "sizing_source": {
+      "bytes": 5158,
+      "path": "scripts/c2-transient-handle-capacity-main.c",
+      "sha256": "27c1f9bb51fe6524edb4540152492989c21d0295bbc5d5a39194a82c7bec0f88"
+    },
+    "target_compiler": {
+      "bytes": 78628536,
+      "path": "tools/llvm-mos/bin/mos-mega65-clang",
+      "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+    },
+    "target_object": {
+      "bytes": 8404,
+      "path": "build/c2.2/transient-handle-contract-probe/c2-transient-handle-capacity-main.o",
+      "sha256": "74409c8bf50b223f8bd2baf4d7ebd8b386189441e870d6cfd64c163b0094dc89"
+    }
+  },
+  "claim_limit": "Bounded contract, host-state and target-object capacity projection only. No product implementation, LTO link, hardware result, GC-latency acceptance or promotion is claimed.",
+  "compiler": {
+    "command": [
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/mos-mega65-clang",
+      "-Oz",
+      "-Wall",
+      "-Wextra",
+      "-fno-lto",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-c",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/scripts/c2-transient-handle-capacity-main.c",
+      "-o",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/transient-handle-contract-probe/c2-transient-handle-capacity-main.o"
+    ],
+    "lookup_calibration": {
+      "difference_bytes": 6,
+      "link32_lto_symbol_bytes": 648,
+      "target_object_baseline_bytes": 642
+    },
+    "mode": "llvm-mos target relocatable, -Oz, no LTO"
+  },
+  "fallbacks": {
+    "option_1_in_place_reclaim": "not entered because handle design is green",
+    "option_3_reopen_e000": "not eligible; would require a separate owner floor decision"
+  },
+  "format": "lisp65-c2-transient-handle-contract-probe-receipt-v1",
+  "format_decision": {
+    "c2d_version": 5,
+    "depth": "derived from contiguous source-kind-2 records; maximum four",
+    "header_and_record_delta_bytes": 0,
+    "inactive_watermark": 4096,
+    "logical_persistent_domain": [
+      0,
+      2047
+    ],
+    "logical_transient_domain": [
+      2048,
+      4095
+    ],
+    "physical_translation": "logical-2048",
+    "single_runtime_visibility_value": "transient_handle_watermark_u16",
+    "unshipped_version_rule": "v4-to-v5 is free only before first C2 product seal"
+  },
+  "gc_transport": {
+    "additional_blocks_per_collection": 78,
+    "link32_blocks_per_collection": 18,
+    "next_hardware_presmoke": "separate GC time/frame line required",
+    "status": "capacity-neutral; performance not accepted",
+    "transient_high_edge_blocks_per_collection": 96
+  },
+  "model": {
+    "cases": [
+      {
+        "detail": "logical and physical ordinals are identical",
+        "name": "persistent-identity",
+        "status": "passed"
+      },
+      {
+        "detail": "neither low hole nor inactive high namespace is callable",
+        "name": "inactive-hole",
+        "status": "passed"
+      },
+      {
+        "detail": "logical and physical fronts descend in lockstep",
+        "name": "nested-high-handles",
+        "status": "passed"
+      },
+      {
+        "detail": "both active extents are callable",
+        "name": "nested-active-lookup",
+        "status": "passed"
+      },
+      {
+        "detail": "inner handles die while outer handles remain live",
+        "name": "inner-pop-stale",
+        "status": "passed"
+      },
+      {
+        "detail": "watermark reset rejects every old transient handle",
+        "name": "abort-kills-all",
+        "status": "passed"
+      },
+      {
+        "detail": "staged records are invisible before watermark store",
+        "name": "publish-last-before",
+        "status": "passed"
+      },
+      {
+        "detail": "one watermark store publishes the complete extent",
+        "name": "publish-last-after",
+        "status": "passed"
+      },
+      {
+        "detail": "raised watermark kills handles before bytes are wiped",
+        "name": "unpublish-before-wipe",
+        "status": "passed"
+      },
+      {
+        "detail": "inactive watermark precedes generation change",
+        "name": "restage-invalidates-first",
+        "status": "passed"
+      },
+      {
+        "detail": "format validation rejects the header",
+        "name": "malformed-watermark-below-domain",
+        "status": "passed"
+      },
+      {
+        "detail": "format validation rejects the header",
+        "name": "malformed-watermark-above-domain",
+        "status": "passed"
+      },
+      {
+        "detail": "record/header generation mismatch rejected",
+        "name": "stale-record-generation",
+        "status": "passed"
+      },
+      {
+        "detail": "record/high-front mismatch rejected",
+        "name": "noncontiguous-record",
+        "status": "passed"
+      },
+      {
+        "detail": "rejected before mutation",
+        "name": "fifth-depth",
+        "status": "passed"
+      },
+      {
+        "detail": "2047 persistent plus one transient is legal",
+        "name": "f2-exact-meet",
+        "status": "passed"
+      },
+      {
+        "detail": "one entry beyond the meet fails before journal/target mutation",
+        "name": "f2-plus-one",
+        "status": "passed"
+      },
+      {
+        "detail": "a full low edge rejects the first high entry",
+        "name": "f2-full-persistent",
+        "status": "passed"
+      },
+      {
+        "detail": "low-edge growth does not renumber high handles",
+        "name": "persistent-descendant-stability",
+        "status": "passed"
+      }
+    ],
+    "f2_collision": "exact meet accepted; +1 rejected before journal/target mutation",
+    "failed": 0,
+    "passed": 19,
+    "stale_after_abort": "rejected by watermark alone before wipe"
+  },
+  "next_gate": "Before any successor product link, perform the commissioned cross-invariant quick pass for B2, E1, C2, B5 and D1 against this stable contract.",
+  "recorded_on": "2026-07-20",
+  "scope": {
+    "hardware_execution": "prohibited",
+    "host_model_cases": 19,
+    "performance_claim": "none",
+    "product_closure_links": 0,
+    "product_source_files_changed_by_probe": 0,
+    "target_objects_compiled": 1
+  },
+  "status": "passed-contract-and-capacity-probe-product-work-not-authorized",
+  "target_capacity_projection": {
+    "bank0_text": {
+      "handle_contract_delta_bytes": 0,
+      "link32_headroom_bytes": 10,
+      "nested_serial_and_abort_projection_headroom_bytes": 16,
+      "status": "unchanged from green non-lookup seams"
+    },
+    "bank5_session_plane": {
+      "c2d_header_delta_bytes": 0,
+      "c2d_record_width_delta_bytes": 0,
+      "ordinary_c_bss_delta_bytes": 0,
+      "status": "same-width v5 contract",
+      "unwind_journal_bytes": 64
+    },
+    "cpu_e000_window": {
+      "delta_bytes": -42,
+      "link32_margin_bytes": 386,
+      "lookup_baseline_target_bytes": 642,
+      "lookup_normalized_target_bytes": 600,
+      "policy": "closed to new tenants; replacement delta must be <=0",
+      "projected_margin_bytes": 428,
+      "status": "passed exact-zero-or-credit gate"
+    },
+    "ordinary_bank0_bss": {
+      "delta_bytes": 0,
+      "link32_headroom_bytes": 19,
+      "status": "unchanged"
+    },
+    "resident_island": {
+      "already_projected_abort_facade_bytes": 13,
+      "combined_bytes": 93,
+      "handle_normalizer_bytes": 80,
+      "link32_headroom_bytes": 109,
+      "projected_headroom_bytes": 16,
+      "status": "fits target-object projection"
+    },
+    "runtime_overlay_session_bank": {
+      "abort_cleanup_offset": 49152,
+      "abort_cleanup_slice_bytes": 709,
+      "link32_bytes": 49054,
+      "projected_headroom_bytes": 15675,
+      "projected_storage_bytes": 49861,
+      "projected_storage_delta_bytes": 807,
+      "slice_count_after": 37,
+      "slice_count_before": 36,
+      "status": "fits target-object projection",
+      "transient_tail_lookup_slice_bytes": 0,
+      "watermark_control_bytes": 17,
+      "watermark_control_storage_delta_bytes": 0
+    }
+  }
+}

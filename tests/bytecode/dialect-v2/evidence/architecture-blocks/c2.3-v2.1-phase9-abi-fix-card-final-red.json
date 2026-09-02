@@ -1,0 +1,67 @@
+{
+  "artifacts": {
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69978,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-card/wplto/c2-substitution.ld",
+      "sha256": "c8b88d4e12b998e35796f6cdbfbb7c295d59f75682c173691a892cf85a667d15"
+    },
+    "resolved_profile": {
+      "bytes": 12392,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-card/wplto/resolved-profile.txt",
+      "sha256": "415a4e6a0b7e8c0325974c11b5ec0bf54bf5d03133564d8c74a389a04bb5412d"
+    }
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "cards_authorized": 1,
+    "cards_consumed": 1,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1
+  },
+  "authority": {
+    "ABI_contract": {
+      "bytes": 3456,
+      "path": "config/c2-mapped-far-abi-preservation-contract-v2.json",
+      "sha256": "3a1023e01d1205c6b61cf63b566e4602a2187f70a97c195df5fbc935e4f73e1a"
+    },
+    "driver": {
+      "bytes": 21361,
+      "path": "tools/host-lisp/c2_v21_phase9_abi_fix_card.py",
+      "sha256": "119aadb2537e9fc1cf52a0e77a3c508c7b29023aab941787d1f311b8207c3f6e"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 93867,
+      "commit": "78ae9255e22acfdb5c6c9bbc922ef3be05953fbf",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "2145c841544457bab20f3f17e7dd237460b0df1fbcd91b44181341fdfa764c27"
+    },
+    "preflight": {
+      "bytes": 3967,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-preflight/preflight.json",
+      "sha256": "01e3834d6e82b758f2e7f98303519bc59f6ce48aa3e972fea78541f039479179"
+    }
+  },
+  "claim_limit": "The sole card is consumed; no Completion, media or device.",
+  "error": {
+    "message": "fresh phase-9 ABI child _produce red:\nc2-lite-v6-real-abi-direct-entry-contract: PASS refs=674 fixnums=0 target-negatives=4\nruntime-overlay-bank: PREPARE build_id=0x415a4e6a profile=c2-product-substitution-v1 header=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v2.1-phase9-abi-fix-card/wplto/runtime-overlay.prepare-standard.h\nresident-island-prepare: PASS capacity=2048 sentinel=1536 build_id=415a4e6a\nerror-text-table: ok profile=workbench codes=63 active=44 omitted=19 bytes=803 crc16=1105 build_id=415a4e6a\nbuild/c2.3/v2.1-phase9-abi-fix-card/wplto/generated-product-sources/c2_product_runtime.c:973:26: warning: unused function 'c2_entry_records' [-Wunused-function]\n  973 | C2_COLD_ENTRY_FN uint8_t c2_entry_records(\n      |                          ^~~~~~~~~~~~~~~~\nbuild/c2.3/v2.1-phase9-abi-fix-card/wplto/generated-product-sources/c2_product_runtime.c:1076:26: warning: unused function 'c2_export_name' [-Wunused-function]\n 1076 | C2_APPEND_INLINE uint8_t c2_export_name(\n      |                          ^~~~~~~~~~~~~~\n2 warnings generated.\nsrc/eval.c:99:12: warning: unused function 'cadr' [-Wunused-function]\n   99 | static obj cadr(obj o) { return car(cdr(o)); }\n      |            ^~~~\nsrc/eval.c:272:17: warning: unused function 'hilo' [-Wunused-function]\n  272 | static unsigned hilo(obj hi, obj lo) {\n      |                 ^~~~\nsrc/eval.c:125:12: warning: variable 'k_lcc_invalid_parameter_list' set but not used [-Wunused-but-set-global]\n  125 | static obj k_lcc_invalid_parameter_list;\n      |            ^\n3 warnings generated.\nsrc/vm_boot_overlay.c:199:16: warning: unused function 'ov_wipe_target' [-Wunused-function]\n  199 | static uint8_t ov_wipe_target(void) {\n      |                ^~~~~~~~~~~~~~\n1 warning generated.\nbuild/c2.3/v2.1-phase9-abi-fix-card/wplto/generated-product-sources/vm_runtime_overlay.c:1020:13: warning: unused function 'rtov_read_region' [-Wunused-function]\n 1020 | static void rtov_read_region(\n      |             ^~~~~~~~~~~~~~~~\n1 warning generated.\nld.lld: warning: build/c2.3/v2.1-phase9-abi-fix-card/wplto/resident-island-seed.prg.lto.o:(.llvm_sympart) is being placed in '.llvm_sympart'\nTraceback (most recent call last):\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_rtov_crc_real_abi_successor_link.py\", line 233, in build\n    P.single_link(\n    ~~~~~~~~~~~~~^\n        OUT, probe_definitions=features,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<13 lines>...\n            \"final_e000_floor_bytes=115\",\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n            \"green_inheritance=none\"))\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_final_island_identity_successor_link.py\", line 220, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_export_symbol_domain_successor_link.py\", line 215, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py\", line 199, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link47_l65e_transient_successor_link.py\", line 178, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link48_zero_literal_successor_link.py\", line 145, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link49_append_final_hybrid_facade16_successor_link.py\", line 308, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link50_persistent_header_successor_link.py\", line 214, in single_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_lite_v6_link50_badopcode_retirement_wplto.py\", line 141, in nonpromotable_link\n    return old[\"single_link\"](*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_v150_candidate_product.py\", line 278, in v150_single_link\n    return inherited(\n        out, probe_definitions=features,\n    ...<8 lines>...\n        ),\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_top_level_macro_redispatch_link94.py\", line 426, in service_single_link\n    return inherited_single_link(\n        out,\n    ...<7 lines>...\n        ),\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_defstruct_foundations_wplto.py\", line 175, in service_single_link\n    return inherited_single_link(\n        out,\n    ...<7 lines>...\n        ),\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_require_resolver_wplto.py\", line 209, in resolver_single_link\n    return original_single_link(\n        out,\n    ...<8 lines>...\n        ),\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_f1_published_value_call_wplto.py\", line 380, in f1_single_link\n    return original_single_link(\n        out,\n    ...<3 lines>...\n        extra_contract_lines=extra_contract_lines,\n    )\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_product_substitution_link.py\", line 6808, in single_link\n    seed = compile_link(out, \"resident-island-seed.prg\", common, artifacts,\n                        probe_definitions=probe_definitions)\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_product_substitution_link.py\", line 2893, in compile_link\n    final_section_inventory_gate(out, target)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_product_substitution_link.py\", line 3942, in final_section_inventory_gate\n    report = final_section_inventory_check(target)\n  File \"/home/alex/Videos/lisp65-cp4-safety-20260712/tools/host-lisp/c2_product_substitution_link.py\", line 3905, in final_section_inventory_check\n    raise RuntimeError(\n        f\"final section inventory red: {violations}; \"\n        f\"missing={missing}; additional={additional}\")\nRuntimeError: final section inventory red: ['full-map-owner-size:.rela.lisp65_c2_mapped_far_service']; missing=[]; additional=[]\n2.1 phase-9 ABI card: FINAL RED: producer did not emit the linked candidate artifacts\n",
+    "type": "CardError"
+  },
+  "format": "lisp65-c2.3-v2.1-phase9-abi-fix-card-final-red-v1",
+  "owner_disposition_required": true,
+  "recorded_on": "2026-08-15",
+  "retry_authorized": false,
+  "status": "FINAL RED: phase-9 ABI fix card returns to owner"
+}

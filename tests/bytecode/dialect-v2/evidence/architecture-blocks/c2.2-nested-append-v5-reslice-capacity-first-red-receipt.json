@@ -1,0 +1,225 @@
+{
+  "aggregate_projection_not_authorization": {
+    "claim": "aggregate fits; hard per-slice gate is red",
+    "link32_session_bytes": 49054,
+    "new_group_quanta_including_invalid_journal_bytes": 10496,
+    "old_capacity_and_rollback_quanta_bytes": 3072,
+    "other_v5_quantum_delta_bytes": 768,
+    "projected_headroom_bytes": 8290,
+    "projected_session_bytes": 57246,
+    "projected_slice_count": 41
+  },
+  "bindings": {
+    "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+      "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a"
+    },
+    "build/c2.2/substitution/product-link-32-preinstall-island-guard/runtime-overlays-session-final.json": {
+      "bytes": 27300,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/runtime-overlays-session-final.json",
+      "sha256": "c1cf2f8f5fbfa38e71b4123a1eecd44b20bba0e31556e562f885034acfb24db8"
+    },
+    "build/c2.2/substitution/substitution-artifacts.json": {
+      "bytes": 2104,
+      "path": "build/c2.2/substitution/substitution-artifacts.json",
+      "sha256": "e204a6c28234ac2b80e4e2324e27cafd919677992fcbc18ca0adcc297bf8c512"
+    },
+    "candidate_target_object": {
+      "bytes": 156528,
+      "path": "build/c2.2/nested-append-v5-reslice-capacity-first-red/c2-nested-append-v5-reslice.o",
+      "sha256": "2beceb6cc9018a0c1a2c9faea3a12e4e18f53f23d83eafa0d5d9d20421d26d35"
+    },
+    "docs/planning/c2.2-nested-append-v5-reslice-capacity-first-red.md": {
+      "bytes": 2368,
+      "path": "docs/planning/c2.2-nested-append-v5-reslice-capacity-first-red.md",
+      "sha256": "f7c3c4cd0664607689cce47cc8208f4343bdab3dc4df873d610985ff7c8a23ca"
+    },
+    "src/c2_product_runtime.c": {
+      "bytes": 81674,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "283f1d1d9af1c5103b75d3294384bbf79b0c79cb94500ecede922d252c854a6a"
+    },
+    "src/c2_product_runtime.h": {
+      "bytes": 6723,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "88de9fff368f5235ad8e6c20b8666aece4ff3bbf55819307b75c383f1c28907f"
+    },
+    "target_compiler": {
+      "bytes": 78628536,
+      "path": "tools/llvm-mos/bin/mos-mega65-clang",
+      "sha256": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c"
+    },
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-nested-append-v5-implementation-capacity-first-red-receipt.json": {
+      "bytes": 17891,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-nested-append-v5-implementation-capacity-first-red-receipt.json",
+      "sha256": "2767feb19cc70de7a5492614743cc98b6efb874756a2fd8f3107eea57d96abda"
+    },
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-transient-handle-contract-probe-receipt.json": {
+      "bytes": 9841,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-transient-handle-contract-probe-receipt.json",
+      "sha256": "d337afdd0ff5d0b1d382005d7427cf6ee33563378cc5dcc65828d828db023a37"
+    }
+  },
+  "claim_limit": "Capacity first-red only. No C2J product behavior, B2 rollback, overlay-closure gate, product identity, hardware or latency is claimed.",
+  "compiler": {
+    "command": [
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/mos-mega65-clang",
+      "-Oz",
+      "-Wall",
+      "-Wextra",
+      "-fno-lto",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-DLISP65_DIALECT_V2",
+      "-DLISP65_V2_CARRIER_CUT",
+      "-DLISP65_VM_NATIVE_APPLY",
+      "-DLISP65_V2_NATIVE_CAPABILITIES",
+      "-DLISP65_V2_NATIVE_STRING_CODECS",
+      "-DLISP65_V2_SERVICE_REGISTRY_CLOSED",
+      "-DLISP65_V2_WORKBENCH_SERVICES",
+      "-DLISP65_V2_TREE_PRIMITIVE_VIEW",
+      "-DLISP65_VM",
+      "-DLISP65_EMBED_STDLIB",
+      "-DLISP65_EMBED_DMA",
+      "-DLISP65_REPL",
+      "-DHEAP_CELLS=48",
+      "-DLISP65_MEGA65_MATH_OVERRIDE",
+      "-DLISP65_F011_GUARD_ASM",
+      "-DVM_CODEBUF=56",
+      "-DLISP65_SYMPOOL_EXT",
+      "-DLISP65_SYMVAL_EXT",
+      "-DLISP65_NAMEOFF_EXT",
+      "-DGC_ROOTS=128",
+      "-DLISP65_MARK_BITMAP",
+      "-DLISP65_EXT_HEAP",
+      "-DLISP65_SCREEN_DRIVER",
+      "-DLISP65_VM_SCREEN_PRIMS",
+      "-DLISP65_VM_STDLIB_IO_WRAPPERS",
+      "-DLISP65_VM_GLOBAL_PRIMS",
+      "-DLISP65_MACROEXPAND_PRIM",
+      "-DLISP65_TREEWALK_STDLIB_BRIDGES",
+      "-DLISP65_OUTPUT_WRAPPERS_IN_STDLIB",
+      "-DLISP65_SCREEN_BULK_P_IN_STDLIB",
+      "-DLISP65_TREEWALK_STRIP",
+      "-DMEGA65_F011_LOAD",
+      "-DMEGA65_F011_WRITE",
+      "-DIO_BUF_MAX=1",
+      "-DEXT_CELLS=1024",
+      "-DLISP65_NURSERY_HYSTERESIS=192",
+      "-DLISP65_STRING_ARENA",
+      "-DLISP65_FIRST_CLASS_BUFFER",
+      "-DSTR_ARENA_SIZE=0x2480",
+      "-DDISK_EXT_BASE=0x6900",
+      "-DDISK_EXT_FILE_MAX=0x9600",
+      "-DLISP65_COMPILE_STRING",
+      "-DLISP65_SYMFN_EXT",
+      "-DSYMPOOL_EXT_OFF=0xc680",
+      "-DNAMEPOOL=10208",
+      "-DMAX_SYM=752",
+      "-DVM_DIR_MAX=608",
+      "-DREPL_BUF_MAX=192",
+      "-DHIST_MAX=64",
+      "-DLISP65_REPL_HISTORY_IN_BUF",
+      "-DLISP65_REPL_BANNER_REQUIRED",
+      "-DLISP65_STDLIB_BOOT_OVERLAY_CODE",
+      "-DLISP65_STAGED_BOOT_OVERLAY",
+      "-DLISP65_RUNTIME_OVERLAY",
+      "-DLISP65_RUNTIME_OVERLAY_LIFETIME_FAMILIES",
+      "-DLISP65_C2_RUNTIME_LIFETIME_FAMILIES",
+      "-DLISP65_STACK_GUARD",
+      "-DLISP65_C2_PRODUCT_CUT",
+      "-DLISP65_C2_SLICED_APPEND",
+      "-DC2_STREAM_PRODUCT_V3=1",
+      "-DLISP65_C2_KERNAL_UNMAP",
+      "-DLISP65_C2_PRODUCT_BUILD_ID=0x69496476UL",
+      "-DLISP65_C2_PRODUCT_SHELF_BYTES=70897UL",
+      "-DLISP65_ERROR_OVERLAY",
+      "-DLISP65_ERROR_OVERLAY_SLOT=32",
+      "-DLISP65_RUNTIME_ISLAND_INSTALL_SLOT=8",
+      "-DLISP65_BUFFER_OVERLAY_READ_SLOT=33",
+      "-DLISP65_BUFFER_OVERLAY_WRITE_SLOT=34",
+      "-DLISP65_BUFFER_OVERLAY_ALLOC_SLOT=35",
+      "-DLISP65_C2_DIRECT_HOT_REFILL",
+      "-DLISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+      "-DLISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+      "-DLISP65_C2_TRANSACTION_AUTH",
+      "-DLISP65_C2_TRANSACTION_AUTH_NOINLINE",
+      "-DLISP65_C2_NESTED_APPEND_V5",
+      "-I",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/src",
+      "-I",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/scripts",
+      "-I",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution",
+      "-I",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-32-preinstall-island-guard",
+      "-I",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/build/bytecode",
+      "-c",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/src/c2_product_runtime.c",
+      "-o",
+      "/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/nested-append-v5-reslice-capacity-first-red/c2-nested-append-v5-reslice.o"
+    ],
+    "mode": "llvm-mos target relocatable, -Oz, no LTO"
+  },
+  "first_red": {
+    "bytes": 2749,
+    "cap_bytes": 1792,
+    "combined_actions": [
+      "prepare/write/readback",
+      "load/identity/range/CRC validation and scratch reconstruction",
+      "clear/readback"
+    ],
+    "over_cap_bytes": 957,
+    "section": ".lisp65_rt_c2append_journal",
+    "stop": "before serial-driver wiring, B2 proof and product link"
+  },
+  "format": "lisp65-c2-nested-append-v5-reslice-capacity-first-red-v1",
+  "preferred_review_option": "Split C2J into serial write, validated-load and clear actions; retain the no-overlay-calls-overlay invariant and remeasure all walls.",
+  "recorded_on": "2026-07-20",
+  "scope": {
+    "b2_fixture": "not run",
+    "driver_wiring_after_first_red": "not run",
+    "hardware_runs": 0,
+    "product_closure_links": 0,
+    "target_relocatable_compiles": 1
+  },
+  "semantic_reslice": {
+    "overlay_to_overlay_rule": "Serial resident driver is the sole loader; phase closures may not name another phase or overlay transport. Structural gate remains required after capacity is green.",
+    "phases": {
+      ".lisp65_rt_c2append_fronts": {
+        "bytes": 1328,
+        "headroom_bytes": 464
+      },
+      ".lisp65_rt_c2append_reserve_persistent": {
+        "bytes": 1273,
+        "headroom_bytes": 519
+      },
+      ".lisp65_rt_c2append_reserve_transient": {
+        "bytes": 1606,
+        "headroom_bytes": 186
+      },
+      ".lisp65_rt_c2append_rollback_finalize": {
+        "bytes": 1682,
+        "headroom_bytes": 110
+      },
+      ".lisp65_rt_c2append_rollback_unpublish": {
+        "bytes": 739,
+        "headroom_bytes": 1053
+      },
+      ".lisp65_rt_c2append_roots": {
+        "bytes": 371,
+        "headroom_bytes": 1421
+      }
+    },
+    "status": "passed-per-section-capacity",
+    "transition_tuple": {
+      "ordinary_bss_delta_bytes": 0,
+      "resident_island_delta_bytes": 0,
+      "resident_text_delta_bytes": 0,
+      "storage": "existing exclusive 304-byte append scratch"
+    }
+  },
+  "status": "first-red-c2j-slice-append-and-rollback-reslice-green"
+}

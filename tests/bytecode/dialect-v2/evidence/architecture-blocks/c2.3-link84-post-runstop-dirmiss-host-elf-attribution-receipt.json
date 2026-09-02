@@ -1,0 +1,238 @@
+{
+  "authorities": {
+    "commission": "docs/planning/1.3-link84-closing-first-red-review.md",
+    "deployed_link84": {
+      "deployment": {
+        "bytes": 8889,
+        "path": "build/ship-builder/v13/closing-device-session/deployment.json",
+        "sha256": "ee127bf1c344979f8d778c06bbe3c886786ea5fb369765c555d1bf5c9231f03b"
+      },
+      "device_receipt": {
+        "bytes": 11157,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link84-closing-device-receipt.json",
+        "sha256": "1bbb72b215c63bff6f6c9bbd0710fb30a5c8c1c8853c11c647507083582c85b5"
+      },
+      "elf": {
+        "bytes": 622560,
+        "path": "build/c2.3/v1.3.0-candidate-product-link84-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "b48a70ca1ca2eb50aff8cc0937697d43c0a0ce3edefa42eb08f55d4dc4cf57a7"
+      },
+      "kernal_window": {
+        "bytes": 8192,
+        "path": "build/c2.3/v1.3.0-candidate-product-link84-r1/final/c2-product-kernal-window.bin",
+        "sha256": "9b37c3073363a9eb12bae8e28b47fa096fd7666861127dd73f55758469ad1bbc"
+      },
+      "product": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.3.0-candidate-product-link84-r1/final/lisp65-c2-substitution-linked.prg",
+        "sha256": "643b4c4270a97c63e562f1e90d43d674db84f0cea200cd7a8b502711ca355ed4"
+      }
+    },
+    "d3_initial_state": {
+      "c2d": {
+        "bytes": 33840,
+        "path": "build/ship-builder/v13/closing-device-session/run/D3-preload-c2d-v6-code-plane.bin",
+        "sha256": "89ed677540a5b589e8489c68c392566a5ddeec7f00fb8eb60596eec470b24df6"
+      },
+      "c2j": {
+        "bytes": 64,
+        "path": "build/ship-builder/v13/closing-device-session/run/D3-preload-harness-zero-C2J-baseline.bin",
+        "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+      }
+    },
+    "host_editor_predecessor_comparison": {
+      "bytes": 7525,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.6-editor-stall-host-attribution-receipt.json",
+      "sha256": "844e67cd545fd972670120ca06fafae019a32ec9610073a43eb9800411d7df4e"
+    },
+    "historical_ready_loss_precedent": {
+      "bytes": 6719,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link47-zero-literal-entry-hardware-first-red.json",
+      "sha256": "4b96c62a98b12a7649d1fd0246615f2ac2d4d80f1b6c2d1c706cc77e72ce8d31"
+    },
+    "manifest": {
+      "bytes": 293237,
+      "path": "build/c2.3/v1.3.0-candidate-product-link84-r1/static-plane/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "06085250a7a47ea71b41f4e3ff189453f9513580a882975d97ee62c00ece655a"
+    },
+    "sources": {
+      "c2_product_runtime.c": "9b1afffa93ffefb6eac10e1f99f3c6b7f0db572575b07b396d6ec321c354e94e",
+      "ide-ui.lisp": "e5569bf3668135d674809b2eb4d4cd9341936c98edc5c55b55dc36cf1628d7d4",
+      "interrupt.c": "3daa9e790bbf95d9b1f15da688386b17831d7f9d0c95e61038399ea9d2105de0",
+      "vm.c": "91683fa85d714d54443f44c5d0201804fdb96ba59a382ccda58e7e98d6d6b43d"
+    }
+  },
+  "bounded_attribution": {
+    "abort_path": {
+      "entry": "Every top-level error and RUN/STOP uses lisp_abort_jump -> c2_product_abort_cleanup before longjmp (src/interrupt.c:61-75).",
+      "full_error_renderer_implication": "The complete 'vm: undefined function #0ab' text requires a successful L65E runtime-overlay call after abort. The runtime-overlay transport was therefore callable in the stable failed state; this does not prove c2_ready or c2_runtime integrity.",
+      "product_cleanup": "With LISP65_C2_E000_REOPEN, cleanup first releases the runtime overlay, then returns immediately when c2_ready is already zero or otherwise calls c2_abort_driver (src/c2_product_runtime.c:3563-3574).",
+      "zero_depth_clean_sequence": [
+        "abort-control",
+        "journal-validate",
+        "journal-reconstruct",
+        "abort-control",
+        "transient-fronts",
+        "abort-control",
+        "rollback-prepare",
+        "abort-control-done"
+      ],
+      "zero_depth_state_checks": {
+        "journal": "The deployed C2J is all zero. journal-validate returns NONE/OK and reconstruction returns immediately (src/c2_product_runtime.c:1927-1976).",
+        "rollback_prepare": "A zero front depth returns NONE/OK without a C2D read (src/c2_product_runtime.c:2065-2081).",
+        "transient_fronts": "The only content-dependent zero-depth phase reads the C2D header and high image row 63, then requires generation equality and watermark 4096 (src/c2_product_runtime.c:1096-1142).",
+        "jump_table": {
+          "address": "0x0000b708",
+          "bytes": 20,
+          "hex": "9d c3 db c3 ac c3 1f c4 34 c4 f9 c3 0f c4 43 c4 cb c3 e3 c3",
+          "sha256": "f46dd472e0952dee007a2434a75300065e82ceff8f19a07b18d896168ae561ab",
+          "states": 10,
+          "verdict": "all states 0..9 branch to their intended abort-control cases; no table skew or false default exists"
+        }
+      }
+    },
+    "ordinal_decode": {
+      "captured_detail": "#0ab",
+      "decimal_ordinal": 171,
+      "hex_ordinal": "0x0ab",
+      "manifest_entry": {
+        "blob_offset": 3899,
+        "ext_addr": "0x050f3b",
+        "length": 108,
+        "literals": [
+          "%c2-published-direct-call-p",
+          "%c2-direct-values",
+          "%c2-compile-form",
+          "defmacro",
+          "defun"
+        ],
+        "name": "lcc-run"
+      },
+      "preloaded_c2d_row": {
+        "address": "0x00050ede",
+        "bytes": 10,
+        "hex": "00 05 3b 0f 6c 00 ae 00 01 00",
+        "interpretation": "image 0, local entry 0x0f3b, length 108, resolution base 174, generation 1"
+      },
+      "vm_path": "dir_find reads the symbol's BCODE function cell and returns ordinal 171; vm_run_dir then reports this exact BCODE detail only when c2_product_entry_length(171) returns zero (src/vm.c:204-237,367-375).",
+      "verdict": "The dispatch symbol/function view is not shifted. It still names the valid lcc-run ordinal. The failure begins when the product directory tries to materialize that ordinal."
+    },
+    "commissioned_state_suspects": {
+      "arena_cursor": "exonerated for the observed first failure: vm_run_dir rejects zero directory length before loading or executing the code object",
+      "dispatch_base": "exonerated as a shifted-base mechanism: the symbol function cell resolves to the manifest- and C2D-bound lcc-run ordinal 171",
+      "rootstack": "exonerated for the observed first failure: no VM operand frame is entered before the directory-length gate",
+      "remaining": "c2_ready versus resident c2_runtime/live-C2D entry materialization"
+    },
+    "preloaded_geometry": {
+      "boot_transition": "The preloaded v6 header has watermark 0; c2_product_prepare_boot changes it to 4096 before product boot.",
+      "generation": 1,
+      "header_address": "0x00050000",
+      "header_bytes": 48,
+      "high_row_63": {
+        "address": "0x00050810",
+        "bytes": 32,
+        "hex": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+        "verdict": "no stale transient record exists in the deployed prestate"
+      },
+      "initial_counts": {
+        "entries": 757,
+        "images": 6,
+        "resolutions": 2947,
+        "roots": 350
+      }
+    },
+    "regression_disposition": {
+      "exact_function_bytes_link82_link83_link84": {
+        "c2_abort_driver": {
+          "bytes": 134,
+          "sha256": "26e9d856e794de4a238c3549aba4fa9938e3c6da4e8a723ebafe6722de70def1"
+        },
+        "c2_product_abort_cleanup": {
+          "bytes": 55,
+          "sha256": "3cf50bed4adae0f1f0be32e309b8e4f104b45fce3ed8651cda38abb9f05f15df"
+        },
+        "c2_product_entry_length": {
+          "bytes": 104,
+          "sha256": "134f8d124f32195cc6a00943ba58c8181d80d429d1af44cd4ee14a56637f99d9"
+        },
+        "c2_product_entry_record": {
+          "bytes": 562,
+          "sha256": "531cff396096d809fc200c0ef2a54c43e5c9f58dc172dd9837a947a7a7542281"
+        },
+        "lisp_input_event": {
+          "bytes": 128,
+          "sha256": "07dc6feca9a8ac75038568972577a247a9ce8160f5648c2cc9d0a62f4a7fc791"
+        }
+      },
+      "exact_overlay_sections_link82_link83_link84": {
+        "abort_control": {
+          "bytes": 268,
+          "sha256": "714a3d4a1ac5cbec8a2b360c98ace1d397c2c1ddb84e64bd3de9cf49571e2c5e"
+        },
+        "journal_prepare": {
+          "bytes": 1732,
+          "sha256": "bed6ba9c1adda7af3d4c16df0ecca893de883af7672a57a7910b59fc5f14f800"
+        },
+        "journal_reconstruct": {
+          "bytes": 1102,
+          "sha256": "53373396323ea81c2953fe58e8e18169e165184f33a0cdac671772afea849b64"
+        },
+        "journal_validate": {
+          "bytes": 964,
+          "sha256": "d93e6c531dda557bab57501cff270534a69c3e9b3459601c3570ae1bb667e274"
+        },
+        "roots_fronts": {
+          "bytes": 1510,
+          "sha256": "701389b3c6b52e3532b3554882d0beeca39cf7ae7d7dea0630e101e5c1a07d29"
+        }
+      },
+      "host_predecessor_lane": "The standing real-C host lane accepts all 80 keys in both the v1.2.5 and Link-83 editor images. It proves editor/VM/collector logic with modeled transport; it does not execute physical target C2 abort cleanup.",
+      "source_history": "lib/ide-ui.lisp has not changed since the Link-83 editor commit d47dca64; D3 executes (edit), not the new read-line surface.",
+      "verdict": "No byte or host mechanism assigns this failure to Link-84 Ship/read-line/q freight. It is a target-state fault on a pre-existing abort/directory seam, exposed by this session rather than a demonstrated new-freight regression."
+    }
+  },
+  "claim_boundary": {
+    "proved": [
+      "#0ab is the valid lcc-run ordinal 171, not a shifted or invented dispatch index.",
+      "The post-RUN/STOP top-level failure is c2_product_entry_length(171)==0: linked product-directory visibility is unavailable.",
+      "The relevant native functions and transported abort phases are byteidentical across Link 82, Link 83 and Link 84.",
+      "The deployed clean prestate has zero C2J and zero high row 63; the pure zero-depth abort plan is structurally valid.",
+      "The L65E runtime-overlay renderer remains callable after abort."
+    ],
+    "not_statically_decidable": [
+      "whether c2_ready is zero after abort or remains one while c2_runtime/C2D entry materialization is damaged",
+      "whether READY was already zero before RUN/STOP or was cleared by c2_abort_driver",
+      "if the driver failed, whether journal validation/reconstruction, transient-fronts, rollback-prepare or physical overlay transport was the first failing step"
+    ],
+    "reason": "The stable device state was observed only through the REPL error renderer; no c2_ready, runtime-context, phase-scratch or C2D readback was captured after the failure. Host/ELF evidence cannot manufacture that target-time state."
+  },
+  "format": "lisp65-c2.3-link84-post-runstop-dirmiss-host-elf-attribution-v1",
+  "next_discriminator": {
+    "authorization_required": "Class C: one read-only post-failure capture; no product-byte, link or media change",
+    "capture": [
+      {"address": "0x0000008c", "bytes": 1, "name": "c2_ready"},
+      {"address": "0x00000079", "bytes": 1, "name": "rtov_busy"},
+      {"address": "0x00000089", "bytes": 1, "name": "c2_phase_owner"},
+      {"address": "0x0000bff3", "bytes": 4, "name": "rtov_fault_family_generation"},
+      {"address": "0x0000c084", "bytes": 46, "name": "c2_runtime"},
+      {"address": "0x0000c17c", "bytes": 36, "name": "abort_record_and_meta0_3"},
+      {"address": "0x0000c1f4", "bytes": 2, "name": "installer_trace"},
+      {"address": "0x00050000", "bytes": 48, "name": "live_C2D_header"},
+      {"address": "0x00050810", "bytes": 32, "name": "live_C2D_high_row63"},
+      {"address": "0x00050ede", "bytes": 10, "name": "live_C2D_lcc_run_row171"},
+      {"address": "0x0005c640", "bytes": 64, "name": "live_C2J"}
+    ],
+    "disjoint_outcomes": {
+      "abort_driver_fronts": "c2_ready=0 and abort meta state=6 identifies transient-fronts as the failed range.",
+      "abort_driver_prepare": "c2_ready=0 and abort meta state=7 identifies rollback-prepare as the failed range.",
+      "abort_driver_validate": "c2_ready=0 and abort meta state=1 identifies journal validation/reconstruction as the failed range.",
+      "no_abort_progression": "c2_ready=0 with no attributable abort-state progression is consistent with READY already being zero, runtime-overlay abort cleanup failing before the driver, or the driver's phase-scratch acquisition failing before state initialization; rtov and owner bytes separate those cases.",
+      "entry_read_divergence": "c2_ready=1 moves ownership to c2_runtime/C2D header/row/materialization; the captured first unequal field names the failed invariant."
+    },
+    "why_trace_alone_is_insufficient": "abort-control locks the primary trace; the four abort meta bytes are required to identify the completed control-state boundary."
+  },
+  "product_bytes_changed": 0,
+  "product_links_created": 0,
+  "recorded_on": "2026-08-02",
+  "status": "bounded-host-elf-exhausted-class-C-readback-required"
+}

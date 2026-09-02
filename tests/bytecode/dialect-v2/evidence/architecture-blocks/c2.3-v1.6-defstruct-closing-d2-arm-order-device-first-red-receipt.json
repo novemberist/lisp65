@@ -1,0 +1,88 @@
+{
+  "authority": {
+    "arm_order_correction_commit": "86992d49",
+    "choreography_closure": {
+      "bytes": 4208,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-choreography-closure-receipt.json",
+      "sha256": "a6cba4103d7898cff4e24f7afce3d95e6bf90cc9f5bbb274a543abe90f77e8eb"
+    },
+    "entry_witness": {
+      "bytes": 9424,
+      "path": "tools/host-lisp/c2_v16_d2_entry_witness.py",
+      "sha256": "ce0f34356a0602bff2f5056faf3260c246912c76fc8890aed0ee523392d9d55b"
+    },
+    "plan": {
+      "bytes": 41447,
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "d3c1bc0481696c04622f660eb1d3d256f4c85851da41efbe193ca7f54850d043"
+    },
+    "runner": {
+      "bytes": 5732,
+      "path": "scripts/c2-v16-defstruct-closing-d2-hw.sh",
+      "sha256": "a2d9e123823fb1821a694b2720f7713a263af77006ac44aa3304a9dad74ddd3a"
+    }
+  },
+  "claim_limit": "This receipt proves a host-bound arm-before-launch order and one device setup failure at its entry witness. It does not prove whether the virtual RETURN arrived, whether the live monitor retained the breakpoint, execute require or defstruct, select R/A/I/G, run trailing peeks, authorize a retry or name a product defect.",
+  "date": "2026-08-05",
+  "device_contact": {
+    "contact_consumed": true,
+    "fresh_basic": {
+      "bytes": 4237,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-arm-order-correction/fresh-basic.png",
+      "sha256": "8a0091738880c05f95908f2000b0379489e9ee0b2dee8222b9f49e4d23334024"
+    },
+    "hardware_improvisation": false,
+    "output_directory": "build/c2.3/v1.6-defstruct-closing-session/d2-arm-order-correction",
+    "retry_authorized": false
+  },
+  "entry_witness": {
+    "arm_response_persisted": false,
+    "breakpoint": "0x2023",
+    "breakpoint_cleared_on_mismatch": true,
+    "CPU_left_stopped": true,
+    "error": "entry breakpoint did not fire: PC=0x754a",
+    "expected_post_instruction_PC": "0x2024",
+    "launch_order": [
+      "CPU-resumed",
+      "breakpoint-arm-written",
+      "armed-state-observed",
+      "virtual-RETURN-submitted",
+      "post-entry-PC-observed"
+    ],
+    "observed_PC": "0x754a",
+    "success_entry_JSON_written": false
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-D2-arm-order-device-first-red-v1",
+  "preconditions": {
+    "diagnostic_preload_readbacks": {
+      "byteidentical": 7,
+      "expected": 7
+    },
+    "launch_screen": {
+      "bytes": 5173,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-arm-order-correction/launch-before-return.png",
+      "sha256": "c89b42b94bbeed6b064262830bab92c8888b77f32ff812cabcc2e567c5257f7a",
+      "visible_state": "BASIC run: intermediate"
+    },
+    "library_medium": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-arm-order-correction/readback.d81",
+      "sha256": "871b90824924dacbe27f071d56b0b97488257da0c1a0b9e80f5d5eeae5f23380"
+    },
+    "transfer_log": {
+      "bytes": 2350,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-arm-order-correction/upload.log",
+      "sha256": "27447aff47ea6a9c665e99c0f9ffbf1279245b97ada51fa2b9c1c363783d343a"
+    }
+  },
+  "result": {
+    "R_A_I_G_row": null,
+    "defstruct_started": false,
+    "measured_forms_started": 0,
+    "record_armed": false,
+    "require_started": false,
+    "standing_trailing_peeks_run": false,
+    "status": "SETUP FIRST RED: ordered entry breakpoint did not fire"
+  },
+  "status": "FIRST RED: corrected arm order passed host closure; device entry witness stopped at PC 0x754a"
+}

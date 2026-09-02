@@ -1,0 +1,132 @@
+{
+  "claim_limit": "Preparation for one G4-corrected, non-promotable bundled run. No device result, mem_init answer or R/A/I/G row is claimed here.",
+  "execution_witnesses": 10,
+  "facts": {
+    "authorities": {
+      "G4": {
+        "bytes": 10163,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-ownership-guard-attribution-receipt.json",
+        "sha256": "e10ff7dbb82d4151f564390b44e16e8b5dcebef8fc3506d4520ddc86fb257e3d"
+      },
+      "deployment": {
+        "bytes": 10609,
+        "path": "build/c2.3/v1.6-defstruct-ownership-crc-bound/deployment.json",
+        "sha256": "f590ce7742aecd6a9fc4df32d78c43d4c936956b8457aa57754029c1935d4a72"
+      },
+      "driver": {
+        "bytes": 26011,
+        "path": "tools/host-lisp/c2_v16_ownership_crc_full_run.py",
+        "sha256": "2e50c89c6eb609879c79c42e40875d9f63ff998a55229de3baa0d69b043b91a4"
+      },
+      "phase_B": {
+        "bytes": 35761,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-b-guard-partition-receipt.json",
+        "sha256": "83a8328a7dc3e4c395ff42b368f79aaed8d258076efebada021736afce96428a"
+      },
+      "runner": {
+        "bytes": 7119,
+        "path": "scripts/c2-v16-defstruct-ownership-crc-full-run-hw.sh",
+        "sha256": "16be1771277f6e1741af1e5e657e81641181e16bd3936e14a6ea1aca61af0ad7"
+      }
+    },
+    "choreography": {
+      "actions": [
+        "stage",
+        "verify-boot",
+        "arm",
+        "capture"
+      ],
+      "boot_quiet_floor_seconds": 27.653,
+      "defstruct_quiet_seconds": 180.0,
+      "owner_input": [
+        "RUN",
+        "(require 'defstruct)",
+        "(defstruct point x y)"
+      ],
+      "prelaunch_monitor_accesses": 0,
+      "record_arm": "canonical reset plus A1 only after visible require=t",
+      "stops_during_measured_form": 1,
+      "virtual_key_events": 0
+    },
+    "classification": {
+      "R_A_I_G_pending_independent_oracle_decode": true,
+      "R_A_I_G_rows": [
+        "R",
+        "A",
+        "I",
+        "G"
+      ],
+      "claim_widening_allowed": false,
+      "mem_init_binary": true
+    },
+    "identity": {
+      "diagnostic_ELF": {
+        "bytes": 621260,
+        "path": "build/c2.3/v1.6-defstruct-ownership-crc-bound/artifacts/diagnostic-preinstaller-micro-ladder-crc-bound.elf",
+        "sha256": "1a2ea5eb355504ce7934a90f0e3ecb874f7aa51612e0bce02deeae5e450b7a25"
+      },
+      "diagnostic_PRG": {
+        "bytes": 41566,
+        "path": "build/c2.3/v1.6-defstruct-ownership-crc-bound/artifacts/diagnostic-preinstaller-micro-ladder-crc-bound.prg",
+        "sha256": "8682a2ac023cd7790658d433dd46fed9a84743e3358362c6a7882fc3f43df484"
+      },
+      "diagnostic_window": {
+        "bytes": 8192,
+        "path": "build/c2.3/v1.6-defstruct-bootstrap-romc-repair/artifacts/diagnostic-window.bin",
+        "sha256": "3b08d8276c2de9be243851a2b20c34c3f064def56ae23d66f4f8c3bdbb88504b"
+      },
+      "expected_G4_crc16": "0xD24C",
+      "product_bytes_changed": 0,
+      "promotable": false
+    },
+    "mem_init_witness": {
+      "address": "0xb582",
+      "after_tag": "0xa6",
+      "before_tag": "0xa1",
+      "bytes": 10,
+      "read_post_session": true
+    },
+    "owner_authority": {
+      "bytes": 149343,
+      "path": "git:86f3af8a1478174293f94e9b0af91869d4af83b3:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "07bf375f7c121758805dd7a677b9643a625a7a6818406fd55c51b1c6844f1023"
+    },
+    "read_protocol": {
+      "CPU_left_stopped": true,
+      "code": "CPU-view bytes plus unique active-owner binding",
+      "data": "capture MAPH/MAPL then physical Bank-0 RAM underlay",
+      "far_planes": [
+        "C2J",
+        "C2D-reset-domain",
+        "Bank-2-source"
+      ],
+      "record_stable_reads": 3
+    },
+    "reset_domain": {
+      "C2J_CLEAR_before_RUN": true,
+      "bytes": 50816,
+      "null_suffix_bytes": 16976,
+      "prefix_bytes": 33840
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-ownership-crc-full-run-preparation-v1",
+  "mutations_rejected": {
+    "change-product": "diagnostic identity boundary drift",
+    "dirty-c2j": "reset-domain contract drift",
+    "drop-mem-answer": "read/classification boundary drift",
+    "preclaim-row": "read/classification boundary drift",
+    "prefix-only-stage": "reset-domain contract drift",
+    "prelaunch-monitor": "physical/quiet/one-stop choreography drift",
+    "promote-diagnostic": "diagnostic identity boundary drift",
+    "resume-after-read": "read/classification boundary drift",
+    "second-stop": "physical/quiet/one-stop choreography drift",
+    "short-boot-floor": "physical/quiet/one-stop choreography drift",
+    "short-defstruct-floor": "physical/quiet/one-stop choreography drift",
+    "unstable-record": "read/classification boundary drift",
+    "use-control-crc": "diagnostic identity boundary drift",
+    "virtual-input": "physical/quiet/one-stop choreography drift",
+    "widen-row": "read/classification boundary drift"
+  },
+  "recorded_on": "2026-08-06",
+  "status": "HOST-GREEN; OWNER-AUTHORIZED FULL RUN READY"
+}

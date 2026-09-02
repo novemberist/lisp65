@@ -1,0 +1,446 @@
+{
+  "affected_claims": {
+    "hardware": "not-run",
+    "latency": "not measured or claimed",
+    "link32_hardware_first_red": "unchanged and still blocks promotion",
+    "link32_structural_receipt": "unchanged",
+    "product_source_or_sha": "unchanged by this probe"
+  },
+  "alternative_results": {
+    "current_execute_inside_open_transaction": "rejected: inner begin returns BUSY",
+    "serial_current_suffix_rollback": "rejected: removes a persistent descendant",
+    "serial_disjoint_transient_lane": "passed all host contract cases",
+    "serial_skip_rollback": "rejected: retains a transient ancestor per descendant commit"
+  },
+  "artifacts": {
+    "persistent_attic_prefix": {
+      "bytes": 96,
+      "path": "build/c2.2/nested-append-unwind-contract-probe/session-attic-persistent-prefix.bin",
+      "sha256": "2601ae82876611308205d580c1853c097c4d993432e804af499f2ab4c8b3ec92"
+    },
+    "persistent_descendant_v4": {
+      "bytes": 50816,
+      "path": "build/c2.2/nested-append-unwind-contract-probe/c2d-v4-persistent-descendant.bin",
+      "sha256": "6ce672e7dfa8353b0f2db485147ef6c128cc2eb6e0b90094b3733d33a289676f"
+    },
+    "seed_v4": {
+      "bytes": 50816,
+      "path": "build/c2.2/nested-append-unwind-contract-probe/c2d-v4-seed.bin",
+      "sha256": "4fd3137140dc41c203b1c28623e99edf144bc07241f69ed58a231179e6ae09a7"
+    }
+  },
+  "bindings": {
+    "addendum": {
+      "bytes": 4664,
+      "path": "docs/planning/c2.2-nested-append-unwind-addendum.md",
+      "sha256": "230f9b82114bf42c205b6c57abce53a4b25e39568334bd12133945d9f3ab89c9"
+    },
+    "contract": {
+      "bytes": 9229,
+      "path": "config/c2-nested-append-unwind-contract.json",
+      "sha256": "d0bf8f6fa27cce6dcd621cebc9e17d5656e9eb60a5675515a6798d400b66988d"
+    },
+    "initial_c2d_v3": {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/initial.c2d-v3.bin",
+      "sha256": "0a0ddf0168028bae27e7cd6fdc687fe8ca3a3f4940cdf70dae844c0bd5c1c185"
+    },
+    "link32_hardware_first_red": {
+      "bytes": 12363,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link32-nested-eval-hardware-first-red-diagnosis.json",
+      "sha256": "f8696b3a7a06afd087f310b5262fe0f3fbd516af8f5a9ae164a796092724ae87"
+    },
+    "model_tool": {
+      "bytes": 50026,
+      "path": "tools/host-lisp/c2_nested_append_unwind_probe.py",
+      "sha256": "ca5577abd8068d308831dd84da7bbf10edf88fb940c92239fc27b9ff6522be50"
+    },
+    "source_classification": {
+      "bytes": 3912,
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "13a83f76b8c8e93c9b1bee590eee6e30bd268985865a1e444e7b605c00e3caf7"
+    }
+  },
+  "capacity_projection_not_authorization": {
+    "bank5_session_region_bytes": 50816,
+    "c2d_plane_bytes": 33840,
+    "gap_between_max_export_journal_and_unwind_journal_bytes": 8720,
+    "maximum_export_journal_bytes": 8192,
+    "next_rule": "No implementation or product link is authorized. A separately reviewed, product-shaped capacity/placement probe must price the transient lookup, GC high-tail scan, serial transaction boundaries and longjmp cleanup.",
+    "raw_region_headroom_after_fixed_journal_bytes": 16912,
+    "resident_walls_unchanged_by_host_probe": {
+      "bank0_text": 10,
+      "e000": 386,
+      "minimum_runtime_slice": 11,
+      "ordinary_bss": 19,
+      "resident_island": 109
+    },
+    "unwind_journal_bytes": 64
+  },
+  "cases": {
+    "by_group": {
+      "abort-depth": 4,
+      "alternative-rejection": 3,
+      "capacity": 6,
+      "cutpoint": 12,
+      "format-negative": 2,
+      "gc-negative": 2,
+      "generation": 1,
+      "journal-negative": 3,
+      "nested-cutpoint": 5,
+      "positive": 4,
+      "public-entry": 5,
+      "transaction-negative": 1
+    },
+    "passed": 48,
+    "rows": [
+      {
+        "detail": "reproduces the Link-32 BUSY class",
+        "group": "alternative-rejection",
+        "name": "current-open-transaction-rejects-inner-begin",
+        "status": "passed"
+      },
+      {
+        "detail": "outer rollback restores the pre-outer counts and removes the inner commit",
+        "group": "alternative-rejection",
+        "name": "serial-current-suffix-rollback-deletes-descendant",
+        "status": "passed"
+      },
+      {
+        "detail": "two cycles retain two outer wrappers plus two descendants",
+        "group": "alternative-rejection",
+        "name": "serial-skip-rollback-leaks-transient-ancestors",
+        "status": "passed"
+      },
+      {
+        "detail": "serial publish-then-run leaves no active transaction or byte",
+        "group": "positive",
+        "name": "nested-transient-exact-restoration",
+        "status": "passed"
+      },
+      {
+        "detail": "images, entries, resolutions, roots and both Attic fronts return exactly",
+        "group": "positive",
+        "name": "two-warm-nested-evals-zero-growth",
+        "status": "passed"
+      },
+      {
+        "detail": "low-prefix commit is byte-identical with and without the transient ancestor",
+        "group": "positive",
+        "name": "persistent-descendant-survives-ancestor-return",
+        "status": "passed"
+      },
+      {
+        "detail": "abort removes both high-tail dynamic extents and preserves the low-prefix commit",
+        "group": "positive",
+        "name": "persistent-descendant-survives-ancestor-longjmp",
+        "status": "passed"
+      },
+      {
+        "detail": "zero-growth nested path",
+        "group": "public-entry",
+        "name": "public-eval-transient-seam",
+        "status": "passed"
+      },
+      {
+        "detail": "zero-growth nested path",
+        "group": "public-entry",
+        "name": "public-eval-string-transient-seam",
+        "status": "passed"
+      },
+      {
+        "detail": "zero-growth nested path",
+        "group": "public-entry",
+        "name": "public-load-transient-seam",
+        "status": "passed"
+      },
+      {
+        "detail": "persistent low-prefix append survives outer transient return",
+        "group": "public-entry",
+        "name": "public-load-lib-persistent-descendant",
+        "status": "passed"
+      },
+      {
+        "detail": "media producer only; subsequent load-lib owns the persistent C2D append",
+        "group": "public-entry",
+        "name": "public-compile-string-classification",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "persistent-after_journal",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "persistent-after_attic",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "persistent-after_records",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "persistent-after_publish",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "persistent-after_export",
+        "status": "passed"
+      },
+      {
+        "detail": "pending low-prefix mutation and active high-tail ancestor both unwind exactly",
+        "group": "nested-cutpoint",
+        "name": "nested-persistent-after_journal",
+        "status": "passed"
+      },
+      {
+        "detail": "pending low-prefix mutation and active high-tail ancestor both unwind exactly",
+        "group": "nested-cutpoint",
+        "name": "nested-persistent-after_attic",
+        "status": "passed"
+      },
+      {
+        "detail": "pending low-prefix mutation and active high-tail ancestor both unwind exactly",
+        "group": "nested-cutpoint",
+        "name": "nested-persistent-after_records",
+        "status": "passed"
+      },
+      {
+        "detail": "pending low-prefix mutation and active high-tail ancestor both unwind exactly",
+        "group": "nested-cutpoint",
+        "name": "nested-persistent-after_publish",
+        "status": "passed"
+      },
+      {
+        "detail": "pending low-prefix mutation and active high-tail ancestor both unwind exactly",
+        "group": "nested-cutpoint",
+        "name": "nested-persistent-after_export",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "transient-push-after_journal",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "transient-push-after_attic",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "transient-push-after_records",
+        "status": "passed"
+      },
+      {
+        "detail": "byte-identical abort restoration",
+        "group": "cutpoint",
+        "name": "transient-push-after_publish",
+        "status": "passed"
+      },
+      {
+        "detail": "unpublish-first cleanup is idempotent",
+        "group": "cutpoint",
+        "name": "transient-pop-after_journal",
+        "status": "passed"
+      },
+      {
+        "detail": "unpublish-first cleanup is idempotent",
+        "group": "cutpoint",
+        "name": "transient-pop-after_unpublish",
+        "status": "passed"
+      },
+      {
+        "detail": "unpublish-first cleanup is idempotent",
+        "group": "cutpoint",
+        "name": "transient-pop-after_wipe",
+        "status": "passed"
+      },
+      {
+        "detail": "all transient suffix ranges removed; persistent descendant policy preserved",
+        "group": "abort-depth",
+        "name": "longjmp-depth-1",
+        "status": "passed"
+      },
+      {
+        "detail": "all transient suffix ranges removed; persistent descendant policy preserved",
+        "group": "abort-depth",
+        "name": "longjmp-depth-2",
+        "status": "passed"
+      },
+      {
+        "detail": "all transient suffix ranges removed; persistent descendant policy preserved",
+        "group": "abort-depth",
+        "name": "longjmp-depth-3",
+        "status": "passed"
+      },
+      {
+        "detail": "all transient suffix ranges removed; persistent descendant policy preserved",
+        "group": "abort-depth",
+        "name": "longjmp-depth-4",
+        "status": "passed"
+      },
+      {
+        "detail": "bounded depth is four",
+        "group": "capacity",
+        "name": "fifth-depth-rejected-before-mutation",
+        "status": "passed"
+      },
+      {
+        "detail": "rejected before journal publication",
+        "group": "capacity",
+        "name": "images-front-collision",
+        "status": "passed"
+      },
+      {
+        "detail": "rejected before journal publication",
+        "group": "capacity",
+        "name": "entries-front-collision",
+        "status": "passed"
+      },
+      {
+        "detail": "rejected before journal publication",
+        "group": "capacity",
+        "name": "resolutions-front-collision",
+        "status": "passed"
+      },
+      {
+        "detail": "rejected before journal publication",
+        "group": "capacity",
+        "name": "roots-front-collision",
+        "status": "passed"
+      },
+      {
+        "detail": "rejected before journal publication",
+        "group": "capacity",
+        "name": "attic-front-collision",
+        "status": "passed"
+      },
+      {
+        "detail": "session invalidated; target bytes left untouched",
+        "group": "journal-negative",
+        "name": "corrupt-journal-identity",
+        "status": "passed"
+      },
+      {
+        "detail": "session invalidated; target bytes left untouched",
+        "group": "journal-negative",
+        "name": "corrupt-journal-crc",
+        "status": "passed"
+      },
+      {
+        "detail": "session invalidated; target bytes left untouched",
+        "group": "journal-negative",
+        "name": "corrupt-journal-range",
+        "status": "passed"
+      },
+      {
+        "detail": "rejected after unpublish",
+        "group": "format-negative",
+        "name": "inactive-high-tail-handle",
+        "status": "passed"
+      },
+      {
+        "detail": "rejected before lookup",
+        "group": "format-negative",
+        "name": "stale-transient-generation",
+        "status": "passed"
+      },
+      {
+        "detail": "tagged resolution has no owner",
+        "group": "gc-negative",
+        "name": "missing-transient-root-interval",
+        "status": "passed"
+      },
+      {
+        "detail": "exactly one root owner required",
+        "group": "gc-negative",
+        "name": "overlapping-transient-root-ownership",
+        "status": "passed"
+      },
+      {
+        "detail": "physical Attic bytes may remain but no handle survives",
+        "group": "generation",
+        "name": "restage-invalidates-before-generation-change",
+        "status": "passed"
+      },
+      {
+        "detail": "publish-then-run is structural, not conventional",
+        "group": "transaction-negative",
+        "name": "execution-with-active-transaction-rejected",
+        "status": "passed"
+      }
+    ],
+    "total": 48
+  },
+  "claim_limit": "Host contract/state-machine proof only. The model proves one serial semantic design and rejects three alternatives; it is not a product implementation, capacity authorization, hardware result, promotion or successor-link authority.",
+  "format": "lisp65-c2-nested-append-unwind-contract-probe-receipt-v1",
+  "format_result": {
+    "c2d_version": 4,
+    "header_bytes": 48,
+    "initial_counts": {
+      "entries": 588,
+      "images": 6,
+      "resolutions": 2264,
+      "roots": 283
+    },
+    "initial_free": {
+      "entries": 1460,
+      "images": 58,
+      "resolutions": 1832,
+      "roots": 1253,
+      "session_attic_bytes": 1048576
+    },
+    "persistent_allocation": "low prefixes and low Session-Attic front",
+    "record_widths_unchanged": {
+      "entry": 10,
+      "image": 32,
+      "resolution": 2,
+      "root": 2
+    },
+    "transient_allocation": "high suffixes and high Session-Attic front",
+    "transient_depth_field": {
+      "bytes": 2,
+      "offset": 8,
+      "range": [
+        0,
+        4
+      ]
+    },
+    "unwind_journal": {
+      "bytes": 64,
+      "offset": 50752,
+      "region_end": 50816
+    }
+  },
+  "recorded_on": "2026-07-20",
+  "semantic_result": {
+    "invalid_unwind_journal": "session-invalid; no guessed target mutation",
+    "nested_transient_longjmp": "byte-identical restoration",
+    "nested_transient_normal_return": "byte-identical restoration",
+    "overlay_transaction_maximum_depth": 1,
+    "persistent_descendant_after_ancestor_abort": "preserved and callable",
+    "persistent_descendant_after_ancestor_return": "preserved and callable",
+    "transaction_active_during_bytecode_execution": false,
+    "warm_repeat_growth": {
+      "attic": 0,
+      "entries": 0,
+      "images": 0,
+      "resolutions": 0,
+      "roots": 0
+    }
+  },
+  "status": "passed-host-contract-probe-product-work-not-authorized"
+}

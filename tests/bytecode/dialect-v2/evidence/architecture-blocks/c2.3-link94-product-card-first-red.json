@@ -1,0 +1,76 @@
+{
+  "attempt_accounting": {
+    "hardware_runs": 0,
+    "media_builds": 0,
+    "product_cards_authorized": 1,
+    "product_cards_consumed": 1,
+    "product_closure_links": 0,
+    "retries_authorized": 0
+  },
+  "authorities": {
+    "driver_at_card": {
+      "bytes": 34046,
+      "path": "tools/host-lisp/c2_top_level_macro_redispatch_link94.py",
+      "sha256": "6a98e902541951b897cdeb485bbfbe9bac8f9273fc40905a193ca14bdae1d2c3"
+    },
+    "host_receipt": {
+      "bytes": 6839,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link94-top-level-macro-redispatch-receipt.json",
+      "sha256": "b030c1d273c701b3cb982d72cf509d87fd24261754de25893b9452cfc590f06b"
+    },
+    "locality_receipt": {
+      "bytes": 16826,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.11-compiler-locality-receipt.json",
+      "sha256": "00dd7628e2d69885f01c49ffa46eff1b49cf9a48e7cade8eec98d7dcc65baadd"
+    },
+    "preflight_receipt": {
+      "bytes": 6760,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link94-product-preflight-receipt.json",
+      "sha256": "8d21dddcdd1d8d5731aca05aaf632bffe1f471186e7d94b8e172b5192bd9ba4f"
+    }
+  },
+  "classification": {
+    "carrier_semantics_red": false,
+    "geometry_red": false,
+    "harness_or_authority_red": true,
+    "linker_ran": false,
+    "product_artifact_exists": false,
+    "product_semantics_red": false
+  },
+  "failure": {
+    "command": "python3 tools/host-lisp/c2_top_level_macro_redispatch_link94.py build",
+    "exit_code": 2,
+    "message": "1.11 locality receipt differs from current host execution",
+    "stage": "pre-WPLTO-freight-wall/c2-v111-compiler-locality-check"
+  },
+  "format": "lisp65-c2.3-link94-product-card-first-red-v1",
+  "observations": {
+    "expected_historical_candidate_manifest": {
+      "bytes": 213654,
+      "code_bytes": 8134,
+      "dependency_known_targets": 388,
+      "entries": 102,
+      "sha256": "d6a8ac2d3dfddcd8866e1eec640733dc3a317ea7a870e632b7b51e52c87ffd3d"
+    },
+    "first_red_candidate_manifest": {
+      "bytes": 213654,
+      "code_bytes": 8134,
+      "dependency_known_targets": 391,
+      "entries": 102,
+      "sha256": "5b2c3e1f33b691edb27de0232e90e6623fffa3c345c43edac3feb6df72b501b7"
+    },
+    "full_check_before_card": "passed",
+    "link94_preflight_before_card": "passed",
+    "locality_semantic_and_pricing_projection": "byteidentical to the accepted 1.11 receipt",
+    "product_build_directory_entries": 0,
+    "product_card_receipt_exists": false
+  },
+  "attribution": {
+    "mechanism": "The historical 1.11 locality replay derives its carrier manifest through the mutable shared generated symbol universe. The complete check ran the accepted 1.11 replay before later generators materialized the three Link-94 helper symbols. The card then re-ran the 1.11 wall after that shared state had changed. The carrier still contained the same 102 objects and 8134 code bytes, but three additional known symbol targets changed name-object/directory identities and therefore the fully pinned manifest SHA.",
+    "proof": "Restoring the SHA-bound historical generated source, suite and phase-v carrier reproduces d6a8ac2d... and makes the locality wall green. Re-deriving against the post-check shared state reproduces 5b2c3e1f... while every accepted 1.11 workload, freight and pricing field remains unchanged.",
+    "required_fix_shape_if_recommissioned": "Give the 1.11 locality wall an isolated, SHA-bound historical input closure before any product card. The card must not depend on mutable shared generated sources, suites, carriers or symbol namespaces. A new card requires an explicit owner disposition; this receipt authorizes neither repair nor retry."
+  },
+  "claim_limit": "Terminal First Red from the one authorized Link-94 product card. It proves a pre-link authority-closure defect only. It makes no linked-product, geometry, media, hardware, trace, defstruct, public-surface or release claim.",
+  "recorded_on": "2026-08-09",
+  "status": "FIRST RED: LINK94 CARD CONSUMED BEFORE PRODUCT LINK; OWNER DISPOSITION REQUIRED"
+}

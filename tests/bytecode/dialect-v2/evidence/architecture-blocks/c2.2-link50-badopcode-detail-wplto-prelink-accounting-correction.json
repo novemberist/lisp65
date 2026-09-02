@@ -1,0 +1,45 @@
+{
+  "format": "lisp65-c2-lite-v6-badopcode-detail-wplto-prelink-accounting-correction-v1",
+  "recorded_on": "2026-07-22",
+  "status": "corrected-prelink-first-red-WPLTO-unconsumed",
+  "supersedes_execution_accounting_only": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-detail-wplto-receipt.json",
+    "bytes": 2721,
+    "sha256": "690264abffc320a395edb606e292ca487c2e3ea4ec84f8c79112656b5a86ea25"
+  },
+  "internal_first_red": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-detail-wplto-internal-structural.json",
+    "bytes": 7319,
+    "sha256": "7572152eb7335b3a8a2badc05437c4c44d697957cdb3f70a23a6dbdb0012c101",
+    "reported_product_closure_links": 0
+  },
+  "corrected_execution_accounting": {
+    "prelink_gate_runs": 1,
+    "whole_program_lto_closure_links": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "authorized_wplto_probe_consumed": false
+  },
+  "first_red": {
+    "gate": "c2_append_final_consolidation_gate.source_gate",
+    "message": "final consolidation contract drift",
+    "class": "stale_gate_model_only",
+    "product_bytes_created": 0,
+    "cause": [
+      "the final-consolidation gate still required the retired three-item BADOPCODE preservation list",
+      "the gate still displayed the historical 115-byte E000 floor instead of the owner-authorized 54-byte terminal floor"
+    ]
+  },
+  "class_a_correction": {
+    "path": "tools/host-lisp/c2_append_final_consolidation_gate.py",
+    "sha256": "d41026ccc7440bbfe15f7985b2ef7549a91d1d3b50fc263580f7ed352612f00a",
+    "changes": [
+      "recognize the permanent typed Fixnum BADOPCODE seam while keeping the raw plan latch retired",
+      "bind the current 54-byte E000 floor"
+    ],
+    "pure_source_replay": "passed-final-append-consolidation-source-contract",
+    "badopcode_source_replay": "passed-typed-BADOPCODE-one-seam-source-contract"
+  },
+  "claim_limit": "This correction qualifies only the prelink gate model. It does not authorize or claim a compiler run, WPLTO closure link, product link, or hardware run.",
+  "next_gate": "Class-C confirmation to run the still-unconsumed one product-shaped WPLTO probe"
+}

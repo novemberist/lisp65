@@ -1,0 +1,50 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-device-session-input-ingress-repeat-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "HARNESS FIRST RED: the REPL input ingress wedged a second time before sprite-shape submission",
+  "candidate_link": 89,
+  "product_started": true,
+  "completed_product_rows": [
+    "exact product D81 readback",
+    "exact Bank-2 readback",
+    "bounds rejection and post-error recovery",
+    "three synchronous draw forms",
+    "two compact sprite-string setup forms",
+    "explicit 63-byte sprite-string oracle"
+  ],
+  "mechanism": "The active line displayed (m65-sprite-shape 0 s), but no result or new prompt appeared. A synchronized CPU capture placed PC at 0xe017 in c2_kernal_event_poll with stack return 0x82a0 inside lisp_input_event, vm_status=0 and gc_rootsp=0. The 64-byte sprite slot was byte-identical to the earlier pre-execution capture. Therefore m65-sprite-shape never began; this is the second reproduced virtual-input ingress wedge, not a parity-pilot product failure.",
+  "observation": {
+    "product_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-repeat/D1-product-readback.d81",
+      "bytes": 819200,
+      "sha256": "cc3509b7a6df421bb749f85dcbb77bf75d704016c0cb702b011e20c5d3b54696"
+    },
+    "bank2_readback": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-repeat/D1-bank2.bin",
+      "bytes": 47298,
+      "sha256": "eb45f07ed2edc179812c585399aef5ee9ceb0dbdd02f1126e086e357156f4c30"
+    },
+    "active_line": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-repeat/d1-sprite-setup-4.png",
+      "bytes": 6702,
+      "sha256": "7d8e50245ebeaa0b3249d16f2c192a6ddd32d20a99fb8ff5aa6e7192aba25fc5"
+    },
+    "shape_slot": {
+      "path": "build/post-promotion/v14/link89-device-session/first-red-input-ingress-repeat/d1-shape-slot-live.bin",
+      "address": "0x000017c0",
+      "bytes": 64,
+      "sha256": "7b50cbe254dd39fa61a532e2a5083b3bc538410a20febbbc20bb6922cacf6639",
+      "comparison": "byte-identical to the first input-ingress first red"
+    },
+    "synchronized_cpu": {
+      "pc": "0xe017",
+      "stack_pointer": "0x01d8",
+      "stack_return": "0x82a0 inside lisp_input_event",
+      "vm_status": 0,
+      "gc_rootsp": 0,
+      "interpretation": "idle input wait; no sprite-shape execution"
+    }
+  },
+  "disposition": "Preserve the already-green D1 draw rows. Run the sprite smoke in a separate cold Link-89 identity with six total forms; sprite-shape is the fourth form and activation/readback are fused. Product and Link-89 bytes remain unchanged.",
+  "claim_limit": "A repeated harness/input-ingress failure before submission. It proves no failure in m65-sprite-shape, VIC/SID hardware, the Ship sample, D3, release or promotion."
+}

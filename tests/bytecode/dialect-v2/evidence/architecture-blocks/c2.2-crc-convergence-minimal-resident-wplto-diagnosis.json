@@ -1,0 +1,70 @@
+{
+  "format": "lisp65-c2-crc-convergence-minimal-resident-wplto-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED diagnosed: inline fast path duplicated; criterion 3 not yet established",
+  "promotable": false,
+  "authority": {
+    "first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-crc-convergence-minimal-resident-wplto-first-red-receipt.json",
+      "sha256": "a65cf6fc5d672a0635ea51d83e2f5b3125d15225629917f428af87e15d70f255"
+    },
+    "first_red_map": {
+      "path": "build/c2.2/substitution/crc-convergence-minimal-resident-wplto/resident-island-seed.prg.map",
+      "sha256": "f3b4a6132c093770a8c8ed7d8c371602d71a8cac4a276f281bfa9e6c713280df"
+    },
+    "temperature_map": {
+      "path": "build/c2.2/substitution/l65r-v3-crc-convergence-temperature-wplto/resident-island-seed.prg.map",
+      "sha256": "efd1edeb6ca6b4ab2c6790731990f64ec152c59c660843b0ecb8fb1d9c42c428"
+    },
+    "link35_map": {
+      "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/resident-island-seed.prg.map",
+      "sha256": "ddec66d7aaad9775b12ca230defcc5becdcf5d993035abf53b67bcc0070869d1"
+    }
+  },
+  "measured_delta": {
+    "bank0_text_bytes": {
+      "link35": 38007,
+      "temperature_probe": 38261,
+      "inline_minimal_probe": 38309,
+      "inline_probe_vs_link35": 302,
+      "inline_probe_vs_temperature": 48
+    },
+    "named_changes_vs_temperature_bytes": {
+      "removed_generic_noinline_driver": -181,
+      "moved_cold_crc_helper_to_island": -38,
+      "added_non_lto_start_sample": 12,
+      "added_non_lto_retry_after_miss": 65,
+      "exec_family_growth_from_two_inlined_fast_paths": 190
+    },
+    "cold_slices_bytes": {
+      "catalog": 1609,
+      "record": 1639,
+      "island": 2042,
+      "island_ceiling": 1792
+    }
+  },
+  "diagnosis": {
+    "first_red_is_valid": true,
+    "product_semantics_reached": false,
+    "root_cause": "The probe inlined the pre-CRC frame sample, CRC call and miss dispatch twice into vm_runtime_overlay_exec_family. That function grew from 1290 to 1480 bytes. The attempted form therefore did not satisfy the commissioned minimal-resident decomposition.",
+    "why_the_250_byte_shortage_is_not_a_principle_result": "The 302-byte aggregate delta includes 190 bytes of demonstrated duplication. It proves this form impossible, but it does not prove that a single shared target-specialized runtime driver is impossible.",
+    "contract_constraints_preserved": [
+      "16-bit modulo frame arithmetic",
+      "frame sample before the first CRC",
+      "CRC match checked before the frame-64 timeout",
+      "specific completion-timeout status"
+    ]
+  },
+  "unrun_successor_shape": {
+    "description": "One shared, target-specialized noinline/non-LTO function for C356 and rtov_loaded_len; expected CRC is its only varying input. It owns start sampling, first CRC and the cold retry loop, so callers contain one call rather than two inlined state machines.",
+    "why_not_run": "First-red discipline: the Whole-Program run exposed a product-shape error. A corrected product-shaped WPLTO run requires a fresh Class-C authorization.",
+    "required_result": "All resident growth must fit the unchanged 19-byte text reserve plus 33-byte fixed pocket; Island still requires its separately authorized semantic split; no anchor, floor or ceiling may move."
+  },
+  "claim_correction": "The first-red receipt's automatic criterion-3 conclusion is superseded by this diagnosis. Criterion 3 remains pending, not reached, until the shared-driver shape is measured.",
+  "execution_accounting": {
+    "whole_program_lto_seed_runs": 1,
+    "product_links": 0,
+    "hardware_runs": 0
+  },
+  "next_gate": "Class-C decision on exactly one shared-driver WPLTO correction; no automatic retry."
+}

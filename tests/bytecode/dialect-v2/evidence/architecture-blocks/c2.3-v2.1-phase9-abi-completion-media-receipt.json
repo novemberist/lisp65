@@ -1,0 +1,597 @@
+{
+  "acceptance": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 1,
+          "candidate_max_end_exclusive": 45999,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 413,
+          "candidate_max_end_exclusive": 31984,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-plus-freight-boundaries-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_boundaries": {
+        "__lisp65_c2_mapped_far_service_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 31984
+        },
+        "__lisp65_c2_mapped_far_service_load_end": {
+          "operation": "section-lma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 179440
+        },
+        "__lisp65_workbench_overlay_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_workbench_overlay",
+          "value": 51857
+        }
+      },
+      "derived_freight_sha256": "6841ceb5c8965caf7642871779b254a458f3b595018c4d80847492499e3748c8",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 25,
+      "fixed_projection_sha256": "2ebfe0002a9f196c374ebaeab5f063ce248b437348c28dc63d3bca6881ea7146",
+      "freight_derived_boundary_symbols": 3,
+      "mapped_far_service_capacity": {
+        "candidate_headroom_bytes": 413,
+        "candidate_max_end_exclusive": 31984,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      }
+    },
+    "delivered_bytes": {
+      "candidate_elf": {
+        "bytes": 629736,
+        "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "19e52617cb9235f2337094197d8affc4565af4da481a3b628abb47a659b55f93"
+      },
+      "completed_resident_prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "2697f301f6f25f5a28581ee0643a5010e6876344db9a282b0f881c0d8042a888"
+      },
+      "identity_bytes": 290,
+      "identity_mismatches": 0,
+      "load_address": "0x2001",
+      "new_staging_roles": 0,
+      "publish_last": {
+        "addresses": [
+          46324,
+          46330
+        ],
+        "bytes": 2,
+        "independent_crc16": "0x90e1",
+        "independent_window_bytes": 8192,
+        "independent_window_sha256": "c09bc590e1ff25e35eed2409bb7fc61ffef03d48a21d7b0101cb1c98d4ce8f94",
+        "observed_values": [
+          144,
+          225
+        ],
+        "producer_report": {
+          "bytes": 1549,
+          "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/kernal-window-publish-last.json",
+          "sha256": "d818bca6ba60bb56bed259c66f156755506bbc1dee7d1f84233a52a6ca7df5b7"
+        },
+        "values_correct": true
+      },
+      "sections": [
+        {
+          "bytes": 223,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb4a3",
+          "lma_equals_vma": true,
+          "publish_last_values": [
+            {
+              "address": 46324,
+              "correct": true,
+              "expected": 144,
+              "observed": 144
+            },
+            {
+              "address": 46330,
+              "correct": true,
+              "expected": 225,
+              "observed": 225
+            }
+          ],
+          "resident_prg_offset": 38052,
+          "section": ".lisp65_c2_kernal_handoff",
+          "vma": "0xb4a3"
+        },
+        {
+          "bytes": 48,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5c4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38341,
+          "section": ".lisp65_c2_host_facade",
+          "vma": "0xb5c4"
+        },
+        {
+          "bytes": 11,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5f4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38389,
+          "section": ".lisp65_c2_kernal_io_reveal",
+          "vma": "0xb5f4"
+        },
+        {
+          "bytes": 10,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5ff",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38400,
+          "section": ".lisp65_c2_kernal_map_switch",
+          "vma": "0xb5ff"
+        }
+      ],
+      "status": "passed-identity-plus-independent-CRC-value"
+    },
+    "delivery_mutations_rejected": [
+      "drop-section",
+      "rewrite-LMA",
+      "grow-carveout",
+      "widen-carveout-bytes",
+      "replace-independent-CRC",
+      "accept-wrong-high",
+      "accept-wrong-low",
+      "hide-identity-mismatch",
+      "replace-oracle-window",
+      "add-staging-role"
+    ],
+    "far_payload": {
+      "LMA_end_exclusive": "0x0002bcf0",
+      "LMA_start": "0x0002b8b2",
+      "VMA": "0x78b2",
+      "arena_capacity_bytes": 1499,
+      "candidate_derived_bytes": 1086,
+      "candidate_derived_cpu_end_exclusive": 31984,
+      "candidate_headroom_bytes": 413,
+      "fixed_size_expectation": false,
+      "section": ".lisp65_c2_mapped_far_service",
+      "sha256": "57defb4d4c0498439e67aa04f545f3a1828ecafe135112157f8e6ae73d7516a7",
+      "size_source": "emitted-candidate-section-and-symbol-extents",
+      "status": "passed-candidate-derived-far-payload-extent-identity"
+    },
+    "freight_boundary_authority": {
+      "bytes": 12856,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-freight-boundary-golden-review-receipt.json",
+      "sha256": "ca30136567f3b8596fcc1cb1d3fd04f43decf6c552f744cd6a1019260721f0e4"
+    },
+    "linked_MAP_mutations_rejected": [
+      "old-A",
+      "old-X",
+      "wrong-offset",
+      "wrong-block",
+      "wrong-entry",
+      "mapped-block1",
+      "skip-descriptor-store",
+      "restore-874-size-pin",
+      "move-arena-wall",
+      "hide-headroom"
+    ],
+    "linked_MAP_tuple": {
+      "VMA": "0xB3C2",
+      "block1_unchanged": true,
+      "bytes": "48da5aa940a282a000a3805ceaa3007afa6860",
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "far_service": {
+        "arena_capacity_bytes": 1499,
+        "arena_end_exclusive": 32397,
+        "candidate_derived_bytes": 1086,
+        "candidate_derived_end_exclusive": 31984,
+        "candidate_headroom_bytes": 413,
+        "fixed_size_expectation": false,
+        "section": ".lisp65_c2_mapped_far_service",
+        "size_source": "emitted-candidate-section-table",
+        "start": 30898
+      },
+      "first_descriptor_store": {
+        "bytes": "a9048d00c0",
+        "effect": "STA $C000 <= $04",
+        "physical_PC": "0x02B8E4"
+      },
+      "service_entry_physical": "0x02B9DC",
+      "status": "passed-primary-semantics-candidate-derived-tuple",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "low_resident_LMA_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    },
+    "pid": 629447,
+    "source_authoritative_oracle": {
+      "VMA": "0xc356",
+      "bytes": 1671,
+      "c2d_crc16": [
+        "0xe27e",
+        "0x8cc6",
+        "0x74d8",
+        "0x277a",
+        "0x9866",
+        "0xe9dc"
+      ],
+      "capacity": 1792,
+      "delivery_inputs": [
+        {
+          "bytes": 93681,
+          "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+          "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+        },
+        {
+          "bytes": 33840,
+          "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+        }
+      ],
+      "generated_decoder": {
+        "bytes": 41551,
+        "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+      },
+      "generated_owner": {
+        "bytes": 548,
+        "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+      },
+      "oracle_offset": 0,
+      "records_per_image": 6,
+      "reserve": 121,
+      "section": ".lisp65_rt_c2d_02a",
+      "shelf_crc16": [
+        "0xce26",
+        "0x46f5",
+        "0xfccb",
+        "0xbc88",
+        "0xf871",
+        "0xe3f7"
+      ],
+      "status": "passed-linked-delivery-bound-CRC-oracle",
+      "timeout_frames": 64
+    },
+    "status": "PASS"
+  },
+  "authority": {
+    "base_media": {
+      "bytes": 8769,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-abi-base-media-receipt.json",
+      "sha256": "2385185ef17796b00b2fcdc0d1486f7068c5e4e4fe58eca17b71014b0f139221"
+    },
+    "candidate_size_gate": {
+      "bytes": 3877,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-candidate-derived-tuple-gate-receipt.json",
+      "sha256": "93911e4472b0de486ab81ab148864ba370de0ad240e875e45478a69cf25c0d35"
+    },
+    "driver": {
+      "bytes": 28763,
+      "path": "tools/host-lisp/c2_v21_phase9_abi_fix_media.py",
+      "sha256": "b47bdc5567cf1380ffc78b8b7c8f85cfb0e82baeae2009847e75924c23d82f5b"
+    },
+    "far_media": {
+      "bytes": 10365,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-abi-media-r3-receipt.json",
+      "sha256": "f4240aa7a4cf0c922fc2d7ffd3054f5b8bf99460fd6063a8ad76fea1f5cb66c9"
+    },
+    "freight_boundary_golden": {
+      "bytes": 12856,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-freight-boundary-golden-review-receipt.json",
+      "sha256": "ca30136567f3b8596fcc1cb1d3fd04f43decf6c552f744cd6a1019260721f0e4"
+    },
+    "frozen_acceptance": {
+      "bytes": 19161,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-abi-fix-artifact-resume-receipt.json",
+      "sha256": "c9a8f1204bfe6d576d40d4a2c438f3121d54ace6f4aed5e4659125f592ab3cf3"
+    },
+    "liveness_media": {
+      "bytes": 6126,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-phase9-abi-liveness-media-receipt.json",
+      "sha256": "b42aabad0feb10e9e6e09b27dc0f524d81f732f4bfc5062f0b2f9cb86c967110"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 100520,
+      "commit": "ded37acdeff4ad63ff979539f8f5570fc3dc1082",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "d99efb9c1d06c354632e08c9232e8c5d0049e659f97d39aa3d017780cda5f20e"
+    }
+  },
+  "claim_limit": "Host Completion/media only; D1 not run, D2-D5 closed.",
+  "completion": {
+    "bytes": 6169,
+    "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/receipts/artifact-completion.json",
+    "sha256": "579a69ccc121eb39c324a2a0755346e7d58cad567ac8f1221925d935fa2e3183"
+  },
+  "execution_accounting": {
+    "additional_WPLTO_runs": 0,
+    "additional_cards": 0,
+    "additional_product_links": 0,
+    "artifact_completions": 1,
+    "device_contacts": 0,
+    "library_builds": 1,
+    "shared_media_builds": 3
+  },
+  "final_artifacts": {
+    "elf": {
+      "bytes": 629736,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "19e52617cb9235f2337094197d8affc4565af4da481a3b628abb47a659b55f93"
+    },
+    "manifest": {
+      "bytes": 23750,
+      "path": "build/c2.3/v2.0-crc-carveout-card/canonical-product-manifest.json",
+      "sha256": "4d1352efeb8bdc898f0793df752129b6c6d87bcd3fe16a9dfbbc5801b6f00c8f"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "2697f301f6f25f5a28581ee0643a5010e6876344db9a282b0f881c0d8042a888"
+    }
+  },
+  "format": "lisp65-c2.3-v2.1-phase9-ABI-completion-media-v1",
+  "frozen_after": {
+    "elf": {
+      "bytes": 629736,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "19e52617cb9235f2337094197d8affc4565af4da481a3b628abb47a659b55f93"
+    },
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69978,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/c2-substitution.ld",
+      "sha256": "c8b88d4e12b998e35796f6cdbfbb7c295d59f75682c173691a892cf85a667d15"
+    },
+    "lto": {
+      "bytes": 619872,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "d9874ced3720fb0306ca63ed05b7664dd27ccea6b0408733c2d18ed5663583be"
+    },
+    "map": {
+      "bytes": 188082,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "f533838f16802c002f0b53f50b4b373f148551eb6d24fe30bc1e3800c1df06fa"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "2697f301f6f25f5a28581ee0643a5010e6876344db9a282b0f881c0d8042a888"
+    },
+    "publish_last": {
+      "bytes": 1549,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/kernal-window-publish-last.json",
+      "sha256": "d818bca6ba60bb56bed259c66f156755506bbc1dee7d1f84233a52a6ca7df5b7"
+    },
+    "resolved_profile": {
+      "bytes": 12680,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "6938408cac944a69737a76d2394d5ad580b64b468922c882bc4fb4e2bf59707c"
+    }
+  },
+  "frozen_before": {
+    "elf": {
+      "bytes": 629736,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "19e52617cb9235f2337094197d8affc4565af4da481a3b628abb47a659b55f93"
+    },
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 69978,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/c2-substitution.ld",
+      "sha256": "c8b88d4e12b998e35796f6cdbfbb7c295d59f75682c173691a892cf85a667d15"
+    },
+    "lto": {
+      "bytes": 619872,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "d9874ced3720fb0306ca63ed05b7664dd27ccea6b0408733c2d18ed5663583be"
+    },
+    "map": {
+      "bytes": 188082,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "f533838f16802c002f0b53f50b4b373f148551eb6d24fe30bc1e3800c1df06fa"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "2697f301f6f25f5a28581ee0643a5010e6876344db9a282b0f881c0d8042a888"
+    },
+    "publish_last": {
+      "bytes": 1549,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/kernal-window-publish-last.json",
+      "sha256": "d818bca6ba60bb56bed259c66f156755506bbc1dee7d1f84233a52a6ca7df5b7"
+    },
+    "resolved_profile": {
+      "bytes": 12680,
+      "path": "build/c2.3/v2.1-phase9-abi-fix-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "6938408cac944a69737a76d2394d5ad580b64b468922c882bc4fb4e2bf59707c"
+    }
+  },
+  "hardware_handoff": {
+    "D1_ready": true,
+    "D2_D5_open": false,
+    "session": {
+      "bytes": 2817,
+      "path": "config/c2-v150-v21-phase9-abi-far-r3-device-session.json",
+      "sha256": "660cb7b1e3515ca91ce3d47ae2b212ac2fd17172b458aa4ed0642aed9e8c9eb5"
+    }
+  },
+  "media": {
+    "actual_ELF_liveness": "passed-actual-linked-stager-prefix",
+    "arena_capacity_bytes": 1499,
+    "candidate_headroom_bytes": 413,
+    "delivered_bytes": 48368,
+    "fixed_size_expectation": false,
+    "library_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-phase9-abi-media-base/library/lisp65-library.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "packed_gate_registry_complete": true,
+    "payload_bytes": 1086,
+    "product_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-phase9-abi-media-r3/shared-system/lisp65-product.d81",
+      "sha256": "69e539f4a15067640cd0f753fcf9934ac6c0641f20fb6611a5caa36e9235b1c5"
+    },
+    "readback": "byteidentical",
+    "roles": 19,
+    "same_world": true,
+    "session": {
+      "bytes": 2817,
+      "path": "config/c2-v150-v21-phase9-abi-far-r3-device-session.json",
+      "sha256": "660cb7b1e3515ca91ce3d47ae2b212ac2fd17172b458aa4ed0642aed9e8c9eb5"
+    }
+  },
+  "mutations_rejected": [
+    "claim-link",
+    "restore-874-pin",
+    "truncate-extent",
+    "cross-world",
+    "omit-packed-gate",
+    "open-D2"
+  ],
+  "recorded_on": "2026-08-16",
+  "source_gate": {
+    "additional_WPLTO_runs": 0,
+    "additional_product_links": 0,
+    "fixed_capacity_bytes": 1499,
+    "fixed_size_expectations": 0,
+    "fresh_process_stages": 6,
+    "payload_source": "emitted-candidate-section-and-symbol-extents",
+    "status": "passed-candidate-derived-media-freight"
+  },
+  "source_mutations_rejected": [
+    "restore-874-payload-pin",
+    "restore-48156-extent-pin",
+    "remove-fixed-arena-wall",
+    "drop-far-stage"
+  ],
+  "status": "PASS: phase-9 ABI candidate completed and media closed; D1 ready"
+}

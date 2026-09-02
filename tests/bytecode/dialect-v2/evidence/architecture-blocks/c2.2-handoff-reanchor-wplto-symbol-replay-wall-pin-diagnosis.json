@@ -1,0 +1,74 @@
+{
+  "authorization_scope": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "link33_attempts": 0,
+    "linker_runs": 0,
+    "product_closure_links": 0,
+    "pure_replays_consumed": 1,
+    "wplto_retries": 0
+  },
+  "bound_evidence": {
+    "immutable_elf": {
+      "mode": "0444",
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/l65r-v2-boot-family-placement.prg.elf",
+      "sha256": "c82b9bd0763e1c515e083c615b7f35742b571a262e75b03649a5798382110d2b"
+    },
+    "symbol_pure_replay_first_red": {
+      "mode": "0444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-symbol-pure-replay-receipt.json",
+      "sha256": "c06df28dd7126cb4203665b5f3026278f9d55d1f8dc58addaa4b8fdbbf544f0f"
+    }
+  },
+  "diagnosis": {
+    "actual_resident_walls": {
+      "bank0_text_headroom_bytes": 42,
+      "e000_headroom_bytes": 115,
+      "fixed_hot_block_headroom_bytes": 33,
+      "ordinary_bank0_bss_headroom_bytes": 195,
+      "resident_island_headroom_bytes": 7
+    },
+    "arithmetic": {
+      "fixed_code_base": "0xc218",
+      "fixed_code_bytes": 45,
+      "fixed_hot_bss_base": "0xc245",
+      "fixed_hot_bss_bytes": 240,
+      "fixed_contract_end": "0xc335",
+      "runtime_overlay_base": "0xc356",
+      "headroom_bytes": 33
+    },
+    "incorrect_replay_pin_bytes": 273,
+    "model_error": "The replay copied the pre-hot-BSS headroom (0xc356 - (0xc218 + 45) = 273) and omitted the already-authorized 240-byte fixed hot-BSS tenant. The canonical WPLTO probe itself pins 33 bytes.",
+    "product_finding": "none: all five walls are positive and the shared ELF-truth Boot-lifetime gate completed before this harness-only comparison",
+    "status": "replay-wall-pin-first-red"
+  },
+  "format": "lisp65-c2-handoff-reanchor-wplto-symbol-replay-wall-pin-diagnosis-v1",
+  "proposed_bounded_continuation": {
+    "correction": "Bind fixed-hot-block headroom to the post-BSS-triage contract value 33, matching the canonical WPLTO probe and measured section geometry; do not alter any product or capacity floor.",
+    "requested_execution": "one additional pure replay against the same immutable evidence only",
+    "still_forbidden": [
+      "compiler run",
+      "linker run",
+      "WPLTO retry",
+      "Link 33",
+      "hardware run"
+    ]
+  },
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+    "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "unchanged"
+  },
+  "shared_elf_truth_progress": {
+    "boot_lifetime": "migrated-and-passed-before-first-red",
+    "foundation": "implemented",
+    "remaining_named_consumers": [
+      "pre_ownership",
+      "fixed_facade",
+      "profile_data_reference",
+      "kernal_control_flow",
+      "final_section_inventory"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "classification": "artifact-replay-order-only-not-a-product-or-link-red",
+  "execution_accounting": {
+    "additional_compiler_runs": 0,
+    "additional_linker_runs": 0,
+    "hardware_runs": 0,
+    "whole_program_product_links": 1
+  },
+  "format": "lisp65-c2.2-link74-ASM-Z-boundary-postlink-replay-first-red-v1",
+  "observed": {
+    "artifact_completion": "passed",
+    "failure": "require-resolver profile selector order drift",
+    "product_sha256": "e0a925f085786c02444ba259b90eb0d811234656243ca728d2a675a05e71eab9",
+    "stop_boundary": "after the one authorized product link and artifact completion, while assembling the wrapper receipt"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-28",
+  "resolution": "Replay source-only gates before the final artifact checker retargets mutable resolver modules. Resume from the existing Link-74 product, manifest and completion receipt; never invoke the linker again.",
+  "status": "FIRST RED: post-link wrapper replayed a source selector after artifact-checker reconfiguration"
+}

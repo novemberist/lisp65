@@ -1,0 +1,108 @@
+{
+  "format": "lisp65-c2-product-link40-c2d-v6-shelf-catalog-hardware-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "first-red-deployment-c2d-shelf-catalog-identity-mismatch",
+  "promotable": false,
+  "candidate": {
+    "product": {
+      "path": "build/c2.2/substitution/product-link-40-c2-lite-v6-real-abi-e000/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "sha256": "a683a2e9b3be92b41bcc5ef0013f0e1c7ef379a63c26f4fe1883a21508bf44a0"
+    },
+    "c2d_identity_correction_authority": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link40-c2d-v6-product-identity-rebind-receipt.json",
+      "bytes": 8717,
+      "sha256": "88aaf4a77d1e448bb3d86c9241a006ddab460972bf53e3192c2d45463e46e082"
+    },
+    "deployment": {
+      "path": "build/c2.2/hardware-presmoke-link40-c2d-identity-rebind/deployment.json",
+      "bytes": 3527,
+      "sha256": "ec3f9d05bb036abd4ab87e1109f456a4d813a416e637d27dd78d484611cd6770",
+      "prelaunch_readbacks": "6/6 byte-identical"
+    }
+  },
+  "operator_observation": {
+    "visible": "black screen",
+    "boot_to_repl": "first-red-no-repl",
+    "completed_latency_measurements": 0,
+    "latency_attempts_consumed": "0/2"
+  },
+  "captured_runtime_state": {
+    "vm_boot_overlay_status": {"address": "0x006c", "value": 0},
+    "vm_runtime_overlay_fault": {"address": "0x0078", "value": 9},
+    "runtime_family": {"address": "0x0079", "value": 1, "decoded": "BOOT"},
+    "runtime_island_state": {"address": "0x007a", "value": 2, "decoded": "RTOV_ISLAND_READY"},
+    "c2_ready": {"address": "0x008c", "value": 0},
+    "pending_error": {"address": "0x0038", "value": 37, "decoded": "LISP65_ERR_STDLIB_PROFILED_PRELOAD"},
+    "c2_stream_context": {
+      "address": "0xc084",
+      "phase": 1,
+      "finished": 0,
+      "error": 2,
+      "decoded_error": "C2_STREAM_ERR_SHELF",
+      "product_build_id_check": "passed-before-phase-01"
+    }
+  },
+  "catalog_identity_mismatch": {
+    "product_shelf": {
+      "path": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+      "bytes": 70897,
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74",
+      "header_catalog_crc32": "0x3d6302f3",
+      "computed_catalog_crc32": "0x3d6302f3",
+      "catalog_span": {"offset": 32, "bytes": 192},
+      "product_build_id": "0x69496476"
+    },
+    "deployed_c2d_v6": {
+      "path": "build/c2.2/c2d-v6-product-identity-rebind-link40/v6-semantics/initial.c2d-v6.bin",
+      "bytes": 33840,
+      "sha256": "985d1d39e22dec478462a32ccf55eeddf79d9c4fdce76e1485efa2ce9399e8db",
+      "header_catalog_crc32": "0xd3186bec",
+      "product_build_id": "0x69496476"
+    },
+    "live_bank5": {
+      "path": "build/c2.2/hardware-presmoke-link40-c2d-identity-rebind/line1-first-red/bank5-c2d-live.bin",
+      "bytes": 33840,
+      "sha256": "4bbdedd160a0ec4407fb08200fb0d83031ed0ca8aa980be1a6c589c2cda5a68c",
+      "difference_from_preload_count": 1,
+      "sole_difference": "offset 9 changed 0x00 to 0x10 by the expected transient watermark publication",
+      "header_catalog_crc32": "0xd3186bec",
+      "product_build_id": "0x69496476"
+    },
+    "historical_product_c2d_v3": {
+      "path": "build/c2.2/substitution/initial.c2d-v3.bin",
+      "catalog_crc32": "0x3d6302f3",
+      "product_build_id": "0x69496476"
+    }
+  },
+  "root_cause": {
+    "class": "two-catalog-identity-sources-in-the-deployment-plane",
+    "contract_truth": "C2D catalog_crc32 binds the immutable L65S-v4 shelf catalog.",
+    "plane_truth": "c2_lite_v6_product_probe.py::static_plane privately hashes the six newly shaped C2D-v6 image rows.",
+    "fail_closed_result": "Phase 01 rejects the mismatched C2D/shelf pair before Bank-2 publication, C2 READY or any callable/export publication."
+  },
+  "class_a_closure": {
+    "action": "The presmoke verifier now checks C2D catalog_crc32 against the self-verified deployed shelf catalog as well as checking all three build identities.",
+    "selftest": "passed",
+    "negative_replay": "C2D/shelf catalog identity mismatch: c2d=0xd3186bec shelf=0x3d6302f3",
+    "product_byte_delta": 0,
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "hardware_runs": 0
+  },
+  "required_class_c_decision": {
+    "recommended_direction": "Make the C2D-v6 emitter consume the shelf catalog CRC from the canonical, self-verified product shelf instead of hashing its private C2D image rows. Regenerate and rebind only the C2D-v6 plane, prove an exact four-byte delta at offsets 40..43 from the already corrected plane, rerun v6 semantics and the combined catalog/build identity gate, then prepare a fresh deployment against the unchanged Link-40 PRG/ELF.",
+    "expected_delta": "C2D-v6 offsets 40..43: ec 6b 18 d3 -> f3 02 63 3d",
+    "product_link": "not proposed unless the artifact-only correction finds product-code or capacity movement",
+    "hardware": "no retry until the corrected plane and deployment authority are separately approved"
+  },
+  "captures": [
+    {"path": "build/c2.2/hardware-presmoke-link40-c2d-identity-rebind/line1-first-red/low-0000-0100.bin", "bytes": 256, "sha256": "78b9def6a991a0b509b5cf86e378c7fa76abc5efa9302f2a24c34799a7d82e9c"},
+    {"path": "build/c2.2/hardware-presmoke-link40-c2d-identity-rebind/line1-first-red/bank0-c000-c100.bin", "bytes": 256, "sha256": "3134d91bcdbac8d2ee487698fd75c956b3bee845a99125811e45c5c241165770"},
+    {"path": "build/c2.2/hardware-presmoke-link40-c2d-identity-rebind/line1-first-red/bank2-code-plane.bin", "bytes": 65536, "sha256": "13bf9fdb246f4394d62f8dbddded68abdbed5ff32a769de8b46a400d325523ae"},
+    {"path": "build/c2.2/hardware-presmoke-link40-c2d-identity-rebind/line1-first-red/bank3-0000-0700.bin", "bytes": 1792, "sha256": "85b7303090a429921b5fcc17433bfe96b8809384b6975f0eb438946f20f821ba"},
+    {"path": "build/c2.2/hardware-presmoke-link40-c2d-identity-rebind/line1-first-red/screen-0800-1000.bin", "bytes": 2048, "sha256": "6a3e0d33c868bf3d1c2183c95af1a5bf2f0bad80d286d73a9801b520bda76fac"},
+    {"path": "build/c2.2/hardware-presmoke-link40-c2d-identity-rebind/line1-first-red/window-state-ff80-ffff.bin", "bytes": 128, "sha256": "7124c716cfc1d8fb62931d9e51eb8a6f8a3c884132f5bc4197296bacde111453"}
+  ],
+  "claim_limit": "Read-only hardware First-Red diagnosis plus zero-product-byte Class-A gate closure. It is not hardware acceptance, latency evidence, promotion, authority to change the C2D plane, or authority for another hardware run."
+}

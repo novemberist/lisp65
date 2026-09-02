@@ -1,0 +1,140 @@
+{
+  "format": "lisp65-post-capture-planning-status-state-completion-v1",
+  "version": 1,
+  "id": "post-capture-planning-return-and-persistent-status-single-source",
+  "status": "passed-authorized-not-promoted",
+  "measured_on": "2026-07-15",
+  "parent_authorization": {
+    "path": "config/post-capture-planning-capacity-authorization.json",
+    "decision": "owner-authorized-option-1-2026-07-15"
+  },
+  "baseline": {
+    "product_artifact_set_sha256": "a2e5fe2da4628512da4c4cdc4c95fba811b979a053ac011406381290afa8353e",
+    "m65d": {
+      "path": "build/r6/ship/components/m65d",
+      "bytes": 7214,
+      "sha256": "34bcbcae4b05aa743aece138b7c3c4502d49d454d419f5008fc2c6dda6021768",
+      "code_bytes": 4020
+    },
+    "capacity": {
+      "post_boot_reserve_bytes": 1868,
+      "post_boot_margin_over_1536_bytes": 332,
+      "ext_post_headroom_bytes": 16388,
+      "ext_margin_over_16384_bytes": 4,
+      "symbol_headroom": 120,
+      "namepool_headroom_bytes": 2160,
+      "directory_headroom_entries": 32
+    }
+  },
+  "candidate": {
+    "m65d": {
+      "path": "build/bytecode/dialect-v2/libs/m65d.ext.bin",
+      "bytes": 7217,
+      "sha256": "a895647815229a939ca2e9f2811b6b2e223faba612f11d66c9e770142aa22b35",
+      "code_bytes": 4023
+    },
+    "m65d_manifest": {
+      "path": "build/bytecode/dialect-v2/libs/m65d.manifest.json",
+      "bytes": 50944,
+      "sha256": "89a812a1dccd5ade06bd6fbaac2f6ee4a3a352d6915dd7a1a215c7ba84c8aced"
+    },
+    "composition_report": {
+      "path": "build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+      "bytes": 2898,
+      "sha256": "891096faec5d64356e79f9e19202f70f444906f61e0380f918303e5a16185251"
+    },
+    "product_footprint_report": {
+      "path": "build/products/workbench/overlay-stack-guard/footprint-audit.json",
+      "bytes": 615,
+      "sha256": "3f8b89322b03e8640688b79daf722c09200307e214222a8396efe0ced54a2b7d"
+    },
+    "product_elf": {
+      "path": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+      "bytes": 120268,
+      "sha256": "aaeadc4a72c18796dc4c6fa9d9849306120c94c74f199504460f485ce600b755"
+    }
+  },
+  "capacity_delta_from_parent_candidate": {
+    "bank": {
+      "before_post_boot_reserve_bytes": 1868,
+      "after_post_boot_reserve_bytes": 1868,
+      "release_target_bytes": 1536,
+      "after_margin_bytes": 332,
+      "delta_bytes": 0
+    },
+    "ext": {
+      "before_post_headroom_bytes": 16388,
+      "after_post_headroom_bytes": 16385,
+      "release_floor_bytes": 16384,
+      "before_margin_bytes": 4,
+      "after_margin_bytes": 1,
+      "delta_bytes": -3,
+      "floor_status": "held-with-1-byte-margin",
+      "attribution": {
+        "mechanism": "publish-the-classified-planning-result-through-m65d-set-so-return-value-and-m65d-status-share-one-value",
+        "m65d_code_bytes_before": 4020,
+        "m65d_code_bytes_after": 4023,
+        "m65d_code_delta_bytes": 3,
+        "metadata_bytes_before": 3190,
+        "metadata_bytes_after": 3190,
+        "metadata_delta_bytes": 0
+      }
+    },
+    "symbols": {
+      "before_headroom": 120,
+      "after_headroom": 120,
+      "delta": 0
+    },
+    "namepool": {
+      "before_headroom_bytes": 2160,
+      "after_headroom_bytes": 2160,
+      "delta_bytes": 0
+    },
+    "directory": {
+      "before_headroom_entries": 32,
+      "after_headroom_entries": 32,
+      "delta_entries": 0
+    },
+    "boot_overlay_delta_bytes": 0
+  },
+  "status_single_source_proof": {
+    "observation_report": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/post-capture-planning-status-state-observations.json",
+      "bytes": 12629,
+      "sha256": "a4d625fff00ed06420f5ed9d35c2e0ebace3c5564dc077fa099233958af5adb5"
+    },
+    "changed_token": {
+      "return_status": 12,
+      "persistent_m65d_status": 12,
+      "writes": 0,
+      "partial_write_latched": false
+    },
+    "stable_token_read_failure": {
+      "return_status": 6,
+      "persistent_m65d_status": 6,
+      "writes": 0,
+      "partial_write_latched": false
+    },
+    "rule": "the-classified-planning-result-is-the-only-value-used-for-both-the-call-return-and-persistent-m65d-status"
+  },
+  "identity_effect": {
+    "product_artifact_changed": true,
+    "changed_role": "library-m65d",
+    "receipt_resume_policy": "existing-hardware-receipts-cannot-be-rebound-to-the-new-product-artifact-set",
+    "required_followup": "fresh-R4-R5-R6-and-G6-hardware-cases-for-the-new-product-set"
+  },
+  "authorization_effect": {
+    "existing_ext_authorization_bytes": 31,
+    "required_cumulative_ext_authorization_bytes": 34,
+    "incremental_ext_authorization_required_bytes": 3,
+    "promotion_blocked_until_authorized": false,
+    "authorized_on": "2026-07-15",
+    "post_authorization_ext_headroom_bytes": 16385,
+    "post_authorization_ext_floor_bytes": 16384,
+    "post_authorization_ext_margin_bytes": 1,
+    "ext_1_0_policy": "frozen-no-further-debit-authorizable-even-one-byte",
+    "future_ext_change_rule": "requires-simultaneous-structural-relief",
+    "named_structural_relief": "1.1-attic-shelf-removes-library-FASLs-from-EXT-equation"
+  },
+  "result": "status-state-divergence-closed-capacity-floors-held-incremental-3-byte-ext-debit-authorized-and-EXT-frozen-for-1.0"
+}

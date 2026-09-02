@@ -1,0 +1,47 @@
+{
+  "format": "lisp65-r5-wave1-attic-shelf-harness-stop-diagnosis-v1",
+  "id": "r5-wave1-attic-shelf-preload-closure",
+  "status": "closed-test-closure-fix-failed-case-must-rerun",
+  "recorded_on": "2026-07-16",
+  "failed_attempt": {
+    "harness_commit": "7bb79d2",
+    "run_id": "r5-run-20260716-wave1-01",
+    "case": "workbench-ux/overlay-stack-guard",
+    "cycle_id": "r5-run-20260716-wave1-01-workbench-01",
+    "product_artifact_set_sha256": "91fcad2d6c42abc30a27f4bc2a9cfa65a8bbd85ec74d4a57bd1898ace1314c67",
+    "test_closure_set_sha256": "04990fef9e6e456004f4b2a69158c90dd756d308f9a78b1b3bcb581e63fe36df",
+    "observation": "The banner and REPL appeared, but both arithmetic forms stopped with *** lcc-install failed.",
+    "raw_screen_path": "build/r5-global-g5/evidence/r5-run-20260716-wave1-01/workbench-overlay-stack-guard-failed-04990/r5-g5-overlay-stack-arith-42.txt",
+    "raw_screen_sha256": "31323c25438837301a646b2aadd6fe11bbd573200ac38abd66055d18447f048f",
+    "case_receipt_created": false,
+    "claim": "diagnostic only; no product case passed"
+  },
+  "root_cause": {
+    "class": "test-closure artifact completeness",
+    "summary": "The sealed Wave 1 product added the reset-stable Attic library shelf at 0x08100000. The R5 Etherload package, deploy path, and memory verifier still bound only the runtime-overlay catalog and Bank-5 preload.",
+    "first_visible_failure": "C1 compiles every interactive REPL form through the compiler tier loaded from the shelf, so the first arithmetic form failed at lcc-install before product semantics ran.",
+    "product_defect": false,
+    "product_sha_changed": false
+  },
+  "structural_fix": {
+    "artifact_id": "attic-library-shelf",
+    "artifact_sha256": "bd40ade243dd3ac79059a8a835f2983b9aa7b24118a2db143bd49dfce6527adf",
+    "bytes": 65042,
+    "address": "0x08100000",
+    "bindings": [
+      "R5 hardware-package artifact inventory and preload manifest",
+      "all Workbench Etherload and reset deploy paths",
+      "staged and post-reset SHA readback",
+      "static target-to-artifact preflight"
+    ],
+    "legacy_packages_without_a_shelf": "remain supported by the generic readback harness; a manifest that names a shelf requires it fail-closed"
+  },
+  "post_fix_preflight": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/r5/global-g5-static-preflight-receipt.json",
+    "receipt_sha256": "69f98ccc017a760729d8cf12deca9d2741a37a0bb8eacbe2cda68f959d01266e",
+    "test_closure_set_sha256": "b100a4b9d23b6f00e98747f025b729f2f581e3a2d92a1c3f83f214612b58d055",
+    "cases": 14,
+    "result": "passed-static-no-hardware"
+  },
+  "resume_rule": "Because the product set is unchanged and the failed attempt produced no case receipt, rerun only workbench-ux/overlay-stack-guard; no previous receipt is promoted or relabeled."
+}

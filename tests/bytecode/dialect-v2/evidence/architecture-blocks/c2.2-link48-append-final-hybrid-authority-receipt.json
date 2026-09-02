@@ -1,0 +1,67 @@
+{
+  "format": "lisp65-c2-lite-v6-link48-append-final-hybrid-authority-receipt-v1",
+  "recorded_on": "2026-07-22",
+  "status": "passed-static-hybrid-authority-and-pricing-gate; Alex selection pending",
+  "owner_decision": {
+    "e000_floor_bytes": 54,
+    "e000_self_defense": "Any future E000 demand below 54 bytes automatically triggers scope triage; no negotiation, exception, or fourth floor event.",
+    "bank0_text_noise_floor_bytes": 32,
+    "scope_cut_required_bytes": 24,
+    "selection_rule": "Alex selects exactly one candidate before any product source cut or WPLTO."
+  },
+  "geometry": {
+    "reopen_gap0": {"address": "0xfca2", "bytes": 128, "end_exclusive": "0xfd22"},
+    "session_emitter_state": {"address": "0xfd22", "bytes": 10, "end_exclusive": "0xfd2c"},
+    "profile_rodata": {"address": "0xfd2c", "bytes": 342, "end_exclusive": "0xfe82"},
+    "resolved_overlap_bytes": 26,
+    "new_product_bytes": 0
+  },
+  "scope_cut_candidates": [
+    {
+      "id": "numeric-early-errors",
+      "current_attributed_text_bytes": 81,
+      "consequence": "E2e/E2f/E3d/E3e retain stable numeric output but lose their resident prose sentences."
+    },
+    {
+      "id": "visible-block-cursor",
+      "current_attributed_text_bytes": 65,
+      "consequence": "REPL editing remains usable but has no visible reverse-video insertion cursor."
+    },
+    {
+      "id": "mid-transaction-media-change-classification",
+      "current_attributed_text_bytes": 27,
+      "consequence": "Disk swaps still fail, but report invalid-read rather than the dedicated media-changed status."
+    }
+  ],
+  "gate": {
+    "mutations_rejected": [
+      "floor-53",
+      "state-old-address",
+      "profile-old-address",
+      "noise-floor-8",
+      "premature-selection"
+    ],
+    "check_source_target": "c2-append-final-hybrid-check"
+  },
+  "evidence": {
+    "contract": {"path": "config/c2-append-final-hybrid-contract.json", "sha256": "d2dd5194036da648d70488e26cc39c69d03dc534b0751147a0d47dcf24dd7787"},
+    "active_c2_lite_contract": {"path": "config/c2-lite-execution-contract.json", "sha256": "7fbeded98d4ae31ea5b0acb3d0aa0b14dd0e10451051e4338c007eea558c598a"},
+    "kernal_contract": {"path": "config/c2-kernal-unmap-contract.json", "sha256": "16a8b53c400560009e87aabe3f8165470d85d9dffedbe33249d8f395e93ed84f"},
+    "gate_source": {"path": "tools/host-lisp/c2_append_final_hybrid_gate.py", "sha256": "9577bda89d9b7f9adac9a936f9b47bdc272b232205cef803d600922dd4963369"},
+    "linker_truth_source": {"path": "tools/host-lisp/c2_product_substitution_link.py", "sha256": "d2f1336fe2b2b2d7012b7452eab043dbfaa0a962862526b151e7ee2dd9b70966"},
+    "failed_wplto_map": {"path": "build/c2.2/substitution/link48-append-final-consolidation-wplto-gate-replay/resident-island-seed.prg.map", "sha256": "7d596c691a7768c7808281d881432528cc4b5c89f1441a5470d539e7d1466636"},
+    "failed_wplto_lto_object": {"path": "build/c2.2/substitution/link48-append-final-consolidation-wplto-gate-replay/resident-island-seed.prg.lto.o", "sha256": "b2f184c964c82cee7f896b58f00a13fce690021bca43dfcbc5a9b20dd0855f05"}
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "wplto_runs": 0,
+    "product_links": 0,
+    "product_bytes_changed": 0,
+    "hardware_runs": 0,
+    "line1": "green; product First-Red budget remains 2/3",
+    "latency": "0/2"
+  },
+  "claim_limit": "The geometry and scope-cut prices are statically bound. No scope cut, capacity pass, product candidate, hardware behavior, or latency result is claimed.",
+  "next_gate": "Alex selects exactly one candidate; only then one combined WPLTO may run."
+}

@@ -1,0 +1,157 @@
+{
+  "format": "lisp65-c2.3-v1.3-link85-full-reset-domain-host-receipt-v1",
+  "recorded_on": "2026-08-02",
+  "status": "passed-full-reset-domain-gate-link85-and-closing-preparation",
+  "commission": "docs/planning/1.3-link84-closing-first-red-review.md#fix-commission--2026-08-02-reviewer-class-c",
+  "mechanism": {
+    "historical_role2_bytes": 33840,
+    "reset_domain_bytes": 50816,
+    "canonical_prefix": [
+      0,
+      33840
+    ],
+    "zero_suffix": [
+      33840,
+      50816
+    ],
+    "c2j": [
+      50752,
+      50816
+    ],
+    "c2j_zero_bytes": 64,
+    "write_order": [
+      "write-and-content-readback-complete-reset-domain",
+      "write-and-content-readback-authenticated-Boot-scratch",
+      "chain-to-product-validation-and-READY"
+    ],
+    "ready_shortcut": false,
+    "guard_disposition": "unchanged-and-correctly-fail-closed"
+  },
+  "class_closer": {
+    "target": "c2-reset-domain-completeness-check",
+    "aggregator": "check-source",
+    "status": "passed-full-Bank5-reset-domain-and-C2J-zeroing",
+    "executions": 7,
+    "mutations_rejected": 6,
+    "cases": [
+      "Boot-scratch-before-reset-domain",
+      "canonical-prefix-drift",
+      "omitted-C2J-zeroing",
+      "prefix-only-restage",
+      "role2-prefix-without-transform",
+      "stale-inactive-suffix"
+    ],
+    "check_source": "passed-complete-no-exceptions"
+  },
+  "link85": {
+    "link": 85,
+    "release_candidate": "v1.3.0",
+    "product": {
+      "path": "build/c2.3/v1.3.0-candidate-product-link85-r1/final/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "0a04d73267927be7f3087c46f604cf88235fbc5a069563bcd30c6913f83e829f"
+    },
+    "elf": {
+      "path": "build/c2.3/v1.3.0-candidate-product-link85-r1/final/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 622560,
+      "sha256": "569187ae75b14f4ecf072580eea34fe217ebab14d2b6466e177f60c10e9da0f9"
+    },
+    "product_manifest": {
+      "path": "build/c2.3/v1.3.0-candidate-product-link85-r1/canonical-product-manifest.json",
+      "bytes": 20562,
+      "sha256": "ab59b8edb5697eb2d2b4391a136b6b3892d78f9cd14f7474d8ba1da1a29e68f1"
+    },
+    "media_manifest": {
+      "path": "build/c2.3/v1.3.0-candidate-media-link85-r1/candidate-manifest.json",
+      "bytes": 16895,
+      "sha256": "2456096fccaf0091e09dab64d7eeadfbb709fc3aca0aabb7897728660dbf8c23"
+    },
+    "media_artifact_set_sha256": "35edb4e1c46aad74f0d390941bbe97daaad93cf65d8deef9664306e2610f385a",
+    "product_d81": {
+      "path": "build/c2.3/v1.3.0-candidate-media-link85-r1/lisp65-product.d81",
+      "bytes": 819200,
+      "sha256": "4e3eaec9f998d5425c2bd149f9ab095996e51ca8a5a36cd4be47fb9dd09e397f"
+    },
+    "reset_domain": {
+      "path": "build/c2.3/v1.3.0-candidate-media-link85-r1/c2d-v6-reset-domain.bin",
+      "bytes": 50816,
+      "sha256": "26bec13fc2ace4f4f9a27128212e03ff98cb4400a5f845d1cc6219108d7ee3f8",
+      "prefix_sha256": "89ed677540a5b589e8489c68c392566a5ddeec7f00fb8eb60596eec470b24df6",
+      "suffix_nonzero_bytes": 0,
+      "c2j_nonzero_bytes": 0
+    },
+    "descriptor_role2": {
+      "destination": "0x00050000",
+      "bytes": 50816,
+      "crc32": "0x536e27be",
+      "readback_policy": "stage-and-independent-target-readback"
+    },
+    "descriptor_role3": {
+      "destination": "0x00058500",
+      "bytes": 3286,
+      "crc32": "0xf312800b",
+      "order": "after-role2"
+    },
+    "geometry": {
+      "bank2_static_code_bytes": 45514,
+      "product_build_id": "0x74e2765d",
+      "bank2_sha256": "49658f5239abf867a29875a1464629f1885d3dab58102077fda5ba19af882589",
+      "resident_delta_bytes": 0
+    },
+    "link84_to_link85_product_delta": {
+      "differing_bytes": 16,
+      "old_profile_build_id": "0xd1ebda49",
+      "new_profile_build_id": "0xa5fd9f61",
+      "classification": "profile-identity-immediates-and-derived-catalog-check-values; full linked gates passed"
+    }
+  },
+  "authorities": {
+    "media_contract": {
+      "path": "config/c2-lite-media-product.json",
+      "bytes": 5819,
+      "sha256": "0cfdb64443be8c71df5962324406b881f7150565bb9871fed554cba9008503a8"
+    },
+    "destructive_restage_contract": {
+      "path": "config/c2-destructive-restage-contract.json",
+      "bytes": 5408,
+      "sha256": "2f8ec854f4a6ec7104c7eb8deddc8127ffc61a19ffc32463cf259a5f4ab2ef47"
+    },
+    "media_builder_and_gate": {
+      "path": "tools/host-lisp/c2_lite_media_product.py",
+      "bytes": 49331,
+      "sha256": "779dd121379b28dbde2a8f2f5d79e7e7eb22f673d41e5634011ff3b3f785ba06"
+    },
+    "gate_wiring": {
+      "path": "mk/gates.mk",
+      "bytes": 26877,
+      "sha256": "fe8f32f32539b00a4ecd79a89994fc1c4a4e1794f2cb156f19f09442119e6f36"
+    },
+    "root_cause_capture": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link84-post-runstop-readonly-capture-receipt.json",
+      "sha256": "87d7fb78fea0e37274bb1a96de70f0d78685ef810ea53e2d0a1d8aa2c0a259e2"
+    }
+  },
+  "closing_session": {
+    "status": "prepared-host-green-link85-closing-session",
+    "hardware_runs": 0,
+    "order": [
+      "D3-30-keys-RUNSTOP-live-REPL",
+      "Ship-interactive-Ada-Hello",
+      "D4-require-q-time"
+    ],
+    "preparation_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link85-full-reset-closing-device-preparation-receipt.json",
+      "bytes": 4373,
+      "sha256": "0c45874a7ba929e29a1db70536b72e360493ac5c0d16cc3f5265cf726f3c56ef"
+    },
+    "dry_run": "passed"
+  },
+  "scope": {
+    "prior_media": "The shared historical builder selected the 33,840-byte prefix for role 2; prior media are therefore presumed to carry the same gap unless individually disproved.",
+    "field_exposure": "none: v1.3 is the first advertised release and remains closed; earlier media are internal historical acceptance identities",
+    "product_logic_delta": "none commissioned; READY and journal validation remain unchanged",
+    "hardware_claim": "none",
+    "release_claim": "none"
+  },
+  "next_gate": "one commissioned Link-85 closing device session, then Halt #2"
+}

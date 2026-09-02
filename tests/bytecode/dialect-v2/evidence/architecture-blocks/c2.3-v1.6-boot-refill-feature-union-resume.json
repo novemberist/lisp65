@@ -1,0 +1,274 @@
+{
+  "Final_Red": {
+    "binding": {
+      "bytes": 2123,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-boot-refill-generator-template-card-final-red.json",
+      "sha256": "0fc80d389523d2e2b3f65e5166b7f30765b94bf688f1a0b9012a7703df7d7dca"
+    },
+    "drift": {
+      "comparison": "effective-features",
+      "expected": [
+        "LISP65_CODE_WINDOW_CONVERGENCE",
+        "LISP65_DMA_CONTENT_CONVERGENCE",
+        "LISP65_C2_ASM_CONVERGENCE",
+        "LISP65_C2_FULL_SPAN_CONVERGENCE",
+        "LISP65_C2_MUTABLE_CPU_READS",
+        "LISP65_C2_TERMINAL_RETURN_GUARD",
+        "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+        "LISP65_C2_MAP_CPU_TRANSPORT",
+        "LISP65_C2_REQUIRE_RESOLVER"
+      ],
+      "observed": [
+        "LISP65_CODE_WINDOW_CONVERGENCE",
+        "LISP65_DMA_CONTENT_CONVERGENCE",
+        "LISP65_C2_ASM_CONVERGENCE",
+        "LISP65_C2_REFILL_BOUNDARY_WITNESS",
+        "LISP65_C2_FULL_SPAN_CONVERGENCE",
+        "LISP65_C2_MUTABLE_CPU_READS",
+        "LISP65_C2_TERMINAL_RETURN_GUARD",
+        "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+        "LISP65_C2_MAP_CPU_TRANSPORT",
+        "LISP65_C2_REQUIRE_RESOLVER"
+      ]
+    }
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 433619,
+    "commit": "84924e894e94b006dee911aaf568c1d3fdf0207e",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "d50ca9fb6c72e7fc2ef2e431801925ea5356730816454cd4cd68fe3a9f704324"
+  },
+  "emitted_candidate_gate": {
+    "emitted_source": {
+      "bytes": 165355,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/generated-product-sources/c2_product_runtime.c",
+      "sha256": "05603996719acf64ce2f379bd340817ffdfab59c921078690737628f36abab54"
+    },
+    "failure_propagated": true,
+    "owner": "c2_product_entry_read",
+    "raw_read_edges": 0,
+    "status": "PASS: EMITTED BOOT REFILL USES MAP-CPU",
+    "transport": "c2_facade_runtime_overlay_exec"
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "feature_union": {
+    "active_card_registry_features": [
+      "LISP65_C2_REFILL_BOUNDARY_WITNESS"
+    ],
+    "authority": "active-candidate-registry-union",
+    "configured_wrapper_features": [
+      "LISP65_C2_TERMINAL_RETURN_GUARD",
+      "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+      "LISP65_C2_REQUIRE_RESOLVER"
+    ],
+    "expected_members": [
+      "LISP65_CODE_WINDOW_CONVERGENCE",
+      "LISP65_DMA_CONTENT_CONVERGENCE",
+      "LISP65_C2_ASM_CONVERGENCE",
+      "LISP65_C2_FULL_SPAN_CONVERGENCE",
+      "LISP65_C2_MUTABLE_CPU_READS",
+      "LISP65_C2_MAP_CPU_TRANSPORT",
+      "LISP65_C2_TERMINAL_RETURN_GUARD",
+      "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+      "LISP65_C2_REQUIRE_RESOLVER",
+      "LISP65_C2_REFILL_BOUNDARY_WITNESS"
+    ],
+    "observed_members": [
+      "LISP65_CODE_WINDOW_CONVERGENCE",
+      "LISP65_DMA_CONTENT_CONVERGENCE",
+      "LISP65_C2_ASM_CONVERGENCE",
+      "LISP65_C2_REFILL_BOUNDARY_WITNESS",
+      "LISP65_C2_FULL_SPAN_CONVERGENCE",
+      "LISP65_C2_MUTABLE_CPU_READS",
+      "LISP65_C2_TERMINAL_RETURN_GUARD",
+      "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+      "LISP65_C2_MAP_CPU_TRANSPORT",
+      "LISP65_C2_REQUIRE_RESOLVER"
+    ],
+    "previous_candidate_features": [
+      "LISP65_CODE_WINDOW_CONVERGENCE",
+      "LISP65_DMA_CONTENT_CONVERGENCE",
+      "LISP65_C2_ASM_CONVERGENCE",
+      "LISP65_C2_FULL_SPAN_CONVERGENCE",
+      "LISP65_C2_MUTABLE_CPU_READS",
+      "LISP65_C2_MAP_CPU_TRANSPORT"
+    ]
+  },
+  "final_ELF_gate": {
+    "ELF": {
+      "bytes": 646988,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "02209a9ddda93b49bc3025f6b0caa9b2d88cb96b2504167b3ccc98d6f9ffba99"
+    },
+    "classified_raw_read_callers": [
+      {
+        "classification": "immutable-delivery-CRC",
+        "function": "c2_lite_stage_boot_family_impl",
+        "section": ".lisp65_boot_bank3_stage",
+        "sink": "c2_facade_vm_code_load"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "function": "ov_bank_crc16",
+        "section": ".lisp65_boot_bank3_stage",
+        "sink": "c2_facade_vm_code_load"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "function": "vm_boot_overlay_chain_prepare",
+        "section": ".lisp65_boot_bank3_stage",
+        "sink": "c2_facade_vm_code_load"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "function": "c2_lite_stage_session_family_impl",
+        "section": ".lisp65_rt_bank3_stage_session",
+        "sink": "c2_facade_vm_code_load"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "function": "c2_lite_stage_session_overflow",
+        "section": ".lisp65_rt_bank3_stage_session",
+        "sink": "c2_facade_vm_code_load"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "function": "c2_phase02a_record_read",
+        "section": ".lisp65_rt_c2d_02a",
+        "sink": "c2_facade_vm_code_load"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "function": "c2_stream_phase_03b",
+        "section": ".lisp65_rt_c2d_03b",
+        "sink": "c2_facade_vm_code_load"
+      },
+      {
+        "classification": "immutable-delivery-CRC",
+        "function": "rtov_read",
+        "section": ".text",
+        "sink": "c2_facade_vm_code_load"
+      }
+    ],
+    "instrument": {
+      "neutral": true,
+      "present": true,
+      "product_entry_edges": 0,
+      "raw_DMA_edges": 0,
+      "raw_read_edges": 0
+    },
+    "linked_MAP_CPU_callers": [
+      {
+        "function": "c2_dma_read_or_abort",
+        "section": ".lisp65_c2_mapped_far_facade"
+      },
+      {
+        "function": "c2_map_cpu_selector",
+        "section": ".text"
+      },
+      {
+        "function": "ext_dma_read_or_abort",
+        "section": ".text"
+      }
+    ],
+    "linked_raw_read_callers": [
+      {
+        "function": "c2_lite_stage_boot_family_impl",
+        "section": ".lisp65_boot_bank3_stage"
+      },
+      {
+        "function": "ov_bank_crc16",
+        "section": ".lisp65_boot_bank3_stage"
+      },
+      {
+        "function": "vm_boot_overlay_chain_prepare",
+        "section": ".lisp65_boot_bank3_stage"
+      },
+      {
+        "function": "c2_lite_stage_session_family_impl",
+        "section": ".lisp65_rt_bank3_stage_session"
+      },
+      {
+        "function": "c2_lite_stage_session_overflow",
+        "section": ".lisp65_rt_bank3_stage_session"
+      },
+      {
+        "function": "c2_phase02a_record_read",
+        "section": ".lisp65_rt_c2d_02a"
+      },
+      {
+        "function": "c2_stream_phase_03b",
+        "section": ".lisp65_rt_c2d_03b"
+      },
+      {
+        "function": "rtov_read",
+        "section": ".text"
+      }
+    ],
+    "product_entry": {
+      "MAP_CPU_edges": 1,
+      "raw_DMA_edges": 0,
+      "raw_read_edges": 0,
+      "section": ".text"
+    },
+    "unsafe_content_DMA_count": 0,
+    "unsafe_content_DMA_surfaces": []
+  },
+  "format": "lisp65-c2-v160-boot-refill-feature-union-resume-v1",
+  "frozen_pair_after": {
+    "ELF": {
+      "bytes": 646988,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "02209a9ddda93b49bc3025f6b0caa9b2d88cb96b2504167b3ccc98d6f9ffba99"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "96a7d5d1c81eb15cfdad9d9bb272584a5b80ae2ad02f1d4f824c65729b34eee9"
+    }
+  },
+  "frozen_pair_before": {
+    "ELF": {
+      "bytes": 646988,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "02209a9ddda93b49bc3025f6b0caa9b2d88cb96b2504167b3ccc98d6f9ffba99"
+    },
+    "PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "96a7d5d1c81eb15cfdad9d9bb272584a5b80ae2ad02f1d4f824c65729b34eee9"
+    }
+  },
+  "media_authorized": false,
+  "mutations_rejected": [
+    "omit-active-witness",
+    "restore-exact-nine-pin"
+  ],
+  "next": "artifact-only media, then seam confirmation contact",
+  "qualification_tail": {
+    "artifact-acceptance.json": {
+      "bytes": 17876,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/artifact-acceptance.json",
+      "sha256": "0ffbaf34e9150a3b75cb963237dbd401ac65515c647f9c4e160786c4a84b266a"
+    },
+    "owner-scope-result.json": {
+      "bytes": 2434,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/owner-scope-result.json",
+      "sha256": "993629eb867ba21fa8f4e349ca95c0aea368d8cf2a0d07668ac666cd7d155010"
+    },
+    "producer-result.json": {
+      "bytes": 11404,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/producer-result.json",
+      "sha256": "e5a8e9371b7cf4b91e9617abac0363a2d0cc1851e11bcb874911be5125093246"
+    }
+  },
+  "recorded_on": "2026-08-23",
+  "status": "PASS: BOOT REFILL DMA FIX CHAIN CLOSED"
+}

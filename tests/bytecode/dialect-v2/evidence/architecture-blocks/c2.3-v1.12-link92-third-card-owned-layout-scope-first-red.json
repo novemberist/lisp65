@@ -1,0 +1,112 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-third-card-owned-layout-scope-first-red-v1",
+  "recorded_on": "2026-08-07",
+  "status": "FIRST RED-attributed-parked-ownership-linker-layout-conflicts-with-legacy-noinit-contract",
+  "owner_authorization": "b6c0c735",
+  "repair_commit": "4f92c16c",
+  "product_card": "link92-r4",
+  "card_ordinal_in_block": 3,
+  "passed_before_red": {
+    "source_owner_scope": "ordinary Link-92 scope selects neither the three convergence defines nor their two assembly owners",
+    "source_owner_mutations_rejected": 3,
+    "startup_mutations_rejected": 13,
+    "semantic_zero_literal_witness": {
+      "local_ordinal": 5,
+      "code_bytes": 38,
+      "code_sha256": "8caea511a5e3e550646b36d942e5715d6d97d840edadd026d5f06506afd6b69d"
+    },
+    "direct_entry_contract_refs": 674,
+    "compiler_reached": true
+  },
+  "first_error": {
+    "stage": "resident-island seed WPLTO link before orphan-wrapper acceptance",
+    "linker_exit": 1,
+    "diagnostic": "C2 inherited noinit/fixed-block geometry drift"
+  },
+  "linked_shape_at_failure": {
+    "legacy_contract": {
+      "hot_bss_start": "$C25D",
+      "hot_bss_bytes": 240,
+      "hot_bss_end": "$C34D",
+      "noinit_start": "$C34D",
+      "noinit_bytes": 6,
+      "overlay_min_start": "$C354"
+    },
+    "observed": {
+      "hot_bss_start": "$C25D",
+      "hot_bss_bytes": 240,
+      "hot_bss_end": "$C34D",
+      "static_stack_owner_section": ".lisp65_c2_static_stack",
+      "static_stack_start": "$C074",
+      "static_stack_bytes": 6,
+      "noinit_start": "$C353",
+      "noinit_bytes": 0,
+      "overlay_vma": "$C356"
+    }
+  },
+  "mechanism": {
+    "generated_layout": "The product linker unconditionally emits the parked ownership layout, which captures every .noinit..Lstatic_stack input in the owned .lisp65_c2_static_stack arena at $C074.",
+    "remaining_assertion": "The same generated linker retains the legacy BSS-triage assertion that requires the captured six bytes to remain in .noinit at $C34D.",
+    "contradiction": "The owned selector and the inherited assertion cannot both hold: the stack was correctly captured at $C074, leaving .noinit empty, so the legacy assertion rejected the seed link.",
+    "classification": "A second parked-ownership scope contamination, this time in the linker-layout closure rather than the already-repaired base defines. It is not a text or state-capacity result and not a semantic-locality failure.",
+    "scope_fix_from_4f92c16c_implicated": false,
+    "parked_ownership_freight_promoted": false
+  },
+  "execution_accounting": {
+    "authorized_attempts": 1,
+    "attempts_consumed": 1,
+    "automatic_retries": 0,
+    "whole_program_LTO_closure_links": 1,
+    "seed_link_completed": false,
+    "final_product_link_completed": false,
+    "linked_elf_created": false,
+    "linked_product_created": false,
+    "media_created": false,
+    "hardware_runs": 0
+  },
+  "authorities": {
+    "generated_linker_script": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r4/wplto/c2-substitution.ld",
+      "bytes": 68176,
+      "sha256": "90103632c924c311a7d93cb6f9e4352159e598ee4ba60e83a0e8bbf2087efd04"
+    },
+    "failed_map": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r4/wplto/resident-island-seed.prg.map",
+      "bytes": 175940,
+      "sha256": "89b5e87f9f9bb3a8e38772a7100152f82296f9241bc90145715e446751d5cb61"
+    },
+    "linker_stderr": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r4/wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 304,
+      "sha256": "27e1d6c96700251d34f86b6a9988ad159efcc2dad6bde510afdd19222719a167"
+    },
+    "seed_lto_object": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r4/wplto/resident-island-seed.prg.lto.o",
+      "bytes": 618644,
+      "sha256": "86d2378fee3040ea9691a7b7bfd3fd9d55695b9968f450f68d87a0bc48253f3d"
+    },
+    "resolved_profile": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r4/wplto/resolved-profile.txt",
+      "bytes": 12052,
+      "sha256": "a8237253e78c522a63dd3a494d036dbc32d3062de6c470252903c1112241bbd2"
+    },
+    "internal_receipt": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r4/receipts/wplto-internal.json",
+      "bytes": 30800,
+      "sha256": "9a2e773873414f23cc7edd9063e3a255b62abb1f5a42e2606bedd1f79fbad498"
+    },
+    "base_result": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r4/receipts/wplto-base-result.json",
+      "bytes": 4090,
+      "sha256": "7ca5d57458f35c266afb96655baba4ad645c5ce9203457243aa3db1f0b7bd951"
+    }
+  },
+  "disposition": {
+    "retry_run": false,
+    "source_changed_after_red": false,
+    "phase_c": "blocked-pending-owner-block-disposition",
+    "fourth_card_authorized": false,
+    "required_by_b6c0c735": "Any red on the third card returns as a block-disposition question; no fourth card runs locally."
+  },
+  "claim_limit": "Attributed third-card linker-layout First Red only. No completed seed or product link, capacity acceptance, media, device, Link-92, Halt-1 or release claim."
+}

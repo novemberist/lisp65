@@ -1,0 +1,14 @@
+{
+  "format": "lisp65-c2.2-link75-static-plane-authority-path-first-red-v1",
+  "recorded_on": "2026-07-28",
+  "status": "FIRST RED: static-plane-gate-read-historical-hard-coded-build-path",
+  "classification": "class-A-gate-authority-only",
+  "product_semantic_delta_bytes": 0,
+  "observed": "The profile correctly bound the Link-75 40284-byte Bank-2 plane, but c2_l_full_static_plane_gate.py defaulted to the historical published-nullary artifact root and reported that the receipt and profile disagreed.",
+  "fix": "In ordinary source-gate mode, consume product_manifest, compiled_ide_manifest and bank2_static_plane from the profile authority and derive the six bound manifests from that product identity. Explicit product-shaped WPLTO overrides remain authoritative when supplied.",
+  "execution_accounting": {
+    "product_links": 0,
+    "hardware_runs": 0
+  },
+  "claim_limit": "Gate authority selection only; Link 75 and all product artifacts are unchanged."
+}

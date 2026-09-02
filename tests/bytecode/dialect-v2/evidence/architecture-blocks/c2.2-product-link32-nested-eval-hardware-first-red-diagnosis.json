@@ -1,0 +1,276 @@
+{
+  "affected_claims": {
+    "hardware_acceptance": "not claimed",
+    "hardware_correctness": "first red on nested public eval",
+    "link32_structural_receipt": "remains valid structural evidence",
+    "performance": "not measured; neither the 15/16-frame nor <=10-frame limit was evaluated",
+    "promotion": "blocked"
+  },
+  "bounded_next_contract_probe": {
+    "authorization": "not granted by this diagnosis; product work remains stopped",
+    "capacity_first": {
+      "bank0_text_headroom_bytes": 10,
+      "e000_growth_policy": "closed-to-new-tenants",
+      "e000_headroom_bytes": 386,
+      "ordinary_bank0_bss_headroom_bytes": 19,
+      "resident_island_headroom_bytes": 109,
+      "rule": "Any resident cost is a triage event; Boot-family lifetime substitution is the pre-named first candidate. No successor product link precedes a green contract and capacity/placement probe.",
+      "runtime_slice_minimum_headroom_bytes": 11
+    },
+    "must_not_do": [
+      "merely allow a second overlay transaction_begin without defining C2D rollback ownership",
+      "let an outer rollback erase or overwrite a newer persistent definition",
+      "let longjmp clean only overlay trust while leaving a transient C2D suffix",
+      "claim latency before the correctness cycle completes"
+    ],
+    "required_cases": [
+      "nested transient eval succeeds without leaking an image, entry, resolution or root",
+      "identical warm nested eval repeats with zero count growth",
+      "error/longjmp at every supported nesting depth restores exact C2D, export, root and Attic-watermark state",
+      "nested persistent definition semantics are explicit: survive the outer transient atomically or fail closed before publication",
+      "eval, eval-string and load entry seams each exercise the nested contract; compile-string is classified against the same contract",
+      "generation change invalidates every active nested checkpoint fail-closed",
+      "nesting depth is bounded and overflow is rejected before mutation"
+    ],
+    "scope": "nested C2 append, persistence and non-local abort semantics"
+  },
+  "claim_limit": "This diagnosis binds one receipt-less Link-32 hardware first red and read-only post-stop memory/source evidence. It is not hardware acceptance, promotion, capacity authorization or permission to implement a fix.",
+  "format": "lisp65-c2-product-link32-nested-eval-hardware-first-red-diagnosis-v1",
+  "hardware_observation": {
+    "boot_to_repl_regression_watch": {
+      "claim_limit": "The stable owned-counter read followed prompt polling and virtual input. It is an upper bound, not an exact banner-to-prompt time.",
+      "limit_frames": 1500,
+      "result": "within regression-watch limit",
+      "stable_counter_result": "(3 117 3)",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/latency/boot_counter.txt",
+        "sha256": "d15a81b1909e0cdfc57e881843afa00f4d1631ec827e206bf123bc7ffc8a236c"
+      },
+      "upper_bound_frames": 885,
+      "upper_bound_milliseconds": 17700
+    },
+    "cold_definition_first_call": {
+      "elapsed_frames": "not-measured-correctness-failed-first",
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%c2h)))))(list r a(peek 215 250))))",
+      "limit_frames": 16,
+      "result": "*** vm: bad bytecode",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/latency/definition_first_call.txt",
+        "sha256": "c753d0dda415572fcffee21507a711b857dca711eeffaa3a1bfc022463b73c4c"
+      }
+    },
+    "definition_setup": {
+      "form": "(defun %c2h()(quote t))",
+      "result": "%c2h",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/latency/definition_setup.txt",
+        "sha256": "8b69b1a47eac15ecaa969223b5dda1f7f2dc910c8f91ef22475f6969e57073b0"
+      }
+    },
+    "direct_defined_call_diagnostic": {
+      "form": "(%c2h)",
+      "harness_completion_only_not_latency": {
+        "bytes": 179,
+        "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/latency/direct-defined-call-diagnostic-timing.json",
+        "sha256": "ec8e4b41910cfd8480b1c08a711ae60179c6b7ca45bad186365a121a4939bbd0"
+      },
+      "meaning": "The named definition and its emitted C2 image execute correctly when the outer transient wrapper calls it directly; the failure is specific to nested public eval/install.",
+      "result": "t",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/latency/direct-defined-call-diagnostic.txt",
+        "sha256": "5986c7c5e35943f0d7de2a8f0ce865e7845cf5a5ffc31686d5c2e134e1e4797c"
+      }
+    },
+    "warm_second_call": {
+      "elapsed_frames": "not-measured-correctness-failed-first",
+      "form": "identical nested eval form",
+      "limit_frames": 10,
+      "result": "*** vm: bad bytecode",
+      "transcript": {
+        "bytes": 2241,
+        "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/latency/warm_second_call.txt",
+        "sha256": "7c3af6036f9ebc1a1f5ea11f0ae7452b4a402685e781e5bf35faf8ce55cd29ed"
+      }
+    }
+  },
+  "recorded_on": "2026-07-20",
+  "root_cause": {
+    "abort_leak": "lcc_install_obj converts VM_BADOPCODE to a top-level longjmp before the outer c2_product_install can call c2_append_rollback. The central abort cleanup invalidates and wipes runtime-overlay transaction state but owns no C2D append checkpoint. Each failed nested eval therefore leaves its already-published outer transient wrapper active, exactly matching the observed +1 image/+1 entry/+7 resolutions/+1 root per failure.",
+    "class": "nested C2 append lifetime and non-local abort rollback contract gap",
+    "primary": "Every non-atomic public eval routes through lcc-run and c2_product_install. The outer top-level transient install begins one authenticated overlay transaction, appends its wrapper, and keeps that transaction active while vm_run_dir executes the wrapper. A public eval inside that wrapper re-enters c2_product_install. The inner transaction_begin rejects the already-active transaction as BUSY; c2_product_install maps that failure to VM_BADOPCODE.",
+    "why_direct_call_passes": "A top-level wrapper that calls %c2h directly does not start an inner compiler transaction. It completes and reaches the ordinary outer rollback path."
+  },
+  "runtime_evidence": {
+    "appended_images": [
+      {
+        "calculated_crc32": 720818954,
+        "code_length": 9,
+        "code_offset": 64,
+        "combined_crc32": 720818954,
+        "crc_matches_captured_attic": true,
+        "directory_base": 588,
+        "entries": 1,
+        "flags": 0,
+        "generation": 1,
+        "metadata_length": 46,
+        "metadata_offset": 73,
+        "payload_sha256": "656e9e5a96582cc1b8d66a13929c8903ef0f1d295d862a3a98aa28de2ee54817",
+        "reserved": 0,
+        "resolution_base": 2264,
+        "resolutions": 0,
+        "root_base": 283,
+        "roots": 0,
+        "slot": 6,
+        "source_kind": 1,
+        "source_slot": 0
+      },
+      {
+        "calculated_crc32": 1698339834,
+        "code_length": 48,
+        "code_offset": 184,
+        "combined_crc32": 1698339834,
+        "crc_matches_captured_attic": true,
+        "directory_base": 589,
+        "entries": 1,
+        "flags": 0,
+        "generation": 1,
+        "metadata_length": 114,
+        "metadata_offset": 232,
+        "payload_sha256": "fb883263a43187191f2cb632bcfb925c04997ee2fa54cb2c0857588ff99fba63",
+        "reserved": 0,
+        "resolution_base": 2264,
+        "resolutions": 7,
+        "root_base": 283,
+        "roots": 1,
+        "slot": 7,
+        "source_kind": 1,
+        "source_slot": 1
+      },
+      {
+        "calculated_crc32": 1698339834,
+        "code_length": 48,
+        "code_offset": 410,
+        "combined_crc32": 1698339834,
+        "crc_matches_captured_attic": true,
+        "directory_base": 590,
+        "entries": 1,
+        "flags": 0,
+        "generation": 1,
+        "metadata_length": 114,
+        "metadata_offset": 458,
+        "payload_sha256": "fb883263a43187191f2cb632bcfb925c04997ee2fa54cb2c0857588ff99fba63",
+        "reserved": 0,
+        "resolution_base": 2271,
+        "resolutions": 7,
+        "root_base": 284,
+        "roots": 1,
+        "slot": 8,
+        "source_kind": 1,
+        "source_slot": 2
+      }
+    ],
+    "captured_c2d_bank5": {
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/first-red-c2d-bank5.bin",
+      "sha256": "69008acaf4d4937d6f1f98c8e9b5838962cdb1dfa923f9ff24e916485ce4beef"
+    },
+    "captured_session_attic_prefix": {
+      "bytes": 1024,
+      "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/first-red-session-attic.bin",
+      "sha256": "2865436ca2b6f174ee306cef3768c4e04d45c0a3a607a3d475a73e096749d2b3"
+    },
+    "counts_after_definition_and_two_failed_nested_evals": {
+      "entries": 591,
+      "images": 9,
+      "resolutions": 2278,
+      "roots": 285
+    },
+    "counts_before": {
+      "entries": 588,
+      "images": 6,
+      "resolutions": 2264,
+      "roots": 283
+    },
+    "delta": {
+      "entries": 3,
+      "images": 3,
+      "resolutions": 14,
+      "roots": 2
+    },
+    "initial_c2d": {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/initial.c2d-v3.bin",
+      "sha256": "0a0ddf0168028bae27e7cd6fdc687fe8ca3a3f4940cdf70dae844c0bd5c1c185"
+    },
+    "interpretation": {
+      "crc_claim": "All three active session-image records match the captured Session-Attic code+metadata bytes exactly; staging/emission integrity is not the first red.",
+      "slot_6": "one valid persistent %c2h definition image",
+      "slots_7_8": "two byte-identical transient outer eval wrappers that were published but not rolled back after the nested install aborted"
+    }
+  },
+  "scope": {
+    "candidate_product_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "deployment": {
+      "bytes": 2940,
+      "path": "build/c2.2/hardware-presmoke-link32-preinstall-island-guard/deployment.json",
+      "sha256": "e6ac3aec83754f57a349df601cac313f5f0178d195da114f702ad789efcad2de"
+    },
+    "new_product_links_after_first_red": 0,
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+      "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a"
+    },
+    "product_source_changes_after_first_red": 0,
+    "remaining_hardware_cases": "not-run",
+    "structural_receipt": {
+      "bytes": 15456,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link32-preinstall-island-guard-structural-receipt.json",
+      "sha256": "5843fea325faf2c63afc9c675de556cf72a8bb911555de0f375c98edf58ee2ab"
+    }
+  },
+  "static_evidence": {
+    "abort_cleanup_invalidates_overlay_trust_but_has_no_c2_append_rollback": true,
+    "nested_begin_rejects_active_transaction": true,
+    "ordered_install_seam": [
+      "vm_runtime_overlay_transaction_begin(",
+      "c2_append_begin(length, &before, &main)",
+      "result = vm_run_dir((int)main, 0, 0)",
+      "c2_append_rollback(&before)",
+      "vm_runtime_overlay_transaction_end() after rollback"
+    ],
+    "sources": [
+      {
+        "bytes": 94956,
+        "path": "src/eval.c",
+        "sha256": "2e6eeb77c3cc076f40abd06a1d57c5afb37ca41a83ce39a29dc43a0eba66d30d"
+      },
+      {
+        "bytes": 56975,
+        "path": "src/c2_product_runtime.c",
+        "sha256": "8a151bfc80dd37c29264f310f07f9adbd44155ae233a5b361c4582a4c4a0f84d"
+      },
+      {
+        "bytes": 46599,
+        "path": "src/vm_runtime_overlay.c",
+        "sha256": "a2f02fe0944eace86dd8c208f38f685493142ad191025757f4e091c2cb48e0f8"
+      },
+      {
+        "bytes": 4785,
+        "path": "src/interrupt.c",
+        "sha256": "81257cce3c1358a8cf4b2268ffc476d85cdd5c6bff077de43e2285c01b118ce3"
+      },
+      {
+        "bytes": 3912,
+        "path": "lib/dialect-v2/eval-runtime.lisp",
+        "sha256": "13a83f76b8c8e93c9b1bee590eee6e30bd268985865a1e444e7b605c00e3caf7"
+      }
+    ],
+    "vm_error_longjmps_before_outer_rollback": true
+  },
+  "status": "first-red-receipt-less-hardware-presmoke-stopped"
+}

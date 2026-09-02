@@ -4,7 +4,7 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
-## v1.9.0 — prepared 2026-08-30
+## v1.9.0 — published 2026-08-30
 
 - Routed the native `lisp65>` prompt through the resident insertion-mode line
   editor, retiring the Cursor Left/Right `invalid token` limitation.
@@ -17,9 +17,10 @@ here.
   with one WPLTO/link each and no private evidence inputs.
 - External contributions included in this sync: **none**.
 
-The corresponding public commit, tag, and GitHub release are prepared locally.
-No public ref or release is changed until the owner gives publication
-authorization.
+Published as public `main` commit
+`e237fc3da2297119c8a8861d8fb0410044fabbcf`, annotated tag `v1.9.0`
+(tag object `ca76036ba2b7e3210c519485932599a548161dae`) and GitHub release
+379395123. All four assets matched a fresh downloaded readback.
 
 ## v1.8.0 — prepared 2026-08-28
 

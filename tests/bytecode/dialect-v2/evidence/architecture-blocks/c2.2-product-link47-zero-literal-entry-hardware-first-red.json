@@ -1,0 +1,121 @@
+{
+  "format": "lisp65-c2-lite-v6-link47-zero-literal-entry-hardware-first-red-v1",
+  "status": "first-red-valid-zero-literal-c2d-entry-rejected-by-runtime-reader",
+  "date": "2026-07-22",
+  "candidate": {
+    "link": 47,
+    "product_path": "build/c2.2/substitution/product-link-47-c2-lite-v6-l65e-transient-callability/lisp65-c2-substitution-linked.prg",
+    "product_sha256": "c7e57a7004b309a7f4d2836d135d342e4015c5c1127eac6414ace5359c016739",
+    "elf_path": "build/c2.2/substitution/product-link-47-c2-lite-v6-l65e-transient-callability/lisp65-c2-substitution-linked.prg.elf",
+    "elf_sha256": "7912bdd9eb6bbf34c560ac9165e074636bddbdcf9aed814afd137e281b617515",
+    "structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link47-c2-lite-v6-l65e-transient-callability-structural-receipt.json",
+      "sha256": "78afacdadcd8794f698b6cd9a2ab349379caef5a64ada763c68f9357eb4ccf11"
+    },
+    "deployment": {
+      "path": "build/c2.2/hardware-presmoke-link47-l65e-transient/deployment.json",
+      "sha256": "0dfc106478ec40ad63cae37c8eae0dcfca6e3eb35e7fb4b742c4334dd7d8db18"
+    }
+  },
+  "hardware_result": {
+    "line1": {
+      "status": "passed",
+      "observed": "complete Lisp65 Workbench Dialect V2 banner and usable REPL",
+      "screen": {
+        "path": "build/c2.2/hardware-presmoke-link47-l65e-transient/line1/screen.png",
+        "sha256": "7bc0ff2468c8dcbd089f000422dc62f4f607f2e7394ae04790f06ef4d3725e6c"
+      },
+      "boot_upper_bound": "27.653 seconds from the loader's RUN timestamp to the completed JTAG screenshot; the prompt may have appeared earlier"
+    },
+    "line2_definition_setup": {
+      "form": "(defun %c2h()(quote t))",
+      "observed": "*** vm: undefined function #1e9",
+      "expected": "a successfully published definition",
+      "first_deviation": true,
+      "transcript": {
+        "path": "build/c2.2/hardware-presmoke-link47-l65e-transient/latency/definition_setup.txt",
+        "sha256": "006354b9f2f259d06e1c9edfefcaaca597aba924a3943a2733f13bf5c821ee9e"
+      },
+      "screen": {
+        "path": "build/c2.2/hardware-presmoke-link47-l65e-transient/latency/definition_setup.png",
+        "sha256": "2226ee7378cf92a096ee69473a39ec980f1cae36b1f5523c497741f7eb784757"
+      }
+    },
+    "automatic_sequence_correction": {
+      "fact": "The shell sequence submitted the cold and warm forms before inspecting the setup transcript.",
+      "secondary_observed": "*** vm: undefined function #0ab",
+      "interpretation": "This is not a second root cause: after the setup failure C2 READY was already zero, so the later lcc-run entry could not be consumed.",
+      "policy": "No result from either later form is a completed latency measurement. Future execution must inspect and accept definition_setup before submitting the cold form."
+    }
+  },
+  "ordinal_attribution": {
+    "primary": {
+      "raw_ordinal_hex": "0x1e9",
+      "raw_ordinal_decimal": 489,
+      "image": "lcc",
+      "image_entry_base": 483,
+      "local_ordinal": 6,
+      "name": "%lcc-consp",
+      "manifest_lit_count": 0,
+      "manifest_code_length": 38
+    },
+    "secondary": {
+      "raw_ordinal_hex": "0x0ab",
+      "raw_ordinal_decimal": 171,
+      "image": "stdlib-p0",
+      "local_ordinal": 171,
+      "name": "lcc-run",
+      "cause": "follow-on call after C2 READY had failed closed"
+    }
+  },
+  "read_only_post_error_state": {
+    "low64k": {
+      "path": "build/c2.2/hardware-presmoke-link47-l65e-transient/first-red/low64k.bin",
+      "sha256": "8ace1c09c371a6b41bbb5e8822ae1dd93835272cdc92124de3c74a5d3bf3665f"
+    },
+    "live_c2d_v6": {
+      "path": "build/c2.2/hardware-presmoke-link47-l65e-transient/first-red/live-c2d-v6.bin",
+      "sha256": "ff4e9643e3886d6dc3ae4a7dc26ec3daae105f0f338889708430de28306c2f25"
+    },
+    "vm_status_after_renderer_reset": 0,
+    "c2_ready": 0,
+    "runtime_entry_count": 588,
+    "runtime_phase": 13,
+    "runtime_finished": 1,
+    "runtime_error": 0,
+    "entry_489": {
+      "expected_hex": "05 00 45 6c 26 00 e7 06 01 00",
+      "live_hex": "05 00 45 6c 26 00 e7 06 01 00",
+      "byte_identical": true,
+      "image_slot": 5,
+      "literal_count": 0,
+      "code_offset": "0x6c45",
+      "code_length": 38,
+      "resolution_base": 1767,
+      "generation": 1
+    },
+    "interpretation": "The valid row exists on the device, is inside the published 588-entry prefix and is byte-identical to Link 47. The normal error boundary then removed READY; no partial definition was published."
+  },
+  "linked_format_finding": {
+    "canonical_emitter_rule": "src/c2d_v6_entry.h accepts literal_count zero and rejects code_length zero; zero-literal executable entries are contractual.",
+    "consumer_site": "tools/host-lisp/c2_lite_v6_product_probe.py:943-962, materialized as generated-product-sources/c2_product_runtime.c:582-601",
+    "rejecting_expression": "directory[0] >= 64u || !directory[1]",
+    "field_meaning": "directory[1] is literal_count, not an entry-valid marker",
+    "root_cause": "The C2-lite runtime entry reader treats a legitimate zero literal_count as an invalid record. The preceding transient-callability fix proved the high-edge bounds but had no execution fixture for a static, zero-literal callee.",
+    "not_transport_or_identity": "The exact live entry row, generation, published entry count and line-1 boot are correct; no DMA, staging, catalog or product-identity mismatch is present."
+  },
+  "recommended_class_c_cut": {
+    "product_change": "Remove the nonzero-literal requirement from c2_product_entry_record. Keep the existing image-slot, generation, Bank-2 code-range and resolution-range checks unchanged.",
+    "fixture": "Execute a published static C2D-v6 entry with literal_count=0 through vm_run_dir, and reject mutations for zero code_length, out-of-range image slot, code wrap, resolution wrap and generation mismatch.",
+    "crossing_case": "Retain the existing transient handle 4095/root 1535 callability fixture alongside the new persistent zero-literal call fixture so both axes are covered.",
+    "verification": "Run a product-shaped WPLTO capacity probe and all C2-lite gates. Any promotable successor link and another hardware presmoke require the project's normal Class-C authorization."
+  },
+  "accounting": {
+    "line1_boot": "passed",
+    "line1_product_first_red_budget_before_run": "2/3",
+    "completed_latency_measurements": "0/2",
+    "new_product_links_during_diagnosis": 0,
+    "additional_hardware_runs_during_diagnosis": 0
+  },
+  "claim_limit": "Receipt-less Hardware First Red plus read-only on-device and linked-source diagnosis. No product fix, successor link, latency result, promotion, acceptance or release is claimed."
+}

@@ -1,0 +1,197 @@
+{
+  "authority": {
+    "driver": {
+      "bytes": 11529,
+      "path": "tools/host-lisp/c2_link55_defun_crash_host_catalog.py",
+      "sha256": "d22b572834232fddab7c34f39126a29f4b95bcaa3bce03e059935e05182931c4"
+    },
+    "elf": {
+      "bytes": 612148,
+      "path": "build/c2.2/substitution/product-link-55-c2-lite-v6-append-suffix-fusion-attempt2/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "488bf31ea999751169d59681a2f98900e8c8ffa4c98f57f547db4c19621d7792"
+    },
+    "hardware_first_red": {
+      "bytes": 4669,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link55-append-suffix-defun-crash-hardware-first-red.json",
+      "sha256": "bb7c1e826cb666d8dc5274cc967ef6444eb45e28990e8481095e7ebc31244595"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-55-c2-lite-v6-append-suffix-fusion-attempt2/lisp65-c2-substitution-linked.prg",
+      "sha256": "968990d2fd2904cd1d97aa16e870c3c369f3fa27d787f2894dd9db08dbd3297d"
+    },
+    "session_manifest": {
+      "bytes": 38155,
+      "path": "build/c2.2/substitution/product-link-55-c2-lite-v6-append-suffix-fusion-attempt2/runtime-overlays-session-final.json",
+      "sha256": "8e1329514c3d1a22c3c8e592e8db513290774aec010e97ae170fe2268225b99a"
+    }
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0
+  },
+  "format": "lisp65-c2-link55-defun-crash-static-catalog-v1",
+  "gate_gap": "The ELF-derived selector ABI gate checked context registers and the two tail relocations, but not the C-entry Z invariant at those edges. Its two witnesses therefore shared an incomplete ABI model.",
+  "promotable": false,
+  "recorded_on": "2026-07-23",
+  "required_fix": "Establish Z=0 immediately before each tail JMP; enumerate the 512 marker/main-domain cases and reject both missing-Z restores in the permanent ABI mutation suite.",
+  "status": "convicted-selector-tail-violates-C-entry-Z0",
+  "suspect_1_selector": {
+    "control_transfers": {
+      "indirect": 0,
+      "ordinary_error_return": "A=8, Z=0, RTS",
+      "tail_edges": {
+        "c2_append_journal_write_phase": {
+          "edge_address": 50049,
+          "last_Z_writer": "ldz #$d5",
+          "last_Z_writer_address": 50043
+        },
+        "c2_append_rollback_prepare_phase": {
+          "edge_address": 50052,
+          "last_Z_writer": "ldz #$d5",
+          "last_Z_writer_address": 50043
+        }
+      }
+    },
+    "finding": "Marker dispatch is total, but both successful tail edges carry Z=$d5 into C functions whose first (ptr),Z operation is reached without a local Z definition. llvm-mos requires Z=0 at C entry; the selector therefore converts a valid marker into out-of-object writes.",
+    "marker_domain": {
+      "accepted": [
+        {
+          "main_ordinal_nonzero": 0,
+          "marker": 0,
+          "target": "rollback_prepare"
+        },
+        {
+          "main_ordinal_nonzero": 0,
+          "marker": 2,
+          "target": "journal_write"
+        },
+        {
+          "main_ordinal_nonzero": 1,
+          "marker": 0,
+          "target": "journal_write"
+        }
+      ],
+      "cases": 512,
+      "fail_closed": 509
+    },
+    "targets": {
+      "c2_append_journal_write_phase": {
+        "bytes": 856,
+        "entry": 50060,
+        "first_Z_indexed_address": 50601,
+        "first_Z_indexed_instruction": "sta ($18),z",
+        "prior_Z_writer": null,
+        "required_C_entry_Z": 0
+      },
+      "c2_append_rollback_prepare_phase": {
+        "bytes": 854,
+        "entry": 50916,
+        "first_Z_indexed_address": 51087,
+        "first_Z_indexed_instruction": "sta ($16),z",
+        "prior_Z_writer": null,
+        "required_C_entry_Z": 0
+      }
+    },
+    "verdict": "convicted"
+  },
+  "suspect_2_fused_entry_geometry": {
+    "body_intervals_contiguous": true,
+    "catalog_record": {
+      "abi_version": 1,
+      "capability_mask": 0,
+      "crc16": 28250,
+      "end": 51770,
+      "end_symbol": "__lisp65_rt_c2append_journal_prepare_end",
+      "entry": 50006,
+      "entry_offset": 0,
+      "entry_symbol": "__lisp65_rt_c2append_journal_prepare_entry",
+      "file_offset": 43520,
+      "file_size": 1764,
+      "flags": 6,
+      "id": 30,
+      "memory_size": 1764,
+      "name": "c2-append-journal-prepare",
+      "record_crc16": 23378,
+      "roles": [
+        "runtime",
+        "reusable"
+      ],
+      "section": ".lisp65_rt_c2append_journal_prepare",
+      "sha256": "92d5158d16a54085125b3e9010b513e9f7e25511732245c1cbddf1f6205d9eb6",
+      "slice_build_id": 1700942042,
+      "start_symbol": "__lisp65_rt_c2append_journal_prepare_start",
+      "vma": 50006
+    },
+    "functions": {
+      "c2_append_journal_prepare_phase": {
+        "address": 50006,
+        "bytes": 54,
+        "section": ".lisp65_rt_c2append_journal_prepare"
+      },
+      "c2_append_journal_write_phase": {
+        "address": 50060,
+        "bytes": 856,
+        "section": ".lisp65_rt_c2append_journal_prepare"
+      },
+      "c2_append_rollback_prepare_phase": {
+        "address": 50916,
+        "bytes": 854,
+        "section": ".lisp65_rt_c2append_journal_prepare"
+      }
+    },
+    "section_sha_matches_catalog": true,
+    "verdict": "exonerated"
+  },
+  "suspect_3_plan_bytes": {
+    "actual": {
+      "lisp65_c2_append_persistent_publish_plan": [
+        37,
+        38,
+        39,
+        40,
+        0
+      ],
+      "lisp65_c2_append_rollback_plan": [
+        41,
+        42,
+        40,
+        0
+      ],
+      "lisp65_c2_append_stage_plan": [
+        30,
+        33,
+        34,
+        35,
+        36,
+        0
+      ]
+    },
+    "all_slots_resolve_to_current_manifest": true,
+    "expected": {
+      "lisp65_c2_append_persistent_publish_plan": [
+        37,
+        38,
+        39,
+        40,
+        0
+      ],
+      "lisp65_c2_append_rollback_plan": [
+        41,
+        42,
+        40,
+        0
+      ],
+      "lisp65_c2_append_stage_plan": [
+        30,
+        33,
+        34,
+        35,
+        36,
+        0
+      ]
+    },
+    "verdict": "exonerated"
+  }
+}

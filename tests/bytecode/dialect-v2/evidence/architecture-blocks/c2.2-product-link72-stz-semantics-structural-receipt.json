@@ -1,0 +1,519 @@
+{
+  "ELF": {
+    "bytes": 622512,
+    "path": "build/post-promotion/link72-stz-semantics/final/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "f504fc2c543bc4b3f33baddcae7b25793883047f576baa6139b1b1cfef30001d"
+  },
+  "authority": {
+    "STZ_gate": {
+      "bytes": 13511,
+      "path": "tools/host-lisp/c2_stz_z_dominance_gate.py",
+      "sha256": "8dcecaf8405cdda58b69d1d17325f0ed58c0cd5645edc47966b76f93d0a5e45e"
+    },
+    "WPLTO_internal": {
+      "bytes": 451923,
+      "path": "build/post-promotion/link72-stz-semantics/receipts/wplto-internal.json",
+      "sha256": "b90c94f3dc954da89f7695c69cdf82080b29329c19ec1235a840d634970fb21e"
+    },
+    "artifact_completion": {
+      "bytes": 6056,
+      "path": "build/post-promotion/link72-stz-semantics/receipts/artifact-completion.json",
+      "sha256": "813f4caa1c531643a2bec7313dd5ebe60b15df845aef422b0f32186eae055d9e"
+    },
+    "driver": {
+      "bytes": 13101,
+      "path": "tools/host-lisp/c2_defstruct_stz_successor_link72.py",
+      "sha256": "9758404843e1450be371a8be6181da11c204f02f70c833a6360365f70f228247"
+    },
+    "final_ELF_STZ_replay": {
+      "bytes": 41727,
+      "path": "build/post-promotion/link72-stz-semantics/receipts/c2-asm-leaf-ABI-and-STZ-dataflow-replay.json",
+      "sha256": "029bb936d7b007e211ea02feb7a16e66797ac262d3866b829736ca7f7867677c"
+    },
+    "robust_form_First_Red": {
+      "bytes": 2302,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link72-stz-independent-zero-wplto-first-red.json",
+      "sha256": "5e11afae0cbdae41ed6202c16edd1ca3d1d7b70c55535c778316af049176f83d"
+    }
+  },
+  "claim_limit": "Link 72 structural completion only; hardware unclaimed.",
+  "execution_accounting": {
+    "artifact_completion_compiler_runs": 0,
+    "artifact_completion_linker_runs": 0,
+    "hardware_runs": 0,
+    "whole_program_product_links": 1
+  },
+  "fix_gates": {
+    "IRQ_episode": {
+      "mutations": {
+        "rejected": 13,
+        "semantic_mutations_pinned": [
+          "model-STZ-as-constant-zero",
+          "arbitrary-IRQ-Z-without-normalization",
+          "no-raster-rearm",
+          "source-less-self-rearm",
+          "accept-second-source-less",
+          "reject-first-source-less"
+        ],
+        "source_mutations_rejected": [
+          "handler-Z-normalization-removed",
+          "nonzero-Z-injected-before-episode-reset",
+          "explicit-nonzero-Z-before-episode-reset",
+          "owned-raster-reset-removed",
+          "owned-raster-reset-reversed",
+          "cross-section-conditional-restored",
+          "source-less-self-reset"
+        ],
+        "total": 13
+      },
+      "semantics": {
+        "arbitrary_repeat_fixture": {
+          "events": [
+            "source-less",
+            "raster",
+            "source-less",
+            "raster",
+            "source-less"
+          ],
+          "final_latch": 1,
+          "outcomes": [
+            "continue",
+            "continue",
+            "continue",
+            "continue",
+            "continue"
+          ],
+          "status": "PROVEN"
+        },
+        "double_freezer_fixture": {
+          "events": [
+            "source-less",
+            "raster",
+            "source-less"
+          ],
+          "outcomes": [
+            "continue",
+            "continue",
+            "continue"
+          ],
+          "status": "PROVEN"
+        },
+        "double_sourceless_fixture": {
+          "events": [
+            "source-less",
+            "source-less"
+          ],
+          "final_latch": 1,
+          "outcomes": [
+            "continue",
+            "fail-closed"
+          ],
+          "status": "PROVEN"
+        },
+        "nonzero_interrupted_Z_negative": {
+          "interrupted_Z": 3,
+          "status": "REJECTED",
+          "without_handler_LDZ0": [
+            "continue",
+            "fail-closed"
+          ]
+        }
+      },
+      "source": {
+        "45GS02_STZ_semantics": "memory := Z register",
+        "IRQ_entry_Z": "arbitrary",
+        "first_source_less_accept": true,
+        "handler_local_Z_zero_authority": "ldz #0 immediately after phz",
+        "owned_raster_reset": true,
+        "second_consecutive_source_less_fail_closed": true,
+        "session_counter_residue": 0
+      }
+    },
+    "STZ_mutations": {
+      "baseline_sites": 25,
+      "mutations": [
+        "scripts/c2-crc-convergence-shared-driver-probe.s:60:inz",
+        "scripts/c2-crc-convergence-shared-driver-probe.s:60:ldz-#1",
+        "scripts/c2-crc-convergence-shared-driver-probe.s:61:inz",
+        "scripts/c2-crc-convergence-shared-driver-probe.s:61:ldz-#1",
+        "src/c2_boot_chain_commit.s:47:inz",
+        "src/c2_boot_chain_commit.s:47:ldz-#1",
+        "src/c2_boot_chain_commit.s:107:inz",
+        "src/c2_boot_chain_commit.s:107:ldz-#1",
+        "src/c2_kernal_window.s:31:inz",
+        "src/c2_kernal_window.s:31:ldz-#1",
+        "src/c2_kernal_window.s:82:inz",
+        "src/c2_kernal_window.s:82:ldz-#1",
+        "src/c2_kernal_window.s:98:inz",
+        "src/c2_kernal_window.s:98:ldz-#1",
+        "src/f011_guarded_write.s:84:inz",
+        "src/f011_guarded_write.s:84:ldz-#1",
+        "src/mega65_math.s:64:inz",
+        "src/mega65_math.s:64:ldz-#1",
+        "src/mega65_math.s:65:inz",
+        "src/mega65_math.s:65:ldz-#1",
+        "src/mega65_math.s:70:inz",
+        "src/mega65_math.s:70:ldz-#1",
+        "src/mega65_math.s:71:inz",
+        "src/mega65_math.s:71:ldz-#1",
+        "src/mega65_math.s:87:inz",
+        "src/mega65_math.s:87:ldz-#1",
+        "src/mega65_math.s:88:inz",
+        "src/mega65_math.s:88:ldz-#1",
+        "src/mega65_math.s:93:inz",
+        "src/mega65_math.s:93:ldz-#1",
+        "src/mega65_math.s:94:inz",
+        "src/mega65_math.s:94:ldz-#1",
+        "src/mega65_math.s:113:inz",
+        "src/mega65_math.s:113:ldz-#1",
+        "src/mega65_math.s:114:inz",
+        "src/mega65_math.s:114:ldz-#1",
+        "src/mega65_math.s:268:inz",
+        "src/mega65_math.s:268:ldz-#1",
+        "src/mega65_math.s:269:inz",
+        "src/mega65_math.s:269:ldz-#1",
+        "src/mega65_math.s:274:inz",
+        "src/mega65_math.s:274:ldz-#1",
+        "src/mega65_math.s:275:inz",
+        "src/mega65_math.s:275:ldz-#1",
+        "src/vm_c2d_byte.s:69:inz",
+        "src/vm_c2d_byte.s:69:ldz-#1",
+        "src/c2_kernal_runtime.c:inline:inz",
+        "src/c2_kernal_runtime.c:inline:ldz-#1",
+        "scripts/c2-lite-chipram-proof-main.c:inline:inz",
+        "scripts/c2-lite-chipram-proof-main.c:inline:ldz-#1"
+      ],
+      "rejected": 50,
+      "status": "passed-STZ-Z-dominance-mutations"
+    },
+    "handwritten_STZ_Z_dominance": {
+      "assembly_site_count": 23,
+      "files": {
+        "scripts/c2-crc-convergence-shared-driver-probe.s": {
+          "entries": 5,
+          "sites": [
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 60,
+              "operand": "__rc2"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 61,
+              "operand": "__rc3"
+            }
+          ]
+        },
+        "src/c2_boot_chain_commit.s": {
+          "entries": 1,
+          "sites": [
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 47,
+              "operand": "__rc5"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 107,
+              "operand": "vm_boot_overlay_status"
+            }
+          ]
+        },
+        "src/c2_kernal_window.s": {
+          "entries": 5,
+          "sites": [
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 31,
+              "operand": "C2K_BREAK_PENDING"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 82,
+              "operand": "C2K_SOURCELESS_IRQS"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 98,
+              "operand": "C2K_BREAK_HELD"
+            }
+          ]
+        },
+        "src/f011_guarded_write.s": {
+          "entries": 2,
+          "sites": [
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 84,
+              "operand": "__rc2"
+            }
+          ]
+        },
+        "src/mega65_math.s": {
+          "entries": 7,
+          "sites": [
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 64,
+              "operand": "$d772"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 65,
+              "operand": "$d773"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 70,
+              "operand": "$d776"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 71,
+              "operand": "$d777"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 87,
+              "operand": "$d772"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 88,
+              "operand": "$d773"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 93,
+              "operand": "$d776"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 94,
+              "operand": "$d777"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 113,
+              "operand": "__rc8"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 114,
+              "operand": "__rc9"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 268,
+              "operand": "$d772"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 269,
+              "operand": "$d773"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 274,
+              "operand": "$d776"
+            },
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 275,
+              "operand": "$d777"
+            }
+          ]
+        },
+        "src/vm_c2d_byte.s": {
+          "entries": 1,
+          "sites": [
+            {
+              "abstract_Z_at_store": "zero",
+              "line": 69,
+              "operand": "__rc5"
+            }
+          ]
+        }
+      },
+      "inline_assembly": {
+        "files": {
+          "scripts/c2-lite-chipram-proof-main.c": {
+            "proof": "non-product main calls install_owned_window before DMA tests",
+            "sites": [
+              {
+                "abstract_Z_at_store": "zero",
+                "operand": "$d702"
+              }
+            ]
+          },
+          "src/c2_kernal_runtime.c": {
+            "proof": "owned C world begins with SEI / LDZ #0 before c2k_copy",
+            "sites": [
+              {
+                "abstract_Z_at_store": "zero",
+                "operand": "$d702"
+              }
+            ]
+          }
+        },
+        "site_count": 2
+      },
+      "instruction_semantics": "45GS02 STZ stores the Z register",
+      "site_count": 25,
+      "source_roots": [
+        "src",
+        "scripts"
+      ],
+      "status": "passed-all-handwritten-STZ-sites-have-Z-zero-dominance"
+    },
+    "resolver_and_header": {
+      "fix": {
+        "changed_calls_from_link_69": 7,
+        "changed_calls_from_predecessor": 5,
+        "field": "L65I-v1 canonical header CRC16 over bytes 0..16",
+        "format_delta_bytes": 0,
+        "media_delta_bytes": 0,
+        "new_reader": "%l65i-next-crc",
+        "old_reader": "%l65i-next-byte"
+      },
+      "media_mutations_rejected": {
+        "artifact-identity": "index-artifact-identity",
+        "artifact-length": "index-artifact-length",
+        "artifact-zero": "index-row-zero-authority",
+        "bank2-zero": "index-row-zero-authority",
+        "dependency-count": "index-row-dependency-count",
+        "dependency-padding": "index-row-dependency-padding",
+        "dependency-self": "index-row-dependency",
+        "dependency-width": "index-widths",
+        "duplicate-identity": "index-artifact-identity",
+        "duplicate-name": "index-artifact-length",
+        "empty-name": "index-row-name",
+        "execution-source": "index-row-source",
+        "header-crc": "index-header-crc",
+        "header-reserved": "index-header-reserved",
+        "header-seal-magic-identity-only": "index-header-crc",
+        "header-seal-magic-record-crc-identity-only": "index-header-crc",
+        "header-seal-omits-record-crc-fields": "index-header-crc",
+        "header-width": "index-widths",
+        "identity": "index-identity",
+        "images-zero": "index-row-zero-authority",
+        "magic": "index-magic",
+        "name-padding": "index-row-name",
+        "record-bytes": "index-record-bytes",
+        "record-crc": "index-record-crc",
+        "row-crc": "index-record-crc",
+        "row-reserved": "index-row-reserved",
+        "row-width": "index-widths",
+        "sector-range": "index-row-locator",
+        "track-zero": "index-row-locator",
+        "version": "index-version",
+        "zero-identity": "index-row-zero-authority",
+        "zero-rows": "index-count"
+      },
+      "source": {
+        "arguments": [
+          "offset-low-byte",
+          "offset-high-byte"
+        ],
+        "assembler_leaf": "vm_c2d_byte",
+        "assembler_leaf_tokens": 8,
+        "bank2_decisions": [
+          "active persistent identity universe",
+          "canonical static Bank-2 edge from C2D slots 0..5",
+          "persistent Bank-2 low edge",
+          "transient C2D and Bank-2 high edges",
+          "six-currency aggregate preflight",
+          "dependency order and idempotence"
+        ],
+        "claimed_resident_state_bytes": 0,
+        "lisp_tokens": 15,
+        "native_policy_decisions": 0,
+        "new_session_records": 0,
+        "overlay_roundtrips": 0,
+        "prim_id": 67,
+        "primitive_tokens": 3,
+        "published_c2d_bytes": 33840,
+        "read_bytes": 1,
+        "retired_string_query_protocol": true,
+        "status": "passed-private-C2D-byte-primitive-bank2-orchestration"
+      },
+      "source_mutations_rejected": {
+        "active-prefix-removed": "lisp-seam",
+        "append-seam-removed": "lisp-seam",
+        "assembler-leaf-edge": "primitive-seam",
+        "byte-args-arity": "primitive-seam",
+        "byte-args-helper-removed": "primitive-seam",
+        "c2d-read-address": "primitive-seam",
+        "c2d-read-width": "primitive-seam",
+        "capacity-orchestration-removed": "lisp-seam",
+        "dependency-width-omitted": "lisp-seam",
+        "header-record-crc-high-omitted": "lisp-seam",
+        "header-record-crc-low-omitted": "lisp-seam",
+        "header-version-omitted": "lisp-seam",
+        "header-width-omitted": "lisp-seam",
+        "leaf-length-high-Z-nonzero": "assembler-leaf-seam",
+        "leaf-proof-precondition": "assembler-leaf-seam",
+        "leaf-published-high-bound": "assembler-leaf-seam",
+        "leaf-published-low-bound": "assembler-leaf-seam",
+        "leaf-reader-Z": "assembler-leaf-seam",
+        "leaf-reader-edge": "assembler-leaf-seam",
+        "leaf-size": "assembler-leaf-seam",
+        "native-policy-reintroduced": "native-policy",
+        "old-query-protocol": "retired-query-protocol",
+        "prim-id": "primitive-seam",
+        "raw-c2d-read-removed": "lisp-seam",
+        "registry-introduced": "loaded-registry",
+        "row-count-omitted": "lisp-seam",
+        "row-width-omitted": "lisp-seam",
+        "static-prefix-removed": "lisp-seam",
+        "transient-fronts-removed": "lisp-seam",
+        "typed-result": "primitive-seam"
+      },
+      "target_compile": "bytecode-p0-stdlib-check: PASS suites=1 functions=333 cases=204 objects=553 code_bytes=18168 dir_bytes=3871 steps=26390"
+    }
+  },
+  "format": "lisp65-c2.2-product-link72-STZ-semantics-successor-v1",
+  "link_number": 72,
+  "manifest": {
+    "bytes": 16947,
+    "path": "build/post-promotion/link72-stz-semantics/canonical-product-manifest.json",
+    "sha256": "30b9fcefcf7a6a7ea10937066eaa982fd94cede305efca85cd6acbab8187979a"
+  },
+  "next_gate": "Bundled require/defstruct hardware session with ordinary Freezer return; no diagnostic hardware run is required.",
+  "predecessor": {
+    "bytes": 7466,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link71-defstruct-header-crc-domain-structural-receipt.json",
+    "sha256": "19cda63ce0acf8b2acf962686bcea155a577447eac45c385962ecb60e42d1ce0"
+  },
+  "product": {
+    "bytes": 41566,
+    "path": "build/post-promotion/link72-stz-semantics/final/lisp65-c2-substitution-linked.prg",
+    "sha256": "dd11737e6baf8073a088eefd642782d789b69c40b9aabb8caed91ce9561cb857"
+  },
+  "promotable": false,
+  "qualified_WPLTO": {
+    "bytes": 21970,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link72-stz-semantics-wplto-receipt.json",
+    "sha256": "d67bf577267dddad5661523d280780b972205c3eba1d273e2425fcb698c7eea7"
+  },
+  "recorded_on": "2026-07-27",
+  "session_service": {
+    "boot_records": 12,
+    "generation_binding": "canonical selected Session-family catalog and generation",
+    "overlay_to_loader_edges": 0,
+    "session_records": 52,
+    "shared_facade_to_loader_edges": 1,
+    "slice_bytes": 399,
+    "slot": 51,
+    "status": "passed-one-Session-record-no-overlay-recursion-generation-bound"
+  },
+  "status": "passed-Link72-STZ-semantics-successor-hardware-not-run",
+  "walls": {
+    "bank0_text_headroom_bytes": 351,
+    "e000_headroom_bytes": 54,
+    "fixed_hot_block_headroom_bytes": 2,
+    "ordinary_bank0_bss_headroom_bytes": 137,
+    "resident_island_headroom_bytes": 61,
+    "session_family_headroom_bytes": 113
+  }
+}

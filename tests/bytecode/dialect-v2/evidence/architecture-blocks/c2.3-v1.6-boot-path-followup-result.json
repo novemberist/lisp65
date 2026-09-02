@@ -1,0 +1,129 @@
+{
+  "claim_limit": "Proves class membership and the boot trigger. It does not choose or authorize the execution-boundary design, a fix card, media or another device contact.",
+  "contact": {
+    "CPU_left_stopped": true,
+    "bytes_read": 153,
+    "kind": "read original conserved stop",
+    "resets": 0,
+    "resumes": 0,
+    "runs": 0,
+    "stops": 1
+  },
+  "escalation": {
+    "authority": "owner decision required by commission 17be2562",
+    "no_automatic_fix": true,
+    "question": "Move the v1.7 execution-boundary backstop into v1.6 now that the class has a deterministic ordinary-boot trigger?",
+    "required": true
+  },
+  "format": "lisp65-c2.3-v1.6-boot-path-followup-result-v1",
+  "holder": {
+    "first_instance_identity": {
+      "ABI_identity": "saved __rc18/__rc19",
+      "address": "0xbd4c..0xbd4d",
+      "causal_chain": [
+        "setjmp snapshots $c356 in the top-level continuation",
+        "VM_TYPE abort runs RTOV wipe",
+        "longjmp restores the pre-retirement $c356 snapshot",
+        "indirect control can re-enter the retired window"
+      ],
+      "consumer": "__call_indir is JMP ($14), i.e. __rc18/__rc19",
+      "longjmp_restore": "emitted longjmp restores offsets 6/5 to __rc19/__rc18",
+      "owner": "lisp_toplevel.csrs[0..1]",
+      "setjmp_save": "emitted setjmp stores __rc18 then __rc19 at jmp_buf offsets 5/6",
+      "target": "defprim / first byte of retired RTOV window",
+      "value": "0xc356"
+    },
+    "native_return": "0xa9fc",
+    "owner": "current lisp_toplevel jmp_buf",
+    "same_as_first_holder": true,
+    "saved_pairs": [
+      {
+        "jmp_buf_offset": 5,
+        "pair": "__rc18/__rc19",
+        "value": "0xc356"
+      },
+      {
+        "jmp_buf_offset": 7,
+        "pair": "__rc20/__rc21",
+        "value": "0xcfd0"
+      },
+      {
+        "jmp_buf_offset": 9,
+        "pair": "__rc22/__rc23",
+        "value": "0x3900"
+      },
+      {
+        "jmp_buf_offset": 11,
+        "pair": "__rc24/__rc25",
+        "value": "0x0101"
+      },
+      {
+        "jmp_buf_offset": 13,
+        "pair": "__rc26/__rc27",
+        "value": "0x0409"
+      },
+      {
+        "jmp_buf_offset": 15,
+        "pair": "__rc28/__rc29",
+        "value": "0x00d3"
+      },
+      {
+        "jmp_buf_offset": 17,
+        "pair": "__rc30/__rc31",
+        "value": "0x0252"
+      }
+    ],
+    "unique_in_window_pair": {
+      "jmp_buf_offset": 5,
+      "pair": "__rc18/__rc19",
+      "value": "0xc356"
+    }
+  },
+  "inputs": {
+    "ELF": {
+      "bytes": 646988,
+      "path": "build/c2.3/v1.6-boot-refill-generator-template-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "02209a9ddda93b49bc3025f6b0caa9b2d88cb96b2504167b3ccc98d6f9ffba99"
+    },
+    "capture": {
+      "bytes": 9541,
+      "path": "build/c2.3/v1.6-boot-path-followup-read-20260823/capture.json",
+      "sha256": "538dcc947b6f0064c3dbc89ef2c98eefb25a810d62892c5b096e1905edaeb16e"
+    },
+    "first_holder_result": {
+      "bytes": 3079,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-stale-holder-broadened-result-receipt.json",
+      "sha256": "8ac979e536fc055dffa7a0f4f3ecec0bafde72d964a659bdaaa5d2f5771a4d5f"
+    },
+    "materialized_registry": {
+      "bytes": 40,
+      "path": "build/c2.3/v1.6-boot-refill-dma-media/canonical-product/final/runtime-overlay-verifier-bindings.bin",
+      "sha256": "1125caaaee34cb1d796f7d1e99718c7a0c8f82047f9626965cf80f56b94f3225"
+    },
+    "preceding_attribution": {
+      "bytes": 7627,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-boot-path-two-layer-attribution.json",
+      "sha256": "2d95eeb0f4c6a7ba83b2e03f409877e0b3e61504bec16a4cbee6a8b9775d5755"
+    }
+  },
+  "membership_decision": {
+    "class": "retirement with a restorable in-generation reference",
+    "discriminator": "The exact current jmp_buf, not zero-page resemblance, contains $c356 while vm_codebuf/bookkeeping are fully zero.",
+    "instance_ordinal": 3,
+    "new_trigger": "ordinary boot/banner path",
+    "refuted_alternative": "fresh non-retired vm_codebuf payload or corrupt registry"
+  },
+  "recorded_on": "2026-08-23",
+  "retirement": {
+    "map_generation": 1,
+    "meaning": "The execution/refill window is retired and its bookkeeping clear, while a restorable continuation still names the window entry.",
+    "registry": "40/40 live bytes equal the completion-materialized registry",
+    "rtov_busy": 0,
+    "rtov_family": "session (2)",
+    "rtov_family_generation": 1,
+    "rtov_fault": 0,
+    "rtov_loaded_len": 0,
+    "vm_codebuf_and_bookkeeping": "75/75 bytes zero"
+  },
+  "status": "PROVEN: THIRD RETIRED-WINDOW HOLDER INSTANCE; BOOT-PATH TRIGGER"
+}

@@ -1,0 +1,76 @@
+{
+  "authority": {
+    "fixture": {
+      "bytes": 18296,
+      "path": "scripts/runtime-overlay-transaction-main.c",
+      "sha256": "cf767acf7cd24ecdbbc85f032d93204674c0bf4b1e77add073c68e9654324452"
+    },
+    "gate": {
+      "bytes": 7769,
+      "path": "tools/host-lisp/c2_e000_s1_tuple_lifetime_gate.py",
+      "sha256": "bd261583579d337e5de8e830e5a2c10fd6ca7b8a2f8f349c9c017e12b8f05e9f"
+    },
+    "narrow_binary": {
+      "bytes": 150192,
+      "path": "build/runtime-overlay-smoke-host",
+      "sha256": "47b449a9b23c4d7090d31dff22f555e1e153618f49dcfd48c115fafd9e9d47bf"
+    },
+    "source": {
+      "bytes": 91002,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "fac6da4acd3d7d6a04a94e116322807ea597e8edee3054d7dbed779b104695a1"
+    },
+    "transaction_binary": {
+      "bytes": 114752,
+      "path": "build/runtime-overlay-transaction-host",
+      "sha256": "06afa5045f0ba0c92a4c5adc4f932ec7c8e10379cd7abca96ad7b9949bed9c1d"
+    }
+  },
+  "capacity": {
+    "WPLTO_truth": "pending",
+    "expected_current_product_delta_bytes": 0,
+    "narrow_prelink_dormant_BSS_removed_bytes": 5
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "whole_program_LTO_closure_links": 0
+  },
+  "feature_matrix": {
+    "narrow_prelink_shape": {
+      "compiler": "-Wall -Wextra -Werror",
+      "expected_tuple_bytes": 0,
+      "tuple_symbols": {}
+    },
+    "transaction_auth_product_shape": {
+      "compiler": "-Wall -Wextra -Werror -fsanitize=address,undefined",
+      "expected_tuple_bytes": 5,
+      "host_status": "runtime-overlay-transaction: PASS catalog=once-per-transaction record+payload=per-slice same-generation-mutation=crc-red generation-change=reauthenticated batch-state=lifetime-exclusive batch-S1=full-single-record-repeat stale-predecessor=exact-link30 preinstall-island-calls=0",
+      "tuple_symbols": {
+        "rtov_batch_crc": 2,
+        "rtov_batch_entry": 2,
+        "rtov_batch_slot_id": 1
+      }
+    }
+  },
+  "format": "lisp65-c2-E000-S1-tuple-feature-lifetime-gate-v1",
+  "recorded_on": "2026-07-24",
+  "source_contract": {
+    "entry_crc_owners": [
+      "serial split-installer handoff",
+      "transaction-auth catalog tuple"
+    ],
+    "mutations": {
+      "entry-declaration-removed": "rejected",
+      "entry-guard-removed": "rejected",
+      "same-payload-runner-restored": "rejected",
+      "slot-guard-removed": "rejected"
+    },
+    "slot_owners": [
+      "transaction-auth catalog tuple",
+      "fixed retry probe result",
+      "non-transaction-auth C1 abort result"
+    ]
+  },
+  "status": "passed-narrow-profile-zero-tuple-and-live-profile-exact-tuple"
+}

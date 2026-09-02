@@ -1,0 +1,97 @@
+{
+  "authority": {
+    "link38_hardware_first_red": {
+      "bytes": 5810,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link38-c2-lite-v6-hardware-line1-first-red-diagnosis.json",
+      "sha256": "d90edf4414d3bacf7081e4b46cea7f50a08b3a0227c9b36d2c6cdc565c9685bd"
+    },
+    "link38_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-38-c2-lite-v6-boot-crc-abi-replay/lisp65-c2-substitution-linked.prg",
+      "sha256": "61f406b57eeb2e258e941be432e8f6cea797c0623f421f09cc56e91f6f1419a2"
+    },
+    "link38_structural_replay": {
+      "bytes": 207261,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link38-c2-lite-v6-boot-crc-abi-artifact-replay-receipt.json",
+      "sha256": "3cad09e6a609f7b7e860896bf30ba707a17acb68975b9d56d9ba1c08117f1cfc"
+    },
+    "source_deployment": {
+      "bytes": 3607,
+      "path": "build/c2.2/hardware-presmoke-link38-c2-lite-v6/deployment.json",
+      "sha256": "56a916950c18ce6a285517c667b2aa16bd341bda91573fafc2ff10fbc28f60b1"
+    }
+  },
+  "capacity_effect": {
+    "bank0_text_bytes": 0,
+    "e000_bytes": 0,
+    "file_bytes": 0,
+    "fixed_hot_block_bytes": 0,
+    "ordinary_bank0_bss_bytes": 0,
+    "resident_island_bytes": 0,
+    "runtime_overlay_bank_bytes": 0,
+    "runtime_slice_bytes": 0
+  },
+  "claim_limit": "Permanently non-promotable diagnostic identity derived from the SHA-bound Link-38 product without compilation or relinking. It carries no product, capacity, promotion or acceptance claim.",
+  "diagnostic_identity": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/link38-c2-lite-hold-before-fail-NONPROMOTABLE/lisp65-link38-hold-before-fail-NONPROMOTABLE.prg",
+    "sha256": "bc67a875a68541cde21a5e03987a2bbc022830fb02e7fcca15be74ac35e9b7a7"
+  },
+  "execution_accounting": {
+    "changed_bytes": 1,
+    "compiler_runs": 0,
+    "diagnostic_instruction_patches": 1,
+    "hardware_runs": 0,
+    "instruction_span_bytes": 2,
+    "linker_runs": 0,
+    "promotable_candidates": 0
+  },
+  "expected_witness": {
+    "bytes": 1287,
+    "crc16": "0xa8ea",
+    "destination_address": "0xc356",
+    "source": "Boot family in Chip Bank 3",
+    "source_offset": "0x3300"
+  },
+  "format": "lisp65-c2-link38-hold-before-fail-patch-v1",
+  "manifest": {
+    "bytes": 3617,
+    "path": "build/c2.2/substitution/link38-c2-lite-hold-before-fail-NONPROMOTABLE/patch-manifest.json",
+    "sha256": "d044365bcf50a10e8451b0748a0eb6919615658bcc41ecc0ae677bd9c9feb5cd"
+  },
+  "next_gate": "one authorized hold-before-fail hardware run",
+  "patch_gate": {
+    "after_instruction_hex": "80fe",
+    "after_semantics": "BRA $AE23, self-loop before rtov_fail and wipe",
+    "before_instruction_hex": "80f6",
+    "before_semantics": "BRA $AE1B, then call rtov_fail and wipe",
+    "changed_bytes": 1,
+    "changed_cpu_addresses": [
+      "0xae24"
+    ],
+    "changed_file_offsets": [
+      "0x8e25"
+    ],
+    "file_size_delta_bytes": 0,
+    "instruction_address": "0xae23",
+    "instruction_file_offset": "0x8e24",
+    "instruction_span_bytes": 2,
+    "load_address": "0x2001",
+    "mutations": {
+      "extra-byte": "rejected",
+      "old-operand": "rejected",
+      "wrong-opcode": "rejected"
+    },
+    "precision_note": "The authorized patch spans one two-byte instruction. The opcode remains 0x80; exactly its one-byte relative operand changes.",
+    "status": "passed-exact-self-loop-instruction-patch"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-38-c2-lite-v6-boot-crc-abi-replay/lisp65-c2-substitution-linked.prg",
+    "sha256": "61f406b57eeb2e258e941be432e8f6cea797c0623f421f09cc56e91f6f1419a2",
+    "status": "untouched"
+  },
+  "status": "passed-nonpromotable-fixed-length-instrumentation"
+}

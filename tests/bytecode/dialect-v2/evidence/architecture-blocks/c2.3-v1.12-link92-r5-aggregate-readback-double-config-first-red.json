@@ -1,0 +1,135 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-r5-aggregate-readback-double-config-first-red-v1",
+  "recorded_on": "2026-08-07",
+  "status": "FIRST RED-attributed-same-process-double-configuration-at-aggregate-readback",
+  "authorization": {
+    "commit": "35e0a6f1",
+    "scope": "declared dependency-closure verifier with over- and under-resolution mutations, followed by aggregate closure over SHA-fixed shared, base and defstruct media"
+  },
+  "completed_before_red": {
+    "resolver_contract": {
+      "comfort": {
+        "declared_dependency_closure": [0],
+        "actual_resolver_order": [0]
+      },
+      "defstruct": {
+        "declared_dependency_closure": [1],
+        "actual_resolver_order": [1]
+      },
+      "mutations_rejected": {
+        "undeclared-prefix-row-required": "resolver expectation contains undeclared or misses declared rows",
+        "declared-dependency-omitted-by-resolver": "resolver returned less or more than closure"
+      }
+    },
+    "resume_source_gate": {
+      "status": "passed-resume-only-defstruct-sibling-and-aggregates",
+      "shared_system_rebuilds": 0,
+      "base_library_rebuilds": 0,
+      "defstruct_sibling_builds": 0,
+      "existing_identity_checks": 2,
+      "rebuild_mutations_rejected": [
+        "shared-system-rebuild-reintroduced",
+        "base-library-rebuild-reintroduced",
+        "defstruct-sibling-rebuild-reintroduced"
+      ]
+    },
+    "immutable_inputs": {
+      "product_manifest": {
+        "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/canonical-product-manifest.json",
+        "bytes": 524467,
+        "sha256": "10254204dc5277e1bf2e308fcc32b8d6a2c669a20daf7c464dca2449a99dafec"
+      },
+      "shared_manifest": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/shared-system/candidate-manifest.json",
+        "bytes": 17164,
+        "sha256": "fd8f1ab004929a01b63da6b7d1ef8699596a6cd5746b37d4343ca0d3c1ba4cd0"
+      },
+      "base_D81": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/base/lisp65-library.d81",
+        "bytes": 819200,
+        "sha256": "3182314c3ebb1328d608dd9ca6dfc44d7e2e5c2ea64b2fe5f43e40238c726213"
+      },
+      "defstruct_D81": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/defstruct-acceptance/lisp65-library.d81",
+        "bytes": 819200,
+        "sha256": "6de86390b16837f8030222715d5c95c8e9fa998d000abcaf75e46580863c04dd"
+      }
+    },
+    "aggregate_outputs_before_readback": {
+      "base_manifest": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/base-candidate-manifest.json",
+        "bytes": 4924,
+        "sha256": "457ec6cc84ab2659838fa76f06f229929edf1a3c2be6cf502377784c92e8cb7a"
+      },
+      "defstruct_acceptance_manifest": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/defstruct-acceptance-manifest.json",
+        "bytes": 5919,
+        "sha256": "7e04eb7f9b8c8d0904cea7d65d6693334afd29f322fd130f23807c746b411d7d"
+      },
+      "aggregate_manifest": {
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/candidate-manifest.json",
+        "bytes": 8116,
+        "sha256": "a8c544ba9f3b77fab2df1ff3a73241bd34926b7bd837915ca32659fc3c21aff0"
+      },
+      "persisted_receipt": {
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-two-variant-media-receipt.json",
+        "bytes": 8116,
+        "sha256": "a8c544ba9f3b77fab2df1ff3a73241bd34926b7bd837915ca32659fc3c21aff0"
+      },
+      "manifest_equals_receipt": true,
+      "readback_status": "not-established-because-checker-startup-failed"
+    }
+  },
+  "mechanism": {
+    "error": "ValueError: require-resolver profile selector order drift",
+    "sequence": [
+      "main(resume) calls resume()",
+      "resume() calls configure_shared() and performs the SHA-fixed aggregate closure",
+      "main(resume) then calls check() in the same Python process",
+      "check() calls configure_shared() a second time",
+      "PRODUCT.configure() reaches the one-shot require-resolver profile selector again"
+    ],
+    "first_selector_state": ".rodata.vm_callprim = 164 bytes, then selected to 166",
+    "second_selector_state": ".rodata.vm_callprim already = 166 bytes while the one-shot selector requires its 164-byte predecessor",
+    "cause": "The resume wrapper repeats a deliberately one-shot global product configuration before readback. This is the same lifecycle class already caught by the Link-92 startup gate; the generated aggregate bytes are not implicated.",
+    "classification": "Post-write readback-checker lifecycle error, not product, dependency closure, media bytes, compiler, linker, capacity, device or release."
+  },
+  "precedent": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-startup-first-red.json",
+    "bytes": 1079,
+    "sha256": "15443311bd4438c567889899cbcc2be16484c5973d1d59dccabeb3a232ba9138",
+    "status": "FIRST RED-attributed-pre-WPLTO-double-configuration"
+  },
+  "execution_accounting": {
+    "additional_product_compiler_runs": 0,
+    "additional_product_linker_runs": 0,
+    "additional_product_cards": 0,
+    "artifact_completion_calls": 0,
+    "cold_stager_compiler_runs": 0,
+    "shared_system_rebuilds": 0,
+    "base_library_rebuilds": 0,
+    "defstruct_sibling_rebuilds": 0,
+    "aggregate_manifest_writes": 4,
+    "aggregate_readback_checks_completed": 0,
+    "automatic_retries": 0,
+    "hardware_runs": 0
+  },
+  "source_authority": {
+    "candidate_media": {
+      "path": "tools/host-lisp/c2_v112_candidate_media.py",
+      "bytes": 30858,
+      "sha256_at_first_red": "863dd79ebe2e9116f4fe4aafac1a3792fb3f6fe00c8a1c7a9436954062056274"
+    },
+    "prior_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-sibling-resolver-order-first-red.json",
+      "bytes": 6013,
+      "sha256": "b12ecb5450a0cd3628e4f28ffc2014cb140489a55678466240aa0fec57036b20"
+    }
+  },
+  "disposition": {
+    "state": "owner-disposition-required",
+    "no_fix_or_second_readback_performed": true,
+    "recommendation": "Repair only the wrapper/readback lifecycle: one product configuration per process, with a loud mutation that reintroduces same-process double configuration. Then perform a resume-safe readback replay against the four SHA-fixed aggregate outputs without regenerating product, shared media, either library D81 or any aggregate manifest. Green may promote the persisted aggregate receipt to the two-variant media authority and open Phase D."
+  },
+  "claim_limit": "The semantic resolver contract and aggregate writes are complete, but their post-write readback did not start. The persisted aggregate receipt is frozen output, not yet acceptance authority. There is no media-closed contract state, Phase D, Halt or release claim."
+}

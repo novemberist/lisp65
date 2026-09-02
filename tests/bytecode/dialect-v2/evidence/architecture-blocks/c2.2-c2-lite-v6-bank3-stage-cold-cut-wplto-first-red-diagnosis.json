@@ -1,0 +1,109 @@
+{
+  "format": "lisp65-c2-lite-bank3-stage-cold-cut-wplto-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: cold homes fit; mandatory two-record resident loader exceeds the Handoff corridor",
+  "scope": {
+    "whole_program_lto_runs": 1,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "promotable": false
+  },
+  "green_before_link": {
+    "state_machine_cases": 8,
+    "source_contract_checks": 13,
+    "source_mutations_rejected": 4,
+    "resident_transition_api_symbols": 0,
+    "artifacts": [
+      {
+        "path": "build/c2-lite/v6-bank3-stage-cold-cut-wplto/stage-state-machine-gate.json",
+        "bytes": 365,
+        "sha256": "024a3590fa716375be06b00ae8d63bcfbb29ed5c5e3097a424f065a9826f6fba"
+      },
+      {
+        "path": "build/c2-lite/v6-bank3-stage-cold-cut-wplto/stage-source-contract-gate.json",
+        "bytes": 1253,
+        "sha256": "2f81955042bea4ff6dd2432ed34abfae1e6f0f29471594b6689f0ad8e22d7366"
+      }
+    ]
+  },
+  "cold_home_measurement": {
+    "workbench_record": {
+      "bytes": 1731,
+      "previous_first_red_bytes": 2361,
+      "delta_bytes": -630,
+      "stack_safe_limit_headroom_bytes": 35
+    },
+    "prefamily_boot_stage_record": {
+      "bytes": 654,
+      "slice_cap_headroom_bytes": 1138
+    },
+    "decoder_phase_03": {
+      "bytes": 1584,
+      "previous_first_red_bytes": 2285,
+      "delta_bytes": -701,
+      "slice_cap_headroom_bytes": 208
+    },
+    "final_boot_family_session_stage_slice": {
+      "bytes": 763,
+      "slice_cap_headroom_bytes": 1029,
+      "slot": 8
+    },
+    "interpretation": "Both cold bodies and phase 03 fit independently. The approved semantic placement itself is viable."
+  },
+  "first_red": {
+    "gate": "Bank-0 text must end before Handoff at 0xb4a3",
+    "text_start": "0x2023",
+    "text_bytes": 38568,
+    "maximum_text_bytes": 38016,
+    "overlap_bytes": 552,
+    "ordinary_rodata_bytes": 941,
+    "ordinary_bss_bytes": 1587,
+    "bss_start": "0xbc19",
+    "bss_end_exclusive": "0xc24c",
+    "fixed_block_start": "0xc080",
+    "bss_overlap_bytes": 460,
+    "causal_chain": "The 403-byte text regression shifts unchanged rodata/BSS by 403 bytes; the prior 57-byte BSS overlap therefore becomes 460 bytes. This is a text-placement consequence, not new BSS state."
+  },
+  "resident_attribution": {
+    "previous_single_record_loader_bytes": 639,
+    "new_install_coordinator_bytes": 457,
+    "new_parameterized_record_loader_bytes": 731,
+    "new_two_record_loader_total_bytes": 1188,
+    "loader_delta_bytes": 549,
+    "removed_stage_begin_bytes": 139,
+    "removed_stage_verified_bytes": 44,
+    "removed_stage_fail_bytes": 13,
+    "removed_transition_api_total_bytes": 196,
+    "other_whole_program_lto_delta_bytes": 50,
+    "net_text_delta_from_previous_first_red_bytes": 403,
+    "equation": "+549 loader -196 retired resident transitions +50 WPLTO remainder = +403"
+  },
+  "claim_limit": "The cold cut is semantically and locally capacity-valid, but the complete WPLTO is red. No wall, anchor, floor, deckel, product identity or hardware claim is made.",
+  "rollback_line": {
+    "product": "Link 35",
+    "status": "untouched"
+  },
+  "evidence": [
+    {
+      "path": "build/c2-lite/v6-bank3-stage-cold-cut-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.lto.o",
+      "bytes": 597000,
+      "sha256": "f6860f455225b5ecae73933df97b027446c15b1ec7255a447471d231191ba4aa"
+    },
+    {
+      "path": "build/c2-lite/v6-bank3-stage-cold-cut-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.map",
+      "bytes": 192339,
+      "sha256": "bc5f5acee9a535528a7055250ddd95e5b76b4aad382c92cce1692c006e795235"
+    },
+    {
+      "path": "build/c2-lite/v6-bank3-stage-cold-cut-wplto/full-product-wplto/c2-lite-v6-full-seed.prg.link.stderr.txt",
+      "bytes": 2752,
+      "sha256": "abaebe7f34cea46e136a2f03a7b0591c4c210c8a63b05df5b0cf342bf7c99e4a"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank3-stage-cold-cut-wplto-receipt.json",
+      "bytes": 10230,
+      "sha256": "0ca1d8f4ebb3be06c7b3b3fe6a7f3b867b9e67d9267bef6908b193788706be08"
+    }
+  ],
+  "review_question": "The mandatory two-record bootstrap is resident by necessity, but the general C implementation spends 1188 bytes. A further product decision is required before any retry: define a compact, contract-equivalent bounded two-record loader (likely non-LTO/assembly or another explicitly priced handoff protocol), or revise the record seam. No automatic second WPLTO is authorized."
+}

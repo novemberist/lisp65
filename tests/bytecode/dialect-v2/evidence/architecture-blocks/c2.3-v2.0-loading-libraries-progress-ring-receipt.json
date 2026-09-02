@@ -1,0 +1,738 @@
+{
+  "accounting": {
+    "D1_D5_open": false,
+    "contact_authorized": false,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 75581,
+    "commit": "db20fc5b01bfdc1a075666b3c5607ae062d2568c",
+    "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+    "sha256": "4f05db80ac3181e3fcd4495bbf2ee67ee6e15cc041fd8bbcdf9b3b4f6868dcb1"
+  },
+  "choreography": {
+    "active_interval_external_actions": 0,
+    "contact_authorized": false,
+    "final_stop_transitions_after_future_authorization": 1,
+    "raw_first_ranges": [
+      "0x0000B582:66",
+      "0x0000FF83:2"
+    ]
+  },
+  "claim_limit": "Host-green, non-promotable diagnostic sibling only. The ring measures successful logical read progress; it does not relax convergence, estimate a device rate before capture, claim a hang, authorize contact, or open D1-D5.",
+  "decision_table": {
+    "READY": "D1 boot healthy; close the performance question before D2-D5",
+    "fixed_slots": "NO LOGICAL READ PROGRESS; phase/ordinals name the loop or stall neighborhood",
+    "growing_slots": "LIVE; derive measured logical-read rate and completion estimate",
+    "invalid_or_torn": "INSTRUMENT RED; no product claim"
+  },
+  "deployment": {
+    "bytes": 1683,
+    "path": "build/c2.3/v2.0-loading-libraries-progress/deployment.json",
+    "sha256": "b6585a04e6f66805e9669df9fc32569c47e79cb9d476ca970e31e8687b22b9b9"
+  },
+  "format": "lisp65-c2.3-v2.0-loading-libraries-progress-ring-v1",
+  "identity": {
+    "WPLTO_runs": 0,
+    "control_bytes_outside_delta_byteidentical": true,
+    "enumerated_delta_roles": [
+      "lisp65.prg",
+      "window.bin",
+      "boot.id",
+      "autoboot.c65"
+    ],
+    "hardware_contacts": 0,
+    "product_candidate_bytes_changed": 0,
+    "product_links": 0,
+    "promotable": false
+  },
+  "inputs": {
+    "CPU_reconciliation": {
+      "bytes": 5808,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-cpu-transport-reconciliation-receipt.json",
+      "sha256": "9f7d2b549058525cafb9ac5c44e823b067f57b04d31fce4fdc5c60cd22fe74d3"
+    },
+    "Link106_media": {
+      "bytes": 14423,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-phase02b-header-consumption-completion-media-receipt.json",
+      "sha256": "349e744fc5667ee49bc8c6551e4e164ce2dd181949793106f1bdbd1c6e146dbe"
+    },
+    "control_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-media/shared-system/lisp65-product.d81",
+      "sha256": "467a636528c6a1cd45854fd3d1b64c827b0b68bf9ee3d9eb09cca5d7ae3e2766"
+    },
+    "control_ELF": {
+      "bytes": 628736,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "339c52c08236cffc827834d6806150a0526b2ef840cba2ddae9217837c6f6af5"
+    },
+    "control_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "6adf950e01c5b88814939713b34be11fb0f57e46e4e669b1293f11b13f466d36"
+    },
+    "granularity_review": {
+      "bytes": 12288,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-convergence-granularity-review-receipt.json",
+      "sha256": "ae449f4c8c7c0ea751e695d64f49848e0623aed3a60f417f7d2fe77b3690e829"
+    },
+    "owner_free_inventory": {
+      "bytes": 14701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-boot-order-durable-witness-receipt.json",
+      "sha256": "5ec917daf1308ebab615b7fa73f0997b87abbe52d85ee0488ba41033b0d7cb8e"
+    }
+  },
+  "media": {
+    "build_id": "0xbb66ca08",
+    "control_roles": {
+      "autoboot.c65": {
+        "bytes": 6227,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/autoboot-c65",
+        "sha256": "6e6063691d93a1a5296b6196421506e0c33b35fa2893b66a1a2abc491001677f"
+      },
+      "boot.bin": {
+        "bytes": 19658,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/boot-bin",
+        "sha256": "9f5d8e4a17d6349367b328e7cb274f6908a082d554b457ba945c4107c239ee6c"
+      },
+      "boot.id": {
+        "bytes": 432,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/boot-id",
+        "sha256": "4ef2ed4250f04b11e5a0349eda2c3055ec8a84d6a493cb42ecc8dc83457c7421"
+      },
+      "bootstage.bin": {
+        "bytes": 3405,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/bootstage-bin",
+        "sha256": "0dcf6c0fd7f6dc284a9748e6c8a3547df31c3786d4c96e1b5f7132faa3d19091"
+      },
+      "c2d.bin": {
+        "bytes": 50816,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/c2d-bin",
+        "sha256": "3010ec3807409338d119c57444c960d67f306a5b978ac346d5ed7ab119beee29"
+      },
+      "code.bin": {
+        "bytes": 48156,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/code-bin",
+        "sha256": "94479944eb6f8ece405be2902a424961b72e1936534ecd6acb0e8a2287a9c4ec"
+      },
+      "ide": {
+        "bytes": 31886,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/ide",
+        "sha256": "bb38d5c62d5a827ca58442e3a50d714ab0da909b5bed99d05f04dfebcd3ea083"
+      },
+      "idex": {
+        "bytes": 7380,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/idex",
+        "sha256": "e7bb1a4139f9cd31696d23809bc008c3759d2bc445ea5303ad1738c7c948b392"
+      },
+      "lisp65.prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/lisp65-prg",
+        "sha256": "6adf950e01c5b88814939713b34be11fb0f57e46e4e669b1293f11b13f466d36"
+      },
+      "m65d": {
+        "bytes": 6573,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/m65d",
+        "sha256": "4a32837cc87480375c982a3d39ee8f1759b124c2e563cf4d1aaafd439a8e720e"
+      },
+      "profile": {
+        "bytes": 12883,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/profile",
+        "sha256": "fc8409cae672707b584b0d7c05884028f38dc9172f4511dfff81b8d94ba64682"
+      },
+      "region1.bin": {
+        "bytes": 1956,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/region1-bin",
+        "sha256": "f38eb084a8ee3a2629a051e9cb7b9e664e13eeaa36b957f2d1e7e8cae351d8a8"
+      },
+      "session.bin": {
+        "bytes": 65423,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/session-bin",
+        "sha256": "591b7cf67372a5c06d18915fc093f3eb5d9597748cd9ed20e9c1858d23fd047e"
+      },
+      "shelf.bin": {
+        "bytes": 93681,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/shelf-bin",
+        "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+      },
+      "window.bin": {
+        "bytes": 8192,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-control/window-bin",
+        "sha256": "39b6b2f68881f78b4cfd2e20c8c8da25f1c66763bf2dffae88e1d38c7eefaffe"
+      }
+    },
+    "diagnostic_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-loading-libraries-progress/lisp65-loading-libraries-progress.d81",
+      "sha256": "6ba9bf4649bcc046f02e6aa71929a11748a997299f1ea95cbadde155f97aeaeb"
+    },
+    "diagnostic_roles": {
+      "autoboot.c65": {
+        "bytes": 6117,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/autoboot-c65",
+        "sha256": "2ed73af40593649ad4e18aa80fb659c4ea18a54161e7e5d4dc0c75dde6e54ef3"
+      },
+      "boot.bin": {
+        "bytes": 19658,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/boot-bin",
+        "sha256": "9f5d8e4a17d6349367b328e7cb274f6908a082d554b457ba945c4107c239ee6c"
+      },
+      "boot.id": {
+        "bytes": 432,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/boot-id",
+        "sha256": "adeed74ce95b49b6fb435f42a5dd60a48d45a5cb666d650f5631614454580b17"
+      },
+      "bootstage.bin": {
+        "bytes": 3405,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/bootstage-bin",
+        "sha256": "0dcf6c0fd7f6dc284a9748e6c8a3547df31c3786d4c96e1b5f7132faa3d19091"
+      },
+      "c2d.bin": {
+        "bytes": 50816,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/c2d-bin",
+        "sha256": "3010ec3807409338d119c57444c960d67f306a5b978ac346d5ed7ab119beee29"
+      },
+      "code.bin": {
+        "bytes": 48156,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/code-bin",
+        "sha256": "94479944eb6f8ece405be2902a424961b72e1936534ecd6acb0e8a2287a9c4ec"
+      },
+      "ide": {
+        "bytes": 31886,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/ide",
+        "sha256": "bb38d5c62d5a827ca58442e3a50d714ab0da909b5bed99d05f04dfebcd3ea083"
+      },
+      "idex": {
+        "bytes": 7380,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/idex",
+        "sha256": "e7bb1a4139f9cd31696d23809bc008c3759d2bc445ea5303ad1738c7c948b392"
+      },
+      "lisp65.prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/lisp65-prg",
+        "sha256": "61f0305458be1f7046d15d865fe532055de9768863cdcdbc53f15a107189f280"
+      },
+      "m65d": {
+        "bytes": 6573,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/m65d",
+        "sha256": "4a32837cc87480375c982a3d39ee8f1759b124c2e563cf4d1aaafd439a8e720e"
+      },
+      "profile": {
+        "bytes": 12883,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/profile",
+        "sha256": "fc8409cae672707b584b0d7c05884028f38dc9172f4511dfff81b8d94ba64682"
+      },
+      "region1.bin": {
+        "bytes": 1956,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/region1-bin",
+        "sha256": "f38eb084a8ee3a2629a051e9cb7b9e664e13eeaa36b957f2d1e7e8cae351d8a8"
+      },
+      "session.bin": {
+        "bytes": 65423,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/session-bin",
+        "sha256": "591b7cf67372a5c06d18915fc093f3eb5d9597748cd9ed20e9c1858d23fd047e"
+      },
+      "shelf.bin": {
+        "bytes": 93681,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/shelf-bin",
+        "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+      },
+      "window.bin": {
+        "bytes": 8192,
+        "path": "build/c2.3/v2.0-loading-libraries-progress/readback-diagnostic/window-bin",
+        "sha256": "2c8e1e8c4faa54ea3cdf7ddd0cb1e146bf60698ec84ae4b42d0201144d90355f"
+      }
+    },
+    "library_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-media-base/library/lisp65-library.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "profile_id": "0xfc8409ca",
+    "readback": "byteidentical",
+    "regenerated_contract_roles": [
+      "autoboot.c65",
+      "boot.id"
+    ],
+    "replaced_payload_roles": [
+      "lisp65.prg",
+      "window.bin"
+    ],
+    "shared_roles": 11,
+    "stager_gate": {
+      "assembler_C_contract": {
+        "bytes": 752,
+        "path": "build/generated/c2-lite-asm-c-contract.inc",
+        "sha256": "ef41bac1235502cae1893b51c3c1e7ca91f69892c2e56aae8bbaa75067abb275"
+      },
+      "assembler_C_contract_tool": {
+        "bytes": 11883,
+        "path": "tools/host-lisp/asm_c_constant_contract.py",
+        "sha256": "b4f90ce5a4196b96977a08bd641abc2a4a3811ce33ca0d610b82828a5279a0dd"
+      },
+      "attic_initial_ordered_target_read_submissions_per_media_block": 1,
+      "attic_target_read_retry_policy": "immutable-enhanced-readback-once-per-raster-until-match",
+      "bytes": 6117,
+      "chain_bytes": 211,
+      "chain_handoff": {
+        "bounded_attempts": 64,
+        "oracle": "manifest-crc32-versus-cpu-visible-product-payload",
+        "ordered_jobs": 2,
+        "product_entry": "0x2023",
+        "source_and_ELF_mutations_rejected": 12,
+        "state_address": "0x1920",
+        "status": "passed-profile-bound-final-product-entry-after-manifest-crc-content-convergence",
+        "terminal_jump_bytes": "4c2320",
+        "wrong_profile_entry": "0x2026",
+        "wrong_profile_mutations_rejected": 1
+      },
+      "chip_target_read_submissions_per_media_block": 1,
+      "descriptor_reuse_before_completion": false,
+      "hybrid_transport_source_mutations": 16,
+      "linked_transport": {
+        "address_domain_gate": {
+          "attic_base": "0x08000000",
+          "cases": [
+            "attic-role-crosses-28-bit-limit",
+            "attic-role-outside-28-bit-domain",
+            "attic-role-routed-to-20-bit-gap",
+            "attic-role-truncated-to-zero",
+            "chip-role-crosses-20-bit-limit",
+            "chip-role-routed-to-attic"
+          ],
+          "enhanced_f018b_roles": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "mutations_rejected": 6,
+          "normal_f018b_limit_exclusive": "0x00100000",
+          "normal_f018b_roles": [
+            1,
+            2,
+            3
+          ],
+          "physical_limit_exclusive": "0x10000000",
+          "status": "passed-role-qualified-20-bit-versus-28-bit-staging"
+        },
+        "attic_retry_job_symbol": {
+          "bytes": 20,
+          "name": "c2_attic_retry_job",
+          "section": ".bss",
+          "vma": 14804
+        },
+        "attic_stage_jobs_symbol": {
+          "bytes": 40,
+          "name": "c2_attic_stage_jobs",
+          "section": ".bss",
+          "vma": 14764
+        },
+        "chip_jobs_symbol": {
+          "bytes": 24,
+          "name": "c2_stage_jobs",
+          "section": ".bss",
+          "vma": 14740
+        },
+        "elf": {
+          "bytes": 14016,
+          "path": "build/c2.3/v2.0-loading-libraries-progress/autoboot.c65.elf",
+          "sha256": "92b368b5ea3c00634b4a13afe8dfc34876e6e7c20a3fec616ea71c804c291440"
+        },
+        "enhanced_d705_trigger_occurrences": 2,
+        "enhanced_f018b_roles": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "normal_f018b_d700_trigger_occurrences": 1,
+        "normal_f018b_roles": [
+          1,
+          2,
+          3
+        ],
+        "trigger_owner": {
+          "bytes": 2163,
+          "name": "disk_record",
+          "section": ".text",
+          "vma": 11243
+        }
+      },
+      "ordered_chain_descriptor_bytes": 64,
+      "ordered_write_readback_jobs": 4,
+      "poison_writes_per_primary_media_block": 1,
+      "rom_backing_write_enable": {
+        "io_personality_reestablished_immediately_before_trap": true,
+        "source_and_opcode_mutations": 6,
+        "status": "passed-before-first-stage-role",
+        "symbol": {
+          "bytes": 9,
+          "name": "r3_rom_write_enable",
+          "opcode_sha256": "457d0d1c4aecaa429c493ec678e8f764a0f726b9146d446de47094fff71d501b",
+          "section": ".r3_rom_write_enable",
+          "vma": 14291
+        },
+        "trap": "$D641 A=$02 plus mandatory following NOP"
+      },
+      "status": "passed-strict-build-and-address-qualified-hybrid-f018b-content-defined-target-readback",
+      "timeout_raster_low_wraps": 192
+    }
+  },
+  "mutations": {
+    "executable": {
+      "count": 6,
+      "rejected": {
+        "16-bit-counter-ABA": "16-bit counter wrapped inside one busy phase",
+        "producer-state-write-with-IRQ-enabled": "IRQ can see torn producer state: [(0, '0b053402890700'), (255, '0b053402890700'), (255, '0b05340289d000'), (255, '0b053402d0d000'), (255, '0b0534d0d0d000'), (255, '0b05d0d0d0d000'), (255, '0bd0d0d0d0d000'), (255, 'd0d0d0d0d0d000'), (255, 'd0d0d0d0d0d0d0'), (256, '0b053402890700')]",
+        "reader-accepts-torn-uncommitted-slot": "reader lacks two consecutive committed slots",
+        "sampler-does-not-invalidate-before-payload": "commit invalidation absent",
+        "sampler-drops-displaced-IRQ-load": "displaced IRQ LDA/N flag not replayed",
+        "sampler-reachable-from-source-less-guard": "['0xe053', '0xe06d']"
+      }
+    },
+    "receipt": {
+      "count": 18,
+      "rejected": {
+        "admit-owner-overlap": "owned state placement drift",
+        "alter-shared-media": "diagnostic media closure drift",
+        "authorize-contact": "contact/accounting boundary drift",
+        "claim-product-byte": "non-promotable identity drift",
+        "commit-first": "self-sampler semantics drift",
+        "count-probe-jobs": "producer semantics drift",
+        "drop-slot": "self-sampler semantics drift",
+        "enter-validated-region": "owned state placement drift",
+        "move-state-under-owner": "owned state placement drift",
+        "narrow-counter": "producer semantics drift",
+        "open-D1-D5": "contact/accounting boundary drift",
+        "permit-torn-producer": "producer semantics drift",
+        "promote-diagnostic": "non-promotable identity drift",
+        "sample-every-frame": "self-sampler semantics drift",
+        "sample-source-less": "self-sampler semantics drift",
+        "skip-invalidation": "self-sampler semantics drift",
+        "skip-readback": "diagnostic media closure drift",
+        "widen-slot": "self-sampler semantics drift"
+      }
+    },
+    "total": 24
+  },
+  "placement": {
+    "active_owner_overlaps": 0,
+    "outside_ownership_validated_regions": true,
+    "owner_free_state": [
+      "0xb582",
+      "0xb5c4"
+    ],
+    "producer_carrier": [
+      "0xfe88",
+      "0xfee1"
+    ],
+    "retired_edges": {
+      "abort_driver": "0x2dde NOP",
+      "vm_c2d_byte": "0x77c0->0xfeda safe NIL"
+    },
+    "sampler_carrier": [
+      "0xfee1",
+      "0xff67"
+    ]
+  },
+  "producer": {
+    "atomicity": "PHP; SEI before every state write; PLP only after tuple+counter commit",
+    "counter": {
+      "address": "0xb582",
+      "bits": 32,
+      "endianness": "little"
+    },
+    "edges": {
+      "c2d": [
+        {
+          "opcode": "JMP",
+          "pc": "0xe32a",
+          "section": ".lisp65_c2_kernal_window.c2_resident"
+        }
+      ],
+      "sampler": [
+        {
+          "opcode": "JSR",
+          "pc": "0xe053",
+          "section": ".lisp65_c2_kernal_window.irq_handler"
+        }
+      ],
+      "shelf": [
+        {
+          "opcode": "JMP",
+          "pc": "0xe851",
+          "section": ".lisp65_c2_kernal_window.c2_resident"
+        }
+      ]
+    },
+    "expected_full_boot_reads": 346298,
+    "granularity": "one increment per successful logical c2_stream_shelf_read/c2_stream_c2d_read",
+    "location_tuple": {
+      "descriptor_ordinal": "resolution_cursor",
+      "entry_or_publication": "entry_cursor",
+      "image": "low byte of image_cursor",
+      "phase": "c2_runtime+42",
+      "transport": {
+        "0": "C2D Bank-5",
+        "1": "Shelf Attic"
+      }
+    },
+    "vectors": [
+      {
+        "after": 0,
+        "before": 0,
+        "entry": "0xfe88",
+        "interruptible_states": 1,
+        "result": 0,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 255,
+        "before": 255,
+        "entry": "0xfe88",
+        "interruptible_states": 1,
+        "result": 0,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 65535,
+        "before": 65535,
+        "entry": "0xfe88",
+        "interruptible_states": 1,
+        "result": 0,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 16777215,
+        "before": 16777215,
+        "entry": "0xfe88",
+        "interruptible_states": 1,
+        "result": 0,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 4294967295,
+        "before": 4294967295,
+        "entry": "0xfe88",
+        "interruptible_states": 1,
+        "result": 0,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 1,
+        "before": 0,
+        "entry": "0xfe88",
+        "interruptible_states": 2,
+        "result": 1,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 256,
+        "before": 255,
+        "entry": "0xfe88",
+        "interruptible_states": 2,
+        "result": 1,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 65536,
+        "before": 65535,
+        "entry": "0xfe88",
+        "interruptible_states": 2,
+        "result": 1,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 16777216,
+        "before": 16777215,
+        "entry": "0xfe88",
+        "interruptible_states": 2,
+        "result": 1,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 0,
+        "before": 4294967295,
+        "entry": "0xfe88",
+        "interruptible_states": 2,
+        "result": 1,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 0,
+        "before": 0,
+        "entry": "0xfe8f",
+        "interruptible_states": 1,
+        "result": 0,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 4294967295,
+        "before": 4294967295,
+        "entry": "0xfe8f",
+        "interruptible_states": 1,
+        "result": 0,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 1,
+        "before": 0,
+        "entry": "0xfe8f",
+        "interruptible_states": 2,
+        "result": 1,
+        "torn_interruptible_states": 0
+      },
+      {
+        "after": 0,
+        "before": 4294967295,
+        "entry": "0xfe8f",
+        "interruptible_states": 2,
+        "result": 1,
+        "torn_interruptible_states": 0
+      }
+    ]
+  },
+  "recorded_on": "2026-08-14",
+  "runner": {
+    "bytes": 1173,
+    "path": "scripts/c2-v20-loading-libraries-progress-hw.sh",
+    "sha256": "61d08c900f689fedd75e1a5995b2df85b00ff2a6a746bd55e873b8762c43edea"
+  },
+  "sampler": {
+    "IRQ_partition": {
+      "sampler_after": [
+        "D019&1",
+        "D019 acknowledge",
+        "frame increment"
+      ],
+      "source_less_branch_precedes_sampler": true,
+      "source_less_edges_to_sampler": 0
+    },
+    "commit_last": true,
+    "displaced_IRQ_instruction_replayed": "LDA $D613",
+    "execution_vectors": [
+      {
+        "frame_hi": 0,
+        "frame_lo": 0,
+        "sampled": true,
+        "writes": 14
+      },
+      {
+        "frame_hi": 8,
+        "frame_lo": 0,
+        "sampled": true,
+        "writes": 14
+      },
+      {
+        "frame_hi": 16,
+        "frame_lo": 0,
+        "sampled": true,
+        "writes": 14
+      },
+      {
+        "frame_hi": 24,
+        "frame_lo": 0,
+        "sampled": true,
+        "writes": 14
+      },
+      {
+        "frame_hi": 8,
+        "frame_lo": 1,
+        "sampled": false,
+        "writes": 0
+      },
+      {
+        "frame_hi": 9,
+        "frame_lo": 0,
+        "sampled": false,
+        "writes": 0
+      }
+    ],
+    "invalidates_before_payload": true,
+    "no_ABA": {
+      "absolute_maximum_dispatches_per_sample_gap": 1576415349,
+      "counter_modulus": 4294967296,
+      "frame_high_modulus_frames": 65536,
+      "maximum_is_below_modulus": true,
+      "reader_uses_final_FF83_FF84_and_two_consecutive_commits": true,
+      "ring_is_continuously_overwritten": true
+    },
+    "producer": "owned raster IRQ after VIC-raster proof/ack/frame increment",
+    "reader_vectors": [
+      {
+        "name": "latest-consecutive-pair",
+        "rows": [
+          {
+            "age": 2,
+            "counter": 400,
+            "descriptor_ordinal": 23,
+            "entry_or_publication": 13,
+            "frame_hi": 16,
+            "image": 3,
+            "offset": 39,
+            "phase": 6,
+            "transport": 0
+          },
+          {
+            "age": 10,
+            "counter": 300,
+            "descriptor_ordinal": 22,
+            "entry_or_publication": 12,
+            "frame_hi": 8,
+            "image": 2,
+            "offset": 26,
+            "phase": 5,
+            "transport": 0
+          }
+        ]
+      },
+      {
+        "name": "torn-newest-falls-back",
+        "rows": [
+          {
+            "age": 10,
+            "counter": 300,
+            "descriptor_ordinal": 22,
+            "entry_or_publication": 12,
+            "frame_hi": 8,
+            "image": 2,
+            "offset": 26,
+            "phase": 5,
+            "transport": 0
+          },
+          {
+            "age": 18,
+            "counter": 200,
+            "descriptor_ordinal": 21,
+            "entry_or_publication": 11,
+            "frame_hi": 0,
+            "image": 1,
+            "offset": 13,
+            "phase": 4,
+            "transport": 1
+          }
+        ]
+      }
+    ],
+    "sample_every_frames": 2048,
+    "sample_period_seconds": 39.410384,
+    "slots": {
+      "bytes_each": 13,
+      "count": 4,
+      "end_exclusive": "0xb5c2",
+      "start": "0xb58e"
+    }
+  },
+  "session_contract": {
+    "bytes": 1593,
+    "path": "config/c2-v20-loading-libraries-progress-session.json",
+    "sha256": "33b32306555d90863a05bde8c30e90e11022cd91a50bcc962951b6aacd2617ae"
+  },
+  "status": "HOST-GREEN; TARGET-SELF-SAMPLING-RING-ARMED; CONTACT-NOT-AUTHORIZED"
+}

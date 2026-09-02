@@ -1,0 +1,93 @@
+{
+  "accounting": {
+    "contact_budget_consumed": true,
+    "hardware_contacts_this_run": 1,
+    "measured_forms_started": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "progress_samples_taken": 0,
+    "recontact_authorized": false
+  },
+  "artifacts": {
+    "boot_first_observation_png": {
+      "bytes": 2553,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c/boot-first-observation.png",
+      "sha256": "9a82cb4ed4788244fae81c67b5bdac76fd5f6b4de678d419869718f838156385"
+    },
+    "boot_first_observation_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c/boot-first-observation.txt",
+      "sha256": "d64d5cd23b1099c0f92865c9fd3713701fb51a4ebc862865dd2989f3c374f79f"
+    },
+    "diagnostic_prg_payload_readback": {
+      "bytes": 41564,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c/diagnostic-prg-payload.bin",
+      "sha256": "bd787ed2980a1f7a293f7098ecec2f0706c27d2eddb57dcbb296a7b089d56c18"
+    },
+    "full_reset_domain_readback": {
+      "bytes": 50816,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c/preload-c2d-v6-reset-domain.bin",
+      "sha256": "086921d082eabf6c929eed59f2e652afae32afa06295cf9cbe1cfe87c849d4b1"
+    },
+    "post_staging_ready_png": {
+      "bytes": 4728,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c/post-staging-ready.png",
+      "sha256": "989409c2f3f4737e73771ffff1c8cd3018ad6eeb8a8bd228e5e74722cde101c3"
+    },
+    "post_staging_ready_text": {
+      "bytes": 2253,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c/post-staging-ready.txt",
+      "sha256": "ea158da277f570b41c799912da1fb91b36feeb6bcfc1de20dc81428143a1ed77"
+    },
+    "pre_run_c2j": {
+      "bytes": 64,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c/pre-run-c2j.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "upload_log": {
+      "bytes": 2350,
+      "path": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c/upload.log",
+      "sha256": "0c06899e03193b57e679724eb9e0e703f4c9500d0369bb43b004feba3d29091a"
+    }
+  },
+  "authorities": {
+    "authorization_commit": "26b49f2b315cb5a3b3c49b3b512bd8935c199847",
+    "executed_instrument_commit": "fd676e0de42071033204f24068336a947d88ffff",
+    "executed_runner": {
+      "bytes": 10789,
+      "path": "scripts/c2-v16-defstruct-vm-progress-hw.sh",
+      "sha256": "366aa0551e067fdacb27e6c33b0d89bfaefb5549fa2fc639a24c9ded1eb3a4b4"
+    }
+  },
+  "claim_limit": "The full staging ritual and C2J-CLEAR proof passed, and the owner physically submitted RUN. The owner then observed a red border on a blue screen with no text; the scheduled post-floor text capture was blank. However, the physical runner had retained a post-resume, pre-RUN screenshot from the autonomous choreography. That violates the standing no-prelaunch-monitor rule and makes the launch result inadmissible as a product claim. This receipt does not claim that the screenshot caused the red frame, nor does it make a product, require, defstruct, progress, performance, loop, or R/A/I/G claim.",
+  "contact": {
+    "first_observation_floor_seconds": "27.653",
+    "measured_form_reached": false,
+    "owner_observation": "red border, blue background, no text",
+    "owner_RUN_submitted_physically": true,
+    "output_root": "build/c2.3/v1.6-defstruct-closing-session/d2-vm-progress-contact-20260806-c",
+    "prelaunch_monitor_accesses_after_resume": 1,
+    "require_reached": false,
+    "staging": {
+      "C2J_before_RUN": "64x00",
+      "diagnostic_payload_readback": "byteidentical",
+      "full_reset_domain_bytes": 50816,
+      "preload_readbacks": "byteidentical"
+    }
+  },
+  "first_red": {
+    "classification": "PRELAUNCH-MONITOR-CHOREOGRAPHY-VIOLATION",
+    "caused_observed_red_frame": "NOT-CLAIMED",
+    "forbidden_action": "m65 --screenshot after run_m65 -r and before physical RUN",
+    "historical_control": "the previously bound successful physical shadow/full-run choreography uses no prelaunch monitor access"
+  },
+  "format": "lisp65-c2.3-v1.6-defstruct-vm-progress-physical-launch-first-red-v1",
+  "next_method": {
+    "contact_status": "NOT-AUTHORIZED",
+    "required_fix": "After the staging resume, perform no screenshot, monitor synchronization, memory read or other target access before the owner's physical RUN. Preserve the 27.653-second first-observation floor after RUN.",
+    "required_mutation": "Any post-resume target or monitor access in the stage action before the physical RUN handoff must fail the permanent runner gate."
+  },
+  "recorded_at": "2026-08-06T19:13:34Z",
+  "recorded_on": "2026-08-06",
+  "status": "PHYSICAL-LAUNCH-CHOREOGRAPHY-FIRST-RED; PRELAUNCH-MONITOR-VIOLATION; MEASURED-FORM-NOT-STARTED; RECONTACT-NOT-AUTHORIZED"
+}

@@ -1,0 +1,180 @@
+{
+  "format": "lisp65-c2-cpu-chip-write-completion-c2j-seal-first-red-analysis-v1",
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: the emission-bound C2J seal removes the field-comparison explosion, but the package still exceeds the Session aggregate and rollback-finalize slice",
+  "promotable": false,
+  "execution_accounting": {
+    "source_and_mutation_replays_before_compiler": 3,
+    "whole_program_lto_closure_links": 1,
+    "completed_product_links": 0,
+    "hardware_runs": 0
+  },
+  "authority": {
+    "completion_contract": {
+      "path": "config/c2-cpu-chip-write-completion-contract.json",
+      "sha256": "f4e1646ec72271533116686a39e5c7be38f928c2cb8d299dc6642697f67efe7f"
+    },
+    "append_cutpoint_contract": {
+      "path": "config/c2-append-cutpoint-contract.json",
+      "sha256": "813d136fa8a0bc9a6a56471c17f013e950a12fbfe69f28fc65791b2c195ba651"
+    },
+    "runtime": {
+      "path": "src/c2_product_runtime.c",
+      "sha256": "cd6aa9dd49c14417e7fab93f41c38dd67e1ad2d70684bd1da56fec2000d04ec5"
+    },
+    "source_gate": {
+      "path": "tools/host-lisp/c2_cpu_chip_write_completion_gate.py",
+      "sha256": "1fabe1adebb0d49666db703f6247b6c5ea0892c52f7de270e435e1b7b85c8b67"
+    },
+    "WPLTO_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cpu-chip-write-completion-c2j-seal-wplto-receipt.json",
+      "sha256": "7b5973a0f8d83576a65d17cf7a4614f4bb4c24749688cd275cc7da8fce42e345"
+    },
+    "failed_map": {
+      "path": "build/c2.2/substitution/cpu-chip-write-completion-c2j-seal-wplto/resident-island-seed.prg.map",
+      "sha256": "a55b296d3f8c2c06a55cdc77d2111086db58f634ab4f8a935f906ecdcc441e14"
+    },
+    "baseline_map": {
+      "path": "build/c2.2/substitution/link59-c1-freezer-irq-episode-recovery-wplto/resident-island-seed.prg.map",
+      "sha256": "3e679955c3680ade54125d359b8a787e9c3d02809c9bb3160d734ea470e7c4ac"
+    }
+  },
+  "semantic_result": {
+    "transaction_data_barriers": 2,
+    "journal_bookends": 2,
+    "converged_points": 4,
+    "C2J_format_crc": "CRC32/IEEE remains in bytes 60..63",
+    "C2J_bookend_seal": "CRC16/CCITT-FALSE over all 64 final bytes in record[25..26]",
+    "target_leaf": "rtov_crc_mem",
+    "field_reconstruction_comparisons_remaining": 0,
+    "new_resident_cells": 0,
+    "new_BSS_bytes": 0,
+    "mutations_rejected": 21,
+    "C1_status": "OPEN"
+  },
+  "seal_effect": {
+    "header_section_before_seal_bytes": 3236,
+    "header_section_after_seal_bytes": 1466,
+    "header_section_reduction_bytes": 1770,
+    "header_slice_headroom_bytes": 326,
+    "completion_poll_before_seal_bytes": 2367,
+    "completion_poll_after_seal_bytes": 589,
+    "completion_poll_reduction_bytes": 1778,
+    "finding": "The only shared poll now performs one target CRC and one seal comparison. The 20-field identity reconstruction is gone."
+  },
+  "session_sections_changed_from_Link59": [
+    {
+      "name": "c2-append-journal-prepare",
+      "baseline_bytes": 1768,
+      "probe_bytes": 1732,
+      "raw_delta_bytes": -36,
+      "packed_delta_bytes": 0,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-journal-validate",
+      "baseline_bytes": 924,
+      "probe_bytes": 964,
+      "raw_delta_bytes": 40,
+      "packed_delta_bytes": 0,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-stage-copy",
+      "baseline_bytes": 1351,
+      "probe_bytes": 1099,
+      "raw_delta_bytes": -252,
+      "packed_delta_bytes": -256,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-header",
+      "baseline_bytes": 629,
+      "probe_bytes": 1466,
+      "raw_delta_bytes": 837,
+      "packed_delta_bytes": 768,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-publish-clear",
+      "baseline_bytes": 1230,
+      "probe_bytes": 1295,
+      "raw_delta_bytes": 65,
+      "packed_delta_bytes": 256,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-rollback-unpublish",
+      "baseline_bytes": 753,
+      "probe_bytes": 758,
+      "raw_delta_bytes": 5,
+      "packed_delta_bytes": 0,
+      "slice_overhang_bytes": 0
+    },
+    {
+      "name": "c2-append-rollback-finalize",
+      "baseline_bytes": 1692,
+      "probe_bytes": 2214,
+      "raw_delta_bytes": 522,
+      "packed_delta_bytes": 512,
+      "slice_overhang_bytes": 422,
+      "attribution": {
+        "c2_append_rollback_finalize_phase_bytes": 1295,
+        "c2_append_rollback_zero_plane_bytes": 195,
+        "c2_append_rollback_zero_chip_code_bytes": 432,
+        "c2_append_rollback_zero_attic_bytes": 292
+      }
+    },
+    {
+      "name": "c2-append-abort-control",
+      "baseline_bytes": 188,
+      "probe_bytes": 267,
+      "raw_delta_bytes": 79,
+      "packed_delta_bytes": 256,
+      "slice_overhang_bytes": 0
+    }
+  ],
+  "session_aggregate": {
+    "baseline_bytes": 65438,
+    "baseline_headroom_bytes": 98,
+    "raw_changed_section_delta_bytes": 1260,
+    "packed_delta_bytes": 1536,
+    "projected_bytes_before_catalog_change": 66974,
+    "overflow_bytes_before_catalog_change": 1438,
+    "finding": "The seal removes 1792 packed bytes from the preceding First Red, but the aggregate remains 1438 bytes above the u16 bank. Splitting rollback-finalize is required for its local deckel and would add packaging rather than close this aggregate red."
+  },
+  "measured_split_decision": {
+    "header": "no split; 1466 <= 1792 with 326 bytes headroom",
+    "journal_prepare": "no split; 1732 <= 1792 with 60 bytes headroom",
+    "journal_validate": "no split; 964 <= 1792",
+    "publish_clear": "no split; 1295 <= 1792",
+    "rollback_finalize": "one semantic split is required; the 2214-byte physical slice exceeds the deckel by 422 bytes",
+    "split_boundary_candidates": [
+      "rollback bookkeeping/finalization body",
+      "Bank-5 plane and Bank-2 code wipe",
+      "Attic cleanup"
+    ],
+    "action": "No split was implemented after this First Red because no slice-only transformation can close the independent 1438-byte aggregate overflow."
+  },
+  "resident_fund_walls": {
+    "bank0_text": {
+      "probe_start": "0x2023",
+      "probe_end_exclusive": "0xB4B5",
+      "handoff_start": "0xB4A3",
+      "actual_overlap_bytes": 18,
+      "required_noise_headroom_bytes": 32,
+      "required_named_recovery_bytes": 50,
+      "disposition": "separate Fund-Waehrung; untouched by the seal probe"
+    },
+    "E000": {
+      "probe_c2_resident_bytes": 7203,
+      "reopen_gap0_range": "0xFCBE..0xFD3D",
+      "session_emitter_state_start": "0xFD22",
+      "overlap_bytes": 28,
+      "required_floor_bytes": 54,
+      "disposition": "separate Fund-Waehrung; untouched by the seal probe"
+    }
+  },
+  "first_red_action": "Stop before slice edits, product link or hardware. Return the measured 1438-byte aggregate deficit, the single 422-byte slice overhang, and the separate 50/28-byte resident Fund-Waehrungen to Class-C review.",
+  "rollback_line": "Link 59 remains untouched."
+}

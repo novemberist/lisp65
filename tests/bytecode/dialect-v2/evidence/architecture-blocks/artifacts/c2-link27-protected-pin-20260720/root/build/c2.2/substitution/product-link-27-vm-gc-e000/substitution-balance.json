@@ -1,0 +1,113 @@
+{
+  "currencies": {
+    "attic_immutable": {
+      "shelf_bytes": 70897
+    },
+    "bank0": {
+      "fixed_bank0_code_bytes": 45,
+      "fixed_bank0_headroom_bytes": 273,
+      "fixed_bank0_state_bytes": 408,
+      "fixed_host_vector_bytes": 39,
+      "fixed_zero_page_state_bytes": 7,
+      "new_kernal_facade_and_state_bytes": 829,
+      "retired_directory_projection_bytes": 697
+    },
+    "bank5_mutable_plane": {
+      "c2d_bytes": 33840,
+      "capacity_bytes": 65536,
+      "headroom_bytes": 31696
+    },
+    "cpu_e000_window": {
+      "actual_future_margin_bytes": 728,
+      "actual_live_window_bytes": 7464,
+      "contract_future_margin_bytes": 4063,
+      "fixed_resident_deficit_bytes": 3639,
+      "gross_window_bytes": 8192,
+      "relocated_c2_resident_bytes": 7284,
+      "replacement_categories": {
+        "alignment_and_vectors": 22,
+        "frame_source": 9,
+        "irq_handler": 45,
+        "map_switch_and_guards": 324,
+        "nmi_and_freezer_return": 9,
+        "post_startup_output_seam": 4,
+        "typed_queue_driver": 77
+      },
+      "replacement_resident_bytes": 490
+    },
+    "publish_last_binding": {
+      "net_resident_bytes": 0,
+      "non_lto_table_bytes": 32,
+      "retired_embedded_tuple_bytes": 32
+    },
+    "runtime_overlay_bank": {
+      "boot_image_bytes": 12529,
+      "families_are_lifetime_exclusive": true,
+      "retired_l65m_bytes": 36744,
+      "session_image_bytes": 50334
+    }
+  },
+  "format": "lisp65-c2-product-substitution-balance-v1",
+  "projection_vs_actual": {
+    "arrivals": {
+      "c2_decoder_emitter_append_and_services": {
+        "boot_family_image_bytes": 12529,
+        "boot_slices": 9,
+        "session_family_image_bytes": 50334,
+        "session_slices": 36
+      },
+      "c2d_mutable_plane": {
+        "bytes": 33840
+      },
+      "immutable_shelf": {
+        "bytes": 70897
+      },
+      "resident_facades_and_state": {
+        "bank0_and_fixed_zp_bytes": 829,
+        "fixed_bank0_code_bytes": 45,
+        "fixed_bank0_headroom_bytes": 273,
+        "fixed_bank0_state_bytes": 408,
+        "fixed_host_vector_bytes": 39,
+        "fixed_zero_page_state_bytes": 7,
+        "non_lto_verifier_binding_bytes": 32
+      },
+      "typed_queue_irq_nmi_and_window": {
+        "actual_future_margin_bytes": 728,
+        "actual_live_window_bytes": 7464,
+        "contract_future_margin_bytes": 4063,
+        "fixed_resident_deficit_bytes": 3639,
+        "gross_window_bytes": 8192,
+        "relocated_c2_resident_bytes": 7284,
+        "replacement_categories": {
+          "alignment_and_vectors": 22,
+          "frame_source": 9,
+          "irq_handler": 45,
+          "map_switch_and_guards": 324,
+          "nmi_and_freezer_return": 9,
+          "post_startup_output_seam": 4,
+          "typed_queue_driver": 77
+        },
+        "replacement_resident_bytes": 490
+      }
+    },
+    "retirements": {
+      "kernal_window": {
+        "actual_owned_cpu_window_bytes": 8192,
+        "projected_cpu_window_bytes": 8192
+      },
+      "l65m_materializer": {
+        "actual_legacy_closure_edges": 0,
+        "projected_runtime_bank_bytes": 36744
+      },
+      "l65m_runtime_slices": {
+        "actual_remaining_count": 0,
+        "projected_count": 28
+      },
+      "old_directory_arrays": {
+        "actual_remaining_legacy_arrays": 0,
+        "projected_bank0_credit_bytes": 697
+      }
+    }
+  },
+  "status": "passed"
+}

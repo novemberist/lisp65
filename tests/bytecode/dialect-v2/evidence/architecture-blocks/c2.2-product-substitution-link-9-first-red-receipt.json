@@ -1,0 +1,131 @@
+{
+  "format": "lisp65-c2-product-substitution-link-9-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "attempt": {
+    "authorization": "Install the exact five-name non-ALLOC orphan allowlist, require .lisp65_error_callsites with KEEP and reverse assertions, then run the ninth complete substitution link once under first-red",
+    "command": "python3 tools/host-lisp/c2_product_substitution_link.py --out build/c2.2/substitution/product-link-9 --prepare-smoke",
+    "pipeline_stage_reached": "session runtime-family pack argument validation",
+    "status": "failed-not-promoted",
+    "first_red_policy": "honored",
+    "automatic_further_attempt_allowed": false,
+    "successful_intermediate_links": [
+      "resident-island seed",
+      "runtime-overlay bootstrap"
+    ],
+    "final_product_prg_emitted": false,
+    "final_product_elf_emitted": false,
+    "runtime_family_images_emitted": {
+      "boot": 1,
+      "session": 0
+    },
+    "one_truth_gate": "not-reached",
+    "kernal_freedom_gate": "not-reached",
+    "substitution_balance": "not-claimable",
+    "hardware": "not-run"
+  },
+  "first_red": {
+    "gate": "L65R public slice-name grammar",
+    "diagnostic": "slice name must match ^[a-z][a-z0-9-]*$: c2-emit-literal_prep",
+    "finding": "The C2 emitter and append tables use underscore-bearing internal identifiers for C section and symbol construction. The pack driver reused those identifiers verbatim as public L65R slice names, whose existing schema permits lowercase letters, digits and hyphens only.",
+    "scope": "Naming projection only. Both integrated links, all linker assertions, the exact orphan policy, the required evidence section, resident-island materialization and the complete nine-slice boot-family pack passed before this argument-schema rejection.",
+    "next_action": "Return for review. The bounded correction is a single deterministic public-name projection from internal underscore identifiers to hyphenated L65R labels while leaving section names, symbols, slot IDs and entry points unchanged; no further pack or link is authorized by this receipt."
+  },
+  "orphan_policy_result": {
+    "mode": "error",
+    "exact_allowlist": [
+      ".comment",
+      ".symtab",
+      ".strtab",
+      ".shstrtab",
+      ".lisp65_error_callsites"
+    ],
+    "unknown_orphans": 0,
+    "error_callsites": {
+      "address": "0x00000000",
+      "bytes": 39,
+      "elf_type": "PROGBITS",
+      "elf_flags": "none",
+      "alloc_flag": false,
+      "keep_rule": true,
+      "missing_section_assertion": "passed",
+      "zero_address_assertion": "passed"
+    }
+  },
+  "successful_boot_family": {
+    "image": {
+      "path": "build/c2.2/substitution/product-link-9/runtime-overlays-boot-bootstrap.bin",
+      "bytes": 12271,
+      "sha256": "383b33ad704d46fdd7277ae9e06ea30cddf3b72cc09396eab1bc4651e927fda2"
+    },
+    "manifest": {
+      "path": "build/c2.2/substitution/product-link-9/runtime-overlays-boot-bootstrap.json",
+      "bytes": 7845,
+      "sha256": "51e2d62d04ad84ecdf7ec2562398579426dd14b6771a10251daa81974c6eea0c"
+    },
+    "slice_count": 9,
+    "slice_bytes": {
+      "catalog-verifier": 1146,
+      "record-verifier": 1327,
+      "c2-decode-00": 1363,
+      "c2-decode-00b": 1443,
+      "c2-decode-01": 1691,
+      "c2-decode-02a": 1018,
+      "c2-decode-02b": 640,
+      "c2-decode-03": 1584,
+      "resident-island-installer": 495
+    },
+    "maximum_slice_bytes": 1691,
+    "unchanged_limit_bytes": 1792,
+    "headroom_bytes": 101
+  },
+  "successful_intermediate_artifacts": {
+    "resident_seed_prg": {
+      "path": "build/c2.2/substitution/product-link-9/resident-island-seed.prg",
+      "bytes": 39078,
+      "sha256": "9e5e7d5babea75c0d82246789d4da08b772d3445e2a272a07c91ec40a26252a8"
+    },
+    "resident_seed_elf": {
+      "path": "build/c2.2/substitution/product-link-9/resident-island-seed.prg.elf",
+      "bytes": 140228,
+      "sha256": "82845cdc986ccb0af5cae505c45acf2db3fd7862d0ec8778d8e60d67bb059322"
+    },
+    "bootstrap_prg": {
+      "path": "build/c2.2/substitution/product-link-9/runtime-overlay-bootstrap.prg",
+      "bytes": 39078,
+      "sha256": "3ed2298519278bb753cf64ddf7ce1fea13ce9b193a1bd7daeacbbd13b7435aa4"
+    },
+    "bootstrap_elf": {
+      "path": "build/c2.2/substitution/product-link-9/runtime-overlay-bootstrap.prg.elf",
+      "bytes": 139092,
+      "sha256": "bac5531a0c7fc3a80ba01fceeff450cc43f47368eee0a269fd0340d396aa43dc"
+    }
+  },
+  "generated_inputs": {
+    "linker": {
+      "path": "build/c2.2/substitution/product-link-9/c2-substitution.ld",
+      "bytes": 40026,
+      "sha256": "2660170cfe3894bad45a1d83e96ade36cb867081aa9bef9aede76a55c5f5e7dc"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-9/resolved-profile.txt",
+      "bytes": 3939,
+      "sha256": "68929f0c3e9c0f7694d5e6cc0dab4cf89e50415d92df69d769a4ff32fca565e4"
+    },
+    "link_driver": {
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "729ed6c145e9a2938d0f948a9d80dafa4c6911b9495de5a6a2abaa7388d11c11"
+    }
+  },
+  "preserved_constraints": {
+    "runtime_slice_limit_bytes": 1792,
+    "runtime_slice_limit_relaxed": false,
+    "orphan_handling": "error",
+    "orphan_allowlist_wildcards": 0,
+    "error_callsites_discarded": false,
+    "interactive_compilation_present_in_sources": true,
+    "legacy_l65m_path_reintroduced": false,
+    "single_c2_emitter_decoder_rule_preserved_in_sources": true,
+    "final_product_bytes_promoted": false,
+    "no_tuning_after_first_red": true
+  }
+}

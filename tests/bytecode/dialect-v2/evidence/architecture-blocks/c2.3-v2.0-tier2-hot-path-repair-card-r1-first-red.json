@@ -1,0 +1,111 @@
+{
+  "attempt": {
+    "ELF_emitted": false,
+    "PRG_emitted": false,
+    "WPLTO_runs": 1,
+    "product_link_attempts": 1,
+    "successful_product_links": 0
+  },
+  "authority": {
+    "bytes": 1865,
+    "commit": "ddb07891",
+    "path": "docs/planning/v2.0.0-pre-plan.md",
+    "predecessor": {
+      "bytes": 1992702,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-interactive-delivery-chain-product-card-r1-receipt.json",
+      "sha256": "aa6d5604e58c8cae48dde60fc2d347e8ba36340231a6de722b61872c782f8891"
+    },
+    "right": "one repair product card, one WPLTO and one product link",
+    "section": "## Reviewer disposition \u2014 tier-2 hot-path regression, one repair round \u2014 2026-09-02",
+    "sha256": "d28ded5e754aab360513f49f991d9062f2e8ceed70f72c47f8c7a3b28e711260"
+  },
+  "claim": "no replacement build or link is authorized or attempted",
+  "decision": {
+    "bound_fallback": "descope Tier 2; retain Tier 1 and Matcher/Blink",
+    "reason": "130-byte helper has no legal always-visible interval",
+    "relocation_only_candidate": null,
+    "replacement_requires": "new source codegen plus a new WPLTO/link"
+  },
+  "evidence": {
+    "candidate_LTO": {
+      "bytes": 622176,
+      "path": "build/c2.3/v2.0-tier2-hot-path-repair-card-r1/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "99e17685f74087e92c63fa7303fed1147f3517dea7f9a5f51d3d05390215e6ce"
+    },
+    "candidate_map": {
+      "bytes": 191821,
+      "path": "build/c2.3/v2.0-tier2-hot-path-repair-card-r1/wplto/resident-island-seed.prg.map",
+      "sha256": "4c655fda2674842fe7756797b3f632be5257a3684e823e4f6b47878fba3b393f"
+    },
+    "link_stderr": {
+      "bytes": 301,
+      "path": "build/c2.3/v2.0-tier2-hot-path-repair-card-r1/wplto/resident-island-seed.prg.link.stderr.txt",
+      "sha256": "b5e28c9c2d5bfe8d9484464df7b7a06959ffd6f2ed8298cc520c4d3f6fa6a203"
+    },
+    "predecessor_map": {
+      "bytes": 204688,
+      "path": "build/c2.3/v2.0-interactive-delivery-chain-product-card-r1/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "67e0e485362a7c1a6b30a63c9c2448b124961b3255886758ba20c2ffcd89cc86"
+    }
+  },
+  "facade": {
+    "address": 46240,
+    "bytes": 98,
+    "end": 46338,
+    "load_address": 210080,
+    "overflow_bytes": 95,
+    "required_reserve_bytes": 32,
+    "wall_end": 46243
+  },
+  "format": "lisp65-c2-v200-tier2-hot-path-repair-card-v1-first-red-v1",
+  "ordinary_text": {
+    "candidate": {
+      "address": 8227,
+      "bytes": 37981,
+      "end": 46208,
+      "load_address": 8227
+    },
+    "growth_attribution": {
+      "ext_cons_field_bytes": 130,
+      "unexplained_bytes": 0,
+      "vm_run_inner_bytes": 259
+    },
+    "growth_bytes": 389,
+    "predecessor": {
+      "address": 8227,
+      "bytes": 37592,
+      "end": 45819,
+      "load_address": 8227
+    }
+  },
+  "placement_inventory": {
+    "E000_always_visible_holes": [
+      {
+        "bytes": 8,
+        "end": 64812,
+        "start": 64804
+      },
+      {
+        "bytes": 49,
+        "end": 65408,
+        "start": 65359
+      },
+      {
+        "bytes": 10,
+        "end": 65530,
+        "start": 65520
+      }
+    ],
+    "fixed_bank0_code_free_bytes": 2,
+    "largest_E000_hole_bytes": 49,
+    "mapped_far_service_free_bytes": 11,
+    "mapped_service_rejected": "helper consumes c2_map_cpu_read; mapped placement would violate the permanent no-transitive-MAP-nesting rule"
+  },
+  "preflight": {
+    "bytes": 1257626,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-tier2-hot-path-repair-card-r1-preflight.json",
+    "sha256": "60394b6f9bc3ed44defefe2e21c18b6cca752c6fe299b1547edd9a1e8b332c61"
+  },
+  "recorded_on": "2026-09-02",
+  "status": "ATTRIBUTED: FUSED C FORM ESCAPES ORDINARY-TEXT WALL"
+}

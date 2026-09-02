@@ -1,0 +1,912 @@
+{
+  "attribution": {
+    "host_replay": "red",
+    "next_authority": "owner-disposition-before-fix-or-recontact",
+    "observed_red_cause": "not-separated-crossing-consistent-and-product-red-capable",
+    "polling_policy": "proven-invalid-for-this-form",
+    "product_mechanism": "symbol-capture-plus-transient-helper-escape-across-rollback",
+    "quiet_retry_on_unchanged_bytes": "forbidden"
+  },
+  "bindings": {
+    "compiler_manifest": {
+      "bytes": 213535,
+      "path": "build/post-promotion/v112/compiler/lcc.manifest.json",
+      "sha256": "578313342dffab332d37e824901b80f6fa243ad665bf1b6a2d6a16d2217e6509"
+    },
+    "compiler_source": {
+      "bytes": 36291,
+      "path": "build/post-promotion/v112/compiler-tier/c2-compiler-sources/lib/lcc.lisp",
+      "sha256": "3a4c53bc28f0b296c6010c849ba354c08e282ae34978c8a72697157424c97e90"
+    },
+    "eval_runtime": {
+      "bytes": 6035,
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "366556a743e78fba8c232eea935f2dfd64057e87533833156d47afa2b75b1159"
+    },
+    "eval_source": {
+      "bytes": 97933,
+      "path": "src/eval.c",
+      "sha256": "d13b986c0ed15928ad554cdcf758aa176a99291b86ea88b196463a7a1ee4eda6"
+    },
+    "first_red": {
+      "bytes": 5152,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-split-d3-trace-first-red.json",
+      "sha256": "b210a6f1478ab52854b4b4763eb38a2ebb1a52b8ba71fac6ec27b7e7d8c07d19"
+    },
+    "inspect_manifest": {
+      "bytes": 59194,
+      "path": "build/post-promotion/v112/inspect/inspect.manifest.json",
+      "sha256": "9d05ca3a04d42f44de742d84a8660e0236b3489b4b934d182406e01ec2cbf07f"
+    },
+    "library_medium": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5-split/base/lisp65-library.d81",
+      "sha256": "9f4fd70b3ce31d8a8f887bfc92d2d5eff3e4921f8e493c6e59ae66b4a95d50fe"
+    },
+    "media_manifest": {
+      "bytes": 5886,
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5-split/base-candidate-manifest.json",
+      "sha256": "58290154729490b40071089401f3d39a60e799a2290d144a142b337ab943d3d4"
+    },
+    "observation_policy": {
+      "bytes": 980,
+      "path": "config/c2-repl-observation-policy.json",
+      "sha256": "02e5a9c447fee483ee1bedd781c1d0566bee7a2eb7d5ed923bd2ecc1f748484e"
+    },
+    "product_runtime": {
+      "bytes": 159954,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "be5805fd419bcf1c1e6b2ab9eb6382d842916ae86473540d1d56d3701c396d37"
+    },
+    "static_C2D": {
+      "bytes": 33840,
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "08c5f7b85cf9a236db8b94583afec8fe82088a5e6a203679dfcc5505dad7c719"
+    },
+    "string_extra_manifest": {
+      "bytes": 9675,
+      "path": "build/post-promotion/v112/string-extra/string-extra.manifest.json",
+      "sha256": "3b485303e80d633574d8da8894c1ef1085260b917899a1f7ea1c3dd80c1adc86"
+    },
+    "trace_source": {
+      "bytes": 2167,
+      "path": "lib/comfort-trace.lisp",
+      "sha256": "6142c39935295839208c99b876d86511340f497396cc8cd030d40fa4ae1f0273"
+    },
+    "vm_source": {
+      "bytes": 103893,
+      "path": "src/vm.c",
+      "sha256": "750713ab41fcd41387db0f4e852ab748c3c294ee569b1043ebfd5aa6d2c3c215"
+    },
+    "work_plan": {
+      "bytes": 77754,
+      "path": "docs/planning/1.12-v1.4.0-release-work-plan.md",
+      "sha256": "9c2afafcd280f1110be3134faa0c2d009a4e1faba69620bba4c9f5d772d16156"
+    },
+    "workbench_profile": {
+      "bytes": 22860,
+      "path": "config/workbench.mk",
+      "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+    }
+  },
+  "claim_limit": "The delivered trace form is a transient C2D/C2J operation and the D3 poll choreography was invalid. The exact delivered compiler also installs a closure backed by rolled-back transient code and records a symbol instead of the prior function-cell BCODE. This does not prove which mechanism produced the observed red frame; it forbids a harness-only closure and any unchanged-byte retry.",
+  "delivered_geometry": {
+    "build_id": 994600205,
+    "entries": 748,
+    "generation": 1,
+    "images": 6,
+    "immutable_images": 6,
+    "resolutions": 2913,
+    "roots": 350
+  },
+  "exact_compilation": {
+    "compiler_steps": {
+      "trace": 22931,
+      "untrace": 10754
+    },
+    "macro_expansions": {
+      "trace": {
+        "sha256": "38087582b910bb67c331a29212a98b2fa1a9ee461b517a1f4f2bfd918403ec4d",
+        "text": "(progn (if (boundp (quote *comfort-trace-bindings*)) nil (setq *comfort-trace-bindings* nil)) (if (assoc (quote capitalize) *comfort-trace-bindings*) (quote capitalize) ((lambda (%comfort-trace-original) (progn (setq *comfort-trace-bindings* (cons (cons (quote capitalize) %comfort-trace-original) *comfort-trace-bindings*)) (set-symbol-function (quote capitalize) (lambda (&rest %comfort-trace-arguments) (progn (write (cons (quote trace-enter) (cons (quote capitalize) %comfort-trace-arguments))) (terpri) ((lambda (%comfort-trace-result) (progn (write (list (quote trace-exit) (quote capitalize) %comfort-trace-result)) (terpri) %comfort-trace-result)) (apply %comfort-trace-original %comfort-trace-arguments))))) (quote capitalize))) (function capitalize))))"
+      },
+      "untrace": {
+        "sha256": "0d07e842ae5858697978847eddd111d67129e3a81b549143e825e84257f57531",
+        "text": "(if (boundp (quote *comfort-trace-bindings*)) ((lambda (%comfort-trace-binding) (if %comfort-trace-binding (progn (set-symbol-function (quote capitalize) (cdr %comfort-trace-binding)) (setq *comfort-trace-bindings* (%comfort-trace-remove (quote capitalize) *comfort-trace-bindings*)) (quote capitalize)) nil)) (assoc (quote capitalize) *comfort-trace-bindings*)) nil)"
+      }
+    },
+    "trace_objects": [
+      {
+        "encoded_bytes": 64,
+        "encoded_sha256": "a46ddc3eaf91b5d9561477dbf8c7bb4736a20ce1e2699204e95f631f429d085a",
+        "flags": 3,
+        "instructions": [
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 0
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 2
+          },
+          {
+            "mnemonic": "LOADL",
+            "opcode": 57,
+            "operand": 0,
+            "pc": 4
+          },
+          {
+            "mnemonic": "CONS",
+            "opcode": 51,
+            "operand": null,
+            "pc": 6
+          },
+          {
+            "mnemonic": "CONS",
+            "opcode": 51,
+            "operand": null,
+            "pc": 7
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              2,
+              1
+            ],
+            "pc": 8
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 11
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              3,
+              0
+            ],
+            "pc": 12
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 15
+          },
+          {
+            "mnemonic": "UPVAL",
+            "opcode": 64,
+            "operand": 0,
+            "pc": 16
+          },
+          {
+            "mnemonic": "LOADL",
+            "opcode": 57,
+            "operand": 0,
+            "pc": 18
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              7,
+              2
+            ],
+            "pc": 20
+          },
+          {
+            "mnemonic": "STOREL",
+            "opcode": 58,
+            "operand": 1,
+            "pc": 23
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 4,
+            "pc": 25
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 27
+          },
+          {
+            "mnemonic": "LOADL",
+            "opcode": 57,
+            "operand": 1,
+            "pc": 29
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              5,
+              3
+            ],
+            "pc": 31
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              2,
+              1
+            ],
+            "pc": 34
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 37
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              3,
+              0
+            ],
+            "pc": 38
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 41
+          },
+          {
+            "mnemonic": "LOADL",
+            "opcode": 57,
+            "operand": 1,
+            "pc": 42
+          },
+          {
+            "mnemonic": "RET",
+            "opcode": 5,
+            "operand": null,
+            "pc": 44
+          }
+        ],
+        "literals": [
+          {
+            "symbol": "trace-enter"
+          },
+          {
+            "symbol": "capitalize"
+          },
+          {
+            "symbol": "write"
+          },
+          {
+            "symbol": "terpri"
+          },
+          {
+            "symbol": "trace-exit"
+          },
+          {
+            "symbol": "list"
+          }
+        ],
+        "nargs": 0,
+        "nlocals": 2,
+        "payload_hex": "06000601390033333c02013b3c03003b400039003d07023a010604060139013c05033c02013b3c03003b390105",
+        "semantic_sha256": "71e64bc3b695308a9a70f1cc41d2bbf75345eb14a1d6e262a1cf9f70fd47ccc6"
+      },
+      {
+        "encoded_bytes": 85,
+        "encoded_sha256": "d77ff6024ddbdb519a8671b6f23ef0e5482d4c0ce7130d55624570847a911b55",
+        "flags": 2,
+        "instructions": [
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 0
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              57,
+              1
+            ],
+            "pc": 2
+          },
+          {
+            "mnemonic": "JFALSEREL",
+            "opcode": 29,
+            "operand": 3,
+            "pc": 5
+          },
+          {
+            "mnemonic": "PUSHNIL",
+            "opcode": 43,
+            "operand": null,
+            "pc": 7
+          },
+          {
+            "mnemonic": "JMPREL",
+            "opcode": 28,
+            "operand": 6,
+            "pc": 8
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 10
+          },
+          {
+            "mnemonic": "PUSHNIL",
+            "opcode": 43,
+            "operand": null,
+            "pc": 12
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              20,
+              2
+            ],
+            "pc": 13
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 16
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 17
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 19
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              19,
+              1
+            ],
+            "pc": 21
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              2,
+              2
+            ],
+            "pc": 24
+          },
+          {
+            "mnemonic": "JFALSEREL",
+            "opcode": 29,
+            "operand": 4,
+            "pc": 27
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 29
+          },
+          {
+            "mnemonic": "JMPREL",
+            "opcode": 28,
+            "operand": 34,
+            "pc": 31
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 33
+          },
+          {
+            "mnemonic": "STOREL",
+            "opcode": 58,
+            "operand": 0,
+            "pc": 35
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 37
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 39
+          },
+          {
+            "mnemonic": "LOADL",
+            "opcode": 57,
+            "operand": 0,
+            "pc": 41
+          },
+          {
+            "mnemonic": "CONS",
+            "opcode": 51,
+            "operand": null,
+            "pc": 43
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 44
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              19,
+              1
+            ],
+            "pc": 46
+          },
+          {
+            "mnemonic": "CONS",
+            "opcode": 51,
+            "operand": null,
+            "pc": 49
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              20,
+              2
+            ],
+            "pc": 50
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 53
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 54
+          },
+          {
+            "mnemonic": "LOADL",
+            "opcode": 57,
+            "operand": 0,
+            "pc": 56
+          },
+          {
+            "mnemonic": "CLOSURE",
+            "opcode": 63,
+            "operand": [
+              3,
+              1
+            ],
+            "pc": 58
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              4,
+              2
+            ],
+            "pc": 61
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 64
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 65
+          },
+          {
+            "mnemonic": "RET",
+            "opcode": 5,
+            "operand": null,
+            "pc": 67
+          }
+        ],
+        "literals": [
+          {
+            "symbol": "*comfort-trace-bindings*"
+          },
+          {
+            "symbol": "capitalize"
+          },
+          {
+            "symbol": "assoc"
+          },
+          [
+            {
+              "symbol": "%lcc-helper"
+            },
+            0
+          ],
+          {
+            "symbol": "set-symbol-function"
+          }
+        ],
+        "nargs": 0,
+        "nlocals": 1,
+        "payload_hex": "06003d39011d032b1c0606002b3d14023b060106003d13013c02021d0406011c2206013a000600060139003306003d1301333d14023b060139003f03013c04023b060105",
+        "semantic_sha256": "5b11d0610b13a7f2c3bb1f1756b27ca32543bdf4bfc3122d3ba6c064671e456d"
+      }
+    ],
+    "untrace_objects": [
+      {
+        "encoded_bytes": 74,
+        "encoded_sha256": "d0688862a5764b1c2d19cab87c50bf626c00c314b9571df3ec24430f5d0747c9",
+        "flags": 2,
+        "instructions": [
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 0
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              57,
+              1
+            ],
+            "pc": 2
+          },
+          {
+            "mnemonic": "JFALSEREL",
+            "opcode": 29,
+            "operand": 48,
+            "pc": 5
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 7
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 9
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              19,
+              1
+            ],
+            "pc": 11
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              2,
+              2
+            ],
+            "pc": 14
+          },
+          {
+            "mnemonic": "STOREL",
+            "opcode": 58,
+            "operand": 0,
+            "pc": 17
+          },
+          {
+            "mnemonic": "LOADL",
+            "opcode": 57,
+            "operand": 0,
+            "pc": 19
+          },
+          {
+            "mnemonic": "JFALSEREL",
+            "opcode": 29,
+            "operand": 29,
+            "pc": 21
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 23
+          },
+          {
+            "mnemonic": "LOADL",
+            "opcode": 57,
+            "operand": 0,
+            "pc": 25
+          },
+          {
+            "mnemonic": "CDR",
+            "opcode": 53,
+            "operand": null,
+            "pc": 27
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              3,
+              2
+            ],
+            "pc": 28
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 31
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 32
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 34
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 0,
+            "pc": 36
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              19,
+              1
+            ],
+            "pc": 38
+          },
+          {
+            "mnemonic": "CALL",
+            "opcode": 60,
+            "operand": [
+              4,
+              2
+            ],
+            "pc": 41
+          },
+          {
+            "mnemonic": "CALLPRIM",
+            "opcode": 61,
+            "operand": [
+              20,
+              2
+            ],
+            "pc": 44
+          },
+          {
+            "mnemonic": "DROP",
+            "opcode": 59,
+            "operand": null,
+            "pc": 47
+          },
+          {
+            "mnemonic": "PUSHLIT",
+            "opcode": 6,
+            "operand": 1,
+            "pc": 48
+          },
+          {
+            "mnemonic": "JMPREL",
+            "opcode": 28,
+            "operand": 1,
+            "pc": 50
+          },
+          {
+            "mnemonic": "PUSHNIL",
+            "opcode": 43,
+            "operand": null,
+            "pc": 52
+          },
+          {
+            "mnemonic": "JMPREL",
+            "opcode": 28,
+            "operand": 1,
+            "pc": 53
+          },
+          {
+            "mnemonic": "PUSHNIL",
+            "opcode": 43,
+            "operand": null,
+            "pc": 55
+          },
+          {
+            "mnemonic": "RET",
+            "opcode": 5,
+            "operand": null,
+            "pc": 56
+          }
+        ],
+        "literals": [
+          {
+            "symbol": "*comfort-trace-bindings*"
+          },
+          {
+            "symbol": "capitalize"
+          },
+          {
+            "symbol": "assoc"
+          },
+          {
+            "symbol": "set-symbol-function"
+          },
+          {
+            "symbol": "%comfort-trace-remove"
+          }
+        ],
+        "nargs": 0,
+        "nlocals": 1,
+        "payload_hex": "06003d39011d30060106003d13013c02023a0039001d1d06013900353c03023b0600060106003d13013c04023d14023b06011c012b1c012b05",
+        "semantic_sha256": "b4d5ab46e49c38a280eb0e18c456208203ac0b9c09846fad9284ab2dc1e17439"
+      }
+    ]
+  },
+  "exact_host_replay": {
+    "active_transient_append": {
+      "C2J": "guard-sensitive transient append transaction",
+      "directory_entries": 760,
+      "helper_ordinal": 2806,
+      "helper_physical_entry": 758,
+      "installed_function_cell": {
+        "code": {
+          "kind": "BCODE",
+          "ordinal": 2806
+        },
+        "kind": "T_CLOSURE",
+        "upvalues": [
+          {
+            "symbol": "capitalize"
+          }
+        ]
+      },
+      "main_ordinal": 2807,
+      "main_physical_entry": 759
+    },
+    "after_rollback": {
+      "C2J": "CLEAR",
+      "directory_entries": 758,
+      "function_cell_side_effect_restored_by_C2_rollback": false,
+      "helper_live": false,
+      "helper_normalized_entry": 758,
+      "transient_entry_first": 2806
+    },
+    "before": {
+      "C2J": "CLEAR",
+      "capitalize_function_cell": "published BCODE",
+      "directory_entries": 758,
+      "required_library_entries": 10,
+      "static_entries": 748
+    },
+    "first_traced_call": {
+      "directory_length_at_helper_ordinal": 0,
+      "function_cell": {
+        "code": {
+          "kind": "BCODE",
+          "ordinal": 2806
+        },
+        "kind": "T_CLOSURE",
+        "upvalues": [
+          {
+            "symbol": "capitalize"
+          }
+        ]
+      },
+      "reason": "vm_run_dir rejects the removed transient helper ordinal",
+      "target_detail": "BCODE ordinal 2806",
+      "target_status": "VM_DIRMISS"
+    },
+    "untrace": {
+      "matches_pre_trace_BCODE": false,
+      "recorded_original": {
+        "symbol": "capitalize"
+      },
+      "restored_callable_kind": "symbol-not-BCODE",
+      "restored_function_cell": {
+        "symbol": "capitalize"
+      }
+    }
+  },
+  "execution_accounting": {
+    "hardware_contacts": 0,
+    "media_bytes_changed": 0,
+    "product_bytes_changed": 0,
+    "recontacts_authorized": 0
+  },
+  "format": "lisp65-c2.3-v1.12-link92-r5-d3-trace-host-attribution-v1",
+  "mutation_count": 12,
+  "mutations_rejected": [
+    "classify-trace-nonpersistent",
+    "close-red-as-harness-only",
+    "abstract-away-symbol-capture",
+    "keep-transient-helper-after-rollback",
+    "replace-dirmiss-with-success",
+    "authorize-unchanged-product-retry",
+    "omit-post-install-callability",
+    "broaden-product-or-device-scope",
+    "policy-default-nonpersistent",
+    "policy-polling-default-allowed",
+    "policy-trace-recontact-authorized",
+    "policy-repeat-has-intermediate-read"
+  ],
+  "observation_policy": {
+    "active_trace_disposition": {
+      "candidate": "Link-92-r5",
+      "classification": "persistent-transient-C2D-C2J",
+      "future_repeat_contract": {
+        "authorization": "owner-disposition-after-product-fix",
+        "observations_during_sequence": 0,
+        "postcondition_must_cover": [
+          "trace-install",
+          "traced-call-output",
+          "untrace-restoration"
+        ],
+        "postcondition_reads": 1
+      },
+      "host_replay": "red-symbol-capture-plus-transient-helper-escape",
+      "recontact_authorized": false,
+      "unchanged_product_retry": "forbidden-host-red"
+    },
+    "default": {
+      "classification": "persistent-until-proven-nonpersistent",
+      "monitor_or_screenshot_polling": "forbidden",
+      "observation": "one-postcondition-read-after-bound-quiet-window-or-product-completion",
+      "polling_exception": "requires-bound-nonpersistent-proof"
+    },
+    "format": "lisp65-repl-observation-policy-v1",
+    "status": "active-after-link72-and-link92-d3-trace-red"
+  },
+  "recorded_on": "2026-08-08",
+  "runtime_path": {
+    "closure_target": "T_CLOSURE.a = MK_BCODE(transient helper ordinal)",
+    "function_symbol_lowering": "PUSHLIT symbol (not sym_function value)",
+    "journal_class": "C2D transient append/C2J transaction",
+    "profile": "treewalk-stripped",
+    "repl_non_direct_form": "%c2-compile-form -> lcc-install compiled t",
+    "rollback_scope": "C2 append/publication state; not arbitrary function-cell side effects",
+    "target_install": "c2_product_install transient append -> vm_run_dir -> rollback",
+    "transient_image_export_name": "NIL",
+    "treewalk_contrast": "(function SYMBOL) reads sym_function"
+  },
+  "status": "host-red-trace-transient-closure-escape"
+}

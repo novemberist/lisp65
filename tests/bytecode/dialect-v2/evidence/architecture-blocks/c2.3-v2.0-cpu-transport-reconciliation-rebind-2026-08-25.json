@@ -1,0 +1,45 @@
+{
+  "authority": {
+    "historical_receipt": {
+      "bytes": 5808,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-cpu-transport-reconciliation-receipt.json",
+      "sha256": "9f7d2b549058525cafb9ac5c44e823b067f57b04d31fce4fdc5c60cd22fe74d3"
+    },
+    "sealed_runtime_header": {
+      "bytes": 26938,
+      "path": "src/c2_product_runtime.h",
+      "sha256": "bc3841df851f24c0b2f3829bf7495aa9283882b1b88fc983cb366616cf4cfdb5"
+    },
+    "sealing_commit": "7a4f05b583d966d7f7e132a96aa3c4cddfea4481"
+  },
+  "claim_limit": "Evidence-era conversion only. The v2.0 receipt remains byte-exact; the live gate derives its five relevant address constants without persisting the working-tree header identity. No product, medium, card, or device action.",
+  "format": "lisp65-c2.3-v2.0-cpu-transport-reconciliation-rebind-v1",
+  "historical_claim": {
+    "mutation_count": 14,
+    "reads_in_proven_CPU_domain": 0,
+    "reads_outside_proven_CPU_domain": 346298,
+    "status": "DESK-GREEN; NO-CPU-TRANSPORT-FOR-LINK106; RING-STILL-REQUIRED"
+  },
+  "live_semantics": {
+    "c2d_bank": 5,
+    "c2d_base": 0,
+    "c2d_region_bytes": 50816,
+    "session_physical": 138412032,
+    "shelf_physical": 135266304
+  },
+  "mutations_rejected": [
+    "collapse-sealed-era-to-live",
+    "restore-working-tree-binding",
+    "change-live-semantic-address",
+    "rewrite-historical-witness",
+    "drop-historical-mutation"
+  ],
+  "recorded_on": "2026-08-25",
+  "split": {
+    "historical_receipt_rewritten": false,
+    "live_check": "five CPU-transport address constants derived at check time",
+    "live_header_identity_persisted": false,
+    "sealed_witness": "runtime-header identity at sealing commit"
+  },
+  "status": "PASS: sealed CPU reconciliation; live semantics derived"
+}

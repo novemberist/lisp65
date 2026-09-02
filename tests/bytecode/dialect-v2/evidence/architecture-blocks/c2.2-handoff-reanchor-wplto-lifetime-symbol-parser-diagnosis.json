@@ -1,0 +1,77 @@
+{
+  "authorization_scope": {
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "link33_attempts": 0,
+    "linker_runs": 0,
+    "product_closure_links": 0,
+    "pure_replays_consumed": 1,
+    "wplto_retries": 0
+  },
+  "bound_evidence": {
+    "immutable_elf": {
+      "mode": "0444",
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto/l65r-v2-boot-family-placement.prg.elf",
+      "sha256": "c82b9bd0763e1c515e083c615b7f35742b571a262e75b03649a5798382110d2b"
+    },
+    "lifetime_pure_replay_first_red": {
+      "mode": "0444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-lifetime-pure-replay-receipt.json",
+      "sha256": "c56302e76297f8a12481c013684139c34f135c2dfc004789fda80c19ebe65e08"
+    },
+    "prior_gate_diagnosis": {
+      "mode": "0444",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-boot-lifetime-gate-diagnosis.json",
+      "sha256": "146fc989d8eaff2e33d0da877eb5e26cab4aad994c18f137e8533cb4eaad40cd"
+    }
+  },
+  "diagnosis": {
+    "first_red_rows": 60,
+    "parser_defect": "_symbol_section_sets accepts only llvm-objdump --syms rows with at least six whitespace fields. Valid NOTYPE rows without a flag column have five fields, so their explicit section/Absolute provenance is discarded.",
+    "product_finding": "none: the 60 references target two named overlay-base markers, not the installer section; the previously measured true installer set remains 40 internal and zero external",
+    "source_sections": {
+      ".lisp65_resident_island": 2,
+      ".lisp65_rt_rtov_record": 9,
+      ".text": 49
+    },
+    "status": "symbol-provenance-parser-first-red",
+    "targets": {
+      "__lisp65_workbench_overlay_start": {
+        "address": "0xc356",
+        "elf_section": ".lisp65_workbench_overlay",
+        "relocations": 28,
+        "symbol_type": "None"
+      },
+      "__lisp65_workbench_runtime_overlay_vma": {
+        "address": "0xc356",
+        "elf_section": "Absolute",
+        "relocations": 32,
+        "symbol_type": "None"
+      }
+    }
+  },
+  "format": "lisp65-c2-handoff-reanchor-wplto-lifetime-symbol-parser-diagnosis-v1",
+  "proposed_bounded_continuation": {
+    "gate_correction": "Parse symbol Section provenance from llvm-readobj --symbols instead of whitespace-column counts. Accept the section-bound workbench marker and the exact contract-named Absolute runtime-overlay VMA marker; no generic Absolute-at-c356 exception is permitted.",
+    "negative_matrix": [
+      "five-field section-bound workbench marker must resolve and pass",
+      "exact Absolute runtime-overlay VMA marker must resolve and pass",
+      "unknown Absolute symbol at the same numeric VMA must fail",
+      "external installer-section target must fail"
+    ],
+    "requested_execution": "one additional pure replay against the same immutable evidence only",
+    "still_forbidden": [
+      "compiler run",
+      "linker run",
+      "WPLTO retry",
+      "Link 33",
+      "hardware run"
+    ]
+  },
+  "recorded_on": "2026-07-21",
+  "rollback_line": {
+    "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+    "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "status": "unchanged"
+  }
+}

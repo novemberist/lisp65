@@ -1,0 +1,113 @@
+{
+  "authority": {
+    "authority": "git-blob",
+    "bytes": 340197,
+    "commit": "b6632c09175be58a8a5efd1e38232eed4ce8a76d",
+    "path": "docs/planning/v1.6.0-freight-work-plan.md",
+    "sha256": "44d0feccfbcd60f0725156e5348403b47e2194fb4fc49083987b923b819ec017"
+  },
+  "claim_boundary": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "host_only": true,
+    "media_builds": 0,
+    "next_step": "a new one-shot relocation card requires explicit authorization",
+    "product_links": 0,
+    "product_sources_changed": false
+  },
+  "format": "lisp65-c2-v160-queue-owner-cold-relocation-pricing-v1",
+  "inputs": {
+    "callsite_elf": {
+      "bytes": 632832,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-second-replacement-card/wplto/resident-island-seed.prg.elf",
+      "sha256": "22790e7127e440276946ab288e29b7c048840803ae312c0513aef301693d2e5f"
+    },
+    "driver": {
+      "bytes": 10796,
+      "path": "tools/host-lisp/c2_v160_queue_owner_cold_relocation_pricing.py",
+      "sha256": "11af62052234ece9888ef54c906101dca17b8ff9600bdaaa8c5ae390096f6f2b"
+    },
+    "far_facade": {
+      "bytes": 4058,
+      "path": "src/optional/c2_mapped_far_service_liveness_v4.s",
+      "sha256": "e2229f3a3e0f1333d286ba42e4f9264db5263711dba22e4893d6c8c37d8b0de7"
+    },
+    "far_header": {
+      "bytes": 997,
+      "path": "src/c2_mapped_far_service.h",
+      "sha256": "429f0fede631361da6b74c801cac127513e85cd6546d527079233d804cb45826"
+    },
+    "first_guard_map": {
+      "bytes": 182149,
+      "path": "build/c2.3/v1.6-queue-single-owner-card/wplto/resident-island-seed.prg.map",
+      "sha256": "8720ec00f3917decd2185de5c62da36d9c3a4b8351b835e290bf9913ec814ee4"
+    },
+    "first_guard_red": {
+      "bytes": 19752,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-queue-single-owner-card-final-red.json",
+      "sha256": "8e15eaa744e55d09f7bf0fbe5290fe2288a3d7a63f62042efe12bd9f9196380e"
+    },
+    "runtime_source": {
+      "bytes": 91725,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "8458a14d73d84fffdacb8c17fe7cb62b1ec7d64c10fd72462bcd3312b12b4597"
+    },
+    "single_exit_map": {
+      "bytes": 189210,
+      "path": "build/c2.3/v1.6-queue-single-owner-replacement-card/wplto/resident-island-seed.prg.map",
+      "sha256": "a8f00ebe9cfba2de99e1bb21d856359a78cf116db04074fbd56afcd9887e27c8"
+    },
+    "single_exit_red": {
+      "bytes": 19778,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-queue-single-owner-replacement-card-final-red.json",
+      "sha256": "4ae7d119b4d983d888578b7d14d1cdd20d86487e609baf33061d23ba684c534b"
+    }
+  },
+  "route_1": {
+    "first_guard_free_bytes": -7,
+    "first_guard_text_bytes": 37780,
+    "reason": "live stop state costs more than the duplicated abort sites",
+    "single_exit_delta_bytes": 55,
+    "single_exit_free_bytes": -62,
+    "single_exit_overlap_bytes": 62,
+    "single_exit_text_bytes": 37835,
+    "verdict": "REJECTED BY EMITTED BYTES"
+  },
+  "route_2": {
+    "body_bytes": 22,
+    "existing_enter_leave_pair": true,
+    "facade_delta_bytes": 0,
+    "far_service_body_bytes": 22,
+    "far_service_bytes_before": 1462,
+    "far_service_capacity_bytes": 1499,
+    "far_service_free_before": 37,
+    "far_service_projected_free_bytes": 15,
+    "hot_path_classification": "two runtime-overlay transaction verification/install calls; no per-key or per-eval edge",
+    "linked_callsites": [
+      {
+        "instruction": "jsr",
+        "source": "0x2aa1",
+        "target": "0x2e54"
+      },
+      {
+        "instruction": "jsr",
+        "source": "0x2c6e",
+        "target": "0x2e54"
+      }
+    ],
+    "map_window": "CPU block 3 $6000..$7fff",
+    "ordinary_address": "0x2e54",
+    "ordinary_net_reclaim_bytes": 13,
+    "ordinary_projected_free_bytes": 6,
+    "ordinary_required_reclaim_bytes": 7,
+    "ordinary_stub": "JSR c2_mapped_far_enter; JSR far body; JMP c2_mapped_far_leave",
+    "ordinary_stub_bytes": 9,
+    "placement_attribute_available": true,
+    "resident_callee": "rtov_transaction_context@0x1dce",
+    "resident_callee_disjoint": true,
+    "source_call_count": 2,
+    "symbol": "rtov_transaction_context_if_ready",
+    "verdict": "WINNER: COLD RELOCATION FITS BOTH ARENAS"
+  },
+  "status": "PASS: COLD RELOCATION RECOVERS QUEUE-OWNER TEXT CAPACITY"
+}

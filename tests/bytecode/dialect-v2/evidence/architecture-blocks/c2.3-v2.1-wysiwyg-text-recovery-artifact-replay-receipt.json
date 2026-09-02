@@ -1,0 +1,955 @@
+{
+  "acceptance": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 11,
+          "candidate_max_end_exclusive": 45989,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 251,
+          "candidate_max_end_exclusive": 32146,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-plus-freight-boundaries-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_boundaries": {
+        "__lisp65_c2_mapped_far_service_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 32146
+        },
+        "__lisp65_c2_mapped_far_service_load_end": {
+          "operation": "section-lma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 179602
+        },
+        "__lisp65_workbench_overlay_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_workbench_overlay",
+          "value": 51857
+        }
+      },
+      "derived_freight_sha256": "a6c040859232281cb9de254f357fb58f83dcc6e1fdf513bed3304f23205f62cd",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 25,
+      "fixed_projection_sha256": "2ebfe0002a9f196c374ebaeab5f063ce248b437348c28dc63d3bca6881ea7146",
+      "freight_derived_boundary_symbols": 3,
+      "mapped_far_service_capacity": {
+        "candidate_headroom_bytes": 251,
+        "candidate_max_end_exclusive": 32146,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      }
+    },
+    "delivered_bytes": {
+      "candidate_elf": {
+        "bytes": 630792,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "4f899d1e0c9bcc89d14c9d13c5384e6a843c4093ba9d1029b321820a11bf4942"
+      },
+      "completed_resident_prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "65fc01b0730d3e09bf2e97c6a0fda09e36f319c352f5a3ac934f674b891828d9"
+      },
+      "identity_bytes": 290,
+      "identity_mismatches": 0,
+      "load_address": "0x2001",
+      "new_staging_roles": 0,
+      "publish_last": {
+        "addresses": [
+          46324,
+          46330
+        ],
+        "bytes": 2,
+        "independent_crc16": "0x0c39",
+        "independent_window_bytes": 8192,
+        "independent_window_sha256": "c4f3e3016502874d2a1e981833c1eb563a0f8b4e6964bf01b2b644ed3c63838c",
+        "observed_values": [
+          12,
+          57
+        ],
+        "producer_report": {
+          "bytes": 1554,
+          "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/kernal-window-publish-last.json",
+          "sha256": "2c7e75c115809751be95ada03401f8576752663510ad32305b5f030539fafd03"
+        },
+        "values_correct": true
+      },
+      "sections": [
+        {
+          "bytes": 223,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb4a3",
+          "lma_equals_vma": true,
+          "publish_last_values": [
+            {
+              "address": 46324,
+              "correct": true,
+              "expected": 12,
+              "observed": 12
+            },
+            {
+              "address": 46330,
+              "correct": true,
+              "expected": 57,
+              "observed": 57
+            }
+          ],
+          "resident_prg_offset": 38052,
+          "section": ".lisp65_c2_kernal_handoff",
+          "vma": "0xb4a3"
+        },
+        {
+          "bytes": 48,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5c4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38341,
+          "section": ".lisp65_c2_host_facade",
+          "vma": "0xb5c4"
+        },
+        {
+          "bytes": 11,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5f4",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38389,
+          "section": ".lisp65_c2_kernal_io_reveal",
+          "vma": "0xb5f4"
+        },
+        {
+          "bytes": 10,
+          "identity_mismatches_outside_publish_last": [],
+          "inside_resident_prg": true,
+          "lma": "0xb5ff",
+          "lma_equals_vma": true,
+          "publish_last_values": [],
+          "resident_prg_offset": 38400,
+          "section": ".lisp65_c2_kernal_map_switch",
+          "vma": "0xb5ff"
+        }
+      ],
+      "status": "passed-identity-plus-independent-CRC-value"
+    },
+    "delivery_mutations_rejected": [
+      "drop-section",
+      "rewrite-LMA",
+      "grow-carveout",
+      "widen-carveout-bytes",
+      "replace-independent-CRC",
+      "accept-wrong-high",
+      "accept-wrong-low",
+      "hide-identity-mismatch",
+      "replace-oracle-window",
+      "add-staging-role"
+    ],
+    "far_payload": {
+      "LMA_end_exclusive": "0x0002bd92",
+      "LMA_start": "0x0002b8b2",
+      "VMA": "0x78b2",
+      "arena_capacity_bytes": 1499,
+      "candidate_derived_bytes": 1248,
+      "candidate_derived_cpu_end_exclusive": 32146,
+      "candidate_headroom_bytes": 251,
+      "fixed_size_expectation": false,
+      "section": ".lisp65_c2_mapped_far_service",
+      "sha256": "1b0f53d624bc108876ab2f8d4c99bb8dcbb9f887625652af7a222e6dc6422bad",
+      "size_source": "emitted-candidate-section-and-symbol-extents",
+      "status": "passed-candidate-derived-far-payload-extent-identity"
+    },
+    "linked_MAP_mutations_rejected": [
+      "old-A",
+      "old-X",
+      "wrong-offset",
+      "wrong-block",
+      "wrong-entry",
+      "mapped-block1",
+      "skip-descriptor-store",
+      "restore-874-size-pin",
+      "move-arena-wall",
+      "hide-headroom"
+    ],
+    "linked_MAP_tuple": {
+      "VMA": "0xB3C2",
+      "block1_unchanged": true,
+      "bytes": "48da5aa940a282a000a3805ceaa3007afa6860",
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "far_service": {
+        "arena_capacity_bytes": 1499,
+        "arena_end_exclusive": 32397,
+        "candidate_derived_bytes": 1248,
+        "candidate_derived_end_exclusive": 32146,
+        "candidate_headroom_bytes": 251,
+        "fixed_size_expectation": false,
+        "section": ".lisp65_c2_mapped_far_service",
+        "size_source": "emitted-candidate-section-table",
+        "start": 30898
+      },
+      "first_descriptor_store": {
+        "bytes": "a9048d00c0",
+        "candidate_offset": "0x3A",
+        "derivation": "unique-emitted-instruction-sequence",
+        "effect": "STA $C000 <= $04",
+        "occurrences": 1,
+        "physical_PC": "0x0002B8EC"
+      },
+      "service_entry": {
+        "candidate_VMA": "0x7A31",
+        "candidate_physical": "0x2BA31",
+        "derivation": "ELF-symbol-plus-decoded-MAP-tuple",
+        "symbol": "c2_mapped_far_vm_code_load_converged"
+      },
+      "service_entry_physical": "0x2BA31",
+      "status": "passed-primary-semantics-candidate-derived-tuple",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "low_resident_LMA_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    },
+    "pid": 127082,
+    "source_authoritative_oracle": {
+      "VMA": "0xc356",
+      "bytes": 1671,
+      "c2d_crc16": [
+        "0xe27e",
+        "0x8cc6",
+        "0x74d8",
+        "0x277a",
+        "0x9866",
+        "0xe9dc"
+      ],
+      "capacity": 1792,
+      "delivery_inputs": [
+        {
+          "bytes": 93681,
+          "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+          "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+        },
+        {
+          "bytes": 33840,
+          "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+        }
+      ],
+      "generated_decoder": {
+        "bytes": 41551,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+      },
+      "generated_owner": {
+        "bytes": 548,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+      },
+      "oracle_offset": 0,
+      "records_per_image": 6,
+      "reserve": 121,
+      "section": ".lisp65_rt_c2d_02a",
+      "shelf_crc16": [
+        "0xce26",
+        "0x46f5",
+        "0xfccb",
+        "0xbc88",
+        "0xf871",
+        "0xe3f7"
+      ],
+      "status": "passed-linked-delivery-bound-CRC-oracle",
+      "timeout_frames": 64
+    },
+    "status": "PASS"
+  },
+  "authority": {
+    "Acceptance_First_Red": {
+      "bytes": 9195,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-wysiwyg-text-recovery-acceptance-red-attribution-receipt.json",
+      "sha256": "85caedd0fbb2535746477f70a889bcab6c192a8324edb190292756c1b8d27570"
+    },
+    "driver": {
+      "bytes": 10634,
+      "path": "tools/host-lisp/c2_v21_wysiwyg_text_recovery_qualification_tail.py",
+      "sha256": "f3063e2d078532c739467fb239e29bfbca6f425514b46e77750a1595233046df"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 185613,
+      "commit": "f60d6f98e0ed7788cdeb1b8033c52aa24fcb81e6",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "5bfe29cd2f8c14d613037dcf2b7579673bcbb35c53cb4368550d15dd6a09b2b2"
+    },
+    "preflight": {
+      "bytes": 13439,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/artifact-only-scope-acceptance/preflight.json",
+      "sha256": "9d3f056c5ac254c955e23684343e029233bcf06e81afa8e9bc7fb25cb5fc74fa"
+    },
+    "qualification_tail_owner": {
+      "authority": "git-blob",
+      "bytes": 190388,
+      "commit": "2b92214fe3519c58abe126f27527e4e1a2ee9a20",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "57d09a457a7acbd856a664bd3b8767b0dc743ba76bb5c73702ac5cb36a754b79"
+    },
+    "scope_acceptance_resume_owner": {
+      "authority": "git-blob",
+      "bytes": 188284,
+      "commit": "285fe24f1fe1197664dd36d7e979ce653002b188",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "88737a375154b40364dcfbc8b418d6495b79c9c21e2f216f4db9b0568fe24492"
+    }
+  },
+  "claim_limit": "Scope/Acceptance promoted read-only; Completion/media/device zero.",
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "acceptance_attempts": 1,
+    "acceptance_outputs_written": 1,
+    "artifact_replays_authorized": 1,
+    "artifact_replays_run": 1,
+    "cards_consumed": 0,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0,
+    "qualification_tails_run": 1,
+    "scope_attempts_total": 2,
+    "scope_completions": 1
+  },
+  "format": "lisp65-c2.3-v2.1-wysiwyg-link116-artifact-replay-v1",
+  "frozen_artifacts_after": {
+    "elf": {
+      "bytes": 630792,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "4f899d1e0c9bcc89d14c9d13c5384e6a843c4093ba9d1029b321820a11bf4942"
+    },
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 70872,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/c2-substitution.ld",
+      "sha256": "3b0b59ab7e9657157142916e685b9f857a7ae77f55161ab8985240357e0af082"
+    },
+    "lto": {
+      "bytes": 619752,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "5e1cae4295b405d609ecf103358027b19261a126f947b925545a3bc698ac7b14"
+    },
+    "map": {
+      "bytes": 192886,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "9be3773c67acdc4edfdd49c66f9d248de7e6747eb891bbed691e6119164c9e29"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "65fc01b0730d3e09bf2e97c6a0fda09e36f319c352f5a3ac934f674b891828d9"
+    },
+    "publish_last": {
+      "bytes": 1554,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/kernal-window-publish-last.json",
+      "sha256": "2c7e75c115809751be95ada03401f8576752663510ad32305b5f030539fafd03"
+    },
+    "resolved_profile": {
+      "bytes": 12989,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "39c1dfac3869132114a87ef30be699ea0b1b6d6920f2c7484b7a7b4513964689"
+    }
+  },
+  "frozen_artifacts_before": {
+    "elf": {
+      "bytes": 630792,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "4f899d1e0c9bcc89d14c9d13c5384e6a843c4093ba9d1029b321820a11bf4942"
+    },
+    "generated_decoder": {
+      "bytes": 41551,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+    },
+    "generated_phase02a": {
+      "bytes": 548,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+    },
+    "linker": {
+      "bytes": 70872,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/c2-substitution.ld",
+      "sha256": "3b0b59ab7e9657157142916e685b9f857a7ae77f55161ab8985240357e0af082"
+    },
+    "lto": {
+      "bytes": 619752,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "5e1cae4295b405d609ecf103358027b19261a126f947b925545a3bc698ac7b14"
+    },
+    "map": {
+      "bytes": 192886,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "9be3773c67acdc4edfdd49c66f9d248de7e6747eb891bbed691e6119164c9e29"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "65fc01b0730d3e09bf2e97c6a0fda09e36f319c352f5a3ac934f674b891828d9"
+    },
+    "publish_last": {
+      "bytes": 1554,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/kernal-window-publish-last.json",
+      "sha256": "2c7e75c115809751be95ada03401f8576752663510ad32305b5f030539fafd03"
+    },
+    "resolved_profile": {
+      "bytes": 12989,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/resolved-profile.txt",
+      "sha256": "39c1dfac3869132114a87ef30be699ea0b1b6d6920f2c7484b7a7b4513964689"
+    }
+  },
+  "mutations_rejected": {
+    "qualification_tail": [
+      "restore-413-headroom",
+      "shrink-arena",
+      "grow-candidate",
+      "restore-historical-expectation"
+    ],
+    "source_birth": {
+      "historical_headroom_pins": 0,
+      "status": "PASS: tail born candidate-derived"
+    }
+  },
+  "next": "Completion and same-world media closure, then D2",
+  "process_isolation": {
+    "acceptance": 127082,
+    "all_distinct": true,
+    "owner_scope": 127080,
+    "qualification_tail": 139494
+  },
+  "producer_tail": {
+    "CPU_reader_owner_objects": [
+      "062-c2_map_cpu_read.s.o"
+    ],
+    "artifact_replay_pid": 114261,
+    "artifacts": {
+      "elf": {
+        "bytes": 630792,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "4f899d1e0c9bcc89d14c9d13c5384e6a843c4093ba9d1029b321820a11bf4942"
+      },
+      "generated_decoder": {
+        "bytes": 41551,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+      },
+      "generated_phase02a": {
+        "bytes": 548,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+      },
+      "linker": {
+        "bytes": 70872,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/c2-substitution.ld",
+        "sha256": "3b0b59ab7e9657157142916e685b9f857a7ae77f55161ab8985240357e0af082"
+      },
+      "lto": {
+        "bytes": 619752,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+        "sha256": "5e1cae4295b405d609ecf103358027b19261a126f947b925545a3bc698ac7b14"
+      },
+      "map": {
+        "bytes": 192886,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg.map",
+        "sha256": "9be3773c67acdc4edfdd49c66f9d248de7e6747eb891bbed691e6119164c9e29"
+      },
+      "prg": {
+        "bytes": 41566,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "65fc01b0730d3e09bf2e97c6a0fda09e36f319c352f5a3ac934f674b891828d9"
+      },
+      "publish_last": {
+        "bytes": 1554,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/kernal-window-publish-last.json",
+        "sha256": "2c7e75c115809751be95ada03401f8576752663510ad32305b5f030539fafd03"
+      },
+      "resolved_profile": {
+        "bytes": 12989,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/resolved-profile.txt",
+        "sha256": "39c1dfac3869132114a87ef30be699ea0b1b6d6920f2c7484b7a7b4513964689"
+      },
+      "seed_lto": {
+        "bytes": 619752,
+        "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/wplto/resident-island-seed.prg.lto.o",
+        "sha256": "e17552463f50387b888503b9b4658b1cb8dc3cf6760fe8555fc606ab87bc8de1"
+      }
+    },
+    "candidate_completion_identity": {
+      "address": 47500,
+      "bytes": 40,
+      "historical_0xb98a_consumed": false,
+      "section": ".lisp65_runtime_overlay_verifier_bindings",
+      "status": "PASS: publish-last consumed candidate identity"
+    },
+    "candidate_completion_mutations": [
+      "reject-historical-0xb98a"
+    ],
+    "candidate_oracle_inputs": {
+      "bytes": 1341,
+      "path": "build/c2.3/v2.1-wysiwyg-text-recovery-replacement-card/receipts/candidate-oracle-input-closure.json",
+      "sha256": "69933bdf474fafb1a6b4e3d86e6bc9425b60996b6e12555016f31b212dc4a2fa"
+    },
+    "linked_WYSIWYG_semantic_mutations": [
+      "reintroduce-CMP-LDA-opcode-pin",
+      "reintroduce-CPY-LDX-opcode-pin",
+      "make-mnemonics-contractual",
+      "normalize-after-echo",
+      "normalize-after-store",
+      "silently-drop-control",
+      "restore-poison-size",
+      "hide-semantic-mismatch",
+      "drop-real-compiler",
+      "drop-consumed-source"
+    ],
+    "linked_WYSIWYG_semantics": {
+      "authority": {
+        "WYSIWYG_receipt_sha256": "f75f11f27598770eedffce41327ae62218ce427a5470889f80b6665354655709",
+        "checker": "tools/host-lisp/c2_v21_wysiwyg_linked_semantics.py",
+        "pricing_sha256": "af262959f13db4cfb88b64a92a1b139c181470de0d584164a9472736e2f6be52",
+        "semantic_compile_sha256": "5f1fdda46407106875eae56753a4f10ce01945946744d79c8675ba5743cd1505"
+      },
+      "behavior": {
+        "a0_result": "0x20",
+        "exhaustive_cases": 512,
+        "historical_poison_forms": 2,
+        "historical_poison_forms_canonical_bytes": 12,
+        "normalizes_before_echo": true,
+        "normalizes_before_store": true,
+        "semantic_mismatches": 0,
+        "unmappable_controls_reject_visibly": true
+      },
+      "compiler_evidence": {
+        "instruction_selection_constraint": null,
+        "opcode_or_mnemonic_identity_is_contract": false,
+        "profile_consumed_exact_source": true,
+        "real_configured_target_compile": true
+      },
+      "linked_repl": {
+        "address": "0xaa48",
+        "bytes": 696,
+        "consumed_source_sha256": "d3d7ef514615c4975f7994b48d3705e68706815e84019b05eecd776fc449effd"
+      },
+      "status": "PASS: linked WYSIWYG behavior; instruction selection free"
+    },
+    "pid": 94166,
+    "post_configuration_source_owner_gate": {
+      "components": {
+        "probe_oracle_root": {
+          "DMA_completion_trust": false,
+          "DMA_probe_jobs": 0,
+          "candidate_body": "src/optional/c2_mapped_far_convergence_full_span.s",
+          "defines": [
+            "LISP65_CODE_WINDOW_CONVERGENCE",
+            "LISP65_DMA_CONTENT_CONVERGENCE",
+            "LISP65_C2_ASM_CONVERGENCE",
+            "LISP65_C2_FULL_SPAN_CONVERGENCE",
+            "LISP65_C2_MUTABLE_CPU_READS"
+          ],
+          "facade_padding": {
+            "bytes": 19,
+            "kind": "named-explicit-contract-filler",
+            "source": "src/optional/c2_mapped_far_facade_padding.s"
+          },
+          "feature": "LISP65_C2_MUTABLE_CPU_READS",
+          "mutable_read_transport": "MAP-CPU",
+          "mutable_reader_count": 9,
+          "predecessor_body": "src/c2_mapped_far_convergence.s",
+          "service_owner": "src/optional/c2_mapped_far_service_v2.s",
+          "single_body_owner": true,
+          "sources": [
+            "src/optional/c2_mapped_far_service_v2.s",
+            "src/optional/c2_mapped_far_convergence_full_span.s"
+          ]
+        }
+      },
+      "scopes": [
+        {
+          "defines": [
+            "LISP65_C2_ASM_CONVERGENCE",
+            "LISP65_C2_FULL_SPAN_CONVERGENCE",
+            "LISP65_C2_MUTABLE_CPU_READS",
+            "LISP65_CODE_WINDOW_CONVERGENCE",
+            "LISP65_DMA_CONTENT_CONVERGENCE"
+          ],
+          "name": "mapped-far-content-convergence",
+          "selected": true,
+          "sources": [
+            "src/optional/c2_mapped_far_convergence_full_span.s",
+            "src/optional/c2_mapped_far_facade_padding.s",
+            "src/optional/c2_mapped_far_service_v2.s"
+          ]
+        },
+        {
+          "defines": [
+            "LISP65_C2_MAP_CPU_TRANSPORT"
+          ],
+          "name": "map-cpu-library-read",
+          "selected": true,
+          "sources": [
+            "src/optional/c2_map_cpu_read.s"
+          ]
+        }
+      ],
+      "status": "passed-define-and-source-owner-scope-closure"
+    },
+    "status": "PASS",
+    "v21_linked_mutations": [
+      "reader-inside-window",
+      "reader-straddles-window",
+      "reader-empty",
+      "historical-world-changed"
+    ],
+    "v21_linked_transport": {
+      "call_seams": {
+        "c2d": "0xe2dd",
+        "shelf": "0xe79d"
+      },
+      "historical_worlds_changed": 0,
+      "mapped_window": "0x4000..0x5fff",
+      "reader": {
+        "address": "0x2277",
+        "bytes": 189,
+        "end_exclusive": "0x2334",
+        "section": ".text",
+        "section_end": "0xb3a5"
+      },
+      "status": "PASS: linked reader executes outside its mapped window"
+    },
+    "v21_text_recovery": {
+      "E000_delta_bytes": 0,
+      "cold_displacement": {
+        "aggregate_bytes": 65423,
+        "aggregate_growth_bytes": 0,
+        "bytes": 63,
+        "packed_page_bytes": 1280,
+        "section_bytes": 1246
+      },
+      "contracted_margins_used_as_freight": false,
+      "fixed_block_delta_bytes": 0,
+      "ordinary": {
+        "reserve_bytes": 11,
+        "text_end_exclusive": "0xb3a5"
+      },
+      "ownership": {
+        "audited_pre_main_chrout_edges": 1,
+        "direct_window_edges": 390,
+        "entry_edges": 208,
+        "executable_sections": [
+          ".lisp65_c2_kernal_window.c2_resident",
+          ".lisp65_c2_kernal_window.irq_handler",
+          ".lisp65_c2_kernal_window.map_switch_and_guards",
+          ".lisp65_c2_kernal_window.nmi_and_freezer_return",
+          ".lisp65_c2_kernal_window.post_startup_output_seam",
+          ".lisp65_c2_kernal_window.reopen_gap0",
+          ".lisp65_c2_kernal_window.reopen_gap1",
+          ".lisp65_c2_kernal_window.reopen_gap2",
+          ".lisp65_c2_kernal_window.typed_queue_driver"
+        ],
+        "ignored_absolute_or_weak_alias_count": 99,
+        "matrix": {
+          "absolute-weak-alias-disguised-exit": "rejected",
+          "inter-function-non-entry-offset": "rejected",
+          "jsr-to-internal-basic-block": "rejected",
+          "owned-state-or-data-target": "rejected",
+          "same-function-mid-instruction": "rejected",
+          "same-function-symbol-less-basic-block": "passed"
+        },
+        "model": "section-qualified-function-and-instruction-boundary-v1",
+        "owned_function_entries": {
+          "57344": "c2_kernal_event_poll",
+          "57400": "c2_kernal_irq_handler",
+          "57474": "c2_kernal_nmi_handler",
+          "57483": "c2_kernal_fail_closed",
+          "57497": "c2_kernal_output_cell",
+          "57501": "c2_overlay_call",
+          "57530": "c2_product_gc_mark_roots",
+          "58077": "c2_stream_c2d_read",
+          "58162": "c2_stream_product_image_read",
+          "59293": "c2_stream_shelf_read",
+          "59487": "c2_stream_c2d_write",
+          "59581": "c2_stream_name_value",
+          "60414": "c2_header_counts",
+          "60456": "c2_product_entry_record",
+          "61018": "c2_session_emit_reset",
+          "61065": "c2_session_emit_add",
+          "61570": "c2_session_emit_finalize",
+          "61656": "c2_append_begin",
+          "62169": "c2_append_run_rollback_plan",
+          "62198": "c2_product_entry_length",
+          "62302": "vm_arity_accepts",
+          "62358": "vm_logical_relative_target",
+          "62490": "vm_byte_args",
+          "62587": "c2_overlay_call_range",
+          "62640": "c2_decode_from",
+          "63188": "c2_product_physical_copy",
+          "63333": "c2_stream_product_string_record_any",
+          "63965": "c2_stream_product_string_record",
+          "64070": "c2_stream_product_canonical_name",
+          "64496": "c2_stream_gc_checkpoint",
+          "64687": "vm_runtime_overlay_transaction_begin",
+          "65160": "vm_c2d_byte",
+          "65249": "c2_abort_driver",
+          "65424": "c2_facade_target_c2_dma",
+          "65492": "vm_runtime_overlay_transaction_end"
+        },
+        "same_function_basic_block_jumps": 181,
+        "violations": []
+      },
+      "placement_contract": {
+        "authority": "tools/host-lisp/c2_v21_wysiwyg_candidate_contract.py",
+        "delta_bytes": 1,
+        "derivation": {
+          "historical_reserve_consumed": false,
+          "ordinary_end": ".text.sh_addr + .text.sh_size",
+          "ordinary_reserve": ".lisp65_c2_mapped_far_facade.sh_addr - ordinary_end"
+        },
+        "facade_address": 46000,
+        "facade_bytes": 98,
+        "ordinary_reserve_bytes": 11,
+        "reader_address": 8823,
+        "reader_bytes": 189,
+        "status": "PASS: ordinary end/reserve derived from emitted candidate",
+        "text_end_exclusive": 45989
+      },
+      "reader": {
+        "address": "0x2277",
+        "bytes": 189
+      },
+      "return_labels": {
+        "global_non_entries": 0,
+        "symbol_names_present": []
+      },
+      "selector": {
+        "address": "0x2334",
+        "bytes": 40,
+        "fixed_vector": "0xb5eb",
+        "identity_depends_on_global_return_label": false,
+        "real_call_identities": {
+          "c2d": {
+            "call": "0xe326",
+            "emitted_bytes": "20ebb5aa",
+            "entry": "0xe2dd",
+            "entry_offset": 75,
+            "function": "c2_stream_c2d_read",
+            "hardware_pushed_return": "0xe328",
+            "tail_bytes": "aa"
+          },
+          "selector_operands_match": true,
+          "shelf": {
+            "call": "0xe84b",
+            "emitted_bytes": "20ebb58510",
+            "entry": "0xe79d",
+            "entry_offset": 176,
+            "function": "c2_stream_shelf_read",
+            "hardware_pushed_return": "0xe84d",
+            "tail_bytes": "8510"
+          }
+        }
+      },
+      "status": "PASS: candidate-derived local-return identities linked"
+    },
+    "v21_text_recovery_mutations": [
+      "promote-non-entry-to-global",
+      "derive-identity-from-global-label",
+      "accept-wrong-selector-operands",
+      "restore-predecessor-reader-size",
+      "restore-predecessor-reserve"
+    ]
+  },
+  "qualification_tail": {
+    "arena": {
+      "capacity_bytes": 1499,
+      "end_exclusive": 32397,
+      "start": 30898
+    },
+    "authority": "arena-contract-minus-emitted-candidate",
+    "candidate": {
+      "bytes": 1248,
+      "end_exclusive": 32146,
+      "headroom_bytes": 251
+    },
+    "historical_headroom_expectations": 0,
+    "status": "PASS: headroom derived from candidate extents"
+  },
+  "recorded_on": "2026-08-17",
+  "scope": {
+    "gate": {
+      "historical_body_selected": false,
+      "real_global_inventory": {
+        "authorized_successors": {
+          "c2_map_cpu_read": {
+            "policy": "ASM->ASM: physical source A/X/__rc2/__rc3; destination __rc4/__rc5; length __rc6/__rc7; result A; only caller-clobbered __rc2..__rc15; unmap on every exit",
+            "source": "src/optional/c2_map_cpu_read.s"
+          },
+          "c2_map_cpu_selector": {
+            "policy": "fixed-facade->ASM: classify hardware return identity, restore hardware stack, tail to c2_map_cpu_read or historical runtime overlay; no callee-saved imaginary-register clobber",
+            "source": "src/optional/c2_map_cpu_read.s"
+          }
+        },
+        "classified_functions": [
+          "c2_append_journal_prepare_phase",
+          "c2_append_plan_walk",
+          "c2_completion_mode_length",
+          "c2_kernal_event_poll",
+          "c2_map_cpu_read",
+          "c2_map_cpu_selector",
+          "c2_mapped_far_enter",
+          "c2_mapped_far_leave",
+          "c2_mapped_far_physical_read_converged",
+          "c2_mapped_far_vm_code_load_converged",
+          "c2_physical_read_converged",
+          "l65e_emit_bcode_ordinal",
+          "lisp65_ash_tagged",
+          "lisp65_error_overlay_entry",
+          "lisp65_f011_mount_token_op",
+          "lisp65_f011_scratch_buffer",
+          "lisp65_hw_divhi3",
+          "lisp65_hw_modhi3",
+          "lisp65_hw_mulhi3",
+          "lisp65_hw_udivhi3",
+          "lisp65_hw_udivmodhi4",
+          "lisp65_hw_umodhi3",
+          "lisp65_mod_adjust_tagged",
+          "rtov_crc_mem",
+          "rtov_dma_submit_wait",
+          "scr_backspace",
+          "vm_bank3_boot_stage_entry",
+          "vm_boot_overlay_chain_commit",
+          "vm_c2d_byte",
+          "vm_code_load_converged",
+          "vm_l65m_batch_repeat"
+        ],
+        "declared_functions": 31,
+        "duplicate-successor-in-global-asm-domain": "rejected",
+        "expectation": "rule-classified-candidate-inventory",
+        "historical_count_expectations": 0,
+        "status": "passed-real-global-assembler-inventory",
+        "unclassified_functions": []
+      },
+      "relapse_mutation": "duplicate successor in global src/*.s domain rejected",
+      "selected_owner": "mapped-far-content-convergence",
+      "selected_successor_copies": 1,
+      "status": "PASS: one name, one owner, one body per inventory"
+    },
+    "pid": 127080,
+    "status": "PASS"
+  },
+  "status": "PASS: Link-116 artifact-only Scope/Acceptance"
+}

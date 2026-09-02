@@ -1,0 +1,154 @@
+{
+  "format": "lisp65-c2-lite-v6-badopcode-detail-single-constructor-scope-decision-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: final BADOPCODE seam build form is capacity-negative; scope decision required",
+  "promotable": false,
+  "authority": {
+    "wplto_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-detail-single-constructor-wplto-receipt.json",
+      "bytes": 3285,
+      "sha256": "af450fd2cdb902bd87b649ac251e575e1f474e6bb65dc5980f03a15b6cc3f428"
+    },
+    "internal_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link50-badopcode-detail-single-constructor-wplto-internal-structural.json",
+      "bytes": 19997,
+      "sha256": "146b7b652d971797b524043b610c32d09651545e0a660f6d1b057d0cacb0c57a"
+    },
+    "whole_program_lto_object": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-single-constructor-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 610268,
+      "sha256": "d2de64b2677a48ad2a73c96aabb28e561b454e824bd32d3e5bd9a7e96f6c2126"
+    },
+    "link_map": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-single-constructor-wplto/resident-island-seed.prg.map",
+      "bytes": 199529,
+      "sha256": "d3ba8ae5bc8039ac606ea5e628aa3ce652344dc09b555fbfb9f3201cc40626ce"
+    },
+    "link_stderr": {
+      "path": "build/c2.2/substitution/link50-badopcode-detail-single-constructor-wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 3199,
+      "sha256": "973d82289bbaa4fa11830982efa7c3cddb202c82dc68f675d3b8e5e3b882cb7c"
+    },
+    "sources": {
+      "src/vm.c": "f5d54cf806630a3881321e9c352f1f98b54663fa1baa10ab977b8235aff06864",
+      "src/vm.h": "b22fed0e7b69bac2369fcbcd4f46004f2c28d1415aeb643a773dbd06c779cc5e",
+      "tools/host-lisp/c2_vm_badopcode_detail_gate.py": "7027ba8d0a734263e98ad61d4d3d6605fc264590630851005fdd9d9682c320f7",
+      "config/c2-vm-badopcode-detail-contract.json": "3dc39b950839481f76a696a4ce45ea774852d5377cad2d64e424faf783ca0b31"
+    }
+  },
+  "execution_accounting": {
+    "whole_program_lto_closure_links": 1,
+    "successful_product_links": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0,
+    "retry_runs": 0
+  },
+  "qualification": {
+    "source_files_syntax_checked": 606,
+    "badopcode_detail_mutations_rejected": 30,
+    "vm_run_inner_constructor_edges_in_source": 1,
+    "assembler_leaf_abi_mutations_rejected": 28,
+    "crc_leaf_mutations_rejected": 3,
+    "l65e_slice_bytes": 1173,
+    "l65e_slice_headroom_bytes": 147
+  },
+  "measured_capacity": {
+    "link50_baseline": {
+      "text_bytes": 37979,
+      "text_headroom_bytes": 37,
+      "required_noise_reserve_bytes": 32,
+      "maximum_permitted_feature_debit_bytes": 5
+    },
+    "single_constructor_wplto": {
+      "text_bytes": 38435,
+      "text_delta_from_baseline_bytes": 456,
+      "text_end_exclusive": "0xb646",
+      "handoff_start": "0xb4a3",
+      "handoff_overlap_bytes": 419,
+      "bytes_to_restore_required_noise_reserve": 451,
+      "rodata_vma": "0xb7c0",
+      "bss_vma": "0xbb1b",
+      "bss_bytes": 1587,
+      "fixed_block_start": "0xc080",
+      "fixed_block_overlap_bytes": 206
+    },
+    "change_from_cold_branch_form": {
+      "text_bytes_saved": 94,
+      "vm_run_inner_bytes_saved": 94
+    }
+  },
+  "symbol_attribution_bytes": [
+    {
+      "symbol": "vm_run_inner",
+      "baseline": 7934,
+      "single_constructor": 8324,
+      "delta": 390
+    },
+    {
+      "symbol": "c2_product_install",
+      "baseline": 570,
+      "single_constructor": 599,
+      "delta": 29
+    },
+    {
+      "symbol": "vm_check_status",
+      "baseline": 76,
+      "single_constructor": 99,
+      "delta": 23
+    },
+    {
+      "symbol": "vm_badopcode_detail",
+      "baseline": 0,
+      "single_constructor": 14,
+      "delta": 14
+    },
+    {
+      "symbol": "eval_v2_workbench_service",
+      "baseline": 1757,
+      "single_constructor": 1755,
+      "delta": -2
+    },
+    {
+      "symbol": "vm_callprim",
+      "baseline": 5140,
+      "single_constructor": 5140,
+      "delta": 0
+    }
+  ],
+  "fallback_disposition": {
+    "assembler_leaf": "not applicable to the measured blocker",
+    "reason": "the noinline constructor body is already exactly 14 bytes; replacing it with a leaf cannot recover the 451 bytes required, while the dominant 390-byte debit remains in vm_run_inner call/join ABI state"
+  },
+  "scope_options": [
+    {
+      "option": "coarser_cursor",
+      "product_meaning": "retain runtime BADOPCODE detail but reduce its coordinate precision",
+      "measured_fit": "unproved",
+      "capacity_fact": "must recover at least 451 bytes; changing formatting or coordinate width alone does not remove the measured vm_run_inner ABI debit",
+      "process_cost": "new semantic contract and another WPLTO would be required"
+    },
+    {
+      "option": "phases_only",
+      "product_meaning": "retain named setup/install phases but retire nonnegative runtime cursors",
+      "measured_fit": "not established and arithmetically insufficient without further reduction",
+      "capacity_fact": "even granting the entire 390-byte vm_run_inner debit, the named non-VM attribution remains 64 bytes against a maximum permitted net debit of 5 bytes",
+      "process_cost": "requires at least 59 more resident bytes of scope reduction plus a new contract and WPLTO"
+    },
+    {
+      "option": "retire_badopcode_detail",
+      "product_meaning": "return to the proven DIRMISS-only diagnostic world and generic BADOPCODE text",
+      "measured_fit": "proved by Link 50 baseline",
+      "capacity_fact": "restores the measured 37-byte text headroom, satisfying the immutable 32-byte noise reserve",
+      "process_cost": "remove the unshipped typed BADOPCODE seam and retain its First-Red receipts as historical negative evidence"
+    }
+  ],
+  "recommendation": "retire_badopcode_detail",
+  "reason": "It is the only option with an already measured fit and honors the declared last-build-form rule. DIRMISS detail remains intact; only the intermittent BADOPCODE diagnostic luxury is withdrawn.",
+  "claim_limit": "No product link, hardware execution, runtime semantic result or latency measurement is claimed.",
+  "counters": {
+    "class_b_diagnostic_cycles": "3/3 closed",
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  },
+  "next_gate": "Class-C scope decision; no seventh build form, retry, product link, or hardware run"
+}

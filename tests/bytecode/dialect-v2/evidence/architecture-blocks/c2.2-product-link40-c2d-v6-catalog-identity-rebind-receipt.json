@@ -1,0 +1,655 @@
+{
+  "authority": {
+    "catalog_first_red": {
+      "bytes": 6446,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link40-c2d-v6-shelf-catalog-hardware-first-red-diagnosis.json",
+      "sha256": "9e1f0a03680b60395adc91c783e3d5790fbe38a947e2285bc64a1418ea5038f2"
+    },
+    "prior_product_identity_rebind": {
+      "bytes": 8717,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link40-c2d-v6-product-identity-rebind-receipt.json",
+      "sha256": "88aaf4a77d1e448bb3d86c9241a006ddab460972bf53e3192c2d45463e46e082"
+    },
+    "product_identity": {
+      "bytes": 2104,
+      "path": "build/c2.2/substitution/substitution-artifacts.json",
+      "sha256": "e204a6c28234ac2b80e4e2324e27cafd919677992fcbc18ca0adcc297bf8c512"
+    },
+    "product_shelf": {
+      "bytes": 70897,
+      "path": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+    }
+  },
+  "claim_limit": "Fresh C2D-v6 host semantics, a complete 48-byte header-source audit and one exact four-byte catalog identity correction. Link-40 executable bytes are unchanged; hardware, latency, promotion and acceptance remain not run.",
+  "corrected_c2d": {
+    "all_noncatalog_bytes_equal": true,
+    "bank2_static": {
+      "bytes": 34403,
+      "path": "build/c2.2/c2d-v6-catalog-identity-rebind-link40/v6-semantics/bank2-static-code.bin",
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "changed_offsets": [
+      40,
+      41,
+      42,
+      43
+    ],
+    "executable_plane_byte_identical": true,
+    "new": {
+      "bytes": 33840,
+      "path": "build/c2.2/c2d-v6-catalog-identity-rebind-link40/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    "new_catalog_crc32": "0x3d6302f3",
+    "old": {
+      "bytes": 33840,
+      "path": "build/c2.2/c2d-v6-product-identity-rebind-link40/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "985d1d39e22dec478462a32ccf55eeddf79d9c4fdce76e1485efa2ce9399e8db"
+    },
+    "old_catalog_crc32": "0xd3186bec",
+    "product_build_id_unchanged": "0x69496476",
+    "status": "passed"
+  },
+  "execution_accounting": {
+    "c2d_header_bytes_changed": 4,
+    "hardware_runs": 0,
+    "host_entry_emitter_compiles": 1,
+    "product_bytes_changed": 0,
+    "product_compiler_runs": 0,
+    "product_linker_runs": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2-lite-v6-c2d-catalog-identity-rebind-v1",
+  "fresh_host_semantics": {
+    "artifacts": {
+      "c2d": {
+        "bytes": 33840,
+        "path": "build/c2.2/c2d-v6-catalog-identity-rebind-link40/v6-semantics/initial.c2d-v6.bin",
+        "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+      },
+      "code": {
+        "bytes": 34403,
+        "path": "build/c2.2/c2d-v6-catalog-identity-rebind-link40/v6-semantics/bank2-static-code.bin",
+        "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+      }
+    },
+    "c2d_v6_header_source_audit": {
+      "canonical_identity_fields": [
+        "immutable_image_count",
+        "product_shelf_catalog_crc32",
+        "product_build_id_u32"
+      ],
+      "covered_byte_count": 48,
+      "field_count": 23,
+      "fields": [
+        {
+          "bytes": 4,
+          "detail": "C2D NUL",
+          "field": "magic",
+          "offset": 0,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 1,
+          "detail": "C2D-v6",
+          "field": "version",
+          "offset": 4,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 1,
+          "detail": "48",
+          "field": "header_bytes",
+          "offset": 5,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 1,
+          "detail": "32",
+          "field": "image_record_bytes",
+          "offset": 6,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 1,
+          "detail": "10",
+          "field": "entry_record_bytes",
+          "offset": 7,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "derived from active transient entries; zero in pristine plane",
+          "field": "transient_entry_watermark",
+          "offset": 8,
+          "source": "legitimate-local-state"
+        },
+        {
+          "bytes": 2,
+          "detail": "nonzero session generation, invalidated before restage",
+          "field": "session_generation",
+          "offset": 10,
+          "source": "legitimate-local-state"
+        },
+        {
+          "bytes": 2,
+          "detail": "active emitted C2D image records",
+          "field": "image_count",
+          "offset": 12,
+          "source": "legitimate-local-derivative"
+        },
+        {
+          "bytes": 2,
+          "detail": "64",
+          "field": "image_capacity",
+          "offset": 14,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "active emitted C2D entry records",
+          "field": "entry_count",
+          "offset": 16,
+          "source": "legitimate-local-derivative"
+        },
+        {
+          "bytes": 2,
+          "detail": "2048",
+          "field": "entry_capacity",
+          "offset": 18,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "active emitted resolution words",
+          "field": "resolution_count",
+          "offset": 20,
+          "source": "legitimate-local-derivative"
+        },
+        {
+          "bytes": 2,
+          "detail": "4096",
+          "field": "resolution_capacity",
+          "offset": 22,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "active emissions-derived canonical roots",
+          "field": "root_count",
+          "offset": 24,
+          "source": "legitimate-local-derivative"
+        },
+        {
+          "bytes": 2,
+          "detail": "1536",
+          "field": "root_capacity",
+          "offset": 26,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "48",
+          "field": "images_offset",
+          "offset": 28,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "2096",
+          "field": "entries_offset",
+          "offset": 30,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "22576",
+          "field": "resolutions_offset",
+          "offset": 32,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "30768",
+          "field": "roots_offset",
+          "offset": 34,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "33840",
+          "field": "total_bytes",
+          "offset": 36,
+          "source": "contract-constant"
+        },
+        {
+          "bytes": 2,
+          "detail": "consumed from self-verified L65S-v4 shelf header",
+          "field": "immutable_image_count",
+          "offset": 38,
+          "source": "canonical-authority"
+        },
+        {
+          "bytes": 4,
+          "detail": "consumed from and recomputed over the L65S-v4 catalog",
+          "field": "product_shelf_catalog_crc32",
+          "offset": 40,
+          "source": "canonical-authority"
+        },
+        {
+          "bytes": 4,
+          "detail": "consumed from substitution authority and cross-bound to shelf",
+          "field": "product_build_id_u32",
+          "offset": 44,
+          "source": "canonical-authority"
+        }
+      ],
+      "legitimate_local_fields": [
+        "transient_entry_watermark",
+        "session_generation",
+        "image_count",
+        "entry_count",
+        "resolution_count",
+        "root_count"
+      ],
+      "private_identity_derivations": [],
+      "status": "passed-all-48-header-bytes-accounted"
+    },
+    "dynamic": {
+      "code": {
+        "bytes": 84,
+        "sha256": "4af73b51d5cc56bd534f674bbc0406d63af180af99b4f09cbe404ff865f8ba8d"
+      },
+      "input": {
+        "bytes": 300,
+        "path": "build/equivalence/fasl-test.bin",
+        "sha256": "3a8b0d4bd4a39ac3819d36289bc5d42eceb5bde81fd6cc882174a3403a21b39f"
+      },
+      "manifest": {
+        "bytes": 2668,
+        "path": "build/c2.2/c2d-v6-catalog-identity-rebind-link40/v6-semantics/c2-lite-dynamic.manifest.json",
+        "sha256": "04d44f5c99aa8150d620aee38f3c75381e11c8c289be4e0ee465e94542e5bcb5"
+      },
+      "metadata": {
+        "bytes": 218,
+        "sha256": "240b50eb6edabd67a25478716d54b1681326ac12bd51fae4772b0410b07ce64f"
+      },
+      "repeat_byte_identical": true
+    },
+    "negative_fixtures": [
+      "ordinal-1536",
+      "zero-surrogate",
+      "odd-surrogate",
+      "surrogate-above-root-plane",
+      "surrogate-high-bit",
+      "direct-as-root",
+      "root-as-direct",
+      "positive-even-direct-pointer-shape",
+      "v6-rejects-v5",
+      "v5-rejects-v6",
+      "zero-entry-length",
+      "bank2-range-wrap",
+      "c2d-product-build-identity-mismatch",
+      "c2d-zero-product-build-identity",
+      "c2d-shelf-catalog-identity-mismatch",
+      "c2d-zero-shelf-catalog-identity",
+      "c2d-immutable-image-count-mismatch"
+    ],
+    "nested": {
+      "low_and_high_edges_disjoint": true,
+      "persistent_descendant_handles_retained": 6,
+      "transient_handles_rolled_back": 6
+    },
+    "one_emitter": {
+      "dynamic_calls": 2,
+      "implementation": "tools/host-lisp/c2_full_emission.py::emit_image",
+      "implementation_sha256": "34a0c15088ef3ae458469883f196a2c9b1d204993845622784655f118b5bc666",
+      "legacy_emitter_calls": 0,
+      "static_and_dynamic_format": "C2I-v2 through one implementation",
+      "static_calls": 6
+    },
+    "permanent_root_surrogate_gate": {
+      "collision_intersections": {
+        "bcode": 0,
+        "fixnum": 0,
+        "native_direct": 0,
+        "symi": 0
+      },
+      "format": "lisp65-c2d-v6-root-surrogate-gate-v1",
+      "high_bit_tag_rejection_witnesses": {
+        "bcode": 4096,
+        "negative_fixnum": 16384,
+        "symi": 4096
+      },
+      "negative_fixtures": [
+        "ordinal-1536",
+        "zero-surrogate",
+        "odd-surrogate",
+        "surrogate-above-root-plane",
+        "surrogate-high-bit",
+        "direct-as-root",
+        "root-as-direct",
+        "positive-even-direct-pointer-shape"
+      ],
+      "permanent_rule": "Every C2 probe imports and executes this complete-domain gate; new direct obj domains must be added to the obj.h-backed emitter.",
+      "root_capacity": 1536,
+      "root_surrogates": {
+        "count": 1536,
+        "maximum_hex": "0x0c00",
+        "minimum_hex": "0x0002",
+        "ordinal_0_hex": "0x0002",
+        "ordinal_1535_hex": "0x0c00",
+        "ordinal_1536": "rejected"
+      },
+      "source_truth": {
+        "compiler": "cc",
+        "domain_rows": {
+          "bcode": 4096,
+          "fixnum": 32768,
+          "native_direct": 16384,
+          "symi": 4096
+        },
+        "domain_unique_values": {
+          "bcode": 4096,
+          "fixnum": 32768,
+          "native_direct": 16384,
+          "symi": 4096
+        },
+        "emitted_rows": 57344,
+        "helper_source_sha256": "49b53691f0db9feb1d9feab369f7b77d428a51ce51f534ceacee0ea75a47d432",
+        "obj_h_sha256": "c780e3573fc4fa09c4b08ec7c5c80168afa74f1cc7e693e028e4c7066734c306"
+      },
+      "status": "pass"
+    },
+    "product_build_identity": {
+      "authority": {
+        "bytes": 2104,
+        "path": "build/c2.2/substitution/substitution-artifacts.json",
+        "sha256": "e204a6c28234ac2b80e4e2324e27cafd919677992fcbc18ca0adcc297bf8c512"
+      },
+      "private_derivation_sites": 0,
+      "status": "passed-single-canonical-authority",
+      "value_hex": "0x69496476",
+      "value_u32": 1766417526
+    },
+    "product_shelf_identity": {
+      "authority": {
+        "authority": {
+          "bytes": 2104,
+          "path": "build/c2.2/substitution/substitution-artifacts.json",
+          "sha256": "e204a6c28234ac2b80e4e2324e27cafd919677992fcbc18ca0adcc297bf8c512"
+        },
+        "catalog_bytes": 192,
+        "catalog_crc32": 1029898995,
+        "catalog_offset": 32,
+        "image_count": 6,
+        "product_build_id": 1766417526,
+        "shelf": {
+          "bytes": 70897,
+          "path": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+          "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+        }
+      },
+      "catalog_crc32": "0x3d6302f3",
+      "immutable_image_count": 6,
+      "private_derivation_sites": 0,
+      "status": "passed-single-self-verified-shelf-authority"
+    },
+    "rollback": {
+      "count": 8,
+      "cutpoints": [
+        "after-code-copy",
+        "after-resolutions",
+        "after-roots",
+        "after-image",
+        "after-entries",
+        "after-header",
+        "during-export-first",
+        "during-export-last"
+      ]
+    },
+    "stale_generation": {
+      "new_generation": 2,
+      "old_generation": 1,
+      "old_handles_rejected": 9,
+      "physical_bytes_retained": true
+    },
+    "static_bank2": {
+      "c2d_bytes": 33840,
+      "c2d_sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d",
+      "code_bytes": 34403,
+      "code_sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac",
+      "entries": 588,
+      "headroom_bytes": 31133,
+      "images": 6,
+      "resolutions": 2264,
+      "roots": 283
+    },
+    "static_decoder": {
+      "entries_checked": 588,
+      "resolutions_checked": 2264,
+      "roots_checked": 283
+    },
+    "status": "passed"
+  },
+  "header_source_audit": {
+    "canonical_identity_fields": [
+      "immutable_image_count",
+      "product_shelf_catalog_crc32",
+      "product_build_id_u32"
+    ],
+    "covered_byte_count": 48,
+    "field_count": 23,
+    "fields": [
+      {
+        "bytes": 4,
+        "detail": "C2D NUL",
+        "field": "magic",
+        "offset": 0,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 1,
+        "detail": "C2D-v6",
+        "field": "version",
+        "offset": 4,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 1,
+        "detail": "48",
+        "field": "header_bytes",
+        "offset": 5,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 1,
+        "detail": "32",
+        "field": "image_record_bytes",
+        "offset": 6,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 1,
+        "detail": "10",
+        "field": "entry_record_bytes",
+        "offset": 7,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "derived from active transient entries; zero in pristine plane",
+        "field": "transient_entry_watermark",
+        "offset": 8,
+        "source": "legitimate-local-state"
+      },
+      {
+        "bytes": 2,
+        "detail": "nonzero session generation, invalidated before restage",
+        "field": "session_generation",
+        "offset": 10,
+        "source": "legitimate-local-state"
+      },
+      {
+        "bytes": 2,
+        "detail": "active emitted C2D image records",
+        "field": "image_count",
+        "offset": 12,
+        "source": "legitimate-local-derivative"
+      },
+      {
+        "bytes": 2,
+        "detail": "64",
+        "field": "image_capacity",
+        "offset": 14,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "active emitted C2D entry records",
+        "field": "entry_count",
+        "offset": 16,
+        "source": "legitimate-local-derivative"
+      },
+      {
+        "bytes": 2,
+        "detail": "2048",
+        "field": "entry_capacity",
+        "offset": 18,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "active emitted resolution words",
+        "field": "resolution_count",
+        "offset": 20,
+        "source": "legitimate-local-derivative"
+      },
+      {
+        "bytes": 2,
+        "detail": "4096",
+        "field": "resolution_capacity",
+        "offset": 22,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "active emissions-derived canonical roots",
+        "field": "root_count",
+        "offset": 24,
+        "source": "legitimate-local-derivative"
+      },
+      {
+        "bytes": 2,
+        "detail": "1536",
+        "field": "root_capacity",
+        "offset": 26,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "48",
+        "field": "images_offset",
+        "offset": 28,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "2096",
+        "field": "entries_offset",
+        "offset": 30,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "22576",
+        "field": "resolutions_offset",
+        "offset": 32,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "30768",
+        "field": "roots_offset",
+        "offset": 34,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "33840",
+        "field": "total_bytes",
+        "offset": 36,
+        "source": "contract-constant"
+      },
+      {
+        "bytes": 2,
+        "detail": "consumed from self-verified L65S-v4 shelf header",
+        "field": "immutable_image_count",
+        "offset": 38,
+        "source": "canonical-authority"
+      },
+      {
+        "bytes": 4,
+        "detail": "consumed from and recomputed over the L65S-v4 catalog",
+        "field": "product_shelf_catalog_crc32",
+        "offset": 40,
+        "source": "canonical-authority"
+      },
+      {
+        "bytes": 4,
+        "detail": "consumed from substitution authority and cross-bound to shelf",
+        "field": "product_build_id_u32",
+        "offset": 44,
+        "source": "canonical-authority"
+      }
+    ],
+    "legitimate_local_fields": [
+      "transient_entry_watermark",
+      "session_generation",
+      "image_count",
+      "entry_count",
+      "resolution_count",
+      "root_count"
+    ],
+    "private_identity_derivations": [],
+    "status": "passed-all-48-header-bytes-accounted"
+  },
+  "header_values": {
+    "entry_count": 588,
+    "image_count": 6,
+    "immutable_image_count": 6,
+    "product_build_id_u32": "0x69496476",
+    "product_shelf_catalog_crc32": "0x3d6302f3",
+    "resolution_count": 2264,
+    "root_count": 283,
+    "session_generation": 1,
+    "transient_entry_watermark": 0
+  },
+  "next_gate": "fresh receipt-less hardware presmoke from line 1",
+  "presmoke_authorization": {
+    "candidate": "build/c2.2/substitution/product-link-40-c2-lite-v6-real-abi-e000",
+    "corrected_c2d_path": "build/c2.2/c2d-v6-catalog-identity-rebind-link40/v6-semantics/initial.c2d-v6.bin",
+    "link40_elf_unchanged": true,
+    "link40_prg_unchanged": true
+  },
+  "product_identity": {
+    "elf": {
+      "bytes": 597748,
+      "path": "build/c2.2/substitution/product-link-40-c2-lite-v6-real-abi-e000/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "672dad67238b86c9efe43dbc8169cbe86cdfdd0675549b5c40c08bc3fc0065dc"
+    },
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-40-c2-lite-v6-real-abi-e000/lisp65-c2-substitution-linked.prg",
+      "sha256": "a683a2e9b3be92b41bcc5ef0013f0e1c7ef379a63c26f4fe1883a21508bf44a0"
+    }
+  },
+  "recorded_on": "2026-07-22",
+  "report": {
+    "bytes": 19703,
+    "path": "build/c2.2/c2d-v6-catalog-identity-rebind-link40/c2d-v6-catalog-identity-rebind.json",
+    "sha256": "a9f0521458b2d1b9953e4c882be5f6d3a91cf250fa1f5b96e70d5823ae6121e4"
+  },
+  "status": "passed-c2d-v6-canonical-header-identities-hardware-not-run"
+}

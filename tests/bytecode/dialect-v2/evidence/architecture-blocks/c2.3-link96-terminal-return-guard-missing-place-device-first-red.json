@@ -1,0 +1,77 @@
+{
+  "attempt_accounting": {
+    "hardware_contacts": 1,
+    "monitor_accesses_after_error": 0,
+    "physical_forms": 2,
+    "product_links": 0
+  },
+  "authorities": {
+    "defstruct_manifest": {
+      "bytes": 33757,
+      "path": "build/post-promotion/v110-performance/defstruct-candidate.manifest.json",
+      "sha256": "caa438d9140142c99b25bb9e6ba04a2f00b149abd46920adf376cb2f4567f63e"
+    },
+    "predecessor_defstruct": {
+      "bytes": 2877,
+      "path": "build/c2.3/terminal-return-guard-link96-media/defstruct-library/defstruct.l65s",
+      "sha256": "a7c7d6776bc66dc16cb2a4bea24790ce0b6f6e552a47ab415cbd0454afcf7ad5"
+    },
+    "predecessor_index": {
+      "bytes": 80,
+      "path": "build/c2.3/terminal-return-guard-link96-media/defstruct-library/l65index",
+      "sha256": "b08cbfd31cda10430b7b2a7d12cd8c95a2830a490d457758fd10c830dead4bc7"
+    },
+    "predecessor_library_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/terminal-return-guard-link96-media/defstruct-library/lisp65-library.d81",
+      "sha256": "46ee0a733cf30efbfbcf39e08dbc2e0876346f56268cd9f5e047285b23e447ec"
+    },
+    "predecessor_media_receipt": {
+      "authority": "git-blob",
+      "bytes": 5372,
+      "commit": "3a0aba8e1b980a855eb0edde05c5862c430da968",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-media-receipt.json",
+      "sha256": "a494f00abc75fdeec65301cd24c41d18fa3be8f88c9f47114628b2e906945326"
+    },
+    "require_screen_image": {
+      "bytes": 3202,
+      "path": "build/c2.3/terminal-return-guard-link96-device-session/row-require-defstruct.png",
+      "sha256": "391574046db46ab31aa8c88964b39bbccab8ccac39cb4db81828c0e43ed53d7d"
+    },
+    "require_screen_text": {
+      "bytes": 2241,
+      "path": "build/c2.3/terminal-return-guard-link96-device-session/row-require-defstruct.txt",
+      "sha256": "00efa9c3449ef6f9f108a5a0a12841b9ad081fdfe21e19abf74e7a43a8290ca1"
+    }
+  },
+  "claim_limit": "One physical media-closure First Red. No return-guard, runtime, point, release or writer-attribution claim.",
+  "exonerations": {
+    "product_link_changed": false,
+    "runtime_mechanism_claimed": false,
+    "terminal_return_guard_reached": false
+  },
+  "format": "lisp65-c2.3-link96-missing-place-device-first-red-v1",
+  "mechanism": {
+    "classification": "declared-dependency-omitted-from-medium",
+    "first_missing_callee": "%setf-register-begin",
+    "manifest_declared_requires": [
+      "place"
+    ],
+    "owner": "lib/stdlib-places.lisp",
+    "packed_defstruct_dependencies": [],
+    "packed_rows": [
+      "defstruct"
+    ]
+  },
+  "observation": {
+    "automated_device_access_after_error": 0,
+    "definition_form": "(defstruct point x y)",
+    "owner_visible_result": "*** undefined function: %setf-register-begin",
+    "require_form": "(require (quote defstruct))",
+    "require_result": "t",
+    "result_latency": "immediate"
+  },
+  "recorded_on": "2026-08-11",
+  "repair": "Pack place before defstruct and encode defstruct dependency [0] through the existing resolver contract; rebuild media only.",
+  "status": "FIRST RED: defstruct dependency declared but not packed"
+}

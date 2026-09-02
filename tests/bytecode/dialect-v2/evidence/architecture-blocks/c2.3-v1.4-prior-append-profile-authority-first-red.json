@@ -1,0 +1,28 @@
+{
+  "format": "lisp65-c2.3-v1.4-prior-append-profile-authority-first-red-v1",
+  "recorded_on": "2026-08-03",
+  "status": "FIRST RED: permanent prior-append lane retained the Link-88 profile tuple",
+  "promotable": false,
+  "successor_links_consumed": 1,
+  "hardware_runs": 0,
+  "observed_current_profile": {
+    "product_build_id": "0xac5f997a",
+    "images": 6,
+    "entries": 788,
+    "resolutions": 3034,
+    "roots": 350,
+    "bank2_static_code_bytes": 47298
+  },
+  "stale_gate_tuple": {
+    "product_build_id": "0x74e2765d",
+    "images": 6,
+    "entries": 757,
+    "resolutions": 2947,
+    "roots": 350,
+    "bank2_static_code_bytes": 45514
+  },
+  "attribution": "The permanent Option-A execution lane intentionally binds the exact current profile. Its expected tuple had not moved from Link 88 to the commissioned v1.4 parity-pilot profile, so the complete source gate rejected the otherwise valid successor identity before any device session.",
+  "disposition": "Move only the gate's exact expected tuple to the linker-free canonical v1.4 profile and rerun the unchanged baseline, two-prior-append semantics, five rejection mutations and seven execution witnesses.",
+  "result": "c2-require-prior-append-option-A-gate: PASS baseline=t two-appends=t mutations=5 executions=7",
+  "claim_limit": "A post-link, pre-device host-gate authority First Red and its exact profile rebind only. No require semantic change, hardware, acceptance, promotion or release claim."
+}

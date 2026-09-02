@@ -1,0 +1,272 @@
+{
+  "authority": {
+    "promotion_register": {
+      "bytes": 16685,
+      "path": "config/promotion-register.json",
+      "sha256": "36d99f675273c7629fc7df917acd4fc018d172e3b933696970ca0d89a3662fe6"
+    },
+    "release_plan": {
+      "bytes": 4003,
+      "path": "docs/planning/v1.2.2-release-plan.md",
+      "sha256": "bd76cada871f2a6564b3cb8373e487f16f6b02a0c3e3b9f578bad66f897c6b07"
+    },
+    "verifier": {
+      "bytes": 16489,
+      "path": "tools/host-lisp/c2_v122_halt_a.py",
+      "sha256": "09d8541ce01bd51eabe7b4f90679a2008aa8587d769c649e1189a5c188be98ca"
+    }
+  },
+  "candidate": {
+    "package_set_sha256": "129cbf443beb4433bcf87388c2131a8f084df3b2e812b21fb5893f008932d651",
+    "product_artifact_set_sha256": "359809d4a6b3bde95b9624f375ae38c32446ea54024a58691e07eb4673bcf7de",
+    "promotion_state": "not-promoted",
+    "release": "v1.2.2"
+  },
+  "chain": {
+    "A1": {
+      "documents": 230,
+      "executed_cases": 447,
+      "lanes": 11,
+      "receipt": {
+        "bytes": 3521,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.2-a1-prechain-hygiene-receipt.json",
+        "sha256": "f5b05cb7754439e95cca1bef3e24dd9f24b411016bff04027cf9ee6454b5bd40"
+      },
+      "status": "passed"
+    },
+    "A2": {
+      "disposition": {
+        "DOCUMENTED-C2.3-DEFERRED": 3,
+        "EXCLUDED": 5,
+        "PROVEN": 17
+      },
+      "explicit_not_rederived": 24,
+      "receipt": {
+        "bytes": 20964,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.2-link78-cross-invariant-delta-receipt.json",
+        "sha256": "2ab4dd6bac584853ca3a22f7f8f02f2b83fd6f0e29c1e604c807496630914062"
+      },
+      "rederived": [
+        "E5"
+      ],
+      "rows": 25,
+      "status": "passed-no-new-open-row"
+    },
+    "G2_informational_measurement": {
+      "disposition": "no-GC-cut-authorized",
+      "receipt": {
+        "bytes": 3035,
+        "path": "build/c2.2/v1.2.2-acceptance/r5/hardware-session-01/g2-symbol-value-cost-hardware-receipt.json",
+        "sha256": "096ed69a61a73c7754f8fdc4b68421a5180e7b3e4705d128c6e81792605c6b9d"
+      },
+      "status": "passed-not-an-acceptance-criterion",
+      "threshold_frames": 44.5,
+      "threshold_met": false,
+      "value_string": "symval-minus-boundp=0f/1000 = 0.000000f/read = 0us/read; projected-480=0.000f/89f"
+    },
+    "G5": {
+      "device_count": 1,
+      "receipt": {
+        "bytes": 13197,
+        "path": "build/c2.2/v1.2.2-acceptance/r5/hardware-session-01/g5-hardware-receipt.json",
+        "sha256": "b30d0b40b60e34cf56133bd56d34e9b9f6d4acb232eaf175b93c67d822dc5e4f"
+      },
+      "status": "passed-fresh-nine-of-nine",
+      "value_strings": [
+        {
+          "claim": "required",
+          "id": "media/cold-boot-stage-banner",
+          "status": "passed",
+          "value_string": "banner=WORKBENCH-DIALECT-V2 repl=usable limit=banner-and-usable-REPL"
+        },
+        {
+          "claim": "required",
+          "id": "runtime/published-nullary-cold",
+          "status": "passed",
+          "value_string": "result=t counter=100->100 frames=0 limit<=16"
+        },
+        {
+          "claim": "required",
+          "id": "runtime/published-nullary-warm",
+          "status": "passed",
+          "value_string": "result=t counter=39->40 frames=1 limit<=10"
+        },
+        {
+          "claim": "informative",
+          "id": "runtime/published-argument-informative",
+          "status": "recorded-no-claim",
+          "value_string": "result=1 counter=157->157 frames=0 limit=none"
+        },
+        {
+          "claim": "informative",
+          "id": "runtime/gc-envelope-informative",
+          "status": "recorded-no-claim",
+          "value_string": "result=t counter=218->235 frames=17 gc_runs=3->4 collections=1 blockreads=96 limit=none"
+        },
+        {
+          "claim": "required",
+          "id": "runtime/runstop-zero-growth",
+          "status": "passed",
+          "value_string": "stopped=yes C2D_sha256=309149d415b8cc46aa113767d73485b2f7b42c1af44bbc2863b196703dfa0f67 continuation=3 limit=stopped-and-byteidentical-zero-growth"
+        },
+        {
+          "claim": "required",
+          "id": "runtime/idle-freezer-identity",
+          "status": "passed",
+          "value_string": "F3-return=yes bank2=542b8831db6de419193c3e57be04bbca987869de9ff5cf4924daf10c38c377aa bank3=af831a13f3560cfb775f8a642df5be68721e2b3cf62e935ddc3fefeba069f334 E000-live-diffs=3 continuation=9 limit=identity-except-FF83-FF84-FF86-FF89"
+        },
+        {
+          "claim": "required",
+          "id": "runtime/nested-eval-generation",
+          "status": "passed",
+          "value_string": "nested-result=t C2D_sha256=309149d415b8cc46aa113767d73485b2f7b42c1af44bbc2863b196703dfa0f67 family-generation=(1,4) limit=t-zero-growth-generation-bound"
+        },
+        {
+          "claim": "required",
+          "id": "media/destructive-restage-recovery",
+          "status": "passed",
+          "value_string": "destroyed-bank2=7aefa1511529d5ae13d675c4f032d61d5b0c3df71a31e179d3384c7a8ae734dd destroyed-bank3=f987a1b5e0b87fc9e660f09967563a78de60df01dec65236945120eea61d4c56 repaired-bank2=cac8e6392de04b9086f37d77b38db7a2f2fd99e904b7b985c50af93db4b16c09 repaired-bank3=1fd8a514e2e3eddba315e8f8f87214d606effc0a4a90b10e2c0411a241451ba6 repl=5 limit=cold-boot-detects-and-repairs-destroyed-chip-stage"
+        }
+      ]
+    },
+    "G6": {
+      "cases": [
+        "offline-package-verification",
+        "cold-boot-from-exact-R6-product-media",
+        "always-restage-and-target-readback",
+        "work-media-write-read-power-cycle",
+        "product-media-remains-byteidentical"
+      ],
+      "receipt": {
+        "bytes": 2062,
+        "path": "build/c2.2/v1.2.2-acceptance/g6/session-01/g6-hardware-receipt.json",
+        "sha256": "0b38280dc46bc5e4984432733fe48794d17722b45e9dd3933d7c9f92350234d6"
+      },
+      "status": "passed-five-of-five"
+    },
+    "R4": {
+      "archive": {
+        "bytes": 40816961,
+        "path": "build/c2.2/v1.2.2-acceptance/r4/c2-lite-v1.2.2-r4-product.tar.gz",
+        "sha256": "9a0a515590e1ce55abca1e6f1744dafbdb5c154a6116b29188be89a1c7e1f67e"
+      },
+      "assertions": {
+        "bytes": 2508,
+        "path": "build/c2.2/v1.2.2-acceptance/r4/r4-product-candidate-assertions.json",
+        "sha256": "46b505844cc1334709566f0db34926ce718058e4c3f2ec4936be2d8bdfa5ccfb"
+      },
+      "roles": 19,
+      "status": "passed-fresh-seal"
+    },
+    "R6": {
+      "double_pack": "byteidentical",
+      "receipt": {
+        "bytes": 2192,
+        "path": "build/c2.2/v1.2.2-acceptance/r6/r6-packaging-receipt.json",
+        "sha256": "6238ff3536053584453c26e4c8ae7c95a16bb46dbf07a20c95bb53b591c6d5e6"
+      },
+      "roles": 19,
+      "status": "passed-exact-package"
+    },
+    "remote_bound_seal": {
+      "archive": {
+        "bytes": 43354237,
+        "path": "build/c2.2/v1.2.2-seals/c2-lite-v1.2.2-r6-g6-hardware-acceptance-8cbc652.tar.gz",
+        "sha256": "e317bc0525e27c8eb604e70e1018bc8276677959e9b1e455a4687032568e13bc"
+      },
+      "bindings": 129,
+      "claim": "acceptance-sealed-v1.2.2-not-promoted",
+      "current_remote_contains_source": true,
+      "files": 540,
+      "remote_head_at_seal": "8cbc652e2769de131f6cac703112e2b635e375ed",
+      "source_commit": "8cbc652e2769de131f6cac703112e2b635e375ed",
+      "status": "passed-isolated-offline-verification"
+    }
+  },
+  "claim_limit": "Halt-A review package only. It does not prepare release notes, promote, create a tag, push public main or publish v1.2.2. The G2 measurement is informational and cannot make G5 red.",
+  "decision_requested": "accept the fresh v1.2.2 chain and authorize Phase B release preparation; no promotion occurs before this decision",
+  "format": "lisp65-v1.2.2-halt-a-review-v1",
+  "harness_only_first_reds": [
+    {
+      "classification": "measurement-harness-input-transport-only",
+      "disposition": "excluded-no-measurement-form-executed",
+      "id": "measurement-harness-input-transport-only",
+      "receipt": {
+        "bytes": 3609,
+        "path": "build/c2.2/v1.2.2-acceptance/r5/hardware-session-01/g2-symbol-value-cost/input-transport-first-red.json",
+        "sha256": "93437e96edd8539219de4a128d9ebe7f07358b03d4375a864f89b0fde6465ff4"
+      }
+    },
+    {
+      "classification": "G6-harness-media-transfer-timeout-only",
+      "disposition": "excluded-no-product-execution",
+      "id": "G6-harness-media-transfer-timeout-only",
+      "receipt": {
+        "bytes": 1397,
+        "path": "build/c2.2/v1.2.2-acceptance/g6/session-01/case-02-harness-first-red-upload-timeout/receipt.json",
+        "sha256": "32e7a5b83df832657d354b22ee667992a651604c44e099fae65ea166069d69fd"
+      }
+    },
+    {
+      "classification": "G6-harness-clean-clone-tool-path-only",
+      "disposition": "excluded-no-product-form-submitted",
+      "id": "G6-harness-clean-clone-tool-path-only",
+      "receipt": {
+        "bytes": 1031,
+        "path": "build/c2.2/v1.2.2-acceptance/g6/session-01/case-02-cold-boot/harness-first-red-relative-tools-path/receipt.json",
+        "sha256": "d7341dbbd0b52a29967ee205191b3f1f92529aa153bc23e4b0d937aa9226acf6"
+      }
+    },
+    {
+      "classification": "harness-only",
+      "disposition": "bound-harness-first-red-product-green",
+      "id": "remount-exact-result-one-second-past-coarse-deadline",
+      "receipt": {
+        "bytes": 1820,
+        "path": "build/c2.2/v1.2.2-acceptance/g6/session-01/case-04-work-media/harness-first-red-remount-deadline.json",
+        "sha256": "56a41a2766cb457cd1d005039540247fe50c5849a6ca0bbd29d4ec056a4e9452"
+      }
+    },
+    {
+      "classification": "harness-only",
+      "disposition": "bound-harness-first-red-exact-media-remounted",
+      "id": "freezer-mount-not-retained-across-physical-reboot",
+      "receipt": {
+        "bytes": 1991,
+        "path": "build/c2.2/v1.2.2-acceptance/g6/session-01/case-04-work-media/harness-first-red-freezer-mount-persistence.json",
+        "sha256": "10a6b88969494c12b3c23d5a7e3c64648fd92eb7df5da2c112a5061dee31d7aa"
+      }
+    },
+    {
+      "classification": "harness-only",
+      "disposition": "bound-harness-first-red-product-green",
+      "id": "remount-exact-result-one-second-past-coarse-deadline",
+      "receipt": {
+        "bytes": 1815,
+        "path": "build/c2.2/v1.2.2-acceptance/g6/session-01/case-04-work-media/harness-first-red-work-remount-after-cycle-deadline.json",
+        "sha256": "ef7b491cbf1dabbd032f4c31e8db688e373caa91595481a06d179c4ab0c02030"
+      }
+    }
+  ],
+  "known_nonblocking_positions": [
+    "cartridge interrupt storms remain unsupported",
+    "intermittent post-GC OOM remains unreproduced and documented",
+    "defstruct/dynamic library freight remains parked",
+    "fail-closed red-frame guard remains intentionally terse",
+    "C1, E3 and E4 remain explicit C2.3 deferrals"
+  ],
+  "mutations": {
+    "attempted": 6,
+    "names": [
+      "G5-row-red",
+      "G6-case-dropped",
+      "R6-product-set-drift",
+      "matrix-open-row",
+      "G2-threshold-forged",
+      "premature-promotion"
+    ],
+    "rejected": 6
+  },
+  "status": "halt-A-ready-owner-review-required",
+  "version": 1
+}

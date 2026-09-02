@@ -1,0 +1,32 @@
+{
+  "claim_limit": "Pre-trigger diagnostic harness state only; no product or DMA completion result.",
+  "classification": "harness-precondition-not-product",
+  "correction": "Stage-1 deployment now loads and readback-verifies a bound 64-byte zero-C2J fixture before the diagnostic product runs.",
+  "evidence": {
+    "Bank5_before": {
+      "bytes": 65536,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware-symbol-read-session-v2/dma-bank5-before.bin",
+      "sha256": "06d9fa0255eb3fa945c65fc2cfebec2e10622610d1e4474c479f34eb8ebe9be1"
+    },
+    "phase_owner": {
+      "bytes": 1,
+      "path": "build/post-promotion/link75-bound-compiler-carrier/bundled-completion-session/hardware-symbol-read-session-v2/dma-phase-owner-before.bin",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "post_symname": {
+      "bytes": 978,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-post-symname-hardware-v2-receipt.json",
+      "sha256": "596f35cc03e5841fa98555fdf735f420d4d56c4b8db37878ee969a76730b1be9"
+    }
+  },
+  "execution_accounting": {
+    "DMA_rows_run": 0,
+    "product_byte_changes": 0,
+    "product_links": 0
+  },
+  "finding": "The diagnostic contract required C2J=CLEAR but the deployment did not establish its 64-byte zero baseline; live bytes were 64 copies of $10 while phase owner was NONE.",
+  "format": "lisp65-c2.2-link75-symbol-read-precondition-harness-first-red-v1",
+  "recorded_on": "2026-07-28",
+  "status": "FIRST-RED-before-DMA-trigger-C2J-not-CLEAR",
+  "trigger_executed": false
+}

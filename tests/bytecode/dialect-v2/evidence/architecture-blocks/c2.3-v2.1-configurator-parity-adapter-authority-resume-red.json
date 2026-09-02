@@ -1,0 +1,133 @@
+{
+  "authority": {
+    "cleanup": {
+      "bytes": 31845,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-configurator-parity-partial-completion-cleanup-receipt.json",
+      "sha256": "ffe837dcb45bb1fc76ee48fd76a09a04e0260972ed6a77f2ff12568b4e0909e8"
+    },
+    "driver": {
+      "bytes": 62759,
+      "path": "tools/host-lisp/c2_v21_root_padding_configurator_parity_media.py",
+      "sha256": "cc7dc28764da766b92840921408fc50e7abe0bb8b3e7c4ae06cdfd8b2996bfd0"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 143604,
+      "commit": "092dbce54eb58f12565000c17fd30c9fffc17b28",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "7c5da1a3becca9a45c4dc34c1158fbc61f2179273062fcf550a9f5bf796dd5c5"
+    },
+    "predecessor_red": {
+      "bytes": 6026,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-configurator-parity-completion-final-resume-red.json",
+      "sha256": "9cc1b175032648ce42457170e2d0238335165ba33c1eed549eaab7ed73c6a12c"
+    }
+  },
+  "attribution": {
+    "class": "KERNAL-PUBLISH-LAST-PRODUCER-ABSENT-FROM-COMPLETION-CHAIN",
+    "mechanism": "The accepted PRG still carries the compiled KERNAL CRC sentinel 0xA55A, while the candidate-derived 8192-byte KERNAL window has CRC 0x72A7. complete_artifacts() consumes kernal-window-publish-last.json after publishing the runtime-overlay binding, but this continuation neither inherited that candidate-specific receipt nor executed publish_kernal_window_binding() to create it. A historical receipt cannot be projected because the two candidate operands are still genuinely unpublished.",
+    "missing_input": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/final/kernal-window-publish-last.json",
+    "narrow_repair": "Make the candidate-specific KERNAL window publisher an explicit Completion adapter before its receipt consumer, extend the real-consumer preflight from isolated adapter calls to the ordered Completion adapter chain, discard the exact 110-file partial inventory, and resume only on new owner authority.",
+    "product_or_link_finding": false,
+    "proof": {
+      "candidate_window_bytes": 8192,
+      "candidate_window_crc16": "0x72A7",
+      "compiled_crc16": "0xA55A",
+      "current_prg_operand_bytes": [
+        165,
+        90
+      ],
+      "required_publish_last_operand_bytes": [
+        114,
+        167
+      ],
+      "required_changed_bytes": 2,
+      "wplto_kernal_publish_receipt_present": false
+    }
+  },
+  "claim_limit": "The sole nested-adapter-Golden resume was consumed. No further Completion, medium, or hardware contact is authorized here.",
+  "error": {
+    "message": "configurator-parity child _base red:\nconfigurator parity media: FIRST RED: fresh current-world completion red:\nruntime-overlay-bank: PACK profile=c2-product-substitution-v1 slices=11 image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v2.1-root-padding-configurator-parity-continuation/final/runtime-overlays-boot-unbound.bin\nruntime-overlay-bank: PACK profile=c2-product-substitution-v1 slices=52 image=/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v2.1-root-padding-configurator-parity-continuation/final/runtime-overlays-session-unbound.bin\nconfigurator parity media: FIRST RED: [Errno 2] No such file or directory: '/home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.3/v2.1-root-padding-configurator-parity-continuation/final/kernal-window-publish-last.json'\n\n",
+    "type": "MediaError"
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "adapter_authority_resumes_authorized": 1,
+    "adapter_authority_resumes_run": 1,
+    "cards": 0,
+    "device_contacts": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-adapter-authority-resume-red-v1",
+  "frozen_finals_after": {
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d966884a7a3244b23003501e6ed9289a7df21bb1de6edea990649f12201dd043"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 619772,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "8d34e7e9453439e15fc596bb992b7a9ba356db5d8042bd87f8ea993028564d90"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 198179,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "e955cc2c5245a5ee41b19386d490e254ca3057f9f806a395de24c024ccb30b90"
+    }
+  },
+  "frozen_finals_before": {
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d966884a7a3244b23003501e6ed9289a7df21bb1de6edea990649f12201dd043"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 619772,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "8d34e7e9453439e15fc596bb992b7a9ba356db5d8042bd87f8ea993028564d90"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 198179,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "e955cc2c5245a5ee41b19386d490e254ca3057f9f806a395de24c024ccb30b90"
+    }
+  },
+  "owner_disposition_required": true,
+  "partial_outputs": {
+    "artifact_completion_receipt": false,
+    "configurator_preflight": true,
+    "files": 110,
+    "inventory_sha256": "208a56d10df0e6610e7832e7edca83b3f6bcb6861044887eda1d53a0e22839cc",
+    "media_builds": 0,
+    "pipeline_receipt": false,
+    "publish_last_receipt": true
+  },
+  "resume_progress": {
+    "artifact_completion_receipt": false,
+    "candidate_golden_consumers": 2,
+    "candidate_golden_projection": "PASS",
+    "completion_adapter_preflight": "3/3 PASS",
+    "configurator_preflight": "7/7 PASS",
+    "kernal_publish_last": "NOT RUN",
+    "media_builds": 0,
+    "runtime_verifier_publish_last": {
+      "bytes": 40,
+      "changed_bytes": 38,
+      "status": "PASS"
+    }
+  },
+  "recorded_on": "2026-08-17",
+  "retry_authorized": false,
+  "status": "ADAPTER AUTHORITY RESUME RED: RETURNS TO OWNER"
+}

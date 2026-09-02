@@ -1,0 +1,138 @@
+{
+  "claim_limit": "Closes matrix row C4 for the exact Link-57 identity. It is not promotion and does not start R4/R5/R6/G5/G6.",
+  "final": {
+    "c2j_zero": true,
+    "captures": {
+      "bank0": {
+        "bytes": 65536,
+        "path": "build/c2.2/destructive-restage-link57/final-bank0.bin",
+        "sha256": "0fa3c6b4224396d8f6aae6d9d6a7dd1b5707d7172b4c059ca5e8a1c7f344b87e"
+      },
+      "bank5": {
+        "bytes": 50816,
+        "path": "build/c2.2/destructive-restage-link57/final-bank5.bin",
+        "sha256": "9b94fb44518381089a5aaa6768824916a8d822b1be44268b4a4f0f1d3fb73656"
+      }
+    },
+    "header_counts": {
+      "entries": 591,
+      "images": 7,
+      "resolutions": 2273,
+      "roots": 283
+    },
+    "ready": 1
+  },
+  "format": "lisp65-c2-destructive-restage-hardware-receipt-v1",
+  "host_contract_receipt": {
+    "bytes": 5273,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link57-destructive-restage-contract-probe-receipt.json",
+    "sha256": "db8767d2aa369f212a200584eeddfa95b00b435dd402ebc81ae1144d8e449698"
+  },
+  "manual_observations": {
+    "fresh_call": {
+      "input": "(%c4fresh)",
+      "observed": "t",
+      "operator_confirmed": true
+    },
+    "fresh_definition": {
+      "input": "(defun %c4fresh () 't)",
+      "observed": "%c4fresh",
+      "operator_confirmed": true
+    },
+    "stale_form": {
+      "detail_claim": "none",
+      "input": "(%c4-stale)",
+      "observed": "*** vm: undefined function:   P",
+      "operator_confirmed": true,
+      "required_prefix": "*** vm: undefined function"
+    }
+  },
+  "negative": {
+    "bank5_header_generation": 2,
+    "c2_ready": 0,
+    "c2_runtime": {
+      "error": 1,
+      "generation": 2,
+      "phase": 2
+    },
+    "c2j_magic_retained": true,
+    "captures": {
+      "bank0": {
+        "bytes": 65536,
+        "path": "build/c2.2/destructive-restage-link57/negative-bank0.bin",
+        "sha256": "3c6c1296f1ede9f8c32b9f0ce8a4156a542c144e4d2bc0547a2281b8241372c8"
+      },
+      "bank5": {
+        "bytes": 50816,
+        "path": "build/c2.2/destructive-restage-link57/negative-bank5.bin",
+        "sha256": "dd199b13658e8b68c34b5969201e9d69f101b505400ac298b330bac77f051b1a"
+      },
+      "sentinel": {
+        "bytes": 64,
+        "path": "build/c2.2/destructive-restage-link57/negative-stale-attic.bin",
+        "sha256": "3ecbd5500d201be0b1817608801abb296082f04bb8f9b3c1c6677eb3a3370f88"
+      }
+    },
+    "family": 1,
+    "screen_observation": {
+      "expected": "E25",
+      "operator_confirmed": true
+    },
+    "stale_attic_sentinel_retained": true,
+    "status": "passed-fail-closed-negative"
+  },
+  "product_identity": {
+    "address": "0x00002001",
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-57-keymap-nullary-fast-path2/lisp65-c2-substitution-linked.prg",
+    "sha256": "7d568ceb7edab95a237ff3079fcf689768373a9ea48a5a43f355f6275ddc5df8"
+  },
+  "recorded_on": "2026-07-23",
+  "repair_preappend": {
+    "bank2_target_exact": true,
+    "bank3_target_exact": true,
+    "c2_ready": 1,
+    "c2j_zero": true,
+    "captures": {
+      "bank0": {
+        "bytes": 65536,
+        "path": "build/c2.2/destructive-restage-link57/repair-bank0.bin",
+        "sha256": "72657074aa63056fc88d75652d47a0f940b59e87639e403509f888107ea7b5fa"
+      },
+      "bank2": {
+        "bytes": 65536,
+        "path": "build/c2.2/destructive-restage-link57/repair-bank2.bin",
+        "sha256": "ceabda728319f08d33a7ff08ed9477f507d49f19edc3764db0d5cacfa3a9f40a"
+      },
+      "bank3": {
+        "bytes": 65536,
+        "path": "build/c2.2/destructive-restage-link57/repair-bank3.bin",
+        "sha256": "071e8afc11713deab3b512dda58169ff171dac81512e64441ae55634edd62d98"
+      },
+      "bank5": {
+        "bytes": 50816,
+        "path": "build/c2.2/destructive-restage-link57/repair-bank5.bin",
+        "sha256": "233232d7bba7fd6adcd4afa0c3689eab3d454b4bf34a34a5b977c7bcd556dcd7"
+      },
+      "sentinel": {
+        "bytes": 64,
+        "path": "build/c2.2/destructive-restage-link57/repair-stale-attic.bin",
+        "sha256": "3ecbd5500d201be0b1817608801abb296082f04bb8f9b3c1c6677eb3a3370f88"
+      }
+    },
+    "family": 2,
+    "generation": 1,
+    "header_counts": {
+      "entries": 590,
+      "images": 6,
+      "resolutions": 2273,
+      "roots": 283
+    },
+    "island_state": 2,
+    "stale_attic_sentinel": "byte-identical-and-unreachable",
+    "status": "passed-complete-repair-before-first-append"
+  },
+  "row": "C4",
+  "status": "passed-same-identity-destructive-restage-and-repair",
+  "value_string": "C4=PASS link57=same torn-generation=reject-before-ready repair-span=50816 c2j=zero stale-attic=unreachable fresh-append=pass acceptance-chain=still-blocked-by-other-open-rows"
+}

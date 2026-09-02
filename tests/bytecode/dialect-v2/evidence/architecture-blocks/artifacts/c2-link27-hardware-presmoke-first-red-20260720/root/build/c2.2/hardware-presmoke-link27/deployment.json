@@ -1,0 +1,69 @@
+{
+  "boot_overlay": {
+    "build_id": "0x3d56553c",
+    "descriptor_bytes": 18,
+    "entry": "0xc769",
+    "payload_bytes": 1427,
+    "payload_crc16": "0x1cfb",
+    "vma": "0xc356"
+  },
+  "claim_limit": "Host-verified deployment plan for a receipt-less fail-fast hardware pre-smoke. It is not hardware evidence, promotion, acceptance or release.",
+  "format": "lisp65-c2-hardware-presmoke-deployment-v2",
+  "new_product_links": 0,
+  "preloads": [
+    {
+      "address": "0x00050000",
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/initial.c2d-v3.bin",
+      "sha256": "0a0ddf0168028bae27e7cd6fdc687fe8ca3a3f4940cdf70dae844c0bd5c1c185"
+    },
+    {
+      "address": "0x00058500",
+      "bytes": 1445,
+      "path": "build/c2.2/hardware-presmoke-link27/boot-overlay.stage.bin",
+      "sha256": "c3db5b52570bcc69fae7a71fc6cbd62847b08f248c4957bca4d15d917fcd3166"
+    },
+    {
+      "address": "0x08000000",
+      "bytes": 50334,
+      "path": "build/c2.2/substitution/product-link-27-vm-gc-e000/runtime-overlays-session-final.bin",
+      "sha256": "8bd15c921f340005dde7d4a514939cba13e0caa37e85e4dd65938b94b78885df"
+    },
+    {
+      "address": "0x08100000",
+      "bytes": 70897,
+      "path": "build/c2.2/substitution/product-shelf-v4-direct.bin",
+      "sha256": "9b7d9c0328789870b9e292b5277a6301df432bef58d3ab73791a34c56df7fb74"
+    },
+    {
+      "address": "0x08200000",
+      "bytes": 12529,
+      "path": "build/c2.2/substitution/product-link-27-vm-gc-e000/runtime-overlays-boot-final.bin",
+      "sha256": "4418602716ff90daee5dc91c093fd54e75d74a49fdb34420a357915c867bd49f"
+    },
+    {
+      "address": "0x087fe000",
+      "bytes": 8192,
+      "path": "build/c2.2/substitution/product-link-27-vm-gc-e000/c2-product-kernal-window.bin",
+      "sha256": "c5a426a9869e3cd8e6190b2af108482b71d1eb583096675af4cf9a565b77a83e"
+    }
+  ],
+  "product": {
+    "address": "0x00002001",
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-27-vm-gc-e000/lisp65-c2-substitution-linked.prg",
+    "sha256": "7303eb122a34bf2a4c49c3f9875f2eb2e3634ffff91a368f589b1abec7341fbc"
+  },
+  "source_candidate": {
+    "directory": "build/c2.2/substitution/product-link-27-vm-gc-e000",
+    "handoff_z_gate_sha256": "29e77093e6b5b60085941ac59b52bd392d143382f22e17c84eb553f6217351a4",
+    "structural_report_sha256": "3560bb0051ad0ff0723cc5d0a2a5ccc58616e8c5f7324e4378df2601d4e0068a"
+  },
+  "span_checks": {
+    "c2d_ends_before_boot_overlay": true,
+    "session_ends_before_shelf": true,
+    "shelf_ends_before_boot_family": true,
+    "window_ends_at_attic_limit": true
+  },
+  "status": "ready-receipt-less"
+}

@@ -1,0 +1,108 @@
+{
+  "authorities": {
+    "device": {
+      "bytes": 13462,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-control-shaped-device-receipt.json",
+      "sha256": "45161cdd465e59c1f2a8dd8d6087f9dac792be838278ba7158f0153e177f8a56"
+    },
+    "driver": {
+      "bytes": 13000,
+      "path": "tools/host-lisp/c2_v16_control_shaped_result.py",
+      "sha256": "ad6cedbfd3354cc28de0caa8685c8a0c06ac518dfb6684b46af5df58ce31ed64"
+    },
+    "handover": {
+      "bytes": 5043,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-physical-run-handover-desk-receipt.json",
+      "sha256": "9669dc1988bd959c23f17e0d484a981cc473d2ef2c5a259f54d9eba887cf3ae4"
+    },
+    "owner_observation": {
+      "bytes": 97010,
+      "path": "git:5d656d6a83e2334be26b6c6abfccd3380db0bdf1:docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "aba64d9d9d135eb23afc1db732a21f6ec523f15db231eedfcc7ddc874ab90cd9"
+    },
+    "physical_control": {
+      "bytes": 2429,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-launch-boundary-control-device-receipt.json",
+      "sha256": "fe5e918571fc984cfb91604ab4c0f5c4e2f0feed3acf2d32b2df72dbcb87436e"
+    },
+    "preparation": {
+      "bytes": 4350,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-control-shaped-preparation-receipt.json",
+      "sha256": "6f9b005309ddb6ca2ae91ebebc1c87d9522c5a11846a478d24990b410c76105c"
+    },
+    "prior_quiet_result": {
+      "bytes": 5334,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-d2-corrected-view-quiet-result-receipt.json",
+      "sha256": "b2dc562176498d8d7ae43964e64c67c53072607e9d13112f686493b125670b7e"
+    }
+  },
+  "claim_limit": "Closes the control-shaped discriminator. Removing the prelaunch monitor crossing did not change the physical monitor/no-entry outcome, so that hypothesis is falsified. The remaining boundary is target-side and before $202C, but its mechanism is not yet attributed. No product hang, F018B, R/A/I/G, form, fix or contact is claimed.",
+  "facts": {
+    "decision": {
+      "F018B_membership_claim": false,
+      "R_A_I_G_claim": false,
+      "contact_consumed": true,
+      "measured_forms_run": 0,
+      "new_contact_authorized": false,
+      "next_step": "desk attribution of the residual target-side launch difference",
+      "product_hang_claim": false
+    },
+    "experiment": {
+      "outcome_matches_prior_failed_launch": true,
+      "owner_observed_monitor_after_RETURN": true,
+      "prelaunch_monitor_crossing_causal": false,
+      "prelaunch_monitor_crossing_present": false,
+      "treatment_removed": "prelaunch monitor-sync/t1/reads/t0",
+      "visible_lisp65_prompt": false
+    },
+    "launch": {
+      "PCs": [
+        "0xe1c2",
+        "0xe18f",
+        "0xe1bf"
+      ],
+      "diagnostic_entry_observed": false,
+      "durable_entry_witness": [
+        "0xd7",
+        "0xd7",
+        "0xd7"
+      ],
+      "first_executable_diagnostic_delta": "0x202c",
+      "mechanism_attributed": false,
+      "named_boundary": "target-side physical launch before $202c",
+      "residual_target_side_launch_difference": true
+    },
+    "view_and_owner": {
+      "MAPH": "0x8300",
+      "MAPL": "0x82a0",
+      "all_reads_CPU_view": true,
+      "exact_backing_image_named": false,
+      "observed_E000_bytes": "f724a20fdd54eef005ca10f88018a5d1",
+      "product_E000_bytes": "068a69008507a41fb1048504a001b106",
+      "selected_owner_class": "historical-live-C65/BOOT-high-MAP-non-product"
+    }
+  },
+  "format": "lisp65-c2.3-v1.6-D2-control-shaped-result-v1",
+  "mutations_rejected": {
+    "authorize-contact": "claim boundary drift",
+    "claim-F018B": "claim boundary drift",
+    "claim-R-A-I-G": "claim boundary drift",
+    "claim-mechanism": "residual launch boundary drift",
+    "claim-prelaunch-causal": "discriminator conclusion drift",
+    "claim-product-hang": "claim boundary drift",
+    "different-outcome": "discriminator conclusion drift",
+    "erase-monitor": "discriminator conclusion drift",
+    "erase-target-difference": "residual launch boundary drift",
+    "invent-entry": "residual launch boundary drift",
+    "invent-form": "claim boundary drift",
+    "invent-prompt": "discriminator conclusion drift",
+    "move-delta": "residual launch boundary drift",
+    "name-unknown-backing": "owner closure drift",
+    "physical-view": "owner closure drift",
+    "restore-prelaunch": "discriminator conclusion drift",
+    "same-product-bytes": "owner closure drift",
+    "select-product-map": "owner closure drift"
+  },
+  "recorded_on": "2026-08-05",
+  "status": "PRELAUNCH MONITOR HYPOTHESIS FALSIFIED; TARGET-SIDE BOUNDARY REMAINS"
+}

@@ -1,0 +1,199 @@
+{
+  "candidate": {
+    "elf": {
+      "bytes": 619904,
+      "path": "build/post-promotion/link67-f1-f2/final/lisp65-c2-substitution-linked.prg.elf",
+      "role": "linked-product-elf",
+      "sha256": "25e563ba41283fb1ce21624a84f618b2337f889510dee19261509dc29e465f32"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link67-f1-f2/final/lisp65-c2-substitution-linked.prg",
+      "role": "c2-resident-prg",
+      "sha256": "1b6fb1a524a71a63489848531b30e1d399b871ed5b863c93be7232f3362e44f3"
+    }
+  },
+  "claim_limit": "This receipt proves an invalid attempt-1 harness delay, exact candidate uploads and a visible REPL only. It makes no F1, F2, timing, Freezer, acceptance, promotion or release claim.",
+  "device": {
+    "core_identity": {
+      "bytes": 4,
+      "hex": "6b4cb203",
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware/device-core-id.bin",
+      "sha256": "bd075eada684d364ddb275c939b000db0fddec2bd491a0f8628b280e9026cb53"
+    },
+    "m65_tool": {
+      "bytes": 286728,
+      "path": "tools/m65tools/m65",
+      "sha256": "158c932c07a82771704c86e8ee79700c992e150fe0cd64b2ba99b10071233bc4"
+    }
+  },
+  "diagnosis": {
+    "cause": "The harness inserted fixed waits before reading an absolute since-boot frame counter, so the counter included the harness delay and could not prove boot-to-REPL.",
+    "class": "harness-timing-model",
+    "correction": "Poll once per second for the first visible REPL and submit the boot-watch immediately with a one-second result wait.",
+    "hardware_replay_authorized": false,
+    "product_claim": "none"
+  },
+  "evidence": {
+    "autorun_screen": {
+      "bytes": 2253,
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware/autorun-probe.txt",
+      "sha256": "3f2175513be027ad8bd48c95bddb091f57f075ee23b76deb5fe42ab8f14803c8"
+    },
+    "boot_screen": {
+      "bytes": 2241,
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware/boot.txt",
+      "sha256": "7501eb06924f35c93daae7a861962c852c86c4d1f250dc1aaa83a60bdd09a09b"
+    },
+    "contract": {
+      "bytes": 4818,
+      "path": "config/c2.2-s1-freight-session.json",
+      "sha256": "e8f5885a00451665341f6fd044d7d68ec9a2d80ba0eae311bc9ec23c47879994"
+    },
+    "deployment": {
+      "bytes": 4820,
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware/deployment.json",
+      "sha256": "6da40e4e15c5cafe2d7a22011d62c10d33df77106de91f9304f28d3fcaa0b777"
+    },
+    "driver": {
+      "bytes": 23354,
+      "path": "tools/host-lisp/c2_phase_f_s1_link67.py",
+      "sha256": "e6db450f4c300826c64ec3c12fa73b03f2e9746d506b59dd7ffcf0eb2cdc91d2"
+    },
+    "observations": {
+      "bytes": 106,
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware/observed-rows.json",
+      "sha256": "edd043ec95ebad47465f6da19874c260af11c4961f3a4100c265991907f1b3d9"
+    },
+    "row_screen": {
+      "bytes": 2241,
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware/row-boot-watch.txt",
+      "sha256": "a49e52f7ab846710fefc398e583273ddaebca842e2700267d02e1df929d163da"
+    }
+  },
+  "execution_accounting": {
+    "F1_rows_run": 0,
+    "F2_rows_run": 0,
+    "Freezer_roundtrips": 0,
+    "accepted_product_rows": 0,
+    "hardware_attempts": 1
+  },
+  "format": "lisp65-c2.2-link67-S1-harness-first-red-v1",
+  "observation": {
+    "accepted_product_rows": 0,
+    "autorun_probe_mtime_ns": 1785143293249292185,
+    "boot_capture_mtime_ns": 1785143321769289735,
+    "configured_fixed_boot_wait_seconds": 28,
+    "configured_fixed_row_wait_seconds": 5,
+    "reported_counter": {
+      "frames": 1797,
+      "limit_frames": 1500,
+      "nominal_milliseconds": 35940,
+      "raw": "(7 5 7)"
+    },
+    "row_capture_mtime_ns": 1785143330110570484
+  },
+  "recorded_on": "2026-07-27",
+  "status": "harness-first-red-invalid-fixed-delay-zero-product-rows",
+  "uploads": [
+    {
+      "byteidentical": true,
+      "readback": {
+        "bytes": 33840,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware/readback-initial.c2d-v6.bin",
+        "sha256": "8f8ff0bedd1740c57e9fe2fe4e7491d32abc27e2ff7bef6943c1fcfc1199cee9"
+      },
+      "role": "c2d-v6-code-plane",
+      "source": {
+        "bytes": 33840,
+        "path": "build/post-promotion/link67-f1-f2/final/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+        "sha256": "8f8ff0bedd1740c57e9fe2fe4e7491d32abc27e2ff7bef6943c1fcfc1199cee9"
+      }
+    },
+    {
+      "byteidentical": true,
+      "readback": {
+        "bytes": 3264,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware/readback-bootstage.bin",
+        "sha256": "0688bad3d08a07bfa9fcd736bbe594db79b5266611e9464f0fb50c31fdbce059"
+      },
+      "role": "c2-two-record-boot-stage",
+      "source": {
+        "bytes": 3264,
+        "path": "build/post-promotion/link67-f1-f2/artifacts/bootstage.bin",
+        "sha256": "0688bad3d08a07bfa9fcd736bbe594db79b5266611e9464f0fb50c31fdbce059"
+      }
+    },
+    {
+      "byteidentical": true,
+      "readback": {
+        "bytes": 64926,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware/readback-runtime-overlays-session-final.bin",
+        "sha256": "ece59bb453871172ba60d59215f76e8049d77a1803feed36be69bb4a06b84e35"
+      },
+      "role": "c2-session-family-region-0",
+      "source": {
+        "bytes": 64926,
+        "path": "build/post-promotion/link67-f1-f2/final/runtime-overlays-session-final.bin",
+        "sha256": "ece59bb453871172ba60d59215f76e8049d77a1803feed36be69bb4a06b84e35"
+      }
+    },
+    {
+      "byteidentical": true,
+      "readback": {
+        "bytes": 72236,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware/readback-product-shelf-v4-direct.bin",
+        "sha256": "d3d17501dcb0c36658e97cac52bef754c3af7dd2ade90b0b107b5617360290f3"
+      },
+      "role": "c2-product-shelf",
+      "source": {
+        "bytes": 72236,
+        "path": "build/post-promotion/f2/product/product-shelf-v4-direct.bin",
+        "sha256": "d3d17501dcb0c36658e97cac52bef754c3af7dd2ade90b0b107b5617360290f3"
+      }
+    },
+    {
+      "byteidentical": true,
+      "readback": {
+        "bytes": 19383,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware/readback-runtime-overlays-boot-final.bin",
+        "sha256": "7ce094beabf782c1168314eb3229d3675f1cd0be56a972a78c6b9c0ebd428586"
+      },
+      "role": "c2-boot-family",
+      "source": {
+        "bytes": 19383,
+        "path": "build/post-promotion/link67-f1-f2/final/runtime-overlays-boot-final.bin",
+        "sha256": "7ce094beabf782c1168314eb3229d3675f1cd0be56a972a78c6b9c0ebd428586"
+      }
+    },
+    {
+      "byteidentical": true,
+      "readback": {
+        "bytes": 1956,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware/readback-runtime-overlays-session-final-region1.bin",
+        "sha256": "25db7e2cd0c02c15db8f10b29fc1827b1bd367f25c9217c44600106bbb1f58d5"
+      },
+      "role": "c2-session-family-region-1",
+      "source": {
+        "bytes": 1956,
+        "path": "build/post-promotion/link67-f1-f2/final/runtime-overlays-session-final-region1.bin",
+        "sha256": "25db7e2cd0c02c15db8f10b29fc1827b1bd367f25c9217c44600106bbb1f58d5"
+      }
+    },
+    {
+      "byteidentical": true,
+      "readback": {
+        "bytes": 8192,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware/readback-c2-product-kernal-window.bin",
+        "sha256": "580f4adfe7f0796ccf9d3c7959b6fa69847d7a01e5b744a5caef2458c3c697de"
+      },
+      "role": "c2-kernal-window",
+      "source": {
+        "bytes": 8192,
+        "path": "build/post-promotion/link67-f1-f2/final/c2-product-kernal-window.bin",
+        "sha256": "580f4adfe7f0796ccf9d3c7959b6fa69847d7a01e5b744a5caef2458c3c697de"
+      }
+    }
+  ]
+}

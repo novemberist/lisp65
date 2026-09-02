@@ -360,13 +360,33 @@ def emit_client_plane() -> dict[str, Any]:
     return value
 
 
+def validate_client_plane_authority(plane: dict[str, Any]) -> dict[str, Any]:
+    product_value = load(PLANE_ROOT / "product/substitution-artifacts.json")
+    required = {
+        "product": bind(PLANE_ROOT / "product/substitution-artifacts.json"),
+        "profile": bind(PLANE_ROOT / "candidate-profile.json"),
+        "header": bind(PLANE_ROOT / "c2_lite_static_plane.h"),
+        "bank2": bind(CODE),
+    }
+    geometry = plane.get("geometry", {})
+    require(geometry.get("bytes") == CODE.stat().st_size
+            and geometry.get("sha256") == required["bank2"]["sha256"]
+            and all(geometry.get(name) == product_value[name]
+                    for name in ("images", "entries", "resolutions", "roots"))
+            and all(plane.get(name) == binding
+                    for name, binding in required.items()),
+            "native-client preflight plane authority drift")
+    return {"geometry_bytes": CODE.stat().st_size,
+            "geometry_sha256": required["bank2"]["sha256"],
+            "topology": {name: product_value[name]
+                         for name in ("images", "entries", "resolutions", "roots")},
+            "materialized_bindings": required}
+
+
 def bind_client_plane() -> dict[str, Any]:
     INIT._configure_plane_module()
     plane = load(PLANE_RECEIPT)
-    require(plane["status"] ==
-                "PASS: NATIVE CLIENT CANDIDATE PLANE MATERIALIZED 0/1"
-            and plane["geometry"]["bytes"] == CODE.stat().st_size,
-            "native-client preflight plane authority drift")
+    validate_client_plane_authority(plane)
     value = CURRENT_PLANE.bind_current_plane(PLANE_ROOT)
     CURRENT_PLANE.CANDIDATE.ZERO_LITERAL.LINKED_PRODUCT_INVENTORY = (
         PLANE_ROOT / "product/substitution-artifacts.json", ROOT)

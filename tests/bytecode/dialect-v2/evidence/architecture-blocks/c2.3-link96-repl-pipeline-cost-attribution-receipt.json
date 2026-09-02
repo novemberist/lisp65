@@ -1,0 +1,1367 @@
+{
+  "accounting": {
+    "device_contacts": 0,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0
+  },
+  "attribution": {
+    "Link94_expansion": "priced and exonerated as the dominant term",
+    "boundary": "after RETURN and before the user body starts",
+    "direct_fastpath_explanation": "published calls and primitive bytecode calls with already-direct arguments bypass compile/install; this explains probe(41) and flat literal forms without invoking a runtime-path defect",
+    "mechanism": "every non-direct top-level form repeats the serial compile, emit, transient append/install, execute and rollback ceremony",
+    "new_vs_always_present": "the seconds-class ceremony predates v1.4.0; Link94 adds an 18-instruction outer expansion stage, while the accepted Link96 carrier is cheaper on both compiled counterprobes",
+    "optimization_target": "remove or amortize the per-form transient ceremony; do not optimize healthy CAR/CDR, allocation, accessor or game-loop paths",
+    "reader": "structurally bounded here but not target-timed",
+    "runtime_body": "exonerated by the owner frame rows"
+  },
+  "authorities": {
+    "Link96_canonical": {
+      "bytes": 21534,
+      "path": "build/c2.3/terminal-return-guard-link96/canonical-product-manifest.json",
+      "sha256": "769490bf8c5978bc7bac6c1b6b2ba7271f801a22a6153bee28e73a0ee7be6742"
+    },
+    "abi_ledger": {
+      "bytes": 10175,
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "f85f472900059506cbed35d8320df38c1c0a2fb7fcd49d9434db1bdf2d971f23"
+    },
+    "driver": {
+      "bytes": 44381,
+      "path": "tools/host-lisp/c2_repl_pipeline_cost_attribution.py",
+      "sha256": "ca819869bff347580efc6a07e168551a76febf116508f4f12c81a0ec6e032f67"
+    },
+    "frame_calibration": {
+      "bytes": 9663,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.4-phase-m-hardware-receipt.json",
+      "sha256": "b821f41a37426b97c701256f0b0abebf3e76196264210c756a697c639cadc724"
+    },
+    "gate_wiring": {
+      "path": "mk/gates.mk",
+      "semantic_projection": [
+        "c2-repl-pipeline-cost-attribution-selftest:",
+        "python3 tools/host-lisp/c2_repl_pipeline_cost_attribution.py selftest",
+        "c2-repl-pipeline-cost-attribution-check: c2-repl-pipeline-cost-attribution-selftest",
+        "python3 tools/host-lisp/c2_repl_pipeline_cost_attribution.py check",
+        "check-source: c2-repl-pipeline-cost-attribution-check"
+      ]
+    },
+    "historical_target_stations": {
+      "bytes": 2938,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link57-top-level-frame-attribution-hardware-receipt.json",
+      "sha256": "b4bf579f325a3976b58ba51219981403e40aaa6eb0674f3e1cbc10c8d9ee6ce3"
+    },
+    "historical_vm_projection": {
+      "bytes": 140857,
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/v125-editor-input-latency-host-accounting-receipt.json",
+      "sha256": "7169325fb9b5919f8d9bf255104cd70b06ba5d63df751965368be4a2e1871ebc"
+    },
+    "source_and_docs": {
+      "current_direction_plan": {
+        "bytes": 87094,
+        "path": "docs/planning/post-v1.4.0-direction-plan.md",
+        "sha256": "6585f1f3d57c06205ffe19b2ca2c592b9f0ddf968945a949b650af6622b347b4"
+      },
+      "experience_plan": {
+        "bytes": 4121,
+        "path": "docs/planning/startup-require-experience-work-plan.md",
+        "sha256": "d11fdc3b7ae880bf40e220ada3953ce16e85191cab55c98aafdca9f15f17d989"
+      },
+      "owner_correction": {
+        "authority": "git-blob",
+        "bytes": 83818,
+        "commit": "665fb1ce1dd3c4d6f51ca0baa3e845e72eafd34d",
+        "path": "docs/planning/post-v1.4.0-direction-plan.md",
+        "sha256": "d7396994c065b6c2eeaca1a38f249dd2eae27e24a02901c5dd0ccbfe2aa74b23"
+      },
+      "reader": {
+        "authority": {
+          "bytes": 10451,
+          "path": "src/reader.c",
+          "sha256": "ca260a4f52fba17c9678fa6d37ee03bfdff85f344579eda378c71c03de027a86"
+        },
+        "projection": [
+          "cell = cons(value, NIL);",
+          "cell_set_b(tail, cell);",
+          "obj read_expr(const char **p)"
+        ]
+      },
+      "repl": {
+        "authority": {
+          "bytes": 13504,
+          "path": "src/repl.c",
+          "sha256": "146ca95cd81c65b40b20252ca77b98356a7be37f47c2d147dc9d703418b71ee1"
+        },
+        "projection": [
+          "obj form = read_expr(&p);",
+          "q = cons(form, NIL);",
+          "q = cons(intern(\"quote\"), q);",
+          "q = cons(q, NIL);",
+          "q = cons(lccrun, q);",
+          "print_obj(eval(q));"
+        ]
+      },
+      "transient_install": {
+        "authority": {
+          "bytes": 163560,
+          "path": "src/c2_product_runtime.c",
+          "sha256": "8d1ab8d0150fa2401094613372ebf57143027c612d4612a4479ecfe43e2c6b00"
+        },
+        "projection": [
+          "obj c2_product_install(obj fnlist, obj definition_name)",
+          "emit = c2_session_emit_reset();",
+          "append_ok = c2_append_begin(length, &before, &main",
+          "result = vm_run_dir((int)main, 0, 0);",
+          "if (!c2_append_rollback(&before))"
+        ]
+      }
+    },
+    "v1_4_canonical": {
+      "bytes": 524467,
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/canonical-product-manifest.json",
+      "sha256": "10254204dc5277e1bf2e308fcc32b8d6a2c669a20daf7c464dca2449a99dafec"
+    }
+  },
+  "claim_limit": "This receipt exactly replays the canonical v1.4.0 and Link96 runtime/compiler artifacts through the install boundary, binds the historical target station trace, and attributes the seconds-class interaction to the repeated transient ceremony. VM time conversions are historical projections, reader time is unmeasured, and no fix, Link96 target timing, v1.5 release, or game-frame acceptance is claimed.",
+  "experience_block_disposition": {
+    "game_loop_claim": "compiled runtime execution is currently exonerated; this receipt does not yet constitute a game-frame hardware acceptance",
+    "permanent_release_smokes": [
+      "published direct call",
+      "nested compiled form",
+      "setq",
+      "list allocation inside time",
+      "string operation"
+    ],
+    "phase_A": "use this ledger as the baseline and price reader, routing/carrier and transient suffix separately",
+    "phase_C_candidate_order": [
+      "direct-path coverage for semantically complete forms",
+      "reuse/amortize transient installation without weakening rollback",
+      "reader/compiler work only if the residual price justifies it"
+    ],
+    "third_pillar": "REPL per-form reactivity",
+    "track": "startup & require experience",
+    "v1_5_gate": "no seconds-per-form interaction"
+  },
+  "format": "lisp65-c2.3-link96-repl-pipeline-cost-attribution-v1",
+  "mutation_proof": {
+    "expected": 22,
+    "rejected": {
+      "blame-expansion": "stage-price attribution drift",
+      "claim-device-contact": "withdrawal/accounting drift",
+      "claim-fix": "scope broadened",
+      "claim-reader-timed": "attribution claim drift",
+      "claim-release": "scope broadened",
+      "claim-runtime-slow": "attribution claim drift",
+      "compile-primitive-direct": "route/install cardinality drift",
+      "deny-per-form-repeat": "stage-price attribution drift",
+      "drop-compiled-smoke": "experience/release disposition drift",
+      "drop-repl-pillar": "experience/release disposition drift",
+      "erase-target-suffix": "stage-price attribution drift",
+      "erase-whole-envelope": "stage-price attribution drift",
+      "hide-cons-outlier": "owner evidence overclaim/drift",
+      "hide-window-scaling": "compiler window/shape attribution drift",
+      "inflate-expansion": "stage-price attribution drift",
+      "invent-compiler-regression": "compiled world delta drift",
+      "make-expansion-per-node": "stage-price attribution drift",
+      "remove-direct-delta": "direct world delta drift",
+      "retain-stale-receipt": "withdrawal/accounting drift",
+      "ship-seconds": "experience/release disposition drift",
+      "skip-nested-install": "route/install cardinality drift",
+      "turn-five-allocations-slow": "owner evidence overclaim/drift"
+    }
+  },
+  "owner_hardware_rows": {
+    "amortized_outlier": {
+      "disposition": "not a per-cell price: five allocations subsequently completed inside one timed body in zero frames",
+      "form": "(cons 1 2)",
+      "frames": 5
+    },
+    "authority": "owner physical observations bound by 665fb1ce",
+    "claim": "calls, reads, writes and allocation inside the timed body are healthy; the perceived delay is outside that body",
+    "remeasured_here": false,
+    "runtime_body": [
+      {
+        "form": "(+ 1 2)",
+        "frames": 0
+      },
+      {
+        "form": "(cdr lst)",
+        "frames": 0
+      },
+      {
+        "form": "(length l10)",
+        "frames": 1
+      },
+      {
+        "form": "(cdr qlst)",
+        "frames": 0
+      },
+      {
+        "form": "(time (point-y test))",
+        "frames": 0
+      },
+      {
+        "form": "(time (list 1 2 3 4 5))",
+        "frames": 0
+      }
+    ]
+  },
+  "pricing_authorities": {
+    "frame_hz": 51.96615805290813,
+    "frame_microseconds": 19243.29289423077,
+    "historical_vm_projection": {
+      "authority": {
+        "bytes": 140857,
+        "path": "tests/bytecode/dialect-v2/evidence/post-release/v125-editor-input-latency-host-accounting-receipt.json",
+        "sha256": "7169325fb9b5919f8d9bf255104cd70b06ba5d63df751965368be4a2e1871ebc"
+      },
+      "claim_limit": "Dynamic instruction and allocation counts are exact for the generated product IDE composition in the host P0 VM. Collection placement is derived from the product's 192-allocation nursery rule for every incoming phase. The host does not execute target DMA, screen timing, or GC phase timing; 89 frames is an external accepted whole-collection observation.",
+      "constants": {
+        "cycles_per_vm_instruction": 1100,
+        "microseconds_per_vm_instruction": 27.5,
+        "target_cpu_hz": 40000000
+      }
+    },
+    "transient_suffix_target_station_trace": {
+      "claim_limit": "physical C2 Link-57 attribution for the same named serial ceremony; structural price authority, not a Link-96 remeasurement",
+      "cold_first_to_last_frames": 43,
+      "cold_station_deltas": [
+        2,
+        5,
+        5,
+        1,
+        4,
+        4,
+        5,
+        6,
+        1,
+        1,
+        4,
+        3,
+        1,
+        1
+      ],
+      "derived_whole_envelope_frames_cold_warm": [
+        60,
+        62
+      ],
+      "station_order": [
+        "emit_final_crc",
+        "append_envelope",
+        "reserve_transient_bounds",
+        "stage_copy",
+        "stage_plane",
+        "decode_04",
+        "decode_06a",
+        "decode_09",
+        "decode_12",
+        "append_header",
+        "inner_vm",
+        "rollback_prepare",
+        "rollback_unpublish",
+        "rollback_finalize",
+        "journal_clear"
+      ],
+      "unobserved_envelope_frames_cold_warm": [
+        17,
+        18
+      ],
+      "warm_first_to_last_frames": 44,
+      "warm_station_deltas": [
+        2,
+        5,
+        5,
+        2,
+        3,
+        4,
+        6,
+        5,
+        1,
+        1,
+        4,
+        3,
+        1,
+        2
+      ]
+    }
+  },
+  "recorded_on": "2026-08-11",
+  "scope": {
+    "device_contacts": 0,
+    "execution": "host exact-artifact replay plus historical target receipt",
+    "fix_implemented": false,
+    "new_target_timing_measurements": 0,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "release_claim": false
+  },
+  "stage_prices": {
+    "Link94_outer_expansion": {
+      "classification": "outer-only constant probe; present but not seconds-dominant",
+      "exact_vm_instructions_nonmacro_form": 18,
+      "historical_projection": {
+        "claim_limit": "historical projection, not a Link-96 target measurement",
+        "frames": 0.02572324823618952,
+        "instructions": 18,
+        "microseconds": 495.0,
+        "milliseconds": 0.495
+      },
+      "nested_form_instructions": 18
+    },
+    "compiler_carrier": {
+      "classification": "Link96 carrier work is lower in both compiled counterprobes; the Link94 change is not a seconds-class compiler regression",
+      "nested_list_read": {
+        "Link96": 1560,
+        "v1_4": 1693
+      },
+      "setq": {
+        "Link96": 1042,
+        "v1_4": 1175
+      }
+    },
+    "compiler_window_pressure": {
+      "classification": "form-shape scaling is in compiler work/window traffic, not recursive Link94 outer expansion",
+      "nested_fixnum_compiled_identity_equal": true,
+      "nested_fixnum_events": {
+        "Link96": 443,
+        "v1_4": 701
+      },
+      "nested_list_read_events": {
+        "Link96": 258,
+        "v1_4": 368
+      },
+      "target_time": "not projected: no current per-window target cost authority"
+    },
+    "reader": {
+      "range_pre_lcc_cells": [
+        6,
+        15
+      ],
+      "target_time": "unmeasured; no seconds claim",
+      "unit": "exact cons-cell structure plus four-cell lcc-first wrapper"
+    },
+    "transient_install_execute_rollback": {
+      "classification": "dominant measured per-form cost class",
+      "derived_whole_envelope_frames_cold_warm": [
+        60,
+        62
+      ],
+      "repeated_for_every_non_direct_form": true,
+      "target_first_to_last_frames_cold_warm": [
+        43,
+        44
+      ]
+    },
+    "world_delta_direct_route": {
+      "classification": "sub-frame by two orders of magnitude",
+      "exact_vm_instructions": 30,
+      "historical_projection": {
+        "claim_limit": "historical projection, not a Link-96 target measurement",
+        "frames": 0.0428720803936492,
+        "instructions": 30,
+        "microseconds": 825.0,
+        "milliseconds": 0.825
+      }
+    }
+  },
+  "status": "ATTRIBUTED-PER-FORM-TRANSIENT-CEREMONY; LINK94-EXPANSION-NOT-DOMINANT; RUNTIME-BODY-EXONERATED",
+  "withdrawn_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-cons-access-cost-world-diff-receipt.json",
+    "reason": "superseded: it promoted an isolated five-frame event to a per-access cost despite the later zero-frame five-allocation row",
+    "retained_as_authority": false
+  },
+  "world_diff": {
+    "five-cell-list-direct": {
+      "Link96_compiler_instructions": 0,
+      "Link96_install_calls": 0,
+      "Link96_instructions": 255,
+      "delta_instructions": 30,
+      "route": "published-direct-call",
+      "v1_4_compiler_instructions": 0,
+      "v1_4_install_calls": 0,
+      "v1_4_instructions": 225
+    },
+    "nested-fixnum-arithmetic": {
+      "Link96_compiler_instructions": 3037,
+      "Link96_install_calls": 1,
+      "Link96_instructions": 3183,
+      "delta_instructions": -333,
+      "route": "compile-then-transient-install",
+      "v1_4_compiler_instructions": 3400,
+      "v1_4_install_calls": 1,
+      "v1_4_instructions": 3516
+    },
+    "nested-list-read": {
+      "Link96_compiler_instructions": 1560,
+      "Link96_install_calls": 1,
+      "Link96_instructions": 1672,
+      "delta_instructions": -103,
+      "route": "compile-then-transient-install",
+      "v1_4_compiler_instructions": 1693,
+      "v1_4_install_calls": 1,
+      "v1_4_instructions": 1775
+    },
+    "owner-published-direct": {
+      "Link96_compiler_instructions": 0,
+      "Link96_install_calls": 0,
+      "Link96_instructions": 107,
+      "delta_instructions": 30,
+      "route": "published-direct-call",
+      "v1_4_compiler_instructions": 0,
+      "v1_4_install_calls": 0,
+      "v1_4_instructions": 77
+    },
+    "primitive-direct": {
+      "Link96_compiler_instructions": 0,
+      "Link96_install_calls": 0,
+      "Link96_instructions": 167,
+      "delta_instructions": 30,
+      "route": "published-direct-call",
+      "v1_4_compiler_instructions": 0,
+      "v1_4_install_calls": 0,
+      "v1_4_instructions": 137
+    },
+    "setq-special-form": {
+      "Link96_compiler_instructions": 1042,
+      "Link96_install_calls": 1,
+      "Link96_instructions": 1116,
+      "delta_instructions": -103,
+      "route": "compile-then-transient-install",
+      "v1_4_compiler_instructions": 1175,
+      "v1_4_install_calls": 1,
+      "v1_4_instructions": 1219
+    }
+  },
+  "worlds": {
+    "accepted_Link96": {
+      "authority": {
+        "canonical_manifest": {
+          "bytes": 21534,
+          "path": "build/c2.3/terminal-return-guard-link96/canonical-product-manifest.json",
+          "sha256": "769490bf8c5978bc7bac6c1b6b2ba7271f801a22a6153bee28e73a0ee7be6742"
+        },
+        "compiler_carrier": {
+          "blob": {
+            "bytes": 8134,
+            "path": "build/post-promotion/v112/compiler/lcc.blob.bin",
+            "sha256": "14eac650a65773fb92cdd827654d85da5573b70c5753ed767c48f0e1bcfb9685"
+          },
+          "code_bytes": 8134,
+          "entries": 102,
+          "manifest": {
+            "bytes": 213535,
+            "path": "build/post-promotion/v112/compiler/lcc.manifest.json",
+            "sha256": "578313342dffab332d37e824901b80f6fa243ad665bf1b6a2d6a16d2217e6509"
+          }
+        },
+        "product_build_id": "0x14d980c3",
+        "stdlib": {
+          "blob": {
+            "bytes": 17134,
+            "path": "build/c2.3/link95-packed-callee-closure/static-plane/narrow-static/stdlib-p0.blob.bin",
+            "sha256": "eb131ee780442e5df9fa68fbf88c5f69244dfe5463fe6be92161a8ecd4e40017"
+          },
+          "code_bytes": 17134,
+          "entries": 391,
+          "manifest": {
+            "bytes": 342773,
+            "path": "build/c2.3/link95-packed-callee-closure/static-plane/narrow-static/stdlib-p0.manifest.json",
+            "sha256": "56f691c54f6c0dcc5930f21c13eb494d53d5b5e129957db8e5dcd6122768ce08"
+          }
+        }
+      },
+      "forms": {
+        "five-cell-list-direct": {
+          "host_heap_cells_allocated_after_read": 10,
+          "id": "five-cell-list-direct",
+          "outcome": {
+            "compiled": null,
+            "result": "(1 2 3 4 5)",
+            "route": "published-direct-call"
+          },
+          "pipeline": {
+            "initial_window_count": 33,
+            "initial_windows_by_role": {
+              "product-runtime": 33
+            },
+            "install_calls": 0,
+            "instructions": 255,
+            "instructions_by_function": {
+              "%c2-direct-quoted-value-p": 25,
+              "%c2-direct-value": 25,
+              "%c2-direct-value-p": 25,
+              "%c2-direct-values": 54,
+              "%c2-direct-values-p": 64,
+              "%c2-published-direct-call-p": 16,
+              "%c2-run-expanded": 23,
+              "%c2-top-level-expand": 10,
+              "%c2-top-level-macro-p": 8,
+              "lcc-run": 3,
+              "list": 2
+            },
+            "instructions_by_role": {
+              "product-runtime": 255
+            },
+            "refill_count": 20,
+            "refills_by_role": {
+              "product-runtime": 20
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 6,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 10,
+            "source_bytes_ascii": 16,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(list 1 2 3 4 5)"
+        },
+        "nested-fixnum-arithmetic": {
+          "host_heap_cells_allocated_after_read": 172,
+          "id": "nested-fixnum-arithmetic",
+          "outcome": {
+            "compiled": {
+              "encoded_bytes": 29,
+              "entries": [
+                {
+                  "encoded_bytes": 29,
+                  "encoded_sha256": "ac6f2f2eb07c6714c919edecacca8dee403ba43d38db4b3c14d3f53e1ee2e6a4",
+                  "literal_count": 1,
+                  "payload_bytes": 20,
+                  "payload_sha256": "dc9518b59bc2ba2cf6587f36ed0a71d421cac57fee13dfc398767080fdcce399"
+                }
+              ],
+              "literal_count": 1,
+              "objects": 1,
+              "payload_bytes": 20
+            },
+            "install_name": "t",
+            "route": "compile-then-transient-install"
+          },
+          "pipeline": {
+            "initial_window_count": 168,
+            "initial_windows_by_role": {
+              "compiler-carrier": 155,
+              "product-runtime": 13
+            },
+            "install_calls": 1,
+            "instructions": 3183,
+            "instructions_by_function": {
+              "%c2-compile-form": 21,
+              "%c2-direct-quoted-value-p": 10,
+              "%c2-direct-value-p": 26,
+              "%c2-direct-values-p": 35,
+              "%c2-published-direct-call-p": 16,
+              "%c2-run-expanded": 36,
+              "%c2-top-level-expand": 10,
+              "%c2-top-level-macro-p": 8,
+              "%lcc-2args-p": 39,
+              "%lcc-args": 96,
+              "%lcc-binary": 12,
+              "%lcc-call": 50,
+              "%lcc-compile-lambda": 47,
+              "%lcc-consp": 173,
+              "%lcc-cs": 40,
+              "%lcc-do-p": 42,
+              "%lcc-emit": 40,
+              "%lcc-emit-op": 340,
+              "%lcc-emit-st": 20,
+              "%lcc-emit2": 280,
+              "%lcc-equal": 6,
+              "%lcc-expr": 111,
+              "%lcc-expr-form": 111,
+              "%lcc-expr-ops": 46,
+              "%lcc-expr-sf2": 111,
+              "%lcc-fns": 18,
+              "%lcc-len": 24,
+              "%lcc-lit-find": 15,
+              "%lcc-lit-slot": 63,
+              "%lcc-op": 214,
+              "%lcc-op2": 88,
+              "%lcc-params-env": 4,
+              "%lcc-prim": 140,
+              "%lcc-push-value": 168,
+              "%lcc-rev-into": 214,
+              "%lcc-seq": 10,
+              "%lcc-v2-env": 15,
+              "%lcc-v2-finish": 60,
+              "%lcc-v2-params": 6,
+              "%lcc-v2-params-walk": 10,
+              "%lcc-v2-prim2": 76,
+              "%lcc-v2-prim3": 84,
+              "%lcc-v2-prim4": 148,
+              "%lcc-v2-prim5": 44,
+              "%lcc-vop": 22,
+              "%lcc-wrap": 8,
+              "lcc-compile-obj": 21,
+              "lcc-run": 3,
+              "list": 2
+            },
+            "instructions_by_role": {
+              "compiler-carrier": 3037,
+              "product-runtime": 146
+            },
+            "refill_count": 275,
+            "refills_by_role": {
+              "compiler-carrier": 267,
+              "product-runtime": 8
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 11,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 15,
+            "source_bytes_ascii": 23,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(+ 1 2 (+ 3 4 (- 3 1)))"
+        },
+        "nested-list-read": {
+          "host_heap_cells_allocated_after_read": 85,
+          "id": "nested-list-read",
+          "outcome": {
+            "compiled": {
+              "encoded_bytes": 17,
+              "entries": [
+                {
+                  "encoded_bytes": 17,
+                  "encoded_sha256": "4225990c70b3bf8d015f3eafe8ad7432b5ffe9a16be77442ae993d58f6beca68",
+                  "literal_count": 1,
+                  "payload_bytes": 8,
+                  "payload_sha256": "1aef7efd7b9babd9f2bb1f3e5f356cced5bf762d44ff60a84651a72e2daab887"
+                }
+              ],
+              "literal_count": 1,
+              "objects": 1,
+              "payload_bytes": 8
+            },
+            "install_name": "t",
+            "route": "compile-then-transient-install"
+          },
+          "pipeline": {
+            "initial_window_count": 91,
+            "initial_windows_by_role": {
+              "compiler-carrier": 82,
+              "product-runtime": 9
+            },
+            "install_calls": 1,
+            "instructions": 1672,
+            "instructions_by_function": {
+              "%c2-compile-form": 21,
+              "%c2-direct-quoted-value-p": 10,
+              "%c2-direct-value-p": 16,
+              "%c2-direct-values-p": 11,
+              "%c2-published-direct-call-p": 16,
+              "%c2-run-expanded": 36,
+              "%c2-top-level-expand": 10,
+              "%c2-top-level-macro-p": 8,
+              "%lcc-compile-lambda": 47,
+              "%lcc-consp": 72,
+              "%lcc-cs": 40,
+              "%lcc-do-p": 28,
+              "%lcc-emit": 40,
+              "%lcc-emit-op": 170,
+              "%lcc-emit-st": 20,
+              "%lcc-emit2": 35,
+              "%lcc-env-find": 4,
+              "%lcc-expr": 68,
+              "%lcc-expr-form": 74,
+              "%lcc-expr-ops": 46,
+              "%lcc-expr-ops2": 70,
+              "%lcc-expr-sf2": 74,
+              "%lcc-fns": 18,
+              "%lcc-len": 12,
+              "%lcc-lit-find": 4,
+              "%lcc-lit-slot": 41,
+              "%lcc-op": 245,
+              "%lcc-op2": 76,
+              "%lcc-params-env": 4,
+              "%lcc-push-lit": 10,
+              "%lcc-resolve-uv": 5,
+              "%lcc-rev-into": 106,
+              "%lcc-seq": 10,
+              "%lcc-top-env": 4,
+              "%lcc-unary": 14,
+              "%lcc-v2-env": 15,
+              "%lcc-v2-finish": 60,
+              "%lcc-v2-params": 6,
+              "%lcc-v2-params-walk": 10,
+              "%lcc-var": 22,
+              "%lcc-vop": 60,
+              "%lcc-wrap": 8,
+              "lcc-compile-obj": 21,
+              "lcc-run": 3,
+              "list": 2
+            },
+            "instructions_by_role": {
+              "compiler-carrier": 1560,
+              "product-runtime": 112
+            },
+            "refill_count": 167,
+            "refills_by_role": {
+              "compiler-carrier": 161,
+              "product-runtime": 6
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 4,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 8,
+            "source_bytes_ascii": 15,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(car (cdr lst))"
+        },
+        "owner-published-direct": {
+          "host_heap_cells_allocated_after_read": 1,
+          "id": "owner-published-direct",
+          "outcome": {
+            "compiled": null,
+            "result": "41",
+            "route": "published-direct-call"
+          },
+          "pipeline": {
+            "initial_window_count": 13,
+            "initial_windows_by_role": {
+              "owner-published-definition": 1,
+              "product-runtime": 12
+            },
+            "install_calls": 0,
+            "instructions": 107,
+            "instructions_by_function": {
+              "%c2-direct-quoted-value-p": 5,
+              "%c2-direct-value": 5,
+              "%c2-direct-value-p": 5,
+              "%c2-direct-values": 14,
+              "%c2-direct-values-p": 16,
+              "%c2-published-direct-call-p": 16,
+              "%c2-run-expanded": 23,
+              "%c2-top-level-expand": 10,
+              "%c2-top-level-macro-p": 8,
+              "lcc-run": 3,
+              "probe": 2
+            },
+            "instructions_by_role": {
+              "owner-published-definition": 2,
+              "product-runtime": 105
+            },
+            "refill_count": 8,
+            "refills_by_role": {
+              "product-runtime": 8
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 2,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 6,
+            "source_bytes_ascii": 10,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(probe 41)"
+        },
+        "primitive-direct": {
+          "host_heap_cells_allocated_after_read": 4,
+          "id": "primitive-direct",
+          "outcome": {
+            "compiled": null,
+            "result": "3",
+            "route": "published-direct-call"
+          },
+          "pipeline": {
+            "initial_window_count": 21,
+            "initial_windows_by_role": {
+              "product-runtime": 21
+            },
+            "install_calls": 0,
+            "instructions": 167,
+            "instructions_by_function": {
+              "%add-list": 22,
+              "%c2-direct-quoted-value-p": 10,
+              "%c2-direct-value": 10,
+              "%c2-direct-value-p": 10,
+              "%c2-direct-values": 24,
+              "%c2-direct-values-p": 28,
+              "%c2-published-direct-call-p": 16,
+              "%c2-run-expanded": 23,
+              "%c2-top-level-expand": 10,
+              "%c2-top-level-macro-p": 8,
+              "+": 3,
+              "lcc-run": 3
+            },
+            "instructions_by_role": {
+              "product-runtime": 167
+            },
+            "refill_count": 11,
+            "refills_by_role": {
+              "product-runtime": 11
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 3,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 7,
+            "source_bytes_ascii": 7,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(+ 1 2)"
+        },
+        "setq-special-form": {
+          "host_heap_cells_allocated_after_read": 85,
+          "id": "setq-special-form",
+          "outcome": {
+            "compiled": {
+              "encoded_bytes": 17,
+              "entries": [
+                {
+                  "encoded_bytes": 17,
+                  "encoded_sha256": "66e32bab851d7ad7b5626b425e66b9ca1456b6a9e35d0b83df55e10ac8a4340b",
+                  "literal_count": 1,
+                  "payload_bytes": 8,
+                  "payload_sha256": "b1a6b9ff9e252cd33b35f766a84cc9f5f705b4665acd4eb572ccf535549045eb"
+                }
+              ],
+              "literal_count": 1,
+              "objects": 1,
+              "payload_bytes": 8
+            },
+            "install_name": "t",
+            "route": "compile-then-transient-install"
+          },
+          "pipeline": {
+            "initial_window_count": 70,
+            "initial_windows_by_role": {
+              "compiler-carrier": 64,
+              "product-runtime": 6
+            },
+            "install_calls": 1,
+            "instructions": 1116,
+            "instructions_by_function": {
+              "%c2-compile-form": 21,
+              "%c2-published-direct-call-p": 15,
+              "%c2-run-expanded": 36,
+              "%c2-top-level-expand": 10,
+              "%c2-top-level-macro-p": 8,
+              "%lcc-compile-lambda": 47,
+              "%lcc-consp": 49,
+              "%lcc-cs": 40,
+              "%lcc-emit": 40,
+              "%lcc-emit-op": 136,
+              "%lcc-emit-st": 20,
+              "%lcc-emit2": 70,
+              "%lcc-env-find": 4,
+              "%lcc-expr": 31,
+              "%lcc-expr-form": 35,
+              "%lcc-fns": 18,
+              "%lcc-len": 12,
+              "%lcc-lit-find": 4,
+              "%lcc-lit-slot": 41,
+              "%lcc-op": 109,
+              "%lcc-op2": 48,
+              "%lcc-params-env": 4,
+              "%lcc-push-lit": 10,
+              "%lcc-push-value": 28,
+              "%lcc-resolve-uv": 5,
+              "%lcc-rev-into": 106,
+              "%lcc-seq": 10,
+              "%lcc-setq": 30,
+              "%lcc-top-env": 4,
+              "%lcc-v2-env": 15,
+              "%lcc-v2-finish": 60,
+              "%lcc-v2-params": 6,
+              "%lcc-v2-params-walk": 10,
+              "%lcc-wrap": 8,
+              "lcc-compile-obj": 21,
+              "lcc-run": 3,
+              "list": 2
+            },
+            "instructions_by_role": {
+              "compiler-carrier": 1042,
+              "product-runtime": 74
+            },
+            "refill_count": 84,
+            "refills_by_role": {
+              "compiler-carrier": 79,
+              "product-runtime": 5
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 3,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 7,
+            "source_bytes_ascii": 10,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(setq x 1)"
+        }
+      }
+    },
+    "released_v1_4_0": {
+      "authority": {
+        "canonical_manifest": {
+          "bytes": 524467,
+          "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/canonical-product-manifest.json",
+          "sha256": "10254204dc5277e1bf2e308fcc32b8d6a2c669a20daf7c464dca2449a99dafec"
+        },
+        "compiler_carrier": {
+          "blob": {
+            "bytes": 7854,
+            "path": "build/post-promotion/phase-v/while/gate/carrier/lcc.blob.bin",
+            "sha256": "708304f61eaf8c76dc9c33961463a8a6d5fefdd9a835000b49caefee746f3726"
+          },
+          "code_bytes": 7854,
+          "entries": 111,
+          "manifest": {
+            "bytes": 228972,
+            "path": "build/post-promotion/phase-v/while/gate/carrier/lcc.manifest.json",
+            "sha256": "7996e2a714e3ef2490d296d7867fb7c98710c3d6f36f3fe7965d7ff293886519"
+          }
+        },
+        "product_build_id": "0x3b48650d",
+        "stdlib": {
+          "blob": {
+            "bytes": 16989,
+            "path": "build/post-promotion/v112/stdlib/stdlib-p0.blob.bin",
+            "sha256": "b919e413897b27dbabf921ded55d855b2f5886b831d15548b638cf161031c2c5"
+          },
+          "code_bytes": 16989,
+          "entries": 386,
+          "manifest": {
+            "bytes": 338679,
+            "path": "build/post-promotion/v112/stdlib/stdlib-p0.manifest.json",
+            "sha256": "fb22ec049cf08c231eb197ac242828ea3486ecfcd6ed217c912b5c77d327ec0d"
+          }
+        }
+      },
+      "forms": {
+        "five-cell-list-direct": {
+          "host_heap_cells_allocated_after_read": 10,
+          "id": "five-cell-list-direct",
+          "outcome": {
+            "compiled": null,
+            "result": "(1 2 3 4 5)",
+            "route": "published-direct-call"
+          },
+          "pipeline": {
+            "initial_window_count": 30,
+            "initial_windows_by_role": {
+              "product-runtime": 30
+            },
+            "install_calls": 0,
+            "instructions": 225,
+            "instructions_by_function": {
+              "%c2-direct-quoted-value-p": 25,
+              "%c2-direct-value": 25,
+              "%c2-direct-value-p": 25,
+              "%c2-direct-values": 54,
+              "%c2-direct-values-p": 64,
+              "%c2-published-direct-call-p": 16,
+              "lcc-run": 14,
+              "list": 2
+            },
+            "instructions_by_role": {
+              "product-runtime": 225
+            },
+            "refill_count": 18,
+            "refills_by_role": {
+              "product-runtime": 18
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 6,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 10,
+            "source_bytes_ascii": 16,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(list 1 2 3 4 5)"
+        },
+        "nested-fixnum-arithmetic": {
+          "host_heap_cells_allocated_after_read": 172,
+          "id": "nested-fixnum-arithmetic",
+          "outcome": {
+            "compiled": {
+              "encoded_bytes": 29,
+              "entries": [
+                {
+                  "encoded_bytes": 29,
+                  "encoded_sha256": "ac6f2f2eb07c6714c919edecacca8dee403ba43d38db4b3c14d3f53e1ee2e6a4",
+                  "literal_count": 1,
+                  "payload_bytes": 20,
+                  "payload_sha256": "dc9518b59bc2ba2cf6587f36ed0a71d421cac57fee13dfc398767080fdcce399"
+                }
+              ],
+              "literal_count": 1,
+              "objects": 1,
+              "payload_bytes": 20
+            },
+            "install_name": "t",
+            "route": "compile-then-transient-install"
+          },
+          "pipeline": {
+            "initial_window_count": 318,
+            "initial_windows_by_role": {
+              "compiler-carrier": 308,
+              "product-runtime": 10
+            },
+            "install_calls": 1,
+            "instructions": 3516,
+            "instructions_by_function": {
+              "%c2-compile-form": 21,
+              "%c2-direct-quoted-value-p": 10,
+              "%c2-direct-value-p": 26,
+              "%c2-direct-values-p": 35,
+              "%c2-published-direct-call-p": 16,
+              "%lcc-2args-p": 39,
+              "%lcc-args": 96,
+              "%lcc-binary": 12,
+              "%lcc-call": 50,
+              "%lcc-compile-lambda": 33,
+              "%lcc-consp": 173,
+              "%lcc-cs": 220,
+              "%lcc-do-p": 42,
+              "%lcc-emit": 220,
+              "%lcc-emit-op": 40,
+              "%lcc-emit-st": 200,
+              "%lcc-emit2": 40,
+              "%lcc-equal": 6,
+              "%lcc-expr": 111,
+              "%lcc-expr-form": 111,
+              "%lcc-expr-ops": 46,
+              "%lcc-expr-sf2": 111,
+              "%lcc-fns": 126,
+              "%lcc-len": 24,
+              "%lcc-lit-find": 15,
+              "%lcc-lit-slot": 42,
+              "%lcc-lits": 104,
+              "%lcc-max": 110,
+              "%lcc-op": 214,
+              "%lcc-op2": 88,
+              "%lcc-params-env": 4,
+              "%lcc-prim": 140,
+              "%lcc-push-value": 168,
+              "%lcc-rev": 12,
+              "%lcc-rev-into": 214,
+              "%lcc-seq": 10,
+              "%lcc-st": 66,
+              "%lcc-v2-env": 11,
+              "%lcc-v2-finish": 35,
+              "%lcc-v2-max0": 8,
+              "%lcc-v2-nargs": 6,
+              "%lcc-v2-optional": 4,
+              "%lcc-v2-params": 6,
+              "%lcc-v2-params-walk": 7,
+              "%lcc-v2-prim2": 76,
+              "%lcc-v2-prim3": 84,
+              "%lcc-v2-prim4": 148,
+              "%lcc-v2-prim5": 44,
+              "%lcc-v2-rest": 15,
+              "%lcc-vop": 22,
+              "%lcc-wrap": 8,
+              "lcc-compile-obj": 18,
+              "lcc-run": 27,
+              "list": 2
+            },
+            "instructions_by_role": {
+              "compiler-carrier": 3400,
+              "product-runtime": 116
+            },
+            "refill_count": 383,
+            "refills_by_role": {
+              "compiler-carrier": 377,
+              "product-runtime": 6
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 11,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 15,
+            "source_bytes_ascii": 23,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(+ 1 2 (+ 3 4 (- 3 1)))"
+        },
+        "nested-list-read": {
+          "host_heap_cells_allocated_after_read": 85,
+          "id": "nested-list-read",
+          "outcome": {
+            "compiled": {
+              "encoded_bytes": 17,
+              "entries": [
+                {
+                  "encoded_bytes": 17,
+                  "encoded_sha256": "a87adb842fda45761715a5b51bea8d2c09b4f971141e3707150d3f9a2a3af1ed",
+                  "literal_count": 1,
+                  "payload_bytes": 8,
+                  "payload_sha256": "1aef7efd7b9babd9f2bb1f3e5f356cced5bf762d44ff60a84651a72e2daab887"
+                }
+              ],
+              "literal_count": 1,
+              "objects": 1,
+              "payload_bytes": 8
+            },
+            "install_name": "t",
+            "route": "compile-then-transient-install"
+          },
+          "pipeline": {
+            "initial_window_count": 155,
+            "initial_windows_by_role": {
+              "compiler-carrier": 149,
+              "product-runtime": 6
+            },
+            "install_calls": 1,
+            "instructions": 1775,
+            "instructions_by_function": {
+              "%c2-compile-form": 21,
+              "%c2-direct-quoted-value-p": 10,
+              "%c2-direct-value-p": 16,
+              "%c2-direct-values-p": 11,
+              "%c2-published-direct-call-p": 16,
+              "%lcc-compile-lambda": 33,
+              "%lcc-consp": 72,
+              "%lcc-cs": 100,
+              "%lcc-do-p": 28,
+              "%lcc-emit": 88,
+              "%lcc-emit-op": 20,
+              "%lcc-emit-st": 80,
+              "%lcc-emit2": 5,
+              "%lcc-env-find": 4,
+              "%lcc-expr": 68,
+              "%lcc-expr-form": 74,
+              "%lcc-expr-ops": 46,
+              "%lcc-expr-ops2": 70,
+              "%lcc-expr-sf2": 74,
+              "%lcc-fns": 54,
+              "%lcc-len": 12,
+              "%lcc-lit-find": 4,
+              "%lcc-lit-slot": 26,
+              "%lcc-lits": 48,
+              "%lcc-max": 50,
+              "%lcc-op": 245,
+              "%lcc-op2": 76,
+              "%lcc-params-env": 4,
+              "%lcc-push-lit": 10,
+              "%lcc-resolve-uv": 5,
+              "%lcc-rev": 12,
+              "%lcc-rev-into": 106,
+              "%lcc-seq": 10,
+              "%lcc-st": 30,
+              "%lcc-top-env": 4,
+              "%lcc-unary": 14,
+              "%lcc-v2-env": 11,
+              "%lcc-v2-finish": 35,
+              "%lcc-v2-max0": 8,
+              "%lcc-v2-nargs": 6,
+              "%lcc-v2-optional": 4,
+              "%lcc-v2-params": 6,
+              "%lcc-v2-params-walk": 7,
+              "%lcc-v2-rest": 15,
+              "%lcc-var": 22,
+              "%lcc-vop": 60,
+              "%lcc-wrap": 8,
+              "lcc-compile-obj": 18,
+              "lcc-run": 27,
+              "list": 2
+            },
+            "instructions_by_role": {
+              "compiler-carrier": 1693,
+              "product-runtime": 82
+            },
+            "refill_count": 213,
+            "refills_by_role": {
+              "compiler-carrier": 209,
+              "product-runtime": 4
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 4,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 8,
+            "source_bytes_ascii": 15,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(car (cdr lst))"
+        },
+        "owner-published-direct": {
+          "host_heap_cells_allocated_after_read": 1,
+          "id": "owner-published-direct",
+          "outcome": {
+            "compiled": null,
+            "result": "41",
+            "route": "published-direct-call"
+          },
+          "pipeline": {
+            "initial_window_count": 10,
+            "initial_windows_by_role": {
+              "owner-published-definition": 1,
+              "product-runtime": 9
+            },
+            "install_calls": 0,
+            "instructions": 77,
+            "instructions_by_function": {
+              "%c2-direct-quoted-value-p": 5,
+              "%c2-direct-value": 5,
+              "%c2-direct-value-p": 5,
+              "%c2-direct-values": 14,
+              "%c2-direct-values-p": 16,
+              "%c2-published-direct-call-p": 16,
+              "lcc-run": 14,
+              "probe": 2
+            },
+            "instructions_by_role": {
+              "owner-published-definition": 2,
+              "product-runtime": 75
+            },
+            "refill_count": 6,
+            "refills_by_role": {
+              "product-runtime": 6
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 2,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 6,
+            "source_bytes_ascii": 10,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(probe 41)"
+        },
+        "primitive-direct": {
+          "host_heap_cells_allocated_after_read": 4,
+          "id": "primitive-direct",
+          "outcome": {
+            "compiled": null,
+            "result": "3",
+            "route": "published-direct-call"
+          },
+          "pipeline": {
+            "initial_window_count": 18,
+            "initial_windows_by_role": {
+              "product-runtime": 18
+            },
+            "install_calls": 0,
+            "instructions": 137,
+            "instructions_by_function": {
+              "%add-list": 22,
+              "%c2-direct-quoted-value-p": 10,
+              "%c2-direct-value": 10,
+              "%c2-direct-value-p": 10,
+              "%c2-direct-values": 24,
+              "%c2-direct-values-p": 28,
+              "%c2-published-direct-call-p": 16,
+              "+": 3,
+              "lcc-run": 14
+            },
+            "instructions_by_role": {
+              "product-runtime": 137
+            },
+            "refill_count": 9,
+            "refills_by_role": {
+              "product-runtime": 9
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 3,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 7,
+            "source_bytes_ascii": 7,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(+ 1 2)"
+        },
+        "setq-special-form": {
+          "host_heap_cells_allocated_after_read": 85,
+          "id": "setq-special-form",
+          "outcome": {
+            "compiled": {
+              "encoded_bytes": 17,
+              "entries": [
+                {
+                  "encoded_bytes": 17,
+                  "encoded_sha256": "5d41c156f7da96e9433d6514e2dcaff8bf8e24ee64e521f31df475ceaa87e4fe",
+                  "literal_count": 1,
+                  "payload_bytes": 8,
+                  "payload_sha256": "b1a6b9ff9e252cd33b35f766a84cc9f5f705b4665acd4eb572ccf535549045eb"
+                }
+              ],
+              "literal_count": 1,
+              "objects": 1,
+              "payload_bytes": 8
+            },
+            "install_name": "t",
+            "route": "compile-then-transient-install"
+          },
+          "pipeline": {
+            "initial_window_count": 134,
+            "initial_windows_by_role": {
+              "compiler-carrier": 131,
+              "product-runtime": 3
+            },
+            "install_calls": 1,
+            "instructions": 1219,
+            "instructions_by_function": {
+              "%c2-compile-form": 21,
+              "%c2-published-direct-call-p": 15,
+              "%lcc-compile-lambda": 33,
+              "%lcc-consp": 49,
+              "%lcc-cs": 100,
+              "%lcc-emit": 88,
+              "%lcc-emit-op": 16,
+              "%lcc-emit-st": 80,
+              "%lcc-emit2": 10,
+              "%lcc-env-find": 4,
+              "%lcc-expr": 31,
+              "%lcc-expr-form": 35,
+              "%lcc-fns": 54,
+              "%lcc-len": 12,
+              "%lcc-lit-find": 4,
+              "%lcc-lit-slot": 26,
+              "%lcc-lits": 48,
+              "%lcc-max": 50,
+              "%lcc-op": 109,
+              "%lcc-op2": 48,
+              "%lcc-params-env": 4,
+              "%lcc-push-lit": 10,
+              "%lcc-push-value": 28,
+              "%lcc-resolve-uv": 5,
+              "%lcc-rev": 12,
+              "%lcc-rev-into": 106,
+              "%lcc-seq": 10,
+              "%lcc-setq": 30,
+              "%lcc-st": 30,
+              "%lcc-top-env": 4,
+              "%lcc-v2-env": 11,
+              "%lcc-v2-finish": 35,
+              "%lcc-v2-max0": 8,
+              "%lcc-v2-nargs": 6,
+              "%lcc-v2-optional": 4,
+              "%lcc-v2-params": 6,
+              "%lcc-v2-params-walk": 7,
+              "%lcc-v2-rest": 15,
+              "%lcc-wrap": 8,
+              "lcc-compile-obj": 18,
+              "lcc-run": 27,
+              "list": 2
+            },
+            "instructions_by_role": {
+              "compiler-carrier": 1175,
+              "product-runtime": 44
+            },
+            "refill_count": 130,
+            "refills_by_role": {
+              "compiler-carrier": 127,
+              "product-runtime": 3
+            }
+          },
+          "reader_structure": {
+            "form_cons_cells": 3,
+            "lcc_first_wrapper_cons_cells": 4,
+            "pre_lcc_cons_cells": 7,
+            "source_bytes_ascii": 10,
+            "time_authority": "structural count only; no reader wall-time claimed"
+          },
+          "source": "(setq x 1)"
+        }
+      }
+    }
+  }
+}

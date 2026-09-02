@@ -1,0 +1,1173 @@
+     VMA      LMA     Size Align Out     In      Symbol
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 __lisp65_workbench_noinit_end = ADDR(.noinit) + SIZEOF(.noinit)
+       0        0        0     1 __lisp65_workbench_overlay_min_start = ALIGN(__lisp65_workbench_noinit_end + 1, 2)
+       0        0        0     1 __lisp65_workbench_required_boot_stack = DEFINED(__lisp65_workbench_required_boot_stack_param) ? __lisp65_workbench_required_boot_stack_param : 0x0200
+       0        0        0     1 __lisp65_workbench_required_runtime_stack = DEFINED(__lisp65_workbench_required_runtime_stack_param) ? __lisp65_workbench_required_runtime_stack_param : 1450
+       0        0        0     1 __lisp65_workbench_required_post_boot_reserve = DEFINED(__lisp65_workbench_required_post_boot_reserve_param) ? __lisp65_workbench_required_post_boot_reserve_param : 0x0400
+       0        0        0     1 __lisp65_workbench_runtime_overlay_max_vma = DEFINED(__lisp65_workbench_runtime_overlay_max_vma_param) ? __lisp65_workbench_runtime_overlay_max_vma_param : 0xc356
+       0        0        0     1 __lisp65_workbench_runtime_overlay_fixed_vma = DEFINED(__lisp65_workbench_runtime_overlay_vma_param) ? __lisp65_workbench_runtime_overlay_vma_param : __lisp65_workbench_runtime_overlay_max_vma
+       0        0        0     1 __lisp65_workbench_runtime_transport_max_bytes = 1792
+       0        0        0     1 __lisp65_error_overlay_max_bytes = DEFINED(__lisp65_error_overlay_max_bytes_param) ? __lisp65_error_overlay_max_bytes_param : 1320
+       0        0        0     1 __lisp65_workbench_screen_base = 0x0800
+       0        0        0     1 __lisp65_workbench_screen_columns = 80
+       0        0        0     1 __lisp65_workbench_screen_rows = 50
+       0        0        0     1 __lisp65_workbench_screen_cell_bytes = 1
+       0        0        0     1 __lisp65_workbench_screen_limit = __lisp65_workbench_screen_base + (__lisp65_workbench_screen_columns * __lisp65_workbench_screen_rows * __lisp65_workbench_screen_cell_bytes)
+       0        0        0     1 __lisp65_resident_island_base = 0x1800
+       0        0        0     1 __lisp65_resident_island_limit = 0x2000
+       0        0        0     1 __lisp65_resident_island_payload_capacity = 2048
+       0        0        0     1 __lisp65_workbench_runtime_overlay_vma = __lisp65_workbench_runtime_overlay_fixed_vma
+       0        0     ca46     1 
+    ca46        0        0     1 __lisp65_resident_island_seed_lma = ALIGN(LOADADDR(.lisp65_rt_buffer_alloc) + SIZEOF(.lisp65_rt_buffer_alloc), 0x100)
+    ca46        0        0     1 __lisp65_workbench_overlay_start = ADDR(.lisp65_workbench_overlay)
+    ca46        0        0     1 __lisp65_workbench_overlay_end = ADDR(.lisp65_workbench_overlay) + SIZEOF(.lisp65_workbench_overlay)
+    ca46        0        0     1 __lisp65_workbench_overlay_entry = vm_workbench_boot_overlay_entry
+    ca46        0        0     1 __lisp65_workbench_resident_file_end = __data_load_start + __data_size
+    ca46        0        0     1 __lisp65_workbench_runtime_overlay_limit = __stack - __lisp65_workbench_required_runtime_stack
+    ca46        0        0     1 __lisp65_workbench_boot_slice_limit = __stack - __lisp65_workbench_required_boot_stack
+    ca46        0        0     1 __lisp65_rt_rtov_catalog_start = ADDR(.lisp65_rt_rtov_catalog)
+    ca46        0        0     1 __lisp65_rt_rtov_catalog_end = ADDR(.lisp65_rt_rtov_catalog) + SIZEOF(.lisp65_rt_rtov_catalog)
+    ca46        0        0     1 __lisp65_rt_rtov_record_start = ADDR(.lisp65_rt_rtov_record)
+    ca46        0        0     1 __lisp65_rt_rtov_record_end = ADDR(.lisp65_rt_rtov_record) + SIZEOF(.lisp65_rt_rtov_record)
+    ca46        0        0     1 __lisp65_rt_c2d_00_start = ADDR(.lisp65_rt_c2d_00)
+    ca46        0        0     1 __lisp65_rt_c2d_00_end = ADDR(.lisp65_rt_c2d_00) + SIZEOF(.lisp65_rt_c2d_00)
+    ca46        0        0     1 __lisp65_rt_c2d_00b_start = ADDR(.lisp65_rt_c2d_00b)
+    ca46        0        0     1 __lisp65_rt_c2d_00b_end = ADDR(.lisp65_rt_c2d_00b) + SIZEOF(.lisp65_rt_c2d_00b)
+    ca46        0        0     1 __lisp65_rt_c2d_01_start = ADDR(.lisp65_rt_c2d_01)
+    ca46        0        0     1 __lisp65_rt_c2d_01_end = ADDR(.lisp65_rt_c2d_01) + SIZEOF(.lisp65_rt_c2d_01)
+    ca46        0        0     1 __lisp65_rt_c2d_02a_start = ADDR(.lisp65_rt_c2d_02a)
+    ca46        0        0     1 __lisp65_rt_c2d_02a_end = ADDR(.lisp65_rt_c2d_02a) + SIZEOF(.lisp65_rt_c2d_02a)
+    ca46        0        0     1 __lisp65_rt_c2d_02b_start = ADDR(.lisp65_rt_c2d_02b)
+    ca46        0        0     1 __lisp65_rt_c2d_02b_end = ADDR(.lisp65_rt_c2d_02b) + SIZEOF(.lisp65_rt_c2d_02b)
+    ca46        0        0     1 __lisp65_rt_c2d_03_start = ADDR(.lisp65_rt_c2d_03)
+    ca46        0        0     1 __lisp65_rt_c2d_03_end = ADDR(.lisp65_rt_c2d_03) + SIZEOF(.lisp65_rt_c2d_03)
+    ca46        0        0     1 __lisp65_rt_c2d_04_start = ADDR(.lisp65_rt_c2d_04)
+    ca46        0        0     1 __lisp65_rt_c2d_04_end = ADDR(.lisp65_rt_c2d_04) + SIZEOF(.lisp65_rt_c2d_04)
+    ca46        0        0     1 __lisp65_rt_c2d_05_start = ADDR(.lisp65_rt_c2d_05)
+    ca46        0        0     1 __lisp65_rt_c2d_05_end = ADDR(.lisp65_rt_c2d_05) + SIZEOF(.lisp65_rt_c2d_05)
+    ca46        0        0     1 __lisp65_rt_c2d_06a_start = ADDR(.lisp65_rt_c2d_06a)
+    ca46        0        0     1 __lisp65_rt_c2d_06a_end = ADDR(.lisp65_rt_c2d_06a) + SIZEOF(.lisp65_rt_c2d_06a)
+    ca46        0        0     1 __lisp65_rt_c2d_06b_start = ADDR(.lisp65_rt_c2d_06b)
+    ca46        0        0     1 __lisp65_rt_c2d_06b_end = ADDR(.lisp65_rt_c2d_06b) + SIZEOF(.lisp65_rt_c2d_06b)
+    ca46        0        0     1 __lisp65_rt_c2d_07_start = ADDR(.lisp65_rt_c2d_07)
+    ca46        0        0     1 __lisp65_rt_c2d_07_end = ADDR(.lisp65_rt_c2d_07) + SIZEOF(.lisp65_rt_c2d_07)
+    ca46        0        0     1 __lisp65_rt_c2d_08_start = ADDR(.lisp65_rt_c2d_08)
+    ca46        0        0     1 __lisp65_rt_c2d_08_end = ADDR(.lisp65_rt_c2d_08) + SIZEOF(.lisp65_rt_c2d_08)
+    ca46        0        0     1 __lisp65_rt_c2d_09_start = ADDR(.lisp65_rt_c2d_09)
+    ca46        0        0     1 __lisp65_rt_c2d_09_end = ADDR(.lisp65_rt_c2d_09) + SIZEOF(.lisp65_rt_c2d_09)
+    ca46        0        0     1 __lisp65_rt_c2d_10_start = ADDR(.lisp65_rt_c2d_10)
+    ca46        0        0     1 __lisp65_rt_c2d_10_end = ADDR(.lisp65_rt_c2d_10) + SIZEOF(.lisp65_rt_c2d_10)
+    ca46        0        0     1 __lisp65_rt_c2d_11_start = ADDR(.lisp65_rt_c2d_11)
+    ca46        0        0     1 __lisp65_rt_c2d_11_end = ADDR(.lisp65_rt_c2d_11) + SIZEOF(.lisp65_rt_c2d_11)
+    ca46        0        0     1 __lisp65_rt_c2d_12_start = ADDR(.lisp65_rt_c2d_12)
+    ca46        0        0     1 __lisp65_rt_c2d_12_end = ADDR(.lisp65_rt_c2d_12) + SIZEOF(.lisp65_rt_c2d_12)
+    ca46        0        0     1 __lisp65_rt_c2d_13_start = ADDR(.lisp65_rt_c2d_13)
+    ca46        0        0     1 __lisp65_rt_c2d_13_end = ADDR(.lisp65_rt_c2d_13) + SIZEOF(.lisp65_rt_c2d_13)
+    ca46        0        0     1 __lisp65_rt_c2emit_prepare_start = ADDR(.lisp65_rt_c2emit_prepare)
+    ca46        0        0     1 __lisp65_rt_c2emit_prepare_end = ADDR(.lisp65_rt_c2emit_prepare) + SIZEOF(.lisp65_rt_c2emit_prepare)
+    ca46        0        0     1 __lisp65_rt_c2emit_name_start = ADDR(.lisp65_rt_c2emit_name)
+    ca46        0        0     1 __lisp65_rt_c2emit_name_end = ADDR(.lisp65_rt_c2emit_name) + SIZEOF(.lisp65_rt_c2emit_name)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_prep_start = ADDR(.lisp65_rt_c2emit_literal_prep)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_prep_end = ADDR(.lisp65_rt_c2emit_literal_prep) + SIZEOF(.lisp65_rt_c2emit_literal_prep)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_atom_start = ADDR(.lisp65_rt_c2emit_literal_atom)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_atom_end = ADDR(.lisp65_rt_c2emit_literal_atom) + SIZEOF(.lisp65_rt_c2emit_literal_atom)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_append_start = ADDR(.lisp65_rt_c2emit_literal_append)
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_append_end = ADDR(.lisp65_rt_c2emit_literal_append) + SIZEOF(.lisp65_rt_c2emit_literal_append)
+    ca46        0        0     1 __lisp65_rt_c2emit_code_start = ADDR(.lisp65_rt_c2emit_code)
+    ca46        0        0     1 __lisp65_rt_c2emit_code_end = ADDR(.lisp65_rt_c2emit_code) + SIZEOF(.lisp65_rt_c2emit_code)
+    ca46        0        0     1 __lisp65_rt_c2emit_final_meta_start = ADDR(.lisp65_rt_c2emit_final_meta)
+    ca46        0        0     1 __lisp65_rt_c2emit_final_meta_end = ADDR(.lisp65_rt_c2emit_final_meta) + SIZEOF(.lisp65_rt_c2emit_final_meta)
+    ca46        0        0     1 __lisp65_rt_c2emit_final_crc_start = ADDR(.lisp65_rt_c2emit_final_crc)
+    ca46        0        0     1 __lisp65_rt_c2emit_final_crc_end = ADDR(.lisp65_rt_c2emit_final_crc) + SIZEOF(.lisp65_rt_c2emit_final_crc)
+    ca46        0        0     1 __lisp65_rt_c2append_envelope_start = ADDR(.lisp65_rt_c2append_envelope)
+    ca46        0        0     1 __lisp65_rt_c2append_envelope_end = ADDR(.lisp65_rt_c2append_envelope) + SIZEOF(.lisp65_rt_c2append_envelope)
+    ca46        0        0     1 __lisp65_rt_c2append_crc_start = ADDR(.lisp65_rt_c2append_crc)
+    ca46        0        0     1 __lisp65_rt_c2append_crc_end = ADDR(.lisp65_rt_c2append_crc) + SIZEOF(.lisp65_rt_c2append_crc)
+    ca46        0        0     1 __lisp65_rt_c2append_metadata_start = ADDR(.lisp65_rt_c2append_metadata)
+    ca46        0        0     1 __lisp65_rt_c2append_metadata_end = ADDR(.lisp65_rt_c2append_metadata) + SIZEOF(.lisp65_rt_c2append_metadata)
+    ca46        0        0     1 __lisp65_rt_c2append_capacity_start = ADDR(.lisp65_rt_c2append_capacity)
+    ca46        0        0     1 __lisp65_rt_c2append_capacity_end = ADDR(.lisp65_rt_c2append_capacity) + SIZEOF(.lisp65_rt_c2append_capacity)
+    ca46        0        0     1 __lisp65_rt_c2append_stage_start = ADDR(.lisp65_rt_c2append_stage)
+    ca46        0        0     1 __lisp65_rt_c2append_stage_end = ADDR(.lisp65_rt_c2append_stage) + SIZEOF(.lisp65_rt_c2append_stage)
+    ca46        0        0     1 __lisp65_rt_c2append_image_start = ADDR(.lisp65_rt_c2append_image)
+    ca46        0        0     1 __lisp65_rt_c2append_image_end = ADDR(.lisp65_rt_c2append_image) + SIZEOF(.lisp65_rt_c2append_image)
+    ca46        0        0     1 __lisp65_rt_c2append_entries_start = ADDR(.lisp65_rt_c2append_entries)
+    ca46        0        0     1 __lisp65_rt_c2append_entries_end = ADDR(.lisp65_rt_c2append_entries) + SIZEOF(.lisp65_rt_c2append_entries)
+    ca46        0        0     1 __lisp65_rt_c2append_header_start = ADDR(.lisp65_rt_c2append_header)
+    ca46        0        0     1 __lisp65_rt_c2append_header_end = ADDR(.lisp65_rt_c2append_header) + SIZEOF(.lisp65_rt_c2append_header)
+    ca46        0        0     1 __lisp65_rt_c2append_publish_names_start = ADDR(.lisp65_rt_c2append_publish_names)
+    ca46        0        0     1 __lisp65_rt_c2append_publish_names_end = ADDR(.lisp65_rt_c2append_publish_names) + SIZEOF(.lisp65_rt_c2append_publish_names)
+    ca46        0        0     1 __lisp65_rt_c2append_publish_cells_start = ADDR(.lisp65_rt_c2append_publish_cells)
+    ca46        0        0     1 __lisp65_rt_c2append_publish_cells_end = ADDR(.lisp65_rt_c2append_publish_cells) + SIZEOF(.lisp65_rt_c2append_publish_cells)
+    ca46        0        0     1 __lisp65_rt_c2append_rollback_start = ADDR(.lisp65_rt_c2append_rollback)
+    ca46        0        0     1 __lisp65_rt_c2append_rollback_end = ADDR(.lisp65_rt_c2append_rollback) + SIZEOF(.lisp65_rt_c2append_rollback)
+    ca46        0        0     1 __lisp65_rt_l65e_start = ADDR(.lisp65_rt_l65e)
+    ca46        0        0     1 __lisp65_rt_l65e_end = ADDR(.lisp65_rt_l65e) + SIZEOF(.lisp65_rt_l65e)
+    ca46        0        0     1 __lisp65_rt_buffer_read_start = ADDR(.lisp65_rt_buffer_read)
+    ca46        0        0     1 __lisp65_rt_buffer_read_end = ADDR(.lisp65_rt_buffer_read) + SIZEOF(.lisp65_rt_buffer_read)
+    ca46        0        0     1 __lisp65_rt_buffer_write_start = ADDR(.lisp65_rt_buffer_write)
+    ca46        0        0     1 __lisp65_rt_buffer_write_end = ADDR(.lisp65_rt_buffer_write) + SIZEOF(.lisp65_rt_buffer_write)
+    ca46        0        0     1 __lisp65_rt_buffer_alloc_start = ADDR(.lisp65_rt_buffer_alloc)
+    ca46        0        0     1 __lisp65_rt_buffer_alloc_end = ADDR(.lisp65_rt_buffer_alloc) + SIZEOF(.lisp65_rt_buffer_alloc)
+    ca46        0        0     1 __lisp65_resident_island_start = ADDR(.lisp65_resident_island)
+    ca46        0        0     1 __lisp65_resident_island_end = ADDR(.lisp65_resident_island) + SIZEOF(.lisp65_resident_island)
+    ca46        0        0     1 __lisp65_resident_island_annex_start = ADDR(.lisp65_resident_island_annex)
+    ca46        0        0     1 __lisp65_resident_island_annex_end = ADDR(.lisp65_resident_island_annex) + SIZEOF(.lisp65_resident_island_annex)
+    ca46        0        0     1 __lisp65_rt_island_00_start = ADDR(.lisp65_rt_island_00)
+    ca46        0        0     1 __lisp65_rt_island_00_end = ADDR(.lisp65_rt_island_00) + SIZEOF(.lisp65_rt_island_00)
+    ca46        0        0     1 __lisp65_rt_rtov_catalog_entry = vm_runtime_overlay_catalog_verifier
+    ca46        0        0     1 __lisp65_rt_rtov_record_entry = vm_runtime_overlay_record_verifier
+    ca46        0        0     1 __lisp65_rt_c2d_00_entry = c2_stream_phase_00
+    ca46        0        0     1 __lisp65_rt_c2d_00b_entry = c2_stream_phase_00b
+    ca46        0        0     1 __lisp65_rt_c2d_01_entry = c2_stream_phase_01
+    ca46        0        0     1 __lisp65_rt_c2d_02a_entry = c2_stream_phase_02a
+    ca46        0        0     1 __lisp65_rt_c2d_02b_entry = c2_stream_phase_02b
+    ca46        0        0     1 __lisp65_rt_c2d_03_entry = c2_stream_phase_03
+    ca46        0        0     1 __lisp65_rt_c2d_04_entry = c2_stream_phase_04
+    ca46        0        0     1 __lisp65_rt_c2d_05_entry = c2_stream_phase_05
+    ca46        0        0     1 __lisp65_rt_c2d_06a_entry = c2_stream_phase_06a
+    ca46        0        0     1 __lisp65_rt_c2d_06b_entry = c2_stream_phase_06b
+    ca46        0        0     1 __lisp65_rt_c2d_07_entry = c2_stream_phase_07
+    ca46        0        0     1 __lisp65_rt_c2d_08_entry = c2_stream_phase_08
+    ca46        0        0     1 __lisp65_rt_c2d_09_entry = c2_stream_phase_09
+    ca46        0        0     1 __lisp65_rt_c2d_10_entry = c2_stream_phase_10
+    ca46        0        0     1 __lisp65_rt_c2d_11_entry = c2_stream_phase_11
+    ca46        0        0     1 __lisp65_rt_c2d_12_entry = c2_stream_phase_12
+    ca46        0        0     1 __lisp65_rt_c2d_13_entry = c2_stream_phase_13
+    ca46        0        0     1 __lisp65_rt_c2emit_prepare_entry = c2_session_emit_prepare_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_name_entry = c2_session_emit_name_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_prep_entry = c2_session_emit_literal_prep_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_atom_entry = c2_session_emit_literal_atom_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_literal_append_entry = c2_session_emit_literal_append_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_code_entry = c2_session_emit_code_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_final_meta_entry = c2_session_emit_final_meta_phase
+    ca46        0        0     1 __lisp65_rt_c2emit_final_crc_entry = c2_session_emit_final_crc_phase
+    ca46        0        0     1 __lisp65_rt_c2append_envelope_entry = c2_append_envelope_phase
+    ca46        0        0     1 __lisp65_rt_c2append_crc_entry = c2_append_crc_phase
+    ca46        0        0     1 __lisp65_rt_c2append_metadata_entry = c2_append_metadata_phase
+    ca46        0        0     1 __lisp65_rt_c2append_capacity_entry = c2_append_capacity_phase
+    ca46        0        0     1 __lisp65_rt_c2append_stage_entry = c2_append_stage_phase
+    ca46        0        0     1 __lisp65_rt_c2append_image_entry = c2_append_image_phase
+    ca46        0        0     1 __lisp65_rt_c2append_entries_entry = c2_append_entries_phase
+    ca46        0        0     1 __lisp65_rt_c2append_header_entry = c2_append_header_phase
+    ca46        0        0     1 __lisp65_rt_c2append_publish_names_entry = c2_append_publish_names_phase
+    ca46        0        0     1 __lisp65_rt_c2append_publish_cells_entry = c2_append_publish_cells_phase
+    ca46        0        0     1 __lisp65_rt_c2append_rollback_entry = c2_append_rollback_phase
+    ca46        0        0     1 __lisp65_rt_l65e_entry = lisp65_error_overlay_entry
+    ca46        0        0     1 __lisp65_rt_buffer_read_entry = lisp65_buffer_overlay_read_entry
+    ca46        0        0     1 __lisp65_rt_buffer_write_entry = lisp65_buffer_overlay_write_entry
+    ca46        0        0     1 __lisp65_rt_buffer_alloc_entry = lisp65_buffer_overlay_alloc_entry
+    ca46        0        0     1 __lisp65_rt_island_00_entry = vm_resident_island_install
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+    ca46        0        0     1 
+       0        0       cc     1 .comment
+       0        0       cc     1         <internal>:(.comment)
+       0        0     3210     4 .symtab
+       0        0     3210     4         <internal>:(.symtab)
+       0        0     3adb     1 .strtab
+       0        0     3adb     1         <internal>:(.strtab)
+       0        0      790     1 .shstrtab
+       0        0      790     1         <internal>:(.shstrtab)
+       0        0       27     1 .lisp65_error_callsites
+       0        0       27     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_error_callsites)
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 
+    ca46     ca46        0     1 __basic_zp_start = 0x0002
+    ca46     ca46        0     1 __basic_zp_end = 0x0090
+    ca46     ca46        0     1 __rc0 = __basic_zp_start
+    ca46     ca46        0     1 __rc1 = __rc0 + 1
+    ca46     ca46        0     1 PROVIDE(__rc2 = __rc1 + 1)
+    ca46     ca46        0     1 __rc3 = __rc2 + 1
+    ca46     ca46        0     1 PROVIDE(__rc4 = __rc3 + 1)
+    ca46     ca46        0     1 __rc5 = __rc4 + 1
+    ca46     ca46        0     1 PROVIDE(__rc6 = __rc5 + 1)
+    ca46     ca46        0     1 __rc7 = __rc6 + 1
+    ca46     ca46        0     1 PROVIDE(__rc8 = __rc7 + 1)
+    ca46     ca46        0     1 __rc9 = __rc8 + 1
+    ca46     ca46        0     1 PROVIDE(__rc10 = __rc9 + 1)
+    ca46     ca46        0     1 __rc11 = __rc10 + 1
+    ca46     ca46        0     1 PROVIDE(__rc12 = __rc11 + 1)
+    ca46     ca46        0     1 __rc13 = __rc12 + 1
+    ca46     ca46        0     1 PROVIDE(__rc14 = __rc13 + 1)
+    ca46     ca46        0     1 __rc15 = __rc14 + 1
+    ca46     ca46        0     1 PROVIDE(__rc16 = __rc15 + 1)
+    ca46     ca46        0     1 __rc17 = __rc16 + 1
+    ca46     ca46        0     1 PROVIDE(__rc18 = __rc17 + 1)
+    ca46     ca46        0     1 __rc19 = __rc18 + 1
+    ca46     ca46        0     1 PROVIDE(__rc20 = __rc19 + 1)
+    ca46     ca46        0     1 __rc21 = __rc20 + 1
+    ca46     ca46        0     1 PROVIDE(__rc22 = __rc21 + 1)
+    ca46     ca46        0     1 __rc23 = __rc22 + 1
+    ca46     ca46        0     1 PROVIDE(__rc24 = __rc23 + 1)
+    ca46     ca46        0     1 __rc25 = __rc24 + 1
+    ca46     ca46        0     1 PROVIDE(__rc26 = __rc25 + 1)
+    ca46     ca46        0     1 __rc27 = __rc26 + 1
+    ca46     ca46        0     1 PROVIDE(__rc28 = __rc27 + 1)
+    ca46     ca46        0     1 __rc29 = __rc28 + 1
+    ca46     ca46        0     1 PROVIDE(__rc30 = __rc29 + 1)
+    ca46     ca46        0     1 __rc31 = __rc30 + 1
+    ca46     ca46        0     1 __basic_zp_size = __basic_zp_end - __basic_zp_start
+    2001     2001       16     1 .basic_header
+    2001     2001       16     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/basic-header.o:(.basic_header)
+    2015     2015        0     1                 next_line
+      22     2017        c     1 .zp.data
+      22     2017        0     1         __zp_data_start = .
+      22     2017        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.zp.data)
+      22     2017        2     1                 str_cur_off
+      24     2019        2     1                 str_alt_off
+      26     201b        8     1                 bndbit
+      2e     2023        0     1 __zp_data_load_start = LOADADDR(.zp.data)
+      2e     2023        0     1 __zp_data_size = SIZEOF(.zp.data)
+      2e       2e       4f     1 .zp.bss
+      2e       2e        0     1         __zp_bss_start = .
+      2e       2e       4f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.zp.bss)
+      2e       2e        2     1                 c2_journal_count
+      30       30        2     1                 lisp_t
+      32       32        2     1                 cs_str
+      34       34        1     1                 pending_code
+      35       35        2     1                 disk_file_pos
+      37       37        2     1                 disk_file_len
+      39       39        1     1                 ext_stg1
+      3a       3a        2     1                 alloc_high
+      3c       3c        2     1                 gc_frozen
+      3e       3e        2     1                 freelist
+      40       40        2     1                 gc_badobj
+      42       42        2     1                 allocs_since_gc
+      44       44        2     1                 ext_mark_lo
+      46       46        2     1                 ext_mark_hi
+      48       48        2     1                 str_top
+      4a       4a        2     1                 str_frozen
+      4c       4c        1     1                 reader_status
+      4d       4d        1     1                 reader_error_code
+      4e       4e        2     1                 rd_str
+      50       50        2     1                 rd_sf
+      52       52        1     1                 rd_sc
+      53       53        1     1                 rd_sn
+      54       54        1     1                 rd_depth
+      55       55        1     1                 lisp_toplevel_active
+      56       56        1     1                 screen_row
+      57       57        2     1                 scr_base
+      59       59        1     1                 cols_
+      5a       5a        1     1                 rows_
+      5b       5b        1     1                 cursor_on
+      5c       5c        1     1                 crow
+      5d       5d        1     1                 ccol
+      5e       5e        2     1                 nsym
+      60       60        1     1                 vm_status
+      61       61        2     1                 vm_t
+      63       63        2     1                 vm_k_key
+      65       65        2     1                 vm_k_meta
+      67       67        2     1                 gc_rootsp
+      69       69        2     1                 vmr_code
+      6b       6b        2     1                 vmr_win
+      6d       6d        1     1                 vm_run_inner.poll_
+      6e       6e        1     1                 ov_started
+      6f       6f        1     1                 vm_boot_overlay_status
+      70       70        2     1                 rtov_call_context
+      72       72        2     1                 rtov_call_result
+      74       74        2     1                 rtov_batch_entry
+      76       76        2     1                 rtov_repeat
+      78       78        1     1                 rtov_batch_slot_id
+      79       79        2     1                 rtov_loaded_len
+      7b       7b        1     1                 rtov_busy
+      7c       7c        1     1                 rtov_fault
+      7d       7d        0     1 __zp_bss_size = SIZEOF(.zp.bss)
+      7d       7d        c     1 .zp
+      7d       7d        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.zp.noinit)
+      89       89        7     1 .lisp65_c2_fixed_zp
+      89       89        0     1         __lisp65_c2_fixed_zp_phase_owner = .
+      89       89        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_zp.phase_owner)
+      89       89        1     1                 c2_phase_owner
+      8a       8a        0     1         __lisp65_c2_fixed_zp_pending_roots = .
+      8a       8a        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_zp.pending_roots)
+      8a       8a        2     1                 c2_pending_roots
+      8c       8c        0     1         __lisp65_c2_fixed_zp_ready = .
+      8c       8c        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_zp.ready)
+      8c       8c        1     1                 c2_ready
+      8d       8d        0     1         __lisp65_c2_fixed_zp_str_building = .
+      8d       8d        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_zp.str_building)
+      8d       8d        2     1                 str_building
+      8f       8f        0     1         __lisp65_c2_fixed_zp_mem_oom = .
+      8f       8f        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_zp.mem_oom)
+      8f       8f        1     1                 mem_oom
+    2023     2023     944c     1 .text
+    2023     2023        0     1         _init = .
+    2023     2023        0     1         _start = .
+    2023     2023        e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/unmap-basic.o:(.init.010)
+    2031     2031        8     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(init-stack.S.obj):(.init.100)
+    2031     2031        0     1                 __do_init_stack
+    2039     2039        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-bss.c.obj):(.init.200)
+    2039     2039        0     1                 __do_zero_bss
+    203c     203c        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-zp-bss.c.obj):(.init.200)
+    203c     203c        0     1                 __do_zero_zp_bss
+    203f     203f        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(copy-zp-data.c.obj):(.init.200)
+    203f     203f        0     1                 __do_copy_zp_data
+    2042     2042        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.init.250)
+    2042     2042        0     1                 shift
+    2047     2047        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/crt0.o:(.call_main)
+    204a     204a        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(exit-custom.S.obj):(.after_main)
+    204a     204a        0     1                 __after_main
+    204d     204d        0     1         _fini = .
+    204d     204d        a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/unmap-basic.o:(.fini.990)
+    2057     2057        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/crt0.o:(.fini_rts)
+    2058     2058       ac     1         /tmp/mega65_math-2c7227.o:(.text.mega65_math_div)
+    2058     2058        4     1                 lisp65_hw_udivhi3
+    205c     205c        4     1                 lisp65_hw_umodhi3
+    2060     2060       a4     1                 lisp65_hw_udivmodhi4
+    2104     2104       69     1         /tmp/mega65_math-2c7227.o:(.text.mega65_math_sdiv)
+    2104     2104        4     1                 lisp65_hw_divhi3
+    2108     2108       65     1                 lisp65_hw_modhi3
+    216d     216d       1e     1         /tmp/mega65_math-2c7227.o:(.text.mega65_math_mod_adjust)
+    216d     216d       1e     1                 lisp65_mod_adjust_tagged
+    218b     218b       2c     1         /tmp/mega65_math-2c7227.o:(.text.mega65_math_mul)
+    218b     218b       2c     1                 lisp65_hw_mulhi3
+    21b7     21b7       3e     1         /tmp/f011_guarded_write-e407a7.o:(.text.lisp65_f011_mount_token_op)
+    21b7     21b7       3e     1                 lisp65_f011_mount_token_op
+    21f5     21f5       38     1         /tmp/f011_guarded_write-e407a7.o:(.text.lisp65_f011_scratch_buffer)
+    21f5     21f5       38     1                 lisp65_f011_scratch_buffer
+    222d     222d       13     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-bss.c.obj):(.text.__zero_bss)
+    222d     222d       13     1                 __zero_bss
+    2240     2240       67     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libc.a(setjmp.S.obj):(.text.setjmp)
+    2240     2240        0     1                 setjmp
+    22a7     22a7       6b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libc.a(setjmp.S.obj):(.text.longjmp)
+    22a7     22a7        0     1                 longjmp
+    2312     2312        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/libcrt.a(call-indir.S.obj):(.text)
+    2312     2312        0     1                 __call_indir
+    2315     2315       13     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(zero-zp-bss.c.obj):(.text.__zero_zp_bss)
+    2315     2315       13     1                 __zero_zp_bss
+    2328     2328       17     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/mega65/lib/libcrt0.a(copy-zp-data.c.obj):(.text.__copy_zp_data)
+    2328     2328       17     1                 __copy_zp_data
+    233f     233f       43     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cell_type)
+    233f     233f       43     1                 cell_type
+    233f     233f       43     1                 cell_type.6
+    233f     233f       43     1                 cell_type.16
+    233f     233f       43     1                 cell_type.81
+    233f     233f       43     1                 cell_type.114
+    233f     233f       43     1                 cell_type.179
+    2382     2382       44     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2_facade_target_c2_dma)
+    2382     2382       44     1                 c2_facade_target_c2_dma
+    23c6     23c6       26     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_code_load)
+    23c6     23c6       26     1                 vm_code_load
+    23ec     23ec       2a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.sympool_read)
+    23ec     23ec       2a     1                 sympool_read
+    2416     2416       57     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.symval_set)
+    2416     2416       57     1                 symval_set
+    246d     246d       69     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.nameoff_get)
+    246d     246d       69     1                 nameoff_get
+    24d6     24d6       57     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.symfn_ext_set)
+    24d6     24d6       57     1                 symfn_ext_set
+    252d     252d       58     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2_facade_target_overlay_call_family)
+    252d     252d       58     1                 c2_facade_target_overlay_call_family
+    2585     2585       60     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2_facade_target_c2e_overlay)
+    2585     2585       60     1                 c2_facade_target_c2e_overlay
+    25e5     25e5       3f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2e_symbol)
+    25e5     25e5       3f     1                 c2e_symbol
+    25e5     25e5       3f     1                 is_sym
+    2624     2624       2b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2e_w16)
+    2624     2624       2b     1                 c2e_w16
+    264f     264f        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2e_put)
+    264f     264f        c     1                 c2e_put
+    265b     265b       4a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2e_w24)
+    265b     265b       4a     1                 c2e_w24
+    26a5     26a5        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2e_get)
+    26a5     26a5        c     1                 c2e_get
+    26b1     26b1       3f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.c2e_w32)
+    26b1     26b1       3f     1                 c2e_w32
+    26f0     26f0      1be     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.eval_vm_bridge)
+    26f0     26f0      1be     1                 eval_vm_bridge
+    28ae     28ae        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.eval_vm_apply)
+    28ae     28ae        3     1                 eval_vm_apply
+    28b1     28b1     10b2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.apply)
+    28b1     28b1     10b2     1                 apply
+    3963     3963       55     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cell_a)
+    3963     3963       55     1                 cell_a
+    3963     3963       55     1                 cell_a.63
+    39b8     39b8       5f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cell_b)
+    39b8     39b8       5f     1                 cell_b
+    39b8     39b8       5f     1                 cell_b.64
+    3a17     3a17       2f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_check_status)
+    3a17     3a17       2f     1                 vm_check_status
+    3a46     3a46       2d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.car)
+    3a46     3a46       2d     1                 car
+    3a73     3a73       2d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cdr)
+    3a73     3a73       2d     1                 cdr
+    3aa0     3aa0        6     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cadr)
+    3aa0     3aa0        6     1                 cadr
+    3aa6     3aa6       4f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cell_set_a)
+    3aa6     3aa6       4f     1                 cell_set_a
+    3aa6     3aa6       4f     1                 cell_set_a.77
+    3af5     3af5       5d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cell_set_b)
+    3af5     3af5       5d     1                 cell_set_b
+    3b52     3b52       a9     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cs_fetch)
+    3b52     3b52       a9     1                 cs_fetch
+    3bfb     3bfb      104     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.eval)
+    3bfb     3bfb      104     1                 eval
+    3cff     3cff       2d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.lisp_abort_symbol)
+    3cff     3cff       2d     1                 lisp_abort_symbol
+    3d2c     3d2c        7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.lisp_abort_code)
+    3d2c     3d2c        7     1                 lisp_abort_code
+    3d33     3d33      13d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.lisp65_error_render_pending)
+    3d33     3d33      13d     1                 lisp65_error_render_pending
+    3e70     3e70       80     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.lisp_input_event)
+    3e70     3e70       80     1                 lisp_input_event
+    3ef0     3ef0       58     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.io_disk_read_sector)
+    3ef0     3ef0       58     1                 io_disk_read_sector
+    3f48     3f48       77     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.f011_read_at)
+    3f48     3f48       77     1                 f011_read_at
+    3fbf     3fbf        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.io_disk_transaction_capture_mount_token)
+    3fbf     3fbf        5     1                 io_disk_transaction_capture_mount_token
+    3fc4     3fc4       1b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.io_disk_transaction_classify_status)
+    3fc4     3fc4       1b     1                 io_disk_transaction_classify_status
+    3fdf     3fdf       8e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.io_disk_write_sector_guarded)
+    3fdf     3fdf       8e     1                 io_disk_write_sector_guarded
+    406d     406d       73     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.f011_issue_write_guarded)
+    406d     406d       73     1                 f011_issue_write_guarded
+    40e0     40e0       24     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.io_disk_write_sector)
+    40e0     40e0       24     1                 io_disk_write_sector
+    4104     4104      373     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.io_disk_save_named)
+    4104     4104      373     1                 io_disk_save_named
+    4477     4477       33     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.disk_chain_count)
+    4477     4477       33     1                 disk_chain_count
+    44aa     44aa       11     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.disk_fold)
+    44aa     44aa       11     1                 disk_fold
+    44bb     44bb      144     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.disk_chain_to_scratch)
+    44bb     44bb      144     1                 disk_chain_to_scratch
+    45ff     45ff      230     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.main)
+    45ff     45ff      230     1                 main
+    482f     482f       44     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_dma)
+    482f     482f       44     1                 ext_dma
+    4873     4873       39     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_b)
+    4873     4873       39     1                 ext_b
+    48ac     48ac       39     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_a)
+    48ac     48ac       39     1                 ext_a
+    48e5     48e5       22     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_write_byte)
+    48e5     48e5       22     1                 str_write_byte
+    4907     4907        f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_len)
+    4907     4907        f     1                 str_len
+    4916     4916       2c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_byte)
+    4916     4916       2c     1                 str_byte
+    4942     4942       26     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_read_byte)
+    4942     4942       26     1                 str_read_byte
+    4968     4968       2d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_set_type)
+    4968     4968       2d     1                 ext_set_type
+    4995     4995      119     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.alloc)
+    4995     4995      119     1                 alloc
+    4aae     4aae       5c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cell_set_b.78)
+    4aae     4aae       5c     1                 cell_set_b.78
+    4aae     4aae       5c     1                 cell_set_b.124
+    4b0a     4b0a      5cb     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.gc_collect)
+    4b0a     4b0a      5cb     1                 gc_collect
+    50d5     50d5       e7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.gc_mark1)
+    50d5     50d5       e7     1                 gc_mark1
+    51bc     51bc       9b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.gc_mark_spine)
+    51bc     51bc       9b     1                 gc_mark_spine
+    5257     5257       35     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_type)
+    5257     5257       35     1                 ext_type
+    528c     528c       41     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_copy_to_alt)
+    528c     528c       41     1                 str_copy_to_alt
+    52cd     52cd       dd     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_relocate)
+    52cd     52cd       dd     1                 str_relocate
+    53aa     53aa       37     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_set_b)
+    53aa     53aa       37     1                 ext_set_b
+    53e1     53e1       37     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_set_a)
+    53e1     53e1       37     1                 ext_set_a
+    5418     5418        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.alloc_oom)
+    5418     5418        5     1                 alloc_oom
+    541d     541d       21     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_disk_put)
+    541d     541d       21     1                 ext_disk_put
+    543e     543e       25     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.ext_disk_get)
+    543e     543e       25     1                 ext_disk_get
+    5463     5463      1a4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.gc_mark)
+    5463     5463      1a4     1                 gc_mark
+    5607     5607       e8     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.cons)
+    5607     5607       e8     1                 cons
+    56ef     56ef       c4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_open)
+    56ef     56ef       c4     1                 str_open
+    57b3     57b3      13f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_putc)
+    57b3     57b3      13f     1                 str_putc
+    58f2     58f2       9a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_from_bytes)
+    58f2     58f2       9a     1                 str_from_bytes
+    598c     598c       d5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.str_copy_out)
+    598c     598c       d5     1                 str_copy_out
+    5a61     5a61       12     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.emit)
+    5a61     5a61       12     1                 emit
+    5a73     5a73       14     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.emit_str)
+    5a73     5a73       14     1                 emit_str
+    5a87     5a87      302     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.print_obj)
+    5a87     5a87      302     1                 print_obj
+    5d89     5d89       47     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.reader_from_fetch)
+    5d89     5d89       47     1                 reader_from_fetch
+    5dd0     5dd0       28     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.reader_skip_peek)
+    5dd0     5dd0       28     1                 reader_skip_peek
+    5df8     5df8       7f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.skip_ws)
+    5df8     5df8       7f     1                 skip_ws
+    5e77     5e77       39     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.rd_next)
+    5e77     5e77       39     1                 rd_next
+    5eb0     5eb0      34e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.read_expr_1)
+    5eb0     5eb0      34e     1                 read_expr_1
+    61fe     61fe       3f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.reader_finish)
+    61fe     61fe       3f     1                 reader_finish
+    623d     623d        7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.reader_fail)
+    623d     623d        7     1                 reader_fail
+    6244     6244      124     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.read_string)
+    6244     6244      124     1                 read_string
+    6368     6368      125     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.sugar)
+    6368     6368      125     1                 sugar
+    648d     648d       27     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.rd_peek2)
+    648d     648d       27     1                 rd_peek2
+    64b4     64b4       2f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.is_delim)
+    64b4     64b4       2f     1                 is_delim
+    64e3     64e3      1f3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.read_atom)
+    64e3     64e3      1f3     1                 read_atom
+    66d6     66d6       29     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.read_expr_stream)
+    66d6     66d6       29     1                 read_expr_stream
+    66ff     66ff      2cb     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.repl)
+    66ff     66ff      2cb     1                 repl
+    69ca     69ca       77     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.scr_init)
+    69ca     69ca       77     1                 scr_init
+    6a41     6a41       1a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.scr_clear)
+    6a41     6a41       1a     1                 scr_clear
+    6a5b     6a5b       38     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.fill_row)
+    6a5b     6a5b       38     1                 fill_row
+    6a93     6a93       41     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.scr_cursor)
+    6a93     6a93       41     1                 scr_cursor
+    6ad4     6ad4       c9     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.scr_putc)
+    6ad4     6ad4       c9     1                 scr_putc
+    6b9d     6b9d       32     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.to_screen)
+    6b9d     6b9d       32     1                 to_screen
+    6bcf     6bcf      15d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.sym_lookup)
+    6bcf     6bcf      15d     1                 sym_lookup
+    6d2c     6d2c      1dd     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.intern)
+    6d2c     6d2c      1dd     1                 intern
+    6f09     6f09       a4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.symname)
+    6f09     6f09       a4     1                 symname
+    6fad     6fad       6c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.sym_value)
+    6fad     6fad       6c     1                 sym_value
+    7019     7019       7e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.sidx)
+    7019     7019       7e     1                 sidx
+    7097     7097       57     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.set_sym_value)
+    7097     7097       57     1                 set_sym_value
+    70ee     70ee       33     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.sym_boundp)
+    70ee     70ee       33     1                 sym_boundp
+    7121     7121       6c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.sym_function)
+    7121     7121       6c     1                 sym_function
+    718d     718d       8c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.set_sym_function)
+    718d     718d       8c     1                 set_sym_function
+    7219     7219       89     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_run_dir)
+    7219     7219       89     1                 vm_run_dir
+    72a2     72a2       27     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_run)
+    72a2     72a2       27     1                 vm_run
+    72c9     72c9     1b73     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_run_inner)
+    72c9     72c9     1b73     1                 vm_run_inner
+    8e3c     8e3c      38f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_object_load)
+    8e3c     8e3c      38f     1                 vm_object_load
+    91cb     91cb      276     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_frame_fill)
+    91cb     91cb      276     1                 vm_frame_fill
+    9441     9441      131     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_fixbinop)
+    9441     9441      131     1                 vm_fixbinop
+    9572     9572       32     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.dir_find)
+    9572     9572       32     1                 dir_find
+    95a4     95a4     10e2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_callprim)
+    95a4     95a4     10e2     1                 vm_callprim
+    a686     a686      188     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_key_event)
+    a686     a686      188     1                 vm_key_event
+    a80e     a80e      27f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_install_staged_boot_overlay)
+    a80e     a80e      27f     1                 vm_install_staged_boot_overlay
+    aa8d     aa8d       26     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_runtime_overlay_exec)
+    aa8d     aa8d       26     1                 vm_runtime_overlay_exec
+    aab3     aab3      51e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_runtime_overlay_exec_family)
+    aab3     aab3      51e     1                 vm_runtime_overlay_exec_family
+    afd1     afd1       46     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.rtov_wipe)
+    afd1     afd1       46     1                 rtov_wipe
+    b017     b017       13     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.rtov_fail)
+    b017     b017       13     1                 rtov_fail
+    b02a     b02a       47     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.rtov_read)
+    b02a     b02a       47     1                 rtov_read
+    b071     b071       48     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.rtov_crc_mem)
+    b071     b071       48     1                 rtov_crc_mem
+    b0b9     b0b9       75     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_runtime_overlay_select_family)
+    b0b9     b0b9       75     1                 vm_runtime_overlay_select_family
+    b12e     b12e       1d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.vm_runtime_overlay_abort_cleanup)
+    b12e     b12e       1d     1                 vm_runtime_overlay_abort_cleanup
+    b14b     b14b      205     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.shelf_crc32)
+    b14b     b14b      205     1                 shelf_crc32
+    b350     b350       68     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.crc32_update)
+    b350     b350       68     1                 crc32_update
+    b3b8     b3b8        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.exit)
+    b3b8     b3b8        5     1                 exit
+    b3bd     b3bd       24     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.memcpy)
+    b3bd     b3bd       24     1                 memcpy
+    b3e1     b3e1       32     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.memcmp)
+    b3e1     b3e1       32     1                 memcmp
+    b413     b413       1c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.__memset)
+    b413     b413       1c     1                 __memset
+    b42f     b42f       35     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.strlen)
+    b42f     b42f       35     1                 strlen
+    b464     b464        b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.text.__ashlqi3)
+    b464     b464        b     1                 __ashlqi3
+    b46f     b46f        0     1         __init_array_start = .
+    b46f     b46f        0     1         __init_array_end = .
+    b46f     b46f        0     1         __fini_array_start = .
+    b46f     b46f        0     1         __fini_array_end = .
+    b481     b481      121     1 .lisp65_c2_kernal_handoff
+    b481     b481      121     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_kernal_handoff)
+    b481     b481       54     1                 c2_kernal_take_ownership
+    b4d5     b4d5       61     1                 c2k_copy
+    b536     b536       6c     1                 c2k_crc16
+    b5a2     b5a2       27     1 .lisp65_c2_host_facade
+    b5a2     b5a2       27     1         /tmp/c2_kernal_facade-ecee6b.o:(.lisp65_c2_host_facade)
+    b5a2     b5a2        0     1                 c2_facade_vm_code_load
+    b5a5     b5a5        0     1                 c2_facade_c2_dma
+    b5a8     b5a8        0     1                 c2_facade_overlay_call_family
+    b5ab     b5ab        0     1                 c2_facade_c2e_cons
+    b5ae     b5ae        0     1                 c2_facade_c2e_overlay
+    b5b1     b5b1        0     1                 c2_facade_car
+    b5b4     b5b4        0     1                 c2_facade_cdr
+    b5b7     b5b7        0     1                 c2_facade_gc_collect
+    b5ba     b5ba        0     1                 c2_facade_str_open
+    b5bd     b5bd        0     1                 c2_facade_str_putc
+    b5c0     b5c0        0     1                 c2_facade_intern
+    b5c3     b5c3        0     1                 c2_facade_select_family
+    b5c6     b5c6        0     1                 c2_facade_gc_mark
+    b5c9     b5c9        b     1 .lisp65_c2_kernal_io_reveal
+    b5c9     b5c9        b     1         /tmp/c2_kernal_map-0f64a5.o:(.lisp65_c2_kernal_io_reveal)
+    b5c9     b5c9        0     1                 c2_kernal_reveal_io
+    b5d4     b5d4        a     1 .lisp65_c2_kernal_map_switch
+    b5d4     b5d4        a     1         /tmp/c2_kernal_map-0f64a5.o:(.lisp65_c2_kernal_map_switch)
+    b5d4     b5d4        0     1                 c2_kernal_map_window
+    b5e0     b5e0       14     1 .lisp65_c2_kernal_state
+    b5e0     b5e0       14     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_kernal_state)
+    b5e0     b5e0       14     1                 c2k_dma_job
+    b5f4     b5f4      27c     1 .rodata
+    b5f4     b5f4        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/tools/llvm-mos/bin/../mos-platform/common/lib/libcrt.a(const.S.obj):(.rodata)
+    b5f4     b5f4        0     1                 __set_v
+    b5f5     b5f5        8     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.lisp65_buffer_overlay_read_entry)
+    b5fd     b5fd       68     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.apply)
+    b665     b665        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.print_obj)
+    b671     b671       16     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.read_expr_1)
+    b687     b687       7e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.vm_run_inner)
+    b705     b705       16     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.vm_fixbinop)
+    b71b     b71b       36     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.vm_callprim)
+    b751     b751       12     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.c2_stream_phase_08)
+    b763     b763       10     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.c2_append_stage_zero_plane.zeros)
+    b763     b763       10     1                 c2_append_stage_zero_plane.zeros
+    b773     b773       10     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.c2_append_rollback_zero_plane.zeros)
+    b773     b773       10     1                 c2_append_rollback_zero_plane.zeros
+    b783     b783       e9     1         <internal>:(.rodata.str1.1)
+    b86c     b86c        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata.numeric_error_sentinel)
+    b86c     b86c        1     1                 numeric_error_sentinel
+    b86d     b86d        3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.rodata..Lswitch.table.vm_runtime_overlay_install_island)
+    b870     b870       20     1 .lisp65_runtime_overlay_verifier_bindings
+    b870     b870        0     1         __lisp65_rtov_binding_section_start = .
+    b870     b870       20     1         /tmp/runtime_overlay_verifier_bindings-588f57.o:(.lisp65_runtime_overlay_verifier_bindings)
+    b870     b870        0     1                 __lisp65_rtov_verifier_bindings_start
+    b870     b870        0     1                 rtov_boot_verifiers
+    b880     b880        0     1                 rtov_verifiers
+    b890     b890        0     1                 __lisp65_rtov_verifier_bindings_end
+    b890     b890        0     1         __lisp65_rtov_binding_section_end = .
+    b890     b890       16     1 .data
+    b890     b890        0     1         __data_start = .
+    b890     b890        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.data.vm_buf_off)
+    b890     b890        2     1                 vm_buf_off
+    b892     b892       14     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.data.rtov_edma_job)
+    b892     b892       14     1                 rtov_edma_job
+    b8a6     b8a6        0     1         __data_end = .
+    b8a6     b8a6        0     1 __data_load_start = LOADADDR(.data)
+    b8a6     b8a6        0     1 __data_size = SIZEOF(.data)
+    b8a6     b8a6      70f     1 .bss
+    b8a6     b8a6        0     1         __bss_start = .
+    b8a6     b8a6        9     1         /tmp/f011_guarded_write-e407a7.o:(.bss.f011_guard)
+    b8af     b8af        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.c2_dma_list)
+    b8af     b8af        c     1                 c2_dma_list
+    b8bb     b8bb        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.eval.k_lccrun)
+    b8bb     b8bb        2     1                 eval.k_lccrun
+    b8bd     b8bd        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.k_bytecode)
+    b8bd     b8bd        2     1                 k_bytecode
+    b8bf     b8bf        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.k_primitive)
+    b8bf     b8bf        2     1                 k_primitive
+    b8c1     b8c1        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.k_closure)
+    b8c1     b8c1        2     1                 k_closure
+    b8c3     b8c3        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.k_macro)
+    b8c3     b8c3        2     1                 k_macro
+    b8c5     b8c5        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.k_other)
+    b8c5     b8c5        2     1                 k_other
+    b8c7     b8c7        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.cs_idx)
+    b8c7     b8c7        2     1                 cs_idx
+    b8c9     b8c9        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.pending_symbol)
+    b8c9     b8c9        2     1                 pending_symbol
+    b8cb     b8cb        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.disk_source_pos)
+    b8cb     b8cb        1     1                 disk_source_pos
+    b8cc     b8cc        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.disk_source_len)
+    b8cc     b8cc        1     1                 disk_source_len
+    b8cd     b8cd        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.ext_stg)
+    b8cd     b8cd        2     1                 ext_stg
+    b8cf     b8cf        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.gc_runs)
+    b8cf     b8cf        2     1                 gc_runs
+    b8d1     b8d1      200     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.markstack)
+    b8d1     b8d1      200     1                 markstack
+    bad1     bad1       86     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.marks)
+    bad1     bad1       86     1                 marks
+    bb57     bb57        c     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.ext_dl)
+    bb57     bb57        c     1                 ext_dl
+    bb63     bb63        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.str_stg1)
+    bb63     bb63        1     1                 str_stg1
+    bb64     bb64       c0     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.repl.buf)
+    bb64     bb64       c0     1                 repl.buf
+    bc24     bc24       13     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.lisp_toplevel)
+    bc24     bc24       13     1                 lisp_toplevel
+    bc37     bc37        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.gensym.tag)
+    bc37     bc37        2     1                 gensym.tag
+    bc39     bc39       5e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.symbnd)
+    bc39     bc39       5e     1                 symbnd
+    bc97     bc97       5e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.symfnptr)
+    bc97     bc97       5e     1                 symfnptr
+    bcf5     bcf5        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.npool)
+    bcf5     bcf5        2     1                 npool
+    bcf7     bcf7      178     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.namelen4)
+    bcf7     bcf7      178     1                 namelen4
+    be6f     be6f        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vm_treewalk_call)
+    be6f     be6f        2     1                 vm_treewalk_call
+    be71     be71        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vm_treewalk_apply)
+    be71     be71        2     1                 vm_treewalk_apply
+    be73     be73        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vm_k_shift)
+    be73     be73        2     1                 vm_k_shift
+    be75     be75        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vm_k_control)
+    be75     be75        2     1                 vm_k_control
+    be77     be77       38     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vm_codebuf)
+    be77     be77       38     1                 vm_codebuf
+    beaf     beaf        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vm_buf_bank)
+    beaf     beaf        1     1                 vm_buf_bank
+    beb0     beb0        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vmr_hdrlen)
+    beb0     beb0        2     1                 vmr_hdrlen
+    beb2     beb2        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vmr_littab)
+    beb2     beb2        2     1                 vmr_littab
+    beb4     beb4        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vmr_poff)
+    beb4     beb4        2     1                 vmr_poff
+    beb6     beb6        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vmr_plen)
+    beb6     beb6        2     1                 vmr_plen
+    beb8     beb8        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vmr_pwmax)
+    beb8     beb8        2     1                 vmr_pwmax
+    beba     beba        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vmr_winlen)
+    beba     beba        2     1                 vmr_winlen
+    bebc     bebc        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.vmr_streaming)
+    bebc     bebc        1     1                 vmr_streaming
+    bebd     bebd       f0     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.heap)
+    bebd     bebd       f0     1                 heap
+    bfad     bfad        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.lisp_error_msg)
+    bfad     bfad        2     1                 lisp_error_msg
+    bfaf     bfaf        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.rtov_batch_crc)
+    bfaf     bfaf        2     1                 rtov_batch_crc
+    bfb1     bfb1        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.rtov_family)
+    bfb1     bfb1        1     1                 rtov_family
+    bfb2     bfb2        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.rtov_family_generation)
+    bfb2     bfb2        2     1                 rtov_family_generation
+    bfb4     bfb4        1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.bss.rtov_island_state)
+    bfb4     bfb4        1     1                 rtov_island_state
+    bfb5     bfb5        0     1         __bss_end = .
+    c080     c080      198     1 .lisp65_c2_fixed_bank0
+    c080     c080        0     1         __lisp65_c2_fixed_bank0_committed_roots = .
+    c080     c080        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_bank0.committed_roots)
+    c080     c080        2     1                 c2_committed_roots
+    c082     c082        0     1         __lisp65_c2_fixed_bank0_decode_active = .
+    c082     c082        2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_bank0.decode_active)
+    c082     c082        2     1                 c2_decode_active
+    c084     c084        0     1         __lisp65_c2_fixed_bank0_runtime = .
+    c084     c084       2e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_bank0.runtime)
+    c084     c084       2e     1                 c2_runtime
+    c0b2     c0b2        0     1         __lisp65_c2_fixed_bank0_edma_job = .
+    c0b2     c0b2       14     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_bank0.edma_job)
+    c0b2     c0b2       14     1                 c2_edma_job
+    c0c6     c0c6        0     1         __lisp65_c2_fixed_bank0_phase_scratch = .
+    c0c6     c0c6      130     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_bank0.phase_scratch)
+    c0c6     c0c6      130     1                 lisp65_c2_phase_scratch
+    c1f6     c1f6        0     1         __lisp65_c2_fixed_bank0_sym_name_scratch = .
+    c1f6     c1f6       22     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_bank0.sym_name_scratch)
+    c1f6     c1f6       22     1                 sym_name_scratch
+    c218     c218       2d     1 .lisp65_c2_fixed_bank0_code
+    c218     c218        0     1         __lisp65_c2_fixed_bank0_code_start = .
+    c218     c218        0     1         __lisp65_c2_fixed_bank0_code_kb_cursor_off = .
+    c218     c218        5     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_bank0_code.kb_cursor_off)
+    c218     c218        5     1                 kb_cursor_off
+    c21d     c21d        0     1         __lisp65_c2_fixed_bank0_code_c2e_cons = .
+    c21d     c21d       28     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_fixed_bank0_code.c2e_cons)
+    c21d     c21d       28     1                 c2_facade_target_c2e_cons
+    c245     c245        0     1         __lisp65_c2_fixed_bank0_code_end = .
+    c245     c245        0     1 __bss_size = SIZEOF(.bss)
+    c245     c245        0     1 .noinit
+    c245     c245        0     1         __heap_start = ALIGN(., 2)
+    c356    10000      593     1 .lisp65_workbench_overlay
+    c356    10000      416     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_boot)
+    c356    10000       a7     1                 defprim
+    c3fd    100a7      36c     1                 eval_init
+    c769    10413        3     1                 vm_workbench_boot_overlay_entry
+    c76c    10416      17d     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_boot.names)
+    c76c    10416        8     1                 workbench_boot_name_funcall
+    c774    1041e        6     1                 workbench_boot_name_apply
+    c77a    10424       14     1                 workbench_boot_name_setfn
+    c78e    10438        7     1                 workbench_boot_name_gensym
+    c795    1043f        7     1                 workbench_boot_name_boundp
+    c79c    10446        5     1                 workbench_boot_name_peek
+    c7a1    1044b        5     1                 workbench_boot_name_poke
+    c7a6    10450        5     1                 workbench_boot_name_load
+    c7ab    10455       12     1                 workbench_boot_name_disk_read_sector
+    c7bd    10467        b     1                 workbench_boot_name_disk_byte
+    c7c8    10472        b     1                 workbench_boot_name_disk_poke
+    c7d3    1047d       13     1                 workbench_boot_name_disk_write_sector
+    c7e6    10490        5     1                 workbench_boot_name_save
+    c7eb    10495        e     1                 workbench_boot_name_macroexpand_1
+    c7f9    104a3        c     1                 workbench_boot_name_lcc_install
+    c805    104af        b     1                 workbench_boot_name_set_macro
+    c810    104ba        c     1                 workbench_boot_name_fasl_stage
+    c81c    104c6       10     1                 workbench_boot_name_fasl_stage_get
+    c82c    104d6       10     1                 workbench_boot_name_fasl_read_form
+    c83c    104e6        e     1                 workbench_boot_name_cs_read_open
+    c84a    104f4        d     1                 workbench_boot_name_save_staged
+    c857    10501        b     1                 workbench_boot_name_write_char
+    c862    1050c        6     1                 workbench_boot_name_prin1
+    c868    10512        9     1                 workbench_boot_name_bytecode
+    c871    1051b        a     1                 workbench_boot_name_primitive
+    c87b    10525        8     1                 workbench_boot_name_closure
+    c883    1052d        6     1                 workbench_boot_name_macro
+    c889    10533        6     1                 workbench_boot_name_other
+    c88f    10539        9     1                 workbench_boot_name_nreverse
+    c898    10542        7     1                 workbench_boot_name_rplaca
+    c89f    10549        7     1                 workbench_boot_name_rplacd
+    c8a6    10550        d     1                 workbench_boot_name_symbol_count
+    c8b3    1055d        b     1                 workbench_boot_name_symbol_max
+    c8be    10568        f     1                 workbench_boot_name_number_to_string
+    c8cd    10577        c     1                 workbench_boot_name_symbol_name
+    c8d9    10583        e     1                 workbench_boot_name_function_kind
+    c8e7    10591        2     1                 workbench_boot_name_t
+    c356    10593      47a     1 .lisp65_rt_rtov_catalog
+    c356    10593      47a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_rtov_catalog)
+    c356    10593       24     1                 rtov_c_build_id
+    c37a    105b7       26     1                 rtov_c_crc_byte
+    c3a0    105dd      143     1                 rtov_c_crc_ext
+    c4e3    10720        c     1                 rtov_c_u16
+    c4ef    1072c      2e1     1                 vm_runtime_overlay_catalog_verifier
+    c356    10a0d      52f     1 .lisp65_rt_rtov_record
+    c356    10a0d      52f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_rtov_record)
+    c356    10a0d       24     1                 rtov_r_build_id
+    c37a    10a31        c     1                 rtov_r_u16
+    c386    10a3d      4ff     1                 vm_runtime_overlay_record_verifier
+    c356    10f3c      553     1 .lisp65_rt_c2d_00
+    c356    10f3c      553     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_00)
+    c356    10f3c      553     1                 c2_stream_phase_00
+    c356    1148f      5a3     1 .lisp65_rt_c2d_00b
+    c356    1148f      5a3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_00b)
+    c356    1148f      5a3     1                 c2_stream_phase_00b
+    c356    11a32      69b     1 .lisp65_rt_c2d_01
+    c356    11a32      69b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_01)
+    c356    11a32      69b     1                 c2_stream_phase_01
+    c356    120cd      681     1 .lisp65_rt_c2d_02a
+    c356    120cd      681     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_02a)
+    c356    120cd      681     1                 c2_stream_phase_02a
+    c356    1274e       f3     1 .lisp65_rt_c2d_02b
+    c356    1274e       f3     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_02b)
+    c356    1274e       f3     1                 c2_stream_phase_02b
+    c356    12841      630     1 .lisp65_rt_c2d_03
+    c356    12841      630     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_03)
+    c356    12841      630     1                 c2_stream_phase_03
+    c356    12e71      430     1 .lisp65_rt_c2d_04
+    c356    12e71      430     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_04)
+    c356    12e71      430     1                 c2_stream_phase_04
+    c356    132a1      68b     1 .lisp65_rt_c2d_05
+    c356    132a1      68b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_05)
+    c356    132a1      68b     1                 c2_stream_phase_05
+    c356    1392c      5a7     1 .lisp65_rt_c2d_06a
+    c356    1392c      5a7     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_06a)
+    c356    1392c      5a7     1                 c2_stream_phase_06a
+    c356    13ed3      3f1     1 .lisp65_rt_c2d_06b
+    c356    13ed3      3f1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_06b)
+    c356    13ed3      3f1     1                 c2_stream_phase_06b
+    c356    142c4      437     1 .lisp65_rt_c2d_07
+    c356    142c4      437     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_07)
+    c356    142c4      437     1                 c2_stream_phase_07
+    c356    146fb      565     1 .lisp65_rt_c2d_08
+    c356    146fb      565     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_08)
+    c356    146fb      565     1                 c2_stream_phase_08
+    c356    14c60      5d4     1 .lisp65_rt_c2d_09
+    c356    14c60      5d4     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_09)
+    c356    14c60      5d4     1                 c2_stream_phase_09
+    c356    15234      501     1 .lisp65_rt_c2d_10
+    c356    15234      501     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_10)
+    c356    15234      501     1                 c2_stream_phase_10
+    c356    15735      6c2     1 .lisp65_rt_c2d_11
+    c356    15735      6c2     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_11)
+    c356    15735      6c2     1                 c2_stream_phase_11
+    c356    15df7      509     1 .lisp65_rt_c2d_12
+    c356    15df7      509     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_12)
+    c356    15df7      509     1                 c2_stream_phase_12
+    c356    16300      6f0     1 .lisp65_rt_c2d_13
+    c356    16300      6f0     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2d_13)
+    c356    16300      6f0     1                 c2_stream_phase_13
+    c356    169f0      501     1 .lisp65_rt_c2emit_prepare
+    c356    169f0      501     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2emit_prepare)
+    c356    169f0      501     1                 c2_session_emit_prepare_phase
+    c356    16ef1      31e     1 .lisp65_rt_c2emit_name
+    c356    16ef1      31e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2emit_name)
+    c356    16ef1      31e     1                 c2_session_emit_name_phase
+    c356    1720f      58f     1 .lisp65_rt_c2emit_literal_prep
+    c356    1720f      58f     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2emit_literal_prep)
+    c356    1720f      464     1                 c2_session_emit_literal_prep_phase
+    c7ba    17673       38     1                 c2e_append_desc
+    c7f2    176ab       f3     1                 c2e_write_desc
+    c356    1779e      61e     1 .lisp65_rt_c2emit_literal_atom
+    c356    1779e      61e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2emit_literal_atom)
+    c356    1779e      171     1                 c2_session_emit_literal_atom_phase
+    c4c7    1790f      4ad     1                 c2e_prepare_atom
+    c356    17dbc      21e     1 .lisp65_rt_c2emit_literal_append
+    c356    17dbc      21e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2emit_literal_append)
+    c356    17dbc      21e     1                 c2_session_emit_literal_append_phase
+    c356    17fda      4f6     1 .lisp65_rt_c2emit_code
+    c356    17fda      4f6     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2emit_code)
+    c356    17fda      4f6     1                 c2_session_emit_code_phase
+    c356    184d0      517     1 .lisp65_rt_c2emit_final_meta
+    c356    184d0      517     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2emit_final_meta)
+    c356    184d0      517     1                 c2_session_emit_final_meta_phase
+    c356    189e7      488     1 .lisp65_rt_c2emit_final_crc
+    c356    189e7      488     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2emit_final_crc)
+    c356    189e7      369     1                 c2_session_emit_final_crc_phase
+    c6bf    18d50      11f     1                 c2e_crc
+    c356    18e6f      5c1     1 .lisp65_rt_c2append_envelope
+    c356    18e6f      5c1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_envelope)
+    c356    18e6f      5c1     1                 c2_append_envelope_phase
+    c356    19430      433     1 .lisp65_rt_c2append_crc
+    c356    19430      433     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_crc)
+    c356    19430      30b     1                 c2_append_crc_phase
+    c661    1973b      128     1                 c2_stage_crc
+    c356    19863      297     1 .lisp65_rt_c2append_metadata
+    c356    19863      297     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_metadata)
+    c356    19863      297     1                 c2_append_metadata_phase
+    c356    19afa      576     1 .lisp65_rt_c2append_capacity
+    c356    19afa      576     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_capacity)
+    c356    19afa      576     1                 c2_append_capacity_phase
+    c356    1a070      518     1 .lisp65_rt_c2append_stage
+    c356    1a070      518     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_stage)
+    c356    1a070      454     1                 c2_append_stage_phase
+    c7aa    1a4c4       c4     1                 c2_append_stage_zero_plane
+    c356    1a588      30a     1 .lisp65_rt_c2append_image
+    c356    1a588      30a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_image)
+    c356    1a588      30a     1                 c2_append_image_phase
+    c356    1a892      3c0     1 .lisp65_rt_c2append_entries
+    c356    1a892      3c0     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_entries)
+    c356    1a892      3c0     1                 c2_append_entries_phase
+    c356    1ac52      1b1     1 .lisp65_rt_c2append_header
+    c356    1ac52      1b1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_header)
+    c356    1ac52      1b1     1                 c2_append_header_phase
+    c356    1ae03      485     1 .lisp65_rt_c2append_publish_names
+    c356    1ae03      485     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_publish_names)
+    c356    1ae03      485     1                 c2_append_publish_names_phase
+    c356    1b288      6ac     1 .lisp65_rt_c2append_publish_cells
+    c356    1b288      6ac     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_publish_cells)
+    c356    1b288      6ac     1                 c2_append_publish_cells_phase
+    c356    1b934      515     1 .lisp65_rt_c2append_rollback
+    c356    1b934      515     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_c2append_rollback)
+    c356    1b934      3af     1                 c2_append_rollback_phase
+    c705    1bce3       a2     1                 c2_append_restore_exports
+    c7a7    1bd85       c4     1                 c2_append_rollback_zero_plane
+    c356    1be49      4e3     1 .lisp65_rt_l65e
+    c356    1be49      1e1     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_l65e)
+    c356    1be49        c     1                 l65e_u16
+    c362    1be55      1d5     1                 lisp65_error_overlay_entry
+    c537    1c02a      302     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_l65e_data)
+    c537    1c02a      302     1                 l65e_table
+    c356    1c32c      661     1 .lisp65_rt_island_00
+    c356    1c32c       61     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_island_00)
+    c356    1c32c       61     1                 vm_resident_island_install
+    c3b7    1c38d      600     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_island_00_data)
+    c3b7    1c38d      600     1                 rtov_island_image
+    1800    1d800      18b     1 .lisp65_resident_island
+    1800    1d800      18b     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_resident_island)
+    1800    1d800       89     1                 disk_source_fetch
+    1889    1d889       2e     1                 vm_buffer_call
+    18b7    1d8b7       9a     1                 rtov_run_batch
+    1951    1d951       3a     1                 vm_runtime_overlay_exec_batch_island
+    198c    1d98c      104     2 .lisp65_resident_island_annex
+    198c    1d98c        2     2         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_resident_island_annex.00_before)
+    198c    1d98c        2     1                 lisp65_rootstack_canary_before
+    198e    1d98e      100     2         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_resident_island_annex.01_stack)
+    198e    1d98e      100     1                 gc_rootstack
+    1a8e    1da8e        2     2         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_resident_island_annex.02_after)
+    1a8e    1da8e        2     1                 lisp65_rootstack_canary_after
+    e000    40000       1f     1 .lisp65_c2_kernal_window.typed_queue_driver
+    e000    40000       1f     1         /tmp/c2_kernal_window-0d17f4.o:(.lisp65_c2_kernal_window.typed_queue_driver)
+    e000    40000        0     1                 c2_kernal_window_poll
+    e01f    4001f        9     1 .lisp65_c2_kernal_window.frame_source
+    e01f    4001f        9     1         /tmp/c2_kernal_window-0d17f4.o:(.lisp65_c2_kernal_window.frame_source)
+    e01f    4001f        0     1                 c2_kernal_frame_tick
+    e028    40028       2d     1 .lisp65_c2_kernal_window.irq_handler
+    e028    40028       2d     1         /tmp/c2_kernal_window-0d17f4.o:(.lisp65_c2_kernal_window.irq_handler)
+    e028    40028        0     1                 c2_kernal_irq_handler
+    e055    40055        9     1 .lisp65_c2_kernal_window.nmi_and_freezer_return
+    e055    40055        9     1         /tmp/c2_kernal_window-0d17f4.o:(.lisp65_c2_kernal_window.nmi_and_freezer_return)
+    e055    40055        0     1                 c2_kernal_nmi_handler
+    e05e    4005e        e     1 .lisp65_c2_kernal_window.map_switch_and_guards
+    e05e    4005e        e     1         /tmp/c2_kernal_window-0d17f4.o:(.lisp65_c2_kernal_window.map_switch_and_guards)
+    e05e    4005e        0     1                 c2_kernal_fail_closed
+    e06c    4006c        4     1 .lisp65_c2_kernal_window.post_startup_output_seam
+    e06c    4006c        4     1         /tmp/c2_kernal_window-0d17f4.o:(.lisp65_c2_kernal_window.post_startup_output_seam)
+    e06c    4006c        0     1                 c2_kernal_output_cell
+    e070    40070       2e     1 .lisp65_c2_kernal_window.event_poll
+    e070    40070       2e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_kernal_window.event_poll)
+    e070    40070       2e     1                 c2_kernal_event_poll
+    e09e     e09e        0     1 .lisp65_c2_kernal_window.session_emitter_code
+    e09e     e09e        0     1         __lisp65_c2_session_emitter_code_start = .
+    e09e     e09e        0     1         __lisp65_c2_session_emitter_code_end = .
+    e09e    4009e     1b1a     1 .lisp65_c2_kernal_window.c2_resident
+    e09e    4009e     1b1a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_kernal_window.c2_resident)
+    e09e    4009e       d1     1                 c2_stream_shelf_read
+    e16f    4016f       91     1                 c2_dma_copy
+    e200    40200       57     1                 c2_stream_c2d_read
+    e257    40257       5e     1                 c2_stream_c2d_write
+    e2b5    402b5      28c     1                 c2_stream_product_image_read
+    e541    40541      278     1                 c2_stream_product_string_record_any
+    e7b9    407b9       69     1                 c2_stream_product_string_record
+    e822    40822      1aa     1                 c2_stream_product_canonical_name
+    e9cc    409cc      214     1                 c2_stream_product_child_value
+    ebe0    40be0      341     1                 c2_stream_name_value
+    ef21    40f21       7e     1                 c2_stream_gc_checkpoint
+    ef9f    40f9f       b0     1                 c2_product_entry_length
+    f04f    4104f      288     1                 c2_entry_records
+    f2d7    412d7       72     1                 c2_source_read
+    f349    41349       1d     1                 c2_overlay_call
+    f366    41366      223     1                 c2_product_gc_mark_roots
+    f589    41589      1c8     1                 c2_decode_from
+    f751    41751       2a     1                 c2_header_counts
+    f77b    4177b      13b     1                 c2_append_begin
+    f8b6    418b6       2f     1                 c2_session_emit_reset
+    f8e5    418e5      1f9     1                 c2_session_emit_add
+    fade    41ade       56     1                 c2_session_emit_finalize
+    fb34    41b34       84     1                 vm_logical_relative_target
+    fbb8    41bb8      15a     1 .lisp65_c2_kernal_window.session_emitter_state
+    fbb8    41bb8        0     1         __lisp65_c2_session_emitter_state_start = .
+    fbb8    41bb8      15a     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_c2_kernal_window.session_emitter_state)
+    fbb8    41bb8      15a     1                 c2e
+    fd12    41d12        0     1         __lisp65_c2_session_emitter_state_end = .
+    ff80    41f80       10     1 .lisp65_c2_kernal_window.state
+    ff80    41f80       10     1         /tmp/c2_kernal_window-0d17f4.o:(.lisp65_c2_kernal_window.state)
+    fffa    41ffa        6     1 .lisp65_c2_vectors
+    fffa    41ffa        6     1         /tmp/c2_kernal_window-0d17f4.o:(.lisp65_c2_vectors)
+    c356    1c98d      48e     1 .lisp65_rt_buffer_read
+    c356    1c98d      48e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_buffer_read)
+    c356    1c98d      3f1     1                 lisp65_buffer_overlay_read_entry
+    c747    1cd7e       2c     1                 buf_byte
+    c773    1cdaa       62     1                 buf_freeze
+    c7d5    1ce0c        f     1                 buf_len
+    c356    1ce1b      2a8     1 .lisp65_rt_buffer_write
+    c356    1ce1b      2a8     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_buffer_write)
+    c356    1ce1b      26e     1                 lisp65_buffer_overlay_write_entry
+    c5c4    1d089       3a     1                 buf_set
+    c356    1d0c3      69e     1 .lisp65_rt_buffer_alloc
+    c356    1d0c3      69e     1         /home/alex/Videos/lisp65-cp4-safety-20260712/build/c2.2/substitution/product-link-27-vm-gc-e000/resident-island-seed.prg.lto.o:(.lisp65_rt_buffer_alloc)
+    c356    1d0c3      299     1                 lisp65_buffer_overlay_alloc_entry
+    c5ef    1d35c      1f4     1                 buf_allocate
+    c7e3    1d550       67     1                 buf_from_stage
+    c84a    1d5b7      139     1                 buf_from_string
+    c983    1d6f0        7     1                 buf_make
+    c98a    1d6f7       6a     1                 buf_to_stage
+    c9f4    1d761        0     1 __stack = 0xd000

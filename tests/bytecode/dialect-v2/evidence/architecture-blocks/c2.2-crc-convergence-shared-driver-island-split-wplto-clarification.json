@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-c2-crc-convergence-shared-driver-wplto-clarification-v1",
+  "recorded_on": "2026-07-21",
+  "status": "clarified-without-build-or-replay",
+  "original_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-crc-convergence-shared-driver-island-split-wplto-receipt.json",
+    "sha256": "e9cd1f4429f8a0f6a4aa2eebd67305445e19f42964983e4aee1f33b63b3f28c1"
+  },
+  "clarifications": {
+    "callsite_field": {
+      "original_field": "source_gate.shared_driver_callsites_in_c_source",
+      "original_value": 4,
+      "meaning": "lexical occurrences across mutually exclusive source branches; not compiled call sites",
+      "authoritative_compiled_relocations": 2,
+      "shared_driver_definitions_in_wplto_map": 1,
+      "shared_driver_symbol_bytes": 72,
+      "conclusion": "one shared driver with the two intended hot consumers; no duplicated fast path"
+    },
+    "baseline_domains": {
+      "seed_to_seed_delta_bytes": 104,
+      "link35_seed_text_bytes": 38007,
+      "link35_seed_text_headroom_bytes": 9,
+      "link35_final_text_bytes": 37997,
+      "authorized_final_text_headroom_bytes": 19,
+      "corrected_probe_seed_text_bytes": 38111,
+      "probe_seed_text_headroom_bytes": -95,
+      "projected_final_text_headroom_at_same_delta_bytes": -85,
+      "fixed_hot_block_headroom_bytes": 33,
+      "shortage_after_granting_both_authorized_homes_bytes": 52,
+      "conclusion": "the First Red and criterion-3 disposition are unchanged"
+    }
+  },
+  "bound_inputs": {
+    "link35_seed_map": {
+      "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/resident-island-seed.prg.map",
+      "sha256": "ddec66d7aaad9775b12ca230defcc5becdcf5d993035abf53b67bcc0070869d1"
+    },
+    "link35_final_map": {
+      "path": "build/c2.2/substitution/product-link-35-dma-completion-first-status/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "419935b14944053164757aa024c3fc87c111b17cd5066913dc31e50b4eef44ca"
+    },
+    "probe_lto_object": {
+      "path": "build/c2.2/substitution/crc-convergence-shared-driver-island-split-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 575780,
+      "sha256": "cb78f53bf1ebad892e70cb8d98a81ba6cbd831c0f0fcd351e164a16a713e0714"
+    }
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "product_links": 0,
+    "hardware_runs": 0
+  },
+  "claim_limit": "Read-only clarification over the immutable WPLTO artifacts."
+}

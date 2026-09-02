@@ -1,0 +1,170 @@
+{
+  "format": "lisp65-c2-lite-v6-link48-append-data-plan-wplto-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-22",
+  "status": "FIRST RED: data representation is semantically green but the first shared-interpreter placement exceeds Bank 0 and misses the restored E000 floor",
+  "classification": "Class C placement review required; no retry or product link authorized",
+  "baseline": {
+    "link": 48,
+    "product_sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6",
+    "lto_object": {
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/resident-island-seed.prg.lto.o",
+      "bytes": 606944,
+      "sha256": "e4c56117bd26f693a9cb5565001921f25a258470ceb9f22e1127c396244ffcc4"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/resident-island-seed.prg.map",
+      "bytes": 199010,
+      "sha256": "f990f82d02038a292f126e71c99ff53b5d48ca9ed84d66333443f1c92f006170"
+    }
+  },
+  "probe": {
+    "promotable": false,
+    "lto_object": {
+      "path": "build/c2.2/substitution/link48-append-data-plan-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 610292,
+      "sha256": "b023935fe064e3e6d61de4ab202de18d620988572c1e1d884b96cfa509fb3b19"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/link48-append-data-plan-wplto/resident-island-seed.prg.map",
+      "bytes": 189613,
+      "sha256": "63ffb4cb6ab008c15916ccc7d46edff139eff14ef56cf06a4808d18824ab2fee"
+    },
+    "sealed_first_red_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-data-plan-wplto-receipt.json",
+      "bytes": 1297,
+      "sha256": "a50fe451e40ec10857a5eee41bda76afcfa7e6f5660822584335d27bc7033bd9"
+    },
+    "internal_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-data-plan-wplto-internal.json",
+      "bytes": 20307,
+      "sha256": "baaf81a17a1547335565a69312d8829d1ddfb40c3e33d58312e8fdad080dd3ed"
+    }
+  },
+  "passed_before_linker_stop": {
+    "plan_representation": "two named linked uint8 arrays: forward [31,35,36,37,38], rollback [43,44,30]",
+    "plan_bytes": 8,
+    "range_inventory": "descending fails closed; recovery-only slots 32/33/34 absent from forward data",
+    "cutpoint_fixture": "all five forward failures restore journal and suffix to the pre-append model; plan-byte mutations rejected",
+    "exact_119_byte_fixture": "emit/append/publish/install/call oracle returns T",
+    "detail_boundary": "two existing phase-scratch bytes; armed only for c2_append_begin; non-append owners explicitly inactive",
+    "new_resident_state_bytes": 0,
+    "renderer": "host and non-LTO MOS smoke pass; BADOPCODE BCODE accepted and BADOPCODE SYMI rejected"
+  },
+  "measured_walls": {
+    "bank0_text": {
+      "baseline_bytes": 37999,
+      "baseline_headroom_bytes": 17,
+      "probe_bytes": 38553,
+      "delta_bytes": 554,
+      "probe_headroom_bytes": -537,
+      "handoff_anchor": "0xb4a3"
+    },
+    "ordinary_rodata": {
+      "baseline_bytes": 947,
+      "probe_bytes": 959,
+      "delta_bytes": 12,
+      "named_plan_payload_bytes": 8
+    },
+    "ordinary_bss": {
+      "baseline_bytes": 1587,
+      "probe_bytes": 1587,
+      "delta_bytes": 0,
+      "baseline_vma": "0xb9f7",
+      "probe_vma": "0xbc1c",
+      "predecessor_shift_bytes": 549,
+      "note": "The BSS and noinit collisions are predecessor-layout consequences, not new state."
+    },
+    "fixed_bank0": {
+      "baseline_bytes": 408,
+      "probe_bytes": 408,
+      "delta_bytes": 0
+    },
+    "resident_island": {
+      "baseline_bytes": 1704,
+      "probe_bytes": 1704,
+      "delta_bytes": 0
+    },
+    "e000_c2_resident": {
+      "baseline_bytes": 7108,
+      "probe_bytes": 7138,
+      "delta_bytes": 30,
+      "baseline_headroom_bytes": 136,
+      "probe_headroom_bytes": 106,
+      "required_floor_bytes": 115,
+      "floor_shortfall_bytes": 9
+    }
+  },
+  "whole_program_attribution": {
+    "bank0_text_delta_bytes": 554,
+    "principal_symbols": [
+      {
+        "symbol": "c2_facade_target_overlay_call_family",
+        "baseline_bytes": 88,
+        "probe_bytes": 441,
+        "delta_bytes": 353,
+        "reason": "the first C interpreter combines normal dispatch, two plan-ID branches, pointer/count iteration, first-failure capture and result-pointer handoff"
+      },
+      {
+        "symbol": "c2_product_install",
+        "baseline_bytes": 556,
+        "probe_bytes": 659,
+        "delta_bytes": 103
+      },
+      {
+        "symbol": "vm_check_status",
+        "baseline_bytes": 76,
+        "probe_bytes": 130,
+        "delta_bytes": 54
+      },
+      {
+        "symbol": "c2_product_append_staged",
+        "baseline_bytes": 116,
+        "probe_bytes": 154,
+        "delta_bytes": 38
+      },
+      {
+        "symbol": "other Bank-0 LTO movement",
+        "delta_bytes": 6,
+        "reason": "net remainder after named changes and removals"
+      }
+    ],
+    "e000_delta_bytes": 30,
+    "e000_symbols": [
+      {
+        "symbol": "c2_append_begin",
+        "baseline_bytes": 453,
+        "probe_bytes": 477,
+        "delta_bytes": 24
+      },
+      {
+        "symbol": "c2_overlay_call_range",
+        "baseline_bytes": 47,
+        "probe_bytes": 53,
+        "delta_bytes": 6
+      },
+      {
+        "symbols": ["c2_append_run_stage_plan", "c2_append_run_rollback_plan"],
+        "prior_literal_probe_bytes": 158,
+        "probe_bytes": 0,
+        "result": "both E000 call chains are completely absent"
+      }
+    ]
+  },
+  "diagnosis": {
+    "semantic_result": "green",
+    "data_representation_result": "green and linked as exactly 5+3 bytes",
+    "placement_result": "red",
+    "primary_capacity_cause": "The eight-byte representation is cheap, but its first C interpreter and pointer-based detail handoff are not tiny under llvm-mos WPLTO.",
+    "window_result": "The literal E000 call chains were eliminated, reducing their prior 164-byte debit to 30 bytes, but the restored 115-byte floor still rejects the remaining 9-byte shortfall.",
+    "not_state_growth": true
+  },
+  "review_boundary": {
+    "whole_program_lto_closure_links": 1,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "link48_rollback_line": "untouched",
+    "line1_product_first_reds": "2/3 unchanged",
+    "completed_latency_measurements": "0/2 unchanged",
+    "required_next_decision": "Choose a genuinely compact interpreter/capture placement from these measured numbers; no retry, floor change, anchor change or product link is authorized."
+  }
+}

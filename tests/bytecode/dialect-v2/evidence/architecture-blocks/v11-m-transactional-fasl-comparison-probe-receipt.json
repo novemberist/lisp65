@@ -1,0 +1,419 @@
+{
+  "baseline_product_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+  "bindings": {
+    "canonical_eval": {
+      "bytes": 8177,
+      "path": "lib/dialect-v2/eval-runtime.lisp",
+      "sha256": "1a52be0551a83c03634b3635a2e4bdb68626896106ab702dae19c26c11c09755"
+    },
+    "canonical_m65d": {
+      "bytes": 23376,
+      "path": "lib/m65-disk.lisp",
+      "sha256": "e5c83719427148213e3af6f792b90fb57bc4190ba33c0500131871675da53ecf"
+    },
+    "codemod": {
+      "bytes": 15842,
+      "path": "tools/host-lisp/v11_m_transactional_fasl_codemod.py",
+      "sha256": "80165b52f4c3d2bc50480430dfad5c2b635527309ae83ba0b239c50140b27fc9"
+    },
+    "collector": {
+      "bytes": 20312,
+      "path": "tools/host-lisp/v11_m_transactional_fasl_probe.py",
+      "sha256": "364647f2300c5a2e42bd4922e9bd9a93dd66eb52d320c73f65759a486e1f100a"
+    },
+    "contract": {
+      "bytes": 2093,
+      "path": "config/v11-m-transactional-fasl-probe.json",
+      "sha256": "480643ff2804fbc5f8d12857cf6664819b81612d1dba5277827bf70724661593"
+    },
+    "plan": {
+      "bytes": 64158,
+      "path": "docs/planning/development-plan-1.1.md",
+      "sha256": "c7247a769f1be8535c278c8d22d2f4cce75d450ab44ca94cc4660edc4cc52370"
+    }
+  },
+  "candidate_comparison": {
+    "dedicated_minus_composition": {
+      "boot_fastpath_verify_slice_bytes": 23,
+      "directory_load_headroom": -1,
+      "ext_post_load_headroom_bytes": -45,
+      "m65d_code_bytes": 45,
+      "m65d_ext_bytes": 119,
+      "namepool_headroom_bytes": -17,
+      "runtime_overlay_bank_headroom_bytes": -256,
+      "symbol_headroom": -1
+    },
+    "semantic_difference": "none in the transactional Buffer oracle; only the published entry surface differs"
+  },
+  "claim_limit": "This comparison may recommend an implementation cut. It does not promote product bytes, authorize capacity deltas, prove compile-string end-to-end on hardware, or reuse Wave-1 hardware receipts.",
+  "deltas_from_wave1_baseline": {
+    "composition": {
+      "bank_post_boot_reserve_bytes": 8,
+      "boot_fastpath_verify_slice_bytes": -83,
+      "directory_load_headroom": 7,
+      "directory_post_align_headroom": 8,
+      "ext_post_load_headroom_bytes": 727,
+      "fixed_overlay_bytes": 0,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 0,
+      "installer_slice_headroom_bytes": 0,
+      "namepool_headroom_bytes": 203,
+      "resident_island_annex_bytes": 0,
+      "resident_island_immutable_bytes": 0,
+      "resident_island_reserve_bytes": 0,
+      "runtime_overlay_bank_bytes": -256,
+      "runtime_overlay_bank_headroom_bytes": 256,
+      "runtime_overlay_max_slice_bytes": 0,
+      "runtime_overlay_max_slice_headroom_bytes": 0,
+      "symbol_headroom": 10
+    },
+    "dedicated": {
+      "bank_post_boot_reserve_bytes": 8,
+      "boot_fastpath_verify_slice_bytes": -60,
+      "directory_load_headroom": 6,
+      "directory_post_align_headroom": 8,
+      "ext_post_load_headroom_bytes": 682,
+      "fixed_overlay_bytes": 0,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 0,
+      "installer_slice_headroom_bytes": 0,
+      "namepool_headroom_bytes": 186,
+      "resident_island_annex_bytes": 0,
+      "resident_island_immutable_bytes": 0,
+      "resident_island_reserve_bytes": 0,
+      "runtime_overlay_bank_bytes": 0,
+      "runtime_overlay_bank_headroom_bytes": 0,
+      "runtime_overlay_max_slice_bytes": 0,
+      "runtime_overlay_max_slice_headroom_bytes": 0,
+      "symbol_headroom": 9
+    }
+  },
+  "format": "lisp65-v11-m-transactional-fasl-comparison-probe-receipt-v1",
+  "recommendation": {
+    "choice": "composition",
+    "implementation_gate": "owner/reviewer authorization required before canonical sources or product identities change",
+    "reason": "Both candidates reuse the identical M65D COW transaction and leave the fixed overlay, resident island, reusable runtime-slice maximum and installer slice unchanged. Composition also crosses a 256-byte runtime-bank packing boundary because its boot verifier is 23 bytes smaller. The dedicated seam buys no additional property and costs one symbol, 17 namepool bytes, one raw Directory entry, 45 post-load EXT bytes, 119 M65D container bytes and that 256-byte bank credit."
+  },
+  "recorded_on": "2026-07-17",
+  "recording_commit": "502b62226c01cac83dd5cc914a6803f8ce581195",
+  "scope": "real-link comparison only; canonical product sources are unchanged",
+  "status": "passed-not-promoted",
+  "variants": {
+    "baseline": {
+      "artifacts": {
+        "m65d": {
+          "code_bytes": 4013,
+          "directory_bytes": 266,
+          "ext_bytes": 6447,
+          "objects": 38
+        },
+        "resident": {
+          "code_bytes": 6719,
+          "directory_bytes": 1498,
+          "ext_bytes": 15609,
+          "objects": 214
+        }
+      },
+      "bindings": {
+        "composition": {
+          "bytes": 3085,
+          "path": "build/probes/v11-m/baseline/composition-budget.json",
+          "sha256": "f6f06c98b61e2f736f5d06d830ffd6c669645dbe11c4b22843e245fe9afee06f"
+        },
+        "footprint": {
+          "bytes": 615,
+          "path": "build/probes/v11-m/baseline/footprint-audit.json",
+          "sha256": "1e97685f42b2bbbea4015b44f3117edbc205f40f9a5f78c3255d04a41d58d467"
+        },
+        "layout": {
+          "bytes": 617,
+          "path": "build/probes/v11-m/baseline/layout.json",
+          "sha256": "6f0b0d55a322092c7264bb54ebfba8c6dc8dafc4a117a3bf89211df26ded2fc1"
+        },
+        "linked_elf": {
+          "bytes": 133920,
+          "path": "build/probes/v11-m/baseline/lisp65-workbench-overlay-linked.prg.elf",
+          "sha256": "f7c5a4215d7b76476a32a088ced95fcab4898e2e95c5e7e8cdbeb888c1437caa"
+        },
+        "m65d_manifest": {
+          "bytes": 62324,
+          "path": "build/probes/v11-m/baseline/m65d.manifest.json",
+          "sha256": "192214444d7ca4207936e8cfe3262328a075fd741c89cca87294a25a63d5ed32"
+        },
+        "resident_manifest": {
+          "bytes": 145814,
+          "path": "build/probes/v11-m/baseline/stdlib-p0.manifest.json",
+          "sha256": "b2948cc429e8d690d4e975783a0117dd4b81907583266cefce46d0203cdf5d72"
+        },
+        "runtime_manifest": {
+          "bytes": 32016,
+          "path": "build/probes/v11-m/baseline/runtime-overlays-manifest.json",
+          "sha256": "8c87bfea61c5081c21946497382b89b03dc69457ac7d658005182ada849040d9"
+        }
+      },
+      "capacity": {
+        "bank_post_boot_reserve_bytes": 1890,
+        "boot_fastpath_verify_slice_bytes": 1866,
+        "directory_load_headroom": 170,
+        "directory_post_align_headroom": 168,
+        "ext_post_load_headroom_bytes": 24796,
+        "fixed_overlay_bytes": 1669,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "installer_slice_bytes": 1770,
+        "installer_slice_headroom_bytes": 22,
+        "namepool_headroom_bytes": 4529,
+        "resident_island_annex_bytes": 260,
+        "resident_island_immutable_bytes": 1668,
+        "resident_island_reserve_bytes": 120,
+        "runtime_overlay_bank_bytes": 65472,
+        "runtime_overlay_bank_headroom_bytes": 64,
+        "runtime_overlay_max_slice_bytes": 1783,
+        "runtime_overlay_max_slice_headroom_bytes": 9,
+        "symbol_headroom": 295
+      },
+      "status": "passed"
+    },
+    "composition": {
+      "artifacts": {
+        "m65d": {
+          "code_bytes": 4083,
+          "directory_bytes": 273,
+          "ext_bytes": 6573,
+          "objects": 39
+        },
+        "resident": {
+          "code_bytes": 5922,
+          "directory_bytes": 1435,
+          "ext_bytes": 14094,
+          "objects": 205
+        }
+      },
+      "bindings": {
+        "compiler_tier": {
+          "bytes": 22514,
+          "path": "build/probes/v11-m/composition/lcc.ext.bin",
+          "sha256": "daa5a5636cb8d57aa76582486ac22afa486279fa83e14a6182c4892eef2abe43"
+        },
+        "composition": {
+          "bytes": 3085,
+          "path": "build/probes/v11-m/composition/composition-budget.json",
+          "sha256": "526159c6b0c0aedd7704bc5e31aa1bdf2bd364d4ec65a8dde46a8a4b350b4cf6"
+        },
+        "footprint": {
+          "bytes": 615,
+          "path": "build/probes/v11-m/composition/footprint-audit.json",
+          "sha256": "fe5381660da051da2505817a2f3d34c01496d9a2dc32dd06bfedce4e6bee614e"
+        },
+        "layout": {
+          "bytes": 617,
+          "path": "build/probes/v11-m/composition/layout.json",
+          "sha256": "8633edcf78bcbbee131b6e464055b2f8dc96d61d164878ca1dba402e79666455"
+        },
+        "linked_elf": {
+          "bytes": 133824,
+          "path": "build/probes/v11-m/composition/lisp65-workbench-overlay-linked.prg.elf",
+          "sha256": "71075deac6563588e5add58d2a159952b44ac60feeca6d4f9bfec88c2f59867e"
+        },
+        "m65d_manifest": {
+          "bytes": 63874,
+          "path": "build/probes/v11-m/composition/m65d.manifest.json",
+          "sha256": "ba972a9228beadeeef7dc29dd149643cca1d189f03770ae9c64ac574dfbd198c"
+        },
+        "m65d_observations": {
+          "bytes": 13392,
+          "path": "build/probes/v11-m/composition/m65d-observations.json",
+          "sha256": "3bf30e5b36a234670fafd5087bb8355416c722a528b92448b6fc8089858412af"
+        },
+        "m65d_suite": {
+          "bytes": 17115,
+          "path": "build/probes/v11-m/composition/m65d-suite.json",
+          "sha256": "7e7dbc14b417d84d6a182ff260db332ada34c8c9e640be8737117a4a0e885590"
+        },
+        "resident_manifest": {
+          "bytes": 135752,
+          "path": "build/probes/v11-m/composition/stdlib-p0.manifest.json",
+          "sha256": "c7506dfc78fa31d7dd51411494ca539dda419ba916df775b1c56121bc8b446cb"
+        },
+        "resident_suite": {
+          "bytes": 30362,
+          "path": "build/probes/v11-m/composition/resident-suite.json",
+          "sha256": "9ca4d6ed723490fadccb73a439ec75874da231ec877d57b9aff25b82966332df"
+        },
+        "runtime_manifest": {
+          "bytes": 32019,
+          "path": "build/probes/v11-m/composition/runtime-overlays-manifest.json",
+          "sha256": "d81fbb23221ab5b68cb65ac6113ae1f672e84eabb0177157ae24e207cd6bac22"
+        }
+      },
+      "capacity": {
+        "bank_post_boot_reserve_bytes": 1898,
+        "boot_fastpath_verify_slice_bytes": 1783,
+        "directory_load_headroom": 177,
+        "directory_post_align_headroom": 176,
+        "ext_post_load_headroom_bytes": 25523,
+        "fixed_overlay_bytes": 1669,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "installer_slice_bytes": 1770,
+        "installer_slice_headroom_bytes": 22,
+        "namepool_headroom_bytes": 4732,
+        "resident_island_annex_bytes": 260,
+        "resident_island_immutable_bytes": 1668,
+        "resident_island_reserve_bytes": 120,
+        "runtime_overlay_bank_bytes": 65216,
+        "runtime_overlay_bank_headroom_bytes": 320,
+        "runtime_overlay_max_slice_bytes": 1783,
+        "runtime_overlay_max_slice_headroom_bytes": 9,
+        "symbol_headroom": 305
+      },
+      "semantic_gates": {
+        "buffer_cases": 2,
+        "buffer_external_oracle": {
+          "allocated_equals_visible_chain": true,
+          "directory_slot": "T40/S3#0",
+          "file_blocks": 1,
+          "free_plus_file_blocks": 3160,
+          "header_not_written": true,
+          "header_unchanged": true,
+          "no_double_allocation": true,
+          "result": "pass",
+          "witnesses": [
+            "d81_persistence_fault",
+            "d81_bam_sanity"
+          ]
+        },
+        "compiler_tier": {
+          "bytes": 22514,
+          "path": "build/probes/v11-m/composition/lcc.ext.bin",
+          "sha256": "daa5a5636cb8d57aa76582486ac22afa486279fa83e14a6182c4892eef2abe43"
+        },
+        "historical_cases": 38,
+        "invalid_payload_status": 3,
+        "legacy_slot_functions_absent": true,
+        "m65d_cases": 40,
+        "m65d_function_count": 53
+      },
+      "status": "passed-not-promoted"
+    },
+    "dedicated": {
+      "artifacts": {
+        "m65d": {
+          "code_bytes": 4128,
+          "directory_bytes": 280,
+          "ext_bytes": 6692,
+          "objects": 40
+        },
+        "resident": {
+          "code_bytes": 5922,
+          "directory_bytes": 1435,
+          "ext_bytes": 14100,
+          "objects": 205
+        }
+      },
+      "bindings": {
+        "compiler_tier": {
+          "bytes": 22514,
+          "path": "build/probes/v11-m/dedicated/lcc.ext.bin",
+          "sha256": "daa5a5636cb8d57aa76582486ac22afa486279fa83e14a6182c4892eef2abe43"
+        },
+        "composition": {
+          "bytes": 3085,
+          "path": "build/probes/v11-m/dedicated/composition-budget.json",
+          "sha256": "8de163ad8def6957f51f730df6dd94ec8dbd00704b4f2183d00610fb97af53c2"
+        },
+        "footprint": {
+          "bytes": 615,
+          "path": "build/probes/v11-m/dedicated/footprint-audit.json",
+          "sha256": "fe5381660da051da2505817a2f3d34c01496d9a2dc32dd06bfedce4e6bee614e"
+        },
+        "layout": {
+          "bytes": 616,
+          "path": "build/probes/v11-m/dedicated/layout.json",
+          "sha256": "86a096667d95ca3005981dd9fc086f892ad76124d5ad937829d6c522f406e627"
+        },
+        "linked_elf": {
+          "bytes": 133848,
+          "path": "build/probes/v11-m/dedicated/lisp65-workbench-overlay-linked.prg.elf",
+          "sha256": "a2927d8e1d2e4c1d7b7d97576b32fe04f8bf4ae904c35ed2f1b4ca4f9b7d47a9"
+        },
+        "m65d_manifest": {
+          "bytes": 65388,
+          "path": "build/probes/v11-m/dedicated/m65d.manifest.json",
+          "sha256": "97053aa5e5b7abb2134e40594bcbd38b6aec91d9700ef435451a02d608fd5a17"
+        },
+        "m65d_observations": {
+          "bytes": 13388,
+          "path": "build/probes/v11-m/dedicated/m65d-observations.json",
+          "sha256": "cdbad0c8c6dad577f5cdae592c9c73387d6217842c446ab7b96609e4ec109db5"
+        },
+        "m65d_suite": {
+          "bytes": 17149,
+          "path": "build/probes/v11-m/dedicated/m65d-suite.json",
+          "sha256": "01b8370bda5c90875d29414f323a845870605fe27cdf546da6aeb496503cb41b"
+        },
+        "resident_manifest": {
+          "bytes": 135773,
+          "path": "build/probes/v11-m/dedicated/stdlib-p0.manifest.json",
+          "sha256": "df1442db3914e66b378c52fafe2c1f879750774fa19a39b8986b45d9c1ea4533"
+        },
+        "resident_suite": {
+          "bytes": 30362,
+          "path": "build/probes/v11-m/dedicated/resident-suite.json",
+          "sha256": "9ca4d6ed723490fadccb73a439ec75874da231ec877d57b9aff25b82966332df"
+        },
+        "runtime_manifest": {
+          "bytes": 31974,
+          "path": "build/probes/v11-m/dedicated/runtime-overlays-manifest.json",
+          "sha256": "ebdfb8aace3a76b2ac040594673a2cf6fcb809ceaf81f94342c2794bd5c14d71"
+        }
+      },
+      "capacity": {
+        "bank_post_boot_reserve_bytes": 1898,
+        "boot_fastpath_verify_slice_bytes": 1806,
+        "directory_load_headroom": 176,
+        "directory_post_align_headroom": 176,
+        "ext_post_load_headroom_bytes": 25478,
+        "fixed_overlay_bytes": 1669,
+        "fixed_overlay_vma_headroom_bytes": 0,
+        "installer_slice_bytes": 1770,
+        "installer_slice_headroom_bytes": 22,
+        "namepool_headroom_bytes": 4715,
+        "resident_island_annex_bytes": 260,
+        "resident_island_immutable_bytes": 1668,
+        "resident_island_reserve_bytes": 120,
+        "runtime_overlay_bank_bytes": 65472,
+        "runtime_overlay_bank_headroom_bytes": 64,
+        "runtime_overlay_max_slice_bytes": 1783,
+        "runtime_overlay_max_slice_headroom_bytes": 9,
+        "symbol_headroom": 304
+      },
+      "semantic_gates": {
+        "buffer_cases": 2,
+        "buffer_external_oracle": {
+          "allocated_equals_visible_chain": true,
+          "directory_slot": "T40/S3#0",
+          "file_blocks": 1,
+          "free_plus_file_blocks": 3160,
+          "header_not_written": true,
+          "header_unchanged": true,
+          "no_double_allocation": true,
+          "result": "pass",
+          "witnesses": [
+            "d81_persistence_fault",
+            "d81_bam_sanity"
+          ]
+        },
+        "compiler_tier": {
+          "bytes": 22514,
+          "path": "build/probes/v11-m/dedicated/lcc.ext.bin",
+          "sha256": "daa5a5636cb8d57aa76582486ac22afa486279fa83e14a6182c4892eef2abe43"
+        },
+        "historical_cases": 38,
+        "invalid_payload_status": 3,
+        "legacy_slot_functions_absent": true,
+        "m65d_cases": 40,
+        "m65d_function_count": 54
+      },
+      "status": "passed-not-promoted"
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "D5": {
+    "ELF_derived_addresses": {
+      "npool": "0xBE1A",
+      "nsym": "0x005A"
+    },
+    "captures": {
+      "npool": {
+        "bytes": 2,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-v190-blocks-ab-r7-device-20260830/d5-npool.bin",
+        "sha256": "ed0a415448ff704a7f47c309d0fa1a9c9673721026f87d33a67c336c02c72d75"
+      },
+      "nsym": {
+        "bytes": 2,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-v190-blocks-ab-r7-device-20260830/d5-nsym.bin",
+        "sha256": "a9c4f719aa681581bf3c72e52e1e978f66e5f276c408200858089431dee81552"
+      }
+    },
+    "free": {
+      "namepool_bytes": 1467,
+      "symbol_slots": 107
+    },
+    "limits": {
+      "namepool_bytes": 10208,
+      "symbols": 752
+    },
+    "minimum_free": {
+      "namepool_bytes": 384,
+      "symbol_slots": 32
+    },
+    "observed": {
+      "npool": 8741,
+      "nsym": 645
+    },
+    "status": "PASS: RELEASE-TERMINAL D5 HEADROOM GREEN"
+  },
+  "authority": {
+    "media": {
+      "bytes": 10363,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-blocks-ab-display-r7-acceptance-media-receipt.json",
+      "sha256": "f9228b3bc2fa7445020bf89f1d9248393c16dd3800e01d63809b589cd9ece433"
+    },
+    "plan_result_section": {
+      "bytes": 1062,
+      "path": "docs/planning/v1.9.0-pre-plan.md",
+      "section": "## Block A+B r7 device result \u2014 2026-08-30",
+      "sha256": "0108416b27b22dbbd27c056440e3aa40b1eaa0cc26c84bfd04c768ff48d2ddd5"
+    },
+    "r7_card": {
+      "bytes": 120743,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-display-repair-r7-receipt.json",
+      "sha256": "f6291f78a51c9d8ec5ed42c0f400e00188f2eb89492c7840ac7f720e3c15c9e9"
+    },
+    "report": {
+      "bytes": 2562,
+      "path": "docs/planning/v1.9.0-blocks-ab-r7-device-result.md",
+      "sha256": "37ade6ed04761494d96a427494ab244953e7437e897c1bf3b0b6cfa9ad03fbeb"
+    },
+    "session": {
+      "bytes": 6111,
+      "path": "config/c2-v190-blocks-ab-display-r7-acceptance-session.json",
+      "sha256": "d3de951ade1c878784505316a654eb4928c8e667cd3b0bee6679c68df11c63e7"
+    }
+  },
+  "choreography": {
+    "final_D5_logical_capture": 1,
+    "final_D5_transport_reads": 2,
+    "final_resume": false,
+    "fresh_BASIC_first": true,
+    "owner_keyboard_only_after_boot": true,
+    "post_boot_automated_access_before_final_D5": 0,
+    "transport_note": "m65 honors only the final --memsave per invocation; nsym was read from the same unchanged stopped state"
+  },
+  "claim_limit": {
+    "accepts": [
+      "r7-display-on-one-row",
+      "native-prompt-editor",
+      "user-visible-ordinary-and-fast-input",
+      "boot-without-optional-libraries",
+      "read-line/RUNSTOP/A0",
+      "performance-smokes",
+      "release-terminal-D5"
+    ],
+    "excludes": [
+      "device-observed-forced-collection",
+      "Comfort",
+      "Matcher/Blink",
+      "Block-C",
+      "Block-D",
+      "$22-closure",
+      "Ship",
+      "publication"
+    ]
+  },
+  "decision": {
+    "A_plus_B_hardware_acceptance": "INDEPENDENT-REVIEW-PENDING",
+    "Block_A_forced_collection_device_subclaim": "NOT-CLAIMED",
+    "Block_A_host_forced_collection_wall": "PASS-94/94-ZERO-DROPS",
+    "Block_A_user_visible_losslessness": "PASS",
+    "Block_B_hardware": "PASS",
+    "all_six_groups_strictly_green": false
+  },
+  "deployment": {
+    "bytes": 819200,
+    "device": "/dev/ttyUSB1",
+    "optional_library_mounts": 0,
+    "readback": "byteidentical",
+    "readback_sha256": "9bc5d45db0c0280ce8f067856dee98ed1cc14aec256398c5e93eb1b56bb06412",
+    "remote_name": "V19R7P.D81",
+    "source_sha256": "9bc5d45db0c0280ce8f067856dee98ed1cc14aec256398c5e93eb1b56bb06412",
+    "transport": "mega65_ftp-over-JTAG"
+  },
+  "format": "lisp65-c2-v190-blocks-ab-r7-device-result-v1",
+  "next": "independent review decides whether device-visible losslessness plus the 94/94 armed host wall closes Block A",
+  "recorded_on": "2026-08-30",
+  "rows": [
+    {
+      "id": "ABR7-1-composed-native-prompt-display",
+      "observation": "lisp65> and active cursor share editor-owned row 24; no scattered blanks or second cursor",
+      "result": "PASS"
+    },
+    {
+      "id": "ABR7-2-native-prompt-editor",
+      "observations": [
+        "Left/insert produced (1 2 3)",
+        "C-b/C-f C-a/C-e Backspace C-d and boundary sequence produced abc",
+        "reader: invalid token absent"
+      ],
+      "result": "PASS"
+    },
+    {
+      "device_observation": "owner visually confirmed ordinary and fast physical typing lossless",
+      "forced_collection_witness_on_device": false,
+      "host_final_world": {
+        "capture_lifecycle": "delivered read-line armed",
+        "captured": 94,
+        "drained": 94,
+        "drops": 0,
+        "produced": 94
+      },
+      "id": "ABR7-3-lossless-forced-collection",
+      "reason": "owner shortened impractical scrolling-line stimulus; scripted length oracle was list-only",
+      "result": "PASS-DEVICE-LOSSLESS; FORCED-COLLECTION-DEVICE-NOT-CLAIMED",
+      "scripted_stimulus_completed": false
+    },
+    {
+      "id": "ABR7-4-boot-surface-without-libraries",
+      "observation": "product medium only; no INIT error, red frame, or library dependency",
+      "result": "PASS"
+    },
+    {
+      "id": "ABR7-5-explicit-read-line-break-and-A0",
+      "observations": [
+        "explicit read-line returned abcde",
+        "physical RUN/STOP returned to one live prompt",
+        "vm type error recovered practically immediately",
+        "follow-up (list 1 3) returned (1 3)"
+      ],
+      "result": "PASS"
+    },
+    {
+      "INIT_L65_absence": "silent",
+      "id": "ABR7-6-INIT-performance-and-D5",
+      "performance": [
+        {
+          "frames": 0,
+          "observation": "0 2",
+          "value": "2"
+        },
+        {
+          "frames": 0,
+          "observation": "0 (9 2)",
+          "value": "(9 2)"
+        },
+        {
+          "frames": 0,
+          "observation": "0 98",
+          "value": "98"
+        },
+        {
+          "frames": 0,
+          "observation": "0 42",
+          "value": "42"
+        }
+      ],
+      "result": "PASS"
+    }
+  ],
+  "session_fixture_attribution": {
+    "classification": "SESSION-ORACLE-DEFECT; NOT PRODUCT DEFECT",
+    "correct_public_form": "(string-length string)",
+    "correction_rule": "a withdrawn device stimulus carries no acceptance weight and no unobserved collection claim",
+    "incorrect_public_form": "(length string)",
+    "list_length_authority": {
+      "bytes": 3367,
+      "path": "lib/dialect-v2/lists-core.lisp",
+      "sha256": "d12cb14b4563c5281c0de626bc0b3edb31fc4eafb877ccf175271cad24767c45"
+    },
+    "string_length_authority": {
+      "bytes": 105226,
+      "path": "src/vm.c",
+      "sha256": "401215f971f80e7d9e1920e739b07c3a37b63709a9fca368b79c1fc6e778bee2"
+    }
+  },
+  "status": "PASS: DEVICE ROWS GREEN; FORCED-COLLECTION DEVICE SUBCLAIM REVIEW-PENDING"
+}

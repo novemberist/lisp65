@@ -1,0 +1,60 @@
+{
+  "format": "lisp65-c2-profile-data-reference-first-red-diagnosis-v1",
+  "recorded_on": "2026-07-20",
+  "status": "diagnosis-only-no-gate-pass",
+  "first_red": "all three moved input components were reported as having no retained reference",
+  "root_cause_part_1": "the five retained references target the output section .lisp65_c2_kernal_window.profile_rodata plus an addend; the gate only resolved named symbols or the three input-section names",
+  "root_cause_part_2": "after resolving the output-section base, the gate still classifies every source as pre-handoff because retained relocations identify the merged .text section, while the authorization requires containing-function provenance",
+  "retained_relocation_total": 30075,
+  "profile_references": [
+    {
+      "source_address": "0x2c8a",
+      "containing_symbol": "eval_v2_workbench_service",
+      "target_output_section": ".lisp65_c2_kernal_window.profile_rodata",
+      "addend": "0x0000",
+      "resolved_component": ".rodata.eval_v2_workbench_service"
+    },
+    {
+      "source_address": "0x8cad",
+      "containing_symbol": "vm_callprim",
+      "target_output_section": ".lisp65_c2_kernal_window.profile_rodata",
+      "addend": "0x0020",
+      "resolved_component": ".rodata.vm_callprim"
+    },
+    {
+      "source_address": "0x8cbc",
+      "containing_symbol": "vm_callprim",
+      "target_output_section": ".lisp65_c2_kernal_window.profile_rodata",
+      "addend": "0x00a6",
+      "resolved_component": ".rodata.vm_callprim"
+    },
+    {
+      "source_address": "0x93e2",
+      "containing_symbol": "vm_callprim",
+      "target_output_section": ".lisp65_c2_kernal_window.profile_rodata",
+      "addend": "0x00bc",
+      "resolved_component": ".rodata.vm_callprim"
+    },
+    {
+      "source_address": "0xa3fe",
+      "containing_symbol": "vm_native_call",
+      "target_output_section": ".lisp65_c2_kernal_window.profile_rodata",
+      "addend": "0x00c4",
+      "resolved_component": ".rodata.vm_native_call"
+    }
+  ],
+  "component_coverage_if_output_section_addends_are_resolved": "3/3",
+  "existing_pre_ownership_report": {
+    "pre_handoff_closure_function_count": 0,
+    "pre_handoff_source_sections": [".text"],
+    "problem": "section-level .text is too coarse to decide the five function-local references"
+  },
+  "required_gate_model_before_any_replay": [
+    "resolve output-section symbols plus addends into the three component ranges",
+    "map each relocation source address to one unambiguous sized function symbol",
+    "compare that function against explicit pre-handoff function ranges and the main-prefix cutpoint",
+    "reject unknown, overlapping or unsized source provenance fail-closed",
+    "pin negative cases for a pre-handoff function reference and an unresolved source address"
+  ],
+  "claim_limit": "The five relocations and their containing symbols are read-only observations from the immutable ELF. This file does not prove that any containing function is post-ownership and does not convert the failed gate into a PASS."
+}

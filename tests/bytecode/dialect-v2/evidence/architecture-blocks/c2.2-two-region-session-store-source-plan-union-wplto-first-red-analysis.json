@@ -1,0 +1,134 @@
+{
+  "format": "lisp65-c2-two-region-source-plan-union-first-red-analysis-v1",
+  "recorded_on": "2026-07-24",
+  "status": "FIRST RED: E000 self-defense clause fired; separate record-verifier slice overflow",
+  "promotable": false,
+  "authority": {
+    "WPLTO_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-two-region-session-store-source-plan-union-wplto-receipt.json",
+      "bytes": 4169,
+      "sha256": "16c078f7078eb92c615a701687f953d43ac4ebd3925c6b827aba77ab82ff8e85"
+    },
+    "map": {
+      "path": "build/c2.2/substitution/two-region-session-store-source-plan-union-wplto/resident-island-seed.prg.map",
+      "bytes": 201992,
+      "sha256": "78b6272ff4ab9f01e9833772d9773018007ce183ac49ca399a110a972b27e0e2"
+    },
+    "LTO_object": {
+      "path": "build/c2.2/substitution/two-region-session-store-source-plan-union-wplto/resident-island-seed.prg.lto.o",
+      "bytes": 620744,
+      "sha256": "a92dee1c42daab1b063f8e417787808cb3e5d895020a45e6bcd29948ce87d054"
+    },
+    "link_stderr": {
+      "path": "build/c2.2/substitution/two-region-session-store-source-plan-union-wplto/resident-island-seed.prg.link.stderr.txt",
+      "bytes": 3076,
+      "sha256": "5ce635e47970e46faf9ef1ed0790852b9de17fa90d7467437477322a61bbd5eb"
+    },
+    "predecessor_v4_map": {
+      "path": "build/c2.2/substitution/two-region-session-store-l65r-v4-wplto-replay3/resident-island-seed.prg.map",
+      "sha256": "1b43aece250ef34d33860369020b4750ede8fdfeb51c79ef3ed1097bbcc68d33"
+    },
+    "predecessor_v4_LTO_object": {
+      "path": "build/c2.2/substitution/two-region-session-store-l65r-v4-wplto-replay3/resident-island-seed.prg.lto.o",
+      "sha256": "ca6e07e111bf10c49608ca72fcce902efd099f34e591605c7a31f7035544cf51"
+    }
+  },
+  "authorized_cuts_measured": {
+    "absolute_source_hot_dispatch": {
+      "symbol": "vm_runtime_overlay_exec_family",
+      "predecessor_bytes": 1382,
+      "current_bytes": 1312,
+      "delta_bytes": -70,
+      "result": "hot loader consumes source_addr without region dispatch"
+    },
+    "rollback_wipes_as_plan_slots": {
+      "section": ".text.main",
+      "predecessor_bytes": 681,
+      "current_bytes": 611,
+      "delta_bytes": -70,
+      "result": "three direct wipe call sequences absent from main"
+    },
+    "emitter_state_lifetime_union": {
+      "section": ".lisp65_c2_kernal_window.session_emitter_state",
+      "predecessor_bytes": 10,
+      "current_bytes": 0,
+      "delta_bytes": -10,
+      "sanitized_mutations": "4/4 rejected",
+      "new_roots": 0
+    }
+  },
+  "first_reds": {
+    "E000_floor": {
+      "required_floor_bytes": 54,
+      "reopen_gap0": {
+        "start": "0xfcbe",
+        "bytes": 128,
+        "end_exclusive": "0xfd3e"
+      },
+      "profile_rodata": {
+        "start": "0xfd2c",
+        "bytes": 342,
+        "end_exclusive": "0xfe82"
+      },
+      "overlap_start": "0xfd2c",
+      "overlap_end_exclusive": "0xfd3e",
+      "deficit_bytes": 18,
+      "disposition": "automatic scope triage; no floor negotiation"
+    },
+    "record_verifier_slice": {
+      "section": ".lisp65_rt_rtov_record",
+      "predecessor_bytes": 1749,
+      "current_bytes": 1827,
+      "delta_bytes": 78,
+      "cap_bytes": 1792,
+      "overrun_bytes": 35,
+      "attribution": "absolute source/region bounds validation materialized in the record verifier",
+      "disposition": "separate stage-boundary implementation correction; not scope credit and not attempted after First Red"
+    }
+  },
+  "scope_triage": {
+    "minimum_net_E000_relief_bytes": 18,
+    "selection_status": "awaiting-Alex",
+    "measurement_rule": "Each byte count is the complete sized E000 symbol in the bound LTO object. Net relief and replacement scaffolding require one separately authorized WPLTO.",
+    "candidates": [
+      {
+        "id": "E000-S1",
+        "symbol": "vm_runtime_overlay_exec_batch_island",
+        "measured_gross_bytes": 60,
+        "consequence": "Retire same-slice batch repetition; L65M, commit and LCC use the existing single-record path, preserving correctness with higher phase-load latency.",
+        "surface_class": "performance optimization, no Lisp language surface removed",
+        "recommendation": "preferred"
+      },
+      {
+        "id": "E000-S2",
+        "symbol": "vm_byte_args",
+        "measured_gross_bytes": 97,
+        "consequence": "Retire CALLPRIM 61/62 peek/poke from the C2.2 product; Lisp loses direct byte memory access.",
+        "surface_class": "user-visible primitive cut",
+        "recommendation": "not preferred"
+      },
+      {
+        "id": "E000-S3",
+        "symbol": "vm_arity_accepts",
+        "measured_gross_bytes": 56,
+        "consequence": "Restrict the healed C2.2 published-call path to nullary functions; argument-bearing calls remain outside this product scope.",
+        "surface_class": "user-visible call-surface cut",
+        "recommendation": "not preferred"
+      }
+    ]
+  },
+  "unreached_claims": {
+    "session_region_packing": "not reached",
+    "rollback_wipe_region_membership": "not linked",
+    "product_identity": "not created",
+    "C1_matrix": "unchanged and OPEN",
+    "acceptance_chain": "not started"
+  },
+  "execution_accounting": {
+    "whole_program_LTO_closure_links": 1,
+    "automatic_retries": 0,
+    "promotable_product_links": 0,
+    "hardware_runs": 0
+  },
+  "claim_limit": "Read-only First-Red attribution and three-option scope triage only. No option is selected; no second WPLTO, product link, hardware run, C1 closure or acceptance claim."
+}

@@ -1,0 +1,450 @@
+{
+  "acceptance": {
+    "VMA_golden": {
+      "allocatable_sections": 103,
+      "capacity_arenas": 11,
+      "capacity_measurements": [
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 8215,
+          "end_exclusive": 8215,
+          "id": "basic-header",
+          "start": 8193
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 144,
+          "end_exclusive": 144,
+          "id": "ordinary-zero-page",
+          "start": 34
+        },
+        {
+          "candidate_headroom_bytes": 4,
+          "candidate_max_end_exclusive": 45996,
+          "end_exclusive": 46000,
+          "id": "ordinary-text",
+          "start": 8227
+        },
+        {
+          "candidate_headroom_bytes": 251,
+          "candidate_max_end_exclusive": 32146,
+          "end_exclusive": 32397,
+          "id": "mapped-bank2-far-service",
+          "start": 30898
+        },
+        {
+          "candidate_headroom_bytes": 5,
+          "candidate_max_end_exclusive": 49147,
+          "end_exclusive": 49152,
+          "id": "low-resident-and-ordinary-chain",
+          "start": 46000
+        },
+        {
+          "candidate_headroom_bytes": 7,
+          "candidate_max_end_exclusive": 49997,
+          "end_exclusive": 50004,
+          "id": "owned-bank0-state",
+          "start": 49152
+        },
+        {
+          "candidate_headroom_bytes": 879,
+          "candidate_max_end_exclusive": 51857,
+          "end_exclusive": 52736,
+          "id": "workbench-boot-overlay",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 6,
+          "candidate_max_end_exclusive": 51792,
+          "end_exclusive": 51798,
+          "id": "runtime-overlay-slices",
+          "start": 50006
+        },
+        {
+          "candidate_headroom_bytes": 50,
+          "candidate_max_end_exclusive": 8142,
+          "end_exclusive": 8192,
+          "id": "resident-island",
+          "start": 6144
+        },
+        {
+          "candidate_headroom_bytes": 16,
+          "candidate_max_end_exclusive": 65520,
+          "end_exclusive": 65536,
+          "id": "kernal-window",
+          "start": 57344
+        },
+        {
+          "candidate_headroom_bytes": 0,
+          "candidate_max_end_exclusive": 65536,
+          "end_exclusive": 65536,
+          "id": "kernal-vectors",
+          "start": 65530
+        }
+      ],
+      "comparison": "dependent-address-plus-freight-boundaries-exact",
+      "dependent_fixed_vmas": 101,
+      "dependent_free_derived_vmas": 2,
+      "derived_boundaries": {
+        "__lisp65_c2_mapped_far_service_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 32146
+        },
+        "__lisp65_c2_mapped_far_service_load_end": {
+          "operation": "section-lma-plus-bytes",
+          "section": ".lisp65_c2_mapped_far_service",
+          "value": 179602
+        },
+        "__lisp65_workbench_overlay_end": {
+          "operation": "section-vma-plus-bytes",
+          "section": ".lisp65_workbench_overlay",
+          "value": 51857
+        }
+      },
+      "derived_freight_sha256": "efd781284e3a9126561dff6790101ad6b2b921c578348d59984d03c14286b9ed",
+      "derived_vmas": {
+        ".lisp65_c2_kernal_window.reopen_gap0": {
+          "predecessor": ".lisp65_c2_kernal_window.c2_resident",
+          "predecessor_end": 64687,
+          "vma": 64687
+        },
+        ".lisp65_c2_kernal_window.reopen_gap1": {
+          "predecessor": ".lisp65_c2_kernal_window.profile_rodata",
+          "predecessor_end": 65160,
+          "vma": 65160
+        }
+      },
+      "fixed_boundary_symbols": 25,
+      "fixed_projection_sha256": "2ebfe0002a9f196c374ebaeab5f063ce248b437348c28dc63d3bca6881ea7146",
+      "freight_derived_boundary_symbols": 3,
+      "mapped_far_service_capacity": {
+        "candidate_headroom_bytes": 251,
+        "candidate_max_end_exclusive": 32146,
+        "end_exclusive": 32397,
+        "id": "mapped-bank2-far-service",
+        "start": 30898
+      }
+    },
+    "delivered_bytes": {
+      "reason": "the two CRC operands are intentionally not final before Completion; post-Completion value/identity validation is mandatory",
+      "status": "DEFERRED-UNTIL-PUBLISH-LAST-COMPLETION"
+    },
+    "far_payload": {
+      "LMA_end_exclusive": "0x0002bd92",
+      "LMA_start": "0x0002b8b2",
+      "VMA": "0x78b2",
+      "arena_capacity_bytes": 1499,
+      "candidate_derived_bytes": 1248,
+      "candidate_derived_cpu_end_exclusive": 32146,
+      "candidate_headroom_bytes": 251,
+      "fixed_size_expectation": false,
+      "section": ".lisp65_c2_mapped_far_service",
+      "sha256": "1b0f53d624bc108876ab2f8d4c99bb8dcbb9f887625652af7a222e6dc6422bad",
+      "size_source": "emitted-candidate-section-and-symbol-extents",
+      "status": "passed-candidate-derived-far-payload-extent-identity"
+    },
+    "linked_MAP_tuple": {
+      "VMA": "0xB3C2",
+      "block1_unchanged": true,
+      "bytes": "48da5aa940a282a000a3805ceaa3007afa6860",
+      "decode": {
+        "A": "0x40",
+        "X": "0x82",
+        "block_mask": "0x8",
+        "mapped_low_half_blocks": [
+          3
+        ],
+        "physical_offset": "0x24000"
+      },
+      "far_service": {
+        "arena_capacity_bytes": 1499,
+        "arena_end_exclusive": 32397,
+        "candidate_derived_bytes": 1248,
+        "candidate_derived_end_exclusive": 32146,
+        "candidate_headroom_bytes": 251,
+        "fixed_size_expectation": false,
+        "section": ".lisp65_c2_mapped_far_service",
+        "size_source": "emitted-candidate-section-table",
+        "start": 30898
+      },
+      "first_descriptor_store": {
+        "bytes": "a9048d00c0",
+        "candidate_offset": "0x3A",
+        "derivation": "unique-emitted-instruction-sequence",
+        "effect": "STA $C000 <= $04",
+        "occurrences": 1,
+        "physical_PC": "0x0002B8EC"
+      },
+      "service_entry": {
+        "candidate_VMA": "0x7A31",
+        "candidate_physical": "0x2BA31",
+        "derivation": "ELF-symbol-plus-decoded-MAP-tuple",
+        "symbol": "c2_mapped_far_vm_code_load_converged"
+      },
+      "service_entry_physical": "0x2BA31",
+      "status": "passed-primary-semantics-candidate-derived-tuple",
+      "symbol": "c2_mapped_far_enter",
+      "tuple": {
+        "A": "0x40",
+        "X": "0x82",
+        "Y": "0x00",
+        "Z": "0x80"
+      }
+    },
+    "low_resident_LMA_reset": {
+      ".lisp65_c2_host_facade": "0xb5c4",
+      ".lisp65_c2_kernal_handoff": "0xb4a3",
+      ".lisp65_c2_kernal_io_reveal": "0xb5f4",
+      ".lisp65_c2_kernal_map_switch": "0xb5ff"
+    },
+    "pid": 1674610,
+    "source_authoritative_oracle": {
+      "VMA": "0xc356",
+      "bytes": 1671,
+      "c2d_crc16": [
+        "0xe27e",
+        "0x8cc6",
+        "0x74d8",
+        "0x277a",
+        "0x9866",
+        "0xe9dc"
+      ],
+      "capacity": 1792,
+      "delivery_inputs": [
+        {
+          "bytes": 93681,
+          "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+          "sha256": "0924fff5a35d2c72e830e90a949ba5f70a9937e17378db1f39a49844f31a795c"
+        },
+        {
+          "bytes": 33840,
+          "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+          "sha256": "d576a0ffbff91737f32c29f8cd69f6ee4af1696adeb01741bcab27d8b6043c19"
+        }
+      ],
+      "generated_decoder": {
+        "bytes": 41551,
+        "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/wplto/generated-product-sources/c2-stream-decoder.c",
+        "sha256": "0680dfbdb05552114fc3d5d33dcd30989026995a46f389b2c6bd6adee80614ac"
+      },
+      "generated_owner": {
+        "bytes": 548,
+        "path": "build/c2.3/v2.1-probe-oracle-root-padding-replacement-card/wplto/generated-product-sources/c2-stream-phase-02a.c",
+        "sha256": "371c6446106ef5c851ff73b39d6764d60577794f11bbee99f379cc6b81f33694"
+      },
+      "oracle_offset": 0,
+      "records_per_image": 6,
+      "reserve": 121,
+      "section": ".lisp65_rt_c2d_02a",
+      "shelf_crc16": [
+        "0xce26",
+        "0x46f5",
+        "0xfccb",
+        "0xbc88",
+        "0xf871",
+        "0xe3f7"
+      ],
+      "status": "passed-linked-delivery-bound-CRC-oracle",
+      "timeout_frames": 64
+    },
+    "status": "PASS"
+  },
+  "authority": {
+    "base_media": {
+      "bytes": 13369,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-configurator-parity-base-media-receipt.json",
+      "sha256": "dcf12ee0bc299ad5cb89eb7571e220be47a4f740432318e036037f94cb99d520"
+    },
+    "candidate_size_gate": {
+      "bytes": 29656,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-root-padding-configurator-parity-acceptance-receipt.json",
+      "sha256": "88b214f3ac5e64248df85902519baa2599ed6574e4710decb95e658c01cd5acb"
+    },
+    "driver": {
+      "bytes": 141358,
+      "path": "tools/host-lisp/c2_v21_root_padding_configurator_parity_media.py",
+      "sha256": "6ffe996cb0606739b9ad32229298b55fb4c8dcb636eab740f9d563d3849ca161"
+    },
+    "far_media": {
+      "bytes": 10848,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-configurator-parity-far-media-receipt.json",
+      "sha256": "5c4ef3ff214ad47f19a083f8bb758a4595cd96ac92622028bb17b0f803609596"
+    },
+    "freight_boundary_golden": {
+      "bytes": 29656,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-root-padding-configurator-parity-acceptance-receipt.json",
+      "sha256": "88b214f3ac5e64248df85902519baa2599ed6574e4710decb95e658c01cd5acb"
+    },
+    "frozen_acceptance": {
+      "bytes": 29656,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-root-padding-configurator-parity-acceptance-receipt.json",
+      "sha256": "88b214f3ac5e64248df85902519baa2599ed6574e4710decb95e658c01cd5acb"
+    },
+    "liveness_media": {
+      "bytes": 6222,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-configurator-parity-liveness-media-receipt.json",
+      "sha256": "650310f6f56875c6a56ee7004a952d097bb0603bd6f030f15c3f6ed589b75324"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 141187,
+      "commit": "7d49bb5d4f7ab0c280f89ba76c47b5ab31ccecaa",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "ef1136128cb5dae952d78dc831bfadb2b10ffe1cf6b9de00a57d51ee88b7f91d"
+    }
+  },
+  "claim_limit": "Host Completion/media only; D1 not run, D2-D5 closed.",
+  "completion": {
+    "bytes": 6197,
+    "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/receipts/artifact-completion.json",
+    "sha256": "425f24324976d88b856329526f95d5592a79913374820e55541875f4ab6fb2e1"
+  },
+  "execution_accounting": {
+    "additional_WPLTO_runs": 0,
+    "additional_cards": 0,
+    "additional_product_links": 0,
+    "artifact_completions": 1,
+    "device_contacts": 0,
+    "library_builds": 1,
+    "shared_media_builds": 3
+  },
+  "final_artifacts": {
+    "elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "manifest": {
+      "bytes": 23750,
+      "path": "build/c2.3/v2.0-crc-carveout-card/canonical-product-manifest.json",
+      "sha256": "4d1352efeb8bdc898f0793df752129b6c6d87bcd3fe16a9dfbbc5801b6f00c8f"
+    },
+    "prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "96e8f4f5bae6c6e1e0c554a07b9715fa53ba872670f9c942a5b18ae7fcee26f2"
+    }
+  },
+  "format": "lisp65-c2.3-v2.1-phase9-ABI-completion-media-v1",
+  "frozen_after": {
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d966884a7a3244b23003501e6ed9289a7df21bb1de6edea990649f12201dd043"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 619772,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "8d34e7e9453439e15fc596bb992b7a9ba356db5d8042bd87f8ea993028564d90"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 198179,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "e955cc2c5245a5ee41b19386d490e254ca3057f9f806a395de24c024ccb30b90"
+    }
+  },
+  "frozen_before": {
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d966884a7a3244b23003501e6ed9289a7df21bb1de6edea990649f12201dd043"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 619772,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "8d34e7e9453439e15fc596bb992b7a9ba356db5d8042bd87f8ea993028564d90"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 198179,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "e955cc2c5245a5ee41b19386d490e254ca3057f9f806a395de24c024ccb30b90"
+    }
+  },
+  "hardware_handoff": {
+    "D1_ready": true,
+    "D2_D5_open": false,
+    "session": {
+      "bytes": 2855,
+      "path": "config/c2-v150-v21-configurator-parity-far-device-session.json",
+      "sha256": "a56832abd693a685c0181c7df5011a17d4101bdb3e4de47cc8c0e34e26105031"
+    }
+  },
+  "media": {
+    "actual_ELF_liveness": "passed-actual-linked-stager-prefix",
+    "arena_capacity_bytes": 1499,
+    "candidate_headroom_bytes": 251,
+    "delivered_bytes": 48530,
+    "fixed_size_expectation": false,
+    "library_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-configurator-parity-media-base/library/lisp65-library.d81",
+      "sha256": "15e4405929be0686d12c8079509fbd9e12f9314041218ed773fd57b895692060"
+    },
+    "packed_gate_registry_complete": true,
+    "payload_bytes": 1248,
+    "product_D81": {
+      "bytes": 819200,
+      "path": "build/c2.3/v2.1-configurator-parity-media/shared-system/lisp65-product.d81",
+      "sha256": "bce9b795c78dc859eb834231f0a1f7c41dee80ada33b026b58d9acd3da60be3d"
+    },
+    "readback": "byteidentical",
+    "roles": 19,
+    "same_world": true,
+    "session": {
+      "bytes": 2855,
+      "path": "config/c2-v150-v21-configurator-parity-far-device-session.json",
+      "sha256": "a56832abd693a685c0181c7df5011a17d4101bdb3e4de47cc8c0e34e26105031"
+    }
+  },
+  "mutations_rejected": [
+    "claim-link",
+    "restore-874-pin",
+    "truncate-extent",
+    "cross-world",
+    "omit-packed-gate",
+    "open-D2"
+  ],
+  "recorded_on": "2026-08-17",
+  "source_gate": {
+    "artifact_completions_this_resume": 0,
+    "forbidden_calls_absent": [
+      "CRC.delivered_bytes_gate",
+      "PRODUCT.single_link",
+      "can.complete_artifacts",
+      "complete_child",
+      "completion_delta",
+      "run_wplto"
+    ],
+    "pipeline_completion_actions": 0,
+    "producer_output_count": 4,
+    "producer_output_roles": [
+      "build_tree",
+      "product_manifest",
+      "receipt",
+      "session"
+    ],
+    "real_lifecycle_calls": 1,
+    "replacement_media_resumes": 1,
+    "sibling_outputs": 1,
+    "status": "PASS: output-complete replacement media-only resume"
+  },
+  "source_mutations_rejected": [
+    "ambient-delivered-byte-fallback",
+    "rerun-completion",
+    "skip-external-manifest-cleanup",
+    "substitute-real-lifecycle",
+    "omit-sibling-output"
+  ],
+  "status": "PASS: phase-9 ABI candidate completed and media closed; D1 ready"
+}

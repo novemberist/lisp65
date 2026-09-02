@@ -1,0 +1,84 @@
+{
+  "format": "lisp65-c2.2-Link71-slot40-failure-hold-v2-hardware-first-red-v1",
+  "recorded_on": "2026-07-27",
+  "status": "first-red-diagnostic-solver-overwrote-live-Slot40-return-epilogue",
+  "promotable": false,
+  "candidate": {
+    "product_sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e",
+    "diagnostic_carrier": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot40-failure-hold-v2-NONPROMOTABLE/runtime-overlays-session-link71-slot40-failure-hold-v2.bin",
+      "bytes": 65423,
+      "sha256": "26fe9d08f519b086a2c0828a0150377259bd535c3bed0dadb70863f85abf3e4f"
+    },
+    "deployment": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot40-failure-hold-v2-NONPROMOTABLE/deployment.json",
+      "bytes": 4242,
+      "sha256": "ae8e42bc68b2467862c781b8b3ea56fd0e8d940f4197a243946609c0266f6a2b"
+    },
+    "manifest": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot40-failure-hold-v2-NONPROMOTABLE/manifest.json",
+      "bytes": 3010,
+      "sha256": "c88a23070bc6278e6f4f0a04a7eb07058292406163b3b8cc63f57b2f8c40509f"
+    }
+  },
+  "hardware": {
+    "boots": 1,
+    "forms": 1,
+    "form": "(%disk-load-lib 39 1)",
+    "serial_PC_samples": 32,
+    "stable_PC": "0xe094",
+    "stable_PC_symbol": "c2_kernal_fail_closed",
+    "instrumented_error_edge_reached": false,
+    "product_links": 0
+  },
+  "first_red": {
+    "cause": "The in-record CRC solver at $C863 replaced the operand and RTS bytes of the live common `LDA $12; RTS` Slot-40 return epilogue at $C862..$C864. The carrier therefore preserved Record identity but did not preserve its success path.",
+    "source_epilogue": {
+      "VMA": "0xc862",
+      "bytes": "a51260",
+      "meaning": "load phase result and return"
+    },
+    "v2_epilogue": {
+      "VMA": "0xc862",
+      "bytes": "a5ff67",
+      "meaning": "corrupted operand and missing RTS"
+    },
+    "product_disposition": "not accused; the failure is wholly diagnostic-carrier-induced",
+    "diagnostic_disposition": "discard v2 and move both CRC degrees of freedom into bytes unreachable behind unconditional self-loop holds"
+  },
+  "captures": {
+    "screen": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot40-failure-hold-v2-NONPROMOTABLE/slot40-v2-screen.txt",
+      "bytes": 2241,
+      "sha256": "558c70b463a748a64d8e0d5305e10d0783fe75a6f179d1179d944778fb8b7c13"
+    },
+    "phase_scratch": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot40-failure-hold-v2-NONPROMOTABLE/failclosed-phase-scratch.bin",
+      "bytes": 304,
+      "sha256": "598714ac157099b79096bc7cfdb5a7620cfc40fa3a4f2407671d43ae9400095a",
+      "decoded": {
+        "primary_slot": 40,
+        "staged": 1,
+        "committed": 1
+      }
+    },
+    "C2J": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot40-failure-hold-v2-NONPROMOTABLE/failclosed-c2j.bin",
+      "bytes": 64,
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "decoded": "all zero"
+    },
+    "fixed_tail": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot40-failure-hold-v2-NONPROMOTABLE/failclosed-fixed-tail.bin",
+      "bytes": 16,
+      "sha256": "d0d0029f1b7a036738557e01d0c4afbbe7792c51b19de792318d58fdb17ea8db",
+      "rtov_fault_at_bff3": 0
+    },
+    "C2D_header": {
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/slot40-failure-hold-v2-NONPROMOTABLE/failclosed-c2d-header.bin",
+      "bytes": 48,
+      "sha256": "a6b279d16d1ca8d63de150ce24bab17d91aeef3ed40f111e848fa678b5bb123a"
+    }
+  },
+  "claim_limit": "Harness First Red only. No require, defstruct, product, promotion, or release claim."
+}

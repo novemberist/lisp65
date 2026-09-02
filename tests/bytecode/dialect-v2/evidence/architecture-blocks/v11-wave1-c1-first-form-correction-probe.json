@@ -1,0 +1,185 @@
+{
+  "baseline": {
+    "composition_report_sha256": "2a0e12104b40eba62751c668e7987caa8d91b3675ed14d4db63183d62ba35333",
+    "overlay_sha256": "9283691c320dab148eca89c13959eb0c0fcb9f342d03955edd591ae97bf052fb",
+    "product_artifact_set_sha256": "91fcad2d6c42abc30a27f4bc2a9cfa65a8bbd85ec74d4a57bd1898ace1314c67",
+    "r4_archive": "tests/bytecode/dialect-v2/evidence/promotions/r4-product-candidate-a870bd0.tar.gz",
+    "r4_archive_sha256": "7e27a7cac7098a797dd76f792a037e016a2efb102bc37d980dc6017851c1e2ce",
+    "resident_prg_sha256": "0d2c1220a4606e11f3c45fcf17157e7999be282024c829d0488ed29d6fabad29"
+  },
+  "capacity_delta_against_r4_claim": {
+    "bank_headroom_over_1536": {
+      "after": 337,
+      "before": 337,
+      "delta": 0
+    },
+    "classification": "runtime-capacity-accounting-correction; product binary sizes remain unchanged",
+    "directory_headroom": {
+      "after": 168,
+      "before": 168,
+      "delta": 0
+    },
+    "ext_headroom_bytes": {
+      "after": 25161,
+      "before": 25161,
+      "delta": 0
+    },
+    "namepool_headroom_bytes": {
+      "after": 4594,
+      "before": 5625,
+      "delta": -1031
+    },
+    "overlay_headroom_bytes": {
+      "after": 80,
+      "before": 80,
+      "delta": 0
+    },
+    "symbol_headroom": {
+      "after": 297,
+      "before": 388,
+      "delta": -91
+    }
+  },
+  "claim_limit": "This probe proves the three C1 first-form root causes, the corrected first cold hardware result, and the exact runtime-capacity repin. It does not promote a product set, preserve the stopped R5 receipts, or authorize the symbol/namepool claim correction.",
+  "composition_accounting": {
+    "boot_only_hardware_calibration": {
+      "namepool_bytes": 303,
+      "symbols": 9
+    },
+    "c1_retained_after_retirement": {
+      "namepool_bytes": 432,
+      "symbols": 54
+    },
+    "headroom": {
+      "namepool_bytes": 4594,
+      "symbols": 297
+    },
+    "limits": {
+      "namepool_bytes": 10208,
+      "symbols": 752
+    },
+    "report": "build/bytecode/dialect-v2/workbench-library-composition-budget.json",
+    "report_sha256": "0dc63c94a9590de87317400a28454e3f7ce410be7e37d9a30aa3fc7ed49c5429",
+    "static_manifest_and_native_source": {
+      "namepool_bytes": 4879,
+      "symbols": 392
+    },
+    "total_used": {
+      "namepool_bytes": 5614,
+      "symbols": 455
+    }
+  },
+  "evidence_policy": {
+    "amendment": "new correction receipt; no sealed archive is edited",
+    "old_live_c1_claim": "the archived zero-new-symbol/name assertion is disproved by the bound hardware plan; this addendum supersedes it for every future candidate",
+    "sealed_r4": "left immutable as historical stopped-candidate evidence"
+  },
+  "findings": [
+    {
+      "cause": "a stale private physical address bypassed the profile DISK_EXT_BASE",
+      "closure": "all disk-file consumers use LISP65_EXT_DISK_FILE_PHYSICAL",
+      "id": "attic-shelf-disk-scratch-binding"
+    },
+    {
+      "cause": "the L65M validator rejected the legal 33-byte native service name %lcc-error-invalid-parameter-list",
+      "closure": "one 33-byte symbol contract plus generator 33/34 boundary cases",
+      "id": "l65m-symbol-name-boundary"
+    },
+    {
+      "cause": "C1 validation required zero new symbols/name bytes although the exact preflight planned 53/418; rollback retained internings, so only the retry passed",
+      "closure": "validate the preflight deltas and assert the first hardware form as a separate phase",
+      "id": "c1-first-form-warmup-mask"
+    }
+  ],
+  "format": "lisp65-v11-wave1-c1-first-form-correction-probe-v1",
+  "hardware": {
+    "after_first_form": {
+      "namepool_bytes": 3535,
+      "namepool_path": "build/hw/wave1-c1-namepool-after-first.bin",
+      "namepool_sha256": "1175f92bed5b236467b51004cce008823d2eca31d5dfebea5463984e8987f1c5",
+      "result": 42,
+      "screen": "build/hw/wave1-c1-accounted-first-form.txt",
+      "screen_sha256": "91cc527ba828ffffedfe35f3595ff079be47c24e39fcfe07f4e26733f40739f0",
+      "symbol_count_path": "build/hw/wave1-c1-symbol-count-after-first.bin",
+      "symbol_count_sha256": "c25b167fe09ee747a44ec9baf0a1b0ba63f64a6853777b58caed55e0f269eedc",
+      "symbols": 327
+    },
+    "after_ide_idex_m65d": {
+      "namepool_bytes": 5614,
+      "namepool_path": "build/hw/wave1-c1-namepool-after-composition.bin",
+      "namepool_sha256": "bf74e0a4c98349339cd004bc3e73615501825148c8ba37e024b84e7327c16ea1",
+      "symbol_count_path": "build/hw/wave1-c1-symbol-count-after-composition.bin",
+      "symbol_count_sha256": "3ce47ad1eaa63769ae23f6660b089b63b89c9bac7335fe73a1eab8a2c273d12f",
+      "symbols": 455
+    },
+    "after_identical_second_form": {
+      "namepool_bytes": 3535,
+      "namepool_path": "build/hw/wave1-c1-namepool-after-second.bin",
+      "namepool_sha256": "1175f92bed5b236467b51004cce008823d2eca31d5dfebea5463984e8987f1c5",
+      "symbol_count_path": "build/hw/wave1-c1-symbol-count-after-second.bin",
+      "symbol_count_sha256": "c25b167fe09ee747a44ec9baf0a1b0ba63f64a6853777b58caed55e0f269eedc",
+      "symbols": 327
+    },
+    "plan": {
+      "namepool_before": 3103,
+      "new_name_bytes": 418,
+      "new_symbols": 53,
+      "path": "build/hw/wave1-c1-plan-after-first.bin",
+      "sha256": "6b5d541e6f6bb51ab0983dbff15ba275fe0b49ab932b4c9cc441b6ae7498b4de",
+      "symbols_before": 273
+    },
+    "repeat_leak": {
+      "namepool_bytes": 0,
+      "symbols": 0
+    }
+  },
+  "promotion_gate": {
+    "after_authorization": "commit correction, rebuild product set, restart R4/R5/R6 chain",
+    "owner_authorization_required_for": [
+      "symbol-headroom-repin-388-to-297",
+      "namepool-headroom-repin-5625-to-4594"
+    ]
+  },
+  "real_link": {
+    "boot_overlay": {
+      "byte_identical_to_r4": true,
+      "bytes": 1669,
+      "sha256": "9283691c320dab148eca89c13959eb0c0fcb9f342d03955edd591ae97bf052fb"
+    },
+    "overlay_base": "0xc306",
+    "post_boot_reserve": 1873,
+    "resident_prg": {
+      "baseline_bytes": 39490,
+      "byte_delta": 0,
+      "bytes": 39490,
+      "sha256": "b371fd33591cd6917be6a85b689fe2194b756f187fbce646f592d513c41977be"
+    }
+  },
+  "screen_write_string_followup": {
+    "contract": "config/v11-surface-delivery-parity.json",
+    "contract_sha256": "78ed6ad3fcfee4a578dfcdfec95dc94faebf3cee443ea6c2a4abd9f0d6f4988d",
+    "dialect_surface": "public optional m65-screen capability",
+    "documentation_claim": "not promised by the canonical Workbench released-surface list",
+    "fallback": "screen-bulk-p",
+    "gate": "v11-surface-delivery-parity: PASS claims=2 names=eval,filter",
+    "status": "closed-profile-exclusion-gated",
+    "workbench_profile": "excluded unless LISP65_SCREEN_WRITE_STRING is defined"
+  },
+  "source_bindings": {
+    "config/workbench.mk": "0c40fe1778c9f29fc8e4259501cf24468365e35574769f3e22f33f4f7a0b841c",
+    "mk/workbench-service-inventory.mk": "1d31e010bd2156253e9f54ad6554f4eec1bc4534658878411accb9f2dab06cf5",
+    "mk/workbench.mk": "757e2c2ae336ce07b6239e5b609cbbe99c93c8f4771524751c0480a824339516",
+    "scripts/hw-workbench-overlay-stack-smoke.sh": "625ab8274258c23cf14141ff41568fcf478fcf07c78ef36cec7ac5d0cc22aad4",
+    "scripts/v11-c1-compiler-lifetime-main.c": "012a39c03983ba2697307fdc3ea40d371d19886e53b1a1e95f0e42d32a67f70f",
+    "src/attic_library_shelf.c": "af2b30dcbf4e2d56e9aadecb67f05208bb49a1c2ac8063ebe742db87fe75a47e",
+    "src/c1_compiler_overlay.c": "18b298181e1fb013abea95e885109d52f6985276a9dba610c0e5531a44d5c4be",
+    "src/l65m_validate.c": "458230cd06be66794dcac95ccb59709ea5a2dc29c0e8bf8437e81edbde411f13",
+    "src/mem.h": "0989a331364db59030197c62ef858613b8399f3dae374e673bc2514f5f8f6eea",
+    "src/symbol.h": "8360ca4d469ca32c7e00039d72e31254aec15429a40451227abe06eed2a90c3f",
+    "tools/host-lisp/mvp_vm_stdlib_boot_budget.py": "4aeb4ce5cae81605cf995ad5db6db2930c127390e491955f3e92411b0ade1670",
+    "tools/host-lisp/v11_wave1_c1_first_form.py": "cbabd7cdbef6a091990770af9cb77f5f932b7c4d8702519c250f3b6b6ea4b1b4",
+    "tools/host-lisp/workbench_disklib_budget.py": "b9202651f8fa63e2befbda78b696131c22eb92bfd297310eff5be60fb3926c88"
+  },
+  "status": "passed-not-promoted-owner-capacity-review-required",
+  "version": 1
+}

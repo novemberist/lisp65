@@ -27,6 +27,7 @@ MEDIA_RECEIPT = ARCH / "c2.3-v1.8.0-substrate-media-receipt.json"
 RESULT = ARCH / "c2.3-v1.8.0-substrate-d-session-result-receipt.json"
 CAPTURE = ARCH / "artifacts/c2-v180-substrate-d-session-20260828/final-physical-bank0.bin"
 PLAN = ROOT / "docs/planning/v1.7.0-pre-plan.md"
+RELOCATED_PLAN = ROOT / "docs/planning/v1.8.0-cycle-decisions.md"
 KNOWN = ROOT / "docs/known-issues.md"
 V160_SESSION = ROOT / "config/c2-v160-item1-only-r1-public2-session.json"
 V170_SESSION = ROOT / "config/c2-v170-release-d-session.json"
@@ -317,10 +318,12 @@ def derive() -> dict[str, Any]:
             "session_binding_commit": "f886932d",
             "session": bind(SESSION),
             "media": bind(MEDIA_RECEIPT),
-            "result_plan_section": section_bind(
-                PLAN, "## v1.8 substrate D-session result — 2026-08-28"),
-            "native_cursor_attribution_section": section_bind(
-                PLAN, "## Native-prompt cursor attribution — three-way question closed — 2026-08-28"),
+            "result_plan_section": era_section_bind(
+                SEAL_ERA_COMMIT, PLAN.relative_to(ROOT).as_posix(),
+                "## v1.8 substrate D-session result — 2026-08-28"),
+            "native_cursor_attribution_section": era_section_bind(
+                SEAL_ERA_COMMIT, PLAN.relative_to(ROOT).as_posix(),
+                "## Native-prompt cursor attribution — three-way question closed — 2026-08-28"),
             "known_issue_section": era_section_bind(
                 SEAL_ERA_COMMIT, KNOWN.relative_to(ROOT).as_posix(),
                 "## Active input limitation: Cursor Left/Right at the native `lisp65>` prompt"),
@@ -512,7 +515,24 @@ def selftest() -> None:
         except ResultError:
             rejected.append(name)
     require(rejected == list(cases), "v1.8 substrate result mutation survived")
-    print(f"v1.8 substrate device result: SELFTEST PASS mutations={len(rejected)}")
+    planning_mutations = 0
+    for header in (
+        "## v1.8 substrate D-session result — 2026-08-28",
+        "## Native-prompt cursor attribution — three-way question closed — 2026-08-28",
+    ):
+        try:
+            section_bind(PLAN, header)
+        except ResultError:
+            planning_mutations += 1
+        sealed = era_section_bind(
+            SEAL_ERA_COMMIT, PLAN.relative_to(ROOT).as_posix(), header)
+        relocated = section_bind(RELOCATED_PLAN, header)
+        require(relocated != sealed,
+                "relocated live document impersonated sealed planning path")
+        planning_mutations += 1
+    require(planning_mutations == 4, "planning-era mutation survived")
+    print("v1.8 substrate device result: SELFTEST PASS "
+          f"mutations={len(rejected) + planning_mutations}")
 
 
 def main() -> int:

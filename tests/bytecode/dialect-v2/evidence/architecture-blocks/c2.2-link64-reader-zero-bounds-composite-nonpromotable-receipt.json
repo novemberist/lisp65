@@ -1,0 +1,153 @@
+{
+  "ELF_feasibility": {
+    "executable_operand_bytes_changed": 1,
+    "outcomes": {
+      "bad_bytecode": "reader returned nonzero and the later poll path failed",
+      "caller_zero_hold": "reader returned zero without a held bounds edge; post-facade length remains in $05/$06",
+      "inner_reader_hold": "a bounds reject fired; entry length remains in $06/$07"
+    },
+    "poll_symbol": "c2_completion_poll",
+    "reader_call": "JSR $e691 at $c828",
+    "return_test": "TAX; BNE $c831 at $c82b/$c82c",
+    "zero_exit_after": "JMP $c82e (self-loop)",
+    "zero_exit_before": "JMP $c8f0"
+  },
+  "authority": {
+    "bounds_attribution": {
+      "bytes": 8182,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-c2d-reader-operand-bounds-host-ELF-attribution.json",
+      "sha256": "4708cae753899c679b37451b064954d9b0c6bfb35048d8c3f3ba86abc32f613a"
+    },
+    "cycle_1_nohit": {
+      "bytes": 4452,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-c2d-reader-bounds-nohit-hardware-receipt.json",
+      "sha256": "e215fba135956baca649027721b6992e8472511d802858d245a3da2cf4bf1d04"
+    },
+    "cycle_2_nohit": {
+      "bytes": 3635,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-c2d-reader-bounds-nohit-cycle2-hardware-receipt.json",
+      "sha256": "f705d24c3929c505902adee002b646902ef8a83055d82506888c9c2f9d50d530"
+    },
+    "donor_ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "driver": {
+      "bytes": 11000,
+      "path": "tools/host-lisp/c2_link64_c2d_reader_zero_bounds_composite.py",
+      "sha256": "47ed8d0ac3b56b9096ef048cecde103b98835147872387a64eb90760d1a9351c"
+    },
+    "hardware_driver": {
+      "bytes": 3184,
+      "path": "scripts/c2-link64-reader-zero-bounds-composite-hw.sh",
+      "sha256": "d765873f18972f8e0644d051cd4434ac2269e8501f98baf35ba752882fd523dd"
+    },
+    "source_carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-stage-bound-NONPROMOTABLE/runtime-overlays-session-c1-freezer-link64-stage-bound.bin",
+      "sha256": "bb436ba264065ec49a76dc90f60b9226f1d59065d51ef181e9454990cc40ce1b"
+    },
+    "source_deployment": {
+      "bytes": 10049,
+      "path": "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt4-NONPROMOTABLE/deployment.json",
+      "sha256": "aec06ae9fdafb74298389ab356c7dc51bff4f66c170152878d8e0518bfbeb27d"
+    }
+  },
+  "candidate": {
+    "carrier": {
+      "address": "0x08000000",
+      "bytes": 64926,
+      "path": "build/c2.2/substitution/link64-reader-zero-bounds-composite-NONPROMOTABLE/runtime-overlays-session-reader-zero-bounds.bin",
+      "sha256": "6136ff43b11d994e30671df7ad4ffe388c638fe6cd1819a29b0ac82e24e899ff"
+    },
+    "identity_separate_from_Link64": true,
+    "lifecycle": "discard after the cycle-3 outcome",
+    "manifest": {
+      "bytes": 1950,
+      "path": "build/c2.2/substitution/link64-reader-zero-bounds-composite-NONPROMOTABLE/manifest.json",
+      "sha256": "ff058b575113f6b639cc1ebf0b748e72ab61d5932d47032695c92fcfb39a52e3"
+    }
+  },
+  "carrier_patch_and_rebinding": {
+    "after_hex": "2ec8",
+    "all_changed_file_offsets": [
+      24,
+      25,
+      26,
+      27,
+      1300,
+      1301,
+      1302,
+      1303,
+      56281,
+      56547,
+      56548
+    ],
+    "before_hex": "f0c8",
+    "carrier_size_delta": 0,
+    "derived_identity_bytes_changed": 10,
+    "directory_crc16": "0xc780",
+    "executable_operand_bytes_changed": 1,
+    "family_crc16": "0x472a",
+    "header_crc16": "0xc10b",
+    "instruction_VMA": "0xc82f",
+    "instruction_file_offset": 56281,
+    "mutation_count": 5,
+    "mutations_rejected": [
+      "opcode",
+      "operand",
+      "payload-CRC",
+      "record-CRC",
+      "family-tail"
+    ],
+    "payload_crc16": "0x1bf2",
+    "record_crc16": "0xfb8c",
+    "section": ".lisp65_rt_c2append_header",
+    "slot": 39,
+    "status": "passed-one-byte-reader-return-hold-and-complete-v4-rebinding"
+  },
+  "claim_limit": "Third and final nonpromotable cycle of the commissioned reader-return question. C1 remains OPEN.",
+  "construction": {
+    "all_capacity_deltas": 0,
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "format": "lisp65-c2.2-Link64-reader-zero-bounds-composite-nonpromotable-v1",
+  "live_reader_bounds_patches": [
+    {
+      "address": "0x0000e6a3",
+      "bytes": 1,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/patch-e6a3.bin",
+      "reject_class": "offset-low-overflow",
+      "sha256": "0a43b22d89fa2499be5c7704c9bf273260b0ca9588e4cd1897cd80f9c96cd97a"
+    },
+    {
+      "address": "0x0000e6ac",
+      "bytes": 1,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/patch-e6ac.bin",
+      "reject_class": "offset-high-overflow",
+      "sha256": "087d80f7f182dd44f184aa86ca34488853ebcc04f0c60d5294919a466b463831"
+    },
+    {
+      "address": "0x0000e6c2",
+      "bytes": 1,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/patch-e6c2.bin",
+      "reject_class": "length-low-overflow",
+      "sha256": "aa687b58b0e73e2e383f8c500d75b591e188efe0168b3ffbcd3771caaa6dd4c7"
+    },
+    {
+      "address": "0x0000e6e7",
+      "bytes": 1,
+      "path": "build/c2.2/substitution/link64-c2d-reader-bounds-hold-NONPROMOTABLE/patch-e6e7.bin",
+      "reject_class": "length-high-overflow",
+      "sha256": "aa687b58b0e73e2e383f8c500d75b591e188efe0168b3ffbcd3771caaa6dd4c7"
+    }
+  ],
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "status": "ready-authorized-nonpromotable-cycle-3"
+}

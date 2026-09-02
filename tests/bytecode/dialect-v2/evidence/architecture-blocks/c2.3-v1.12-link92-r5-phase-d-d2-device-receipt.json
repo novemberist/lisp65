@@ -1,0 +1,68 @@
+{
+  "bindings": {
+    "boot_screen": {
+      "bytes": 3202,
+      "path": "build/c2.3/v1.4.0-release/phase-d-split/d2/D2-boot.png",
+      "sha256": "3b2bfcf852228d3cf933e208ca1b7fa770e5225628188ff5b5c269a9e8f85bfd"
+    },
+    "definition_confirmation": {
+      "bytes": 0,
+      "path": "build/c2.3/v1.4.0-release/phase-d-split/d2/definition-owner-confirmed",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "library_readback": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.4.0-release/phase-d-split/d2/D2-library-readback.d81",
+      "sha256": "937dc157da3dfbc9dbebe049731633dd6eada1431d2f102e2d5c63c449f80e4a"
+    },
+    "preparation": {
+      "bytes": 5263,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d2-preparation-receipt.json",
+      "sha256": "41a70c47f3c4b05b0e7f2ebc787ae02728349c0920d11e4dc45068285abfcd23"
+    },
+    "require_confirmation": {
+      "bytes": 11,
+      "path": "build/c2.3/v1.4.0-release/phase-d-split/d2/require-owner-confirmed",
+      "sha256": "6928bc3bdadcc70eb2838837a1d1dddc30d7dc2a09c52e31ce2376353989522d"
+    }
+  },
+  "claim_limit": "D2 delivery red only: after the valid quiet floor the owner saw no prompt and a red frame. defstruct remains undelivered. This is not an infinite-hang, new correctness, or failure-mechanism claim.",
+  "defstruct_public": false,
+  "execution_accounting": {
+    "D2_rows": 1,
+    "additional_links": 0,
+    "hardware_contacts": 1,
+    "post_definition_monitor_accesses": 0,
+    "product_rebuilds": 0
+  },
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-d2-device-v1",
+  "forms": {
+    "definition_form": "(defstruct point x y)",
+    "make_expect": "(point 3 4)",
+    "make_form": "(make-point 3 4)",
+    "observations_during_quiet_window": 0,
+    "owner_physical_input_only": true,
+    "quiet_floor_seconds": 180,
+    "require_expect": "t",
+    "require_form": "(require 'defstruct)",
+    "structural_price_is_completion_upper_bound": false,
+    "structural_price_seconds": 179
+  },
+  "physical_owner_observation": {
+    "definition_form_submitted": true,
+    "first_look_after_floor": true,
+    "make_point_run": false,
+    "require_result": "t",
+    "visible_prompt": false,
+    "visible_red_frame": true
+  },
+  "quiet": {
+    "automated_observations": 0,
+    "complete_epoch": 1786195784,
+    "elapsed_seconds": 180,
+    "start_epoch": 1786195604
+  },
+  "recorded_on": "2026-08-08",
+  "selector": "base",
+  "status": "D2-red-defstruct-not-selected-after-quiet-floor"
+}

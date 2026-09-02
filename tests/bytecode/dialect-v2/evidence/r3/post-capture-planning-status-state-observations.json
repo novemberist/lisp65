@@ -1,0 +1,393 @@
+{
+  "format": "lisp65-bytecode-p0-observations-v1",
+  "suites": [
+    {
+      "observations": [
+        {
+          "name": "m65d-status-default",
+          "object": "0x0001",
+          "result": "0"
+        },
+        {
+          "name": "m65d-terminal-media-change-outranks-postcommit-warning",
+          "object": "0x0019",
+          "result": "12"
+        },
+        {
+          "name": "m65d-save-bad-empty-name",
+          "object": "0x0003",
+          "result": "1"
+        },
+        {
+          "name": "m65d-save-bad-name-character",
+          "object": "0x0003",
+          "result": "1"
+        },
+        {
+          "name": "m65d-save-bad-backslash",
+          "object": "0x0003",
+          "result": "1"
+        },
+        {
+          "name": "m65d-save-source-type",
+          "object": "0x0007",
+          "result": "3"
+        },
+        {
+          "name": "m65d-save-empty-source",
+          "object": "0x0007",
+          "result": "3"
+        },
+        {
+          "name": "m65d-save-latched",
+          "object": "0x0011",
+          "result": "8"
+        },
+        {
+          "name": "m65d-product-media-read-only",
+          "object": "0x0015",
+          "result": "10"
+        },
+        {
+          "name": "m65d-product-header-without-boot-signature-is-user-media",
+          "object": "0x0001",
+          "result": "0"
+        },
+        {
+          "name": "m65d-arbitrary-user-media-roundtrip",
+          "object": "0x0f32",
+          "result": "(0 0 0 (0 10 114 111 117 110 100 116 114 105 112) 0)"
+        },
+        {
+          "name": "m65d-different-user-media-latches-before-write",
+          "object": "0x0ede",
+          "result": "(12 t)"
+        },
+        {
+          "name": "m65d-generation-change-latches-before-write",
+          "object": "0x0ed6",
+          "result": "(12 t)"
+        },
+        {
+          "name": "m65d-media-change-during-planning-read-terminal",
+          "object": "0x0019",
+          "planning_read_guard_oracle": {
+            "classified_status": 12,
+            "disk_write_count": 0,
+            "mount_token_changed": true,
+            "partial_write_latched": false,
+            "persistent_status": 12,
+            "read_failure_status": 6,
+            "result": "pass",
+            "status_state_synchronized": true
+          },
+          "result": "12"
+        },
+        {
+          "name": "m65d-planning-read-failure-with-stable-token-stays-invalid",
+          "object": "0x000d",
+          "planning_read_guard_oracle": {
+            "classified_status": 6,
+            "disk_write_count": 0,
+            "mount_token_changed": false,
+            "partial_write_latched": false,
+            "persistent_status": 6,
+            "read_failure_status": 6,
+            "result": "pass",
+            "status_state_synchronized": true
+          },
+          "result": "6"
+        },
+        {
+          "name": "m65d-claim-read-invalid-latches",
+          "object": "0x0011",
+          "result": "8"
+        },
+        {
+          "name": "m65d-remount-invalid-keeps-latch",
+          "object": "0x0011",
+          "result": "8"
+        },
+        {
+          "name": "m65d-remount-invalid-entry-keeps-latch",
+          "object": "0x0011",
+          "result": "8"
+        },
+        {
+          "name": "m65d-directory-recheck-invalid-is-read-status",
+          "object": "0x0ebe",
+          "result": "(6 t)"
+        },
+        {
+          "name": "m65d-status-tracks-last-result",
+          "object": "0x0003",
+          "result": "1"
+        },
+        {
+          "name": "m65d-remount-clears-latch",
+          "object": "0x0007",
+          "result": "3"
+        },
+        {
+          "name": "m65d-save-new-success",
+          "object": "0x0001",
+          "result": "0"
+        },
+        {
+          "external_d81_oracle": {
+            "allocated_equals_visible_chain": true,
+            "directory_slot": "T40/S3#0",
+            "file_blocks": 1,
+            "free_plus_file_blocks": 3160,
+            "header_not_written": true,
+            "header_unchanged": true,
+            "no_double_allocation": true,
+            "result": "pass",
+            "witnesses": [
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ]
+          },
+          "name": "m65d-blank-d81-create-external",
+          "object": "0x0001",
+          "result": "0"
+        },
+        {
+          "external_d81_oracle": {
+            "allocated_equals_visible_chain": true,
+            "directory_slot": "T40/S3#0",
+            "file_blocks": 1,
+            "free_plus_file_blocks": 3160,
+            "header_not_written": true,
+            "header_unchanged": true,
+            "no_double_allocation": true,
+            "result": "pass",
+            "witnesses": [
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ]
+          },
+          "name": "m65d-blank-d81-create-replace-external",
+          "object": "0x0f22",
+          "result": "(0 0)"
+        },
+        {
+          "external_d81_oracle": {
+            "allocated_equals_visible_chain": true,
+            "directory_slot": "T40/S3#0",
+            "file_blocks": 2,
+            "free_plus_file_blocks": 3160,
+            "header_not_written": true,
+            "header_unchanged": true,
+            "no_double_allocation": true,
+            "result": "pass",
+            "witnesses": [
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ]
+          },
+          "name": "m65d-blank-d81-multisector-create-external",
+          "object": "0x0001",
+          "result": "0"
+        },
+        {
+          "external_d81_oracle": {
+            "allocated_equals_visible_chain": true,
+            "directory_slot": "T40/S3#0",
+            "file_blocks": 3,
+            "free_plus_file_blocks": 3160,
+            "header_not_written": true,
+            "header_unchanged": true,
+            "no_double_allocation": true,
+            "result": "pass",
+            "witnesses": [
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ]
+          },
+          "name": "m65d-blank-d81-multisector-replace-external",
+          "object": "0x0f3a",
+          "result": "(0 0)"
+        },
+        {
+          "name": "m65d-media-change-before-data-write-terminal",
+          "object": "0x0ee0",
+          "result": "(12 t)",
+          "two_media_phase_oracle": {
+            "injected_write_operation": 1,
+            "phase": "before-data-write",
+            "result": "pass",
+            "source_changed_sectors": [],
+            "source_sha256": "589fd04cb2645365f23ce011000209f631ce47c8b5440d8ac2b34cc1821128e6",
+            "source_visible_files": 0,
+            "target_after_sha256": "8933fd7942bbca0788d38b1f20302f1158d822f4add7016b00603bd33173840a",
+            "target_before_sha256": "8933fd7942bbca0788d38b1f20302f1158d822f4add7016b00603bd33173840a",
+            "target_byte_identical": true,
+            "target_changed_sectors": [],
+            "terminal_status": 12,
+            "witnesses": [
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ]
+          }
+        },
+        {
+          "name": "m65d-media-change-before-bam-write-terminal",
+          "object": "0x0ee0",
+          "result": "(12 t)",
+          "two_media_phase_oracle": {
+            "injected_write_operation": 2,
+            "phase": "before-bam-write",
+            "result": "pass",
+            "source_changed_sectors": [
+              "T1/S0"
+            ],
+            "source_sha256": "1200e1df7f0aca79cd43d2ae125de95bcbd2caed3dadf36d6b13adb6fa749007",
+            "source_visible_files": 0,
+            "target_after_sha256": "8933fd7942bbca0788d38b1f20302f1158d822f4add7016b00603bd33173840a",
+            "target_before_sha256": "8933fd7942bbca0788d38b1f20302f1158d822f4add7016b00603bd33173840a",
+            "target_byte_identical": true,
+            "target_changed_sectors": [],
+            "terminal_status": 12,
+            "witnesses": [
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ]
+          }
+        },
+        {
+          "name": "m65d-media-change-before-directory-write-terminal",
+          "object": "0x0ee0",
+          "result": "(12 t)",
+          "two_media_phase_oracle": {
+            "injected_write_operation": 3,
+            "phase": "before-directory-write",
+            "result": "pass",
+            "source_changed_sectors": [
+              "T1/S0",
+              "T40/S1"
+            ],
+            "source_sha256": "5c804d2e8e63eac715f7fb7bee553ed0e1f53462977076e6c078e9bfb163bc8e",
+            "source_visible_files": 0,
+            "target_after_sha256": "8933fd7942bbca0788d38b1f20302f1158d822f4add7016b00603bd33173840a",
+            "target_before_sha256": "8933fd7942bbca0788d38b1f20302f1158d822f4add7016b00603bd33173840a",
+            "target_byte_identical": true,
+            "target_changed_sectors": [],
+            "terminal_status": 12,
+            "witnesses": [
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ]
+          }
+        },
+        {
+          "name": "m65d-residual-window-data-boundary",
+          "object": "0x0019",
+          "residual_window_boundary_oracle": {
+            "damage_class": "unallocated-data-sector-only",
+            "foreign_changed_sector_count": 1,
+            "foreign_changed_sectors": [
+              "T1/S0"
+            ],
+            "foreign_filesystem_valid_after": true,
+            "phase": "data",
+            "result": "known-contract-boundary-characterized",
+            "safety_pass": false,
+            "source_byte_identical": true,
+            "source_changed_sectors": [],
+            "terminal_status": 12,
+            "witnesses": [
+              "full-image-sector-diff",
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ],
+            "writes_after_detection": 0
+          },
+          "result": "12"
+        },
+        {
+          "name": "m65d-residual-window-bam-boundary",
+          "object": "0x0019",
+          "residual_window_boundary_oracle": {
+            "damage_class": "filesystem-metadata-may-be-invalid",
+            "foreign_changed_sector_count": 1,
+            "foreign_changed_sectors": [
+              "T40/S1"
+            ],
+            "foreign_filesystem_valid_after": true,
+            "phase": "bam",
+            "result": "known-contract-boundary-characterized",
+            "safety_pass": false,
+            "source_byte_identical": true,
+            "source_changed_sectors": [],
+            "terminal_status": 12,
+            "witnesses": [
+              "full-image-sector-diff",
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ],
+            "writes_after_detection": 0
+          },
+          "result": "12"
+        },
+        {
+          "name": "m65d-residual-window-directory-boundary",
+          "object": "0x0019",
+          "residual_window_boundary_oracle": {
+            "damage_class": "filesystem-metadata-may-be-invalid",
+            "foreign_changed_sector_count": 1,
+            "foreign_changed_sectors": [
+              "T40/S3"
+            ],
+            "foreign_filesystem_valid_after": false,
+            "phase": "directory",
+            "result": "known-contract-boundary-characterized",
+            "safety_pass": false,
+            "source_byte_identical": true,
+            "source_changed_sectors": [],
+            "terminal_status": 12,
+            "witnesses": [
+              "full-image-sector-diff",
+              "d81_persistence_fault",
+              "d81_bam_sanity"
+            ],
+            "writes_after_detection": 0
+          },
+          "result": "12"
+        },
+        {
+          "name": "m65d-save-new-duplicate",
+          "object": "0x0005",
+          "result": "2"
+        },
+        {
+          "name": "m65d-save-rejects-duplicate-directory-name",
+          "object": "0x000d",
+          "result": "6"
+        },
+        {
+          "name": "m65d-save-new-directory-full",
+          "object": "0x000b",
+          "result": "5"
+        },
+        {
+          "name": "m65d-save-replace-success",
+          "object": "0x0001",
+          "result": "0"
+        },
+        {
+          "name": "m65d-block-count-empty",
+          "object": "0x0003",
+          "result": "1"
+        },
+        {
+          "name": "m65d-block-count-max",
+          "object": "0x0043",
+          "result": "33"
+        }
+      ],
+      "path": "tests/bytecode/libs/p0-m65d-lib.json",
+      "sha256": "8b91bd0a10ac0925c0d54e114202a9908ddc73e77c2c0c6d364794c355e0ba0e"
+    }
+  ]
+}

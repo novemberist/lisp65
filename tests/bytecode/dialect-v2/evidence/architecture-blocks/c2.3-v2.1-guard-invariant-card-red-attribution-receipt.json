@@ -1,0 +1,133 @@
+{
+  "authority": {
+    "ELF": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-guard-invariant-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "46d129f7e2011c3b8c5adf822f7a80d2917de65a672fa9996f97dc0cdce90647"
+    },
+    "WPLTO_base_result": {
+      "bytes": 4430,
+      "path": "build/c2.3/v2.1-guard-invariant-card/receipts/wplto-base-result.json",
+      "sha256": "af8e5c66a814c49370fb4d861bc38754b21b1ab26ced1f6febb5f15181518050"
+    },
+    "WPLTO_internal": {
+      "bytes": 812944,
+      "path": "build/c2.3/v2.1-guard-invariant-card/receipts/wplto-internal.json",
+      "sha256": "da1411a8d82351ac25a03080a5be4dbc1ca4adabb03b5a7243c156c5e30f52e4"
+    },
+    "driver": {
+      "bytes": 11690,
+      "path": "tools/host-lisp/c2_v21_guard_invariant_card_red_attribution.py",
+      "sha256": "ef890279a89d68857fc715a98d4e8e363e89ab546af8e887b5a0874a742dabdd"
+    },
+    "final_red": {
+      "bytes": 8885,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-guard-invariant-card-final-red.json",
+      "sha256": "6fd90074b8dc373736a0f0882fa2135ed9dc8117d86328d65e6bb860b0152cef"
+    },
+    "kernal_freedom": {
+      "bytes": 6420,
+      "path": "build/c2.3/v2.1-guard-invariant-card/wplto/kernal-freedom-link.json",
+      "sha256": "e788a533c1310612b45471e958823b8437822ef4496d56295f4575f6f682fddd"
+    },
+    "local_wrapper_at_card": {
+      "authority": "git-blob",
+      "bytes": 28157,
+      "commit": "da7dae0aff2644414b47b952eafc6adc1b147a2b",
+      "path": "tools/host-lisp/c2_v21_local_return_identity_card.py",
+      "sha256": "4a3dfcbceb65bc049bcaac5c285434c0a743a51828553d2ba28bf817c25391ae"
+    },
+    "map": {
+      "bytes": 181722,
+      "path": "build/c2.3/v2.1-guard-invariant-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "ea1107fd47154edaa881e49fe834ec146469461f0021cb2100a505456c3cf0c0"
+    },
+    "producer": {
+      "bytes": 3913,
+      "path": "build/c2.3/v2.1-guard-invariant-card/producer-result.json",
+      "sha256": "2cb87cdab83a694bf43d821e26d4d1ba4c53657fd48ff4660377bd27ba8f15aa"
+    },
+    "product_producer_at_card": {
+      "authority": "git-blob",
+      "bytes": 337100,
+      "commit": "da7dae0aff2644414b47b952eafc6adc1b147a2b",
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "1189cb93887dd4987edd18f95e14a51b53065a8f3d0f72094dbfc1b0ce1fabad"
+    },
+    "real_ABI": {
+      "bytes": 180735,
+      "path": "build/c2.3/v2.1-guard-invariant-card/wplto/c2-asm-leaf-real-abi-callers.json",
+      "sha256": "58fff678d2334ddb3f36150863da09ce061ec0e5a5c20541a0cd99851ebfa54d"
+    }
+  },
+  "card_disposition": {
+    "completion_allowed": false,
+    "device_allowed": false,
+    "media_allowed": false,
+    "owner_disposition_required": true,
+    "retry_authorized": false
+  },
+  "card_result": {
+    "WPLTO_runs": 1,
+    "cards_consumed": 1,
+    "completion_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 1
+  },
+  "claim_limit": "Read-only attribution of the consumed card. It proves a post-link schema-vocabulary failure after green WPLTO, product link, guard, ownership producer and ABI; it authorizes no repair or retry.",
+  "format": "lisp65-c2.3-v21-guard-invariant-card-red-attribution-v1",
+  "green_subresults": {
+    "guard": {
+      "mapped_window": "0x4000..0x5fff",
+      "mutations_rejected": [
+        "reader-inside-window",
+        "reader-straddles-window",
+        "reader-empty",
+        "historical-world-changed"
+      ],
+      "reader": {
+        "address": "0x2277",
+        "bytes": 166,
+        "end_exclusive": "0x231d",
+        "section": ".text",
+        "section_end": "0xb398"
+      }
+    },
+    "ownership_producer": {
+      "direct_window_edges": 390,
+      "field": "control_flow_ownership",
+      "same_function_basic_block_jumps": 181,
+      "status": "passed",
+      "violations": []
+    },
+    "product_completed_by_WPLTO": true,
+    "real_ABI_status": "passed-all-assembler-leaf-abi-contracts",
+    "rtov_crc_callers": 10
+  },
+  "mutations_rejected": [
+    "hide-consumed-card",
+    "blame-product",
+    "blame-guard",
+    "rename-requested-field",
+    "rename-producer-field",
+    "invent-ownership-violation",
+    "authorize-retry",
+    "allow-completion"
+  ],
+  "recorded_on": "2026-08-14",
+  "root_cause": {
+    "class": "POSTLINK-CONSUMER-SCHEMA-VOCABULARY-DRIFT",
+    "consumer": "c2_v21_local_return_identity_card.linked_gate",
+    "guard_failure": false,
+    "mechanism": "The local-return post-link wrapper indexes the retired kernal-freedom field 'control_flow'. The actual candidate producer emits 'control_flow_ownership', whose violations list is empty. Python raises KeyError after the corrected reader guard and product link are green.",
+    "post_link_consumer_failure": true,
+    "preflight_gap": "The wrapper preflight exercised typed artifact-path roles, but not the linked_gate consumer against the producer's actual kernal-freedom schema.",
+    "producer_field": "control_flow_ownership",
+    "producer_field_present": true,
+    "product_failure": false,
+    "requested_field": "control_flow",
+    "requested_field_present": false
+  },
+  "status": "ATTRIBUTED FINAL RED: post-link consumer requests retired control-flow field"
+}

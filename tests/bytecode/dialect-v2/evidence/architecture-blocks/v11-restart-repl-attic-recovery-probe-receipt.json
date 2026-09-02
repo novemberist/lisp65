@@ -1,0 +1,92 @@
+{
+  "format": "lisp65-v11-restart-repl-attic-recovery-probe-receipt-v1",
+  "version": 1,
+  "id": "v11-restart-repl-attic-recovery",
+  "status": "failed-hard-gates-rolled-back-not-promoted",
+  "recorded_on": "2026-07-18",
+  "authorization": {
+    "scope": "one bounded Attic recovery attempt",
+    "real_link_limit": 1,
+    "hard_gate_rule": "stop on the first red gate; no tuning round and no hardware smoke",
+    "required_integrity": "generation plus full SHA-256 before restore, header CRC32, payload CRC32 before and after restore",
+    "attic_tenant": "0x08200000, reconstructible from the cold stager, never the sole copy"
+  },
+  "baseline": {
+    "source_commit": "d64faa87f218fcf83f52dec7726101191d43fbcf",
+    "product_artifact_set_sha256": "6c358e79baa55999f80d1ebcd45b57234e57af8bc80bc29042e0b93915ac18a5",
+    "workbench_prg_sha256": "59a90485b14270558399ed7f1b90c1f692caa01c572592077ec6e7c271ab7adc",
+    "resident_prg_sha256": "0ae3b4e8a488f9a42737a2423472b029ad30defec4ef3b82ef9b0d830b874710",
+    "bank5_bytes": 16023,
+    "bank5_sha256": "33bcaaea4fcc3f99704d07896d7dfd06c5d358025d535e53af38984291abdec6",
+    "bank_post_boot_reserve_bytes": 1861,
+    "bank_headroom_above_release_floor_bytes": 325,
+    "runtime_overlay_vma": "0xc356",
+    "bss": "0xba4b..0xc311",
+    "noinit_bytes": 0
+  },
+  "implemented_probe": {
+    "attic_layout": {
+      "address": "0x08200000",
+      "window_bytes": 65536,
+      "header_bytes": 64,
+      "generation": "resolved-profile-build-id",
+      "source": "cold-stager-verified-bank5.bin",
+      "reconstructible": true,
+      "sole_copy": false
+    },
+    "integrity": {
+      "identity": "full SHA-256 handed from the cold stager and compared before every restore",
+      "header": "CRC32",
+      "payload": "CRC32 before restore and after Bank-5 writeback",
+      "negative_cases": [
+        "wrong SHA rejected before Bank-5 write",
+        "mutated payload rejected before Bank-5 write"
+      ]
+    },
+    "failure_message": "restart unavailable - reboot from disk",
+    "control_flow": "verified restore, reset 6502 stack pointer, jump to _start"
+  },
+  "host_and_stager_results": {
+    "runtime_overlay_smoke": "passed with ASAN and UBSAN",
+    "asm_c_constant_parity": "15 mirrored values passed",
+    "error_text_and_code_contracts": "passed",
+    "stager_bytes": 6842,
+    "stager_limit_bytes": 16384,
+    "chain_trampoline_bytes": 35,
+    "chain_trampoline_limit_bytes": 64
+  },
+  "single_real_link": {
+    "command": "make --no-print-directory workbench-overlay-stack-guard",
+    "links_consumed": 1,
+    "result": "failed at the resident-island seed link",
+    "candidate_prg": "not-produced",
+    "baseline_bss": "0xba4b..0xc311",
+    "candidate_bss": "0xbf56..0xc81c",
+    "bss_size_bytes": 2246,
+    "resident_front_growth_bytes": 1291,
+    "candidate_noinit": "0xc81c..0xc83c",
+    "candidate_noinit_bytes": 32,
+    "fixed_runtime_overlay_vma": "0xc356",
+    "overlap_bytes_through_noinit": 1254,
+    "hard_gates": [
+      "workbench overlay overlaps resident BSS",
+      "workbench overlay moved below heap floor",
+      "workbench overlay leaves too little post-boot reserve",
+      "resident/noinit state overlaps fixed runtime-overlay VMA"
+    ],
+    "independent_address_failure": "llvm-mos warned that unsigned long 0x00050000 converted to 16-bit uintptr_t becomes 0x0000; the draft DMA destination therefore could not address Bank 5 correctly"
+  },
+  "rollback": {
+    "probe_sources_removed": true,
+    "second_product_link": "not-run",
+    "hardware_smoke": "not-run",
+    "capacity_debit": "none",
+    "canonical_chain": "still blocked by config/v11-g-green-surface-contract.json until a separately reviewed design is proven"
+  },
+  "c2_transfer": {
+    "finding": "Bank 5 is session-mutated, so pre-C2 restart needs a pristine image rather than CRT re-entry alone",
+    "result": "a correct whole-image identity gate and restore is too large for the current resident boundary when implemented there",
+    "design_consequence": "C2 must separate immutable executable state from mutable session state so restart restores or reconstructs only the mutable contract; it must not preserve this whole-image resident implementation"
+  },
+  "claim_limit": "This receipt proves a bounded failed design and an exact rollback only. It claims no product candidate, no restart-repl hardware behavior, no G5/G6 evidence, and no authorized capacity debit."
+}

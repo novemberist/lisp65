@@ -1,0 +1,31 @@
+{
+  "format": "lisp65-c2-lite-v6-link48-append-final-hybrid-wplto-first-red-correction-v1",
+  "recorded_on": "2026-07-22",
+  "status": "corrected-call-edge-provenance-no-product-change",
+  "superseded_statement": "The original derived diagnosis described both c2_append_plan_walk callers as JSR edges.",
+  "corrected_statement": {
+    "stage_plan": "direct JSR c2_append_plan_walk",
+    "rollback_plan": "direct terminal JMP c2_append_plan_walk",
+    "abi_effect": "identical; the terminal JMP returns the Leaf result directly to the rollback wrapper's caller",
+    "gate_rule": "Accept direct JSR and terminal direct JMP; reject indirect and nonterminal JMP edges."
+  },
+  "unchanged_first_red": "Both callers place the plan in __rc2/__rc3 and the context in __rc4/__rc5 while the historical Leaf consumed the old A/X plus __rc2/__rc3 convention.",
+  "authority": {
+    "original_diagnosis": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-hybrid-wplto-first-red-diagnosis.json",
+      "bytes": 4085,
+      "sha256": "6b8f2e3be84cd21ff886ec5b62b5ddc3ef667fa07dc57515d5947aada5bcb5ad"
+    },
+    "failed_wplto_elf": {
+      "path": "build/c2.2/substitution/link48-append-final-hybrid-wplto-class-a-replay/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 609516,
+      "sha256": "616c4b1b43e6b8bc645bf9ed220cba245e0001f2e8101dd61120470ccaeb5b2d"
+    }
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0,
+    "hardware_runs": 0
+  }
+}

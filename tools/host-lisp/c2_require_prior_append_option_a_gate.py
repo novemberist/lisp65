@@ -75,6 +75,29 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
     )
 
 
+def preserve_sealed_receipt(path: Path, value: dict[str, Any]) -> None:
+    """Revalidate the historical gate without rebinding manifest metadata."""
+    if not path.is_file():
+        write_json(path, value)
+        return
+    sealed = load(path)
+    current = value["authority"]["fresh_stdlib"]
+    historical = sealed["authority"]["fresh_stdlib"]
+    require(
+        {key: current.get(key) for key in ("path", "bytes")}
+        == {key: historical.get(key) for key in ("path", "bytes")},
+        "sealed fresh-stdlib path/size drift",
+    )
+    normalized = json.loads(json.dumps(value))
+    normalized["authority"]["fresh_stdlib"] = historical
+    require(normalized["authority"]["driver"]["path"]
+            == sealed["authority"]["driver"]["path"],
+            "historical Option-A driver identity drift")
+    normalized["authority"]["driver"] = sealed["authority"]["driver"]
+    require(normalized == sealed,
+            "historical Option-A receipt semantic drift")
+
+
 def run_source_gate() -> str:
     result = subprocess.run(
         [sys.executable, str(SOURCE_GATE.relative_to(ROOT))],
@@ -630,7 +653,7 @@ def main() -> int:
         }
         if historical_binding is not None:
             value["authority"]["historical_H1"] = historical_binding
-        write_json(RECEIPT, value)
+        preserve_sealed_receipt(RECEIPT, value)
         print(
             "c2-require-prior-append-option-A-gate: PASS "
             "baseline=t two-appends=t mutations=5 executions=7"

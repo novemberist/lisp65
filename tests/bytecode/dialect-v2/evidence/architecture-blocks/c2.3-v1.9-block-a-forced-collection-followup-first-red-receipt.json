@@ -1,0 +1,131 @@
+{
+  "authority": {
+    "binding": {
+      "bytes": 1727,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-block-a-forced-collection-followup-session-receipt.json",
+      "sha256": "52bfb57cc0c562b9bdecec4f8a675c2dcf2af66a451da33548450b048ac0d964"
+    },
+    "plan_result_section": {
+      "bytes": 1416,
+      "path": "docs/planning/v1.9.0-pre-plan.md",
+      "section": "## Block A forced-collection follow-up First Red \u2014 2026-08-30",
+      "sha256": "acd8d845191f3c593a245108b783dd5724fcf6271bca2a9809f787ddb5131771"
+    },
+    "r7_card": {
+      "bytes": 120743,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-display-repair-r7-receipt.json",
+      "sha256": "f6291f78a51c9d8ec5ed42c0f400e00188f2eb89492c7840ac7f720e3c15c9e9"
+    },
+    "report": {
+      "bytes": 2876,
+      "path": "docs/planning/v1.9.0-block-a-forced-collection-followup-first-red.md",
+      "sha256": "5f4b793988a7a1e7242fca99cefdcff6b0ee3e135c0acce672ddb5ae1b186a22"
+    },
+    "session": {
+      "bytes": 6034,
+      "path": "config/c2-v190-block-a-forced-collection-followup-session.json",
+      "sha256": "7194f7581f9830bb74a647b940e5cfda7b257c159afba5a4d91fcaf0c1d264ba"
+    }
+  },
+  "claim_limit": {
+    "does_not_prove": [
+      "general device input losslessness",
+      "platform-level loss",
+      "Block A acceptance"
+    ],
+    "proves": [
+      "owner completed bounded stimulus",
+      "numeric result is 7",
+      "at least one collection occurred",
+      "two ring events were stored and none were taken",
+      "delivered r7 client selects public queue input"
+    ]
+  },
+  "collection": {
+    "forced_during_armed_read_line": true,
+    "heap_cells_per_printable": 1,
+    "numeric_oracle_passed": true,
+    "nursery_cells": 192,
+    "printable_insertions": 199
+  },
+  "decision": {
+    "Block_A_hardware": "FIRST-RED-NOT-ACCEPTED",
+    "Block_B_hardware": "PASS",
+    "fix_authorized": false,
+    "new_device_contact_authorized": false,
+    "new_link_authorized": false,
+    "new_media_authorized": false,
+    "v1_5_fast_typing_known_issue": "REMAINS-OPEN"
+  },
+  "device": {
+    "CPU_left_stopped_after_monitor_exit": false,
+    "capture": {
+      "bytes": 1190,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-block-a-forced-collection-followup-device-capture.json",
+      "sha256": "922a467e3ef3bdb0c4c628a490a68417ad21f17e78ab38fbbaae207797aceacb"
+    },
+    "counter_addresses": {
+      "C2K_INPUT_EVENTS_RAW": "0xBCFC",
+      "C2K_INPUT_EVENTS_SEEN": "0xBCFD",
+      "C2K_INPUT_EVENTS_STORED": "0xBCFE",
+      "C2K_INPUT_EVENTS_TAKEN": "0xBCFF"
+    },
+    "expected": {
+      "raw": 136,
+      "seen": 136,
+      "stored": 136,
+      "taken": 136
+    },
+    "explicit_resume_commands": 0,
+    "numeric_oracle": 7,
+    "observed": {
+      "raw": 2,
+      "seen": 2,
+      "stored": 2,
+      "taken": 0
+    },
+    "post_monitor_completion": {
+      "active_cursor_visible": true,
+      "evaluation_output": "(7 nil)",
+      "live_prompt_returned": true
+    }
+  },
+  "format": "lisp65-c2-v190-block-a-forced-collection-followup-first-red-v2",
+  "mechanism": {
+    "chain": {
+      "capture_armed": true,
+      "delivered_state_cells": 8,
+      "private_ring_route": "key-event mode 2 -> c2_kernal_input_take",
+      "private_ring_route_selected": false,
+      "public_native_sink": "lisp_input_event -> c2_kernal_event_poll",
+      "ring_selector": "(nthcdr 8 state)",
+      "ring_selector_value": "NIL",
+      "selected_route": "public blocking key-event 1",
+      "sources": {
+        "editor": {
+          "bytes": 8188,
+          "path": "build/c2.3/v1.9-native-prompt-editor-display-repair-r7-preflight/sources/stdlib-read-line.lisp",
+          "sha256": "388ec514e06aae4f67c2e62e557bb1a00daa561d4bf5c7252e22f093777df7b5"
+        },
+        "interrupt": {
+          "bytes": 6580,
+          "path": "src/interrupt.c",
+          "sha256": "8f68517539d3e62590abb42125909fdbc7fb13b737c495bd7542d7394bbfafec"
+        },
+        "vm": {
+          "bytes": 105226,
+          "path": "src/vm.c",
+          "sha256": "401215f971f80e7d9e1920e739b07c3a37b63709a9fca368b79c1fc6e778bee2"
+        }
+      }
+    },
+    "classification": "FINAL-CLIENT-CONSUMER-ABSENT",
+    "device_signature": "raw=seen=stored=2; taken=0",
+    "gate_blind_spot": "armed lifecycle was proved on the final wrapper; consumer selection was measured in a different state shape",
+    "interpretation": "the armed IRQ stored two queue events while the delivered editor took none from the ring",
+    "rule": "a delivered client proves both arm and actual final-world consumption"
+  },
+  "next": "review disposition on one final-client consumption repair; no action implied",
+  "recorded_on": "2026-08-30",
+  "status": "FIRST RED: FINAL R7 READ-LINE ARMS CAPTURE BUT CONSUMES PUBLIC QUEUE"
+}

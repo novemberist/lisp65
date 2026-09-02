@@ -1,0 +1,179 @@
+{
+  "addresses": {
+    "c2d_header": {
+      "address": "0x00050000",
+      "bytes": 48,
+      "initial_images": 6,
+      "published_images": 7
+    },
+    "phase_trace": {
+      "address": "0x0000c1f4",
+      "bytes": 2,
+      "claim": "phase provenance only; transaction_end itself has no trace store, so this tuple must not be called a terminator status",
+      "flag_bits": {
+        "inner_entered": 1,
+        "primary_locked": 128
+      },
+      "layout": [
+        "last_session_slot",
+        "trace_flags"
+      ],
+      "scratch": "0xc0c6"
+    },
+    "place_row": {
+      "address": "0x000500f0",
+      "bytes": 32,
+      "generation_field": {
+        "address": "0x000500f4",
+        "expected": 1,
+        "offset": 4
+      },
+      "identity_field": {
+        "address": "0x0005010c",
+        "expected_crc32": "0x485a1ce2",
+        "expected_little_endian": "e21c5a48",
+        "offset": 28
+      },
+      "slot": 6
+    }
+  },
+  "bindings": {
+    "accepted_attribution": {
+      "bytes": 9593,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.3-link80-require-host-attribution-receipt.json",
+      "sha256": "708488940dec1834fbb46abd4783388c89ceb75c686164ea07e02996c8546e23"
+    },
+    "driver": {
+      "bytes": 21101,
+      "path": "tools/host-lisp/c2_v123_link80_require_device_discriminator.py",
+      "sha256": "4b48b9b505d3198d986a87be8a13db1f6dc3e4e57b3d37b08df1773f6a4e7566"
+    },
+    "hardware_script": {
+      "bytes": 6680,
+      "path": "scripts/c2-v123-link80-require-discriminator-hw.sh",
+      "sha256": "2b7f0b4b60617dd1a3732b54b946aa1bfc097103ee91c66689f10230d1b66464"
+    },
+    "initial_c2d": {
+      "address": "0x00050000",
+      "bytes": 33840,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "7d222751a991f989943968b106b18e2af521de08fb7240afd3575f9191f7b424"
+    },
+    "overlay_source": {
+      "bytes": 91725,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "8458a14d73d84fffdacb8c17fe7cb62b1ec7d64c10fd72462bcd3312b12b4597"
+    },
+    "prior_hardware_receipt": {
+      "bytes": 2594,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.3-link80-require-device-discriminator-hardware-receipt.json",
+      "sha256": "738675facc3f2458c78657134e45abcba69e27dee921f470ae9a41154f3209d6"
+    },
+    "runtime_source": {
+      "bytes": 155694,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "9b1afffa93ffefb6eac10e1f99f3c6b7f0db572575b07b396d6ec321c354e94e"
+    },
+    "trace_contract": {
+      "bytes": 3833,
+      "path": "config/c2-install-phase-discriminator-contract.json",
+      "sha256": "e5b274775db560a39c778709aea775f6fef86fbb041c5813fc6ad0b011bf4497"
+    }
+  },
+  "candidate": {
+    "ELF": {
+      "bytes": 622560,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "687134067263173763a6777859d3e2404cb44ba2fb483f30ddab87df7e5afede"
+    },
+    "link": 80,
+    "media": {
+      "bytes": 819200,
+      "path": "build/post-promotion/v1.2.3/link80-bundled-session/library-media/require-defstruct-link78-bound.d81",
+      "sha256": "779713f4ce3723072ad649683463791d9bc82777a13daa4b5d85e38428ad5b22"
+    },
+    "preloads": [
+      {
+        "address": "0x00050000",
+        "bytes": 33840,
+        "path": "build/c2.2/v1.2.3-candidate-product-link80/final/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+        "sha256": "7d222751a991f989943968b106b18e2af521de08fb7240afd3575f9191f7b424"
+      },
+      {
+        "address": "0x00058500",
+        "bytes": 3286,
+        "path": "build/c2.2/v1.2.3-candidate-product-link80/artifacts/bootstage.bin",
+        "sha256": "bcfabba1717652e9eb725aa8d6dddc066926b452480cdeaa451af5e56a56c5c0"
+      },
+      {
+        "address": "0x08000000",
+        "bytes": 65423,
+        "path": "build/c2.2/v1.2.3-candidate-product-link80/final/runtime-overlays-session-final.bin",
+        "sha256": "9f4d9bb19f653199ac735941da2453f70d6f7a4adc3c43497f0a6a7ad45deccd"
+      },
+      {
+        "address": "0x08100000",
+        "bytes": 86175,
+        "path": "build/c2.2/v1.2.3-candidate-product-link80/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+        "sha256": "46d901fcdf120dad7b21a1d5d19ea35701a77ce8de540178c876d9e348b43209"
+      },
+      {
+        "address": "0x08200000",
+        "bytes": 19402,
+        "path": "build/c2.2/v1.2.3-candidate-product-link80/final/runtime-overlays-boot-final.bin",
+        "sha256": "2b6d5aabccdb115967b7e7af1da5477cd46e7b1992e0f156646156276fd3f295"
+      },
+      {
+        "address": "0x08300000",
+        "bytes": 1956,
+        "path": "build/c2.2/v1.2.3-candidate-product-link80/final/runtime-overlays-session-final-region1.bin",
+        "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
+      },
+      {
+        "address": "0x087fe000",
+        "bytes": 8192,
+        "path": "build/c2.2/v1.2.3-candidate-product-link80/final/c2-product-kernal-window.bin",
+        "sha256": "13c96285901a40ad53b09d76141101c5501777e7c955c259d0f72c17581ea166"
+      }
+    ],
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/c2.2/v1.2.3-candidate-product-link80/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "5130971b4cb66fe226fec9b37b8cc974056b3541c1824431d78ec0c2074bb659"
+    }
+  },
+  "claim_limit": "Read-only target discriminator. It may classify the observed Link-80 require failure; it makes no fix, release, promotion or general DMA-completion claim.",
+  "commission": {
+    "class": "C",
+    "contact": "3 of 3",
+    "ftp_progress_guard_seconds": 120,
+    "maximum_physical_contacts": 3,
+    "peeks_only": true,
+    "precondition": "cold reset plus asserted BASIC 65 READY state",
+    "source_commit": "204b90a6"
+  },
+  "form": "(require(quote place))",
+  "format": "lisp65-c2-v1.2.3-link80-require-device-discriminator-prep-v2",
+  "hardware_contacts": 0,
+  "interpretation": {
+    "row_absent": "Prim-18 stage/append/auth side did not leave a published place image; phase tuple narrows the last transported phase",
+    "row_correct": "place publication landed with the requested generation and identity; final nil is downstream in the target identity view/return seam",
+    "second_nil": "the target identity view remains divergent",
+    "second_t": "the published identity becomes visible on the repeat",
+    "terminator_note": "The trace tuple is not a transaction-end status. A successful append necessarily crosses authenticated overlay execution; the native terminator branch remains a structural subcase of the Prim-18 wrapper, not an independently stamped outcome."
+  },
+  "product_delta_bytes": 0,
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-30",
+  "selftest": {
+    "cases": {
+      "absent": "boundary-1-stage-append-auth-side",
+      "published_nil": "boundary-3-target-identity-view-or-return",
+      "published_t": "not-reproduced-published-and-visible"
+    },
+    "mutations_rejected": 2
+  },
+  "status": "passed-host-dry-run-ready-for-one-bounded-device-session"
+}

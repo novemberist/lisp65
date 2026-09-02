@@ -1,0 +1,181 @@
+{
+  "format": "lisp65-c2-link44-op-closure-cycle3-interpretation-correction-v1",
+  "recorded_on": "2026-07-22",
+  "status": "corrected-final-class-b-cycle-no-lookup-identity",
+  "promotable": false,
+  "delegation": {
+    "class": "A evidence-interpretation correction",
+    "reason": "The correction changes no product byte, capacity, compiler output, link output or hardware state."
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "linker_runs": 0,
+    "hardware_runs": 0,
+    "product_bytes_changed": 0,
+    "diagnostic_bytes_changed": 0,
+    "pure_read_only_evidence_replay": true
+  },
+  "preserved_historical_receipts": {
+    "cycle2": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-op-closure-hold-hardware-cycle2-receipt.json",
+      "bytes": 4928,
+      "sha256": "73fc8d3be49c99a053390e0d67b7977ce5d41b9265ad1c8e92468e57e3705ff5"
+    },
+    "cycle3": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link44-op-closure-stable-descriptor-hardware-cycle3-receipt.json",
+      "bytes": 2565,
+      "sha256": "44b025b2f9d72faa904044466be86b9a4e9dc487fa0759a9799234fb17e1d798"
+    }
+  },
+  "superseded_claims": [
+    {
+      "receipt": "cycle2",
+      "field": "device_state",
+      "old": "intentionally held in the $8755 self-loop; safe to power off",
+      "replacement": "The $8755 hold was not established. Device execution state after the submitted form is unknown."
+    },
+    {
+      "receipt": "cycle3",
+      "field": "device_state",
+      "old": "intentionally held in the $8755 self-loop; safe to power off",
+      "replacement": "The $8755 hold was not established. Device execution state after the submitted form is unknown."
+    },
+    {
+      "receipt": "cycle3-feasibility",
+      "field": "prospective_capture_contract.primary_cells[0].meaning",
+      "old": "c2_dma_list, last submitted SYMFN_EXT read",
+      "replacement": "c2_dma_list is a generic C2 DMA descriptor. It becomes a SYMFN_EXT witness only if the patched negative OP_CLOSURE edge is independently proved to have been reached."
+    }
+  ],
+  "hardware_evidence": {
+    "submitted_form": "(list(peek 255 132)(peek 255 131)(peek 255 132))",
+    "screen_before": {
+      "path": "build/c2.2/hardware-link44-op-closure-stable-descriptor-cycle3/before-expression.txt",
+      "bytes": 2241,
+      "sha256": "7501eb06924f35c93daae7a861962c852c86c4d1f250dc1aaa83a60bdd09a09b"
+    },
+    "screen_after_submission": {
+      "path": "build/c2.2/hardware-link44-op-closure-stable-descriptor-cycle3/op-closure-cycle3-one-form-input-attempt-1.txt",
+      "bytes": 2241,
+      "sha256": "031a13d400fd052c65540bb399cdbec3ea01d68dcca10aebb33edfc5a3757971",
+      "observation": "The form is echoed, but neither a result, an error line nor a following prompt is visible. This image does not prove a hold address."
+    },
+    "descriptor_captures": [
+      {
+        "path": "build/c2.2/hardware-link44-op-closure-stable-descriptor-cycle3/capture-1-dma-list-ba00-ba0b.bin",
+        "bytes": 12,
+        "sha256": "1f78c83bce759935cef37f066e851bfe343386f4089698213d69ea16b7f75a72",
+        "elapsed_after_form_submission_ms": 1171
+      },
+      {
+        "path": "build/c2.2/hardware-link44-op-closure-stable-descriptor-cycle3/capture-2-dma-list-ba00-ba0b.bin",
+        "bytes": 12,
+        "sha256": "1f78c83bce759935cef37f066e851bfe343386f4089698213d69ea16b7f75a72",
+        "elapsed_after_form_submission_ms": 1592
+      },
+      {
+        "path": "build/c2.2/hardware-link44-op-closure-stable-descriptor-cycle3/capture-3-dma-list-ba00-ba0b.bin",
+        "bytes": 12,
+        "sha256": "1f78c83bce759935cef37f066e851bfe343386f4089698213d69ea16b7f75a72",
+        "elapsed_after_form_submission_ms": 2514
+      }
+    ],
+    "descriptor_hex": "00e70400ec0356c300000000",
+    "descriptor_decode": {
+      "command": "copy",
+      "length_bytes": 1255,
+      "source_bank": 3,
+      "source_offset": "0xec00",
+      "target_bank": 0,
+      "target_offset": "0xc356",
+      "reserved_bytes": "000000"
+    }
+  },
+  "structured_attribution": {
+    "runtime_manifest": {
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/runtime-overlays-session-final.json",
+      "bytes": 39692,
+      "sha256": "780c8aad81cc61cf51299edaea6a6b9bc1b99b88718c672920dc20ab8271aa3c",
+      "matching_record": {
+        "id": 46,
+        "name": "error-text-renderer",
+        "section": ".lisp65_rt_l65e",
+        "file_size": 1255,
+        "memory_size": 1255,
+        "vma": "0xc356"
+      }
+    },
+    "link_map": {
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 205204,
+      "sha256": "c5b5d5b1fd3e5b2509fe8a3f0207f326d297b60099f0e75bf4eb388569b3b5d9",
+      "matching_row": "c356 205dd 4e7 .lisp65_rt_l65e"
+    },
+    "dma_writer": {
+      "path": "src/c2_platform_dma.c",
+      "bytes": 5446,
+      "sha256": "68ed902d1114e148c54c70d886fea519472f92064e9de104ad8703432ef6c465",
+      "finding": "c2_facade_target_c2_dma is the generic writer of c2_dma_list for code-window, overlay and symbol-table transfers; the object is not intrinsically a symbol-function descriptor."
+    }
+  },
+  "incompatibility_proof": {
+    "patched_edge_contract": "At a reached negative OP_CLOSURE dir_find edge, dir_find has just called sym_function, whose C2 product implementation performs a 2-byte Bank-5 SYMFN_EXT DMA into Bank 0.",
+    "observed": "The stable descriptor instead describes a 1255-byte Bank-3-to-$c356 overlay transfer and matches .lisp65_rt_l65e exactly by length and target.",
+    "conclusion": "The capture premise required to reconstruct the OP_CLOSURE lookup was false. The evidence does not establish that execution reached or remained in the $8755 self-loop, and the descriptor cannot identify a lookup symbol.",
+    "error_overlay_note": "The match identifies the last recorded generic DMA as the error-text-renderer overlay transfer. It does not by itself prove when that transfer occurred relative to the submitted form."
+  },
+  "current_product_dirmiss_inventory": {
+    "count": 6,
+    "sources": [
+      {
+        "file": "src/compile_repl.c",
+        "line": 165,
+        "site": "persistent inner helper vm_dir_add failure",
+        "available_detail": "u.fn[i].name"
+      },
+      {
+        "file": "src/compile_repl.c",
+        "line": 174,
+        "site": "defun vm_dir_add failure",
+        "available_detail": "defname"
+      },
+      {
+        "file": "src/vm.c",
+        "line": 353,
+        "site": "vm_run_dir invalid index or absent directory length",
+        "available_detail": "directory index when representable"
+      },
+      {
+        "file": "src/vm.c",
+        "line": 412,
+        "site": "OP_CLOSURE dir_find miss",
+        "available_detail": "sym"
+      },
+      {
+        "file": "src/vm.c",
+        "line": 1680,
+        "site": "OP_CALL directory miss",
+        "available_detail": "sym"
+      },
+      {
+        "file": "src/vm.c",
+        "line": 1699,
+        "site": "OP_TAILCALL directory miss",
+        "available_detail": "sym"
+      }
+    ],
+    "excluded_claim": "No source in this inventory is named as the hardware root cause without a product-visible first-error payload."
+  },
+  "budgets": {
+    "class_b_diagnostic_cycles": "3/3 consumed; no fourth cycle",
+    "line1_product_first_reds": "2/3 unchanged",
+    "completed_latency_measurements": "0/2 unchanged"
+  },
+  "product_baseline": {
+    "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+    "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+    "status": "untouched"
+  },
+  "claim_limit": "The correction proves that cycle 3 did not obtain a lookup identity and that the declared hold state was unsupported. It does not identify the failing VM_DIRMISS producer or authorize product changes.",
+  "next_action": "Class-C review of a permanent first-error-detail seam; no fourth Class-B patch or hardware run."
+}

@@ -1,0 +1,139 @@
+{
+  "D4": {
+    "rows": [
+      "standing-require-place",
+      "standing-q",
+      "standing-time"
+    ],
+    "screens": {
+      "standing-q": {
+        "bytes": 4139,
+        "path": "build/ship-builder/v13/link85-closing-device-session/run/standing-q.png",
+        "sha256": "0f05acdd5174ca4290a72073b2c7c68e8f2dd0041216015a8ca7a0d70c8c222c"
+      },
+      "standing-require-place": {
+        "bytes": 3581,
+        "path": "build/ship-builder/v13/link85-closing-device-session/run/standing-require-place.png",
+        "sha256": "bae5c7db6dc0f690c41403845d38526170baad4bb5bd97580bbe7cb21bd1ab76"
+      },
+      "standing-time": {
+        "bytes": 4499,
+        "path": "build/ship-builder/v13/link85-closing-device-session/run/standing-time.png",
+        "sha256": "8558d0f613da639cb875ccd26d6e741fee5a254479395099c3c594bb61932e92"
+      }
+    },
+    "status": "passed-require-q-time"
+  },
+  "bindings": {
+    "deployment": {
+      "bytes": 6445,
+      "path": "build/ship-builder/v13/link85-closing-device-session/deployment.json",
+      "sha256": "5efcdf93122d7b3a6b09f952979ddf10f3c9666b84fc50e9a4d49e47cfb38a19"
+    },
+    "executed_driver": {
+      "bytes": 31839,
+      "path": "scripts/c2-v13-closing-device.py",
+      "sha256": "3dc511c5cb9397c628c9267b2b6b34171cc588a68abfb4b1e7ed155a3418c95f"
+    },
+    "executed_session": {
+      "bytes": 9871,
+      "path": "scripts/c2-v13-closing-hw.sh",
+      "sha256": "36fcfcd256dd238ab4db7666bd63e875e418b837edd3e57292167228c2ace2df"
+    },
+    "executed_session_wrapper": {
+      "bytes": 372,
+      "path": "scripts/c2-v13-link85-closing-hw.sh",
+      "sha256": "8810872cf4d283d837fa216a2176b7a174309f80af85eeac235091427efa33a1"
+    },
+    "executed_wrapper": {
+      "bytes": 1476,
+      "path": "scripts/c2-v13-link85-closing-device.py",
+      "sha256": "8724ab9ddd611c8dc2539fe5cef14acb383ff56157a3ec486d572779da1a5f5d"
+    },
+    "host": {
+      "bytes": 6017,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link85-full-reset-domain-host-receipt.json",
+      "sha256": "1c02df13fda2dcc71868351f308cc89f4fc88fa2f6991fda9229bc41700dc077"
+    },
+    "preparation": {
+      "bytes": 4373,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-link85-full-reset-closing-device-preparation-receipt.json",
+      "sha256": "0c45874a7ba929e29a1db70536b72e360493ac5c0d16cc3f5265cf726f3c56ef"
+    }
+  },
+  "candidate_link": 85,
+  "claim_limit": "This receipt claims the Link-85 full reset-domain repair, D3 post-abort liveness and all D4 rows. It does not claim the interactive Ship input row and makes no acceptance or release claim.",
+  "format": "lisp65-c2.3-v1.3-link85-closing-device-first-red-v1",
+  "harness_note": {
+    "private_query": "%ide-buffers-find is a compiler-owned private helper, not a public callable directory entry. Its undefined result cannot be used as D3 acceptance; the commissioned public liveness witness (+ 4 5) passed.",
+    "screen": {
+      "bytes": 4754,
+      "path": "build/ship-builder/v13/link85-closing-device-session/run/editor-query.png",
+      "sha256": "f02014927e804f1add5257cd7c3307cb2ae604c886d8e5a8458702a774dbc8db"
+    },
+    "time_result": "The standing-time config retained the plain form result 3; the public renderer contract emits the measured frame count and value together, here 0 3. The target row is green."
+  },
+  "product_bytes_changed_after_contact": 0,
+  "product_links_created_after_contact": 0,
+  "recorded_on": "2026-08-02",
+  "release_ready": false,
+  "reset_domain_fix": {
+    "D3_retained_keys": 30,
+    "claim": "The full-domain restage removed the stale-C2J post-RUN/STOP failure: the same product identity evaluated (+ 4 5) after the abort. No READY shortcut exists.",
+    "post_stop_result": "9",
+    "run_stop": "returned-live-REPL",
+    "screens": {
+      "post_stop": {
+        "bytes": 5005,
+        "path": "build/ship-builder/v13/link85-closing-device-session/run/editor-post-stop.png",
+        "sha256": "0b6270d731472f6d4806220bdc98e07b13ae8a23842a3284b212639cbfe2bb2b"
+      },
+      "quiet": {
+        "bytes": 2927,
+        "path": "build/ship-builder/v13/link85-closing-device-session/run/editor-quiet-end.png",
+        "sha256": "9cc910d4a890096c0eb99336af146a1937883a20faa3397c92cfce46f7b60ad9"
+      },
+      "stopped": {
+        "bytes": 3333,
+        "path": "build/ship-builder/v13/link85-closing-device-session/run/editor-stopped.png",
+        "sha256": "7683b770d8dc16cbbe3d9a77d5a8caba0e0f85d7412f35a30e71d86841485bdd"
+      }
+    },
+    "status": "passed-on-target"
+  },
+  "scope": {
+    "field_exposure": "zero-v1.3-first-advertised-release-still-closed",
+    "next_gate": "Owner disposition of one corrected interactive-only hardware row before Halt #2; Link 85 and all passed rows stay fixed.",
+    "prior_media_gap": "class-wide-internal-media-only"
+  },
+  "status": "FIRST-RED-Link85-interactive-Ship-input-harness-owner-review",
+  "tool_first_red": {
+    "classification": "unacknowledged-multi-character-input-transport",
+    "mechanism_boundary": "The runner waited for runtime state 2, then sent Ada<RETURN> as one virtual-keyboard invocation. This violates the already bound harness fact that unacknowledged multi-character submissions are not lossless. The row therefore cannot distinguish input loss from a product read-line failure.",
+    "medium_readback": {
+      "bytes": 819200,
+      "path": "build/ship-builder/v13/link85-closing-device-session/run/ship-interactive-package-readback.d81",
+      "sha256": "1ffd21dc29519bd21c28327b3ac1f3819569f4430a4012338ef429dda1a68790"
+    },
+    "observed_state_and_result": "02000000",
+    "prior_transport_authority": {
+      "bytes": 8342,
+      "path": "docs/planning/c2.2-v1.2.6-editor-option1-contact-review.md",
+      "sha256": "105e9b3581c29a17844fd5e392c650eb1dfce73e123e8c6254674d87257845b8"
+    },
+    "required_discriminator": "one character per invocation with an acknowledgement boundary; no product or media change",
+    "result": {
+      "address": "0x00000085",
+      "bytes": 4,
+      "path": "build/ship-builder/v13/link85-closing-device-session/run/ship-interactive-result.bin",
+      "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+    },
+    "row": "ship-interactive",
+    "screen": {
+      "bytes": 2536,
+      "path": "build/ship-builder/v13/link85-closing-device-session/run/ship-interactive.png",
+      "sha256": "39c73c4ae21538ed196460cde81e89088a36c35e1ed02f43796d296c918c7f05"
+    },
+    "state_interpretation": "entry-running; no completed result"
+  }
+}

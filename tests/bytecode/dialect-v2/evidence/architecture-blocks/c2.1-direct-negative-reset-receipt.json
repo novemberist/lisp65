@@ -1,0 +1,225 @@
+{
+  "bindings": {
+    "core_contract": {
+      "bytes": 9568,
+      "path": "config/c2-address-identity-contract.json",
+      "sha256": "ede5e7112d7ad057a021623c0728450213ad5c80027f1f084c33f0927b614346"
+    },
+    "direct_proof_receipt": {
+      "bytes": 3545,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.1-direct-proof-receipt.json",
+      "sha256": "983ee8a4667ccb6c5c72125df69ad0447e656c51181e8ce73b3a3f6f58c4deb2"
+    },
+    "direct_proof_verifier": {
+      "bytes": 27712,
+      "path": "tools/host-lisp/c2_direct_proof.py",
+      "sha256": "17695a5ec0f3fe9a1d55b29d93833bf91bd5853fdc564efa11bcb49aa291c150"
+    },
+    "metadata_envelope": {
+      "bytes": 5448,
+      "path": "config/c2-metadata-envelope-proposal.json",
+      "sha256": "6571d7d25762f9b4fb47d8200fac969c59e6aba2d94753e5af116573ef68bc30"
+    },
+    "oracle": {
+      "bytes": 24810,
+      "path": "tools/host-lisp/c2_direct_oracles.py",
+      "sha256": "4b2fa26469079cad1f43808e716ad28bd40a0d797918cc04c9150a9feda151b1"
+    },
+    "target": {
+      "bytes": 1846,
+      "path": "config/c2.1-direct-proof.json",
+      "sha256": "43d0a7014e947b632a7e2733c7bddeb269eacc62c01deeeda15f5c987e8705e7"
+    }
+  },
+  "claim_limit": "This receipt proves the host shelf/identity/reset model and 29 fail-closed cases. It does not prove the target decoder, DMA timing, target reset, capacity or any product behavior.",
+  "format": "lisp65-c2.1-direct-negative-reset-receipt-v1",
+  "negative_matrix": {
+    "all_rejected": true,
+    "cases": [
+      {
+        "diagnostic": "C2 decoder accepts only L65S-v4",
+        "id": "c2-rejects-v3",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "v1.1 decoder rejects non-v3 shelf",
+        "id": "v11-rejects-v4",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "unknown or non-direct v4 shelf flag",
+        "id": "unknown-v4-flag",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "code region offset outside u24 envelope",
+        "id": "u24-region-envelope",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "28-bit base-plus-offset overflow",
+        "id": "physical-address-overflow",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "anonymous entry carries export flags",
+        "id": "ffff-used-as-named-offset",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "entry code range outside region",
+        "id": "zero-length-entry",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "fixnum descriptor out of range",
+        "id": "fixnum-outside-dialect-range",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "cross-container ordinal reference forbidden",
+        "id": "cross-container-ordinal",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "late-bound entry targeted by ordinal",
+        "id": "late-bound-ordinal-edge",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "code region CRC mismatch",
+        "id": "region-crc-mismatch",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "product/shelf build-identity mismatch",
+        "id": "build-identity-mismatch",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "stale session generation",
+        "id": "stale-generation-after-restage",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "hot restage forbidden in live session",
+        "id": "hot-restage-live-session",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "injected failure before export publication",
+        "id": "failure-before-export-publication",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "injected failure during export publication",
+        "id": "failure-during-export-publication",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "code-window refill crosses entry bounds",
+        "id": "refill-crosses-entry-bound",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "bad C2I magic or version",
+        "id": "metadata-bad-magic",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "record-size mismatch",
+        "id": "metadata-record-width",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "nonzero header flags",
+        "id": "metadata-header-flags",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "literal section arithmetic mismatch",
+        "id": "metadata-section-gap",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "split regions do not close the shelf",
+        "id": "metadata-length-vs-shelf-record",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "entry literal range outside metadata",
+        "id": "entry-literal-range",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "entry flags or reserved invalid",
+        "id": "unknown-entry-flag",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "string offset is not a record boundary",
+        "id": "string-offset-not-boundary",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "symbol name is not canonical ASCII",
+        "id": "invalid-symbol-name",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "nonzero literal flags or reserved",
+        "id": "literal-flags",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "string descriptor length mismatch",
+        "id": "string-length-mismatch",
+        "result": "rejected"
+      },
+      {
+        "diagnostic": "session generation wrap requires cold boot",
+        "id": "session-generation-wrap",
+        "result": "rejected"
+      }
+    ],
+    "core_contract_classes": 17,
+    "count": 29,
+    "metadata_addendum_classes": 12,
+    "overlap_is_explicit": true
+  },
+  "next_authorized_action": "Build the independent target-side C decoder/refill proof and measure the isolated real link; no product cut or capacity debit is authorized.",
+  "publication_rollback": {
+    "before_exports": "exact-baseline-restored",
+    "during_exports": "reverse-journal-exact-baseline-restored"
+  },
+  "recorded_on": "2026-07-19",
+  "reset_restage": {
+    "generation_wrap_rejected": true,
+    "generations": [
+      1,
+      2
+    ],
+    "hot_restage_rejected": true,
+    "immutable_code_sha256": "20849d9fd9b0b41ef97fba458f33d2c39f28c4c653965abf223959e63e64456b",
+    "post_restage_routes": {
+      "apply": 42,
+      "closure": 42,
+      "direct": 42,
+      "funcall": 42,
+      "tail-call": 42
+    },
+    "stale_handle_rejected": true
+  },
+  "shelf": {
+    "build_id": "0xc2210001",
+    "bytes": 319,
+    "catalog_crc32": "3e5c1469",
+    "code_crc32": "7857cb4a",
+    "code_offset": 64,
+    "metadata_crc32": "e62e0dd0",
+    "metadata_offset": 159,
+    "sha256": "2a848f541a487eb63ce07a497bf443bead97c6957d17fbfbbf6c61dd3d915525"
+  },
+  "status": "host-negative-and-reset-model-passed-target-not-run",
+  "version": 1
+}

@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-c2-lite-media-fresh-clone-first-red-v1",
+  "version": 1,
+  "recorded_on": "2026-07-26",
+  "status": "FIRST RED: matrix WPLTO retained an import-time copy of the historical Link-57 authority",
+  "source_commit": "944c51821b44973c8018286060623d32fcdefc47",
+  "axis": "fresh-clone-seed-23-pago-pago-2002",
+  "failed_step": "matrix-addenda authority chain inside current C2-lite WPLTO",
+  "diagnostic": "FileNotFoundError: build/c2.2/hardware-presmoke-link56-selector-tail-z/latency/result.json",
+  "cause": "The canonical wrapper rebound Link-57.authority, but c2_matrix_addenda_wplto had captured the predecessor function in ORIGINAL_AUTHORITY at import time. Its nested authority chain therefore reopened the historical local latency path.",
+  "correction": "Rebind the captured base authority for the duration of canonical WPLTO as well. The complete matrix authority chain then consumes the tracked 60/61-frame first-attempt receipt and restores the historical function afterward.",
+  "execution_accounting": {
+    "fresh_clones_started": 1,
+    "product_links_completed": 0,
+    "media_packages": 0,
+    "hardware_runs": 0,
+    "product_claims": 0
+  },
+  "claims": {
+    "Fresh-Clone": "FIRST RED",
+    "R4": "not-run",
+    "R5": "not-run",
+    "R6": "not-run",
+    "G5": "not-run",
+    "G6": "not-run"
+  }
+}

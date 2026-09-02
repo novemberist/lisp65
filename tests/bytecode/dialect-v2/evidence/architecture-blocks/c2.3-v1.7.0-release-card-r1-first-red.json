@@ -1,0 +1,46 @@
+{
+  "format": "lisp65-c2-v170-release-card-first-red-v1",
+  "recorded_on": "2026-08-27",
+  "status": "FIRST RED: RELEASE SUCCESSOR EXPECTED CODE-PAYLOAD IDENTITY",
+  "authority_commit": "bb2cd463",
+  "failing_gate": "c2_v170_release_card.plane_successor_gate",
+  "expected": {
+    "code_plane_differences": 1,
+    "difference": "ASCII 5 -> 7"
+  },
+  "observed": {
+    "code_plane_differences": 0,
+    "code_plane_bytes": 46053,
+    "code_plane_before_sha256": "77ce216778df169321df87a29bd2228cd503e317856816c9b51ae3187743a755",
+    "code_plane_after_sha256": "77ce216778df169321df87a29bd2228cd503e317856816c9b51ae3187743a755",
+    "banner_payload_differences": {
+      "stdlib-p0.ext.bin": 1,
+      "product/stdlib-p0.c2i.bin": 1,
+      "product/product-shelf-v4-direct.bin": 1
+    },
+    "derived_identity_differences": {
+      "product/initial.c2d-v3.bin": 12,
+      "v6-semantics/initial.c2d-v6.bin": 8,
+      "product/product-shelf-v4-direct.bin": 16
+    },
+    "unattributed": 0
+  },
+  "classification": {
+    "family": "semantic projection, never storage mnemonic",
+    "product_defect": false,
+    "mechanism": "banner strings are external payload; code is unchanged and identities derive from the payload successor"
+  },
+  "frozen_pair": {
+    "ELF_sha256": "e8ca0734427cbe22c6d60dfbba2cc141b8c98dd031beecdab8c57aa7d499efab",
+    "PRG_sha256": "b6ea4519cd2ec29eec028e65fa0102b9eac89f7d0b1a85458415595f5db0342c"
+  },
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "product_links": 1,
+    "scope_runs": 1,
+    "acceptance_runs": 1,
+    "media_builds": 0,
+    "device_contacts": 0
+  },
+  "disposition": "convert final gate and resume read-only over the frozen pair"
+}

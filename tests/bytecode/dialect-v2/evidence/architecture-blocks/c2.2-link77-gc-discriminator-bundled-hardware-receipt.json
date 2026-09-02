@@ -1,0 +1,251 @@
+{
+  "DIRMISS": {
+    "answer": {
+      "outcome": "renderer-consumption-attributed-symname-and-read-seam-exonerated",
+      "scratch_correct_after_symname": true
+    },
+    "captures": [
+      {
+        "index": 1,
+        "live_patch": "80fe",
+        "matches_expected": true,
+        "scratch_hex": "696e7465726e2d72656e64657265722d6d697373696e670000000000000000000000",
+        "scratch_name": "intern-renderer-missing"
+      },
+      {
+        "index": 2,
+        "live_patch": "80fe",
+        "matches_expected": true,
+        "scratch_hex": "696e7465726e2d72656e64657265722d6d697373696e670000000000000000000000",
+        "scratch_name": "intern-renderer-missing"
+      },
+      {
+        "index": 3,
+        "live_patch": "80fe",
+        "matches_expected": true,
+        "scratch_hex": "696e7465726e2d72656e64657265722d6d697373696e670000000000000000000000",
+        "scratch_name": "intern-renderer-missing"
+      }
+    ],
+    "diagnostic_lifecycle": {
+      "eligible_for_promotion": false,
+      "state": "discarded-after-capture"
+    },
+    "format": "lisp65-c2.2-link77-post-symname-hardware-v1",
+    "identity": {
+      "product": {
+        "address": "0x00002001",
+        "bytes": 41566,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/post-symname-hold-NONPROMOTABLE.prg",
+        "sha256": "253cc835e8b644ff899d2f67d67066ec56b2ad8a7cdd2bb3741fdf6b8af4995c"
+      },
+      "session": {
+        "address": "0x08000000",
+        "bytes": 65423,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/post-symname-hold-NONPROMOTABLE.session.bin",
+        "sha256": "726e9628c42541746ee60bd9a97ac41131654335f7cfaf92bc2550bb43dee589"
+      }
+    },
+    "promotable": false,
+    "recorded_on": "2026-07-29",
+    "registers": {
+      "A": "0xd1",
+      "B": "0x00",
+      "PC": "0xc472",
+      "SP": "0x01d7",
+      "X": "0x8f",
+      "Y": "0x00",
+      "Z": "0x00"
+    },
+    "status": "renderer-consumption-attributed-symname-and-read-seam-exonerated"
+  },
+  "GC": {
+    "answer": {
+      "cells_actually_returned_to_freelist": null,
+      "classification": "oom-not-reproduced",
+      "marked_cells": null
+    },
+    "authority": {
+      "host_lane": {
+        "bytes": 5749,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link77-gc-ext-dma-host-lane-receipt.json",
+        "sha256": "cfd35cf18f1c3fab5b29a953b94b6bb6e024e5875e69b9d4d8847532a9aeb76b"
+      },
+      "preparation": {
+        "bytes": 6575,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link77-gc-discriminator-bundled-preparation-receipt.json",
+        "sha256": "4e1c1f8392445e16bd57d177d4b447d32b9c30880b3852b7cbac11b5211ab6f8"
+      }
+    },
+    "claim_limit": "The fresh diagnostic boot completed the 1200-allocation workload with result 600 and never reached alloc_oom. Therefore this run does not distinguish marked from returned cells and authorizes no GC product change.",
+    "diagnostic_lifecycle": {
+      "eligible_for_promotion": false,
+      "identity": {
+        "address": "0x00002001",
+        "bytes": 41566,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/gc-oom-entry-hold-NONPROMOTABLE.prg",
+        "sha256": "e6f851e4cf96628c8e6374f3f944a37fcf9cb1068dcb4bb44d123d92c81f304f"
+      },
+      "state": "discard-after-bundled-session"
+    },
+    "format": "lisp65-c2.2-link77-gc-two-number-hardware-v1",
+    "observation": {
+      "alloc_oom_hold_reached": false,
+      "image": {
+        "bytes": 4152,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/gc-waiting-input.png",
+        "sha256": "9f3d4cf6971487d09af860b7a5d826cbb7b136a508f14f80dd8f053786773bca"
+      },
+      "result": "600",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/gc-waiting-input.txt",
+        "sha256": "bb6a94668d7c8fdd2fb68105d6706a130bafe6582f934ff06a23bff7528df1f3"
+      }
+    },
+    "promotable": false,
+    "recorded_on": "2026-07-29",
+    "status": "completed-oom-not-reproduced"
+  },
+  "authority": {
+    "deployment": {
+      "bytes": 22232,
+      "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/deployment.json",
+      "sha256": "45e9c845a869f4fb4fda8352c4f1c81b06d9adedeb479a58df884a563632ec89"
+    },
+    "observations": {
+      "bytes": 5085,
+      "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/observations.json",
+      "sha256": "c4b596500f0218750db1888a483d1207c44889f284aecb8065d8209170fce8d3"
+    },
+    "preparation": {
+      "bytes": 6575,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link77-gc-discriminator-bundled-preparation-receipt.json",
+      "sha256": "b073fe9a5fda1002a342e5bc126077bce7c5d7554874b68fc7c444cadba85db0"
+    }
+  },
+  "claim_limit": "Claims only the listed GC discriminator, independent product rows, and post-symname diagnostic result.",
+  "execution_accounting": {
+    "controlled_deployments": 3,
+    "physical_device_sessions": 1,
+    "product_links": 0,
+    "promotable_diagnostic_identities": 0
+  },
+  "format": "lisp65-c2.2-link77-gc-bundled-hardware-v1",
+  "product": {
+    "address": "0x00002001",
+    "bytes": 41566,
+    "path": "build/post-promotion/link77-random-while/final/lisp65-c2-substitution-linked.prg",
+    "sha256": "9e8999c0de31e306ee957f4912b7fa0baa52c55d58dfe8a933b1c02462e1faa3"
+  },
+  "product_rows": [
+    {
+      "id": "random-state-width",
+      "image": {
+        "bytes": 4017,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-random-state-width.png",
+        "sha256": "c357a12183ac3a9f8618f2e6796da023ca75ead6e779db74ab9f5b32f718ca4e"
+      },
+      "result": "55",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-random-state-width.txt",
+        "sha256": "6aa7ee71e586774b5d2a81af5870f76249a427a4a5bc15ef5e390d65e7cf94fd"
+      },
+      "status": "passed"
+    },
+    {
+      "id": "random-rejection-path",
+      "image": {
+        "bytes": 4578,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-random-rejection-path.png",
+        "sha256": "436148fbd3a0f7507975b2a50fa52f4f002acdd9d386af9ff865579ab0ca9cce"
+      },
+      "result": "179",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-random-rejection-path.txt",
+        "sha256": "b9c80777431146b1735f5b4f6d9828452a2df2431b8fa37b9965096e12422bd3"
+      },
+      "status": "passed"
+    },
+    {
+      "id": "random-seed-reproducible",
+      "image": {
+        "bytes": 6009,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-random-seed-reproducible.png",
+        "sha256": "f3513eb43e8211ba33894b562a97bb5652ced6221e311288eca06faca8fbf5bc"
+      },
+      "result": "t",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-random-seed-reproducible.txt",
+        "sha256": "e1cdefb894a0c277df716cccb8d6321c8df2b6c697d20924709fae625b30442b"
+      },
+      "status": "passed"
+    },
+    {
+      "id": "random-range",
+      "image": {
+        "bytes": 6553,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-random-range.png",
+        "sha256": "b0f97af2991d480977ab7f901884bc65cbde34945f69e4485b0db4fb0562f808"
+      },
+      "result": "t",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-random-range.txt",
+        "sha256": "7e1f79e9bfcc29e17cec552f25b26cd2dea35c4933f640a1d5ae287316d17104"
+      },
+      "status": "passed"
+    },
+    {
+      "id": "irq-mask-readback",
+      "image": {
+        "bytes": 7353,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-irq-mask-readback.png",
+        "sha256": "9b7143e30a88c9732128f3e64e6d2d1f1209f203abefd011ad92958f12795c77"
+      },
+      "result": "(0 0 0)",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-irq-mask-readback.txt",
+        "sha256": "6a79f9c1f25dc0306a689efd91107dd9c9f5636d8944de6233dda5def517b144"
+      },
+      "status": "passed"
+    },
+    {
+      "id": "while-run-stop",
+      "image": {
+        "bytes": 7799,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-while-run-stop.png",
+        "sha256": "996f0c19af373a68e62aa28b40b4833bad494c830bbb3aefb26b920eb21adf14"
+      },
+      "result": "*** stopped (run/stop)",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-while-run-stop.txt",
+        "sha256": "081c88a5e368cc2f5f74780c57853d2939e18ed3873f65b62317808ac9c4755e"
+      },
+      "status": "passed"
+    },
+    {
+      "id": "post-run-stop-repl",
+      "image": {
+        "bytes": 8014,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-post-run-stop-repl.png",
+        "sha256": "0391a2240f057e522e1ab770ae0a5378af7ad244d25b5f1df46b767c5bba758c"
+      },
+      "result": "3",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link77-random-while/gc-discriminator-bundled-session/row-post-run-stop-repl.txt",
+        "sha256": "d848591e05e595103df0dad7b7d7d2fa8681a480468d6f48a68c6241c26f5fd0"
+      },
+      "status": "passed"
+    }
+  ],
+  "recorded_on": "2026-07-29",
+  "row_local_first_reds": [],
+  "status": "completed-GC-random-RUNSTOP-IRQ-DIRMISS-bundle"
+}

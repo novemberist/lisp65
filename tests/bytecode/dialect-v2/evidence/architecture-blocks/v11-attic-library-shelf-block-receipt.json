@@ -1,0 +1,237 @@
+{
+  "format": "lisp65-v11-architecture-block-receipt-v1",
+  "block_id": "1.1-A-attic-library-shelf",
+  "status": "passed-not-promoted",
+  "recorded_on": "2026-07-15",
+  "source_commit": "cb39f5d67643e9c6b13ad8a50a587871e6fb72ce",
+  "baseline": {
+    "block": "1.1-B-export-only-interning",
+    "source_commit": "b888c8b1aff07c271db14e9311abee90088c4428",
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-export-only-interning-block-receipt.json",
+      "sha256": "34159546ae7220d7a8ce7c6cc1bdff47f198a9393414975accc4bea4ce933376"
+    },
+    "composition_identity_sha256": "d66a8f7690a4b2837e1d3a864d69d9063db4aaaa1369e450f24684b8b81e402e"
+  },
+  "implementation": {
+    "format": "L65S-v1",
+    "attic_address": "0x08100000",
+    "lifetime": "reset-persistent-power-volatile",
+    "libraries": [
+      "ide",
+      "idex",
+      "m65d"
+    ],
+    "load_order": "name-resolver-overlay-then-shelf-overlay-then-proven-L65M-preflight-and-commit",
+    "fallback": "invalid-or-unavailable-shelf-returns-false-and-load-lib-enters-the-proven-D81-directory-path",
+    "device_integrity": "stager-whole-shelf-CRC32 plus runtime catalog-CRC32 plus existing selected-L65M CRC16 preflight before publish",
+    "host_and_package_integrity": "full SHA-256 for shelf and every contained L65M artifact",
+    "product_staging": "a new eighth boot descriptor record stages and reverifies the shelf independently at 0x08100000",
+    "resident_alternative": {
+      "status": "rejected-before-product-implementation",
+      "measured_resident_bytes": 1866,
+      "reason": "would consume the complete Bank-0 release margin; parser and bulk copy were moved into two reusable runtime-overlay slices"
+    }
+  },
+  "shelf": {
+    "contract": {
+      "path": "config/v11-attic-library-shelf.json",
+      "sha256": "bd73105120c07ad4c43aa1017ca16e6a39645622c377384c4c1bc17d41dd2995"
+    },
+    "generator": {
+      "path": "tools/host-lisp/v11_attic_library_shelf.py",
+      "sha256": "12e7715775365749a739c12d3430601a3fbe999e733d84efcf912e47c5e295ab"
+    },
+    "manifest_sha256": "6ae145cf13b79fff22883a1f8c6516d808201a7267a98363c692eb970d2ff41c",
+    "bytes": 42173,
+    "sha256": "c8f984a45ac08ce80143847b21e8c29a68fb1734b93435dc16b95900b5661906",
+    "catalog_crc32": "9c72fd42",
+    "build_id": "6f4d18db",
+    "containers": [
+      {
+        "id": "ide",
+        "offset": 128,
+        "bytes": 27904,
+        "sha256": "20b6d9df6a12d902b0504bd00e511f9ecd6e3dbfc61f7a0e147ca02a8b66a6c7"
+      },
+      {
+        "id": "idex",
+        "offset": 28032,
+        "bytes": 7694,
+        "sha256": "266dc774ca5b0bfde4543a3527c46ec809d48fe9ddf2b74df2070f9a6c99af1d"
+      },
+      {
+        "id": "m65d",
+        "offset": 35726,
+        "bytes": 6447,
+        "sha256": "01bef9581f8a240048f8da7032c53f30bccfac2159dbd8ae483388bd6aec81bd"
+      }
+    ]
+  },
+  "capacity_authorization": {
+    "path": "config/v11-attic-library-shelf-capacity-authorization.json",
+    "sha256": "73283879729f78d95093e24be81c5bda98c777498faff10739866238416e6de9",
+    "status": "authorized-with-zero-EXT-margin-and-C1-wave-gate"
+  },
+  "capacity_delta_scope": "combined-1.1-A-plus-1.1-B-workbench",
+  "capacity_delta": {
+    "baseline_identity_sha256": "d66a8f7690a4b2837e1d3a864d69d9063db4aaaa1369e450f24684b8b81e402e",
+    "candidate_identity_sha256": "075d9613cc6b3b2dcd7768467a08160c8def54dd72e1da51802e9c5463a75021",
+    "dimensions": {
+      "bank": {
+        "baseline": 332,
+        "candidate": 283,
+        "delta": -49,
+        "authorization": {
+          "path": "config/v11-attic-library-shelf-capacity-authorization.json",
+          "sha256": "73283879729f78d95093e24be81c5bda98c777498faff10739866238416e6de9"
+        }
+      },
+      "ext": {
+        "baseline": 16410,
+        "candidate": 16384,
+        "delta": -26,
+        "authorization": {
+          "path": "config/v11-attic-library-shelf-capacity-authorization.json",
+          "sha256": "73283879729f78d95093e24be81c5bda98c777498faff10739866238416e6de9"
+        }
+      },
+      "symbols": {
+        "baseline": 165,
+        "candidate": 165,
+        "delta": 0,
+        "authorization": null
+      },
+      "namepool": {
+        "baseline": 2902,
+        "candidate": 2902,
+        "delta": 0,
+        "authorization": null
+      },
+      "directory": {
+        "baseline": 32,
+        "candidate": 32,
+        "delta": 0,
+        "authorization": null
+      }
+    }
+  },
+  "real_link": {
+    "profile_build_id": "54331bdc",
+    "resolved_profile_sha256": "54331bdcb3c679aaf3d4ae4f7d7643f063001d13af8d4cc4b8bc6e42614bfb90",
+    "footprint_audit_sha256": "1915049932dafc1d08105f50d350a6147a6ada14b997f1cd647616f2f2afeef8",
+    "control_audit_sha256": "00b9ec9b6d384297b73a1f1771d1a97699b008a456678992e9e5f55996cb4e97",
+    "post_boot_reserve": 1819,
+    "reserve_target": 1536,
+    "bank_margin": 283,
+    "overlay_vma": {
+      "baseline": "0xc30c",
+      "candidate": "0xc33c",
+      "delta_bytes": 48
+    },
+    "resident_prg": {
+      "bytes": 39542,
+      "sha256": "a49db24fcd46eeee65b60730476600f1dce8ace4d4953b1487ff8f3c9cbbfd27",
+      "baseline_bytes": 39493,
+      "delta_bytes": 49
+    },
+    "boot_overlay": {
+      "bytes": 1669,
+      "sha256": "fa4bdcbd1352492bed1dddbf083fa283e6021f60c23337b9380e4fe4356a0cdc",
+      "delta_bytes": 0,
+      "identity_change": "expected-profile-binding-change"
+    },
+    "resident_island": {
+      "baseline_bytes": 1108,
+      "candidate_bytes": 1485,
+      "delta_bytes": 377,
+      "capacity_bytes": 2048,
+      "annex_bytes": 260,
+      "remaining_bytes": 302
+    },
+    "runtime_overlay": {
+      "image_bytes": 57820,
+      "manifest_sha256": "e55bd0373ea154dcc7b14f8a9907a4e63f56b162cc47f0c25a1950b387ba12b7",
+      "slice_count": 40,
+      "new_slices": [
+        {
+          "id": 38,
+          "name": "attic-library-shelf",
+          "bytes": 1754,
+          "limit": 1792,
+          "margin": 38,
+          "sha256": "08dbaf1590eb1bb893e5f7874cf8f7394be5c0b8ab6365df242a5e3b637dfd49"
+        },
+        {
+          "id": 39,
+          "name": "attic-library-name",
+          "bytes": 732,
+          "limit": 1792,
+          "margin": 1060,
+          "sha256": "a5d910e1f64c38fad2f165ef1717aca4cca9178a69349686630d2b870644cecb"
+        }
+      ],
+      "installer_slot_37": {
+        "bytes": 1746,
+        "limit": 1792,
+        "margin": 46
+      }
+    }
+  },
+  "stager_probe": {
+    "descriptor_records": 8,
+    "descriptor_bytes": 272,
+    "descriptor_build_id": "1bf23217",
+    "descriptor_sha256": "aaec87c705e754dfaa2590f29c1f8c9040def565311422c8e7605d64386465f4",
+    "stager_bytes": 5355,
+    "stager_sha256": "548b532456d6f711908a34ad6886f71a21349e3ba69d993249210b44de2a5786",
+    "model_cases": 7,
+    "shelf_role": 8,
+    "result": "pass"
+  },
+  "verification": {
+    "shelf_generator_selftest": {
+      "result": "pass",
+      "deterministic_builds": 2,
+      "mutations_rejected": 3
+    },
+    "device_loader_host_smoke": {
+      "result": "pass",
+      "libraries_exact_copy": 3,
+      "negative_cases": 7
+    },
+    "differential": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-attic-library-shelf-differential-receipt.json",
+      "sha256": "5221f06c5ba9ce9c2d8f62cb2a5fe2d93524c2f10f0945fc07f4ebcc2711b835",
+      "artifacts": 4,
+      "cases": 353,
+      "differences": 0
+    },
+    "composition_budget": {
+      "sha256": "075d9613cc6b3b2dcd7768467a08160c8def54dd72e1da51802e9c5463a75021",
+      "status": "pass"
+    },
+    "canonical_guard_link": "pass",
+    "control_audit_selftest_cases": 26,
+    "workbench_ship_selftest": "pass",
+    "source_syntax_files": 284,
+    "source_syntax_status": "pass",
+    "full_check_source": {
+      "status": "expected-stop-before-promotion",
+      "completed_before_stop": "all gates through dialect-v2-lcc-surface",
+      "stop": "sealed prelude evidence correctly rejects the changed live stdlib inventory",
+      "required_resolution": "regular product/evidence repin after capacity authorization; sealed 1.0.1 evidence remains immutable"
+    }
+  },
+  "hardware_case": {
+    "path": "tests/bytecode/dialect-v2/architecture-blocks/v11-attic-library-shelf-g6-case.json",
+    "sha256": "a75234d19a53d6cce5057ca69e78bde9b0338b950ec1cc79107810812713f8aa",
+    "status": "defined-not-run",
+    "sealed_1.0.1_matrix_changed": false
+  },
+  "promotion_blockers": [
+    "perform the regular product/evidence repin and integrate the new hardware case",
+    "run the bound wave-1 hardware acceptance including the reset-between-staging-and-load case"
+  ],
+  "claim_limit": "This receipt proves the 1.1-A implementation, host behavior, staging model and exact capacity result. It does not promote a product set, rewrite sealed 1.0.1 evidence or claim the new hardware-only reset case."
+}

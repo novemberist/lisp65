@@ -1,0 +1,513 @@
+{
+  "authority": {
+    "bcode_ordinal_contract": {
+      "bytes": 2238,
+      "path": "config/c2-vm-dirmiss-bcode-ordinal-contract.json",
+      "sha256": "778d52a4f8ec103824f4ca6eb5d0901dfa345b59b91b031db3dfcbe57d23fc75"
+    },
+    "canonical_product_profile": {
+      "feature_defines": [
+        "LISP65_C2_DIRECT_HOT_REFILL",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+        "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+        "LISP65_C2_TRANSACTION_AUTH",
+        "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+        "LISP65_C2_NESTED_APPEND_V5",
+        "LISP65_C2_RESIDENCY_TRIAGE",
+        "LISP65_C2_E000_REOPEN",
+        "LISP65_C2_BSS_TRIAGE",
+        "LISP65_RUNTIME_OVERLAY_FORMAT_V3",
+        "LISP65_C2_PHASE11_SPLIT",
+        "LISP65_C2_LITE_COLD_EVICTION",
+        "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+        "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+        "LISP65_C2_LITE_BANK3_STAGING",
+        "LISP65_C2_LITE_BANK2_STAGING",
+        "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+        "LISP65_C2_LITE_VM_ARITY_E000",
+        "LISP65_C2_LITE_CHIP_RAM"
+      ],
+      "green_wplto_profile": {
+        "bytes": 8652,
+        "path": "build/c2-lite/v6-bank2-target-stage-phase02b-wplto/full-product-wplto/resolved-profile.txt",
+        "sha256": "a70b02189ca0bc6e014fbacfe23be5bc76e46e5a05db06505730f8ac0d10e9e2"
+      },
+      "link33_gap_disposition": "The Link-33 object bound the base profile only. Later C2-lite wrapper features were appended outside that object; the Link-41 driver inherited the pre-E000 wrapper and therefore omitted one already-authorized feature without tripping the base-object hash.",
+      "profile_object": {
+        "bytes": 2722,
+        "format": "lisp65-c2-lite-v6-roots-fronts-product-profile-v1",
+        "path": "config/c2-lite-v6-roots-fronts-product-profile.json",
+        "sha256": "05a6db5519e8d023bac3bbaae5770efa909f66f26204a374d33330aff09c6b53"
+      },
+      "shape": {
+        "boot_family_slice_count": 12,
+        "roots_fronts_slice_bytes": 1473,
+        "session_family_bytes": 65438,
+        "session_family_headroom_bytes": 98,
+        "session_family_slice_count": 50,
+        "unique_slice_count": 58
+      },
+      "source_gate": {
+        "driver": {
+          "bytes": 10881,
+          "path": "tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py",
+          "sha256": "cbd7056ad607982ac86be9b22ea47b6c93a194fd495db50dfde3216cb10e1d46"
+        },
+        "status": "passed-fixed-link-entry-source-gate"
+      },
+      "status": "passed-canonical-profile-and-fixed-entry-gate"
+    },
+    "driver": {
+      "bytes": 14066,
+      "path": "tools/host-lisp/c2_lite_v6_link46_l65e_transient_wplto.py",
+      "sha256": "58c4be03d21f013107595053c7a08f35163f82179421c27d05b459d8c77e945e"
+    },
+    "link46_l65e_abi_hardware_first_red": {
+      "bytes": 5145,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link46-l65e-entry-abi-hardware-first-red.json",
+      "sha256": "832619fca14d12c8157f1ecc0d6016e4ad6af82fdcac9fa50f3d7f54ccd3ce2b"
+    },
+    "link46_rollback_product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-46-c2-lite-v6-bcode-ordinal-renderer/lisp65-c2-substitution-linked.prg",
+      "sha256": "6d0d1b691bf0ffd81d333663e9d97e5d83588d08dbce745f86a530fa91079416",
+      "status": "untouched"
+    },
+    "link46_structural_authority": {
+      "bytes": 290486,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link46-c2-lite-v6-bcode-ordinal-renderer-structural-receipt.json",
+      "sha256": "040451a9993736f58fcf912cf600f8eeb24a8eef88f59cb540dde2f2fa05723e"
+    },
+    "transient_handle_contract": {
+      "bytes": 6136,
+      "path": "config/c2-transient-handle-contract.json",
+      "sha256": "54fc7e230451b1dbce9f21e58539ed84d08cfef1841096e59cbb29ddc7d7a94b"
+    }
+  },
+  "conditional_next_gate": "Only a resident-capacity overflow authorizes the standing small-hot-object E000 relocation probe; every other failure returns to Class-C review.",
+  "diagnostic": {
+    "message": "runtime-overlay dispatcher has no unique final indirect edge",
+    "type": "GateError"
+  },
+  "evidence": {
+    "c2-crc-asm-leaf-gate.json": {
+      "bytes": 1274,
+      "sha256": "91606040e62f27555b3da47956594935a4e9c951187375d71d3b8558ade37185"
+    },
+    "c2-crc-codegen-gate.json": {
+      "bytes": 1039,
+      "sha256": "c3d6d842b4d54ae1850fb2956f93851d7007d882cf2245db0af6410d3629faa5"
+    },
+    "c2-kernal-window.generated.h": {
+      "bytes": 420,
+      "sha256": "bd66bd08f065add45708fc3943bdd9e6cc50d4dc44bed94de862899d008dbfc7"
+    },
+    "c2-substitution.ld": {
+      "bytes": 64000,
+      "sha256": "ac3c6f47d27894d62ebb5d39ebbd701f921654f30ba3d1a27463c20983129838"
+    },
+    "error-text-table.bin": {
+      "bytes": 774,
+      "sha256": "a31120a89181ccba0a6e897d62a3cde24e2233c23f8b96b82a5f82142771b8a1"
+    },
+    "error-text-table.h": {
+      "bytes": 11576,
+      "sha256": "65438a905b877db3d9602cbfc020a6ded8003c185e1b733ab8ea9dbee1052bcb"
+    },
+    "exact-orphan-wrapper-lisp65-c2-substitution-linked.prg.json": {
+      "bytes": 1066,
+      "sha256": "7d7ffc464af0a7ea204b139392b13b50f29aebe3f919bbbe21fec2dd5cd89492"
+    },
+    "exact-orphan-wrapper-resident-island-seed.prg.json": {
+      "bytes": 1048,
+      "sha256": "865f9c581246a42a4a0cc4a201367a40e21081495eb5073e9768db7835202ed4"
+    },
+    "final-section-inventory-lisp65-c2-substitution-linked.prg.json": {
+      "bytes": 49156,
+      "sha256": "2ea2b1886dd1f1aa09283d4a6cdb2dfaf149b78e428736ac9e05fd13c16df879"
+    },
+    "final-section-inventory-resident-island-seed.prg.json": {
+      "bytes": 49147,
+      "sha256": "a16b284ee699b147040236ee2206f0b191e95303eb9cdc42c25ee55057040a4f"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/banner-return-removed.c": {
+      "bytes": 13544,
+      "sha256": "067c4498c44e8f23b09039c5014ebecef1e4ab7b49542bb1e6fc4638965def7f"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/banner-status-discarded.c": {
+      "bytes": 13523,
+      "sha256": "47fc930e78e45999db8451295fd3bbbf7ae39dbef3a200d2f93206172d903b9d"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/banner-text-truth-reintroduced.c": {
+      "bytes": 13525,
+      "sha256": "ba5d4681b6b9c2351244bbb136ac1b660d3a6ea8a4b8068215b6ec39f6925a15"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/record-cutpoint-replayed.c": {
+      "bytes": 36273,
+      "sha256": "de41a02b7d1f8ae360255e2d678f94bc985e18d4e7a735c4ef018056356bf736"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/stage-call-removed.c": {
+      "bytes": 129010,
+      "sha256": "df77a9157e4d90c58fa568057b74b3335aac7c7496f52f394399eb1d363d9ec5"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/stage-cutpoint-replayed.c": {
+      "bytes": 36273,
+      "sha256": "9d6bfc269019606cf26439d4e52ece6a6bc0a8ba7cc15a61dd188582f6439c57"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/static-plane-close-bypassed.c": {
+      "bytes": 36256,
+      "sha256": "aba0ab0c07f9ecd4e6663290d42831343e5e8327b9e54f0a9ebeb150252c0c5b"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/target-bank-changed.c": {
+      "bytes": 36276,
+      "sha256": "d8b1d684fcfb23a448a0aa11892edbb9f678d8cb77f2084b8eb7ccd4118cfc58"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/target-crc-bypassed.c": {
+      "bytes": 36260,
+      "sha256": "dc25e5d29f4625482998a7e9ee0dd64d410cd2e778eedcce749a84b03747dfec"
+    },
+    "fresh-c2-lite-prelink-gates/bank2-target-stage/mutations/target-cross-binding-bypassed.c": {
+      "bytes": 36252,
+      "sha256": "aa69ef5b513d2b4e6b328b410ae8daa02c80ed167c176a6e9260ee5bac8de038"
+    },
+    "fresh-c2-lite-prelink-gates/export-symbol-domain/export-symbol-domain-host": {
+      "bytes": 15504,
+      "sha256": "dfa0ab15109807ed7dde06a48d181b08fbb45a66d98640e5bc8a35e907bdfaf2"
+    },
+    "fresh-c2-lite-prelink-gates/export-symbol-domain/export-symbol-domain-host.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fresh-c2-lite-prelink-gates/export-symbol-domain/export-symbol-domain-host.stdout.txt": {
+      "bytes": 92,
+      "sha256": "68c326536c4cbc60e9b2378aece9d6ce2edfab24b1ad0afa70d44adc241da74e"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/family-slot-derived-host": {
+      "bytes": 115256,
+      "sha256": "cf0bf2495fe89e057f231adcd8daceb57c5d6fc7a96af23bf0922ef1f49f2258"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/family-slot-derived-host.stdout.txt": {
+      "bytes": 86,
+      "sha256": "a361a1801027d8fc7542e0848e68611bcf652e810c5ec7c1dfb8098a13409be6"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-boot-receives-session-batch-policy": {
+      "bytes": 115272,
+      "sha256": "e941764a01016029ac7a9b72f8b6a778f60d77d13d3e77afc7d354d52a0d3aca"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-boot-receives-session-batch-policy.c": {
+      "bytes": 83763,
+      "sha256": "93e2412dcf6bf7f7dee77c8a40253249dccf0790d0c48478d2acd9366bbe02f7"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-boot-receives-session-batch-policy.log.txt": {
+      "bytes": 78,
+      "sha256": "5de99547c2d595a484c85ccd2099bd045a1f9e13b8050cd0b06d89072dc8fa4c"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-family-blind-installer-special": {
+      "bytes": 115272,
+      "sha256": "7b1f489873a63a4de607c2fb618dd511bfe3bc50384975600cbf24b2e3c7a8ac"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-family-blind-installer-special.c": {
+      "bytes": 83997,
+      "sha256": "834a5e9dd6d184dd518fc70ea389bc65ba43615898b9e568550c997f8c452eae"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-family-blind-installer-special.log.txt": {
+      "bytes": 81,
+      "sha256": "0379efdbdf25b1dba8dee145fd3ed283e0c8a4c3f6c1a7e06e3355b21b42aa12"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-installer-loses-explicit-family-seam": {
+      "bytes": 115280,
+      "sha256": "aaccb336cf01700532bdc40d9387e75130890a2549c82e04efb7644bc5e23df9"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-installer-loses-explicit-family-seam.c": {
+      "bytes": 84004,
+      "sha256": "39040281d5104bc20f2af12d5ec14f003b5fb50c544e1225d8e43ff2e0d7e6f2"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-installer-loses-explicit-family-seam.log.txt": {
+      "bytes": 72,
+      "sha256": "1b79cde5c1eb5c6aebee5ac9f686d67860af3fad635115fb7f698dc1030d5a20"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-session-accepts-boot-record": {
+      "bytes": 115016,
+      "sha256": "f0370ee12036575df581f16dadacdd31b70a039951858d940ac1aa7c7572c9fa"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-session-accepts-boot-record.c": {
+      "bytes": 83877,
+      "sha256": "6cddf1d2edf957e2e2fe5c856d59900d1369dd33f065f53153782738909fa456"
+    },
+    "fresh-c2-lite-prelink-gates/family-slot/mutant-session-accepts-boot-record.log.txt": {
+      "bytes": 4896,
+      "sha256": "23ed1059c2d3805f368c14889e636e519d1dbcd9fc7b9dbd79ff01737909b6d2"
+    },
+    "fresh-c2-lite-prelink-gates/roots-fronts/roots-fronts-cutpoints": {
+      "bytes": 20168,
+      "sha256": "a3e5db9eab55e8e95ef74850a1eb33d03cb43449976729d5fc07c60484a8c4e6"
+    },
+    "fresh-c2-lite-prelink-gates/roots-fronts/roots-fronts-cutpoints.stdout.txt": {
+      "bytes": 127,
+      "sha256": "cafc031cb2e6fcb9ef3878edcb4ff68541bbfd4e05b78ee5b88d93afc7be3e9a"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/coresident-cutpoints": {
+      "bytes": 14344,
+      "sha256": "aebd1fb65a4eaed39258410c9a9d5d96120c3bd224b00f739cb229b8c9c353aa"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/coresident-cutpoints.stdout.txt": {
+      "bytes": 106,
+      "sha256": "e2163c53a436304288be62434a816fc4203dba0d35bbd623394601b4f717c4f2"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/semantic-split-cutpoints": {
+      "bytes": 14320,
+      "sha256": "40942575e9ad0df44389f23b65870ef4751faa1cc0fbed93d270e1928bae952e"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/semantic-split-cutpoints.stdout.txt": {
+      "bytes": 99,
+      "sha256": "38292e22905b1621fbb40c3a744693a0c6098345bf8299ff9af8d8337cb94171"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/bank2-static-code.bin": {
+      "bytes": 34403,
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/c2-lite-dynamic.code.bin": {
+      "bytes": 84,
+      "sha256": "4af73b51d5cc56bd534f674bbc0406d63af180af99b4f09cbe404ff865f8ba8d"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/c2-lite-dynamic.manifest.json": {
+      "bytes": 2733,
+      "sha256": "198c01056d1cbbb0eaffe0c92186d7cfa9fa58e4aa55930588d96a1048a621b3"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/c2d-v6-entry-emitter-host.so": {
+      "bytes": 11616,
+      "sha256": "602bd3d7a141e7a686a40d0696056d413fcea9c46acdf53e50f2802ae0a54d58"
+    },
+    "fresh-c2-lite-prelink-gates/slice-and-publication/shared-semantics/host-v6/initial.c2d-v6.bin": {
+      "bytes": 33840,
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin": {
+      "bytes": 34403,
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2-lite-dynamic.code.bin": {
+      "bytes": 84,
+      "sha256": "4af73b51d5cc56bd534f674bbc0406d63af180af99b4f09cbe404ff865f8ba8d"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2-lite-dynamic.manifest.json": {
+      "bytes": 2699,
+      "sha256": "0952f7bf686e906089da0bd95502bd93f6bb9c8d55126a7cbd962ea91569bf19"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/c2d-v6-entry-emitter-host.so": {
+      "bytes": 11616,
+      "sha256": "602bd3d7a141e7a686a40d0696056d413fcea9c46acdf53e50f2802ae0a54d58"
+    },
+    "fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin": {
+      "bytes": 33840,
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    "fresh-v5-b2-prelink-gates/c2-lite-current-b2-prelink.json": {
+      "bytes": 4343,
+      "sha256": "6ac0dbf056a5c4712c6a865aef24a8f389276a952f772508825c4e1724abddce"
+    },
+    "generated-product-sources/c2-stream-decoder.c": {
+      "bytes": 36598,
+      "sha256": "ddbcbc585fa41b6ffc93679ebe0b8c3fc27388110d99dce6a7d0fd6b4ee2b4bf"
+    },
+    "generated-product-sources/c2-stream-init.c": {
+      "bytes": 310,
+      "sha256": "706b39a032572ace9460e555e45e02c64f08b784d4d5ba91f7a914a990d0d58a"
+    },
+    "generated-product-sources/c2-stream-phase-00.c": {
+      "bytes": 57,
+      "sha256": "19ae4e96f3e4bb904c24c33d7ce3d385edd4cfa7e0781a318f437c5472a3ad75"
+    },
+    "generated-product-sources/c2-stream-phase-00b.c": {
+      "bytes": 58,
+      "sha256": "51f13be0111906cab8684eefc99512fe8165354dcfa0fe6759466dc4384198b5"
+    },
+    "generated-product-sources/c2-stream-phase-01.c": {
+      "bytes": 57,
+      "sha256": "8490454e4f62b691ffd5b1cac42af2eba24bdd9fa116210b1c8667e3fc2ca267"
+    },
+    "generated-product-sources/c2-stream-phase-02a.c": {
+      "bytes": 58,
+      "sha256": "981df649ab6ce6a461b4aa11da15a85eeff659b76822a64b812116c95a152e29"
+    },
+    "generated-product-sources/c2-stream-phase-02b.c": {
+      "bytes": 58,
+      "sha256": "d5f499dd7a66a84406a8e479d94e47dd0879e87b19ebd9721fd5e104fb4e6ef9"
+    },
+    "generated-product-sources/c2-stream-phase-03.c": {
+      "bytes": 57,
+      "sha256": "4b34f04d815306a3ab32c6b7a17ffe6d6baab3a0ff75a32c572c76441ceffa3a"
+    },
+    "generated-product-sources/c2-stream-phase-03b.c": {
+      "bytes": 58,
+      "sha256": "1529c8bfdd42d951f7d87d64f893901260860fcda6df269212f1534024b99165"
+    },
+    "generated-product-sources/c2-stream-phase-04.c": {
+      "bytes": 57,
+      "sha256": "4b4009fa90367f5eddad4005dbd791c05bb7dff5d5441b5b9a7546e1836fbdb9"
+    },
+    "generated-product-sources/c2-stream-phase-05a.c": {
+      "bytes": 58,
+      "sha256": "bb2761c099c7bc4f4c6d11187a40bcffb05ed3e646038f08fc750110371450ea"
+    },
+    "generated-product-sources/c2-stream-phase-05b.c": {
+      "bytes": 58,
+      "sha256": "93f8d5f6f1fa208457de7e6d5e0914def72a724a06e8b39b646c50ef0b992375"
+    },
+    "generated-product-sources/c2-stream-phase-06a.c": {
+      "bytes": 58,
+      "sha256": "59d5e60b9844ffe11ae489a6b234eba08078145dee67b5165985e022a0b7ac57"
+    },
+    "generated-product-sources/c2-stream-phase-06b.c": {
+      "bytes": 58,
+      "sha256": "1491302046f8d90ecfc55e5302c160ab9d3818d67a13250281693d9566ff3e07"
+    },
+    "generated-product-sources/c2-stream-v2-decoder.c": {
+      "bytes": 27376,
+      "sha256": "ad3549245c562c17ba07af5900eecdef4254d81872de49933c33d8fcf0e9fe30"
+    },
+    "generated-product-sources/c2-stream-v2-phase-07.c": {
+      "bytes": 63,
+      "sha256": "d8f1bcb0ab4ecaa16eb9e264d93b52f654252fded7d34604bf42702929c88e09"
+    },
+    "generated-product-sources/c2-stream-v2-phase-08.c": {
+      "bytes": 63,
+      "sha256": "368887762d51ecd1d57e7ecbbedeac3f63a460e40103dce81df86502e07e452d"
+    },
+    "generated-product-sources/c2-stream-v2-phase-09.c": {
+      "bytes": 63,
+      "sha256": "7a86ebdc833548c108109d2ae37a53e025228d06bb3239cc245d833c1a9062d8"
+    },
+    "generated-product-sources/c2-stream-v2-phase-10.c": {
+      "bytes": 64,
+      "sha256": "0eed6be784711c5fc7f1a509308c2d5544c9c10bea7b054983db3b91c8a16647"
+    },
+    "generated-product-sources/c2-stream-v2-phase-11a.c": {
+      "bytes": 64,
+      "sha256": "178f00aa156819966e591b8ed0ea69c0fd0b87ab2d265ba4c7e3941d8a5c05ab"
+    },
+    "generated-product-sources/c2-stream-v2-phase-11b.c": {
+      "bytes": 64,
+      "sha256": "142135a6a2d89de240a84ccd1c8b511a2ba93f5919e2b282324ec8862768e29b"
+    },
+    "generated-product-sources/c2-stream-v2-phase-12.c": {
+      "bytes": 64,
+      "sha256": "88fb0ec64d09e73de4e4eb1ff4dd477de982c8bd7e3d76fd87d1e81ce29e13bb"
+    },
+    "generated-product-sources/c2-stream-v2-phase-13.c": {
+      "bytes": 64,
+      "sha256": "7936273fe746f8b9d9e4a983e010f74f529013f7ccc97f03a1328aa868eb6827"
+    },
+    "generated-product-sources/c2_hot_literal.c": {
+      "bytes": 2405,
+      "sha256": "242d0039c589fcb0bddd09718cda5ab25131afb22315044eb182c87fd35bf16d"
+    },
+    "generated-product-sources/c2_product_runtime.c": {
+      "bytes": 128821,
+      "sha256": "0aac56131d807ba7a8824fdadfd5bd18af32ea00c51e6b2f9a86d5057f214cdd"
+    },
+    "generated-product-sources/vm_runtime_overlay.c": {
+      "bytes": 82632,
+      "sha256": "8a1cb8a486ad347fee9460b7a9b3f771fc37cac819ab3f90d990cac4ffbbcf09"
+    },
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41542,
+      "sha256": "917678d7329b24409178bff92097b11f701736a27c3af5248306d038db9f3ce4"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 608776,
+      "sha256": "a37c9bfe45298b44b41327572b5ac89834723c826b4dfbdfc3f5c90fb18cb6ed"
+    },
+    "lisp65-c2-substitution-linked.prg.link.stderr.txt": {
+      "bytes": 1731,
+      "sha256": "1e270944ac1f1159d5126b9dcca45879517a2ddc758603424fef161adf2d3f93"
+    },
+    "lisp65-c2-substitution-linked.prg.link.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 606972,
+      "sha256": "475961178f12b5165adb2af75fb375294f3e3b8e9a668cdf6e57fd1da8eb3fff"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 192518,
+      "sha256": "b29f894823284bcceb0735f98c97e17e28a42b105402bc9d61d162da502164ca"
+    },
+    "lto-partition-metadata-lisp65-c2-substitution-linked.prg.json": {
+      "bytes": 1450,
+      "sha256": "ea9b912ef69874c3b6e79c048b32698a7128274e7c3bcbc1ed624a5146aa5c12"
+    },
+    "lto-partition-metadata-resident-island-seed.prg.json": {
+      "bytes": 1423,
+      "sha256": "f3b24b61b891f95f5048c7b0e3d096609c7854fa525883beba1e617732ca77ca"
+    },
+    "resident-island-seed.prg": {
+      "bytes": 41542,
+      "sha256": "726bbc156b9a16e5e7040d8e1403c0bb7651e606bd088654e45d8e192f98f8a3"
+    },
+    "resident-island-seed.prg.elf": {
+      "bytes": 608776,
+      "sha256": "8f077566ede1e8c5086756333a5e4d54f9af566de80b0b35765e7a7f35615f90"
+    },
+    "resident-island-seed.prg.link.stderr.txt": {
+      "bytes": 1722,
+      "sha256": "41e5dd0e32768947675f27feb05e29a1f4bb801bb92333b18d8dae2758ad9d89"
+    },
+    "resident-island-seed.prg.link.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "resident-island-seed.prg.lto.o": {
+      "bytes": 606964,
+      "sha256": "75d59942f09518de8bbdd01265f07036d65cfce5b2a3f391909669de296772aa"
+    },
+    "resident-island-seed.prg.map": {
+      "bytes": 188016,
+      "sha256": "aa5c9065c4a0df9847e074d1c66d8970b912708296f475e80e20e970af517c00"
+    },
+    "resident-island.h": {
+      "bytes": 11323,
+      "sha256": "f371f85383f8438e36a5c223dfff4ac9650aa03c1bb2334d92ccb0d7238b2f1f"
+    },
+    "resident-island.prepare.h": {
+      "bytes": 10249,
+      "sha256": "db0f3f7ddc017cf81b90245e07fb15bbb83f98e9d7efe888f535936b5c53e2f8"
+    },
+    "resolved-profile.txt": {
+      "bytes": 10039,
+      "sha256": "cd523c7593f1d2f1abb1df00709b0c5a10ce0c81068d521a10a9a4af73d0f9b0"
+    },
+    "runtime-overlay.prepare-standard.h": {
+      "bytes": 1266,
+      "sha256": "32161f7116b6d2f8b29a62d951e46397374a364595e4cf4e34c4247365dcecdb"
+    },
+    "runtime-overlay.prepare.h": {
+      "bytes": 2267,
+      "sha256": "93c352103924bf543a43a8185b09053097a50d18d1a3ae16ad20c9188150cfb8"
+    },
+    "stage-config.h": {
+      "bytes": 238,
+      "sha256": "ea50a1b69652211801787da394409eeb7cbf3d1d886d92098f5c1e222d5e2ce0"
+    },
+    "v2-product-profile-parity.json": {
+      "bytes": 1762,
+      "sha256": "2d2b3ad38eb71ef493b077c67d15ff85210f69d5a1723b860a858f5bdb2cea2a"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "latency_attempts_consumed": "0/2",
+    "product_closure_links": 1
+  },
+  "format": "lisp65-c2-lite-v6-real-abi-link46-first-red-v1",
+  "promotable": false,
+  "recorded_on": "2026-07-22",
+  "rollback_line": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-46-c2-lite-v6-bcode-ordinal-renderer/lisp65-c2-substitution-linked.prg",
+    "sha256": "6d0d1b691bf0ffd81d333663e9d97e5d83588d08dbce745f86a530fa91079416",
+    "status": "untouched"
+  },
+  "status": "FIRST RED: C2-lite real-ABI Link 46 stopped"
+}

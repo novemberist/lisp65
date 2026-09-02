@@ -1,0 +1,182 @@
+{
+  "format": "lisp65-c2-link55-append-suffix-geometry-wplto-first-red-v1",
+  "recorded_on": "2026-07-23",
+  "status": "first-red-phase04-pack-quantum-leaves-session-family-158-bytes-over-capacity",
+  "authority": {
+    "link54_rollback_product": {
+      "path": "build/c2.2/substitution/product-link-54-c2-lite-v6-phase06a-cutpoint/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "mode": "0444",
+      "sha256": "4cfc797f4ac4fac6cc4fea363ea684ea0dc8c7b395372ebc8bbfe2072fedef07",
+      "status": "untouched"
+    },
+    "link54_structural_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link54-c2-lite-v6-phase06a-cutpoint-structural-receipt.json",
+      "sha256": "1d57762c36832d70f91299e6cc7ea44b72a5634301075983ffd3441ae3a08b34"
+    },
+    "cold_seal_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link55-append-suffix-cold-guard-wplto-first-red.json",
+      "bytes": 7718,
+      "mode": "0444",
+      "sha256": "e4e97d2bae4f6f4125a39078206bf86f9adb77ac8d230c911d03f0a68f2d9c09"
+    },
+    "contract": {
+      "path": "config/c2-append-suffix-read-domain-contract.json",
+      "bytes": 4231,
+      "sha256": "b45091d6c16b1d19b48078a21ac66bb49e8fb5693fd14789b983cb352e36f83a"
+    },
+    "source_gate": {
+      "path": "tools/host-lisp/c2_append_suffix_read_domain_gate.py",
+      "bytes": 20775,
+      "sha256": "919417e77a676fa59ea6ef397a910084b9b084c12731352bc269ae67e8583747"
+    },
+    "wplto_driver": {
+      "path": "tools/host-lisp/c2_lite_v6_link55_append_suffix_geometry_wplto.py",
+      "bytes": 8853,
+      "sha256": "cedee978fade7021489925fdf8e569baa97f261763a41fb33e8d12b2a20117bd"
+    }
+  },
+  "execution": {
+    "wplto_runs": 1,
+    "retries": 0,
+    "product_links": 0,
+    "hardware_runs": 0
+  },
+  "source_contract": {
+    "status": "passed-four-phase-suffix-and-source-domain-contract",
+    "fixture_cases_passed": 11,
+    "negative_mutations_rejected": 13,
+    "phase06a_cutpoint_cases_passed": 6,
+    "phase06a_cutpoint_mutations_rejected": 13,
+    "new_state_bytes": 0,
+    "new_pointers": 0,
+    "handoff": "the phase-04 guard consumes the existing active c2aw transaction identity directly"
+  },
+  "linked_contract": {
+    "status": "passed-linked-four-phase-suffix-domain-closure",
+    "resident_source_read": {
+      "symbol": "c2_stream_shelf_read",
+      "section": ".lisp65_c2_kernal_window.c2_resident",
+      "bytes": 209,
+      "link54_bytes": 209,
+      "delta_bytes": 0
+    },
+    "phase04_guard": {
+      "symbol": "c2_append_source_domain_guard",
+      "section": ".lisp65_rt_c2d_04",
+      "bytes": 300,
+      "phase04_call_edges": 1
+    },
+    "suffix_phase_bytes": {
+      "06a": 1504,
+      "06b": 992,
+      "07": 1088,
+      "08": 1485
+    },
+    "all_suffix_slices_within_1792": true,
+    "phase_scratch_bytes": 304,
+    "new_state_objects": 0
+  },
+  "geometry": {
+    "append_entries": {
+      "baseline_bytes": 1771,
+      "candidate_bytes": 1771,
+      "delta_bytes": 0,
+      "packed_bytes": 1792,
+      "slice_cap_bytes": 1792,
+      "status": "restored-exactly"
+    },
+    "append_header": {
+      "baseline_bytes": 629,
+      "candidate_bytes": 629,
+      "delta_bytes": 0,
+      "packed_bytes": 768,
+      "slice_cap_bytes": 1792,
+      "status": "restored-exactly"
+    },
+    "phase04": {
+      "baseline_bytes": 1077,
+      "candidate_phase_body_bytes": 1104,
+      "guard_bytes": 300,
+      "candidate_section_bytes": 1404,
+      "slice_cap_bytes": 1792,
+      "slice_headroom_bytes": 388,
+      "baseline_packed_bytes": 1280,
+      "candidate_packed_bytes": 1536,
+      "packed_delta_bytes": 256,
+      "status": "slice-cap-green-pack-quantum-red"
+    },
+    "resident_window": {
+      "baseline_bytes": 7168,
+      "candidate_bytes": 7168,
+      "delta_bytes": 0,
+      "e000_headroom_bytes": 58,
+      "required_floor_bytes": 54,
+      "status": "objective-met"
+    },
+    "session_family": {
+      "baseline_bytes": 65438,
+      "candidate_projected_bytes": 65694,
+      "capacity_bytes": 65536,
+      "delta_bytes": 256,
+      "over_capacity_bytes": 158,
+      "pack_quantum_bytes": 256,
+      "status": "first-red"
+    }
+  },
+  "first_red": {
+    "tool_diagnostic": "slice first-class-buffer-alloc exceeds the L65R-v1 64-KB window",
+    "interpretation": "first-class-buffer-alloc is the first record that no longer fits the cumulative bank; it is not itself an over-cap slice. The sole measured aggregate delta is phase04's 1280-to-1536 quantum transition.",
+    "required_recovery_bytes": 158,
+    "available_proven_mechanism": "one co-residence fusion that removes one 256-byte quantum would restore 98 bytes of Session-family reserve",
+    "unchanged_constraints": {
+      "slice_cap_bytes": 1792,
+      "resident_window_delta_bytes": 0,
+      "e000_floor_bytes": 54
+    }
+  },
+  "truth_artifacts": {
+    "candidate_product": {
+      "path": "build/c2.2/substitution/link55-append-suffix-geometry-wplto/lisp65-c2-substitution-linked.prg",
+      "bytes": 41542,
+      "mode": "0444",
+      "sha256": "7cb8e469feefd7fa9bce974422133c3e4a7192b6f3b25757afe5a2d510907067",
+      "status": "WPLTO-only-not-a-product-Link55"
+    },
+    "candidate_elf": {
+      "path": "build/c2.2/substitution/link55-append-suffix-geometry-wplto/lisp65-c2-substitution-linked.prg.elf",
+      "bytes": 612356,
+      "mode": "0444",
+      "sha256": "e9c7abcd8b374006a0107d37a453ee835c0225ffa1f33b0f828d77f99b0601e0"
+    },
+    "candidate_map": {
+      "path": "build/c2.2/substitution/link55-append-suffix-geometry-wplto/lisp65-c2-substitution-linked.prg.map",
+      "bytes": 197016,
+      "mode": "0444",
+      "sha256": "a916854266f322032a976609228749d1d8aaf5e2b67502303533e66c6c18af55"
+    },
+    "candidate_lto_object": {
+      "path": "build/c2.2/substitution/link55-append-suffix-geometry-wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "bytes": 610472,
+      "mode": "0444",
+      "sha256": "954dbe43683205572b832410ef98ced4fb0205c90e413b36dd73c49389ba7c2c"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/link55-append-suffix-geometry-wplto/resolved-profile.txt",
+      "bytes": 11135,
+      "mode": "0444",
+      "sha256": "866273f4cddbec58d5082d9ec2d64fe2171f477da44070a6206c23bdd817d9f2"
+    }
+  },
+  "unreached": [
+    "complete Session-family package",
+    "remaining final WPLTO capacity qualification",
+    "product Link 55",
+    "hardware double run"
+  ],
+  "counters": {
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  },
+  "next_gate": "Return to Class-C review with the measured 158-byte Session aggregate deficit; no retry was attempted."
+}

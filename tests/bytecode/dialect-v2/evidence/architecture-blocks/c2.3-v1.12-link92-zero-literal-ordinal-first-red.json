@@ -1,0 +1,83 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-zero-literal-ordinal-first-red-v1",
+  "observed_on": "2026-08-07",
+  "status": "FIRST RED-attributed-prelink-zero-literal-witness-ordinal-drift",
+  "error": "canonical zero-literal witness drift: local ordinal 5, historical checker expected 6",
+  "mechanism": {
+    "cause": "The zero-literal gate derives %lcc-consp from the active six-image product, but its manifest boundary additionally hard-codes historical lcc local ordinal 6. The accepted v1.11 locality carrier and its promoted v1.12 carrier place the same named zero-literal 38-byte function at local ordinal 5. The semantic witness is intact; only the historical ordinal pin is stale.",
+    "failed_boundary": "fresh replacement-gate closure inside the first Link-92 product-card attempt, before a completed WPLTO product, ELF or map",
+    "product_semantics_implicated": false,
+    "candidate_fix": "Bind the witness by its unique semantic identity (%lcc-consp, lcc image, zero literals, 38-byte code) and derive its local/global ordinal and row from the active emitted manifest. Add loud mutations for a hard-coded historical ordinal and for each semantic identity field."
+  },
+  "witness": {
+    "image": "lcc",
+    "name": "%lcc-consp",
+    "historical_local_ordinal": 6,
+    "promoted_local_ordinal": 5,
+    "promoted_global_ordinal": 651,
+    "literal_count": 0,
+    "code_length": 38,
+    "row_hex": "0500bb9526006c090100",
+    "entry_count": 748,
+    "resolution_limit": 2913,
+    "image_entry_counts": [386, 182, 32, 39, 7, 102]
+  },
+  "carrier_history": {
+    "v1.10": {
+      "manifest": "build/post-promotion/v110-performance/compiler-carrier/lcc.manifest.json",
+      "sha256": "62133c09539596ad184a9aefbb0d6fa7a5001c1d8ca50407e1a352109d288970",
+      "entries": 111,
+      "witness_local_ordinal": 6
+    },
+    "accepted_v1.11": {
+      "manifest": "build/post-promotion/v111/candidate/carrier/lcc.manifest.json",
+      "sha256": "d6a8ac2d3dfddcd8866e1eec640733dc3a317ea7a870e632b7b51e52c87ffd3d",
+      "entries": 102,
+      "witness_local_ordinal": 5
+    },
+    "promoted_v1.12": {
+      "manifest": "build/post-promotion/v112/compiler/lcc.manifest.json",
+      "sha256": "578313342dffab332d37e824901b80f6fa243ad665bf1b6a2d6a16d2217e6509",
+      "entries": 102,
+      "witness_local_ordinal": 5
+    }
+  },
+  "execution_accounting": {
+    "product_card_attempts": 1,
+    "historical_driver_whole_program_closure_link_accounting": 1,
+    "internal_product_closure_links": 0,
+    "completed_product": false,
+    "completed_wplto_maps": 0,
+    "linked_elf_created": false,
+    "linked_map_created": false,
+    "media_created": false,
+    "hardware_runs": 0
+  },
+  "authorities": {
+    "gate": {
+      "path": "tools/host-lisp/c2_zero_literal_execution_gate.py",
+      "sha256": "654ce2e77fad42859fb043659d2b3a66667989ac8766aa5db51077f845c6ed26"
+    },
+    "internal_receipt": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r2/receipts/wplto-internal.json",
+      "sha256": "75b563ec81f7e1fc586047aae7fc2f9328c73366391be40fdd7c8c3f5efaaa21"
+    },
+    "base_result": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r2/receipts/wplto-base-result.json",
+      "sha256": "8347084bb3deaf269ac4df0c9b21a652e4b99d679bea247b8ca67cd1e965a155"
+    },
+    "qualification": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r2/receipts/wplto-qualification.json",
+      "sha256": "ebe78e182e714dfae2da944437f655d1f5bc6a5c69e2c365b71fe4ebfeabdc22"
+    }
+  },
+  "disposition": {
+    "retry_run": false,
+    "gate_changed": false,
+    "phase_c": "blocked-pending-owner-disposition",
+    "artifact_replay_available": false,
+    "reason": "No linked ELF or map exists to replay. Continuing requires a checker correction followed by an explicitly authorized replacement product card.",
+    "recommendation": "Authorize the Class-A semantic-witness rebind plus one replacement Link-92 product-card attempt; do not change product freight, geometry or scope."
+  },
+  "claim_limit": "Attributed prelink checker First Red only. No completed WPLTO product, geometry, media, device, Link-92, Halt-1 or release claim."
+}

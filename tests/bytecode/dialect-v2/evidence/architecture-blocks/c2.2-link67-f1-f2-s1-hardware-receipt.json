@@ -1,0 +1,354 @@
+{
+  "authority": {
+    "contract": {
+      "bytes": 5039,
+      "path": "config/c2.2-s1-freight-session.json",
+      "sha256": "f4b7ad2a1ba281bf6e9123aa5f8374a75a2b81a6204eb4711575989e325e2024"
+    },
+    "deployment": {
+      "bytes": 4820,
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/deployment.json",
+      "sha256": "5507b8adadb1ddce969c1c889c73a616e55a3e9417b0e68a48ef7cad78b10fdb"
+    },
+    "driver": {
+      "bytes": 23425,
+      "path": "tools/host-lisp/c2_phase_f_s1_link67.py",
+      "sha256": "84bceae02c322499628f94cecf709348ca306363731e2530e4ab9d20749eb2f3"
+    },
+    "link_receipt": {
+      "bytes": 14151,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link67-f1-f2-structural-receipt.json",
+      "sha256": "de57bcda521e1ca8974a145960063907b5bd342a8289b5b7714030f3a1186eba"
+    },
+    "manifest": {
+      "bytes": 353447,
+      "path": "build/post-promotion/link67-f1-f2/canonical-product-manifest.json",
+      "sha256": "8723b74406e810efaba7782f61fc795d7b147b854419ccb3664c0a8c6c78978e"
+    },
+    "observations": {
+      "bytes": 8957,
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/observed-rows.json",
+      "sha256": "3a1a072d5ead8f9c7360db08cd24e46837155e012bc8637285ce21207f2212c0"
+    },
+    "preparation_receipt": {
+      "bytes": 10449,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-f4-s1-freight-session-preparation-receipt.json",
+      "sha256": "99fec25542cf3c42e3d6df9da8c3f0c0ed5ddb7a8e28db506f04ae611e7e7eaa"
+    }
+  },
+  "claim_limit": "Claims only the twelve reviewed S1 rows on the bound Link-67 candidate and recorded device/tool identity. It does not claim acceptance, promotion, release, F3, while, catch/throw or C2.3.",
+  "device": {
+    "core_identity": {
+      "bytes": 4,
+      "hex": "6b4cb203",
+      "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/device-core-id.bin",
+      "sha256": "bd075eada684d364ddb275c939b000db0fddec2bd491a0f8628b280e9026cb53"
+    },
+    "hardware_sessions": 1,
+    "m65_tool": {
+      "bytes": 286728,
+      "path": "tools/m65tools/m65",
+      "sha256": "158c932c07a82771704c86e8ee79700c992e150fe0cd64b2ba99b10071233bc4"
+    }
+  },
+  "elf": {
+    "bytes": 619904,
+    "path": "build/post-promotion/link67-f1-f2/final/lisp65-c2-substitution-linked.prg.elf",
+    "role": "linked-product-elf",
+    "sha256": "25e563ba41283fb1ce21624a84f618b2337f889510dee19261509dc29e465f32"
+  },
+  "execution_accounting": {
+    "hardware_retries": 0,
+    "hardware_sessions": 1,
+    "product_links": 1
+  },
+  "format": "lisp65-c2.2-link67-f1-f2-s1-hardware-receipt-v1",
+  "product": {
+    "address": "0x00002001",
+    "bytes": 41566,
+    "path": "build/post-promotion/link67-f1-f2/final/lisp65-c2-substitution-linked.prg",
+    "role": "c2-resident-prg",
+    "sha256": "1b6fb1a524a71a63489848531b30e1d399b871ed5b863c93be7232f3362e44f3"
+  },
+  "recorded_on": "2026-07-27",
+  "rows": [
+    {
+      "form": "(list(peek 255 132)(peek 255 131)(peek 255 132))",
+      "id": "boot-watch",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-boot-watch-late.txt",
+        "sha256": "783e95855a3eb09bce4995e23b4e0bafc8c597aecbf9431a98136cb9be0ef7f6"
+      },
+      "status": "passed",
+      "timing": {
+        "frames": 939,
+        "limit_frames": 1500,
+        "nominal_milliseconds": 18780,
+        "value_string": "939f/18780ms<=1500f"
+      },
+      "visible_result": [
+        "(3 171 3)"
+      ]
+    },
+    {
+      "form": "(defun %s1n(a b)(cons a b))",
+      "id": "f1-define-fixed",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-f1-define-fixed.txt",
+        "sha256": "9818f9638424a72dcf437f095563f7b4ccd65b07f47dcaf74d950865b509faa2"
+      },
+      "status": "passed",
+      "timing": null,
+      "visible_result": [
+        "%s1n"
+      ]
+    },
+    {
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%s1n 7 8)))))(list r a(peek 215 250))))",
+      "id": "f1-nary-cold",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-f1-nary-cold.txt",
+        "sha256": "3706006baaa05428ee1425c9c36babf0729c574a33ae185db80b1f6787952932"
+      },
+      "status": "passed",
+      "timing": {
+        "end": 168,
+        "frames": 1,
+        "limit_frames": 16,
+        "nominal_milliseconds": 20,
+        "start": 167,
+        "value_string": "1f/20ms<=16f"
+      },
+      "visible_result": [
+        "((7 . 8) 167 168)"
+      ]
+    },
+    {
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%s1n 7 8)))))(list r a(peek 215 250))))",
+      "id": "f1-nary-warm",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-f1-nary-warm.txt",
+        "sha256": "3c800d06d05eef05ac78fec0f22e834a86834c8b36fc3419484c84b4df3d7d45"
+      },
+      "status": "passed",
+      "timing": {
+        "end": 122,
+        "frames": 0,
+        "limit_frames": 10,
+        "nominal_milliseconds": 0,
+        "start": 122,
+        "value_string": "0f/0ms<=10f"
+      },
+      "visible_result": [
+        "((7 . 8) 122 122)"
+      ]
+    },
+    {
+      "form": "(defun %s1z()(quote t))",
+      "id": "nullary-define-regression",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-nullary-define-regression.txt",
+        "sha256": "16ff11ff5e7ae28a0c687df9980a43474a7a98253ca9223eb729eb0eacf3df66"
+      },
+      "status": "passed",
+      "timing": null,
+      "visible_result": [
+        "%s1z"
+      ]
+    },
+    {
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%s1z)))))(list r a(peek 215 250))))",
+      "id": "nullary-cold-regression",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-nullary-cold-regression.txt",
+        "sha256": "6a4825196541bdf33f585d5d9ecb44c1c14546f1c3f9a4af2cf25a08378e942d"
+      },
+      "status": "passed",
+      "timing": {
+        "end": 230,
+        "frames": 0,
+        "limit_frames": 16,
+        "nominal_milliseconds": 0,
+        "start": 230,
+        "value_string": "0f/0ms<=16f"
+      },
+      "visible_result": [
+        "(t 230 230)"
+      ]
+    },
+    {
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%s1z)))))(list r a(peek 215 250))))",
+      "id": "nullary-warm-regression",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-nullary-warm-regression.txt",
+        "sha256": "8a2012cfcf107989a803b3053e02a7ceac5d523ca1ec9c80bc700146c7fd7e9c"
+      },
+      "status": "passed",
+      "timing": {
+        "end": 107,
+        "frames": 0,
+        "limit_frames": 10,
+        "nominal_milliseconds": 0,
+        "start": 107,
+        "value_string": "0f/0ms<=10f"
+      },
+      "visible_result": [
+        "(t 107 107)"
+      ]
+    },
+    {
+      "form": "(list(logand -1 42)(logior -43 1)(logxor -43 1)(ash -84 -1)(ash 8191 1))",
+      "id": "f2-bitops-positive",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-f2-bitops-positive.txt",
+        "sha256": "8fa8072c6b019c952ba355a450b664aa79298a192c0552617b114138b522f946"
+      },
+      "status": "passed",
+      "timing": null,
+      "visible_result": [
+        "(42 -43 -44 -42 16382)"
+      ]
+    },
+    {
+      "form": "(logand(quote x)1)",
+      "id": "f2-bitops-type-negative",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-f2-bitops-type-negative.txt",
+        "sha256": "105c4fd2fde43be609910c2e1f8e2ad24076cc68a17278a6b53bf5f24fbe5633"
+      },
+      "status": "passed",
+      "timing": null,
+      "visible_result": [
+        "*** vm: type error"
+      ]
+    },
+    {
+      "form": "(+ 1 2)",
+      "id": "post-error-repl",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-post-error-repl.txt",
+        "sha256": "dcc4b6cf74087cca86b2e2827022a2bd92fdc8ccb8865bc37ed6005aad3329ca"
+      },
+      "status": "passed",
+      "timing": null,
+      "visible_result": [
+        "3"
+      ]
+    },
+    {
+      "E000": {
+        "contract_live_cells": [
+          "0xff83",
+          "0xff84",
+          "0xff86"
+        ],
+        "observed_differences": [
+          {
+            "address": "0xff83",
+            "after": "0xa5",
+            "before": "0x5b"
+          },
+          {
+            "address": "0xff84",
+            "after": "0x59",
+            "before": "0x1c"
+          }
+        ],
+        "preserved_bytes": 8190,
+        "total_bytes": 8192
+      },
+      "authority": {
+        "adjudicator": {
+          "bytes": 3489,
+          "path": "tools/host-lisp/c2_phase_f_s1_freezer_adjudicate.py",
+          "sha256": "f6cb86a8415479a295f231622bf77d9041a36583fe797325c930d553a82b18e6"
+        },
+        "volatile_cell_contract": {
+          "bytes": 4715,
+          "path": "config/c2-c1-freezer-cutpoint-contract.json",
+          "sha256": "ec310bbfa00da6e05dfb268f350f855046050f11b0c220cad42a10fec9f4d831"
+        }
+      },
+      "id": "idle-freezer-roundtrip",
+      "identity_after": {
+        "bank2": {
+          "bytes": 65536,
+          "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/post-freezer-bank2.bin",
+          "sha256": "aad62a10b82c0b6424d91742dbf116af8749d0613e62bef6c35400199237742a"
+        },
+        "bank3": {
+          "bytes": 65536,
+          "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/post-freezer-bank3.bin",
+          "sha256": "5709b9166a1def287dce1fec1a5f63ecfe1ba852868d3f609401c670f3b74ac7"
+        },
+        "bank5": {
+          "bytes": 65536,
+          "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/post-freezer-bank5.bin",
+          "sha256": "374b15fe4c15911896d29637f66f6665fa0b171c7299660fad5f8070591dfccd"
+        },
+        "e000": {
+          "bytes": 8192,
+          "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/post-freezer-e000.bin",
+          "sha256": "748abc8ee1cbc7df516d8283d8ca6b55113ffaff6a6abe9605b1598db6bd9ad5"
+        }
+      },
+      "identity_before": {
+        "bank2": {
+          "bytes": 65536,
+          "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/pre-freezer-bank2.bin",
+          "sha256": "aad62a10b82c0b6424d91742dbf116af8749d0613e62bef6c35400199237742a"
+        },
+        "bank3": {
+          "bytes": 65536,
+          "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/pre-freezer-bank3.bin",
+          "sha256": "5709b9166a1def287dce1fec1a5f63ecfe1ba852868d3f609401c670f3b74ac7"
+        },
+        "bank5": {
+          "bytes": 65536,
+          "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/pre-freezer-bank5.bin",
+          "sha256": "374b15fe4c15911896d29637f66f6665fa0b171c7299660fad5f8070591dfccd"
+        },
+        "e000": {
+          "bytes": 8192,
+          "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/pre-freezer-e000.bin",
+          "sha256": "744e86a595f18018166708a9e8447287ffe0320c723c23c0c7b51e6af9d2490e"
+        }
+      },
+      "operator_action": "physical Freezer; return with F3",
+      "status": "passed"
+    },
+    {
+      "form": "(+ 4 5)",
+      "id": "post-freezer-repl",
+      "screen": {
+        "bytes": 2241,
+        "path": "build/post-promotion/link67-f1-f2/s1-hardware-attempt2/row-post-freezer-repl.txt",
+        "sha256": "5818968a2858ae4f876e436f559c0b61b422cfab22595c746780cb7e39754ef7"
+      },
+      "status": "passed",
+      "timing": null,
+      "visible_result": [
+        "9"
+      ]
+    }
+  ],
+  "status": "passed-Link67-F1-F2-S1-one-session-hardware",
+  "summary": {
+    "F1_nary_direct_call_on_metal": "passed",
+    "F2_bitops_on_metal": "passed",
+    "F3": "parked-not-in-product",
+    "Freezer": "passed-F3-return-with-byteidentical-identities",
+    "mutations_rejected_before_hardware": 10,
+    "rows_passed": 12
+  }
+}

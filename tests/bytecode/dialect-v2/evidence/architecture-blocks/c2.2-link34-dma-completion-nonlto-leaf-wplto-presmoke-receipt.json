@@ -1,0 +1,82 @@
+{
+  "authority": {
+    "c_source": {
+      "bytes": 60539,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "ece063fc8f47c14196755f11ba22c1d14d8687bb4754df21ae51d25aaeabc8a7"
+    },
+    "contract": {
+      "bytes": 4087,
+      "path": "config/c2-runtime-overlay-dma-completion-contract.json",
+      "sha256": "7fa45c183fa470114d0d91d8dce34deb7bb7e75d7f94aa6f7d5ebc148245fc03"
+    },
+    "contract_document": {
+      "bytes": 5251,
+      "path": "docs/planning/c2.2-runtime-overlay-dma-completion-contract.md",
+      "sha256": "07db0888da14a63b6176a60dd0c4aba3a899138ff59c87165d8ff070703bd3a8"
+    },
+    "mutation_matrix": {
+      "barrier-call-removed": "rejected",
+      "chain-removed": "rejected",
+      "fill-removed": "rejected",
+      "interrupt-mask-removed": "rejected",
+      "interrupt-restore-removed": "rejected",
+      "marker-address-wrong": "rejected",
+      "marker-reset-removed": "rejected",
+      "poll-branch-removed": "rejected",
+      "poll-value-wrong": "rejected"
+    },
+    "negative_hardware_first_red": {
+      "bytes": 3565,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link34-catalog-verifier-edma-completion-hardware-first-red-diagnosis.json",
+      "sha256": "ec6203f0e11399a32eb765d0268f7a27c31fe0533dce3a8f8fcb722657d82bb0"
+    },
+    "nonlto_leaf_source": {
+      "bytes": 933,
+      "path": "src/rtov_dma_completion.s",
+      "sha256": "7c23f280aaacd833f35a3269a8eed58314d46add4ec408c49f538ca29a0b1bb2"
+    },
+    "source_gate": {
+      "compiler_barrier": "external non-LTO call boundary",
+      "consumer_seams": [
+        "island-source-crc-chunk",
+        "island-carrier-record",
+        "island-carrier-payload",
+        "catalog-directory-crc-chunk",
+        "catalog-header",
+        "record-entry",
+        "verifier-payload",
+        "application-payload",
+        "function-pointer-binding"
+      ],
+      "hardware_barrier": "ordered marker poll inside leaf",
+      "leaf_section": ".text.rtov_dma_submit_wait",
+      "status": "passed-one-nonlto-leaf-nine-consumer-seams"
+    },
+    "superseded_c_wplto_diagnosis": {
+      "bytes": 4147,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-wplto-capacity-first-red-diagnosis.json",
+      "sha256": "440ad3119904635bc5a9878c70b040d511b634e7293358c7de69ad9b7ab33c09"
+    },
+    "superseded_c_wplto_first_red": {
+      "bytes": 2295,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link34-dma-completion-wplto-presmoke-receipt.json",
+      "sha256": "2bda14161179ac63a405f4b3b9564f3fd9f4f64df3d30067e5e61bd4936a497a"
+    }
+  },
+  "diagnostic": {
+    "message": "linked DMA leaf does not bind the one marker/job pair",
+    "type": "GateError"
+  },
+  "format": "lisp65-c2-link34-dma-completion-leaf-first-red-v1",
+  "link34_rollback": {
+    "bytes": 41542,
+    "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+    "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+    "status": "untouched"
+  },
+  "next_gate": "stop; no hardware run and no product link",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: DMA-completion non-LTO leaf WPLTO stopped"
+}

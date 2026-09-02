@@ -1,0 +1,193 @@
+{
+  "bounded_next_probe": {
+    "authorization": "not granted by this diagnosis",
+    "cases": [
+      "123456789 -> 0x29b1",
+      "catalog header with CRC field zeroed, 32 bytes -> 0xf0de",
+      "catalog-verifier, 1156 bytes -> 0x291d",
+      "record-verifier, 1411 bytes -> 0x3d7c",
+      "resident-island-installer, 1287 bytes -> 0xbf4b",
+      "resident-island-image, 1781 bytes -> 0x8009"
+    ],
+    "decision_rule": {
+      "all_crc_match": "The leaf is exonerated on metal; authorize a diagnostic-only stage latch that preserves the inner verifier status before E2f maps it.",
+      "any_crc_mismatch": "Target execution/ABI of the hand-written leaf is the First Red; return with the exact failing length and value before source work."
+    },
+    "kind": "exact-Link-34-leaf hardware conformance probe; no product link",
+    "method": "Load the immutable Link-34 product bytes without entering the product, call the exact linked leaf at 0x222d from a disposable diagnostic stub, and compare A/X against the pinned CRC for the canonical vector and the five exact early-boot inputs."
+  },
+  "claim_hygiene": {
+    "established": "The deployed bytes and Boot-family preload were exact, cleanup was fail-closed, and the final-ELF leaf interpreter matches every actual early-boot payload CRC used before Island publication.",
+    "not_established": "The exact target-side rejection point and root cause remain unknown. Host instruction interpretation is not 45GS02 hardware execution."
+  },
+  "claim_limit": "Read-only binding and diagnosis of one receipt-less Link-34 hardware First Red. It is not hardware acceptance, performance evidence, promotion, authorization for a retry, source fix or successor product link.",
+  "evidence": {
+    "boot_manifest": {
+      "bytes": 8534,
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/runtime-overlays-boot-final.json",
+      "sha256": "315e71132a56ce00e9174686e8157cf495d95a17e5e7bf7649d5b20dd6818574"
+    },
+    "deployed_boot_family": {
+      "bytes": 15605,
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/runtime-overlays-boot-final.bin",
+      "sha256": "cb9f47b8f1c8a924aee4852ee8ba544f1d316211cbd8b2855ee3cf49f778ef19"
+    },
+    "deployment": {
+      "bytes": 2639,
+      "path": "build/c2.2/hardware-presmoke-link34-crc-asm-leaf/deployment.json",
+      "sha256": "0a57744f50ab5d939c1c8ef93c7d671e61ab7e9c45b93455035ab0bc955074e9"
+    },
+    "elf": {
+      "bytes": 565564,
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "cfbd1f7420c5b0a5bbf80408e7ec39c2b6237d35d3e930a1eb2b219ebb9dadf4"
+    },
+    "hardware_captures": [
+      {
+        "bytes": 8192,
+        "path": "build/c2.2/hardware-presmoke-link34-crc-asm-leaf/first-red-low-0000-1fff.bin",
+        "sha256": "46def544a895cf4cc5d044a43dde04bb15f15ab3b79b0678c1844cb55ec04c61"
+      },
+      {
+        "bytes": 256,
+        "path": "build/c2.2/hardware-presmoke-link34-crc-asm-leaf/first-red-fixed-state-bf80-c07f.bin",
+        "sha256": "8e21943864dc4ba12132d5664e4f4c504ec2c4a554d5aee27aa859f7bb00e071"
+      },
+      {
+        "bytes": 15605,
+        "path": "build/c2.2/hardware-presmoke-link34-crc-asm-leaf/first-red-boot-family.bin",
+        "sha256": "cb9f47b8f1c8a924aee4852ee8ba544f1d316211cbd8b2855ee3cf49f778ef19"
+      }
+    ],
+    "product": {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-34-crc-asm-leaf/lisp65-c2-substitution-linked.prg",
+      "sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485"
+    },
+    "runtime_source": {
+      "bytes": 55861,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "2ea6900006b4b92d6292199d478219318db5d01351e7535738840fc929a63065"
+    },
+    "structural_receipt": {
+      "bytes": 172560,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link34-crc-asm-leaf-structural-receipt.json",
+      "sha256": "b4610ac561b576f85bdbb7491bcb0bec79974edeef1a4c691657adf313d67509"
+    },
+    "target_leaf": {
+      "bytes": 1143,
+      "path": "src/rtov_crc_mem.s",
+      "sha256": "6282f6f0f88b81f57f4c4cc85f396ae3d25e5262ba23e650761c48778601b826"
+    }
+  },
+  "format": "lisp65-c2-product-link34-runtime-island-hardware-first-red-diagnosis-v1",
+  "hardware_observation": {
+    "captured_runtime_state": {
+      "rtov_busy": 0,
+      "rtov_call_context": 0,
+      "rtov_call_result_or_install_target": 0,
+      "rtov_family": 1,
+      "rtov_fault": 20,
+      "rtov_island_state": 3,
+      "rtov_loaded_len": 0
+    },
+    "decoded": {
+      "boot_family_after_fail": "byte-identical to deployed Link-34 family",
+      "family": "boot",
+      "island_0x1800_0x1fff": "all zero; fail-closed cleanup passed",
+      "island_state": "failed",
+      "latched_fault": "VM_RUNTIME_OVERLAY_ERR_ISLAND (generic outer mapping)",
+      "window_payload_after_fail": "wiped; loaded length reset to zero"
+    },
+    "user_visible": "red border; E2f runtime island invalid; redeploy"
+  },
+  "host_exact_operational_payload_check": {
+    "abi_zero_page": {
+      "__rc2": 4,
+      "__rc3": 5,
+      "__rc4": 6,
+      "__rc5": 7,
+      "__rc6": 8,
+      "__rc7": 9
+    },
+    "cases": {
+      "catalog-header": {
+        "bytes": 32,
+        "executed_instructions": 2512,
+        "final_elf_interpreter_crc16": 61662,
+        "manifest_crc16": 61662,
+        "portable_reference_crc16": 61662,
+        "status": "passed-host-only-exact-operational-payload"
+      },
+      "catalog-verifier": {
+        "bytes": 1156,
+        "executed_instructions": 88974,
+        "final_elf_interpreter_crc16": 10525,
+        "manifest_crc16": 10525,
+        "portable_reference_crc16": 10525,
+        "status": "passed-host-only-exact-operational-payload"
+      },
+      "record-verifier": {
+        "bytes": 1411,
+        "executed_instructions": 109180,
+        "final_elf_interpreter_crc16": 15740,
+        "manifest_crc16": 15740,
+        "portable_reference_crc16": 15740,
+        "status": "passed-host-only-exact-operational-payload"
+      },
+      "resident-island-image": {
+        "bytes": 1781,
+        "executed_instructions": 137425,
+        "final_elf_interpreter_crc16": 32777,
+        "manifest_crc16": 32777,
+        "portable_reference_crc16": 32777,
+        "status": "passed-host-only-exact-operational-payload"
+      },
+      "resident-island-installer": {
+        "bytes": 1287,
+        "executed_instructions": 98876,
+        "final_elf_interpreter_crc16": 48971,
+        "manifest_crc16": 48971,
+        "portable_reference_crc16": 48971,
+        "status": "passed-host-only-exact-operational-payload"
+      }
+    },
+    "leaf": {
+      "address": 8749,
+      "bytes": 66,
+      "section": ".text",
+      "symbol_type": "Function"
+    }
+  },
+  "localization": {
+    "basis": "The record verifier is the sole writer of RTOV_INSTALL_CONTEXT and the installer is the sole writer of RTOV_INSTALL_TARGET. Neither generic failure cleanup nor the outer E2f mapping clears those globals. Both remain zero, so successful record publication and installer entry were not reached.",
+    "bounded_region": [
+      "catalog-verifier payload CRC or catalog validation",
+      "record-verifier payload CRC or record validation before frame publication"
+    ],
+    "installer_executed": false,
+    "not_reached": [
+      "verifier-frame seal consumption",
+      "DATA_ONLY carrier read/copy",
+      "resident-Island target CRC",
+      "C2 product boot"
+    ]
+  },
+  "next_gate": "Review/authorize the bounded exact-byte hardware CRC conformance probe; no presmoke retry and no product change.",
+  "recorded_on": "2026-07-21",
+  "scope": {
+    "candidate_product_sha256": "bef7708baa12b8e23094c2150a53f5bee529be25b9b9e11d0d68a3191ee6a485",
+    "hardware_retries_after_first_red": 0,
+    "new_product_links_after_first_red": 0,
+    "presmoke_rows": {
+      "boot_to_repl": "first-red-E2f-no-repl",
+      "definition_first_call": "not-run",
+      "freezer_e000_identity": "not-run",
+      "gc_blockread": "not-run",
+      "nested_eval": "not-run",
+      "warm_second_call": "not-run"
+    },
+    "product_source_changes_after_first_red": 0
+  },
+  "status": "first-red-receipt-less-hardware-presmoke-stopped-before-repl"
+}

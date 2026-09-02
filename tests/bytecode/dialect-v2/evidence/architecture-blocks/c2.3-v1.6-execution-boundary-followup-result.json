@@ -1,0 +1,104 @@
+{
+  "claim_limit": "Proves the recovery self-rearm defect independently of the exact Low-RAM causal history. It authorizes no fix, build, medium, resume or additional device contact.",
+  "contact": {
+    "CPU_left_stopped": true,
+    "bytes_read": 121,
+    "kind": "authorized read of original conserved stop",
+    "resets": 0,
+    "resumes": 0,
+    "runs": 0,
+    "stops": 1
+  },
+  "format": "lisp65-c2.3-v1.6-execution-boundary-followup-result-v1",
+  "history_decision": {
+    "commissioned_binary_question_decided": false,
+    "correction": "$ff86 is current episode state, not history; the specified read was therefore insufficient to select the causal path",
+    "missing_instrument": "no byte records an accepted retired-window continuation or the first source-less PC",
+    "trace_equivalent_histories": [
+      {
+        "name": "independent-low-RAM-entry",
+        "steps": [
+          "control enters $0601",
+          "BRK $0601 sets source-less=1",
+          "RTI continues at $0603",
+          "CPY #$00",
+          "BRK $0605",
+          "classifier rejects continuation $0607"
+        ]
+      },
+      {
+        "name": "prior-source-less-then-low-RAM-entry",
+        "retired_window_acceptance": "possible member, not recorded",
+        "steps": [
+          "an earlier source-less episode leaves source-less=1",
+          "control enters $0603",
+          "CPY #$00",
+          "BRK $0605",
+          "classifier rejects continuation $0607"
+        ]
+      }
+    ]
+  },
+  "inputs": {
+    "ELF": {
+      "bytes": 647612,
+      "path": "build/c2.3/v1.6-execution-boundary-backstop-uint8-irq-return-replacement-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c8b74690e682370f14c68bc837cd9642b702df024e71c82753b0b21d678fd10d"
+    },
+    "first_red": {
+      "bytes": 20041,
+      "path": "build/c2.3/v1.6-execution-boundary-first-red/capture.json",
+      "sha256": "334e67a7a4ecd746c381fc38751607c916d35b100390ddba5abdbe20c14c94d4"
+    },
+    "followup": {
+      "bytes": 7114,
+      "path": "build/c2.3/v1.6-execution-boundary-followup-read-20260824/capture.json",
+      "sha256": "84ba73069944f131a2c547a9c788f417b0cbac2b7081163a59754c3c3623aeda"
+    },
+    "preceding_attribution": {
+      "bytes": 4094,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-execution-boundary-first-red-attribution.json",
+      "sha256": "407c7c9968167645f3269040a9575518cc512322c59829a62dfadf9767dd973f"
+    }
+  },
+  "low_RAM_execution": {
+    "Y": "0xbf",
+    "flag_match": "N=1, Z=0, C=1 plus BRK's pushed B bit",
+    "following_instruction": "$0605: BRK",
+    "meaning": "control entered dynamic Low RAM no later than $0603",
+    "proven_instruction": "$0603: CPY #$00",
+    "pushed_P": "0xb1"
+  },
+  "observed": {
+    "IRQ_episode": {
+      "MAP_generation": 1,
+      "break_held": 0,
+      "break_pending": 0,
+      "frame": 1243,
+      "ring_head": 0,
+      "ring_tail": 255,
+      "source_less": 1,
+      "state": 4,
+      "unowned_VIC": 0
+    },
+    "jmp_buf": "53aadececf56c3d0cf003901010904d3005602",
+    "low_RAM_0600_060f": "800000c00000e00000f00000f80000fc",
+    "neutral_target_expected_after_sanitization": "0xb411",
+    "saved___rc18___rc19": "0xc356",
+    "vm_codebuf_and_bookkeeping": "75/75 zero"
+  },
+  "recorded_on": "2026-08-24",
+  "static_product_finding": {
+    "caused_this_exact_0603_transfer": "not proven",
+    "class": "recovery restores the carrier it is meant to contain",
+    "consequence": "Whenever the backstop accepts this stale-jmp_buf member, its recovery deterministically restores $c356 into the live ABI pair. The boundary catches the first dead-window execution but does not make the recovery state safe.",
+    "proof": [
+      "current lisp_toplevel offsets 5/6 contain $c356",
+      "retired_window_resume tail-jumps directly to longjmp(lisp_toplevel)",
+      "longjmp restores offsets 6/5 to __rc19/__rc18",
+      "there is no continuation sanitizer on that recovery edge"
+    ],
+    "required_contract": "Before longjmp on the accepted boundary path, the target continuation must contain no in-generation saved CSR pair; recovery may not restore its triggering carrier."
+  },
+  "status": "PROVEN: BACKSTOP RECOVERY SELF-REARMS STALE CSR; CURRENT HISTORY AMBIGUOUS"
+}

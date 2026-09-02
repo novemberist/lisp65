@@ -1,0 +1,241 @@
+{
+  "artifacts": [
+    {
+      "bytes": 41542,
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg",
+      "sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926"
+    },
+    {
+      "bytes": 607984,
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "fb9449456d5dc7a56d525fc68f70a613ad992e31da9237c21d98a6847629beb0"
+    },
+    {
+      "bytes": 205204,
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "c5b5d5b1fd3e5b2509fe8a3f0207f326d297b60099f0e75bf4eb388569b3b5d9"
+    },
+    {
+      "bytes": 33840,
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/fresh-c2-lite-prelink-gates/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "1b924a1d33a7ce4d56ed4cf02c76db047d75b44adee99d315620d52224a05e7d"
+    },
+    {
+      "bytes": 34403,
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin",
+      "sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    {
+      "bytes": 65438,
+      "path": "build/c2.2/substitution/product-link-44-c2-lite-v6-bank2-target-stage-replay/runtime-overlays-session-final.bin",
+      "sha256": "c389f8aab29fcc313ffce971b7ff4341b03c55a6d24757c1efefb6bc8ccf4a80"
+    },
+    {
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/first-red-undefined-function/low-0000-ffff.bin",
+      "sha256": "2fbe247337622f464c1f8212984492f5ec5429fdf786ece86e3427a3a21c2062"
+    },
+    {
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/first-red-undefined-function/bank2.bin",
+      "sha256": "22807468d2c8f7c2e1e3611f6393540d2c974a5a23862c860b5d8a877abc5808"
+    },
+    {
+      "bytes": 65536,
+      "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/first-red-undefined-function/bank3.bin",
+      "sha256": "3ac1e86d73d8e59fbac074306f21daaa44bf6572c8fdc4fb63510e3a41635184"
+    },
+    {
+      "bytes": 33840,
+      "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/first-red-undefined-function/c2d-v6.bin",
+      "sha256": "ff4e9643e3886d6dc3ae4a7dc26ec3daae105f0f338889708430de28306c2f25"
+    },
+    {
+      "bytes": 2269,
+      "path": "config/c2-hot-refill-hardware-presmoke.json",
+      "sha256": "868e40012cbfdb24b266e4a9239bac5efd45c193cab1efd7ed6275e2603b6186"
+    },
+    {
+      "bytes": 129011,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "7138ed3395030ef5e6140e5b776166bdf022b3cea522fcd66fe09ab4fe2159f0"
+    }
+  ],
+  "budgets": {
+    "completed_latency_measurements": {
+      "after": "0/2",
+      "before": "0/2",
+      "reason": "No valid counter tuple or latency result was produced."
+    },
+    "line_1_product_first_reds": {
+      "after": "2/3",
+      "before": "2/3",
+      "reason": "The written 3-run rule counts a new product-class First Red in line 1.  Line 1 passed; this finding begins line 2."
+    }
+  },
+  "candidate": {
+    "deployment": {
+      "bytes": 3659,
+      "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/deployment.json",
+      "sha256": "b8d1c873f5140b5f332ff923e303f1cceb8a005a63867b71b9a229f083ee0125"
+    },
+    "link": 44,
+    "product_sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926",
+    "structural_receipt": {
+      "bytes": 285685,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link44-c2-lite-v6-bank2-target-stage-replay-structural-receipt.json",
+      "sha256": "f358d14604eac270d78e407dec9ecf43559267b1344d371ee92fb95189504ede"
+    }
+  },
+  "claim_boundary": {
+    "not_proved": [
+      "which symbol or directory lookup produced VM_DIRMISS",
+      "whether the defect is in emit, append, export, lookup or call",
+      "any cold or warm latency value"
+    ],
+    "proved": [
+      "hardware line 1 passed through visible banner and REPL",
+      "the first latency form reported VM_DIRMISS",
+      "both active Chip planes remained byteidentical to Link 44",
+      "the static decoder completed phase 13 with error zero",
+      "C2 was fail-closed after the queued failed forms (READY=0)"
+    ],
+    "reason": "The public error is intentionally generic and the read-only capture was taken after the pre-emitted batch.  Assigning a single sub-cause would exceed the evidence."
+  },
+  "date": "2026-07-22",
+  "execution": {
+    "compiler_runs": 0,
+    "hardware_inputs_after_first_red_batch": 0,
+    "linker_runs": 0,
+    "new_product_bytes": 0,
+    "next_action": "Class-C review.  No product fix, diagnostic link or additional hardware input is authorized by this receipt."
+  },
+  "format": "lisp65-c2-lite-v6-dynamic-top-level-hardware-first-red-v1",
+  "hardware_result": {
+    "line_1_boot_to_repl": {
+      "claim": "Link 44 staged both Chip planes, completed all decoder phases, published READY and entered the REPL on hardware.",
+      "evidence": [
+        {
+          "bytes": 2241,
+          "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/latency/boot_counter.txt",
+          "sha256": "62d3e934b61216977a9dc07ebf8c646c2b46a4a92ccbb6d31d2fc1f28fc0fe68"
+        },
+        {
+          "bytes": 3988,
+          "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/latency/boot_counter.png",
+          "sha256": "9d4e543c6e9591d91cad90f11c8ea64a6062a74c2f84f308cdd411c8cbc3d36b"
+        }
+      ],
+      "observation": "visible Workbench banner and REPL prompt",
+      "status": "passed"
+    },
+    "line_2_boot_counter": {
+      "first_deviation": true,
+      "form": "(list(peek 255 132)(peek 255 131)(peek 255 132))",
+      "observed": "*** vm: undefined function",
+      "status": "first-red",
+      "vm_status_class": "VM_DIRMISS"
+    },
+    "queued_after_first_red": {
+      "evidence": [
+        {
+          "bytes": 2241,
+          "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/latency/definition_setup.txt",
+          "sha256": "5aed5453c8005679f4b515f0d50cd8dfa2a6ab28d9dffa647d9ad3e86c17116c"
+        },
+        {
+          "bytes": 2241,
+          "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/latency/definition_first_call.txt",
+          "sha256": "ff22d79cd4cacfd9111d9f958c9d6f98f165b4593649befe5211edfd0217d7c0"
+        },
+        {
+          "bytes": 2241,
+          "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/latency/warm_second_call.txt",
+          "sha256": "fde20d05c2f21d8636c11aaa39bb726104216a35bfce5bda139980f71e6a845a"
+        }
+      ],
+      "note": "The already queued setup/cold/warm forms also reported VM_DIRMISS.  They are not counted as separate findings, measurements or attempts.",
+      "status": "non-independent-diagnostic-only"
+    }
+  },
+  "read_only_localization": {
+    "bank2": {
+      "active_bytes": 34403,
+      "captured_active_sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac",
+      "different_bytes": 0,
+      "expected_sha256": "5b0fcfca7cb63967e36e603276bbccae8f359086b734fcfb8ad85d1da610a2ac"
+    },
+    "bank3": {
+      "active_bytes": 65438,
+      "captured_active_sha256": "c389f8aab29fcc313ffce971b7ff4341b03c55a6d24757c1efefb6bc8ccf4a80",
+      "different_bytes": 0,
+      "expected_sha256": "c389f8aab29fcc313ffce971b7ff4341b03c55a6d24757c1efefb6bc8ccf4a80"
+    },
+    "conclusion": "The First Red is downstream of successful static Boot/Stage/Publish and upstream or inside dynamic top-level install/call. It is not a Bank-2 or Bank-3 transport/content failure.",
+    "decoder": {
+      "c2d_bytes": 33840,
+      "catalog_crc32": "0x3d6302f3",
+      "entry_count": 588,
+      "error": 0,
+      "finished": 1,
+      "generation": 1,
+      "image_count": 6,
+      "phase": 13,
+      "resolution_count": 2264,
+      "resolution_cursor": 2264,
+      "root_count": 283,
+      "root_cursor": 283,
+      "shelf_bytes": 70897
+    },
+    "live_c2d": {
+      "bytes": 33840,
+      "path": "build/c2.2/hardware-presmoke-link44-bank2-target-stage/first-red-undefined-function/c2d-v6.bin",
+      "sha256": "ff4e9643e3886d6dc3ae4a7dc26ec3daae105f0f338889708430de28306c2f25"
+    },
+    "post_error_state": {
+      "c2_ready_after_queued_forms": 0,
+      "c2_ready_vma": "0x008c",
+      "committed_roots": 283,
+      "committed_roots_vma": "0xc080",
+      "family_generation": 1,
+      "family_generation_vma": "0xc028",
+      "rtov_family": 2,
+      "rtov_family_vma": "0x0079",
+      "rtov_island_state": 2,
+      "rtov_island_state_vma": "0x007a",
+      "vm_status_after_repl_report_reset": 0,
+      "vm_status_vma": "0x005f"
+    }
+  },
+  "status": "first-red-product-semantics-review-required",
+  "surface_validity": {
+    "boot_counter_is_not_an_out_of_contract_harness_form": true,
+    "list": {
+      "authority": {
+        "bytes": 3367,
+        "path": "lib/dialect-v2/lists-core.lisp",
+        "sha256": "d12cb14b4563c5281c0de626bc0b3edb31fc4eafb877ccf175271cad24767c45"
+      },
+      "evidence": "(defun list (&rest xs) is in dialect-v2 stdlib"
+    },
+    "peek": {
+      "binding": "callprim 61",
+      "dialect_contract": {
+        "bytes": 2391,
+        "path": "config/dialect-v2-contract.json",
+        "sha256": "af897ea891f10d5a4e058b319143130b64ad61af8de9f5b468de6bc5e0d9cd28"
+      },
+      "native_registry": {
+        "bytes": 13061,
+        "path": "config/v2-native-function-registry.json",
+        "sha256": "adc85fbb7f84aa9cdf5efbf1b3da502aeb04226134caa871c1a49f7bc47d87d4"
+      },
+      "vm_source": {
+        "bytes": 79113,
+        "path": "src/vm.c",
+        "sha256": "229612ebf6ab30ea3b26a17c91f3efe14e01fa5db8f874c1e49d1c7d4c88ea47"
+      }
+    }
+  },
+  "value_string": "link44=db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926 line1=pass-banner-repl line2=FIRST-RED-VM_DIRMISS bank2=34403/34403-identical bank3=65438/65438-identical decoder=phase13/error0 ready-after-batch=0 line1-budget=2/3 latency=0/2 acceptance=blocked"
+}

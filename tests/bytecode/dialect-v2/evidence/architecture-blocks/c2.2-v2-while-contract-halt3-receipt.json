@@ -1,0 +1,142 @@
+{
+  "authority": {
+    "Link76": {
+      "bytes": 96875,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link76-require-fastpath-irq-ownership-structural-receipt.json",
+      "sha256": "15c69ca336412892e8421619feeeb547431a8dc336ba6322da75bf4b54db3488"
+    },
+    "contract": {
+      "bytes": 5834,
+      "path": "config/c2-while-contract.json",
+      "sha256": "d93bbf59c7d68574ccb3175ee3416cc65a7906b4a12a544674ff7ed01315dde7"
+    },
+    "eval_c": {
+      "bytes": 96722,
+      "path": "src/eval.c",
+      "sha256": "ddf08e098564a4cc62f15b4aad78d3d3d863ce1f6aec959707a40321b317e392"
+    },
+    "gate": {
+      "bytes": 13580,
+      "path": "tools/host-lisp/c2_while_contract_halt3.py",
+      "sha256": "f00b8cf7d2b4feff27373e8d6abeb41f1a2a6802b9fa6cdbb5448ce2c326f285"
+    },
+    "host_compiler": {
+      "bytes": 48071,
+      "path": "tools/host-lisp/bytecode_p0_compiler.py",
+      "sha256": "f67798900ab7bca76cec2daaa3356ae5a4ad6d1f017947429d73a620cb548dce"
+    },
+    "lcc": {
+      "bytes": 34673,
+      "path": "lib/lcc.lisp",
+      "sha256": "a246593450d38dc78b5337bc422af06259d43220366948bdfef84298fdc8b910"
+    },
+    "lcc_profile": {
+      "bytes": 11800,
+      "path": "lib/dialect-v2/lcc-profile.lisp",
+      "sha256": "d10d817d14a016c84e01b8ab96c0f7fd880bf1f0b109f525171ef7737ac2082a"
+    },
+    "migration_contract": {
+      "bytes": 32055,
+      "path": "config/dialect-migration-contract.json",
+      "sha256": "667a06dd7d7498398c2016f55f1ed5938eead953f006a40c2e60b85ab78c64b0"
+    },
+    "native_compiler": {
+      "bytes": 39110,
+      "path": "src/compile.c",
+      "sha256": "9f9c8d31b6753a0dbd9508d39ac13af100e3d63d49b6636f7f41f3990aa5a7b5"
+    },
+    "paper_decision": {
+      "bytes": 4350,
+      "path": "config/c2-control-flow-repair-decision.json",
+      "sha256": "370249d1d7e0cd4fdf5a08d59632f70fe20bde55763459f10745ec3398164cf0"
+    },
+    "paper_receipt": {
+      "bytes": 2787,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-f5-while-catch-throw-design-probe-receipt.json",
+      "sha256": "2f30c318aded0f20485a7e28a2fe4ea708040ce449d2f94a33dd091af563f5a1"
+    },
+    "review_note": {
+      "bytes": 4241,
+      "path": "docs/planning/c2.2-v2-while-contract-halt3.md",
+      "sha256": "8741f276d609f0c20d97e5b133b4038d6eb4a1eac6066f8ae6358d59100b9a86"
+    },
+    "surface": {
+      "bytes": 12270,
+      "path": "config/dialect-v2-surface.json",
+      "sha256": "887b06ee6dc72759428d74190f4eea54394e44376fe1b6fae68f80ac0fccaaeb"
+    },
+    "vm_c": {
+      "bytes": 83869,
+      "path": "src/vm.c",
+      "sha256": "e357a571a9297f8cf13923f844f829a658c9e86006a7852e00bbc4660d78c4b6"
+    },
+    "vm_h": {
+      "bytes": 6949,
+      "path": "src/vm.h",
+      "sha256": "49f390e8fa714c89030ea4f551e7985bdfc214229a34ca4674cfd7df1166675f"
+    }
+  },
+  "claim_limit": "Contract and real preimplementation authority only. No while implementation, capacity, product-link or hardware claim.",
+  "contract": {
+    "execution_seams": [
+      "native_treewalk",
+      "native_bytecode_compiler",
+      "host_bytecode_compiler",
+      "device_lcc",
+      "vm"
+    ],
+    "geometry_renegotiation": false,
+    "new_runtime_state": 0,
+    "new_vm_opcodes": 0,
+    "parity_views": [
+      "native treewalk",
+      "native C compiler plus target VM",
+      "host compiler plus host VM",
+      "device LCC carrier plus target VM"
+    ],
+    "rel8_domain": [
+      -128,
+      127
+    ],
+    "result": "NIL after normal termination",
+    "status": "passed-complete-while-product-contract",
+    "syntax": "(while test form*)"
+  },
+  "format": "lisp65-c2.2-v2-while-contract-halt3-receipt-v1",
+  "hardware_runs": 0,
+  "implementation_authorized": false,
+  "mutations_rejected": {
+    "body-value-leak": "while surface/semantic drift",
+    "catch-smuggled-in": "while exclusion boundary drift",
+    "geometry-negotiable": "while terminal-geometry policy drift",
+    "hardware-preauthorized": "while Halt-3 scope drift",
+    "implementation-preauthorized": "while Halt-3 scope drift",
+    "last-value-result": "while surface/semantic drift",
+    "missing-device-lcc": "while execution-view or binding proof drift",
+    "new-opcode": "while lowering/runtime-state drift",
+    "nil-only-truth": "while surface/semantic drift",
+    "non-local-misclassification": "while surface/semantic drift",
+    "rel8-minus-128-rejected": "while lowering/runtime-state drift",
+    "test-optional": "while surface/semantic drift"
+  },
+  "owner_decision": "Accept or reject the complete V2 while contract. A yes authorizes implementation and one WPLTO, not a link.",
+  "preimplementation_evidence": {
+    "bound_carrier_gate": "passed-source-to-actual-product-bound-artifact-parity",
+    "device_lcc_witness": "native do-family constant-stack loop",
+    "existing_vm_branch_opcodes": [
+      28,
+      29
+    ],
+    "host_compiler_witness": "dotimes/dolist rel8 lowering",
+    "native_compiler_witness": "dotimes/dolist rel8 lowering",
+    "native_treewalk_witness": "dotimes/dolist flat C loop plus empty-body poll",
+    "paper_decision": "while",
+    "required_lcc_boundary_correction": "-128 exact meet is currently rejected",
+    "status": "passed-real-four-view-preimplementation-baseline",
+    "while_currently_absent": true
+  },
+  "product_links": 0,
+  "promotable": false,
+  "recorded_on": "2026-07-28",
+  "status": "passed-awaiting-owner-halt3-review"
+}

@@ -1,0 +1,96 @@
+{
+  "format": "lisp65-c2-product-substitution-kernal-window-first-red-receipt-v1",
+  "recorded_on": "2026-07-19",
+  "attempt": {
+    "authorization": "Fifth substitution link: one real link, complete named substitution balance, one-truth closure and structural KERNAL-freedom gate; stop on first red",
+    "pipeline_stage_reached": "resident-island seed link",
+    "status": "failed-not-promoted",
+    "first_red_policy": "honored",
+    "automatic_further_attempt_allowed": false,
+    "product_prg_emitted": false,
+    "product_elf_emitted": false,
+    "runtime_family_images_emitted": 0,
+    "one_truth_gate": "not-reached",
+    "kernal_freedom_gate": "not-reached",
+    "substitution_balance": "not-claimable",
+    "hardware": "not-run"
+  },
+  "first_red": {
+    "gate": "combined resident-island seed layout and runtime-slice cap",
+    "diagnostics": [
+      "C2 decoder phase 00 is 1865 bytes, exceeding the unchanged 1792-byte stack-safe slice cap by 73 bytes",
+      "the inserted fixed-VMA E000 window advances the shared linker location/load-address state, placing .basic_header at E000",
+      "overlay LMAs remain linear and cross E000: phase 01 ends at E078, phase 02a starts at E079, and later phases continue through and beyond the owned window",
+      "the named E000 sections therefore overlap .basic_header and multiple C2 runtime-slice load images",
+      "the low-resident map-switch and handoff orphan sections were also assigned inside the E000 output range instead of their intended low-resident load domain"
+    ],
+    "finding": "The KERNAL opportunity is large enough and the selected C2 residents fit it, but the current linker model has only one linear load-address stream. Adding the second CPU VMA without an independent load-image domain makes the owned window collide with the PRG header and runtime-overlay LMAs. Independently, the new call placement expands decoder phase 00 above its unchanged cap.",
+    "invalidated_assumption": "A second MEMORY region plus INSERT AFTER .noinit is sufficient to make the E000 slab an independent product load image while preserving the existing overlay LMA stream and slice sizes.",
+    "next_action": "Return for architecture/layout review. Do not move the header, loosen the 1792-byte cap, shave phase 00, relink, pack, or claim either structural closure gate without a new authorization."
+  },
+  "measured_partial_link": {
+    "map": {
+      "path": "build/c2.2/substitution/product-link-5/resident-island-seed.prg.map",
+      "bytes": 109916,
+      "sha256": "6227fd1ffb30b671113bb0215a3f20661fbb7a226f118a4cee52c0b6ab6ecb1f"
+    },
+    "resolved_profile": {
+      "path": "build/c2.2/substitution/product-link-5/resolved-profile.txt",
+      "bytes": 3831,
+      "sha256": "fedb7b7e6a885373852f9921a9c6698b534363f1b07b6e0bfb1a52936c7fbe50"
+    },
+    "linker": {
+      "path": "build/c2.2/substitution/product-link-5/c2-substitution.ld",
+      "bytes": 36416,
+      "sha256": "bfbe4b6081383f4961fc5f5132fd81434e43914d195938e5fe684fb608fb8996"
+    },
+    "runtime_slice_first_red": {
+      "name": "c2-decode-00",
+      "bytes": 1865,
+      "limit_bytes": 1792,
+      "over_by_bytes": 73
+    },
+    "owned_window": {
+      "typed_queue_driver_bytes": 31,
+      "frame_source_bytes": 9,
+      "irq_handler_bytes": 45,
+      "nmi_and_freezer_return_bytes": 9,
+      "map_switch_and_guards_window_bytes": 14,
+      "post_startup_output_seam_bytes": 4,
+      "relocated_c2_resident_bytes": 4258,
+      "state_bytes": 16,
+      "vectors_bytes": 6,
+      "misplaced_low_map_switch_bytes": 13,
+      "misplaced_low_handoff_bytes": 335,
+      "low_resident_dma_state_bytes": 20,
+      "relocated_c2_residents_cover_fixed_3639_byte_deficit": true,
+      "provisional_contract_margin_if_layout_were_disjoint_bytes": 4051,
+      "provisional_actual_unoccupied_window_bytes": 3452,
+      "capacity_claim_status": "not-claimable-because-link-red"
+    },
+    "representative_collisions": [
+      {"left": ".basic_header", "left_range": "e000-e015", "right": ".lisp65_c2_kernal_window.typed_queue_driver", "right_range": "e000-e01e"},
+      {"left": ".lisp65_rt_c2d_01 LMA", "left_range": "d9de-e078", "right": ".lisp65_c2_kernal_window.typed_queue_driver", "right_range": "e000-e01e"},
+      {"left": ".lisp65_rt_c2d_02a LMA", "left_range": "e079-e472", "right": ".lisp65_c2_kernal_window.c2_resident", "right_range": "e086-f127"},
+      {"left": ".lisp65_rt_c2d_06b LMA", "left_range": "fd51-1005e", "right": ".lisp65_c2_kernal_window.state", "right_range": "ff80-ff8f"}
+    ]
+  },
+  "implementation_inputs": {
+    "link_driver": {"path": "tools/host-lisp/c2_product_substitution_link.py", "sha256": "1835c9915ef210a33ce79a8e2cd8ab9853ed368a521cf894e6243af868e5a910"},
+    "kernal_runtime": {"path": "src/c2_kernal_runtime.c", "sha256": "b6c8f1177d26e9da3156e29d7c74e23b239a8acbc475dc5111eb42937fc67095"},
+    "kernal_window": {"path": "src/c2_kernal_window.s", "sha256": "a6cc9e606742d07914d01f60a3a1e2cfe8110f480da87cec5ffc0c82425dc8c0"},
+    "map_switch": {"path": "src/c2_kernal_map.s", "sha256": "feff5fe3689cd44f98525300e0ce690284a8bdf58df15aa24673ef0ddba994fd"},
+    "contract": {"path": "config/c2-kernal-unmap-contract.json", "sha256": "a7f09bc11d5aafb646c659131030a5ab027619c463698ff5463bf031ff6ac16d"},
+    "bounded_probe_receipt": {"path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2-kernal-unmap-contract-receipt.json", "sha256": "6bf5dde87f10e3895ba2286fbe0326b5917a9d7c797be812a3d36496fe2ec188"}
+  },
+  "preserved_constraints": {
+    "runtime_slice_limit_bytes": 1792,
+    "runtime_slice_limit_relaxed": false,
+    "interactive_compilation_present": true,
+    "legacy_l65m_path_present": false,
+    "single_c2_emitter_decoder_rule_preserved_in_attempt": true,
+    "owned_e000_sections_named": true,
+    "product_bytes_promoted": false,
+    "no_tuning_after_first_red": true
+  }
+}

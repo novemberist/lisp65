@@ -1,0 +1,311 @@
+{
+  "BRK_hypothesis": {
+    "candidate_continuation": "0xbf73",
+    "candidate_opcode_address": "0xbf71",
+    "live_byte_consistency": "unknown",
+    "required_discriminator": "stacked P bit B plus live CPU-view byte $BF71",
+    "status": "live discriminator missing; not attributed",
+    "structural_consistency": "the tested core would stack $BF73 for BRK at $BF71"
+  },
+  "authorities": {
+    "I_result": {
+      "bytes": 6189,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-terminal-ingress-result-receipt.json",
+      "sha256": "b3fddd79fcca6b41973ffc1d09ceab3919cdb40950d37526e5af212077a3a334"
+    },
+    "device_capture": {
+      "bytes": 10944,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-terminal-ingress-device-receipt.json",
+      "sha256": "c69f1ee1402dd1d3d1ef65206c5b25bb6eaf8afd9dbeba1efb3b48b32c8255d9"
+    },
+    "diagnostic_sister": {
+      "bytes": 19897,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-post-v1.4-defstruct-terminal-ingress-sister-receipt.json",
+      "sha256": "8270c660532fbe48234347d029f51e8cd95c392de26011f12114c2fc051db57f"
+    },
+    "interrupt_policy": {
+      "bytes": 16790,
+      "path": "config/c2-interrupt-ownership-policy.json",
+      "sha256": "6a9cb864ea9c449c93ab9bc2159f5ff5eae585d0962033d331c6032da31d928e"
+    },
+    "map_source": {
+      "bytes": 1315,
+      "path": "src/c2_kernal_map.s",
+      "sha256": "9a6248653e92ede1b51daac5bf1f55d340e474fb2775a76057e14b55d22f1551"
+    },
+    "owner_commission": {
+      "authority": "git-blob",
+      "bytes": 45490,
+      "commit": "abf8140c08039d38fe6b7f5dcbece9fc0b6dad2b",
+      "path": "docs/planning/post-v1.4.0-direction-plan.md",
+      "sha256": "fc0ce2a7eefa035232435e26fed8b6145d0d21619af3db53809c07fa38b7ee3e"
+    },
+    "phase_C_capture_source": {
+      "bytes": 54782,
+      "path": "tools/host-lisp/c2_v16_defstruct_phase_c.py",
+      "sha256": "cb569f4beb25644a534c7b084ab330775ede636f61c4fc9411f9121d4c6b1c86"
+    },
+    "runtime_source": {
+      "bytes": 5933,
+      "path": "src/c2_kernal_runtime.c",
+      "sha256": "7264b2cb879a4d7842e4b8dd83efd0de3914a0b347d2fb4d0d3521129e871180"
+    },
+    "tested_core_CPU": {
+      "BRK_advances_over_opcode_and_signature_byte": "https://github.com/MEGA65/mega65-core/blob/03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6/src/vhdl/gs4510.vhdl#L6714-L6760",
+      "BRK_enters_interrupt_state": "https://github.com/MEGA65/mega65-core/blob/03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6/src/vhdl/gs4510.vhdl#L8370-L8379",
+      "commit": "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6",
+      "file": "src/vhdl/gs4510.vhdl",
+      "hardware_IRQ_clears_stacked_B": "https://github.com/MEGA65/mega65-core/blob/03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6/src/vhdl/gs4510.vhdl#L5468-L5488",
+      "hardware_IRQ_preserves_resume_PC": "https://github.com/MEGA65/mega65-core/blob/03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6/src/vhdl/gs4510.vhdl#L6680-L6689",
+      "opcode_00_is_BRK": "https://github.com/MEGA65/mega65-core/blob/03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6/src/vhdl/gs4510.vhdl#L1031-L1034",
+      "repository": "https://github.com/MEGA65/mega65-core",
+      "semantic_result": "hardware IRQ stacks B=0 and the resume PC; BRK stacks B=1 and the PC two bytes after opcode $00",
+      "sha256": "d44ae3906e1b0a826ca8e511c73ef1f50223b7de507a3ed349082fdefe58034e",
+      "stack_push_order_PCH_PCL_P": "https://github.com/MEGA65/mega65-core/blob/03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6/src/vhdl/gs4510.vhdl#L9418-L9436"
+    },
+    "window_source": {
+      "bytes": 4076,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81"
+    }
+  },
+  "claim_limit": "Host/ELF/RTL attribution only. It corrects $BF73 from a presumed routine to a stacked return PC inside namelen4 and proves no interrupt-window seam there. It does not choose BRK, CIA, a peripheral, Freezer/hypervisor or cartridge origin; authorize a fix; alter product bytes; or authorize the specified contact.",
+  "code_authority_correction": {
+    "actual_defstruct_capture_authority": "Link-92-r5 diagnostic sibling",
+    "commission_wording": "delivered Link-95 image",
+    "reason": "Link-95 is the separately accepted trace product; the defstruct sister receipt explicitly derives from Link-92-r5"
+  },
+  "desk_decision": {
+    "device_recontact_authorized": false,
+    "fix_authorized": false,
+    "inherited_CIA_timer_or_TOD_attributed": false,
+    "interrupt_window_at_BF73": false,
+    "named_origin": null,
+    "next": "exactly one terminal-only CPU-side origin row",
+    "reason": "$BF73 is data and the current record omitted stacked B, live resume bytes and CIA/internal source registers"
+  },
+  "format": "lisp65-c2.3-post-v1.4-defstruct-irq-origin-desk-attribution-v1",
+  "interrupt_ownership": {
+    "CIA_registers_present_in_current_capture": false,
+    "desk_exclusions": {
+      "CIA1_inherited_enable": "$DC0D receives $7F and is read under SEI; exact product contains no later direct mask write",
+      "CIA2_as_IRQ": "CIA2 routes to NMI, not IRQ",
+      "F011_and_ordinary_DMA": "no edge into the bound IRQ cone",
+      "VIC": "captured $D019=0 with raster-only enablement",
+      "board_IRQ": "structurally inactive on the bound R6 core",
+      "ethernet_autoIEC_audioDMA_inherited_enable": "all three are disabled and read back before window publish/CLI"
+    },
+    "direct_MMIO_edges": {
+      "$D697": [
+        {
+          "opcode": "stx",
+          "pc": "0xb4c9"
+        },
+        {
+          "opcode": "lda",
+          "pc": "0xb4d9"
+        }
+      ],
+      "$D6E1": [
+        {
+          "opcode": "stz",
+          "pc": "0xb4c4"
+        },
+        {
+          "opcode": "ldx",
+          "pc": "0xb4cf"
+        }
+      ],
+      "$D713": [
+        {
+          "opcode": "stz",
+          "pc": "0xb4cc"
+        },
+        {
+          "opcode": "lda",
+          "pc": "0xb4e3"
+        }
+      ],
+      "$DC0D": [
+        {
+          "opcode": "stx",
+          "pc": "0xb4ab"
+        },
+        {
+          "opcode": "ldy",
+          "pc": "0xb4ae"
+        }
+      ],
+      "$DD0D": [
+        {
+          "opcode": "stx",
+          "pc": "0xb4b6"
+        },
+        {
+          "opcode": "ldx",
+          "pc": "0xb4b9"
+        },
+        {
+          "opcode": "lda",
+          "pc": "0xe083"
+        }
+      ]
+    },
+    "exact_artifact_gate": {
+      "elf": {
+        "bytes": 620936,
+        "path": "build/c2.3/defstruct-terminal-ingress-sister-link92/artifacts/diagnostic-terminal-ingress.elf",
+        "sha256": "73ebdc557926b2d16c73ab1f71094f60cd7f8be46d0aa233ed14cf0bc79ac192"
+      },
+      "mutations": {
+        "policy_mutations_rejected": [
+          "audio-dma-classified-impossible",
+          "f011-classified-live"
+        ],
+        "rejected": 16,
+        "source_mutations_rejected": [
+          "ethernet-mask-omitted",
+          "ethernet-mask-value",
+          "ethernet-wrong-register",
+          "ethernet-readback-omitted",
+          "auto-iec-mask-omitted",
+          "auto-iec-mask-value",
+          "auto-iec-wrong-register",
+          "auto-iec-readback-omitted",
+          "audio-dma-mask-omitted",
+          "audio-dma-mask-value",
+          "audio-dma-wrong-register",
+          "audio-dma-readback-omitted",
+          "crc-restored-to-fixed-handoff",
+          "crc-moved-to-owned-e000-window"
+        ],
+        "total": 16
+      },
+      "status": "passed-strict-internal-interrupt-ownership"
+    },
+    "live_resume_neighborhood_present_in_current_capture": false,
+    "not_target_excluded": [
+      "BRK software ingress or wild execution",
+      "Freezer/hypervisor deferred IRQ replay",
+      "interrupt-generating cartridge outside the supported profile",
+      "target-only source-state corruption or restoration after ownership"
+    ],
+    "stacked_status_present_in_current_capture": false
+  },
+  "recorded_on": "2026-08-10",
+  "required_capture_row": {
+    "authorization": "not-authorized-by-this-desk-result",
+    "contacts": 1,
+    "decision_table": {
+      "BRK": "stacked B=1 and CPU-view byte at return-PC-2 is $00; the stacked PC is the BRK continuation, not a routine",
+      "CIA1": "stacked B=0 and CIA1 ICR bit 7 plus at least one source bit 0..4 is set",
+      "deferred_or_external_remainder": "stacked B=0 with all software-readable internal sources clean; the supported-profile cartridge witness is then required before calling this Freezer/hypervisor replay",
+      "instrument_red": "missing tag, repeated CIA read, absent mapping tuple, non-CPU I/O view or live-byte read from linked BSS initialization",
+      "internal_peripheral": "stacked B=0 and a corresponding enable/status pair is active in $D6E1, $D697 or $D713"
+    },
+    "fields": [
+      {
+        "bytes": 1,
+        "name": "stacked-P",
+        "rule": "tag raw before any later X change; bit 4 is B",
+        "source": "$0105,X"
+      },
+      {
+        "bytes": 2,
+        "name": "stacked-return-PC",
+        "rule": "existing field, recaptured in the same row",
+        "source": "$0106,X/$0107,X"
+      },
+      {
+        "bytes": 4,
+        "name": "resume-neighborhood",
+        "rule": "read once after the tagged PC is known",
+        "source": "CPU-view PC-2..PC+1"
+      },
+      {
+        "bytes": 1,
+        "name": "CIA1-ICR",
+        "rule": "exactly one terminal-only CPU read; read-to-clear is declared",
+        "source": "$DC0D"
+      },
+      {
+        "bytes": 1,
+        "name": "CIA2-ICR",
+        "rule": "context only; CIA2 is an NMI source",
+        "source": "$DD0D"
+      },
+      {
+        "bytes": 1,
+        "name": "Ethernet-IRQ",
+        "rule": "raw enable and sticky status bits",
+        "source": "$D6E1"
+      },
+      {
+        "bytes": 1,
+        "name": "AutoIEC-IRQ",
+        "rule": "raw enable and event bits",
+        "source": "$D697"
+      },
+      {
+        "bytes": 1,
+        "name": "AudioDMA-IRQ",
+        "rule": "raw enable and event bits",
+        "source": "$D713"
+      },
+      {
+        "bytes": 3,
+        "name": "existing-IRQ-context",
+        "rule": "latch, D019 witness and D01A recaptured atomically",
+        "source": "$FF86/$FF89/$D01A"
+      }
+    ],
+    "identity": "non-promotable diagnostic sibling only",
+    "mapping_rule": "capture MAPH/MAPL first; code bytes use CPU view, ordinary RAM uses physical translation, I/O uses a CPU-side read",
+    "name": "terminal-source-less-IRQ-origin",
+    "product_bytes_changed": 0,
+    "side_effect_boundary": "CIA ICR reads acknowledge flags, so they occur once only after the guard has already selected its terminal path; no resume follows",
+    "timing": "capture at the already-terminal second source-less entry, before the hold loop; CPU remains stopped after the sole postcondition read"
+  },
+  "return_PC_binding": {
+    "captured_mapping": {
+      "MAPH": "$8000",
+      "MAPL": "$0000"
+    },
+    "function_owner": null,
+    "interrupt_window_seam": false,
+    "linked_initial_bytes_BF71_BF74": "00000000",
+    "mapping_effect": "only CPU block 7 ($E000-$FFFF) is remapped; $BF73 remains ordinary Bank-0 RAM",
+    "meaning": "interrupted return PC; not an execution sample",
+    "object": {
+      "bytes": 376,
+      "name": "namelen4",
+      "offset": 343,
+      "start": "0xbe1c",
+      "symbol_indices_encoded": [
+        686,
+        687
+      ]
+    },
+    "raw_stack_value": "$BF73",
+    "relocation_edges_to_value": 0,
+    "runtime_bytes_known": false,
+    "runtime_note": "namelen4 is populated after boot; linked zero initialization is not a live-byte oracle",
+    "section": {
+      "bytes": 1583,
+      "executable": false,
+      "name": ".bss",
+      "start": "0xb9c8",
+      "type": "SHT_NOBITS"
+    }
+  },
+  "stack_and_mapping": {
+    "capture_stack_rule": "after hardware frame plus PHA/PHX/PHY/PHZ, TSX-relative $0105,X=P, $0106,X=PCL, $0107,X=PCH",
+    "captured_fields": [
+      "$0106,X",
+      "$0107,X"
+    ],
+    "mapping_stable_through_terminal_path": true,
+    "missing_discriminator": "$0105,X stacked processor status bit B"
+  },
+  "status": "DESK-EXHAUSTED; ONE-ROW-ORIGIN-CAPTURE-SPECIFIED"
+}

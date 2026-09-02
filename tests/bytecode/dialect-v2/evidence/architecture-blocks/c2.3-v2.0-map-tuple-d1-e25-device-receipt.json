@@ -1,0 +1,184 @@
+{
+  "authority": {
+    "authorization": {
+      "authority": "git-blob",
+      "bytes": 46061,
+      "commit": "7478ce73314d3ded64c7d7ced65cbaa00a5b1b87",
+      "path": "docs/planning/2.0-ownership-recharter-work-plan.md",
+      "sha256": "815e03b7b001bca54d80ef394a572fae6972f23130c950306cc40fca9a67ba65"
+    },
+    "candidate_ELF": {
+      "bytes": 628852,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-card/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "a481eff4acd32f04dde6660090aa2761a2f4a4b6307945cbcb2cda0f70435673"
+    },
+    "candidate_decoder_source": {
+      "bytes": 38076,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-card/final/generated-product-sources/c2-stream-decoder.c",
+      "sha256": "56af9971943bc263d7dbf84b06750aaca655ba05ab9e5f2a27af98aa72b8732e"
+    },
+    "candidate_runtime_source": {
+      "bytes": 163339,
+      "path": "build/c2.3/v2.0-map-tuple-fix-replacement-card/final/generated-product-sources/c2_product_runtime.c",
+      "sha256": "f187612a73d501733a3407b117fb16164719b1377199b9d219481aa28c90a692"
+    },
+    "capture_contract": {
+      "bytes": 2754,
+      "path": "config/c2-v20-map-tuple-d1-e25-capture-row.json",
+      "sha256": "59d1ecc001bbca3f8c2720a2fabf7e075dc9985285e1fa921a7de607f68bc777"
+    },
+    "capture_driver": {
+      "bytes": 11096,
+      "path": "tools/host-lisp/c2_v20_map_tuple_d1_e25_capture.py",
+      "sha256": "2ae2efb9c4be3f47fbc27b355c6cd77007936da5987afb6beaef98698e01610a"
+    },
+    "first_red": {
+      "bytes": 7781,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-map-tuple-d1-e25-first-red-receipt.json",
+      "sha256": "dd726bc20552cf033858dccaa85deb8deb9146e0408b694c73ced327cf899895"
+    },
+    "media_closure": {
+      "bytes": 8920,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-map-tuple-media-closure-receipt.json",
+      "sha256": "3b020a0c28c7e446e869d33af6231eb55e58a9019df28616350cc581b0d9e71c"
+    },
+    "raw_capture": {
+      "path": "build/c2.3/v2.0-map-tuple-d1/e25-stopped-state/capture.json",
+      "sha256": "320cc81c2dff3cbc0fb3655107202be32ba6f7dd7b7d34a624e32e50a23567ef"
+    },
+    "reset_domain": {
+      "bytes": 50816,
+      "path": "build/c2.3/v2.0-map-tuple-media/shared-system/c2d-v6-reset-domain.bin",
+      "sha256": "3010ec3807409338d119c57444c960d67f306a5b978ac346d5ed7ab119beee29"
+    },
+    "result_driver": {
+      "bytes": 18165,
+      "path": "tools/host-lisp/c2_v20_map_tuple_d1_e25_result.py",
+      "sha256": "cb9949fb221d31cd8252ad7370fad3b5c5c6cac3184e0ff2bed5b6c7a2b04851"
+    }
+  },
+  "claim_limit": "The authorised row selects decoder phase 02a and its first image pair.  It does not distinguish the two convergence reads from the image-reader validation returns that share C2_STREAM_ERR_IO; it authorizes no fix, repeat boot, resume, D2-D5 or release claim.",
+  "decision": {
+    "decoder_cutpoint": "c2_stream_phase_02a:first-image-pair",
+    "error": {
+      "name": "C2_STREAM_ERR_IO",
+      "value": 1
+    },
+    "mechanism_space": [
+      "first Shelf record read did not converge",
+      "first C2D image-row read did not converge",
+      "the product image reader rejected the first target row or its Shelf cross-read"
+    ],
+    "publication_excluded": true,
+    "result": "E25 is an early decoder phase-02a IO failure on image 0, before roots, publication, journal activity or READY",
+    "selected_row": "decoder-failure"
+  },
+  "decoded_state": {
+    "c2_runtime": {
+      "c2d_bytes": 33840,
+      "catalog_crc32": 1599025767,
+      "entries_offset": 2096,
+      "entry_count": 755,
+      "entry_cursor": 0,
+      "entry_first": 4096,
+      "error": 1,
+      "finished": 0,
+      "generation": 1,
+      "image_count": 6,
+      "image_first": 0,
+      "images_offset": 48,
+      "phase": 2,
+      "reserved": 0,
+      "resolution_count": 2929,
+      "resolution_cursor": 0,
+      "resolution_first": 0,
+      "resolutions_offset": 22576,
+      "root_count": 352,
+      "root_cursor": 0,
+      "root_first": 0,
+      "roots_offset": 30768,
+      "shelf_bytes": 93681
+    },
+    "publication": {
+      "committed_roots": 0,
+      "decode_active": 49284,
+      "journal_count": 0,
+      "lisp_error_msg": 47496,
+      "mem_oom": 0,
+      "pending_code": 37,
+      "pending_roots": 0,
+      "ready": 0
+    }
+  },
+  "device": {
+    "code_identity": {
+      "candidate_ELF_owners": [
+        ".lisp65_c2_kernal_window.map_switch_and_guards",
+        ".rela.text"
+      ],
+      "classification": "bound fail-loop context",
+      "sampled_PC": "0xe096"
+    },
+    "discipline": {
+      "CPU_left_stopped": true,
+      "D2_D5_executed": false,
+      "resets": 0,
+      "resumes": 0,
+      "runs": 0,
+      "stops": 1,
+      "tuple_before_memory": true
+    },
+    "physical_bank0": {
+      "boot-publication-zp": {
+        "bytes": 9,
+        "observed_hex": "000000000ce0ffe025",
+        "physical_address": "0x0000002e"
+      },
+      "c2-boot-runtime": {
+        "bytes": 50,
+        "observed_hex": "000084c0f16d010067324f5f308401000600f302710b30003008305830786001000000000000000000100000000002000100",
+        "physical_address": "0x0000c080"
+      },
+      "pending-error-pointer": {
+        "bytes": 2,
+        "observed_hex": "88b9",
+        "physical_address": "0x0000bfef"
+      },
+      "roots-ready-oom-zp": {
+        "bytes": 6,
+        "observed_hex": "000000000000",
+        "physical_address": "0x0000008a"
+      }
+    },
+    "tuple": {
+      "A": "0x02",
+      "B": "0x00",
+      "MAPH": "0x8000",
+      "MAPL": "0x0000",
+      "PC": "0xe096",
+      "SP": "0x01e4",
+      "X": "0x64",
+      "Y": "0x01",
+      "Z": "0x00",
+      "suffix": "4C96E0  00     04 .....I.. ...P 15 -  00 - ..c..lhc"
+    }
+  },
+  "exonerations": [
+    "c2_publish_exports_from was not reached",
+    "no export publication or rollback journal activity occurred",
+    "no allocator OOM was present",
+    "D2-D5 were not executed"
+  ],
+  "first_pair_authority": {
+    "entry_count": 393,
+    "image_ordinal": 0,
+    "inference": "both captured phase-02 cursors are zero while image 0 would advance both; no image pair completed before the IO failure",
+    "reset_domain_image_offset": "0x0030",
+    "resolution_count": 937,
+    "source_kind": 0,
+    "source_ordinal": 0
+  },
+  "format": "lisp65-c2.3-v20-map-tuple-d1-e25-device-result-v1",
+  "recorded_on": "2026-08-13",
+  "status": "D1-E25-DECODER-IO-PHASE-02A-IMAGE0"
+}

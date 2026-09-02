@@ -1,0 +1,106 @@
+{
+  "answer": {
+    "disproved": [
+      "offset-low bounds rejection",
+      "offset-high bounds rejection",
+      "length-low bounds rejection",
+      "length-high bounds rejection",
+      "any other zero return from c2_stream_c2d_read",
+      "an immediate post-read false exit distinct from timeout"
+    ],
+    "product_fix_justified": false,
+    "proven": "In the final diagnostic episode, the ACTIVE reader succeeded, content did not validate, and the linked poll returned false only through its 64-frame threshold.",
+    "remaining_product_question": "why the live ACTIVE target observation did not validate against the producer seal before the 64-frame threshold"
+  },
+  "authority": {
+    "attribution_driver": {
+      "bytes": 11590,
+      "path": "tools/host-lisp/c2_link64_completion_postread_timeout_attribution.py",
+      "sha256": "73954163fd1012280d35552d12fdd89da9c468f3e1f8c3566975bcb0d4d03ab0"
+    },
+    "diagnostic_donor_ELF": {
+      "bytes": 619772,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "bf794abddd938b8573d0b6e0dc405c8315ef1c650e4682691cf5105bd1338f81"
+    },
+    "diagnostic_donor_generated_runtime": {
+      "bytes": 154771,
+      "path": "build/c2.2/substitution/link64-c1-freezer-cutpoints-WPLTO-donor-NONPROMOTABLE/generated-product-sources/c2_product_runtime.c",
+      "sha256": "1b5a185a94b1064b4735646a3cfdf6da2c5af11ed5c9488cc8e2e3e27fe0f4f3"
+    },
+    "final_composite_hardware_First_Red": {
+      "bytes": 5187,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-reader-zero-bounds-composite-hardware-first-red.json",
+      "sha256": "9577d0332012b4b3a9230c3331420dd36a6b8fecce7736f977a062ddea410e06"
+    },
+    "first_ACTIVE_entry_hardware_receipt": {
+      "bytes": 8701,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link64-slot39-entry-hold-hardware-receipt.json",
+      "sha256": "6c783186645d1ee1fde0c15ad88cc0bb59d610cc572a054c9b5e43f38bd901c0"
+    }
+  },
+  "claim_limit": "This receipt closes only the reader/bounds/false-exit attribution. It makes no product-fix, C1, acceptance, promotion or release claim.",
+  "format": "lisp65-c2.2-Link64-completion-postread-timeout-host-ELF-attribution-v1",
+  "governance": {
+    "C1_matrix_status": "OPEN",
+    "acceptance_chain_status": "LOCKED",
+    "commissioned_diagnostic_cycles_consumed": "3/3",
+    "further_Class_B_hardware_authorized": false,
+    "latency_attempts_consumed": 0,
+    "next_step_class": "Class C product/contract review before any new witness or fix"
+  },
+  "hardware_interpretation": {
+    "final_cycle": {
+      "journal_result_after_First_Red": "2 (PREPARED)",
+      "meaning": "the ACTIVE transition never committed; its successful reader was followed by no successful content comparison before the timeout false return",
+      "reader_returned_nonzero": true
+    },
+    "first_entry": {
+      "entry_target_crc16": "0x2801",
+      "journal_result": "2 (PREPARED)",
+      "mode": "0xa1 (ACTIVE)",
+      "producer_seal": "0x2801"
+    },
+    "qualification": "The matching entry capture proves the producer truth and target at that held entry. The final-cycle target was captured only after rollback and wipe, so it does not reveal which bytes the live poll observed during its timeout."
+  },
+  "linked_identity": {
+    "CRC_leaf": {
+      "VMA": "0x222d",
+      "bytes": 74,
+      "section": ".text"
+    },
+    "completion_poll": {
+      "VMA": "0xc706",
+      "body_sha256": "3e9c4633182ba3983ba01fcd8e9017045d4da7be0bf488a5a658b3c5afb160e3",
+      "bytes": 563,
+      "section": ".lisp65_rt_c2append_header"
+    },
+    "reader": {
+      "VMA": "0xe691",
+      "bytes": 87,
+      "section": ".lisp65_c2_kernal_window.c2_resident"
+    },
+    "timeout_frames": 64
+  },
+  "post_reader_control_flow": {
+    "content_nonmatch_join": "$c895",
+    "false_result": "LDA #$00 at $c8f0",
+    "only_post_reader_false_exit": "content comparison has not succeeded when elapsed reaches 64 frames",
+    "reader_call": "JSR $e691 at $c828",
+    "reader_zero_excluded_by_hardware": true,
+    "reader_zero_exit": "JMP $c8f0 at $c82e",
+    "retry_edge": "JMP $c7e4 at $c8c4",
+    "success_result": "LDA #$01 at $c8ec",
+    "timeout_false_edge": "BCS $c8f0 at $c8c2"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-26",
+  "scope": {
+    "class": "read-only-host-ELF-attribution",
+    "compiler_runs": 0,
+    "hardware_runs": 0,
+    "linker_runs": 0,
+    "product_bytes_changed": 0
+  },
+  "status": "COMPLETE: successful ACTIVE reader followed by content nonmatch and 64-frame timeout"
+}

@@ -1,0 +1,19 @@
+{
+  "format": "lisp65-c2.3-v1.12-link92-r5-phase-d-split-d1-smoke-inheritance-first-red-v1",
+  "recorded_on": "2026-08-08",
+  "status": "first-red-split-session-would-inherit-prior-q-and-output-directory",
+  "authorization": {
+    "split_restart_commit": "a1cf5b9b",
+    "owner_signal": "bereit",
+    "scope": "D1 split-media smoke preflight after the green fresh boot"
+  },
+  "observed": {
+    "old_runner_output": "build/c2.3/v1.4.0-release/phase-d/d1-smokes",
+    "old_resume_order": ["time", "strings"],
+    "old_reuse_prior_q_green": true,
+    "device_forms_submitted": 0
+  },
+  "attribution": "The Phase-D split restart correctly invalidated every live-session result, but the historical D1 smoke runner still reused the q result and output directory from the pre-split session.",
+  "repair": "Use a split-session output directory, bind the fresh split-media boot receipt, and execute q, time and strings anew in the current live REPL. Permanently reject reusing the prior q row or omitting the fresh q submission.",
+  "claim_limit": "Host smoke-preflight First Red only. The split-media D1 boot remains green. No D1 smoke form, D3, D2, selector, Halt, Phase E or release claim."
+}

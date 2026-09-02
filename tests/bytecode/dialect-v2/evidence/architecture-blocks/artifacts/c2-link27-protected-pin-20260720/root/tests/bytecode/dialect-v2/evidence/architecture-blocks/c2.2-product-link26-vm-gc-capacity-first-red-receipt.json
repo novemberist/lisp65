@@ -1,0 +1,124 @@
+{
+  "format": "lisp65-c2.2-product-link26-vm-gc-capacity-first-red-v1",
+  "recorded_on": "2026-07-20",
+  "status": "first-red",
+  "authorization": {
+    "scope": "exactly one combined Link 26 for the logical-PC relative-branch correction and the operational 32-byte GC root scan",
+    "separate_delta_attribution_required": true,
+    "stop_on_any_unauthorized_drift": true
+  },
+  "attempt": {
+    "candidate": "link-26-vm-gc-fix",
+    "command": "python3 tools/host-lisp/c2_product_substitution_link.py --single-link --out build/c2.2/substitution/product-link-26-vm-gc-fix",
+    "stage": "initial resident-island seed link",
+    "elapsed_seconds": 4.9,
+    "build_id": "0xed42850d",
+    "product_link_completed": false,
+    "structural_gates": "not-run",
+    "capacity_gate": "failed-closed-at-seed-layout",
+    "six_artifact_restage": "not-run",
+    "hardware_execution": "not-run",
+    "acceptance_receipt_created": false,
+    "promotion_claim": "not-run"
+  },
+  "input_identity": {
+    "link25_product_prg_sha256": "ae16e161cdf1fd8b2085e1c69acca46c6db21b38449c4feeb44ac3bb4fc9532d",
+    "link25_product_elf_sha256": "5f3ec8ec1d1e181bb20f07d3ed754da37dd38362c6f82096d32a291a978343d3",
+    "link25_kernal_window_sha256": "01bb28e36e30d0f36667ebc757073930a7b97ef1406090d6652f139b4b210f34",
+    "link25_seed_map_sha256": "2beccc7a2c4ecd165656807ae1b0fc820dce8467ff251e5a596167590c16f850",
+    "link26_seed_map_sha256": "e4f8a6749e136009655d94950207f48d42b498f65c4f811ce771059157ec3192",
+    "link26_resolved_profile_sha256": "ed42850d360c1e1d07e12eb5ca03bb07775ae591823d7f6596c2c1b39e10ee7c",
+    "vm_source_sha256": "195a7cff2a0eda3ace4a355a6af8aa6cf317d264d217d9b61ab3f05a0c13003a",
+    "c2_product_runtime_source_sha256": "fb7314e9865baac83c5609e871abb7f7a8fdf3895918e3775bea09116f77ee10",
+    "vm_branch_gate_sha256": "33d7b44e4cb5b1879ce20ccea3af3ffbf4ee1759470b53688d6239413fdf41bd",
+    "gc_operational_binding_gate_sha256": "024e059ce95c089d665c0a3c4a32861e6afdfe96ef3c8a0b311513174703651c"
+  },
+  "first_red": {
+    "gate": "resident-island seed layout assertions",
+    "finding": "The combined correctness/performance candidate exceeded the pre-handoff resident Bank-0 text corridor and consequently overlapped the fixed handoff and fixed C2 state.",
+    "linker_diagnostics": [
+      "workbench overlay moved below heap floor",
+      "resident/noinit state overlaps fixed runtime-overlay VMA",
+      "ordinary Bank-0 state overlaps fixed C2 state",
+      ".text VMA/load range [0x2023,0xb743] overlaps handoff [0xb481,0xb5a1]",
+      ".bss VMA/load range [0xbb64,0xc272] overlaps fixed C2 state beginning at 0xc080"
+    ],
+    "first_red_rule": "The authorized Link 26 was consumed. No retry, restage, hardware run or downstream claim followed."
+  },
+  "capacity_delta_against_link25_seed": {
+    "resident_text": {
+      "before_bytes": 37956,
+      "after_bytes": 38689,
+      "delta_bytes": 733,
+      "before_end_exclusive": "0xb467",
+      "after_end_exclusive": "0xb744",
+      "fixed_handoff_start": "0xb481",
+      "available_headroom_before_bytes": 26,
+      "excess_past_handoff_start_bytes": 707
+    },
+    "rodata": {
+      "before_bytes": 636,
+      "after_bytes": 636,
+      "delta_bytes": 0
+    },
+    "bss": {
+      "before_bytes": 1807,
+      "after_bytes": 1807,
+      "delta_bytes": 0,
+      "before_start": "0xb8a3",
+      "after_start": "0xbb64",
+      "interpretation": "No new static data was allocated; unchanged BSS was displaced upward by the resident-code growth and then collided with the fixed C2 block."
+    },
+    "zero_page_bss": {
+      "before_bytes": 79,
+      "after_bytes": 79,
+      "delta_bytes": 0
+    }
+  },
+  "separate_product_delta_attribution": {
+    "logical_pc_relative_branch_fix": {
+      "symbol": "vm_run_inner",
+      "before_bytes": 6721,
+      "after_bytes": 7320,
+      "delta_bytes": 599,
+      "mechanism": "The correct logical-PC target and streamed-window reload logic was expressed as a macro at both OP_JMPREL and OP_JFALSEREL sites, so LTO emitted the large path twice in the already constrained resident interpreter."
+    },
+    "operational_gc_root_scan_fix": {
+      "symbol": "gc_collect (including the LTO-inlined c2_product_gc_mark_roots path)",
+      "before_bytes": 1777,
+      "after_bytes": 1913,
+      "delta_bytes": 136,
+      "mechanism": "The approved contiguous 32-byte root-plane scan replaced 283 individual reads; LTO folded its loop into the resident collector. No 32-byte BSS object was introduced."
+    },
+    "other_lto_effects": {
+      "delta_bytes": -2,
+      "components": {
+        "apply": 6,
+        "vm_callprim": -4,
+        "vm_key_event": -4
+      }
+    },
+    "arithmetic": "599 + 136 - 2 = 733 bytes"
+  },
+  "root_cause": {
+    "class": "correct-fixes-assigned-to-a-nonfungible-resident-bank0-corridor",
+    "mechanism": "Link 25 left only 26 bytes between ordinary resident text and the fixed handoff at 0xb481. Both Link-26 fixes were emitted into that corridor even though their combined resident cost was 733 bytes. The failure is placement and duplication, not a request to weaken either semantic fix or any capacity boundary."
+  },
+  "unexecuted_successor_scope": {
+    "status": "proposal-only-not-authorized",
+    "recommended_bounded_probe": [
+      "Deduplicate relative-branch handling behind one non-inline logical-PC seam; direct out-of-array C-pointer arithmetic remains forbidden.",
+      "Place the C2-only logical target helper in the already owned fixed 0xe000 window, not in the 26-byte resident corridor.",
+      "Place the blockwise C2 root walker in the same C2-owned window and add exactly one explicit three-byte stable facade vector for its call to Bank-0 gc_mark.",
+      "Prove that neither helper is reachable before KERNAL ownership, re-run the complete control-flow and KERNAL-freedom gates, and price the real window/facade deltas against Link 25's 1404-byte 0xe000 margin and 273-byte fixed-Bank-0 margin.",
+      "Exactly one real successor link only after separate authorization; first-red remains first-red."
+    ],
+    "inadmissible_alternatives": [
+      "Raise or move the fixed handoff/layout boundaries.",
+      "Restore direct ip-relative C-pointer arithmetic.",
+      "Restore forced product GCs or per-root DMA reads from the host stress schedule.",
+      "Stage or claim hardware evidence from the failed Link 26 seed."
+    ]
+  },
+  "claim_limit": "Static capacity first-red only. Link 26 produced no product candidate and proves no structural, hardware, promotion or release claim."
+}

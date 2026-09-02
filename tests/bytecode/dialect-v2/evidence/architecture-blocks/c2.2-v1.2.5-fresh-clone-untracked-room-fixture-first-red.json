@@ -1,0 +1,35 @@
+{
+  "format": "lisp65-c2-v1.2.5-fresh-clone-untracked-room-fixture-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "status": "first-red-attributed-and-corrected-before-retry",
+  "promotable": false,
+  "stage": "fresh-clone-candidate-product-reproduction",
+  "symptom": {
+    "missing_suite": "tests/bytecode/libs/p0-room-lib.json",
+    "missing_source": "lib/room.lisp",
+    "stale_local_manifest": "build/bytecode/dialect-v2/libs/room.manifest.json"
+  },
+  "attribution": {
+    "class": "gate-fixture-depended-on-parked-untracked-G1-work",
+    "finding": "The require resolver source/index gate used room as its first synthetic dependency row. Its suite and source are absent from the tracked tree, and its remaining local build artifacts belong to the parked gc/room/error G1 freight.",
+    "why_not_restore": "The stale room artifact calls the parked runtime-state service and is not current v1.2.5 product freight. Reconstructing it would turn a source gate fixture into an undeclared product dependency.",
+    "history_checks": [
+      "suite absent from current tracked tree",
+      "source absent from current tracked tree",
+      "neither file found in repository history, local backup patch, or dangling objects"
+    ]
+  },
+  "correction": {
+    "old_fixture": "room -> buffer",
+    "new_fixture": "testlib -> buffer",
+    "semantic_equivalence": "The resolver gate still proves two indexed libraries, dependency order, partial and complete idempotence, duplicate indexed-identity rejection, ordinary non-index persistent rows, six exact meets, and six overflow directions.",
+    "tracked_authorities": [
+      "tests/bytecode/libs/p0-testlib.json",
+      "tests/bytecode/libs/testlib.lisp",
+      "tests/bytecode/libs/p0-buffer-lib.json",
+      "lib/buffer.lisp"
+    ],
+    "product_semantics_delta": "none; fixture-only gate correction"
+  },
+  "retry_rule": "Regenerate both tracked fixture libraries, run the resolver and dependent require gates, rebind only their artifact-side authorities, then rerun A1 and fresh-clone qualification."
+}

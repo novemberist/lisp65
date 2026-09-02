@@ -1,0 +1,437 @@
+{
+  "ABA_closure": {
+    "counter_bits": 32,
+    "counter_modulus": 4294967296,
+    "counter_wrap_possible_in_gap": false,
+    "frame_tag_stride": 8,
+    "frame_tag_wrap_disambiguated_by_four_slot_age_window": true,
+    "maximum_sample_gap_frames": 2048,
+    "maximum_sample_gap_seconds": "39.410384",
+    "old_8bit_seqlock_consumed_by_reader": false,
+    "one_cycle_dispatch_upper_bound_in_gap": 1576415348,
+    "reason": "the producer is IRQ-masked during its multi-byte update; the snapshot executes inside that IRQ; the reader runs only after the final stop and validates commit-last ring slots"
+  },
+  "accounting": {
+    "hard_edge": "executed-1.6-final-park",
+    "hardware_runs": 4,
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "recontact_authorized": false
+  },
+  "authorities": {
+    "autonomous_launch_first_red": {
+      "bytes": 4435,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-vm-progress-autonomous-launch-first-red.json",
+      "sha256": "8fb12f687abe969e2617c858c0c0eaa1269c723084881e7350eb0157230103ef"
+    },
+    "base_progress_deployment": {
+      "bytes": 12047,
+      "path": "build/c2.3/v1.6-defstruct-vm-progress/deployment.json",
+      "sha256": "2243ed15dd06063f78aa2503e87745a9e635895e1b908b67bd6eb9970ba79201"
+    },
+    "base_progress_receipt": {
+      "bytes": 10727,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-vm-progress-preparation-receipt.json",
+      "sha256": "89c8f9fce20b44286f506aafed78fb88c76541a3db2d4029075a5285bc79481c"
+    },
+    "contact_authorization": {
+      "bytes": 190440,
+      "commit": "c5963c68ace734e5dcdec543e4c2302eef70bd84",
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "68f1069ef7e37199ee8315ae7e560543cf7dbae2b1907d7b5caf5801e42862c9"
+    },
+    "cost_closure": {
+      "bytes": 4477,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-vm-cost-closure-receipt.json",
+      "sha256": "b6f646d71dc35cc36798d9aac652d8991bba29cd9f0bcbd26243fd8bd1486663"
+    },
+    "driver": {
+      "bytes": 50705,
+      "path": "tools/host-lisp/c2_v16_vm_progress_noninterference.py",
+      "sha256": "b1be9b16ddc2b696d1c3cc363cf6a3362d170da0bc550e2a07be8982d7f8255d"
+    },
+    "final_contact_first_red": {
+      "bytes": 4162,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-vm-progress-final-contact-first-red.json",
+      "sha256": "1a882372c70c34d333e21d53326980b56f2477ba06ab4bd266e8e7cb3e7471d2"
+    },
+    "kernal_IRQ_source": {
+      "bytes": 4076,
+      "path": "src/c2_kernal_window.s",
+      "sha256": "8925fbaeaeff4441d1879c79db54344501520c5c1eb269a11a9f2971bc64ff81"
+    },
+    "line_verify_first_red": {
+      "bytes": 4823,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-vm-progress-line-verify-first-red.json",
+      "sha256": "83e72279740c0ee07ddd02f049727ce0aa2e980506758679284f880ff30c1f9f"
+    },
+    "owner_commission": {
+      "bytes": 178470,
+      "commit": "32e9ccbee15c75f0a27c773b5bffda4fa6662939",
+      "path": "docs/planning/1.6-defstruct-diagnosis-work-plan.md",
+      "sha256": "1e8939b69b2015cf6740cc2eb2b99b46a9d2f157a26badc189b797d210c5dd30"
+    },
+    "physical_launch_first_red": {
+      "bytes": 5015,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-vm-progress-physical-launch-first-red.json",
+      "sha256": "0ab97a14e79da0869b78fd8a30f6437e5a4f9d555a3c7b9cb44c63c9412f599d"
+    },
+    "runner": {
+      "bytes": 9266,
+      "path": "scripts/c2-v16-defstruct-vm-progress-hw.sh",
+      "sha256": "d3564b6b98a55f7b45fc8fdd5f024c640944cd15b577fddc2d348b3d54ef813d"
+    },
+    "source_less_guard_receipt": {
+      "bytes": 18678,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link73-vm-codebuf-owner-structural-receipt.json",
+      "sha256": "6919ab16743746dc7db93809161e9a7a17bac90467ea1c2ab9b2280850dbce73"
+    }
+  },
+  "choreography": {
+    "CPU_stop_transitions_after_samples": 1,
+    "external_calls_during_active_sample_interval": 0,
+    "intermediate_automated_device_actions": 0,
+    "monitor_entries_during_active_sample_interval": 0,
+    "owner_keyboard_inputs": 3,
+    "physical_inputs": [
+      "RUN",
+      "(require (quote defstruct))",
+      "(defstruct point x y)"
+    ],
+    "prelaunch_monitor_accesses_after_resume": 0,
+    "quiet_floor_seconds": 120,
+    "sample_producer": "owned raster IRQ on target"
+  },
+  "claim_limit": "Host proof of a non-promotable autonomous two-snapshot identity. It proves that sample one cannot stop the CPU, enter the monitor or reach the source-less guard, and that the accepted pair cannot be an 8-bit ABA/torn read. Neither spent autonomous launch contact reached a submitted product RUN or the measured form. It does not report target progress or name a product mechanism. The spent physical contact had a forbidden prelaunch monitor crossing and is not product evidence. The final minimal physical contact observed a diagnostic-launch First Red before require, defstruct or either progress row, despite zero automated device actions after the final staging resume. The pre-bound hard edge parks 1.6. This receipt authorizes no further contact and makes no new product-mechanism, progress, performance or R/A/I/G claim.",
+  "decision_table": {
+    "fewer_than_two_valid_consecutive_slots": "INSTRUMENT-FIRST-RED; NO PRODUCT CLAIM",
+    "form_completes_before_final_stop": "PRODUCT-COMPLETES; progress samples unused",
+    "modulo_u32_delta_nonzero": "LIVE-VM-DISPATCH-PROGRESS",
+    "modulo_u32_delta_zero": "NO-VM-DISPATCH-IN-39.410SEC; later owner plus final code-owner/PC names the VM owner or native boundary; not alone an infinite-loop claim"
+  },
+  "deployment": {
+    "bytes": 12331,
+    "path": "build/c2.3/v1.6-defstruct-vm-progress-noninterference/deployment.json",
+    "sha256": "387b1cbd24bb8da96c7cc994995cc6e238abcf1cc5faeec850f4dfc74d4fdea2"
+  },
+  "format": "lisp65-c2.3-v1.6-vm-progress-noninterference-v1",
+  "guard_binding": {
+    "diagnostic_abort_edge_retired": true,
+    "owned_entry_order": [
+      "D019&1",
+      "ack D019",
+      "clear source-less latch",
+      "increment FF83/FF84",
+      "call sampler"
+    ],
+    "sampler_edges_from_source_less_or_fail_closed": 0,
+    "sampler_monitor_or_CPU_stop_operations": 0,
+    "sampler_only_inbound_edge": {
+      "opcode": "JSR",
+      "pc": "0xe053",
+      "section": ".lisp65_c2_kernal_window.irq_handler"
+    },
+    "sampler_reads_D019": false,
+    "sampler_writes_D019_or_D01A": false,
+    "second_source_less_target": "c2_kernal_fail_closed",
+    "source_less_branch_precedes_sampler": true
+  },
+  "identity": {
+    "WPLTO_runs": 0,
+    "abort_call_retired_at": "0x2dde",
+    "abort_driver_available_in_diagnostic": false,
+    "atomic_lowram_preload": {
+      "bytes": 50,
+      "path": "build/c2.3/v1.6-defstruct-vm-progress-noninterference/artifacts/vm-progress-atomic-lowram-preload.bin",
+      "sha256": "134588c759bfaa8d8a540dfa75bcb405e48f8a5513cdd4737feeba04017fb795"
+    },
+    "base_progress_ELF": {
+      "bytes": 621708,
+      "path": "build/c2.3/v1.6-defstruct-vm-progress/artifacts/diagnostic-vm-progress.elf",
+      "sha256": "b7959a53456beb875b15fd9588b20856c53b0c253b40387824a454e2bc17bfbd"
+    },
+    "base_progress_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-vm-progress/artifacts/diagnostic-vm-progress.prg",
+      "sha256": "babea884e5e94d83bb5f67145fd4b58ade4658d74a9b55305550eb1516cd15a6"
+    },
+    "base_progress_window": {
+      "bytes": 8192,
+      "path": "build/c2.3/v1.6-defstruct-pre-rollback-shadow/artifacts/diagnostic-pre-rollback-shadow-window.bin",
+      "sha256": "b824b20316b6d23e8939146f579277efdb9a407495e4738c39a12bae3f8f3da7"
+    },
+    "diagnostic_ELF": {
+      "bytes": 621800,
+      "path": "build/c2.3/v1.6-defstruct-vm-progress-noninterference/artifacts/diagnostic-vm-progress-noninterference.elf",
+      "sha256": "d70507ccff19ef7dab6f87d317967c189dc60ece9f13f43d91cdb854f546d569"
+    },
+    "diagnostic_PRG": {
+      "bytes": 41566,
+      "path": "build/c2.3/v1.6-defstruct-vm-progress-noninterference/artifacts/diagnostic-vm-progress-noninterference.prg",
+      "sha256": "07cdff4dc95fab78aea7f6cc56dd3cbf3e3c3fe047f6c8ca67ea93b109fa58c2"
+    },
+    "diagnostic_window": {
+      "bytes": 8192,
+      "path": "build/c2.3/v1.6-defstruct-vm-progress-noninterference/artifacts/diagnostic-vm-progress-noninterference-window.bin",
+      "sha256": "d243ef9ceadd71086e5f91d47ab4e412dd7e8fa842a409e49030234c3aa355eb"
+    },
+    "hardware_contacts": 4,
+    "product_candidate_bytes_changed": 0,
+    "product_links": 0,
+    "promotable": false,
+    "slot_reset": {
+      "bytes": 32,
+      "path": "build/c2.3/v1.6-defstruct-vm-progress-noninterference/artifacts/vm-progress-slot-reset.bin",
+      "sha256": "a5e3b18c331ba2434e6b7631dcfd41dc39f68409086c026a981ee230e97738b3"
+    },
+    "window_crc16": "0xDC5B"
+  },
+  "mutations": {
+    "execution_rejected": {
+      "CPU-stop-mid-persistent-operation": "monitor/CPU stop leaked into active sample interval",
+      "accept-torn-or-8bit-ABA-window": "fewer than two committed self-snapshots",
+      "prelaunch-monitor-after-resume": "prelaunch monitor/target access after staging resume",
+      "sampler-reachable-from-source-less-guard": "sampler inbound edge set mutated to ['0xe053', '0xe06d']",
+      "screen-helper-clobbers-line-id": "line-verifier helper scope isolation drift",
+      "unverified-combined-launch-submit": "physical-owner input choreography drift"
+    },
+    "receipt_rejected": 24,
+    "rejected": 30,
+    "required_named": [
+      "CPU-stop-mid-persistent-operation",
+      "unverified-combined-launch-submit",
+      "screen-helper-clobbers-line-id",
+      "prelaunch-monitor-after-resume",
+      "accept-torn-or-8bit-ABA-window",
+      "sampler-reachable-from-source-less-guard"
+    ]
+  },
+  "producer": {
+    "IRQ_observation_states": "old-complete or new-complete only",
+    "atomicity": "PHP; SEI; producer update; PLA; PLP",
+    "counter": {
+      "address": "0x1ff8",
+      "bits": 32,
+      "granularity": "every VM dispatch"
+    },
+    "execution_vectors": [
+      {
+        "A_after": 90,
+        "X_after": 108,
+        "after": 1,
+        "before": 0,
+        "interruptible_states": [
+          {
+            "counter": 0,
+            "owner": 54226
+          },
+          {
+            "counter": 1,
+            "owner": 725
+          }
+        ],
+        "owner": 725,
+        "stack_after": 253,
+        "torn_interruptible_states": 0
+      },
+      {
+        "A_after": 90,
+        "X_after": 108,
+        "after": 2,
+        "before": 1,
+        "interruptible_states": [
+          {
+            "counter": 1,
+            "owner": 54226
+          },
+          {
+            "counter": 2,
+            "owner": 725
+          }
+        ],
+        "owner": 725,
+        "stack_after": 253,
+        "torn_interruptible_states": 0
+      },
+      {
+        "A_after": 90,
+        "X_after": 108,
+        "after": 255,
+        "before": 254,
+        "interruptible_states": [
+          {
+            "counter": 254,
+            "owner": 54226
+          },
+          {
+            "counter": 255,
+            "owner": 725
+          }
+        ],
+        "owner": 725,
+        "stack_after": 253,
+        "torn_interruptible_states": 0
+      },
+      {
+        "A_after": 90,
+        "X_after": 108,
+        "after": 256,
+        "before": 255,
+        "interruptible_states": [
+          {
+            "counter": 255,
+            "owner": 54226
+          },
+          {
+            "counter": 256,
+            "owner": 725
+          }
+        ],
+        "owner": 725,
+        "stack_after": 253,
+        "torn_interruptible_states": 0
+      },
+      {
+        "A_after": 90,
+        "X_after": 108,
+        "after": 65536,
+        "before": 65535,
+        "interruptible_states": [
+          {
+            "counter": 65535,
+            "owner": 54226
+          },
+          {
+            "counter": 65536,
+            "owner": 725
+          }
+        ],
+        "owner": 725,
+        "stack_after": 253,
+        "torn_interruptible_states": 0
+      },
+      {
+        "A_after": 90,
+        "X_after": 108,
+        "after": 16777216,
+        "before": 16777215,
+        "interruptible_states": [
+          {
+            "counter": 16777215,
+            "owner": 54226
+          },
+          {
+            "counter": 16777216,
+            "owner": 725
+          }
+        ],
+        "owner": 725,
+        "stack_after": 253,
+        "torn_interruptible_states": 0
+      },
+      {
+        "A_after": 90,
+        "X_after": 108,
+        "after": 0,
+        "before": 4294967295,
+        "interruptible_states": [
+          {
+            "counter": 0,
+            "owner": 725
+          },
+          {
+            "counter": 4294967295,
+            "owner": 54226
+          }
+        ],
+        "owner": 725,
+        "stack_after": 253,
+        "torn_interruptible_states": 0
+      }
+    ],
+    "owner": {
+      "address": "0x1ffc",
+      "bits": 16,
+      "source": "vm_buf_off"
+    },
+    "register_stack_contract": {
+      "A_preserved": true,
+      "I_restored": true,
+      "final_NZ_from_displaced_LDX": true,
+      "stack_balanced": true
+    },
+    "torn_interruptible_states": 0
+  },
+  "recorded_on": "2026-08-06",
+  "self_snapshot": {
+    "one_slot_torn_retains_complete_slots": 3,
+    "period_frames": 2048,
+    "period_seconds_at_51_966Hz": "39.410384",
+    "reader_rule": "after the one final CPU stop, reject commit!=A5 and non-multiple-of-8 frame tags; order by modulo-256 age from FF84; accept only the two newest slots whose frame tags differ by exactly 8",
+    "reader_vectors": [
+      {
+        "accepted": [
+          {
+            "age_high_bytes": 2,
+            "counter": 4129,
+            "frame_hi": 8,
+            "offset": 24,
+            "owner": 260
+          },
+          {
+            "age_high_bytes": 10,
+            "counter": 4128,
+            "frame_hi": 0,
+            "offset": 16,
+            "owner": 259
+          }
+        ],
+        "name": "frame-wrap-latest-pair"
+      },
+      {
+        "accepted": [
+          {
+            "age_high_bytes": 10,
+            "counter": 4128,
+            "frame_hi": 0,
+            "offset": 16,
+            "owner": 259
+          },
+          {
+            "age_high_bytes": 18,
+            "counter": 32,
+            "frame_hi": 248,
+            "offset": 8,
+            "owner": 258
+          }
+        ],
+        "name": "torn-newest-falls-back-to-two-complete"
+      }
+    ],
+    "ring": {
+      "logical_range": [
+        "0xff40",
+        "0xff60"
+      ],
+      "physical_range": [
+        "0x087fff40",
+        "0x087fff60"
+      ],
+      "slot_bytes": 8,
+      "slots": 4
+    },
+    "slot_layout": [
+      "counter_u32_le",
+      "owner_u16_le",
+      "frame_hi",
+      "commit"
+    ],
+    "trigger": "owned raster IRQ after D019 bit-0 proof and acknowledge",
+    "writer_order": [
+      "commit=0",
+      "payload",
+      "commit=0xA5"
+    ]
+  },
+  "status": "HOST-GREEN; FINAL-CONTACT-CONSUMED; 1.6-FINAL-PARK"
+}

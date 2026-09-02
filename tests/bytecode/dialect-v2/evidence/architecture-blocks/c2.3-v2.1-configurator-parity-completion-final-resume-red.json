@@ -1,0 +1,126 @@
+{
+  "authority": {
+    "cleanup": {
+      "bytes": 31845,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-configurator-parity-partial-completion-cleanup-receipt.json",
+      "sha256": "ffe837dcb45bb1fc76ee48fd76a09a04e0260972ed6a77f2ff12568b4e0909e8"
+    },
+    "driver": {
+      "bytes": 54611,
+      "path": "tools/host-lisp/c2_v21_root_padding_configurator_parity_media.py",
+      "sha256": "b57baf96cbea6ff5400a9b4fbf3918f96477ddce23af90bc8f3c10d084e4e0ed"
+    },
+    "owner": {
+      "authority": "git-blob",
+      "bytes": 142738,
+      "commit": "e6806ae0ac7c28a5dc2bd00f36f2868881c83365",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "5ddb9caaf1f3d010cf86f717d967fb98ed5d4893c7e1643167ee432febc3e78a"
+    },
+    "resume_red": {
+      "bytes": 6702,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-configurator-parity-completion-resume-red.json",
+      "sha256": "44f6b5ccbb84c38e66359c276496baf52b9326f88d21b375c71a1dac5279455a"
+    }
+  },
+  "claim_limit": "The sole adapter-owner Completion resume was consumed. No further Completion or media attempt is authorized here.",
+  "attribution": {
+    "class": "COMPLETION-ADAPTER-GOLDEN-AUTHORITY-NOT-PROJECTED",
+    "failed_adapter": "c2_v20_source_oracle_media._link105_fixed_audit",
+    "failed_stage": "fresh-process-real-consumer-adapter-preflight",
+    "mechanism": "The adapter reads FLOW.BASE.INV, whose nested module still selected the historical v2.0 Golden. The preflight child did not project the accepted candidate Golden into that actual consumer namespace. Assigning SOURCE_MEDIA.INV at the outer module was a non-consumed binding.",
+    "narrow_repair": "Project the candidate Golden into the exact nested adapter consumer in both the fresh preflight and Completion child, then require the real adapter to pass there before Completion. This needs new owner authority because the sole resume is consumed.",
+    "product_or_link_finding": false,
+    "read_only_differential": {
+      "candidate_golden": {
+        "dependent_fixed_vmas": 101,
+        "dependent_free_derived_vmas": 2,
+        "mapped_far_service_headroom_bytes": 251,
+        "result": "PASS"
+      },
+      "historical_nested_golden": {
+        "error": "candidate invariant geometry differs from reviewed VMA golden",
+        "result": "RED"
+      }
+    }
+  },
+  "error": {
+    "message": "fresh-process Completion configurator preflight red:\nconfigurator parity media: FIRST RED: candidate invariant geometry differs from reviewed VMA golden\n",
+    "type": "MediaError"
+  },
+  "execution_accounting": {
+    "WPLTO_runs": 0,
+    "cards": 0,
+    "completion_resumes_authorized": 1,
+    "completion_resumes_run": 1,
+    "device_contacts": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.3-v2.1-completion-final-resume-red-v1",
+  "frozen_finals_after": {
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d966884a7a3244b23003501e6ed9289a7df21bb1de6edea990649f12201dd043"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 619772,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "8d34e7e9453439e15fc596bb992b7a9ba356db5d8042bd87f8ea993028564d90"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 198179,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "e955cc2c5245a5ee41b19386d490e254ca3057f9f806a395de24c024ccb30b90"
+    }
+  },
+  "frozen_finals_before": {
+    "lisp65-c2-substitution-linked.prg": {
+      "bytes": 41566,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d966884a7a3244b23003501e6ed9289a7df21bb1de6edea990649f12201dd043"
+    },
+    "lisp65-c2-substitution-linked.prg.elf": {
+      "bytes": 630872,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+    },
+    "lisp65-c2-substitution-linked.prg.lto.o": {
+      "bytes": 619772,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.lto.o",
+      "sha256": "8d34e7e9453439e15fc596bb992b7a9ba356db5d8042bd87f8ea993028564d90"
+    },
+    "lisp65-c2-substitution-linked.prg.map": {
+      "bytes": 198179,
+      "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "e955cc2c5245a5ee41b19386d490e254ca3057f9f806a395de24c024ccb30b90"
+    }
+  },
+  "owner_disposition_required": true,
+  "partial_outputs": {
+    "adapter_preflight": {
+      "artifact": {
+        "bytes": 630872,
+        "path": "build/c2.3/v2.1-root-padding-configurator-parity-continuation/completion-adapter-preflight/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "c1ffd5552307d27ba9efc7f67f459259e1bc8f8fa83d62f64b1731f0c555e8b1"
+      },
+      "completion_adapter_receipts": 0,
+      "scratch_final_family_files": 4,
+      "scratch_only": true
+    },
+    "artifact_completion_receipt": false,
+    "files": 0,
+    "inventory_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "media_builds": 0,
+    "pipeline_receipt": false,
+    "publish_last_receipt": false
+  },
+  "recorded_on": "2026-08-17",
+  "retry_authorized": false,
+  "status": "FINAL RESUME RED: RETURNS TO OWNER"
+}

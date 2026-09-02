@@ -1,0 +1,55 @@
+{
+  "DIRMISS": {
+    "diagnostic_product_delta": 0,
+    "method": "ordinary product error row",
+    "renderer_bytes_byteidentical_to_prior_post_symname_hold": 339,
+    "renderer_sha256": "7ddf36a80772dcd8028a91bd2a8b65341bc2414e01a3b3501cfb41c2558e2021"
+  },
+  "candidate": {
+    "elf_sha256": "ede88619d0e9711b8d5144495ca84f0414ee38352f882df8aadf5372504e9889",
+    "product_sha256": "9e8999c0de31e306ee957f4912b7fa0baa52c55d58dfe8a933b1c02462e1faa3"
+  },
+  "deployment": {
+    "bytes": 5623,
+    "path": "build/post-promotion/link77-random-while/phase-v-bundled-hardware/deployment.json",
+    "sha256": "3813add9a074769d1bcb4fa6e77ce2b55f9b2de3685dfa261ea94f476af2cf40"
+  },
+  "execution_accounting": {
+    "compiler_runs": 0,
+    "hardware_runs": 1,
+    "linker_runs": 0,
+    "product_links": 0
+  },
+  "format": "lisp65-c2.2-link77-phase-v-hardware-preparation-v1",
+  "groups": [
+    "while",
+    "random",
+    "interrupt-ownership",
+    "diagnostic"
+  ],
+  "harness_corrections": [
+    {
+      "allocation_row": {
+        "attribution": "The rejected row retained 5000 cons cells, but the bound target has only 48 hot plus 1024 extended cells.",
+        "observed": "*** vm: out of memory",
+        "proof": {
+          "allocations": 1200,
+          "extended_cells": 1024,
+          "heap_cells": 48,
+          "reason": "The 1200 transient cons allocations exceed the complete 1072-cell target heap, so a successful result proves collection without requiring an impossible live set."
+        },
+        "rejected_form": "(let((i 0)(kept nil))(progn(while(car(cons(< i 5000)nil))(setq kept(cons i kept))(setq i(+ i 1)))(+ i(car kept))))",
+        "replacement": "(let((i 0))(progn(while(car(cons(< i 600)nil))(car(cons i nil))(setq i(+ i 1)))i))",
+        "replacement_expected": "600"
+      },
+      "kind": "test-harness-only",
+      "path_binding": "Relative evidence paths are normalized against the workspace before receipt binding.",
+      "product_delta_bytes": 0,
+      "product_redeployments": 0
+    }
+  ],
+  "next_gate": "resume the same physical session at the corrected allocation row",
+  "recorded_on": "2026-07-29",
+  "rows": 15,
+  "status": "passed-one-session-preparation-hardware-not-run"
+}

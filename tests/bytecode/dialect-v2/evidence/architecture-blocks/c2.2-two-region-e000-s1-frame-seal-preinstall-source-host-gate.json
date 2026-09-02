@@ -1,0 +1,85 @@
+{
+  "authority": {
+    "fixture": {
+      "bytes": 18296,
+      "path": "scripts/runtime-overlay-transaction-main.c",
+      "sha256": "cf767acf7cd24ecdbbc85f032d93204674c0bf4b1e77add073c68e9654324452"
+    },
+    "gate": {
+      "bytes": 54189,
+      "path": "tools/host-lisp/c2_preinstall_island_guard.py",
+      "sha256": "bb16634708afc0a046db539f975b4d6256bdd8d07de2ddf425021886042770b9"
+    },
+    "header": {
+      "bytes": 8631,
+      "path": "src/vm_runtime_overlay.h",
+      "sha256": "951384cb36253a6e92386ede10b48ea4757d29f3ac62d2bf19d4c5ea6af2cee5"
+    },
+    "runtime": {
+      "bytes": 91215,
+      "path": "src/vm_runtime_overlay.c",
+      "sha256": "e1c8ba3cc829b481ec0f461b2e735498450ba39f1aea84a0ea42cd3b33b323d9"
+    }
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "promotable_product_links": 0,
+    "whole_program_LTO_closure_links": 0
+  },
+  "format": "lisp65-c2-e000-s1-preinstall-source-host-gate-v1",
+  "host": {
+    "active_not_ready": "failed-closed-with-zero-Island-calls",
+    "binary": {
+      "bytes": 114752,
+      "path": "build/runtime-overlay-transaction-host",
+      "sha256": "989e02a643033414b0bd7cb63cce2fd2cb6e8ab7306a0c9c25e7e4b8683e862b"
+    },
+    "exact_predecessor": {
+      "bytes": 1291,
+      "path": "build/c2.2/preinstall-island-guard-host/link30-resident-island.bin",
+      "sha256": "5d0141d0c78cfd29bacc993b0050c2ba5770938b36236f6c4e12bf740600b40a"
+    },
+    "postinstall_image": "matches-current-generated-Island",
+    "preinstall_transaction_context_calls": 0,
+    "status": "passed-asan-ubsan",
+    "value_string": "runtime-overlay-transaction: PASS catalog=once-per-transaction record+payload=per-slice same-generation-mutation=crc-red generation-change=reauthenticated batch-state=lifetime-exclusive batch-S1=full-single-record-repeat stale-predecessor=exact-link30 preinstall-island-calls=0"
+  },
+  "recorded_on": "2026-07-24",
+  "source": {
+    "checks": {
+      "E000_S1_full_single_record_repeat": true,
+      "active_not_ready_case": true,
+      "asan_ubsan_host_target": true,
+      "exact_stale_fixture_case": true,
+      "host_context_counter": true,
+      "installer_is_named_noinline_boundary": true,
+      "installer_source_has_exact_two_complete_zero_wipes": true,
+      "installer_source_has_no_other_target_use": true,
+      "lookup_and_publish_share_guard": true,
+      "not_ready_is_fail_closed": true,
+      "resident_guard_exact": true
+    },
+    "mutation_matrix": {
+      "Island-batch-wrapper": "rejected",
+      "active-not-ready": "fail-closed-zero-Island-calls",
+      "active-ready": "single-Island-call",
+      "batch-limit-success": "rejected",
+      "direct-entry-bypass": "rejected",
+      "extra-reference": "rejected",
+      "half-address-pair": "rejected",
+      "inactive-stale": "zero-Island-calls",
+      "missing-active-guard": "rejected",
+      "missing-ready-guard": "rejected",
+      "missing-wipe": "rejected",
+      "nonzero-fill": "rejected",
+      "predicate-before-proof": "rejected",
+      "reversed-guard-order": "rejected",
+      "same-payload-runner": "rejected",
+      "wrong-call-target": "rejected",
+      "wrong-length": "rejected",
+      "wrong-target": "rejected"
+    },
+    "status": "passed"
+  },
+  "status": "passed-E000-S1-source-mutations-and-host-lifecycle"
+}

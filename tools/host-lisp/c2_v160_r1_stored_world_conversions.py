@@ -35,10 +35,30 @@ import c2_v21_dependency_invariant_golden as V4_GOLDEN  # noqa: E402
 DRIVER = Path(__file__).resolve()
 FORMAT = "lisp65-c2-v160-r1-stored-world-conversions-v1"
 STATUS = "PASS: ALL EIGHT R1 STORED-WORLD CONVERSIONS INSTALLED"
+FREIGHT_PLACEMENT_PROVERS: dict[str, Callable[[str, dict[str, Any],
+    dict[str, Any], dict[str, Any]], dict[str, Any]]] = {}
+ACCEPTANCE_ARTIFACT_ROOT: Callable[[], Path] | None = None
 
 
 class ConversionError(RuntimeError):
     pass
+
+
+def configure_freight_placement_prover(gate: str,
+        prover: Callable[[str, dict[str, Any], dict[str, Any],
+                          dict[str, Any]], dict[str, Any]]) -> None:
+    existing = FREIGHT_PLACEMENT_PROVERS.get(gate)
+    require(existing is None or existing is prover,
+            f"freight placement prover configured twice: {gate}")
+    FREIGHT_PLACEMENT_PROVERS[gate] = prover
+
+
+def configure_acceptance_artifact_root(provider: Callable[[], Path]) -> None:
+    global ACCEPTANCE_ARTIFACT_ROOT
+    require(ACCEPTANCE_ARTIFACT_ROOT is None
+            or ACCEPTANCE_ARTIFACT_ROOT is provider,
+            "acceptance artifact root configured twice")
+    ACCEPTANCE_ARTIFACT_ROOT = provider
 
 
 def require(value: bool, message: str) -> None:
@@ -251,6 +271,9 @@ def _freight_proof_rows(layout: dict[str, Any],
                     "predecessor": predecessors[name],
                     "relation": "section-vma-equals-predecessor-vma-plus-bytes",
                     "status": "passed"}
+            elif registry["placement_gate"] in FREIGHT_PLACEMENT_PROVERS:
+                proof = FREIGHT_PLACEMENT_PROVERS[registry["placement_gate"]](
+                    name, row, layout, registry)
             else:
                 placement = registration.get("physical_placement")
                 require(isinstance(placement, dict),
@@ -305,7 +328,8 @@ def _validate_freight_rows(rows: list[dict[str, Any]],
                 and not (set(row["placement_proof"]) & forbidden)
                 and row["placement_proof"].get("status") == "passed"
                 and row["placement_proof"].get("gate") in {
-                    "candidate-predecessor-end", "mapped-arena-contract"}
+                    "candidate-predecessor-end", "mapped-arena-contract",
+                    "composed-raw-owner/preheap-gap"}
                 and ((row["placement_proof"].get("gate") ==
                       "candidate-predecessor-end"
                       and row["placement_proof"].get("relation") ==
@@ -319,6 +343,13 @@ def _validate_freight_rows(rows: list[dict[str, Any]],
                              "candidate-section-ends-at-derived-bank-end",
                              "candidate-section-shares-page-encodable-map-offset",
                              "candidate-section-fits-fixed-mapped-arena"}
+                         and set(row["placement_proof"]) == {
+                             "gate", "relation", "status"})
+                     or (row["placement_proof"].get("gate") ==
+                         "composed-raw-owner/preheap-gap"
+                         and row["placement_proof"].get("relation") in {
+                             "code-start-equals-derived-raw-owner-end",
+                             "state-start-equals-hot-bss-end-before-heap"}
                          and set(row["placement_proof"]) == {
                              "gate", "relation", "status"})),
                 f"additive freight row is an address snapshot: {row.get('name')}")
@@ -397,11 +428,13 @@ def _mapped_lma_successor(layout: dict[str, Any],
     }
 
 
-def mapped_lma_successor_mutations(elf: Path) -> list[str]:
+def mapped_lma_successor_mutations(elf: Path, *, packed_prg: Path | None = None,
+        allowed_flat_packed_sections: set[str] | None = None) -> list[str]:
     policy = PRODUCT.MAPPED_TENANT_LMA_POLICY
     if policy not in ("bank2-top", "map-page-top"):
         return []
-    layout = LAYOUT.layout_from_elf(elf)
+    layout = LAYOUT.layout_from_elf(elf, packed_prg=packed_prg,
+        allowed_flat_packed_sections=allowed_flat_packed_sections)
     golden = load(V5_GOLDEN.GOLDEN)
     rejected: list[str] = []
     boundary = "__lisp65_c2_mapped_far_service_load_start"
@@ -483,7 +516,8 @@ def additive_freight_mutations(elf: Path) -> list[str]:
     return rejected
 
 
-def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN
+def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN,
+                           packed_prg: Path | None = None
                            ) -> dict[str, Any]:
     require(golden is V5_GOLDEN,
             "live acceptance reintroduced a pre-v5 Golden")
@@ -491,8 +525,9 @@ def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN
     registries = PRODUCT.active_card_freight_registries()
     if registries:
         authority = load(golden.GOLDEN)
-        layout = LAYOUT.layout_from_elf(elf)
         registries, registered = _active_freight_union()
+        layout = LAYOUT.layout_from_elf(elf, packed_prg=packed_prg,
+            allowed_flat_packed_sections=registered)
         proof_rows = _freight_proof_rows(layout, registries)
         additive = _additive_section_closure(
             layout, authority, registered, proof_rows)
@@ -508,7 +543,8 @@ def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN
                 comparison_layout["boundary_symbols"][boundary])
             additive["mapped_LMA_successor"] = relocation
             additive["mapped_LMA_mutations_rejected"] = (
-                mapped_lma_successor_mutations(elf))
+                mapped_lma_successor_mutations(elf, packed_prg=packed_prg,
+                    allowed_flat_packed_sections=registered))
         successor = candidate_fixed_successors(base_layout, authority)
         additive["candidate_derived_fixed_successors"] = successor
         additive["candidate_derived_fixed_successor_mutations"] = (
@@ -635,8 +671,9 @@ def acceptance_child() -> int:
     ORACLE.BASE.PRODUCT.configure_e000_reopening()
     ORACLE.BASE.PRODUCT.configure_full_map_ownership()
     ORACLE.BASE.PRODUCT.configure_low_resident_lma_reset()
-    ORACLE.BASE.CRC.BUILD = ORACLE.BUILD
-    golden = acceptance_golden_gate(paths["elf"])
+    ORACLE.BASE.CRC.BUILD = (ORACLE.BUILD if ACCEPTANCE_ARTIFACT_ROOT is None
+                             else ACCEPTANCE_ARTIFACT_ROOT())
+    golden = acceptance_golden_gate(paths["elf"], packed_prg=paths["prg"])
     comparison = golden["comparison"]
     linker = ORACLE.BASE.PRODUCT.low_resident_lma_reset_gate(
         paths["linker"].read_text(encoding="utf-8"))
@@ -726,7 +763,7 @@ def acceptance_golden_source_gate(source_override: str | None = None
     functions = {row.name: ast.unparse(row) for row in tree.body
                  if isinstance(row, ast.FunctionDef)}
     body = functions["acceptance_child"]
-    require("acceptance_golden_gate(paths['elf'])" in body
+    require("acceptance_golden_gate(paths['elf'], packed_prg=paths['prg'])" in body
             and "ORACLE.BASE.INV.compare_elf" not in body
             and "VMA_golden_authority" in body,
             "acceptance consumer is not permanently bound to v5")
@@ -736,7 +773,7 @@ def acceptance_golden_source_gate(source_override: str | None = None
 
 def acceptance_golden_source_mutation() -> str:
     source = DRIVER.read_text(encoding="utf-8").replace(
-        "golden = acceptance_golden_gate(paths[\"elf\"])",
+        "golden = acceptance_golden_gate(paths[\"elf\"], packed_prg=paths[\"prg\"])",
         "golden = ORACLE.BASE.INV.compare_elf(paths[\"elf\"])", 1)
     try:
         acceptance_golden_source_gate(source)

@@ -1,0 +1,31 @@
+{
+  "format": "lisp65-c2-v1.2.5-fresh-clone-hidden-link81-freight-first-red-v1",
+  "recorded_on": "2026-07-31",
+  "status": "first-red-attributed-and-corrected-before-retry",
+  "promotable": false,
+  "stage": "fresh-clone-candidate-product-reproduction",
+  "symptom": {
+    "first_missing_input": "build/post-promotion/v124/time/host-first/candidate/stdlib-p0.manifest.json",
+    "failed_consumer": "current_random_while_feature_gates",
+    "product_link_completed": false
+  },
+  "inventory": {
+    "selected_prelink_freight": [
+      "random base composition",
+      "fx composition",
+      "time composition selected as the final stdlib manifest",
+      "while compiler tier and packed carrier"
+    ],
+    "producer_coverage": {
+      "random_fx_time": "c2_v124_candidate_product.run_freight_gates",
+      "while": "c2_while_gate, invoked by current_random_while_feature_gates"
+    },
+    "root_cause": "Link 82 called only the Link-81 Workbench-suite preparation helper. It never ran the Link-81 source/artifact freight producer, so the selected time manifest existed only when inherited from a dirty historical build tree."
+  },
+  "correction": {
+    "producer_boundary": "Link 82 now runs the complete Link-81 freight gate before any selected v1.2.4 manifest is bound.",
+    "authority": "The generated current-source freight summary is bound into the Link-82 feature receipt; private historical receipts remain proof inputs, not artifact producers.",
+    "product_semantics_delta": "none; clean-build input closure only"
+  },
+  "retry_rule": "With all Phase-V and v1.2.4 freight build directories absent, the producer must regenerate the selected time manifest and while carrier before the candidate product build; only then may A1 and fresh-clone qualification rerun."
+}

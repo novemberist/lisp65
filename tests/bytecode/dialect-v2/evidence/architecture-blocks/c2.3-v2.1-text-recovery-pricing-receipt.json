@@ -1,0 +1,238 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "cards_consumed": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "authority": {
+    "call_seam_receipt": {
+      "bytes": 22598,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-call-seam-pricing-receipt.json",
+      "sha256": "5fde15846df57d65341eb80c3b1f16b12545fdbdcccb7cdee34532300083ee86"
+    },
+    "commission": {
+      "authority": "git-blob",
+      "bytes": 16200,
+      "commit": "992e70f687976e1bba5c972e6fd4572e0fbf96ac",
+      "path": "docs/planning/2.1-cpu-transport-work-plan.md",
+      "sha256": "64167cbf7ebbd282063db6a4462cb1200714bdc33396ccd9f514d89aafa1c225"
+    },
+    "driver": {
+      "bytes": 22865,
+      "path": "tools/host-lisp/c2_v21_text_recovery_pricing.py",
+      "sha256": "338b1467ed9238aed4cdebd7738e8e46e61f071ecbebd5fbae16d6f28ead06ee"
+    },
+    "emitter": {
+      "bytes": 26781,
+      "path": "src/c2_session_emitter.c",
+      "sha256": "b9376f3c3bfac1d6e9ce008a1d6c9c374a0ed2172472f98106dc832755f395cd"
+    },
+    "facade": {
+      "bytes": 828,
+      "path": "src/c2_kernal_facade_reopen.s",
+      "sha256": "7661066f8bfd100829cd33ae0636da43bbb6e30646074804cdbb2bbefa038c6a"
+    },
+    "linked_ELF": {
+      "bytes": 628488,
+      "path": "build/c2.3/v2.1-cpu-transport-shrink-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "5f9a5d6955e3af475a7875d4e79b38f0c308360526d4b6c8c8eba3791af45689"
+    },
+    "linked_map": {
+      "bytes": 184475,
+      "path": "build/c2.3/v2.1-cpu-transport-shrink-card/wplto/lisp65-c2-substitution-linked.prg.map",
+      "sha256": "3f93f2c38c801d8b1bcbcb03b54aaebc19eacaeeaf076a574dca5586ed32090a"
+    },
+    "packed_slice_manifest": {
+      "bytes": 44708,
+      "path": "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/final/runtime-overlays-session-final.json",
+      "sha256": "25261accde71d8d0e2c401eec65733572bbd6b8107dbf2f45d33d59d98d48375"
+    },
+    "packed_slice_receipt": {
+      "bytes": 22005,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-phase02b-header-consumption-replacement-card-receipt.json",
+      "sha256": "9e5843fb7b5aa0799be297059474657841daa17d81b32c069cbcd850a4fdae56"
+    },
+    "reader": {
+      "bytes": 3185,
+      "path": "src/optional/c2_map_cpu_read.s",
+      "sha256": "28b7bd1bc55989c66a7868545814d9208ff374f21343bd9f281262a67653b875"
+    },
+    "runtime": {
+      "bytes": 164002,
+      "path": "src/c2_product_runtime.c",
+      "sha256": "4f2a04c1d45e9d40c242d033aeeb1ebdcd89a0004802d8194c07ced35b996e17"
+    },
+    "shrink_card_final_red": {
+      "bytes": 12287,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-cpu-transport-shrink-card-final-red.json",
+      "sha256": "c69bf56e9ddba0b95712502075c99d1c9545062c9572e4d21d55aef94954b93d"
+    }
+  },
+  "baseline": {
+    "contracted_margins": {
+      "bank0_state": 7,
+      "ordinary_chain": 5,
+      "runtime_overlay": 6
+    },
+    "contracted_margins_used_as_freight": false,
+    "mapped_far_facade_start": "0xb3b0",
+    "ordinary_bytes_available": 1,
+    "ordinary_text_end_exclusive": "0xb3af"
+  },
+  "claim_limit": "Host/ELF pricing only. No product-source edit, placement change, selector, card, product link, medium or device contact occurred.",
+  "complete_selector_seam": {
+    "E000_callsite_bytes_delta": 0,
+    "Y_Z_discipline": "selector neither reads nor writes Y/Z",
+    "classification": "inspect the JSR return identity through the existing runtime-overlay-exec vector",
+    "default": "every other caller retains vm_runtime_overlay_exec",
+    "fixed_vector_bytes_delta": 0,
+    "identity_discipline": "two symbolic post-call labels and relocations; no raw linked-PC pin",
+    "ordinary_bytes": 40,
+    "reader_callers": [
+      "c2_stream_c2d_read_return",
+      "c2_stream_shelf_read_return"
+    ],
+    "register_discipline": "PHA/PHX before classification; PLX/PLA on both tails",
+    "relocations": [
+      {
+        "target": "c2_stream_c2d_read_return",
+        "type": "R_MOS_ADDR16_HI"
+      },
+      {
+        "target": "c2_stream_c2d_read_return",
+        "type": "R_MOS_ADDR16_LO"
+      },
+      {
+        "target": "c2_stream_shelf_read_return",
+        "type": "R_MOS_ADDR16_HI"
+      },
+      {
+        "target": "c2_stream_shelf_read_return",
+        "type": "R_MOS_ADDR16_LO"
+      },
+      {
+        "target": "vm_runtime_overlay_exec",
+        "type": "R_MOS_ADDR16"
+      },
+      {
+        "target": "c2_map_cpu_read",
+        "type": "R_MOS_ADDR16"
+      }
+    ],
+    "status": "PASS: complete preserving selector prices at 40 ordinary bytes"
+  },
+  "decision": {
+    "card_authorized": false,
+    "cards_available_after_owner_go": 1,
+    "owner_disposition_required": true,
+    "recommended_card_scope": [
+      "place c2e_w32 in .lisp65_rt_c2emit_final_crc",
+      "add symbolic zero-byte post-call labels at the two E000 reader calls",
+      "retarget c2_facade_runtime_overlay_exec to the preserving selector",
+      "route only the two named return identities to c2_map_cpu_read",
+      "route every other identity to vm_runtime_overlay_exec"
+    ],
+    "required_gates": [
+      "clean-path c2e_w32 semantic equivalence",
+      "all c2e_w32 callsites co-resident in final-CRC slice",
+      "final-CRC slice remains in its current page and below hard cap",
+      "selector A/X preservation and unknown-caller legacy routing",
+      "symbolic return identities, never raw linked-PC constants",
+      "fixed-vector and E000 code sizes unchanged",
+      "contracted margins remain non-budgets"
+    ],
+    "why": "Option A recovers exactly six bytes but remains 33 bytes short after complete selector pricing. Moving c2e_w32 recovers 63 bytes inside an already allocated cold-slice page and leaves 24 ordinary bytes after the 40-byte preserving selector.",
+    "winner": "option-b-wholesale-displacement"
+  },
+  "format": "lisp65-c2.3-v2.1-text-recovery-pricing-v1",
+  "mutations_rejected": [
+    "accept-micro-despite-deficit",
+    "erase-micro-deficit",
+    "remove-micro-check",
+    "underprice-selector",
+    "clobber-selector-registers",
+    "route-unknown-to-reader",
+    "pin-raw-return-PC",
+    "add-outside-cold-caller",
+    "overflow-cold-page",
+    "require-new-overlay-slot",
+    "erase-wholesale-reserve",
+    "spend-contracted-margin",
+    "authorize-card-at-desk",
+    "invent-card-run"
+  ],
+  "option_a_micro_recovery": {
+    "after_bytes": 160,
+    "before_bytes": 166,
+    "checks_removed": 0,
+    "instruction_delta": [
+      "remove helper LDY #0",
+      "remove helper LDZ #$80",
+      "remove helper LDZ #0"
+    ],
+    "ordinary_bytes_before_selector": 7,
+    "ordinary_deficit_after_complete_pricing": 33,
+    "ordinary_reserve_after_selector": null,
+    "proof": {
+      "MAP_EOM_pairs_unchanged": 5,
+      "copy_loop": "changes neither Y nor Z",
+      "first_helper_entry": "caller already establishes Y=0,Z=$80",
+      "later_helper_entries": "therefore retain Y=0,Z=$80",
+      "public_exit": "restore epilogue still establishes Z=0"
+    },
+    "resident_bytes_recovered": 6,
+    "routine": "c2_map_cpu_read",
+    "selector_bytes": 40,
+    "status": "PRICED BUT REJECTED FOR COMPLETE SEAM: exact six-byte recovery"
+  },
+  "option_b_wholesale_displacement": {
+    "E000_delta_bytes": 0,
+    "aggregate_image_delta_bytes": 0,
+    "call_edges": {
+      "caller_addresses": [
+        "0xc526",
+        "0xc544",
+        "0xc561",
+        "0xc664",
+        "0xc67b"
+      ],
+      "caller_section": ".lisp65_rt_c2emit_final_crc",
+      "count": 5,
+      "outside_cold_slice": 0
+    },
+    "destination": ".lisp65_rt_c2emit_final_crc",
+    "fixed_block_delta_bytes": 0,
+    "net_resident_delta_bytes": -23,
+    "ordinary_bytes_before_selector": 64,
+    "ordinary_reserve_after_selector": 24,
+    "packed_layout": {
+      "aggregate_bytes": 65423,
+      "aggregate_capacity_bytes": 65536,
+      "aggregate_growth_bytes": 0,
+      "aggregate_headroom_bytes": 113,
+      "allocated_page_span_bytes": 1280,
+      "file_bytes": 1183,
+      "file_offset": 32256,
+      "hard_slice_cap_bytes": 1792,
+      "new_slice_required": false,
+      "padding_bytes": 97,
+      "projected_allocated_page_span_bytes": 1280,
+      "projected_file_bytes": 1246,
+      "projected_hard_cap_headroom_bytes": 546,
+      "projected_padding_bytes": 34,
+      "section": ".lisp65_rt_c2emit_final_crc",
+      "slice_id": 22
+    },
+    "placement_contract_change": "c2e_w32 becomes a named member of the final-CRC cold slice",
+    "resident_bytes_recovered": 63,
+    "risk": "A placement-contract change, bounded by co-residency, slice-cap, page-span and no-new-caller gates; no nested overlay transfer is added.",
+    "routine": "c2e_w32",
+    "routine_address": "0xa2f0",
+    "selector_bytes": 40,
+    "status": "WINNER: wholesale displacement into existing cold slice"
+  },
+  "recorded_on": "2026-08-14",
+  "status": "PRICED: WHOLESALE COLD-PHASE DISPLACEMENT WINS; CARD GO REQUIRED"
+}

@@ -1,0 +1,148 @@
+{
+  "format": "lisp65-v11-buffer-printer-fix-probe-receipt-v1",
+  "block_id": "1.1-E-buffer-printer-completion",
+  "status": "passed-not-promoted",
+  "recorded_on": "2026-07-16",
+  "source_commit": "ea649338ba6dbe12d99d8bbee4c601fb5c6f217e",
+  "baseline": {
+    "block": "owner-authorized-1.1-C1-compiler-tier",
+    "post_boot_reserve_bytes": 1798,
+    "bank_margin_over_1536_bytes": 262,
+    "resident_prg_bytes": 39563,
+    "resident_prg_sha256": "6c420e0242d7838f28d0d976f9f6cca977b09cce36c7ee6db36a3af90d2447f8",
+    "standard_composition_ext_headroom_bytes": 25628,
+    "standard_composition_symbol_headroom": 394,
+    "standard_composition_namepool_headroom_bytes": 5708,
+    "standard_composition_directory_post_align_headroom": 176,
+    "overlay_base": "0xc352",
+    "overlay_ceiling": "0xc356",
+    "overlay_headroom_bytes": 4,
+    "boot_overlay_bytes": 1669,
+    "receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-compiler-tier-block-receipt.json",
+      "sha256": "062bb8b2c056f06c5e7aba9eed18cdc4ac4626e9ed082bfed1b478b889c5964d"
+    },
+    "capacity_authorization": {
+      "path": "config/v11-c1-capacity-authorization.json",
+      "sha256": "0a50bd9999a2ac0564f748ed68018b6e6c8710bb7d2dd5bfa9fe64810d03bcc9"
+    }
+  },
+  "implementation": {
+    "representation": "?",
+    "semantics": "opaque non-readable marker; no length or payload disclosure",
+    "dispatch": "T_CONS is explicit; T_BUF and every unknown heap kind fail closed to the opaque marker",
+    "safety_invariant": "T_BUF never reaches print_list and cannot be traversed as cons payload",
+    "product_source": "src/printer.c",
+    "bound_host_oracle": "v11-first-class-buffer-check"
+  },
+  "rejected_probes": [
+    {
+      "id": "dedicated-hash-unknown-marker",
+      "representation": "#<?>",
+      "candidate_overlay_base": "0xc364",
+      "delta_from_c1_bytes": 18,
+      "result": "rejected-by-pinned-overlay-ceiling"
+    },
+    {
+      "id": "explicit-buffer-single-character-case",
+      "representation": "?",
+      "candidate_overlay_base": "0xc35a",
+      "delta_from_c1_bytes": 8,
+      "result": "rejected-by-pinned-overlay-ceiling"
+    },
+    {
+      "id": "shared-unknown-label",
+      "representation": "#<?>",
+      "candidate_overlay_base": "0xc364",
+      "delta_from_c1_bytes": 18,
+      "result": "rejected-by-pinned-overlay-ceiling"
+    }
+  ],
+  "capacity_delta_scope": "buffer-printer-completion-on-owner-authorized-C1-candidate",
+  "capacity_delta": {
+    "dimensions": {
+      "bank": {
+        "baseline_post_boot_reserve_bytes": 1798,
+        "candidate_post_boot_reserve_bytes": 1795,
+        "release_target_bytes": 1536,
+        "baseline_margin_bytes": 262,
+        "candidate_margin_bytes": 259,
+        "delta_bytes": -3,
+        "authorization": null,
+        "authorization_status": "required-before-promotion"
+      },
+      "ext": {
+        "baseline_standard_composition_headroom_bytes": 25628,
+        "candidate_standard_composition_headroom_bytes": 25628,
+        "floor_bytes": 16384,
+        "delta_bytes": 0,
+        "margin_bytes": 9244,
+        "authorization": null
+      },
+      "symbols": {
+        "baseline_headroom": 394,
+        "candidate_headroom": 394,
+        "delta": 0,
+        "authorization": null
+      },
+      "namepool": {
+        "baseline_headroom_bytes": 5708,
+        "candidate_headroom_bytes": 5708,
+        "delta_bytes": 0,
+        "authorization": null
+      },
+      "directory": {
+        "baseline_post_align_headroom": 176,
+        "candidate_post_align_headroom": 176,
+        "delta": 0,
+        "authorization": null
+      },
+      "overlay_vma": {
+        "baseline": "0xc352",
+        "candidate": "0xc354",
+        "delta_bytes": 2,
+        "ceiling": "0xc356",
+        "baseline_headroom_bytes": 4,
+        "candidate_headroom_bytes": 2,
+        "authorization": null,
+        "authorization_status": "required-before-promotion"
+      },
+      "boot_overlay": {
+        "baseline_bytes": 1669,
+        "candidate_bytes": 1669,
+        "delta_bytes": 0,
+        "authorization": null
+      }
+    }
+  },
+  "real_link": {
+    "profile_build_id": "791cb7df",
+    "resolved_profile_sha256": "791cb7dfc70aa7f184515923e0049bd42e944255c0d17c1f25a7dfc5beca83c1",
+    "footprint_audit_sha256": "0e416049c3707afebd5bf7bfdc6215b436ec2a2f4ba751be931b7c6a4fdcd781",
+    "resident_prg": {
+      "bytes": 39566,
+      "sha256": "63abbff479f5e0381ce6797638948d4fd3280a09c2ea52d925130cf3c6d22b1b"
+    },
+    "boot_overlay": {
+      "bytes": 1669,
+      "sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0"
+    },
+    "runtime_overlays_manifest_sha256": "667711417722dc405c715787179dd408f700fa1a3c20275b050760643ffd8f51",
+    "runtime_overlays_image_sha256": "3c5dbc5f292b5d3c954357320d1e21efb14d1381fddc97bdc9c674f9cbcecb54"
+  },
+  "verification": {
+    "host_memory_and_gc_smoke": "pass",
+    "printer_oracle": "exact stdout equals ?",
+    "asan_ubsan": "pass",
+    "independent_buffer_oracle_mutations_rejected": 3,
+    "native_function_cross_parity_evaluations": 828,
+    "canonical_product_link": "pass-with-pinned-overlay-ceiling",
+    "footprint_audit": "pass",
+    "hardware": "not-run"
+  },
+  "promotion_blockers": [
+    "owner authorization of the measured 3-byte Bank debit and 2-byte overlay-headroom debit",
+    "regular wave-level product and evidence repin plus hardware acceptance"
+  ],
+  "claim_limit": "This receipt proves fail-closed Buffer printing, exact host output and the real-link capacity result at source commit ea64933. It does not authorize either measured debit, promote a wave product set, or claim hardware evidence."
+}

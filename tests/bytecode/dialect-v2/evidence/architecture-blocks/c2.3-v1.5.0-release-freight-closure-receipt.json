@@ -1,0 +1,149 @@
+{
+  "attempt_accounting": {
+    "device_contacts": 0,
+    "product_cards_authorized": 1,
+    "product_cards_consumed": 0,
+    "product_links": 0
+  },
+  "authorities": {
+    "contract": {
+      "bytes": 1607,
+      "path": "config/c2-v150-release-contract.json",
+      "sha256": "bab9ec3a606e902c95ab1a5fc4f310b08496b1a056569091f9859ef59dd696a1"
+    },
+    "driver": {
+      "bytes": 9973,
+      "path": "tools/host-lisp/c2_v150_release_closure.py",
+      "sha256": "f940cc0d3a573d556eed3f528f0eb2b4c42f00c9276fed5ff54fc3cdd75652ea"
+    },
+    "preflight": {
+      "bytes": 13965,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-release-preflight-receipt.json",
+      "sha256": "56facd7387eccfd51546dd3473cf44662f6fde6ea15094bdb2c23df1aacb5975"
+    }
+  },
+  "claim_limit": "Complete linker-free v1.5 freight closure. The authorized product card is still unused; media, hardware and release are unclaimed.",
+  "format": "lisp65-c2.3-v150-release-freight-closure-v1",
+  "mutations_rejected": [
+    "consume-card",
+    "claim-link",
+    "claim-device",
+    "unfreeze-scope",
+    "grow-resident",
+    "soften-performance"
+  ],
+  "packages": {
+    "dependencies": {
+      "defstruct": [
+        "place"
+      ],
+      "inspect": [
+        "core"
+      ],
+      "place": [
+        "core"
+      ],
+      "string-extra": [
+        "core"
+      ]
+    },
+    "manifests": {
+      "defstruct": {
+        "bytes": 33757,
+        "path": "build/post-promotion/v110-performance/defstruct-candidate.manifest.json",
+        "sha256": "c5faf5b1a9a05a47740be20d18dc876ae9a9f53bc2b9f9961d22025e9259c478"
+      },
+      "inspect": {
+        "bytes": 60176,
+        "path": "build/c2.3/trace-core-abi/inspect.manifest.json",
+        "sha256": "a04bbff04f3f2cdc5e6e6cf6c3c4002b6b5b8da9c79eaff7d71131ece7a4b946"
+      },
+      "place": {
+        "bytes": 23090,
+        "path": "build/post-promotion/defstruct-v1/foundations/place.manifest.json",
+        "sha256": "224b0b1155bd9bd8307b29774ac714c8cc96dc39d3309832a32555eedfc6bf1a"
+      },
+      "string-extra": {
+        "bytes": 9675,
+        "path": "build/post-promotion/v112/string-extra/string-extra.manifest.json",
+        "sha256": "bb847fa89168aeef1adf8787f0cdcfc991f2665173778441946c246c0b397059"
+      }
+    },
+    "public_entries": {
+      "defstruct": [
+        "defstruct"
+      ],
+      "inspect": [
+        "trace",
+        "untrace",
+        "who-calls"
+      ],
+      "place": [
+        "decf",
+        "incf",
+        "pop",
+        "push",
+        "setf"
+      ],
+      "string-extra": [
+        "capitalize",
+        "string-split"
+      ]
+    }
+  },
+  "performance": {
+    "ceremony_release_max_frames": 72,
+    "direct_path_removed_frames": [
+      60,
+      62
+    ],
+    "operation_smoke_max_frames": 2,
+    "release_terminal_on_violation": true,
+    "smokes": [
+      {
+        "expect": "2",
+        "form": "(time (car (cdr (list 1 2))))",
+        "id": "list-read",
+        "max_frames": 2
+      },
+      {
+        "expect": "(9 2)",
+        "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+        "id": "list-write",
+        "max_frames": 2
+      },
+      {
+        "expect": "#\\b",
+        "form": "(time (string-ref \"abc\" 1))",
+        "id": "string-op",
+        "max_frames": 2
+      },
+      {
+        "expect": "42",
+        "form": "(time (v15-perf-probe 41))",
+        "id": "published-call",
+        "max_frames": 2,
+        "setup": "(defun v15-perf-probe (x) (+ x 1))"
+      }
+    ]
+  },
+  "predecessor_hardware": {
+    "defstruct_guard": {
+      "bytes": 6668,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-device-receipt.json",
+      "sha256": "7545fac8c207accb207d7539b8fc4be2bd1bf65e9251817acd096562cc276199"
+    },
+    "trace": {
+      "bytes": 7671,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link95-trace-hardware-result-receipt.json",
+      "sha256": "d02d5eae47b16d227a6a976b3198be8dd1f0cb42e60617cf4dd726f161bc7145"
+    }
+  },
+  "recorded_on": "2026-08-11",
+  "scope": {
+    "frozen": true,
+    "release": "v1.5.0",
+    "resident_delta_bytes": 0
+  },
+  "status": "V150-FREIGHT-CLOSURE-GREEN; ONE-PRODUCT-CARD-AUTHORIZED"
+}

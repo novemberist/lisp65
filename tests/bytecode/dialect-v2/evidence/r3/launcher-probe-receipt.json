@@ -1,0 +1,207 @@
+{
+  "bank_delta": {
+    "authorization": null,
+    "baseline_banked_headroom_bytes": 269,
+    "baseline_product_sha256": "da4c72a2254a98b4efa44442330e8cc1d5bdf5c8a5dd348391b8641c0892b827",
+    "candidate_banked_headroom_bytes": 269,
+    "candidate_product_sha256": "da4c72a2254a98b4efa44442330e8cc1d5bdf5c8a5dd348391b8641c0892b827",
+    "delta_bytes": 0
+  },
+  "boot_matrix": {
+    "counts": {
+      "emulator-valid": 9,
+      "hardware-only": 6
+    },
+    "path": "tests/bytecode/dialect-v2/r3-boot/cases.json",
+    "sha256": "6156da77922d33dbce143f0387bb3612b9daba5d20d1b43e358867c80ef4ec4d"
+  },
+  "claims": {
+    "G3": "not-run",
+    "G6": "not-run",
+    "autoboot_executed": false,
+    "media_loader_implemented": false,
+    "product_bank0_delta": 0,
+    "release_effect": "none",
+    "separate_artifact": true
+  },
+  "contract": {
+    "path": "config/r3-g3-g6-contract.json",
+    "sha256": "b9a1eb77e5fdc937898b62991b466e1d69351cc85298755a8f9b9ba25dc20cae"
+  },
+  "format": "lisp65-r3-stager-probe-receipt-v1",
+  "id": "r3-separate-stager-zero-bank0-probe",
+  "measured_on": "2026-07-13",
+  "media": {
+    "drive_scope": "drive-8-only-drive-9-rejected",
+    "product": {
+      "bytes": 819200,
+      "entries": [
+        "autoboot.c65",
+        "lisp65.prg",
+        "bank5.bin",
+        "overlays.bin",
+        "profile",
+        "ide",
+        "idex",
+        "m65d"
+      ],
+      "identity": {
+        "disk_id": "65",
+        "disk_name": "L65SYS"
+      },
+      "mount_descriptor": {
+        "bytes": 283,
+        "name": "lisp65-product.mount.json",
+        "role": "product-mount-descriptor",
+        "sha256": "6ab5e430d1dfaaa833993ddc85758e37e25bcfc563651fc6c03f46c35e810f94"
+      },
+      "mount_write_protect": true,
+      "mutable_entries": false,
+      "name": "lisp65-product.d81",
+      "package_mode": "0444",
+      "role": "product-d81",
+      "sha256": "6d4159ee390f9532815e8b7703c63e62e80eecbe3a853ee3abb71254f87050dd"
+    },
+    "work": {
+      "bytes": 819200,
+      "entries": [
+        "demo",
+        "work",
+        "an",
+        "out",
+        "fasl0",
+        "fasl1",
+        "fasl2"
+      ],
+      "identity": {
+        "disk_id": "65",
+        "disk_name": "L65WORK"
+      },
+      "mount_write_protect": false,
+      "name": "lisp65-work.d81",
+      "package_mode": "0644",
+      "role": "work-d81",
+      "sha256": "5597f1a751124d0b99fdf82892ef305d414088a064b76d09cd27ab9994789251"
+    }
+  },
+  "product_identity": {
+    "baseline_product_sha256": "da4c72a2254a98b4efa44442330e8cc1d5bdf5c8a5dd348391b8641c0892b827",
+    "candidate_workbench_product_sha256": "da4c72a2254a98b4efa44442330e8cc1d5bdf5c8a5dd348391b8641c0892b827",
+    "existing_artifact_parity": "exact",
+    "existing_artifacts": [
+      {
+        "bytes": 39564,
+        "name": "lisp65.prg",
+        "role": "workbench-prg",
+        "sha256": "abe28f85bc70611ef1b95df582ecf4d4bee9d1d5ebe2fb84b0dc9705ebad84c1"
+      },
+      {
+        "bytes": 39575,
+        "name": "bank5.bin",
+        "role": "bank5-preload",
+        "sha256": "8d0da954b30142d6054c8969d3dde0f16058f619e9e5c8fd290da6087c8094d5"
+      },
+      {
+        "bytes": 54617,
+        "name": "overlays.bin",
+        "role": "attic-catalog",
+        "sha256": "d67c5b59dae5db94bb13fa5fbe1e57f017243f0cc155932d37b3004a04b91877"
+      },
+      {
+        "bytes": 8699,
+        "name": "profile",
+        "role": "resolved-profile",
+        "sha256": "48cfce19b877a38a614cf18217965984ad512ccfdf7da1e165bea60e9edae6b8"
+      },
+      {
+        "bytes": 119576,
+        "name": "lisp65.elf",
+        "role": "linked-product-elf",
+        "sha256": "59f00ad3b0b041023f12d5bf8a5b70a660faa0b43bdc730c90436afb2cd4de07"
+      }
+    ],
+    "historical_r2_product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "new_artifacts": [
+      {
+        "bytes": 128,
+        "name": "autoboot.c65",
+        "role": "cold-stager",
+        "sha256": "e66e3e7059100ea84bb0349360dba509c3de2b5d1503808963e469b88fa700dc"
+      },
+      {
+        "bytes": 819200,
+        "name": "lisp65-product.d81",
+        "role": "product-d81",
+        "sha256": "6d4159ee390f9532815e8b7703c63e62e80eecbe3a853ee3abb71254f87050dd"
+      },
+      {
+        "bytes": 819200,
+        "name": "lisp65-work.d81",
+        "role": "work-d81",
+        "sha256": "5597f1a751124d0b99fdf82892ef305d414088a064b76d09cd27ab9994789251"
+      },
+      {
+        "bytes": 283,
+        "name": "lisp65-product.mount.json",
+        "role": "product-mount-descriptor",
+        "sha256": "6ab5e430d1dfaaa833993ddc85758e37e25bcfc563651fc6c03f46c35e810f94"
+      }
+    ],
+    "product_libraries": [
+      {
+        "bytes": 27768,
+        "name": "ide",
+        "role": "library-ide",
+        "sha256": "8046b970370cda4786db19c1c04b5c56f770e4077e599c1fe1604b84639ddfa2"
+      },
+      {
+        "bytes": 7772,
+        "name": "idex",
+        "role": "library-idex",
+        "sha256": "0082bb8f3977beed1001fa88e05617b93731dfedb863a1268e849942b7d457f6"
+      },
+      {
+        "bytes": 6719,
+        "name": "m65d",
+        "role": "library-m65d",
+        "sha256": "d294d260b8613f5eb4efc9ca970ae8b5631eaa942876916ffe1ca94007b2c897"
+      }
+    ],
+    "release_artifact_set_sha256": "68feec451d275d34b4dcc89fc1c6e33829b175bbc817def145c34cda7d46e9ac"
+  },
+  "source_bindings": [
+    {
+      "path": "tools/host-lisp/r3_stager_probe.py",
+      "sha256": "144c96a2a35f2efa431c159ee29ba6ca74fc7a372c154051991ba0f27915a6c0"
+    },
+    {
+      "path": "scripts/r3-stager-probe-main.c",
+      "sha256": "3c9974c5b08472c42045621f94ef12896228b8ff6526eb6108a9f08feb15895c"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-product-link-report.json",
+      "sha256": "367c8ad6f0308e5c6e8c2b7ab8ff325f010ded63ab9acc84dbaf1e1ea01cc8fc"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-bank-debit-authorization.json",
+      "sha256": "de51b2a2a1697f59a14ad4c70725323a3e308d4a26b2c328ff90727dd87f6f5d"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/canonical-product-reproducibility-receipt.json",
+      "sha256": "e7c299d998804071b25b5a252cbc1bb89976f8e6590177e6a68841a0525f89dc"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/canonical-product-identity-transition.json",
+      "sha256": "f6be958f069632a4fa2ab5e3c4f1b0e5a9b02058012289e82f653d744c57f71c"
+    }
+  ],
+  "stager": {
+    "bytes": 128,
+    "implementation": "closed-phase-descriptor-no-media-io-no-product-chain",
+    "linked_into_workbench_prg": false,
+    "name": "autoboot.c65",
+    "role": "cold-stager",
+    "sha256": "e66e3e7059100ea84bb0349360dba509c3de2b5d1503808963e469b88fa700dc"
+  },
+  "status": "passed-not-implemented"
+}

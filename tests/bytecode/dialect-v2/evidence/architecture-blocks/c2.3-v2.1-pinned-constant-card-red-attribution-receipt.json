@@ -1,0 +1,133 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 1,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_link_attempts": 1,
+    "replacement_cards_authorized": 1,
+    "replacement_cards_consumed": 1
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 628660,
+      "path": "build/c2.3/v2.1-pinned-constant-card/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "e0d1924eeb9cb9dd13835902c64e8b6e8e4358a2ebabc8e591d2d1d93d9db620"
+    },
+    "F1_consumer": {
+      "bytes": 19669,
+      "path": "tools/host-lisp/c2_f1_published_value_call_wplto.py",
+      "sha256": "7ffadb87c3dba45cf24ede7b5733846d2b672111ea60b9cae1b9ffaab721f01d"
+    },
+    "canonical_configurator": {
+      "bytes": 86356,
+      "path": "tools/host-lisp/c2_lite_canonical_product.py",
+      "sha256": "f2983048eb02a6dee37a5cbcc0fe10c38cb16e62c989710a1bc0db1cc7ca5048"
+    },
+    "card_driver": {
+      "bytes": 16778,
+      "path": "tools/host-lisp/c2_v21_pinned_constant_card.py",
+      "sha256": "64210b51b44cfa3a18545689bae091d226f8c1dabb4547d0f5756ac586d20751"
+    },
+    "driver": {
+      "bytes": 12710,
+      "path": "tools/host-lisp/c2_v21_pinned_constant_card_red_attribution.py",
+      "sha256": "7d458402c79922d7d1534122c3fdf84185b23bed03f0c028febf429b562911c5"
+    },
+    "final_red": {
+      "bytes": 10112,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-pinned-constant-card-final-red.json",
+      "sha256": "d2ddfdb7828ab0d50293420039ed8be333c5f2a66219e73a8f7dfc7878c83a78"
+    },
+    "scratch": {
+      "bytes": 1851,
+      "path": "build/c2.3/v2.1-pinned-constant-card/wplto/fresh-c2-lite-prelink-gates/bank2-target-stage/current-workbench-overlay.bin",
+      "sha256": "d43859e3d403f99d184b9b1c8df363edffe41090ae31519601c88c0456a3a26f"
+    },
+    "sweep": {
+      "bytes": 6157,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-pinned-constant-sweep-receipt.json",
+      "sha256": "b625e658973c1b8e5965f71756218bba248ec059ada36d9f6259612671874a50"
+    },
+    "sweep_driver": {
+      "bytes": 15852,
+      "path": "tools/host-lisp/c2_v21_pinned_constant_sweep.py",
+      "sha256": "ef41ab8786cc5c0afdc59d4a60914e85a0c1b55f2740c4a28ed069134372adfc"
+    },
+    "wrapper": {
+      "bytes": 10881,
+      "path": "tools/host-lisp/c2_lite_v6_bank2_target_stage_successor_link.py",
+      "sha256": "cbd7056ad607982ac86be9b22ea47b6c93a194fd495db50dfde3216cb10e1d46"
+    }
+  },
+  "authorized_work_result": {
+    "candidate_stage_address_green": true,
+    "candidate_stage_bytes": 40,
+    "ownership_violations": 0,
+    "publish_last_status": "passed",
+    "resident_reserve_bytes": 24,
+    "same_function_basic_block_jumps": 181,
+    "specific_candidate_stage_address": "0xb98c"
+  },
+  "card_disposition": {
+    "completion_promotion_allowed": false,
+    "device_allowed": false,
+    "media_allowed": false,
+    "owner_disposition_required": true,
+    "replacement_card_consumed": true,
+    "retry_authorized": false
+  },
+  "claim_limit": "Read-only attribution and loud correction of the overbroad sweep claim. No helper fix, retry, completion, media or device action is authorized.",
+  "format": "lisp65-c2.3-v2.1-pinned-card-red-attribution-v1",
+  "mutations_rejected": [
+    "blame-artifact-binding",
+    "hide-size-red",
+    "erase-overrun",
+    "preserve-complete-sweep-claim",
+    "rewrite-historical-receipt",
+    "blame-product-geometry",
+    "authorize-retry",
+    "allow-media",
+    "claim-device"
+  ],
+  "new_final_red": {
+    "actual_workbench_overlay_bytes": 1851,
+    "artifact_identity_implicated": false,
+    "call_chain": [
+      "c2_lite_v6_bank2_target_stage_successor_link.replacement",
+      "B.target_fixture(REPLAY.fixture_product())",
+      "c2_f1_published_value_call_wplto.bank2_target_fixture"
+    ],
+    "class": "TRANSITIVE-HELPER-PINNED-SIZE-CEILING",
+    "fixture_plane_bytes": 34748,
+    "historical_ceiling_bytes": 1792,
+    "mechanism": "The linked candidate reached the F1 target-fixture helper through a monkey-patched transitive call.  Its artifact binding and plane length both match.  Only the inherited 1,792-byte Workbench-overlay ceiling rejects the candidate's 1,851-byte overlay.",
+    "over_ceiling_bytes": 59,
+    "predicate": "0 < len(scratch) <= min(1792, static_bytes)",
+    "predicate_results": {
+      "fixture_artifact_binding_equal": true,
+      "fixture_plane_length_equal": true,
+      "scratch_nonempty": true,
+      "scratch_within_historical_1792_ceiling": false
+    },
+    "product_geometry_implicated": false,
+    "product_link_completed": true,
+    "reached_consumer": "c2_f1_published_value_call_wplto.bank2_target_fixture"
+  },
+  "recorded_on": "2026-08-14",
+  "status": "ATTRIBUTED FINAL RED: transitive F1 helper pins overlay-size ceiling",
+  "sweep_correction": {
+    "historical_receipt_rewritten": false,
+    "omission": "The sweep enumerated selected function bodies in seven source modules but did not close the reachable call graph or execute the real qualification consumer before arming the card.",
+    "required_class_answer": "Any renewed sweep must enumerate expectations transitively through the actual configured call graph and run the real qualification consumer; function-local AST closure is not a complete path closure.",
+    "retracted_claims": [
+      "complete remaining qualification-path enumeration",
+      "pinned_count=0 over the complete reachable path",
+      "no later card can discover this class"
+    ],
+    "surviving_claims": [
+      "the fourteen enumerated direct expectations are candidate-derived",
+      "seven directly enumerated historical pins were converted or retired",
+      "the concrete B9CD-to-B98C stage repair is linked green"
+    ]
+  }
+}

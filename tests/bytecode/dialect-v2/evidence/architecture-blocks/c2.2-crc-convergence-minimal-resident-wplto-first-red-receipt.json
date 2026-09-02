@@ -1,0 +1,82 @@
+{
+  "claim_limit": "One product-shaped Whole-Program-LTO capacity/placement run; no product candidate and no hardware execution.",
+  "contract_guard": {
+    "crc_checked_before_timeout": true,
+    "eight_bit_frame_shortcut": "rejected-contract-drift",
+    "frame_width_bits": 16,
+    "late_start_after_first_miss": "rejected-contract-drift",
+    "specific_timeout_status": 22,
+    "timeout_frames": 64
+  },
+  "diagnostic": {
+    "message": "link command failed before orphan-wrapper acceptance: exit=1",
+    "type": "RuntimeError"
+  },
+  "exact_non_lto_floor": {
+    "boot_context_excluded": true,
+    "call_site_glue_excluded": true,
+    "combined_bytes": 77,
+    "disassembly": {
+      "bytes": 3524,
+      "path": "build/c2.2/substitution/crc-convergence-minimal-resident-wplto/minimal-resident.disassembly.txt",
+      "sha256": "db570cae9789362b514120cc104976686689053ee1a18171706bd92b7bb5483f"
+    },
+    "object": {
+      "bytes": 1136,
+      "path": "build/c2.2/substitution/crc-convergence-minimal-resident-wplto/minimal-resident.o",
+      "sha256": "39d985d46acfffeba3315c18143f12a8499b65ba594dd3604e2deb81c59d49a8"
+    },
+    "retry_after_miss_bytes": 65,
+    "source": {
+      "bytes": 2838,
+      "path": "scripts/c2-crc-convergence-minimal-resident-probe.s",
+      "sha256": "1f3ac7969a0734e72623be9e5afd753e6e799cef04210f5acfd8e3aded79b46a"
+    },
+    "start_sample_bytes": 12,
+    "wplto_can_shrink_these_sections": false
+  },
+  "execution_accounting": {
+    "hardware_runs": 0,
+    "product_links": 0,
+    "promotable_product_candidates": 0,
+    "whole_program_lto_seed_runs": 1
+  },
+  "first_red_conclusion": "The focused minimal form still exceeds the combined 19-byte text reserve and 33-byte fixed pocket. Per the commissioned threshold, no further placement or slice attempt is eligible; Reissleinen criterion 3 is reached.",
+  "format": "lisp65-c2-crc-convergence-minimal-resident-wplto-first-red-v1",
+  "next_gate": "Class-C principle decision: C2-lite or explicit floor break; no automatic continuation.",
+  "promotable": false,
+  "recorded_on": "2026-07-21",
+  "status": "FIRST RED: minimal resident CRC retry exceeds the final legal homes",
+  "temperature_decomposition": {
+    "boot_consumers": {
+      "catalog_slice_bytes": 1609,
+      "cold_crc_helper_moved_from_resident_bytes": 38,
+      "island_slice_bytes": 2042,
+      "island_slice_ceiling_bytes": 1792,
+      "record_slice_bytes": 1639
+    },
+    "runtime_miss_path": "one consumer only; fixed target C356, existing loaded length, u16 modulo-frame retry, CRC-before-timeout, specific status",
+    "runtime_success_path": "one pre-CRC 16-bit frame sample mandated by the approved contract, then the existing rtov_crc_mem and comparison"
+  },
+  "walls_not_relaxed": [
+    "runtime-slice-1792",
+    "final-e000-floor-115",
+    "handoff-anchor-b4a3",
+    "bank0-fixed-block-c080"
+  ],
+  "whole_program_truth": {
+    "aggregate_legal_homes_bytes": 52,
+    "baseline_link35_text_bytes": 38007,
+    "delta_vs_link35_bytes": 302,
+    "legal_fixed_pocket_bytes": 33,
+    "legal_text_reserve_bytes": 19,
+    "map": {
+      "bytes": 185011,
+      "path": "build/c2.2/substitution/crc-convergence-minimal-resident-wplto/resident-island-seed.prg.map",
+      "sha256": "f3b4a6132c093770a8c8ed7d8c371602d71a8cac4a276f281bfa9e6c713280df"
+    },
+    "minimal_probe_text_bytes": 38309,
+    "prior_temperature_text_bytes": 38261,
+    "shortage_after_both_legal_homes_bytes": 250
+  }
+}
