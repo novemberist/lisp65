@@ -221,8 +221,11 @@ def documentation_gate() -> dict[str, Any]:
             and "held or repeating cartridge" in
             cartridge.get("claim_limit", ""),
             "machine-readable cartridge storm boundary missing")
+    # Markdown heading capitalization is presentation, not part of the
+    # public hardware boundary.  Bind the three semantic clauses without
+    # turning title case into a second spelling authority.
     known_text = " ".join(
-        KNOWN_DOC.read_text(encoding="utf-8").split())
+        KNOWN_DOC.read_text(encoding="utf-8").split()).casefold()
     require("interrupt-generating cartridges" in known_text
             and "raster-delimited episode" in known_text
             and "interrupt storm" in known_text,

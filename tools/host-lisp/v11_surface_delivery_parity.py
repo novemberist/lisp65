@@ -59,11 +59,38 @@ def defun_names(text: str) -> set[str]:
 
 def reference_public_names(text: str) -> set[str]:
     start_marker = "The released surface includes:"
-    end_marker = "The complete native visibility"
-    if text.count(start_marker) != 1 or text.count(end_marker) != 1:
+    if text.count(start_marker) != 1:
         raise ParityError("language-reference public-surface section drift")
-    section = text.split(start_marker, 1)[1].split(end_marker, 1)[0].strip().split("\n\n", 1)[0]
+    lines = text.split(start_marker, 1)[1].splitlines()
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    section_lines: list[str] = []
+    for line in lines:
+        if line.startswith("- ") or (section_lines and line.startswith("  ")):
+            section_lines.append(line)
+            continue
+        break
+    if not section_lines:
+        raise ParityError("language-reference public-surface list missing")
+    section = "\n".join(section_lines)
     return set(re.findall(r"`([^`]+)`", section))
+
+
+def reference_documents_name(text: str, name: str) -> bool:
+    """Recognize an exact inline-code name anywhere in the Functions section.
+
+    The released-medium list and the documented-but-not-on-this-medium list
+    are deliberately separate in the 2.0.1 reference.  Delivery parity is
+    checked against the first; an explicit historical/library claim may be
+    documented in either, but prose substrings never count as a name.
+    """
+    match = re.search(r"(?m)^## Functions\s*$", text)
+    if match is None:
+        raise ParityError("language-reference Functions section missing")
+    tail = text[match.end():]
+    next_section = re.search(r"(?m)^## (?!#)", tail)
+    section = tail[:next_section.start()] if next_section else tail
+    return name in set(re.findall(r"`([^`]+)`", section))
 
 
 def verify_authority(claim: dict[str, Any]) -> None:
@@ -254,7 +281,7 @@ def verify_values(
             if len(manifest_matches) != 1:
                 role = "library" if delivery is not None else "resident"
                 raise ParityError(f"{role} manifest does not deliver exactly one {name}")
-        if name not in reference_names:
+        if not reference_documents_name(reference, name):
             raise ParityError(f"language reference does not document {name}")
         if authorities:
             verify_authority(claim)
@@ -338,6 +365,7 @@ def selftest() -> None:
     closure = {"implemented_bindings": {"native-service": []}}
     workbench_profile = "WORKBENCH_DEFINES := -DLISP65_VM_SCREEN_PRIMS\n"
     reference = (
+        "## Functions\n\n"
         "The released surface includes:\n\n- symbols: `eval`, `filter`, `random`.\n\n"
         "The complete native visibility follows.\n"
     )

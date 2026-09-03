@@ -1753,6 +1753,12 @@ def derive_contract_authority_closure() -> dict[str, Any]:
         stdout=subprocess.PIPE).stdout
     durable = json.loads(durable_raw)
     require_promoted_contract(durable, measured)
+    # The predecessor is the sealed v1.9 execution world.  The live domain
+    # executor now names the v2.0 release receipt, which is correct for new
+    # measurements but must not rewrite this historical projection.  Restore
+    # the profile identity from the closure's own evidence era before hashing
+    # the predecessor; target-visible rows are still freshly re-executed.
+    predecessor["product_profile"] = deepcopy(durable["product_profile"])
     changed = contract_semantic_delta(predecessor, measured)
     classification_changes = [row for row in changed
         if row["before"]["classification"] != row["after"]["classification"]]
