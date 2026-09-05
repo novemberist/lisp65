@@ -10,6 +10,35 @@ The final section preserves entries that were closed in an earlier release.
 
 ## Active product limitations
 
+### CPU hardware-stack exhaustion
+
+Status: **confirmed in the released 2.0.1 product; not fixed**
+
+Deep non-tail Lisp recursion can exhaust the CPU hardware stack and enter a
+repeated `E29` error loop requiring a reset. In a bounded emulator reproduction
+of the released product, the following function succeeds through `n = 12`
+and overflows at `n = 13` (13 recursive descents, 14 simultaneous invocations):
+
+```lisp
+(defun sp-depth (n)
+  (if (= n 0) 0 (+ 1 (sp-depth (- n 1)))))
+(sp-depth 13)
+```
+
+This is not a universal safe depth: the surrounding call chain and native
+helpers also consume stack space. Printing deeply nested lists is affected
+independently; the tested printing path overflows at 23 nested list levels.
+Tail calls avoid the additional non-tail VM call frames, but do not protect
+against stack exhaustion inside native helpers such as the recursive printer.
+
+Avoid deep non-tail recursion and deeply nested printed values. If the system
+enters the error loop, reset it before continuing; uncommitted work may be lost.
+
+A shared hardware-stack floor, safer selector reads and a Comfort trampoline
+are planned together for v2.1, with clean rejection instead of stack corruption.
+They are not shipped fixes. Removing the VM's native-recursion depth limit is
+separate architecture work registered for v2.2, not a delivery promise.
+
 ### Permissive `car` and `cdr`
 
 Status: **documented; Tier-2 check descoped**
