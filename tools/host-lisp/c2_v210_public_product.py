@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import importlib
 import json
@@ -102,6 +103,33 @@ def artifact_set(rows: list[dict[str, Any]]) -> str:
                   for row in sorted(rows, key=lambda row: (row["role"], row["name"]))]
     return hashlib.sha256(json.dumps(
         projection, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def source_preflight_path() -> Path:
+    """The producer owns the output root; consumers never select an era receipt."""
+    return PUBLIC / "source-preflight.json"
+
+
+def compiler_projection(sources, mapping) -> dict[str, Any]:
+    def identity(path):
+        local = Path(path).relative_to(ROOT)
+        return (local.name if "generated-product-sources" in local.parts
+                else local.as_posix())
+    rows = [{"source": identity(Path(p)), "bytes": Path(p).stat().st_size,
+             "sha256": sha(Path(p))} for p in sources]
+    require(len({r["source"] for r in rows}) == len(rows),
+            "ambiguous compiler source population")
+    return {"total": len(rows), "generated": len(mapping), "identities": rows}
+
+
+def consume_source_preflight(path, value, sources, mapping):
+    require(Path(path).resolve() == source_preflight_path().resolve(),
+            "source preflight consumer diverges from producer output")
+    require(value.get("producer_output") == source_preflight_path().relative_to(ROOT).as_posix()
+            and value.get("status") == "PASS"
+            and value.get("compiler_sources") == compiler_projection(sources, mapping),
+            "source preflight value diverges from materialized compiler inputs")
+    return value
 
 
 def authority() -> dict[str, Any]:
@@ -464,6 +492,7 @@ def configure_card() -> None:
     CARD.DIFFERENCE = PUBLIC / "unused-difference.json"
     CARD.REPORT = PUBLIC / "unused-report.md"
     CARD.PREFLIGHT_RECEIPT = PUBLIC / "unused-preflight.json"
+    CARD.SOURCE_PREFLIGHT = source_preflight_path()
     plane_receipt = load(PLANE_RECEIPT)
     plane_receipt["geometry"] = CARD.geometry()
     PLANE_RECEIPT.write_bytes(canonical(plane_receipt))
@@ -495,6 +524,7 @@ def configure_card() -> None:
             "renderer feature population drift")
     CARD.CHAIN.LINK.predecessor_profile = lambda: profile_path
     CARD.CHAIN.LINK.predecessor_features = lambda: renderer_features
+    consumer_inputs = {}
     def renderer_sources(mapping: dict[Path, Path],
                          features: tuple[str, ...]) -> list[str]:
         require(features == renderer_features, "renderer feature consumer drift")
@@ -511,8 +541,22 @@ def configure_card() -> None:
             return local.name if "generated-product-sources" in local.parts else local.as_posix()
         require([identity(p) for p in result] == [identity(p) for p in expected],
                 "renderer compiled-source population differs from bound profile")
+        consumer_inputs.update(sources=result, mapping=mapping)
         return result
     CARD.CHAIN.LINK.projected_source_list = renderer_sources
+    link = CARD.CHAIN.LINK
+    require(link.SOURCE_PREFLIGHT == source_preflight_path(),
+            "configured source preflight path did not reach the compiler consumer")
+    if not hasattr(link, "_v210_original_load"):
+        link._v210_original_load = link.load
+    def consumer_load(path):
+        if Path(path) == link.SOURCE_PREFLIGHT:
+            require(consumer_inputs, "source preflight consumed before materialization")
+            require(Path(path).resolve() == source_preflight_path().resolve(),
+                    "source preflight consumer selected a historical output")
+            return consume_source_preflight(path, load(path), **consumer_inputs)
+        return link._v210_original_load(path)
+    link.load = consumer_load
     public = lambda: {"authority": "public-renderer-source-v2.1",
         "private_evidence_inputs": 0, "release": "v2.1.0"}
     def public_configuration_gate() -> dict[str, Any]:
@@ -965,10 +1009,47 @@ def source_preflight() -> dict[str, Any]:
     require(len(expected_linker) == 1 and sha(out/"c2-substitution.ld") == expected_linker[0],
             "public linker source differs from frozen renderer")
     value = {"status": "PASS", "compiler_invocations": 0,
+             "producer_output": source_preflight_path().relative_to(ROOT).as_posix(),
+             "compiler_sources": compiler_projection(sources, mapping),
              "sources": rows, "auxiliary_inputs": [bind(ROOT/p) for p in sorted(auxiliary)],
              "feature_count": len(link.predecessor_features()),
              "linker": bind(out/"c2-substitution.ld")}
-    (PUBLIC/"source-preflight.json").write_bytes(canonical(value))
+    source_preflight_path().write_bytes(canonical(value))
+    # Exercise the actual loader installed at LINK.child's pre-compiler seam.
+    require(link.load(link.SOURCE_PREFLIGHT) == value, "consumer did not read producer receipt")
+    rejected = []
+    cases = {"value-count-divergence": copy.deepcopy(value),
+             "source-identity-divergence": copy.deepcopy(value),
+             "producer-path-divergence": copy.deepcopy(value),
+             "projection-omitted": copy.deepcopy(value)}
+    cases["value-count-divergence"]["compiler_sources"]["total"] += 1
+    cases["source-identity-divergence"]["compiler_sources"]["identities"][0]["sha256"] = "0" * 64
+    cases["producer-path-divergence"]["producer_output"] = "historical/source-preflight.json"
+    del cases["projection-omitted"]["compiler_sources"]
+    try:
+        for name, mutant in cases.items():
+            source_preflight_path().write_bytes(canonical(mutant))
+            try:
+                link.load(link.SOURCE_PREFLIGHT)
+            except PublicBuildError:
+                rejected.append(name)
+            else:
+                raise PublicBuildError("source preflight mutation survived: " + name)
+        link.SOURCE_PREFLIGHT = PUBLIC / "historical-source-preflight.json"
+        try:
+            link.load(link.SOURCE_PREFLIGHT)
+        except PublicBuildError:
+            rejected.append("consumer-path-divergence")
+        else:
+            raise PublicBuildError("consumer path mutation survived")
+    finally:
+        link.SOURCE_PREFLIGHT = source_preflight_path()
+        source_preflight_path().write_bytes(canonical(value))
+    (PUBLIC / "source-preflight-consumption.json").write_bytes(canonical({
+        "status": "PASS", "producer": bind(source_preflight_path()),
+        "consumer": "c2_v200_block3_return_product_card.child:_produce",
+        "compiler_sources": value["compiler_sources"],
+        "mutations_rejected": rejected, "compiler_invocations": 0}))
     return value
 
 
