@@ -35,9 +35,13 @@ Avoid deep non-tail recursion and deeply nested printed values. If the system
 enters the error loop, reset it before continuing; uncommitted work may be lost.
 
 A shared hardware-stack floor, safer selector reads and a Comfort trampoline
-are planned together for v2.1, with clean rejection instead of stack corruption.
-They are not shipped fixes. Removing the VM's native-recursion depth limit is
-separate architecture work registered for v2.2, not a delivery promise.
+are planned for the capacity release after v2.1, not for v2.1 itself.
+In the native `mapcar` test of the hardening measurement seed, the deepest
+observed point left 33 bytes of hardware stack. This is a measurement of that
+path, not a general safe reserve or a device timing guarantee. The proposed
+floor rejected required native work and is not a shipped fix. Removing the
+VM's native-recursion depth limit remains registered architecture work;
+the planned changes are not a delivery promise.
 
 ### Permissive `car` and `cdr`
 
