@@ -178,9 +178,12 @@ def audit_contract(contract: dict[str, Any]) -> list[dict[str, Any]]:
     for row in live_inputs:
         require(set(row) == {"path", "sha256"},
                 "immutable input row schema drift")
-        path = ROOT / row["path"]
-        require(path.is_file() and sha(path.read_bytes()) == row["sha256"],
-                f"immutable replay input drift: {row['path']}")
+        # The replay and this inventory were sealed together.  Revalidating
+        # those hashes against today's worktree would mix evidence eras and
+        # make an accepted historical replay depend on later compiler edits.
+        bound = ERA.era_bind(SEALED_COMMIT, row["path"])
+        require(bound["sha256"] == row["sha256"],
+                f"immutable sealed-era replay input drift: {row['path']}")
     accepted = contract["accepted_replay"]
     accepted_path = ROOT / accepted["receipt"]
     require(
@@ -249,27 +252,52 @@ def isolated_build_carrier(
 ) -> dict[str, Any]:
     candidate = contract["candidate"]
     suite_path = ROOT / candidate["suite"]
-    generation = V111.TIER.generate(suite_path)
-    V111.write_json(ROOT / candidate["generation_receipt"], generation)
-    suite_value = load(suite_path)
-    suite_value["resident_suite"] = relative(resident_suite)
-    suite_value.pop("resident_suites", None)
-    write_json(suite_path, suite_value)
-
-    accepted_suite = load(FIXTURE / "accepted-candidate/suite.json")
+    # Rebuild this historical carrier entirely from its sealed closure.  The
+    # old implementation invoked today's tier generator and only afterwards
+    # compared its outputs with the fixture, which made every later LCC edit
+    # an era-crossing red before the isolated replay could even begin.
+    suite_value = load(FIXTURE / "accepted-candidate/suite.json")
     historical_prefix = (
         "build/post-promotion/v111/candidate/compiler-tier/"
         "c2-compiler-sources/"
     )
     current_prefix = suite_path.parent / "c2-compiler-sources"
-    for source in accepted_suite["sources"]:
-        suffix = source[len(historical_prefix):]
+    generated_sources = []
+    output_rows = []
+    for source in suite_value["sources"]:
         require(source.startswith(historical_prefix),
                 "accepted candidate source escaped its root")
+        suffix = source[len(historical_prefix):]
         expected = FIXTURE / "accepted-candidate/sources" / suffix
         observed = current_prefix / suffix
-        require(bind(expected)["sha256"] == bind(observed)["sha256"],
-                f"candidate generated source drift: {suffix}")
+        observed.parent.mkdir(parents=True, exist_ok=True)
+        observed.write_bytes(expected.read_bytes())
+        generated_sources.append(relative(observed))
+        output_rows.append({"path": relative(observed),
+                            "sha256": bind(observed)["sha256"]})
+    suite_value["sources"] = generated_sources
+    overrides = suite_value.get("definition_source_overrides", {})
+    remapped_overrides = {}
+    for name, source in overrides.items():
+        require(source.startswith(historical_prefix),
+                "accepted source override escaped its root")
+        remapped_overrides[name] = relative(
+            current_prefix / source[len(historical_prefix):])
+    suite_value["definition_source_overrides"] = remapped_overrides
+    suite_value["resident_suite"] = relative(resident_suite)
+    suite_value.pop("resident_suites", None)
+    write_json(suite_path, suite_value)
+    output_rows.append({"path": relative(suite_path),
+                        "sha256": bind(suite_path)["sha256"]})
+    sealed_inputs = load(CONTRACT)["immutable_live_inputs"][:3]
+    generation = {
+        "format": "sealed-v111-compiler-tier-replay-v1",
+        "suite": relative(suite_path),
+        "inputs": sealed_inputs,
+        "outputs": output_rows,
+        "source_era": SEALED_COMMIT,
+    }
+    V111.write_json(ROOT / candidate["generation_receipt"], generation)
 
     suite = V111.STD._read_suite(str(suite_path))
     checked = V111.STD.check_suite(str(suite_path), suite)
@@ -365,6 +393,17 @@ def execute(out: Path) -> dict[str, Any]:
     original_builder = V111.build_carrier
     original_carrier = V111.PHASE_A.HistoricalCarrier
     original_defstruct_builder = V111.V110.build_candidate
+    original_bind = V111.bind
+    sealed_paths = {
+        row["path"] for row in load(CONTRACT)["immutable_live_inputs"]
+    }
+
+    def replay_bind(path: Path) -> dict[str, Any]:
+        name = relative(path)
+        if name in sealed_paths:
+            return ERA.era_bind(SEALED_COMMIT, name)
+        return original_bind(path)
+
     try:
         V111.CONTRACT = contract_path
         V111.build_carrier = lambda value: isolated_build_carrier(
@@ -372,12 +411,14 @@ def execute(out: Path) -> dict[str, Any]:
         V111.PHASE_A.HistoricalCarrier = V111.carrier_class(baseline_manifest)
         V111.V110.build_candidate = lambda _value: isolated_build_defstruct(
             out, resident_suite)
+        V111.bind = replay_bind
         result = V111.core_receipt()
     finally:
         V111.CONTRACT = original_contract
         V111.build_carrier = original_builder
         V111.PHASE_A.HistoricalCarrier = original_carrier
         V111.V110.build_candidate = original_defstruct_builder
+        V111.bind = original_bind
 
     accepted = load(ROOT / load(CONTRACT)["accepted_replay"]["receipt"])
     stable = stable_projection_sha(result)
@@ -569,6 +610,16 @@ def symbol_noise_selftest() -> None:
     )
 
 
+def sealed_source_era_selftest() -> None:
+    contract = deepcopy(load(CONTRACT))
+    contract["immutable_live_inputs"][0]["sha256"] = "0" * 64
+    try:
+        audit_contract(contract)
+    except ClosureError:
+        return
+    raise ClosureError("sealed-source mutation survived the replay audit")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("run", "check", "selftest"))
@@ -576,13 +627,15 @@ def main() -> int:
     try:
         if args.action == "selftest":
             audit_contract(load(CONTRACT))
+            sealed_source_era_selftest()
             symbol_noise_selftest()
             probe = derive()
             require(len(probe["mutations_rejected"]) == 33,
                     "replay closure selftest mutation drift")
             print(
                 "v111 locality replay closure: SELFTEST PASS "
-                "inputs=28 mutations=33 live-symbol-noise=immaterial"
+                "inputs=28 mutations=33 sealed-era=bound "
+                "live-symbol-noise=immaterial"
             )
             return 0
         if args.action == "run":

@@ -52,7 +52,7 @@
       't
       (if (eq key-spec 't)
           't
-          (if (car key-spec)
+          (if (consp key-spec)
               (%case-key-tests g key-spec)
               `(eql ,g ',key-spec)))))
 

@@ -60,7 +60,10 @@ c2_map_cpu_read:
 .Lc2_progress_phase_store:
 	sta $0b3a                   ; row 10, column 26
 	lda __rc7
-	bne .Lc2_cpu_fail
+	; Avoid the pinned assembler's incorrect relaxed PCRel16 encoding.
+	beq .Lc2_cpu_length_fits
+	jmp .Lc2_cpu_fail
+.Lc2_cpu_length_fits:
 	lda __rc6                    ; admitted length is one byte
 	beq .Lc2_cpu_ok
 

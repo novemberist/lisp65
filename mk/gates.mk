@@ -1,6 +1,54 @@
 # Stable gate entry points and provider-neutral CI wrappers.
 
+.PHONY: public-export-population-selftest public-export-population-check
+public-export-population-selftest:
+	python3 tools/host-lisp/public_export_population.py --selftest
+
+# In a public checkout this audits all committed blobs, not the private selector.
+public-export-population-check: public-export-population-selftest
+	python3 tools/host-lisp/public_export_population.py --commit HEAD
+
+check-source: public-export-population-selftest
+
+.PHONY: v210-bundle-docs-check
+v210-bundle-docs-check:
+	python3 tools/host-lisp/c2_v210_bundle_docs_gate.py
+
 .PHONY: workspace-capacity-selftest workspace-capacity-check doctor doctor-selftest source-syntax-check ci-selftest document-index-selftest document-index-check c2-product-profile-parity-selftest c2-product-profile-parity-check c2-lite-v6-roots-fronts-product-profile-selftest c2-lite-v6-roots-fronts-product-profile-check c2-lite-media-acceptance-selftest c2-lite-public-clean-build-selftest c2-lite-public-clean-build-qualify c2-final-island-identity-check c2-append-final-hybrid-check c2-vm-badopcode-detail-check c2-install-phase-discriminator-check c2-phase06a-cutpoint-check c2-append-suffix-read-domain-check c2-l-full-keymap-end-to-end-check c2-crc-codegen-selftest c2-historical-gate-inheritance-selftest c2-historical-gate-inheritance-check c2-address-identity-contract-selftest c2-address-identity-contract-check c2-kernal-residency-audit-selftest c2-kernal-residency-audit-check c2-kernal-unmap-contract-check c2-kernal-unmap-contract-receipt-check c2-nested-append-v5-selftest c2-nested-append-v5-check c2-q-check upstream-verification-selftest upstream-verification-check proof-hooks-install evidence-archive-assets-selftest evidence-archive-assets-check evidence-archive-assets-remote-check evidence-archive-index-size-gate evidence-archive-history-size-gate history-transport-bootstrap history-transport-rewrite-check remote-source-binding-selftest remote-source-binding-receipt-check promotion-register-check promotion-preflight-check r4-product-candidate-check r5-global-g5-input-check r5-global-g5-seal-selftest r6-ship-selftest r6-g6-selftest r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check workbench-product-reproducibility-selftest workbench-product-reproducibility-check workbench-product-reproducibility-preflight media-guard-bank-attribution-check post-capture-planning-capacity-check chain-walker-inventory-check dialect-contract-selftest dialect-contract-check bytecode-abi-ledger-selftest bytecode-abi-ledger-check code-object-arity-contract-selftest code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check r3-product-block-build r3-current-product-block-check r3-g3-g6-contract-check r3-g3-g6-environment-check r3-product-block-check r3-product-reproducibility-check r3-g3-static-preflight-check r3-stager-probe-check workbench-ux-harness-selftest semantic-contracts-selftest semantic-contracts-lint semantic-contracts-g0 semantic-contracts-g1 semantic-contracts-g2 bytecode-p0-omission-contract-check ci-check-source ci-check-host check-source check-host check-product check-reference reference-diagnostics check-emulator check-hardware-dry-run check-hardware
+.PHONY: block-26-build-integrity-selftest block-26-build-integrity-check
+.PHONY: block-26-small-hardening-selftest block-26-small-hardening-check
+.PHONY: block-26-card6-e000-pricing-selftest block-26-card6-e000-pricing-check
+.PHONY: block-26-closure-selftest block-26-closure-check
+
+block-26-closure-selftest:
+	python3 tools/host-lisp/block_26_closure.py selftest
+
+block-26-closure-check: block-26-closure-selftest
+	python3 tools/host-lisp/block_26_closure.py check
+
+check-source: block-26-closure-check
+
+block-26-build-integrity-selftest:
+	python3 tools/host-lisp/block_26_build_integrity_card.py selftest
+
+block-26-build-integrity-check:
+	python3 tools/host-lisp/block_26_build_integrity_card.py check
+check-source: block-26-build-integrity-check
+
+block-26-small-hardening-selftest:
+	python3 tools/host-lisp/block_26_small_hardening_card.py selftest
+
+block-26-small-hardening-check:
+	python3 tools/host-lisp/block_26_small_hardening_card.py check
+check-source: block-26-small-hardening-check
+
+block-26-card6-e000-pricing-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_small_hardening_e000_pricing.py selftest
+
+block-26-card6-e000-pricing-check: block-26-card6-e000-pricing-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_small_hardening_e000_pricing.py check
+
+check-source: block-26-card6-e000-pricing-check
 .PHONY: c2-bound-artifact-source-parity-selftest c2-bound-artifact-source-parity-required-check
 .PHONY: c2-bound-artifact-source-parity-check
 .PHONY: c2-interrupt-ownership-selftest
@@ -902,6 +950,7 @@ c2-crc-codegen-selftest:
 	python3 tools/host-lisp/c2_crc_asm_leaf_gate.py --selftest
 	python3 tools/host-lisp/c2_asm_leaf_abi_gate.py --selftest
 	python3 tools/host-lisp/c2_fixed_block_leaf_gate.py --selftest
+	python3 tools/host-lisp/f011_dynamic_owners_gate.py
 
 c2-historical-gate-inheritance-selftest: c2-crc-codegen-selftest
 	python3 tools/host-lisp/c2_historical_gate_inheritance.py --selftest
@@ -2119,7 +2168,7 @@ check-source: workspace-capacity-check doctor-selftest source-syntax-check ci-se
 
 check-host: check-source ship-builder-sample-fleet-check ship-builder-reproducibility-check c2-while-check semantic-contracts-g1 host-oracle fixed-point-check closure-surface-check ide-host-slice-check eval-bytecode-equivalence-check equivalence-check dialect-v2-lcc-surface-check dialect-v2-capacity-ledger-check dialect-v2-number-to-string-check v2-fasl-save-host-check v11-m-transactional-fasl-acceptance-check v2-capability-carrier-check-host-3 dialect-v2-prelude-evidence-live-check post-mvp-stdlib-polish-check stdlib-embed-whatif-check bytecode-p0-stdlib-check string-arena-probe bytecode-p0-private-inline-check workbench-private-inline-composition-probe gc-symbol-scan-timing-check bytecode-p0-ide-full-lib-check bytecode-p0-ide-extra-lib-check bytecode-p0-m65d-lib-check bytecode-p0-ide-lib-artifacts d81-persistence-fault-selftest demo-suite-check ide-bytecode-cost-report ide-bytecode-dynamic-report runtime-core-smoke gc-smoke compile-smoke compile-run repl-session lcc-install-device-smoke lcc-install-overlay-smoke vm-boot-fastpath-smoke error-state-smoke prelude-compile-check prelude-load-run eval-prims-smoke save-semantics-check output-smoke screen-smoke v11-wave3-dry-smoke
 
-check-product: check-host mvp-vm-stdlib-boot-budget-check mvp-vm-stdlib-runtime-budget-check bytecode-vm-compile-check workbench-overlay-bootstrap-smoke workbench-overlay-control-audit-selftest hw-stack-probe-readback-selftest workbench-product workbench-error-code-contract-check bank0-lifetime-report bank0-island-inventory-report runtime-core-prototype-check mvp-ship-artifacts bytecode-p0-ide-lib-check ide-capacity-check workbench-symfn-dynamic-report workbench-l65m-transport-ops-report workbench-l65m-commit-ops-report workbench-disk-lib-budget-check v2-workbench-library-composition-check workbench-d81-bam-sanity workbench-d81-bam-alloc-diff-selftest workbench-d81-chain-write-diff-selftest workbench-d81-dir-write-diff-selftest m65-disk-alloc-load-check m65-disk-alloc-var-load-check workbench-d81-save-new-diff-selftest workbench-d81-save-new-scan-diff-selftest workbench-d81-save-new-var-diff-selftest workbench-ship-artifacts-check semantic-contracts-g2
+check-product: check-host toolchain-external-product-verify mvp-vm-stdlib-boot-budget-check mvp-vm-stdlib-runtime-budget-check bytecode-vm-compile-check workbench-overlay-bootstrap-smoke workbench-overlay-control-audit-selftest hw-stack-probe-readback-selftest workbench-product workbench-error-code-contract-check bank0-lifetime-report bank0-island-inventory-report runtime-core-prototype-check mvp-ship-artifacts bytecode-p0-ide-lib-check ide-capacity-check workbench-symfn-dynamic-report workbench-l65m-transport-ops-report workbench-l65m-commit-ops-report workbench-disk-lib-budget-check v2-workbench-library-composition-check workbench-d81-bam-sanity workbench-d81-bam-alloc-diff-selftest workbench-d81-chain-write-diff-selftest workbench-d81-dir-write-diff-selftest m65-disk-alloc-load-check m65-disk-alloc-var-load-check workbench-d81-save-new-diff-selftest workbench-d81-save-new-scan-diff-selftest workbench-d81-save-new-var-diff-selftest workbench-ship-artifacts-check semantic-contracts-g2
 
 check-hardware-dry-run: hw-workbench-overlay-stack-guard-smoke-dry-run hw-smoke-vm-stdlib-dry-run hw-workbench-ux-smoke-dry-run hw-workbench-bam-read-smoke-dry-run hw-workbench-bam-alloc-smoke-dry-run hw-workbench-chain-write-smoke-dry-run hw-workbench-dir-write-smoke-dry-run hw-workbench-save-new-smoke-dry-run hw-workbench-save-new-scan-smoke-dry-run hw-workbench-save-new-var-smoke-dry-run
 
@@ -3446,7 +3495,7 @@ c2-v190-release-package-selftest: c2-v190-public-clean-build-selftest
 
 check-source: c2-v190-release-package-selftest
 
-.PHONY: c2-v200-release-media-check c2-v200-candidate-seal-check c2-v200-public-clean-build-selftest
+.PHONY: c2-v200-release-media-check c2-v200-candidate-seal-check c2-v200-public-clean-build-selftest c2-v200-release-package-selftest
 c2-v200-release-media-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_media.py check
 
@@ -3456,7 +3505,10 @@ c2-v200-candidate-seal-check: c2-v200-release-media-check
 c2-v200-public-clean-build-selftest: c2-v200-candidate-seal-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_public_clean_build.py selftest
 
-check-source: c2-v200-public-clean-build-selftest
+c2-v200-release-package-selftest: c2-v200-public-clean-build-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_package.py selftest
+
+check-source: c2-v200-release-package-selftest
 
 .PHONY: c2-v200-public-surface-medium-projection-selftest c2-v200-public-surface-medium-projection-check
 c2-v200-public-surface-medium-projection-selftest:
@@ -3475,6 +3527,12 @@ c2-v201-bundle-docs-source-check: c2-v201-bundle-docs-selftest
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v201_bundle_docs_gate.py source-check
 
 check-source: c2-v201-bundle-docs-source-check
+
+.PHONY: c2-v201-release-package-selftest
+c2-v201-release-package-selftest: c2-v201-bundle-docs-source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v201_release_package.py selftest
+
+check-source: c2-v201-release-package-selftest
 
 .PHONY: check-source-runtime-selftest check-source-runtime-check check-source-inner
 check-source-runtime-selftest:
@@ -3511,6 +3569,203 @@ consolidated-consumption-authority-check: consolidated-consumption-authority-sel
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/consolidated_consumption_authority.py check
 
 check-source: consolidated-consumption-authority-check
+
+.PHONY: block-26-card1-sidx-selftest block-26-card1-sidx-check
+block-26-card1-sidx-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/sidx_symbol_domain_gate.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_sidx_wrong_world_attribution.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_sidx_product_card.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_sidx_guard_form_pricing.py selftest
+
+block-26-card1-sidx-check: block-26-card1-sidx-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/sidx_symbol_domain_gate.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_sidx_wrong_world_attribution.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_sidx_product_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_sidx_dwx_prefilter.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_sidx_guard_form_pricing.py check
+
+check-source: block-26-card1-sidx-check
+
+.PHONY: block-26-card2-f011-pricing-selftest block-26-card2-f011-pricing-check
+block-26-card2-f011-pricing-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_text_budget_pricing.py selftest
+
+block-26-card2-f011-pricing-check: block-26-card2-f011-pricing-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_text_budget_pricing.py check
+
+check-source: block-26-card2-f011-pricing-check
+
+.PHONY: block-26-card2-f011-product-preflight-check
+block-26-card2-f011-product-preflight-check: block-26-card2-f011-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_replacement_product_card.py check-preflight
+
+check-source: block-26-card2-f011-product-preflight-check
+
+.PHONY: block-26-card2-f011-final-link-red-selftest block-26-card2-f011-final-link-red-check
+block-26-card2-f011-final-link-red-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_final_link_red.py selftest
+
+block-26-card2-f011-final-link-red-check: block-26-card2-f011-final-link-red-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_final_link_red.py check
+
+check-source: block-26-card2-f011-final-link-red-check
+
+.PHONY: block-26-card2-f011-state-pricing-selftest block-26-card2-f011-state-pricing-check
+block-26-card2-f011-state-pricing-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_state_placement_pricing.py selftest
+
+block-26-card2-f011-state-pricing-check: block-26-card2-f011-state-pricing-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_state_placement_pricing.py check
+
+check-source: block-26-card2-f011-state-pricing-check
+
+.PHONY: block-26-card2-f011-replacement-red-selftest block-26-card2-f011-replacement-red-check
+block-26-card2-f011-replacement-red-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_replacement_final_red.py selftest
+
+block-26-card2-f011-replacement-red-check: block-26-card2-f011-replacement-red-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_replacement_final_red.py check
+
+check-source: block-26-card2-f011-replacement-red-check
+
+.PHONY: block-26-card2-f011-map-abort-repair-pricing-check
+block-26-card2-f011-map-abort-repair-pricing-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_map_abort_repair_pricing.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_map_abort_repair_pricing.py selftest
+
+check-source: block-26-card2-f011-map-abort-repair-pricing-check
+
+.PHONY: block-26-card2-f011-last-link-preflight-check
+block-26-card2-f011-last-link-preflight-check: block-26-card2-f011-map-abort-repair-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_map_abort_repair_product_card.py check-preflight
+
+check-source: block-26-card2-f011-last-link-preflight-check
+
+.PHONY: block-26-card2-f011-last-link-acceptance-red-check
+block-26-card2-f011-last-link-acceptance-red-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_map_abort_repair_acceptance_red.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_map_abort_repair_acceptance_red.py selftest
+
+check-source: block-26-card2-f011-last-link-acceptance-red-check
+
+.PHONY: block-26-card2-f011-acceptance-placement-conversion-check
+block-26-card2-f011-acceptance-placement-conversion-check: block-26-card2-f011-last-link-acceptance-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_placement_conversion.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_placement_conversion.py selftest
+
+check-source: block-26-card2-f011-acceptance-placement-conversion-check
+
+.PHONY: block-26-card2-f011-acceptance-successor-red-check
+block-26-card2-f011-acceptance-successor-red-check: block-26-card2-f011-acceptance-placement-conversion-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_successor_red.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_successor_red.py selftest
+
+check-source: block-26-card2-f011-acceptance-successor-red-check
+
+.PHONY: block-26-card2-f011-acceptance-successor-conversion-check
+block-26-card2-f011-acceptance-successor-conversion-check: block-26-card2-f011-acceptance-successor-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_successor_conversion.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_successor_conversion.py selftest
+
+check-source: block-26-card2-f011-acceptance-successor-conversion-check
+
+.PHONY: block-26-card2-f011-acceptance-normalization-red-check
+block-26-card2-f011-acceptance-normalization-red-check: block-26-card2-f011-acceptance-successor-conversion-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_normalization_red.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_normalization_red.py selftest
+
+check-source: block-26-card2-f011-acceptance-normalization-red-check
+
+.PHONY: block-26-card2-f011-acceptance-projection-correction-check
+block-26-card2-f011-acceptance-projection-correction-check: block-26-card2-f011-acceptance-normalization-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_projection_correction.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_acceptance_projection_correction.py selftest
+
+check-source: block-26-card2-f011-acceptance-projection-correction-check
+
+.PHONY: block-26-card2-f011-last-link-resume-check
+block-26-card2-f011-last-link-resume-check: block-26-card2-f011-acceptance-projection-correction-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_map_abort_repair_product_card.py check-resume
+
+check-source: block-26-card2-f011-last-link-resume-check
+
+.PHONY: block-26-card2-f011-dwx-prefilter-check
+block-26-card2-f011-dwx-prefilter-check: block-26-card2-f011-last-link-resume-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_dwx_prefilter.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_f011_dwx_prefilter.py selftest
+
+check-source: block-26-card2-f011-dwx-prefilter-check
+
+.PHONY: block-26-card3-vm-preamble-selftest block-26-card3-vm-preamble-check
+block-26-card3-vm-preamble-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_preamble.py selftest
+
+block-26-card3-vm-preamble-check: block-26-card3-vm-preamble-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_preamble.py check
+
+check-source: block-26-card3-vm-preamble-check
+
+.PHONY: block-26-card3-vm-product-preflight-selftest block-26-card3-vm-product-preflight-check
+block-26-card3-vm-product-preflight-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_product_preflight.py selftest
+
+block-26-card3-vm-product-preflight-check: block-26-card3-vm-product-preflight-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_product_preflight.py check
+
+check-source: block-26-card3-vm-product-preflight-check
+
+.PHONY: block-26-card3-vm-product-card-preflight-check
+block-26-card3-vm-product-card-preflight-check: block-26-card3-vm-product-preflight-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_product_card.py check-preflight
+
+check-source: block-26-card3-vm-product-card-preflight-check
+
+.PHONY: block-26-card3-vm-fixed-raw-bss-owner-red-check
+block-26-card3-vm-fixed-raw-bss-owner-red-check: block-26-card3-vm-product-card-preflight-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_dwx_prefilter.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_dwx_prefilter.py selftest
+
+check-source: block-26-card3-vm-fixed-raw-bss-owner-red-check
+
+.PHONY: block-26-card3-vm-bss-placement-pricing-selftest block-26-card3-vm-bss-placement-pricing-check
+block-26-card3-vm-bss-placement-pricing-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_bss_placement_pricing.py selftest
+
+block-26-card3-vm-bss-placement-pricing-check: block-26-card3-vm-bss-placement-pricing-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_bss_placement_pricing.py check
+
+check-source: block-26-card3-vm-bss-placement-pricing-check
+
+.PHONY: block-26-card3-vm-reserved-product-preflight-check
+block-26-card3-vm-reserved-product-preflight-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_reserved_product_card.py check-preflight
+
+check-source: block-26-card3-vm-reserved-product-preflight-check
+
+.PHONY: block-26-card3-vm-reserved-dwx-check
+block-26-card3-vm-reserved-dwx-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_reserved_dwx_prefilter.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_hardening_reserved_dwx_prefilter.py selftest
+
+check-source: block-26-card3-vm-reserved-dwx-check
+
+.PHONY: block-26-card3-vm-a7-pricing-selftest block-26-card3-vm-a7-pricing-check
+block-26-card3-vm-a7-pricing-selftest: block-26-card3-vm-reserved-dwx-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_a7_pricing.py selftest
+
+block-26-card3-vm-a7-pricing-check: block-26-card3-vm-a7-pricing-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_vm_a7_pricing.py check
+
+check-source: block-26-card3-vm-a7-pricing-check
+
+.PHONY: block-26-card4-compiler-prelude-selftest block-26-card4-compiler-prelude-check
+block-26-card4-compiler-prelude-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_compiler_prelude_card.py selftest
+
+block-26-card4-compiler-prelude-check: block-26-card4-compiler-prelude-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/block_26_compiler_prelude_card.py check
+
+check-source: block-26-card4-compiler-prelude-check
 
 .PHONY: receipt-idempotence-audit-selftest receipt-idempotence-audit-check
 receipt-idempotence-audit-selftest:
@@ -3848,3 +4103,55 @@ c2-v200-release-card-check: c2-v200-release-device-attribution-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_card.py selftest
 
 check-source: c2-v200-release-card-check
+
+check-source: dwx-retroactive-red-replay-check
+
+.PHONY: c2-v210-comfort-display-repair-check
+c2-v210-comfort-display-repair-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v210_comfort_display_repair.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/dwx_comfort_resume.py --selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/dwx_comfort_collection_row.py check --out build/v2.1/comfort-collection-calibration-r2
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v210_comfort_device_session.py check
+
+check-source: c2-v210-comfort-display-repair-check
+.PHONY: f011-read-error-propagation-check
+f011-read-error-propagation-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/f011_read_error_propagation_gate.py
+
+check-source: f011-read-error-propagation-check
+
+.PHONY: f011-status-qualification-check
+f011-status-qualification-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/f011_status_instrument_semantics.py
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/f011_status_qualification_gate.py
+
+check-source: f011-status-qualification-check
+
+.PHONY: f011-frame-device-session-check
+f011-frame-device-session-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/f011_frame_device_session.py check
+
+check-source: f011-frame-device-session-check
+
+.PHONY: f011-buffered-repair-qualification-check
+f011-buffered-repair-qualification-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/f011_buffered_repair_final_proof.py
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/f011_buffered_repair_qualification.py check
+
+check-source: f011-buffered-repair-qualification-check
+
+.PHONY: renderer-branch-candidate-failure-check
+renderer-branch-candidate-failure-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/renderer_branch_product_card.py failure-checks
+
+check-source: renderer-branch-candidate-failure-check
+
+.PHONY: comfort-stack-source-authority-check
+comfort-stack-source-authority-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/comfort_entry_service_gate.py --output build/v2.1/comfort-stack-source-gates/registration.json
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/comfort_entry_context_gate.py --output build/v2.1/comfort-stack-source-gates/admission.json
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/hardware_sp_link_authority.py
+
+# Source predicates and threshold-consumer mutations only. Final ELF, timing,
+# watermarks and packed-world admission remain separate candidate obligations.
+check-source: comfort-stack-source-authority-check

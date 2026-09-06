@@ -203,11 +203,16 @@ def audit_truth(truth: ElfTruth, *, require_hot_bss: bool,
         owned_stack: dict[str, Any] | None = None
         if full_map_ownership:
             stack = truth.section(OWNED_STACK_SECTION)
+            arena = json.loads((ROOT / "config/c2-state-ownership-contract.json")
+                               .read_text())["arena_skeleton"]["compiler_static_stack"]
+            stack_start = int(arena["start"], 0)
+            stack_end = int(arena["end_exclusive"], 0)
             require(
                 (noinit.address, noinit.bytes) == (NOINIT_ADDRESS, 0)
                 and noinit_end == NOINIT_ADDRESS
-                and (stack.address, stack.bytes) ==
-                    (OWNED_STACK_ADDRESS, OWNED_STACK_BYTES),
+                and stack.address == stack_start == OWNED_STACK_ADDRESS
+                and stack_end - stack_start == int(arena["capacity_bytes"])
+                and 0 < stack.bytes <= stack_end - stack_start,
                 "full-map state ownership drift: "
                 f"noinit={noinit} static_stack={stack}")
             overlay_min = OVERLAY_FLOOR

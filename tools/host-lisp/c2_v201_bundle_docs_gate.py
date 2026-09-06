@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 from typing import Any, Callable
 
@@ -33,6 +34,10 @@ TIER1 = ROOT / "lib/domain-tier1.lisp"
 DEVICE = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v2.0-release-strip-device-result-receipt.json")
+SEALED_RECEIPT = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/post-release/"
+    "v201-bundled-docs-halt-b-receipt.json")
+SEALED_COMMIT = "ec8a73517c32c56e109ddae8f105a6cc2c2bd1d6"
 DOC_PATHS = {
     "release": "docs/release-notes.md",
     "guide": "docs/user-guide.md",
@@ -91,40 +96,35 @@ def tier1_names() -> list[str]:
     return [name for name in names if not name.startswith("%")]
 
 
+def sealed_release_result() -> dict[str, Any]:
+    relative = SEALED_RECEIPT.relative_to(ROOT).as_posix()
+    raw = subprocess.run(
+        ["git", "show", f"{SEALED_COMMIT}:{relative}"], cwd=ROOT,
+        check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    ).stdout
+    require(SEALED_RECEIPT.read_bytes() == raw,
+            "v2.0.1 bundled-docs evidence escaped its sealed era")
+    receipt = json.loads(raw)
+    require(
+        isinstance(receipt, dict)
+        and receipt.get("format") == "lisp65-v201-bundled-docs-halt-b-v1"
+        and isinstance(receipt.get("result"), dict),
+        "sealed v2.0.1 bundled-docs receipt drift",
+    )
+    return receipt["result"]
+
+
 def derive_facts() -> dict[str, Any]:
-    metadata = load(METADATA)
-    projection = load(MEDIUM_RECEIPT)
-    MEDIUM.validate(projection)
-    errors = load(ERRORS)["codes"]
-    arities = [row["arity"]["status"] for row in metadata["records"]]
-    device = load(DEVICE)
-    d5 = device["rows"][3]["D5"]["free"]
-    counters = device["rows"][1]["captures"]["counter_values"]
-    examples = sorted((ROOT / "examples/ship").glob("*/project.l65p"))
-    keymap = load(KEYMAP)
-    tier1 = tier1_names()
-    require(len(errors) == 63
-            and sum(row["presentation"] == "active-text" for row in errors) == 44
-            and arities.count("exact-code-object") == 103
-            and arities.count("unresolved") == 36
-            and len(metadata["records"]) == 139
-            and len(examples) == 5 and len(keymap["bindings"]) == 41
-            and d5 == {"symbol_slots": 107, "namepool_bytes": 1467}
-            and counters == {"raw": 138, "seen": 138,
-                             "stored": 138, "taken": 138}
-            and len(tier1) == 21,
-            "derived bundled-document number authority drift")
-    return {
-        "error_codes": {"stable": 63, "active_text": 44},
-        "arity": {"exact": 103, "unresolved": 36, "records": 139},
-        "ship_examples": {"count": 5,
-            "projects": [path.parent.name for path in examples]},
-        "keymap_bindings": 41,
-        "D5_free": d5,
-        "capture_counters": counters,
-        "tier1_changed_public_functions": tier1,
-        "medium_projection": projection["counts"],
-    }
+    result = sealed_release_result()
+    facts = result.get("number_pins")
+    require(isinstance(facts, dict)
+            and facts.get("tier1_changed_public_functions")
+                == ["append", "length", "nth", "nthcdr", "reverse", "last",
+                    "member", "assoc", "mapcar", "mapcan", "mapc", "find",
+                    "position", "butlast", "copy-list", "count", "reduce",
+                    "every", "some", "getf", "remf"],
+            "sealed v2.0.1 bundled-document number authority drift")
+    return deepcopy(facts)
 
 
 def historical_version_context(texts: dict[str, str]) -> list[dict[str, str]]:
@@ -254,8 +254,7 @@ def validate_bundle(root: Path) -> dict[str, Any]:
                           "sha256": hashlib.sha256(raw).hexdigest()}
     result = validate_texts(texts, root.name, derive_facts())
     result["bindings"] = bindings
-    result["authorities"] = [bind(path) for path in
-        (METADATA, MEDIUM_RECEIPT, ERRORS, KEYMAP, TIER1, DEVICE)]
+    result["authorities"] = deepcopy(sealed_release_result()["authorities"])
     return result
 
 

@@ -9,8 +9,11 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 from typing import Any, Callable
+
+from evidence_era import era_bind, era_blob
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -18,6 +21,7 @@ CONTRACT = ROOT / "config/c2-v200-public-surface-medium-projection.json"
 RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v2.0.0-public-surface-medium-projection.json")
+PROFILE_EVIDENCE_ERA = "1b19b81d5042f29ab2a9e8a50669231902c748ff"
 
 
 class ProjectionError(RuntimeError):
@@ -55,10 +59,40 @@ def parse_defmacros(path: Path) -> set[str]:
         r"^\(defmacro\s+([^\s()]+)", path.read_text(encoding="utf-8"), re.M))
 
 
-def evaluator_macro_names(path: Path) -> set[str]:
+def evaluator_macro_names(source: str) -> set[str]:
     return set(re.findall(
         r'WORKBENCH_BOOTNAME\([^,]+,\s*"([^"]+)"\)',
-        path.read_text(encoding="utf-8")))
+        source))
+
+
+def sealed_evaluator_source(spec: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    path = str(spec["evaluator_source"])
+    commit = str(spec["evaluator_source_commit"])
+    history_path = ROOT / str(spec["public_history_rebind"])
+    history = load(history_path)
+    require(
+        history.get("release") == "v2.0.0"
+        and history.get("tree_identity", {}).get("trees_identical") is True
+        and history.get("history", {}).get("original_certified_commit") == commit,
+        "sealed evaluator source is not bound to the certified v2.0 tree",
+    )
+    completed = subprocess.run(
+        ["git", "show", f"{commit}:{path}"], cwd=ROOT,
+        check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    require(completed.returncode == 0,
+            "sealed evaluator source cannot be read from its evidence era")
+    raw = completed.stdout
+    profile = (ROOT / "config/c2-v200-public-plane/static-plane/resolved-profile.txt")
+    match = re.search(
+        rf"^input_sha256={re.escape(path)}:([0-9a-f]{{64}})$",
+        profile.read_text(encoding="utf-8"), re.M)
+    digest = hashlib.sha256(raw).hexdigest()
+    require(match is not None and match.group(1) == digest,
+            "sealed evaluator source differs from the public Plane input")
+    return raw.decode("utf-8"), {
+        "path": path, "commit": commit, "bytes": len(raw), "sha256": digest,
+        "evidence_era": "v2.0.0-original-certified-tree",
+    }
 
 
 def runtime_entry(path: Path) -> str:
@@ -82,14 +116,18 @@ def derive() -> dict[str, Any]:
     image_root = ROOT / spec["external_image_root"]
     registry_path = ROOT / spec["native_registry"]
     profile_path = ROOT / spec["product_profile"]
-    evaluator_path = ROOT / spec["evaluator_source"]
     runtime_path = ROOT / spec["runtime_entry_authority"]
+    evaluator_source, evaluator_binding = sealed_evaluator_source(spec)
+    history_path = ROOT / spec["public_history_rebind"]
 
     metadata = load(metadata_path)
     build = load(authority_path)
     resident = load(resident_path)
     registry = load(registry_path)
-    profile = load(profile_path)["product_profile"]
+    release_commit = str(spec["evaluator_source_commit"])
+    profile = json.loads(era_blob(
+        PROFILE_EVIDENCE_ERA,
+        profile_path.relative_to(ROOT).as_posix()))["product_profile"]
     records = metadata.get("records", [])
     names = {row.get("name") for row in records}
     require(metadata.get("delivery") ==
@@ -104,8 +142,9 @@ def derive() -> dict[str, Any]:
     claims: dict[str, list[dict[str, str]]] = {str(name): [] for name in names}
     authorities: list[dict[str, Any]] = [
         bind(CONTRACT), bind(metadata_path), bind(authority_path),
-        bind(resident_path), bind(registry_path), bind(profile_path),
-        bind(evaluator_path), bind(runtime_path),
+        bind(resident_path), bind(registry_path),
+        era_bind(PROFILE_EVIDENCE_ERA, profile_path),
+        evaluator_binding, bind(history_path), bind(runtime_path),
     ]
 
     def add(name: str, category: str, source: str) -> None:
@@ -152,8 +191,8 @@ def derive() -> dict[str, Any]:
             add(name, "resident-native", "native-registry")
 
     macro_names = {row["name"] for row in records if row.get("kind") == "macro"}
-    for name in evaluator_macro_names(evaluator_path) & macro_names:
-        add(name, "resident-evaluator-form", evaluator_path.relative_to(ROOT).as_posix())
+    for name in evaluator_macro_names(evaluator_source) & macro_names:
+        add(name, "resident-evaluator-form", str(spec["evaluator_source"]))
     add(runtime_entry(runtime_path), "delivered-runtime-entry",
         runtime_path.relative_to(ROOT).as_posix())
 
@@ -195,6 +234,9 @@ def selftest() -> list[str]:
         "delivered-role-dropped": lambda value: value["records"].pop(),
         "unbound-delivery-claim": lambda value: value["records"][0].update(
             authorities=[]),
+        "live-evaluator-substituted-for-sealed-era": lambda value: next(
+            row for row in value["authorities"]
+            if row.get("path") == "src/eval.c").update(commit="WORKTREE"),
     }
     rejected = []
     for name, mutate in cases.items():

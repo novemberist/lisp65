@@ -219,6 +219,21 @@ def closure_adapter() -> dict[str, Any]:
             "rule": "copy-only completion; zero WPLTO and product links"}
 
 
+def accepted_projection_population(projection: dict[str, Any],
+                                   freight: dict[str, Any]) -> dict[str, int]:
+    """Derive the successor section count from Golden plus active freight."""
+    registered = freight["registered_sections"]
+    require(len(registered) == len(set(registered)),
+            "packed projection contains duplicate registered freight")
+    expected = projection["allocatable_sections"] + len(registered)
+    require(freight["golden_sections"] == projection["allocatable_sections"]
+            and freight["candidate_sections"] == expected,
+            "Block-3 accepted projection population drift")
+    return {"golden_sections": projection["allocatable_sections"],
+            "registered_freight_sections": len(registered),
+            "candidate_sections": expected}
+
+
 def complete_artifacts() -> dict[str, Any]:
     configure_paths()
     pair = accepted_pair()
@@ -227,9 +242,9 @@ def complete_artifacts() -> dict[str, Any]:
     projection = acceptance["VMA_golden"]
     freight = acceptance["additive_card_freight"]
     require(projection["dependent_fixed_vmas"] == 101
-            and projection["dependent_free_derived_vmas"] == 2
-            and freight["candidate_sections"] == 109,
+            and projection["dependent_free_derived_vmas"] == 2,
             "Block-3 accepted projection drift")
+    accepted_projection_population(projection, freight)
 
     class AcceptedProjection:
         @staticmethod
@@ -290,17 +305,24 @@ def complete_artifacts() -> dict[str, Any]:
     return value
 
 
-def mapped_section_rows(truth: ElfTruth) -> list[tuple[int, bytes, str]]:
+def mapped_section_rows(truth: ElfTruth,
+                        names: list[str]) -> list[tuple[int, bytes, str]]:
     rows = []
-    for name in (".lisp65_c2_mapped_far_service",
-                 ".lisp65_c2_mapped_product_cold"):
+    require(names and len(names) == len(set(names)),
+            "mapped media owner population is empty or duplicated")
+    for name in names:
         raw = truth.section_bytes(name)
         symbol = "__" + name.removeprefix(".") + "_load_start"
         rows.append((truth.symbol(symbol).value, raw, name))
-    require([(start, len(raw), name) for start, raw, name in rows] == [
-        (0x2F8B2, 1488, ".lisp65_c2_mapped_far_service"),
-        (0x2FE8D, 324, ".lisp65_c2_mapped_product_cold")],
-        "Block-3 mapped media geometry drift")
+    rows.sort()
+    offsets = {start - truth.section(name).address
+               for start, _raw, name in rows}
+    require(len(offsets) == 1 and next(iter(offsets)) % 0x100 == 0
+            and all(start + len(raw) <= 0x30000
+                for start, raw, name in rows)
+            and all(left[0] + len(left[1]) <= right[0]
+                    for left, right in zip(rows, rows[1:])),
+            "mapped media geometry is not page-congruent/disjoint")
     return rows
 
 
@@ -323,28 +345,31 @@ def product_manifest(completion: dict[str, Any]) -> dict[str, Any]:
     require(len(prefix) == PLANE_BYTES,
             "Block-3 static-plane prefix drift")
     base = 0x20000
-    sections = mapped_section_rows(truth)
+    composed = load(CARD.RECEIPT)["final_product"]["composed_bank2"]
+    mapped_names = [owner["owner"] for owner in composed["owners"]
+                    if owner["owner"].startswith(".lisp65_c2_mapped_")]
+    sections = mapped_section_rows(truth, mapped_names)
     end = max(start + len(raw) for start, raw, _name in sections)
     materialized = bytearray(end - base)
     materialized[:len(prefix)] = prefix
     cursor = base + len(prefix)
     owners = [{"owner": "static-plane", "start": base,
                "end_exclusive": cursor, "bytes": len(prefix)}]
-    for start, raw, name in sections:
+    for index, (start, raw, name) in enumerate(sections):
         require(start >= cursor, f"mapped section overlaps predecessor: {name}")
         if start > cursor:
-            owners.append({"owner": ("mapped-tenant-congruence-gap" if
-                cursor >= 0x2F8B2 else "static-to-mapped-free-hole"),
+            owners.append({"owner": ("static-to-mapped-free-hole" if
+                index == 0 else "mapped-tenant-congruence-gap"),
                 "start": cursor, "end_exclusive": start,
                 "bytes": start - cursor})
         materialized[start - base:start - base + len(raw)] = raw
         owners.append({"owner": name, "start": start,
             "end_exclusive": start + len(raw), "bytes": len(raw)})
         cursor = start + len(raw)
-    require(cursor == 0x2FFD1 and 0x30000 - cursor == 47,
-            "Block-3 Bank-2 end reserve drift")
+    end_reserve = 0x30000 - cursor
+    require(end_reserve >= 0, "mapped owners exceed Bank-2 end")
     owners.append({"owner": "mapped-tenant-bank-end-reserve",
-        "start": cursor, "end_exclusive": 0x30000, "bytes": 47})
+        "start": cursor, "end_exclusive": 0x30000, "bytes": end_reserve})
     bank2 = BUILD / "product-inputs/bank2-static-code.bin"
     bank2.parent.mkdir(parents=True, exist_ok=True)
     bank2.write_bytes(materialized)
@@ -358,7 +383,7 @@ def product_manifest(completion: dict[str, Any]) -> dict[str, Any]:
         "largest_contiguous_hole": {
             "start": base + PLANE_BYTES, "end_exclusive": sections[0][0],
             "bytes": sections[0][0] - (base + PLANE_BYTES)},
-        "membership_authority": "qualified Block-3 final-ELF composition",
+        "membership_authority": "qualified product receipt plus final-ELF composition",
     })
     media.CAN.MANIFEST.write_bytes(canonical(value))
     media.CAN.check()

@@ -63,8 +63,9 @@ def tree_identity(root: Path) -> dict:
     }
 
 
-def verify_package(name: str, package: dict, tool_root: Path) -> dict:
-    install = tool_root / Path(package["install_directory"]).name
+def verify_package(name: str, package: dict, tool_root: Path,
+                   install_override: Path | None = None) -> dict:
+    install = install_override or (tool_root / Path(package["install_directory"]).name)
     failures = []
     for relative, expected in package["required_files"].items():
         path = install / relative
@@ -130,10 +131,11 @@ def command_verify(args) -> int:
     manifest = load_manifest(args.manifest)
     results = []
     for name, package in manifest["packages"].items():
-        if name == "mega65_tools" and args.product_build_only and not (args.tool_root / "m65tools").exists():
+        if name == "mega65_tools" and args.product_build_only:
             results.append({"package": name, "status": "not-required-for-product-build"})
             continue
-        results.append(verify_package(name, package, args.tool_root))
+        override = args.llvm_mos_root if name == "llvm_mos" else None
+        results.append(verify_package(name, package, args.tool_root, override))
     print(json.dumps({"schema": "lisp65-toolchain-verification-v1", "status": "pass", "packages": results}, sort_keys=True))
     return 0
 
@@ -198,6 +200,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     verify = sub.add_parser("verify")
     verify.add_argument("--tool-root", type=Path, default=ROOT / "tools")
+    verify.add_argument("--llvm-mos-root", type=Path)
     verify.add_argument("--product-build-only", action="store_true")
     verify.set_defaults(func=command_verify)
     fetch = sub.add_parser("fetch")

@@ -1,0 +1,109 @@
+{
+  "authority": {
+    "budget": {
+      "WPLTO": 1,
+      "device_contacts": 0,
+      "product_links": 1
+    },
+    "commit": "5b59fca5",
+    "predecessor": {
+      "ELF": {
+        "bytes": 640232,
+        "path": "build/2.6/card6-small-hardening-dma-tuple-repair-product-r3/wplto/lisp65-c2-substitution-linked.prg.elf",
+        "sha256": "f02d6997e33ae6c1059be1a9f81711d219f430c26e3144772124fd9a979366cf"
+      },
+      "PRG": {
+        "bytes": 41811,
+        "path": "build/2.6/card6-small-hardening-dma-tuple-repair-product-r3/wplto/lisp65-c2-substitution-linked.prg",
+        "sha256": "3f00922419c808ca96dbe7a6b24d24abe3c4c3c3cb00ae591b44be20aab7b238"
+      }
+    },
+    "section_sha256": "a6aaeeec44a063ef14b4799a9c4e35d6fc1dce7dcc47bcd6ac0adde10deff69c"
+  },
+  "choreography": {
+    "F011_register_reads": false,
+    "automated_input": false,
+    "freezer_operations": 0,
+    "physical_owner_keyboard_only_after_boot": true,
+    "restore_and_SHA_readback_before_every_cold_boot": true,
+    "resumes": 0,
+    "stops": 1
+  },
+  "claim_limit": "F011 read diagnosis and error propagation only; Comfort remains unattributed; no release acceptance.",
+  "decision_table": {
+    "boot-not-complete": "do not infer tag semantics until execution of the boot reset is established; no require was submitted",
+    "tag-0-or-inconsistent-record": "instrument coverage/readpoint unresolved; no no-failure claim",
+    "tag-1-and-require-T": "no failure reproduced in this contact; retain the evidence boundary",
+    "tag-1-but-load-failed": "failure outside recorded mask/timeout paths; further attribution, not Comfort blame",
+    "tag-2": "compare the raw masked status with the bound core; hardware evidence governs the next decision",
+    "tag-3-or-4": "timeout phase identified; do not interpret as a completed-read mask mismatch"
+  },
+  "format": "lisp65-v21-f011-status-device-session-v1",
+  "medium": {
+    "bytes": 819200,
+    "path": "build/v2.1/f011-status-comfort-r1/lisp65-v2.1-f011-comfort.d81",
+    "remote_name": "V21F011.D81",
+    "sha256": "dbe397e20ebc912148b7f7073a6c7392754ff263f317b9d1dbf0c7b187332d91"
+  },
+  "product": {
+    "bytes": 640620,
+    "path": "build/v2.1/f011-status-product-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "29d3ff462afc9c59ad9769fac8098ed0f02900d3c7cf5a37c89855b0444d9cc6"
+  },
+  "qualification": {
+    "bytes": 3428,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v2.1-f011-status-product-r1-qualification-receipt.json",
+    "sha256": "6f3bf72723095648ce7d546ba20f0c6c53e1faa3f26c0f11c423552122919aac"
+  },
+  "recorded_on": "2026-09-05",
+  "rows": [
+    {
+      "actions": [
+        "Freshly restore and SHA-readback the bound D81; cold boot.",
+        "Observe WORKBENCH 2.0.0 and native lisp65>. If boot fails, stop; do not submit a form."
+      ],
+      "id": "F1"
+    },
+    {
+      "actions": [
+        "Submit once; report the complete visible result.",
+        "At return to the native prompt, touch no further key. Stop the CPU for F3. Do not enter Comfort."
+      ],
+      "form": "(require 'repl-comfort)",
+      "id": "F2"
+    },
+    {
+      "actions": [
+        "Seal the three raw RAM bytes before interpreting them. No F011-register read, resume or reset."
+      ],
+      "id": "F3",
+      "raw_first": true,
+      "read_only": true,
+      "reads": [
+        {
+          "address": 48090,
+          "authority": {
+            "bytes": 640620,
+            "path": "build/v2.1/f011-status-product-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+            "sha256": "29d3ff462afc9c59ad9769fac8098ed0f02900d3c7cf5a37c89855b0444d9cc6"
+          },
+          "bytes": 3,
+          "layout": [
+            "tag",
+            "raw_D082",
+            "raw_D083"
+          ],
+          "symbol": "lisp65_f011_status_state"
+        }
+      ]
+    }
+  ],
+  "status": "BOUND; NOT STARTED",
+  "tags": {
+    "0": "unseen; not equivalent to success",
+    "1": "first success retained; no recorded failure",
+    "2": "first completion-mask failure",
+    "3": "first spin-up timeout",
+    "4": "first read timeout"
+  }
+}

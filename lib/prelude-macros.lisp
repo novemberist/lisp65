@@ -60,7 +60,7 @@
       (quote t)
       (if (eq key (quote otherwise))
           (quote t)
-          (if (car key)
+          (if (consp key)
               (%prelude-macros-case-key-tests tmp key)
               (list (quote eql) tmp (list (quote quote) key))))))
 

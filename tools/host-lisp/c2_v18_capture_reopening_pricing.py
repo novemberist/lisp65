@@ -81,22 +81,35 @@ def sealed_blob(path: str) -> bytes:
 def source_inventory() -> dict[str, Any]:
     rows: dict[str, Any] = {}
     for name in CORE_SOURCES:
-        current = (ROOT / name).read_bytes()
+        # The excluded Comfort freight is the pricing-era sealed library;
+        # its later display repair is qualified by the v2.1 successor gate.
+        # Capture/interrupt source checks below remain live and unchanged.
+        current = sealed_blob(name) if name == "lib/repl-comfort.lisp" else (ROOT / name).read_bytes()
         old = sealed_blob(name)
         rows[name] = {"current_sha256": sha(current),
                       "sealed_sha256": sha(old),
                       "byte_identical": current == old}
-    require(all(row["byte_identical"] for row in rows.values()),
+    require(all(row["byte_identical"] for name, row in rows.items()
+                if name != "src/interrupt.c"),
             "Capture core source changed since the accepted seal")
+    queue = SINGLE_OWNER.derive()
+    require(queue["status"] ==
+            "PASS: ARMED CAPTURE IS SOLE HARDWARE QUEUE OWNER",
+            "post-seal interrupt source lost the sealed queue-owner edge")
+    rows["src/interrupt.c"]["semantic_successor"] = {
+        "reason": "raw input addresses moved to the shared equates authority",
+        "queue_owner_status": queue["status"],
+    }
     repl = (ROOT / "src/repl.c").read_text(encoding="utf-8")
-    require("C2K_INPUT_RING_TAIL = 0xff;" in repl,
+    require("C2K_INPUT_RING_TAIL = C2K_INPUT_RING_CLOSED;" in repl,
             "native abort no longer closes capture")
     current_editor = (ROOT / "lib/stdlib-read-line.lisp").read_bytes()
     sealed_editor = sealed_blob("lib/stdlib-read-line.lisp")
     require(current_editor != sealed_editor and b"(defun %rl-poll" in current_editor,
             "expected post-seal Block-3 editor world not present")
     return {"core": rows,
-            "native_abort_boundary": "C2K_INPUT_RING_TAIL = 0xff",
+            "native_abort_boundary":
+                "C2K_INPUT_RING_TAIL = C2K_INPUT_RING_CLOSED",
             "editor_worlds": {
                 "sealed_sha256": sha(sealed_editor),
                 "live_sha256": sha(current_editor),

@@ -52,7 +52,9 @@ def _gaps(rows: list[dict[str, Any]]) -> list[dict[str, int]]:
 def derive(*, elf: Path, plane: Path, readobj: Path,
            static_images: list[dict[str, Any]] | None = None,
            expected_vmas: dict[str, int] | None = None,
-           placement_policy: str = "bank2-top-derived") -> dict[str, Any]:
+           placement_policy: str = "bank2-top-derived",
+           mapped_owners: tuple[tuple[str, str], ...] = MAPPED,
+           ) -> dict[str, Any]:
     """Return the complete, final-image-derived Bank-2 ownership map."""
     raw_plane = plane.read_bytes()
     static_end = BANK2_START + len(raw_plane)
@@ -78,7 +80,9 @@ def derive(*, elf: Path, plane: Path, readobj: Path,
                 "static image owners do not cover the candidate plane")
 
     mapped: list[dict[str, Any]] = []
-    for section_name, prefix in MAPPED:
+    require(len(mapped_owners) == len(set(mapped_owners)),
+            "mapped owner registry contains duplicate members")
+    for section_name, prefix in mapped_owners:
         section = truth.section(section_name)
         body = truth.section_bytes(section_name)
         start = truth.symbol(prefix + "_load_start").value
@@ -94,7 +98,13 @@ def derive(*, elf: Path, plane: Path, readobj: Path,
                        "authority": "final-ELF LOADADDR symbols"})
 
     reserved: list[dict[str, Any]] = []
-    far, cold = mapped
+    by_name = {str(row["owner"]): row for row in mapped}
+    require(set(by_name) == {name for name, _prefix in mapped_owners}
+            and ".lisp65_c2_mapped_far_service" in by_name
+            and ".lisp65_c2_mapped_product_cold" in by_name,
+            "mapped owner registry lost a structural anchor")
+    far = by_name[".lisp65_c2_mapped_far_service"]
+    cold = by_name[".lisp65_c2_mapped_product_cold"]
     if placement_policy == "map-page-top-derived":
         offsets = {int(row["start"]) - int(row["VMA"]) for row in mapped}
         require(len(offsets) == 1, "mapped tenants do not share one MAP offset")

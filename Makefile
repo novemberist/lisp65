@@ -179,14 +179,14 @@ M65HWDIRWRITEPRG := build/lisp65-mega65-hw-dir-write-smoke.prg
 M65HWSAVENEWPRG := build/lisp65-mega65-hw-save-new-smoke.prg
 R5_PERSISTENCE_FIXTURE_TOOL := tools/host-lisp/r5_persistence_fixtures.py
 R5_PERSISTENCE_FIXTURE_CONFIG := config/r5-persistence-fixtures.json
-R5_FIXED_TRACK := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.track)
-R5_FIXED_FIRST := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.first_sector)
-R5_FIXED_SECOND := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.second_sector)
-R5_SAVE_NEW_FIRST := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new.first_sector)
-R5_SAVE_NEW_SECOND := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new.second_sector)
-R5_SAVE_SCAN_RESERVE := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.reserved_sector)
-R5_SAVE_SCAN_FIRST := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.first_sector)
-R5_SAVE_SCAN_SECOND := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.second_sector)
+R5_FIXED_TRACK = $$(python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.track)
+R5_FIXED_FIRST = $$(python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.first_sector)
+R5_FIXED_SECOND = $$(python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.second_sector)
+R5_SAVE_NEW_FIRST = $$(python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new.first_sector)
+R5_SAVE_NEW_SECOND = $$(python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new.second_sector)
+R5_SAVE_SCAN_RESERVE = $$(python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.reserved_sector)
+R5_SAVE_SCAN_FIRST = $$(python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.first_sector)
+R5_SAVE_SCAN_SECOND = $$(python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.second_sector)
 M65HWSAVENEWSCANPRG := build/lisp65-mega65-hw-save-new-scan-smoke.prg
 M65HWSAVENEWVARPRG := build/lisp65-mega65-hw-save-new-var-smoke.prg
 BYTECODE_VM_M65_OBJ := build/vm-mega65.o
@@ -217,8 +217,7 @@ V2_CAPABILITY_CARRIER_G5_PLAN := $(V2_CAPABILITY_CARRIER_G5_DIR)/hardware-plan.j
 V2_CAPABILITY_CARRIER_G5_HW_PACKAGE := $(V2_CAPABILITY_CARRIER_G5_DIR)/workbench-hw-package
 V2_CAPABILITY_CARRIER_G5_EVIDENCE := $(V2_CAPABILITY_CARRIER_G5_DIR)/evidence
 V2_CAPABILITY_CARRIER_G5_D81 := $(V2_CAPABILITY_CARRIER_G5_DIR)/lisp65-v2-workbench.d81
-V2_CAPABILITY_CARRIER_G5_PREFLIGHT_KEY := $(shell sha256sum config/v2-capability-carrier-g5-candidate.json tools/host-lisp/v2_capability_carrier_g5.py tools/host-lisp/v2_g5_domain_verifiers.py Makefile | sha256sum | cut -c1-16)
-V2_CAPABILITY_CARRIER_G5_PREFLIGHT := $(V2_CAPABILITY_CARRIER_G5_DIR)/preflight/preflight-$(V2_CAPABILITY_CARRIER_G5_PREFLIGHT_KEY).json
+V2_CAPABILITY_CARRIER_G5_PREFLIGHT := $(V2_CAPABILITY_CARRIER_G5_DIR)/preflight/preflight-derived.json
 # The explicit v2 proof target and the canonical product target must resolve to
 # one artifact set. A second output path changes the ABI-contract build id and
 # therefore creates a different product SHA despite identical code/layout.
@@ -245,23 +244,25 @@ R5_GLOBAL_G5_RUN_ID := r5-run-20260719-wave3-01
 R5_GLOBAL_G5_EVIDENCE := $(R5_GLOBAL_G5_DIR)/evidence/$(R5_GLOBAL_G5_RUN_ID)
 R5_GLOBAL_G5_BOOT_WAIT_SEC := 8
 R5_GLOBAL_G5_PRODUCT_SET := 048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024
-R5_GLOBAL_G5_CLOSURE_SET = $(shell python3 -c 'import json; print(json.load(open("$(R5_GLOBAL_G5_CLOSURE)"))["closure_set_sha256"])' 2>/dev/null)
+R5_GLOBAL_G5_CLOSURE_SET = $$(python3 tools/host-lisp/make_recipe_value.py json-get $(R5_GLOBAL_G5_CLOSURE) closure_set_sha256)
 R5_GLOBAL_G5_PRODUCT_PREFIX := $(R5_GLOBAL_G5_PRODUCT)/build/products/workbench/overlay-stack-guard
 R6_SHIP_DIR := build/r6/ship
 R6_SHIP_SECOND_DIR := build/r6/ship-second
-R6_SHIP_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
-R6_SHIP_PACKED_ON ?= $(shell git show -s --format=%cs $(R6_SHIP_SOURCE_COMMIT) 2>/dev/null)
+R6_SHIP_SOURCE_COMMIT ?= $$(python3 tools/host-lisp/make_recipe_value.py git-head)
+R6_SHIP_PACKED_ON ?= $$(python3 tools/host-lisp/make_recipe_value.py git-date $(R6_SHIP_SOURCE_COMMIT))
 R6_SHIP_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-ship-wave3-packer-receipt.json
-R6_G6_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
-R6_G6_PREFLIGHT_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave3-static-preflight-receipt.json
-R6_G6_PROFILE_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave3-profile-applicability-receipt.json
+R6_G6_SOURCE_COMMIT ?= $$(python3 tools/host-lisp/make_recipe_value.py git-head)
+R6_G6_PREFLIGHT_RECEIPT := build/r6/g6/generated/r6-g6-wave3-static-preflight-receipt.json
+R6_G6_PROFILE_RECEIPT := build/r6/g6/generated/r6-g6-wave3-profile-applicability-receipt.json
+R6_G6_TRACKED_PREFLIGHT_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave3-static-preflight-receipt.json
+R6_G6_TRACKED_PROFILE_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave3-profile-applicability-receipt.json
 R6_G6_RUN_DIR := build/r6/g6/run-20260719-wave3-01
 R6_G6_TOP_RECEIPT := $(R6_G6_RUN_DIR)/g6-hardware-receipt.json
-R6_G6_SEAL_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
-R6_G6_SEALED_ON ?= $(shell git show -s --format=%cs $(R6_G6_SEAL_SOURCE_COMMIT) 2>/dev/null)
-R6_G6_SEAL_ID ?= r6-g6-hardware-acceptance-$(shell git rev-parse --short=7 $(R6_G6_SEAL_SOURCE_COMMIT) 2>/dev/null)
+R6_G6_SEAL_SOURCE_COMMIT ?= $$(python3 tools/host-lisp/make_recipe_value.py git-head)
+R6_G6_SEALED_ON ?= $$(python3 tools/host-lisp/make_recipe_value.py git-date $(R6_G6_SEAL_SOURCE_COMMIT))
+R6_G6_SEAL_ID ?= r6-g6-hardware-acceptance-$$(python3 tools/host-lisp/make_recipe_value.py git-short $(R6_G6_SEAL_SOURCE_COMMIT))
 R6_G6_SEAL_ARCHIVE ?= tests/bytecode/dialect-v2/evidence/promotions/$(R6_G6_SEAL_ID).tar.gz
-R7_MANIFEST_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
+R7_MANIFEST_SOURCE_COMMIT ?= $$(python3 tools/host-lisp/make_recipe_value.py git-head)
 R7_MANIFEST_PREVIEW ?= build/r7/public-manifest-prerequisites.json
 R7_MANIFEST_RECEIPT ?= build/r7/public-manifest-prerequisites-receipt.json
 R7_RELEASE_BUNDLE := releases/lisp65-1.0.1.tar.gz
@@ -1880,6 +1881,42 @@ xmega65-safety-check:
 	python3 scripts/check-xmega65-safe-run.py --selftest
 	python3 scripts/check-xmega65-safe-run.py
 
+.PHONY: dwx-xemu-item1-selftest
+dwx-xemu-item1-selftest:
+	python3 tools/host-lisp/dwx_xemu_f011_adapter.py --selftest
+	python3 tools/host-lisp/dwx_xemu_f011_adapter.py --check
+	python3 tools/host-lisp/dwx_delivered_world_boot.py --selftest
+	python3 tools/host-lisp/dwx_delivered_world_boot.py --check
+
+.PHONY: dwx-prefilter-blind-spot-contract-check
+dwx-prefilter-blind-spot-contract-check: dwx-xemu-item1-selftest
+	python3 tools/host-lisp/dwx_keymap_transport.py --check
+	python3 tools/host-lisp/dwx_comfort_resume.py --selftest
+	python3 tools/host-lisp/dwx_prefilter_blind_spot_contract.py --selftest
+	python3 tools/host-lisp/dwx_prefilter_blind_spot_contract.py --check
+
+.PHONY: dwx-freezer-free-boot-variants-check
+dwx-freezer-free-boot-variants-check: dwx-prefilter-blind-spot-contract-check
+	python3 tools/host-lisp/dwx_freezer_free_boot_variants.py selftest
+	python3 tools/host-lisp/dwx_freezer_free_boot_variants.py check
+
+.PHONY: dwx-mirrored-prefilter-rows-check
+dwx-mirrored-prefilter-rows-check: dwx-freezer-free-boot-variants-check
+	python3 tools/host-lisp/dwx_xemu_headless_input_adapter.py --selftest
+	python3 tools/host-lisp/dwx_mirrored_prefilter_rows.py selftest
+	python3 tools/host-lisp/dwx_mirrored_prefilter_rows.py check
+
+.PHONY: dwx-media-admission-gate-check
+dwx-media-admission-gate-check: dwx-mirrored-prefilter-rows-check
+	python3 tools/host-lisp/dwx_media_admission_gate.py selftest
+	python3 tools/host-lisp/dwx_media_admission_gate.py check
+
+.PHONY: dwx-retroactive-red-replay-check
+dwx-retroactive-red-replay-check: dwx-media-admission-gate-check
+	python3 tools/host-lisp/dwx_xemu_cycle_probe_adapter.py --selftest
+	python3 tools/host-lisp/dwx_retroactive_red_replay.py selftest
+	python3 tools/host-lisp/dwx_retroactive_red_replay.py check
+
 fixed-point-check:
 	python3 tools/host-lisp/stdlib_fixed_eval_oracle.py
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(BYTECODE_FIXED_SUITE)
@@ -2487,8 +2524,8 @@ r6-ship-selftest:
 r6-ship-pack: r6-ship-selftest
 	rm -rf '$(R6_SHIP_DIR)'
 	python3 tools/host-lisp/r6_ship.py pack \
-		--source-commit '$(R6_SHIP_SOURCE_COMMIT)' \
-		--packed-on '$(R6_SHIP_PACKED_ON)' --out '$(R6_SHIP_DIR)'
+		--source-commit "$(R6_SHIP_SOURCE_COMMIT)" \
+		--packed-on "$(R6_SHIP_PACKED_ON)" --out '$(R6_SHIP_DIR)'
 
 r6-ship-verify:
 	python3 tools/host-lisp/r6_ship.py verify '$(R6_SHIP_DIR)'
@@ -2518,11 +2555,20 @@ r6-g6-profile-receipt-check:
 
 r6-g6-static-preflight: r6-g6-profile-receipt
 	python3 tools/host-lisp/r6_g6.py preflight \
-		--source-commit '$(R6_G6_SOURCE_COMMIT)' --ship '$(R6_SHIP_DIR)' \
+		--source-commit "$(R6_G6_SOURCE_COMMIT)" --ship '$(R6_SHIP_DIR)' \
+		--profile-receipt '$(R6_G6_PROFILE_RECEIPT)' \
 		--out '$(R6_G6_PREFLIGHT_RECEIPT)'
 
 r6-g6-preflight-check:
 	python3 tools/host-lisp/r6_g6.py preflight-check '$(R6_G6_PREFLIGHT_RECEIPT)'
+
+.PHONY: r6-g6-receipts-seal
+r6-g6-receipts-seal: r6-g6-static-preflight
+	python3 tools/host-lisp/block_26_build_integrity_card.py seal-r6-g6 \
+		--profile '$(R6_G6_PROFILE_RECEIPT)' \
+		--preflight '$(R6_G6_PREFLIGHT_RECEIPT)' \
+		--tracked-profile '$(R6_G6_TRACKED_PROFILE_RECEIPT)' \
+		--tracked-preflight '$(R6_G6_TRACKED_PREFLIGHT_RECEIPT)'
 
 r6-g6-aggregate-check:
 	python3 tools/host-lisp/r6_g6.py aggregate-check '$(R6_G6_TOP_RECEIPT)'
@@ -2532,14 +2578,14 @@ r6-g6-seal-selftest:
 
 r6-g6-seal: r6-g6-seal-selftest r6-g6-aggregate-check
 	python3 tools/host-lisp/r6_g6_seal.py seal \
-		--id '$(R6_G6_SEAL_ID)' --source-commit '$(R6_G6_SEAL_SOURCE_COMMIT)' \
-		--sealed-on '$(R6_G6_SEALED_ON)' --output '$(R6_G6_SEAL_ARCHIVE)'
+		--id "$(R6_G6_SEAL_ID)" --source-commit "$(R6_G6_SEAL_SOURCE_COMMIT)" \
+		--sealed-on "$(R6_G6_SEALED_ON)" --output "$(R6_G6_SEAL_ARCHIVE)"
 
 r6-g6-seal-verify:
-	python3 tools/host-lisp/r6_g6_seal.py verify '$(R6_G6_SEAL_ARCHIVE)'
+	python3 tools/host-lisp/r6_g6_seal.py verify "$(R6_G6_SEAL_ARCHIVE)"
 
 r6-g6-seal-negative-test:
-	python3 tools/host-lisp/r6_g6_seal.py negative-test '$(R6_G6_SEAL_ARCHIVE)'
+	python3 tools/host-lisp/r6_g6_seal.py negative-test "$(R6_G6_SEAL_ARCHIVE)"
 
 r7-manifest-prerequisites-selftest:
 	python3 tools/host-lisp/r7_manifest_prerequisites.py selftest
@@ -2547,7 +2593,7 @@ r7-manifest-prerequisites-selftest:
 r7-manifest-prerequisites: r7-manifest-prerequisites-selftest
 	rm -f '$(R7_MANIFEST_PREVIEW)' '$(R7_MANIFEST_RECEIPT)'
 	python3 tools/host-lisp/r7_manifest_prerequisites.py preflight \
-		--source-commit '$(R7_MANIFEST_SOURCE_COMMIT)' \
+		--source-commit "$(R7_MANIFEST_SOURCE_COMMIT)" \
 		--manifest-out '$(R7_MANIFEST_PREVIEW)' --receipt-out '$(R7_MANIFEST_RECEIPT)'
 
 r7-manifest-prerequisites-check:
@@ -2663,7 +2709,7 @@ r5-global-g5-preflight-ready: r5-global-g5-preflight-check
 
 define R5_GLOBAL_G5_CASE_GUARD
 	@test '$(R5_GLOBAL_G5_PRODUCT_SET)' = '048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024'
-	@test -n '$(R5_GLOBAL_G5_CLOSURE_SET)'
+	@test -n "$(R5_GLOBAL_G5_CLOSURE_SET)"
 	@test -n '$(R5_GLOBAL_G5_CYCLE_ID)' || \
 		{ printf '%s\n' 'Set R5_GLOBAL_G5_CYCLE_ID to the Workbench run id or fresh Runtime power-cycle id.' >&2; exit 2; }
 endef
@@ -2680,8 +2726,8 @@ define R5_GLOBAL_G5_PACK_WORKBENCH
 	python3 tools/host-lisp/r5_g5_case_receipts.py pack-workbench \
 		--candidate '$(R5_GLOBAL_G5_CANDIDATE)' --domain '$(1)' --case-id '$(2)' \
 		--cycle-id '$(R5_GLOBAL_G5_CYCLE_ID)' $(3) \
-		--native-out '$(R5_GLOBAL_G5_EVIDENCE)/workbench-$(2)/receipt-chain/$(R5_GLOBAL_G5_CLOSURE_SET)/native-receipt.json' \
-		--out '$(R5_GLOBAL_G5_EVIDENCE)/workbench-$(2)/receipt-chain/$(R5_GLOBAL_G5_CLOSURE_SET)/case-receipt.json'
+		--native-out "$(R5_GLOBAL_G5_EVIDENCE)/workbench-$(2)/receipt-chain/$(R5_GLOBAL_G5_CLOSURE_SET)/native-receipt.json" \
+		--out "$(R5_GLOBAL_G5_EVIDENCE)/workbench-$(2)/receipt-chain/$(R5_GLOBAL_G5_CLOSURE_SET)/case-receipt.json"
 endef
 
 .PHONY: r5-global-g5-workbench-overlay-stack-guard \
@@ -2693,7 +2739,7 @@ endef
 
 r5-global-g5-workbench-overlay-stack-guard: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET)'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET)"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-ux/overlay-stack-guard)
 	BOOT_WAIT_SEC='$(R5_GLOBAL_G5_BOOT_WAIT_SEC)' \
 		WORKBENCH_OVERLAY_RESIDENT_PRG='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.prg' \
@@ -2722,7 +2768,7 @@ r5-global-g5-workbench-overlay-stack-guard: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-stdlib-runtime: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET)'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET)"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-ux/stdlib-runtime)
 	mkdir -p '$(R5_GLOBAL_G5_EVIDENCE)/workbench-stdlib-runtime'
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) sh scripts/hw-smoke-vm-stdlib.sh --no-build --remote-d81 L65R5S.D81 || \
@@ -2738,7 +2784,7 @@ r5-global-g5-workbench-stdlib-runtime: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-ux-complete: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET)'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET)"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-ux/ux-complete)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) OUT_DIR='$(R5_GLOBAL_G5_EVIDENCE)/workbench-ux-complete' \
 		PREFIX=r5-g5-ux sh scripts/hw-workbench-ux-smoke.sh --no-build --remote-d81 L65R5U.D81 || \
@@ -2755,7 +2801,7 @@ r5-global-g5-workbench-ux-complete: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-bam-read: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET)'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET)"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/bam-read)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) OUT_DIR='$(R5_GLOBAL_G5_EVIDENCE)/workbench-bam-read' \
 		PREFIX=r5-g5-bam-read sh scripts/hw-workbench-bam-read-smoke.sh --no-build --remote-d81 L65R5R.D81 || \
@@ -2768,7 +2814,7 @@ r5-global-g5-workbench-bam-read: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-bam-alloc: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-bam-alloc'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-bam-alloc"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/bam-alloc)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWBAMALLOCPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-bam-alloc.prg' \
 		sh scripts/hw-workbench-bam-alloc-smoke.sh --no-build --remote-d81 L65R5A.D81 \
@@ -2785,7 +2831,7 @@ r5-global-g5-workbench-bam-alloc: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-chain-write: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-chain-write'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-chain-write"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/chain-write)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWCHAINWRITEPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-chain-write.prg' \
 		sh scripts/hw-workbench-chain-write-smoke.sh --no-build --remote-d81 L65R5C.D81 \
@@ -2803,7 +2849,7 @@ r5-global-g5-workbench-chain-write: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-dir-write: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-dir-write'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-dir-write"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/dir-write)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWDIRWRITEPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-dir-write.prg' \
 		sh scripts/hw-workbench-dir-write-smoke.sh --no-build --remote-d81 L65R5D.D81 \
@@ -2821,7 +2867,7 @@ r5-global-g5-workbench-dir-write: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-save-new: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-save-new'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-save-new"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/save-new)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWSAVENEWPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-save-new.prg' \
 		sh scripts/hw-workbench-save-new-smoke.sh --no-build --remote-d81 L65R5N.D81 \
@@ -2839,7 +2885,7 @@ r5-global-g5-workbench-save-new: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-save-new-scan: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-save-new-scan'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-save-new-scan"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/save-new-scan)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWSAVENEWPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-save-new-scan.prg' \
 		sh scripts/hw-workbench-save-new-smoke.sh --no-build --remote-d81 L65R56.D81 \
@@ -2857,7 +2903,7 @@ r5-global-g5-workbench-save-new-scan: r5-global-g5-preflight-ready
 
 r5-global-g5-workbench-save-new-var: r5-global-g5-preflight-ready
 	$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-save-new-var'
+	@printf '%s\n' "R5 binding product=$(R5_GLOBAL_G5_PRODUCT_SET) closure=$(R5_GLOBAL_G5_CLOSURE_SET) helper-save-new-var"
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/save-new-var)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWSAVENEWPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-save-new-var.prg' \
 		sh scripts/hw-workbench-save-new-smoke.sh --no-build --generic-diff --wait 45 --timeout 40 \
@@ -2884,7 +2930,7 @@ R5_GLOBAL_G5_CYCLE_ID ?=
 define R5_GLOBAL_G5_RUNTIME_PHASE_TARGET
 r5-global-g5-runtime-$(1): r5-global-g5-preflight-ready
 	$$(R5_GLOBAL_G5_CASE_GUARD)
-	@printf '%s\n' 'R5 binding product=$$(R5_GLOBAL_G5_PRODUCT_SET) closure=$$(R5_GLOBAL_G5_CLOSURE_SET) runtime-package'
+	@printf '%s\n' "R5 binding product=$$(R5_GLOBAL_G5_PRODUCT_SET) closure=$$(R5_GLOBAL_G5_CLOSURE_SET) runtime-package"
 	$$(call R5_GLOBAL_G5_PRODUCT_PHASE,runtime-export/$(1))
 	@test '$$(R5_GLOBAL_G5_POWER_CYCLE_TOKEN)' = POWER-CYCLED || \
 		{ printf '%s\n' 'Set R5_GLOBAL_G5_POWER_CYCLE_TOKEN=POWER-CYCLED only after a physical power-cycle.' >&2; exit 2; }
@@ -2902,7 +2948,7 @@ r5-global-g5-runtime-$(1): r5-global-g5-preflight-ready
 		--package '$$(R5_GLOBAL_G5_RUNTIME)' \
 		--oracle '$$(R5_GLOBAL_G5_RUNTIME)/hardware-oracle.json' \
 		--native-receipt '$$(R5_GLOBAL_G5_EVIDENCE)/runtime-$(1)/native/receipt-$(1).json' \
-		--out '$$(R5_GLOBAL_G5_EVIDENCE)/runtime-$(1)/receipt-chain/$$(R5_GLOBAL_G5_CLOSURE_SET)/case-receipt.json'
+		--out "$$(R5_GLOBAL_G5_EVIDENCE)/runtime-$(1)/receipt-chain/$$(R5_GLOBAL_G5_CLOSURE_SET)/case-receipt.json"
 endef
 
 $(eval $(call R5_GLOBAL_G5_RUNTIME_PHASE_TARGET,clean))
@@ -3090,8 +3136,13 @@ bytecode-p0-program-check:
 bytecode-p0-bundle-check:
 	python3 tools/host-lisp/bytecode_p0_bundle.py --check
 
+# Standalone dialect-v1 run of the legacy stdlib suites. Suites that are
+# dialect-v2 codemod templates (config/v2-workbench-artifact-closure.json
+# source_suite entries) only run as their generated dialect-v2 product
+# suites and are excluded by derivation at recipe time (gate-drift card
+# 2026-09-05); no parse-time shell execution.
 bytecode-p0-stdlib-check:
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $$(python3 -c "import glob,json;t=set(a['source_suite'] for a in json.load(open('config/v2-workbench-artifact-closure.json'))['artifacts']);print(' '.join(p for p in sorted(glob.glob('tests/bytecode/stdlib/*.json')) if p not in t))")
 
 bytecode-p0-stdlib-artifacts: | build/bytecode
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_STDLIB_PREFIX) $(BYTECODE_STDLIB_SUITE)

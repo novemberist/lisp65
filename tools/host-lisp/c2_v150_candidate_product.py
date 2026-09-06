@@ -33,6 +33,7 @@ import c2_v150_link97_slice_content_map as SLICE_MAP  # noqa: E402
 import c2_v150_qualification_ambient_closure as AMBIENT  # noqa: E402
 import c2_f1_published_value_call_wplto as F1W  # noqa: E402
 import c2_lite_v6_link48_append_final_hybrid_facade16_artifact_replay as ARTIFACT_REPLAY  # noqa: E402,E501
+from evidence_era import era_blob  # noqa: E402
 
 
 RELEASE = "v1.5.0"
@@ -59,6 +60,7 @@ REPLAY_INTERNAL = REPLAY / "wplto-internal.json"
 REPLAY_LINKED_GATE = REPLAY / "single-submit-linked-gates.json"
 ROOT_PROOF_INTERNAL = (
     ROOT / "build/c2.3/terminal-return-guard-link96/receipts/wplto-internal.json")
+ROOT_PROOF_EVIDENCE_ERA = "19aeb0cfafa327248560eddae71a73188f96b44a"
 REPLAY_RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.5.0-link97-post-link-qualification-replay-receipt.json"
@@ -422,10 +424,13 @@ def bound_direct_entry_gate() -> dict[str, Any]:
 
 def validate_bound_root_surrogate(proof: dict[str, Any]) -> None:
     source = proof.get("source_truth", {})
+    sealed_obj_h = era_blob(
+        ROOT_PROOF_EVIDENCE_ERA,
+        ARTIFACT_REPLAY.ROOT_GATE.OBJ_H.relative_to(ROOT).as_posix())
     require(
         proof.get("status") == "pass"
         and source.get("obj_h_sha256")
-            == hashlib.sha256(ARTIFACT_REPLAY.ROOT_GATE.OBJ_H.read_bytes()).hexdigest()
+            == hashlib.sha256(sealed_obj_h).hexdigest()
         and source.get("helper_source_sha256") == hashlib.sha256(
             ARTIFACT_REPLAY.ROOT_GATE.helper_source().encode()).hexdigest()
         and source.get("emitted_rows") == 57344

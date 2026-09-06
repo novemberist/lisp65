@@ -3,6 +3,8 @@
  * Wave-3 link attempts; keeping the recipe here avoids creating a second,
  * smoke-only DMA implementation. */
 #include "screen_scroll_overlay.h"
+#include "mega65_dma_descriptor.h"
+#include <stddef.h>
 
 #if defined(__mos__) && defined(LISP65_SCREEN_EDMA_SCROLL)
 #include <mega65.h>
@@ -24,6 +26,9 @@ struct screen_edma_job {
     uint8_t end_option;
     uint8_t dmalist[12];
 };
+_Static_assert(sizeof(struct screen_edma_job) == 20u
+               && offsetof(struct screen_edma_job, dmalist) == 8u,
+               "screen EDMA storage must be one canonical 20-byte descriptor");
 
 /* The inline assembly names this object directly. Keep the symbol global so
  * llvm-mos LTO cannot give the C object and the assembler reference different
@@ -33,33 +38,11 @@ SCREEN_SCROLL_DATA struct screen_edma_job lisp65_screen_edma_job = {{0}, 0, {0}}
 static __attribute__((always_inline)) inline void screen_edma_common(
         uint8_t cmd, uint32_t src, uint32_t dst, uint16_t count,
         uint8_t fill_value) {
-    lisp65_screen_edma_job.options[0] = ENABLE_F018B_OPT;
-    lisp65_screen_edma_job.options[1] = SRC_ADDR_BITS_OPT;
-    lisp65_screen_edma_job.options[2] = (uint8_t)(src >> 20);
-    lisp65_screen_edma_job.options[3] = DST_ADDR_BITS_OPT;
-    lisp65_screen_edma_job.options[4] = (uint8_t)(dst >> 20);
-    lisp65_screen_edma_job.options[5] = DST_SKIP_RATE_OPT;
-    lisp65_screen_edma_job.options[6] = 1;
-    lisp65_screen_edma_job.end_option = 0;
-
-    lisp65_screen_edma_job.dmalist[0] = cmd;
-    lisp65_screen_edma_job.dmalist[1] = (uint8_t)count;
-    lisp65_screen_edma_job.dmalist[2] = (uint8_t)(count >> 8);
-    if (cmd == DMA_FILL_CMD) {
-        lisp65_screen_edma_job.dmalist[3] = fill_value;
-        lisp65_screen_edma_job.dmalist[4] = 0;
-        lisp65_screen_edma_job.dmalist[5] = 0;
-    } else {
-        lisp65_screen_edma_job.dmalist[3] = (uint8_t)src;
-        lisp65_screen_edma_job.dmalist[4] = (uint8_t)(src >> 8);
-        lisp65_screen_edma_job.dmalist[5] = (uint8_t)((src >> 16) & 0x0f);
-    }
-    lisp65_screen_edma_job.dmalist[6] = (uint8_t)dst;
-    lisp65_screen_edma_job.dmalist[7] = (uint8_t)(dst >> 8);
-    lisp65_screen_edma_job.dmalist[8] = (uint8_t)((dst >> 16) & 0x0f);
-    lisp65_screen_edma_job.dmalist[9] = 0;
-    lisp65_screen_edma_job.dmalist[10] = 0;
-    lisp65_screen_edma_job.dmalist[11] = 0;
+    uint8_t *job = (uint8_t *)(void *)&lisp65_screen_edma_job;
+    if (cmd == DMA_FILL_CMD)
+        lisp65_edma_fill_descriptor(job, cmd, fill_value, dst, count);
+    else
+        lisp65_edma_descriptor(job, cmd, src, dst, count);
 
     __asm__ volatile(
         "lda #1\n\t"

@@ -12,6 +12,7 @@
 #include "mem.h"      /* alloc, cons, GC_* */
 #include "symbol.h"   /* intern */
 #include "interrupt.h" /* lisp_abort (kalter Boot-Pfad; kein LTO-Risiko wie bei mem.c) */
+#include "mega65_dma_descriptor.h"
 #ifdef LISP65_CODE_WINDOW_CONVERGENCE
 #include "ship_runtime_io.h"
 #endif
@@ -727,10 +728,7 @@ uint16_t dma_code = 0, dma_wr = 0, dma_sym = 0;
 #define DMA_COUNT(v) ((void)0)
 #endif
 static void vm_dma(uint16_t sa, uint8_t sb, uint16_t da, uint8_t db, uint16_t n) {
-    vm_dma_list[0]=0; vm_dma_list[1]=(uint8_t)n; vm_dma_list[2]=(uint8_t)(n>>8);
-    vm_dma_list[3]=(uint8_t)sa; vm_dma_list[4]=(uint8_t)(sa>>8); vm_dma_list[5]=sb;
-    vm_dma_list[6]=(uint8_t)da; vm_dma_list[7]=(uint8_t)(da>>8); vm_dma_list[8]=db;
-    vm_dma_list[9]=0; vm_dma_list[10]=0; vm_dma_list[11]=0;
+    lisp65_f018_descriptor(vm_dma_list, 0u, sa, sb, da, db, n);
     /* REGISTERFREIER Trigger + "memory"-Clobber. Der Clobber ist ESSENZIELL: ohne ihn darf
      * der Optimizer (LTO inlined vm_dma ueberall) die vm_dma_list-Stores HINTER den Trigger
      * verschieben -> die DMA liest eine halb geschriebene Liste -> wilde Transfers ->
@@ -772,32 +770,11 @@ static const uint8_t vm_code_verify_marker = 0xa5u;
 static void vm_dma_verify_submit(uint16_t source, uint8_t source_bank,
                                  uint8_t *destination) {
     uint8_t *next = vm_dma_verify_list + 12u;
-    vm_dma_verify_list[0] = 4u;
-    vm_dma_verify_list[1] = 1u;
-    vm_dma_verify_list[2] = 0u;
-    vm_dma_verify_list[3] = (uint8_t)source;
-    vm_dma_verify_list[4] = (uint8_t)(source >> 8);
-    vm_dma_verify_list[5] = source_bank;
-    vm_dma_verify_list[6] = (uint8_t)(uintptr_t)destination;
-    vm_dma_verify_list[7] =
-        (uint8_t)((uint16_t)(uintptr_t)destination >> 8);
-    vm_dma_verify_list[8] = 0u;
-    vm_dma_verify_list[9] = 0u;
-    vm_dma_verify_list[10] = 0u;
-    vm_dma_verify_list[11] = 0u;
-    next[0] = 0u;
-    next[1] = 1u;
-    next[2] = 0u;
-    next[3] = (uint8_t)(uintptr_t)&vm_code_verify_marker;
-    next[4] =
-        (uint8_t)((uint16_t)(uintptr_t)&vm_code_verify_marker >> 8);
-    next[5] = 0u;
-    next[6] = (uint8_t)(uintptr_t)&vm_code_verify_done;
-    next[7] = (uint8_t)((uint16_t)(uintptr_t)&vm_code_verify_done >> 8);
-    next[8] = 0u;
-    next[9] = 0u;
-    next[10] = 0u;
-    next[11] = 0u;
+    lisp65_f018_descriptor(vm_dma_verify_list, 4u, source, source_bank,
+                           (uint16_t)(uintptr_t)destination, 0u, 1u);
+    lisp65_f018_descriptor(next, 0u,
+                           (uint16_t)(uintptr_t)&vm_code_verify_marker, 0u,
+                           (uint16_t)(uintptr_t)&vm_code_verify_done, 0u, 1u);
     __asm__ volatile(
         "lda #0\n\t"
         "sta $d702\n\t"

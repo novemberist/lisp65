@@ -26,6 +26,7 @@ from elf_truth import ElfTruth  # noqa: E402
 import c2_v200_domain_tier2_product_card as T2  # noqa: E402
 import c2_v200_interactive_delivery_chain_product_card as CHAIN  # noqa: E402
 import c2_v200_tier2_hot_path_repair_card as REPAIR  # noqa: E402
+from evidence_era import era_blob  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -77,6 +78,7 @@ OBJDUMP = ROOT / "tools/llvm-mos/bin/llvm-objdump"
 FORMAT = "lisp65-c2-v200-tier2-descope-product-card-v1"
 STATUS = "PASS: V2.0 TIER-2 DESCOPE PRODUCT GREEN"
 EXTENT = 53820
+RECEIPT_EVIDENCE_ERA = "6c443c259ba36f3ac6f8bbdcaa1b2c87b84c083c"
 
 _CHAIN_CONFIGURATION_GATE = CHAIN.configuration_gate
 
@@ -669,7 +671,10 @@ def validate(value: dict[str, Any]) -> None:
             and value["artifacts_before"] == value["artifacts_after"] ==
                 frozen_artifacts()
             and load(MEASURED_CONTRACT)["counts"] ==
-                load(DURABLE_CONTRACT)["counts"] == final["contract_counts"]
+                json.loads(era_blob(
+                    RECEIPT_EVIDENCE_ERA,
+                    DURABLE_CONTRACT.relative_to(ROOT).as_posix()))["counts"] ==
+                final["contract_counts"]
             and value["attempt_accounting"] == {"product_cards": 1,
                 "WPLTO_runs": 1, "product_links": 1, "scope_runs": 1,
                 "acceptance_runs": 1, "media_builds": 0,

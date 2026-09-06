@@ -103,6 +103,16 @@ static __attribute__((unused)) obj caddr(obj o){ return car(cdr(cdr(o))); }
  * ein reiner Registervergleich -> Variablen-Lookup im heissen Pfad wird BILLIGER. */
 static uint8_t is_sym(obj o) { return IS_SYMI(o) || (IS_PTR(o) && cell_type(o) == T_SYM); }
 
+/* Eval-facing symbol-table writers cross an untrusted Lisp boundary.  Keep
+ * their domain check here, before sidx() can interpret an arbitrary object as
+ * a table index.  Internal writers continue to receive already-proven symbol
+ * objects and therefore do not pay for a second check. */
+static uint8_t eval_symbol_arg_p(obj value) {
+    if (is_sym(value)) return 1;
+    lisp_abort_static(LISP65_ERR_VM_TYPE, "vm: type error");
+    return 0;
+}
+
 /* "undefined function" MIT Namen (Diagnose 2026-07-02: stumme UNDEFs kosteten heute drei
  * HW-Zyklen). Statischer Puffer: lisp_abort longjmpt — die Message muss ueberleben. */
 #ifndef LISP65_NUMERIC_ERRORS
@@ -129,26 +139,15 @@ static obj k_key, k_shift, k_control, k_meta;
 #endif
 
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
-#include "petscii_normalization.h"
+#include "key_event_object.h"
 /* Tastatur-Event normalisieren (Codex-Vertrag: `(key code mods)`). PETSCII-Buchstaben ->
  * ASCII klein; geshiftete ($C1-$DA) -> ASCII GROSS + (shift). Steuercodes (RETURN $0D,
  * DEL $14, CRSR $11/$91/$1D/$9D, CLR $93, Ctrl+Buchstabe $01-$1A, ...) bleiben ROH —
  * Keymaps matchen die Codes direkt. Ctrl+M ist auf GETIN-Ebene von RETURN nicht
  * unterscheidbar (beide $0D) — Editor behandelt $0D als RETURN. */
 static obj key_event(int c, uint8_t event_modifiers) {
-    obj mods = NIL, e;
-    c = lisp65_normalize_petscii((uint8_t)c, &event_modifiers);
-    if (event_modifiers & LISP65_KEYMOD_SHIFT) mods = cons(k_shift, mods);
-    if (event_modifiers & LISP65_KEYMOD_CONTROL) mods = cons(k_control, mods);
-    if (event_modifiers & LISP65_KEYMOD_META) mods = cons(k_meta, mods);
-    GC_PUSH(mods);
-    e = cons(gc_rootstack[GC_TOP], NIL);            /* (mods) */
-    GC_SET(GC_TOP, e);
-    e = cons(MKFIX((int16_t)c), gc_rootstack[GC_TOP]);   /* (code mods) */
-    GC_SET(GC_TOP, e);
-    e = cons(k_key, gc_rootstack[GC_TOP]);               /* (key code mods) */
-    GC_POPN(1);
-    return e;
+    return lisp65_key_event_object(c, event_modifiers,
+                                   k_key, k_shift, k_control, k_meta);
 }
 #endif
 
@@ -253,6 +252,9 @@ int8_t eval_v2_native_function_view(obj sym, uint8_t *kind, uint8_t *value) {
 #endif
 #if defined(LISP65_SCREEN_DRIVER) || defined(LISP65_EVAL_SCREEN_PRIMS)
 #include "screen.h"
+#ifdef LISP65_SCREEN_WRITE_STRING
+#include "screen_string_span.h"
+#endif
 #endif
 #if defined(LISP65_SCREEN_DRIVER) && !defined(LISP65_VM_STDLIB_IO_WRAPPERS)
 #define LISP65_EVAL_SCREEN_PRIMS 1
@@ -616,7 +618,12 @@ static obj apply_prim(int16_t id, obj args) {
 #else
         return apply(car(args), cadr(args));
 #endif
-    case P_SETFN:   set_sym_function(car(args), cadr(args)); return cadr(args);
+    case P_SETFN: {
+        obj symbol = car(args);
+        if (!eval_symbol_arg_p(symbol)) return NIL;
+        set_sym_function(symbol, cadr(args));
+        return cadr(args);
+    }
     case P_GENSYM:  return gensym();
     case P_INTERN: {
         obj string;
@@ -697,7 +704,9 @@ static obj apply_prim(int16_t id, obj args) {
     case P_SETMACRO: {   /* (%set-macro name bcode-fn) -> name. Konvergenz-M2: Makro mit
                           * BYTECODE-Expander (T_MACRO, cell_a=BCODE) — defmacro-Install ohne
                           * eval_env (docs/einsuite-convergence-design.md). */
-        obj nm = car(args), m = alloc(T_MACRO);
+        obj nm = car(args), m;
+        if (!eval_symbol_arg_p(nm)) return NIL;
+        m = alloc(T_MACRO);
         if (m == NIL) return NIL;
         cell_set_a(m, cadr(args)); cell_set_b(m, NIL);
         set_sym_function(nm, m);
@@ -1040,23 +1049,14 @@ static obj apply_prim(int16_t id, obj args) {
          * (redisplay lever (a), collaboration.md). A C loop straight over the character list,
          * no static bank-0 buffer; attr as in put-char (bit 7 = reverse video). */
         obj str = caddr(args), a4 = car(cdr(cdr(cdr(args))));
-        char wbuf[80];
         int16_t attr = IS_FIX(a4) ? FIXVAL(a4) : (int16_t)-1;
-        uint8_t x = (uint8_t)FIXVAL(car(args)), y = (uint8_t)FIXVAL(cadr(args)), n = 0;
+        uint8_t x = (uint8_t)FIXVAL(car(args)), y = (uint8_t)FIXVAL(cadr(args));
         if (!(IS_PTR(str) && cell_type(str) == T_STR)) {
             lisp_abort_static(LISP65_ERR_SCREEN_WRITE_STRING_TYPE, "screen-write-string: not a string"); return NIL;
         }
-#ifdef LISP65_STRING_ARENA
-        n = (uint8_t)str_copy_out(str, wbuf, 80);
-#else
-        { obj cs; for (cs = cell_a(str); IS_PTR(cs) && cell_type(cs) == T_CONS && n < 80; cs = cell_b(cs))
-            wbuf[n++] = (char)FIXVAL(cell_a(cs)); }
-#endif
         /* attr Bit 6 (0x40) = bis Zeilenende auffuellen. Span-Schreiber: Basiszeiger einmal,
          * lineare Stores — vorher ~1500 Zyklen JE ZEICHEN via scr_put_at (xemu-Messung). */
-        scr_write_span(x, y, wbuf, n,
-                       (attr >= 0 && (attr & 0x40)) ? scr_cols() : 0,
-                       (attr >= 0) ? (attr & ~0x40) : attr);
+        lisp65_screen_write_string_span(x, y, str, attr);
         return NIL; }
 #endif /* LISP65_SCREEN_WRITE_STRING */
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
@@ -1219,7 +1219,11 @@ uint8_t eval_v2_workbench_service(uint8_t id, const obj *args, obj *result) {
 #endif
 #if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
     case 35: { /* %set-macro */
-        obj macro = alloc(T_MACRO);
+        obj macro;
+        if (!eval_symbol_arg_p(args[0])) {
+            *result = NIL; return 1;
+        }
+        macro = alloc(T_MACRO);
         if (macro == NIL) { *result = NIL; return 1; }
         cell_set_a(macro, args[1]); cell_set_b(macro, NIL);
         set_sym_function(args[0], macro);
@@ -1669,7 +1673,9 @@ static obj eval_env(obj e, obj env) {
                     gc_rootsp = base; return r;
                 }
                 if (op == sf_setq) {
-                    obj s = car(args), v = eval_env(cadr(args), env), b = env_lookup(s, env);
+                    obj s = car(args), v, b;
+                    if (!eval_symbol_arg_p(s)) { gc_rootsp = base; return NIL; }
+                    v = eval_env(cadr(args), env); b = env_lookup(s, env);
                     if (b != NIL) cell_set_b(b, v); else set_sym_value(s, v);
                     gc_rootsp = base; return v;
                 }

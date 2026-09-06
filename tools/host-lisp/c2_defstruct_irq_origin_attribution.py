@@ -31,6 +31,7 @@ HOST = ROOT / "tools/host-lisp"
 sys.path.insert(0, str(HOST))
 from elf_truth import ElfTruth, ElfTruthError  # noqa: E402
 import c2_interrupt_ownership_gate as IRQ  # noqa: E402
+from evidence_era import era_bind, era_blob  # noqa: E402
 
 
 EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -68,6 +69,7 @@ BRK_CANDIDATE_PC = RETURN_PC - 2
 PRG_LOAD = 0x2001
 TESTED_CORE_COMMIT = "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6"
 TESTED_CORE_FILE_SHA = "d44ae3906e1b0a826ca8e511c73ef1f50223b7de507a3ed349082fdefe58034e"
+EVIDENCE_ERA = "8ca4c9dbdcd575287146405e9208679b1cd5f0f3"
 CORE_BASE = (
     "https://github.com/MEGA65/mega65-core/blob/"
     f"{TESTED_CORE_COMMIT}/src/vhdl/gs4510.vhdl")
@@ -258,7 +260,7 @@ def map_and_stack_contract(device: dict[str, Any]) -> dict[str, Any]:
 
 
 def ownership_binding(policy: dict[str, Any]) -> dict[str, Any]:
-    runtime = RUNTIME.read_text(encoding="utf-8")
+    runtime = era_blob(EVIDENCE_ERA, RUNTIME.relative_to(ROOT).as_posix()).decode()
     text = disassembly(DIAGNOSTIC_ELF)
     exact = IRQ.audit(elf=DIAGNOSTIC_ELF)
     require(exact["status"] == "passed-strict-internal-interrupt-ownership",
@@ -400,7 +402,7 @@ def derive() -> dict[str, Any]:
             "diagnostic_sister": bind(SISTER),
             "interrupt_policy": bind(POLICY),
             "map_source": bind(MAP_SOURCE),
-            "runtime_source": bind(RUNTIME),
+            "runtime_source": era_bind(EVIDENCE_ERA, RUNTIME),
             "window_source": historical_bind(WINDOW),
             "phase_C_capture_source": bind(PHASE_C),
             "tested_core_CPU": core_authority(policy),

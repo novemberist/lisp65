@@ -164,10 +164,13 @@ def semantic_inputs() -> list[dict[str, Any]]:
         ("full-span-successor", "partial-transfer-safe convergence", FULL_SPAN),
         ("ABI-vocabulary-pairing", "producer/consumer status identity", ABI_PAIRING),
     ]
-    tool_paths = {ABI_GATE, SERVICE_GATE, EQUIVALENCE_GATE}
+    # Every member is evidence for the sealed Link-109 closure.  Binding only
+    # the checker tools to that era left the assembly sources live and made a
+    # later, legitimate successor edit reconstruct a historical receipt from
+    # mixed generations.  The live-gate half below remains live by design;
+    # the ten semantic inputs are uniformly historical.
     result = [{"id": name, "role": role,
-               "identity": (ERA.era_bind(SEAL_ERA_COMMIT, path)
-                            if path in tool_paths else bind(path))}
+               "identity": ERA.era_bind(SEAL_ERA_COMMIT, path)}
               for name, role, path in rows]
     require(len(result) == 10 and len({row["id"] for row in result}) == 10,
             "Link-109 semantic input inventory is incomplete")
@@ -275,6 +278,8 @@ def validate(value: dict[str, Any]) -> None:
         "Link-109 semantic closure rebind drift")
     require(value.get("authority", {}).get("driver") ==
             ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)
+            and inputs.get("mapped-far-service-source") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, FAR_SOURCE)
             and inputs.get("transitive-ABI-gate") ==
             ERA.era_bind(SEAL_ERA_COMMIT, ABI_GATE)
             and inputs.get("mapped-far-service-gate") ==
@@ -307,6 +312,10 @@ def mutations(value: dict[str, Any]) -> list[str]:
             row for row in x["semantic_inputs"]
             if row["id"] == "mapped-far-service-gate").update(
                 identity=ERA.era_bind("HEAD", SERVICE_GATE)),
+        "collapse-source-era-to-live": lambda x: next(
+            row for row in x["semantic_inputs"]
+            if row["id"] == "mapped-far-service-source").update(
+                identity=bind(FAR_SOURCE)),
         "restore-working-tree-binding": lambda x: x["authority"].update(
             driver=bind(DRIVER)),
     }
@@ -334,14 +343,14 @@ def check() -> None:
     validate(value); expected = derive(); validate(expected)
     require(value == expected and rejected == SEALED_MUTATIONS,
             "Link-109 semantic closure receipt drift")
-    require(len(mutations(value)) == 11,
+    require(len(mutations(value)) == 12,
             "live Link-109 era mutations did not run")
     print("Link-109 semantic closure: CHECK PASS history=unchanged inputs=10")
 
 
 def selftest() -> None:
     value = derive(); validate(value)
-    require(len(mutations(value)) == 11, "Link-109 closure mutation drift")
+    require(len(mutations(value)) == 12, "Link-109 closure mutation drift")
     mutant = DRIVER.read_text(encoding="utf-8").replace(
         "git_bind(AUTHORIZATION, PLAN)", "bind(PLAN)", 1)
     try:
@@ -350,7 +359,7 @@ def selftest() -> None:
         pass
     else:
         raise RebindError("living-plan source mutation survived")
-    print("Link-109 semantic closure: SELFTEST PASS mutations=12")
+    print("Link-109 semantic closure: SELFTEST PASS mutations=13")
 
 
 def freight_check() -> None:

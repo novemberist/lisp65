@@ -11,6 +11,7 @@
 #include "obj.h"
 #include "c2_platform_dma.h"
 #include "c2_kernal_facade.h"
+#include "mega65_dma_descriptor.h"
 #ifdef LISP65_CODE_WINDOW_CONVERGENCE
 #include "c2_kernal_runtime.h"
 #include "c2_kernal_layout.h"
@@ -45,18 +46,8 @@ LISP65_C2_REOPEN_TEXT_GAP2_FN
 void c2_facade_target_c2_dma(uint16_t source, uint8_t source_bank,
                              uint16_t target, uint8_t target_bank,
                              uint16_t length) {
-    c2_dma_list[0] = 0u;
-    c2_dma_list[1] = (uint8_t)length;
-    c2_dma_list[2] = (uint8_t)(length >> 8);
-    c2_dma_list[3] = (uint8_t)source;
-    c2_dma_list[4] = (uint8_t)(source >> 8);
-    c2_dma_list[5] = source_bank;
-    c2_dma_list[6] = (uint8_t)target;
-    c2_dma_list[7] = (uint8_t)(target >> 8);
-    c2_dma_list[8] = target_bank;
-    c2_dma_list[9] = 0u;
-    c2_dma_list[10] = 0u;
-    c2_dma_list[11] = 0u;
+    lisp65_f018_descriptor(c2_dma_list, 0u, source, source_bank,
+                           target, target_bank, length);
     __asm__ volatile(
         "lda #0\n\tsta $d702\n\t"
         "lda #mos16hi(c2_dma_list)\n\tsta $d701\n\t"
@@ -75,31 +66,11 @@ void vm_code_load(uint8_t bank, uint16_t offset, uint16_t length,
 static LISP65_C2_MAPPED_FAR_FN
 void c2_dma_verify_submit(uint16_t source, uint8_t source_bank) {
     uint8_t *next = c2_dma_verify_list + 12u;
-    c2_dma_verify_list[0] = 4u;
-    c2_dma_verify_list[1] = 1u;
-    c2_dma_verify_list[2] = 0u;
-    c2_dma_verify_list[3] = (uint8_t)source;
-    c2_dma_verify_list[4] = (uint8_t)(source >> 8);
-    c2_dma_verify_list[5] = source_bank;
-    c2_dma_verify_list[6] = (uint8_t)(uintptr_t)&c2_dma_verify;
-    c2_dma_verify_list[7] =
-        (uint8_t)((uint16_t)(uintptr_t)&c2_dma_verify >> 8);
-    c2_dma_verify_list[8] = 0u;
-    c2_dma_verify_list[9] = 0u;
-    c2_dma_verify_list[10] = 0u;
-    c2_dma_verify_list[11] = 0u;
-    next[0] = 0u;
-    next[1] = 1u;
-    next[2] = 0u;
-    next[3] = (uint8_t)(uintptr_t)&c2_dma_verify_marker;
-    next[4] = (uint8_t)((uint16_t)(uintptr_t)&c2_dma_verify_marker >> 8);
-    next[5] = 0u;
-    next[6] = (uint8_t)(uintptr_t)&c2_dma_verify_done;
-    next[7] = (uint8_t)((uint16_t)(uintptr_t)&c2_dma_verify_done >> 8);
-    next[8] = 0u;
-    next[9] = 0u;
-    next[10] = 0u;
-    next[11] = 0u;
+    lisp65_f018_descriptor(c2_dma_verify_list, 4u, source, source_bank,
+                           (uint16_t)(uintptr_t)&c2_dma_verify, 0u, 1u);
+    lisp65_f018_descriptor(next, 0u,
+                           (uint16_t)(uintptr_t)&c2_dma_verify_marker, 0u,
+                           (uint16_t)(uintptr_t)&c2_dma_verify_done, 0u, 1u);
     __asm__ volatile(
         "lda #0\n\tsta $d702\n\t"
         "lda #mos16hi(c2_dma_verify_list)\n\tsta $d701\n\t"

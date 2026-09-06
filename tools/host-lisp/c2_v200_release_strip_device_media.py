@@ -166,7 +166,18 @@ def packed_readback(product: Path) -> dict[str, Any]:
     product_dir = source_product.parent
     lengths = [(product_dir / f"{key}.code.bin").stat().st_size
                for key in STRIP.PRODUCT_KEYS]
-    require(sum(lengths) == PLANE_BYTES and len(packed_code) == 65489,
+    packed_manifest = load(SHARED / "candidate-manifest.json")
+    code_rows = [row for row in packed_manifest["artifacts"]
+                 if row["role"] == "c2-bank2-static-code-plane"]
+    require(len(code_rows) == 1,
+            "packed stripped code authority population drift")
+    code_row = code_rows[0]
+    code_source = ROOT / code_row["path"]
+    code_binding = bind(code_source)
+    require(sum(lengths) == PLANE_BYTES
+            and all(code_row[key] == code_binding[key]
+                    for key in ("path", "bytes", "sha256"))
+            and packed_code == code_source.read_bytes(),
             "packed stripped population drift")
     projection = BUILD / f"packed-readback-{product.stem.lower()}/product"
     if projection.parent.exists():
@@ -217,7 +228,17 @@ def packed_readback(product: Path) -> dict[str, Any]:
         except BASE.BASE.M.BASE.MediaError:
             rejected.append(name)
     require(len(rejected) == 2, "packed stripped mutation survived")
-    final = load(STRIP.RECEIPT)["final_product"]["packed_product"]
+    candidate = load(STRIP.RECEIPT)
+    final = candidate["final_product"].get("packed_product")
+    if final is None:
+        preflight_binding = candidate.get("preflight")
+        require(isinstance(preflight_binding, dict),
+                "packed delivered-input authority absent")
+        preflight_path = ROOT / preflight_binding["path"]
+        require(bind(preflight_path) == preflight_binding,
+                "packed delivered-input preflight identity drift")
+        preflight = load(preflight_path)
+        final = preflight["configuration"]["inherited"]["packed"]
     require(final["key_sources"]["active_sink_set"] == [
                 "c2_kernal_input_take"]
             and final["host_wall"]["counters"] == {
@@ -358,7 +379,7 @@ def static_plane_gate() -> dict[str, Any]:
     row = next(item for item in value["artifacts"]
                if item["role"] == "c2-bank2-static-code-plane")
     require(plane["product_build_id"] == f"0x{PRODUCT_ID:08x}"
-            and plane["bank2_static_code_bytes"] == row["bytes"] == 65489
+            and plane["bank2_static_code_bytes"] == row["bytes"]
             and plane["largest_contiguous_hole"]["bytes"] ==
                 EXPECTED_LARGEST_HOLE
             and plane["composed_owners"][-2]["bytes"] == 324

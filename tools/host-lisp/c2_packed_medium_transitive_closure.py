@@ -147,6 +147,21 @@ def _external_calls(manifest: Path, component: str,
     ledger = C._abi_ledger("dialect-v2", None)
     calls: list[dict[str, Any]] = []
     entries = value.get("entries", [])
+    nodes = value.get("literal_nodes", [])
+    index = value.get("literal_index", [])
+    patches = value.get("literal_patches", [])
+    require(isinstance(nodes, list) and isinstance(index, list)
+            and isinstance(patches, list),
+            f"packed literal projection absent: {manifest}")
+    patch_nodes: dict[int, int] = {}
+    for patch in patches:
+        require(isinstance(patch, dict)
+                and isinstance(patch.get("blob_offset"), int)
+                and isinstance(patch.get("node"), int)
+                and 0 <= patch["node"] < len(nodes)
+                and patch["blob_offset"] not in patch_nodes,
+                f"packed literal patch invalid: {manifest}")
+        patch_nodes[patch["blob_offset"]] = patch["node"]
     for ordinal, entry in enumerate(entries):
         if not isinstance(entry, dict) or entry.get("kind") not in {
                 "function", "macro"}:
@@ -170,15 +185,36 @@ def _external_calls(manifest: Path, component: str,
             literal, argc = operand
             require(literal < len(literals),
                     f"packed call literal outside table: {component}/{name}")
-            descriptor = literals[literal]
-            require(isinstance(descriptor, dict)
-                    and isinstance(descriptor.get("symbol"), str),
-                    f"packed external call is not symbolic: {component}/{name}")
+            lit_first = int(entry.get("lit_first", -1))
+            require(lit_first >= 0 and lit_first + literal < len(index),
+                    f"packed call literal lacks projection: {component}/{name}")
+            node_id = int(index[lit_first + literal])
+            patch_at = offset + 7 + 2 * literal
+            require(0 <= node_id < len(nodes)
+                    and patch_nodes.get(patch_at) == node_id,
+                    f"packed call literal patch/index mismatch: {component}/{name}")
+            node = nodes[node_id]
+            kind = int(node.get("kind", -1)) if isinstance(node, dict) else -1
+            if kind == 8:
+                target_ordinal = int(node.get("first", -1))
+                require(0 <= target_ordinal < len(entries),
+                        f"packed direct-entry target outside image: {component}/{name}")
+                target = entries[target_ordinal].get("name")
+                require(isinstance(target, str) and target,
+                        f"packed direct-entry target unnamed: {component}/{name}")
+                packed_kind: str | int = 4
+            else:
+                descriptor = literals[literal]
+                require(kind == 4 and isinstance(descriptor, dict)
+                        and isinstance(descriptor.get("symbol"), str),
+                        f"packed external call is neither symbol nor entry: {component}/{name}")
+                target = descriptor["symbol"]
+                packed_kind = "external-symbol"
             calls.append({"component": component, "image": component,
                 "caller": name, "pc": here, "opcode": op.mnemonic,
                 "argc": argc, "literal": literal,
-                "packed_literal_kind": "external-symbol",
-                "target": descriptor["symbol"]})
+                "packed_literal_kind": packed_kind,
+                "target": target})
     return ({"kind": "external-library", "key": component,
              "manifest": bind(manifest), "blob": bind(blob_path),
              "objects": sum(1 for row in entries if isinstance(row, dict)

@@ -27,6 +27,7 @@ import c2_link75_real_require_resolver_host as R  # noqa: E402
 import c2_defstruct_foundations_gate as FOUNDATION  # noqa: E402
 import c2_require_resolver_gate as RESOLVER  # noqa: E402
 import c2_v124_require_prior_append_h1 as H1  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 SOURCE_GATE = ROOT / "tools/host-lisp/c2_require_resolver_gate.py"
@@ -75,27 +76,51 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
     )
 
 
+def sealed_receipt_commit(path: Path) -> str:
+    result = subprocess.run(
+        ["git", "log", "-1", "--format=%H", "--",
+         path.relative_to(ROOT).as_posix()], cwd=ROOT, text=True,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    require(result.returncode == 0 and result.stdout.strip(),
+            "historical Option-A sealing commit is not derivable")
+    return result.stdout.strip()
+
+
 def preserve_sealed_receipt(path: Path, value: dict[str, Any]) -> None:
-    """Revalidate the historical gate without rebinding manifest metadata."""
-    if not path.is_file():
-        write_json(path, value)
-        return
-    sealed = load(path)
-    current = value["authority"]["fresh_stdlib"]
-    historical = sealed["authority"]["fresh_stdlib"]
+    """Validate live behavior while preserving the old receipt in its era."""
+    require(path.is_file(), "historical Option-A receipt absent")
+    commit = sealed_receipt_commit(path)
+    raw = ERA.era_blob(commit, path.relative_to(ROOT).as_posix())
+    require(path.read_bytes() == raw,
+            "historical Option-A receipt was rewritten by a live check")
+    sealed = json.loads(raw.decode("utf-8"))
     require(
-        {key: current.get(key) for key in ("path", "bytes")}
-        == {key: historical.get(key) for key in ("path", "bytes")},
-        "sealed fresh-stdlib path/size drift",
+        sealed.get("format") == FORMAT
+        and sealed.get("status")
+            == "passed-option-A-require-after-two-ordinary-appends-host-lane"
+        and sealed.get("authority", {}).get("driver")
+            == ERA.era_bind(commit, Path(__file__).resolve()),
+        "historical Option-A receipt/driver era drift",
     )
-    normalized = json.loads(json.dumps(value))
-    normalized["authority"]["fresh_stdlib"] = historical
-    require(normalized["authority"]["driver"]["path"]
-            == sealed["authority"]["driver"]["path"],
-            "historical Option-A driver identity drift")
-    normalized["authority"]["driver"] = sealed["authority"]["driver"]
-    require(normalized == sealed,
-            "historical Option-A receipt semantic drift")
+    require(
+        value.get("format") == FORMAT
+        and value.get("status")
+            == "passed-option-A-require-after-two-ordinary-appends-host-lane"
+        and value.get("execution_witness", {}).get("baseline", {}).get("result")
+            == "t"
+        and value.get("execution_witness", {}).get(
+            "two_prior_appends", {}).get("result") == "t"
+        and len(value.get("execution_witness", {}).get(
+            "mutations_rejected", {})) == 5,
+        "live Option-A successor semantics drift",
+    )
+    # A present-day execution is deliberately not normalized into the sealed
+    # receipt.  That old equality check was the era-crossing defect.
+    mixed = json.loads(raw.decode("utf-8"))
+    mixed["source_reproducible_fixture"] = value[
+        "source_reproducible_fixture"]
+    require(mixed != sealed,
+            "live/sealed Option-A anti-mixing mutation was ineffective")
 
 
 def run_source_gate() -> str:
@@ -156,6 +181,13 @@ def prepare_source_fixtures() -> dict[str, str]:
             CURRENT_COMPILER_SUITE.relative_to(ROOT).as_posix(),
         ],
         "current C2 compiler carrier",
+    )
+    generation = load(CURRENT_COMPILER_TIER)
+    inputs = {row["path"]: row["sha256"] for row in generation["inputs"]}
+    require(
+        inputs.get("lib/lcc.lisp") == H1.sha_bytes(
+            (ROOT / "lib/lcc.lisp").read_bytes()),
+        "current Option-A compiler carrier is not bound to live lcc.lisp",
     )
     libraries = {}
     for name, suite in (

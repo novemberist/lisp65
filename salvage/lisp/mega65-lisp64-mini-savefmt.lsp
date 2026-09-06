@@ -1,3 +1,0 @@
-; Minimale SAVEFMT-Quelle fuer MEGA65-LISP64-LOAD-Probes.
-
-(DE M65OK NIL 'M65OK)

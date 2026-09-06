@@ -353,7 +353,9 @@ def runtime(candidate_manifest: Path) -> tuple[Any, ...]:
     # world, but its compiler execution must use the carrier bound by the
     # selected living product.  Release names and historical manifest hashes
     # are not carrier identities.
-    carrier_path, _tier, _product, _sources = PARITY.default_authorities()
+    carrier_path, _tier, _product, _sources, _source_era = (
+        PARITY.default_authorities()
+    )
     heap = C.prepare_heap([])
     directory: dict[int, B.CodeObject] = {}
     macros: set[int] = set()

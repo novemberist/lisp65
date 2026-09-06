@@ -61,6 +61,16 @@ PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v18-receipt.json"
 PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v19-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v20-receipt.json"
+# DWX Item 3 adds the first emulator-prefilter medium producer.  It is current
+# diagnostic tooling, so the structural producer population and its closure
+# receipt advance together rather than rewriting the v19 evidence world.
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v21-receipt.json"
+# DWX Item 4 adds a focus-free packed-require producer.  Its stopped-memory
+# and framebuffer rows are part of the producer closure, not an unregistered
+# test-side copy of the medium.
 BANK4 = ARCH / "c2.3-v2.1-bank4-map-probe-receipt.json"
 DEVICE_PREPARATION = ARCH / (
     "c2.3-v1.6-item1-only-media-r1-public2-receipt.json")
@@ -83,7 +93,13 @@ BLOCKS_AB_MEDIA = ARCH / (
     "c2.3-v1.9-blocks-ab-acceptance-media-receipt.json")
 BLOCK3_RETURN_MEDIA = ARCH / (
     "c2.3-v2.0-block3-return-device-media-receipt.json")
-FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v19"
+DWX_FREEZER_FREE_MEDIA = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/post-release/"
+    "dwx-freezer-free-boot-variants-receipt-20260902.json")
+DWX_MIRRORED_MEDIA = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/post-release/"
+    "dwx-mirrored-prefilter-rows-receipt-20260902.json")
+FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v21"
 SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 
 # The registry is deliberately explicit.  Discovery below is independent of
@@ -145,6 +161,8 @@ REGISTERED = {
     "tools/host-lisp/c2_v17_init_l65_product_variants_media.py",
     "tools/host-lisp/c2_v190_blocks_ab_acceptance_media.py",
     "tools/host-lisp/c2_v200_block3_return_device_media.py",
+    "tools/host-lisp/dwx_freezer_free_boot_variants.py",
+    "tools/host-lisp/dwx_mirrored_prefilter_rows.py",
     "tools/host-lisp/c2_v20_crc_carveout_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media_liveness.py",
     "tools/host-lisp/c2_v20_far_payload_delivery.py",
@@ -198,6 +216,10 @@ CURRENT = {
         "v1.9 Blocks A+B artifact-only product/work media with packed-facade, composed-Bank2 and physical-session closure",
     "tools/host-lisp/c2_v200_block3_return_device_media.py":
         "v2.0 Block-3 artifact-only product/work media with packed-byte transitive callee closure",
+    "tools/host-lisp/dwx_freezer_free_boot_variants.py":
+        "DWX freezer-free drive-8 and complete-product cold-boot variants with INIT-only diff and framebuffer closure",
+    "tools/host-lisp/dwx_mirrored_prefilter_rows.py":
+        "DWX focus-free packed-require medium plus mirrored framebuffer and stopped-memory row closure",
 }
 
 
@@ -364,6 +386,12 @@ def active_closure() -> dict[str, Any]:
     block3_return_source = (HOST /
         "c2_v200_block3_return_device_media.py").read_text(encoding="utf-8")
     block3_return = load(BLOCK3_RETURN_MEDIA)
+    dwx_freezer_free_source = (HOST /
+        "dwx_freezer_free_boot_variants.py").read_text(encoding="utf-8")
+    dwx_freezer_free = load(DWX_FREEZER_FREE_MEDIA)
+    dwx_mirrored_source = (HOST /
+        "dwx_mirrored_prefilter_rows.py").read_text(encoding="utf-8")
+    dwx_mirrored = load(DWX_MIRRORED_MEDIA)
     require(
         "PACKED_ARTIFACT_GATES" in far_source
         and "run_packed_artifact_gates()" in far_source
@@ -529,6 +557,52 @@ def active_closure() -> dict[str, Any]:
             "static_plane", {}).get("largest_contiguous_hole", {}).get(
                 "bytes") == 11167,
         "v2.0 Block-3 medium builder lacks packed-byte transitive closure")
+    require(
+        "cross_variant_proof(" in dwx_freezer_free_source
+        and "run_variant(" in dwx_freezer_free_source
+        and dwx_freezer_free.get("status") == "PASS"
+        and dwx_freezer_free.get("choreography", {}).get(
+            "freezer_operations") == 0
+        and dwx_freezer_free.get("choreography", {}).get(
+            "claims_freezer_behavior") is False
+        and dwx_freezer_free.get("choreography", {}).get(
+            "fresh_emulator_process_per_product_variant") is True
+        and dwx_freezer_free.get("choreography", {}).get(
+            "manual_boot_media_swap") is False
+        and [row.get("id") for row in dwx_freezer_free.get(
+            "product_media_variants", [])] == [
+                "product-medium-init-absent",
+                "product-medium-init-valid",
+                "product-medium-init-error"]
+        and all(row.get("framebuffer_oracle", {}).get("passed") is True
+            for row in dwx_freezer_free.get("product_media_variants", []))
+        and dwx_freezer_free.get("product_media_diff_attribution", {}).get(
+            "rule") ==
+            "one frozen product filesystem; INIT.L65 is the sole variant",
+        "DWX freezer-free medium builder lacks named choreography or runtime closure")
+    require(
+        "create_packed_medium(" in dwx_mirrored_source
+        and "c1541_write(" in dwx_mirrored_source
+        and "headless local UART monitor to Xemu HWA queue" in dwx_mirrored_source
+        and dwx_mirrored.get("status") == "PASS"
+        and dwx_mirrored.get("accounting") == {
+            "WPLTO_runs": 0, "device_contacts": 0,
+            "focus_dependent_input_events": 0,
+            "fresh_headless_xemu_processes": 3,
+            "product_bytes_changed": 0, "product_links": 0}
+        and len(dwx_mirrored.get("rows", [])) == 8
+        and all(row.get("result") == "PASS"
+                for row in dwx_mirrored.get("rows", []))
+        and dwx_mirrored.get("capture_stopped_state", {}).get(
+            "raw_bytes") == "88888888"
+        and dwx_mirrored.get("capture_stopped_state", {}).get(
+            "all_equal") is True
+        and dwx_mirrored.get("capture_stopped_state", {}).get(
+            "all_nonzero") is True
+        and dwx_mirrored.get("runtime_policy", {}).get(
+            "desktop_focus_input") is False
+        and dwx_mirrored.get("device_acceptance_claimed") is False,
+        "DWX mirrored-row medium lacks focus-free runtime or oracle closure")
     return {"current": dict(sorted(CURRENT.items())),
             "repair_registry": repaired,
             "breadcrumb_registry": traced,
@@ -598,7 +672,29 @@ def active_closure() -> dict[str, Any]:
                 "packed_readback_transitive_closure": True,
                 "objects": 792, "calls": 2651,
                 "optional_library_media": False,
-                "device_contacts_during_build": 0}}
+                "device_contacts_during_build": 0},
+            "dwx_freezer_free_registry": {
+                "producer":
+                    "tools/host-lisp/dwx_freezer_free_boot_variants.py",
+                "artifact_only": True,
+                "drive8_only_predecessor": True,
+                "complete_product_cold_boot_variants": 3,
+                "INIT_only_diff_attribution": True,
+                "framebuffer_oracles": 3,
+                "fresh_emulator_processes": 3,
+                "manual_boot_media_swap": False,
+                "freezer_operations": 0,
+                "claims_freezer_behavior": False},
+            "dwx_mirrored_rows_registry": {
+                "producer":
+                    "tools/host-lisp/dwx_mirrored_prefilter_rows.py",
+                "packed_require_medium": True,
+                "active_rows": 8,
+                "framebuffer_or_stopped_memory_only": True,
+                "capture_counters_hex": "88888888",
+                "headless": True,
+                "desktop_focus_input": False,
+                "device_acceptance_claimed": False}}
 
 
 def derive() -> dict[str, Any]:
@@ -611,7 +707,7 @@ def derive() -> dict[str, Any]:
         domains.setdefault(domain(path), []).append(path)
     value = {
         "format": FORMAT,
-        "recorded_on": "2026-08-27",
+        "recorded_on": "2026-09-02",
         "status": "PASS: EVERY MEDIUM BUILDER IN TREE ENUMERATED",
         "builders": {
             "total": len(observed),
@@ -679,7 +775,19 @@ def audit(value: dict[str, Any]) -> None:
             "blocks_ab_registry", {}).get("composed_bank2_gate") is True
         and value.get("active_closure", {}).get(
             "block3_return_registry", {}).get(
-                "packed_readback_transitive_closure") is True,
+                "packed_readback_transitive_closure") is True
+        and value.get("active_closure", {}).get(
+            "dwx_freezer_free_registry", {}).get(
+                "complete_product_cold_boot_variants") == 3
+        and value.get("active_closure", {}).get(
+            "dwx_freezer_free_registry", {}).get(
+                "claims_freezer_behavior") is False
+        and value.get("active_closure", {}).get(
+            "dwx_mirrored_rows_registry", {}).get(
+                "capture_counters_hex") == "88888888"
+        and value.get("active_closure", {}).get(
+            "dwx_mirrored_rows_registry", {}).get(
+                "desktop_focus_input") is False,
         "media-builder structural enumeration drift")
 
 
@@ -710,6 +818,12 @@ def mutations(base: dict[str, Any]) -> list[str]:
         ("incomplete-block3-return-registry", lambda x: x["active_closure"]
             ["block3_return_registry"].update(
                 packed_readback_transitive_closure=False)),
+        ("incomplete-dwx-freezer-free-registry", lambda x:
+            x["active_closure"]["dwx_freezer_free_registry"].update(
+                claims_freezer_behavior=True)),
+        ("incomplete-dwx-mirrored-rows-registry", lambda x:
+            x["active_closure"]["dwx_mirrored_rows_registry"].update(
+                desktop_focus_input=True)),
         ("incomplete-public-release-registry", lambda x: x["active_closure"]
             ["public_release_registry"].update(artifact_count=0)),
         ("incomplete-comfort-product-profile-registry", lambda x:
@@ -739,7 +853,7 @@ def mutations(base: dict[str, Any]) -> list[str]:
             audit(trial)
         except EnumerationError:
             rejected.append(name)
-    require(len(rejected) == 17,
+    require(len(rejected) == 19,
             "media-builder enumeration mutation survived")
     return sorted(rejected)
 
@@ -821,7 +935,29 @@ def check() -> dict[str, Any]:
                 "packed_readback_transitive_closure": True,
                 "objects": 792, "calls": 2651,
                 "optional_library_media": False,
-                "device_contacts_during_build": 0},
+                "device_contacts_during_build": 0}
+            and value["active_closure"]["dwx_freezer_free_registry"] == {
+                "producer":
+                    "tools/host-lisp/dwx_freezer_free_boot_variants.py",
+                "artifact_only": True,
+                "drive8_only_predecessor": True,
+                "complete_product_cold_boot_variants": 3,
+                "INIT_only_diff_attribution": True,
+                "framebuffer_oracles": 3,
+                "fresh_emulator_processes": 3,
+                "manual_boot_media_swap": False,
+                "freezer_operations": 0,
+                "claims_freezer_behavior": False}
+            and value["active_closure"]["dwx_mirrored_rows_registry"] == {
+                "producer":
+                    "tools/host-lisp/dwx_mirrored_prefilter_rows.py",
+                "packed_require_medium": True,
+                "active_rows": 8,
+                "framebuffer_or_stopped_memory_only": True,
+                "capture_counters_hex": "88888888",
+                "headless": True,
+                "desktop_focus_input": False,
+                "device_acceptance_claimed": False},
             "media-builder enumeration reconstruction drift")
     return value
 

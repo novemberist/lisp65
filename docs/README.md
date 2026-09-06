@@ -3,13 +3,14 @@
 This index is the curated entry point for the live lisp65 documentation.
 Documents not linked from the first three sections are implementation records,
 machine-bound contracts, proposals, or historical material; they are not user
-instructions for release 2.0.1.
+instructions for release 2.1.0.
 
 ## Users
 
 - [User Guide](user-guide.md) — verify, boot, edit, save, and recover
 - [Dialect V2 Language Reference](language-reference.md) — released syntax and surface
-- [Release Notes 2.0.1](releases/2.0.1.md) — current documentation bundle and unchanged product boundary
+- [Release Notes 2.1.0](releases/2.1.0.md) — current F011 and renderer product boundary
+- [Release Notes 2.0.1](releases/2.0.1.md) — historical documentation-only correction
 - [Release Notes 2.0.0](releases/2.0.0.md) — previous product and evidence boundary
 - [Release Notes 1.9.0](releases/1.9.0.md) — previous product and evidence boundary
 - [Release Notes 1.8.0](releases/1.8.0.md) — previous product and evidence boundary

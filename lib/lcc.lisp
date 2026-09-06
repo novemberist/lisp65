@@ -538,7 +538,7 @@
              (%lcc-expr cs lvls
                         (cons 'let (cons (%lcc-imm-binds (car (cdr op)) args nil)
                                     (cdr (cdr op)))))
-             (%lcc-push-value cs nil)))
+             (%lcc-error-invalid-parameter-list)))
         ((eq op 'lambda) (%lcc-lambda cs lvls form))
         ((eq op 'quote) (%lcc-push-value cs (car args)))
         ((eq op 'progn) (%lcc-seq cs lvls args))
@@ -660,7 +660,7 @@
      ((lambda (hole1 len1)
         ((lambda (cs3)
            (progn
-             (rplaca hole1 (- (cdr (%lcc-st cs3)) len1))
+             (rplaca hole1 (%lcc-rel8 (- (cdr (%lcc-st cs3)) len1)))
              (%lcc-tail cs3 lvls (if (cdr (cdr args)) (car (cdr (cdr args))) nil))))
          (%lcc-tail cs2 lvls (car (cdr args)))))
       (car (%lcc-st cs2)) (cdr (%lcc-st cs2))))
@@ -674,7 +674,7 @@
                     (%lcc-tail cs lvls
                                (cons 'let (cons (%lcc-imm-binds (car (cdr op)) args nil)
                                            (cdr (cdr op)))))
-                    (%lcc-emit-op (%lcc-expr cs lvls form) 'ret)))
+                    (%lcc-error-invalid-parameter-list)))
                ((eq op 'if)    (%lcc-tail-if cs lvls args))
                ((eq op 'progn) (%lcc-tail-seq cs lvls args))
                ((eq op 'let)   (%lcc-tail-let cs lvls args nil))

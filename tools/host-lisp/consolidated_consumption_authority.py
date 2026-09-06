@@ -20,6 +20,9 @@ from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "config/consolidated-consumption-authority.json"
+PUBLIC_BUILD_AUTHORITY = ROOT / "config/c2-v200-public-build-authority.json"
+PUBLIC_PRODUCT_PLANE = ROOT / "config/c2-v200-public-plane/static-plane"
+V201_PACKAGE = ROOT / "build/release-v2.0.1/v2.0.1-package-preparation-receipt.json"
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 EXTENT = ARCH / "c2.3-v1.7-ide-idle-blink-product-card-r10-receipt.json"
 ENTRY = ARCH / "c2.3-v1.9-native-prompt-editor-card-r6-receipt.json"
@@ -33,6 +36,7 @@ TUPLE_PREFLIGHT = ARCH / "c2.3-v1.7-block3-r10-map-geometry-preflight-red.json"
 # graph nodes.  Replacement, rather than accumulation, prevents an imported
 # predecessor card from donating stale consumers to its successor.
 _OUTPUT_ROOT_RESOLVERS: dict[str, Path] = {}
+_PRODUCT_WORLD_IDENTITY: dict[str, Any] | None = None
 
 
 class AuthorityError(RuntimeError):
@@ -49,6 +53,138 @@ def load(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     require(isinstance(value, dict), f"JSON object required: {path}")
     return value
+
+
+def _binding(path: Path) -> dict[str, Any]:
+    require(path.is_file() and not path.is_symlink(), f"artifact absent: {path}")
+    raw = path.read_bytes()
+    return {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw),
+            "sha256": hashlib.sha256(raw).hexdigest()}
+
+
+def _plane_world(root: Path) -> dict[str, Any]:
+    """Read every identity-bearing member of one transported Plane world."""
+    require(root.is_dir() and not root.is_symlink(),
+            f"product Plane root absent: {root}")
+    manifest_path = root / "stdlib-p0.manifest.json"
+    ext_path = root / "stdlib-p0.ext.bin"
+    product_path = root / "product/substitution-artifacts.json"
+    shelf_path = root / "product/product-shelf-v4-direct.bin"
+    manifest, product = load(manifest_path), load(product_path)
+    banners = [row["literals"][-1]["string"] for row in manifest["entries"]
+               if row.get("name") == "%repl-banner"]
+    require(len(banners) == 1, "product Plane has no unique banner identity")
+    return {
+        "root": root.relative_to(ROOT).as_posix(),
+        "banner": banners[0],
+        "product_build_id": product["product_build_id_hex"],
+        "members": {
+            "manifest": _binding(manifest_path),
+            "extended_stdlib": _binding(ext_path),
+            "product_shelf": _binding(shelf_path),
+            "product_identity": _binding(product_path),
+        },
+    }
+
+
+def validate_product_world_identity(value: dict[str, Any]) -> None:
+    """Prove one selected Plane is the published product world, as a unit."""
+    bound, selected = value["bound_release_world"], value["selected_plane_world"]
+    require(value.get("status") == "passed-product-world-identity-bound"
+            and bound["release"] == "v2.0.0"
+            and bound["docs_only_successor"] == "v2.0.1"
+            and selected["banner"] == bound["banner"] == "WORKBENCH 2.0.0"
+            and selected["product_build_id"] == bound["product_build_id"]
+            == "0x4a1713ab",
+            "selected Plane escaped the published product-world identity")
+    names = ("manifest", "extended_stdlib", "product_shelf", "product_identity")
+    require(sorted(selected["members"]) == sorted(bound["members"]) == sorted(names),
+            "complete Plane-world member population was shortened")
+    require(all(selected["members"][name]["bytes"] ==
+                bound["members"][name]["bytes"]
+                and selected["members"][name]["sha256"] ==
+                bound["members"][name]["sha256"] for name in names),
+            "selected Plane member differs from published world authority")
+    require(value["public_build_authority"]["sealed_artifact_set_sha256"] ==
+            value["v2_0_1_docs_only_authority"]["artifact_set_sha256"]
+            and value["v2_0_1_docs_only_authority"]["product_double_pack"] ==
+            "passed-byte-identical",
+            "v2.0.1 does not preserve the v2.0.0 published product world")
+
+
+def derive_product_world_identity(*, selected_plane: Path,
+        published_plane: Path = PUBLIC_PRODUCT_PLANE,
+        build_authority_path: Path = PUBLIC_BUILD_AUTHORITY,
+        docs_only_receipt_path: Path = V201_PACKAGE) -> dict[str, Any]:
+    """Bind a candidate Plane to the v2.0.0/v2.0.1 public build authority."""
+    authority = load(build_authority_path)
+    docs = load(docs_only_receipt_path)
+    bound = _plane_world(published_plane)
+    selected = _plane_world(selected_plane)
+    require(authority.get("format") == "lisp65-c2-public-build-authority-v8"
+            and authority.get("release") == "v2.0.0"
+            and authority["sealed_path_dependent_profile_fields"]
+                ["c2_artifacts_sha256"] ==
+                bound["members"]["product_identity"]["sha256"]
+            and authority["sealed_roles"]["c2-product-shelf"]["sha256"] ==
+                bound["members"]["product_shelf"]["sha256"],
+            "published Plane is not bound by the public build authority")
+    value = {
+        "status": "passed-product-world-identity-bound",
+        "public_build_authority": {
+            "binding": _binding(build_authority_path),
+            "release": authority["release"],
+            "sealed_artifact_set_sha256":
+                authority["sealed_product_artifact_set_sha256"],
+        },
+        "v2_0_1_docs_only_authority": {
+            "binding": _binding(docs_only_receipt_path),
+            "release": docs["release"],
+            "artifact_set_sha256": docs["product"]["artifact_set_sha256"],
+            "product_double_pack": docs["verification"]["product_double_pack"],
+        },
+        "bound_release_world": {
+            **bound, "release": "v2.0.0", "docs_only_successor": "v2.0.1"},
+        "selected_plane_world": selected,
+        "derivation": ("manifest, extended stdlib, product shelf, banner and Product "
+                       "Build ID are read from the selected Plane and compared as one "
+                       "world to the published v2.0.0 authority preserved by v2.0.1"),
+    }
+    validate_product_world_identity(value)
+    return value
+
+
+def configure_product_world_identity(value: dict[str, Any]) -> None:
+    """Bind the product-world authority consumed by the next real link."""
+    global _PRODUCT_WORLD_IDENTITY
+    validate_product_world_identity(value)
+    _PRODUCT_WORLD_IDENTITY = copy.deepcopy(value)
+
+
+def product_world_mutations(value: dict[str, Any]) -> list[str]:
+    cases: dict[str, Callable[[dict[str, Any]], None]] = {
+        "historical-plane-build-ID-selected": lambda x: x[
+            "selected_plane_world"].update(product_build_id="0xc4c3ce30"),
+        "historical-plane-banner-selected": lambda x: x[
+            "selected_plane_world"].update(banner="WORKBENCH 1.9.0"),
+        "complete-plane-member-omitted": lambda x: x[
+            "selected_plane_world"]["members"].pop("extended_stdlib"),
+        "plane-member-content-diverges": lambda x: x[
+            "selected_plane_world"]["members"]["product_shelf"].update(
+                sha256="0" * 64),
+        "v2.0.1-product-world-diverges": lambda x: x[
+            "v2_0_1_docs_only_authority"].update(artifact_set_sha256="0" * 64),
+    }
+    rejected: list[str] = []
+    for name, mutate in cases.items():
+        trial = copy.deepcopy(value)
+        mutate(trial)
+        try:
+            validate_product_world_identity(trial)
+        except (AuthorityError, KeyError, TypeError, ValueError):
+            rejected.append(name)
+    require(rejected == list(cases), "product-world identity mutation survived")
+    return rejected
 
 
 def _scalar_leaves(value: Any, path: tuple[str, ...] = ()) -> list[
@@ -270,16 +406,36 @@ def validate_authority_input_inventory(value: dict[str, Any]) -> dict[str, Any]:
                 and feature_profile["missing_features"] == []
                 and feature_profile["non_unique_features"] == [],
                 "feature/profile population was empty, shortened or divergent")
+    product_world = value.get("product_world_identity")
+    if product_world is not None:
+        validate_product_world_identity(product_world)
+    fixed_raw = value.get("fixed_raw_NOLOAD_reservations")
+    if fixed_raw is not None:
+        require(bool(fixed_raw)
+                and all(int(row["start"]) < int(row["end_exclusive"])
+                        and str(row["section"]).startswith(".lisp65_")
+                        for row in fixed_raw),
+                "fixed-raw NOLOAD reservation population is invalid")
+        ordered = sorted(fixed_raw, key=lambda row: int(row["start"]))
+        require(all(int(left["end_exclusive"]) <= int(right["start"])
+                    for left, right in zip(ordered, ordered[1:])),
+                "fixed-raw NOLOAD reservation population overlaps")
     categories = sorted({"manifest-definition", "phase-owned-output-root",
                          "linker-LOADADDR-geometry",
                          *("force-include-header" for _ in force_includes),
                          *("feature-profile-population"
-                           for _ in (() if feature_profile is None else (0,)))})
+                           for _ in (() if feature_profile is None else (0,))),
+                         *("product-world-identity"
+                           for _ in (() if product_world is None else (0,))),
+                         *("fixed-raw-NOLOAD-reservation"
+                           for _ in (() if fixed_raw is None else (0,)))})
     require(categories == sorted(value["derived_authority_categories"]),
             "authority-category population was enumerated or omitted")
     return {"constants": len(constants), "force_includes": len(force_includes),
             "features": (0 if feature_profile is None
                          else len(feature_profile["bound_features"])),
+            "product_world": product_world is not None,
+            "fixed_raw_reservations": 0 if fixed_raw is None else len(fixed_raw),
             "categories": categories}
 
 
@@ -314,6 +470,17 @@ def authority_input_mutations(value: dict[str, Any]) -> list[str]:
                 ["derived_authority_categories"].remove(
                     "feature-profile-population"),
         })
+    if value.get("product_world_identity") is not None:
+        cases.update({
+            "product-world-build-ID-diverges": lambda x: x[
+                "product_world_identity"]["selected_plane_world"].update(
+                    product_build_id="0xc4c3ce30"),
+            "product-world-member-omitted": lambda x: x[
+                "product_world_identity"]["selected_plane_world"]["members"].pop(
+                    "extended_stdlib"),
+            "product-world-category-omitted": lambda x: x[
+                "derived_authority_categories"].remove("product-world-identity"),
+        })
     if value["phase_owned_output_root"].get("resolver_population") is not None:
         cases.update({
             "qualifier-output-root-diverges": lambda x: x
@@ -341,7 +508,9 @@ def build_authority_input_inventory(*, target: Path, manifest_path: Path,
         static_report: dict[str, Any] | None,
         stdlib_report: dict[str, Any] | None,
         linker_script: Path, compiler_sources: list[str] | None = None,
-        feature_report: dict[str, Any] | None = None
+        feature_report: dict[str, Any] | None = None,
+        product_world_report: dict[str, Any] | None = None,
+        fixed_raw_reservations: list[dict[str, Any]] | None = None
         ) -> dict[str, Any]:
     """Materialize the two-axis inventory consumed by one real link."""
     require(manifest_path.is_file() and not manifest_path.is_symlink(),
@@ -421,6 +590,16 @@ def build_authority_input_inventory(*, target: Path, manifest_path: Path,
         categories.add("force-include-header")
     if feature_report is not None:
         categories.add("feature-profile-population")
+    product_world = (copy.deepcopy(_PRODUCT_WORLD_IDENTITY)
+                     if product_world_report is None
+                     else copy.deepcopy(product_world_report))
+    if product_world is not None:
+        validate_product_world_identity(product_world)
+        categories.add("product-world-identity")
+    if fixed_raw_reservations is not None:
+        require(bool(fixed_raw_reservations),
+                "fixed-raw reservation authority is empty")
+        categories.add("fixed-raw-NOLOAD-reservation")
     value = {
         "format": "lisp65-prelink-authority-input-inventory-v1",
         "status": "PASS: BOTH CONSUMER AND AUTHORITY POPULATIONS DERIVED",
@@ -447,6 +626,11 @@ def build_authority_input_inventory(*, target: Path, manifest_path: Path,
         "linker_geometry": geometry,
         **({"feature_profile_population": copy.deepcopy(feature_report)}
            if feature_report is not None else {}),
+        **({"product_world_identity": product_world}
+           if product_world is not None else {}),
+        **({"fixed_raw_NOLOAD_reservations": copy.deepcopy(
+                fixed_raw_reservations)}
+           if fixed_raw_reservations is not None else {}),
         "derived_authority_categories": sorted(categories),
     }
     validate_authority_input_inventory(value)
@@ -666,10 +850,12 @@ def evaluate(root: Path = ROOT) -> dict[str, Any]:
         "output-root-MAP-tuple": tuple_population(tuple_row),
         "bytecode-entry": header_population(entry),
     }
-    require(config["format"] == "lisp65-consolidated-consumption-authority-v5"
+    require(config["format"] == "lisp65-consolidated-consumption-authority-v6"
             and "perturb every scalar leaf" in
                 config["authority_population_derivation"]
             and "feature/profile population" in
+                config["authority_population_derivation"]
+            and "product-world identity" in
                 config["authority_population_derivation"]
             and "absence of an explicit authority fails closed" in
                 config["rule"]
@@ -687,6 +873,12 @@ def evaluate(root: Path = ROOT) -> dict[str, Any]:
     output_population = build_output_root_resolver_population(
         target=ROOT / "build/card/product.prg")
     output_mutations = output_root_resolver_mutations(output_population)
+    product_world = derive_product_world_identity(
+        selected_plane=root / PUBLIC_PRODUCT_PLANE.relative_to(ROOT),
+        published_plane=root / PUBLIC_PRODUCT_PLANE.relative_to(ROOT),
+        build_authority_path=root / PUBLIC_BUILD_AUTHORITY.relative_to(ROOT),
+        docs_only_receipt_path=root / V201_PACKAGE.relative_to(ROOT))
+    world_mutations = product_world_mutations(product_world)
     predecessor = {
         "phase02b": sorted(extent_receipt.get("adapter_mutations", [])),
         "MAP_tuple": sorted(tuple_preflight["tuple_LOADADDR_gate_prototype"]
@@ -722,6 +914,10 @@ def evaluate(root: Path = ROOT) -> dict[str, Any]:
             "population": output_population,
             "mutations_rejected": output_mutations,
         },
+        "product_world_identity": {
+            "authority": product_world,
+            "mutations_rejected": world_mutations,
+        },
         "product_bytes_changed": 0,
     }
 
@@ -731,10 +927,11 @@ def selftest() -> None:
     require(value["prelink_authority"]["total"] == 13
             and len(value["consolidated_mutations_rejected"]) == 8
             and len(value["consumer_population"]["mutations_rejected"]) == 3
-            and len(value["output_root_population"]["mutations_rejected"]) == 3,
+            and len(value["output_root_population"]["mutations_rejected"]) == 3
+            and len(value["product_world_identity"]["mutations_rejected"]) == 5,
             "consolidated authority selftest drift")
     print("consolidated authority selftest: PASS cases=3 pins=13 "
-          "mutations=14 population=derived build-and-checking")
+          "mutations=19 population=derived build-and-checking worlds=6")
 
 
 def main() -> int:

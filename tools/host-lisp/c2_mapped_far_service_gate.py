@@ -8,6 +8,7 @@ from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -36,9 +37,16 @@ CONVERGENCE = ROOT / (
 SWEEP = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.4-dma-content-consumption-broaden-once-sweep.json")
+SEALED_SWEEP_SHA256 = (
+    "f47c5800e1072811c2307274ce703dbedc09340c62f27986e59e55ea33d30200")
 EQUIVALENCE = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v2.1-mapped-far-abi-preservation-equivalence-receipt.json")
+SEALED_OWNERSHIP_RECEIPT = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
+    "c2.3-v2.1-mapped-far-abi-preservation-ownership-gate-receipt.json")
+SEALED_OWNERSHIP_SHA256 = (
+    "c7a0aca3f89d6d28e9d107b72001c7ab5fdc60f864a473655d5fedd3b742632b")
 FACADE_SOURCE = ROOT / "src/optional/c2_mapped_far_service_v2.s"
 ASSEMBLY_SOURCE = ROOT / "src/c2_mapped_far_convergence.s"
 OWNER_HEADER = ROOT / "src/c2_mapped_far_service.h"
@@ -48,6 +56,7 @@ LINKER_SOURCE = ROOT / "tools/host-lisp/c2_product_substitution_link.py"
 LLVM_MC = ROOT / "tools/llvm-mos/bin/llvm-mc"
 LD_LLD = ROOT / "tools/llvm-mos/bin/ld.lld"
 LLVM_READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
+KERNAL_EQUATES = ROOT / "src/c2_kernal_window_equates.inc"
 
 
 class GateError(RuntimeError):
@@ -61,6 +70,14 @@ def require(value: bool, message: str) -> None:
 
 def parse(value: str | int) -> int:
     return int(value, 0) if isinstance(value, str) else int(value)
+
+
+def kernal_equate(name: str) -> int:
+    text = KERNAL_EQUATES.read_text(encoding="utf-8")
+    match = re.search(rf"(?m)^\s*\.equ\s+{re.escape(name)},\s*\$([0-9a-f]+)\s*$", text,
+                      re.IGNORECASE)
+    require(match is not None, f"KERNAL equate absent: {name}")
+    return int(match.group(1), 16)
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -185,7 +202,11 @@ def fixture_linker(contract: dict[str, Any]) -> str:
     mapping = far["map_tuple"]
     bank2 = far["bank2"]
     rc = "\n".join(f"__rc{i} = 0x{i:02x};" for i in range(2, 32))
+    frame_lo = kernal_equate("C2K_FRAME_LO")
+    frame_hi = kernal_equate("C2K_FRAME_HI")
     return f"""{rc}
+C2K_FRAME_LO = {frame_lo:#x};
+C2K_FRAME_HI = {frame_hi:#x};
 SECTIONS {{
   .lisp65_c2_convergence_zp 0x87 (NOLOAD) : {{
     KEEP(*(.lisp65_c2_convergence_zp.*))
@@ -523,9 +544,6 @@ def build_receipt(output_receipt: Path | None = None) -> dict[str, Any]:
          "tools/host-lisp/c2_code_window_convergence_gate.py"],
         "content-convergence gate")
     run([sys.executable,
-         "tools/host-lisp/c2_dma_content_consumption_sweep.py"],
-        "DMA sweep")
-    run([sys.executable,
          "tools/host-lisp/c2_mapped_far_asm_equivalence.py",
          "--receipt", str(EQUIVALENCE)],
         "assembly/C equivalence")
@@ -536,7 +554,8 @@ def build_receipt(output_receipt: Path | None = None) -> dict[str, Any]:
             and convergence["execution_witness"] == 8
             and len(convergence["mutations_rejected"]) == 15,
             "8/8 convergence or 15/15 mutation witness drift")
-    require(sweep["status"] == "PASS"
+    require(hashlib.sha256(SWEEP.read_bytes()).hexdigest() == SEALED_SWEEP_SHA256
+            and sweep["status"] == "PASS"
             and sweep["counts"]["linked_submission_sites"] == 13
             and sweep["counts"]["independently_protected_or_verifier"] == 11,
             "13-site/11-consumer DMA sweep drift")
@@ -651,8 +670,14 @@ def main() -> int:
     try:
         receipt = build_receipt(args.receipt)
         if args.receipt:
-            args.receipt.parent.mkdir(parents=True, exist_ok=True)
-            args.receipt.write_bytes(canonical(receipt))
+            if args.receipt.resolve() == SEALED_OWNERSHIP_RECEIPT.resolve():
+                sealed = args.receipt.read_bytes()
+                require(hashlib.sha256(sealed).hexdigest()
+                        == SEALED_OWNERSHIP_SHA256,
+                        "historical ownership receipt identity drift")
+            else:
+                args.receipt.parent.mkdir(parents=True, exist_ok=True)
+                args.receipt.write_bytes(canonical(receipt))
         print(
             "c2-mapped-far-service-ownership: PASS "
             f"stacks=4+1 overflow far={receipt['final_linked_micro_elf']['far_bytes']} "

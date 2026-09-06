@@ -22,6 +22,7 @@ import c2_v21_span_verification_pricing as PRICING  # noqa: E402
 import c2_v21_full_span_convergence as FULL_SPAN  # noqa: E402
 import c2_v21_probe_oracle_root_fix as ROOT_FIX  # noqa: E402
 import c2_product_substitution_link as PRODUCT  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -30,6 +31,7 @@ RECEIPT = ARCH / (
     "c2.3-v2.1-span-pricing-source-unbind-20260816-receipt.json")
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "bbfcfade"
+SEAL_COMMIT = "77e3de784d2f41f32bae7d4c3209dc370c57b3fc"
 FORMAT = "lisp65-c2.3-v2.1-span-pricing-source-unbind-v1"
 STATUS = "PASS: HISTORICAL-SPAN-PRICING-DETACHED-FROM-LIVE-SOURCES"
 HISTORICAL_RECEIPT_SHA256 = (
@@ -55,6 +57,13 @@ def load(path: Path) -> dict[str, Any]:
     require(path.is_file() and not path.is_symlink(), f"JSON absent: {path}")
     value = json.loads(path.read_text(encoding="utf-8"))
     require(isinstance(value, dict), f"JSON object required: {path}")
+    return value
+
+
+def era_load(path: Path) -> dict[str, Any]:
+    value = json.loads(ERA.era_blob(
+        SEAL_COMMIT, path.relative_to(ROOT).as_posix()).decode("utf-8"))
+    require(isinstance(value, dict), f"era JSON object required: {path}")
     return value
 
 
@@ -91,10 +100,10 @@ def authorization() -> dict[str, Any]:
 
 
 def historical_pricing() -> dict[str, Any]:
-    binding = bind(PRICING.RECEIPT)
+    binding = ERA.era_bind(SEAL_COMMIT, PRICING.RECEIPT)
     require(binding["sha256"] == HISTORICAL_RECEIPT_SHA256,
             "historical span-pricing receipt was rewritten")
-    value = load(PRICING.RECEIPT)
+    value = era_load(PRICING.RECEIPT)
     rejected = value.pop("mutations_rejected", None)
     PRICING.validate(value)
     require(rejected == PRICING.mutations(value),
@@ -112,10 +121,10 @@ def historical_pricing() -> dict[str, Any]:
 
 
 def historical_full_span() -> dict[str, Any]:
-    binding = bind(FULL_SPAN.RECEIPT)
+    binding = ERA.era_bind(SEAL_COMMIT, FULL_SPAN.RECEIPT)
     require(binding["sha256"] == HISTORICAL_FULL_SPAN_SHA256,
             "historical full-span receipt was rewritten")
-    value = load(FULL_SPAN.RECEIPT)
+    value = era_load(FULL_SPAN.RECEIPT)
     rejected = value.pop("mutations_rejected", None)
     FULL_SPAN.validate(value)
     require(rejected == FULL_SPAN.mutations(value),
@@ -134,9 +143,12 @@ def historical_full_span() -> dict[str, Any]:
 def derive() -> dict[str, Any]:
     old = historical_pricing()
     old_full_span = historical_full_span()
-    live = load(ROOT_FIX.RECEIPT)
-    current_dma = bind(PRICING.DMA)
-    current_mem = bind(PRICING.MEM)
+    # The "living" side below names the successor that was living when this
+    # historical unbind was sealed.  It must not drift with later cards.
+    live = era_load(ROOT_FIX.RECEIPT)
+    current_dma = ERA.era_bind(SEAL_COMMIT, PRICING.DMA)
+    current_mem = ERA.era_bind(SEAL_COMMIT, PRICING.MEM)
+    current_linker = ERA.era_bind(SEAL_COMMIT, Path(PRODUCT.__file__))
     require(
         live.get("status") == ROOT_FIX.STATUS
         and live["authority"]["DMA"] == current_dma
@@ -146,8 +158,7 @@ def derive() -> dict[str, Any]:
         and old["DMA_source"]["sha256"] != current_dma["sha256"]
         and old["EXT_source"]["sha256"] != current_mem["sha256"]
         and old_full_span["DMA_source"] == old["DMA_source"]
-        and old_full_span["linker"]["sha256"] !=
-            bind(Path(PRODUCT.__file__))["sha256"],
+        and old_full_span["linker"]["sha256"] != current_linker["sha256"],
         "historical/living span source boundary drift")
     value = {
         "format": FORMAT,
@@ -155,9 +166,10 @@ def derive() -> dict[str, Any]:
         "status": STATUS,
         "authority": {
             "standing_owner_clause": authorization(),
-            "historical_receipt": bind(PRICING.RECEIPT),
-            "living_root_fix": bind(ROOT_FIX.RECEIPT),
-            "driver": bind(DRIVER),
+            "historical_receipt": ERA.era_bind(
+                SEAL_COMMIT, PRICING.RECEIPT),
+            "living_root_fix": ERA.era_bind(SEAL_COMMIT, ROOT_FIX.RECEIPT),
+            "driver": ERA.era_bind(SEAL_COMMIT, DRIVER),
         },
         "historical": old,
         "historical_full_span": old_full_span,
@@ -166,8 +178,8 @@ def derive() -> dict[str, Any]:
             "EXT_source": current_mem,
             "acceptance_authority": "nine-reader MAP-CPU root-fix receipt",
             "historical_sources_are_live_predicates": False,
-            "reader_count": ROOT_FIX.source_contract()["reader_count"],
-            "linker": bind(Path(PRODUCT.__file__)),
+            "reader_count": live["source_contract"]["reader_count"],
+            "linker": current_linker,
         },
         "execution_accounting": {
             "WPLTO_runs": 0, "product_links": 0,

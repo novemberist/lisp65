@@ -145,13 +145,16 @@ def accepted_pair() -> dict[str, Any]:
     return pair
 
 
-def sealed_freight_gate() -> dict[str, Any]:
+def sealed_freight_gate(*, source_ref: str | None = None) -> dict[str, Any]:
     rows = []
     for path in SEALED_INPUTS:
-        current = path.read_bytes()
+        current = path.read_bytes() if source_ref is None else git_blob(source_ref, path)
         sealed = git_blob(SEALED_COMFORT_COMMIT, path)
         require(current == sealed, f"sealed Comfort freight changed: {path}")
-        rows.append({**bind(path), "sealed_commit": SEALED_COMFORT_COMMIT})
+        rows.append({"path": path.relative_to(ROOT).as_posix(),
+                     "bytes": len(current),
+                     "sha256": hashlib.sha256(current).hexdigest(),
+                     "sealed_commit": SEALED_COMFORT_COMMIT})
     trial = deepcopy(rows)
     trial[0]["sha256"] = "0" * 64
     require(trial != rows, "sealed-source mutation did not alter the witness")
@@ -617,7 +620,8 @@ def check() -> None:
             "sealed Comfort-return report drift")
     value = load(RECEIPT)
     validate(value)
-    sealed_freight_gate()
+    require(sealed_freight_gate(source_ref=CARD_SEAL_COMMIT) == value["sealed_freight"],
+            "sealed Comfort-return source-era binding drift")
     print("v2.0 Comfort return: CHECK PASS sealed evidence-era card")
 
 

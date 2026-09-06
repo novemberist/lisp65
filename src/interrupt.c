@@ -15,16 +15,6 @@
 #define DEVICE 1
 #endif
 
-#ifdef LISP65_C2_KERNAL_UNMAP
-/* Single-owner handoff for the physical keyboard queue.  $ff means that the
- * IRQ capture is closed; every other tail value makes it the sole queue
- * consumer.  RUN/STOP remains independently sourced by the IRQ's matrix
- * latch, so evaluator polling never needs to steal an ordinary queue cell. */
-#define C2K_INPUT_RING_TAIL  (*(volatile uint8_t *)0xff8d)
-#define C2K_BREAK_PENDING    (*(volatile uint8_t *)0xff8a)
-#define C2K_INPUT_RING_CLOSED 0xffu
-#endif
-
 jmp_buf     lisp_toplevel;
 uint8_t     lisp_toplevel_active = 0;
 const char *lisp_error_msg = 0;

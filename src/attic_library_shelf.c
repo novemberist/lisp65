@@ -7,6 +7,7 @@
  */
 #include "attic_library_shelf.h"
 #include "c1_phase_probe.h"
+#include "mega65_dma_descriptor.h"
 #include "mem.h"
 #ifdef LISP65_C1_TRUST_FASTPATH_PROBE
 #include "dialect-v2/libs/lcc-contract.h"
@@ -64,15 +65,7 @@ static L65S_FN void l65s_dma(l65s_stage_context *context, uint32_t source,
                              uint32_t target, uint16_t length) {
     uint8_t *job = l65s_edma_job;
     (void)context;
-    job[0] = 0x0b; job[1] = 0x80; job[2] = (uint8_t)(source >> 20);
-    job[3] = 0x81; job[4] = (uint8_t)(target >> 20);
-    job[5] = 0x85; job[6] = 1; job[7] = 0; job[8] = 0;
-    job[9] = (uint8_t)length; job[10] = (uint8_t)(length >> 8);
-    job[11] = (uint8_t)source; job[12] = (uint8_t)(source >> 8);
-    job[13] = (uint8_t)((source >> 16) & 0x0fu);
-    job[14] = (uint8_t)target; job[15] = (uint8_t)(target >> 8);
-    job[16] = (uint8_t)((target >> 16) & 0x0fu);
-    job[17] = job[18] = job[19] = 0;
+    lisp65_edma_descriptor(job, 0u, source, target, length);
     __asm__ volatile(
         "lda #1\n\tsta $d703\n\tlda #0\n\tsta $d702\n\tsta $d704\n\t"
         "lda #mos16hi(l65s_edma_job)\n\tsta $d701\n\t"

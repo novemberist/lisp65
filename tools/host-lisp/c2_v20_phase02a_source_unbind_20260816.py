@@ -20,6 +20,7 @@ if str(HOST) not in sys.path:
 
 import c2_v20_phase02a_attribution as ATTR  # noqa: E402
 import c2_v20_phase02a_site_result as SITE  # noqa: E402
+from evidence_era import era_bind  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -39,6 +40,7 @@ HISTORICAL_ASM_SHA256 = (
     "697fcc294e30512ccf62255f80ae79c3a75d9bd0ef6bc79c5f920903effcb166")
 LIVE_ASM_SHA256 = (
     "2d1f4ebfe8d1cd61e9c6df261b2f57f7d7580f79b6271f545b68620caf0e83f6")
+EVIDENCE_ERA = "e502b1d0812e89a1b68ad465784822e4a99b3c02"
 
 
 class UnbindError(RuntimeError):
@@ -135,7 +137,7 @@ def source_gate(source_override: str | None = None) -> dict[str, Any]:
 
 def derive() -> dict[str, Any]:
     attribution, site = historical_receipts()
-    live = bind(LIVE_SOURCE)
+    live = era_bind(EVIDENCE_ERA, LIVE_SOURCE)
     require(live["sha256"] == LIVE_ASM_SHA256
             and live["sha256"] != HISTORICAL_ASM_SHA256,
             "authorized living phase-9/full-span source identity drift")
@@ -148,7 +150,7 @@ def derive() -> dict[str, Any]:
             "historical_attribution": bind(ATTR.RECEIPT),
             "historical_site_result": bind(SITE.RECEIPT),
             "source_unbind_precedent": bind(PRECEDENT),
-            "living_source": live, "driver": bind(DRIVER)},
+            "living_source": live, "driver": era_bind(EVIDENCE_ERA, DRIVER)},
         "historical": {
             "attribution_status": attribution["status"],
             "site_result_status": site["status"],

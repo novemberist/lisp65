@@ -1,5 +1,6 @@
 /* Resident bootstrap and Attic-backed catalog verifier for runtime overlays. */
 #include "vm_runtime_overlay.h"
+#include "mega65_dma_descriptor.h"
 #include "c2_kernal_layout.h"
 #include "c2_mapped_far_service.h"
 #ifdef LISP65_C2_E000_REOPEN
@@ -562,22 +563,7 @@ uint8_t
 #else
 static uint8_t
 #endif
-rtov_edma_job[RTOV_EDMA_JOB_BYTES] = {
-    0x0b, 0x80, LISP65_RUNTIME_OVERLAY_STORAGE_MEGABYTE,
-    0x81, 0x00, 0x85, 0x01, 0x00,
-#ifdef LISP65_RTOV_DMA_COMPLETION_FENCE
-    0x04, 0x00, 0x00, 0x00, 0x00,
-#else
-    0x00, 0x00, 0x00, 0x00, 0x00,
-#endif
-    (uint8_t)((LISP65_RUNTIME_OVERLAY_STORAGE_BASE >> 16) & 0x0fu),
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-#ifdef LISP65_RTOV_DMA_COMPLETION_FENCE
-    , 0x0b, 0x80, 0x00, 0x81, 0x00, 0x85, 0x01, 0x00,
-    0x03, 0x01, 0x00, RTOV_EDMA_DONE, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-#endif
-};
+rtov_edma_job[RTOV_EDMA_JOB_BYTES];
 #endif
 
 #if defined(__mos__) && \
@@ -979,14 +965,13 @@ static void rtov_read_source(
                      source_low, length, dst);
 #else
     uint16_t target = (uint16_t)(uintptr_t)dst;
-    rtov_edma_job[2] = (uint8_t)(source_high >> 8);
-    rtov_edma_job[13] = (uint8_t)source_high;
-    rtov_edma_job[9] = (uint8_t)length;
-    rtov_edma_job[10] = (uint8_t)(length >> 8);
-    rtov_edma_job[11] = (uint8_t)source_low;
-    rtov_edma_job[12] = (uint8_t)(source_low >> 8);
-    rtov_edma_job[14] = (uint8_t)target;
-    rtov_edma_job[15] = (uint8_t)(target >> 8);
+#ifdef LISP65_RTOV_DMA_COMPLETION_FENCE
+    lisp65_edma_tuple_descriptor(rtov_edma_job, 4u, source_low, source_high,
+                                 target, length);
+#else
+    lisp65_edma_tuple_descriptor(rtov_edma_job, 0u, source_low, source_high,
+                                 target, length);
+#endif
 #ifdef LISP65_RTOV_DMA_COMPLETION_FENCE
     /* A normal DMAgic job is documented to hold the CPU until completion, but
      * the bound Link-34 hardware trace observed a still-changing destination
@@ -995,8 +980,8 @@ static void rtov_read_source(
      * Keep maskable aborts outside the descriptor/transfer interval; NMI may
      * round-trip, but cannot mutate this private list or marker. */
     target = (uint16_t)(uintptr_t)&rtov_edma_complete;
-    rtov_edma_job[34] = (uint8_t)target;
-    rtov_edma_job[35] = (uint8_t)(target >> 8);
+    lisp65_edma_fill_descriptor(rtov_edma_job + 20u, 3u, RTOV_EDMA_DONE,
+                                target, 1u);
 #endif
 #ifdef LISP65_RTOV_DMA_COMPLETION_FENCE
     /* The external non-LTO leaf is also the compiler barrier: it owns marker

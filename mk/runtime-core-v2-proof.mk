@@ -20,7 +20,7 @@ V2_RUNTIME_CORE_PROOF_PRODUCT_INPUTS := \
 	tests/bytecode/runtime/p0-runtime-export-app-v2.json \
 	tools/host-lisp/bytecode_p0_stdlib.py \
 	tools/host-lisp/runtime_export_preload.py
-V2_RUNTIME_CORE_PROOF_PRODUCT_SOURCE_ID := $(shell sha256sum $(sort $(V2_RUNTIME_CORE_PROOF_PRODUCT_INPUTS)) | sha256sum | cut -c1-40)
+V2_RUNTIME_CORE_PROOF_PRODUCT_SOURCE_ID = $$(python3 tools/host-lisp/make_recipe_value.py hash-files $(sort $(V2_RUNTIME_CORE_PROOF_PRODUCT_INPUTS)))
 V2_RUNTIME_CORE_PROOF_LINK_INPUTS := \
 	$(V2_RUNTIME_CORE_PROOF_SRCS) \
 	$(V2_RUNTIME_CORE_PROOF_ARTIFACT_C) \
@@ -51,7 +51,7 @@ $(V2_RUNTIME_CORE_PROOF_PROFILE): $(V2_RUNTIME_CORE_PROOF_CONTRACT) \
 	@mkdir -p '$(V2_RUNTIME_CORE_PROOF_DIR)'
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v2_runtime_core_proof.py \
 		--contract '$(V2_RUNTIME_CORE_PROOF_CONTRACT)' profile \
-		--product-source-id '$(V2_RUNTIME_CORE_PROOF_PRODUCT_SOURCE_ID)' --out '$@'
+		--product-source-id "$(V2_RUNTIME_CORE_PROOF_PRODUCT_SOURCE_ID)" --out '$@'
 
 v2-runtime-core-proof-profile: $(V2_RUNTIME_CORE_PROOF_PROFILE)
 

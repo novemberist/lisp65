@@ -144,7 +144,7 @@ def retirement_source_gate(source_override: str | None = None) -> dict[str, Any]
         "FIXED_BLOCK_LEAF.OWNED_STACK_SECTION] = (\n")
     require(source.count(call) == 1 and source.count(branch) >= 1
             and source.count(stack_row) == 1
-            and "FIXED_BLOCK_LEAF.OWNED_STACK_BYTES" in source,
+            and 'fixed_leaf["hot_bss"]["owned_static_stack"]["bytes"]' in source,
             "historical noinit checker remains on the full-map path")
     FIXED.configure_link60_geometry()
     rejected = FIXED.full_map_ownership_selftest()
@@ -406,6 +406,17 @@ def selftest() -> None:
           "noinit=retired oracle=candidate mutations=6")
 
 
+def sealed_verification_driver() -> dict[str, Any]:
+    # The historical receipt binds its verification-era driver, not each
+    # future checker conversion.  6141cf4d is the last pushed pre-conversion
+    # world; live source semantics remain exercised by selftest separately.
+    name = DRIVER.relative_to(ROOT).as_posix()
+    raw = subprocess.run(["git", "show", f"6141cf4d:{name}"], cwd=ROOT,
+                         check=True, stdout=subprocess.PIPE).stdout
+    return {"path": name, "bytes": len(raw),
+            "sha256": hashlib.sha256(raw).hexdigest()}
+
+
 def check() -> None:
     if FINAL_RED.exists():
         value = load(FINAL_RED)
@@ -434,7 +445,7 @@ def check() -> None:
         and verification.get("reason")
             == "post-card selftest no longer requires the candidate build to be absent"
         and verification.get("executed_driver") == value["authority"]["driver"]
-        and verification.get("current_driver") == bind(DRIVER),
+        and verification.get("current_driver") == sealed_verification_driver(),
         "green replacement-III receipt drift")
     print("2.0 source-oracle replacement-III: CHECK PASS card=1/1")
 

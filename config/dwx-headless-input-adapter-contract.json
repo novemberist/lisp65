@@ -1,0 +1,23 @@
+{
+  "format": "lisp65-dwx-headless-input-adapter-contract-v1",
+  "status": "ACTIVE",
+  "base_contract": "config/dwx-xemu-link73-contract.json",
+  "base_patch": "tools/xemu-patches/mega65-f011-io-buffer-select.patch",
+  "transport_patch": "tools/xemu-patches/mega65-dwx-headless-input.patch",
+  "transport": {
+    "channel": "local-unix-uart-monitor",
+    "commands": [
+      "~typehex",
+      "~keyevent",
+      "~typebusy",
+      "~screen"
+    ],
+    "keymap_authority": "config/v11-l-lite-keymap.json",
+    "keyboard_path": "Xemu HWA ASCII/PETSCII queue consumed through $D610/$D619",
+    "desktop_focus_required": false,
+    "gui_required": false,
+    "screen_query_is_control_only": true,
+    "logs_are_oracle": false
+  },
+  "claim_limit": "The adapter makes scripted input deterministic and headless; it adds no product byte and supplies no device-acceptance evidence."
+}

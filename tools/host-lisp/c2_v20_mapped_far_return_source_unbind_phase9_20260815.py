@@ -19,6 +19,7 @@ if str(HOST) not in sys.path:
 
 import c2_v20_mapped_far_return_attribution as OLD  # noqa: E402
 import c2_v20_building_heap_device_source_unbind_phase9_20260815 as UNBIND  # noqa: E402
+from evidence_era import era_bind  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -26,6 +27,7 @@ RECEIPT = ARCH / (
     "c2.3-v2.0-mapped-far-return-source-unbind-phase9-"
     "20260815-receipt.json")
 DRIVER = Path(__file__).resolve()
+EVIDENCE_ERA = "6b986b748cfe091bb708ab7b40f609f4e8dbd246"
 
 
 class RebindError(RuntimeError):
@@ -110,10 +112,10 @@ def derive() -> dict[str, Any]:
         "status": "PASS: mapped-far return row remains historical",
         "authority": {"historical_receipt": bind(OLD.RECEIPT),
                       "source_unbind": bind(UNBIND.RECEIPT),
-                      "driver": bind(DRIVER)},
+                      "driver": era_bind(EVIDENCE_ERA, DRIVER)},
         "historical": {"status": old["status"],
             "far_body_source": old["authorities"]["far_body_source"]},
-        "living": {"far_body_source": bind(OLD.BODY)},
+        "living": {"far_body_source": era_bind(EVIDENCE_ERA, OLD.BODY)},
         "result": {"historical_receipt_changed": False,
             "historical_claim_changed": False,
             "living_source_is_historical_predicate": False,

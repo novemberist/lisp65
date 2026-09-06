@@ -1,0 +1,163 @@
+{
+  "authority": "Alex selected Freezer mount followed by warmstart; no physical cold-start claim",
+  "bound_record_header": {
+    "bytes": 3255,
+    "path": "tests/fixtures/f011-frame-witness-pricing.h",
+    "sha256": "7616ad7618d27a1bc53ad830ec8c04683251960ccf860bd99776935e27928846"
+  },
+  "calibration": {
+    "decoded": {
+      "after_spin_d082": 114,
+      "busy_after_spin_command": false,
+      "completion_mask_passes": true,
+      "d082": 98,
+      "d083": 170,
+      "elapsed_frames_usable": true,
+      "frames": 0,
+      "tag": 1,
+      "validity": 7
+    },
+    "raw_hex": "017262aa000007",
+    "scope": "Emulator only; no measured physical spin-up or timing noise claim"
+  },
+  "choreography": {
+    "F011_register_reads": 0,
+    "automated_input": false,
+    "freezer_operations": 1,
+    "fresh_restore_and_SHA_readback": true,
+    "initial_power_state": "not constrained; not evidence of power-off cold start",
+    "order": [
+      "restore-and-SHA-readback",
+      "owner-freezer-mount-bound-D81",
+      "owner-warmstart",
+      "product-start-no-typing",
+      "first-screen-banner-or-cannot-open",
+      "stop-once",
+      "seal-raw-RAM-record",
+      "seal-RAM-geometry",
+      "derive-and-seal-framebuffer",
+      "interpret-without-resume"
+    ],
+    "owner_warmstarts_before_measurement": 1,
+    "resets_after_measurement_start": 0,
+    "resumes": 0,
+    "start_prerequisite": "Owner mounts exactly the SHA-readback D81 through the Freezer, then warmstarts into that product. If the product does not start, stop and report; no improvised loader or additional reset.",
+    "stops": 1,
+    "typing_after_product_start": false
+  },
+  "claim_boundary": {
+    "Comfort_attributed": false,
+    "Freezer_behavior_covered_by_prefilter": false,
+    "SD_initialization_cause_established": false,
+    "device_contacts_executed": 0,
+    "diagnostic_only": true,
+    "physical_cold_start": false,
+    "release_eligible": false,
+    "unmeasured_variant": "A: automatic product boot after >=30 seconds power off remains untested"
+  },
+  "decision_table": {
+    "tag0-or-inconsistent": "Coverage/readpoint unresolved; no success or clock-validity claim.",
+    "tag1-valid-time-mask-passes": "Completion observed in N frames in the Freezer-mount/warmstart variant only. Do not use this number alone to size a power-off cold-start timeout or lift the release block.",
+    "tag2": "Completion status fails the mask; retain raw bytes and attribute status, not a successful timing calibration.",
+    "tag4-valid-time-cap-reached": "No completion within the cap; deeper attribution, no automatic timeout enlargement.",
+    "tag5": "Clock not observed or lost; do not base the repair on FF83 at this read point."
+  },
+  "diagnostic_completion": {
+    "bytes": 4219,
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/f011-frame-diagnostic-r1-receipt.json",
+    "sha256": "9d86e755fac9202f09f5a9dae504fd7686baa741aa1aac792019423795788165"
+  },
+  "format": "f011-frame-freezer-warmstart-session-v1",
+  "frame_cap": 600,
+  "medium": {
+    "bytes": 819200,
+    "path": "build/v2.1/f011-frame-diagnostic-r1/prefilter/media/shared-system/lisp65-product.d81",
+    "remote_name": "V21FRAME.D81",
+    "sha256": "0ee1fec093283a51f5e585a24c319eb7732c7d3dca74c9dfec3e86d4d1778650"
+  },
+  "pair": [
+    {
+      "bytes": 643596,
+      "path": "build/v2.1/f011-frame-diagnostic-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "3091160b5d48cabdfcb2c8056f8c512a24cb57d7f612c04449aef2e1581f54b2"
+    },
+    {
+      "bytes": 41811,
+      "path": "build/v2.1/f011-frame-diagnostic-r1/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "d12203b3f0c7b676deddcc17893843ddce02538c00dc80d2e807421c371b30e4"
+    }
+  ],
+  "prefilter": {
+    "bytes": 2018,
+    "path": "build/v2.1/f011-frame-diagnostic-r1/prefilter/boot-r1/receipt.json",
+    "sha256": "1c316a9c6a4748c8a1a3c51f73ef11fb1eb0a2498bdac8f5259990959a081a7e"
+  },
+  "record": {
+    "RAM_monitor_window": {
+      "address": 48093,
+      "bytes": 16
+    },
+    "address": 48093,
+    "bytes": 7,
+    "endian": "little",
+    "fields": [
+      {
+        "bytes": 1,
+        "name": "tag",
+        "offset": 0
+      },
+      {
+        "bytes": 1,
+        "name": "after_spin_d082",
+        "offset": 1
+      },
+      {
+        "bytes": 1,
+        "name": "d082",
+        "offset": 2
+      },
+      {
+        "bytes": 1,
+        "name": "d083",
+        "offset": 3
+      },
+      {
+        "bytes": 2,
+        "name": "frames",
+        "offset": 4
+      },
+      {
+        "bytes": 1,
+        "name": "validity",
+        "offset": 6
+      }
+    ],
+    "retention": "First success retained until first failure replaces it; first failure never overwritten. No read ordinal is recorded.",
+    "symbol": "lisp65_f011_status_state"
+  },
+  "recorded_on": "2026-09-05",
+  "screen": {
+    "RAM_monitor_window": {
+      "address": 86,
+      "bytes": 16
+    },
+    "derived_read": "base=scr_base; logical bytes=cols_*rows_; transport rounded up to 16 bytes; validate 1<=cols<=80, 1<=rows<=25 and entire transport in ordinary RAM [0x0200,0x8000) before reading; otherwise stop without reading the surface",
+    "symbols": {
+      "cols_": {
+        "address": 88,
+        "bytes": 1
+      },
+      "rows_": {
+        "address": 89,
+        "bytes": 1
+      },
+      "scr_base": {
+        "address": 86,
+        "bytes": 2
+      }
+    }
+  },
+  "status": "BOUND; NOT UPLOADED; NOT STARTED",
+  "time_units": "Frames. No seconds conversion without the measured video/frame rate. Fuel is a bounded no-clock escape, never elapsed time.",
+  "variant": "B_FREEZER_MOUNT_WARMSTART"
+}

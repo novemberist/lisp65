@@ -24,6 +24,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v20_building_heap_device_result as OLD  # noqa: E402
+from evidence_era import era_bind  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -37,6 +38,7 @@ RECEIPT = ARCH / (
     "20260815-receipt.json")
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "7fa52735"
+EVIDENCE_ERA = "6b986b748cfe091bb708ab7b40f609f4e8dbd246"
 
 
 class UnbindError(RuntimeError):
@@ -84,7 +86,7 @@ def historical_audit(value: dict[str, Any]) -> None:
     require(rejected == OLD.mutations(value),
             "historical BUILDING-HEAP mutation receipt drift")
     source = value["authorities"]["mapped_far_body_source"]
-    require(source["sha256"] != bind(LIVE_SOURCE)["sha256"],
+    require(source["sha256"] != era_bind(EVIDENCE_ERA, LIVE_SOURCE)["sha256"],
             "historical and living mapped-far sources no longer differ")
 
 
@@ -106,8 +108,8 @@ def derive() -> dict[str, Any]:
             "owner": authority,
             "historical_device_receipt": bind(HISTORICAL),
             "living_ABI_contract": bind(ABI_CONTRACT),
-            "living_ABI_gate": bind(ABI_GATE),
-            "driver": bind(DRIVER),
+            "living_ABI_gate": era_bind(EVIDENCE_ERA, ABI_GATE),
+            "driver": era_bind(EVIDENCE_ERA, DRIVER),
         },
         "historical_observation": {
             "status": old["status"],
@@ -118,7 +120,7 @@ def derive() -> dict[str, Any]:
             "claim_changed": False,
         },
         "living_successor": {
-            "mapped_far_body_source": bind(LIVE_SOURCE),
+            "mapped_far_body_source": era_bind(EVIDENCE_ERA, LIVE_SOURCE),
             "acceptance_authority": "phase-9 linked ABI successor gates",
             "historical_source_is_live_predicate": False,
         },

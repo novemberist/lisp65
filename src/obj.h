@@ -11,8 +11,10 @@
 #define LISP65_OBJ_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 typedef int16_t obj;
+_Static_assert(sizeof(obj) == 2u, "obj ABI requires an exact 16-bit carrier");
 
 #define NIL        ((obj)0)
 #define MKFIX(n)   ((obj)(uint16_t)((((uint16_t)(int16_t)(n)) << 1) | 1u))
@@ -63,6 +65,19 @@ typedef struct {
     obj a;
     obj b;
 } Cell;
+/* LLVM-MOS gives 16-bit objects byte alignment; the ordinary host ABI gives
+ * them two-byte alignment.  Hot Cells deliberately use the compiler-native
+ * layout in each world.  They are not the eight-byte Extended-Heap record,
+ * whose offsets are a separate transport ABI in mem.c. */
+#if defined(__mos__)
+_Static_assert(offsetof(Cell, a) == 1u && offsetof(Cell, b) == 3u,
+               "target hot Cell field offsets drift");
+_Static_assert(sizeof(Cell) == 5u, "target hot Cell ABI size drift");
+#else
+_Static_assert(offsetof(Cell, a) == 2u && offsetof(Cell, b) == 4u,
+               "host hot Cell field offsets drift");
+_Static_assert(sizeof(Cell) == 6u, "host hot Cell ABI size drift");
+#endif
 
 #ifndef HEAP_CELLS
 /* Mark-sweep heap (cell 0 = NIL, reserved); overridable with -D.

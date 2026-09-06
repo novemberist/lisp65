@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include "c2_kernal_runtime.h"
 #include "mega65_raster_timebase.h"
+#include "mega65_dma_descriptor.h"
 
 #ifdef LISP65_C2_KERNAL_UNMAP
 #include "c2-kernal-window.generated.h"
@@ -29,11 +30,6 @@
 #define AUTOIEC_IRQ  REG8(0xd697)
 #define AUDIODMA_IRQ REG8(0xd713)
 
-#define C2K_FRAME_LO        REG8(LISP65_C2_FRAME_LO_ADDRESS)
-#define C2K_FRAME_HI        REG8(LISP65_C2_FRAME_HI_ADDRESS)
-#define C2K_MAP_GENERATION  REG8(0xff87)
-#define C2K_STATE           REG8(0xff88)
-
 #define C2K_STATE_PRODUCT 4u
 
 extern void c2_kernal_reveal_io(void);
@@ -47,15 +43,7 @@ static uint8_t c2k_dma_job[20];
 static C2K_SECTION void c2k_copy(uint32_t source, uint32_t target,
                                  uint16_t length) {
     uint8_t *job = c2k_dma_job;
-    job[0] = 0x0bu; job[1] = 0x80u; job[2] = (uint8_t)(source >> 20);
-    job[3] = 0x81u; job[4] = (uint8_t)(target >> 20);
-    job[5] = 0x85u; job[6] = 1u; job[7] = 0u; job[8] = 0u;
-    job[9] = (uint8_t)length; job[10] = (uint8_t)(length >> 8);
-    job[11] = (uint8_t)source; job[12] = (uint8_t)(source >> 8);
-    job[13] = (uint8_t)((source >> 16) & 0x0fu);
-    job[14] = (uint8_t)target; job[15] = (uint8_t)(target >> 8);
-    job[16] = (uint8_t)((target >> 16) & 0x0fu);
-    job[17] = 0u; job[18] = 0u; job[19] = 0u;
+    lisp65_edma_descriptor(job, 0u, source, target, length);
     __asm__ volatile(
         /* Z is normalized at the ownership boundary below.  Writing D702
          * clears D704 by controller contract, so the second zero-store is

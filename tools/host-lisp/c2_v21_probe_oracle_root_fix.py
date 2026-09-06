@@ -19,6 +19,7 @@ sys.path.insert(0, str(HOST))
 
 import c2_product_substitution_link as PRODUCT  # noqa: E402
 import c2_v21_probe_oracle_root_product_config as CONFIG  # noqa: E402
+from evidence_era import era_bind  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -35,6 +36,7 @@ PADDING_RECEIPT = ARCH / (
     "c2.3-v2.1-probe-oracle-root-facade-padding-receipt.json")
 
 AUTHORIZATION = "20a5f4ec"
+PRICING_EVIDENCE_ERA = "91dca237f6ee8217224fb5ac304f87f618b460d3"
 FORMAT = "lisp65-c2.3-v2.1-probe-oracle-root-fix-v1"
 STATUS = "HOST-GREEN: NINE-MUTABLE-READERS-USE-MAP-CPU; CARD-PENDING"
 PADDING_STATUS = "HOST-GREEN: EXPLICIT-NAMED-19-BYTE-FACADE-PADDING"
@@ -91,6 +93,25 @@ def changed_paths(old: Any, new: Any, prefix: str = "") -> list[str]:
                 result.extend(changed_paths(old[key], new[key], child))
         return result
     return [] if old == new else [prefix]
+
+
+def padding_successor_projection(historical: dict[str, Any],
+                                 current: dict[str, Any]) -> dict[str, Any]:
+    """Project only the changes authorized by the sealed padding card.
+
+    Later living-source changes are checked by their own cards and must not
+    silently enlarge this historical successor's authorized delta.
+    """
+    projected = deepcopy(historical)
+    for dotted in PADDING_AUTHORIZED_CHANGED_PATHS:
+        source: Any = current
+        destination: Any = projected
+        parts = dotted.split(".")
+        for part in parts[:-1]:
+            source = source[part]
+            destination = destination[part]
+        destination[parts[-1]] = source[parts[-1]]
+    return projected
 
 
 def successor_contract(historical: dict[str, Any], current: dict[str, Any],
@@ -297,7 +318,8 @@ def derive() -> dict[str, Any]:
             "root-map-cpu-for-all-nine-mutable-readers"
             and pricing["code_prices"]["root"]
                 ["target_shaped_total_executable_delta_bytes"] == -18
-            and pricing["authority"]["assembly"] == bind(IMMUTABLE_SERVICE)
+            and pricing["authority"]["assembly"] ==
+                era_bind(PRICING_EVIDENCE_ERA, IMMUTABLE_SERVICE)
             and pricing["linked_inventory"]["current_service_bytes"] == 1248
             and capture["claim_boundary"]
                 ["fresh_name_reproduces_same_mechanism"] is True,
@@ -316,7 +338,8 @@ def derive() -> dict[str, Any]:
         "authority": {"owner": authorization(), "pricing": bind(PRICING),
             "capture": bind(CAPTURE), "mem": bind(MEM), "DMA": bind(DMA),
             "header": bind(HEADER), "configuration": bind(CONFIG_DRIVER),
-            "immutable_full_span_service": bind(IMMUTABLE_SERVICE),
+            "immutable_full_span_service":
+                era_bind(PRICING_EVIDENCE_ERA, IMMUTABLE_SERVICE),
             "checker": bind(Path(__file__))},
         "execution_accounting": {"WPLTO": 0, "product_links": 0,
             "cards_consumed": 0, "product_bytes_changed": 0,
@@ -434,9 +457,10 @@ def main() -> int:
         historical = load(RECEIPT)
         if historical != value:
             padding = load(PADDING_RECEIPT)
+            successor = padding_successor_projection(historical, value)
             successor_projection_source_gate()
-            successor_contract(historical, value, padding)
-            successor_mutations(historical, value, padding)
+            successor_contract(historical, successor, padding)
+            successor_mutations(historical, successor, padding)
         else:
             require(historical == value, "root-fix receipt stale")
     else:
@@ -445,9 +469,10 @@ def main() -> int:
                 "root-fix mutation count drift")
         historical = load(RECEIPT)
         padding = load(PADDING_RECEIPT)
+        successor = padding_successor_projection(historical, value)
         successor_projection_source_gate()
-        successor_contract(historical, value, padding)
-        require(len(successor_mutations(historical, value, padding)) == 2,
+        successor_contract(historical, successor, padding)
+        require(len(successor_mutations(historical, successor, padding)) == 2,
                 "root-fix successor mutation count drift")
     print(f"probe-oracle root fix: PASS action={action} readers=9 "
           f"partial=6 mutations=18")

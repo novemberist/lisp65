@@ -52,8 +52,6 @@ const char *reader_error_message(void) {
 }
 
 lisp65_error_code reader_lisp_error_code(void) {
-    uint8_t code = reader_error_code;
-
     /* Link-only evidence remains explicit even though the runtime map is arithmetic. */
     LISP65_ERROR_EMISSION_MARK(LISP65_ERR_READER_UNCLOSED_LIST);
     LISP65_ERROR_EMISSION_MARK(LISP65_ERR_READER_UNCLOSED_STRING);
@@ -62,16 +60,22 @@ lisp65_error_code reader_lisp_error_code(void) {
     LISP65_ERROR_EMISSION_MARK(LISP65_ERR_READER_TOO_DEEP);
     LISP65_ERROR_EMISSION_MARK(LISP65_ERR_READER_SYNTAX);
 
-    if (code == READER_ERR_UNCLOSED_LIST)
+    switch (reader_error_code) {
+    case READER_ERR_UNCLOSED_LIST:
         return LISP65_ERR_READER_UNCLOSED_LIST;
-    code = (uint8_t)(code - READER_ERR_UNCLOSED_STRING);
-    if (code <= (READER_ERR_TOO_DEEP - READER_ERR_UNCLOSED_STRING)) {
-        code = (uint8_t)(code + LISP65_ERR_READER_UNCLOSED_STRING);
-        if (code >= 6u) --code;
-        if (code >= 7u) --code;
-        return code;
+    case READER_ERR_UNCLOSED_STRING:
+        return LISP65_ERR_READER_UNCLOSED_STRING;
+    case READER_ERR_UNFINISHED_ESCAPE:
+        return LISP65_ERR_READER_UNFINISHED_ESCAPE;
+    case READER_ERR_TOKEN_TOO_LONG:
+    case READER_ERR_FIXNUM_RANGE:
+        return LISP65_ERR_READER_INVALID_TOKEN;
+    case READER_ERR_ROOT_OVERFLOW:
+    case READER_ERR_TOO_DEEP:
+        return LISP65_ERR_READER_TOO_DEEP;
+    default:
+        return LISP65_ERR_READER_SYNTAX;
     }
-    return LISP65_ERR_READER_SYNTAX;
 }
 
 void reader_from_fetch(char (*fetch)(void)) {

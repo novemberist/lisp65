@@ -177,9 +177,12 @@ def emitted_route() -> dict[str, Any]:
 
 def target_contract() -> dict[str, Any]:
     vm, vm_binding = sealed_vm()
-    irq = IRQ_SOURCE.read_text(encoding="utf-8")
-    take = TAKE_SOURCE.read_text(encoding="utf-8")
-    interrupt = INTERRUPT_SOURCE.read_text(encoding="utf-8")
+    irq_raw, irq_binding = sealed_file(IRQ_SOURCE)
+    take_raw, take_binding = sealed_file(TAKE_SOURCE)
+    interrupt_raw, interrupt_binding = sealed_file(INTERRUPT_SOURCE)
+    irq = irq_raw.decode("utf-8")
+    take = take_raw.decode("utf-8")
+    interrupt = interrupt_raw.decode("utf-8")
     require("mode == 2 || mode == 3" in vm
             and "c2_kernal_input_take" in vm
             and "lisp_input_event(0u, 0u, &event)" in vm,
@@ -198,8 +201,8 @@ def target_contract() -> dict[str, Any]:
         "private_ring_modes": [2, 3],
         "transfer": "$D60A/$D619 -> C2K_INPUT_RING_BASE",
         "taken_witness": "C2K_INPUT_EVENTS_TAKEN increments only in c2_kernal_input_take",
-        "bindings": [vm_binding, bind(IRQ_SOURCE), bind(TAKE_SOURCE),
-                     bind(INTERRUPT_SOURCE)],
+        "bindings": [vm_binding, irq_binding, take_binding,
+                     interrupt_binding],
     }
 
 

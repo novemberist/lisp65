@@ -521,7 +521,9 @@ def check_implemented_successor() -> None:
     old_raw = era_blob(PRICING_COMMIT, COMFORT)
     old_source = old_raw.decode("utf-8")
     old_editor = era_blob(PRICING_COMMIT, EDITOR).decode("utf-8")
-    current = COMFORT.read_text(encoding="utf-8")
+    # This is the historical implemented Variant-B price, not a claim about
+    # the v2.1 display-repair successor. Execute the implementation's own era.
+    current = era_blob("870e5f53", COMFORT).decode("utf-8")
     require(current == fallback_source(old_source),
             "implemented Variant B differs from the priced source transform")
     require(receipt["inputs"]["comfort"] == bind_raw(COMFORT, old_raw),

@@ -48,8 +48,10 @@
 	.zeropage __rc30
 	.zeropage __rc31
 
-	.equ C2_FRAME_LO, 0xff83
-	.equ C2_FRAME_HI, 0xff84
+	; The owning KERNAL-window object defines these through
+	; c2_kernal_window_equates.inc; this leaf consumes the named authority.
+	.extern C2K_FRAME_LO
+	.extern C2K_FRAME_HI
 	.equ C2_TIMEOUT_FRAMES, 64
 	.equ C2_MARKER, 0xa5
 	.equ C2_MARKER_CLEAR, 0x5a
@@ -129,11 +131,11 @@
 
 ; Shared clock leaf.  Return low in A, high in X, sampled atomically.
 .Lc2_far_frame:
-	lda C2_FRAME_HI
+	lda C2K_FRAME_HI
 	sta __rc31
-	lda C2_FRAME_LO
+	lda C2K_FRAME_LO
 	tay
-	lda C2_FRAME_HI
+	lda C2K_FRAME_HI
 	cmp __rc31
 	bne .Lc2_far_frame
 	tya

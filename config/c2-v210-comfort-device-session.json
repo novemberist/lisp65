@@ -1,0 +1,515 @@
+{
+  "authority_commit": "8b22d361",
+  "capture_acceptance": "each visible row exact; GC-START counters 00; GC-END counters 80; CAPTURE counters 88, four identical nonzero bytes",
+  "checkpoints": [
+    {
+      "id": "LATCH",
+      "on_red": "remain stopped, no further input; attribute before any action",
+      "raw_first": true,
+      "read_only": true,
+      "reads": [
+        {
+          "address": 49997,
+          "bytes": 5,
+          "encoding": "little-endian",
+          "symbol": "lisp65_symbol22_latch_state"
+        },
+        {
+          "address": 47751,
+          "bytes": 34,
+          "encoding": "little-endian",
+          "symbol": "c2_symbol22_repl_buf"
+        }
+      ],
+      "resume_if_green": true,
+      "when": "after abort cleanup and native prompt, before any further input"
+    },
+    {
+      "id": "GC-ORIGIN",
+      "on_red": "remain stopped, no further input; attribute before any action",
+      "raw_first": true,
+      "read_only": true,
+      "reads": [
+        {
+          "address": 47598,
+          "bytes": 2,
+          "encoding": "little-endian",
+          "symbol": "gc_runs"
+        },
+        {
+          "address": 48380,
+          "bytes": 4,
+          "layout": [
+            "raw",
+            "seen",
+            "stored",
+            "taken"
+          ],
+          "owner": "reserved Raw-Input"
+        }
+      ],
+      "resume_if_green": true,
+      "when": "blank nested row before any warmup input"
+    },
+    {
+      "id": "GC-START",
+      "on_red": "remain stopped, no further input; attribute before any action",
+      "raw_first": true,
+      "read_only": true,
+      "reads": [
+        {
+          "address": 47598,
+          "bytes": 2,
+          "encoding": "little-endian",
+          "symbol": "gc_runs"
+        },
+        {
+          "address": 48380,
+          "bytes": 4,
+          "layout": [
+            "raw",
+            "seen",
+            "stored",
+            "taken"
+          ],
+          "owner": "reserved Raw-Input"
+        }
+      ],
+      "resume_if_green": true,
+      "when": "blank row after all warmup passes"
+    },
+    {
+      "id": "GC-END",
+      "on_red": "remain stopped, no further input; attribute before any action",
+      "raw_first": true,
+      "read_only": true,
+      "reads": [
+        {
+          "address": 47598,
+          "bytes": 2,
+          "encoding": "little-endian",
+          "symbol": "gc_runs"
+        },
+        {
+          "address": 48380,
+          "bytes": 4,
+          "layout": [
+            "raw",
+            "seen",
+            "stored",
+            "taken"
+          ],
+          "owner": "reserved Raw-Input"
+        }
+      ],
+      "resume_if_green": true,
+      "when": "blank row after measured passes, before final text/Return"
+    },
+    {
+      "id": "CAPTURE",
+      "on_red": "remain stopped, no further input; attribute before any action",
+      "raw_first": true,
+      "read_only": true,
+      "reads": [
+        {
+          "address": 48380,
+          "bytes": 4,
+          "layout": [
+            "raw",
+            "seen",
+            "stored",
+            "taken"
+          ],
+          "owner": "reserved Raw-Input"
+        },
+        {
+          "address": 49997,
+          "bytes": 5,
+          "encoding": "little-endian",
+          "symbol": "lisp65_symbol22_latch_state"
+        },
+        {
+          "address": 47751,
+          "bytes": 34,
+          "encoding": "little-endian",
+          "symbol": "c2_symbol22_repl_buf"
+        }
+      ],
+      "resume_if_green": true,
+      "when": "visible numeric 7 during wait, before next prompt or input"
+    },
+    {
+      "id": "D5",
+      "on_red": "remain stopped, no further input; attribute before any action",
+      "raw_first": true,
+      "read_only": true,
+      "reads": [
+        {
+          "address": 92,
+          "bytes": 2,
+          "encoding": "little-endian",
+          "symbol": "nsym"
+        },
+        {
+          "address": 48572,
+          "bytes": 2,
+          "encoding": "little-endian",
+          "symbol": "npool"
+        },
+        {
+          "address": 49997,
+          "bytes": 5,
+          "encoding": "little-endian",
+          "symbol": "lisp65_symbol22_latch_state"
+        },
+        {
+          "address": 47751,
+          "bytes": 34,
+          "encoding": "little-endian",
+          "symbol": "c2_symbol22_repl_buf"
+        }
+      ],
+      "resume_if_green": false,
+      "when": "after performance smokes, final loaded configuration, before any further key"
+    }
+  ],
+  "choreography": {
+    "automated_input": false,
+    "freezer_operations": 0,
+    "fresh_restore_and_SHA_readback_before_each_qualifying_cold_boot": true,
+    "no_reset_or_product_memory_writes_after_boot": true,
+    "physical_owner_keyboard_only_after_boot": true,
+    "resumes_if_all_green": 5,
+    "single_medium": true,
+    "stops": 6
+  },
+  "claim_scope": {
+    "accepts": [
+      "Comfort semantics",
+      "Comfort composed display"
+    ],
+    "excludes": [
+      "Matcher/Blink",
+      "Block 3",
+      "B-full canonical prompt swap",
+      "release acceptance"
+    ]
+  },
+  "collection_binding": {
+    "bytes": 11805,
+    "path": "build/v2.1/comfort-collection-calibration-r2/collection-row-binding.json",
+    "sha256": "8e8eb52efaaba62d3825f7dda6fa772468db4da3e8be92390e848bc0da3d612a"
+  },
+  "decision_table": {
+    "GC-window-unproved": "not accepted; no inferred Collection",
+    "all-seven-green": "Comfort hardware accepted",
+    "daily-use-Comfort-red": "Comfort descopes; feature repair round already spent",
+    "rare-cosmetic": "Known Issue with evidence",
+    "tag-nonzero": "stop and read bound payload, no further input",
+    "tool-or-composition-red": "attribute separately; never relabel it as a feature finding",
+    "unexpected-error-at-any-row": "no further key; stop and use the LATCH checkpoint's bound state/payload ranges"
+  },
+  "execution_order": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7"
+  ],
+  "format": "lisp65-v210-comfort-device-session-v1",
+  "gc_acceptance": "GC-ORIGIN == GC-START; 0 < (GC-END - GC-START) modulo 65536 < 32768",
+  "media": {
+    "combined": {
+      "bytes": 819200,
+      "path": "build/v2.1/comfort-display-repair-r1/lisp65-v2.1-comfort.d81",
+      "remote_name": "V21CFP.D81",
+      "sha256": "07bc70eebf251c74d9659b8387da03d3bb22ba1338c6ba50cc5ae4ce047d82a0"
+    }
+  },
+  "packed_gates": {
+    "bytes": 1021351,
+    "path": "build/v2.1/comfort-display-repair-r1/receipt.json",
+    "sha256": "b001f8b0ed3ee62674513aed2c96c0ed8979120517e34fd30fb2736551b5dfcc"
+  },
+  "prefilter": {
+    "bytes": 100232,
+    "path": "build/v2.1/comfort-collection-calibration-r2/receipt.json",
+    "sha256": "d3702d2119d7603788cf0ef42cae0dd253f9df018315f7de5f70ba7279cefaef"
+  },
+  "recorded_on": "2026-09-05",
+  "rows": [
+    {
+      "actions": [
+        "Freshly restore the single bound D81, read back and verify SHA before a fresh BASIC boot. No disk swap during boot."
+      ],
+      "expect": [
+        "WORKBENCH 2.0.0 banner and native lisp65> prompt",
+        "INIT.L65 absence is silent"
+      ],
+      "failure_attribution": "Boot/D082 failure is a Card-2/product finding, not a Comfort feature finding",
+      "group": "native boot without optional libraries",
+      "id": "G1"
+    },
+    {
+      "actions": [
+        "At the native prompt submit (require 'repl-comfort).",
+        "Submit (repl). At l65> submit one empty balanced line; then enter (repl) again."
+      ],
+      "expect": [
+        "require returns t",
+        "Comfort prompt is l65>",
+        "empty balanced line returns to one native lisp65>",
+        "second entry returns to l65>"
+      ],
+      "group": "entry and prompts",
+      "id": "G2"
+    },
+    {
+      "actions": [
+        "submit (list 1 3)",
+        "submit (+ 10 on one physical line and 32) on the next",
+        "submit (list 7 8), then press Up and Return",
+        "submit one unmatched closing parenthesis"
+      ],
+      "expect": [
+        "(1 3)",
+        "42",
+        "(7 8) is recalled and evaluated again",
+        "over-close is rejected before evaluation and l65> remains live"
+      ],
+      "group": "evaluation, multiline, history, over-close",
+      "id": "G3"
+    },
+    {
+      "actions": [
+        "At l65> submit (+ nil 32). Observe recovery and the complete diagnostic.",
+        "Before any further key, checkpoint LATCH reads state and payload raw-first.",
+        "If tag is zero, resume and re-enter Comfort with (repl). Otherwise stop the session."
+      ],
+      "expect": [
+        "*** vm: type error",
+        "no red frame",
+        "one native lisp65> appears practically immediately",
+        "Comfort re-entry shows l65>"
+      ],
+      "group": "A0 abort recovery",
+      "id": "G4",
+      "trigger": {
+        "authority": {
+          "bytes": 194879,
+          "path": "config/public-surface-domain-contract.json",
+          "sha256": "c686f374a2116c4f0e2de0892130d80be427260f795872fd2cf96292f4b7644b"
+        },
+        "classification": "error-raised",
+        "detail": "expected two fixnums",
+        "domain": "nil",
+        "error": "TypeError",
+        "forbidden_surrogate": "(>= nil 32)",
+        "form": "(+ nil 32)",
+        "function": "+"
+      }
+    },
+    {
+      "actions": [
+        "during C1/C2 inspect the active Comfort row and result handoff"
+      ],
+      "expect": [
+        "l65> prompt, editable input and cursor share one row",
+        "evaluated (1 3) row has no stale input tail",
+        "next l65> has one cursor and no second positioning model",
+        "The entire diagnostic, including its first eight characters, survives on its own output row."
+      ],
+      "group": "composed display",
+      "id": "G5"
+    },
+    {
+      "actions": [
+        "Submit (progn (setq s (read-line)) (print (string-length s)) (wait 16383))",
+        "On the blank nested row, checkpoint GC-ORIGIN; resume without pressing a key.",
+        "Perform the derived warmup passes: each time type the exact 32-character pattern, then delete all 32 characters to blank. Do not press Return between passes.",
+        "Checkpoint GC-START after warmup; its GC counter must equal GC-ORIGIN. Resume.",
+        "Perform the six measured passes, ordinary pace for 1-2 and fast for 3-6. Observe each exact typed row and each empty deleted row. Do not press Return between passes.",
+        "Checkpoint GC-END before typing the final oracle: GC must have increased since GC-START. Resume.",
+        "Type abcdefg and Return. At visible 7, no further key; checkpoint CAPTURE reads all four counters, latch and payload.",
+        "If green, resume. Let the existing wait finish naturally; do not inject keys or change wait/product state."
+      ],
+      "binding_limit": "Physical counterpart: only owner keys; the explicit checkpoints below authorize read-only stops/resumes, never input injection.",
+      "collection": {
+        "controller": "(progn (setq s (read-line)) (print (string-length s)) (wait 16383))",
+        "delete_events_per_pass": 32,
+        "derivation": {
+          "authority": {
+            "allocator_emitted_hex": "a616daa617daa618daa619da8519a63fa440a5418504a542c000d004e000f030a404aad004c000f030aad007c060b0074ccb39c9009032a646d008a645e0c0b0068026e000902220973ba441a5428002a404aad014c000d01020973ba441a542d007c000d0034c733a8518aa8416982010368541a4168642e645d002e646a6188617a6188605460584066606a63ee405d024a63de406b008a606863da605863ea517d018c060901aa6198604a605a5062067414c4c3ae40590de80e4a618e000b0e6a5060aa605860726070a26071865068504a50765058505a95d1865048504a9c265058505a519920464046405a618a51620893864046405a618a516209541a618a5167a84197a84187a84177a841660206241a900aa80eb",
+            "extended_bank": 4,
+            "heap_address": 49757,
+            "hot_cell_bytes": 5,
+            "hot_cells": 48,
+            "nursery_hysteresis_allocations": 192,
+            "product": {
+              "bytes": 640232,
+              "path": "build/2.6/card6-small-hardening-dma-tuple-repair-product-r3/wplto/lisp65-c2-substitution-linked.prg.elf",
+              "sha256": "f02d6997e33ae6c1059be1a9f81711d219f430c26e3144772124fd9a979366cf"
+            },
+            "sources": [
+              {
+                "bytes": 8505,
+                "path": "src/obj.h",
+                "sha256": "d0e7ef74416c2c3f6e0d04639645b48776920588defe49591403fc7c7786361e"
+              },
+              {
+                "bytes": 7828,
+                "path": "src/mem.h",
+                "sha256": "1a8590d1fd98869cd0c959830275a135fcd92ea91183a31d492af7b92e6c26db"
+              },
+              {
+                "bytes": 48664,
+                "path": "src/mem.c",
+                "sha256": "8f8ea8afae27a0262c21866aff9674c2e5cf3fb96daeb9c71fa11f1a77248241"
+              },
+              {
+                "bytes": 22860,
+                "path": "config/workbench.mk",
+                "sha256": "85333ae7d379df562f4022a11b2339402830779d1b26eeb37f46e4f9263c6586"
+              }
+            ],
+            "symbols": {
+              "allocs_since_gc": 69,
+              "freelist": 65,
+              "gc_frozen": 63,
+              "gc_runs": 47598
+            }
+          },
+          "cells_per_pass": 32,
+          "delete_cells_per_key": 0.0,
+          "gc_frozen": 0,
+          "measured_passes": 6,
+          "origin_free_cells": 490,
+          "policy": "freelist-exhaustion; nursery disabled",
+          "predicted_remaining_cells": 106,
+          "predicted_window_allocations": 192,
+          "printable_cells_per_key": 1.0,
+          "sample_increments": [
+            [
+              32,
+              0
+            ],
+            [
+              32,
+              0
+            ]
+          ],
+          "sample_passes": 2,
+          "warmup_counter_modulo": 0,
+          "warmup_passes": 12
+        },
+        "event_arithmetic": {
+          "counter_modulus": 256,
+          "expected_each_modulo_256": 136,
+          "measured_physical_events_including_oracle_return": 392,
+          "total_physical_events": 1160,
+          "warmup_physical_events": 768
+        },
+        "expected_each_modulo_256": 136,
+        "final_text": "abcdefg",
+        "observed_gc": [
+          4,
+          4,
+          5
+        ],
+        "passes": 6,
+        "pattern": "01234567012345670123456701234567",
+        "physical_keyboard_claimed": false,
+        "rebinding_rule": "execute calibration on the bound world; never inherit warmup length",
+        "required_gc_window": "after warmup, before final-text/Return",
+        "warmup_passes": 12
+      },
+      "expect": [
+        "each token stays exact and each 32nd deletion empties the row",
+        "visible numeric oracle is 7",
+        "wait holds the counters before another prompt can re-zero them",
+        "Single-key and fast typing feel like the hardware-green v1.9 route; owner observation is mandatory."
+      ],
+      "group": "lossless fast typing over forced collection",
+      "id": "G6"
+    },
+    {
+      "D5": {
+        "free_name_byte_floor": 384,
+        "free_slot_floor": 32,
+        "name_byte_capacity": 10208,
+        "prefilter_before_smoke_definitions_only": {
+          "free_name_bytes": 1433,
+          "free_slots": 104
+        },
+        "slot_capacity": 752
+      },
+      "actions": [
+        "After the capture wait completes, define (defun v20-perf-probe (x) (+ x 1)).",
+        "Run each performance form once, one submission at a time.",
+        "Checkpoint D5 is terminal and observes repl-comfort plus all session definitions."
+      ],
+      "group": "loaded Comfort D5 and performance",
+      "id": "G7",
+      "performance_forms": [
+        {
+          "form": "(time (car (cdr (list 1 2))))",
+          "max_frames": 2,
+          "value": "2"
+        },
+        {
+          "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+          "max_frames": 2,
+          "value": "(9 2)"
+        },
+        {
+          "form": "(time (string-ref \"abc\" 1))",
+          "max_frames": 2,
+          "value": "98"
+        },
+        {
+          "form": "(time (v20-perf-probe 41))",
+          "max_frames": 2,
+          "value": "42"
+        }
+      ]
+    }
+  ],
+  "status": "BOUND; OWNER CONTACT NOT STARTED",
+  "world": {
+    "C2D": {
+      "bytes": 33840,
+      "path": "build/2.6/card6-small-hardening-dma-tuple-repair-product-r3-preflight/setup-owned/static-plane/narrow-static/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "404c0391ad928b01b70b962e2d960d5f40a145c06b7e38ca04ff2dd0e59a40f4"
+    },
+    "ELF": {
+      "bytes": 640232,
+      "path": "build/2.6/card6-small-hardening-dma-tuple-repair-product-r3/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "f02d6997e33ae6c1059be1a9f81711d219f430c26e3144772124fd9a979366cf"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/2.6/card6-small-hardening-dma-tuple-repair-product-r3/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "3f00922419c808ca96dbe7a6b24d24abe3c4c3c3cb00ae591b44be20aab7b238"
+    },
+    "build_id": "0x4a1713ab",
+    "code_bytes": 47795,
+    "entries": 760,
+    "product_D81": {
+      "bytes": 819200,
+      "path": "build/2.6/card6-small-hardening-dma-tuple-repair-dwx-r3/media/shared-system/lisp65-product.d81",
+      "sha256": "b47f2c5a8188e27312b37c59b65c2837db3888483c099f318f097c6b5ffdb961"
+    },
+    "static_code": {
+      "bytes": 47795,
+      "path": "build/2.6/card6-small-hardening-dma-tuple-repair-product-r3-preflight/setup-owned/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+      "sha256": "1f58813b2423cdc47e647e8ef7ecf44c500fab8a534bb02e8f21dda2b732a924"
+    },
+    "substitution_artifacts": {
+      "bytes": 2598,
+      "path": "build/2.6/card6-small-hardening-dma-tuple-repair-product-r3-preflight/setup-owned/static-plane/narrow-static/product/substitution-artifacts.json",
+      "sha256": "2ab22f8ce7f750688fd5bc4a003c3e91959929aa8768ccf1e1d5617f1733745c"
+    }
+  }
+}

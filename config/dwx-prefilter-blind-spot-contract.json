@@ -1,0 +1,458 @@
+{
+  "format": "lisp65-dwx-prefilter-blind-spot-contract-v3",
+  "status": "ACTIVE",
+  "evidence_class": "xemu-prefilter-green",
+  "authority_rule": "Xemu is a functional prefilter, never device acceptance authority.",
+  "contract_rows": [
+    {
+      "id": "freezer-entry-return",
+      "kind": "blind-spot",
+      "reason": "The qualified Xemu has no working Freezer path (X4), so it cannot exercise Freezer entry, return, or post-Freezer restoration.",
+      "device_mandatory": true,
+      "forbidden_prefilter_claims": [
+        "freezer-entry-correct",
+        "freezer-return-correct",
+        "post-freezer-state-restored"
+      ]
+    },
+    {
+      "id": "dma-visibility-completion-timing",
+      "kind": "blind-spot",
+      "reason": "Xemu does not establish physical DMA visibility, completion timing, or the L10 delayed-content class.",
+      "device_mandatory": true,
+      "forbidden_prefilter_claims": [
+        "dma-content-visible-on-completion",
+        "dma-completion-timing-bounded",
+        "l10-closed"
+      ]
+    },
+    {
+      "id": "fpga-core-identity",
+      "kind": "blind-spot",
+      "reason": "The physical acceptance core is git-03b24c6b; an emulator process is not that FPGA implementation.",
+      "device_mandatory": true,
+      "forbidden_prefilter_claims": [
+        "tested-core-equivalent",
+        "fpga-rtl-behavior-proven",
+        "core-specific-defect-closed"
+      ]
+    },
+    {
+      "id": "native-latency-and-typing-feel",
+      "kind": "blind-spot",
+      "reason": "VM steps and host runtime do not establish native-cycle latency, collection-hitch perception, or physical typing feel.",
+      "device_mandatory": true,
+      "forbidden_prefilter_claims": [
+        "native-single-key-latency-green",
+        "gc-hitch-imperceptible",
+        "typing-feel-accepted"
+      ]
+    },
+    {
+      "id": "uart-hwa-versus-physical-keyboard",
+      "kind": "blind-spot",
+      "reason": "UART/HWA injection enters the typed-event queue without exercising the physical keyboard matrix, debounce or physical inter-key timing; it also cannot close raster-IRQ/evaluator timing races or the v1.6 double-consumer class.",
+      "device_mandatory": true,
+      "valid_prefilter_claims": [
+        "typed-event-queue-counter-equality",
+        "typed-event-queue-order-preserved",
+        "typed-event-queue-losslessness"
+      ],
+      "forbidden_prefilter_claims": [
+        "physical-keyboard-matrix-equivalent",
+        "physical-key-debounce-and-inter-key-timing-proven",
+        "raster-irq-evaluator-race-closed",
+        "v1.6-double-consumer-class-closed"
+      ]
+    },
+    {
+      "id": "patched-xemu-fork-identity",
+      "kind": "tool-identity",
+      "reason": "The qualified Drei-Patch-Fork binds BUFSEL, headless keymap transport and emulated cycle counting. The withdrawn EQ-setting patch is not equivalent; incomplete or extended patch sets fail.",
+      "device_mandatory": false,
+      "unpatched_xemu_is_equivalent": false,
+      "required_on_every_prefilter_claim": [
+        "source_commit",
+        "patches",
+        "patched_source_sha256",
+        "binary_sha256"
+      ]
+    }
+  ],
+  "qualified_tool_identity": {
+    "binary_sha256": "586875f683d213e5d4aae37e2852d1e1924b96e791620201c5c1657dece26b30",
+    "patched_source_sha256": {
+      "targets/mega65/dwx_keymap_generated.h": "28852e503f06621f487bcedf9f9cdbf4ed6f5dd12cc35c0d3614f37fe2d4262f",
+      "targets/mega65/inject.c": "48081bb61e915df940a68660489c9ca4c4ee7fbf638acd5e835223c47cc0714c",
+      "targets/mega65/inject.h": "ef1ef623033738743fa3e32f3a81c713e025a822b88bc91b63e30cf14de70933",
+      "targets/mega65/input_devices.c": "7c755341d1a73f49553ab6f555bce2f6d824aef7511daffadcd9cc0752c3b34a",
+      "targets/mega65/io_mapper.c": "ab5dc491ed0b2c41ac4e3c8ed6413ee1db3d9191cf75dfa6b9094adb91bcdfd0",
+      "targets/mega65/mega65.c": "caa47531c6c6506a5190902208ac77298c957418f5b3dab294459bc390dcfc89",
+      "targets/mega65/mega65.h": "e91f6486caf4aaab9f9dd943eeda89518a427efb9083d0a348ce1e98032b2cc0",
+      "targets/mega65/sdcard.c": "60be77e18e30d2573ad643ec388bacf5017e3cb570353aa7374774840cc8646f",
+      "targets/mega65/uart_monitor.c": "6d9ea01aa431ee914e297a72ceabc8d507b028296ee2c040b26e7f006d553a17",
+      "xemu/f011_core.c": "d8b5b3fc6d1ba202b7e4b4d79a17b3c78b0702030a09a39786f50cfd81b29611"
+    },
+    "patches": [
+      {
+        "path": "tools/xemu-patches/mega65-f011-io-buffer-select.patch",
+        "role": "base_patch",
+        "sha256": "6c42ebb7041ff48d966c2710ca95e949e228e39c376adbe44914e1935121a145"
+      },
+      {
+        "path": "tools/xemu-patches/mega65-dwx-headless-input.patch",
+        "role": "transport_patch",
+        "sha256": "8ee6d35288b8915752bf04dd6036f518d79ce20d116205dc20a360bb87e009d9"
+      },
+      {
+        "path": "tools/xemu-patches/mega65-dwx-cycle-counter.patch",
+        "role": "cycle_patch",
+        "sha256": "c44185db036545746b6c2ed3aa580dc3da9430a5852cb911c2993ed8cb1132fc"
+      }
+    ],
+    "source_commit": "40dfef0d1d5f56be2469492715c12bdb32c75b67"
+  },
+  "sealed_item2_tool_identity": {
+    "source_commit": "40dfef0d1d5f56be2469492715c12bdb32c75b67",
+    "source_file_sha256": {
+      "targets/mega65/sdcard.c": "5eb28898069cec38206f7fd1870ffcfae3c62bd1db4d4e05644ef634832aba5c",
+      "targets/mega65/io_mapper.c": "ab5dc491ed0b2c41ac4e3c8ed6413ee1db3d9191cf75dfa6b9094adb91bcdfd0"
+    },
+    "patch_sha256": "5ad2cef8c64242bda0827f322bf06b7eaa17e5d4972af14e13ad053458132e89",
+    "patched_source_sha256": "60be77e18e30d2573ad643ec388bacf5017e3cb570353aa7374774840cc8646f",
+    "binary_sha256": "e79649572a67e8d1f6cdb123b13fe4c082075d40515aa743717eb490ebed9507"
+  },
+  "hardware_references": [
+    {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+      "pdf_page": 134,
+      "printed_page": 120,
+      "section": "Buffered Sector Operations",
+      "claim": "$D689.7 selects the FDC or SD sector buffer for the $DE00..$DFFF mapping enabled through $D680."
+    },
+    {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+      "pdf_page": 135,
+      "printed_page": 121,
+      "section": "Buffered Sector Operations",
+      "claim": "Manual EQ recipe contradiction: exact device core 03b24c6b keeps buffered writes while setting LOST and suppresses EQ on SD reads. The upstream EQ-clear F011 body is restored; this is not a physical timing claim."
+    }
+  ],
+  "device_confirmation_rows": [
+    {
+      "id": "card2-f011-d082-success-status",
+      "device_mandatory": true,
+      "next_contact": "v2.1 Comfort acceptance",
+      "oracle": "genuine named cold-start variant: repaired product boots through CRC validation; buffered completion ($D082 & $D8) == $40; EQ/LOST ignored only in buffered mode",
+      "disagreement_disposition": "If physical hardware disagrees with the manual, classify it as a card-2 product finding, never as Xemu exoneration."
+    }
+  ],
+  "runtime_requalification": {
+    "receipt": {
+      "path": "build/dwx/buffered-repair-three-patch-requalification-r3/boot-receipt.json",
+      "sha256": "8130d305bceb32f35ac0d1538e7618d4dcfadbe0210027879c45c5e49c3ab3da"
+    },
+    "framebuffer_sha256": "000c4a3a9de447297c76360a6ce0ed3810d8d708158bf36396091ac925d2be8c",
+    "screenshot_sha256": "677483700fc2415178f39c994b3ead06d8578b57ea2998e2e1cfbf99a61061e1",
+    "oracle": "published v2.0.0 reaches WORKBENCH 2.0.0 and LISP65> without a disk error",
+    "device_acceptance_claimed": false
+  },
+  "outward_items": [
+    {
+      "id": "X2",
+      "target": "https://github.com/lgblgblgb/xemu",
+      "draft": "docs/upstream-issue-drafts.md",
+      "register": "docs/upstream-findings.md",
+      "status": "OWNER_REVIEW_REQUIRED_NOT_FILED"
+    },
+    {
+      "id": "X3",
+      "target": "MEGA65 chipset documentation (owner review before filing)",
+      "draft": "docs/upstream-issue-drafts.md",
+      "register": "docs/upstream-findings.md",
+      "status": "OWNER_REVIEW_REQUIRED_NOT_FILED"
+    }
+  ],
+  "navigation_transport": {
+    "authority": {
+      "path": "config/v11-l-lite-keymap.json",
+      "sha256": "a7b0f0ac2f131de5e6a4bda911a742e2b39270fb88aff5d412974432be01129d"
+    },
+    "dropped_event_mutations": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        6,
+        0
+      ],
+      [
+        10,
+        0
+      ],
+      [
+        11,
+        0
+      ],
+      [
+        12,
+        0
+      ],
+      [
+        13,
+        0
+      ],
+      [
+        14,
+        0
+      ],
+      [
+        15,
+        0
+      ],
+      [
+        16,
+        0
+      ],
+      [
+        17,
+        0
+      ],
+      [
+        18,
+        0
+      ],
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        22,
+        0
+      ],
+      [
+        23,
+        0
+      ],
+      [
+        24,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        26,
+        0
+      ],
+      [
+        29,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        88,
+        16
+      ],
+      [
+        120,
+        0
+      ],
+      [
+        120,
+        16
+      ],
+      [
+        127,
+        0
+      ],
+      [
+        145,
+        0
+      ],
+      [
+        157,
+        0
+      ],
+      [
+        255,
+        4
+      ]
+    ],
+    "events": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        6,
+        0
+      ],
+      [
+        10,
+        0
+      ],
+      [
+        11,
+        0
+      ],
+      [
+        12,
+        0
+      ],
+      [
+        13,
+        0
+      ],
+      [
+        14,
+        0
+      ],
+      [
+        15,
+        0
+      ],
+      [
+        16,
+        0
+      ],
+      [
+        17,
+        0
+      ],
+      [
+        18,
+        0
+      ],
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        22,
+        0
+      ],
+      [
+        23,
+        0
+      ],
+      [
+        24,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        26,
+        0
+      ],
+      [
+        29,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        88,
+        16
+      ],
+      [
+        120,
+        0
+      ],
+      [
+        120,
+        16
+      ],
+      [
+        127,
+        0
+      ],
+      [
+        145,
+        0
+      ],
+      [
+        157,
+        0
+      ],
+      [
+        255,
+        4
+      ]
+    ],
+    "header": {
+      "path": "targets/mega65/dwx_keymap_generated.h",
+      "sha256": "28852e503f06621f487bcedf9f9cdbf4ed6f5dd12cc35c0d3614f37fe2d4262f"
+    },
+    "oracle": "executed patched C queue writers; exact PETSCII/modifier tuple",
+    "claim_limit": "Functional typed-event navigation only; physical history remains a mandatory device row."
+  },
+  "retired_patch_evidence": [
+    {
+      "path": "tools/xemu-patches/mega65-f011-buffered-read-eq.patch",
+      "sha256": "f4418d433361c4148cf24f8b33b0c3e699ef4a0f53843873e141842806b1198f",
+      "authority_commit": "566c2e23",
+      "reason": "EQ-setting patch withdrawn; documentation contradicted by exact device core"
+    }
+  ]
+}

@@ -37,7 +37,7 @@ void emit(char c) {
 #endif
     if (c == '\n' || c == '\r') screen_row++;
 #ifdef LISP65_XEMU_TEST
-    TSINK[tpos++] = (uint8_t)c;
+    if (tpos < sizeof tsink_buf) TSINK[tpos++] = (uint8_t)c;
 #endif
 }
 

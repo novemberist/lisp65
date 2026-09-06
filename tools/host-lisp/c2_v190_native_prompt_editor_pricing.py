@@ -547,8 +547,7 @@ def b_light(codegen: dict[str, Any], editor: dict[str, Any],
 
 
 def b_full(block_a: dict[str, Any]) -> dict[str, Any]:
-    source = COMFORT.read_text(encoding="utf-8") + "\n" + SEXP.read_text(
-        encoding="utf-8")
+    source = evidence_bytes(COMFORT).decode("utf-8") + "\n" + evidence_bytes(SEXP).decode("utf-8")
     functions = ["%repl-read", "%repl-prompt", "%repl-step", "repl",
                  "%ide-line-net-depth"]
     objects = compile_objects(source, functions)
@@ -671,8 +670,8 @@ def derive() -> dict[str, Any]:
         "inputs": {"native_repl": evidence_bind(REPL),
                    "candidate_editor": bind(EDITOR),
                    "candidate_manifest": bind(MANIFEST),
-                   "candidate_header": bind(HEADER), "Comfort": bind(COMFORT),
-                   "sexp_helper": bind(SEXP), "resolved_profile": bind(PROFILE),
+                   "candidate_header": bind(HEADER), "Comfort": evidence_bind(COMFORT),
+                   "sexp_helper": evidence_bind(SEXP), "resolved_profile": bind(PROFILE),
                    "substitution_artifacts": bind(ARTIFACTS),
                    "pricing_driver": evidence_bind(Path(__file__).resolve())},
         "current_topology": topology,

@@ -832,10 +832,9 @@ workbench-c1-fastpath-probe: v11-c1-lease-check v11-c1-trust-fastpath-check
 hw-workbench-c1-phase-probe-dry-run: workbench-c1-phase-probe-check
 	python3 scripts/hw-c1-phase-probe.py --probe 1 --dry-run
 
-# Canonical C2-lite product.  The historical 1.1 tier-composition prerequisites
-# are intentionally absent: the six-image compiler/FASL plane has one emitter,
-# one WPLTO closure and one media packer.  Existing manifests are checked
-# read-only; a missing manifest is built exactly once.
+# Canonical C2-lite products. Build and verify are deliberately different
+# operations: verification is source-world-bound and cannot bless old bytes
+# after src/, lib/, or a release authority changes.
 .PHONY: c2-phase-v-gc-ext-dma-check c2-v122-g5-freezer-authority-check
 c2-phase-v-gc-ext-dma-check:
 	python3 tools/host-lisp/c2_phase_v_gc_ext_dma_lane.py
@@ -847,53 +846,61 @@ c2-v122-g5-freezer-authority-check:
 c2-v150-public-product-lifecycle-selftest:
 	python3 tools/host-lisp/c2_v150_public_product.py lifecycle-selftest
 
-workbench-product: c2-v150-public-product-lifecycle-selftest
-	@if test -f build/c2.3/v1.5.0-public-selected/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v150_public_product.py check; \
-	else \
-		python3 tools/host-lisp/c2_v150_public_product.py build; \
-	fi
+WORKBENCH_PRODUCT_TOOL := tools/host-lisp/workbench_product.py
+
+.PHONY: workbench-product-build workbench-product-verify \
+	workbench-product-v160 workbench-product-v160-build workbench-product-v160-verify \
+	workbench-product-v170 workbench-product-v170-build workbench-product-v170-verify \
+	workbench-product-v180 workbench-product-v180-build workbench-product-v180-verify \
+	workbench-product-v190 workbench-product-v190-build workbench-product-v190-verify \
+	workbench-product-v200 workbench-product-v200-build workbench-product-v200-verify
+
+workbench-product: workbench-product-build
+
+workbench-product-build: toolchain-external-product-verify c2-v150-public-product-lifecycle-selftest
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v150
 	python3 tools/host-lisp/c2_lite_public_clean_build.py check-local
 
-.PHONY: workbench-product-v160
-workbench-product-v160:
-	@if test -f build/c2.3/v1.6.0-public-selected/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v160_public_product.py check; \
-	else \
-		python3 tools/host-lisp/c2_v160_public_product.py build; \
-	fi
+workbench-product-verify: toolchain-external-product-verify c2-v150-public-product-lifecycle-selftest
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v150
+	python3 tools/host-lisp/c2_lite_public_clean_build.py check-local
 
-.PHONY: workbench-product-v170
-workbench-product-v170:
-	@if test -f build/c2.3/v1.7.0-public-selected/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v170_public_product.py check; \
-	else \
-		python3 tools/host-lisp/c2_v170_public_product.py build; \
-	fi
+workbench-product-v160: workbench-product-v160-build
+workbench-product-v160-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v160
+workbench-product-v160-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v160
 
-.PHONY: workbench-product-v180
-workbench-product-v180:
-	@if test -f build/c2.3/v1.8.0-public-selected/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v180_public_product.py check; \
-	else \
-		python3 tools/host-lisp/c2_v180_public_product.py build; \
-	fi
+workbench-product-v170: workbench-product-v170-build
+workbench-product-v170-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v170
+workbench-product-v170-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v170
 
-.PHONY: workbench-product-v190
-workbench-product-v190:
-	@if test -f build/c2.3/v1.9.0-public-selected/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v190_public_product.py check; \
-	else \
-		python3 tools/host-lisp/c2_v190_public_product.py build; \
-	fi
+workbench-product-v180: workbench-product-v180-build
+workbench-product-v180-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v180
+workbench-product-v180-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v180
 
-.PHONY: workbench-product-v200
-workbench-product-v200:
-	@if test -f build/c2.3/v2.0.0-public-selected/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v200_public_product.py check; \
-	else \
-		python3 tools/host-lisp/c2_v200_public_product.py build; \
-	fi
+workbench-product-v190: workbench-product-v190-build
+workbench-product-v190-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v190
+workbench-product-v190-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v190
+
+workbench-product-v200: workbench-product-v200-build
+workbench-product-v200-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v200
+workbench-product-v200-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v200
+
+.PHONY: workbench-product-v210 workbench-product-v210-build workbench-product-v210-verify
+workbench-product-v210: workbench-product-v210-build
+workbench-product-v210-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v210
+workbench-product-v210-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v210
 
 workbench-product-footprint-report: workbench-product
 	@test -f build/c2.2/canonical-product/final/substitution-balance.json
@@ -1285,7 +1292,8 @@ $(M65D_ALLOC_LOAD_CHECK): scripts/m65-disk-alloc-load-check-main.c $(M5_ALLOC_SO
 workbench-d81-save-new-diff-selftest: mvp-ship-artifacts
 	mkdir -p build/hw
 	cp "$(WORKBENCH_SHIP_D81)" "$(WORKBENCH_M5_SELFTEST_D81)"
-	$(C1541) "$(WORKBENCH_M5_SELFTEST_D81)" -write "$(M5_ALLOC_SOURCE)" "$(WORKBENCH_M5_ALLOC_NAME),s" >/tmp/lisp65-m5-c1541.log 2>&1 || { cat /tmp/lisp65-m5-c1541.log >&2; exit 3; }
+	@mkdir -p build/hw/logs
+	$(C1541) "$(WORKBENCH_M5_SELFTEST_D81)" -write "$(M5_ALLOC_SOURCE)" "$(WORKBENCH_M5_ALLOC_NAME),s" >build/hw/logs/m5-c1541.log 2>&1 || { cat build/hw/logs/m5-c1541.log >&2; exit 3; }
 	python3 tools/host-lisp/d81_dir_write_diff.py --selftest "$(WORKBENCH_M5_SELFTEST_D81)" \
 		--source "$(M5_NEW_SOURCE)" --name "$(WORKBENCH_M5_NAME)" \
 		--track "$(WORKBENCH_M5_TRACK)" \
@@ -1298,7 +1306,8 @@ workbench-d81-save-new-diff-selftest: mvp-ship-artifacts
 workbench-d81-save-new-scan-diff-selftest: mvp-ship-artifacts
 	mkdir -p build/hw
 	cp "$(WORKBENCH_SHIP_D81)" "$(WORKBENCH_M6_SELFTEST_D81)"
-	$(C1541) "$(WORKBENCH_M6_SELFTEST_D81)" -write "$(M5_ALLOC_SOURCE)" "$(WORKBENCH_M5_ALLOC_NAME),s" >/tmp/lisp65-m6-c1541.log 2>&1 || { cat /tmp/lisp65-m6-c1541.log >&2; exit 3; }
+	@mkdir -p build/hw/logs
+	$(C1541) "$(WORKBENCH_M6_SELFTEST_D81)" -write "$(M5_ALLOC_SOURCE)" "$(WORKBENCH_M5_ALLOC_NAME),s" >build/hw/logs/m6-c1541.log 2>&1 || { cat build/hw/logs/m6-c1541.log >&2; exit 3; }
 	python3 tools/host-lisp/d81_bam_reserve_sector.py "$(WORKBENCH_M6_SELFTEST_D81)" \
 		--track "$(WORKBENCH_M5_TRACK)" \
 		--sector "$(WORKBENCH_M6_RESERVE_SECTOR)"
@@ -1314,7 +1323,8 @@ workbench-d81-save-new-scan-diff-selftest: mvp-ship-artifacts
 workbench-d81-save-new-var-diff-selftest: mvp-ship-artifacts
 	mkdir -p build/hw
 	cp "$(WORKBENCH_SHIP_D81)" "$(WORKBENCH_M7_SELFTEST_D81)"
-	$(C1541) "$(WORKBENCH_M7_SELFTEST_D81)" -write "$(M7_ALLOC_SOURCE)" "$(WORKBENCH_M7_ALLOC_NAME),s" >/tmp/lisp65-m7-c1541.log 2>&1 || { cat /tmp/lisp65-m7-c1541.log >&2; exit 3; }
+	@mkdir -p build/hw/logs
+	$(C1541) "$(WORKBENCH_M7_SELFTEST_D81)" -write "$(M7_ALLOC_SOURCE)" "$(WORKBENCH_M7_ALLOC_NAME),s" >build/hw/logs/m7-c1541.log 2>&1 || { cat build/hw/logs/m7-c1541.log >&2; exit 3; }
 	python3 tools/host-lisp/d81_save_new_diff.py --selftest "$(WORKBENCH_M7_SELFTEST_D81)" \
 		--source "$(M7_VAR_SOURCE)" --name "$(WORKBENCH_M7_NAME)" \
 		--dir-track "$(WORKBENCH_M5_DIR_TRACK)" \

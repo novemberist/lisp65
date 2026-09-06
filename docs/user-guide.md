@@ -1,9 +1,9 @@
-# lisp65 2.0.1 User Guide
+# lisp65 2.1.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-2.0.1` release bundle
+- The extracted `lisp65-2.1.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -86,7 +86,7 @@ already exists on the mounted disk. Any other destination name sets the
 publish a library under an arbitrary name, use `compile-string` directly, as
 shown below.
 
-The selected 2.0.1 product checks for `INIT.L65` after the resident world is
+The selected 2.1.0 product checks for `INIT.L65` after the resident world is
 ready and before the first banner. The release medium deliberately omits the
 file, so the normal release boot takes the silent absence path. On a derived
 medium that supplies it, the file is evaluated once per cold boot. An open or
@@ -107,12 +107,12 @@ single-line editor, not the deferred balanced multiline/history Comfort REPL.
 
 The input queue has one active product owner. Capture is armed while the native
 editor reads, and the delivered editor consumes from its ring; the evaluator
-does not race it for ordinary events. A physical-device sequence crossing a
+does not race it for ordinary events. In the historical 2.0.0 acceptance, a physical-device sequence crossing a
 forced collection ended with `raw = seen = stored = taken = 138`. This proves
 the interactive read phase used in the acceptance session. It does not promise
 type-ahead while Lisp evaluation is running.
 
-The release-terminal capacity reading for this unchanged product world is
+The 2.1.0 release-terminal capacity reading, before the destructive recursion test, is
 107 free symbol slots and 1,467 free name bytes, above the required 32/384
 floor.
 
@@ -133,12 +133,12 @@ Example:
 
 ### Product-resident libraries
 
-The 2.0.1 product D81 contains `ide`, `idex`, and `m65d`, and no other library
+The 2.1.0 product D81 contains `ide`, `idex`, and `m65d`, and no other library
 role. Load the libraries you need before swapping to the work disk. If M65D is
 already active when the mounted image changes, run `(m65d-remount)` before
 loading or saving. Historical optional packages such as `buffer`,
 `string-extra`, `inspect`, `place`, and `defstruct` are not part of the
-selected 2.0.1 medium or its hardware claim; `(load-lib "buffer")` and the
+selected 2.1.0 medium or its hardware claim; `(load-lib "buffer")` and the
 other package names therefore have nothing to load on the release disk.
 
 Interactive Shift-Space is normalized to ordinary space. This matters for the
@@ -362,16 +362,16 @@ Save important edits first. The escalation ladder is:
 implementations failed their product-semantics or capacity gates; the feature
 is reserved for the immutable-code/mutable-session architecture.
 
-## Buffers (not on the 2.0.1 medium)
+## Buffers (not on the 2.1.0 medium)
 
 The optional `buffer` shelf library provides fixed-length mutable byte
 buffers. Like `string-extra`, `inspect`, `place`, and `defstruct`, it is **not
-part of the 2.0.1 product disk**, so the sequence below cannot be run from the
+part of the 2.1.0 product disk**, so the sequence below cannot be run from the
 release medium. It is documented here because the module and its contract are
 still maintained:
 
 ```lisp
-(load-lib "buffer")               ; not present on the 2.0.1 product disk
+(load-lib "buffer")               ; not present on the 2.1.0 product disk
 (setq b (make-buffer 16))
 (buffer-set! b 0 65)
 (buffer-ref b 0)                  ; => 65

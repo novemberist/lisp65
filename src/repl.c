@@ -52,8 +52,6 @@
 #endif
 #define BUF_MAX REPL_BUF_MAX
 
-#define C2K_INPUT_RING_TAIL (*(volatile unsigned char *)0xff8d)
-
 #ifdef DEVICE_KB
 /* Input history (1 entry = the last submitted line). Recall: cursor-up (0x91) or Ctrl+P (0x10).
  * Ctrl+arrow cannot be told apart reliably through KERNAL GETIN; cursor-up is free here (the REPL
@@ -236,7 +234,9 @@ void repl(void) {
     if (setjmp(lisp_toplevel)) {                          /* Rueckkehr nach Abbruch/Fehler */
         /* A longjmp can cross the Bank-2 Comfort loop.  Disable its raw IRQ
          * capture before rendering or re-entering the native fallback. */
-        C2K_INPUT_RING_TAIL = 0xff;
+#ifdef LISP65_C2_KERNAL_UNMAP
+        C2K_INPUT_RING_TAIL = C2K_INPUT_RING_CLOSED;
+#endif
 #ifdef LISP65_C2_NESTED_APPEND_V5
         /* Retirement ran before longjmp while its generation was still
          * named.  Transported journal recovery belongs here: setjmp has now

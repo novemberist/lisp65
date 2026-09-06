@@ -1,5 +1,16 @@
 ; Heap-backed input loop for interactive work.  The native C REPL remains the
 ; boot and fail-closed fallback; this shelf only owns input assembly.
+;
+; Resident row protocol (no additional Comfort tags):
+;   row >= 0: explicit read-line row, origin column 0.
+;   row = -1: private key-event read in %rl-render, not a screen row.
+;   row = -2: native "lisp65> " painter; stop is its screen row.
+;   -34 <= row < -2: prompted Comfort row = -row-2, origin 5.
+;   row < -34: native prompted row = -row-34, origin 8.
+; Return clears the owned input row through the resident editor; sequential
+; output keeps its own cursor and scrolls before the next input row is drawn.
+; Comfort paints only l65> on that input row. It must never call the -2
+; native painter on the preceding output row (that overwrites diagnostics).
 
 (defun %repl-read (prefix history history-index columns row)
   (if (numberp prefix)
@@ -50,9 +61,7 @@
          (line
           (progn
             (if top
-                (progn
-            (%rl-screen-tail nil 0 0 (- row 1) 0 -2)
-                  (%repl-prompt row))
+                (%repl-prompt row)
                 nil)
             (%repl-read indent history 0
                         (if top (- columns 5) columns)

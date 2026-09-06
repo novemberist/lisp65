@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 2.0.1. Sealed
+This is the maintained user-facing issue register for lisp65 2.1.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -13,6 +13,10 @@ The final section preserves entries that were closed in an earlier release.
 ### CPU hardware-stack exhaustion
 
 Status: **confirmed in the released 2.0.1 product; not fixed**
+
+The 2.1.0 device acceptance also reproduced the recursion example: depth 12
+returned 12, depth 13 entered the repeated `E29` loop, followed by a reset.
+The renderer and disk fixes do not remove this limitation.
 
 Deep non-tail Lisp recursion can exhaust the CPU hardware stack and enter a
 repeated `E29` error loop requiring a reset. In a bounded emulator reproduction
@@ -150,11 +154,11 @@ if the REPL does not recover. Preserve the preceding forms and approximate key
 count. Reopening the parked diagnosis requires a natural physical recurrence
 with a hardware arrival witness.
 
-## Names and packages not delivered in 2.0.1
+## Names and packages not delivered in 2.1.0
 
 ### Optional library packages are not on the product disk
 
-The 2.0.1 product D81 carries exactly three library roles: `ide`, `idex` and
+The 2.1.0 product D81 carries exactly three library roles: `ide`, `idex` and
 `m65d`. The historical optional packages are not on it and are not part of its
 hardware claim:
 

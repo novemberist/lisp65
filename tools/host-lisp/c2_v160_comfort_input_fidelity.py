@@ -792,7 +792,7 @@ def lifecycle_gate() -> dict[str, Any]:
             and comfort.index(disable) < comfort.index("(lcc-run form)")
             and "(dotimes (counter 4 nil)" in comfort
             and "(poke 188 (+ 252 counter) 0)" in comfort
-            and "C2K_INPUT_RING_TAIL = 0xff;" in repl,
+            and "C2K_INPUT_RING_TAIL = C2K_INPUT_RING_CLOSED;" in repl,
             "capture lifecycle is not closed on eval/normal/error paths")
     require("cmp #$03" in window and "sta $d619" in window
             and "lda $d613" in window and "inc C2K_BREAK_PENDING" in window,

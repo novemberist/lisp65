@@ -19,6 +19,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 from elf_truth import ElfTruth  # noqa: E402
+from evidence_era import era_bind  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -37,6 +38,7 @@ RECEIPT = ARCH / "c2.3-v2.1-phase9-relocation-emission-receipt.json"
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "7fa52735"
 SECTION = ".rela.lisp65_c2_mapped_far_service"
+EVIDENCE_ERA = "6b986b748cfe091bb708ab7b40f609f4e8dbd246"
 
 
 class EmissionError(RuntimeError):
@@ -156,7 +158,8 @@ def derive() -> dict[str, Any]:
         "recorded_on": "2026-08-15",
         "status": "PASS: relocation freight derived from emitted candidate",
         "authority": {"owner": authority, "Final_Red": bind(FINAL_RED),
-                      "source": bind(SOURCE), "driver": bind(DRIVER)},
+                      "source": era_bind(EVIDENCE_ERA, SOURCE),
+                      "driver": era_bind(EVIDENCE_ERA, DRIVER)},
         "emitted_candidate": {
             "linked_ELF": bind(SEED_ELF),
             "canonical_object": bind(EMITTED_OBJECT),

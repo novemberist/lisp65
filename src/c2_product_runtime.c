@@ -23,6 +23,7 @@
 #include "c2_phase_scratch.h"
 #include "c2_platform_dma.h"
 #include "c2_session_emitter.h"
+#include "mega65_dma_descriptor.h"
 #include "eval.h"
 #include "interrupt.h"
 #include "mem.h"
@@ -338,33 +339,14 @@ static uint8_t c2_publish_exports_from(uint16_t first);
 static LISP65_C2_MAPPED_FAR_FN
 void c2_edma_prepare(uint8_t *job, uint32_t source, uint32_t target,
                      uint16_t length, uint8_t command) {
-    job[0] = 0x0bu; job[1] = 0x80u; job[2] = (uint8_t)(source >> 20);
-    job[3] = 0x81u; job[4] = (uint8_t)(target >> 20);
-    job[5] = 0x85u; job[6] = 1u; job[7] = 0u;
-    job[8] = command;
-    job[9] = (uint8_t)length; job[10] = (uint8_t)(length >> 8);
-    job[11] = (uint8_t)source; job[12] = (uint8_t)(source >> 8);
-    job[13] = (uint8_t)((source >> 16) & 0x0fu);
-    job[14] = (uint8_t)target; job[15] = (uint8_t)(target >> 8);
-    job[16] = (uint8_t)((target >> 16) & 0x0fu);
-    job[17] = 0u; job[18] = 0u; job[19] = 0u;
+    lisp65_edma_descriptor(job, command, source, target, length);
 }
 #endif
 
 C2_KERNAL_RESIDENT void c2_product_physical_copy(
         uint32_t source, uint32_t target, uint16_t length) {
     uint8_t *job = c2_edma_job;
-    /* The historical descriptor uses four option pairs followed by its
-     * terminator and 12-byte F018B list. */
-    job[0] = 0x0bu; job[1] = 0x80u; job[2] = (uint8_t)(source >> 20);
-    job[3] = 0x81u; job[4] = (uint8_t)(target >> 20);
-    job[5] = 0x85u; job[6] = 1u; job[7] = 0u; job[8] = 0u;
-    job[9] = (uint8_t)length; job[10] = (uint8_t)(length >> 8);
-    job[11] = (uint8_t)source; job[12] = (uint8_t)(source >> 8);
-    job[13] = (uint8_t)((source >> 16) & 0x0fu);
-    job[14] = (uint8_t)target; job[15] = (uint8_t)(target >> 8);
-    job[16] = (uint8_t)((target >> 16) & 0x0fu);
-    job[17] = 0u; job[18] = 0u; job[19] = 0u;
+    lisp65_edma_descriptor(job, 0u, source, target, length);
     __asm__ volatile(
         "lda #1\n\tsta $d703\n\tlda #0\n\tsta $d702\n\tsta $d704\n\t"
         "lda #mos16hi(c2_edma_job)\n\tsta $d701\n\t"

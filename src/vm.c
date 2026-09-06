@@ -32,6 +32,10 @@
  * the rendering bytecode primitives. */
 #ifdef LISP65_VM_SCREEN_PRIMS
 #include "screen.h"
+#include "key_event_object.h"
+#ifdef LISP65_SCREEN_WRITE_STRING
+#include "screen_string_span.h"
+#endif
 #endif
 #ifdef LISP65_SHIP_RUNTIME_IO
 #include "ship_runtime_io.h"
@@ -1155,22 +1159,11 @@ void vm_init(void) {
 }
 
 #ifdef LISP65_VM_SCREEN_PRIMS
-#include "petscii_normalization.h"
 /* Gleiches Eventformat wie eval.c:key_event: (key code mods). */
 static obj vm_key_event(int c, uint8_t event_modifiers) {
-    obj mods = NIL, e;
-    c = lisp65_normalize_petscii((uint8_t)c, &event_modifiers);
-    if (event_modifiers & LISP65_KEYMOD_SHIFT) mods = cons(vm_k_shift, mods);
-    if (event_modifiers & LISP65_KEYMOD_CONTROL) mods = cons(vm_k_control, mods);
-    if (event_modifiers & LISP65_KEYMOD_META) mods = cons(vm_k_meta, mods);
-    GC_PUSH(mods);
-    e = cons(gc_rootstack[GC_TOP], NIL);
-    GC_SET(GC_TOP, e);
-    e = cons(MKFIX((int16_t)c), gc_rootstack[GC_TOP]);
-    GC_SET(GC_TOP, e);
-    e = cons(vm_k_key, gc_rootstack[GC_TOP]);
-    GC_POPN(1);
-    return e;
+    return lisp65_key_event_object(c, event_modifiers,
+                                   vm_k_key, vm_k_shift,
+                                   vm_k_control, vm_k_meta);
 }
 #endif
 
@@ -1215,13 +1208,16 @@ static __attribute__((noinline)) obj vm_fixbinop(uint8_t op, obj a, obj b) {
     if (op == OP_LOGIOR) return (obj)(a | b);
     if (op == OP_LOGXOR) return (obj)((a ^ b) | 1u);
     switch (op) {
-    case OP_ADD: return MKFIX(x + y);
-    case OP_SUB: return MKFIX(x - y);
-    case OP_MUL: return MKFIX(x * y);
-    case OP_DIV: if (y == 0) { vm_status = VM_TYPEERROR; return NIL; } return MKFIX(x / y);
-    case OP_REMAINDER: if (y == 0) { vm_status = VM_TYPEERROR; return NIL; } return MKFIX(x % y);
+    case OP_ADD: return MKFIX((int16_t)((int32_t)x + (int32_t)y));
+    case OP_SUB: return MKFIX((int16_t)((int32_t)x - (int32_t)y));
+    case OP_MUL: return MKFIX((int16_t)((int32_t)x * (int32_t)y));
+    case OP_DIV: if (y == 0) { vm_status = VM_TYPEERROR; return NIL; }
+                 return MKFIX((int16_t)((int32_t)x / (int32_t)y));
+    case OP_REMAINDER: if (y == 0) { vm_status = VM_TYPEERROR; return NIL; }
+                       return MKFIX((int16_t)((int32_t)x % (int32_t)y));
     case OP_MOD: if (y == 0) { vm_status = VM_TYPEERROR; return NIL; }
-                 return vm_mod_adjust(MKFIX(x % y), b);
+                 return vm_mod_adjust(
+                     MKFIX((int16_t)((int32_t)x % (int32_t)y)), b);
     case OP_LESS: return x < y ? vm_t : NIL;
     default:      return x > y ? vm_t : NIL;   /* OP_GREATER */
     }
@@ -1333,6 +1329,8 @@ extern obj vm_c2d_byte(obj *args);
 #endif
 
 #if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
+_Static_assert(sizeof(lisp65_buffer_overlay_context) <= VM_CODEBUF,
+               "buffer overlay context exceeds vm_codebuf");
 #ifdef LISP65_C1_COMPILER_TIER
 #include "c1_compiler_overlay.h"
 #endif
@@ -1569,23 +1567,14 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
     }
 #ifdef LISP65_SCREEN_WRITE_STRING
     case 12: {  /* screen-write-string */
-        obj str, cs; char wbuf[80];
-        int16_t attr; uint8_t x, y, cnt = 0;
+        obj str;
+        int16_t attr; uint8_t x, y;
         if (n < 3 || n > 4 || !IS_FIX(a[0]) || !IS_FIX(a[1]) ||
             !IS_PTR(a[2]) || cell_type(a[2]) != T_STR ||
             (n == 4 && !IS_FIX(a[3]))) { vm_status = VM_TYPEERROR; return NIL; }
         x = (uint8_t)FIXVAL(a[0]); y = (uint8_t)FIXVAL(a[1]); str = a[2];
         attr = (n == 4) ? FIXVAL(a[3]) : (int16_t)-1;
-#ifdef LISP65_STRING_ARENA
-        cnt = (uint8_t)str_copy_out(str, wbuf, 80);
-        (void)cs;
-#else
-        for (cs = cell_a(str); IS_PTR(cs) && cell_type(cs) == T_CONS && cnt < 80; cs = cell_b(cs))
-            wbuf[cnt++] = (char)FIXVAL(cell_a(cs));
-#endif
-        scr_write_span(x, y, wbuf, cnt,
-                       (attr >= 0 && (attr & 0x40)) ? scr_cols() : 0,
-                       (attr >= 0) ? (attr & ~0x40) : attr);
+        lisp65_screen_write_string_span(x, y, str, attr);
         return NIL;
     }
 #endif
@@ -1624,7 +1613,14 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #ifdef MEGA65_F011_LOAD
     case 15:  /* %disk-read-sector */
         if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
-        return io_disk_read_sector((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1])) ? vm_t : NIL;
+        /* The mapped reader returns only after leaving its MAP window.
+         * A failed read is not an absent directory entry: keep that failure
+         * out of require's ordinary NIL/not-found route, as for source load. */
+        if (!io_disk_read_sector((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1]))) {
+            lisp_abort_code(LISP65_ERR_LOAD_OPEN);
+            return NIL;
+        }
+        return vm_t;
     case 16:  /* %disk-byte */
         if (n != 1 || !IS_FIX(a[0])) { vm_status = VM_TYPEERROR; return NIL; }
         return MKFIX(io_disk_byte((uint8_t)FIXVAL(a[0])));
@@ -1661,6 +1657,7 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #endif
 #ifdef MEGA65_F011_WRITE
     case 21:  /* %disk-poke */
+        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
         io_disk_scratch_poke((uint8_t)FIXVAL(a[0]), (uint8_t)(FIXVAL(a[1]) & 0xFF));
         return a[1];
     case 22:  /* %disk-write-sector */
@@ -1906,6 +1903,15 @@ obj vm_directory_only_test_callprim(uint8_t pid, obj *args, uint8_t nargs) {
 /* Frame bei base fuellen: fixe Params [0,nargs), dann Locals=NIL. Variadisch (flags&1): der
  * Rest-Slot (erstes Local, Index nargs) bekommt die Liste der Args[nargs..n) — exakt wie die
  * Host-VM (P0VM). Setzt gc_rootsp = vb (Frame-Top) und gibt vb zurueck. Callee prueft GC_ROOTS. */
+static inline __attribute__((always_inline)) uint16_t vm_frame_slots(
+        uint8_t actual, uint8_t nargs, uint8_t nlocals, uint8_t flags) {
+    uint16_t slots = (uint16_t)nargs + nlocals;
+    if (flags & CO_FLAG_REST)
+        slots = (uint16_t)(slots + 1u +
+            ((actual > nargs) ? (uint8_t)(actual - nargs) : 0u));
+    return slots;
+}
+
 static uint16_t vm_frame_fill(uint16_t base, const obj *args, uint8_t n,
                               uint8_t nargs, uint8_t nlocals, uint8_t flags) {
     uint16_t i, vb = (uint16_t)(base + nargs + nlocals);
@@ -2166,14 +2172,15 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
      * STACKOVER (s. klebriger Status). Operanden-Pushes sind einzeln PUSH-geprueft
      * und brechen jetzt ehrlich ab -> die Reservierung darf auf das wirklich
      * Geschriebene schrumpfen. Typischer Frame 17->5 Slots, Tiefe ~3x. */
-    if ((uint16_t)(base + nargs + nlocals + 1) >= GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }
+    if ((uint16_t)(base + vm_frame_slots(nargs_actual, nargs, nlocals, flags)) > GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }
     vb = vm_frame_fill(base, args, nargs_actual, nargs, nlocals, flags);   /* fix + variadisch */
     ip = code;
 
 #define PUSH(x)  do { if (gc_rootsp >= GC_ROOTS) { vm_status = VM_STACKOVER; goto done; } \
                       gc_rootstack[gc_rootsp++] = (obj)(x); } while (0)
-#define POP()    (gc_rootsp > vb ? gc_rootstack[--gc_rootsp] : (vm_status = VM_BADOPCODE, NIL))
+#define POP()    ({ obj pop__; if (gc_rootsp <= vb) { vm_status = VM_BADOPCODE; goto done; } pop__ = gc_rootstack[--gc_rootsp]; pop__; })
 #define SLOT(n)  gc_rootstack[base + (n)]
+#define SLOT_OK(n) ((uint16_t)(n) < (uint16_t)nargs + nlocals)
 #define LIT(i)   ((obj)(littab[2*(i)] | (littab[2*(i)+1] << 8)))
 #define NEEDFIX2 do { if (!IS_FIX(a) || !IS_FIX(b)) { vm_status = VM_TYPEERROR; goto done; } } while (0)
 
@@ -2229,9 +2236,9 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
         case OP_PUSHARG0: PUSH(SLOT(0)); break;
         case OP_PUSHARG1: PUSH(SLOT(1)); break;
         case OP_PUSHARG2: PUSH(SLOT(2)); break;
-        case OP_PUSHARGN: { uint8_t n = RD8(); PUSH(SLOT(n)); break; }
-        case OP_LOADL:    { uint8_t n = RD8(); PUSH(SLOT(n)); break; }
-        case OP_STOREL:   { uint8_t n = RD8(); a = POP(); SLOT(n) = a; break; }
+        case OP_PUSHARGN: { uint8_t n = RD8(); if (!SLOT_OK(n)) { vm_status = VM_BADOPCODE; goto done; } PUSH(SLOT(n)); break; }
+        case OP_LOADL:    { uint8_t n = RD8(); if (!SLOT_OK(n)) { vm_status = VM_BADOPCODE; goto done; } PUSH(SLOT(n)); break; }
+        case OP_STOREL:   { uint8_t n = RD8(); if (!SLOT_OK(n)) { vm_status = VM_BADOPCODE; goto done; } a = POP(); SLOT(n) = a; break; }
         case OP_DROP:
             (void)POP();
             LISP65_V14_INSTR_AFTER_DROP(
@@ -2336,7 +2343,7 @@ relative_branch: {
      * STACKOVER (s. klebriger Status). Operanden-Pushes sind einzeln PUSH-geprueft
      * und brechen jetzt ehrlich ab -> die Reservierung darf auf das wirklich
      * Geschriebene schrumpfen. Typischer Frame 17->5 Slots, Tiefe ~3x. */
-    if ((uint16_t)(base + nargs + nlocals + 1) >= GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }
+    if ((uint16_t)(base + vm_frame_slots(n, nargs, nlocals, flags)) > GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }
             vb = vm_frame_fill(base, cargs, n, nargs, nlocals, flags);   /* fix + variadisch */
             ip = code;
             break;
@@ -2402,6 +2409,7 @@ done:
 #undef PUSH
 #undef POP
 #undef SLOT
+#undef SLOT_OK
 #undef LIT
 #undef NEEDFIX2
 #undef OBJ_SETUP

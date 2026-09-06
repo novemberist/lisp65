@@ -8,6 +8,7 @@ from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -34,6 +35,11 @@ CONVERGENCE_RECEIPT = ROOT / (
 RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.7-mapped-far-assembly-equivalence-receipt.json")
+SEALED_SUCCESSOR_RECEIPT = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
+    "c2.3-v2.1-mapped-far-abi-preservation-equivalence-receipt.json")
+SEALED_SUCCESSOR_SHA256 = (
+    "de7bc4cc8244b5f087b1664956d82718ae70fc2fed879c7f84c98bba7898f0ed")
 LLVM_MC = ROOT / "tools/llvm-mos/bin/llvm-mc"
 LD_LLD = ROOT / "tools/llvm-mos/bin/ld.lld"
 LLVM_READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
@@ -274,7 +280,20 @@ def parse_rows(text: str) -> dict[tuple[str, str], dict[str, Any]]:
 
 
 def fixture_source() -> str:
-    return """
+    equates = (ROOT / "src/c2_kernal_window_equates.inc").read_text(
+        encoding="utf-8")
+    values: dict[str, str] = {}
+    for name in ("C2K_FRAME_LO", "C2K_FRAME_HI"):
+        match = re.search(rf"^\s*\.equ\s+{name},\s*\$([0-9a-fA-F]+)\s*$",
+                          equates, re.MULTILINE)
+        require(match is not None, f"KERNAL-window equate absent: {name}")
+        values[name] = "0x" + match.group(1)
+    return f"""
+.globl C2K_FRAME_LO
+.set C2K_FRAME_LO, {values['C2K_FRAME_LO']}
+.globl C2K_FRAME_HI
+.set C2K_FRAME_HI, {values['C2K_FRAME_HI']}
+
 .section .lisp65_c2_convergence_state,"aw",@nobits
 .globl c2_dma_verify_list
 c2_dma_verify_list: .space 24
@@ -757,8 +776,14 @@ def main() -> int:
     try:
         receipt = build_receipt(args.receipt or RECEIPT)
         if args.receipt:
-            args.receipt.parent.mkdir(parents=True, exist_ok=True)
-            args.receipt.write_bytes(canonical(receipt))
+            if args.receipt.resolve() == SEALED_SUCCESSOR_RECEIPT.resolve():
+                sealed = args.receipt.read_bytes()
+                require(hashlib.sha256(sealed).hexdigest()
+                        == SEALED_SUCCESSOR_SHA256,
+                        "historical equivalence receipt identity drift")
+            else:
+                args.receipt.parent.mkdir(parents=True, exist_ok=True)
+                args.receipt.write_bytes(canonical(receipt))
         print(
             "c2-mapped-far-asm-equivalence: PASS "
             f"cases={receipt['execution_witness']['equivalence']}/16 "

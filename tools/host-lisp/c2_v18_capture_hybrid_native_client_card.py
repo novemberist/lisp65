@@ -716,7 +716,8 @@ def client_final_gate() -> dict[str, Any]:
             and "%rl-poll" not in entries and "%ide-idle" not in entries,
             "final client plane/lifecycle drift")
     repl = (ROOT / "src/repl.c").read_text(encoding="utf-8")
-    require(repl.count("C2K_INPUT_RING_TAIL = 0xff;") == 1,
+    require(repl.count(
+        "C2K_INPUT_RING_TAIL = C2K_INPUT_RING_CLOSED;") == 1,
             "native abort close edge drift")
     return {"status": "PASS: SHIPPED READ-LINE ARMS AND DISARMS CAPTURE",
         "source": bind(CLIENT_SOURCE), "plane": bind(CODE),

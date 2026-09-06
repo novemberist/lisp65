@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-dwx-cycle-probe-adapter-contract-v1",
+  "status": "ACTIVE",
+  "base_contract": "config/dwx-headless-input-adapter-contract.json",
+  "cycle_patch": "tools/xemu-patches/mega65-dwx-cycle-counter.patch",
+  "completion_semantics": {
+    "status_register": "$D082",
+    "successful_buffered_read_status_mask": "$40",
+    "predicate_mask": "$D8",
+    "device_core_commit": "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6",
+    "meaning": "Unmodified upstream F011 EQ-clear behavior; buffered product predicate ignores EQ/LOST and retains BUSY/DRQ/RNF/CRC. No physical-timing equivalence claim.",
+    "hardware_reference": {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+      "pdf_page": 135,
+      "printed_page": 121,
+      "section": "Buffered Sector Operations"
+    }
+  },
+  "transport": {
+    "base_commands": [
+      "~typehex",
+      "~keyevent",
+      "~typebusy",
+      "~screen"
+    ],
+    "added_commands": [
+      "~cyclecount",
+      "~typeone"
+    ],
+    "counter": "monotonic-emulated-CPU-and-DMA-cycles",
+    "desktop_focus_required": false,
+    "gui_required": false,
+    "logs_are_oracle": false
+  },
+  "claim_limit": "The counter compares emulated execution between byte-exact sealed media under one fork; typeone enters the existing HWA queue without paste-frame delay. Neither command is a physical-keyboard, wall-clock, FPGA-timing, or device-acceptance measurement."
+}

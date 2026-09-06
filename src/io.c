@@ -1,5 +1,6 @@
 /* lisp65 — Datei-Eingabe-Naht (Lane K). Siehe io.h. */
 #include "io.h"
+#include "mega65_dma_descriptor.h"
 #ifdef MEGA65_F011_LOAD
 #include "obj.h"     /* ext_disk_put/get/stage (EXT-Disk-Scratch) */
 #include "mem.h"     /* shared Bank-4 disk-scratch layout contract */
@@ -62,24 +63,41 @@ static void m65_io_enable(void) {
     __asm__ volatile("lda #$47\n\t sta $d02f\n\t lda #$53\n\t sta $d02f\n\t" ::: "a");
 }
 #include "f011_context.h"
+#include "f011_buffered_wait.h"
+#define LISP65_F011_READ_FAILED 0xffffu
+
+#if defined(__mos__) && defined(LISP65_C2_F011_COLD)
+unsigned int f011_read_at(unsigned char T, unsigned char S);
+unsigned char io_disk_read_sector(unsigned char track, unsigned char sector);
+unsigned char disk_source_refill(void);
+#endif
+
 /* F011 read of ONE CBM logical sector (T 1..80, S 0..39). Afterwards the 256-byte logical half
  * sits in the $DE00 window at the RETURNED offset (0 or 256) — NO copy (rule-B redesign: the
  * primitives and the chain reader copy straight out of $DE00, saving stack scratch). */
+#if defined(__mos__) && defined(LISP65_C2_F011_COLD)
+LISP65_C2_MAPPED_F011_COLD_FN
+unsigned int f011_read_at_far(unsigned char T, unsigned char S) {
+#else
 static unsigned int f011_read_at(unsigned char T, unsigned char S) {
+#endif
     unsigned char b    = (unsigned char)(S >> 1);              /* 0..19  512-byte block in the track */
     unsigned char half = (unsigned char)(S & 1);              /* 0=lower, 1=upper 256 B */
     unsigned char side = (unsigned char)(b >= 10 ? 1 : 0);
     unsigned char fsec = (unsigned char)((b >= 10 ? b - 10 : b) + 1);   /* 1..10 */
-    unsigned int  g;
+    uint16_t start;
     m65_io_enable();
     lisp65_f011_take_context();                               /* Drive 0 + F011-Puffer */
+    if (!f011_wait_clock_ready() || !f011_wait_sample(&start))
+        return LISP65_F011_READ_FAILED;
     *((volatile unsigned char *)0xD081) = 0x20;               /* spinup */
-    for (g = 0; g < 20000; g++) {}
     *((volatile unsigned char *)0xD084) = (unsigned char)(T - 1);      /* f011 track 0..79 */
     *((volatile unsigned char *)0xD085) = fsec;                        /* f011 sektor 1..10 */
     *((volatile unsigned char *)0xD086) = side;                        /* seite 0/1 */
     *((volatile unsigned char *)0xD081) = 0x40;                        /* read */
-    for (g = 0; g < 60000 && (*((volatile unsigned char *)0xD082) & 0x80); g++) {}   /* BUSY */
+    if (!f011_wait_complete(start)) {
+        return LISP65_F011_READ_FAILED;
+    }
     lisp65_f011_map_buffer();                                          /* F011-Puffer -> $DE00 */
     return (unsigned int)half << 8;
 }
@@ -110,14 +128,43 @@ static unsigned int disk_chain_count(unsigned char t, unsigned char s,
 }
 
 /* %disk-read-sector: liest CBM-Logiksektor (T,S), legt die 256 B in den EXT-Dir-Scratch. */
+#if defined(__mos__) && defined(LISP65_C2_F011_COLD)
+/* A mapped caller that needs the chain link receives it as data.  It must not
+ * read the copied EXT scratch through ext_disk_get: that helper may abort and
+ * abort cleanup is itself a MAP consumer. */
+static LISP65_C2_MAPPED_F011_COLD_FN
+unsigned int io_disk_read_sector_link_far(
+    unsigned char track, unsigned char sector
+) {
+    unsigned int off, i, link;
+    off = f011_read_at_far(track, sector);
+    if (off == LISP65_F011_READ_FAILED) return LISP65_F011_READ_FAILED;
+    link = (unsigned int)((volatile unsigned char *)0xDE00)[off] |
+        ((unsigned int)((volatile unsigned char *)0xDE00)[off + 1u] << 8);
+    for (i = 0; i < 256; i++)
+        ext_disk_put((unsigned int)(DISK_EXT_DIR + i),
+                     ((volatile unsigned char *)0xDE00)[off + i]);
+    lisp65_f011_unmap_buffer();
+    return link;
+}
+
+LISP65_C2_MAPPED_F011_COLD_FN
+unsigned char io_disk_read_sector_far(unsigned char track, unsigned char sector) {
+    return (unsigned char)(io_disk_read_sector_link_far(track, sector) !=
+                           LISP65_F011_READ_FAILED);
+}
+#else
 unsigned char io_disk_read_sector(unsigned char track, unsigned char sector) {
     unsigned int off, i;
     off = f011_read_at(track, sector);
+    if (off == LISP65_F011_READ_FAILED) return 0;
     for (i = 0; i < 256; i++)
-        ext_disk_put((unsigned int)(DISK_EXT_DIR + i), ((volatile unsigned char *)0xDE00)[off + i]);
+        ext_disk_put((unsigned int)(DISK_EXT_DIR + i),
+                     ((volatile unsigned char *)0xDE00)[off + i]);
     lisp65_f011_unmap_buffer();
     return 1;
 }
+#endif
 /* %disk-byte: Byte i (0..255) aus dem EXT-Dir-Scratch. */
 unsigned char io_disk_byte(unsigned char i) { return ext_disk_get((unsigned int)(DISK_EXT_DIR + i)); }
 
@@ -227,6 +274,8 @@ static unsigned char f011_write_at_guarded(unsigned char T, unsigned char S) {
     if (!disk_transaction_mount_token_op(0))
         return LISP65_DISK_STATUS_MEDIA_CHANGED;
     off = f011_read_at(T, S);                                 /* RMW: Block holen, $DE00 aktiv */
+    if (off == LISP65_F011_READ_FAILED)
+        return LISP65_DISK_STATUS_READ_INVALID;
     if (!disk_transaction_mount_token_op(0)) {
         lisp65_f011_unmap_buffer();
         return LISP65_DISK_STATUS_MEDIA_CHANGED;
@@ -242,6 +291,8 @@ unsigned char io_disk_write_sector_guarded(unsigned char track, unsigned char se
     unsigned char status = f011_write_at_guarded(track, sector);
     if (status != LISP65_DISK_STATUS_OK) return status;
     off = f011_read_at(track, sector);
+    if (off == LISP65_F011_READ_FAILED)
+        return LISP65_DISK_STATUS_READ_INVALID;
     if (!disk_transaction_mount_token_op(0)) {
         lisp65_f011_unmap_buffer();
         return LISP65_DISK_STATUS_MEDIA_CHANGED;
@@ -339,20 +390,83 @@ static char disk_file_fetch(void) {
  * scratch instead.  The two-byte reader lookahead and the current sector stay
  * valid while C1 owns the file window; the next sector is fetched only when
  * the reader asks for it. */
-static unsigned char disk_source_pos, disk_source_len;
-static LISP65_RESIDENT_ISLAND_FN char disk_source_fetch(void) {
+/* The validated successor link owns two bytes outside DIR scratch.
+ * Bits 0..5 are sector, 6..12 are track and bit 15 is validity.  A terminal
+ * link has track/sector zero after its payload length has been validated;
+ * disk_file_len remains the authoritative stream terminator. */
+#define DISK_SOURCE_LINK_VALID 0x8000u
+#define DISK_SOURCE_LINK_PACK(t, s) \
+    ((unsigned int)(DISK_SOURCE_LINK_VALID | ((unsigned int)(t) << 6) | (s)))
+#define DISK_SOURCE_LINK_TRACK(v) ((unsigned char)(((v) >> 6) & 0x7fu))
+#define DISK_SOURCE_LINK_SECTOR(v) ((unsigned char)((v) & 0x3fu))
+static unsigned int disk_source_link;
+
+#if defined(__mos__) && defined(LISP65_C2_F011_COLD)
+LISP65_C2_MAPPED_F011_COLD_FN
+unsigned char disk_source_refill_far(void) {
+    unsigned int link = disk_source_link;
+    unsigned char t = DISK_SOURCE_LINK_TRACK(link);
+    unsigned char s = DISK_SOURCE_LINK_SECTOR(link);
     unsigned char nt, ns;
+    unsigned int count, read_link;
+    if (!(link & DISK_SOURCE_LINK_VALID) || !t) {
+        disk_source_link = 0;
+        return 0;
+    }
+    read_link = io_disk_read_sector_link_far(t, s);
+    if (read_link == LISP65_F011_READ_FAILED) {
+        disk_source_link = 0;
+        return 0;
+    }
+    nt = (unsigned char)read_link;
+    ns = (unsigned char)(read_link >> 8);
+    count = disk_chain_count(t, s, nt, ns);
+    if (count > 254u) {
+        disk_source_link = 0;
+        return 0;
+    }
+    disk_source_link = DISK_SOURCE_LINK_PACK(nt, nt ? ns : 0u);
+    return 1;
+}
+#endif
+
+static LISP65_RESIDENT_ISLAND_FN char disk_source_fetch(void) {
+    unsigned int folded;
+    unsigned char pos;
+#if !defined(__mos__) || !defined(LISP65_C2_F011_COLD)
+    unsigned char t, s, nt, ns;
+    unsigned int count, link;
+#endif
     if (disk_file_pos >= disk_file_len) return '\0';
-    if (disk_source_pos >= disk_source_len) {
+    /* 256 == 2 (mod 254): fold the existing linear progress counter into
+     * the current sector offset without another persistent state byte. */
+    folded = (unsigned int)((disk_file_pos & 0xffu) +
+                            ((disk_file_pos >> 8) << 1));
+    while (folded >= 254u) folded -= 254u;
+    pos = (unsigned char)folded;
+    if (disk_file_pos && !pos) {
+#if defined(__mos__) && defined(LISP65_C2_F011_COLD)
+        if (!disk_source_refill()) return '\0';
+#else
+        link = disk_source_link;
+        t = DISK_SOURCE_LINK_TRACK(link);
+        s = DISK_SOURCE_LINK_SECTOR(link);
+        if (!(link & DISK_SOURCE_LINK_VALID) || !t ||
+            !io_disk_read_sector(t, s)) {
+            disk_source_link = 0;
+            return '\0';
+        }
         nt = io_disk_byte(0); ns = io_disk_byte(1);
-        if (!nt || !io_disk_read_sector(nt, ns)) return '\0';
-        nt = io_disk_byte(0); ns = io_disk_byte(1);
-        if (!nt && !ns) return '\0';
-        disk_source_pos = 0;
-        disk_source_len = nt ? 254u : (unsigned char)(ns - 1u);
+        count = disk_chain_count(t, s, nt, ns);
+        if (count > 254u) {
+            disk_source_link = 0;
+            return '\0';
+        }
+        disk_source_link = DISK_SOURCE_LINK_PACK(nt, nt ? ns : 0u);
+#endif
     }
     ++disk_file_pos;
-    return (char)io_disk_byte((unsigned char)(2u + disk_source_pos++));
+    return (char)io_disk_byte((unsigned char)(2u + pos));
 }
 
 /* Folgt der 1581-Sektorkette ab (T,S) und akkumuliert die Datenbytes DIREKT aus $DE00 in den
@@ -374,7 +488,12 @@ static unsigned int disk_chain_to_scratch(unsigned char track,
     unsigned int n = 0, off, i, cnt, remaining;
     unsigned char t = track, s = sector, nt, ns;
     while (t) {
+#if defined(__mos__) && defined(LISP65_C2_F011_COLD)
+        off = f011_read_at_far(t, s);
+#else
         off = f011_read_at(t, s);
+#endif
+        if (off == LISP65_F011_READ_FAILED) return 0;
         nt = ((volatile unsigned char *)0xDE00)[off];
         ns = ((volatile unsigned char *)0xDE00)[off + 1];
         if ((!nt && !ns) ||
@@ -411,10 +530,11 @@ unsigned char io_disk_load_chain(unsigned char track, unsigned char sector) {
     disk_file_len = n; disk_file_pos = 0;
     if (!io_disk_read_sector(track, sector)) return 0;
     nt = io_disk_byte(0); ns = io_disk_byte(1);
-    disk_source_pos = 0;
-    disk_source_len = nt ? 254u : (unsigned char)(ns - 1u);
+    n = disk_chain_count(track, sector, nt, ns);
+    if (n > 254u) return 0;
+    disk_source_link = DISK_SOURCE_LINK_PACK(nt, nt ? ns : 0u);
     load_source_stream(disk_source_fetch);
-    return 1;
+    return (unsigned char)((disk_source_link & DISK_SOURCE_LINK_VALID) != 0);
 }
 
 /* Boot-Ladeanzeige (S5): wie weit hat der Reader die Disk-Quelle konsumiert, in Promille (0..1000).
@@ -559,23 +679,10 @@ static uint8_t attic_crc_buf[16];
 /* Enhanced DMA is required here: the shelf lives above the 24-bit Bank-5
  * address space. One shared descriptor handles both Attic reads and the final
  * Attic-to-Bank-5 blob stage. */
-__attribute__((used)) static uint8_t attic_edma_job[20] = {
-    0x0b, 0x80, 0x81, 0x81, 0x00, 0x85, 0x01, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
+__attribute__((used)) static uint8_t attic_edma_job[20];
 
 static void attic_copy(uint32_t source, uint32_t target, uint16_t length) {
-    attic_edma_job[2] = (uint8_t)(source >> 20);
-    attic_edma_job[4] = (uint8_t)(target >> 20);
-    attic_edma_job[9] = (uint8_t)length;
-    attic_edma_job[10] = (uint8_t)(length >> 8);
-    attic_edma_job[11] = (uint8_t)source;
-    attic_edma_job[12] = (uint8_t)(source >> 8);
-    attic_edma_job[13] = (uint8_t)((source >> 16) & 0x0fu);
-    attic_edma_job[14] = (uint8_t)target;
-    attic_edma_job[15] = (uint8_t)(target >> 8);
-    attic_edma_job[16] = (uint8_t)((target >> 16) & 0x0fu);
+    lisp65_edma_descriptor(attic_edma_job, 0u, source, target, length);
     __asm__ volatile(
         "lda #1\n\tsta $d703\n\tlda #0\n\tsta $d702\n\tsta $d704\n\t"
         "lda #mos16hi(attic_edma_job)\n\tsta $d701\n\t"
@@ -654,7 +761,10 @@ static uint8_t attic_name_equal(uint16_t record, const char *name) {
     return 0;
 }
 
-unsigned char io_attic_load_lib(const char *name) {
+/* Historical price-probe entry: deliberately not the product obj ABI from
+ * io.h.  A distinct name keeps the rejected probe buildable without defining
+ * two incompatible versions of the public loader. */
+unsigned char io_attic_load_lib_name_probe(const char *name) {
     uint8_t index;
     uint16_t record, total, off, length;
     uint32_t expected_crc;

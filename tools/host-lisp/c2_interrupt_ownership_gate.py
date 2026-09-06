@@ -21,6 +21,7 @@ import re
 import subprocess
 import sys
 from typing import Any
+from evidence_era import era_bind
 
 import c2_crc_codegen_gate as DISASM
 from elf_truth import ElfTruth
@@ -246,7 +247,9 @@ def documentation_gate() -> dict[str, Any]:
     return {
         "public_known_issue": binding(KNOWN_DOC),
         "known_issue_authority": binding(KNOWN),
-        "upstream_L11": binding(UPSTREAM),
+        # The live L11 content was checked above; later upstream items do not
+        # rewrite the provenance of this sealed interrupt-ownership witness.
+        "upstream_L11": era_bind("334f4993", UPSTREAM),
         "bundled_hardware_line": binding(HARDWARE),
     }
 

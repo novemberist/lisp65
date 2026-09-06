@@ -24,6 +24,7 @@ RECEIPT = ROOT / (
 )
 FORMAT = "lisp65-c2.3-link95-top-level-macro-publication-receipt-v1"
 RECORDED_ON = "2026-08-09"
+EVIDENCE_COMMIT = "38c97aa493f48d4eb2a368d198a20b7d861f819f"
 
 
 class RedispatchError(RuntimeError):
@@ -58,6 +59,10 @@ def bind(path: Path) -> dict[str, Any]:
         "bytes": len(raw),
         "sha256": sha(raw),
     }
+
+
+def bind_raw(relative: str, raw: bytes) -> dict[str, Any]:
+    return {"path": relative, "bytes": len(raw), "sha256": sha(raw)}
 
 
 def git_bytes(commit: str, relative: str) -> bytes:
@@ -283,7 +288,9 @@ def validate_source(value: dict[str, Any], compiler: str, runtime: str) -> dict[
 def mutation_tests(value: dict[str, Any]) -> int:
     compiler_path = ROOT / value["sources"]["compiler"]
     runtime_path = ROOT / value["sources"]["product_runtime"]
-    compiler = compiler_path.read_text(encoding="utf-8")
+    compiler = git_bytes(
+        EVIDENCE_COMMIT, value["sources"]["compiler"]
+    ).decode("utf-8")
     runtime = candidate_runtime(value)
     mutations: list[tuple[str, str, bool]] = []
 
@@ -395,7 +402,8 @@ def bank2_price(value: dict[str, Any]) -> dict[str, Any]:
 
 def build_receipt(value: dict[str, Any]) -> dict[str, Any]:
     sources = value["sources"]
-    compiler = (ROOT / sources["compiler"]).read_text(encoding="utf-8")
+    compiler_raw = git_bytes(EVIDENCE_COMMIT, sources["compiler"])
+    compiler = compiler_raw.decode("utf-8")
     runtime = candidate_runtime(value)
     source_claim = validate_source(value, compiler, runtime)
     current = run_actual_lcc(value, product_runtime_override=runtime)
@@ -419,7 +427,8 @@ def build_receipt(value: dict[str, Any]) -> dict[str, Any]:
                 "docs/planning/post-v1.4.0-direction-plan.md",
             ),
             "current_sources": {
-                key: bind(ROOT / relative)
+                key: (bind_raw(relative, compiler_raw)
+                      if key == "compiler" else bind(ROOT / relative))
                 for key, relative in sources.items()
                 if key != "actual_lcc_binary"
             },
@@ -502,7 +511,17 @@ def sealed_projection_selftest() -> int:
         sealed_receipt_projection(living, malformed)
     except RedispatchError:
         rejected += 1
-    require(rejected == 3, "sealed-evidence projection mutation survived")
+    try:
+        validate_source(
+            load(CONTRACT),
+            (ROOT / load(CONTRACT)["sources"]["compiler"]).read_text(
+                encoding="utf-8"
+            ),
+            candidate_runtime(load(CONTRACT)),
+        )
+    except RedispatchError:
+        rejected += 1
+    require(rejected == 4, "sealed/live compiler-era mixing survived")
     return rejected
 
 

@@ -1,0 +1,75 @@
+{
+  "format": "lisp65-dwx-freezer-free-boot-variants-contract-v1",
+  "status": "ACTIVE",
+  "evidence_class": "xemu-prefilter-green",
+  "authority_rule": "Freezer-free Xemu variants expose the choreography gap; they never claim Freezer behavior.",
+  "inputs": {
+    "published_product_d81": {
+      "path": "build/release-v2.0.0/pack-product-a/lisp65-2.0.0/media/lisp65-product.d81",
+      "sha256": "7bd0cd478da52b0d731a1fd837bce16d76832b4d1ae0e836ad63209433d68f2d"
+    },
+    "rom_sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0",
+    "system_sd_sha256": "5d5a890490a85d6f20e97d7dd50b8b5cfd16f8ac82f3749634e651a6e27b4ff0",
+    "item1_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/dwx-link73-xemu-boot-receipt-20260902.json",
+      "sha256": "cc1339ab3f04c709936244b4a878332e973be1c2ba0a89c6bc1531556b10a334"
+    }
+  },
+  "variant_policy": {
+    "manual_boot_media_swap": false,
+    "fresh_emulator_process_per_product_variant": true,
+    "freezer_operations": 0,
+    "claims_freezer_behavior": false,
+    "device_choreography_gap": "The device library-medium Freezer mount is not exercised by any Xemu variant."
+  },
+  "variants": [
+    {
+      "id": "published-v2.0.0-drive-8-only",
+      "family": "drive-8-only",
+      "source": "bound-item1-runtime-receipt",
+      "init_l65": "absent"
+    },
+    {
+      "id": "product-medium-init-absent",
+      "family": "complete-product-medium-per-cold-boot",
+      "source": "published-v2.0.0-product-copy",
+      "init_l65": "absent"
+    },
+    {
+      "id": "product-medium-init-valid",
+      "family": "complete-product-medium-per-cold-boot",
+      "source": "published-v2.0.0-product-copy",
+      "init_l65": "valid"
+    },
+    {
+      "id": "product-medium-init-error",
+      "family": "complete-product-medium-per-cold-boot",
+      "source": "published-v2.0.0-product-copy",
+      "init_l65": "error"
+    }
+  ],
+  "init_payloads": {
+    "valid": {
+      "path": "build/c2.3/v1.7-init-l65-product-variants-media/INIT-VALID.L65",
+      "sha256": "f5817bf7ba721960fcf246c129cdb0df47b4f61ae7572321e37157f7631cd764"
+    },
+    "error": {
+      "path": "build/c2.3/v1.7-init-l65-product-variants-media/INIT-ERROR.L65",
+      "sha256": "073038300abc088f99613adbcbd343d2867cbb6f258bcea2eacdf8c1dfbf2000"
+    }
+  },
+  "framebuffer_oracles": {
+    "absent": {
+      "required": ["WORKBENCH 2.0.0", "LISP65>"],
+      "forbidden": ["L65SYS DISK ERROR", "L65APP DISK ERROR", "VM: TYPE ERROR"]
+    },
+    "valid": {
+      "required": ["17", "WORKBENCH 2.0.0", "LISP65>"],
+      "forbidden": ["L65SYS DISK ERROR", "L65APP DISK ERROR", "VM: TYPE ERROR"]
+    },
+    "error": {
+      "required": ["VM: TYPE ERROR", "LISP65>"],
+      "forbidden": ["L65SYS DISK ERROR", "L65APP DISK ERROR"]
+    }
+  }
+}

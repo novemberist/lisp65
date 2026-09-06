@@ -26,10 +26,9 @@ python3 tools/host-lisp/asm_c_constant_contract.py selftest
 ```
 
 The public repository cannot reproduce sealed hardware acceptance by itself.
-It also does not yet expose a supported clean-build entry point for the exact
-C2-lite 1.2 product; use the release bundle and its offline verifier for the
-released binary identity. The historical `workbench-product` target describes
-the retired 1.1 tier model and is not a 1.2 release build.
+Use the [Development Guide](docs/development.md), the sole authority for the
+supported build and deployment commands. Use the release bundle and its
+offline verifier for released binary identity.
 Maintainers run the applicable private capacity, identity, mutation, and
 hardware gates before publishing an accepted change.
 

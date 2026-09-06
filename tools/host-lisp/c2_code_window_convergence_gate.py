@@ -32,6 +32,8 @@ RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.4-code-window-content-convergence-gate-receipt.json"
 )
+SEALED_RECEIPT_SHA256 = (
+    "0bd21d50606b9f72a0420725d445e1b8bccc410fbc04044827f501b872d86fbe")
 
 
 class GateError(RuntimeError):
@@ -59,6 +61,11 @@ def bind(path: Path) -> dict[str, Any]:
 
 
 def write(path: Path, value: dict[str, Any]) -> None:
+    if path.resolve() == RECEIPT.resolve():
+        sealed = path.read_bytes()
+        require(hashlib.sha256(sealed).hexdigest() == SEALED_RECEIPT_SHA256,
+                "historical convergence receipt identity drift")
+        return
     payload = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:

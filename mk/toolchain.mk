@@ -13,10 +13,15 @@ M65VMSTDLIB_NM ?= $(LLVM)/llvm-nm
 M65VMSTDLIB_SIZE ?= $(LLVM)/llvm-size
 ETHERLOAD ?= $(M65TOOLS_ROOT)/etherload
 
-.PHONY: toolchain-external-selftest toolchain-external-verify
+.PHONY: toolchain-external-selftest toolchain-external-verify \
+	toolchain-external-product-verify
 
 toolchain-external-selftest:
 	python3 tools/host-lisp/toolchain_external.py selftest
 
 toolchain-external-verify:
 	python3 tools/host-lisp/toolchain_external.py verify --tool-root tools
+
+toolchain-external-product-verify:
+	python3 tools/host-lisp/toolchain_external.py verify --tool-root tools \
+		--llvm-mos-root '$(LLVM_MOS_ROOT)' --product-build-only

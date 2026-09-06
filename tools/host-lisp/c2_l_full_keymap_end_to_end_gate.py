@@ -30,6 +30,7 @@ CONTRACT = ROOT / "config/v11-l-lite-keymap.json"
 CROSS_CHECK = ROOT / "config/c2-l-full-keymap-probe.json"
 WINDOW = ROOT / "src/c2_kernal_window.s"
 VM = ROOT / "src/vm.c"
+KEY_EVENT_H = ROOT / "src/key_event_object.h"
 NORMALIZATION_H = ROOT / "src/petscii_normalization.h"
 RUNTIME_H = ROOT / "src/c2_kernal_runtime.h"
 GENERATED = ROOT / "lib/ide-keymap-generated.lisp"
@@ -163,6 +164,7 @@ def source_bundle() -> dict[str, Any]:
         "cross_check": json.loads(CROSS_CHECK.read_text(encoding="utf-8")),
         "window": WINDOW.read_text(encoding="utf-8"),
         "vm": VM.read_text(encoding="utf-8"),
+        "key_event_h": KEY_EVENT_H.read_text(encoding="utf-8"),
         "normalization_h": NORMALIZATION_H.read_text(encoding="utf-8"),
         "runtime_h": RUNTIME_H.read_text(encoding="utf-8"),
         "generated": GENERATED.read_text(encoding="utf-8"),
@@ -233,15 +235,18 @@ def validate(bundle: dict[str, Any], *, run_oracle: bool) -> dict[str, Any]:
         "product modifier masks drifted from the queue contract",
     )
     vm = bundle["vm"]
+    key_event_h = bundle["key_event_h"]
     require(
-        "lisp65_normalize_petscii((uint8_t)c, &event_modifiers)" in vm
+        "return lisp65_key_event_object(c, event_modifiers," in vm
+        and "code = lisp65_normalize_petscii((uint8_t)code, &event_modifiers);"
+        in key_event_h
         and "code >= 0x41u && code <= 0x5au" in bundle["normalization_h"]
         and "return (uint8_t)(code + 0x20u);" in bundle["normalization_h"],
-        "vm_key_event no longer performs the raw-88 to code-120 normalisation",
+        "vm_key_event no longer reaches the shared raw-88 to code-120 normalisation",
     )
     require(
-        "event_modifiers & LISP65_KEYMOD_CONTROL" in vm
-        and "event_modifiers & LISP65_KEYMOD_META" in vm,
+        "event_modifiers & LISP65_KEYMOD_CONTROL" in key_event_h
+        and "event_modifiers & LISP65_KEYMOD_META" in key_event_h,
         "vm_key_event does not consume both required modifier domains",
     )
 
@@ -372,6 +377,10 @@ def mutation_tests(bundle: dict[str, Any]) -> int:
         b["normalization_h"].replace(
             "return (uint8_t)(code + 0x20u);",
             "return (uint8_t)(code + 0x00u);", 1)}))
+    add("shared-event-normalization-edge", lambda b: b.update({"key_event_h":
+        b["key_event_h"].replace(
+            "code = lisp65_normalize_petscii((uint8_t)code, &event_modifiers);",
+            "code = (uint8_t)code;", 1)}))
     add("consumer-modifiers", lambda b: b.update({"generated": b["generated"].replace(
         "(ide-event-modifiers event)", "nil", 1)}))
     add("compiled-source", lambda b: b["werkbank"]["sources"].remove(
@@ -433,6 +442,7 @@ def main() -> int:
         "canonical_contract": sha(CONTRACT),
         "generated_product_consumer": sha(GENERATED),
         "product_vm_normalizer": sha(VM),
+        "product_shared_event_builder": sha(KEY_EVENT_H),
         "product_queue_capture": sha(WINDOW),
         "werkbank_compilation_manifest": sha(WERKBANK),
         "pinned_core_snapshot": sha(CORE_SNAPSHOT),

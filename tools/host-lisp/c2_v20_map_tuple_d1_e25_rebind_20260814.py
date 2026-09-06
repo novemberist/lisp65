@@ -102,6 +102,10 @@ def derive() -> dict[str, Any]:
     current = deepcopy(live)
     current["authority"]["runtime"] = ERA.era_bind(
         SEAL_ERA_COMMIT, E25.RUNTIME)
+    # The dated rebind is historical for every source identity, not only
+    # runtime. Live semantics were independently derived/verified above.
+    current["authority"]["main"] = ERA.era_bind(
+        SEAL_ERA_COMMIT, historical['authority']['main']['path'])
     changed = tuple(changed_paths(historical, current))
     require(changed == ALLOWED,
             f"D1/E25 rebind exceeds runtime source authority: {changed}")

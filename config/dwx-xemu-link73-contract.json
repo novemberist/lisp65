@@ -1,0 +1,32 @@
+{
+  "format": "lisp65-dwx-xemu-link73-contract-v1",
+  "xemu_source": {
+    "commit": "40dfef0d1d5f56be2469492715c12bdb32c75b67",
+    "sdcard_c_sha256": "5eb28898069cec38206f7fd1870ffcfae3c62bd1db4d4e05644ef634832aba5c",
+    "io_mapper_c_sha256": "ab5dc491ed0b2c41ac4e3c8ed6413ee1db3d9191cf75dfa6b9094adb91bcdfd0"
+  },
+  "adapter": {
+    "patch": "tools/xemu-patches/mega65-f011-io-buffer-select.patch",
+    "register": "$D689.7",
+    "sd_buffer_offset": "$0E00",
+    "f011_buffer_offset": "$0C00",
+    "mapped_window": "$DE00..$DFFF",
+    "rule": "the flat CPU view and the DE00 I/O view are selected by the same D689.7 value"
+  },
+  "delivered_world": {
+    "product_d81_sha256": "7bd0cd478da52b0d731a1fd837bce16d76832b4d1ae0e836ad63209433d68f2d",
+    "rom_sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0",
+    "system_sd_sha256": "5d5a890490a85d6f20e97d7dd50b8b5cfd16f8ac82f3749634e651a6e27b4ff0"
+  },
+  "framebuffer_oracle": {
+    "required": [
+      "WORKBENCH 2.0.0",
+      "LISP65>"
+    ],
+    "forbidden": [
+      "L65SYS DISK ERROR",
+      "L65APP DISK ERROR"
+    ],
+    "logs_are_authority": false
+  }
+}

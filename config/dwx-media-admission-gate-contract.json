@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-dwx-media-admission-gate-contract-v1",
+  "status": "ACTIVE",
+  "source_prefilter": {
+    "contract": "config/dwx-mirrored-prefilter-rows-contract.json",
+    "receipt": "tests/bytecode/dialect-v2/evidence/post-release/dwx-mirrored-prefilter-rows-receipt-20260902.json"
+  },
+  "blind_spot_contract": "config/dwx-prefilter-blind-spot-contract.json",
+  "stage_order": [
+    "packed-medium",
+    "emulator-prefilter",
+    "admission-decision",
+    "device-session-binding"
+  ],
+  "admission_policy": {
+    "pass_result": "PASS",
+    "pass_evidence_class": "xemu-prefilter-green",
+    "red_result": "RED",
+    "red_evidence_class": "xemu-prefilter-red-bound-blind-spot",
+    "red_requires_exact_bound_blind_spot": true,
+    "every_session_row_remains_device_mandatory": true,
+    "device_acceptance_claimed": false,
+    "logs_are_oracle": false
+  },
+  "injection_path_boundary": {
+    "transport": "local-unix-uart-monitor-to-HWA-queue",
+    "valid_prefilter_claims": [
+      "typed-event-queue-counter-equality",
+      "typed-event-queue-order-preserved",
+      "typed-event-queue-losslessness"
+    ],
+    "device_mandatory_claims": [
+      "physical-keyboard-matrix-equivalent",
+      "physical-key-debounce-and-inter-key-timing-proven",
+      "raster-irq-evaluator-race-closed",
+      "v1.6-double-consumer-class-closed"
+    ]
+  },
+  "authority_rule": "A packed medium may be associated with a device-session row only after every derived emulator row is PASS or every RED has one exact attribution to a device-mandatory blind spot; admission never claims device acceptance."
+}

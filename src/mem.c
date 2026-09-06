@@ -13,6 +13,7 @@
 #endif
 #include "c2_kernal_layout.h"
 #include "boot_progress.h"
+#include "mega65_dma_descriptor.h"
 #ifdef LISP65_DMA_CONTENT_CONVERGENCE
 #include "interrupt.h"
 #include "vm.h"
@@ -231,10 +232,7 @@ static void ext_dma(uint16_t sa,uint8_t sb,uint16_t da,uint8_t db,uint16_t n){
 #ifdef LISP65_DMA_PROF
     dma_cell++;
 #endif
-    ext_dl[0]=0; ext_dl[1]=(uint8_t)n; ext_dl[2]=(uint8_t)(n>>8);
-    ext_dl[3]=(uint8_t)sa; ext_dl[4]=(uint8_t)(sa>>8); ext_dl[5]=sb;
-    ext_dl[6]=(uint8_t)da; ext_dl[7]=(uint8_t)(da>>8); ext_dl[8]=db;
-    ext_dl[9]=0; ext_dl[10]=0; ext_dl[11]=0;
+    lisp65_f018_descriptor(ext_dl, 0u, sa, sb, da, db, n);
     /* REGISTERFREIER Trigger + "memory"-Clobber — EXAKT wie vm_dma (vm_embed.c). Die alte
      * Fassung ("r"-Operanden, KEIN memory-Clobber) erlaubte LTO, die ext_dl-Stores HINTER
      * den Trigger zu schieben -> DMA las eine halb geschriebene Liste -> wilde Transfers.
@@ -250,31 +248,33 @@ static void ext_dma(uint16_t sa,uint8_t sb,uint16_t da,uint8_t db,uint16_t n){
         ::: "a", "memory");
 }
 #if defined(LISP65_C2_MUTABLE_CPU_READS)
-static void ext_dma_read_or_abort(uint16_t source, uint8_t source_bank,
-                                  uint8_t *destination, uint16_t length) {
+static uint8_t ext_dma_read_or_abort(uint16_t source, uint8_t source_bank,
+                                     uint8_t *destination, uint16_t length) {
     uint32_t physical = (uint32_t)source | ((uint32_t)source_bank << 16);
     if (!c2_map_cpu_read(physical, destination, length)) {
         lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
                           "CPU content read failed; reboot");
-        return;
+        return 0u;
     }
+    return 1u;
 }
 #elif defined(LISP65_DMA_CONTENT_CONVERGENCE)
-static void ext_dma_read_or_abort(uint16_t source, uint8_t source_bank,
-                                  uint8_t *destination, uint16_t length) {
+static uint8_t ext_dma_read_or_abort(uint16_t source, uint8_t source_bank,
+                                     uint8_t *destination, uint16_t length) {
     if (!vm_code_load_converged(source_bank, source, length, destination)) {
         lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
                           "DMA content did not converge; reboot");
-        return;
+        return 0u;
     }
+    return 1u;
 }
 #else
 #define ext_dma_read_or_abort(source, bank, destination, length) \
-    ext_dma((source), (bank), (uint16_t)(uintptr_t)(destination), 0u, (length))
+    (ext_dma((source), (bank), (uint16_t)(uintptr_t)(destination), 0u, (length)), 1u)
 #endif
-uint8_t ext_type(uint16_t i){ ext_dma_read_or_abort(EXT_OFF(i)+0,EXT_BANK,&ext_stg1,1); return ext_stg1; }
-obj     ext_a(uint16_t i)   { ext_dma_read_or_abort(EXT_OFF(i)+2,EXT_BANK,(uint8_t *)&ext_stg,2); return (obj)ext_stg; }
-obj     ext_b(uint16_t i)   { ext_dma_read_or_abort(EXT_OFF(i)+4,EXT_BANK,(uint8_t *)&ext_stg,2); return (obj)ext_stg; }
+uint8_t ext_type(uint16_t i){ return ext_dma_read_or_abort(EXT_OFF(i)+0,EXT_BANK,&ext_stg1,1) ? ext_stg1 : 0xffu; }
+obj     ext_a(uint16_t i)   { return ext_dma_read_or_abort(EXT_OFF(i)+2,EXT_BANK,(uint8_t *)&ext_stg,2) ? (obj)ext_stg : NIL; }
+obj     ext_b(uint16_t i)   { return ext_dma_read_or_abort(EXT_OFF(i)+4,EXT_BANK,(uint8_t *)&ext_stg,2) ? (obj)ext_stg : NIL; }
 void    ext_set_type(uint16_t i,uint8_t t){ ext_stg1=t; ext_dma((uint16_t)(uintptr_t)&ext_stg1,0,EXT_OFF(i)+0,EXT_BANK,1); }
 void    ext_set_a(uint16_t i,obj v){ ext_stg=(uint16_t)v; ext_dma((uint16_t)(uintptr_t)&ext_stg,0,EXT_OFF(i)+2,EXT_BANK,2); }
 void    ext_set_b(uint16_t i,obj v){ ext_stg=(uint16_t)v; ext_dma((uint16_t)(uintptr_t)&ext_stg,0,EXT_OFF(i)+4,EXT_BANK,2); }
@@ -283,9 +283,12 @@ void    ext_set_b(uint16_t i,obj v){ ext_stg=(uint16_t)v; ext_dma((uint16_t)(uin
  * Datei-Bytes bis Bankende; der Produktpin nutzt dieses Fenster fuer die ladbare IDE-Lib.
  * Byteweise, kalt. */
 void    ext_disk_put(uint16_t off, uint8_t v){ ext_stg1 = v; ext_dma((uint16_t)(uintptr_t)&ext_stg1, 0, (uint16_t)(DISK_EXT_BASE + off), EXT_BANK, 1); }
-uint8_t ext_disk_get(uint16_t off){ ext_dma_read_or_abort((uint16_t)(DISK_EXT_BASE + off), EXT_BANK, &ext_stg1, 1); return ext_stg1; }
+uint8_t ext_disk_get(uint16_t off){ return ext_dma_read_or_abort((uint16_t)(DISK_EXT_BASE + off), EXT_BANK, &ext_stg1, 1) ? ext_stg1 : 0u; }
 void ext_disk_read(uint16_t off, uint8_t *dst, uint16_t len){
-    if (len) ext_dma_read_or_abort((uint16_t)(DISK_EXT_BASE + off), EXT_BANK, dst, len);
+    uint16_t i;
+    if (len && !ext_dma_read_or_abort((uint16_t)(DISK_EXT_BASE + off),
+                                      EXT_BANK, dst, len))
+        for (i = 0; i < len; i++) dst[i] = 0u;
 }
 #ifdef LISP65_DISK_LIBS
 /* Disk-Lib-Staging (Stufe 2): Blob+Trailer aus dem Disk-Scratch (EXT_BANK @ DISK_EXT_BASE+scratch_off)
@@ -403,12 +406,10 @@ void mem_init(void) {
 #endif
 }
 
-/* VOLL iterativ (expliziter Mark-Stack, KEINE C-Rekursion): cdr-Kette per Schleife,
- * car per Push. Entscheidend auf dem 6502: der HW-Stack (Page 1, 256 B ~ 128 JSRs)
- * ist knapp; rekursives gc_mark wuerde bei GC mitten in tiefer eval-Rekursion den
- * HW-Stack ueberlaufen lassen. Iterativ traegt gc_mark 0 zur JSR-Tiefe bei. */
-#define MARKSTACK 256
-static obj markstack[MARKSTACK];
+/* Product roots join the collector's existing flat fixpoint.  The former
+ * private 256-entry traversal stack silently dropped a live car when full;
+ * marking only the root here leaves successor traversal to the ordinary
+ * stackless fixpoint below. */
 uint16_t gc_badobj = 0;   /* Diagnose: verworfene Nicht-Heap-"Pointer" (korrupte objs) */
 uint16_t gc_runs = 0;     /* Statistik: Anzahl gc_collect-Laeufe */
 #ifdef LISP65_GC_SCAN_PROBE
@@ -429,40 +430,10 @@ uint32_t perf_vm_ops = 0; /* VM-Instruktionen (vm.c-Dispatch; Kostenanteil Inter
 #endif
 
 
-void gc_mark(obj o) {
-#ifdef GC_MARK_STUB
-    (void)o; return;   /* Bisektion: leerer Body */
-#endif
-    uint16_t sp = 0;
-    markstack[sp++] = o;
-    while (sp) {
-        o = markstack[--sp];
-        while (IS_PTR(o)) {
-            uint16_t i = (uint16_t)o >> 1;
-#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
-            gc_attr_mark_walk_visits[gc_attr_phase]++;
-#endif
-            if (i >= MAX_CELLS) { gc_badobj++; break; }   /* korruptes obj: NIE OOB marken/traversieren
-                                                           * (MARK_SET haette wild in .bss geschrieben) */
-            if (MARK_GET(i)) break;
-            MARK_SET(i);
-            switch (cell_type(o)) {
-            case T_CONS: case T_CLOSURE: case T_MACRO:
-#ifndef LISP65_STRING_ARENA
-            case T_STR:   /* char-listen-String: a wie CONS traversieren (Arena: Leaf) */
-#endif
-                if (sp < MARKSTACK) markstack[sp++] = cell_a(o);   /* car/Zeichenliste spaeter */
-                o = cell_b(o);                                     /* cdr jetzt   */
-                break;
-            default:
-                o = NIL;          /* T_SYM/T_PRIM: nicht traversieren */
-                break;
-            }
-        }
-    }
-}
-
 /* Mark a single obj (WITHOUT successors). 1 = newly marked. Flat, no stack. */
+static uint8_t gc_mark1(obj o);
+void gc_mark(obj o) { (void)gc_mark1(o); }
+
 static uint8_t gc_mark_children_hot(uint16_t i);
 #ifdef LISP65_EXT_HEAP
 static uint8_t gc_mark_children_ext(uint16_t i);
@@ -948,9 +919,9 @@ static uint16_t str_alt_off = STR_ARENA_ALT_OFF;   /* Kompaktier-Ziel */
 static uint8_t  str_stg1;
 
 static uint8_t str_read_byte(uint16_t off) {
-    ext_dma_read_or_abort((uint16_t)(str_cur_off + off), STR_ARENA_BANK,
-                          &str_stg1, 1);
-    return str_stg1;
+    return ext_dma_read_or_abort((uint16_t)(str_cur_off + off),
+                                 STR_ARENA_BANK, &str_stg1, 1)
+        ? str_stg1 : 0u;
 }
 static void str_write_byte(uint16_t off, uint8_t b) {
     str_stg1 = b;

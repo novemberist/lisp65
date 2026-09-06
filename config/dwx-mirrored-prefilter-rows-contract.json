@@ -1,0 +1,171 @@
+{
+  "format": "lisp65-dwx-mirrored-prefilter-rows-contract-v1",
+  "status": "ACTIVE",
+  "evidence_class": "xemu-prefilter-green",
+  "authority_rule": "A prefilter row exists only when it names its physical-device counterpart and uses a framebuffer or stopped-memory oracle; logs are never authority.",
+  "inputs": {
+    "product_d81": {
+      "path": "build/release-v2.0.0/pack-product-a/lisp65-2.0.0/media/lisp65-product.d81",
+      "sha256": "7bd0cd478da52b0d731a1fd837bce16d76832b4d1ae0e836ad63209433d68f2d"
+    },
+    "require_product_d81": {
+      "path": "build/c2.3/v2.0-comfort-return-final-composition/shared-system/lisp65-product.d81",
+      "sha256": "e20c161509f790aeecd1f6fa008e84bd2020f303a26500a41df49b9c980b0d0c"
+    },
+    "item3_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/dwx-freezer-free-boot-variants-receipt-20260902.json"
+    },
+    "headless_adapter_manifest": {
+      "path": "build/dwx/xemu-headless-input-adapter-r1/dwx-xemu-headless-input-adapter.json",
+      "sha256": "fe1c0fc4752d5df37dd5b9273324d30ae860b1b54756a6dca98719218a45aaf8"
+    },
+    "headless_adapter_binary": {
+      "path": "build/dwx/xemu-headless-input-adapter-r1/build/bin/xmega65.native",
+      "sha256": "7c5fe32f23eb85361013b3963e92658b2d26210fb1f344bce836c3a02b3c1567"
+    },
+    "rom_sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0",
+    "system_sd_sha256": "5d5a890490a85d6f20e97d7dd50b8b5cfd16f8ac82f3749634e651a6e27b4ff0",
+    "packed_library_members": [
+      {
+        "disk_name": "l65index",
+        "path": "build/c2.3/v2.0-comfort-return-final-composition/library/l65index",
+        "sha256": "ed32c1591a591959e4971ba7524a51614cf81f7b67d1cf7e250886f2b9d99e01"
+      },
+      {
+        "disk_name": "repl-comfort",
+        "path": "build/c2.3/v2.0-comfort-return-final-composition/library/repl-comfort.l65s",
+        "sha256": "5fe1b133ec3afb5797a6b79823608d920ac7e028521c11409263f03bcce54926"
+      }
+    ]
+  },
+  "runtime_policy": {
+    "headless": true,
+    "desktop_focus_input": false,
+    "input_transport": "local-unix-uart-monitor-to-HWA-queue",
+    "screen_queries_are_control_only": true,
+    "logs_are_oracle": false,
+    "fresh_process_per_runtime_row": true,
+    "device_acceptance_claimed": false
+  },
+  "rows": [
+    {
+      "id": "boot-surface-without-libraries",
+      "state": "ACTIVE",
+      "execution": "bound-item3-absent-cold-boot",
+      "device_counterpart": "config/c2-v190-blocks-ab-acceptance-session.json#AB-1-boot-surface-without-libraries",
+      "oracle": {
+        "type": "framebuffer",
+        "required": ["WORKBENCH 2.0.0", "LISP65>"],
+        "forbidden": ["DISK ERROR"]
+      }
+    },
+    {
+      "id": "tier1-documented-domain-error",
+      "state": "ACTIVE",
+      "execution": "headless-HWA-input",
+      "medium": "product",
+      "input": "(length \"abc\")\n",
+      "device_counterpart": "config/c2-v200-release-strip-device-session.json#S20-1-documented-domain-behavior",
+      "oracle": {
+        "type": "framebuffer",
+        "required": ["VM: TYPE ERROR", "LISP65>"],
+        "forbidden": ["DISK ERROR"]
+      }
+    },
+    {
+      "id": "library-require-over-packed-medium",
+      "state": "ACTIVE",
+      "execution": "headless-HWA-input",
+      "medium": "product-plus-packed-library",
+      "input": "(require 'repl-comfort)\n",
+      "device_counterpart": "config/c2-v200-comfort-return-device-session-r2.json#C1",
+      "oracle": {
+        "type": "framebuffer",
+        "required": ["LISP65>"],
+        "required_exact_lines": ["T"],
+        "forbidden": ["DISK ERROR", "UNDEFINED FUNCTION", "WRONG ARGUMENT COUNT"]
+      }
+    },
+    {
+      "id": "init-l65-absent",
+      "state": "ACTIVE",
+      "execution": "bound-item3-absent-cold-boot",
+      "device_counterpart": "config/c2-v17-init-l65-device-session.json#I-absent",
+      "oracle": {
+        "type": "framebuffer",
+        "required": ["WORKBENCH 2.0.0", "LISP65>"],
+        "forbidden": ["DISK ERROR", "VM: TYPE ERROR"]
+      }
+    },
+    {
+      "id": "init-l65-valid",
+      "state": "ACTIVE",
+      "execution": "bound-item3-valid-cold-boot",
+      "device_counterpart": "config/c2-v17-init-l65-product-variants-resume-session.json#I-present",
+      "oracle": {
+        "type": "framebuffer",
+        "required": ["17", "WORKBENCH 2.0.0", "LISP65>"],
+        "forbidden": ["DISK ERROR", "VM: TYPE ERROR"]
+      }
+    },
+    {
+      "id": "init-l65-broken",
+      "state": "ACTIVE",
+      "execution": "bound-item3-error-cold-boot",
+      "device_counterpart": "config/c2-v17-init-l65-product-variants-resume-session.json#I-error",
+      "oracle": {
+        "type": "framebuffer",
+        "required": ["VM: TYPE ERROR", "LISP65>"],
+        "forbidden": ["DISK ERROR"]
+      }
+    },
+    {
+      "id": "composed-native-prompt-and-cursor",
+      "state": "ACTIVE",
+      "execution": "bound-item3-absent-cold-boot",
+      "device_counterpart": "config/c2-v190-blocks-ab-acceptance-session.json#AB-2-native-prompt-editor",
+      "oracle": {
+        "type": "framebuffer",
+        "required_same_line": ["LISP65>", "{$A0}"],
+        "required_line_count": 1,
+        "forbidden": ["DISK ERROR"]
+      }
+    },
+    {
+      "id": "matcher-and-blink-visibility",
+      "state": "DEFERRED_UNTIL_FREIGHT_RETURNS",
+      "execution": "not-a-prefilter-row-yet",
+      "device_counterpart": "config/c2-v200-block3-hot-path-repair-device-session.json#B3-2-matcher-and-blink",
+      "oracle": {
+        "type": "framebuffer",
+        "future_requirement": "matched delimiter attributes and blink phases must be visible in framebuffer captures"
+      }
+    },
+    {
+      "id": "capture-counters-at-stopped-point",
+      "state": "ACTIVE",
+      "execution": "headless-HWA-input-then-CPU-stop",
+      "medium": "product",
+      "device_counterpart": "config/c2-v200-release-strip-device-session.json#S20-2-v1.9-input-and-forced-collection",
+      "oracle": {
+        "type": "stopped-memory",
+        "address": "0xBCFC",
+        "bytes": 4,
+        "names": ["raw", "seen", "stored", "taken"],
+        "relation": "raw == seen == stored == taken != 0",
+        "framebuffer_required_exact_lines": ["7"]
+      },
+      "stimulus": {
+        "controller": "(progn(print 9)(setq s(read-line))(print(string-length s))(wait 16383))\n",
+        "control_marker": "9",
+        "pattern": "01234567012345670123456701234567",
+        "passes": 6,
+        "delete_events_per_pass": 32,
+        "final": "abcdefg\n",
+        "minimum_printable_insertions": 193,
+        "expected_device_modulo_count": 136,
+        "device_count_is_not_an_emulator_pin": true
+      }
+    }
+  ]
+}

@@ -20,6 +20,7 @@ if str(HOST) not in sys.path:
 
 import c2_v20_building_heap_attribution as OLD  # noqa: E402
 import c2_v21_probe_oracle_root_fix as ROOT_FIX  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -29,6 +30,7 @@ RECEIPT = ARCH / (
     "c2.3-v2.0-building-heap-mem-source-unbind-20260816-receipt.json")
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "7e4a1f86"
+SEAL_COMMIT = "53dad27fad2ec2ee330d39dd0c913160dedb1aad"
 FORMAT = "lisp65-c2.3-v20-building-heap-mem-source-unbind-v1"
 STATUS = "PASS: HISTORICAL-BUILDING-HEAP-MEM-DETACHED-FROM-LIVE-SOURCE"
 
@@ -50,6 +52,13 @@ def load(path: Path) -> dict[str, Any]:
     require(path.is_file() and not path.is_symlink(), f"JSON absent: {path}")
     value = json.loads(path.read_text(encoding="utf-8"))
     require(isinstance(value, dict), f"JSON object required: {path}")
+    return value
+
+
+def era_load(path: Path) -> dict[str, Any]:
+    value = json.loads(ERA.era_blob(
+        SEAL_COMMIT, path.relative_to(ROOT).as_posix()).decode("utf-8"))
+    require(isinstance(value, dict), f"era JSON object required: {path}")
     return value
 
 
@@ -93,29 +102,33 @@ def historical_audit(value: dict[str, Any]) -> None:
 
 
 def derive() -> dict[str, Any]:
-    old = load(OLD.RECEIPT)
+    # This receipt is an historical unbind, not a rolling projection of
+    # living mem.c.  Reconstruct the successor world from the commit that
+    # sealed the receipt; later mem.c changes belong to their own cards.
+    old = era_load(OLD.RECEIPT)
     historical_audit(deepcopy(old))
     historical_mem = old["phase_binding"]["source_bindings"]["mem"]
-    current_mem = bind(MEM)
-    root = load(ROOT_FIX.RECEIPT)
-    require(historical_mem["path"] == current_mem["path"]
-            and historical_mem["sha256"] != current_mem["sha256"]
+    sealed_successor_mem = ERA.era_bind(SEAL_COMMIT, MEM)
+    root = era_load(ROOT_FIX.RECEIPT)
+    require(historical_mem["path"] == sealed_successor_mem["path"]
+            and historical_mem["sha256"] != sealed_successor_mem["sha256"]
             and root.get("status") == ROOT_FIX.STATUS
-            and root["authority"]["mem"] == current_mem
-            and ROOT_FIX.source_contract()["reader_count"] == 9,
+            and root["authority"]["mem"] == sealed_successor_mem
+            and root["source_contract"]["reader_count"] == 9,
             "historical/live mem boundary or root semantics drift")
     value = {
         "format": FORMAT, "recorded_on": "2026-08-16", "status": STATUS,
         "authority": {"owner": authorization(),
-            "historical_receipt": bind(OLD.RECEIPT),
-            "prior_loud_rebind": bind(OLD.LATEST_REBIND),
-            "living_root_fix": bind(ROOT_FIX.RECEIPT),
-            "driver": bind(DRIVER)},
+            "historical_receipt": ERA.era_bind(SEAL_COMMIT, OLD.RECEIPT),
+            "prior_loud_rebind": ERA.era_bind(
+                SEAL_COMMIT, OLD.LATEST_REBIND),
+            "living_root_fix": ERA.era_bind(SEAL_COMMIT, ROOT_FIX.RECEIPT),
+            "driver": ERA.era_bind(SEAL_COMMIT, DRIVER)},
         "historical_observation": {
             "status": old["status"], "recorded_on": old["recorded_on"],
             "mem_source": historical_mem, "receipt_rewritten": False,
             "claim_changed": False},
-        "living_successor": {"mem_source": current_mem,
+        "living_successor": {"mem_source": sealed_successor_mem,
             "acceptance_authority": "nine-reader MAP-CPU root gate",
             "historical_mem_is_live_predicate": False,
             "root_reader_count": 9, "DMA_probe_jobs": 0,

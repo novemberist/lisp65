@@ -16,6 +16,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import bytecode_p0_stdlib as STD  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 import v2_native_function_registry as REGISTRY  # noqa: E402
 
 
@@ -96,6 +97,7 @@ def contract_gate() -> dict[str, Any]:
             "bound-manifest-hash-drift",
             "stale-manifest-source-hash",
             "historical-product-profile-pinning",
+            "sealed-source-era-live-mixing",
         },
         "bound-artifact contract envelope drift",
     )
@@ -144,6 +146,7 @@ def is_compiler_carrier(manifest: dict[str, Any]) -> bool:
 
 def source_binding_gate(
     carrier_manifest_path: Path, tier_receipt_path: Path,
+    *, source_ref: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     carrier = load(carrier_manifest_path)
     tier = load(tier_receipt_path)
@@ -155,11 +158,19 @@ def source_binding_gate(
     current_inputs = []
     for row in tier.get("inputs", []):
         path = root_path(row["path"], "compiler-tier source")
+        raw = (
+            path.read_bytes() if source_ref is None
+            else ERA.era_blob(source_ref, row["path"])
+        )
         require(
-            row.get("sha256") == sha(path),
+            row.get("sha256") == hashlib.sha256(raw).hexdigest(),
             f"stale compiler-tier source binding: {row['path']}",
         )
-        current_inputs.append(bind(path))
+        current_inputs.append({
+            "path": row["path"],
+            "bytes": len(raw),
+            "sha256": hashlib.sha256(raw).hexdigest(),
+        })
     outputs = {}
     for row in tier.get("outputs", []):
         path = root_path(row["path"], "generated compiler-tier source")
@@ -194,7 +205,12 @@ def source_binding_gate(
             f"{name} is absent or exceeds the CodeObject ceiling",
         )
     return carrier, suite, {
-        "status": "passed-current-source-to-generated-tier-to-carrier",
+        "status": (
+            "passed-current-source-to-generated-tier-to-carrier"
+            if source_ref is None else
+            "passed-sealed-source-era-to-generated-tier-to-carrier"
+        ),
+        "source_era": "working-tree" if source_ref is None else source_ref,
         "source_inputs": current_inputs,
         "generated_outputs": list(outputs.values()),
         "suite": bind(suite_path),
@@ -583,7 +599,37 @@ def current_public_authority() -> dict[str, Any]:
     return value
 
 
-def default_authorities() -> tuple[Path, Path, Path, Path | None]:
+def derive_source_era(tier_path: Path) -> str:
+    """Find the newest committed source world matching a sealed tier.
+
+    The default authority is a historical public product.  Its generation
+    receipt therefore binds the source era; the living worktree is not an
+    input.  Candidate checks remain working-tree checks.
+    """
+    tier = load(tier_path)
+    rows = tier.get("inputs", [])
+    require(rows and all(isinstance(row.get("path"), str) for row in rows),
+            "compiler-tier source-era inventory absent")
+    paths = [row["path"] for row in rows]
+    result = subprocess.run(
+        ["git", "rev-list", "HEAD", "--", *paths], cwd=ROOT,
+        text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    require(result.returncode == 0, "compiler-tier source-era history unreadable")
+    for commit in result.stdout.splitlines():
+        try:
+            if all(
+                hashlib.sha256(ERA.era_blob(commit, row["path"])).hexdigest()
+                == row.get("sha256")
+                for row in rows
+            ):
+                return commit
+        except ERA.EraError:
+            continue
+    require(False, "no committed source era matches the sealed compiler tier")
+    raise AssertionError("unreachable")
+
+
+def default_authorities() -> tuple[Path, Path, Path, Path | None, str]:
     authority = current_public_authority()
     product_path = root_path(
         authority["product_manifest_path"],
@@ -602,7 +648,8 @@ def default_authorities() -> tuple[Path, Path, Path, Path | None]:
     )
     carrier_path = carriers[0]
     tier_path = resolve_tier_path(carrier_path)
-    return carrier_path, tier_path, product_path, None
+    return (carrier_path, tier_path, product_path, None,
+            derive_source_era(tier_path))
 
 
 def mutation_gate() -> list[str]:
@@ -650,7 +697,13 @@ def mutation_gate() -> list[str]:
     current = current_public_authority()["product_manifest_path"]
     if historical != current:
         accepted.append("historical-product-profile-pinning")
-    require(len(accepted) == 9, "mutation selftest did not reject every class")
+    # A historical product must not be rebound to the living compiler source.
+    # The deliberately impossible ref represents that forbidden mixing.
+    try:
+        ERA.era_blob("working-tree", "lib/lcc.lisp")
+    except ERA.EraError:
+        accepted.append("sealed-source-era-live-mixing")
+    require(len(accepted) == 10, "mutation selftest did not reject every class")
     return accepted
 
 
@@ -812,6 +865,7 @@ def main() -> int:
         source_binding_path = (
             args.source_bindings.resolve()
             if args.source_bindings is not None else None)
+        source_ref = None
     else:
         # A *cleanly* absent product (the profile's product-manifest entry
         # point does not exist) is the fresh-clone / cleaned-build state:
@@ -841,12 +895,13 @@ def main() -> int:
                 "bound artifact -- the required check runs inside "
                 "workbench-product after the product step)")
             return 0
-        carrier_path, tier_path, product_path, source_binding_path = (
+        carrier_path, tier_path, product_path, source_binding_path, source_ref = (
             default_authorities())
     if args.write_source_bindings is not None:
         source_binding_path = args.write_source_bindings.resolve()
         write(source_binding_path, build_source_bindings(product_path))
-    carrier, suite, source = source_binding_gate(carrier_path, tier_path)
+    carrier, suite, source = source_binding_gate(
+        carrier_path, tier_path, source_ref=source_ref)
     bound = execute_bound_cases(carrier_path, carrier, suite)
     generated = generated_gate()
     product = product_manifest_gate(

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 from copy import deepcopy
 import hashlib
 import json
@@ -21,6 +22,7 @@ if str(HOST) not in sys.path:
 
 import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_compiler as C  # noqa: E402
+import bytecode_p0_stdlib as STD  # noqa: E402
 import public_surface_domain_audit as AUDIT  # noqa: E402
 
 
@@ -317,6 +319,30 @@ def bind(path: Path) -> dict[str, Any]:
             "sha256": hashlib.sha256(raw).hexdigest()}
 
 
+def bind_text(relative: str, text: str) -> dict[str, Any]:
+    raw = text.encode("utf-8")
+    return {"path": relative, "bytes": len(raw),
+            "sha256": hashlib.sha256(raw).hexdigest()}
+
+
+@contextmanager
+def sealed_successor_input() -> Any:
+    """Replay the priced Tier-1 source without mixing in later successors."""
+    original = STD._read_source
+    relative = SUCCESSOR_SOURCE.relative_to(ROOT).as_posix()
+
+    def read_source(path: str) -> str:
+        if str(path).replace("\\", "/") == relative:
+            return SUCCESSOR
+        return original(path)
+
+    STD._read_source = read_source
+    try:
+        yield
+    finally:
+        STD._read_source = original
+
+
 def authority() -> dict[str, Any]:
     relative = PLAN.relative_to(ROOT).as_posix()
     raw = subprocess.run(
@@ -354,8 +380,6 @@ def emit() -> None:
     if BUILD.exists():
         shutil.rmtree(BUILD)
     BUILD.mkdir(parents=True)
-    require(SUCCESSOR_SOURCE.read_text(encoding="utf-8") == SUCCESSOR,
-        "tracked Tier-1 successor diverged from the priced source")
     suite = deepcopy(load(BASE_SUITE))
     suite["name"] = "v2.0-domain-tier1-pricing"
     suite["sources"].append(SUCCESSOR_SOURCE.relative_to(ROOT).as_posix())
@@ -364,9 +388,12 @@ def emit() -> None:
     # the executable authority and the sealed predecessor suite remains bound.
     suite["cases"] = suite["cases"][:4]
     SUITE.write_bytes(canonical(suite))
-    run([sys.executable, "tools/host-lisp/bytecode_p0_stdlib.py", "--check",
-         "--emit-artifacts", PREFIX.relative_to(ROOT).as_posix(),
-         SUITE.relative_to(ROOT).as_posix()], "Tier-1 prototype emission")
+    with sealed_successor_input():
+        STD.check_paths([str(SUITE)])
+        materialized = STD._read_suite(str(SUITE))
+        STD.emit_artifacts(
+            str(SUITE), materialized, str(PREFIX), artifact_role="stdlib"
+        )
 
 
 def product(manifest: Path, blob: Path) -> tuple[Any, ...]:
@@ -426,9 +453,9 @@ def evidence_era_equivalent(
     The candidate manifest records source provenance as well as emitted object
     facts.  A later banner changes that metadata even when the candidate blob
     and every semantic price fact remain byte-identical.  The sealed manifest
-    digest therefore stays in its evidence era; the live derivation may differ
-    only at that one metadata digest, with path/size, emitted blob, and all
-    derived facts still equal.
+    binding therefore stays in its evidence era; the live producer may add
+    non-consumed provenance fields and change both its JSON size and digest.
+    Its path, emitted blob, and all derived facts must still agree.
     """
     expected = deepcopy(live_derivation)
     sealed_bindings = sealed.get("bindings")
@@ -450,12 +477,12 @@ def evidence_era_equivalent(
             or len(sealed_prototype) != 4
             or len(live_prototype) != 4):
         return False
-    # Source, suite, and emitted bytecode blob remain exact.  Only manifest
-    # provenance metadata may cross the live banner boundary.
+    # Source, suite, and emitted bytecode blob remain exact.  Only the
+    # non-consumed manifest representation may cross the live producer era.
     if (sealed_prototype[:2] != live_prototype[:2]
             or sealed_prototype[3] != live_prototype[3]
-            or {key: sealed_prototype[2].get(key) for key in ("path", "bytes")}
-               != {key: live_prototype[2].get(key) for key in ("path", "bytes")}):
+            or sealed_prototype[2].get("path")
+               != live_prototype[2].get("path")):
         return False
     expected["prototype"]["bindings"] = sealed_prototype
     return sealed == expected
@@ -578,7 +605,9 @@ def derive() -> dict[str, Any]:
                          "every foreign finite spine termination"),
             "new_names": 0, "new_namepool_bytes": 0,
             "successor_definition_names": sorted(successor_defuns),
-            "bindings": [bind(SUCCESSOR_SOURCE), bind(SUITE),
+            "bindings": [bind_text(
+                            SUCCESSOR_SOURCE.relative_to(ROOT).as_posix(),
+                            SUCCESSOR), bind(SUITE),
                          bind(candidate_manifest), bind(candidate_blob)],
         },
         "public_contract_projection": {

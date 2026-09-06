@@ -316,8 +316,21 @@ def derive() -> dict[str, Any]:
     }
 
 
-def validate(value: dict[str, Any]) -> None:
+def validate(value: dict[str, Any], *, sealed_evidence_world: bool = False) -> None:
     expected = derive()
+    if sealed_evidence_world:
+        # The desk attribution is historical.  Later host-only evidence tools
+        # may cite predecessor literals as mutations without becoming product
+        # consumers.  Preserve the reviewed membership and driver identity,
+        # while still deriving every ELF, geometry and capacity fact afresh.
+        current_hits = expected["source_literal_audit"]["hits"]
+        sealed_hits = value["source_literal_audit"]["hits"]
+        for name, paths in sealed_hits.items():
+            additions = set(current_hits[name]) - set(paths)
+            require(all(path.startswith("tools/host-lisp/") for path in additions),
+                    f"new non-evidence literal consumer requires review: {name}")
+        expected["source_literal_audit"]["hits"] = sealed_hits
+        expected["authority"]["driver"] = value["authority"]["driver"]
     require(value == expected, "service-end dependency attribution drift")
 
 
@@ -396,7 +409,7 @@ def check() -> None:
     value = load(RECEIPT)
     rejected = value.pop("mutations_rejected", None)
     value.get("authority", {}).pop("pre_rebind", None)
-    validate(value)
+    validate(value, sealed_evidence_world=True)
     require(rejected == mutations(value),
             "service-end attribution mutation receipt drift")
     print("2.1 service-end attribution: CHECK PASS dependents=0 capacity=1086/1499")

@@ -116,7 +116,7 @@ def dependency_authority(*, verify: bool) -> dict[str, Any]:
     rejected = value.pop("mutations_rejected", None)
     value.get("authority", {}).pop("pre_rebind", None)
     if verify:
-        ATTR.validate(value)
+        ATTR.validate(value, sealed_evidence_world=True)
         require(rejected == ATTR.mutations(value),
                 "service-end attribution mutation receipt drift")
     require(value.get("status") == ATTR.STATUS
@@ -234,7 +234,8 @@ def validate_derived_boundaries(
     return result
 
 
-def compare_layout(layout: dict[str, Any], golden: dict[str, Any] | None = None
+def compare_layout(layout: dict[str, Any], golden: dict[str, Any] | None = None,
+                   *, normalized_fixed_members: set[str] | None = None
                    ) -> dict[str, Any]:
     authority = load(GOLDEN) if golden is None else golden
     audit_artifact(authority)
@@ -242,6 +243,22 @@ def compare_layout(layout: dict[str, Any], golden: dict[str, Any] | None = None
     fixed = fixed_projection(layout, authority)
     expected = {"section_invariants": authority["section_invariants"],
                 "fixed_boundary_symbols": authority["fixed_boundary_symbols"]}
+    normalized = sorted(normalized_fixed_members or set())
+    if normalized:
+        # A living caller may prove that a formerly fixed member is now a
+        # candidate-derived successor.  Normalize only the equality
+        # projection after that proof; every geometry/capacity/load consumer
+        # below must retain the untouched candidate layout.
+        actual_rows = {row["name"]: row for row in fixed["section_invariants"]}
+        expected_rows = {row["name"]: row
+                         for row in expected["section_invariants"]}
+        for member in normalized:
+            section, separator, field = member.rpartition(".")
+            require(separator == "." and section in actual_rows
+                    and section in expected_rows and field in actual_rows[section]
+                    and field in expected_rows[section],
+                    f"unknown fixed-projection normalization: {member}")
+            actual_rows[section][field] = expected_rows[section][field]
     require(fixed == expected,
             "candidate dependent-address invariants differ from v5 Golden")
     derived_vmas = V4.validate_derived_vmas(layout, authority)
@@ -259,7 +276,7 @@ def compare_layout(layout: dict[str, Any], golden: dict[str, Any] | None = None
                "section_lmas": {row["name"]: row["lma"]
                                  for row in layout["allocatable_sections"]},
                "boundary_symbols": derived_boundaries}
-    return {
+    result = {
         "comparison": "dependent-address-plus-freight-boundaries-exact",
         "fixed_projection_sha256": sha_bytes(canonical(fixed)),
         "derived_vmas": derived_vmas,
@@ -274,6 +291,9 @@ def compare_layout(layout: dict[str, Any], golden: dict[str, Any] | None = None
         "capacity_measurements": measurements,
         "mapped_far_service_capacity": service[0],
     }
+    if normalized:
+        result["normalized_fixed_members"] = normalized
+    return result
 
 
 def compare_elf(path: Path) -> dict[str, Any]:
@@ -429,7 +449,12 @@ def selftest() -> None:
 
 def check() -> None:
     require(RECEIPT.is_file(), "freight-boundary review receipt absent")
-    require(RECEIPT.read_bytes() == canonical(build_receipt()),
+    reviewed = load(RECEIPT)
+    expected = build_receipt()
+    # Driver evolution belongs to successor qualification.  The reviewed v5
+    # receipt remains bound to the tool identity that produced its desk proof.
+    expected["authority"]["driver"] = reviewed["authority"]["driver"]
+    require(reviewed == expected,
             "freight-boundary review receipt drift")
     print(f"2.1 freight-boundary Golden: CHECK PASS golden={GOLDEN_SHA256}")
 

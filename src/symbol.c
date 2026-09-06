@@ -25,6 +25,17 @@
 #if NAMEPOOL > 65535
 #error "NAMEPOOL > 65535: the nameoff offset is 16 bits (uint16_t)"
 #endif
+
+/* Card 2.6/3: the capture ring is a fixed raw-address owner inside the
+ * ordinary Bank-0 BSS arena.  In the reserved-layout product the symbol
+ * metadata is one explicit successor class placed after that linker-visible
+ * owner.  Other profiles retain the historical ordinary-BSS layout. */
+#ifdef LISP65_C2_FIXED_RAW_BSS_OWNERS
+#define LISP65_SYMBOL_METADATA_BSS \
+    __attribute__((section(".lisp65_c2_symbol_metadata_bss")))
+#else
+#define LISP65_SYMBOL_METADATA_BSS
+#endif
 /* Stage 2b: interned symbols are SYMI IMMEDIATES (obj.h) — no heap cell and no symobj[] array any
  * more; instead nameoff[] carries the name offset per index (the same .bss size as the old symobj[],
  * but about 174 boot heap cells freed). Gensyms remain T_SYM cells (a=index, b=name offset) — the
@@ -44,7 +55,7 @@
  * identical: names under 15 characters (almost all of them) filter exactly; longer ones share the
  * 15 bucket and at worst cost one extra 34-byte DMA comparison (rare). The shifts are constant
  * (>>4, <<4) — the miscompile bug affected only VARIABLE shifts (the markbit saga, mem.c). */
-static uint8_t      namelen4[(MAX_SYM + 1) / 2];
+static uint8_t LISP65_SYMBOL_METADATA_BSS namelen4[(MAX_SYM + 1) / 2];
 #define NLEN4_CAP(l)  ((uint8_t)((l) < 15 ? (l) : 15))
 static uint8_t nlen4_get(uint16_t i) {
     return (uint8_t)((i & 1) ? (namelen4[i >> 1] >> 4) : (namelen4[i >> 1] & 0x0F));
@@ -83,7 +94,7 @@ static void symval_set(uint16_t i, obj v) { symval[i] = v; }
 #ifdef LISP65_SYMFN_EXT
 obj  symfn_ext_get(uint16_t i);
 void symfn_ext_set(uint16_t i, obj v);
-static uint8_t  symfnptr[(MAX_SYM + 7) / 8];
+static uint8_t LISP65_SYMBOL_METADATA_BSS symfnptr[(MAX_SYM + 7) / 8];
 static obj  symfn_get(uint16_t i)        { return symfn_ext_get(i); }
 static void symfn_set(uint16_t i, obj v) { symfn_ext_set(i, v); }
 #else
@@ -91,12 +102,12 @@ static obj          symfn[MAX_SYM];
 static obj  symfn_get(uint16_t i)        { return symfn[i]; }
 static void symfn_set(uint16_t i, obj v) { symfn[i] = v; }
 #endif
-static uint8_t      symbnd[(MAX_SYM + 7) / 8];  /* Bitmap: 1 = Wert-Zelle gebunden (spart ~200 B .bss) */
+static uint8_t LISP65_SYMBOL_METADATA_BSS symbnd[(MAX_SYM + 7) / 8];  /* Bitmap: 1 = Wert-Zelle gebunden (spart ~200 B .bss) */
 /* Bit-Lookup statt variablem Shift: `1u << (i&7)` war auf dieser Toolchain nachweislich
  * miscompiled (Saga: markbit-Bug) — gleiches sicheres Muster wie mem.c. */
 static const uint8_t bndbit[8] = {1,2,4,8,16,32,64,128};
 static uint16_t     nsym = 0;
-static uint16_t     npool = 0;
+static uint16_t LISP65_SYMBOL_METADATA_BSS npool = 0;
 
 /* Name pool behind an access seam: intern copies the name, so callers (for instance the reader
  * working from a transient token buffer) need not provide stable storage. The pool is COLD (only

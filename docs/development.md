@@ -38,6 +38,57 @@ Run the read-only prerequisite check first:
 make doctor DOCTOR_GATE=G2
 ```
 
+## Clone, diagnose, build, inspect, and deploy
+
+This guide is the sole build-command authority. Other active documents link
+here rather than copying commands that can drift.
+
+Start from a fresh public clone and install the pinned tools as described in
+the [external toolchain setup](toolchain-setup.md):
+
+```sh
+git clone https://github.com/novemberist/lisp65.git
+cd lisp65
+python3 tools/host-lisp/toolchain_external.py fetch --tool-root tools
+make doctor DOCTOR_GATE=G2
+```
+
+Build the current public product explicitly. `build` always builds; `verify`
+is read-only and refuses to check artifacts whose source signature no longer
+matches `src/`, `lib/`, the release authority, and the release driver:
+
+```sh
+make clean
+make workbench-product-v210-build
+make workbench-product-v210-verify
+```
+
+Both product paths verify the exact LLVM-MOS installation before using it.
+To use a separately installed SDK, pass `LLVM_MOS_ROOT=/path/to/llvm-mos` to
+both Make invocations.
+
+Resolve and inspect the D81 from the source-bound candidate manifest instead
+of guessing an output path:
+
+```sh
+D81=$(python3 tools/host-lisp/workbench_product.py artifact \
+  --release v210 --role product-d81)
+c1541 "$D81" -list
+```
+
+Deployment changes the attached MEGA65 SD card. With the optional, pinned
+MEGA65 tools installed and the machine ready for transfer, upload the exact
+manifest-bound D81 and read it back before use:
+
+```sh
+tools/m65tools/mega65_ftp -e -y \
+  -c "put $D81 LISP65.D81" -c "get LISP65.D81 build/LISP65-readback.D81" -c exit
+cmp "$D81" build/LISP65-readback.D81
+```
+
+Mount `LISP65.D81` from the MEGA65 Freezer and cold-boot the product. Network
+deployment and hardware acceptance are not implied by any host build target.
+
 ## Public source gates
 
 The curated public repository contains the product source, build system, host
@@ -55,19 +106,9 @@ paths, credentials, LFS objects, and bundled binary tools. The Make target
 checks source syntax. The assembler inventory gate binds every C/assembler
 mirror and classifies every non-mirror assembler source.
 
-The supported public C2-lite build uses the same single-emitter model as the
-sealed 1.2 product:
-
-```sh
-make clean
-make workbench-product
-```
-
-The target emits the six-image Lisp plane once, performs one whole-program LTO
-closure, completes the publish-last bindings, constructs the product, work and
-optional-library D81 images, and checks all 25 selected artifact roles against
-`config/c2-v150-public-build-authority.json`. The retired 1.1 compiler-tier
-composition is not part of this entry point.
+The supported public C2-lite build uses the single-emitter model described in
+the walkthrough above. The retired 1.1 compiler-tier composition is not part
+of that entry point.
 
 Maintainers qualify changes to the build path in two varied, detached fresh
 clones:

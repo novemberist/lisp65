@@ -474,15 +474,16 @@ def validate_delivery(value: dict[str, Any], elf: Path, prg: Path) -> None:
 def delivery_mutations(value: dict[str, Any], elf: Path, prg: Path) -> list[str]:
     cases: dict[str, Callable[[dict[str, Any]], None]] = {
         "drop-section": lambda x: x["sections"].pop(),
-        "rewrite-LMA": lambda x: x["sections"][0].update(lma="0x2f4a3"),
+        "rewrite-LMA": lambda x: x["sections"][0].update(
+            lma=hex(int(x["sections"][0]["lma"], 16) ^ 1)),
         "grow-carveout": lambda x: x["publish_last"]["addresses"].append(0xB4FB),
         "widen-carveout-bytes": lambda x: x["publish_last"].update(bytes=3),
         "replace-independent-CRC": lambda x: x["publish_last"].update(
-            independent_crc16="0xa0b2"),
+            independent_crc16=hex(int(x["publish_last"]["independent_crc16"], 16) ^ 1)),
         "accept-wrong-high": lambda x: x["publish_last"][
-            "observed_values"].__setitem__(0, 0xA1),
+            "observed_values"].__setitem__(0, x["publish_last"]["observed_values"][0] ^ 1),
         "accept-wrong-low": lambda x: x["publish_last"][
-            "observed_values"].__setitem__(1, 0xB2),
+            "observed_values"].__setitem__(1, x["publish_last"]["observed_values"][1] ^ 1),
         "hide-identity-mismatch": lambda x: x["sections"][1][
             "identity_mismatches_outside_publish_last"].append("0xb5c4"),
         "replace-oracle-window": lambda x: x["publish_last"].update(
@@ -493,6 +494,7 @@ def delivery_mutations(value: dict[str, Any], elf: Path, prg: Path) -> list[str]
     for name, mutate in cases.items():
         candidate = deepcopy(value)
         mutate(candidate)
+        require(candidate != value, "CRC delivery mutation made no change: " + name)
         try:
             validate_delivery(candidate, elf, prg)
         except CarveoutCardError:

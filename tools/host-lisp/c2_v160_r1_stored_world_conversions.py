@@ -274,6 +274,48 @@ def _freight_proof_rows(layout: dict[str, Any],
             elif registry["placement_gate"] in FREIGHT_PLACEMENT_PROVERS:
                 proof = FREIGHT_PLACEMENT_PROVERS[registry["placement_gate"]](
                     name, row, layout, registry)
+            elif registry["placement_gate"] == "candidate-derived-after-ordinary-bss":
+                proof = _after_ordinary_bss_proof(name, row, layout, registry)
+            elif registry["placement_gate"] == \
+                    "linker-visible-fixed-raw/split-bss":
+                owners = registration["owners"]
+                expected = owners.get(name)
+                by_name = {item["name"]: item
+                           for item in layout["allocatable_sections"]}
+                input_owner = by_name.get(
+                    ".lisp65_c2_input_raw_owner")
+                def validate_fixed(candidate: dict[str, Any]) -> None:
+                    require(expected is not None and input_owner is not None
+                            and candidate["vma"] == expected["address"]
+                            and candidate["bytes"] == expected["bytes"]
+                            and (name != ".lisp65_c2_symbol_metadata_bss"
+                                 or candidate["vma"] ==
+                                    input_owner["vma"] + input_owner["bytes"]),
+                            f"fixed-raw/split-BSS placement violated: {name}")
+                validate_fixed(row)
+                mutations = {
+                    "owner-address-diverges": {**row, "vma": row["vma"] + 1},
+                    "owner-extent-diverges": {**row, "bytes": row["bytes"] + 1},
+                }
+                rejected: list[str] = []
+                for label, mutant in mutations.items():
+                    try:
+                        validate_fixed(mutant)
+                    except ConversionError:
+                        rejected.append(label)
+                require(rejected == list(mutations),
+                        f"fixed-raw/split-BSS mutation survived: {name}")
+                relation = (
+                    "symbol-metadata-starts-at-input-owner-end"
+                    if name == ".lisp65_c2_symbol_metadata_bss" else
+                    "section-equals-linker-visible-fixed-raw-owner")
+                proof = {"gate": "linker-visible-fixed-raw/split-bss",
+                    "relation": relation, "status": "passed",
+                    "mutations_rejected": rejected}
+            elif registry["placement_gate"] == (
+                    "derived-before-far-service/shared-map-offset"):
+                proof = _derived_before_far_service_proof(
+                    name, row, layout, registry)
             else:
                 placement = registration.get("physical_placement")
                 require(isinstance(placement, dict),
@@ -329,8 +371,19 @@ def _validate_freight_rows(rows: list[dict[str, Any]],
                 and row["placement_proof"].get("status") == "passed"
                 and row["placement_proof"].get("gate") in {
                     "candidate-predecessor-end", "mapped-arena-contract",
-                    "composed-raw-owner/preheap-gap"}
+                    "composed-raw-owner/preheap-gap",
+                    "derived-before-far-service/shared-map-offset",
+                    "linker-visible-fixed-raw/split-bss",
+                    "candidate-derived-after-ordinary-bss"}
                 and ((row["placement_proof"].get("gate") ==
+                      "candidate-derived-after-ordinary-bss"
+                      and row["placement_proof"].get("relation") ==
+                      "record-follows-final-bss-before-raw-input-floor"
+                      and row["placement_proof"].get("mutations_rejected") ==
+                      ["record-adjacency-broken", "record-size-broken", "record-floor-broken"]
+                      and set(row["placement_proof"]) ==
+                      {"gate", "relation", "status", "mutations_rejected"})
+                     or (row["placement_proof"].get("gate") ==
                       "candidate-predecessor-end"
                       and row["placement_proof"].get("relation") ==
                       "section-vma-equals-predecessor-vma-plus-bytes"
@@ -351,8 +404,113 @@ def _validate_freight_rows(rows: list[dict[str, Any]],
                              "code-start-equals-derived-raw-owner-end",
                              "state-start-equals-hot-bss-end-before-heap"}
                          and set(row["placement_proof"]) == {
-                             "gate", "relation", "status"})),
+                             "gate", "relation", "status"})
+                     or (row["placement_proof"].get("gate") ==
+                         "derived-before-far-service/shared-map-offset"
+                         and row["placement_proof"].get("relation") ==
+                         ("section-ends-at-far-service-in-vma-and-lma-"
+                          "under-shared-page-offset")
+                         and row["placement_proof"].get(
+                             "mutations_rejected") == [
+                                 "broken-vma-lma-adjacency",
+                                 "broken-shared-map-offset"]
+                         and set(row["placement_proof"]) == {
+                             "gate", "relation", "status",
+                             "mutations_rejected"})
+                     or (row["placement_proof"].get("gate") ==
+                         "linker-visible-fixed-raw/split-bss"
+                         and row["placement_proof"].get("relation") in {
+                             "section-equals-linker-visible-fixed-raw-owner",
+                             "symbol-metadata-starts-at-input-owner-end"}
+                         and row["placement_proof"].get(
+                             "mutations_rejected") == [
+                                 "owner-address-diverges",
+                                 "owner-extent-diverges"]
+                         and set(row["placement_proof"]) == {
+                             "gate", "relation", "status",
+                             "mutations_rejected"})),
                 f"additive freight row is an address snapshot: {row.get('name')}")
+
+
+def _after_ordinary_bss_proof(name: str, row: dict[str, Any],
+        layout: dict[str, Any], registry: dict[str, Any]) -> dict[str, Any]:
+    owners = {item["name"]: item for item in layout["allocatable_sections"]}
+    record_bytes = registry["registration"].get("record_bytes")
+    require(name == ".noinit.lisp65_f011_status" and
+            type(record_bytes) is int and record_bytes > 0,
+            "F011 record authority mismatch")
+    bss, raw = owners[".bss"], owners[".lisp65_c2_input_raw_owner"]
+    def relation(candidate: dict[str, Any], raw_start: int) -> None:
+        require(candidate["bytes"] == registry["registration"]["record_bytes"]
+                and candidate["vma"] == bss["vma"] + bss["bytes"]
+                and candidate["vma"] + candidate["bytes"] + 5 <= raw_start,
+                "F011 record is not a disjoint BSS successor")
+    relation(row, raw["vma"])
+    mutations = [
+        ("record-adjacency-broken", {**row, "vma": row["vma"] + 1}, raw["vma"]),
+        ("record-size-broken", {**row, "bytes": record_bytes - 1}, raw["vma"]),
+        ("record-floor-broken", row, row["vma"] + row["bytes"] + 4),
+    ]
+    rejected = []
+    for name, candidate, limit in mutations:
+        try: relation(candidate, limit)
+        except ConversionError: rejected.append(name)
+    require(len(rejected) == len(mutations), "F011 placement mutation survived")
+    return {"gate": "candidate-derived-after-ordinary-bss",
+            "relation": "record-follows-final-bss-before-raw-input-floor",
+            "status": "passed", "mutations_rejected": rejected}
+
+
+def _derived_before_far_service_proof(name: str, row: dict[str, Any],
+        layout: dict[str, Any], registry: dict[str, Any]) -> dict[str, Any]:
+    """Prove the F011 tenant's linker-derived placement semantically.
+
+    The relation is taken exclusively from the final ELF layout.  Neither the
+    owner's address nor the far-service address is an Acceptance constant.
+    """
+    registration = registry["registration"]
+    by_name = {item["name"]: item for item in layout["allocatable_sections"]}
+    far = by_name.get(".lisp65_c2_mapped_far_service")
+    require(name == ".lisp65_c2_mapped_f011_cold"
+            and registry["registry"] == "block-26-f011-cold-read"
+            and registration.get("physical_placement", {}).get("kind") ==
+                "derived-before-far-service-under-shared-map-offset"
+            and far is not None,
+            "derived-before-far-service prover bound another owner")
+
+    def relation(candidate: dict[str, Any]) -> None:
+        owner_offset = candidate["lma"] - candidate["vma"]
+        far_offset = far["lma"] - far["vma"]
+        require(candidate["bytes"] > 0
+                and candidate["bytes"] <= registration["capacity_bytes"]
+                and candidate["vma"] >= registration["cpu_floor"]
+                and candidate["vma"] + candidate["bytes"] == far["vma"]
+                and candidate["lma"] + candidate["bytes"] == far["lma"]
+                and owner_offset == far_offset
+                and owner_offset & 0xff == 0,
+                f"derived-before-far-service placement violated: {name}")
+
+    relation(row)
+    mutations = {
+        "broken-vma-lma-adjacency": {**row,
+            "vma": row["vma"] - 1, "lma": row["lma"] - 1},
+        "broken-shared-map-offset": {**row, "lma": row["lma"] + 0x100},
+    }
+    rejected: list[str] = []
+    for label, mutant in mutations.items():
+        try:
+            relation(mutant)
+        except ConversionError:
+            rejected.append(label)
+        else:
+            raise ConversionError(
+                f"derived-before-far-service mutation survived: {label}")
+    require(rejected == list(mutations),
+            "derived-before-far-service mutation closure drift")
+    return {"gate": "derived-before-far-service/shared-map-offset",
+        "relation": ("section-ends-at-far-service-in-vma-and-lma-under-"
+                     "shared-page-offset"),
+        "mutations_rejected": rejected, "status": "passed"}
 
 
 def _additive_section_closure(layout: dict[str, Any], golden: dict[str, Any],
@@ -363,7 +521,9 @@ def _additive_section_closure(layout: dict[str, Any], golden: dict[str, Any],
     require(not (golden_names & registered),
             "additive freight has double Golden authority")
     require(candidate_names == golden_names | registered,
-            "candidate section has neither Golden nor card-freight authority")
+            "candidate section authority differs: unregistered="
+            + repr(sorted(candidate_names - (golden_names | registered)))
+            + "; missing=" + repr(sorted((golden_names | registered) - candidate_names)))
     _validate_freight_rows(proof_rows, registered)
     base = deepcopy(layout)
     base["allocatable_sections"] = [
@@ -545,10 +705,10 @@ def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN,
             additive["mapped_LMA_mutations_rejected"] = (
                 mapped_lma_successor_mutations(elf, packed_prg=packed_prg,
                     allowed_flat_packed_sections=registered))
-        successor = candidate_fixed_successors(base_layout, authority)
+        successor = candidate_fixed_successors(layout, authority)
         additive["candidate_derived_fixed_successors"] = successor
         additive["candidate_derived_fixed_successor_mutations"] = (
-            candidate_fixed_successor_mutations(base_layout, authority))
+            candidate_fixed_successor_mutations(layout, authority))
         # The sealed Golden remains byte-history.  Its comparison view is
         # normalized only for the independently proved candidate successors;
         # every other fixed member remains exact.
@@ -567,7 +727,13 @@ def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN,
                      "__lisp65_resident_island_end"):
             golden_layout["boundary_symbols"][name] = (
                 authority["fixed_boundary_symbols"][name])
-        comparison = golden.compare_layout(golden_layout, authority)
+        if "zero_page_BSS" in successor:
+            golden_layout["boundary_symbols"]["__zp_bss_size"] = (
+                authority["fixed_boundary_symbols"]["__zp_bss_size"])
+        comparison = golden.compare_layout(golden_layout, authority,
+            normalized_fixed_members={
+                ".lisp65_resident_island_annex.vma"} | (
+                    {".zp.vma"} if "zero_page_BSS" in successor else set()))
         additive["placement_gate"] = {
             "gate": "active-card-registry-union",
             "status": "passed",
@@ -596,34 +762,106 @@ def candidate_fixed_successors(layout: dict[str, Any],
     handoff = rows[".lisp65_c2_kernal_handoff"]
     bss = rows[".bss"]
     island = rows[".lisp65_resident_island"]
+    annex = rows[".lisp65_resident_island_annex"]
     symbols = layout["boundary_symbols"]
     expected_facade = max(0xB3B0, text["vma"] + text["bytes"] + 32)
     bss_end = bss["vma"] + bss["bytes"]
+    split_bss = ".lisp65_c2_symbol_metadata_bss" in rows
+    if split_bss:
+        input_owner = rows[".lisp65_c2_input_raw_owner"]
+        metadata = rows[".lisp65_c2_symbol_metadata_bss"]
+        logical_bss_end = metadata["vma"] + metadata["bytes"]
+        require(bss_end <= input_owner["vma"]
+                and input_owner["vma"] + input_owner["bytes"] ==
+                    metadata["vma"]
+                and symbols["__bss_start"] == bss["vma"]
+                and symbols["__bss_end"] == logical_bss_end
+                and symbols["__bss_size"] ==
+                    logical_bss_end - bss["vma"]
+                and 0xC000 - logical_bss_end >= 5,
+                "candidate split-BSS successor is not owner-derived/margin-safe")
+    else:
+        logical_bss_end = bss_end
     island_end = island["vma"] + island["bytes"]
+    annex_vma = (island_end + annex["alignment"] - 1) & ~(
+        annex["alignment"] - 1)
     require(facade["vma"] == expected_facade
             and facade["vma"] + facade["bytes"] <= handoff["vma"],
             "candidate facade is not derived from final text/owner interval")
-    require(symbols["__bss_start"] == bss["vma"]
-            and symbols["__bss_size"] == bss["bytes"]
-            and symbols["__bss_end"] == bss_end
-            and 0xC000 - bss_end >= 5,
-            "candidate BSS successor is not extent-derived/margin-safe")
+    if not split_bss:
+        require(symbols["__bss_start"] == bss["vma"]
+                and symbols["__bss_size"] == bss["bytes"]
+                and symbols["__bss_end"] == bss_end
+                and 0xC000 - bss_end >= 5,
+                "candidate BSS successor is not extent-derived/margin-safe")
     require(symbols["__lisp65_resident_island_start"] == island["vma"]
-            and symbols["__lisp65_resident_island_end"] == island_end,
+            and symbols["__lisp65_resident_island_end"] == island_end
+            and annex["vma"] == annex_vma
+            and annex["vma"] + annex["bytes"] <= 0x2000,
             "candidate resident-island end is not extent-derived")
-    return {"status": "passed-candidate-derived-fixed-successors",
+    result = {"status": "passed-candidate-derived-fixed-successors",
         "facade": {"vma": facade["vma"], "derived_vma": expected_facade,
             "text_reserve_bytes": facade["vma"]-text["vma"]-text["bytes"],
             "next_owner_reserve_bytes":
                 handoff["vma"]-facade["vma"]-facade["bytes"]},
         "BSS": {"vma": bss["vma"], "bytes": bss["bytes"],
-            "end": bss_end, "margin_bytes": 0xC000-bss_end},
+            "end": logical_bss_end,
+            "margin_bytes": 0xC000-logical_bss_end,
+            "layout": "split-around-linker-visible-raw-owner"
+                if split_bss else "single-section"},
         "resident_island": {"vma": island["vma"], "bytes": island["bytes"],
-            "end": island_end},
+            "end": island_end, "annex_vma": annex["vma"],
+            "derived_annex_vma": annex_vma,
+            "annex_alignment": annex["alignment"],
+            "combined_margin_bytes": 0x2000-annex["vma"]-annex["bytes"]},
         "sealed_golden_unchanged": True,
         "normalized_fixed_members": [".text.capacity_end",
             ".lisp65_c2_mapped_far_facade.vma",
-            "__bss_end", "__bss_size", "__lisp65_resident_island_end"]}
+            "__bss_end", "__bss_size", "__lisp65_resident_island_end",
+            ".lisp65_resident_island_annex.vma"]}
+    if symbols["__zp_bss_size"] != authority["fixed_boundary_symbols"][
+            "__zp_bss_size"]:
+        result["zero_page_BSS"] = candidate_zp_bss_successor(layout)
+        result["zero_page_BSS_mutations"] = candidate_zp_bss_mutations(layout)
+        result["normalized_fixed_members"].extend(("__zp_bss_size", ".zp.vma"))
+    return result
+
+
+def candidate_zp_bss_successor(layout: dict[str, Any]) -> dict[str, Any]:
+    rows = {row["name"]: row for row in layout["allocatable_sections"]}
+    bss, following = rows[".zp.bss"], rows[".zp"]
+    fixed = rows[".lisp65_c2_convergence_zp"]
+    symbols = layout["boundary_symbols"]
+    require(bss["bytes"] > 0
+            and symbols["__zp_bss_start"] == bss["vma"]
+            and symbols["__zp_bss_size"] == bss["bytes"]
+            and bss["vma"] + bss["bytes"] == following["vma"]
+            and following["bytes"] > 0
+            and following["vma"] + following["bytes"] <= fixed["vma"],
+            "candidate ZP BSS is not extent-derived/disjoint")
+    return {"vma": bss["vma"], "bytes": bss["bytes"],
+            "next_owner": following["name"], "next_vma": following["vma"],
+            "next_bytes": following["bytes"],
+            "reserve_bytes": fixed["vma"]-following["vma"]-following["bytes"]}
+
+
+def candidate_zp_bss_mutations(layout: dict[str, Any]) -> list[str]:
+    wrong = deepcopy(layout)
+    wrong["boundary_symbols"]["__zp_bss_size"] += 1
+    overlap = deepcopy(layout)
+    rows = {row["name"]: row for row in overlap["allocatable_sections"]}
+    size = rows[".zp"]["vma"] - rows[".zp.bss"]["vma"] + 1
+    rows[".zp.bss"]["bytes"] = size
+    overlap["boundary_symbols"]["__zp_bss_size"] = size
+    rejected = []
+    for label, trial in (("ZP-BSS-boundary-diverges", wrong),
+                         ("ZP-BSS-overlaps-next-owner", overlap)):
+        try:
+            candidate_zp_bss_successor(trial)
+        except ConversionError:
+            rejected.append(label)
+    require(len(rejected) == 2, "ZP-BSS successor mutation survived")
+    return rejected
 
 
 def candidate_fixed_successor_mutations(
@@ -640,6 +878,12 @@ def candidate_fixed_successor_mutations(
         "resident-end-diverges": lambda x: x["boundary_symbols"].update(
             __lisp65_resident_island_end=
                 x["boundary_symbols"]["__lisp65_resident_island_end"] + 1),
+        "resident-annex-adjacency-diverges": lambda x: next(row for row in
+            x["allocatable_sections"] if row["name"] ==
+            ".lisp65_resident_island_annex").update(
+                vma=next(row for row in x["allocatable_sections"]
+                         if row["name"] ==
+                         ".lisp65_resident_island_annex")["vma"] + 2),
     }
     rejected = []
     for name, mutate in cases.items():
@@ -650,6 +894,80 @@ def candidate_fixed_successor_mutations(
             rejected.append(name)
     require(rejected == list(cases),
             "candidate fixed-successor acceptance mutation survived")
+    return rejected
+
+
+def qualification_resolver_population(source_override: str | None = None
+                                      ) -> dict[str, Any]:
+    """Derive candidate-world resolvers reachable from live Acceptance.
+
+    This complements the historical seven literal pins and six inherited
+    closures: qualification functions are discovered from their actual local
+    call graph, not appended to another hand-maintained list.
+    """
+    source = DRIVER.read_text(encoding="utf-8") if source_override is None \
+        else source_override
+    tree = ast.parse(source)
+    functions = {node.name: node for node in tree.body
+                 if isinstance(node, ast.FunctionDef)}
+    root = "acceptance_golden_gate"
+    require(root in functions, "Acceptance qualification root absent")
+    reachable: set[str] = set()
+    pending = [root]
+    while pending:
+        name = pending.pop()
+        if name in reachable:
+            continue
+        reachable.add(name)
+        pending.extend(sorted({call.func.id for call in ast.walk(functions[name])
+            if isinstance(call, ast.Call) and isinstance(call.func, ast.Name)
+            and call.func.id in functions} - reachable))
+    candidate_arguments = {"layout", "elf", "packed_prg", "authority", "golden"}
+    resolvers = sorted(name for name in reachable
+        if candidate_arguments & {arg.arg for arg in functions[name].args.args})
+    require(root in resolvers and "_freight_proof_rows" in resolvers
+            and "candidate_fixed_successors" in resolvers,
+            "Acceptance candidate-resolver closure is incomplete")
+    return {"root": root,
+        "derivation": "transitive local call graph plus candidate-world arguments",
+        "resolvers": [{"name": name,
+            "world_policy": "candidate-derived-before-sealed-normalization"}
+            for name in resolvers],
+        "resolver_count_derived": len(resolvers)}
+
+
+def validate_qualification_resolver_population(value: dict[str, Any],
+        source_override: str | None = None) -> dict[str, Any]:
+    derived = qualification_resolver_population(source_override)
+    require(value == derived, "qualification resolver population is stale")
+    return value
+
+
+def qualification_resolver_population_mutations() -> list[str]:
+    source = DRIVER.read_text(encoding="utf-8")
+    current = qualification_resolver_population(source)
+    cases: dict[str, tuple[dict[str, Any], str]] = {}
+    omitted = deepcopy(current); omitted["resolvers"].pop()
+    omitted["resolver_count_derived"] -= 1
+    cases["reachable-qualification-resolver-omitted"] = (omitted, source)
+    added_source = source.replace(
+        "    require(golden is V5_GOLDEN,\n",
+        "    _mutation_new_qualification_resolver(layout)\n"
+        "    require(golden is V5_GOLDEN,\n", 1) + (
+        "\n\ndef _mutation_new_qualification_resolver(layout: dict[str, Any])"
+        " -> dict[str, Any]:\n    return layout\n")
+    cases["new-qualification-resolver-uninventoried"] = (current, added_source)
+    missing_root = source.replace("def acceptance_golden_gate(",
+                                  "def mutation_acceptance_golden_gate(", 1)
+    cases["qualification-root-removed"] = (current, missing_root)
+    rejected = []
+    for label, (value, candidate_source) in cases.items():
+        try:
+            validate_qualification_resolver_population(value, candidate_source)
+        except ConversionError:
+            rejected.append(label)
+    require(rejected == list(cases),
+            "qualification resolver population mutation survived")
     return rejected
 
 

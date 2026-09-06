@@ -1,0 +1,110 @@
+{
+  "authority_rule": "Every sealed v2.0 device-session red is replayed over its byte-exact sealed medium by a fresh headless process and must reproduce through a framebuffer, stopped-memory, or emulated-cycle oracle; a log line is never the oracle.",
+  "evidence_class": "xemu-prefilter-red-reproduced",
+  "format": "lisp65-dwx-retroactive-red-replay-contract-v2",
+  "inputs": {
+    "cycle_probe_binary": {
+      "path": "build/dwx/xemu-buffered-repair-three-patch-r2/build/bin/xmega65.native",
+      "sha256": "586875f683d213e5d4aae37e2852d1e1924b96e791620201c5c1657dece26b30"
+    },
+    "cycle_probe_manifest": {
+      "path": "build/dwx/xemu-buffered-repair-three-patch-r2/dwx-xemu-cycle-probe-adapter.json",
+      "sha256": "7476df252c59c0012772694dcb32259beaee4125452b971ab92176c9f68f06c0"
+    },
+    "fork_requalification_receipt": {
+      "path": "build/dwx/buffered-repair-three-patch-requalification-r3/boot-receipt.json",
+      "sha256": "8130d305bceb32f35ac0d1538e7618d4dcfadbe0210027879c45c5e49c3ab3da"
+    },
+    "item5_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/post-release/dwx-media-admission-gate-receipt-20260902.json",
+      "sha256": "fde47b9458a3a5b821b153ac4ec8df0708bc6a9c0741a0dec1b3a84494bd7b6f"
+    },
+    "rom_sha256": "af3c447f791a2fdc48cb21e1bd3fab015e32641228d9d30d21259b9e878c6fa0",
+    "system_sd_sha256": "5d5a890490a85d6f20e97d7dd50b8b5cfd16f8ac82f3749634e651a6e27b4ff0"
+  },
+  "rows": [
+    {
+      "device_counterpart": "config/c2-v200-comfort-return-device-session-r1.json#C1",
+      "id": "stale-v16core-freight",
+      "library_medium": {
+        "path": "build/c2.3/v2.0-comfort-return-materialization-repair/library/lisp65-library.d81",
+        "sha256": "7764211f9f870f7a0cdb5a85a5f8fd4c4dbcdaadbe5964f10f90a21de82cc5f9"
+      },
+      "oracle": {
+        "minimum_visible_instances": 2,
+        "required_text": "WRONG ARGUMENT COUNT",
+        "type": "framebuffer"
+      },
+      "product_medium": {
+        "path": "build/c2.3/v2.0-comfort-return-materialization-repair/shared-system/lisp65-product.d81",
+        "sha256": "e20c161509f790aeecd1f6fa008e84bd2020f303a26500a41df49b9c980b0d0c"
+      },
+      "sealed_red_receipt": {
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-comfort-return-repair-red-attribution-receipt.json",
+        "sha256": "d027f48138710123617720278d59f735919e3e93bc29ee0e6be01afbe480cfb7"
+      },
+      "stimulus": "(require 'v16core)\n"
+    },
+    {
+      "device_counterpart": "config/c2-v200-block3-banner-repair-device-session.json#B3-1-line-editor-matcher",
+      "id": "b3-1-no-keystroke",
+      "oracle": {
+        "address": "0xBCFC",
+        "framebuffer_required": "LISP65>",
+        "names": [
+          "raw",
+          "seen",
+          "stored",
+          "taken"
+        ],
+        "relation": "raw == seen == stored >= 1 and taken == 0",
+        "type": "stopped-memory-plus-framebuffer"
+      },
+      "product_medium": {
+        "path": "build/c2.3/v2.0-block3-banner-repair-device-media/shared-system/lisp65-product.d81",
+        "sha256": "adb018ea0ca438fc4ccb537d755bcefb71a4b75507b5873afeed6df7730256d1"
+      },
+      "sealed_red_receipt": {
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-block3-banner-repair-device-result-receipt.json",
+        "sha256": "b81b171eed7b07abd9c8b0418f0937512a1d8750c3a2ebe077bebb0843608a04"
+      },
+      "stimulus": "a"
+    },
+    {
+      "device_counterpart": "config/c2-v200-tier2-descope-device-session.json#A-3-forced-collection",
+      "id": "block3-hot-path",
+      "oracle": {
+        "comparison": "same-key same-screen-write against the sealed 902-step reference world",
+        "minimum_red_to_reference_cycle_ratio": 1.5,
+        "type": "emulated-cycle-trace"
+      },
+      "product_medium": {
+        "path": "build/c2.3/v2.0-tier2-descope-device-media/shared-system/lisp65-product.d81",
+        "sha256": "5074ff6eae93f7c7bd4a867035d8055f96d8f9952d04af2ecd8d01e6ee6b6536"
+      },
+      "reference_medium": {
+        "path": "build/c2.3/v2.0-release-strip-device-media/shared-system/lisp65-product.d81",
+        "sha256": "7b043c689bcd2a862f1117c1bcb8e957c8b193ec6b25530cc5b28f31d1df620c"
+      },
+      "sealed_red_receipt": {
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-block3-hot-path-repair-host-receipt.json",
+        "sha256": "d0eec9c2cbc646fb9dd2277614bedd6d64d176ed2a74c8e103ffbe7f9e7153d9"
+      },
+      "stimulus": {
+        "byte": "a",
+        "characters": 40,
+        "device_reference_vm_steps_per_key": 902,
+        "screen_base": "0x0800"
+      }
+    }
+  ],
+  "runtime_policy": {
+    "desktop_focus_input": false,
+    "device_acceptance_claimed": false,
+    "fresh_process_per_world": true,
+    "headless": true,
+    "input_transport": "local-unix-uart-monitor-to-HWA-queue",
+    "logs_are_oracle": false
+  },
+  "status": "ACTIVE"
+}

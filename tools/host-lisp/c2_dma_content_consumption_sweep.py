@@ -24,6 +24,8 @@ RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.4-dma-content-consumption-broaden-once-sweep.json"
 )
+SEALED_RECEIPT_SHA256 = (
+    "f47c5800e1072811c2307274ce703dbedc09340c62f27986e59e55ea33d30200")
 
 
 class SweepError(RuntimeError):
@@ -45,6 +47,11 @@ def bind(path: Path) -> dict[str, Any]:
 
 
 def write(value: dict[str, Any]) -> None:
+    if RECEIPT.is_file():
+        sealed = RECEIPT.read_bytes()
+        require(hashlib.sha256(sealed).hexdigest() == SEALED_RECEIPT_SHA256,
+                "historical DMA-sweep receipt identity drift")
+        return
     payload = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=RECEIPT.parent, delete=False) as handle:

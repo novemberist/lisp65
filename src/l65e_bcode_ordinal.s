@@ -8,6 +8,9 @@
 ; table plus compile-time format assertions.  This MOS leaf consumes that same
 ; table and owns no persistent state.  Its constants are pinned by the BCODE
 ; ordinal contract/gate against the C headers.
+; Keep distant transfers as inverted short branches plus symbolic JMP.
+; The pinned assembler's relaxed PCRel16 form uses the wrong PC base for
+; the product core.  Local skip labels require no displacement arithmetic.
 
 	.zeropage	__rc2
 	.zeropage	__rc3
@@ -24,36 +27,54 @@ lisp65_error_overlay_entry:
 	; and one-based error code before observing the detail or emitting bytes.
 	lda	__rc2
 	ora	__rc3
-	beq	.Lerr_context
+	bne	.Lcontext_present
+	jmp	.Lerr_context
+.Lcontext_present:
 	ldz	#0
 	lda	(__rc2),z
 	cmp	#$4c
-	bne	.Lerr_context
+	beq	.Ltag_l_valid
+	jmp	.Lerr_context
+.Ltag_l_valid:
 	inz
 	lda	(__rc2),z
 	cmp	#$36
-	bne	.Lerr_context
+	beq	.Ltag_6_valid
+	jmp	.Lerr_context
+.Ltag_6_valid:
 	inz
 	lda	(__rc2),z
 	cmp	#$35
-	bne	.Lerr_context
+	beq	.Ltag_5_valid
+	jmp	.Lerr_context
+.Ltag_5_valid:
 	inz
 	lda	(__rc2),z
 	cmp	#$45
-	bne	.Lerr_context
+	beq	.Ltag_e_valid
+	jmp	.Lerr_context
+.Ltag_e_valid:
 	inz
 	lda	(__rc2),z
 	cmp	#$e1
-	bne	.Lerr_abi
+	beq	.Labi_low_valid
+	jmp	.Lerr_abi
+.Labi_low_valid:
 	inz
 	lda	(__rc2),z
 	cmp	#$65
-	bne	.Lerr_abi
+	beq	.Labi_high_valid
+	jmp	.Lerr_abi
+.Labi_high_valid:
 	inz
 	lda	(__rc2),z
-	beq	.Lerr_code
+	bne	.Lcode_nonzero
+	jmp	.Lerr_code
+.Lcode_nonzero:
 	cmp	#64
-	bcs	.Lerr_code
+	bcc	.Lcode_in_range
+	jmp	.Lerr_code
+.Lcode_in_range:
 	sta	__rc6
 	inz
 	lda	(__rc2),z
@@ -74,33 +95,49 @@ lisp65_error_overlay_entry:
 .Ldetail_tagged:
 	lda	__rc4
 	and	#1
-	bne	.Lerr_detail
+	beq	.Ldetail_even
+	jmp	.Lerr_detail
+.Ldetail_even:
 	lda	__rc5
 	cmp	#$c0
-	bcc	.Lerr_detail
+	bcs	.Ldetail_high_valid
+	jmp	.Lerr_detail
+.Ldetail_high_valid:
 	cpx	#41
 	beq	.Ldetail_bcode
 	bra	.Ldetail_symbol
 .Ldetail_depth:
 	lda	__rc4
 	cmp	#$0b			; MKFIX(5)
-	bne	.Lerr_detail
+	beq	.Ldepth_low_valid
+	jmp	.Lerr_detail
+.Ldepth_low_valid:
 	lda	__rc5
-	bne	.Lerr_detail
+	beq	.Ldepth_high_valid
+	jmp	.Lerr_detail
+.Ldepth_high_valid:
 	bra	.Ldetail_valid
 .Ldetail_bcode:
 	cmp	#$e0
-	bcs	.Lerr_detail
+	bcc	.Lbcode_detail_valid
+	jmp	.Lerr_detail
+.Lbcode_detail_valid:
 	bra	.Ldetail_valid
 .Ldetail_symbol:
 	cmp	#$e0
-	bcc	.Lerr_detail
+	bcs	.Lsymbol_detail_valid
+	jmp	.Lerr_detail
+.Lsymbol_detail_valid:
 	cpx	#28
 	beq	.Ldetail_valid
 	cpx	#49
-	bcc	.Lerr_detail
+	bcs	.Lsymbol_code_low_valid
+	jmp	.Lerr_detail
+.Lsymbol_code_low_valid:
 	cpx	#60
-	bcs	.Lerr_detail
+	bcc	.Lsymbol_code_high_valid
+	jmp	.Lerr_detail
+.Lsymbol_code_high_valid:
 
 .Ldetail_valid:
 	; Descriptor index = 16 + 2*(code-1) = 14 + 2*code.
@@ -117,7 +154,9 @@ lisp65_error_overlay_entry:
 	lsr
 	lsr
 	sta	__rc7                 ; six-bit shared-span length
-	beq	.Lerr_code_pop
+	bne	.Lspan_nonempty
+	jmp	.Lerr_code_pop
+.Lspan_nonempty:
 	pla
 	and	#3
 	sta	__rc3                 ; descriptor offset bits 8..9

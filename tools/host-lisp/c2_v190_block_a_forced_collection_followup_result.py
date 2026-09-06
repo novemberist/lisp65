@@ -87,7 +87,7 @@ def section_bind(path: Path, header: str) -> dict[str, Any]:
 def source_chain() -> dict[str, Any]:
     source = R7_SOURCE.read_text(encoding="utf-8")
     vm = era_blob(EVIDENCE_ERA, VM.relative_to(ROOT).as_posix()).decode()
-    interrupt = INTERRUPT.read_text(encoding="utf-8")
+    interrupt = era_blob(EVIDENCE_ERA, INTERRUPT.relative_to(ROOT).as_posix()).decode()
     state = "(state (list head head head 0 0 0 columns row))"
     route = """(if (nthcdr 8 state)
                     (%rl-render nil 0 0 0 0 -1)
@@ -115,7 +115,7 @@ def source_chain() -> dict[str, Any]:
         "capture_armed": True,
         "sources": {"editor": bind(R7_SOURCE),
                     "vm": era_bind(EVIDENCE_ERA, VM),
-                    "interrupt": bind(INTERRUPT)},
+                    "interrupt": era_bind(EVIDENCE_ERA, INTERRUPT)},
     }
 
 

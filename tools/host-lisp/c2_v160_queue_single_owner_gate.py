@@ -75,9 +75,9 @@ def derive(source: str | None = None) -> dict[str, Any]:
             and "lisp_abort_static(LISP65_ERR_STOPPED" in guarded
             and "return;" in guarded,
             "armed path must preserve matrix RUN/STOP and return before queue poll")
-    require("(*(volatile uint8_t *)0xff8d)" in text
-            and "(*(volatile uint8_t *)0xff8a)" in text
-            and "C2K_INPUT_RING_CLOSED 0xffu" in text,
+    require("C2K_INPUT_RING_TAIL" in text
+            and "C2K_BREAK_PENDING" in text
+            and "C2K_INPUT_RING_CLOSED" in text,
             "single-owner state authority drift")
     armed_key = simulate(armed=True, break_pending=False, queue_present=True)
     armed_stop = simulate(armed=True, break_pending=True, queue_present=True)
@@ -154,13 +154,14 @@ def selftest(value: dict[str, Any]) -> None:
         source.replace("if (C2K_BREAK_PENDING) {", "if (0) {", 1),
         source.replace("C2K_BREAK_PENDING = 0u;", "/* no acknowledge */", 1),
         source.replace("        return;\n    }\n    /* Evaluator polling", "    }\n    /* Evaluator polling", 1),
+        source.replace("C2K_INPUT_RING_TAIL", "C2K_UNBOUND_RING_TAIL"),
     )
     rejected = 0
     for mutant in mutations:
         try: derive(mutant)
         except (RuntimeError, ValueError): rejected += 1
         else: raise RuntimeError("queue single-owner mutation survived")
-    require(rejected == 4, "queue single-owner mutation count drift")
+    require(rejected == 5, "queue single-owner mutation count drift")
     receipt_mutations = (
         lambda row: row["current_candidate_reproof"]["ELF"].update(
             sha256="0" * 64),

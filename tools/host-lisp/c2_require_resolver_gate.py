@@ -85,11 +85,11 @@ def preserve_sealed_receipt(
         path: Path, value: dict[str, Any], metadata_binding: tuple[str, ...]) -> None:
     """Keep historical proof bytes while revalidating a live manifest.
 
-    The emitted manifest records source provenance, so a later same-size
-    banner replacement changes its digest even though this historical gate's
-    executable result is unchanged.  Only that metadata digest may differ;
-    every other receipt field, including the bound path and size, remains an
-    exact comparison.
+    The emitted manifest and bound VM source record source provenance.  Later
+    product cards may change either while this historical gate's executable
+    result remains unchanged.  The live run above still exercises the current
+    source; this comparison keeps only the sealed-era provenance in the
+    historical receipt.
     """
     if not path.is_file():
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -116,10 +116,15 @@ def preserve_sealed_receipt(
     for key in metadata_binding[:-1]:
         cursor = cursor[key]
     cursor[metadata_binding[-1]] = sealed_binding
-    require(normalized["authority"]["gate"]["path"]
-            == sealed["authority"]["gate"]["path"],
-            "historical resolver gate identity drift")
-    normalized["authority"]["gate"] = sealed["authority"]["gate"]
+    current_authority = normalized["authority"]
+    sealed_authority = sealed["authority"]
+    require(set(current_authority) == set(sealed_authority),
+            "historical resolver authority population drift")
+    for name in sorted(sealed_authority):
+        require(current_authority[name]["path"]
+                == sealed_authority[name]["path"],
+                f"historical resolver authority path drift: {name}")
+    normalized["authority"] = sealed_authority
     require(normalized == sealed,
             "historical resolver receipt semantic drift")
 

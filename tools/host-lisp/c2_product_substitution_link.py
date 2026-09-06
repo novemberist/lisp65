@@ -64,6 +64,7 @@ DERIVED_FIXED_BANK0_CODE_LAYOUT_REQUESTED = False
 E000_REOPENING = False
 BSS_TRIAGE = False
 FULL_MAP_OWNERSHIP = False
+FIXED_RAW_BSS_OWNERS = False
 LOW_RESIDENT_LMA_RESET = False
 FULL_MAP_OWNERSHIP_CONTRACT = (
     ROOT / "config/c2-full-map-ownership-contract.json")
@@ -133,6 +134,20 @@ PRODUCT_COLD_BUILD_CONFIGURATION = {
 PRODUCT_COLD_FEATURE = str(PRODUCT_COLD_BUILD_CONFIGURATION["feature"])
 PRODUCT_COLD_SOURCE = Path(PRODUCT_COLD_BUILD_CONFIGURATION["source"])
 PRODUCT_COLD_ENABLED = False
+F011_COLD_BUILD_CONFIGURATION = {
+    "name": "block-26-f011-cold-read",
+    "feature": "LISP65_C2_F011_COLD",
+    "source": ROOT / "src/optional/c2_f011_cold_wrappers.s",
+    "allocated": (".lisp65_c2_mapped_f011_cold",),
+    "cpu_end": 0x78B2,
+    "cpu_floor": 0x6000,
+    "capacity_bytes": 0x18B2,
+}
+F011_COLD_FEATURE = str(F011_COLD_BUILD_CONFIGURATION["feature"])
+F011_COLD_SOURCE = Path(F011_COLD_BUILD_CONFIGURATION["source"])
+F011_COLD_ENABLED = False
+F011_COLD_REQUESTED = False
+F011_STATUS_WITNESS_ENABLED = False
 RECOVERY_QUIESCENCE_ENABLED = False
 # The historical ownership contract gives the mapped tenants fixed Bank-2
 # load addresses.  Successor cards may instead select a structural policy;
@@ -353,6 +368,80 @@ def full_map_platform_c_ld() -> str:
     """
     if not FULL_MAP_OWNERSHIP:
         raise RuntimeError("full-map platform linker requested before selection")
+    if FIXED_RAW_BSS_OWNERS:
+        return r'''/* Generated Block-2.6 full-map owner.  Fixed raw-access
+ * windows are linker-visible NOLOAD owners; the ordinary and symbol-metadata
+ * BSS classes are placed on opposite sides of the input window. */
+INCLUDE zp.ld
+.text 0x2023 : {
+    INCLUDE text-sections.ld
+} >c_readonly
+
+.rodata 0xb61d : {
+    INCLUDE rodata-sections.ld
+} >c_readonly
+
+.lisp65_runtime_overlay_verifier_bindings 0xb98c : {
+    __lisp65_rtov_binding_section_start = .;
+    KEEP(*(.lisp65_runtime_overlay_verifier_bindings))
+    __lisp65_rtov_binding_section_end = .;
+} >c_writeable
+
+.data 0xb9b4 : AT(0xb9b4) {
+    INCLUDE data-sections.ld
+} >c_writeable
+INCLUDE data-symbols.ld
+
+.bss 0xb9ca (NOLOAD) : {
+    __bss_start = .;
+    *(.bss .bss.* BSS COMMON)
+} >c_writeable
+
+.noinit.lisp65_f011_status (ADDR(.bss) + SIZEOF(.bss)) (NOLOAD) : {
+    KEEP(*(.noinit.lisp65_f011_status))
+} >c_writeable
+ASSERT(SIZEOF(.noinit.lisp65_f011_status) == 0 ||
+       SIZEOF(.noinit.lisp65_f011_status) == 3,
+       "malformed F011 status witness owner")
+ASSERT(ADDR(.noinit.lisp65_f011_status) +
+       SIZEOF(.noinit.lisp65_f011_status) + 5 <=
+           ADDR(.lisp65_c2_input_raw_owner),
+       "F011 witness breached the raw-input floor")
+
+.lisp65_c2_input_raw_owner 0xbc90 (NOLOAD) : {
+    __lisp65_c2_input_raw_owner_start = .;
+    . += 0x70;
+    __lisp65_c2_input_raw_owner_end = .;
+} >c_writeable
+
+.lisp65_c2_symbol_metadata_bss 0xbd00 (NOLOAD) : {
+    __lisp65_c2_symbol_metadata_bss_start = .;
+    KEEP(*(.lisp65_c2_symbol_metadata_bss))
+    __lisp65_c2_symbol_metadata_bss_end = .;
+    __bss_end = .;
+} >c_writeable
+__bss_size = __bss_end - __bss_start;
+
+ASSERT(ADDR(.bss) + SIZEOF(.bss) + 5 <=
+           ADDR(.lisp65_c2_input_raw_owner),
+       "ordinary low BSS breached the input-owner floor")
+ASSERT(ADDR(.lisp65_c2_input_raw_owner) == 0xbc90 &&
+       SIZEOF(.lisp65_c2_input_raw_owner) == 112,
+       "fixed input raw owner geometry drift")
+ASSERT(ADDR(.lisp65_c2_symbol_metadata_bss) == 0xbd00 &&
+       SIZEOF(.lisp65_c2_symbol_metadata_bss) == 566,
+       "symbol metadata BSS geometry drift")
+ASSERT(__lisp65_c2_symbol_metadata_bss_end <= 0xc000,
+       "symbol metadata BSS crossed the Bank-0 floor")
+
+/* The sole .noinit-namespace resident is extracted by the named static-stack
+ * owner before this empty ordinary owner. */
+.noinit 0xc34d (NOLOAD) : {
+    INCLUDE noinit-sections.ld
+} >c_writeable
+__lisp65_c2_ordinary_noinit_end = ADDR(.noinit) + SIZEOF(.noinit);
+__heap_start = 0xc354;
+'''
     return r'''/* Generated v1.8 full-map owner.  This file deliberately
  * replaces the platform c.ld include; it is not an INSERT overlay. */
 INCLUDE zp.ld
@@ -389,6 +478,12 @@ INCLUDE bss-symbols.ld
 __lisp65_c2_ordinary_noinit_end = ADDR(.noinit) + SIZEOF(.noinit);
 __heap_start = 0xc354;
 '''
+
+
+def configure_fixed_raw_bss_owners() -> None:
+    """Select the Card-2.6 linker-visible fixed raw/BSS ownership layout."""
+    global FIXED_RAW_BSS_OWNERS
+    FIXED_RAW_BSS_OWNERS = True
 
 
 def full_map_platform_commodore_ld() -> str:
@@ -467,7 +562,10 @@ def full_map_rewrite_product_linker(script: str) -> str:
         script, count=1)
     if replacements != 1:
         raise RuntimeError("full-map inherited noinit assertion drift")
-    return script + r'''
+    ordinary_bss_limit = (
+        "ADDR(.lisp65_c2_input_raw_owner)"
+        if FIXED_RAW_BSS_OWNERS else "0xc000")
+    return script + f'''
 
 /* v1.8 full-map simultaneous-live closure.  All addresses are duplicated in
  * the independent Phase-B contract and checked by the permanent gate. */
@@ -475,14 +573,17 @@ ASSERT(ADDR(.rodata) == 0xb61d &&
        ADDR(.rodata) + SIZEOF(.rodata) <= 0xb98c &&
        ADDR(.lisp65_runtime_overlay_verifier_bindings) == 0xb98c &&
        SIZEOF(.lisp65_runtime_overlay_verifier_bindings) == 40 &&
-       ADDR(.data) == 0xb9b4 && LOADADDR(.data) == 0xb9b4 &&
-       SIZEOF(.data) == 22 &&
+       ADDR(.data) == 0xb9b4 && LOADADDR(.data) == ADDR(.data) &&
+       ADDR(.data) + SIZEOF(.data) <= ADDR(.bss) &&
        ADDR(.bss) == 0xb9ca &&
-       ADDR(.bss) + SIZEOF(.bss) <= 0xbffb,
+       ADDR(.bss) + SIZEOF(.bss) + 5 <=
+           {ordinary_bss_limit},
        "ordinary full-map chain drift");
 ASSERT(ADDR(.lisp65_c2_convergence_state) == 0xc000 &&
        ADDR(.lisp65_c2_static_stack) == 0xc074 &&
-       SIZEOF(.lisp65_c2_static_stack) == 6 &&
+       SIZEOF(.lisp65_c2_static_stack) > 0 &&
+       ADDR(.lisp65_c2_static_stack) + SIZEOF(.lisp65_c2_static_stack)
+           <= ADDR(.lisp65_c2_fixed_bank0) &&
        ADDR(.lisp65_c2_fixed_bank0) == 0xc080 &&
        ADDR(.lisp65_c2_fixed_bank0_hot_bss) +
            SIZEOF(.lisp65_c2_fixed_bank0_hot_bss) == 0xc34d &&
@@ -1116,6 +1217,11 @@ SOURCE_OWNER_SCOPES = ({
     "trigger": PRODUCT_COLD_FEATURE,
     "defines": (PRODUCT_COLD_FEATURE,),
     "sources": (PRODUCT_COLD_SOURCE,),
+}, {
+    "name": "block-26-f011-cold-read",
+    "trigger": F011_COLD_FEATURE,
+    "defines": (F011_COLD_FEATURE,),
+    "sources": (F011_COLD_SOURCE,),
 }, {
     "name": "v200-symbol22-first-fault-latch",
     "trigger": SYMBOL22_LATCH_FEATURE,
@@ -1828,6 +1934,58 @@ def product_cold_inventory_registration(
     }
 
 
+def f011_cold_inventory_registration(
+        definitions: tuple[str, ...] | None = None) -> dict[str, object]:
+    """Project the Card-2 F011 owner from feature through final inventory."""
+    selected_definitions = (tuple(CONVERGENCE_DEFINES)
+                            if definitions is None else tuple(definitions))
+    selected = F011_COLD_FEATURE in selected_definitions
+    if definitions is None and selected != F011_COLD_ENABLED:
+        raise RuntimeError("F011-cold inventory/build activation disagree")
+    linked = {Path(path).resolve() for path in source_list(selected_definitions)}
+    if (F011_COLD_SOURCE.resolve() in linked) != selected:
+        raise RuntimeError("F011-cold wrapper owner was not compiler-consumed")
+    allocated = (tuple(F011_COLD_BUILD_CONFIGURATION["allocated"])
+                 if selected else ())
+    relocations = tuple(f".rela{name}" for name in allocated)
+    return {
+        "feature": F011_COLD_FEATURE,
+        "selected": selected,
+        "source": F011_COLD_SOURCE.relative_to(ROOT).as_posix(),
+        "allocated": list(allocated),
+        "relocations": list(relocations),
+        "names": [*allocated, *relocations],
+        "cpu_end": F011_COLD_BUILD_CONFIGURATION["cpu_end"],
+        "cpu_floor": F011_COLD_BUILD_CONFIGURATION["cpu_floor"],
+        "physical_placement": {
+            "kind": "derived-before-far-service-under-shared-map-offset",
+            "authority": "final section size plus linker-derived MAP offset",
+        },
+        "capacity_bytes": F011_COLD_BUILD_CONFIGURATION["capacity_bytes"],
+        "authority": "feature/source membership and final linker geometry",
+    }
+
+
+def select_f011_cold_world() -> dict[str, object]:
+    """Select the complete F011 read successor and its mapped wrapper owner."""
+    global CONVERGENCE_DEFINES, F011_COLD_ENABLED
+    if F011_COLD_FEATURE not in CONVERGENCE_DEFINES:
+        CONVERGENCE_DEFINES = (*CONVERGENCE_DEFINES, F011_COLD_FEATURE)
+    F011_COLD_ENABLED = True
+    return f011_cold_inventory_registration()
+
+
+def configure_f011_cold_product() -> None:
+    """Request Card-2 freight before the clean product world is assembled.
+
+    The clean-world selector is the phase owner for feature and source
+    membership.  Keeping the request separate lets prelink bind that world
+    before WPLTO while preventing an ad-hoc post-selection source append.
+    """
+    global F011_COLD_REQUESTED
+    F011_COLD_REQUESTED = True
+
+
 def select_clean_product_world() -> dict[str, object]:
     """Replace temporary diagnostic freight with its product-owned tenant.
 
@@ -1867,6 +2025,8 @@ def select_clean_product_world() -> dict[str, object]:
     registration = product_cold_inventory_registration()
     if refill_witness_inventory_registration()["selected"]:
         raise RuntimeError("diagnostic witness survived product-world selection")
+    if F011_COLD_REQUESTED:
+        select_f011_cold_world()
     return registration
 
 
@@ -2633,12 +2793,30 @@ ASSERT(ADDR(.lisp65_symbol22_first_fault_state) ==
            SIZEOF(.lisp65_symbol22_first_fault_state) <= __heap_start,
        "symbol22 first-fault state escaped the derived pre-heap gap");
 """ if SYMBOL22_LATCH_ENABLED else ""
+    terminal_raw_owner_layout = r"""
+    /* Four terminal-return wrappers address this physical interval directly.
+     * Make that ownership visible to the linker instead of treating it as an
+     * anonymous gap. */
+    .lisp65_c2_terminal_return_raw_owner 0xb582 (NOLOAD) : {
+        __lisp65_c2_terminal_return_raw_owner_start = .;
+        . += 0x10;
+        __lisp65_c2_terminal_return_raw_owner_end = .;
+    } >ram
+""" if FIXED_RAW_BSS_OWNERS else ""
+    terminal_raw_owner_assertions = r"""
+ASSERT(ADDR(.lisp65_c2_terminal_return_raw_owner) == 0xb582 &&
+       SIZEOF(.lisp65_c2_terminal_return_raw_owner) == 16 &&
+       __lisp65_c2_terminal_return_raw_owner_end <=
+           ADDR(.lisp65_symbol22_first_fault_latch),
+       "terminal-return fixed raw owner geometry drift");
+""" if FIXED_RAW_BSS_OWNERS else ""
     kernal_layout = r"""/* Product-resident handoff code is ordinary PRG material.  Name it here so
  * neither fixed-VMA artifact can capture an orphan section. */
 SECTIONS {
     .lisp65_c2_kernal_handoff 0xb4a3 : {
         KEEP(*(.lisp65_c2_kernal_handoff))
     } >ram
+{terminal_raw_owner_layout}
 {symbol22_latch_layout}
     .lisp65_c2_host_facade 0xb5c4 : {
         KEEP(*(.lisp65_c2_host_facade))
@@ -2791,6 +2969,7 @@ SECTIONS {
 
 ASSERT(ADDR(.basic_header) == 0x2001,
        "C2 load domains moved the product PRG header");
+{terminal_raw_owner_assertions}
 {symbol22_latch_assertions}
 ASSERT(LOADADDR(.lisp65_workbench_overlay) == ORIGIN(c2_runtime_load),
        "C2 runtime-slice load domain did not start at its own origin");
@@ -2897,7 +3076,10 @@ ASSERT(ADDR(.lisp65_c2_vectors) == 0xfffa && SIZEOF(.lisp65_c2_vectors) == 6,
        "C2 owned vector geometry drift");
 """
     kernal_layout = kernal_layout.replace(
-        "{symbol22_latch_layout}", symbol22_latch_layout).replace(
+        "{terminal_raw_owner_layout}", terminal_raw_owner_layout).replace(
+            "{symbol22_latch_layout}", symbol22_latch_layout).replace(
+            "{terminal_raw_owner_assertions}",
+            terminal_raw_owner_assertions).replace(
             "{symbol22_latch_assertions}", symbol22_latch_assertions)
     callprim_profile_bytes = PROFILE_RODATA_INPUT_SECTIONS[
         ".rodata.vm_callprim"]
@@ -3381,6 +3563,46 @@ ASSERT(SIZEOF(.lisp65_c2_kernal_window.reopen_gap0) +
             raise RuntimeError(
                 "unknown mapped-facade placement policy: "
                 f"{MAPPED_FACADE_PLACEMENT_POLICY}")
+        f011_layout = ""
+        f011_symbols = ""
+        f011_assertion = ""
+        if F011_COLD_ENABLED:
+            if MAPPED_TENANT_LMA_POLICY != "map-page-top" or map_shared_offset is None:
+                raise RuntimeError(
+                    "F011-cold owner requires the page-congruent shared MAP policy")
+            f011_section = str(F011_COLD_BUILD_CONFIGURATION["allocated"][0])
+            f011_cpu_end = int(F011_COLD_BUILD_CONFIGURATION["cpu_end"])
+            f011_cpu_floor = int(F011_COLD_BUILD_CONFIGURATION["cpu_floor"])
+            if f011_cpu_end != int(mapping["mapped_service_cpu_start"], 0):
+                raise RuntimeError("F011-cold boundary diverged from far-service authority")
+            f011_start = f"({f011_cpu_end:#06x} - SIZEOF({f011_section}))"
+            f011_lma = f"(({f011_start}) + ({map_shared_offset}))"
+            f011_layout = f"""
+    {f011_section} {f011_start}
+        : AT({f011_lma}) {{
+        KEEP(*({f011_section}))
+        KEEP(*({f011_section}.*))
+    }} >ram
+"""
+            f011_symbols = f"""
+__lisp65_c2_mapped_f011_cold_start = ADDR({f011_section});
+__lisp65_c2_mapped_f011_cold_end =
+    ADDR({f011_section}) + SIZEOF({f011_section});
+__lisp65_c2_mapped_f011_cold_load_start = LOADADDR({f011_section});
+__lisp65_c2_mapped_f011_cold_load_end =
+    LOADADDR({f011_section}) + SIZEOF({f011_section});
+"""
+            f011_assertion = f"""
+ASSERT(SIZEOF({f011_section}) > 0 &&
+       ADDR({f011_section}) >= {f011_cpu_floor:#06x} &&
+       ADDR({f011_section}) + SIZEOF({f011_section}) ==
+           ADDR(.lisp65_c2_mapped_far_service) &&
+       LOADADDR({f011_section}) - ADDR({f011_section}) ==
+           __lisp65_c2_mapped_shared_offset &&
+       LOADADDR({f011_section}) + SIZEOF({f011_section}) ==
+           LOADADDR(.lisp65_c2_mapped_far_service),
+       "F011 cold owner escaped its derived mapped interval");
+"""
         owned_layout = f"""/* Halt-1-selected stack/state/far-service owners.
  * Expected addresses live in the reviewed ownership contract; the permanent
  * gate compares this generated script and the final ELF against that
@@ -3409,6 +3631,7 @@ SECTIONS {{
         __lisp65_c2_mapped_far_facade_padding_end = .;
         KEEP(*(.lisp65_c2_mapped_far_facade.*))
     }} >ram
+{f011_layout}
     .lisp65_c2_mapped_far_service {int(mapping['mapped_service_cpu_start'], 0):#06x}
         : AT({far_lma}) {{
         KEEP(*(.lisp65_c2_mapped_far_service))
@@ -3439,6 +3662,7 @@ __lisp65_c2_mapped_far_maplo_a =
     (__lisp65_c2_mapped_shared_offset / 0x100) & 0xff;
 __lisp65_c2_mapped_far_maplo_x =
     0x80 + ((__lisp65_c2_mapped_shared_offset / 0x10000) & 0x0f);
+{f011_symbols}
 
 ASSERT(ADDR(.lisp65_c2_static_stack) == 0xc074 &&
        SIZEOF(.lisp65_c2_static_stack) <= 12 &&
@@ -3476,6 +3700,7 @@ ASSERT(__lisp65_c2_mapped_far_required == 0 ||
 ASSERT(__lisp65_c2_mapped_far_required == 0 ||
        {ordinary_text_assertion},
        "ordinary text displaced the mapped far facade");
+{f011_assertion}
 ASSERT({int(cpu['start'], 0):#06x} == 0x6000 &&
        {int(cpu['end_exclusive'], 0):#06x} == 0x8000,
        "mapped CPU slab contract drifted");
@@ -3667,6 +3892,8 @@ def scoped_probe_definitions(
     result = list(extra_definitions)
     if FULL_MAP_OWNERSHIP and CONVERGENCE_FEATURE not in result:
         result.append(CONVERGENCE_FEATURE)
+    if FIXED_RAW_BSS_OWNERS and "LISP65_C2_FIXED_RAW_BSS_OWNERS" not in result:
+        result.append("LISP65_C2_FIXED_RAW_BSS_OWNERS")
     for scope in SOURCE_OWNER_SCOPES:
         trigger = str(scope["trigger"])
         companions = set(scope["defines"]) - {trigger}
@@ -4111,7 +4338,15 @@ def compile_link(out: Path, name: str, headers: list[Path],
         static_report=consumed_report, stdlib_report=stdlib_consumed_report,
         linker_script=out / "c2-substitution.ld",
         compiler_sources=compiler_sources,
-        feature_report=feature_consumption_report)
+        feature_report=feature_consumption_report,
+        fixed_raw_reservations=([
+            {"section": ".lisp65_c2_terminal_return_raw_owner",
+             "start": 0xB582, "end_exclusive": 0xB592,
+             "derivation": "final non-control terminal-return raw targets"},
+            {"section": ".lisp65_c2_input_raw_owner",
+             "start": 0xBC90, "end_exclusive": 0xBD00,
+             "derivation": "C2K input-ring through events-taken equates"},
+        ] if FIXED_RAW_BSS_OWNERS else None))
     write(Path(str(target) + ".authority-input-consumption.json"),
           json.dumps(authority_inventory, indent=2, sort_keys=True) + "\n")
     if os.environ.get("LISP65_DISABLE_LINK_ASLR") == "1":
@@ -4992,6 +5227,19 @@ def _full_map_final_section_owners() -> list[dict[str, object]]:
         name = str(value["name"])
         is_relocation = name.startswith(".rela.")
         policy = value.get("size_policy")
+        # Six was a historical demand, not the compiler's owned capacity.
+        # Keep the sealed row as history; derive the live envelope from the
+        # independent state-owner contract, never from the candidate ELF.
+        if name == ".lisp65_c2_static_stack":
+            arena = json.loads((ROOT / "config/c2-state-ownership-contract.json")
+                               .read_text())["arena_skeleton"]["compiler_static_stack"]
+            start = int(arena["start"], 0)
+            end = int(arena["end_exclusive"], 0)
+            if (start != int(str(value["address"]), 0)
+                    or end - start != int(arena["capacity_bytes"])):
+                raise RuntimeError("compiler static-stack owner authorities disagree")
+            value = {**value, "capacity_bytes": end - start}
+            policy = "candidate-derived-section-bytes"
         if policy is None:
             policy = (
                 "candidate-derived-relocation-records"
@@ -5024,6 +5272,31 @@ def _full_map_final_section_owners() -> list[dict[str, object]]:
                 MAPPED_FACADE_TEXT_FLOOR_BYTES
                 if name == ".lisp65_c2_mapped_far_facade" else None),
         })
+    if FIXED_RAW_BSS_OWNERS:
+        owners.extend((
+            {"name": ".lisp65_c2_terminal_return_raw_owner",
+             "address": 0xB582, "bytes": 16,
+             # A linker-only NOLOAD reservation has no input section from
+             # which LLD could inherit SHF_WRITE.  Its allocation, exact
+             # address and extent are the ownership contract; requiring a
+             # write flag here would pin an incidental ELF representation.
+             "flags": ("SHF_ALLOC",),
+             "size_policy": "fixed-contract", "capacity_bytes": 16,
+             "address_policy": "fixed-contract", "arena_start": None,
+             "arena_end": None, "text_floor_bytes": None},
+            {"name": ".lisp65_c2_input_raw_owner",
+             "address": 0xBC90, "bytes": 112,
+             "flags": ("SHF_ALLOC", "SHF_WRITE"),
+             "size_policy": "fixed-contract", "capacity_bytes": 112,
+             "address_policy": "fixed-contract", "arena_start": None,
+             "arena_end": None, "text_floor_bytes": None},
+            {"name": ".lisp65_c2_symbol_metadata_bss",
+             "address": 0xBD00, "bytes": 566,
+             "flags": ("SHF_ALLOC", "SHF_WRITE"),
+             "size_policy": "fixed-contract", "capacity_bytes": 566,
+             "address_policy": "fixed-contract", "arena_start": None,
+             "arena_end": None, "text_floor_bytes": None},
+        ))
     names = [str(row["name"]) for row in owners]
     if len(set(names)) != len(names):
         raise RuntimeError("full-map final-section owners are not unique")
@@ -5128,9 +5401,16 @@ def active_card_freight_registries() -> list[dict[str, object]]:
          "mapped-arena-contract"),
         ("product-cold-disk-chain", product_cold_inventory_registration(),
          "mapped-arena-contract"),
+        ("block-26-f011-cold-read", f011_cold_inventory_registration(),
+         "derived-before-far-service/shared-map-offset"),
+        ("f011-first-read-first-failure", f011_status_inventory_registration(),
+         "candidate-derived-after-ordinary-bss"),
         ("symbol22-first-fault-latch",
          symbol22_latch_inventory_registration(),
          "composed-raw-owner/preheap-gap"),
+        ("fixed-raw-and-split-bss",
+         fixed_raw_bss_inventory_registration(),
+         "linker-visible-fixed-raw/split-bss"),
     )
     active: list[dict[str, object]] = []
     for registry, registration, placement_gate in candidates:
@@ -5146,6 +5426,46 @@ def active_card_freight_registries() -> list[dict[str, object]]:
     if len(names) != len(set(names)):
         raise RuntimeError("active card registries have double authority")
     return active
+
+
+def f011_status_inventory_registration() -> dict[str, object]:
+    """Explicit temporary instrument world; no relocation in its data owner."""
+    selected = F011_STATUS_WITNESS_ENABLED
+    if selected and not (F011_COLD_ENABLED and FIXED_RAW_BSS_OWNERS):
+        raise RuntimeError("F011 witness requires cold reader and raw reservations")
+    names = [".noinit.lisp65_f011_status"] if selected else []
+    return {"selected": selected, "allocated": names, "relocations": [],
+            "relocation_free_allocated": names, "names": names,
+            "authority": "explicit product-card instrument world",
+            "record_bytes": 3, "placement": "ADDR(.bss)+SIZEOF(.bss)"}
+
+
+def fixed_raw_bss_inventory_registration() -> dict[str, object]:
+    """Expose linker-visible raw reservations as additive card freight.
+
+    Acceptance consumes the same final-section owner catalog as the linker
+    inventory.  This prevents the Golden/card-freight split from treating a
+    semantically owned, zero-file-byte NOLOAD reservation as an unknown ELF
+    section merely because it has no source object of its own.
+    """
+    names = (".lisp65_c2_terminal_return_raw_owner",
+             ".lisp65_c2_input_raw_owner",
+             ".lisp65_c2_symbol_metadata_bss")
+    owners = {str(row["name"]): row for row in
+              (_full_map_final_section_owners()
+               if FIXED_RAW_BSS_OWNERS else [])}
+    if FIXED_RAW_BSS_OWNERS and set(names) - set(owners):
+        raise RuntimeError("fixed-raw Acceptance owner population incomplete")
+    return {
+        "selected": FIXED_RAW_BSS_OWNERS,
+        "allocated": list(names) if FIXED_RAW_BSS_OWNERS else [],
+        "owners": {name: {
+            "address": int(owners[name]["address"]),
+            "bytes": int(owners[name]["bytes"]),
+            "flags": list(owners[name]["flags"]),
+        } for name in names} if FIXED_RAW_BSS_OWNERS else {},
+        "authority": "profile-derived final-section owner catalog",
+    }
 
 
 def symbol22_latch_inventory_registration(
@@ -5300,6 +5620,7 @@ def input_capture_compile_profile(
          "recovery-quiescence"),
         (SYMBOL22_LATCH_FEATURE, SYMBOL22_LATCH_ENABLED,
          "symbol22-first-fault-latch"),
+        (F011_COLD_FEATURE, F011_COLD_ENABLED, "block-26-f011-cold-read"),
     )
     for feature, enabled, label in features:
         count = definitions.count(feature)
@@ -5406,6 +5727,10 @@ def final_section_inventory_expectation() -> dict[str, object]:
     product_cold_inventory = product_cold_inventory_registration()
     profile_names.extend(
         str(name) for name in product_cold_inventory["names"])
+    f011_cold_inventory = f011_cold_inventory_registration()
+    profile_names.extend(str(name) for name in f011_cold_inventory["names"])
+    profile_names.extend(str(name) for name in
+                         f011_status_inventory_registration()["names"])
     symbol22_inventory = symbol22_latch_inventory_registration()
     profile_names.extend(str(name) for name in symbol22_inventory["names"])
     if FULL_MAP_OWNERSHIP:
@@ -5438,6 +5763,7 @@ def final_section_inventory_expectation() -> dict[str, object]:
         "input_capture_registration": capture_inventory,
         "refill_witness_registration": witness_inventory,
         "product_cold_registration": product_cold_inventory,
+        "f011_cold_registration": f011_cold_inventory,
         "symbol22_latch_registration": symbol22_inventory,
         "derivation": (
             "Link-28 stable envelope minus its append ABI, plus the configured "
@@ -5451,10 +5777,14 @@ def final_section_inventory_expectation() -> dict[str, object]:
             "sections and their relocation sections; "
             "the selected product-cold feature contributes its mapped disk-"
             "chain section and relocation from the same build authority; "
+            "the selected F011-cold feature contributes its derived mapped "
+            "read section and relocation from the same build authority; "
             "the selected symbol22 first-fault feature contributes its one "
             "derived-gap section and relocation from the same registry; "
             "the selected full-map profile adds its five named owned sections "
             "and two relocation sections from the independent v1.8 contract; "
+            "the selected fixed-raw/BSS profile additionally derives its two "
+            "raw NOLOAD owners and one symbol-metadata BSS successor class; "
             "the target ELF is never an expectation source"),
     }
 
@@ -5591,6 +5921,16 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
             raise AssertionError(
                 f"full-map moved-section mutation accepted: {section}")
         movement_mutations[section] = "rejected"
+        changed_flags = [
+            ({**row, "flags": (
+                [] if row["flags"] else ["SHF_ALLOC"])}
+             if row["name"] == section else dict(row))
+            for row in valid]
+        marker = f"full-map-owner-flags:{section}"
+        if marker not in _final_section_inventory_violations(
+                expected, changed_flags, owners):
+            raise AssertionError(
+                f"full-map changed-flags mutation accepted: {section}")
         if owner.get("size_policy") == "candidate-derived-relocation-records":
             resized = [
                 ({**row, "bytes": int(row["bytes"]) - 12}
@@ -5627,6 +5967,16 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
                     expected, overflow, owners):
                 raise AssertionError(
                     f"candidate-derived section overflow accepted: {section}")
+        elif owner.get("size_policy") == "fixed-contract":
+            resized = [
+                ({**row, "bytes": int(row["bytes"]) + 1}
+                 if row["name"] == section else dict(row))
+                for row in valid]
+            marker = f"full-map-owner-size:{section}"
+            if marker not in _final_section_inventory_violations(
+                    expected, resized, owners):
+                raise AssertionError(
+                    f"fixed owner resized mutation accepted: {section}")
     stray = [*valid, {"name": ".lisp65_unowned_stray", "address": 0,
                       "bytes": 1, "flags": ["SHF_ALLOC"]}]
     if "section-name-set" not in _final_section_inventory_violations(
@@ -5958,8 +6308,8 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
             required_sections[".noinit"] = (
                 FIXED_BANK0_HOT_BSS_BASE + FIXED_BANK0_HOT_BSS_BYTES, 0)
             required_sections[FIXED_BLOCK_LEAF.OWNED_STACK_SECTION] = (
-                FIXED_BLOCK_LEAF.OWNED_STACK_ADDRESS,
-                FIXED_BLOCK_LEAF.OWNED_STACK_BYTES)
+                fixed_leaf["hot_bss"]["owned_static_stack"]["address"],
+                fixed_leaf["hot_bss"]["owned_static_stack"]["bytes"])
         else:
             required_sections[".noinit"] = (
                 FIXED_BANK0_HOT_BSS_BASE + FIXED_BANK0_HOT_BSS_BYTES,
@@ -6104,7 +6454,7 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
                 "owned_static_stack": ({
                     "section": FIXED_BLOCK_LEAF.OWNED_STACK_SECTION,
                     "base": FIXED_BLOCK_LEAF.OWNED_STACK_ADDRESS,
-                    "bytes": FIXED_BLOCK_LEAF.OWNED_STACK_BYTES,
+                    "bytes": fixed_leaf["hot_bss"]["owned_static_stack"]["bytes"],
                 } if FULL_MAP_OWNERSHIP else None),
                 "geometry_authority": (
                     "full-map-state-ownership"
