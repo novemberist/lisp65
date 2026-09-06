@@ -153,14 +153,78 @@ def selftest():
     print('PASS: raw-pair mutations=4; no build invoked')
 
 
+def qualify_remaining(repository, commit, public_main, toolchain, output,
+                      first_root, consumer_preflight):
+    """Owner-authorized completion rebind: never repeat the first compilation."""
+    commit, parent = lineage(repository, commit, public_main)
+    require(not output.exists(), 'second reproduction already invoked; no retry')
+    first_commit = run(['git','rev-parse','HEAD'], first_root).strip()
+    changed = run(['git','diff','--name-only',first_commit,commit], repository).splitlines()
+    require(changed and all(p.startswith('tools/host-lisp/c2_v210_')
+                           or p == 'config/public-export-binary-contract.json'
+                           for p in changed), 'rebind changed non-release-chain sources')
+    preflight = json.loads(consumer_preflight.read_text())
+    require(preflight['status'] == 'PASS' and not preflight['unbound_inputs']
+            and len(preflight['mutations_rejected']) == 5
+            and preflight['product_compiler_invocations'] == 0,
+            'complete consumer preflight is not green')
+    for row in preflight['executed_tool_sources']:
+        blob = subprocess.check_output(['git','show',f"{commit}:{row['path']}"],cwd=repository)
+        require(len(blob) == row['bytes'] and hashlib.sha256(blob).hexdigest() == row['sha256'],
+                'preflight code differs from second reproduction: '+row['path'])
+    first = check_root(first_root)
+    export = EXPORT.audit_export(EXPORT.commit_blobs(repository, commit))
+    export['mutations'] = EXPORT.selftest()
+    output.mkdir(parents=True)
+    invocation = {'authorization':'fb08e5cb', 'first_compilation_commit':first_commit,
+        'second_compilation_commit':commit, 'public_main':parent,
+        'host_only_rebind_paths':changed, 'first_product_rebuilds':0,
+        'remaining_product_reproductions':1,
+        'consumer_preflight':identity(consumer_preflight)}
+    (output/'invocation.json').write_text(json.dumps(invocation,indent=2)+'\n')
+    (output/'export-population.json').write_text(json.dumps(export,indent=2,sort_keys=True)+'\n')
+    checkout = output/'clean-2'
+    env={**os.environ,'GIT_LFS_SKIP_SMUDGE':'1','PYTHONDONTWRITEBYTECODE':'1'}
+    run(['git','clone','--no-local','--no-checkout',str(repository),str(checkout)],output,env)
+    run(['git','checkout','--detach',commit],checkout,env)
+    require(not (checkout/'build').exists() and not (checkout/'tools/llvm-mos').exists(),
+            'second reproduction is not clean')
+    (checkout/'tools/llvm-mos').symlink_to(toolchain,target_is_directory=True)
+    facts=DOCS.facts(checkout); texts=DOCS.source_texts(checkout)
+    docs=DOCS.validate(texts,DOCS.TOP,facts)
+    docs['mutations_rejected']=DOCS.selftest(texts,facts)
+    (output/'docs-2.json').write_text(json.dumps(docs,indent=2,sort_keys=True)+'\n')
+    axis=BASE.AXES[1]
+    env.update({key:axis[key] for key in ('PYTHONHASHSEED','SOURCE_DATE_EPOCH','TZ')})
+    env['LLVM_MOS_ROOT']=str(toolchain)
+    with (output/'attempt-2.json').open('x') as handle:
+        json.dump({'attempt':2,'source_commit':commit,'command':COMMAND,'axis':axis},handle,indent=2)
+    with (output/'clean-2.log').open('x') as log:
+        process=subprocess.run(COMMAND,cwd=checkout,env=env,stdout=log,
+            stderr=subprocess.STDOUT,umask=int(axis['UMASK'],8))
+    require(process.returncode==0, f'HALT: second reproduction exited {process.returncode}; no retry')
+    second=check_root(checkout)
+    require(second['raw_pair']==first['raw_pair'] and second['artifacts']==first['artifacts'],
+            'HALT: independent product reproduction differs')
+    receipt={'format':'lisp65-v210-public-clean-build-resumed-v1','status':'PASS',
+        **invocation,'first':first,'second':second,
+        'claim':'two independent exact product/role reproductions; first completion used an authorized host-only rebind, not a rebuilt product',
+        'first_root':str(first_root),'second_root':str(checkout),
+        'card_budget_consumption':False,'public_writes':0}
+    (output/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+    print('PASS: two exact product reproductions, first resumed without rebuilding; Publish closed')
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action',choices=('selftest','qualify','check-root'))
+    parser.add_argument('action',choices=('selftest','qualify','qualify-remaining','check-root'))
     parser.add_argument('--repository',type=Path)
     parser.add_argument('--commit')
     parser.add_argument('--public-main')
     parser.add_argument('--toolchain',type=Path)
     parser.add_argument('--output',type=Path)
+    parser.add_argument('--first-root',type=Path)
+    parser.add_argument('--consumer-preflight',type=Path)
     args=parser.parse_args()
     if args.action=='selftest':
         selftest()
@@ -169,8 +233,13 @@ def main():
     else:
         require(all((args.repository,args.commit,args.public_main,args.toolchain,args.output)),
                 'all public reproduction authorities must be explicit')
-        qualify(args.repository.resolve(),args.commit,args.public_main,
+        common=(args.repository.resolve(),args.commit,args.public_main,
                 args.toolchain.resolve(),args.output.resolve())
+        if args.action=='qualify-remaining':
+            require(args.first_root and args.consumer_preflight, 'resume authorities absent')
+            qualify_remaining(*common,args.first_root.resolve(),args.consumer_preflight.resolve())
+        else:
+            qualify(*common)
 
 
 if __name__=='__main__':

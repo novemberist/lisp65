@@ -6,7 +6,28 @@ from pathlib import Path
 import shutil
 
 
-def pack(P):
+def bind_packed_name_authority(P, product_path):
+    """Diagnostic name classification comes from all current image manifests."""
+    import c2_packed_symbolic_callee_closure as C
+    bindings = P.load(product_path)["manifests"]
+    entries, inputs = [], []
+    for row in bindings:
+        path = P.ROOT / row["path"]
+        P.require(P.bind(path) == row, 'packed manifest path/value divergence')
+        value = P.load(path)
+        P.require(isinstance(value.get('entries'), list), 'packed name population absent')
+        entries.extend({'name': e['name'], 'anonymous': bool(e.get('anonymous', False))}
+                       for e in value['entries'])
+        inputs.append(row)
+    P.require(entries, 'empty packed name population')
+    path = P.PUBLIC/'packed-name-authority.json'
+    path.write_bytes(P.canonical({'entries': entries, 'inputs': inputs,
+        'scope': 'current packed image manifests; no historical anonymous-name fixture'}))
+    C.ANONYMOUS_AUTHORITY = path
+    return P.bind(path)
+
+
+def pack(P, *, resume=False):
     import c2_v160_refill_boundary_witness_media_repair as FACADE
     import c2_lite_canonical_product as CAN
     import c2_lite_media_product as MEDIA
@@ -17,14 +38,18 @@ def pack(P):
     import c2_v160_nested_map_swap_media as NESTED
     root, final, plane = P.ROOT, P.BUILD/'wplto', P.PLANE_ROOT
     out = P.PUBLIC/'renderer-media'
-    P.require(not out.exists(), 'public media completion is one-shot')
-    out.mkdir()
+    P.require(out.is_dir() if resume else not out.exists(),
+              'public media completion lifecycle drift')
+    if not resume:
+        out.mkdir()
     completion = out/'completion'
-    shutil.copytree(final, completion)
+    if not resume:
+        shutil.copytree(final, completion)
     target = completion/P.PRG.name
     elf = completion/P.ELF.name
     before = P.PRG.read_bytes()
-    predecessors = NESTED.materialize_candidate_publish_predecessors(completion, target, elf)
+    predecessors = (P.load(completion/'packed-prg-facade-predecessor-rebind.json')
+        if resume else NESTED.materialize_candidate_publish_predecessors(completion, target, elf))
     address, expected = FACADE.facade_truth(elf)
     _raw, offset = FACADE.prg_span(target, address, len(expected))
     after = target.read_bytes()
@@ -35,7 +60,7 @@ def pack(P):
     for name in ('c2-product-kernal-window.bin', 'runtime-overlays-boot-final.bin',
                  'runtime-overlays-session-final.bin', 'runtime-overlays-session-final-region1.bin', P.ELF.name):
         P.require((completion/name).read_bytes() == (final/name).read_bytes(), 'completion drift: '+name)
-    CAN.ARTIFACTS = out/'artifacts'; CAN.ARTIFACTS.mkdir()
+    CAN.ARTIFACTS = out/'artifacts'; CAN.ARTIFACTS.mkdir(exist_ok=resume)
     bootstage, geometry = CAN.build_boot_stage(elf, P.PROFILE)
     truth = ElfTruth.read(elf, llvm_readobj=root/'tools/llvm-mos/bin/llvm-readobj', include_section_data=True)
     names = [s.name for s in truth.sections if s.name.startswith('.lisp65_c2_mapped_')
@@ -72,22 +97,38 @@ def pack(P):
     domains = MEDIA.stage_domain_gate(media_rows)
     stager = out/'autoboot.c65'
     opt = COMPOSE.BASE.MEDIA.PREP.LIVENESS.OPT_IN
-    stager_gate = MEDIA.compile_stager(build_id, media_rows, build_dir=out,
-        stager=stager, stager_map=Path(str(stager)+'.map'), compile_defines=(opt,))
+    if resume:
+        identity = P.bind(stager)
+        P.require({k: identity[k] for k in ('bytes','sha256')} ==
+                  P.authority()['sealed_roles']['cold-stager'], 'resume stager drift')
+        stager_gate = {'status': 'PASS', 'mode': 'exact qualified stager identity',
+                       'artifact': identity, 'compiler_invocations': 0}
+    else:
+        stager_gate = MEDIA.compile_stager(build_id, media_rows, build_dir=out,
+            stager=stager, stager_map=Path(str(stager)+'.map'), compile_defines=(opt,))
     medium = out/'lisp65-product.d81'
     entries = [(stager,'autoboot.c65'), (desc,'boot.id'),
                *[(r['path'],r['name']) for r in media_rows]]
-    MEDIA.build_d81(medium, 'L65SYS,65', entries); MEDIA.D81.stamp_product_boot_marker(medium)
+    if not resume:
+        MEDIA.build_d81(medium, 'L65SYS,65', entries); MEDIA.D81.stamp_product_boot_marker(medium)
     actual = D81.visible_files(medium.read_bytes())
     P.require(actual == {name.upper().encode():path.read_bytes() for path,name in entries},
               'packed role readback differs')
     P.require(actual[b'CODE.BIN'] == bytes(image), 'packed code projection differs')
-    projection = out/'readback-product'; shutil.copytree(plane/'product', projection)
+    projection = out/'readback-product'
+    if not resume:
+        shutil.copytree(plane/'product', projection)
     offset = 0
     for key in P.CARD.STRIP.PRODUCT_KEYS:
         source = projection/(key+'.code.bin'); n = source.stat().st_size
-        source.write_bytes(actual[b'CODE.BIN'][offset:offset+n]); offset += n
+        payload = actual[b'CODE.BIN'][offset:offset+n]
+        if resume:
+            P.require(source.read_bytes() == payload, 'resume packed projection drift')
+        else:
+            source.write_bytes(payload)
+        offset += n
     P.require(offset == len(prefix), 'packed static population extent mismatch')
+    name_authority = bind_packed_name_authority(P, projection/'substitution-artifacts.json')
     closure = DELIVERY.CLOSURE.derive(projection/'substitution-artifacts.json')
     DELIVERY.CLOSURE.require_closed(closure)
     coherence = DELIVERY.COHERENCE.derive(plane/'stdlib-p0.manifest.json',
@@ -121,7 +162,8 @@ def pack(P):
         'completion':{'predecessors':predecessors,'facade':facade},
         'boot_geometry':geometry,'descriptor':parsed,'descriptor_mutations':mutations,
         'domains':domains,'reset':reset,'stager':stager_gate,
-        'closure':closure,'coherence':coherence,'product_rebuilds':0,'product_links':0}
+        'closure':closure,'coherence':coherence,'name_authority':name_authority,
+        'artifact_only_resume':resume,'product_rebuilds':0,'product_links':0}
     P.require(value['artifact_set_sha256'] == P.authority()['sealed_product_artifact_set_sha256'],
               'public media aggregate differs from sealed target')
     P.MANIFEST_OUT.write_bytes(P.canonical(value))

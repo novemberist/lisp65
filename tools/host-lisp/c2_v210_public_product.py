@@ -194,6 +194,8 @@ def bind_l_full_consumer() -> None:
 
 
 def original_relative(raw: str) -> Path:
+    if Path(raw).is_absolute() and Path(raw).is_relative_to(ROOT):
+        return Path(raw).relative_to(ROOT)
     marker = "/lisp65-cp4-safety-20260712/"
     candidate = raw.split(marker, 1)[1] if marker in raw else raw
     result = Path(candidate)
@@ -279,6 +281,14 @@ def rebind_plane_source_manifest() -> dict[str, Any]:
     require(len(product["manifests"]) == 6,
             "v2.0 public product manifest inventory drift")
     product["manifests"][0] = bind(manifest_path)
+    # Serialized inputs retain their bytes, but their producer-owned paths
+    # must describe this checkout's materialization, not the source era.
+    for role, row in product["artifacts"].items():
+        target = product_path.parent / Path(row["path"]).name
+        observed = bind(target)
+        require(all(observed[k] == row[k] for k in ("bytes", "sha256")),
+                "materialized Plane artifact differs: " + role)
+        product["artifacts"][role] = observed
     product_path.write_bytes(canonical(product))
 
     return {"source_root": ROOT.as_posix(), "source_count": 25,
@@ -483,8 +493,8 @@ def configure_card() -> None:
         "status": "PUBLIC SOURCE PROFILE AUTHORITY",
         "private_evidence_inputs": 0,
         "artifacts_after": {"ELF": {"path":
-            (PLANE_SOURCE / "profile-anchor.elf").relative_to(ROOT).as_posix()}},
-        "profile": bind(PLANE_SOURCE / "resolved-profile.txt"),
+            ELF.relative_to(ROOT).as_posix()}},
+        "profile": bind(ROOT / "config/c2-v210-renderer-profile.txt"),
     }))
     CARD.PREDECESSOR_RECEIPT = public_predecessor
     CARD.INVOCATION = PUBLIC / "public-link-invocation.json"
@@ -638,6 +648,36 @@ def configure_card() -> None:
     CARD.CHAIN.LINK.DIRECT_ENTRY_RECEIPT = PUBLIC_DIRECT_ENTRY
     v160.CAPACITY.capacity_authority = v160.public_capacity
     bind_l_full_consumer()
+    if not hasattr(product_link, "_v210_closure_gate"):
+        product_link._v210_closure_gate = product_link.closure_gate
+    def public_closure_gate(out, final):
+        expected = load(PLANE_ROOT / "product/substitution-artifacts.json")["artifacts"]
+        for field, role in (("INITIAL_C2D", "initial_c2d"), ("PRODUCT_SHELF", "shelf")):
+            require(hasattr(product_link, field), 'closure consumer omitted: '+field)
+            path = getattr(product_link, field)
+            require(path.parent == PLANE_ROOT / "product"
+                    and bind(path) == expected[role],
+                    "closure consumer path/value divergence: " + field)
+        return product_link._v210_closure_gate(out, final)
+    product_link.closure_gate = public_closure_gate
+
+
+def bind_completion_plane() -> dict[str, Any]:
+    """Bind both post-link input consumers from the materialized authority."""
+    product = importlib.import_module("c2_product_substitution_link")
+    manifest = PLANE_ROOT / "product/substitution-artifacts.json"
+    require(product.resolved_product_artifacts_manifest() == manifest,
+            "completion manifest resolver differs from renderer producer")
+    value = load(manifest)
+    for field, role in (("INITIAL_C2D", "initial_c2d"), ("PRODUCT_SHELF", "shelf")):
+        row = value["artifacts"][role]
+        path = ROOT / row["path"]
+        require(path.parent == manifest.parent and bind(path) == row,
+                "completion Plane path/value divergence: " + role)
+        setattr(product, field, path)
+    return {"authority": bind(manifest),
+            "INITIAL_C2D": bind(product.INITIAL_C2D),
+            "PRODUCT_SHELF": bind(product.PRODUCT_SHELF)}
 
 
 def produce_child(action: str) -> None:
@@ -943,6 +983,10 @@ def build_link() -> dict[str, Any]:
         "authority": {"public-current-source": True,
                       "private_evidence_inputs": 0}}))
     output = run_child("_produce")
+    return qualify_link(output)
+
+
+def qualify_link(output: str) -> dict[str, Any]:
     observed = {"PRG": bind(PRG), "ELF": bind(ELF), "profile": bind(PROFILE)}
     for role, identity in observed.items():
         require((identity["bytes"], identity["sha256"]) == EXPECTED_RAW[role],
@@ -969,6 +1013,41 @@ def build_link() -> dict[str, Any]:
         "final_product": {"packed_product": delivered}}
     LINK_RECEIPT.write_bytes(canonical(value))
     print("v2.0 public product: LINK PASS WPLTO=1 evidence=0")
+    return value
+
+
+def resume_postlink() -> dict[str, Any]:
+    """Resume strictly after publish-last/family packing; never replay it."""
+    before = {role: bind(path) for role, path in
+              (("PRG", PRG), ("ELF", ELF), ("profile", PROFILE))}
+    require(all((row["bytes"], row["sha256"]) == EXPECTED_RAW[role]
+                for role, row in before.items()), "resume requires exact renderer pair")
+    out = PUBLIC / "postlink-resume.json"
+    require(not out.exists(), "postlink resume already completed")
+    configure_card()
+    rebind_plane_source_manifest()
+    # Restore the same feature/owner configuration as the original producer,
+    # without invoking its compile/link entry point.
+    CARD.CHAIN.LINK.configure()
+    CARD.CHAIN.LINK.setup_child()
+    binding = bind_completion_plane()
+    product = importlib.import_module("c2_product_substitution_link")
+    # These are the gates following the failed load, not finish_single_link:
+    # the latter includes publish-last mutation and must never be replayed.
+    wplto = PRG.parent
+    require((wplto / "runtime-overlays-session-final.bin").is_file(),
+            "resume has no completed runtime-family image")
+    product.closure_gate(wplto, PRG)
+    kernal = product.kernal_freedom_gate(wplto, PRG)
+    balance = product.substitution_balance(wplto, PRG, kernal)
+    require(before == {role: bind(path) for role, path in
+                       (("PRG", PRG), ("ELF", ELF), ("profile", PROFILE))},
+            "postlink gates changed frozen product")
+    value = {"status": "PASS", "binding": binding, "pair": before,
+             "kernal": kernal, "balance": balance,
+             "seed_WPLTO": 0, "final_C_LTO": 0, "product_links": 0}
+    out.write_bytes(canonical(value))
+    qualify_link("artifact-only post-link continuation; original build log retained")
     return value
 
 
