@@ -53,7 +53,7 @@ def lineage(repository, commit, public_main):
     return selected, parent
 
 
-def check_root(root):
+def check_root(root, *, source_projection=None):
     authority = json.loads((root/AUTHORITY).read_text())
     require(authority['release'] == 'v2.1.0'
             and authority['producer_preflight_complete'] is True
@@ -81,7 +81,8 @@ def check_root(root):
         roles[row['role']] = {k: row[k] for k in ('role','name','bytes','sha256')}
     require(set(roles) == set(authority['sealed_roles']), 'omitted artifact role')
     return {'raw_pair': rows, 'artifacts': [roles[k] for k in sorted(roles)],
-            'source_projection': BASE.public_source_projection(root)}
+            'source_projection': (BASE.public_source_projection(root)
+                                  if source_projection is None else source_projection)}
 
 
 def qualify(repository, commit, public_main, toolchain, output):
@@ -172,7 +173,20 @@ def qualify_remaining(repository, commit, public_main, toolchain, output,
         blob = subprocess.check_output(['git','show',f"{commit}:{row['path']}"],cwd=repository)
         require(len(blob) == row['bytes'] and hashlib.sha256(blob).hexdigest() == row['sha256'],
                 'preflight code differs from second reproduction: '+row['path'])
-    first = check_root(first_root)
+    overlay = run(['git','diff','--name-only'],first_root).splitlines()
+    overlay += run(['git','ls-files','--others','--exclude-standard'],first_root).splitlines()
+    require(set(overlay) <= set(changed), 'first completion changed an unbound source')
+    overlay_rows = []
+    for path in sorted(set(overlay)):
+        selected = subprocess.check_output(['git','show',f'{commit}:{path}'],cwd=repository)
+        require((first_root/path).read_bytes() == selected,
+                'first completion overlay differs from selected release chain: '+path)
+        overlay_rows.append({'path':path,**identity(first_root/path)})
+    first = check_root(first_root,source_projection={
+        'source_tree_clean':False, 'compilation_source_commit':first_commit,
+        'authorized_artifact_only_completion_overlay':overlay_rows,
+        'product_sources_changed':False,
+        'note':'original clean compile retained; no claim of a new clean compile on the rebound host-tool commit'})
     export = EXPORT.audit_export(EXPORT.commit_blobs(repository, commit))
     export['mutations'] = EXPORT.selftest()
     output.mkdir(parents=True)
