@@ -30,6 +30,9 @@ CLANG = ROOT / "tools/llvm-mos/bin/mos-mega65-clang"
 READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 AUTHORITY = "ad4a25ad"
 SEALED_COMMIT = "30279915b3afe3c2c2469fe3da341613e877d65d"
+# The additive 41+43 component fixture was introduced by this later gate
+# conversion. Its price is historical, not a constraint on a live successor.
+ASSEMBLED_SOURCE_COMMIT = "8362a4fd"
 WINDOW_SECTIONS_PREFIX = ".lisp65_rt_"
 SERVICE = ".lisp65_c2_mapped_far_service"
 STACK_RETURN_OFFSET = 7
@@ -265,7 +268,10 @@ def component_membership(truth: ElfTruth, *, full_section: bool) -> dict[str, An
 def assembled_price() -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="c2-active-frame-") as name:
         obj = Path(name) / "service.o"
-        subprocess.run([str(CLANG), "-c", "-Isrc", str(SOURCE), "-o", str(obj)],
+        historical_source = Path(name) / "service.s"
+        historical_source.write_bytes(ERA.era_blob(
+            ASSEMBLED_SOURCE_COMMIT, SOURCE.relative_to(ROOT).as_posix()))
+        subprocess.run([str(CLANG), "-c", "-Isrc", str(historical_source), "-o", str(obj)],
                        cwd=ROOT, check=True, stdout=subprocess.PIPE,
                        stderr=subprocess.PIPE)
         truth = ElfTruth.read(obj, llvm_readobj=READOBJ, include_section_data=True)
@@ -397,11 +403,115 @@ def validate(value: dict[str, Any]) -> None:
             "active-frame mutation receipt drift")
 
 
+def descriptor_gate(elf: Path) -> dict[str, Any]:
+    """Execute the linked descriptor ABI, independently of C prologue size.
+
+    This is a local instruction contract, not a replacement for the packed
+    direct-evaluation/compilation recovery rows or the separate RTI proof.
+    """
+    from f011_frame_emitted_semantics import NativeCPU
+    t = ElfTruth.read(elf, llvm_readobj=READOBJ, include_section_data=True)
+    names = {s.name for s in t.symbols}
+    require({'lisp_abort_code', 'lisp_abort_symbol'} <= names,
+            'required descriptor entry absent')
+    entries = [n for n in ('lisp_abort_code', 'lisp_abort_symbol', 'lisp_abort')
+               if n in names]
+    walker = t.symbol('c2_rtov_retire_continuations')
+    template = bytearray(65536)
+    # The mapped far body aliases ordinary .text. Install its active view
+    # last; entry shims remain in the unaffected resident part of .text.
+    sections = sorted({t.symbol(n).section for n in entries} - {walker.section})
+    for name in [*sections, walker.section]:
+        section = t.section(name)
+        require(0 <= section.address < section.address + section.bytes <= 65536,
+                'descriptor code outside CPU address space')
+        template[section.address:section.address + section.bytes] = t.section_bytes(name)
+    rc2, rc3 = [t.symbol(n).value for n in ('__rc2', '__rc3')]
+    start = t.symbol('__lisp65_workbench_overlay_start').value - 1
+    length = t.symbol('__lisp65_workbench_overlay_len').value
+    replacement = t.symbol('c2_retired_continuation_stub').value - 1
+
+    def run(cpu, end):
+        for _ in range(500):
+            if cpu.PC == end:
+                return
+            cpu.step()
+        raise GateError('descriptor execution did not reach its return')
+
+    def execute(memory):
+        count = 0
+        for name in entries:
+            for sp in range(256):
+                c = NativeCPU(bytearray(memory))
+                c.PC = t.symbol(name).value
+                c.SP, c.A, c.X = sp, 39, 0x34
+                c.mem[rc2] = 0x12
+                string = name == 'lisp_abort'
+                end = t.symbol('lisp_abort_captured' if string else
+                               'lisp_abort_symbol_captured').value
+                run(c, end)
+                if string:
+                    require(c.A == (sp + 1) & 255 and
+                            c.mem[rc2] == 39 and c.mem[rc3] == 0x34,
+                            'string descriptor/pointer ABI drift')
+                else:
+                    require(c.mem[rc3] == (sp + 1) & 255 and c.A == 39 and
+                            c.X == (0 if name == 'lisp_abort_code' else 0x34),
+                            'symbol descriptor/value ABI drift')
+                require(c.SP == sp, 'entry changed caller stack')
+                count += 1
+        for pushes in range(32):
+            for slot in (0, 1, 0xd1, 0xff):
+                for word in (0x3046, 0x87c4, start - 1, start,
+                             start + length - 1, start + length):
+                    c = NativeCPU(bytearray(memory))
+                    lo, hi = 256 + slot, 256 + ((slot + 1) & 255)
+                    c.mem[lo], c.mem[hi] = word & 255, word >> 8
+                    c.SP = 0xc9 - pushes
+                    c.push16(0xefff)
+                    c.A, c.PC = slot, walker.value
+                    run(c, 0xf000)
+                    expected = replacement if start <= word < start + length else word
+                    require((c.mem[lo] | c.mem[hi] << 8) == expected,
+                            'retirement used a guessed slot or wrong interval')
+                    count += 1
+        return count
+
+    cases = execute(template)
+    rejected = []
+    # Both controls edit the executed final bytes, not a source expression.
+    entry = t.symbol('lisp_abort_symbol')
+    body = bytes(template[entry.value:entry.value + entry.bytes])
+    require(body.count(b'\xe8\xe8\xe8') == 1, 'entry capture control site absent')
+    capture = entry.value + body.index(b'\xe8\xe8\xe8')
+    body = bytes(template[walker.value:walker.value + walker.bytes])
+    require(body.count(b'\xa8') == 1, 'walker descriptor control site absent')
+    consume = walker.value + body.index(b'\xa8')
+    for name, address in (('capture-one-byte-short', capture),
+                          ('ignore-passed-descriptor', consume)):
+        mutant = bytearray(template)
+        mutant[address] = 0xea
+        try:
+            execute(mutant)
+        except GateError:
+            rejected.append(name)
+        else:
+            raise GateError('descriptor mutation survived: ' + name)
+    return dict(status='PASS: FINAL EMITTED DESCRIPTOR', ELF=bind(elf),
+                entries=entries, cases=cases, mutations_rejected=rejected,
+                claim='Entry/walker ABI only; full prompt recovery separately required')
+
+
 def main() -> int:
     require(len(sys.argv) >= 2 and sys.argv[1] in {"check", "write", "preflight",
-                                                   "final"},
+                                                   "final", "descriptor"},
             "usage: c2_v160_active_frame_liveness.py check|write|preflight|final ELF")
     action = sys.argv[1]
+    if action == 'descriptor':
+        require(len(sys.argv) == 3, 'descriptor action requires ELF')
+        value = descriptor_gate(Path(sys.argv[2]).resolve())
+        print(json.dumps(value, indent=2, sort_keys=True))
+        return 0
     if action == "final":
         require(len(sys.argv) == 3, "final action requires ELF")
         value = final_gate(ROOT / sys.argv[2] if not Path(sys.argv[2]).is_absolute()

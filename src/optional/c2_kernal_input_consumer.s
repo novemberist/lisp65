@@ -23,6 +23,9 @@ c2_kernal_input_take:
 	ora #$20
 	bra .Ltake_commit
 .Ltake_shifted:
+	; $5c (`£`, the quasiquote key) enters here, fails the #$c1 bound and
+	; commits unchanged.  That pass-through is contractual: the reader wants
+	; the byte as ASCII backslash 0x5c, which is the same code.
 	cmp #$c1
 	bcc .Ltake_commit
 	cmp #$db

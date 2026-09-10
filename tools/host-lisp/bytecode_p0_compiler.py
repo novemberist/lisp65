@@ -100,6 +100,24 @@ def _default_program_paths():
     return sorted(glob.glob(os.path.join(_repo_root(), "tests", "bytecode", "programs", "*.json")))
 
 
+# Owner decision 2026-09-08: the device `£` key delivers PETSCII $5c = ASCII
+# backslash, and outside a string literal that is quasiquote sugar, exactly as
+# in src/reader.c.  Both spellings lex to the same "`" token here, so the rest
+# of the compiler sees one quasiquote form and needs no further change.
+QUASIQUOTE_CHARS = "`\\"
+
+# Atom terminators.  A sugar character has to end the preceding token as well
+# as start its own, or `(foo`bar)` lexes as the single symbol "foo`bar" while
+# src/reader.c reads it as two forms.  Backquote had that asymmetry; backslash
+# is added here without inheriting it.
+#
+# Known remaining divergence from src/reader.c:103 `is_delim`: "'", '"' and ","
+# still start a token without terminating one, so `(a,b)` lexes as the symbol
+# "a,b" here.  Closing that needs the `#'` two-character sugar first (adding
+# "'" as a terminator would split `#'foo`), which is a separate owner call.
+ATOM_TERMINATORS = "();`\\"
+
+
 def tokenize(src):
     out = []
     i = 0
@@ -110,7 +128,10 @@ def tokenize(src):
         elif c == ";":
             while i < len(src) and src[i] != "\n":
                 i += 1
-        elif c in "()`":
+        elif c in QUASIQUOTE_CHARS:
+            out.append("`")
+            i += 1
+        elif c == "(" or c == ")":
             out.append(c)
             i += 1
         elif c == "'":
@@ -135,7 +156,7 @@ def tokenize(src):
             i = j + 1
         else:
             j = i
-            while j < len(src) and not src[j].isspace() and src[j] not in "();":
+            while j < len(src) and not src[j].isspace() and src[j] not in ATOM_TERMINATORS:
                 j += 1
             out.append(src[i:j])
             i = j
@@ -1285,6 +1306,67 @@ def check_programs(paths, verbose=False):
     return ok
 
 
+READER_SELFTEST_CASES = [
+    # (source, parsed form) — the £/backslash spelling and the ASCII backquote
+    # spelling must produce byte-identical forms.
+    ("\\(1 ,(+ 1 1))", ["quasiquote", [1, ["unquote", ["+", 1, 1]]]]),
+    ("`(1 ,(+ 1 1))", ["quasiquote", [1, ["unquote", ["+", 1, 1]]]]),
+    ("\\(1 \\(2 ,x))", ["quasiquote", [1, ["quasiquote", [2, ["unquote", "x"]]]]]),
+    ("`(a ,@(b))", ["quasiquote", ["a", ["unquote-splicing", ["b"]]]]),
+    ("\\(a ,@(b))", ["quasiquote", ["a", ["unquote-splicing", ["b"]]]]),
+]
+
+# Sugar characters terminate the preceding token as well as starting their own.
+READER_SELFTEST_TOKENIZATIONS = [
+    ("(foo`bar)", ["(", "foo", "`", "bar", ")"]),
+    ("(foo\\bar)", ["(", "foo", "`", "bar", ")"]),
+    ("(a \\b)", ["(", "a", "`", "b", ")"]),
+    ("\\", ["`"]),
+]
+
+READER_SELFTEST_ERRORS = [
+    "\\",          # sugar without a form
+    "\\(1 2",      # unterminated list behind the sugar
+]
+
+
+def reader_selftest():
+    checked = 0
+    for source, expected in READER_SELFTEST_CASES:
+        got = parse_one(source)
+        if got != expected:
+            raise AssertionError(
+                "reader selftest %r: expected %r got %r" % (source, expected, got)
+            )
+        checked += 1
+    for source, expected in READER_SELFTEST_TOKENIZATIONS:
+        got = tokenize(source)
+        if got != expected:
+            raise AssertionError(
+                "reader selftest tokenize %r: expected %r got %r"
+                % (source, expected, got)
+            )
+        checked += 1
+    for source in READER_SELFTEST_ERRORS:
+        try:
+            parse_one(source)
+        except CompileError:
+            checked += 1
+            continue
+        raise AssertionError("reader selftest %r: expected CompileError" % source)
+    # A backslash inside a string literal is string content, never sugar: the
+    # string branch consumes it before the sugar branch can see it.
+    inside = tokenize('("a\\b")')
+    if len(inside) != 3 or not isinstance(inside[1], StringLit) or inside[1].value != "a\\b":
+        raise AssertionError("reader selftest: backslash inside a string was lexed as sugar")
+    checked += 1
+    # Mutation: the terminator set must actually bite.
+    if "`" not in ATOM_TERMINATORS or "\\" not in ATOM_TERMINATORS:
+        raise AssertionError("reader selftest: sugar characters missing from ATOM_TERMINATORS")
+    checked += 1
+    return checked
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("paths", nargs="*", help="vector JSON files")
@@ -1294,8 +1376,22 @@ def main(argv=None):
         action="store_true",
         help="compile multi-defun programs, compare golden hex, and run via directory",
     )
+    ap.add_argument(
+        "--selftest",
+        action="store_true",
+        help="check the tokenizer/parser reader surface only",
+    )
     ap.add_argument("-v", "--verbose", action="store_true")
     ns = ap.parse_args(argv)
+
+    if ns.selftest:
+        try:
+            checked = reader_selftest()
+        except Exception as e:
+            print("bytecode-p0-compiler-selftest: FAIL: %s" % e, file=sys.stderr)
+            return 1
+        print("bytecode-p0-compiler-selftest: PASS reader-cases=%d" % checked)
+        return 0
 
     paths = ns.paths or (_default_program_paths() if ns.check_programs else _default_paths())
     if not paths:

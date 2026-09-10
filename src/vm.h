@@ -162,4 +162,14 @@ obj vm_native_apply(obj fn, obj arglist);
 obj vm_directory_only_test_callprim(uint8_t pid, obj *args, uint8_t nargs);
 #endif
 
+/* R2 (LISP65_VM_SOFT_FRAMES): VM->VM calls live on an explicit frame stack
+ * inside one vm_run_inner activation instead of on the 6502 hardware stack.
+ * These accessors exist for host harnesses/instrumentation only. */
+#if defined(LISP65_VM_SOFT_FRAMES) && !defined(__mos__)
+uint16_t vm_soft_frame_depth(void);
+uint16_t vm_soft_frame_capacity(void);
+uint16_t vm_soft_frame_high_water(void);
+void     vm_soft_frame_reset(void);
+#endif
+
 #endif /* LISP65_VM_H */

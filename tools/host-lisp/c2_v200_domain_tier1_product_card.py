@@ -1759,6 +1759,20 @@ def derive_contract_authority_closure() -> dict[str, Any]:
     # the profile identity from the closure's own evidence era before hashing
     # the predecessor; target-visible rows are still freshly re-executed.
     predecessor["product_profile"] = deepcopy(durable["product_profile"])
+    # The same historical projection also owns its metadata population.
+    # Verify the named rows from that era before restoring its provenance;
+    # semantic cells are still freshly executed above and compared below.
+    metadata_path = durable["population"]["path"]
+    metadata_raw = subprocess.run(["git", "show",
+        f"{CONTRACT_AUTHORITY_EVIDENCE_ERA}:{metadata_path}"], cwd=ROOT,
+        check=True, stdout=subprocess.PIPE).stdout
+    metadata = json.loads(metadata_raw)
+    expected_names = sorted((r["name"], r["kind"]) for r in metadata["records"])
+    require(hashlib.sha256(metadata_raw).hexdigest() == durable["population"]["sha256"]
+            and expected_names == sorted((r["name"], r["kind"]) for r in predecessor["rows"])
+            and len(expected_names) == durable["population"]["records"],
+            "historical Tier-1 metadata population differs")
+    predecessor["population"] = deepcopy(durable["population"])
     changed = contract_semantic_delta(predecessor, measured)
     classification_changes = [row for row in changed
         if row["before"]["classification"] != row["after"]["classification"]]

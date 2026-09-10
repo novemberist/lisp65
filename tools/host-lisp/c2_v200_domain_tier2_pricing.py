@@ -795,6 +795,7 @@ Machine-readable evidence:
 """
 
 
+@ERA.in_host_source_world("520352a6")
 def selftest() -> None:
     value = derive()
     mutations = []

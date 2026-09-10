@@ -1,0 +1,74 @@
+{
+  "format": "lisp65-capacity-card0-diagnostic-instrument-v1",
+  "status": "REVIEW_ACCEPTED_DIAGNOSTIC_ONLY",
+  "acceptance": "f02647e8",
+  "product_builds": 0,
+  "device_contacts": 0,
+  "removal_default": true,
+  "normal_fork_patch_count": 3,
+  "diagnostic_patch": {
+    "path": "tools/xemu-patches/mega65-dwx-pc-histogram.patch",
+    "sha256": "51ce482d2318357e7dc388d5a4e984e7f215a57dc82d32f643670339daabe14a"
+  },
+  "base_manifest": {
+    "path": "build/dwx/xemu-buffered-repair-three-patch-r2/dwx-xemu-cycle-probe-adapter.json",
+    "sha256": "7476df252c59c0012772694dcb32259beaee4125452b971ab92176c9f68f06c0"
+  },
+  "instrument": {
+    "path": "build/capacity/card0-r3/instrument-build.json",
+    "sha256": "5eab467a81b8b48f7097179a632a29bf14420e17b9f19f65bafbfd7702ad9bfb"
+  },
+  "receipt": "build/capacity/card0-r3/card0-receipt.json",
+  "tools": [
+    {
+      "path": "tools/host-lisp/capacity_card0_qualify.py",
+      "class": "diagnostic-probe",
+      "scope": "capacity card 0; no product or device claim"
+    },
+    {
+      "path": "tools/host-lisp/capacity_observer_proof.py",
+      "class": "diagnostic-probe",
+      "scope": "capacity card 0; no product or device claim"
+    },
+    {
+      "path": "tools/host-lisp/capacity_pc_histogram_rows.py",
+      "class": "diagnostic-probe",
+      "scope": "capacity card 0; no product or device claim"
+    },
+    {
+      "path": "tools/host-lisp/capacity_pc_histogram_tool.py",
+      "class": "diagnostic-probe",
+      "scope": "capacity card 0; no product or device claim"
+    },
+    {
+      "path": "tools/host-lisp/capacity_pc_population.py",
+      "class": "diagnostic-probe",
+      "scope": "capacity card 0; no product or device claim"
+    },
+    {
+      "path": "tools/host-lisp/capacity_prefilter_media.py",
+      "class": "diagnostic-probe",
+      "scope": "capacity card 0; no product or device claim"
+    },
+    {
+      "path": "tools/host-lisp/capacity_prefilter_rows.py",
+      "class": "diagnostic-probe",
+      "scope": "capacity card 0; no product or device claim"
+    },
+    {
+      "path": "tools/host-lisp/parity_bank2_price.py",
+      "class": "host-only-price-probe",
+      "scope": "parity pricing remains a projection, not an accepted total price"
+    },
+    {
+      "path": "tools/host-lisp/fixtures/dwx_pc_histogram.h",
+      "class": "diagnostic-fixture",
+      "scope": "capacity card 0; no product or device claim"
+    },
+    {
+      "path": "tools/host-lisp/fixtures/dwx_pc_histogram_test.c",
+      "class": "diagnostic-fixture",
+      "scope": "capacity card 0; no product or device claim"
+    }
+  ]
+}

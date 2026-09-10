@@ -62,6 +62,11 @@ static uint8_t to_screen(char ch) {
     if (c >= 'A' && c <= 'Z') return c;                     /* 0x41..0x5A */
     if (c >= 0x20 && c <= 0x3F) return c;                   /* Ziffern/Interpunktion 1:1 */
     if (c == '[') return 0x1B;
+    /* 0x5c is the quasiquote code: ASCII backslash to the reader, PETSCII `£`
+     * on the keycap.  The charset has no backslash glyph, so echo the `£` the
+     * user pressed.  Screen code $1c continues the same $40..$5f - $40 run as
+     * the '[' and ']' rows around it. */
+    if (c == 0x5C) return 0x1C;
     if (c == ']') return 0x1D;
     if (c == '@') return 0x00;
     return 0x20;                                            /* Unbekanntes: Leerzeichen */

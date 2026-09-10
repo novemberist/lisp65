@@ -78,6 +78,12 @@ def sealed_blob(path: str) -> bytes:
         stdout=subprocess.PIPE).stdout
 
 
+def assembly_body(raw: bytes) -> bytes:
+    """Only whole-line comments are non-emitting; keep all other bytes."""
+    return b''.join(line for line in raw.splitlines(keepends=True)
+                    if not line.lstrip().startswith(b';'))
+
+
 def source_inventory() -> dict[str, Any]:
     rows: dict[str, Any] = {}
     for name in CORE_SOURCES:
@@ -89,8 +95,12 @@ def source_inventory() -> dict[str, Any]:
         rows[name] = {"current_sha256": sha(current),
                       "sealed_sha256": sha(old),
                       "byte_identical": current == old}
+        if name == "src/optional/c2_kernal_input_consumer.s":
+            require(assembly_body(current) == assembly_body(old),
+                    "Capture consumer instructions changed since the accepted seal")
+            rows[name]["comment_only_successor"] = True
     require(all(row["byte_identical"] for name, row in rows.items()
-                if name != "src/interrupt.c"),
+                if name not in ("src/interrupt.c", "src/optional/c2_kernal_input_consumer.s")),
             "Capture core source changed since the accepted seal")
     queue = SINGLE_OWNER.derive()
     require(queue["status"] ==
@@ -303,6 +313,12 @@ def validate(value: dict[str, Any]) -> None:
 
 
 def selftest(value: dict[str, Any]) -> None:
+    consumer = (ROOT / "src/optional/c2_kernal_input_consumer.s").read_bytes()
+    require(consumer.count(b'cmp #$5b') == 1, "normalization boundary population drift")
+    require(assembly_body(consumer.replace(b'cmp #$5b', b'cmp #$5c')) != assembly_body(consumer),
+            "changed normalization instruction was hidden as a comment")
+    require(assembly_body(b'; non-emitting comment\n' + consumer) == assembly_body(consumer),
+            "comment-only positive control failed")
     mutations = (
         lambda row: row["price"]["E000"].update(watch_margin_bytes=2),
         lambda row: row["price"]["symbol_capacity_after"].update(symbol_slots=112),

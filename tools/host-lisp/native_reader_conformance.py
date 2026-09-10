@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 from typing import Any
 
 from reader_fixture import FixtureError, load_fixture
@@ -216,7 +217,38 @@ def boundary_cases() -> list[NativeCase]:
         NativeCase("syntax/function-sugar-eof", "#'", status="error", error="unexpected-eof"),
         NativeCase("syntax/unquote-eof", ",", status="error", error="unexpected-eof"),
         NativeCase("syntax/unquote-splicing-eof", ",@", status="error", error="unexpected-eof"),
+        # Owner decision 2026-09-08: the device `£` key delivers PETSCII $5c =
+        # ASCII backslash, and outside a string that is quasiquote sugar.
+        NativeCase(
+            "sugar/pound-quasiquote",
+            "\\(1 ,(+ 1 1))",
+            value="(QUASIQUOTE (1 (UNQUOTE (+ 1 1))))",
+        ),
+        NativeCase(
+            "sugar/pound-quasiquote-backquote-equivalent",
+            "`(1 ,(+ 1 1))",
+            value="(QUASIQUOTE (1 (UNQUOTE (+ 1 1))))",
+        ),
+        NativeCase(
+            "sugar/pound-quasiquote-nested",
+            "\\(1 \\(2 ,x))",
+            value="(QUASIQUOTE (1 (QUASIQUOTE (2 (UNQUOTE X)))))",
+        ),
+        NativeCase(
+            "sugar/pound-quasiquote-delimits-token",
+            "(a \\b)",
+            value="(A (QUASIQUOTE B))",
+        ),
+        NativeCase(
+            "sugar/pound-quasiquote-eof",
+            "\\",
+            status="error",
+            error="unexpected-eof",
+        ),
         NativeCase("string/empty", '""', value='""'),
+        # Inside a string literal backslash stays the escape, not sugar.
+        NativeCase("string/backslash-escapes-paren", '"a\\(b"', value='"a(b"'),
+        NativeCase("string/backslash-escapes-comma", '"a\\,b"', value='"a,b"'),
         NativeCase("string/backslash", '"a\\\\b"', value='"a\\\\b"'),
         NativeCase("string/unfinished-escape", '"abc\\', status="error", error="unfinished-escape"),
         NativeCase(
@@ -287,6 +319,41 @@ def check_depths(driver: Path, timeout: float) -> int:
     return count
 
 
+def check_quasiquote_transport() -> None:
+    """The row assertion and the executed normalizer are separate witnesses."""
+    source = (ROOT / "src/petscii_normalization.h").read_text(encoding="utf-8")
+    row = "X(0x41u, 0x5au,"
+    implementation = "code <= 0x5au"
+    if source.count(row) != 1 or source.count(implementation) != 1:
+        raise HarnessFailure("quasiquote transport mutation target drift")
+    forms = (
+        ("control", source, True, 0),
+        ("row-widened", source.replace(row, "X(0x41u, 0x5cu,"), False, None),
+        ("implementation-widened", source.replace(implementation, "code <= 0x5cu"), True, 1),
+    )
+    with tempfile.TemporaryDirectory(prefix="quasiquote-transport-") as tmp:
+        out = Path(tmp)
+        main = out / "main.c"
+        main.write_text('#include "interrupt.h"\n#include "normalization.h"\n'
+            'int main(void) { unsigned i; for(i=0;i<256;i++) { uint8_t m=i;'
+            'if(lisp65_normalize_petscii(0x5c,&m)!=0x5c || m!=i) return 1; } return 0; }\n')
+        for name, header, compiles, result in forms:
+            (out / "normalization.h").write_text(header, encoding="utf-8")
+            binary = out / name
+            command = [os.environ.get("HOSTCC", "cc"), "-std=c99", "-Wall", "-Werror",
+                       "-Isrc", str(main), "-o", str(binary)]
+            build = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+            if (build.returncode == 0) != compiles:
+                raise HarnessFailure(f"quasiquote transport {name} compile expectation: {build.stderr}")
+            if not compiles:
+                if "lisp65_petscii_quasiquote_stays_unmapped" not in build.stderr:
+                    raise HarnessFailure("row mutation failed outside the derived assertion")
+                continue
+            run = subprocess.run([str(binary)], cwd=ROOT, capture_output=True, timeout=3)
+            if run.returncode != result:
+                raise HarnessFailure(f"quasiquote transport {name}: {run.returncode} != {result}")
+
+
 def main(argv: list[str]) -> int:
     args = parse_args(argv)
     driver = args.driver.resolve()
@@ -297,6 +364,7 @@ def main(argv: list[str]) -> int:
 
     passed = 0
     try:
+        check_quasiquote_transport()
         groups = [fixture_cases(fixture), boundary_cases(), eof_prefix_cases()]
         for cases in groups:
             for case in cases:

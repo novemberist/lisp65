@@ -71,6 +71,7 @@ METADATA_INDEX = ARCH / "v11-function-metadata-index.json"
 METADATA_RECEIPT = ARCH / "v11-function-metadata-contract-receipt.json"
 MEASURED = ARCH / "block-2.6-card4-compiler-prelude-domain-contract.json"
 RECEIPT = ARCH / "block-2.6-card4-compiler-prelude-receipt.json"
+METADATA_CLOSURE_ERA = "036b13e1778d81aee754fe75a679f9227908923e"
 REPORT = ROOT / "docs/planning/block-2.6-card4-compiler-prelude-report.md"
 BASE_SUITE = ROOT / "config/c2-v200-public-plane/resident-interactive-stdlib-suite.json"
 DURABLE_CONTRACT = ROOT / "config/public-surface-domain-contract.json"
@@ -126,6 +127,62 @@ def bind(path: Path) -> dict[str, Any]:
     require(path.is_file() and not path.is_symlink(), f"artifact absent: {path}")
     return {"path": path.relative_to(ROOT).as_posix(), "bytes": path.stat().st_size,
             "sha256": sha(path)}
+
+
+def historical_follow_on_checks() -> dict[str, Any]:
+    from evidence_era import era_bind
+    return {name: era_bind(PROMOTION_AUTHORIZATION, path) for name, path in {
+        "tier1_price": TIER1_PRICE, "v201_bundled_docs": V201_DOCS}.items()}
+
+
+def historical_metadata_bind(path: Path) -> dict[str, Any]:
+    from evidence_era import era_blob
+    # The two integration checkers belong to the same sealed closure as
+    # its metadata receipts. Their live successors are executed separately.
+    require(path in (METADATA_INDEX, METADATA_RECEIPT,
+                     TOP_LEVEL_REDISPATCH, DIRECT_EXPRESSION),
+            "unregistered historical closure member")
+    raw = era_blob(METADATA_CLOSURE_ERA, path.relative_to(ROOT).as_posix())
+    result = {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw),
+              "sha256": hashlib.sha256(raw).hexdigest()}
+    # Preserve the original receipt shape, but reject live-era provenance,
+    # omitted ownership and an altered extent by the same equality contract.
+    for trial in ({**result, "evidence_era": "WORKTREE"},
+                  {k: v for k, v in result.items() if k != "path"},
+                  {**result, "bytes": result["bytes"] + 1}):
+        try:
+            verify_metadata_binding(trial, result)
+        except CardError:
+            continue
+        raise CardError("historical metadata mutation survived")
+    return result
+
+
+def verify_metadata_binding(value, expected):
+    require(value == expected, "historical metadata binding drift")
+
+
+def verify_historical_follow_on(value: dict[str, Any]) -> None:
+    require(value == historical_follow_on_checks(),
+            "Card 4 historical follow-on checks escaped their source era")
+
+
+def historical_follow_on_mutations() -> list[str]:
+    base = historical_follow_on_checks()
+    verify_historical_follow_on(base)
+    rejected = []
+    for name, change in (
+        ("live-v201-checker-in-historical-closure", lambda v: v.update(v201_bundled_docs=bind(V201_DOCS))),
+        ("historical-checker-omitted", lambda v: v.pop("tier1_price")),
+        ("historical-checker-sha-diverges", lambda v: v["v201_bundled_docs"].update(sha256="0" * 64)),
+    ):
+        trial = deepcopy(base); change(trial)
+        try:
+            verify_historical_follow_on(trial)
+        except CardError:
+            rejected.append(name)
+    require(len(rejected) == 3, "historical follow-on mutation survived")
+    return rejected
 
 
 def run(command: list[str], label: str) -> str:
@@ -471,11 +528,17 @@ def derive_contract(write: bool = True) -> tuple[dict[str, Any], list[dict[str, 
     # the live file would erase the one-cell attribution on every replay.
     before = load_git_json(f"{PROMOTION_AUTHORIZATION}^", DURABLE_CONTRACT)
     old_manifest, old_blob = AUDIT.STDLIB_MANIFEST, AUDIT.STDLIB_BLOB
+    old_load, old_sha = AUDIT.load, AUDIT.sha
+    from evidence_era import era_blob
+    metadata_raw = era_blob(METADATA_CLOSURE_ERA, METADATA_INDEX.relative_to(ROOT).as_posix())
     try:
         AUDIT.STDLIB_MANIFEST, AUDIT.STDLIB_BLOB = MANIFEST, BLOB
+        AUDIT.load = lambda path: json.loads(metadata_raw) if path == AUDIT.METADATA else old_load(path)
+        AUDIT.sha = lambda path: hashlib.sha256(metadata_raw).hexdigest() if path == AUDIT.METADATA else old_sha(path)
         after = AUDIT.derive()
     finally:
         AUDIT.STDLIB_MANIFEST, AUDIT.STDLIB_BLOB = old_manifest, old_blob
+        AUDIT.load, AUDIT.sha = old_load, old_sha
     old_rows = {row["name"]: row for row in before["rows"]}
     new_rows = {row["name"]: row for row in after["rows"]}
     require(old_rows.keys() == new_rows.keys(), "domain population changed")
@@ -586,8 +649,8 @@ def record() -> None:
                 "source_parity_contract": bind(SOURCE_PARITY_CONTRACT),
                 "locality_replay": bind(LOCALITY_REPLAY),
                 "option_a": bind(OPTION_A),
-                "top_level_redispatch": bind(TOP_LEVEL_REDISPATCH),
-                "direct_expression": bind(DIRECT_EXPRESSION),
+                "top_level_redispatch": historical_metadata_bind(TOP_LEVEL_REDISPATCH),
+                "direct_expression": historical_metadata_bind(DIRECT_EXPRESSION),
             },
             "anti_mixing_mutations": [
                 "sealed-source-era-live-mixing",
@@ -597,16 +660,13 @@ def record() -> None:
             ],
         },
         "full_check_closure": {
-            "historical_follow_on_checks": {
-                "tier1_price": bind(TIER1_PRICE),
-                "v201_bundled_docs": bind(V201_DOCS),
-            },
+            "historical_follow_on_checks": historical_follow_on_checks(),
             "derived_successor_indexes": {
                 "prelude_inventory": bind(PRELUDE_INVENTORY),
                 "dialect_migration_contract": bind(MIGRATION_CONTRACT),
                 "dialect_budget_comparison": bind(BUDGET_COMPARISON),
-                "function_metadata_index": bind(METADATA_INDEX),
-                "function_metadata_receipt": bind(METADATA_RECEIPT),
+                "function_metadata_index": historical_metadata_bind(METADATA_INDEX),
+                "function_metadata_receipt": historical_metadata_bind(METADATA_RECEIPT),
             },
             "rule": (
                 "sealed evidence is replayed in its source era; living indexes "
@@ -695,21 +755,19 @@ def validate(value: dict[str, Any]) -> None:
         "source_parity_contract": bind(SOURCE_PARITY_CONTRACT),
         "locality_replay": bind(LOCALITY_REPLAY),
         "option_a": bind(OPTION_A),
-        "top_level_redispatch": bind(TOP_LEVEL_REDISPATCH),
-        "direct_expression": bind(DIRECT_EXPRESSION),
+        "top_level_redispatch": historical_metadata_bind(TOP_LEVEL_REDISPATCH),
+        "direct_expression": historical_metadata_bind(DIRECT_EXPRESSION),
     } and len(value["integration_closure"]["anti_mixing_mutations"]) == 4,
             "Card 4 integration closure drift")
+    verify_historical_follow_on(value.get("full_check_closure", {}).get("historical_follow_on_checks", {}))
     require(value.get("full_check_closure") == {
-        "historical_follow_on_checks": {
-            "tier1_price": bind(TIER1_PRICE),
-            "v201_bundled_docs": bind(V201_DOCS),
-        },
+        "historical_follow_on_checks": historical_follow_on_checks(),
         "derived_successor_indexes": {
             "prelude_inventory": bind(PRELUDE_INVENTORY),
             "dialect_migration_contract": bind(MIGRATION_CONTRACT),
             "dialect_budget_comparison": bind(BUDGET_COMPARISON),
-            "function_metadata_index": bind(METADATA_INDEX),
-            "function_metadata_receipt": bind(METADATA_RECEIPT),
+            "function_metadata_index": historical_metadata_bind(METADATA_INDEX),
+            "function_metadata_receipt": historical_metadata_bind(METADATA_RECEIPT),
         },
         "rule": (
             "sealed evidence is replayed in its source era; living indexes "
@@ -785,7 +843,8 @@ def selftest() -> None:
     source_gate(texts)
     rejected = mutation_gate(texts)
     require(len(rejected) == 8, "Card 4 selftest mutation count drift")
-    print("block-2.6-card4: SELFTEST PASS mutations=8")
+    provenance = historical_follow_on_mutations()
+    print(f"block-2.6-card4: SELFTEST PASS mutations=8 historical-binding-mutations={len(provenance)}")
 
 
 def main() -> int:

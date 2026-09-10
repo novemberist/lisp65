@@ -27,6 +27,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 from elf_truth import ElfTruth  # noqa: E402
+from evidence_era import era_bind
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -350,8 +351,8 @@ def derive() -> dict[str, Any]:
             "historical_MAP_device": bind(MAP_DEVICE),
             "media": bind(MEDIA), "ELF": bind(ELF), "PRG": bind(PRG),
             "product_manifest": bind(PRODUCT_MANIFEST),
-            "reader_source": bind(READER), "MAP_contract": bind(MAP_CONTRACT),
-            "driver": bind(DRIVER),
+            "reader_source": era_bind("ca98451e^", READER), "MAP_contract": bind(MAP_CONTRACT),
+            "driver": era_bind("ca98451e^", DRIVER),
         },
         "emitted_reader": emitted_reader(),
         "primary_RTL_decode": decode,
@@ -476,6 +477,8 @@ def main() -> int:
         sys.stdout.buffer.write(canonical(value))
     elif action == "check":
         require(load(RECEIPT) == value, "Bank-4 attribution receipt stale")
+        from renderer_map_authority_rebind import check as check_successor
+        check_successor("bank4")
         print("Bank-4 MAP attribution: CHECK PASS tuple=4420 probe=pending mutations=13")
     else:
         require(len(value["mutations_rejected"]) == 13,

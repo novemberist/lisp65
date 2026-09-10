@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 2.1.0. Sealed
+This is the maintained user-facing issue register for lisp65 2.2.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -10,65 +10,85 @@ The final section preserves entries that were closed in an earlier release.
 
 ## Active product limitations
 
-### CPU hardware-stack exhaustion
+### Non-tail recursion depth bound (raised from the 2.0.1/2.1.0 cliff)
 
-Status: **confirmed in the released 2.0.1 product; not fixed**
+Status: **changed in 2.2.0; documented depth and recovery rows accepted on device**
 
-The 2.1.0 device acceptance also reproduced the recursion example: depth 12
-returned 12, depth 13 entered the repeated `E29` loop, followed by a reset.
-The renderer and disk fixes do not remove this limitation.
+Non-tail Lisp calls no longer re-enter natively on the CPU hardware stack:
+each call runs as a VM call frame on a soft stack of 16 frames. The
+2.0.1/2.1.0 hardware-stack cliff (depth 12 returned, depth 13 fell into a
+repeated `E29` loop needing a reset) no longer applies in that form.
 
-Deep non-tail Lisp recursion can exhaust the CPU hardware stack and enter a
-repeated `E29` error loop requiring a reset. In a bounded emulator reproduction
-of the released product, the following function succeeds through `n = 12`
-and overflows at `n = 13` (13 recursive descents, 14 simultaneous invocations):
-
-```lisp
-(defun sp-depth (n)
-  (if (= n 0) 0 (+ 1 (sp-depth (- n 1)))))
-(sp-depth 13)
-```
-
-This is not a universal safe depth: the surrounding call chain and native
-helpers also consume stack space. Printing deeply nested lists is affected
-independently; the tested printing path overflows at 23 nested list levels.
-Tail calls avoid the additional non-tail VM call frames, but do not protect
-against stack exhaustion inside native helpers such as the recursive printer.
-
-Avoid deep non-tail recursion and deeply nested printed values. If the system
-enters the error loop, reset it before continuing; uncommitted work may be lost.
-
-A shared hardware-stack floor, safer selector reads and a Comfort trampoline
-are planned for the capacity release after v2.1, not for v2.1 itself.
-In the native `mapcar` test of the hardening measurement seed, the deepest
-observed point left 33 bytes of hardware stack. This is a measurement of that
-path, not a general safe reserve or a device timing guarantee. The proposed
-floor rejected required native work and is not a shipped fix. Removing the
-VM's native-recursion depth limit remains registered architecture work;
-the planned changes are not a delivery promise.
-
-### Permissive `car` and `cdr`
-
-Status: **documented; Tier-2 check descoped**
-
-Since 2.0.0 the public list functions raise an explicit error on an
-unsupported argument domain, but the hottest opcodes stay permissive:
+In the documented host, emulator and device test, non-tail recursion at depth 16 returns
+correctly and depth 17 is refused with a VM stack-overflow error while the
+`lisp65>` prompt stays live:
 
 ```lisp
-(car nil)                         ; => nil
-(car 1)                           ; => nil
-(cdr "abc")                       ; => nil
+(defun sp-depth (n) (if (= n 0) 0 (+ 1 (sp-depth (- n 1)))))
+(sp-depth 16)                      ; => 16
+(sp-depth 17)                      ; refused, prompt stays live
 ```
 
-A fully checked Tier-2 implementation was measured, but it did not fit the
-resident text budget without an unacceptable per-key latency cost. The
-inconsistency between the checked library functions and the permissive hot
-opcodes is therefore documented rather than hidden. Code that must distinguish
-"empty" from "not a list" has to test with `consp` or `null` itself.
+The same 16-frame bound applies inside the compiler. Deep forms may be
+refused; 16 is not a general safe source-nesting depth. The compiler's measured
+self-compile peak is 26 frames, beyond this release's capacity.
 
-The measured public surface is 545 error-raised, 179 documented-permissive and
-110 silently-wrong cells over an 834-cell population. Tier 2 remains a sealed
-return candidate for the 2.x series and carries no delivery promise.
+The first long-line device test exposed a separate retirement-cleanup defect.
+That defect is repaired in this candidate: the repeated 40-argument form now
+returns the existing type error and a live prompt, followed by `(+ 4 5)` → 9.
+Direct argument evaluation is iterative; this does not increase the existing
+12-argument call/apply limit. Host tests separately prove recovery from stack
+errors in direct evaluation and compilation of a top-level form.
+
+A separate, older bound is the call protocol itself: a call passes at most
+12 arguments (`VM_MAXARGS`), whether compiled or evaluated at the prompt,
+and `apply` accepts a list of at most 12 elements. A call with more
+arguments reports a type error at the prompt; it never worked in any release
+because every VM frame reserves exactly 13 operand slots. Pass many values
+as a list and fold them (`(let ((s 0)) (dolist (x xs s) (setq s (+ s x))))`)
+or split the call. Raising the bound is registered with its price.
+
+Tail calls are unaffected, as before. Printing deeply nested lists is a
+separate native recursion path; the previously measured printer overflow at
+23 nested list levels is not changed by this bound and is not re-measured
+in this release.
+
+### Unbound global reads as `nil`
+
+Status: **documented; permissive by owner decision**
+
+Reading an unbound global symbol evaluates to `nil` instead of raising an
+error, the same permissive shape as the hot `car`/`cdr` opcodes above. A
+checked variant was priced (an estimated 37 additional bytes on a hot path,
+touching five suites that rely on unbound-reads-as-`nil` through
+`load-lib`) and is kept in the register as an option; it is not shipped.
+
+### Library packages load by hand; not yet supported from `INIT.L65`
+
+Status: **five packages now ship on the product disk; `INIT.L65` load unsupported this release**
+
+The product D81 carries `ide`, `idex`, `m65d`, and the five optional packages
+`buffer`, `place`, `string-extra`, `inspect`, and `defstruct`. Load an
+optional package at the native prompt with `require`, for example
+`(require 'place)`; `ide`, `idex`, and `m65d` keep loading with `load-lib`
+as before. This supersedes the older "optional library packages are not on
+the product disk" entry.
+
+| Package | Names it publishes |
+| --- | --- |
+| `buffer` | `make-buffer`, `buffer-ref`, `buffer-set!`, `buffer-length`, `bufferp`, `string->buffer`, `buffer->string` |
+| `place` | `setf`, `push`, `pop`, `incf`, `decf` |
+| `string-extra` | `capitalize`, `string-split` |
+| `inspect` | `who-calls`, `trace`, `untrace` |
+| `defstruct` | `defstruct` and its generated accessors |
+
+A library load inside `INIT.L65` is not supported in this release: it
+corrupts the source loader's sector scratch, so a `require` executed from
+`INIT.L65` can leave the reader in an unclosed-list state before the banner
+appears. Load packages by hand at the prompt instead; do not add a `require`
+to a derived `INIT.L65`. The repair is scheduled for the next release,
+together with default loading of `place` and `string-extra` from
+`INIT.L65`.
 
 ### Freezer during a definition
 
@@ -154,27 +174,12 @@ if the REPL does not recover. Preserve the preceding forms and approximate key
 count. Reopening the parked diagnosis requires a natural physical recurrence
 with a hardware arrival witness.
 
-## Names and packages not delivered in 2.1.0
+## Names and packages not delivered in 2.2.0
 
-### Optional library packages are not on the product disk
-
-The 2.1.0 product D81 carries exactly three library roles: `ide`, `idex` and
-`m65d`. The historical optional packages are not on it and are not part of its
-hardware claim:
-
-| Package | Names it would publish |
-| --- | --- |
-| `buffer` | `make-buffer`, `buffer-ref`, `buffer-set!`, `buffer-length`, `bufferp`, `string->buffer`, `buffer->string` |
-| `place` | `setf`, `push`, `pop`, `incf`, `decf` |
-| `string-extra` | `capitalize`, `string-split` |
-| `inspect` | `who-calls`, `trace`, `untrace` |
-| `defstruct` | `defstruct` and its generated accessors |
-
-`(load-lib "buffer")` and the other package names therefore have nothing to
-load from the release medium. This supersedes the older entry that reported
-`trace` and `untrace` as delivered: the Link-92 mechanism was closed in
-1.5.0 and the functions still exist as a module, but no release since 1.6.0
-has placed the `inspect` row on the selected medium.
+The `inspect` package (`trace`/`untrace`) is now delivered again: the
+Link-92 mechanism was closed in 1.5.0 and the functions existed as a module,
+but no release between 1.6.0 and this one placed the `inspect` row on the
+selected medium. See "Library packages load by hand" above.
 
 ### `gc`, `room` and `error`
 

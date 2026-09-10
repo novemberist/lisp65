@@ -34,7 +34,15 @@ AUTHORIZATION = "fb149737"
 PRODUCT_REMOTE = "V16WFR.D81"
 LIBRARY_REMOTE = "V16WLR.D81"
 FACADE_SECTION = ".lisp65_c2_mapped_far_facade"
-FACADE_BYTES = 98
+# Ninety-eight bytes is the identity of the sealed v1.6 world this card's
+# receipt, session config and media pair bind -- never a size contract for a
+# later world.  Bank 2 as a second DMA source removes the constant-bank
+# specialization of the resident wrapper around c2_dma_read_or_abort and the
+# facade grows.  `facade_truth` is reused live by the Card-2b media adapter
+# (`capacity_disk_window_media`), so it derives the size from the consumed ELF
+# and keeps only the two walls exact; the era identity is asserted separately
+# by `era_gate`, on the sealed v1.6 artifacts alone.
+ERA_FACADE_BYTES = 98
 
 
 def require(value: bool, message: str) -> None:
@@ -76,15 +84,92 @@ def authority() -> dict[str, Any]:
             "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
 
 
+def facade_arena() -> tuple[int, int]:
+    """Resident wall and handoff bound from the selected ownership contract.
+
+    The same authority the linker consumer reads, so a card that projects a
+    successor contract is honoured instead of a second private copy.
+    """
+    resident = json.loads(BASE.PRODUCT.OWNERSHIP_CONTRACT.read_text(
+        encoding="utf-8"))["mapped_far_service"]["resident"]
+    start = int(resident["start"], 0)
+    end = int(resident["end_exclusive"], 0)
+    require(end - start == int(resident["capacity_bytes"]),
+            "resident facade arena authorities disagree")
+    return start, end
+
+
+def facade_extent_violations(address: int, size: int, raw_bytes: int,
+                             arena: tuple[int, int]) -> list[str]:
+    """Derive the facade's acceptance from its extent and its two walls."""
+    start, handoff = arena
+    violations: list[str] = []
+    if size != raw_bytes or size <= 0:
+        violations.append("facade-extent-not-self-consistent")
+    if address != start:
+        violations.append("facade-resident-wall")
+    if address + size > handoff:
+        violations.append("facade-handoff-bound")
+    return violations
+
+
 def facade_truth(elf: Path) -> tuple[int, bytes]:
     truth = ElfTruth.read(
         elf, llvm_readobj=ROOT / "tools/llvm-mos/bin/llvm-readobj",
         include_section_data=True)
     section = truth.section(FACADE_SECTION)
     raw = truth.section_bytes(FACADE_SECTION)
-    require(section.bytes == len(raw) == FACADE_BYTES,
-            "linked far-facade geometry drift")
+    violations = facade_extent_violations(
+        section.address, section.bytes, len(raw), facade_arena())
+    require(not violations, f"linked far-facade geometry drift: {violations}")
     return section.address, raw
+
+
+def _historical_facade_pin(size: int) -> bool:
+    """The predicate this consumer held before the conversion."""
+    return size == ERA_FACADE_BYTES
+
+
+def facade_derivation_selftest() -> dict[str, Any]:
+    """Fail-closed evidence for the derived size and the two exact walls."""
+    start, handoff = arena = facade_arena()
+    accepted: dict[str, int] = {}
+    for name, size in (("sealed-v1.6-98-byte-world", ERA_FACADE_BYTES),
+                       ("grown-119-byte-world", 119)):
+        require(not facade_extent_violations(start, size, size, arena),
+                f"derived facade rejected: {name}")
+        accepted[name] = size
+    # The converted predicate's regression control: the literal this consumer
+    # used to enforce (`section.bytes == 98`) must reject the grown world.
+    require(not _historical_facade_pin(119),
+            "historical 98-byte pin accepted the 119-byte world")
+    require(_historical_facade_pin(ERA_FACADE_BYTES),
+            "historical facade pin control is degenerate")
+    cases = {
+        "extent-not-self-consistent": (start, 119, ERA_FACADE_BYTES),
+        "resident-wall-shift": (start - 1, ERA_FACADE_BYTES, ERA_FACADE_BYTES),
+        "handoff-one-byte-overlap":
+            (start, handoff - start + 1, handoff - start + 1),
+        "empty-facade": (start, 0, 0),
+    }
+    rejected: list[str] = []
+    for name, (address, size, raw_bytes) in cases.items():
+        if facade_extent_violations(address, size, raw_bytes, arena):
+            rejected.append(name)
+    require(rejected == list(cases), "derived facade mutation survived")
+    return {"arena": {"resident_wall": f"0x{start:04X}",
+                      "handoff_bound": f"0x{handoff:04X}"},
+            "accepted": accepted, "rejected": rejected,
+            "era_identity_bytes": ERA_FACADE_BYTES}
+
+
+def era_gate(elf: Path) -> dict[str, Any]:
+    """Keep the sealed v1.6 world's own facade size era-bound, not widened."""
+    _address, raw = facade_truth(elf)
+    require(len(raw) == ERA_FACADE_BYTES,
+            "sealed v1.6 far-facade era identity drift")
+    return {"era": "v1.6", "bytes": ERA_FACADE_BYTES,
+            "scope": "sealed v1.6 artifacts only; not a later world's size"}
 
 
 def prg_span(product: Path, address: int, count: int) -> tuple[bytearray, int]:
@@ -181,7 +266,7 @@ def materialize_publish_predecessors(final: Path, product: Path,
     prior["completion_facade_predecessor"] = {
         "authority": AUTHORIZATION,
         "source": FACADE_SECTION,
-        "bytes": FACADE_BYTES,
+        "bytes": ERA_FACADE_BYTES,
         "frozen_receipt_sha256": hashlib.sha256(prior_receipt_raw).hexdigest(),
         "frozen_unbound": prior_unbound,
         "frozen_window_bound": prior_window,
@@ -263,7 +348,7 @@ def complete() -> dict[str, Any]:
     product = BASE.CAN.FINAL / "lisp65-c2-substitution-linked.prg"
     elf = Path(str(product) + ".elf")
     gate = packed_facade_gate(product, elf)
-    require(gate["bytes"] == FACADE_BYTES,
+    require(gate["bytes"] == ERA_FACADE_BYTES,
             "Completion did not deliver the fixed facade")
     return value
 
@@ -274,7 +359,7 @@ def session_config(product: Path, library: Path) -> dict[str, Any]:
     value["media"]["product"]["remote_name"] = PRODUCT_REMOTE
     value["media"]["library"]["remote_name"] = LIBRARY_REMOTE
     value["shipped_byte_facade"] = {
-        "section": FACADE_SECTION, "address": "0xB3B0", "bytes": FACADE_BYTES,
+        "section": FACADE_SECTION, "address": "0xB3B0", "bytes": ERA_FACADE_BYTES,
         "gate": "packed PRG byte-equal to final ELF before media build"}
     return value
 
@@ -304,6 +389,8 @@ def preflight() -> None:
         RED.WPLTO / "lisp65-c2-substitution-linked.prg",
         RED.WPLTO / "lisp65-c2-substitution-linked.prg.elf")
     require(mutation["cases"] == 2, "packed-facade preflight drift")
+    facade_derivation_selftest()
+    era_gate(RED.WPLTO / "lisp65-c2-substitution-linked.prg.elf")
     print(f"v1.6 shipped facade repair: PREFLIGHT PASS authority={authority()['commit'][:8]}")
 
 
@@ -347,6 +434,11 @@ def check() -> dict[str, Any]:
     pair = BASE.PAIR.pair_identity(ROOT / value["media"]["product"]["path"],
                                    ROOT / value["media"]["library"]["path"])
     require(pair == value["same_world_pair"], "repaired media pair drift")
+    # Conversion evidence: the derived predicate and its mutations are checked
+    # on every run; the sealed v1.6 identity stays era-bound to these
+    # artifacts and is not widened into a later world's size contract.
+    value["facade_derivation"] = facade_derivation_selftest()
+    value["facade_era"] = era_gate(elf)
     return value
 
 

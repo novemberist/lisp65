@@ -379,6 +379,7 @@ def install_primitives() -> None:
     prim("numberp", lambda args: T if isinstance(args[0], int) else NIL)
     prim("symbolp", lambda args: T if isinstance(args[0], Symbol) else NIL)
     prim("stringp", lambda args: T if isinstance(args[0], String) else NIL)
+    prim("consp", lambda args: T if isinstance(args[0], DottedList) or (isinstance(args[0], list) and args[0]) else NIL)
     prim("string->list", lambda args: lisp_list([ord(ch) for ch in need_string(args[0]).value]))
     prim("list->string", lambda args: String("".join(chr(need_char_code(code)) for code in as_list(args[0], "list->string args"))))
     prim("string-length", lambda args: len(need_string(args[0]).value))

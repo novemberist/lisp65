@@ -186,6 +186,11 @@ def current_manifest_names() -> list[str]:
     return sorted(names)
 
 
+def single_product_medium_claim(guide: str) -> bool:
+    # Markdown wrapping does not change the asserted media model.
+    return 'no separate optional-library medium' in ' '.join(guide.split())
+
+
 def derive() -> dict[str, Any]:
     guide = USER_GUIDE.read_text(encoding="utf-8")
     release = RELEASE_NOTES.read_text(encoding="utf-8")
@@ -197,7 +202,7 @@ def derive() -> dict[str, Any]:
     for designator in ("ide", "idex", "m65d"):
         require(f'(load-lib "{designator}")' in guide,
                 f"current guide lost library designator {designator}")
-    require("no separate optional-library medium" in guide,
+    require(single_product_medium_claim(guide),
             "v1.9 guide reverted to the historical two-media model")
     require("no `v16core` load" in release,
             "v1.9 release no longer states the resident-core boundary")
@@ -255,38 +260,62 @@ def stable(value: dict[str, Any]) -> dict[str, Any]:
     return value
 
 
+def verify(recorded: dict[str, Any], observed: dict[str, Any]) -> None:
+    require(stable(recorded) == stable(observed),
+            "public naming inventory/classification drift")
+
+
 def check() -> dict[str, Any]:
     recorded = load(CONTRACT)
     observed = derive()
-    require(stable(recorded) == stable(observed),
-            "public naming inventory/classification drift")
+    verify(recorded, observed)
     return observed
 
 
 def selftest() -> dict[str, Any]:
+    require(single_product_medium_claim('no separate optional-library medium')
+            and single_product_medium_claim('no\nseparate optional-library medium')
+            and not single_product_medium_claim('a separate optional-library medium'),
+            'media assertion whitespace/polarity control failed')
     observed = derive()
+    def reject(trial: dict[str, Any], label: str) -> None:
+        try:
+            verify(trial, observed)
+        except NamingError:
+            return
+        raise NamingError(f"{label} mutation survived")
     mutated = json.loads(json.dumps(observed))
     mutated["public_functions"].pop()
-    require(mutated != observed, "missing public name mutation survived")
+    reject(mutated, "missing public name")
     mutated = json.loads(json.dumps(observed))
     target = next(row for row in mutated["public_functions"] if row["name"] == "m65d-save")
     target["classification"] = "capability-or-language-term"
-    require(mutated != observed, "implementation-name reclassification survived")
+    reject(mutated, "implementation-name reclassification")
     mutated = json.loads(json.dumps(observed))
     mutated["migration_policy"]["proposal"] = "mandatory alias"
-    require(mutated != observed, "obsolete alias policy mutation survived")
+    reject(mutated, "obsolete alias policy")
     mutated = json.loads(json.dumps(observed))
     mutated["authority"]["v2_plan"]["sha256"] = sha(V2_PLAN)
-    require(mutated != observed, "living-plan substitution survived era bind")
-    return {"observed": observed, "mutations_rejected": 4}
+    reject(mutated, "living-plan substitution")
+    mutated = json.loads(json.dumps(observed))
+    mutated["authority"]["user_guide"]["sha256"] = "0" * 64
+    reject(mutated, "stale user-guide provenance")
+    mutated = json.loads(json.dumps(observed))
+    mutated["authority"].pop("user_guide")
+    reject(mutated, "omitted user-guide provenance")
+    return {"observed": observed, "mutations_rejected": 6,
+            "media_claim_controls": 3}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("derive", "check", "selftest"))
+    parser.add_argument("mode", choices=("derive", "record", "check", "selftest"))
     args = parser.parse_args()
     if args.mode == "derive":
         print(json.dumps(derive(), indent=2, sort_keys=True))
+        return 0
+    if args.mode == "record":
+        CONTRACT.write_text(json.dumps(selftest()["observed"], indent=2, sort_keys=True) + "\n")
         return 0
     if args.mode == "selftest":
         result = selftest()

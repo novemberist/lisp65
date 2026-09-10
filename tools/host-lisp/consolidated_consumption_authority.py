@@ -37,6 +37,7 @@ TUPLE_PREFLIGHT = ARCH / "c2.3-v1.7-block3-r10-map-geometry-preflight-red.json"
 # predecessor card from donating stale consumers to its successor.
 _OUTPUT_ROOT_RESOLVERS: dict[str, Path] = {}
 _PRODUCT_WORLD_IDENTITY: dict[str, Any] | None = None
+_COMMISSIONED_WORLD: dict[str, Any] | None = None
 
 
 class AuthorityError(RuntimeError):
@@ -89,6 +90,26 @@ def _plane_world(root: Path) -> dict[str, Any]:
 
 def validate_product_world_identity(value: dict[str, Any]) -> None:
     """Prove one selected Plane is the published product world, as a unit."""
+    if 'commissioned_successor' in value:
+        require(_COMMISSIONED_WORLD is not None,
+                'unregistered commissioned product world')
+        require(value['commissioned_successor'] == _COMMISSIONED_WORLD,
+                'commissioned world authority changed')
+        base = copy.deepcopy(value)
+        base.pop('commissioned_successor')
+        base['selected_plane_world'] = copy.deepcopy(value['bound_release_world'])
+        base['selected_plane_world'].pop('release')
+        base['selected_plane_world'].pop('docs_only_successor')
+        validate_product_world_identity(base)
+        selected = value['selected_plane_world']
+        expected = _COMMISSIONED_WORLD['world']
+        require(selected == expected, 'selected Plane differs from commissioned world')
+        require(selected == _plane_world(ROOT / selected['root']),
+                'commissioned Plane bytes or paths changed')
+        for item in _COMMISSIONED_WORLD['evidence']:
+            require(_binding(ROOT / item['path']) == item,
+                    'commissioned source/emission authority changed')
+        return
     bound, selected = value["bound_release_world"], value["selected_plane_world"]
     require(value.get("status") == "passed-product-world-identity-bound"
             and bound["release"] == "v2.0.0"
@@ -159,6 +180,23 @@ def configure_product_world_identity(value: dict[str, Any]) -> None:
     global _PRODUCT_WORLD_IDENTITY
     validate_product_world_identity(value)
     _PRODUCT_WORLD_IDENTITY = copy.deepcopy(value)
+
+
+def register_commissioned_product_world(*, name: str, world: dict[str, Any],
+        evidence: list[dict[str, Any]]) -> dict[str, Any]:
+    """One explicit successor at a time; never alter the published-world proof.
+
+    The card binds its complete emitted world and source/emission evidence
+    before compilation. Reconfiguration replaces, rather than broadens, the
+    accepted population, as with the existing output-root resolvers.
+    """
+    global _COMMISSIONED_WORLD
+    require(bool(name) and bool(evidence), 'successor lacks named evidence')
+    require(world == _plane_world(ROOT / world['root']), 'successor world is not derived')
+    require(all(_binding(ROOT / row['path']) == row for row in evidence),
+            'successor evidence is not bound')
+    _COMMISSIONED_WORLD = copy.deepcopy(dict(name=name, world=world, evidence=evidence))
+    return copy.deepcopy(_COMMISSIONED_WORLD)
 
 
 def product_world_mutations(value: dict[str, Any]) -> list[str]:

@@ -26,6 +26,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v160_input_service_time_pricing as PRICE  # noqa: E402
+import evidence_era as ERA
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -562,6 +563,7 @@ product card is opened by this report.
 """
 
 
+@ERA.in_host_source_world("520352a6")
 def check() -> None:
     actual = load(RECEIPT)
     validate(actual)

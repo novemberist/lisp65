@@ -393,8 +393,13 @@ def _audit_sources(values: dict[str, int], contract: dict[str, Any]) -> tuple[in
         ("vm_arity_accepts", "CO_OPTIONAL_COUNT(flags)", "CO_FLAG_STRICT_ARITY", "CO_FLAG_REST"),
     )
     call_sites = len(re.findall(r"\bvm_arity_accepts\s*\(", vm_c)) - 1
-    if call_sites != contract["cost_gate"]["native_static_call_sites"]:
-        raise ContractError(f"native arity call-site drift: {call_sites}, expected 2")
+    # The sealed cost reference prices the unshared two-entry implementation.
+    # Sharing may lower that price, never omit an executed entry check. The
+    # compiled probe below proves both routes, including exactly-once cost.
+    reference_sites = contract["cost_gate"]["native_static_call_sites"]
+    if not 1 <= call_sites <= reference_sites:
+        raise ContractError(f"native arity call-site cost drift: {call_sites}, reference {reference_sites}")
+    _probe_entry_coverage(vm_c)
 
     _require(
         "tools/host-lisp/l65m_contract.py",
@@ -550,6 +555,77 @@ def _validate_contract_sections(contract: dict[str, Any]) -> None:
         raise ContractError("host report must not claim unmeasured target cycles")
 
 
+def _probe_entry_coverage(source: str, windows: tuple[int, ...] = (128, 16),
+                          defines: tuple[str, ...] = ()) -> None:
+    """Execute the actual C VM; instrumentation lives only in a host copy."""
+    marker = "uint8_t actual, uint8_t nargs, uint8_t flags) {"
+    if source.count(marker) != 1:
+        raise ContractError("arity probe helper population drift")
+    instrumented = source.replace(marker, marker +
+        "\n    extern unsigned arity_checks; arity_checks++;", 1)
+    with tempfile.TemporaryDirectory(prefix="arity-entry-") as tmp:
+        path = Path(tmp) / "vm.c"
+        path.write_text(instrumented, encoding="utf-8")
+        for window in windows:
+            binary = Path(tmp) / f"entry-{window}"
+            command = ["cc", "-std=c99", "-w", "-DLISP65_DIALECT_V2",
+                "-DLISP65_STRING_ARENA", "-DHEAP_CELLS=2048", "-DGC_ROOTS=1024",
+                "-DMAX_SYM=160", "-DNAMEPOOL=2048", f"-DVM_CODEBUF={window}",
+                *defines,
+                "-Isrc", "scripts/vm-entry-arity-main.c", str(path),
+                "src/mem.c", "src/symbol.c", "src/interrupt.c", "-o", str(binary)]
+            compiled = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+            if compiled.returncode:
+                raise ContractError("arity entry probe compilation failed: " + compiled.stderr)
+            try:
+                result = subprocess.run([str(binary)], cwd=ROOT, capture_output=True,
+                                        text=True, timeout=10)
+            except subprocess.TimeoutExpired as exc:
+                raise ContractError("arity entry probe timed out") from exc
+            if result.returncode or len(result.stdout.splitlines()) != 9:
+                raise ContractError(f"arity entry probe failed window={window}: {result.stdout}")
+
+
+# R2 (LISP65_VM_SOFT_FRAMES) adds a THIRD route into the one shared callee
+# entry: OP_CALL's soft-frame push.  Its `enter_*` assignment is textually the
+# same as OP_TAILCALL's, so each target below carries the comment line that
+# identifies its site, and the soft-frame row is probed with the feature ON --
+# the site is inside its #ifdef and is dead code in the default build.
+_TAIL_SITE = ("/* Echtes TCO: base bleibt, nur die Identitaet wechselt. */\n"
+              "            enter_di = (uint16_t)di; enter_n = n;")
+_SOFT_SITE = ("base = gc_rootsp;          /* args are already popped */\n"
+              "                    enter_di = (uint16_t)di; enter_n = n;")
+_SOFT = ("-DLISP65_VM_SOFT_FRAMES",)
+
+
+def _entry_mutations() -> int:
+    source = (ROOT / "src/vm.c").read_text(encoding="utf-8")
+    guard = "if (!vm_arity_accepts(enter_n, nargs, flags)) { vm_status = VM_ARITY; goto done; }"
+    replacements = (
+        (guard, "/* removed arity guard */", ()),
+        (guard, guard + "\n    (void)vm_arity_accepts(enter_n, nargs, flags);", ()),
+        ("enter_args = args; enter_n = nargs_actual;",
+         "enter_args = args; enter_n = 0;", ()),
+        (_TAIL_SITE, _TAIL_SITE.replace("enter_n = n;", "enter_n = 0;"), ()),
+        (_SOFT_SITE, _SOFT_SITE.replace("enter_n = n;", "enter_n = 0;"), _SOFT),
+    )
+    _probe_entry_coverage(source)
+    _probe_entry_coverage(source, defines=_SOFT)
+    for old, new, defines in replacements:
+        if source.count(old) != 1:
+            raise ContractError("arity entry mutation target drift")
+        for window in (128, 16):
+            try:
+                _probe_entry_coverage(source.replace(old, new, 1), (window,), defines)
+            except ContractError as exc:
+                # A malformed mutant is not an executed counterexample.
+                if not str(exc).startswith("arity entry probe failed window="):
+                    raise
+            else:
+                raise ContractError("arity entry mutation survived")
+    return len(replacements)
+
+
 def _selftest() -> None:
     values = {
         "rest": 1, "strict": 2, "optional_mask": 252, "optional_shift": 2,
@@ -576,7 +652,8 @@ def _selftest() -> None:
                 f"selftest mismatch: {(nargs, nlocals, flags, actual)} "
                 f"got={(got_error, got_accepted)} want={(error, accepted)}"
             )
-    print(f"code-object-arity-contract-selftest: PASS={len(cases)} FAIL=0")
+    mutations = _entry_mutations()
+    print(f"code-object-arity-contract-selftest: PASS={len(cases)} FAIL=0 entry_mutations={mutations}")
 
 
 def run(args: argparse.Namespace) -> str:
@@ -609,6 +686,10 @@ def run(args: argparse.Namespace) -> str:
         f"sampled_accepts={counts['sampled_accepts']}",
         f"sampled_rejects={counts['sampled_rejects']}",
         f"native_arity_call_sites={call_sites}",
+        f"native_static_call_sites_reference={budget['native_static_call_sites']}",
+        "entry_coverage=executed-direct-and-tail:actual-0-1-2:windows-128-16",
+        f"entry_vm_sha256={_sha256(ROOT / 'src/vm.c')}",
+        f"entry_fixture_sha256={_sha256(ROOT / 'scripts/vm-entry-arity-main.c')}",
         f"native_helper_text_bytes={cost['helper_text_bytes']}",
         f"native_helper_text_budget={budget['native_helper_max_text_bytes']}",
         f"native_call_wrapper_text_bytes={cost['call_wrapper_text_bytes']}",

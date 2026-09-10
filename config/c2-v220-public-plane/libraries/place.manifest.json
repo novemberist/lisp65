@@ -1,0 +1,1179 @@
+{
+  "abi_profile": "dialect-v2",
+  "artifact_role": "disk-lib",
+  "base_addr": "0x000000",
+  "blob": "config/c2-v220-public-plane/libraries/place.blob.bin",
+  "blob_sha256": "0592c8437756442e43bf07f18bfae2c5c3482b1a271ef126e9a8f9c443a49d60",
+  "c_source": "build/library-delivery-r1/raw/place.c",
+  "cases": [
+    "place-function-kind-setf",
+    "place-function-kind-incf",
+    "place-function-kind-putf",
+    "place-putf-replace",
+    "place-putf-append",
+    "place-setf-expand-symbol",
+    "place-register-publish-last",
+    "place-register-identical-idempotent",
+    "place-register-conflict-rejected",
+    "place-register-abort-invisible",
+    "place-unknown-remains-unsupported"
+  ],
+  "code_bytes": 781,
+  "cost": {
+    "dependency_gate": {
+      "allowed_external_calls": [],
+      "checked": true,
+      "known_targets": 375
+    },
+    "dir_slots": 16,
+    "dir_slots_after_align8": 16,
+    "largest_code_object": "%setf-expand-list",
+    "largest_code_object_bytes": 150,
+    "macro_entries": 5,
+    "max_code_object_bytes": 255,
+    "private_inline_gate": {
+      "expansions": 0,
+      "functions": 0,
+      "names": [],
+      "resident_functions": 0
+    },
+    "region_bytes": 781,
+    "symbol_count_estimate": 32,
+    "symbol_names": [
+      "%places-consp",
+      "%places-error-unsupported-place",
+      "%putf",
+      "%setf-expand",
+      "%setf-expand-list",
+      "%setf-expand-registered",
+      "%setf-place-setter",
+      "%setf-register",
+      "%setf-register-abort",
+      "%setf-register-begin",
+      "%setf-register-commit",
+      "%setf-registry-find",
+      "*setf-place-open*",
+      "*setf-place-pending*",
+      "*setf-place-registry*",
+      "+",
+      "-",
+      "append",
+      "car",
+      "cdr",
+      "cons",
+      "decf",
+      "getf",
+      "incf",
+      "let",
+      "list",
+      "pop",
+      "push",
+      "rplaca",
+      "rplacd",
+      "setf",
+      "setq"
+    ],
+    "vm_dir_budget": null
+  },
+  "d81_name": "PLACE",
+  "directory": "build/library-delivery-r1/raw/place.dir.bin",
+  "directory_bytes": 112,
+  "directory_note": "raw dir.bin uses host-heap name_obj values; native loaders should intern entries[].name and call vm_dir_add()",
+  "directory_sha256": "b511687aedb30eb0a2a7fd0d9bd74206682be136edd34fd7e287a8d7bb06a39b",
+  "disasm": "build/library-delivery-r1/raw/place.disasm.txt",
+  "disasm_sha256": "43ebd9f78ae97e653befc44c881a0e7c33c30624bd223bfbcfa0bbf43aac5f45",
+  "embed": {
+    "address_encoding": "vm_embed_entry.bank/off/len are derived from each object's ext_addr/length",
+    "bank_symbol": "lisp65_stdlib_bank",
+    "base_addr_macro": "LISP65_BYTECODE_STDLIB_BASE_ADDR",
+    "blob_len_symbol": "lisp65_stdlib_blob_len",
+    "blob_symbol": "lisp65_stdlib_blob",
+    "compat_blob_macro": "lisp65_bytecode_stdlib_blob",
+    "compat_table_macro": "lisp65_bytecode_stdlib_embed",
+    "count_macro": "LISP65_BYTECODE_STDLIB_EMBED_COUNT",
+    "count_symbol": "lisp65_embed_count",
+    "entry_type": "vm_embed_entry",
+    "flags_field": "vm_embed_entry.flags bit0 marks macro entries; all other bits are reserved and must be zero",
+    "name_field": "vm_embed_entry.name is a NUL-terminated runtime string; native registration interns that name",
+    "off_symbol": "lisp65_stdlib_off",
+    "table_symbol": "lisp65_embed"
+  },
+  "entries": [
+    {
+      "blob_offset": 0,
+      "code_flags": 2,
+      "ext_addr": "0x000000",
+      "flags": 0,
+      "kind": "function",
+      "length": 38,
+      "lit_count": 0,
+      "lit_first": 0,
+      "literals": [],
+      "name": "%places-consp",
+      "name_obj": "0x02a0"
+    },
+    {
+      "blob_offset": 38,
+      "code_flags": 2,
+      "ext_addr": "0x000026",
+      "flags": 0,
+      "kind": "function",
+      "length": 48,
+      "lit_count": 1,
+      "lit_first": 0,
+      "literals": [
+        {
+          "symbol": "%putf"
+        }
+      ],
+      "name": "%putf",
+      "name_obj": "0x02a2"
+    },
+    {
+      "blob_offset": 86,
+      "code_flags": 2,
+      "ext_addr": "0x000056",
+      "flags": 0,
+      "kind": "function",
+      "length": 31,
+      "lit_count": 1,
+      "lit_first": 1,
+      "literals": [
+        {
+          "symbol": "%setf-registry-find"
+        }
+      ],
+      "name": "%setf-registry-find",
+      "name_obj": "0x02a4"
+    },
+    {
+      "blob_offset": 117,
+      "code_flags": 2,
+      "ext_addr": "0x000075",
+      "flags": 0,
+      "kind": "function",
+      "length": 30,
+      "lit_count": 2,
+      "lit_first": 2,
+      "literals": [
+        {
+          "symbol": "*setf-place-registry*"
+        },
+        {
+          "symbol": "%setf-registry-find"
+        }
+      ],
+      "name": "%setf-place-setter",
+      "name_obj": "0x02a6"
+    },
+    {
+      "blob_offset": 147,
+      "code_flags": 2,
+      "ext_addr": "0x000093",
+      "flags": 0,
+      "kind": "function",
+      "length": 43,
+      "lit_count": 3,
+      "lit_first": 4,
+      "literals": [
+        {
+          "symbol": "*setf-place-pending*"
+        },
+        {
+          "symbol": "*setf-place-registry*"
+        },
+        {
+          "symbol": "*setf-place-open*"
+        }
+      ],
+      "name": "%setf-register-begin",
+      "name_obj": "0x02a8"
+    },
+    {
+      "blob_offset": 190,
+      "code_flags": 2,
+      "ext_addr": "0x0000be",
+      "flags": 0,
+      "kind": "function",
+      "length": 91,
+      "lit_count": 3,
+      "lit_first": 7,
+      "literals": [
+        {
+          "symbol": "*setf-place-open*"
+        },
+        {
+          "symbol": "*setf-place-pending*"
+        },
+        {
+          "symbol": "%setf-registry-find"
+        }
+      ],
+      "name": "%setf-register",
+      "name_obj": "0x02aa"
+    },
+    {
+      "blob_offset": 281,
+      "code_flags": 2,
+      "ext_addr": "0x000119",
+      "flags": 0,
+      "kind": "function",
+      "length": 59,
+      "lit_count": 3,
+      "lit_first": 10,
+      "literals": [
+        {
+          "symbol": "*setf-place-open*"
+        },
+        {
+          "symbol": "*setf-place-registry*"
+        },
+        {
+          "symbol": "*setf-place-pending*"
+        }
+      ],
+      "name": "%setf-register-commit",
+      "name_obj": "0x02ac"
+    },
+    {
+      "blob_offset": 340,
+      "code_flags": 2,
+      "ext_addr": "0x000154",
+      "flags": 0,
+      "kind": "function",
+      "length": 27,
+      "lit_count": 2,
+      "lit_first": 13,
+      "literals": [
+        {
+          "symbol": "*setf-place-pending*"
+        },
+        {
+          "symbol": "*setf-place-open*"
+        }
+      ],
+      "name": "%setf-register-abort",
+      "name_obj": "0x02ae"
+    },
+    {
+      "blob_offset": 367,
+      "code_flags": 2,
+      "ext_addr": "0x00016f",
+      "flags": 0,
+      "kind": "function",
+      "length": 59,
+      "lit_count": 5,
+      "lit_first": 15,
+      "literals": [
+        {
+          "symbol": "%setf-place-setter"
+        },
+        {
+          "symbol": "let"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "append"
+        },
+        {
+          "symbol": "%places-error-unsupported-place"
+        }
+      ],
+      "name": "%setf-expand-registered",
+      "name_obj": "0x02b0"
+    },
+    {
+      "blob_offset": 426,
+      "code_flags": 2,
+      "ext_addr": "0x0001aa",
+      "flags": 0,
+      "kind": "function",
+      "length": 150,
+      "lit_count": 10,
+      "lit_first": 20,
+      "literals": [
+        {
+          "symbol": "car"
+        },
+        {
+          "symbol": "let"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "rplaca"
+        },
+        {
+          "symbol": "cdr"
+        },
+        {
+          "symbol": "rplacd"
+        },
+        {
+          "symbol": "getf"
+        },
+        {
+          "symbol": "setq"
+        },
+        {
+          "symbol": "%putf"
+        },
+        {
+          "symbol": "%setf-expand-registered"
+        }
+      ],
+      "name": "%setf-expand-list",
+      "name_obj": "0x02b2"
+    },
+    {
+      "blob_offset": 576,
+      "code_flags": 2,
+      "ext_addr": "0x000240",
+      "flags": 0,
+      "kind": "function",
+      "length": 46,
+      "lit_count": 5,
+      "lit_first": 30,
+      "literals": [
+        {
+          "symbol": "setq"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%places-consp"
+        },
+        {
+          "symbol": "%setf-expand-list"
+        },
+        {
+          "symbol": "%places-error-unsupported-place"
+        }
+      ],
+      "name": "%setf-expand",
+      "name_obj": "0x02b4"
+    },
+    {
+      "blob_offset": 622,
+      "code_flags": 2,
+      "ext_addr": "0x00026e",
+      "flags": 1,
+      "kind": "macro",
+      "length": 14,
+      "lit_count": 1,
+      "lit_first": 35,
+      "literals": [
+        {
+          "symbol": "%setf-expand"
+        }
+      ],
+      "name": "setf",
+      "name_obj": "0x02b6"
+    },
+    {
+      "blob_offset": 636,
+      "code_flags": 3,
+      "ext_addr": "0x00027c",
+      "flags": 1,
+      "kind": "macro",
+      "length": 34,
+      "lit_count": 3,
+      "lit_first": 36,
+      "literals": [
+        {
+          "symbol": "+"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%setf-expand"
+        }
+      ],
+      "name": "incf",
+      "name_obj": "0x02b8"
+    },
+    {
+      "blob_offset": 670,
+      "code_flags": 3,
+      "ext_addr": "0x00029e",
+      "flags": 1,
+      "kind": "macro",
+      "length": 34,
+      "lit_count": 3,
+      "lit_first": 39,
+      "literals": [
+        {
+          "symbol": "-"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%setf-expand"
+        }
+      ],
+      "name": "decf",
+      "name_obj": "0x02ba"
+    },
+    {
+      "blob_offset": 704,
+      "code_flags": 2,
+      "ext_addr": "0x0002c0",
+      "flags": 1,
+      "kind": "macro",
+      "length": 24,
+      "lit_count": 3,
+      "lit_first": 42,
+      "literals": [
+        {
+          "symbol": "cons"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%setf-expand"
+        }
+      ],
+      "name": "push",
+      "name_obj": "0x02bc"
+    },
+    {
+      "blob_offset": 728,
+      "code_flags": 2,
+      "ext_addr": "0x0002d8",
+      "flags": 1,
+      "kind": "macro",
+      "length": 53,
+      "lit_count": 5,
+      "lit_first": 45,
+      "literals": [
+        {
+          "symbol": "let"
+        },
+        {
+          "symbol": "car"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "cdr"
+        },
+        {
+          "symbol": "%setf-expand"
+        }
+      ],
+      "name": "pop",
+      "name_obj": "0x02be"
+    }
+  ],
+  "exports": [],
+  "external_image": {
+    "bytes": 2119,
+    "code_bytes": 781,
+    "code_offset": 4,
+    "file_header_bytes": 4,
+    "file_header_format": "u16 blob_len, u16 md_len",
+    "format": "lisp65-bytecode-p0-disk-lib-image-v1",
+    "load_addr": "0x000000",
+    "metadata_addr": "0x00030d",
+    "metadata_bytes": 1334,
+    "metadata_format": {
+      "endianness": "little",
+      "entry_flags": {
+        "bit0": "macro entry; loader registers T_MACRO(BCODE) instead of a function cell"
+      },
+      "entry_record": "u16 name_off, u8 bank, u8 flags, u16 off, u16 len",
+      "header_bytes": 38,
+      "literal_index_record": "u16 node",
+      "literal_node_record": "u8 kind, u8 reserved, i16 value, u16 first, u16 count, u16 name_off_or_0xffff",
+      "literal_patch_record": "u16 blob_offset, u16 node",
+      "magic": "L65M",
+      "string_pool": "NUL-terminated UTF-8 strings referenced by name_off",
+      "version": 1
+    },
+    "metadata_offset": 785,
+    "metadata_sha256": "a0495842a308fbbc28c9de5c2637c02b3e1fbdaf2fa61b8f67a60e692e4e1270",
+    "path": "build/library-delivery-r1/raw/place.ext.bin",
+    "runtime_code_offset": 0,
+    "runtime_metadata_offset": 781,
+    "sha256": "891b5a5bd50403d284ae4d93e0e0f54346e2db1f425c31197ee8b631cff9f71e"
+  },
+  "format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+  "functions": [
+    "%places-consp",
+    "%putf",
+    "%setf-registry-find",
+    "%setf-place-setter",
+    "%setf-register-begin",
+    "%setf-register",
+    "%setf-register-commit",
+    "%setf-register-abort",
+    "%setf-expand-registered",
+    "%setf-expand-list",
+    "%setf-expand",
+    "setf",
+    "incf",
+    "decf",
+    "push",
+    "pop"
+  ],
+  "header": "build/library-delivery-r1/raw/place.h",
+  "late_bound_exports": [],
+  "literal_format": {
+    "entry_fields": "lisp65_bytecode_stdlib_entries[].lit_first/lit_count map each code object's littab slots to literal_index nodes",
+    "index_table": "lisp65_bytecode_stdlib_literal_index",
+    "materialization": "boot loader walks literal_patches, materializes each node, and overwrites the raw host obj word at blob_offset before execution",
+    "node_table": "lisp65_bytecode_stdlib_literal_nodes",
+    "patch_fields": "lisp65_bytecode_stdlib_literal_patches[].blob_offset points at each raw 16-bit littab obj word; .node selects the materialized literal node",
+    "patch_table": "lisp65_bytecode_stdlib_literal_patches"
+  },
+  "literal_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49
+  ],
+  "literal_nodes": [
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%putf",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-registry-find",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-registry*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-registry-find",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-pending*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-registry*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-open*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-open*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-pending*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-registry-find",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-open*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-registry*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-pending*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-pending*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*setf-place-open*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-place-setter",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "let",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "append",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%places-error-unsupported-place",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "car",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "let",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "rplaca",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "cdr",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "rplacd",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "getf",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "setq",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%putf",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-expand-registered",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "setq",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%places-consp",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-expand-list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%places-error-unsupported-place",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-expand",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "+",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-expand",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-expand",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "cons",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-expand",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "let",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "car",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "cdr",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-expand",
+      "value": 0
+    }
+  ],
+  "literal_note": "code-object literal-table obj words are host placeholders; native loaders must rewrite them from literal_format before running",
+  "literal_patches": [
+    {
+      "blob_offset": 45,
+      "node": 0
+    },
+    {
+      "blob_offset": 93,
+      "node": 1
+    },
+    {
+      "blob_offset": 124,
+      "node": 2
+    },
+    {
+      "blob_offset": 126,
+      "node": 3
+    },
+    {
+      "blob_offset": 154,
+      "node": 4
+    },
+    {
+      "blob_offset": 156,
+      "node": 5
+    },
+    {
+      "blob_offset": 158,
+      "node": 6
+    },
+    {
+      "blob_offset": 197,
+      "node": 7
+    },
+    {
+      "blob_offset": 199,
+      "node": 8
+    },
+    {
+      "blob_offset": 201,
+      "node": 9
+    },
+    {
+      "blob_offset": 288,
+      "node": 10
+    },
+    {
+      "blob_offset": 290,
+      "node": 11
+    },
+    {
+      "blob_offset": 292,
+      "node": 12
+    },
+    {
+      "blob_offset": 347,
+      "node": 13
+    },
+    {
+      "blob_offset": 349,
+      "node": 14
+    },
+    {
+      "blob_offset": 374,
+      "node": 15
+    },
+    {
+      "blob_offset": 376,
+      "node": 16
+    },
+    {
+      "blob_offset": 378,
+      "node": 17
+    },
+    {
+      "blob_offset": 380,
+      "node": 18
+    },
+    {
+      "blob_offset": 382,
+      "node": 19
+    },
+    {
+      "blob_offset": 433,
+      "node": 20
+    },
+    {
+      "blob_offset": 435,
+      "node": 21
+    },
+    {
+      "blob_offset": 437,
+      "node": 22
+    },
+    {
+      "blob_offset": 439,
+      "node": 23
+    },
+    {
+      "blob_offset": 441,
+      "node": 24
+    },
+    {
+      "blob_offset": 443,
+      "node": 25
+    },
+    {
+      "blob_offset": 445,
+      "node": 26
+    },
+    {
+      "blob_offset": 447,
+      "node": 27
+    },
+    {
+      "blob_offset": 449,
+      "node": 28
+    },
+    {
+      "blob_offset": 451,
+      "node": 29
+    },
+    {
+      "blob_offset": 583,
+      "node": 30
+    },
+    {
+      "blob_offset": 585,
+      "node": 31
+    },
+    {
+      "blob_offset": 587,
+      "node": 32
+    },
+    {
+      "blob_offset": 589,
+      "node": 33
+    },
+    {
+      "blob_offset": 591,
+      "node": 34
+    },
+    {
+      "blob_offset": 629,
+      "node": 35
+    },
+    {
+      "blob_offset": 643,
+      "node": 36
+    },
+    {
+      "blob_offset": 645,
+      "node": 37
+    },
+    {
+      "blob_offset": 647,
+      "node": 38
+    },
+    {
+      "blob_offset": 677,
+      "node": 39
+    },
+    {
+      "blob_offset": 679,
+      "node": 40
+    },
+    {
+      "blob_offset": 681,
+      "node": 41
+    },
+    {
+      "blob_offset": 711,
+      "node": 42
+    },
+    {
+      "blob_offset": 713,
+      "node": 43
+    },
+    {
+      "blob_offset": 715,
+      "node": 44
+    },
+    {
+      "blob_offset": 735,
+      "node": 45
+    },
+    {
+      "blob_offset": 737,
+      "node": 46
+    },
+    {
+      "blob_offset": 739,
+      "node": 47
+    },
+    {
+      "blob_offset": 741,
+      "node": 48
+    },
+    {
+      "blob_offset": 743,
+      "node": 49
+    }
+  ],
+  "name": "place",
+  "objects": 16,
+  "omission_gate": {
+    "defmacro_count": 0,
+    "defmacros": [],
+    "defun_count": 0,
+    "defuns": []
+  },
+  "override_exports": [],
+  "private_inline_functions": [],
+  "provides": [
+    "setf",
+    "incf",
+    "decf",
+    "push",
+    "pop"
+  ],
+  "relocation": {
+    "disk_lib_contract": "disk-lib files are [u16 blob_len][u16 md_len][blob][L65M]; entry bank/off and literal patch offsets are blob-relative; the device loader stages blob at lib_hw, trailer at lib_hw+blob_len, then supplies the final Bank-5 base",
+    "kind": "runtime-relative"
+  },
+  "requires": [
+    "core"
+  ],
+  "resident_overrides": [],
+  "resident_private_inline_functions": [],
+  "resident_suites": [
+    "../stdlib/p0-stdlib-einsuite-core-subset.json"
+  ],
+  "sources": [
+    "lib/stdlib-places.lisp"
+  ],
+  "strict_arity": true,
+  "suite": "tests/bytecode/libs/p0-place-lib.json",
+  "suite_format": "lisp65-bytecode-p0-disk-lib-suite-v1"
+}

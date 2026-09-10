@@ -269,13 +269,40 @@ behavior differed from the real F011 path. Current Xemu source still documents
 immediate/incomplete F011 behavior. File only with a reduced observable
 differential.
 
-### X2 — SD sector-buffer mapping differs from hardware (current source confirmed)
+### X2 — `$DE00` F011 buffer selection ignores `$D689.7` (reproduced; owner review pending)
 
-Current Xemu source says the F011 buffer is not integrated into the shared
-buffer model and deliberately retains an SD-only I/O mapping after reverting
-the combined mapping. This matches the local `$DE00`/`$FFD6E00` divergence.
+At Xemu commit `40dfef0d1d5f56be2469492715c12bdb32c75b67`, F011
+sector commands fill `disk_buffers + $0C00` and `$D689.7` correctly changes
+`disk_buffer_cpu_view`, but the `$DE00..$DFFF` I/O decoder consumes the
+separate `disk_buffer_io_mapped` pointer, which remains fixed at the SD buffer
+at `$0E00`. A published v2.0.0 D81 that boots on hardware therefore reaches
+`L65SYS DISK ERROR - CHECK MEDIA` under unmodified Xemu. An eleven-line patch
+makes both CPU views consume the existing selector; two independent runs then
+reach `WORKBENCH 2.0.0` and `LISP65>` with byte-identical framebuffer output.
 
-### X3 — Freezer is not emulated (current source confirmed)
+The local Chipset Reference explicitly applies `BUFSEL` to the `$DE00` mapping
+(PDF page 134 / printed page 120). Evidence and patch are in the DWX Link-73
+attribution. The paste-ready report remains owner-held and has not been filed.
+
+### X3 — F011 buffered-read completion clears `EQ` (documentation contradiction; owner review pending)
+
+At Xemu commit `40dfef0d1d5f56be2469492715c12bdb32c75b67`, the
+successful buffered-read path sets DRQ but explicitly clears EQ. The local
+Chipset Reference requires BUSY clear with DRQ and EQ high after the complete
+512-byte transfer (PDF page 135 / printed page 121). A strict positive F011
+consumer consequently observes `$D082 & $7C == $40` instead of `$60` and
+rejects the otherwise valid read.
+
+The former EQ-setting patch is withdrawn from the active fork. The exact
+device core `03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6` suppresses EQ on SD
+reads and keeps filling the sector buffer while setting LOST. The device
+record `$44` agrees with that mechanism. The buffered predicate is
+`(status & $D8) == $40`; the old manual-based `$60` requirement was a product
+defect, not an Xemu defect. No same-read `$44` plus CRC-correct payload device
+evidence is claimed yet. X3 is now a MEGA65 documentation draft, not an Xemu
+bug report; owner review remains required and nothing has been filed.
+
+### X4 — Freezer is not emulated (current source confirmed)
 
 Current `hypervisor.c` reports that Freezer is not enabled and `configdb.c`
 marks the option `NOT YET WORKING`. This prevents emulator coverage of the

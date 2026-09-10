@@ -8,6 +8,7 @@ from copy import deepcopy
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -157,8 +158,14 @@ def vm_mutants(source: str) -> dict[str, str]:
     new_entry = "if ((uint16_t)(base + vm_frame_slots(nargs_actual, nargs, nlocals, flags)) > GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }"
     new_tail = "if ((uint16_t)(base + vm_frame_slots(n, nargs, nlocals, flags)) > GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }"
     old = "if ((uint16_t)(base + nargs + nlocals + 1) >= GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }"
-    rest = replace_once(source, new_entry, old, "entry REST guard removal")
-    rest = replace_once(rest, new_tail, old, "tail REST guard removal")
+    shared = "if ((uint16_t)(base + vm_frame_slots(enter_n, nargs, nlocals, flags)) > GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }"
+    if shared in source:
+        require(source.count("base + vm_frame_slots(") == 1,
+                "shared REST guard population drift")
+        rest = replace_once(source, shared, old, "shared REST guard removal")
+    else:
+        rest = replace_once(source, new_entry, old, "entry REST guard removal")
+        rest = replace_once(rest, new_tail, old, "tail REST guard removal")
 
     pop = replace_once(source,
         "#define POP()    ({ obj pop__; if (gc_rootsp <= vb) { vm_status = VM_BADOPCODE; goto done; } pop__ = gc_rootstack[--gc_rootsp]; pop__; })",
@@ -169,6 +176,25 @@ def vm_mutants(source: str) -> dict[str, str]:
         "        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }\n"
         "        io_disk_scratch_poke")
     old_disk_block = "    case 21:  /* %disk-poke */\n        io_disk_scratch_poke"
+    if "if (!vm_two_byte_args(a, n)) return NIL;" in source:
+        require(disk_domain_present(source), "factored disk domain drift")
+        disk_block = ("    case 21:  /* %disk-poke */\n"
+                      "        if (!vm_two_byte_args(a, n)) return NIL;\n"
+                      "        io_disk_scratch_poke")
+        # Remove validation, not argument decoding: a successful poke must
+        # still write the requested bytes in the negative-control program.
+        old_disk_block = ("    case 21:  /* %disk-poke */\n"
+                          "        vm_arg_x = (uint8_t)FIXVAL(a[0]);\n"
+                          "        vm_arg_y = (uint8_t)FIXVAL(a[1]);\n"
+                          "        io_disk_scratch_poke")
+    if "vm_pop_args(obj *dst," in source:
+        # OP_CALLPRIM now executes this POP copy, not the inline macro.
+        # Recreate the old continue-with-NIL behavior at the live checkpoint.
+        pop = replace_once(pop,
+            "        if (gc_rootsp <= vb_) { vm_status = VM_BADOPCODE; return 0; }\n"
+            "        dst[i - 1] = gc_rootstack[--gc_rootsp];",
+            "        dst[i - 1] = gc_rootsp > vb_ ? gc_rootstack[--gc_rootsp] : (vm_status = VM_BADOPCODE, NIL);",
+            "factored POP fail-stop removal")
     pop = replace_once(pop, disk_block, old_disk_block,
                        "historical disk-poke domain removal")
     disk = replace_once(source, disk_block, old_disk_block,
@@ -202,6 +228,10 @@ def executed_fixtures(root: Path) -> dict[str, Any]:
         binary = root / f"vm-{name}"
         vm_compile(mutant_source, binary)
         mutations[name] = run([str(binary)], expect_success=False)
+        if name == "pop-fail-stop-and-disk-domain-removed":
+            require(re.search(r"FAIL POP underflow exits opcode before disk poke status=\d+ poke=1",
+                              mutations[name]["stdout_tail"]) is not None,
+                    "POP mutation did not execute the forbidden write")
 
     return {
         "gc": {"status": "PASS: REAL FIXPOINT PRESERVES 600-CELL PRODUCT GRAPH",
@@ -214,17 +244,35 @@ def executed_fixtures(root: Path) -> dict[str, Any]:
     }
 
 
+def disk_domain_present(vm: str) -> bool:
+    inline = "case 21:  /* %disk-poke */\n        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1]))"
+    factored = "case 21:  /* %disk-poke */\n        if (!vm_two_byte_args(a, n)) return NIL;"
+    helper = (
+        "vm_two_byte_args(const obj *a, uint8_t n) {\n"
+        "    if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return 0; }\n"
+        "    vm_arg_x = (uint8_t)FIXVAL(a[0]);\n"
+        "    vm_arg_y = (uint8_t)FIXVAL(a[1]);\n"
+        "    return 1;\n}")
+    return vm.count(inline) == 1 or (vm.count(factored) == 1 and vm.count(helper) == 1)
+
+
 def source_contract() -> dict[str, Any]:
     mem = MEM.read_text(encoding="utf-8")
     vm = VM.read_text(encoding="utf-8")
+    # A shares the suffix without changing either route's transient-slot bound.
+    # Execute entry argument propagation rather than assuming two source sites.
+    shared = vm.count("base + vm_frame_slots(") == 1 and (
+        "base + vm_frame_slots(enter_n, nargs, nlocals, flags)" in vm)
+    if shared:
+        from code_object_arity_contract import _probe_entry_coverage
+        _probe_entry_coverage(vm)
     checks = {
         "bounded-mark-worklist-absent": "MARKSTACK" not in mem and "markstack[" not in mem,
         "product-root-enters-flat-mark": "void gc_mark(obj o) { (void)gc_mark1(o); }" in mem,
         "slot-predicate-bound": vm.count("if (!SLOT_OK(n))") == 3,
-        "both-frame-guards-use-transient-bound": vm.count("base + vm_frame_slots(") == 2,
+        "both-frame-guards-use-transient-bound": shared or vm.count("base + vm_frame_slots(") == 2,
         "pop-is-fail-stop": "if (gc_rootsp <= vb) { vm_status = VM_BADOPCODE; goto done; }" in vm,
-        "disk-poke-has-exact-domain": (
-            "case 21:  /* %disk-poke */\n        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1]))" in vm),
+        "disk-poke-has-exact-domain": disk_domain_present(vm),
     }
     require(all(checks.values()), "A3-A6 source contract incomplete")
     return {"status": "PASS: A3-A6 SOURCE CONTRACT BOUND", "checks": checks,

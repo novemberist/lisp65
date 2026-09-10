@@ -414,6 +414,7 @@ def run_surface(source: Path, expr: str, expected: str,
     macros = P0._macro_symbol_objs(heap, flags, resident)
     abi_profile, abi_ledger = P0._suite_abi(suite)
     vm = TargetFrameVM(heap=heap.clone(), directory=directory,
+        historical_screen_era=DISPLAY.SCREEN_ORACLE_ERA,
         macro_symbols=macros, max_steps=1_000_000,
         max_call_args=suite.get("max_call_args"), key_events=events,
         private_key_event_modes=True, abi_profile=abi_profile,

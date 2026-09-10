@@ -2,18 +2,42 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 from copy import deepcopy
 from pathlib import Path
 
 import c2_v210_comfort_display_repair as REPAIR
 import dwx_comfort_collection_row as COLLECTION
 from elf_truth import ElfTruth
-from evidence_era import stable_recorded_on
+from evidence_era import stable_recorded_on, era_blob
 
 BASE = REPAIR.BASE
 ROOT = BASE.ROOT
 OUT = ROOT / "config/c2-v210-comfort-device-session.json"
 RUNTIME = ROOT / "build/v2.1/comfort-collection-calibration-r2"
+SESSION_ERA = "f5f970b1fb29138da7544ad3c4faa086b8eec45e"
+
+
+def error_probe_authority(path, function, domain):
+    """Keep a completed session in its era; still reject changed semantics."""
+    raw = era_blob(SESSION_ERA, path.relative_to(ROOT).as_posix())
+    historical = json.loads(raw)
+    def cell(value):
+        return next(r for r in value['rows'] if r['name'] == function)['cells'][domain]
+    expected = cell(historical)
+    def verify(value):
+        BASE.require(value == expected and value['classification'] == 'error-raised',
+                     'historical abort probe semantics differ')
+    verify(cell(BASE.load(path)))
+    for change in ({'classification': 'documented-permissive'}, {'error': 'different'}, {'detail': 'different'}):
+        try:
+            verify(dict(expected, **change))
+        except BASE.CardError:
+            continue
+        raise BASE.CardError('historical abort probe mutation survived')
+    return {'path': path.relative_to(ROOT).as_posix(), 'bytes': len(raw),
+            'sha256': hashlib.sha256(raw).hexdigest()}, expected
 
 
 def derive():
@@ -42,12 +66,12 @@ def derive():
         "Submit (repl). At l65> submit one empty balanced line; then enter (repl) again."])
     evaluation = old["C2"]; evaluation["id"] = "G3"
     recovery = old["C3"]
-    # Keep the executed error form, but bind its domain authority live.
+    # This completed session owns historical provenance, not today's metadata SHA.
     domain_path = ROOT / "config/public-surface-domain-contract.json"
-    domain = BASE.load(domain_path)
-    cell = next(r for r in domain["rows"] if r["name"] == recovery["trigger"]["function"])["cells"][recovery["trigger"]["domain"]]
+    authority, cell = error_probe_authority(domain_path,
+        recovery["trigger"]["function"], recovery["trigger"]["domain"])
     BASE.require(cell["classification"] == "error-raised", "abort probe no longer belongs to error-raised domain")
-    recovery["trigger"].update(authority=BASE.bind(domain_path),
+    recovery["trigger"].update(authority=authority,
         classification=cell["classification"], error=cell["error"], detail=cell["detail"])
     recovery.update(id="G4", actions=["At l65> submit (+ nil 32). Observe recovery and the complete diagnostic.",
         "Before any further key, checkpoint LATCH reads state and payload raw-first.",

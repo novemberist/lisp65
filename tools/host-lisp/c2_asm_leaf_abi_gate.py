@@ -492,6 +492,69 @@ def _last_writer(window: list[dict[str, Any]], register: str) \
     return matches[-1]
 
 
+def _crc_reaching_writer(body: list[dict[str, Any]], call_index: int,
+                         register: str) -> dict[str, Any]:
+    """Follow real intra-owner predecessors, not the last textual JMP.
+
+    Every reaching path must establish a load/transfer. A call,
+    function entry, cycle, unknown transfer or register clobber is a stop,
+    not an assumed ABI value. This admits branch-around shared CRC setup.
+    """
+    by_address = {r['address']: i for i, r in enumerate(body)}
+    require(len(by_address) == len(body), 'duplicate CRC owner instruction')
+    predecessors: dict[int, list[int]] = {i: [] for i in range(len(body))}
+    conditional = {'bcc', 'bcs', 'beq', 'bmi', 'bne', 'bpl', 'bvc', 'bvs'}
+    for i, row in enumerate(body):
+        op = row['opcode']
+        successors = []
+        if op in conditional | {'jmp', 'bra'}:
+            target = re.fullmatch(r'\$([0-9a-f]+)(?:\s+<[^>]+>)?', row['operand'])
+            if target and int(target[1], 16) in by_address:
+                successors.append(by_address[int(target[1], 16)])
+            # A taken edge outside this owner cannot reach this local call.
+            # Its fall-through (if conditional) still participates below.
+        if op not in {'jmp', 'bra', 'rts', 'rti', 'brk'} and i + 1 < len(body):
+            successors.append(i + 1)
+        for successor in successors:
+            predecessors[successor].append(i)
+    # Explicit non-writers; arithmetic/unknown instructions cannot silently
+    # preserve a value simply because the old writer recognizer lacks them.
+    preserves = {
+        'A': {'ldx','ldy','stx','sty','sta','stz','tay','tax','pha','phx','phy',
+              'plx','ply','inx','dex','iny','dey','cmp','cpx','cpy','bit',
+              'clc','sec','cli','sei','clv','cld','sed','nop','jmp','bra'},
+        'X': {'lda','ldy','sta','sty','stx','stz','txa','tay','pha','phx','phy',
+              'pla','ply','iny','dey','cmp','cpx','cpy','bit','ora','and','eor',
+              'adc','sbc','clc','sec','cli','sei','clv','cld','sed','nop','jmp','bra'},
+    }
+    memo = {}
+    def visit(index, active):
+        require(index not in active, 'cycle before CRC argument definition')
+        if index in memo:
+            return memo[index]
+        row = body[index]
+        if _instruction_writer(row, register):
+            return {index}
+        require(row['opcode'] in preserves[register] | conditional,
+                'unproven CRC argument preservation: ' + row['opcode'])
+        require(index != 0 and predecessors[index], 'CRC argument reaches owner entry undefined')
+        found = set()
+        for prior in predecessors[index]:
+            found.update(visit(prior, active | {index}))
+        memo[index] = found
+        return found
+    require(predecessors[call_index], 'CRC call has no predecessors')
+    found = set()
+    for index in predecessors[call_index]:
+        found.update(visit(index, set()))
+    definitions = [body[i] for i in sorted(found)]
+    require(definitions, 'CRC argument has no reaching definition')
+    result = dict(definitions[0])
+    result['reaching_definition_addresses'] = [r['address'] for r in definitions]
+    result['reaching_definitions'] = definitions
+    return result
+
+
 def _crc_caller_inventory(truth: ElfTruth,
                           rows: list[dict[str, Any]]) -> dict[str, Any]:
     target_rows = [row for row in truth.relocations
@@ -530,8 +593,8 @@ def _crc_caller_inventory(truth: ElfTruth,
                     f"CRC callsite lacks a local {name} pointer writer: "
                     f"0x{relocation.offset - 1:x}")
             pointer_rows[name] = matches[-1]
-        a_writer = _last_writer(window, "A")
-        x_writer = _last_writer(window, "X")
+        a_writer = _crc_reaching_writer(body, call_index, "A")
+        x_writer = _crc_reaching_writer(body, call_index, "X")
         model = {
             "pointer_low": "__rc2", "pointer_high": "__rc3",
             "length_low": "A", "length_high": "X",
@@ -557,8 +620,10 @@ def _crc_caller_inventory(truth: ElfTruth,
         "callers": result,
         "invariant": (
             "Every final-ELF relocation to rtov_crc_mem is owned, is a direct "
-            "JSR, and locally establishes pointer in __rc2/__rc3 plus length "
-            "in A/X. No caller class is inferred from the Leaf comment."),
+            "JSR, locally establishes pointer in __rc2/__rc3 and establishes "
+            "length in A/X over every intra-owner predecessor. This is an ABI "
+            "setup proof, not a numeric length or memory-value proof. "
+            "No caller class is inferred from the Leaf comment."),
     }
 
 
@@ -1385,6 +1450,26 @@ def selftest() -> dict[str, str]:
                  *sorted((ROOT / "src").glob("*.s")), *EXTRA_ABI_SOURCES)}
     source_inventory(texts)
     rejected: dict[str, str] = {}
+    # A non-taken textual JMP is not the predecessor of the shared setup.
+    shape = [('lda','$79'),('ldx','$7a'),('bne','$105'),('tay',''),
+             ('bra','$108'),('ldy','#$56'),('sty','$4'),('jsr','$2213'),('rts','')]
+    cfg = [dict(section='.test',address=0x100+i,opcode=op,operand=arg)
+           for i,(op,arg) in enumerate(shape)]
+    require(_crc_reaching_writer(cfg,7,'A')['address']==0x100 and
+            _crc_reaching_writer(cfg,7,'X')['address']==0x101,
+            'CRC branch-around setup positive control failed')
+    cfg_mutations = (
+            ('CRC-CFG-remove-A',0,'nop','','A'),
+            ('CRC-CFG-remove-X',1,'nop','','X'),
+            ('CRC-CFG-clobber-A',5,'eor','#$1','A'),
+            ('CRC-CFG-clobber-X',5,'inx','','X'),
+            ('CRC-CFG-call-clobber',5,'jsr','$200','A'),
+            ('CRC-CFG-definition-cycle',0,'bra','$100','A'))
+    for name,index,op,arg,reg in cfg_mutations:
+        trial=[dict(r) for r in cfg];trial[index].update(opcode=op,operand=arg)
+        try:_crc_reaching_writer(trial,7,reg)
+        except GateError:rejected[name]='rejected'
+        else:raise GateError('CRC CFG mutation survived: '+name)
     stz = STZ.selftest()
     for name in stz["mutations"]:
         rejected[f"STZ-Z-dominance:{name}"] = "rejected"
@@ -1593,7 +1678,7 @@ def selftest() -> dict[str, str]:
             rejected[name] = "rejected"
         else:
             raise GateError(f"transitive ABI mutation survived: {name}")
-    require(len(rejected) == len(CURRENT_ABI_POLICIES) + 28 + stz["rejected"],
+    require(len(rejected) == len(CURRENT_ABI_POLICIES) + 28 + stz["rejected"] + len(cfg_mutations),
             "assembler ABI mutation count drift")
     return rejected
 

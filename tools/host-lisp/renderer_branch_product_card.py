@@ -21,14 +21,24 @@ DIRECT = ('src/l65e_bcode_ordinal.s', 'src/optional/c2_map_cpu_read.s')
 
 
 def failure_checks():
-    from c2_no_pcrel16_gate import inspect
+    from c2_no_pcrel16_gate import inspect, boundary_selftest
     elf = BUILD/'wplto/lisp65-c2-substitution-linked.prg.elf'
     core = ROOT/'build/v2.1/comfort-buffered-repair-device-r1/stack-repair-pricing-r1/gs4510-03b24c6b.vhdl'
+    plane = BUILD.with_name(BUILD.name+'-preflight')/'setup-owned/static-plane/narrow-static'
+    records = dict(shelf=plane/'product/product-shelf-v4-direct.bin',
+                   c2d=plane/'v6-semantics/initial.c2d-v6.bin')
     result = inspect(elf, core,
         'd44ae3906e1b0a826ca8e511c73ef1f50223b7de507a3ed349082fdefe58034e',
         elf.parent/'generated-product-sources/c2-stream-phase-02a.c',
-        ROOT/'tools/llvm-mos/bin/llvm-readobj', ROOT/'tools/llvm-mos/bin/llvm-objdump')
+        ROOT/'tools/llvm-mos/bin/llvm-readobj', ROOT/'tools/llvm-mos/bin/llvm-objdump',
+        lto=elf.with_suffix('.lto.o'), link_map=elf.with_suffix('.map'),
+        record_oracles=records)
     assert result['status'] == 'PASS', 'candidate still contains PCRel16 instructions'
+    result['boundary_mutations'] = boundary_selftest(elf, core,
+        'd44ae3906e1b0a826ca8e511c73ef1f50223b7de507a3ed349082fdefe58034e',
+        elf.parent/'generated-product-sources/c2-stream-phase-02a.c',
+        ROOT/'tools/llvm-mos/bin/llvm-readobj', ROOT/'tools/llvm-mos/bin/llvm-objdump',
+        lto=elf.with_suffix('.lto.o'), link_map=elf.with_suffix('.map'), record_oracles=records)
     base = Path(tempfile.mkdtemp(prefix='failure-check-', dir=BUILD))
     (base/'no-pcrel16.json').write_text(json.dumps(result, indent=2)+'\n')
     subprocess.run([sys.executable, str(ROOT/'tools/host-lisp/c2_renderer_failure_gate.py'),

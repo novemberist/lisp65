@@ -6,8 +6,19 @@
 ; generation-bound C2D image rows through the existing one-argument
 ; %disk-load-lib seam; there is deliberately no *loaded-libs* registry here.
 
+; Data-file continuation, not a Track-40 directory link. Zero is handled as
+; EOF by the caller. Sector bytes are unsigned; retain the explicit bounds
+; here so this predicate also has a complete standalone contract.
+(defun %disk-file-link-valid-p (track sector next-track next-sector)
+  (and (>= next-track 1) (<= next-track 80)
+       (>= next-sector 0) (< next-sector 40)
+       (not (and (= next-track track) (= next-sector sector)))))
+
 (defun %l65i-open-sector (track sector)
-  (if (%disk-read-sector track sector)
+  (if (> (symbol-value '*l65i-fuel*) 0)
+    (progn
+      (set-symbol-value '*l65i-fuel* (1- (symbol-value '*l65i-fuel*)))
+      (if (%disk-read-sector track sector)
       (progn
         (set-symbol-value '*l65i-track* track)
         (set-symbol-value '*l65i-sector* sector)
@@ -16,11 +27,12 @@
         (set-symbol-value '*l65i-offset* 2)
         t)
       nil))
+    nil))
 
 (defun %l65i-next-byte ()
   (if (= (symbol-value '*l65i-offset*) 256)
       (if (> (symbol-value '*l65i-next-track*) 0)
-          (if (%disk-directory-link-valid-p
+          (if (%disk-file-link-valid-p
                (symbol-value '*l65i-track*)
                (symbol-value '*l65i-sector*)
                (symbol-value '*l65i-next-track*)
@@ -282,6 +294,9 @@
       nil))
 
 (defun %l65i-parse ()
+  ; L65I-v1: 32-byte header + at most 32 rows of 48 bytes = 1,568 bytes;
+  ; ceil(1,568 / 254) = seven sectors, including the initial sector.
+  (set-symbol-value '*l65i-fuel* 7)
   (let ((entry (%l65i-find (%string-codes "l65index") 40 3 64)))
     (if entry
         (if (%l65i-open-sector (car entry) (cdr entry))

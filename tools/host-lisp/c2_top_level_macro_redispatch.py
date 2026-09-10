@@ -25,6 +25,7 @@ RECEIPT = ROOT / (
 FORMAT = "lisp65-c2.3-link95-top-level-macro-publication-receipt-v1"
 RECORDED_ON = "2026-08-09"
 EVIDENCE_COMMIT = "38c97aa493f48d4eb2a368d198a20b7d861f819f"
+RUNTIME_PRICE_COMMIT = "6b711cb4"
 
 
 class RedispatchError(RuntimeError):
@@ -131,8 +132,8 @@ def source_text(value: dict[str, Any], relative: str, *, commit: str | None = No
     return raw.decode("utf-8")
 
 
-def candidate_runtime(value: dict[str, Any]) -> str:
-    source = source_text(value, value["sources"]["product_runtime"])
+def candidate_runtime(value: dict[str, Any], *, commit: str | None = None) -> str:
+    source = source_text(value, value["sources"]["product_runtime"], commit=commit)
     old = "(%lcc-macro-p (car form))"
     new = "(%c2-top-level-macro-p (car form))"
     anchor = (
@@ -354,7 +355,7 @@ def bank2_price(value: dict[str, Any]) -> dict[str, Any]:
         "Link93_baseline": git_bytes(
             value["redispatch_first_red_commit"], relative
         ).decode("utf-8"),
-        "Link95_candidate": candidate_runtime(value),
+        "Link95_candidate": candidate_runtime(value, commit=RUNTIME_PRICE_COMMIT),
     }
     prices: dict[str, dict[str, int]] = {}
     ledger = C._abi_ledger("dialect-v2", None)
@@ -408,6 +409,17 @@ def build_receipt(value: dict[str, Any]) -> dict[str, Any]:
     source_claim = validate_source(value, compiler, runtime)
     current = run_actual_lcc(value, product_runtime_override=runtime)
     validate_current_execution(value, current)
+    # Live semantics above remain compulsory. The fixed 208-byte price and
+    # sealed provenance below belong to the consumed historical runtime, not
+    # to later direct-argument implementation changes.
+    runtime_raw = git_bytes(RUNTIME_PRICE_COMMIT, sources['product_runtime'])
+    sealed = load(RECEIPT)
+    require(bind_raw(sources['product_runtime'], runtime_raw) ==
+            sealed['authorities']['product_runtime_candidate']['base'],
+            'historical runtime source authority drift')
+    runtime = candidate_runtime(value, commit=RUNTIME_PRICE_COMMIT)
+    require(run_actual_lcc(value, product_runtime_override=runtime) == current,
+            'live/sealed redispatch execution differs')
     historical = run_actual_lcc(value, commission=True)
     validate_first_red(value, historical)
     price = bank2_price(value)
@@ -427,13 +439,14 @@ def build_receipt(value: dict[str, Any]) -> dict[str, Any]:
                 "docs/planning/post-v1.4.0-direction-plan.md",
             ),
             "current_sources": {
-                key: (bind_raw(relative, compiler_raw)
-                      if key == "compiler" else bind(ROOT / relative))
+                key: (bind_raw(relative, compiler_raw) if key == "compiler"
+                      else bind_raw(relative, runtime_raw) if key == "product_runtime"
+                      else bind(ROOT / relative))
                 for key, relative in sources.items()
                 if key != "actual_lcc_binary"
             },
             "product_runtime_candidate": {
-                "base": bind(ROOT / sources["product_runtime"]),
+                "base": bind_raw(sources["product_runtime"], runtime_raw),
                 "bytes": len(runtime.encode("utf-8")),
                 "sha256": sha(runtime.encode("utf-8")),
                 "transform": "replace-private-call-and-append-product-helper",
@@ -525,6 +538,22 @@ def sealed_projection_selftest() -> int:
     return rejected
 
 
+def historical_runtime_price_selftest() -> None:
+    global RUNTIME_PRICE_COMMIT
+    saved = RUNTIME_PRICE_COMMIT
+    try:
+        RUNTIME_PRICE_COMMIT = '57e79601'
+        try:
+            bank2_price(load(CONTRACT))
+        except RedispatchError as error:
+            require('Bank-2 price drift' in str(error),
+                    'runtime-era mutation failed for an unrelated reason')
+        else:
+            raise RedispatchError('later runtime contaminated historical price')
+    finally:
+        RUNTIME_PRICE_COMMIT = saved
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("selftest", "write", "check"))
@@ -535,6 +564,7 @@ def main() -> int:
         if args.mode == "selftest":
             count = mutation_tests(value)
             projection = sealed_projection_selftest()
+            historical_runtime_price_selftest()
             print("c2-top-level-macro-redispatch: SELFTEST PASS "
                   f"mutations={count} sealed-projection={projection}")
             return 0

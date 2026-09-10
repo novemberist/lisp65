@@ -728,12 +728,13 @@ def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN,
             golden_layout["boundary_symbols"][name] = (
                 authority["fixed_boundary_symbols"][name])
         if "zero_page_BSS" in successor:
-            golden_layout["boundary_symbols"]["__zp_bss_size"] = (
-                authority["fixed_boundary_symbols"]["__zp_bss_size"])
+            for name in ("__zp_bss_size", "__zp_bss_start", "__zp_data_size"):
+                golden_layout["boundary_symbols"][name] = (
+                    authority["fixed_boundary_symbols"][name])
         comparison = golden.compare_layout(golden_layout, authority,
             normalized_fixed_members={
                 ".lisp65_resident_island_annex.vma"} | (
-                    {".zp.vma"} if "zero_page_BSS" in successor else set()))
+                    {".zp.vma", ".zp.bss.vma"} if "zero_page_BSS" in successor else set()))
         additive["placement_gate"] = {
             "gate": "active-card-registry-union",
             "status": "passed",
@@ -771,6 +772,19 @@ def candidate_fixed_successors(layout: dict[str, Any],
         input_owner = rows[".lisp65_c2_input_raw_owner"]
         metadata = rows[".lisp65_c2_symbol_metadata_bss"]
         logical_bss_end = metadata["vma"] + metadata["bytes"]
+        # Derive all allocated high-BSS tail owners, not just the historical
+        # metadata endpoint. Additive closure has already proved ownership;
+        # this proves that startup zeroing includes the entire contiguous tail.
+        tail = sorted((row for row in rows.values()
+                       if row["bytes"] and "SHF_ALLOC" in row["flags"] and
+                       logical_bss_end <= row["vma"] < 0xC000),
+                      key=lambda row: row["vma"])
+        for owner in tail:
+            require(owner["vma"] == logical_bss_end and
+                    owner["section_type"] == "SHT_NOBITS" and
+                    set(owner["flags"]) == {"SHF_ALLOC", "SHF_WRITE"},
+                    "high-BSS tail is not contiguous writable NOLOAD ownership")
+            logical_bss_end += owner["bytes"]
         require(bss_end <= input_owner["vma"]
                 and input_owner["vma"] + input_owner["bytes"] ==
                     metadata["vma"]
@@ -823,16 +837,21 @@ def candidate_fixed_successors(layout: dict[str, Any],
             "__zp_bss_size"]:
         result["zero_page_BSS"] = candidate_zp_bss_successor(layout)
         result["zero_page_BSS_mutations"] = candidate_zp_bss_mutations(layout)
-        result["normalized_fixed_members"].extend(("__zp_bss_size", ".zp.vma"))
+        result["normalized_fixed_members"].extend(("__zp_bss_size", "__zp_bss_start",
+            "__zp_data_size", ".zp.vma", ".zp.bss.vma"))
     return result
 
 
 def candidate_zp_bss_successor(layout: dict[str, Any]) -> dict[str, Any]:
     rows = {row["name"]: row for row in layout["allocatable_sections"]}
-    bss, following = rows[".zp.bss"], rows[".zp"]
+    data, bss, following = rows[".zp.data"], rows[".zp.bss"], rows[".zp"]
     fixed = rows[".lisp65_c2_convergence_zp"]
     symbols = layout["boundary_symbols"]
-    require(bss["bytes"] > 0
+    require(data["bytes"] > 0
+            and symbols["__zp_data_start"] == data["vma"]
+            and symbols["__zp_data_size"] == data["bytes"]
+            and data["vma"] + data["bytes"] == bss["vma"]
+            and bss["bytes"] > 0
             and symbols["__zp_bss_start"] == bss["vma"]
             and symbols["__zp_bss_size"] == bss["bytes"]
             and bss["vma"] + bss["bytes"] == following["vma"]
@@ -853,14 +872,22 @@ def candidate_zp_bss_mutations(layout: dict[str, Any]) -> list[str]:
     size = rows[".zp"]["vma"] - rows[".zp.bss"]["vma"] + 1
     rows[".zp.bss"]["bytes"] = size
     overlap["boundary_symbols"]["__zp_bss_size"] = size
+    data_size = deepcopy(layout)
+    data_size["boundary_symbols"]["__zp_data_size"] += 1
+    data_overlap = deepcopy(layout)
+    data = next(row for row in data_overlap["allocatable_sections"] if row["name"] == ".zp.data")
+    data["bytes"] += 1
+    data_overlap["boundary_symbols"]["__zp_data_size"] = data["bytes"]
     rejected = []
     for label, trial in (("ZP-BSS-boundary-diverges", wrong),
-                         ("ZP-BSS-overlaps-next-owner", overlap)):
+                         ("ZP-BSS-overlaps-next-owner", overlap),
+                         ("ZP-data-boundary-diverges", data_size),
+                         ("ZP-data-overlaps-BSS", data_overlap)):
         try:
             candidate_zp_bss_successor(trial)
         except ConversionError:
             rejected.append(label)
-    require(len(rejected) == 2, "ZP-BSS successor mutation survived")
+    require(len(rejected) == 4, "ZP-BSS successor mutation survived")
     return rejected
 
 

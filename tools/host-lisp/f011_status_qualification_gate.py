@@ -11,7 +11,8 @@ import dwx_comfort_collection_calibration as CAL
 from elf_truth import ElfTruth
 
 def verify_binding(item):
-    if item['path']=='tools/host-lisp/dwx_comfort_resume.py':
+    if item['path'] in ('tools/host-lisp/dwx_comfort_resume.py',
+                        'tools/host-lisp/dwx_comfort_collection_calibration.py'):
         from evidence_era import era_bind
         C.require(era_bind('5224d70d',item['path'])==item,'sealed status-world executor drift')
         return
@@ -55,7 +56,7 @@ def run():
     address=C.load(FINAL.OUT)['record_owner']['start']
     C.require(negative_dump[address:address+3]==raw,'negative stopped record differs from sealed RAM dump')
     truth=ElfTruth.read(C.ELF,llvm_readobj=C.B.READOBJ,include_section_data=True)
-    authority=CAL.model(truth,C.ELF)
+    authority=CAL.model(truth,C.ELF,source_era='5224d70d')
     data=comfort['collection_calibration']
     capture=next(r for r in C.load(RUN.SESSION)['rows'] if r['id']=='C4')['collection']
     samples=[(C.load(runtime/f'calibration-sample-{i}-typed.json'),
@@ -66,6 +67,13 @@ def run():
     CAL.validate_window(data['origin'],data['start'],data['end'])
     runtime_semantics(comfort,negative,frames,raw)
     mutations=[]
+    # This exact R2-source/historical-ELF mixture caused the original drift.
+    later=CAL.model(truth,C.ELF,source_era='663b69f0')
+    try:
+        C.require(json.loads(C.canonical(CAL.derive(data['origin'],samples,capture,later)))==data['plan'],
+                  'later source world accepted for historical allocator')
+    except RuntimeError:mutations.append('later-source-world-with-historical-ELF')
+    else:raise RuntimeError('later source-world mutation survived')
     for kind in ('unseen-success','masked-read-error-as-nil','overwritten-diagnostic','gc-before-window','undrained-ring'):
         m=deepcopy(comfort);f=dict(frames)
         if kind=='unseen-success':next(r for r in m['rows'] if r['id']=='F011-first-success')['raw']='0062aa'

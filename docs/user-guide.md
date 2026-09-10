@@ -1,16 +1,18 @@
-# lisp65 2.1.0 User Guide
+# lisp65 2.2.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-2.1.0` release bundle
+- The extracted `lisp65-2.2.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
 The bundle supplies `media/lisp65-product.d81` and a blank convenience image,
 `media/lisp65-work.d81`. Any valid non-product 1581 image may be used as the
-work disk. The product image contains the resident prompt editor and the IDE,
-IDEX, and M65D libraries; there is no separate optional-library medium.
+work disk. The product image contains the resident prompt editor, the IDE,
+IDEX, and M65D libraries, and the five optional packages described in
+[Product-resident libraries](#product-resident-libraries); there is no
+separate optional-library medium.
 
 ## Verify the bundle
 
@@ -86,11 +88,23 @@ already exists on the mounted disk. Any other destination name sets the
 publish a library under an arbitrary name, use `compile-string` directly, as
 shown below.
 
-The selected 2.1.0 product checks for `INIT.L65` after the resident world is
+The selected 2.2.0 product checks for `INIT.L65` after the resident world is
 ready and before the first banner. The release medium deliberately omits the
 file, so the normal release boot takes the silent absence path. On a derived
 medium that supplies it, the file is evaluated once per cold boot. An open or
 evaluation error returns to one live `lisp65>` prompt and is not retried.
+
+Do not put a library `require` inside a derived `INIT.L65` in this release: it
+corrupts the source loader's sector scratch and can leave the reader stuck
+before the banner appears. See
+[Known Issues](known-issues.md) for the mechanism. The repair, together with a
+default-loaded `INIT.L65` shipping `place` and `string-extra`, is scheduled
+for the next release.
+
+A call passes at most 12 arguments, at the prompt and in compiled code, and
+`apply` takes a list of at most 12 elements; longer argument lists report a
+type error. Fold long value lists instead of passing them as arguments. See
+Known Issues, "Non-tail recursion depth bound", for the related frame bound.
 
 The REPL accepts several forms on one input line and evaluates them from left
 to right. If a later form has a reader error, earlier forms on that line have
@@ -101,9 +115,15 @@ The native `lisp65>` prompt and explicit `(read-line)` calls use the same
 focused insertion-mode editor. Cursor Left/Right and `C-b`/`C-f` move by one
 character; `C-a` and `C-e` move to the endpoints; Delete removes backward and
 `C-d` removes forward. Movement or deletion beyond an endpoint is a no-op.
-The cursor-following viewport preserves the 250-character limit. Prompt,
-editable input, and cursor share one editor-owned line. This is still a
-single-line editor, not the deferred balanced multiline/history Comfort REPL.
+The cursor-following viewport preserves the 250-character limit. Prompt, editable input and cursor share an editor-owned logical line,
+which may occupy several screen rows. This is still a single-logical-line editor, not the deferred balanced multiline/history Comfort REPL.
+
+A logical line longer than the screen row now soft-wraps onto the row(s)
+above it instead of scrolling its own content sideways: the line is laid out
+in screen-width windows, anchored at the editor's own (bottom) row, and every
+wrapped row keeps the same prompt indent as the first row. Backspace, cursor
+movement, and insertion all work correctly across a wrap boundary, including
+deleting or reflowing text right at the boundary.
 
 The input queue has one active product owner. Capture is armed while the native
 editor reads, and the delivered editor consumes from its ring; the evaluator
@@ -112,9 +132,11 @@ forced collection ended with `raw = seen = stored = taken = 138`. This proves
 the interactive read phase used in the acceptance session. It does not promise
 type-ahead while Lisp evaluation is running.
 
-The 2.1.0 release-terminal capacity reading, before the destructive recursion test, is
-107 free symbol slots and 1,467 free name bytes, above the required 32/384
-floor.
+The earlier R2-world reading without optional packages was 106 free symbol
+slots and 1,458 name bytes; it is not a fresh reading of the expanded library
+layout in this release. See
+[Product-resident libraries](#product-resident-libraries) for the reading
+with all five optional packages loaded and for the required 32/384 floor.
 
 `compile-string` saves an arbitrary library name through the full M65D
 copy-on-write transaction: allocation and verified staging happen first,
@@ -133,13 +155,54 @@ Example:
 
 ### Product-resident libraries
 
-The 2.1.0 product D81 contains `ide`, `idex`, and `m65d`, and no other library
-role. Load the libraries you need before swapping to the work disk. If M65D is
-already active when the mounted image changes, run `(m65d-remount)` before
-loading or saving. Historical optional packages such as `buffer`,
-`string-extra`, `inspect`, `place`, and `defstruct` are not part of the
-selected 2.1.0 medium or its hardware claim; `(load-lib "buffer")` and the
-other package names therefore have nothing to load on the release disk.
+The 2.2.0 product D81 contains `ide`, `idex`, and `m65d`, and the five
+optional packages `buffer`, `place`, `string-extra`, `inspect`, and
+`defstruct`. Load the libraries you need before swapping to the work disk.
+If M65D is already active when the mounted image changes, run
+`(m65d-remount)` before loading or saving.
+
+`ide`, `idex`, and `m65d` keep loading with `load-lib` as in earlier
+releases:
+
+```lisp
+(load-lib "ide")
+(load-lib "idex")
+(load-lib "m65d")
+```
+
+Load an optional package at the native prompt with `require` and a quoted
+symbol, for example `(require 'place)`. `require` interns the package name
+symbol as an ordinary side effect of resolving it, the same as typing any
+other symbol. This release's `require` does not accept a string in place of
+the symbol; packages listed as dependencies in the library index are loaded first.
+None of the five packages is loaded automatically: putting a `require` in a
+derived `INIT.L65` is not supported this release (see
+[Known Issues](known-issues.md)), so load them by hand after the banner, or
+from your own source once it is running.
+
+| Package | Names it publishes |
+| --- | --- |
+| `buffer` | `make-buffer`, `buffer-ref`, `buffer-set!`, `buffer-length`, `bufferp`, `string->buffer`, `buffer->string` |
+| `place` | `setf`, `push`, `pop`, `incf`, `decf` |
+| `string-extra` | `capitalize`, `string-split` |
+| `inspect` | `who-calls`, `trace`, `untrace` |
+| `defstruct` | `defstruct` and its generated accessors |
+
+User code shares symbol, name and code capacity with the libraries, so
+what you load changes how much room your own program has. The release-terminal
+capacity reading (host figure) is:
+
+| Loaded | Free symbol slots | Free name bytes | User-code bytes |
+| --- | ---: | ---: | ---: |
+| earlier R2 world, no optional packages (historical comparison) | 106 | 1,458 | — |
+| all five optional packages | 32 | 384 | 8,576 |
+
+At the end of the release's device session, after its own definitions and
+tests, the stopped machine showed 19 free symbol slots, 273 free name bytes
+and 8,435 free user-code bytes: a session's own definitions draw on the same
+pools. The required floor for this release is 32 free symbol slots and 384 free
+name bytes with all five packages loaded; loading fewer packages leaves more
+of both. These are host figures, not yet device-measured in this exact form.
 
 Interactive Shift-Space is normalized to ordinary space. This matters for the
 natural Lisp typing sequence `) (`, where Shift may remain held between the two
@@ -312,6 +375,13 @@ no `#\` literal syntax (`#'` function quote is the reader's supported `#`
 form). Obtain a code with `string-ref` or use a number, compare it with `=`,
 and convert case with `char-upcase` or `char-downcase`.
 
+The MEGA65 `£` key is the quasiquote character: `£(1 ,(+ 1 1))` evaluates to
+`(1 2)`; `,` means unquote and `,@` means unquote-splicing. On the device,
+PETSCII `$5C` is echoed as `£`; in host source files the same byte is written
+`\`. ASCII backquote remains accepted. Inside strings, backslash retains its
+escape meaning. `(quasiquote …)` and `(unquote …)` spelled out remain
+accepted as well.
+
 `every`, `some`, `filter`, `mapcar`, and `reduce` walk lists rather than
 strings. Dialect V2 does not expose the former `string->list` and
 `list->string` conversion names. For character-by-character work, iterate by
@@ -362,16 +432,14 @@ Save important edits first. The escalation ladder is:
 implementations failed their product-semantics or capacity gates; the feature
 is reserved for the immutable-code/mutable-session architecture.
 
-## Buffers (not on the 2.1.0 medium)
+## Buffers
 
-The optional `buffer` shelf library provides fixed-length mutable byte
-buffers. Like `string-extra`, `inspect`, `place`, and `defstruct`, it is **not
-part of the 2.1.0 product disk**, so the sequence below cannot be run from the
-release medium. It is documented here because the module and its contract are
-still maintained:
+The optional `buffer` package provides fixed-length mutable byte buffers. It
+ships on the 2.2.0 product disk; load it by hand with `require`, as described
+in [Product-resident libraries](#product-resident-libraries):
 
 ```lisp
-(load-lib "buffer")               ; not present on the 2.1.0 product disk
+(require 'buffer)
 (setq b (make-buffer 16))
 (buffer-set! b 0 65)
 (buffer-ref b 0)                  ; => 65

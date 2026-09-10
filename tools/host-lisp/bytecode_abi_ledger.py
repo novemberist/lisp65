@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 from typing import Any, Callable
 
@@ -31,6 +32,8 @@ TOP_KEYS = {
     "staging_prim_dispatch", "prim_retirements", "opcode_identities",
     "prim_identities", "profiles",
 }
+EXTENSION_KEYS = {"prim_mode_extensions", "staged_prim_withdrawals"}
+RESTART_LEDGER_COMMIT = "b7b744d1"
 POLICIES = {
     "id_reuse": "forbidden",
     "canonical_name_change": "forbidden",
@@ -49,6 +52,26 @@ DIAGNOSTICS = {
 }
 OPERANDS = {"none", "s8", "u8", "idx", "rel8", "idx+u8", "pid+u8"}
 FROZEN_V1_SHA256 = "30c585bb97fdd0e93d389104add98280ce40a8874ba1da19034fab4965bbfacd"
+COMFORT_MODES = [
+    {"profile": "dialect-v2", "prim_id": 20,
+     "name": "comfort-pending-form-query", "argc": 0, "selector": None,
+     "effect": "read-only-no-consumption", "consumer": "lib/repl-comfort.lisp:repl",
+     "feature": "LISP65_COMFORT_TRAMPOLINE"},
+    {"profile": "dialect-v2", "prim_id": 20,
+     "name": "comfort-input-continuation", "argc": 3,
+     "selector": {"argument": 2, "fixnum": 70, "executing_identity_argument": 1},
+     "effect": "request-handoff-normal-return", "consumer": "lib/repl-comfort.lisp:repl",
+     "feature": "LISP65_COMFORT_TRAMPOLINE"},
+]
+STAGED_WITHDRAWALS = [{
+    "id": 69, "canonical_name": "%repl-enter", "profile": "dialect-v2",
+    "transition": "active-to-tombstone", "reuse": "forbidden",
+    "introduced_commit": "059b4b7a22176572e0f0be2be7a8afdbda408905",
+    "introduced_ledger_sha256": "16778d9f72209031e2b294bec8f3434ac0b021bacd535d5c32e0024947852f48",
+    "disposition_commit": "df60d4b1",
+    "evidence": "docs/planning/v2.1-comfort-stack-product-report.md",
+    "product_state": "seed-link-failed-no-final-elf", "runtime": "reject-bad-primitive",
+}]
 PRIM_RETIREMENTS = {
     26: {
         "canonical_name": "%string-slice",
@@ -371,7 +394,10 @@ def validate(
     value: dict[str, Any], *, check_mirrors: bool = True,
     require_staging_dispatch: bool = False,
 ) -> dict[str, int]:
-    _exact(value, TOP_KEYS, "ledger")
+    # The renderer ledger has no descoped seed extensions. If an extension
+    # family is declared, its complete paired schema remains mandatory.
+    extensions = bool(EXTENSION_KEYS & value.keys())
+    _exact(value, TOP_KEYS | (EXTENSION_KEYS if extensions else set()), "ledger")
     if value["format"] != FORMAT or value["version"] != 1 or value["id_bits"] != 8:
         raise LedgerError("ledger format/version/id_bits drift")
     if value["policies"] != POLICIES or value["diagnostics"] != DIAGNOSTICS:
@@ -392,6 +418,20 @@ def validate(
         raise LedgerError("staging Prim-ID dispatch contract drift")
     staging_ids = set(range(30, 57))
     retired_by_profile = _prim_retirements(value["prim_retirements"], prim_ids)
+    # A failed, never-linked seed is not published-carrier retirement evidence.
+    # Retain its identity as a tombstone with an explicitly separate provenance.
+    if extensions and value["staged_prim_withdrawals"] != STAGED_WITHDRAWALS:
+        raise LedgerError("staged Prim-ID withdrawal inventory drift")
+    if not extensions and any(row["id"] in prim_ids for row in STAGED_WITHDRAWALS):
+        raise LedgerError("staged Prim-ID present without its withdrawal contract")
+    for row in value.get("staged_prim_withdrawals", []):
+        if prim_ids.get(row["id"], (None,))[0] != row["canonical_name"]:
+            raise LedgerError("staged Prim-ID withdrawal identity drift")
+        if not (ROOT / row["evidence"]).is_file():
+            raise LedgerError("staged Prim-ID withdrawal report absent")
+        retired_by_profile.setdefault(row["profile"], set()).add(row["id"])
+    if extensions and value["prim_mode_extensions"] != COMFORT_MODES:
+        raise LedgerError("Prim 20 mode extension missing or changed")
     staging_active_ids = staging_ids - set(staging["retired_ids"])
     if not staging_ids <= set(prim_ids):
         raise LedgerError("staging Prim-ID range lacks permanent identities")
@@ -416,6 +456,9 @@ def validate(
         }
     if _frozen_v1_hash(value) != FROZEN_V1_SHA256:
         raise LedgerError("dialect-v1 ABI genesis snapshot drift")
+    for mode in value.get("prim_mode_extensions", []):
+        if mode["prim_id"] not in resolved[mode["profile"]]["prim_ids"]["active"]:
+            raise LedgerError("mode extension does not belong to a living Prim-ID")
 
     for child_id, parent_id in zip(order[1:], order[:-1]):
         for space in ("opcodes", "prim_ids"):
@@ -630,7 +673,8 @@ def selftest() -> None:
         v1_prims["active"] != list(range(23))
         or v1_prims["tombstone"]
         or v2_prims["active"] != [0, *range(3, 26), 28, 29, *range(30, 34), *range(35, 40), *range(41, 69)]
-        or v2_prims["tombstone"] != [1, 2, 26, 27, 34, 40]
+        or v2_prims["tombstone"] != sorted({1, 2, *PRIM_RETIREMENTS,
+            *(row["id"] for row in base.get("staged_prim_withdrawals", []))})
     ):
         raise LedgerError("pinned dialect-v1/v2 Prim-ID allocation drift")
     if any(B.prim_is_function_designator(pid, "dialect-v2", base) for pid in B.INTERNAL_ONLY_PRIM_IDS):
@@ -677,14 +721,24 @@ def selftest() -> None:
             ),
         )
 
-    def mutation(change: Callable[[dict[str, Any]], None]) -> Callable[[], None]:
+    def mutation(change: Callable[[dict[str, Any]], None], fixture=None) -> Callable[[], None]:
         def run() -> None:
-            value = deepcopy(base)
+            value = deepcopy(base if fixture is None else fixture)
             change(value)
             validate(value, check_mirrors=False)
         return run
 
     _expect_failure("id width", mutation(lambda value: value.update(id_bits=16)))
+    # Exercise the retired extension's negative witnesses against its own
+    # sealed ledger, never by adding that feature back to the product.
+    restart = json.loads(subprocess.check_output([
+        "git", "show", f"{RESTART_LEDGER_COMMIT}:config/bytecode-abi-ledger.json"], cwd=ROOT))
+    validate(restart, check_mirrors=False)
+    _expect_failure("Prim20 query omitted", mutation(lambda value: value["prim_mode_extensions"].pop(0), restart))
+    _expect_failure("Prim20 query consumes", mutation(lambda value: value["prim_mode_extensions"][0].update(effect="consume"), restart))
+    _expect_failure("Prim20 selector drift", mutation(lambda value: value["prim_mode_extensions"][1]["selector"].update(fixnum=69), restart))
+    _expect_failure("withdrawn seed ID reused", mutation(lambda value: value.update(staged_prim_withdrawals=[]), restart))
+    _expect_failure("declared extension schema omitted", mutation(lambda value: [value.pop(key) for key in EXTENSION_KEYS], restart))
     _expect_failure("policy", mutation(lambda value: value["policies"].update(id_reuse="allowed")))
     _expect_failure("retirement missing", mutation(lambda value: value.update(prim_retirements=[])))
     _expect_failure(
@@ -754,6 +808,7 @@ def selftest() -> None:
 
     prim_tombstone = deepcopy(base)
     validate(prim_tombstone, check_mirrors=False)
+    reserved_prim = min(_ranges(v2_prims["reserved_ranges"], "reserved Prim-IDs"))
     if B.disassemble_payload(
         bytes((61, 1, 1)), profile_id="dialect-v2", abi_ledger=prim_tombstone
     ) != ["0000 CALLPRIM prim=1:string->list[abi-prim-tombstone] argc=1"]:
@@ -767,13 +822,13 @@ def selftest() -> None:
     _expect_exception(
         "real reserved Prim-ID decoder", B.DecodeError,
         lambda: B.decode_instruction(
-            bytes((61, 69, 0)), 0, profile_id="dialect-v2", abi_ledger=prim_tombstone
+            bytes((61, reserved_prim, 0)), 0, profile_id="dialect-v2", abi_ledger=prim_tombstone
         ),
     )
     _expect_exception(
         "real reserved Prim-ID emitter", ValueError,
         lambda: B.encode_instruction(
-            "CALLPRIM", 69, 0, profile_id="dialect-v2", abi_ledger=prim_tombstone
+            "CALLPRIM", reserved_prim, 0, profile_id="dialect-v2", abi_ledger=prim_tombstone
         ),
     )
     if B.encode_instruction("UPVAL", 7) != bytes((64, 7)):
@@ -796,7 +851,7 @@ def main(argv: list[str]) -> int:
         if args.selftest:
             selftest()
             print(
-                "bytecode-abi-ledger: SELFTEST PASS mutations=12 "
+                "bytecode-abi-ledger: SELFTEST PASS "
                 "transition=reserved-to-active decoder=active+tombstone+reserved "
                 "emitter=fail-closed"
             )

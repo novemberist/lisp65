@@ -386,6 +386,15 @@ def acceptance_compare_layout(layout: dict[str, Any],
         if golden is None else golden
     descriptor = descriptor_emission_gate()
     successor = _candidate_data_successor(layout, authority_value, descriptor)
+    normalized = set(normalized_fixed_members or set())
+    extra_normalized = set(successor.get("normalized_fixed_members", []))
+    BASE.require(extra_normalized <= {".data.flags"}, "unknown data-successor normalization")
+    if extra_normalized:
+        data = next(row for row in layout["allocatable_sections"] if row["name"] == ".data")
+        BASE.require(data["bytes"] == 0 and data["section_type"] == "SHT_PROGBITS"
+                     and set(data["flags"]) == {"SHF_ALLOC"},
+                     "nonempty/writable data owner cannot use empty-section normalization")
+    normalized |= extra_normalized
     mutations = _candidate_data_successor_mutations(
         layout, authority_value, descriptor)
     comparison_layout = deepcopy(layout)
@@ -393,7 +402,7 @@ def acceptance_compare_layout(layout: dict[str, Any],
         comparison_layout["boundary_symbols"][name] = (
             authority_value["fixed_boundary_symbols"][name])
     value = ORIGINAL_ACCEPT_COMPARE(comparison_layout, authority_value,
-        normalized_fixed_members=normalized_fixed_members)
+        normalized_fixed_members=normalized)
     value["candidate_derived_data_successor"] = successor
     value["candidate_derived_data_successor_mutations"] = mutations
     value["sealed_golden_modified"] = False

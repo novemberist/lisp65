@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+from elf_truth import ElfTruth
 
 
 FUNCTION = re.compile(r"^[0-9a-f]+ <([^>]+)>:$")
@@ -22,7 +23,26 @@ class AuditError(RuntimeError):
     pass
 
 
+def relocated_operand(truth, section, pc, opcode, operand):
+    if opcode not in {'jsr', 'jmp'} or not operand.startswith('$'):
+        return operand
+    rels = [r for r in truth.relocations if r.source_section == section and r.offset == pc+1]
+    if not rels:
+        return operand
+    if len(rels) != 1 or rels[0].relocation_type != 'R_MOS_ADDR16':
+        raise AuditError('ambiguous direct F011 call relocation')
+    symbol = truth.symbols[rels[0].target_symbol_index]
+    target = symbol.value + rels[0].addend
+    encoded = re.match(r'\$([0-9a-f]+)', operand)
+    if not encoded or int(encoded[1], 16) != target:
+        raise AuditError('F011 call operand disagrees with relocation')
+    # Same-VMA overlays make objdump's cosmetic label ambiguous.
+    return re.sub(r'\s*<[^>]*>', '', operand) + ' <'+symbol.name.lower()+'>'
+
+
 def disassemble(objdump: Path, elf: Path) -> dict[str, list[tuple[int, str, str]]]:
+    truth = ElfTruth.read(elf, llvm_readobj=objdump.with_name('llvm-readobj'))
+    section = None
     run = subprocess.run(
         [str(objdump), "-d", str(elf)],
         text=True,
@@ -34,6 +54,11 @@ def disassemble(objdump: Path, elf: Path) -> dict[str, list[tuple[int, str, str]
     functions: dict[str, list[tuple[int, str, str]]] = {}
     current: list[tuple[int, str, str]] | None = None
     for raw in run.stdout.splitlines():
+        heading = re.fullmatch(r'Disassembly of section (.*):', raw.strip())
+        if heading:
+            section = heading[1]
+            current = None
+            continue
         header = FUNCTION.fullmatch(raw.strip())
         if header:
             current = []
@@ -41,8 +66,10 @@ def disassemble(objdump: Path, elf: Path) -> dict[str, list[tuple[int, str, str]
             continue
         match = INSTRUCTION.match(raw)
         if match and current is not None:
+            pc, opcode, operand = int(match.group(1),16), match.group(2).lower(), (match.group(3) or '').strip().lower()
+            operand = relocated_operand(truth, section, pc, opcode, operand)
             current.append(
-                (int(match.group(1), 16), match.group(2).lower(), (match.group(3) or "").strip().lower())
+                (pc, opcode, operand)
             )
     return functions
 
@@ -112,6 +139,25 @@ def audit(functions: dict[str, list[tuple[int, str, str]]]) -> dict[str, object]
 
 
 def selftest() -> None:
+    from types import SimpleNamespace as N
+    import copy
+    relocation = N(source_section='.member', offset=0x2003,
+                   relocation_type='R_MOS_ADDR16', target_symbol_index=0, addend=0)
+    truth = N(relocations=[relocation], symbols=[N(value=0x1000, name='guard')])
+    assert relocated_operand(truth, '.member', 0x2002, 'jsr', '$1000 <foreign-overlay>') == '$1000 <guard>'
+    assert relocated_operand(truth, '.member', 0x2002, 'jmp', '($1000,x)') == '($1000,x)'
+    for mutation in ('duplicate', 'relocation-kind', 'wrong-target', 'wrong-addend'):
+        bad_truth = copy.deepcopy(truth)
+        if mutation == 'duplicate': bad_truth.relocations *= 2
+        elif mutation == 'relocation-kind': bad_truth.relocations[0].relocation_type = 'R_MOS_ADDR8'
+        elif mutation == 'wrong-target': bad_truth.symbols[0].value += 1
+        else: bad_truth.relocations[0].addend += 1
+        try:
+            relocated_operand(bad_truth, '.member', 0x2002, 'jsr', '$1000 <foreign-overlay>')
+        except AuditError:
+            pass
+        else:
+            raise AuditError('relocation mutation survived: '+mutation)
     good = {
         "lisp65_f011_mount_token_op": [
             (0x1000, "lda", "$d68b,x"), (0x1003, "cmp", "$2000,x"),
@@ -149,7 +195,7 @@ def main() -> int:
     try:
         if args.selftest:
             selftest()
-            print("f011-mount-window: SELFTEST PASS cases=2")
+            print("f011-mount-window: SELFTEST PASS cases=8")
             return 0
         if not args.elf or not args.objdump or not args.out:
             raise AuditError("--elf, --objdump and --out are required")

@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 2.1.0**. The language remains
+This living reference describes **lisp65 2.2.0**. The language remains
 Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
@@ -158,11 +158,11 @@ The IDE library adds `(ide)`, `(ide-buffers)`, `(dir)`,
 `(m65d-save-new name string)`. Both libraries live on the product disk and
 must be loaded with `load-lib`; see the [User Guide](user-guide.md).
 
-### Names outside the 2.1.0 medium
+### Optional names on the 2.2.0 medium
 
-The generated public-surface metadata index is a host-side population. Several
-of its names belong to libraries that the 2.1.0 product disk does not carry,
-so they are documented modules without a 2.1.0 delivery claim:
+The generated public-surface metadata index is a host-side population. The
+following optional libraries are delivered on the 2.2.0 product disk and
+loaded manually with symbol-form `require`; they are not loaded at boot:
 
 - generalized places from the `place` library: `setf`, `push`, `pop`, `incf`,
   `decf`;
@@ -284,7 +284,7 @@ publishes ordinary functions that carry no public-surface metadata.
 
 Byte buffers print as the opaque marker `?`, which is not a readable
 representation; read their contents with `buffer-ref` and their length with
-`buffer-length`. The `buffer` library is not on the 2.1.0 product disk.
+`buffer-length`. The `buffer` library is on the 2.2.0 product disk; load it with `(require 'buffer)`.
 
 ## Interactive latency boundary
 

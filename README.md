@@ -7,10 +7,22 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 2.0.1**, using **Dialect V2**. This
-documentation-only update reuses the 2.0.0 product bytes unchanged.
+The current release is **lisp65 2.2.0**, using **Dialect V2**. It is a
+product release: the qualified product still displays `WORKBENCH 2.0.0` in
+its boot banner; the package version is 2.2.0. See the
+[2.2.0 release notes](docs/releases/2.2.0.md) for the change summary and
+evidence boundary.
 
 ## Highlights
+
+- 2.2.0: non-tail Lisp calls run as VM frames on a soft stack (16 frames);
+  the documented device recursion test returns at depths 12, 13 and 16 and
+  refuses 17 with a live prompt. Not a general safe nesting depth; the
+  12-argument call/apply bound remains.
+- 2.2.0: the native prompt soft-wraps long lines onto the rows above, with
+  Backspace working across the wrap; the physical `£` key is quasiquote.
+- 2.2.0: five optional packages on the product disk (`buffer`, `place`,
+  `string-extra`, `inspect`, `defstruct`), loaded by hand with `require`.
 
 - Native REPL and self-hosted `lcc` compiler on the MEGA65
 - Lisp-2 semantics, macros, closures, higher-order functions, and strict arity
@@ -41,13 +53,13 @@ documentation-only update reuses the 2.0.0 product bytes unchanged.
 
 ## Get the release
 
-Download `lisp65-2.0.1.tar.gz` from the
-[v2.0.1 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.0.1).
+Download `lisp65-2.2.0.tar.gz` from the
+[v2.2.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.2.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-2.0.1.tar.gz
-cd lisp65-2.0.1
+tar -xzf lisp65-2.2.0.tar.gz
+cd lisp65-2.2.0
 python3 verify.py
 ```
 
@@ -55,8 +67,19 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [2.0.1 release notes](docs/releases/2.0.1.md) for the complete change
+See the [2.2.0 release notes](docs/releases/2.2.0.md) for the complete change
 summary and evidence boundary.
+
+## Reproduce this product
+
+Use the pinned toolchain declared by the source snapshot, then run
+`make workbench-product-v220-build` in a fresh checkout and
+`make workbench-product-v220-verify` to check the result. The build refuses
+an existing output directory; do not use an older default product target
+to reproduce this release. See `config/c2-v220-public-native/manifest.json`
+and `config/c2-v220-public-plane/README.md` for projection provenance. Two
+independent release-chain reproductions match PRG, ELF, profile, D81 and all
+16 media roles.
 
 ## First start from BASIC
 
@@ -90,7 +113,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 2.0.1.
+identity. There is no on-device disk formatter in 2.2.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -98,7 +121,7 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 2.0.1 is an early, hardware-validated release.** It is suitable for
+**lisp65 2.2.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
@@ -120,8 +143,10 @@ unattended operation, or large applications.
 | Banner colors persist after scrolling | The screen driver scrolls character cells but not color RAM, so text crossing the former banner rows can inherit its colors. Data and program state are unaffected. | A later color-RAM-aware scroll path must preserve the native post-boot ownership contract. |
 | Function metadata is incomplete | Complete integrated help is not claimed for every native and macro entry. | Full metadata coverage and integrated help remain later work. |
 
-The first-class `buffer` library is not part of the 2.0.1 product medium; the
-byte-buffer names remain a documented module without a 2.0.1 delivery claim.
+The five optional packages `buffer`, `place`, `string-extra`, `inspect` and
+`defstruct` ship on the 2.2.0 product disk and load by hand with `require`,
+for example `(require 'place)`; there is no `INIT.L65` on the system image
+and library loading from an INIT source is not supported in this release.
 The physical product-medium write-protect case is not
 applicable to the tested stock-core SD-D81 profile because it exposes no
 physical or virtual write-protect medium.
@@ -132,26 +157,23 @@ acceptance.
 
 ## Verification status
 
-Release 2.0.1 reuses the sealed 2.0.0 artifact set
-`29a9c3eb63c662a94a24ab9b23582eda66bea5a656912bbe4f65660f1a04c2f2`,
-resident PRG
-`39d317943cc4b39c2c2e8198f124ebe43708a945ba5a88dbd5296a5fc8577d25`:
+Release 2.2.0 is a new product pair, device-accepted in one sealed session on
+one physical MEGA65 and reproduced twice from the public source projection:
 
-- `(length "abc")` raised a VM type error and recovered to a live prompt, while
-  the deliberately permissive `(car 1)` returned `nil`;
-- prompt-line insertion, cursor movement and deletion passed on one physical
-  MEGA65, with no native `invalid token` response;
-- a forced-collection input sequence ended with
-  `raw = seen = stored = taken = 138`;
-- valid and failing `INIT.L65` variants ran once before the first prompt, with
-  a failing form returning promptly to a usable native REPL;
-- the stopped D5 session retained 107 free symbol slots and 1,467 free name
-  bytes, above the mandatory 32/384 user floor; and
-- two varied fresh public clones reproduced all 19 selected roles with zero
-  private evidence inputs.
+- the documented recursion test returned at depths 12, 13 and 16 and refused
+  depth 17 with a stack-overflow error and a live prompt; a 40-argument call
+  returned the existing type error and a live prompt, then `(+ 4 5)` gave 9;
+- a long native-prompt line wrapped onto the row above, Backspace across the
+  wrap left no residue, and ten Backspaces left no inverse rectangles;
+- all five optional packages loaded with `require` and answered one call
+  each; the four native smokes returned `0 2`, `0 (9 2)`, `0 98` and `0 42`;
+- the stopped session after its own definitions retained 19 free symbol
+  slots, 273 free name bytes and 8,435 free user-code bytes; and
+- two independent clean-checkout reproductions matched PRG, ELF, profile,
+  D81 and all 16 media roles byte for byte.
 
 Exact hashes and claim limits are recorded in the
-[2.0.1 release notes](docs/releases/2.0.1.md). The maintained limitations and
+[2.2.0 release notes](docs/releases/2.2.0.md). The maintained limitations and
 retired exceptions are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
@@ -174,18 +196,13 @@ make source-syntax-check
 python3 tools/host-lisp/asm_c_constant_contract.py selftest
 ```
 
-Start with the [Development Guide](docs/development.md). Aggregate proof gates
+The [Development Guide](docs/development.md) is the single authority for the
+clone, doctor, build, D81 inspection, and deploy commands. Aggregate proof gates
 that consume sealed evidence are available only in the private proof repository.
-With the pinned LLVM-MOS SDK and `c1541` installed, the public C2-lite build is:
-
-```sh
-make clean
-make workbench-product-v200
-```
-
-The target uses the single C2 emitter, one WPLTO closure, and the canonical
-media packer. Its final gate requires all 19 product roles to reproduce the
-sealed 2.0.0 artifact-set identity; the line editor is resident product freight.
+The public product path uses the single C2 emitter, one WPLTO closure, and the
+canonical media packer. Its final gate requires all 19 product roles to
+reproduce the sealed 2.0.0 artifact-set identity; the line editor is resident
+product freight.
 The independently verifiable release bundle remains the
 authority for hardware-acceptance claims.
 
@@ -194,6 +211,7 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
+- [Release Notes for 2.2.0](docs/releases/2.2.0.md)
 - [Release Notes for 2.0.1](docs/releases/2.0.1.md)
 - [Release Notes for 2.0.0](docs/releases/2.0.0.md)
 - [Release Notes for 1.9.0](docs/releases/1.9.0.md)

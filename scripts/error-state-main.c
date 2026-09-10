@@ -3,7 +3,14 @@
 #include <string.h>
 
 #include "interrupt.h"
+#include "mem.h"
 #include "vm_runtime_overlay.h"
+
+/* This harness links src/interrupt.c ALONE, on purpose: the error-state seam
+ * must not need the memory subsystem.  The abort producer now unwinds the root
+ * stack before its longjmp, so the harness owns that one word the same way it
+ * owns the overlay cleanup seams above -- and can assert the contract. */
+gc_rootsp_t gc_rootsp;
 
 static unsigned commit_cleanups;
 static unsigned transport_cleanups;
@@ -104,10 +111,12 @@ int main(void) {
 
     lisp65_error_clear();
     lisp_toplevel_active = 1;
+    gc_rootsp = 7;   /* roots of the frames the longjmp is about to skip */
     if (setjmp(lisp_toplevel) == 0) {
         lisp_abort_code(LISP65_ERR_VM_OOM);
         failed += expect(0, "numeric longjmp returned");
     }
+    failed += expect(gc_rootsp == 0, "abort unwinds the root stack");
     lisp_toplevel_active = 0;
     failed += expect(commit_cleanups == 1, "commit cleanup exactly once");
     failed += expect(transport_cleanups == 1, "transport cleanup exactly once");
@@ -115,10 +124,20 @@ int main(void) {
                      "longjmp keeps numeric state");
 
     lisp_toplevel_active = 1;
+    gc_rootsp = 11;
     if (setjmp(lisp_toplevel) == 0) {
         lisp_abort(dynamic);
         failed += expect(0, "dynamic longjmp returned");
     }
+    failed += expect(gc_rootsp == 0, "dynamic abort unwinds the root stack");
+
+    /* A raise with no toplevel active must NOT touch the root stack: it does
+     * not unwind anything, it just records the message and returns. */
+    lisp_toplevel_active = 0;
+    gc_rootsp = 5;
+    lisp_abort(dynamic);
+    failed += expect(gc_rootsp == 5, "no landing, no unwind");
+    gc_rootsp = 0;
     lisp_toplevel_active = 0;
     failed += expect(commit_cleanups == 2, "dynamic commit cleanup exactly once");
     failed += expect(transport_cleanups == 2, "dynamic transport cleanup exactly once");

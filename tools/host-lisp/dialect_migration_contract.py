@@ -53,7 +53,10 @@ FROZEN_LAMBDA_MARKERS = ["&rest"]
 TARGET_LAMBDA_MARKERS = ["&optional", "&rest"]
 FROZEN_LAMBDA_LIST_FORMS = ["dotted", "fixed", "rest-marker", "variadic-symbol"]
 TARGET_LAMBDA_LIST_FORMS = ["fixed", "optional-marker", "rest-marker"]
-FROZEN_READER_TOKENS = ["#'", "'", ",", ",@", ".", "`"]
+# "\\" is the device `£` key (PETSCII $5c = ASCII backslash), admitted as the
+# typeable quasiquote spelling by the owner decision of 2026-09-08.  It sorts
+# between "." and "`" by the ASCII order the rest of this inventory follows.
+FROZEN_READER_TOKENS = ["#'", "'", ",", ",@", ".", "\\", "`"]
 FROZEN_DEFERRED_CONTROL_FORMS = ["catch", "on-error", "throw"]
 FROZEN_RETAINED_MACROS = [
     "and", "case", "cond", "defun", "dolist", "dotimes", "let", "let*",

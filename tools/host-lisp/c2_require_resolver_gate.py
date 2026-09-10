@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import c2_full_emission as F  # noqa: E402
 import c2_session_extension_probe as S  # noqa: E402
 import d81_persistence_fault as D81  # noqa: E402
+from evidence_era import stable_recorded_on  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-require-resolver-contract.json"
@@ -39,6 +40,8 @@ BUILD = ROOT / "build/post-promotion/require-resolver/l65i-v1"
 RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.2-require-resolver-source-index-gate-receipt.json")
+SUCCESSOR_RECEIPT = RECEIPT.with_name(
+    "library-require-resolver-source-successor-receipt.json")
 HOST_PROBE = ROOT / "tools/host-lisp/c2_require_manifest_v1_probe.py"
 
 HEADER_BYTES = 32
@@ -793,7 +796,29 @@ def source_mutations() -> dict[str, str]:
     return rejected
 
 
-def main() -> int:
+def verify_successor(recorded: dict[str, Any], observed: dict[str, Any]) -> None:
+    require(recorded == observed, "live resolver successor differs")
+
+
+def successor_mutations(value: dict[str, Any]) -> list[str]:
+    rejected = []
+    for name in ("stale-manifest-size", "stale-source-sha", "missing-capacity-wall"):
+        trial = copy.deepcopy(value)
+        if name == "stale-manifest-size":
+            trial["target_bank2_compile"]["manifest"]["bytes"] -= 1
+        elif name == "stale-source-sha":
+            trial["authority"]["lisp"]["sha256"] = "0" * 64
+        else:
+            trial["binary_index"]["capacity_exact_meets"] = 0
+        try:
+            verify_successor(trial, value)
+        except GateError:
+            rejected.append(name)
+    require(len(rejected) == 3, "resolver successor mutation survived")
+    return rejected
+
+
+def main(*, record_successor: bool = False) -> int:
     try:
         public_build = (
             os.environ.get("LISP65_PUBLIC_CURRENT_SOURCE_BUILD") == "1"
@@ -986,8 +1011,22 @@ def main() -> int:
             value["authority"]["note"] = bind(NOTE)
         if host is not None:
             value["authority"]["host_receipt"] = bind(HOST_RECEIPT)
-        preserve_sealed_receipt(
-            RECEIPT, value, ("target_bank2_compile", "manifest"))
+        if public_build:
+            preserve_sealed_receipt(
+                RECEIPT, value, ("target_bank2_compile", "manifest"))
+        else:
+            # This is a fresh execution of the live index reader, not an
+            # amendment to the historical manifest's size or provenance.
+            value["format"] = "lisp65-library-resolver-live-successor-v1"
+            value["recorded_on"] = stable_recorded_on(SUCCESSOR_RECEIPT)
+            value["predecessor"] = bind(RECEIPT)
+            value["successor_mutations"] = successor_mutations(value)
+            if record_successor:
+                SUCCESSOR_RECEIPT.write_text(
+                    json.dumps(value, indent=2, sort_keys=True) + "\n",
+                    encoding="utf-8")
+            else:
+                verify_successor(load(SUCCESSOR_RECEIPT), value)
         print(
             "c2-require-resolver-gate: PASS "
             f"rows={len(rows)} source-mutations={len(source_rejected)} "
@@ -1001,4 +1040,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--record-successor", action="store_true")
+    raise SystemExit(main(record_successor=parser.parse_args().record_successor))

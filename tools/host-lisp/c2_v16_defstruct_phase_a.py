@@ -22,6 +22,7 @@ from pathlib import Path
 import struct
 import subprocess
 import sys
+import tempfile
 from typing import Any
 
 
@@ -68,6 +69,18 @@ COMPILER_TIER = ROOT / (
     "build/post-promotion/phase-v/while/gate/compiler-tier/"
     "tier-generation.json"
 )
+# build/post-promotion/phase-v/while/gate/carrier/lcc.manifest.json is not a
+# frozen historical artifact: tools/host-lisp/c2_while_gate.py regenerates and
+# overwrites it -- and its own sealed receipt below -- from whatever
+# lib/lcc.lisp currently is, every time `make c2-while-check` runs. A literal
+# pinned SHA here goes stale the next time that source changes (as it did
+# when Block 2.6 Card 4 rewrote lib/lcc.lisp). Bind to the successor
+# authority's own sealed receipt instead of pasting its current value.
+WHILE_RECEIPT = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
+    "c2.2-v2-while-four-view-receipt.json"
+)
+WHILE_RECEIPT_FORMAT = "lisp65-c2.2-v2-while-four-view-receipt-v1"
 WRONG_MEDIA = ROOT / "build/c2.2/v1.2.5-candidate-media/lisp65-product.d81"
 OUT = ROOT / "build/post-promotion/v16/defstruct-phase-a"
 RECEIPT = ROOT / (
@@ -79,9 +92,6 @@ RECORDED_ON = "2026-08-04"
 VM_CODEBUF = 56
 EXPECTED_SOURCE_COMMIT = "fe5c98fea63236af3bddca86bf1bb955cf9a6ffe"
 EXPECTED_MEDIA_SHA = "871b90824924dacbe27f071d56b0b97488257da0c1a0b9e80f5d5eeae5f23380"
-EXPECTED_CARRIER_SHA = (
-    "7996e2a714e3ef2490d296d7867fb7c98710c3d6f36f3fe7965d7ff293886519"
-)
 
 
 class PhaseAError(RuntimeError):
@@ -118,6 +128,92 @@ def bind(path: Path) -> dict[str, Any]:
     except ValueError:
         name = str(path.resolve())
     return {"path": name, "bytes": len(data), "sha256": sha_bytes(data)}
+
+
+def expected_carrier_binding() -> dict[str, Any]:
+    """The compiler-carrier binding this reconstruction must match.
+
+    c2-while-gate (tools/host-lisp/c2_while_gate.py) unconditionally
+    regenerates ``build/post-promotion/phase-v/while/gate/carrier/
+    lcc.manifest.json`` and its own sealed receipt (WHILE_RECEIPT) from
+    whatever lib/lcc.lisp currently is on every ``make c2-while-check`` run,
+    so the manifest's SHA-256 is a moving target, not a historical constant.
+    Read the successor world's own sealed authority instead of pinning
+    today's value.
+    """
+    receipt = load(WHILE_RECEIPT)
+    require(
+        receipt.get("format") == WHILE_RECEIPT_FORMAT,
+        "c2-while-gate receipt format drift",
+    )
+    manifest = receipt.get("bound_device_carrier", {}).get("manifest")
+    require(
+        isinstance(manifest, dict)
+        and manifest.get("path")
+        == "build/post-promotion/phase-v/while/gate/carrier/lcc.manifest.json"
+        and isinstance(manifest.get("sha256"), str)
+        and len(manifest["sha256"]) == 64,
+        "c2-while-gate receipt carrier-manifest binding drift",
+    )
+    return manifest
+
+
+def carrier_binding_selftest() -> None:
+    """Prove ``expected_carrier_binding`` is derived from -- and sensitive
+    to -- the sealed c2-while-gate receipt, rather than a pasted constant.
+
+    This only needs WHILE_RECEIPT, which is committed sealed evidence
+    (tests/bytecode/dialect-v2/evidence/...), so it runs without any prior
+    ``make check-host`` build/ output.
+    """
+    global WHILE_RECEIPT
+    original_path = WHILE_RECEIPT
+    baseline = expected_carrier_binding()
+    require(
+        isinstance(baseline["sha256"], str) and len(baseline["sha256"]) == 64,
+        "carrier binding selftest: baseline shape drift",
+    )
+    receipt = load(original_path)
+    with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as handle:
+        tmp = Path(handle.name)
+    try:
+        diverged = json.loads(json.dumps(receipt))
+        diverged["bound_device_carrier"]["manifest"]["sha256"] = "0" * 64
+        tmp.write_text(json.dumps(diverged), encoding="utf-8")
+        WHILE_RECEIPT = tmp
+        derived = expected_carrier_binding()
+        require(
+            derived["sha256"] == "0" * 64 and derived["sha256"] != baseline["sha256"],
+            "carrier binding selftest: divergent receipt was not reflected "
+            "(the tool is still pinning a constant instead of deriving it)",
+        )
+
+        format_broken = json.loads(json.dumps(receipt))
+        format_broken["format"] = "not-the-while-gate-format"
+        tmp.write_text(json.dumps(format_broken), encoding="utf-8")
+        try:
+            expected_carrier_binding()
+        except PhaseAError:
+            pass
+        else:
+            raise PhaseAError(
+                "carrier binding selftest: format-mutated receipt survived"
+            )
+
+        shape_broken = json.loads(json.dumps(receipt))
+        del shape_broken["bound_device_carrier"]["manifest"]["sha256"]
+        tmp.write_text(json.dumps(shape_broken), encoding="utf-8")
+        try:
+            expected_carrier_binding()
+        except PhaseAError:
+            pass
+        else:
+            raise PhaseAError(
+                "carrier binding selftest: sha256-omitted receipt survived"
+            )
+    finally:
+        WHILE_RECEIPT = original_path
+        tmp.unlink(missing_ok=True)
 
 
 def git_blob(relative: str) -> bytes:
@@ -232,11 +328,12 @@ class HistoricalCarrier(CARRIER.BoundCarrierCompiler):
     """
 
     def __init__(self) -> None:
+        expected = expected_carrier_binding()
         parity = load(BOUND_PARITY)
         carrier_binding = parity["compiler_carrier"]["carrier"]
         require(
-            carrier_binding["sha256"] == EXPECTED_CARRIER_SHA
-            and bind(COMPILER_MANIFEST)["sha256"] == EXPECTED_CARRIER_SHA,
+            carrier_binding["sha256"] == expected["sha256"]
+            and bind(COMPILER_MANIFEST)["sha256"] == expected["sha256"],
             "Link-82 compiler-carrier binding drift",
         )
         self.manifest = load(COMPILER_MANIFEST)
@@ -818,7 +915,7 @@ def sequence(
                 source,
                 compiled["name"],
                 compiled["code"],
-                compiler_authority=EXPECTED_CARRIER_SHA,
+                compiler_authority=expected_carrier_binding()["sha256"],
             )
             target_row_correction(plane, append)
             journal = "CLEAR"
@@ -1234,9 +1331,10 @@ def main() -> int:
     validate_window_authority()
     if args.action == "selftest":
         require(VM_CODEBUF == 56 and geometry()["entries"] == 725, "selftest drift")
+        carrier_binding_selftest()
         print(
             "c2-v16-defstruct-phase-a: SELFTEST PASS "
-            "vm-codebuf=56 Link82-entries=725"
+            "vm-codebuf=56 Link82-entries=725 carrier-binding-derived=1"
         )
         return 0
     if args.action == "run":

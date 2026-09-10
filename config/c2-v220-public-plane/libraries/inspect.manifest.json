@@ -1,0 +1,3266 @@
+{
+  "abi_profile": "dialect-v2",
+  "artifact_role": "disk-lib",
+  "base_addr": "0x000000",
+  "blob": "config/c2-v220-public-plane/libraries/inspect.blob.bin",
+  "blob_sha256": "a3ce82774fa73d5033a6ccf9880fb1b3d1df413c5620a29f3ad33da64dee1224",
+  "c_source": "build/library-delivery-r1/raw/inspect.c",
+  "cases": [
+    "who-calls-known",
+    "trace-remove-head",
+    "trace-remove-tail",
+    "trace-form-shape"
+  ],
+  "code_bytes": 558,
+  "cost": {
+    "dependency_gate": {
+      "allowed_external_calls": [],
+      "checked": true,
+      "known_targets": 458
+    },
+    "dir_slots": 13,
+    "dir_slots_after_align8": 16,
+    "largest_code_object": "%inspect-untrace",
+    "largest_code_object_bytes": 104,
+    "macro_entries": 2,
+    "max_code_object_bytes": 255,
+    "private_inline_gate": {
+      "expansions": 0,
+      "functions": 0,
+      "names": [],
+      "resident_functions": 0
+    },
+    "region_bytes": 558,
+    "symbol_count_estimate": 85,
+    "symbol_names": [
+      "%comfort-callers-index",
+      "%function-cell",
+      "%ide-apply-page-command",
+      "%ide-apply-rare-edit-command",
+      "%ide-apply-region-command",
+      "%ide-apply-word-edit-command",
+      "%ide-buffer-with-mark",
+      "%ide-execute-command-submit",
+      "%ide-kill-region-lines",
+      "%ide-mini-search-submit",
+      "%ide-page-rows",
+      "%ide-region-bounds",
+      "%ide-region-parts",
+      "%ide-region-parts-tail",
+      "%ide-search-lines",
+      "%ide-search-lines-from",
+      "%ide-word-scan",
+      "%ide-x",
+      "%inspect-trace-arguments",
+      "%inspect-trace-binding",
+      "%inspect-trace-call",
+      "%inspect-trace-finish",
+      "%inspect-trace-form",
+      "%inspect-trace-original",
+      "%inspect-trace-prepare",
+      "%inspect-trace-remove",
+      "%inspect-untrace",
+      "%m65d-bam-change",
+      "%m65d-bam-find",
+      "%m65d-bam-header-ok-p",
+      "%m65d-bam-validate-tracks",
+      "%m65d-before-write",
+      "%m65d-bit-free-p",
+      "%m65d-bitmap-off",
+      "%m65d-blocks-for",
+      "%m65d-chain-state",
+      "%m65d-check-old-half",
+      "%m65d-claim-new",
+      "%m65d-clear",
+      "%m65d-commit-dir",
+      "%m65d-copy",
+      "%m65d-count-free",
+      "%m65d-dir-entries",
+      "%m65d-dir-fill",
+      "%m65d-dir-scan",
+      "%m65d-dir-write-name",
+      "%m65d-entry-valid-p",
+      "%m65d-mask",
+      "%m65d-media-detail",
+      "%m65d-media-kind",
+      "%m65d-name-chars-ok-p",
+      "%m65d-old-validated",
+      "%m65d-pair-member-p",
+      "%m65d-read-old-chain",
+      "%m65d-release-half",
+      "%m65d-run",
+      "%m65d-run-authorized",
+      "%m65d-run-record",
+      "%m65d-run-source",
+      "%m65d-set",
+      "%m65d-write-chain",
+      "%m65d-write-plan",
+      "&rest",
+      "*inspect-trace-bindings*",
+      "assoc",
+      "defun",
+      "ide-exchange-point-and-mark",
+      "ide-kill-region",
+      "ide-move-word-left",
+      "ide-move-word-right",
+      "ide-region-text",
+      "ide-set-mark",
+      "list",
+      "m65d-remount",
+      "m65d-save",
+      "m65d-save-new",
+      "progn",
+      "quote",
+      "terpri",
+      "trace",
+      "trace-enter",
+      "trace-exit",
+      "untrace",
+      "who-calls",
+      "write"
+    ],
+    "vm_dir_budget": null
+  },
+  "d81_name": "INSPECT",
+  "directory": "build/library-delivery-r1/raw/inspect.dir.bin",
+  "directory_bytes": 91,
+  "directory_note": "raw dir.bin uses host-heap name_obj values; native loaders should intern entries[].name and call vm_dir_add()",
+  "directory_sha256": "1e10d4d0966fb56ba28f8c006edb6daf018628dcda33fdd8afdb26ad26a688a5",
+  "disasm": "build/library-delivery-r1/raw/inspect.disasm.txt",
+  "disasm_sha256": "90fdb0cf251ca3f02dd8365d5aad12a38b7ffea40b11a0dea2b39b5d6fe72d5e",
+  "embed": {
+    "address_encoding": "vm_embed_entry.bank/off/len are derived from each object's ext_addr/length",
+    "bank_symbol": "lisp65_stdlib_bank",
+    "base_addr_macro": "LISP65_BYTECODE_STDLIB_BASE_ADDR",
+    "blob_len_symbol": "lisp65_stdlib_blob_len",
+    "blob_symbol": "lisp65_stdlib_blob",
+    "compat_blob_macro": "lisp65_bytecode_stdlib_blob",
+    "compat_table_macro": "lisp65_bytecode_stdlib_embed",
+    "count_macro": "LISP65_BYTECODE_STDLIB_EMBED_COUNT",
+    "count_symbol": "lisp65_embed_count",
+    "entry_type": "vm_embed_entry",
+    "flags_field": "vm_embed_entry.flags bit0 marks macro entries; all other bits are reserved and must be zero",
+    "name_field": "vm_embed_entry.name is a NUL-terminated runtime string; native registration interns that name",
+    "off_symbol": "lisp65_stdlib_off",
+    "table_symbol": "lisp65_embed"
+  },
+  "entries": [
+    {
+      "blob_offset": 0,
+      "code_flags": 2,
+      "ext_addr": "0x000000",
+      "flags": 0,
+      "kind": "function",
+      "length": 12,
+      "lit_count": 1,
+      "lit_first": 209,
+      "literals": [
+        [
+          [
+            {
+              "symbol": "%ide-apply-page-command"
+            },
+            {
+              "symbol": "%ide-apply-rare-edit-command"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-apply-rare-edit-command"
+            },
+            {
+              "symbol": "%ide-x"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-apply-region-command"
+            },
+            {
+              "symbol": "%ide-apply-rare-edit-command"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-apply-word-edit-command"
+            },
+            {
+              "symbol": "%ide-apply-rare-edit-command"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-buffer-with-mark"
+            },
+            {
+              "symbol": "%ide-kill-region-lines"
+            },
+            {
+              "symbol": "ide-exchange-point-and-mark"
+            },
+            {
+              "symbol": "ide-kill-region"
+            },
+            {
+              "symbol": "ide-set-mark"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-execute-command-submit"
+            },
+            {
+              "symbol": "%ide-x"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-kill-region-lines"
+            },
+            {
+              "symbol": "ide-kill-region"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-mini-search-submit"
+            },
+            {
+              "symbol": "%ide-x"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-page-rows"
+            },
+            {
+              "symbol": "%ide-apply-page-command"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-region-bounds"
+            },
+            {
+              "symbol": "ide-kill-region"
+            },
+            {
+              "symbol": "ide-region-text"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-region-parts"
+            },
+            {
+              "symbol": "%ide-kill-region-lines"
+            },
+            {
+              "symbol": "ide-region-text"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-region-parts-tail"
+            },
+            {
+              "symbol": "%ide-region-parts"
+            },
+            {
+              "symbol": "%ide-region-parts-tail"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-search-lines"
+            },
+            {
+              "symbol": "%ide-search-lines"
+            },
+            {
+              "symbol": "%ide-search-lines-from"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-search-lines-from"
+            },
+            {
+              "symbol": "%ide-mini-search-submit"
+            },
+            {
+              "symbol": "%ide-search-lines-from"
+            }
+          ],
+          [
+            {
+              "symbol": "%ide-word-scan"
+            },
+            {
+              "symbol": "%ide-word-scan"
+            },
+            {
+              "symbol": "ide-move-word-left"
+            },
+            {
+              "symbol": "ide-move-word-right"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-bam-change"
+            },
+            {
+              "symbol": "%m65d-bam-change"
+            },
+            {
+              "symbol": "%m65d-claim-new"
+            },
+            {
+              "symbol": "%m65d-release-half"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-bam-find"
+            },
+            {
+              "symbol": "%m65d-bam-find"
+            },
+            {
+              "symbol": "%m65d-write-plan"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-bam-header-ok-p"
+            },
+            {
+              "symbol": "%m65d-check-old-half"
+            },
+            {
+              "symbol": "%m65d-claim-new"
+            },
+            {
+              "symbol": "%m65d-release-half"
+            },
+            {
+              "symbol": "%m65d-write-plan"
+            },
+            {
+              "symbol": "m65d-remount"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-bam-validate-tracks"
+            },
+            {
+              "symbol": "%m65d-bam-validate-tracks"
+            },
+            {
+              "symbol": "m65d-remount"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-before-write"
+            },
+            {
+              "symbol": "%m65d-claim-new"
+            },
+            {
+              "symbol": "%m65d-commit-dir"
+            },
+            {
+              "symbol": "%m65d-release-half"
+            },
+            {
+              "symbol": "%m65d-write-chain"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-bit-free-p"
+            },
+            {
+              "symbol": "%m65d-bam-find"
+            },
+            {
+              "symbol": "%m65d-chain-state"
+            },
+            {
+              "symbol": "%m65d-count-free"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-bitmap-off"
+            },
+            {
+              "symbol": "%m65d-bam-change"
+            },
+            {
+              "symbol": "%m65d-bit-free-p"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-blocks-for"
+            },
+            {
+              "symbol": "%m65d-blocks-for"
+            },
+            {
+              "symbol": "%m65d-run-record"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-chain-state"
+            },
+            {
+              "symbol": "%m65d-chain-state"
+            },
+            {
+              "symbol": "%m65d-check-old-half"
+            },
+            {
+              "symbol": "%m65d-claim-new"
+            },
+            {
+              "symbol": "%m65d-release-half"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-check-old-half"
+            },
+            {
+              "symbol": "%m65d-old-validated"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-claim-new"
+            },
+            {
+              "symbol": "%m65d-write-plan"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-clear"
+            },
+            {
+              "symbol": "%m65d-write-chain"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-commit-dir"
+            },
+            {
+              "symbol": "%m65d-write-plan"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-copy"
+            },
+            {
+              "symbol": "%m65d-write-chain"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-count-free"
+            },
+            {
+              "symbol": "%m65d-bam-find"
+            },
+            {
+              "symbol": "%m65d-bam-validate-tracks"
+            },
+            {
+              "symbol": "%m65d-chain-state"
+            },
+            {
+              "symbol": "%m65d-count-free"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-dir-entries"
+            },
+            {
+              "symbol": "%m65d-dir-entries"
+            },
+            {
+              "symbol": "%m65d-dir-scan"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-dir-fill"
+            },
+            {
+              "symbol": "%m65d-commit-dir"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-dir-scan"
+            },
+            {
+              "symbol": "%m65d-dir-scan"
+            },
+            {
+              "symbol": "%m65d-run-source"
+            },
+            {
+              "symbol": "m65d-remount"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-dir-write-name"
+            },
+            {
+              "symbol": "%m65d-dir-fill"
+            },
+            {
+              "symbol": "%m65d-dir-write-name"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-entry-valid-p"
+            },
+            {
+              "symbol": "%m65d-dir-entries"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-mask"
+            },
+            {
+              "symbol": "%m65d-bam-change"
+            },
+            {
+              "symbol": "%m65d-bit-free-p"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-media-detail"
+            },
+            {
+              "symbol": "%m65d-media-detail"
+            },
+            {
+              "symbol": "%m65d-media-kind"
+            },
+            {
+              "symbol": "%m65d-run"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-media-kind"
+            },
+            {
+              "symbol": "%m65d-before-write"
+            },
+            {
+              "symbol": "%m65d-run"
+            },
+            {
+              "symbol": "m65d-remount"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-name-chars-ok-p"
+            },
+            {
+              "symbol": "%m65d-name-chars-ok-p"
+            },
+            {
+              "symbol": "%m65d-run-authorized"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-old-validated"
+            },
+            {
+              "symbol": "%m65d-run-record"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-pair-member-p"
+            },
+            {
+              "symbol": "%m65d-pair-member-p"
+            },
+            {
+              "symbol": "%m65d-read-old-chain"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-read-old-chain"
+            },
+            {
+              "symbol": "%m65d-read-old-chain"
+            },
+            {
+              "symbol": "%m65d-run-record"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-release-half"
+            },
+            {
+              "symbol": "%m65d-write-plan"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-run"
+            },
+            {
+              "symbol": "m65d-save"
+            },
+            {
+              "symbol": "m65d-save-new"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-run-authorized"
+            },
+            {
+              "symbol": "%m65d-run"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-run-record"
+            },
+            {
+              "symbol": "%m65d-run-source"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-run-source"
+            },
+            {
+              "symbol": "%m65d-run-authorized"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-set"
+            },
+            {
+              "symbol": "%m65d-bam-find"
+            },
+            {
+              "symbol": "%m65d-before-write"
+            },
+            {
+              "symbol": "%m65d-claim-new"
+            },
+            {
+              "symbol": "%m65d-commit-dir"
+            },
+            {
+              "symbol": "%m65d-dir-entries"
+            },
+            {
+              "symbol": "%m65d-dir-scan"
+            },
+            {
+              "symbol": "%m65d-old-validated"
+            },
+            {
+              "symbol": "%m65d-read-old-chain"
+            },
+            {
+              "symbol": "%m65d-run"
+            },
+            {
+              "symbol": "%m65d-run-authorized"
+            },
+            {
+              "symbol": "%m65d-run-record"
+            },
+            {
+              "symbol": "%m65d-run-source"
+            },
+            {
+              "symbol": "%m65d-write-plan"
+            },
+            {
+              "symbol": "m65d-remount"
+            },
+            {
+              "symbol": "m65d-save-new"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-write-chain"
+            },
+            {
+              "symbol": "%m65d-write-chain"
+            },
+            {
+              "symbol": "%m65d-write-plan"
+            }
+          ],
+          [
+            {
+              "symbol": "%m65d-write-plan"
+            },
+            {
+              "symbol": "%m65d-run-record"
+            }
+          ]
+        ]
+      ],
+      "name": "%comfort-callers-index",
+      "name_obj": "0x0350"
+    },
+    {
+      "blob_offset": 12,
+      "code_flags": 2,
+      "ext_addr": "0x00000c",
+      "flags": 0,
+      "kind": "function",
+      "length": 30,
+      "lit_count": 2,
+      "lit_first": 210,
+      "literals": [
+        {
+          "symbol": "%comfort-callers-index"
+        },
+        {
+          "symbol": "assoc"
+        }
+      ],
+      "name": "who-calls",
+      "name_obj": "0x0352"
+    },
+    {
+      "blob_offset": 42,
+      "code_flags": 3,
+      "ext_addr": "0x00002a",
+      "flags": 0,
+      "kind": "function",
+      "length": 26,
+      "lit_count": 0,
+      "lit_first": 212,
+      "literals": [],
+      "name": "%function-cell",
+      "name_obj": "0x0354"
+    },
+    {
+      "blob_offset": 68,
+      "code_flags": 2,
+      "ext_addr": "0x000044",
+      "flags": 0,
+      "kind": "function",
+      "length": 34,
+      "lit_count": 1,
+      "lit_first": 212,
+      "literals": [
+        {
+          "symbol": "%inspect-trace-remove"
+        }
+      ],
+      "name": "%inspect-trace-remove",
+      "name_obj": "0x0356"
+    },
+    {
+      "blob_offset": 102,
+      "code_flags": 2,
+      "ext_addr": "0x000066",
+      "flags": 0,
+      "kind": "function",
+      "length": 29,
+      "lit_count": 2,
+      "lit_first": 213,
+      "literals": [
+        {
+          "symbol": "*inspect-trace-bindings*"
+        },
+        {
+          "symbol": "assoc"
+        }
+      ],
+      "name": "%inspect-trace-binding",
+      "name_obj": "0x0358"
+    },
+    {
+      "blob_offset": 131,
+      "code_flags": 2,
+      "ext_addr": "0x000083",
+      "flags": 0,
+      "kind": "function",
+      "length": 26,
+      "lit_count": 1,
+      "lit_first": 215,
+      "literals": [
+        {
+          "symbol": "%inspect-trace-binding"
+        }
+      ],
+      "name": "%inspect-trace-original",
+      "name_obj": "0x035a"
+    },
+    {
+      "blob_offset": 157,
+      "code_flags": 2,
+      "ext_addr": "0x00009d",
+      "flags": 0,
+      "kind": "function",
+      "length": 83,
+      "lit_count": 4,
+      "lit_first": 216,
+      "literals": [
+        {
+          "symbol": "*inspect-trace-bindings*"
+        },
+        {
+          "symbol": "%inspect-trace-binding"
+        },
+        {
+          "symbol": "%function-cell"
+        },
+        {
+          "symbol": "list"
+        }
+      ],
+      "name": "%inspect-trace-prepare",
+      "name_obj": "0x035c"
+    },
+    {
+      "blob_offset": 240,
+      "code_flags": 2,
+      "ext_addr": "0x0000f0",
+      "flags": 0,
+      "kind": "function",
+      "length": 37,
+      "lit_count": 2,
+      "lit_first": 220,
+      "literals": [
+        {
+          "symbol": "%inspect-trace-binding"
+        },
+        {
+          "symbol": "%function-cell"
+        }
+      ],
+      "name": "%inspect-trace-finish",
+      "name_obj": "0x035e"
+    },
+    {
+      "blob_offset": 277,
+      "code_flags": 2,
+      "ext_addr": "0x000115",
+      "flags": 0,
+      "kind": "function",
+      "length": 62,
+      "lit_count": 6,
+      "lit_first": 222,
+      "literals": [
+        {
+          "symbol": "trace-enter"
+        },
+        {
+          "symbol": "write"
+        },
+        {
+          "symbol": "terpri"
+        },
+        {
+          "symbol": "%inspect-trace-original"
+        },
+        {
+          "symbol": "trace-exit"
+        },
+        {
+          "symbol": "list"
+        }
+      ],
+      "name": "%inspect-trace-call",
+      "name_obj": "0x0360"
+    },
+    {
+      "blob_offset": 339,
+      "code_flags": 2,
+      "ext_addr": "0x000153",
+      "flags": 0,
+      "kind": "function",
+      "length": 104,
+      "lit_count": 4,
+      "lit_first": 228,
+      "literals": [
+        {
+          "symbol": "%inspect-trace-binding"
+        },
+        {
+          "symbol": "%function-cell"
+        },
+        {
+          "symbol": "*inspect-trace-bindings*"
+        },
+        {
+          "symbol": "%inspect-trace-remove"
+        }
+      ],
+      "name": "%inspect-untrace",
+      "name_obj": "0x0362"
+    },
+    {
+      "blob_offset": 443,
+      "code_flags": 2,
+      "ext_addr": "0x0001bb",
+      "flags": 0,
+      "kind": "function",
+      "length": 60,
+      "lit_count": 8,
+      "lit_first": 234,
+      "literals": [
+        {
+          "symbol": "progn"
+        },
+        {
+          "symbol": "defun"
+        },
+        [
+          {
+            "symbol": "&rest"
+          },
+          {
+            "symbol": "%inspect-trace-arguments"
+          }
+        ],
+        {
+          "symbol": "%inspect-trace-call"
+        },
+        {
+          "symbol": "quote"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%inspect-trace-arguments"
+        },
+        {
+          "symbol": "%inspect-trace-finish"
+        }
+      ],
+      "name": "%inspect-trace-form",
+      "name_obj": "0x0364"
+    },
+    {
+      "blob_offset": 503,
+      "code_flags": 2,
+      "ext_addr": "0x0001f7",
+      "flags": 1,
+      "kind": "macro",
+      "length": 31,
+      "lit_count": 4,
+      "lit_first": 242,
+      "literals": [
+        {
+          "symbol": "%inspect-trace-prepare"
+        },
+        {
+          "symbol": "%inspect-trace-form"
+        },
+        {
+          "symbol": "quote"
+        },
+        {
+          "symbol": "list"
+        }
+      ],
+      "name": "trace",
+      "name_obj": "0x0366"
+    },
+    {
+      "blob_offset": 534,
+      "code_flags": 2,
+      "ext_addr": "0x000216",
+      "flags": 1,
+      "kind": "macro",
+      "length": 24,
+      "lit_count": 3,
+      "lit_first": 246,
+      "literals": [
+        {
+          "symbol": "%inspect-untrace"
+        },
+        {
+          "symbol": "quote"
+        },
+        {
+          "symbol": "list"
+        }
+      ],
+      "name": "untrace",
+      "name_obj": "0x0368"
+    }
+  ],
+  "exports": [],
+  "external_image": {
+    "bytes": 5300,
+    "code_bytes": 558,
+    "code_offset": 4,
+    "file_header_bytes": 4,
+    "file_header_format": "u16 blob_len, u16 md_len",
+    "format": "lisp65-bytecode-p0-disk-lib-image-v1",
+    "load_addr": "0x000000",
+    "metadata_addr": "0x00022e",
+    "metadata_bytes": 4738,
+    "metadata_format": {
+      "endianness": "little",
+      "entry_flags": {
+        "bit0": "macro entry; loader registers T_MACRO(BCODE) instead of a function cell"
+      },
+      "entry_record": "u16 name_off, u8 bank, u8 flags, u16 off, u16 len",
+      "header_bytes": 38,
+      "literal_index_record": "u16 node",
+      "literal_node_record": "u8 kind, u8 reserved, i16 value, u16 first, u16 count, u16 name_off_or_0xffff",
+      "literal_patch_record": "u16 blob_offset, u16 node",
+      "magic": "L65M",
+      "string_pool": "NUL-terminated UTF-8 strings referenced by name_off",
+      "version": 1
+    },
+    "metadata_offset": 562,
+    "metadata_sha256": "6f0975ded8731b2c5c70f0112cdeeca4d95a9229d90110c9ae78ad942bdaa19c",
+    "path": "build/library-delivery-r1/raw/inspect.ext.bin",
+    "runtime_code_offset": 0,
+    "runtime_metadata_offset": 558,
+    "sha256": "761032b820fb6461b1bc93fcb6e6e2f8a9555da4b406496c63a203a52f21b8ba"
+  },
+  "format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+  "functions": [
+    "%comfort-callers-index",
+    "who-calls",
+    "%function-cell",
+    "%inspect-trace-remove",
+    "%inspect-trace-binding",
+    "%inspect-trace-original",
+    "%inspect-trace-prepare",
+    "%inspect-trace-finish",
+    "%inspect-trace-call",
+    "%inspect-untrace",
+    "%inspect-trace-form",
+    "trace",
+    "untrace"
+  ],
+  "header": "build/library-delivery-r1/raw/inspect.h",
+  "late_bound_exports": [],
+  "literal_format": {
+    "entry_fields": "lisp65_bytecode_stdlib_entries[].lit_first/lit_count map each code object's littab slots to literal_index nodes",
+    "index_table": "lisp65_bytecode_stdlib_literal_index",
+    "materialization": "boot loader walks literal_patches, materializes each node, and overwrites the raw host obj word at blob_offset before execution",
+    "node_table": "lisp65_bytecode_stdlib_literal_nodes",
+    "patch_fields": "lisp65_bytecode_stdlib_literal_patches[].blob_offset points at each raw 16-bit littab obj word; .node selects the materialized literal node",
+    "patch_table": "lisp65_bytecode_stdlib_literal_patches"
+  },
+  "literal_index": [
+    0,
+    1,
+    3,
+    4,
+    6,
+    7,
+    9,
+    10,
+    12,
+    13,
+    14,
+    15,
+    16,
+    18,
+    19,
+    21,
+    22,
+    24,
+    25,
+    27,
+    28,
+    30,
+    31,
+    32,
+    34,
+    35,
+    36,
+    38,
+    39,
+    40,
+    42,
+    43,
+    44,
+    46,
+    47,
+    48,
+    50,
+    51,
+    52,
+    53,
+    55,
+    56,
+    57,
+    58,
+    60,
+    61,
+    62,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    71,
+    72,
+    73,
+    75,
+    76,
+    77,
+    78,
+    79,
+    81,
+    82,
+    83,
+    84,
+    86,
+    87,
+    88,
+    90,
+    91,
+    92,
+    94,
+    95,
+    96,
+    97,
+    98,
+    100,
+    101,
+    103,
+    104,
+    106,
+    107,
+    109,
+    110,
+    112,
+    113,
+    115,
+    116,
+    117,
+    118,
+    119,
+    121,
+    122,
+    123,
+    125,
+    126,
+    128,
+    129,
+    130,
+    131,
+    133,
+    134,
+    135,
+    137,
+    138,
+    140,
+    141,
+    142,
+    144,
+    145,
+    146,
+    147,
+    149,
+    150,
+    151,
+    152,
+    154,
+    155,
+    156,
+    158,
+    159,
+    161,
+    162,
+    163,
+    165,
+    166,
+    167,
+    169,
+    170,
+    172,
+    173,
+    174,
+    176,
+    177,
+    179,
+    180,
+    182,
+    183,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    202,
+    203,
+    204,
+    206,
+    207,
+    2,
+    5,
+    8,
+    11,
+    17,
+    20,
+    23,
+    26,
+    29,
+    33,
+    37,
+    41,
+    45,
+    49,
+    54,
+    59,
+    63,
+    70,
+    74,
+    80,
+    85,
+    89,
+    93,
+    99,
+    102,
+    105,
+    108,
+    111,
+    114,
+    120,
+    124,
+    127,
+    132,
+    136,
+    139,
+    143,
+    148,
+    153,
+    157,
+    160,
+    164,
+    168,
+    171,
+    175,
+    178,
+    181,
+    184,
+    201,
+    205,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    234,
+    235,
+    232,
+    233,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248
+  ],
+  "literal_nodes": [
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-apply-page-command",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-apply-rare-edit-command",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 0,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-apply-rare-edit-command",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-x",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 2,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-apply-region-command",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-apply-rare-edit-command",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 4,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-apply-word-edit-command",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-apply-rare-edit-command",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 6,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-buffer-with-mark",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-kill-region-lines",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-exchange-point-and-mark",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-kill-region",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-set-mark",
+      "value": 0
+    },
+    {
+      "count": 5,
+      "first": 8,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-execute-command-submit",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-x",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 13,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-kill-region-lines",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-kill-region",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 15,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-mini-search-submit",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-x",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 17,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-page-rows",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-apply-page-command",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 19,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-region-bounds",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-kill-region",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-region-text",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 21,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-region-parts",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-kill-region-lines",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-region-text",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 24,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-region-parts-tail",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-region-parts",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-region-parts-tail",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 27,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-search-lines",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-search-lines",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-search-lines-from",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 30,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-search-lines-from",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-mini-search-submit",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-search-lines-from",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 33,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-word-scan",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%ide-word-scan",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-move-word-left",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "ide-move-word-right",
+      "value": 0
+    },
+    {
+      "count": 4,
+      "first": 36,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-change",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-change",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-claim-new",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-release-half",
+      "value": 0
+    },
+    {
+      "count": 4,
+      "first": 40,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-find",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-find",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-plan",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 44,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-header-ok-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-check-old-half",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-claim-new",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-release-half",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-plan",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 6,
+      "first": 47,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-validate-tracks",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-validate-tracks",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 53,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-before-write",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-claim-new",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-commit-dir",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-release-half",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-chain",
+      "value": 0
+    },
+    {
+      "count": 5,
+      "first": 56,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bit-free-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-find",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-chain-state",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-count-free",
+      "value": 0
+    },
+    {
+      "count": 4,
+      "first": 61,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bitmap-off",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-change",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bit-free-p",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 65,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-blocks-for",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-blocks-for",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-record",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 68,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-chain-state",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-chain-state",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-check-old-half",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-claim-new",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-release-half",
+      "value": 0
+    },
+    {
+      "count": 5,
+      "first": 71,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-check-old-half",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-old-validated",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 76,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-claim-new",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-plan",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 78,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-clear",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-chain",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 80,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-commit-dir",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-plan",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 82,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-copy",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-chain",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 84,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-count-free",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-find",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-validate-tracks",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-chain-state",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-count-free",
+      "value": 0
+    },
+    {
+      "count": 5,
+      "first": 86,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-entries",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-entries",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-scan",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 91,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-fill",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-commit-dir",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 94,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-scan",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-scan",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-source",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 4,
+      "first": 96,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-write-name",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-fill",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-write-name",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 100,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-entry-valid-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-entries",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 103,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-mask",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-change",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bit-free-p",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 105,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-media-detail",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-media-detail",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-media-kind",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run",
+      "value": 0
+    },
+    {
+      "count": 4,
+      "first": 108,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-media-kind",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-before-write",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 4,
+      "first": 112,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-name-chars-ok-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-name-chars-ok-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-authorized",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 116,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-old-validated",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-record",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 119,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-pair-member-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-pair-member-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-read-old-chain",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 121,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-read-old-chain",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-read-old-chain",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-record",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 124,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-release-half",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-plan",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 127,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-save",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-save-new",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 129,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-authorized",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 132,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-record",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-source",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 134,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-source",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-authorized",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 136,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-set",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-bam-find",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-before-write",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-claim-new",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-commit-dir",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-entries",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-dir-scan",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-old-validated",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-read-old-chain",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-authorized",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-record",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-source",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-plan",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-save-new",
+      "value": 0
+    },
+    {
+      "count": 16,
+      "first": 138,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-chain",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-chain",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-plan",
+      "value": 0
+    },
+    {
+      "count": 3,
+      "first": 154,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-write-plan",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%m65d-run-record",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 157,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 50,
+      "first": 159,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%comfort-callers-index",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "assoc",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-remove",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*inspect-trace-bindings*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "assoc",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-binding",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*inspect-trace-bindings*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-binding",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%function-cell",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-binding",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%function-cell",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "trace-enter",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "write",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "terpri",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-original",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "trace-exit",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-binding",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%function-cell",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "*inspect-trace-bindings*",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-remove",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "progn",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "defun",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "&rest",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-arguments",
+      "value": 0
+    },
+    {
+      "count": 2,
+      "first": 232,
+      "kind": 6,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-call",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "quote",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-arguments",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-finish",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-prepare",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-trace-form",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "quote",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%inspect-untrace",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "quote",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    }
+  ],
+  "literal_note": "code-object literal-table obj words are host placeholders; native loaders must rewrite them from literal_format before running",
+  "literal_patches": [
+    {
+      "blob_offset": 7,
+      "node": 209
+    },
+    {
+      "blob_offset": 19,
+      "node": 210
+    },
+    {
+      "blob_offset": 21,
+      "node": 211
+    },
+    {
+      "blob_offset": 75,
+      "node": 212
+    },
+    {
+      "blob_offset": 109,
+      "node": 213
+    },
+    {
+      "blob_offset": 111,
+      "node": 214
+    },
+    {
+      "blob_offset": 138,
+      "node": 215
+    },
+    {
+      "blob_offset": 164,
+      "node": 216
+    },
+    {
+      "blob_offset": 166,
+      "node": 217
+    },
+    {
+      "blob_offset": 168,
+      "node": 218
+    },
+    {
+      "blob_offset": 170,
+      "node": 219
+    },
+    {
+      "blob_offset": 247,
+      "node": 220
+    },
+    {
+      "blob_offset": 249,
+      "node": 221
+    },
+    {
+      "blob_offset": 284,
+      "node": 222
+    },
+    {
+      "blob_offset": 286,
+      "node": 223
+    },
+    {
+      "blob_offset": 288,
+      "node": 224
+    },
+    {
+      "blob_offset": 290,
+      "node": 225
+    },
+    {
+      "blob_offset": 292,
+      "node": 226
+    },
+    {
+      "blob_offset": 294,
+      "node": 227
+    },
+    {
+      "blob_offset": 346,
+      "node": 228
+    },
+    {
+      "blob_offset": 348,
+      "node": 229
+    },
+    {
+      "blob_offset": 350,
+      "node": 230
+    },
+    {
+      "blob_offset": 352,
+      "node": 231
+    },
+    {
+      "blob_offset": 450,
+      "node": 232
+    },
+    {
+      "blob_offset": 452,
+      "node": 233
+    },
+    {
+      "blob_offset": 454,
+      "node": 236
+    },
+    {
+      "blob_offset": 456,
+      "node": 237
+    },
+    {
+      "blob_offset": 458,
+      "node": 238
+    },
+    {
+      "blob_offset": 460,
+      "node": 239
+    },
+    {
+      "blob_offset": 462,
+      "node": 240
+    },
+    {
+      "blob_offset": 464,
+      "node": 241
+    },
+    {
+      "blob_offset": 510,
+      "node": 242
+    },
+    {
+      "blob_offset": 512,
+      "node": 243
+    },
+    {
+      "blob_offset": 514,
+      "node": 244
+    },
+    {
+      "blob_offset": 516,
+      "node": 245
+    },
+    {
+      "blob_offset": 541,
+      "node": 246
+    },
+    {
+      "blob_offset": 543,
+      "node": 247
+    },
+    {
+      "blob_offset": 545,
+      "node": 248
+    }
+  ],
+  "name": "inspect-trace-next",
+  "objects": 13,
+  "omission_gate": {
+    "defmacro_count": 0,
+    "defmacros": [],
+    "defun_count": 0,
+    "defuns": []
+  },
+  "override_exports": [],
+  "private_inline_functions": [],
+  "provides": [
+    "inspect"
+  ],
+  "relocation": {
+    "disk_lib_contract": "disk-lib files are [u16 blob_len][u16 md_len][blob][L65M]; entry bank/off and literal patch offsets are blob-relative; the device loader stages blob at lib_hw, trailer at lib_hw+blob_len, then supplies the final Bank-5 base",
+    "kind": "runtime-relative"
+  },
+  "requires": [
+    "core"
+  ],
+  "resident_overrides": [],
+  "resident_private_inline_functions": [],
+  "resident_suites": [
+    "p0-stdlib-ship-input-wait-base.json"
+  ],
+  "sources": [
+    "lib/comfort-who-calls-generated.lisp",
+    "lib/inspect-trace.lisp"
+  ],
+  "strict_arity": true,
+  "suite": "tests/bytecode/libs/p0-inspect-trace.json",
+  "suite_format": "lisp65-bytecode-p0-disk-lib-suite-v1"
+}

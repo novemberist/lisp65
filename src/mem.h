@@ -40,8 +40,21 @@ void ext_disk_read(uint16_t off, uint8_t *dst, uint16_t len); /* Scratch -> Bank
  * more soft-stack room up to $D000. Overridable with -D. */
 #define GC_ROOTS 512
 #endif
-extern obj      gc_rootstack[GC_ROOTS];
-extern uint16_t gc_rootsp;
+/* Root-stack index type.  The whole stack fits in a byte in every narrow
+ * profile (the product runs GC_ROOTS=128), and on the 6502 a byte index removes
+ * one byte of arithmetic from every push, pop, base save and slot address.
+ *
+ * 256 is deliberately NOT in the narrow range: gc_rootsp must be able to HOLD
+ * the value GC_ROOTS -- that is the stack-full state the overflow check tests
+ * for -- and 256 is not representable in a uint8_t, so the check would stop
+ * being exact.  Profiles with GC_ROOTS >= 256 keep the 16-bit type unchanged. */
+#if (GC_ROOTS) <= 255
+typedef uint8_t  gc_rootsp_t;
+#else
+typedef uint16_t gc_rootsp_t;
+#endif
+extern obj         gc_rootstack[GC_ROOTS];
+extern gc_rootsp_t gc_rootsp;
 extern uint16_t gc_badobj;   /* diagnosis: corrupt objs rejected by gc_mark */
 extern uint16_t gc_runs;    /* Statistik: Anzahl gc_collect-Laeufe */
 #ifdef LISP65_GC_SCAN_PROBE
@@ -107,9 +120,15 @@ extern uint8_t LISP65_C2_ZP mem_oom; /* 1 = alloc lief in OOM (REPL meldet + loe
 #define GC_PUSH(x)  (gc_rootstack[gc_rootsp++] = (obj)(x))
 #define GC_SET(i,x) (gc_rootstack[(i)] = (obj)(x))   /* gepushten Slot aktualisieren */
 #define GC_TOP      (gc_rootsp - 1)
-#define GC_POPN(n)  (gc_rootsp = (uint16_t)(gc_rootsp - (n)))
+#define GC_POPN(n)  (gc_rootsp = (gc_rootsp_t)(gc_rootsp - (n)))
+/* At the byte maximum the index cannot exceed the capacity.  Else retain
+ * the corrupt-index check before subtracting, including wider profiles. */
+#if GC_ROOTS == 255
+#define GC_CAN_RESERVE(n) ((uint16_t)(n) <= (uint16_t)(GC_ROOTS - gc_rootsp))
+#else
 #define GC_CAN_RESERVE(n) \
     (gc_rootsp <= GC_ROOTS && (uint16_t)(n) <= (uint16_t)(GC_ROOTS - gc_rootsp))
+#endif
 
 /* Soft-stack guard (F1, docs/vollprofil-stack-heap-collision.md): the C recursion (nested vm_run,
  * compile_expr, read_expr) grows on the mega65 DOWNWARD from $D000 towards the top of heap[].

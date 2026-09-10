@@ -23,6 +23,7 @@ if str(HOST) not in sys.path:
 import bytecode_p0_compiler as COMPILER  # noqa: E402
 import c2_v160_input_service_time_pricing as PRICE  # noqa: E402
 import c2_v17_repl_idle_blink_card as CARD2  # noqa: E402
+import evidence_era as ERA
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -415,6 +416,7 @@ def write() -> None:
           f"batch-margin={value['responsiveness']['batch_throughput']['margin_percent']:.3f}%")
 
 
+@ERA.in_host_source_world("520352a6")
 def check() -> None:
     value = json.loads(RECEIPT.read_text())
     validate(value)

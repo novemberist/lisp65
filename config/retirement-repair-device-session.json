@@ -1,0 +1,266 @@
+{
+  "format": "lisp65-library-release-device-session-v1",
+  "recorded_on": "2026-09-09",
+  "authority": "73f8ca88",
+  "amendment": "owner ready and disposable BASIC confirmed in current session",
+  "predecessor": {
+    "path": "config/library-release-candidate-device-session.json",
+    "bytes": 7658,
+    "sha256": "1d109ac5ecb919222d475ae3527e6aee696c112098f2512061db3705140d3c5d"
+  },
+  "status": "BOUND; UPLOAD PENDING",
+  "contact_authorized": true,
+  "device_contacts_started": 0,
+  "remote_name": "R2FIX.D81",
+  "medium": {
+    "path": "build/retirement-repair-final-library-medium-r2/packed/hardware-sp-seed.d81",
+    "bytes": 819200,
+    "sha256": "36c98acfc591b9b0b0963d65b446498a2eaab399e88fbf6c10e4c85166304189"
+  },
+  "elf": {
+    "bytes": 631540,
+    "path": "build/retirement-repair-product-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "95d8d7df3f46ad2e6d60ffd3dc095ec4e99b0bba1b92ded01414252503f354ec"
+  },
+  "prg": {
+    "bytes": 41811,
+    "path": "build/retirement-repair-product-r2/wplto/lisp65-c2-substitution-linked.prg",
+    "sha256": "b48c7074d62432ae5edaf6f5f8c1587154757defcf1a98e9f7cc2bdd49a3d5a3"
+  },
+  "host_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/retirement-repair-final-qualified-receipt.json",
+    "bytes": 6526,
+    "sha256": "e4a0e3e6178c99a404221dc60383771e68e56fb9b837d6953de116ac06ce09ed"
+  },
+  "full_source_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/retirement-repair-final-qualified-receipt.json",
+    "bytes": 6526,
+    "sha256": "e4a0e3e6178c99a404221dc60383771e68e56fb9b837d6953de116ac06ce09ed"
+  },
+  "choreography": {
+    "variant": "B",
+    "transport": "established JTAG-monitor SD helper, not volatile RAM staging",
+    "order": [
+      "owner confirms disposable BASIC",
+      "SD upload and byte/SHA readback",
+      "power off at least 30 seconds",
+      "power on",
+      "owner Freezer-mounts R2FIX.D81",
+      "owner starts product",
+      "bound rows"
+    ],
+    "min_power_off_seconds": 30,
+    "preparation_helper_resets_expected": true,
+    "only_physical_keyboard_after_boot": true,
+    "no_F011_register_reads": true,
+    "no_live_transport_helper": true,
+    "red_action": "Stop at the first failed row; no further input or device repair; seal evidence and request any CPU-stop/RAM-read permission separately"
+  },
+  "rows": [
+    {
+      "id": "boot",
+      "expected": [
+        "WORKBENCH 2.0.0",
+        "lisp65> with cursor",
+        "no load error"
+      ]
+    },
+    {
+      "id": "native-line-wrap",
+      "physical_keyboard": true,
+      "form": "(+ 41 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1)",
+      "characters": 84,
+      "expected": "*** vm: type error",
+      "type_without_return": true,
+      "backspaces_before_restore": 20,
+      "shortened_input": "(+ 41 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ",
+      "restore_suffix": "0 0 0 0 0 0 0 0 0 1)",
+      "actions": [
+        "Type the complete expression without Return; observe upward wrap, preserved prompt indent and tail on editor row.",
+        "Delete the bound suffix to cross the wrap; the released row must become completely blank.",
+        "Restore the exact suffix, then Return; Type Error, live native prompt, no red border or halt."
+      ],
+      "source": {
+        "path": "config/pound-a-device-session.json",
+        "bytes": 4391,
+        "sha256": "96f0ba5eb57ec6f586b80be9f95f3e4c2f671d539859a7d074e87dc887ec076b"
+      },
+      "must_return_to_native_prompt": true
+    },
+    {
+      "id": "long-line-recovery",
+      "form": "(+ 4 5)",
+      "expected": "9"
+    },
+    {
+      "id": "depth-definition",
+      "form": "(defun sp-depth (n) (if (= n 0) 0 (+ 1 (sp-depth (- n 1)))))",
+      "expected": "sp-depth"
+    },
+    {
+      "id": "depth-12",
+      "form": "(sp-depth 12)",
+      "expected": "12"
+    },
+    {
+      "id": "depth-13",
+      "form": "(sp-depth 13)",
+      "expected": "13"
+    },
+    {
+      "id": "depth-16",
+      "form": "(sp-depth 16)",
+      "expected": "16"
+    },
+    {
+      "id": "depth-17",
+      "form": "(sp-depth 17)",
+      "expected": "*** vm: stack overflow",
+      "must_return_to_native_prompt": true,
+      "repeated_E29_is_red": true
+    },
+    {
+      "id": "depth-recovery",
+      "form": "(+ 4 5)",
+      "expected": "9"
+    },
+    {
+      "id": "require-place",
+      "form": "(require 'place)",
+      "expected": "t"
+    },
+    {
+      "id": "place-call-1",
+      "form": "(setf (car (list 1 2)) 9)",
+      "expected": "9"
+    },
+    {
+      "id": "require-string-extra",
+      "form": "(require 'string-extra)",
+      "expected": "t"
+    },
+    {
+      "id": "string-extra-call-1",
+      "form": "(capitalize \"abc\")",
+      "expected": "\"Abc\""
+    },
+    {
+      "id": "require-buffer",
+      "form": "(require 'buffer)",
+      "expected": "t"
+    },
+    {
+      "id": "buffer-call-1",
+      "form": "(buffer-length (make-buffer 3))",
+      "expected": "3"
+    },
+    {
+      "id": "require-defstruct",
+      "form": "(require 'defstruct)",
+      "expected": "t"
+    },
+    {
+      "id": "defstruct-call-1",
+      "form": "(defstruct point x)",
+      "expected": "t"
+    },
+    {
+      "id": "defstruct-call-2",
+      "form": "(point-x (make-point 42))",
+      "expected": "42"
+    },
+    {
+      "id": "require-inspect",
+      "form": "(require 'inspect)",
+      "expected": "t"
+    },
+    {
+      "id": "inspect-call-1",
+      "form": "(who-calls 'car)",
+      "expected": "nil"
+    },
+    {
+      "id": "smoke-definition",
+      "form": "(defun v20-perf-probe (x) (+ x 1))",
+      "expected": "v20-perf-probe"
+    },
+    {
+      "id": "smoke-1",
+      "form": "(time (car (cdr (list 1 2))))",
+      "value": "2",
+      "max_frames": 2
+    },
+    {
+      "id": "smoke-2",
+      "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+      "value": "(9 2)",
+      "max_frames": 2
+    },
+    {
+      "id": "smoke-3",
+      "form": "(time (string-ref \"abc\" 1))",
+      "value": "98",
+      "max_frames": 2
+    },
+    {
+      "id": "smoke-4",
+      "form": "(time (v20-perf-probe 41))",
+      "value": "42",
+      "max_frames": 2
+    },
+    {
+      "id": "D5",
+      "requires_separate_stop_and_RAM_read_permission": true,
+      "reads": [
+        {
+          "symbol": "nsym",
+          "address": 87,
+          "bytes": 2
+        },
+        {
+          "symbol": "npool",
+          "address": 48584,
+          "bytes": 2
+        }
+      ],
+      "further_reads": "C2D header first; derive entry span and persistent front from live header and final ELF; RAM only"
+    },
+    {
+      "id": "reset",
+      "owner_action": true,
+      "terminal": true,
+      "expected": "BASIC"
+    }
+  ],
+  "loaded_packages": [
+    "buffer",
+    "place",
+    "string-extra",
+    "inspect",
+    "defstruct"
+  ],
+  "D5_reference": {
+    "context": "pure five-package loading plus (+ 4 5), not this longer session",
+    "free_symbols": 32,
+    "free_name_bytes": 384,
+    "contiguous_user_code_bytes": 8576,
+    "source": {
+      "path": "build/retirement-repair-r2/user-currency.json",
+      "bytes": 62656,
+      "sha256": "adca566da67b96c9bc82f4725c363774a8f55d64123597d316652dca3a1e3b3a"
+    }
+  },
+  "D5_claim": "Measure the session stop without subtracting unmeasured estimates. Definitions, generated struct names and test code consume additional capacity; 32/384/8576 is NOT the expected equality after these forms.",
+  "bank2_owner_limit": 59168,
+  "claim_boundary": "Repair-world device re-run: wrap recovery, R2, five manual libraries and smokes. Earlier A/pound claims retained. No INIT, string-require, Ship or Publish.",
+  "materialized_prg": {
+    "path": "build/retirement-repair-final-library-medium-r2/materialized/lisp65-c2-substitution-linked.prg",
+    "bytes": 41811,
+    "sha256": "96fadcebde1244b5a95757a207a1290f9de1700e3b58ccfb0895e332fd7ea1a5"
+  },
+  "medium_projection": {
+    "path": "build/retirement-repair-r2/medium-projection.json",
+    "bytes": 2428,
+    "sha256": "7f306f9edf41ca117ee6261a395bebc6a48a18ca793dd8a0230f88dbe52a172f"
+  }
+}

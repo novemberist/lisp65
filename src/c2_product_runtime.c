@@ -38,6 +38,8 @@
 #error "C2 product cut requires the exact product build identity"
 #endif
 
+#include "c2_bank2_code_domain.h"
+
 #define C2_MAX_HOT_LITERALS 23u
 #define C2_SESSION_SOURCE_TAG 0x800000UL
 #define C2_EXPORT_JOURNAL_BASE LISP65_C2D_BYTES
@@ -297,6 +299,8 @@ _Static_assert(offsetof(c2_append_state, record) + 31u == 213u,
 #endif
 #define C2_RESERVE_TRANSIENT_MARK 0x74u
 #define C2_RESERVE_PERSISTENT_MARK 0x70u
+#define C2_RESERVE_SCAN_REQUEST 0x62u
+#define C2_RESERVE_SCAN_DONE 0x64u
 #define C2_STAGE_COPY_MARK 0x53u
 #define C2_EXPORT_SCAN_MARK 0xa7u
 #define C2_EXPORT_PLAN_MARK 0x50u
@@ -343,7 +347,9 @@ void c2_edma_prepare(uint8_t *job, uint32_t source, uint32_t target,
 }
 #endif
 
-C2_KERNAL_RESIDENT void c2_product_physical_copy(
+/* Named tier-1 E000 evacuation: retain the out-of-line leaf ABI, but use
+ * ordinary resident text. No window load or facade is introduced. */
+__attribute__((noinline)) void c2_product_physical_copy(
         uint32_t source, uint32_t target, uint16_t length) {
     uint8_t *job = c2_edma_job;
     lisp65_edma_descriptor(job, 0u, source, target, length);
@@ -703,7 +709,7 @@ uint8_t c2_stream_pair_value(uint16_t car_value, uint16_t cdr_value,
     *value = (uint16_t)pair; return 1;
 }
 
-C2_KERNAL_RESIDENT uint8_t c2_stream_gc_checkpoint(uint16_t roots_offset, uint16_t root_count) {
+__attribute__((noinline)) uint8_t c2_stream_gc_checkpoint(uint16_t roots_offset, uint16_t root_count) {
     if (!c2_decode_active || roots_offset != c2_decode_active->roots_offset
         || root_count != c2_decode_active->c2_root_count) return 0;
     c2_pending_roots =
@@ -1324,16 +1330,39 @@ C2_APPEND_INLINE uint8_t c2_transient_fronts(
  * returned interval is the only place a new image may be installed; no
  * separately maintained watermark can drift from the rows that make code
  * callable. */
-C2_APPEND_INLINE uint8_t c2_lite_bank2_fronts(
-        uint16_t transient_first, uint32_t *low_out, uint32_t *high_out) {
-    uint8_t row[10]; uint16_t i; uint32_t low = 0u, high = 65536UL, end;
-    if (!low_out || !high_out || transient_first > C2D_ENTRY_CAP) return 0u;
+#ifdef LISP65_C2_LITE_V6_SEMANTIC_SPLITS
+typedef c2_append_state c2_bank2_front_population;
+#define C2_FRONT_SCAN_FN static C2_APPEND_SECTION("reserve_persistent_code")
+#else
+typedef struct {
+    uint16_t transient_first;
+    uint32_t low, high;
+} c2_bank2_front_population;
+#define C2_FRONT_SCAN_FN static __attribute__((noinline))
+#endif
+
+/* One scan shared by both reservation paths. In the split product it lives
+ * with the persistent-code entry and is called only while that slice owns
+ * the window. The resident driver returns before loading either bounds
+ * slice; no pointer or nested overlay call crosses this lifetime boundary.
+ * Record bytes 12..19 are dead source-record fields after CRC/metadata and
+ * hold the two checked fronts until the reservation consumes its marker. */
+C2_FRONT_SCAN_FN uint8_t c2_lite_bank2_scan(
+        c2_bank2_front_population *fronts) {
+    uint8_t row[10]; uint16_t i;
+#ifdef LISP65_C2_LITE_V6_SEMANTIC_SPLITS
+    uint16_t transient_first = C2AW_FRONT_ENTRIES(fronts);
+#else
+    uint16_t transient_first = fronts->transient_first;
+#endif
+    uint32_t low = 0u, high = LISP65_C2_BANK2_CODE_LIMIT, end;
+    if (transient_first > C2D_ENTRY_CAP) return 0u;
     for (i = 0; i < c2_runtime.entry_count; ++i) {
         if (!c2_stream_c2d_read((uint16_t)(c2_runtime.entries_offset
                 + i * LISP65_C2D_V6_ENTRY_BYTES), row, sizeof row)
             || !c2_u16(row + 4)
             || c2_u16(row + 8) != c2_runtime.generation
-            || (uint32_t)c2_u16(row + 2) + c2_u16(row + 4) > 65536UL)
+            || !c2_bank2_code_range(c2_u16(row + 2), c2_u16(row + 4)))
             return 0u;
         end = (uint32_t)c2_u16(row + 2) + c2_u16(row + 4);
         if (end > low) low = end;
@@ -1343,14 +1372,34 @@ C2_APPEND_INLINE uint8_t c2_lite_bank2_fronts(
             if (!c2_stream_c2d_read((uint16_t)(c2_runtime.entries_offset
                     + i * LISP65_C2D_V6_ENTRY_BYTES), row, sizeof row)
                 || !c2_u16(row + 4)
-                || c2_u16(row + 8) != c2_runtime.generation)
+                || c2_u16(row + 8) != c2_runtime.generation
+                || !c2_bank2_code_range(c2_u16(row + 2), c2_u16(row + 4)))
                 return 0u;
             if ((uint32_t)c2_u16(row + 2) < high) high = c2_u16(row + 2);
         }
     }
     if (low > high) return 0u;
-    *low_out = low; *high_out = high; return 1u;
+#ifdef LISP65_C2_LITE_V6_SEMANTIC_SPLITS
+    c2_record_u32(fronts->record + 12, low);
+    c2_record_u32(fronts->record + 16, high);
+#else
+    fronts->low = low; fronts->high = high;
+#endif
+    return 1u;
 }
+#undef C2_FRONT_SCAN_FN
+
+#ifndef LISP65_C2_LITE_V6_SEMANTIC_SPLITS
+C2_APPEND_INLINE uint8_t c2_lite_bank2_fronts(
+        uint16_t transient_first, uint32_t *low_out, uint32_t *high_out) {
+    c2_bank2_front_population fronts;
+    if (!low_out || !high_out) return 0u;
+    fronts.transient_first = transient_first;
+    if (!c2_lite_bank2_scan(&fronts)) return 0u;
+    *low_out = fronts.low; *high_out = fronts.high;
+    return 1u;
+}
+#endif
 #endif
 
 C2_APPEND_INLINE void c2_header_watermark(uint8_t header[48], uint16_t value) {
@@ -1367,7 +1416,7 @@ static void c2_zero_plane(uint16_t at, uint16_t bytes) {
     }
 }
 #endif
-static C2_KERNAL_RESIDENT void c2_header_counts(uint8_t header[48], uint16_t images,
+static __attribute__((noinline)) void c2_header_counts(uint8_t header[48], uint16_t images,
                              uint16_t entries, uint16_t resolutions,
                              uint16_t roots) {
     header[12] = (uint8_t)images; header[13] = (uint8_t)(images >> 8);
@@ -1812,7 +1861,8 @@ uint8_t c2_append_reserve_transient_bounds_phase(void *opaque) {
     c2_append_state *w = opaque;
     uint8_t depth; uint16_t high_entries, high_res, high_roots;
     uint32_t high_attic, low_attic;
-    if (!w || !C2AW_TRANSIENT(w) || C2AW_RESERVE_MARK(w))
+    if (!w || !C2AW_TRANSIENT(w)
+        || C2AW_RESERVE_MARK(w) != C2_RESERVE_SCAN_DONE)
         return C2_STREAM_ERR_STATE;
     depth = C2AW_FRONT_DEPTH(w);
     high_entries = C2AW_FRONT_ENTRIES(w);
@@ -1851,8 +1901,8 @@ uint8_t c2_append_reserve_transient_code_phase(void *opaque) {
     if (!w || !C2AW_TRANSIENT(w)
         || C2AW_RESERVE_MARK(w) != C2_RESERVE_TRANSIENT_MARK)
         return C2_STREAM_ERR_STATE;
-    if (!c2_lite_bank2_fronts(C2AW_FRONT_ENTRIES(w), &code_low, &code_high)
-        || w->code_len > code_high || code_high - w->code_len < code_low)
+    code_low = c2_u32(w->record + 12); code_high = c2_u32(w->record + 16);
+    if (w->code_len > code_high || code_high - w->code_len < code_low)
         return C2_STREAM_ERR_C2D;
     c2_record_u16(w->record + 28, (uint16_t)(code_high - w->code_len));
     C2AW_RESERVE_MARK(w) = 0u;
@@ -1867,7 +1917,8 @@ uint8_t c2_append_reserve_persistent_bounds_phase(void *opaque) {
     C2_INSTALL_TRACE_STAMP_SLOT(LISP65_C2_APPEND_RESERVE_PERSISTENT_BOUNDS_SLOT);
     c2_append_state *w = opaque;
     uint16_t high_entries, high_res, high_roots; uint32_t high_attic;
-    if (!w || C2AW_TRANSIENT(w) || C2AW_RESERVE_MARK(w))
+    if (!w || C2AW_TRANSIENT(w)
+        || C2AW_RESERVE_MARK(w) != C2_RESERVE_SCAN_DONE)
         return C2_STREAM_ERR_STATE;
     high_entries = C2AW_FRONT_ENTRIES(w);
     high_res = C2AW_FRONT_RESOLUTIONS(w);
@@ -1895,11 +1946,18 @@ C2_APPEND_SECTION("reserve_persistent_code")
 uint8_t c2_append_reserve_persistent_code_phase(void *opaque) {
     C2_INSTALL_TRACE_STAMP_SLOT(LISP65_C2_APPEND_RESERVE_PERSISTENT_CODE_SLOT);
     c2_append_state *w = opaque; uint32_t code_low, code_high;
-    if (!w || C2AW_TRANSIENT(w)
+    if (!w) return C2_STREAM_ERR_STATE;
+    if (C2AW_RESERVE_MARK(w) == C2_RESERVE_SCAN_REQUEST) {
+        C2AW_RESERVE_MARK(w) = 0u;
+        if (!c2_lite_bank2_scan(w)) return C2_STREAM_ERR_C2D;
+        C2AW_RESERVE_MARK(w) = C2_RESERVE_SCAN_DONE;
+        return C2_STREAM_OK;
+    }
+    if (C2AW_TRANSIENT(w)
         || C2AW_RESERVE_MARK(w) != C2_RESERVE_PERSISTENT_MARK)
         return C2_STREAM_ERR_STATE;
-    if (!c2_lite_bank2_fronts(C2AW_FRONT_ENTRIES(w), &code_low, &code_high)
-        || code_low + w->code_len > code_high)
+    code_low = c2_u32(w->record + 12); code_high = c2_u32(w->record + 16);
+    if (code_low + w->code_len > code_high)
         return C2_STREAM_ERR_C2D;
     c2_record_u16(w->record + 28, (uint16_t)code_low);
     C2AW_RESERVE_MARK(w) = 0u;
@@ -2336,7 +2394,9 @@ C2_APPEND_SECTION("stage") uint8_t c2_append_stage_phase(void *opaque) {
     c2_append_state *w = opaque;
     uint8_t expected[16], readback[16];
     uint16_t i;
-    if (!w || !w->before) return C2_STREAM_ERR_STATE;
+    if (!w || !w->before
+        || !c2_bank2_code_range(C2AW_CHIP_CODE_BASE(w), w->code_len))
+        return C2_STREAM_ERR_STATE;
     c2_dma_copy(LISP65_EXT_DISK_FILE_PHYSICAL,
                 LISP65_C2_SESSION_PHYSICAL + w->attic, w->length);
     for (i = 0; i < w->length; i = (uint16_t)(i + sizeof readback)) {
@@ -2413,7 +2473,8 @@ uint8_t c2_append_stage_copy_phase(void *opaque) {
     c2_append_state *w = opaque;
     uint8_t expected[16], readback[16];
     uint16_t i;
-    if (!w || !w->before || C2AW_STAGE_MARK(w))
+    if (!w || !w->before || C2AW_STAGE_MARK(w)
+        || !c2_bank2_code_range(C2AW_CHIP_CODE_BASE(w), w->code_len))
         return C2_STREAM_ERR_STATE;
     c2_dma_copy(LISP65_EXT_DISK_FILE_PHYSICAL,
                 LISP65_C2_SESSION_PHYSICAL + w->attic, w->length);
@@ -3210,7 +3271,7 @@ c2_append_rollback_zero_chip_code(c2_append_state *w) {
 #ifdef LISP65_C2_LITE_COLD_EVICTION
     static const uint8_t zeros[16] = {0}; uint16_t i;
     if (!w || !w->code_len
-        || (uint32_t)C2AW_CHIP_CODE_BASE(w) + w->code_len > 65536UL)
+        || !c2_bank2_code_range(C2AW_CHIP_CODE_BASE(w), w->code_len))
         return 0u;
     for (i = 0; i < w->code_len; i = (uint16_t)(i + sizeof zeros)) {
         uint16_t n = (uint16_t)(w->code_len - i);
@@ -3461,6 +3522,8 @@ static C2_KERNAL_RESIDENT uint8_t c2_append_begin(uint16_t length,
                                LISP65_C2_APPEND_FRONTS_SLOT, &c2aw)
 #endif
 #ifdef LISP65_C2_LITE_V6_SEMANTIC_SPLITS
+        || (C2AW_RESERVE_MARK(&c2aw) = C2_RESERVE_SCAN_REQUEST,
+            !c2_overlay_call(LISP65_C2_APPEND_RESERVE_PERSISTENT_CODE_SLOT, &c2aw))
         || !(transient
              ? c2_overlay_call_range(
                     LISP65_C2_APPEND_RESERVE_TRANSIENT_BOUNDS_SLOT,
@@ -3833,12 +3896,14 @@ done:
 }
 #endif
 
-uint8_t c2_product_abort_cleanup(void) {
 #if defined(__mos__) && defined(LISP65_C2_RTOV_CONTINUATION_LIVENESS)
-    extern void c2_rtov_retire_continuations_facade(void);
+uint8_t c2_product_abort_cleanup(uint8_t return_slot) {
+    extern void c2_rtov_retire_continuations_facade(uint8_t return_slot);
     /* Retirement owns continuation liveness.  Sanitize every restorable
      * snapshot while the retiring generation is still named, before wipe. */
-    c2_rtov_retire_continuations_facade();
+    c2_rtov_retire_continuations_facade(return_slot);
+#else
+uint8_t c2_product_abort_cleanup(void) {
 #endif
     if (vm_runtime_overlay_abort_cleanup() != VM_RUNTIME_OVERLAY_OK) {
         c2_ready = 0; return 0;

@@ -67,19 +67,9 @@
           (if (cdr xs) (%list-malformed-error) xs))
       (if xs (%list-malformed-error) nil)))
 
-(defun member (item xs)
-  (if (consp xs)
-      (if (eql item (car xs)) xs (member item (cdr xs)))
-      (if xs (%list-malformed-error) nil)))
-
-(defun assoc (key alist)
-  (if (consp alist)
-      (if (consp (car alist))
-          (if (eql key (car (car alist)))
-              (car alist)
-              (assoc key (cdr alist)))
-          (%list-malformed-error))
-      (if alist (%list-malformed-error) nil)))
+; find/member/assoc are owned by dialect-v2/lists-core.  Keep the domain
+; overlay free of shadow definitions so their optional/predicate ABI cannot
+; depend on source order.
 
 (defun %any-null (lists)
   (if (consp lists)
@@ -122,11 +112,6 @@
 (defun mapc (fn xs)
   (%mapc fn xs)
   xs)
-
-(defun find (item xs)
-  (if (consp xs)
-      (if (eql item (car xs)) (car xs) (find item (cdr xs)))
-      (if xs (%list-malformed-error) nil)))
 
 (defun %position-from (item xs n)
   (if (consp xs)

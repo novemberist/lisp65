@@ -20,6 +20,7 @@ if str(HOST) not in sys.path:
 
 import c2_v21_map_mask_fix as FIX  # noqa: E402
 import c2_v21_terminal_screen_lease as LEASE  # noqa: E402
+from evidence_era import era_blob, era_bind
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -95,7 +96,7 @@ def authorization() -> dict[str, Any]:
 def source_lineage() -> dict[str, Any]:
     before = git_binding(f"{SCREEN_COMMIT}^", SOURCE)
     after = git_binding(SCREEN_COMMIT, SOURCE)
-    current = bind(SOURCE)
+    current = era_bind(SCREEN_COMMIT, SOURCE)
     require(before["sha256"] == load(HISTORICAL)["authority"]["source"]["sha256"]
             and after["path"] == current["path"]
             and after["bytes"] == current["bytes"]
@@ -121,7 +122,10 @@ def derive() -> dict[str, Any]:
     FIX.validate(old, verify=False)
     require(isinstance(rejected, list) and len(rejected) == 9,
             "historical MAP-mask mutation authority drift")
-    current = FIX.derive()
+    current = FIX.derive(
+        source_text=era_blob(SCREEN_COMMIT, SOURCE.relative_to(ROOT).as_posix()).decode(),
+        source_binding=era_bind(SCREEN_COMMIT, SOURCE),
+        driver_binding=old["authority"]["driver"])
     comparison = deepcopy(current)
     comparison["authority"]["source"] = old["authority"]["source"]
     require(comparison == old,
@@ -138,7 +142,7 @@ def derive() -> dict[str, Any]:
         "authority": {"owner": authorization(),
             "historical_MAP_mask": bind(HISTORICAL),
             "screen_lease": bind(SCREEN), "card_Final_Red": bind(FINAL_RED),
-            "driver": bind(DRIVER)},
+            "driver": era_bind("ca98451e^", DRIVER)},
         "source_lineage": source_lineage(),
         "semantic_equivalence": {
             "emitted_construction": current["emitted_construction"],
@@ -208,6 +212,8 @@ def check() -> None:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
     expected = derive(); validate(value, expected)
     require(rejected == mutations(expected), "MAP rebind mutation receipt drift")
+    from renderer_map_authority_rebind import check as check_successor
+    check_successor("screen")
     print("2.1 MAP authority rebind: CHECK PASS WPLTO=0 link=0 card=0")
 
 

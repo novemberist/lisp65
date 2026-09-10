@@ -621,7 +621,11 @@ void c2_product_gc_mark_roots(void);
  * continuations and retires the active runtime-overlay generation while that
  * generation is still named.  Transported journal work cannot run here: the
  * failing Lisp evaluation still owns the deep soft stack until longjmp. */
+#if defined(__mos__) && defined(LISP65_C2_RTOV_CONTINUATION_LIVENESS)
+uint8_t c2_product_abort_cleanup(uint8_t return_slot);
+#else
 uint8_t c2_product_abort_cleanup(void);
+#endif
 
 /* Second half of the abort seam.  The native REPL calls this immediately
  * after longjmp has restored its shallow top-level soft stack, before error

@@ -26,10 +26,11 @@ TOOLCHAIN = ROOT / "tools/llvm-mos/bin"
 DIRECT = re.compile(r"^\$([0-9a-f]+)\b")
 IMMEDIATE = re.compile(r"^#\$([0-9a-f]+)$")
 INDIRECT_Z = re.compile(r"^\(\$([0-9a-f]+)\),z\b")
+INDEXED_X = re.compile(r"^\$([0-9a-f]+),x\b")
 ALLOWED = {
     "asl", "bcc", "beq", "bne", "bra", "dec", "dey", "eor", "inw",
     "lda", "ldx", "ldy", "ldz", "ora", "rol", "rts", "sta", "stx",
-    "sty",
+    "sty", "lsr", "tax",
 }
 VECTORS = {
     "empty": b"",
@@ -69,7 +70,7 @@ def _number(pattern: re.Pattern[str], operand: str, kind: str) -> int:
 
 
 def execute(rows: list[dict[str, Any]], *, rc: dict[str, int],
-            data: bytes) -> dict[str, int]:
+            data: bytes, table: dict[int, int] | None = None) -> dict[str, int]:
     require(rows, "CRC leaf has no linked instructions")
     by_address = {int(row["address"]): row for row in rows}
     addresses = sorted(by_address)
@@ -130,9 +131,23 @@ def execute(rows: list[dict[str, Any]], *, rc: dict[str, int],
             zp[target] = a if opcode == "sta" else x if opcode == "stx" else y
         elif opcode in ("ora", "eor"):
             immediate = IMMEDIATE.match(operand)
-            value = (int(immediate.group(1), 16) if immediate
-                     else zp[_number(DIRECT, operand, "direct")])
+            indexed = INDEXED_X.match(operand)
+            if indexed:
+                address = int(indexed.group(1), 16) + x
+                require(table is not None and address in table,
+                        "CRC indexed read escaped the final table owner")
+                value = table[address]
+            else:
+                value = (int(immediate.group(1), 16) if immediate
+                         else zp[_number(DIRECT, operand, "direct")])
             a = nz(a | value if opcode == "ora" else a ^ value)
+        elif opcode == "tax":
+            require(not operand, "unexpected TAX operand")
+            x = nz(a)
+        elif opcode == "lsr":
+            require(operand in ("", "a"), "CRC LSR must address A")
+            carry = bool(a & 1)
+            a = nz(a >> 1)
         elif opcode == "dec":
             target = _number(DIRECT, operand, "direct")
             zp[target] = nz(zp[target] - 1)
@@ -165,7 +180,8 @@ def execute(rows: list[dict[str, Any]], *, rc: dict[str, int],
 
 
 def audit_elf(elf: Path, *, out: Path | None = None) -> dict[str, Any]:
-    truth = ElfTruth.read(elf, llvm_readobj=TOOLCHAIN / "llvm-readobj")
+    truth = ElfTruth.read(elf, llvm_readobj=TOOLCHAIN / "llvm-readobj",
+                          include_section_data=True)
     leaf = truth.symbol(CODEGEN.CRC)
     require(leaf.symbol_type == "Function" and leaf.bytes > 0
             and leaf.section == ".text",
@@ -182,9 +198,33 @@ def audit_elf(elf: Path, *, out: Path | None = None) -> dict[str, Any]:
     rows = [row for row in CODEGEN.disassembly_rows(completed.stdout)
             if row["section"] == leaf.section
             and leaf.value <= int(row["address"]) < leaf.value + leaf.bytes]
+    table: dict[int, int] = {}
+    table_symbols = [s for s in truth.symbols if s.name in
+                     ("rtov_crc_nibbles_low", "rtov_crc_nibbles_high")]
+    if table_symbols:
+        require(len(table_symbols) == 2, "partial CRC nibble table")
+        planes = []
+        for name in ("rtov_crc_nibbles_low", "rtov_crc_nibbles_high"):
+            symbol = truth.symbol(name)
+            section = truth.section(symbol.section)
+            require(symbol.bytes == 16 and symbol.symbol_type == "Object",
+                    "CRC table plane is not a sized 16-byte owner")
+            offset = symbol.value - section.address
+            raw = truth.section_bytes(section.name)[offset:offset + symbol.bytes]
+            require(len(raw) == 16, "truncated CRC table")
+            for i,byte in enumerate(raw):
+                require(symbol.value+i not in table, "CRC table planes overlap")
+                table[symbol.value+i] = byte
+            planes.append(raw)
+        for state in range(65536):
+            expected = state
+            for _ in range(4):
+                expected = ((expected << 1) ^ (0x1021 if expected & 0x8000 else 0)) & 0xffff
+            actual = ((state << 4) & 0xffff) ^ planes[0][state >> 12] ^ (planes[1][state >> 12] << 8)
+            require(actual == expected, "CRC nibble-state equivalence failed")
     results: dict[str, Any] = {}
     for name, data in VECTORS.items():
-        actual = execute(rows, rc=rc, data=data)
+        actual = execute(rows, rc=rc, data=data, table=table)
         expected = crc_reference(data)
         require(actual["crc"] == expected,
                 f"CRC parity failed for {name}: 0x{actual['crc']:04x} != "
@@ -200,6 +240,7 @@ def audit_elf(elf: Path, *, out: Path | None = None) -> dict[str, Any]:
         "leaf": {"section": leaf.section, "address": leaf.value,
                  "bytes": leaf.bytes, "symbol_type": leaf.symbol_type},
         "abi_zero_page": rc,
+        "nibble_table_bytes": len(table),
         "vectors": results,
         "invariant": (
             "The executed final-ELF leaf equals CRC-16/CCITT-FALSE for every "
@@ -228,11 +269,66 @@ def selftest() -> dict[str, str]:
         "linked-codegen-mutations": "delegated-to-central-gate"}
 
 
+def audit_source(source: Path, reference: Path, out: Path) -> dict[str, Any]:
+    """Execute a relocatable target leaf; deliberately not a product link.
+
+    Resolve only the admitted ABI ZP operands and two table planes. The
+    final-link gate still has to run on the candidate's own ZP and placement.
+    """
+    import hashlib
+    out.parent.mkdir(parents=True, exist_ok=True)
+    obj = out.with_suffix('.o')
+    subprocess.run([str(TOOLCHAIN/'mos-mega65-clang'), '-c', str(source),
+                    '-o', str(obj)], check=True)
+    truth = ElfTruth.read(obj, llvm_readobj=TOOLCHAIN/'llvm-readobj', include_section_data=True)
+    baseline = ElfTruth.read(reference, llvm_readobj=TOOLCHAIN/'llvm-readobj')
+    rc = {f'__rc{i}':baseline.symbol(f'__rc{i}').value for i in range(2,8)}
+    leaf = truth.symbol(CODEGEN.CRC)
+    asm = subprocess.check_output([str(TOOLCHAIN/'llvm-objdump'), '-d', '--no-show-raw-insn', str(obj)], text=True)
+    rows = [r for r in CODEGEN.disassembly_rows(asm) if r['section']==leaf.section]
+    raw = truth.section_bytes('.rodata.rtov_crc_nibbles')
+    require(len(raw)==32, 'source CRC table is not 32 bytes')
+    table = {0x3000+i:byte for i,byte in enumerate(raw)}
+    for relocation in truth.relocations:
+        require(relocation.source_section==leaf.section, 'foreign CRC relocation')
+        row = [r for r in rows if r['address']+1==relocation.offset]
+        require(len(row)==1, 'unresolved CRC instruction operand')
+        if relocation.relocation_type=='R_MOS_ADDR8':
+            require(relocation.target in rc, 'foreign CRC ZP relocation')
+            value = rc[relocation.target]+relocation.addend
+        else:
+            require(relocation.relocation_type=='R_MOS_ADDR16', 'unknown CRC relocation')
+            symbol=truth.symbol(relocation.target)
+            require(symbol.section=='.rodata.rtov_crc_nibbles', 'foreign CRC data owner')
+            value=0x3000+symbol.value+relocation.addend
+        row[0]['operand']=re.sub(r'\$[0-9a-f]+',f'${value:x}',row[0]['operand'],count=1)
+    def check(candidate):
+        for name,data in VECTORS.items():
+            require(execute(rows,rc=rc,data=data,table=candidate)['crc']==crc_reference(data), name)
+    check(table)
+    rejected=[]
+    for name,index in [('low-table',0),('high-table',16)]:
+        mutant=dict(table);mutant[0x3000+index]^=1
+        try:check(mutant)
+        except GateError:rejected.append(name)
+        else:raise GateError(name+' mutation survived')
+    def bind(path):
+        return dict(path=str(path.relative_to(ROOT)),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+    value=dict(status='PASS: ASSEMBLED SOURCE, NOT FINAL LINK',source=bind(source),object=bind(obj),
+        reference=bind(reference),code_bytes=leaf.bytes,table_bytes=32,
+        delta=leaf.bytes+32-baseline.symbol(CODEGEN.CRC).bytes,
+        mutations=rejected,abi_zero_page=rc,
+        limits=['No product build, candidate placement or DWX cycle claim.'])
+    out.write_text(json.dumps(value,indent=2)+'\n')
+    return value
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--selftest", action="store_true")
     parser.add_argument("--elf", type=Path)
     parser.add_argument("--out", type=Path)
+    parser.add_argument("--source", type=Path)
     args = parser.parse_args(argv)
     try:
         if args.selftest:
@@ -241,6 +337,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         if args.elf is None:
             parser.error("--elf is required without --selftest")
+        if args.source is not None:
+            if args.out is None:parser.error('--source requires --out')
+            value=audit_source(args.source.resolve(),args.elf.resolve(),args.out.resolve())
+            print('c2-crc-asm-leaf-gate: '+value['status'])
+            return 0
         value = audit_elf(args.elf, out=args.out)
         print("c2-crc-asm-leaf-gate: " + value["status"])
         return 0

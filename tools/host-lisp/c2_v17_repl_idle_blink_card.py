@@ -474,6 +474,7 @@ def build_receipt() -> dict[str, Any]:
     }
 
 
+@ERA.in_host_source_world("520352a6")
 def check_sealed_successor() -> tuple[dict[str, Any], dict[str, Any]]:
     """Retain card 2's reviewed world while card 3 owns live evolution."""
     require(RECEIPT.is_file() and not RECEIPT.is_symlink(),
@@ -521,7 +522,7 @@ def main() -> int:
             free = receipt["capacity"]["free_after_card2"]
             print("v1.7 REPL idle/blink card: PASS sealed=9fe443da "
                   f"free={free['symbol_slots']}/{free['namepool_bytes']} "
-                  f"live_cursor={live['emission']['function_bytes']['%cursor-blink']}")
+                  f"sealed_successor_cursor={live['emission']['function_bytes']['%cursor-blink']}")
             return 0
         receipt = build_receipt()
         payload = canonical(receipt)

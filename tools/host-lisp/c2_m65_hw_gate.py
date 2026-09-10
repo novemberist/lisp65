@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 from typing import Any
+import evidence_era as ERA
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,6 +28,10 @@ RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.4-m65-hw-host-first-receipt.json"
 )
+SEALED_ERA = "972faa24"
+LIVE_RECEIPT = BUILD / "live-host-first-receipt.json"
+# Existing pilot admission, independent of growth in the common baseline.
+PILOT_OBJECT_BUDGET = 30
 PUBLIC = [
     "m65-byte-read", "m65-byte-write", "m65-bit-set", "m65-bit-clear",
     "m65-bit-test", "m65-word-read", "m65-word-write", "m65-draw-plot",
@@ -72,12 +77,46 @@ def bind(path: Path) -> dict[str, Any]:
 
 
 def atomic_json(path: Path, value: dict[str, Any]) -> None:
+    require(path.resolve() != RECEIPT.resolve(),
+            "check must not overwrite sealed v1.4 evidence")
     payload = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:
         temporary = Path(handle.name)
         handle.write(payload)
     temporary.replace(path)
+
+
+def sealed_world(value: dict[str, Any]) -> dict[str, Any]:
+    recorded = json.loads(ERA.era_blob(SEALED_ERA, RECEIPT.relative_to(ROOT).as_posix()))
+    require(value == recorded, "sealed v1.4 receipt changed outside its era")
+    expected = ERA.era_bind(SEALED_ERA, BASE_SUITE)
+    require(value['inputs']['base_suite'] == expected,
+            "sealed base-suite binding does not resolve in v1.4 era")
+    return dict(commit=SEALED_ERA, receipt=bind(RECEIPT), base_suite=expected)
+
+
+def sealed_world_selftest() -> None:
+    original = RECEIPT.read_bytes()
+    value = json.loads(original)
+    sealed_world(value)
+    bad = copy.deepcopy(value)
+    bad['inputs']['base_suite'] = bind(BASE_SUITE)
+    require(bad != value, "live/era base-suite control no longer differs")
+    for mutation in (bad, dict(value, status='not-passed')):
+        try:
+            sealed_world(mutation)
+        except GateError:
+            pass
+        else:
+            raise GateError('historical receipt mutation survived')
+    try:
+        atomic_json(RECEIPT, value)
+    except GateError:
+        pass
+    else:
+        raise GateError('check-written sealed receipt mutation survived')
+    require(RECEIPT.read_bytes() == original, 'sealed receipt changed during controls')
 
 
 def validate(
@@ -158,8 +197,28 @@ def validate(
     }
 
 
+def fixture_only_helpers() -> list[str]:
+    import bytecode_p0_stdlib as P
+    suite = P._read_suite(str(SUITE))
+    artifact = P._compile_suite(suite, include_cases=False)
+    source = P._compile_suite(suite)
+    names = set(P._suite_embed_names(source[1], source[8], source[2]))
+    return sorted(names - set(artifact[1]))
+
+
 def run_suite(suite: Path, prefix: Path, observations: Path | None = None) -> subprocess.CompletedProcess[str]:
     prefix.parent.mkdir(parents=True, exist_ok=True)
+    if suite != BASE_SUITE:
+        baseline = load(BASE_PREFIX.with_suffix(".manifest.json"))
+        floor = load(SUITE)["min_vm_dir_headroom"]
+        require(floor == 8, "pilot directory floor changed")
+        # Case-created lambda objects belong to the fixture, not the pilot.
+        count = int(baseline["objects"]) + PILOT_OBJECT_BUDGET + len(fixture_only_helpers())
+        capacity = ((count + 7) // 8) * 8 + floor
+        derived = prefix.with_suffix(".capacity-suite.json")
+        atomic_json(derived, {"extends": str(suite.resolve()),
+                             "vm_dir_max": capacity})
+        suite = derived
     command = [
         sys.executable, "tools/host-lisp/bytecode_p0_stdlib.py", "--check",
         "--emit-artifacts", str(prefix.relative_to(ROOT)),
@@ -192,7 +251,7 @@ def artifact_gate(contract: dict[str, Any]) -> dict[str, Any]:
     object_delta = int(manifest["objects"]) - int(baseline["objects"])
     require(
         code_bytes <= contract["placement"]["admission_budget_bytes"]
-        and object_delta == 30
+        and object_delta == PILOT_OBJECT_BUDGET
         and manifest["cost"]["private_inline_gate"]["functions"] == 28
         and not (set(manifest["private_inline_functions"])
                  & set(manifest["functions"]))
@@ -208,6 +267,21 @@ def artifact_gate(contract: dict[str, Any]) -> dict[str, Any]:
         and sum(row.get("io_witness", {}).get("screen_put_char", 0) for row in rows) >= 11,
         "m65-hw positive execution witness drift",
     )
+    import bytecode_p0_stdlib as P
+    capacity_suite = P._read_suite(str(PREFIX.with_suffix(".capacity-suite.json")))
+    # The runner's own emitted-object headroom check must reject the old
+    # fixture limit and an over-budget candidate. No hardware capacity claim.
+    rejected = []
+    helpers = fixture_only_helpers()
+    for label, trial, objects in (
+        ("old-472-fixture", {**capacity_suite, "vm_dir_max": load(SUITE)["vm_dir_max"]}, int(manifest["objects"]) + len(helpers)),
+        ("pilot-population-overflow", capacity_suite, capacity_suite["vm_dir_max"]),
+    ):
+        try:
+            P._validate_vm_dir_headroom_expectations(trial, range(objects))
+        except P.StdlibCheckError:
+            rejected.append(label)
+    require(len(rejected) == 2, "pilot directory capacity mutation survived")
     return {
         "status": "passed-source-and-emitted-artifact",
         "code_bytes": code_bytes,
@@ -216,6 +290,15 @@ def artifact_gate(contract: dict[str, Any]) -> dict[str, Any]:
         "objects": object_delta,
         "cases_executed_per_lane": len(rows),
         "lanes": 2,
+        "directory_fixture": {
+            "baseline_objects": baseline["objects"],
+            "admitted_pilot_objects": PILOT_OBJECT_BUDGET,
+            "fixture_only_helpers": helpers,
+            "capacity": capacity_suite["vm_dir_max"],
+            "floor": capacity_suite["min_vm_dir_headroom"],
+            "mutations_rejected": rejected,
+            "claim": "Host fixture for unchanged pilot object admission; not the product C2D capacity",
+        },
         "memory_writes_observed": sum(
             row.get("io_witness", {}).get("memory_write", 0) for row in rows
         ),
@@ -304,6 +387,8 @@ def mutations(
 
 def main() -> int:
     try:
+        sealed_world_selftest()
+        historical = sealed_world(load(RECEIPT))
         contract = load(CONTRACT)
         registers = REGISTERS.read_text(encoding="utf-8")
         source = SOURCE.read_text(encoding="utf-8")
@@ -318,7 +403,8 @@ def main() -> int:
         artifact = artifact_gate(contract)
         rejected = mutations(contract, registers, source, suite)
         receipt = {
-            "format": "lisp65-c2-v14-m65-hw-host-first-receipt-v1",
+            "format": "lisp65-c2-v14-m65-hw-live-successor-receipt-v1",
+            "historical_world": historical,
             "status": "passed",
             "source_contract": source_gate,
             "artifact": artifact,
@@ -336,7 +422,9 @@ def main() -> int:
             },
             "claim_limit": contract["claim_limit"],
         }
-        atomic_json(RECEIPT, receipt)
+        atomic_json(LIVE_RECEIPT, receipt)
+        require(bind(RECEIPT) == historical['receipt'],
+                'live check modified its historical authority')
         print(
             "c2-m65-hw: PASS public=%d cases=%dx2 mutations=%d "
             "bank2=%d/%d headroom=%d resident=+0"

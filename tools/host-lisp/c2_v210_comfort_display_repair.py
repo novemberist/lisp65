@@ -87,7 +87,10 @@ class FrameVM(DISPLAY.TargetFrameVM):
         # result-return stop is not the seam of this witness.
         if prim_id == 45 and argc:
             self.sequential(BASE.B.fixval(stack[-1]))
-        return BASE.B.P0VM._callprim(self, prim_id, argc, stack, pc=pc,
+        dispatch = (self.historical_screen_dispatch
+                    if prim_id in (11, 12) and self.historical_screen_dispatch
+                    else BASE.B.P0VM._callprim)
+        return dispatch(self, prim_id, argc, stack, pc=pc,
                                      native_base=native_base, frame_slots=frame_slots)
 
     def _invoke_primitive_name(self, name, args, native_base=0):
@@ -98,6 +101,7 @@ class FrameVM(DISPLAY.TargetFrameVM):
 
 def frame(host, entry="%repl-step") -> dict:
     vm = FrameVM(heap=host.heap, directory=host.directory,
+                 historical_screen_era=DISPLAY.DISPLAY.SCREEN_ORACLE_ERA,
                  code_names=host.code_names, max_steps=100000,
                  private_key_event_modes=True, abi_profile="dialect-v2", abi_ledger=host.ledger)
     for row in range(24):
@@ -191,6 +195,7 @@ def build() -> None:
     print("Comfort repair HOST/PACK PASS; DWX pending", flush=True)
 
 
+@ERA.in_host_source_world("520352a6")
 def check() -> None:
     value = BASE.load(RECEIPT)
     BASE.require(value["source"] == source_gate() and value["product"] == BASE.product_identity()

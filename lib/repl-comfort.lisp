@@ -1,6 +1,10 @@
 ; Heap-backed input loop for interactive work.  The native C REPL remains the
 ; boot and fail-closed fallback; this shelf only owns input assembly.
 ;
+; The editor soft-wraps: state cell 5 is the wrap lift LENGTH/COLUMNS, not a
+; horizontal viewport start, and a prefix longer than one row therefore opens
+; on as many rows as it needs, ending on the owned input row.
+;
 ; Resident row protocol (no additional Comfort tags):
 ;   row >= 0: explicit read-line row, origin column 0.
 ;   row = -1: private key-event read in %rl-render, not a screen row.
@@ -19,13 +23,13 @@
          (length (length codes))
          (head (cons 0 codes))
          (tail (last head))
-         (start (if (>= length columns)
-                    (- length (- columns 1)) 0))
-         (state (list head tail tail length length start columns row
+         (top (/ length columns))
+         (state (list head tail tail length length top columns row
                       history history-index))
          (result
           (progn
-            (%rl-screen-tail (nthcdr start codes) start 0 columns length row)
+            (%rl-screen-tail codes 0 (* columns (+ top 1)) length top
+                             columns row)
             (%read-line-loop state))))
     (progn
       (if (numberp result)

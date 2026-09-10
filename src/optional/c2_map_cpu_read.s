@@ -31,6 +31,10 @@
 	.zeropage __rc14
 	.zeropage __rc15
 
+	; Unexecuted placement prefix, priced under 101e4414. The linker asserts
+	; the local copy/remap range below stays on one page; external callers
+	; need not share that page. Never turn this into work inside the loop.
+	.space 12,0xea
 c2_map_cpu_read:
 	sta __rc8                    ; physical source, little endian
 	stx __rc9
@@ -115,6 +119,8 @@ c2_map_cpu_read:
 	and #$0f
 	ora #$40
 	sta __rc14
+	.globl __lisp65_c2_map_cpu_hot_begin
+__lisp65_c2_map_cpu_hot_begin:
 	jsr .Lc2_cpu_map_window
 .Lc2_cpu_copy:
 	; The mapper returns Y=0 and the copy loop never changes Y.  Keeping that
@@ -184,6 +190,8 @@ c2_map_cpu_read:
 	eom
 	ldz #0
 	rts
+	.globl __lisp65_c2_map_cpu_hot_end
+__lisp65_c2_map_cpu_hot_end:
 	.size c2_map_cpu_read, .-c2_map_cpu_read
 
 ; Preserve the historical runtime-overlay vector while admitting the two

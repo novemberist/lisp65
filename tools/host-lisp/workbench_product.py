@@ -36,6 +36,8 @@ RELEASES = {
              "config/c2-v200-public-build-authority.json"),
     "v210": ("v2.1.0", "tools/host-lisp/c2_v210_public_product.py",
              "config/c2-v210-public-build-authority.json"),
+    "v220": ("2.2.0", "tools/host-lisp/c2_v220_public_product.py",
+             "config/c2-v220-public-build-authority.json"),
 }
 
 

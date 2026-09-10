@@ -267,12 +267,87 @@ def composed_bank2() -> dict[str, Any]:
     return result
 
 
+def initialized_zp_load_fits(load_start: int, initialized_bytes: int,
+                             text_start: int) -> bool:
+    """Physical load ownership, independently of CPU-space ZP allocation.
+
+    Callers derive these values from their consumed map/ELF. A pre-WPLTO
+    projection must also bind its source transformation; it never replaces
+    checking the emitted seed and final load intervals.
+    """
+    return (all(type(value) is int for value in
+                (load_start, initialized_bytes, text_start))
+            and 0 <= load_start <= text_start
+            and 0 <= initialized_bytes <= text_start - load_start)
+
+
+def initialized_zp_linker_has_guard(text: str) -> bool:
+    import re
+    expression = (r'ASSERT\s*\(\s*LOADADDR\s*\(\s*\.zp\.data\s*\)\s*'
+                  r'\+\s*SIZEOF\s*\(\s*\.zp\.data\s*\)\s*<=\s*'
+                  r'ADDR\s*\(\s*\.text\s*\)\s*,')
+    return len(re.findall(expression, text)) == 1
+
+
+def initialized_zp_load_selftest() -> None:
+    # Boundary controls have no fixed product origin or capacity pin.
+    for start in (0, 8199, 32768):
+        for capacity in (0, 1, 12, 15):
+            for size in range(18):
+                assert initialized_zp_load_fits(start, size, start + capacity) == (size <= capacity)
+    assert not initialized_zp_load_fits(12, 0, 11)
+    assert not initialized_zp_load_fits(12, -1, 20)
+    assert not initialized_zp_load_fits(12, True, 20)
+    import c2_product_substitution_link as product
+    saved = product.FULL_MAP_OWNERSHIP, product.FIXED_RAW_BSS_OWNERS
+    try:
+        product.FULL_MAP_OWNERSHIP = True
+        for fixed_raw in (False, True):
+            product.FIXED_RAW_BSS_OWNERS = fixed_raw
+            script = product.full_map_platform_c_ld()
+            assert initialized_zp_linker_has_guard(script)
+            guard = product.ZP_INITIALIZER_LOAD_ASSERTION
+            assert not initialized_zp_linker_has_guard(script.replace(guard, ''))
+            assert not initialized_zp_linker_has_guard(script + guard)
+            assert not initialized_zp_linker_has_guard(script.replace(
+                'LOADADDR(.zp.data) + SIZEOF(.zp.data) <= ADDR(.text)',
+                'LOADADDR(.zp.data) + SIZEOF(.zp.data) >= ADDR(.text)'))
+    finally:
+        product.FULL_MAP_OWNERSHIP, product.FIXED_RAW_BSS_OWNERS = saved
+
+
+def zero_page_within_bounds(data, bss, noinit, convergence, fixed) -> bool:
+    return (data.address + data.bytes <= bss.address and
+            bss.address + bss.bytes <= noinit.address and
+            noinit.address + noinit.bytes <= convergence.address and
+            convergence.address == 0x87 and convergence.bytes == 2 and
+            fixed.address == 0x89 and fixed.bytes == 7)
+
+
+def zero_page_population_selftest() -> None:
+    from types import SimpleNamespace
+    def section(address, size):
+        return SimpleNamespace(address=address, bytes=size)
+    # The same live footprint split differently by LTO remains within bounds.
+    tail = (section(0x7B, 12), section(0x87, 2), section(0x89, 7))
+    for initialized, zeroed in ((12, 77), (15, 74)):
+        data, bss = section(0x22, initialized), section(0x22 + initialized, zeroed)
+        require(zero_page_within_bounds(data, bss, *tail), "legal ZP partition rejected")
+        require(not zero_page_within_bounds(section(data.address, initialized + 1), bss, *tail),
+                "initialized-ZP overlap accepted")
+        require(not zero_page_within_bounds(data, section(bss.address, zeroed + 1), *tail),
+                "zeroed-ZP overlap accepted")
+    old_accepts = bss.bytes == 77 and zero_page_within_bounds(data, bss, *tail)
+    require(not old_accepts, "historical population pin accepted successor")
+
+
 def bounded_owners(truth: ElfTruth) -> dict[str, Any]:
     text = truth.section(".text")
     facade = truth.section(".lisp65_c2_mapped_far_facade")
     bss = truth.section(".bss")
     island = truth.section(".lisp65_resident_island")
     annex = truth.section(".lisp65_resident_island_annex")
+    zp_data = truth.section(".zp.data")
     zp_bss = truth.section(".zp.bss")
     # The input `.zp.noinit` members are collected into the final `.zp`
     # output section; qualify the emitted section identity, not its mnemonic
@@ -293,11 +368,10 @@ def bounded_owners(truth: ElfTruth) -> dict[str, Any]:
             annex.address >= island.address + island.bytes and
             island_margin >= RESIDENT_ISLAND_FLOOR,
             "resident-Island owner below its five-byte floor")
-    require(zp_bss.bytes == 77 and
-            zp_bss.address + zp_bss.bytes <= zp_noinit.address and
-            zp_noinit.address + zp_noinit.bytes <= convergence_zp.address and
-            convergence_zp.address == 0x87 and convergence_zp.bytes == 2 and
-            fixed_zp.address == 0x89 and fixed_zp.bytes == 7,
+    # LTO may move live owners between initialized ZP and zeroed ZP.
+    # Their emitted intervals, not a predecessor's 77-byte population,
+    # are the bound; the final section inventory binds each exact owner.
+    require(zero_page_within_bounds(zp_data, zp_bss, zp_noinit, convergence_zp, fixed_zp),
             "ZP owners escaped their final-link intervals")
     require(noinit.address == 0xC34D and noinit_margin >= 0,
             "NOLOAD owner crossed the derived heap floor")
@@ -553,6 +627,7 @@ def build() -> None:
 
 
 def selftest() -> None:
+    zero_page_population_selftest()
     patch_card()
     value = load(RECEIPT)
     cases: dict[str, Callable[[dict[str, Any]], None]] = {

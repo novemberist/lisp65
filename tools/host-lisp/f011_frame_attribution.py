@@ -22,7 +22,7 @@ def literal(line):
     return bytes(result)
 
 
-def derive(seed=False):
+def derive(seed=False, asm_attributor=None, c_attributor=None):
     oldw=D.WPLTO if seed else D.OLD['BUILD']/'wplto'
     oldtarget=oldw/('resident-island-seed.prg' if seed else D.PRG.name)
     oldelf=Path(str(oldtarget)+'.elf')
@@ -45,10 +45,22 @@ def derive(seed=False):
     for name in sorted(names[0]):
         a,b=[d/name for d in dirs];family='byte-identical';diff=[]
         if a.read_bytes()!=b.read_bytes():
+            if name.endswith('.s.o') and asm_attributor is not None:
+                proof=asm_attributor(name,a,b)
+                assert proof['status']=='PASS'
+                rows.append({'name':name,'before':D.C.bind(a),'after':D.C.bind(b),
+                             'family':'bound assembler repair','assembly_proof':proof})
+                continue
             assert name.endswith('.c.o'),name
             left,right=A.ir(a,oldw.parent),A.ir(b,D.BUILD)
             if left==right:family='output-root / inline-asm source-location metadata'
-            elif not seed and name in ('013-io.c.o','014-main.c.o'):
+            elif c_attributor is not None and not seed and (proof := c_attributor(name,a,b,left,right)) is not None:
+                assert proof['status']=='PASS'
+                rows.append({'name':name,'before':D.C.bind(a),'after':D.C.bind(b),
+                             'family':proof['family'],'source_proof':proof,
+                             'diff':list(difflib.unified_diff(left.splitlines(),right.splitlines(),n=1))})
+                continue
+            elif not seed and c_attributor is None and name in ('013-io.c.o','014-main.c.o'):
                 family='bound diagnostic io/main transforms and seven-byte record header'
             elif name=='009-error_overlay.c.o':
                 la,lb=left.splitlines(),right.splitlines()

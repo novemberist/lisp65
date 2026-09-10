@@ -49,6 +49,7 @@ CORE_OPERATORS = {
     "gensym",
     "boundp",
     "stringp",
+    "consp",
     "string->list",
     "list->string",
     "string-length",

@@ -1,0 +1,1792 @@
+{
+  "abi_profile": "dialect-v2",
+  "artifact_role": "disk-lib",
+  "base_addr": "0x000000",
+  "blob": "config/c2-v220-public-plane/libraries/defstruct.blob.bin",
+  "blob_sha256": "0309dbc29dba1521a1fcc9ffd7a357086cc994bf0d88a4f7f70b8cd28296adcf",
+  "c_source": "build/library-delivery-r1/raw/defstruct.c",
+  "cases": [
+    "defstruct-generated-name-seam",
+    "defstruct-kind"
+  ],
+  "code_bytes": 1031,
+  "cost": {
+    "dependency_gate": {
+      "allowed_external_calls": [
+        "%setf-register",
+        "%setf-register-abort",
+        "%setf-register-commit"
+      ],
+      "checked": true,
+      "known_targets": 402
+    },
+    "dir_slots": 21,
+    "dir_slots_after_align8": 24,
+    "largest_code_object": "%defstruct-one-slot-forms",
+    "largest_code_object_bytes": 144,
+    "macro_entries": 1,
+    "max_code_object_bytes": 255,
+    "private_inline_gate": {
+      "expansions": 0,
+      "functions": 0,
+      "names": [],
+      "resident_functions": 0
+    },
+    "region_bytes": 1031,
+    "symbol_count_estimate": 39,
+    "symbol_names": [
+      "%defstruct-constructor-form",
+      "%defstruct-copy",
+      "%defstruct-copy-form",
+      "%defstruct-error-invalid-layout",
+      "%defstruct-expansion",
+      "%defstruct-generated-names",
+      "%defstruct-instance-p",
+      "%defstruct-member",
+      "%defstruct-names-free-p",
+      "%defstruct-one-slot-forms",
+      "%defstruct-predicate-form",
+      "%defstruct-read",
+      "%defstruct-register-forms",
+      "%defstruct-register-layout",
+      "%defstruct-set",
+      "%defstruct-slot-forms",
+      "%defstruct-slot-names",
+      "%defstruct-slot-symbol",
+      "%defstruct-slots-valid-p",
+      "%defstruct-symbol",
+      "%defstruct-with",
+      "%setf-register",
+      "%setf-register-abort",
+      "%setf-register-begin",
+      "%setf-register-commit",
+      "append",
+      "copy-list",
+      "defstruct",
+      "defun",
+      "length",
+      "list",
+      "new-value",
+      "nth",
+      "nthcdr",
+      "progn",
+      "quote",
+      "reverse",
+      "string-append",
+      "value"
+    ],
+    "vm_dir_budget": null
+  },
+  "d81_name": "DEFSTRUCT",
+  "directory": "build/library-delivery-r1/raw/defstruct.dir.bin",
+  "directory_bytes": 147,
+  "directory_note": "raw dir.bin uses host-heap name_obj values; native loaders should intern entries[].name and call vm_dir_add()",
+  "directory_sha256": "2b747123a2e14f21b1cb11b407ae35c63bed2f745b6bb3498c1be00a4cc36b7f",
+  "disasm": "build/library-delivery-r1/raw/defstruct.disasm.txt",
+  "disasm_sha256": "b54bd419011905ff1d26575868e457305a2eeed57448ea0dd8b029bbd046c53b",
+  "embed": {
+    "address_encoding": "vm_embed_entry.bank/off/len are derived from each object's ext_addr/length",
+    "bank_symbol": "lisp65_stdlib_bank",
+    "base_addr_macro": "LISP65_BYTECODE_STDLIB_BASE_ADDR",
+    "blob_len_symbol": "lisp65_stdlib_blob_len",
+    "blob_symbol": "lisp65_stdlib_blob",
+    "compat_blob_macro": "lisp65_bytecode_stdlib_blob",
+    "compat_table_macro": "lisp65_bytecode_stdlib_embed",
+    "count_macro": "LISP65_BYTECODE_STDLIB_EMBED_COUNT",
+    "count_symbol": "lisp65_embed_count",
+    "entry_type": "vm_embed_entry",
+    "flags_field": "vm_embed_entry.flags bit0 marks macro entries; all other bits are reserved and must be zero",
+    "name_field": "vm_embed_entry.name is a NUL-terminated runtime string; native registration interns that name",
+    "off_symbol": "lisp65_stdlib_off",
+    "table_symbol": "lisp65_embed"
+  },
+  "entries": [
+    {
+      "blob_offset": 0,
+      "code_flags": 2,
+      "ext_addr": "0x000000",
+      "flags": 0,
+      "kind": "function",
+      "length": 22,
+      "lit_count": 1,
+      "lit_first": 0,
+      "literals": [
+        {
+          "symbol": "string-append"
+        }
+      ],
+      "name": "%defstruct-symbol",
+      "name_obj": "0x02ca"
+    },
+    {
+      "blob_offset": 22,
+      "code_flags": 2,
+      "ext_addr": "0x000016",
+      "flags": 0,
+      "kind": "function",
+      "length": 28,
+      "lit_count": 1,
+      "lit_first": 1,
+      "literals": [
+        {
+          "symbol": "string-append"
+        }
+      ],
+      "name": "%defstruct-slot-symbol",
+      "name_obj": "0x02cc"
+    },
+    {
+      "blob_offset": 50,
+      "code_flags": 2,
+      "ext_addr": "0x000032",
+      "flags": 0,
+      "kind": "function",
+      "length": 28,
+      "lit_count": 1,
+      "lit_first": 2,
+      "literals": [
+        {
+          "symbol": "%defstruct-member"
+        }
+      ],
+      "name": "%defstruct-member",
+      "name_obj": "0x02ce"
+    },
+    {
+      "blob_offset": 78,
+      "code_flags": 2,
+      "ext_addr": "0x00004e",
+      "flags": 0,
+      "kind": "function",
+      "length": 44,
+      "lit_count": 2,
+      "lit_first": 3,
+      "literals": [
+        {
+          "symbol": "%defstruct-member"
+        },
+        {
+          "symbol": "%defstruct-slots-valid-p"
+        }
+      ],
+      "name": "%defstruct-slots-valid-p",
+      "name_obj": "0x02d0"
+    },
+    {
+      "blob_offset": 122,
+      "code_flags": 2,
+      "ext_addr": "0x00007a",
+      "flags": 0,
+      "kind": "function",
+      "length": 28,
+      "lit_count": 1,
+      "lit_first": 5,
+      "literals": [
+        {
+          "symbol": "%defstruct-names-free-p"
+        }
+      ],
+      "name": "%defstruct-names-free-p",
+      "name_obj": "0x02d2"
+    },
+    {
+      "blob_offset": 150,
+      "code_flags": 2,
+      "ext_addr": "0x000096",
+      "flags": 0,
+      "kind": "function",
+      "length": 56,
+      "lit_count": 5,
+      "lit_first": 6,
+      "literals": [
+        {
+          "string": "-"
+        },
+        {
+          "symbol": "%defstruct-slot-symbol"
+        },
+        {
+          "string": "-set-"
+        },
+        {
+          "string": "-with-"
+        },
+        {
+          "symbol": "%defstruct-slot-names"
+        }
+      ],
+      "name": "%defstruct-slot-names",
+      "name_obj": "0x02d4"
+    },
+    {
+      "blob_offset": 206,
+      "code_flags": 2,
+      "ext_addr": "0x0000ce",
+      "flags": 0,
+      "kind": "function",
+      "length": 58,
+      "lit_count": 8,
+      "lit_first": 11,
+      "literals": [
+        {
+          "string": "make-"
+        },
+        {
+          "string": ""
+        },
+        {
+          "symbol": "%defstruct-symbol"
+        },
+        {
+          "string": "-p"
+        },
+        {
+          "string": "copy-"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%defstruct-slot-names"
+        },
+        {
+          "symbol": "append"
+        }
+      ],
+      "name": "%defstruct-generated-names",
+      "name_obj": "0x02d6"
+    },
+    {
+      "blob_offset": 264,
+      "code_flags": 2,
+      "ext_addr": "0x000108",
+      "flags": 0,
+      "kind": "function",
+      "length": 44,
+      "lit_count": 6,
+      "lit_first": 19,
+      "literals": [
+        {
+          "symbol": "defun"
+        },
+        {
+          "string": "make-"
+        },
+        {
+          "string": ""
+        },
+        {
+          "symbol": "%defstruct-symbol"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "quote"
+        }
+      ],
+      "name": "%defstruct-constructor-form",
+      "name_obj": "0x02d8"
+    },
+    {
+      "blob_offset": 308,
+      "code_flags": 2,
+      "ext_addr": "0x000134",
+      "flags": 0,
+      "kind": "function",
+      "length": 54,
+      "lit_count": 8,
+      "lit_first": 25,
+      "literals": [
+        {
+          "symbol": "defun"
+        },
+        {
+          "string": ""
+        },
+        {
+          "string": "-p"
+        },
+        {
+          "symbol": "%defstruct-symbol"
+        },
+        {
+          "symbol": "value"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%defstruct-instance-p"
+        },
+        {
+          "symbol": "quote"
+        }
+      ],
+      "name": "%defstruct-predicate-form",
+      "name_obj": "0x02da"
+    },
+    {
+      "blob_offset": 362,
+      "code_flags": 2,
+      "ext_addr": "0x00016a",
+      "flags": 0,
+      "kind": "function",
+      "length": 46,
+      "lit_count": 7,
+      "lit_first": 33,
+      "literals": [
+        {
+          "symbol": "defun"
+        },
+        {
+          "string": "copy-"
+        },
+        {
+          "string": ""
+        },
+        {
+          "symbol": "%defstruct-symbol"
+        },
+        {
+          "symbol": "value"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%defstruct-copy"
+        }
+      ],
+      "name": "%defstruct-copy-form",
+      "name_obj": "0x02dc"
+    },
+    {
+      "blob_offset": 408,
+      "code_flags": 2,
+      "ext_addr": "0x000198",
+      "flags": 0,
+      "kind": "function",
+      "length": 18,
+      "lit_count": 0,
+      "lit_first": 40,
+      "literals": [],
+      "name": "%defstruct-instance-p",
+      "name_obj": "0x02de"
+    },
+    {
+      "blob_offset": 426,
+      "code_flags": 2,
+      "ext_addr": "0x0001aa",
+      "flags": 0,
+      "kind": "function",
+      "length": 18,
+      "lit_count": 1,
+      "lit_first": 40,
+      "literals": [
+        {
+          "symbol": "copy-list"
+        }
+      ],
+      "name": "%defstruct-copy",
+      "name_obj": "0x02e0"
+    },
+    {
+      "blob_offset": 444,
+      "code_flags": 2,
+      "ext_addr": "0x0001bc",
+      "flags": 0,
+      "kind": "function",
+      "length": 14,
+      "lit_count": 1,
+      "lit_first": 41,
+      "literals": [
+        {
+          "symbol": "nth"
+        }
+      ],
+      "name": "%defstruct-read",
+      "name_obj": "0x02e2"
+    },
+    {
+      "blob_offset": 458,
+      "code_flags": 2,
+      "ext_addr": "0x0001ca",
+      "flags": 0,
+      "kind": "function",
+      "length": 19,
+      "lit_count": 1,
+      "lit_first": 42,
+      "literals": [
+        {
+          "symbol": "nthcdr"
+        }
+      ],
+      "name": "%defstruct-set",
+      "name_obj": "0x02e4"
+    },
+    {
+      "blob_offset": 477,
+      "code_flags": 2,
+      "ext_addr": "0x0001dd",
+      "flags": 0,
+      "kind": "function",
+      "length": 72,
+      "lit_count": 2,
+      "lit_first": 43,
+      "literals": [
+        {
+          "symbol": "nth"
+        },
+        {
+          "symbol": "reverse"
+        }
+      ],
+      "name": "%defstruct-with",
+      "name_obj": "0x02e6"
+    },
+    {
+      "blob_offset": 549,
+      "code_flags": 2,
+      "ext_addr": "0x000225",
+      "flags": 0,
+      "kind": "function",
+      "length": 144,
+      "lit_count": 13,
+      "lit_first": 45,
+      "literals": [
+        {
+          "string": "-"
+        },
+        {
+          "symbol": "%defstruct-slot-symbol"
+        },
+        {
+          "string": "-set-"
+        },
+        {
+          "string": "-with-"
+        },
+        {
+          "symbol": "defun"
+        },
+        {
+          "symbol": "value"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%defstruct-read"
+        },
+        {
+          "symbol": "new-value"
+        },
+        {
+          "symbol": "%defstruct-set"
+        },
+        {
+          "symbol": "%defstruct-with"
+        },
+        {
+          "symbol": "quote"
+        },
+        {
+          "symbol": "length"
+        }
+      ],
+      "name": "%defstruct-one-slot-forms",
+      "name_obj": "0x02e8"
+    },
+    {
+      "blob_offset": 693,
+      "code_flags": 2,
+      "ext_addr": "0x0002b5",
+      "flags": 0,
+      "kind": "function",
+      "length": 42,
+      "lit_count": 3,
+      "lit_first": 58,
+      "literals": [
+        {
+          "symbol": "%defstruct-one-slot-forms"
+        },
+        {
+          "symbol": "%defstruct-slot-forms"
+        },
+        {
+          "symbol": "append"
+        }
+      ],
+      "name": "%defstruct-slot-forms",
+      "name_obj": "0x02ea"
+    },
+    {
+      "blob_offset": 735,
+      "code_flags": 2,
+      "ext_addr": "0x0002df",
+      "flags": 0,
+      "kind": "function",
+      "length": 87,
+      "lit_count": 7,
+      "lit_first": 61,
+      "literals": [
+        {
+          "string": "-"
+        },
+        {
+          "symbol": "%defstruct-slot-symbol"
+        },
+        {
+          "string": "-set-"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%defstruct-register-layout"
+        },
+        {
+          "symbol": "quote"
+        },
+        {
+          "symbol": "reverse"
+        }
+      ],
+      "name": "%defstruct-register-forms",
+      "name_obj": "0x02ec"
+    },
+    {
+      "blob_offset": 822,
+      "code_flags": 2,
+      "ext_addr": "0x000336",
+      "flags": 0,
+      "kind": "function",
+      "length": 78,
+      "lit_count": 3,
+      "lit_first": 68,
+      "literals": [
+        {
+          "symbol": "%setf-register"
+        },
+        {
+          "symbol": "%setf-register-commit"
+        },
+        {
+          "symbol": "%setf-register-abort"
+        }
+      ],
+      "name": "%defstruct-register-layout",
+      "name_obj": "0x02ee"
+    },
+    {
+      "blob_offset": 900,
+      "code_flags": 2,
+      "ext_addr": "0x000384",
+      "flags": 0,
+      "kind": "function",
+      "length": 70,
+      "lit_count": 9,
+      "lit_first": 71,
+      "literals": [
+        {
+          "symbol": "progn"
+        },
+        {
+          "symbol": "%setf-register-begin"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%defstruct-constructor-form"
+        },
+        {
+          "symbol": "%defstruct-predicate-form"
+        },
+        {
+          "symbol": "%defstruct-copy-form"
+        },
+        {
+          "symbol": "%defstruct-slot-forms"
+        },
+        {
+          "symbol": "%defstruct-register-forms"
+        },
+        {
+          "symbol": "append"
+        }
+      ],
+      "name": "%defstruct-expansion",
+      "name_obj": "0x02f0"
+    },
+    {
+      "blob_offset": 970,
+      "code_flags": 3,
+      "ext_addr": "0x0003ca",
+      "flags": 1,
+      "kind": "macro",
+      "length": 61,
+      "lit_count": 6,
+      "lit_first": 80,
+      "literals": [
+        {
+          "symbol": "%defstruct-slots-valid-p"
+        },
+        {
+          "symbol": "%defstruct-generated-names"
+        },
+        {
+          "symbol": "%defstruct-names-free-p"
+        },
+        {
+          "symbol": "%defstruct-expansion"
+        },
+        {
+          "symbol": "%defstruct-error-invalid-layout"
+        },
+        {
+          "symbol": "list"
+        }
+      ],
+      "name": "defstruct",
+      "name_obj": "0x02f2"
+    }
+  ],
+  "exports": [],
+  "external_image": {
+    "bytes": 3305,
+    "code_bytes": 1031,
+    "code_offset": 4,
+    "file_header_bytes": 4,
+    "file_header_format": "u16 blob_len, u16 md_len",
+    "format": "lisp65-bytecode-p0-disk-lib-image-v1",
+    "load_addr": "0x000000",
+    "metadata_addr": "0x000407",
+    "metadata_bytes": 2270,
+    "metadata_format": {
+      "endianness": "little",
+      "entry_flags": {
+        "bit0": "macro entry; loader registers T_MACRO(BCODE) instead of a function cell"
+      },
+      "entry_record": "u16 name_off, u8 bank, u8 flags, u16 off, u16 len",
+      "header_bytes": 38,
+      "literal_index_record": "u16 node",
+      "literal_node_record": "u8 kind, u8 reserved, i16 value, u16 first, u16 count, u16 name_off_or_0xffff",
+      "literal_patch_record": "u16 blob_offset, u16 node",
+      "magic": "L65M",
+      "string_pool": "NUL-terminated UTF-8 strings referenced by name_off",
+      "version": 1
+    },
+    "metadata_offset": 1035,
+    "metadata_sha256": "d7b99a107ae3f43f0ad40c984f5a9a6ad672397006a3d3770a76da1df7daf3d6",
+    "path": "build/library-delivery-r1/raw/defstruct.ext.bin",
+    "runtime_code_offset": 0,
+    "runtime_metadata_offset": 1031,
+    "sha256": "1581f73fcf38ba0db34f371bd1c95ade4c464d70b30a0a3b2ae14d8c42af54fd"
+  },
+  "format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+  "functions": [
+    "%defstruct-symbol",
+    "%defstruct-slot-symbol",
+    "%defstruct-member",
+    "%defstruct-slots-valid-p",
+    "%defstruct-names-free-p",
+    "%defstruct-slot-names",
+    "%defstruct-generated-names",
+    "%defstruct-constructor-form",
+    "%defstruct-predicate-form",
+    "%defstruct-copy-form",
+    "%defstruct-instance-p",
+    "%defstruct-copy",
+    "%defstruct-read",
+    "%defstruct-set",
+    "%defstruct-with",
+    "%defstruct-one-slot-forms",
+    "%defstruct-slot-forms",
+    "%defstruct-register-forms",
+    "%defstruct-register-layout",
+    "%defstruct-expansion",
+    "defstruct"
+  ],
+  "header": "build/library-delivery-r1/raw/defstruct.h",
+  "late_bound_exports": [],
+  "literal_format": {
+    "entry_fields": "lisp65_bytecode_stdlib_entries[].lit_first/lit_count map each code object's littab slots to literal_index nodes",
+    "index_table": "lisp65_bytecode_stdlib_literal_index",
+    "materialization": "boot loader walks literal_patches, materializes each node, and overwrites the raw host obj word at blob_offset before execution",
+    "node_table": "lisp65_bytecode_stdlib_literal_nodes",
+    "patch_fields": "lisp65_bytecode_stdlib_literal_patches[].blob_offset points at each raw 16-bit littab obj word; .node selects the materialized literal node",
+    "patch_table": "lisp65_bytecode_stdlib_literal_patches"
+  },
+  "literal_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85
+  ],
+  "literal_nodes": [
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "string-append",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "string-append",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-member",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-member",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slots-valid-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-names-free-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slot-symbol",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-set-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-with-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slot-names",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "make-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-symbol",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "copy-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slot-names",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "append",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "defun",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "make-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-symbol",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "quote",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "defun",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-symbol",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "value",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-instance-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "quote",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "defun",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "copy-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-symbol",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "value",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-copy",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "copy-list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "nth",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "nthcdr",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "nth",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "reverse",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slot-symbol",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-set-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-with-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "defun",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "value",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-read",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "new-value",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-set",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-with",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "quote",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "length",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-one-slot-forms",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slot-forms",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "append",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slot-symbol",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "-set-",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-register-layout",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "quote",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "reverse",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-register",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-register-commit",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-register-abort",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "progn",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%setf-register-begin",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-constructor-form",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-predicate-form",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-copy-form",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slot-forms",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-register-forms",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "append",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-slots-valid-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-generated-names",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-names-free-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-expansion",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%defstruct-error-invalid-layout",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    }
+  ],
+  "literal_note": "code-object literal-table obj words are host placeholders; native loaders must rewrite them from literal_format before running",
+  "literal_patches": [
+    {
+      "blob_offset": 7,
+      "node": 0
+    },
+    {
+      "blob_offset": 29,
+      "node": 1
+    },
+    {
+      "blob_offset": 57,
+      "node": 2
+    },
+    {
+      "blob_offset": 85,
+      "node": 3
+    },
+    {
+      "blob_offset": 87,
+      "node": 4
+    },
+    {
+      "blob_offset": 129,
+      "node": 5
+    },
+    {
+      "blob_offset": 157,
+      "node": 6
+    },
+    {
+      "blob_offset": 159,
+      "node": 7
+    },
+    {
+      "blob_offset": 161,
+      "node": 8
+    },
+    {
+      "blob_offset": 163,
+      "node": 9
+    },
+    {
+      "blob_offset": 165,
+      "node": 10
+    },
+    {
+      "blob_offset": 213,
+      "node": 11
+    },
+    {
+      "blob_offset": 215,
+      "node": 12
+    },
+    {
+      "blob_offset": 217,
+      "node": 13
+    },
+    {
+      "blob_offset": 219,
+      "node": 14
+    },
+    {
+      "blob_offset": 221,
+      "node": 15
+    },
+    {
+      "blob_offset": 223,
+      "node": 16
+    },
+    {
+      "blob_offset": 225,
+      "node": 17
+    },
+    {
+      "blob_offset": 227,
+      "node": 18
+    },
+    {
+      "blob_offset": 271,
+      "node": 19
+    },
+    {
+      "blob_offset": 273,
+      "node": 20
+    },
+    {
+      "blob_offset": 275,
+      "node": 21
+    },
+    {
+      "blob_offset": 277,
+      "node": 22
+    },
+    {
+      "blob_offset": 279,
+      "node": 23
+    },
+    {
+      "blob_offset": 281,
+      "node": 24
+    },
+    {
+      "blob_offset": 315,
+      "node": 25
+    },
+    {
+      "blob_offset": 317,
+      "node": 26
+    },
+    {
+      "blob_offset": 319,
+      "node": 27
+    },
+    {
+      "blob_offset": 321,
+      "node": 28
+    },
+    {
+      "blob_offset": 323,
+      "node": 29
+    },
+    {
+      "blob_offset": 325,
+      "node": 30
+    },
+    {
+      "blob_offset": 327,
+      "node": 31
+    },
+    {
+      "blob_offset": 329,
+      "node": 32
+    },
+    {
+      "blob_offset": 369,
+      "node": 33
+    },
+    {
+      "blob_offset": 371,
+      "node": 34
+    },
+    {
+      "blob_offset": 373,
+      "node": 35
+    },
+    {
+      "blob_offset": 375,
+      "node": 36
+    },
+    {
+      "blob_offset": 377,
+      "node": 37
+    },
+    {
+      "blob_offset": 379,
+      "node": 38
+    },
+    {
+      "blob_offset": 381,
+      "node": 39
+    },
+    {
+      "blob_offset": 433,
+      "node": 40
+    },
+    {
+      "blob_offset": 451,
+      "node": 41
+    },
+    {
+      "blob_offset": 465,
+      "node": 42
+    },
+    {
+      "blob_offset": 484,
+      "node": 43
+    },
+    {
+      "blob_offset": 486,
+      "node": 44
+    },
+    {
+      "blob_offset": 556,
+      "node": 45
+    },
+    {
+      "blob_offset": 558,
+      "node": 46
+    },
+    {
+      "blob_offset": 560,
+      "node": 47
+    },
+    {
+      "blob_offset": 562,
+      "node": 48
+    },
+    {
+      "blob_offset": 564,
+      "node": 49
+    },
+    {
+      "blob_offset": 566,
+      "node": 50
+    },
+    {
+      "blob_offset": 568,
+      "node": 51
+    },
+    {
+      "blob_offset": 570,
+      "node": 52
+    },
+    {
+      "blob_offset": 572,
+      "node": 53
+    },
+    {
+      "blob_offset": 574,
+      "node": 54
+    },
+    {
+      "blob_offset": 576,
+      "node": 55
+    },
+    {
+      "blob_offset": 578,
+      "node": 56
+    },
+    {
+      "blob_offset": 580,
+      "node": 57
+    },
+    {
+      "blob_offset": 700,
+      "node": 58
+    },
+    {
+      "blob_offset": 702,
+      "node": 59
+    },
+    {
+      "blob_offset": 704,
+      "node": 60
+    },
+    {
+      "blob_offset": 742,
+      "node": 61
+    },
+    {
+      "blob_offset": 744,
+      "node": 62
+    },
+    {
+      "blob_offset": 746,
+      "node": 63
+    },
+    {
+      "blob_offset": 748,
+      "node": 64
+    },
+    {
+      "blob_offset": 750,
+      "node": 65
+    },
+    {
+      "blob_offset": 752,
+      "node": 66
+    },
+    {
+      "blob_offset": 754,
+      "node": 67
+    },
+    {
+      "blob_offset": 829,
+      "node": 68
+    },
+    {
+      "blob_offset": 831,
+      "node": 69
+    },
+    {
+      "blob_offset": 833,
+      "node": 70
+    },
+    {
+      "blob_offset": 907,
+      "node": 71
+    },
+    {
+      "blob_offset": 909,
+      "node": 72
+    },
+    {
+      "blob_offset": 911,
+      "node": 73
+    },
+    {
+      "blob_offset": 913,
+      "node": 74
+    },
+    {
+      "blob_offset": 915,
+      "node": 75
+    },
+    {
+      "blob_offset": 917,
+      "node": 76
+    },
+    {
+      "blob_offset": 919,
+      "node": 77
+    },
+    {
+      "blob_offset": 921,
+      "node": 78
+    },
+    {
+      "blob_offset": 923,
+      "node": 79
+    },
+    {
+      "blob_offset": 977,
+      "node": 80
+    },
+    {
+      "blob_offset": 979,
+      "node": 81
+    },
+    {
+      "blob_offset": 981,
+      "node": 82
+    },
+    {
+      "blob_offset": 983,
+      "node": 83
+    },
+    {
+      "blob_offset": 985,
+      "node": 84
+    },
+    {
+      "blob_offset": 987,
+      "node": 85
+    }
+  ],
+  "name": "defstruct",
+  "objects": 21,
+  "omission_gate": {
+    "defmacro_count": 0,
+    "defmacros": [],
+    "defun_count": 0,
+    "defuns": []
+  },
+  "override_exports": [],
+  "private_inline_functions": [],
+  "provides": [
+    "defstruct"
+  ],
+  "relocation": {
+    "disk_lib_contract": "disk-lib files are [u16 blob_len][u16 md_len][blob][L65M]; entry bank/off and literal patch offsets are blob-relative; the device loader stages blob at lib_hw, trailer at lib_hw+blob_len, then supplies the final Bank-5 base",
+    "kind": "runtime-relative"
+  },
+  "requires": [
+    "place"
+  ],
+  "resident_overrides": [],
+  "resident_private_inline_functions": [],
+  "resident_suites": [
+    "p0-stdlib-require-resolver.json"
+  ],
+  "sources": [
+    "lib/defstruct.lisp"
+  ],
+  "strict_arity": true,
+  "suite": "tests/bytecode/libs/p0-defstruct-v1-lib.json",
+  "suite_format": "lisp65-bytecode-p0-disk-lib-suite-v1"
+}

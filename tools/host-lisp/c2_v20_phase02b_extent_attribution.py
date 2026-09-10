@@ -294,11 +294,10 @@ def preprocess_value(extra_first: Path | None = None) -> int:
     return int(matches[0])
 
 
-def compiler_consumption() -> dict[str, Any]:
-    source = LINK_DRIVER.read_text(encoding="utf-8")
+def include_order(source: str, public: str) -> None:
     tokens = [
         '"-I", checkout_arg(ROOT / "src")',
-        '"-I", checkout_arg(ROOT / "scripts")',
+        '"-I", checkout_arg(globals().get("BOUND_SCRIPT_INCLUDE_DIRECTORY", ROOT / "scripts"))',
         '"-I", checkout_arg(ROOT / "build/c2.2/substitution")',
         '"-I", checkout_arg(out)',
         '"-I", checkout_arg(ROOT / "build/bytecode")',
@@ -309,6 +308,27 @@ def compiler_consumption() -> dict[str, Any]:
             and positions == sorted(positions), "real compiler include order drift")
     require("EXTRA_INCLUDE_DIRS: tuple[Path, ...] = ()" in source,
             "default extra include authority drift")
+    require("P.BOUND_SCRIPT_INCLUDE_DIRECTORY=OUT/'generated-product-sources'" in public,
+            "public producer lost its bound include directory")
+
+
+def compiler_consumption() -> dict[str, Any]:
+    source = LINK_DRIVER.read_text(encoding="utf-8")
+    public = (ROOT / "tools/host-lisp/c2_v220_public_product.py").read_text()
+    include_order(source, public)
+    # Preserve the legacy default separately from the public closed projection.
+    for changed, consumer in (
+        (source.replace('globals().get("BOUND_SCRIPT_INCLUDE_DIRECTORY", ROOT / "scripts")',
+                        'ROOT / "scripts"'), public),
+        (source.replace('ROOT / "scripts"', 'ROOT / "wrong"'), public),
+        (source, public.replace("P.BOUND_SCRIPT_INCLUDE_DIRECTORY=OUT/'generated-product-sources'", "")),
+    ):
+        try:
+            include_order(changed, consumer)
+        except ExtentError:
+            pass
+        else:
+            raise ExtentError("include authority mutation survived")
     production = preprocess_value()
     owner_first = preprocess_value(CANDIDATE_HEADER.parent)
     require(production == 45939 and owner_first == 46043,

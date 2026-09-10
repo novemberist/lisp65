@@ -1,0 +1,3271 @@
+{
+  "abi_profile": "dialect-v2",
+  "artifact_role": "disk-lib",
+  "base_addr": "0x000000",
+  "blob": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.blob.bin",
+  "blob_sha256": "3556853d71d05ea760e21f839b1e32372f7e7882552fb87e7e22a2656f4877c7",
+  "c_source": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.c",
+  "cases": [
+    "m65d-status-default",
+    "m65d-terminal-media-change-outranks-postcommit-warning",
+    "m65d-save-bad-empty-name",
+    "m65d-save-bad-name-character",
+    "m65d-save-bad-backslash",
+    "m65d-save-source-type",
+    "m65d-save-empty-source",
+    "m65d-save-latched",
+    "m65d-product-media-read-only",
+    "m65d-product-header-without-boot-signature-is-user-media",
+    "m65d-arbitrary-user-media-roundtrip",
+    "m65d-different-user-media-latches-before-write",
+    "m65d-generation-change-latches-before-write",
+    "m65d-media-change-during-planning-read-terminal",
+    "m65d-planning-read-failure-with-stable-token-stays-invalid",
+    "m65d-claim-read-invalid-latches",
+    "m65d-remount-invalid-keeps-latch",
+    "m65d-remount-invalid-entry-keeps-latch",
+    "m65d-directory-recheck-invalid-is-read-status",
+    "m65d-status-tracks-last-result",
+    "m65d-remount-clears-latch",
+    "m65d-save-new-success",
+    "m65d-blank-d81-create-external",
+    "m65d-blank-d81-create-replace-external",
+    "m65d-blank-d81-multisector-create-external",
+    "m65d-blank-d81-multisector-replace-external",
+    "m65d-media-change-before-data-write-terminal",
+    "m65d-media-change-before-bam-write-terminal",
+    "m65d-media-change-before-directory-write-terminal",
+    "m65d-residual-window-data-boundary",
+    "m65d-residual-window-bam-boundary",
+    "m65d-residual-window-directory-boundary",
+    "m65d-save-new-duplicate",
+    "m65d-save-rejects-duplicate-directory-name",
+    "m65d-save-new-directory-full",
+    "m65d-save-replace-success",
+    "m65d-block-count-empty",
+    "m65d-block-count-max",
+    "m65d-buffer-payload-composition-external",
+    "m65d-buffer-payload-composition-bad-type"
+  ],
+  "code_bytes": 4083,
+  "cost": {
+    "dependency_gate": {
+      "allowed_external_calls": [],
+      "checked": true,
+      "known_targets": 325
+    },
+    "dir_slots": 39,
+    "dir_slots_after_align8": 40,
+    "largest_code_object": "%m65d-write-plan",
+    "largest_code_object_bytes": 252,
+    "macro_entries": 0,
+    "max_code_object_bytes": 255,
+    "private_inline_gate": {
+      "expansions": 23,
+      "functions": 14,
+      "names": [
+        "%m65d-latched-p",
+        "%m65d-valid-ts-p",
+        "%m65d-bam-sector",
+        "%m65d-bam-base",
+        "%m65d-track-ok-p",
+        "%m65d-name-ok-p",
+        "%m65d-find-dir",
+        "%m65d-find-new-chain",
+        "%m65d-old-plan",
+        "%m65d-run-unlatched",
+        "%m65d-remount-finish",
+        "%m65d-release-old",
+        "%m65d-dir-target-ok-p",
+        "%m65d-remount-work"
+      ],
+      "resident_functions": 0
+    },
+    "region_bytes": 4083,
+    "symbol_count_estimate": 12,
+    "symbol_names": [
+      "%load-entry-byte",
+      "%load-entry-match-p",
+      "%load-entry-used-p",
+      "%load-fold-code",
+      "%load-name-match-at",
+      "length",
+      "list",
+      "m65d-remount",
+      "m65d-save",
+      "m65d-save-new",
+      "m65d-status",
+      "reverse"
+    ],
+    "vm_dir_budget": null
+  },
+  "d81_name": "M65D",
+  "directory": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.dir.bin",
+  "directory_bytes": 273,
+  "directory_note": "raw dir.bin uses host-heap name_obj values; native loaders should intern entries[].name and call vm_dir_add()",
+  "directory_only": {
+    "anonymous_entries": 35,
+    "container_sha256": "4a32837cc87480375c982a3d39ee8f1759b124c2e563cf4d1aaafd439a8e720e",
+    "diagnostic_map": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.diagnostic-map.json",
+    "diagnostic_map_sha256": "6df091414d2fceb0cf583133bd0d73f00bc30159844efa811d3870d180313b5f",
+    "entry_ref_nodes": 84,
+    "entry_refs": [
+      {
+        "caller": "%m65d-media-detail",
+        "literal_slot": 0,
+        "node": 3,
+        "target": "%m65d-media-detail",
+        "target_ordinal": 2
+      },
+      {
+        "caller": "%m65d-media-kind",
+        "literal_slot": 2,
+        "node": 6,
+        "target": "%m65d-media-detail",
+        "target_ordinal": 2
+      },
+      {
+        "caller": "%m65d-before-write",
+        "literal_slot": 0,
+        "node": 7,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-before-write",
+        "literal_slot": 3,
+        "node": 10,
+        "target": "%m65d-media-kind",
+        "target_ordinal": 3
+      },
+      {
+        "caller": "%m65d-bit-free-p",
+        "literal_slot": 0,
+        "node": 13,
+        "target": "%m65d-mask",
+        "target_ordinal": 5
+      },
+      {
+        "caller": "%m65d-bit-free-p",
+        "literal_slot": 1,
+        "node": 14,
+        "target": "%m65d-bitmap-off",
+        "target_ordinal": 6
+      },
+      {
+        "caller": "%m65d-count-free",
+        "literal_slot": 0,
+        "node": 16,
+        "target": "%m65d-bit-free-p",
+        "target_ordinal": 7
+      },
+      {
+        "caller": "%m65d-count-free",
+        "literal_slot": 1,
+        "node": 17,
+        "target": "%m65d-count-free",
+        "target_ordinal": 9
+      },
+      {
+        "caller": "%m65d-bam-validate-tracks",
+        "literal_slot": 0,
+        "node": 18,
+        "target": "%m65d-bam-validate-tracks",
+        "target_ordinal": 10
+      },
+      {
+        "caller": "%m65d-bam-validate-tracks",
+        "literal_slot": 1,
+        "node": 19,
+        "target": "%m65d-count-free",
+        "target_ordinal": 9
+      },
+      {
+        "caller": "%m65d-name-chars-ok-p",
+        "literal_slot": 0,
+        "node": 20,
+        "target": "%m65d-name-chars-ok-p",
+        "target_ordinal": 11
+      },
+      {
+        "caller": "%m65d-dir-entries",
+        "literal_slot": 1,
+        "node": 25,
+        "target": "%m65d-entry-valid-p",
+        "target_ordinal": 12
+      },
+      {
+        "caller": "%m65d-dir-entries",
+        "literal_slot": 3,
+        "node": 27,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-dir-entries",
+        "literal_slot": 6,
+        "node": 30,
+        "target": "%m65d-dir-entries",
+        "target_ordinal": 13
+      },
+      {
+        "caller": "%m65d-dir-scan",
+        "literal_slot": 0,
+        "node": 31,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-dir-scan",
+        "literal_slot": 1,
+        "node": 32,
+        "target": "%m65d-dir-entries",
+        "target_ordinal": 13
+      },
+      {
+        "caller": "%m65d-dir-scan",
+        "literal_slot": 3,
+        "node": 34,
+        "target": "%m65d-dir-scan",
+        "target_ordinal": 14
+      },
+      {
+        "caller": "%m65d-bam-find",
+        "literal_slot": 1,
+        "node": 36,
+        "target": "%m65d-bam-find",
+        "target_ordinal": 15
+      },
+      {
+        "caller": "%m65d-bam-find",
+        "literal_slot": 2,
+        "node": 37,
+        "target": "%m65d-count-free",
+        "target_ordinal": 9
+      },
+      {
+        "caller": "%m65d-bam-find",
+        "literal_slot": 3,
+        "node": 38,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-bam-find",
+        "literal_slot": 4,
+        "node": 39,
+        "target": "%m65d-bit-free-p",
+        "target_ordinal": 7
+      },
+      {
+        "caller": "%m65d-pair-member-p",
+        "literal_slot": 0,
+        "node": 40,
+        "target": "%m65d-pair-member-p",
+        "target_ordinal": 16
+      },
+      {
+        "caller": "%m65d-read-old-chain",
+        "literal_slot": 0,
+        "node": 41,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-read-old-chain",
+        "literal_slot": 1,
+        "node": 42,
+        "target": "%m65d-pair-member-p",
+        "target_ordinal": 16
+      },
+      {
+        "caller": "%m65d-read-old-chain",
+        "literal_slot": 4,
+        "node": 45,
+        "target": "%m65d-read-old-chain",
+        "target_ordinal": 17
+      },
+      {
+        "caller": "%m65d-chain-state",
+        "literal_slot": 0,
+        "node": 46,
+        "target": "%m65d-count-free",
+        "target_ordinal": 9
+      },
+      {
+        "caller": "%m65d-chain-state",
+        "literal_slot": 1,
+        "node": 47,
+        "target": "%m65d-bit-free-p",
+        "target_ordinal": 7
+      },
+      {
+        "caller": "%m65d-chain-state",
+        "literal_slot": 2,
+        "node": 48,
+        "target": "%m65d-chain-state",
+        "target_ordinal": 18
+      },
+      {
+        "caller": "%m65d-check-old-half",
+        "literal_slot": 0,
+        "node": 49,
+        "target": "%m65d-bam-header-ok-p",
+        "target_ordinal": 8
+      },
+      {
+        "caller": "%m65d-check-old-half",
+        "literal_slot": 1,
+        "node": 50,
+        "target": "%m65d-chain-state",
+        "target_ordinal": 18
+      },
+      {
+        "caller": "%m65d-write-chain",
+        "literal_slot": 1,
+        "node": 53,
+        "target": "%m65d-before-write",
+        "target_ordinal": 4
+      },
+      {
+        "caller": "%m65d-write-chain",
+        "literal_slot": 2,
+        "node": 54,
+        "target": "%m65d-clear",
+        "target_ordinal": 20
+      },
+      {
+        "caller": "%m65d-write-chain",
+        "literal_slot": 3,
+        "node": 55,
+        "target": "%m65d-copy",
+        "target_ordinal": 21
+      },
+      {
+        "caller": "%m65d-write-chain",
+        "literal_slot": 4,
+        "node": 56,
+        "target": "%m65d-write-chain",
+        "target_ordinal": 22
+      },
+      {
+        "caller": "%m65d-bam-change",
+        "literal_slot": 0,
+        "node": 57,
+        "target": "%m65d-bitmap-off",
+        "target_ordinal": 6
+      },
+      {
+        "caller": "%m65d-bam-change",
+        "literal_slot": 1,
+        "node": 58,
+        "target": "%m65d-mask",
+        "target_ordinal": 5
+      },
+      {
+        "caller": "%m65d-bam-change",
+        "literal_slot": 2,
+        "node": 59,
+        "target": "%m65d-bam-change",
+        "target_ordinal": 23
+      },
+      {
+        "caller": "%m65d-claim-new",
+        "literal_slot": 0,
+        "node": 60,
+        "target": "%m65d-before-write",
+        "target_ordinal": 4
+      },
+      {
+        "caller": "%m65d-claim-new",
+        "literal_slot": 1,
+        "node": 61,
+        "target": "%m65d-bam-header-ok-p",
+        "target_ordinal": 8
+      },
+      {
+        "caller": "%m65d-claim-new",
+        "literal_slot": 2,
+        "node": 62,
+        "target": "%m65d-chain-state",
+        "target_ordinal": 18
+      },
+      {
+        "caller": "%m65d-claim-new",
+        "literal_slot": 3,
+        "node": 63,
+        "target": "%m65d-bam-change",
+        "target_ordinal": 23
+      },
+      {
+        "caller": "%m65d-claim-new",
+        "literal_slot": 4,
+        "node": 64,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-release-half",
+        "literal_slot": 0,
+        "node": 65,
+        "target": "%m65d-before-write",
+        "target_ordinal": 4
+      },
+      {
+        "caller": "%m65d-release-half",
+        "literal_slot": 1,
+        "node": 66,
+        "target": "%m65d-bam-header-ok-p",
+        "target_ordinal": 8
+      },
+      {
+        "caller": "%m65d-release-half",
+        "literal_slot": 2,
+        "node": 67,
+        "target": "%m65d-chain-state",
+        "target_ordinal": 18
+      },
+      {
+        "caller": "%m65d-release-half",
+        "literal_slot": 3,
+        "node": 68,
+        "target": "%m65d-bam-change",
+        "target_ordinal": 23
+      },
+      {
+        "caller": "%m65d-dir-write-name",
+        "literal_slot": 2,
+        "node": 71,
+        "target": "%m65d-dir-write-name",
+        "target_ordinal": 26
+      },
+      {
+        "caller": "%m65d-dir-fill",
+        "literal_slot": 1,
+        "node": 73,
+        "target": "%m65d-dir-write-name",
+        "target_ordinal": 26
+      },
+      {
+        "caller": "%m65d-commit-dir",
+        "literal_slot": 0,
+        "node": 74,
+        "target": "%m65d-before-write",
+        "target_ordinal": 4
+      },
+      {
+        "caller": "%m65d-commit-dir",
+        "literal_slot": 4,
+        "node": 78,
+        "target": "%m65d-dir-fill",
+        "target_ordinal": 27
+      },
+      {
+        "caller": "%m65d-commit-dir",
+        "literal_slot": 5,
+        "node": 79,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-blocks-for",
+        "literal_slot": 1,
+        "node": 81,
+        "target": "%m65d-blocks-for",
+        "target_ordinal": 29
+      },
+      {
+        "caller": "%m65d-old-validated",
+        "literal_slot": 1,
+        "node": 83,
+        "target": "%m65d-check-old-half",
+        "target_ordinal": 19
+      },
+      {
+        "caller": "%m65d-old-validated",
+        "literal_slot": 2,
+        "node": 84,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-write-plan",
+        "literal_slot": 0,
+        "node": 85,
+        "target": "%m65d-bam-header-ok-p",
+        "target_ordinal": 8
+      },
+      {
+        "caller": "%m65d-write-plan",
+        "literal_slot": 1,
+        "node": 86,
+        "target": "%m65d-bam-find",
+        "target_ordinal": 15
+      },
+      {
+        "caller": "%m65d-write-plan",
+        "literal_slot": 3,
+        "node": 88,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-write-plan",
+        "literal_slot": 4,
+        "node": 89,
+        "target": "%m65d-write-chain",
+        "target_ordinal": 22
+      },
+      {
+        "caller": "%m65d-write-plan",
+        "literal_slot": 5,
+        "node": 90,
+        "target": "%m65d-claim-new",
+        "target_ordinal": 24
+      },
+      {
+        "caller": "%m65d-write-plan",
+        "literal_slot": 6,
+        "node": 91,
+        "target": "%m65d-commit-dir",
+        "target_ordinal": 28
+      },
+      {
+        "caller": "%m65d-write-plan",
+        "literal_slot": 7,
+        "node": 92,
+        "target": "%m65d-release-half",
+        "target_ordinal": 25
+      },
+      {
+        "caller": "%m65d-run-record",
+        "literal_slot": 0,
+        "node": 93,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-run-record",
+        "literal_slot": 1,
+        "node": 94,
+        "target": "%m65d-blocks-for",
+        "target_ordinal": 29
+      },
+      {
+        "caller": "%m65d-run-record",
+        "literal_slot": 2,
+        "node": 95,
+        "target": "%m65d-read-old-chain",
+        "target_ordinal": 17
+      },
+      {
+        "caller": "%m65d-run-record",
+        "literal_slot": 3,
+        "node": 96,
+        "target": "%m65d-old-validated",
+        "target_ordinal": 30
+      },
+      {
+        "caller": "%m65d-run-record",
+        "literal_slot": 5,
+        "node": 98,
+        "target": "%m65d-write-plan",
+        "target_ordinal": 31
+      },
+      {
+        "caller": "%m65d-run-source",
+        "literal_slot": 0,
+        "node": 99,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-run-source",
+        "literal_slot": 2,
+        "node": 101,
+        "target": "%m65d-dir-scan",
+        "target_ordinal": 14
+      },
+      {
+        "caller": "%m65d-run-source",
+        "literal_slot": 3,
+        "node": 102,
+        "target": "%m65d-run-record",
+        "target_ordinal": 32
+      },
+      {
+        "caller": "%m65d-run-authorized",
+        "literal_slot": 0,
+        "node": 104,
+        "target": "%m65d-name-chars-ok-p",
+        "target_ordinal": 11
+      },
+      {
+        "caller": "%m65d-run-authorized",
+        "literal_slot": 1,
+        "node": 105,
+        "target": "%m65d-run-source",
+        "target_ordinal": 33
+      },
+      {
+        "caller": "%m65d-run-authorized",
+        "literal_slot": 2,
+        "node": 106,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-run",
+        "literal_slot": 1,
+        "node": 108,
+        "target": "%m65d-media-kind",
+        "target_ordinal": 3
+      },
+      {
+        "caller": "%m65d-run",
+        "literal_slot": 2,
+        "node": 109,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "%m65d-run",
+        "literal_slot": 4,
+        "node": 111,
+        "target": "%m65d-media-detail",
+        "target_ordinal": 2
+      },
+      {
+        "caller": "%m65d-run",
+        "literal_slot": 5,
+        "node": 112,
+        "target": "%m65d-run-authorized",
+        "target_ordinal": 34
+      },
+      {
+        "caller": "m65d-save",
+        "literal_slot": 0,
+        "node": 113,
+        "target": "%m65d-run",
+        "target_ordinal": 35
+      },
+      {
+        "caller": "m65d-save-new",
+        "literal_slot": 0,
+        "node": 114,
+        "target": "%m65d-run",
+        "target_ordinal": 35
+      },
+      {
+        "caller": "m65d-save-new",
+        "literal_slot": 1,
+        "node": 115,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      },
+      {
+        "caller": "m65d-remount",
+        "literal_slot": 0,
+        "node": 116,
+        "target": "%m65d-media-kind",
+        "target_ordinal": 3
+      },
+      {
+        "caller": "m65d-remount",
+        "literal_slot": 1,
+        "node": 117,
+        "target": "%m65d-bam-header-ok-p",
+        "target_ordinal": 8
+      },
+      {
+        "caller": "m65d-remount",
+        "literal_slot": 2,
+        "node": 118,
+        "target": "%m65d-bam-validate-tracks",
+        "target_ordinal": 10
+      },
+      {
+        "caller": "m65d-remount",
+        "literal_slot": 4,
+        "node": 120,
+        "target": "%m65d-dir-scan",
+        "target_ordinal": 14
+      },
+      {
+        "caller": "m65d-remount",
+        "literal_slot": 6,
+        "node": 122,
+        "target": "%m65d-set",
+        "target_ordinal": 0
+      }
+    ],
+    "format_version": 2
+  },
+  "directory_sha256": "d2234038b96ea7f428a363ad2de1b3ec3da9188e5adecec0eccc6cc997898642",
+  "disasm": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.disasm.txt",
+  "disasm_sha256": "7731682c57a7a8a4d8f651c1f056785ff4a21065a53df279b6f89eeedf26ae05",
+  "embed": {
+    "address_encoding": "vm_embed_entry.bank/off/len are derived from each object's ext_addr/length",
+    "bank_symbol": "lisp65_stdlib_bank",
+    "base_addr_macro": "LISP65_BYTECODE_STDLIB_BASE_ADDR",
+    "blob_len_symbol": "lisp65_stdlib_blob_len",
+    "blob_symbol": "lisp65_stdlib_blob",
+    "compat_blob_macro": "lisp65_bytecode_stdlib_blob",
+    "compat_table_macro": "lisp65_bytecode_stdlib_embed",
+    "count_macro": "LISP65_BYTECODE_STDLIB_EMBED_COUNT",
+    "count_symbol": "lisp65_embed_count",
+    "entry_type": "vm_embed_entry",
+    "flags_field": "vm_embed_entry.flags bit0 marks macro entries; all other bits are reserved and must be zero",
+    "name_field": "vm_embed_entry.name is a NUL-terminated runtime string; native registration interns that name",
+    "off_symbol": "lisp65_stdlib_off",
+    "table_symbol": "lisp65_embed"
+  },
+  "entries": [
+    {
+      "anonymous": true,
+      "blob_offset": 0,
+      "code_flags": 2,
+      "ext_addr": "0x000000",
+      "flags": 0,
+      "kind": "function",
+      "length": 46,
+      "lit_count": 2,
+      "lit_first": 0,
+      "literals": [
+        {
+          "symbol": "m65d-status"
+        },
+        {
+          "symbol": "m65d-remount"
+        }
+      ],
+      "name": "%m65d-set",
+      "name_obj": "0x0212"
+    },
+    {
+      "anonymous": false,
+      "blob_offset": 46,
+      "code_flags": 2,
+      "ext_addr": "0x00002e",
+      "flags": 0,
+      "kind": "function",
+      "length": 25,
+      "lit_count": 1,
+      "lit_first": 2,
+      "literals": [
+        {
+          "symbol": "m65d-status"
+        }
+      ],
+      "name": "m65d-status",
+      "name_obj": "0x0214"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 71,
+      "code_flags": 2,
+      "ext_addr": "0x000047",
+      "flags": 0,
+      "kind": "function",
+      "length": 84,
+      "lit_count": 1,
+      "lit_first": 3,
+      "literals": [
+        {
+          "symbol": "%m65d-media-detail"
+        }
+      ],
+      "name": "%m65d-media-detail",
+      "name_obj": "0x0216"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 155,
+      "code_flags": 2,
+      "ext_addr": "0x00009b",
+      "flags": 0,
+      "kind": "function",
+      "length": 121,
+      "lit_count": 3,
+      "lit_first": 4,
+      "literals": [
+        {
+          "string": "L65SYS"
+        },
+        {
+          "symbol": "%load-name-match-at"
+        },
+        {
+          "symbol": "%m65d-media-detail"
+        }
+      ],
+      "name": "%m65d-media-kind",
+      "name_obj": "0x0218"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 276,
+      "code_flags": 2,
+      "ext_addr": "0x000114",
+      "flags": 0,
+      "kind": "function",
+      "length": 155,
+      "lit_count": 5,
+      "lit_first": 7,
+      "literals": [
+        {
+          "symbol": "%m65d-set"
+        },
+        {
+          "symbol": "m65d-save"
+        },
+        {
+          "symbol": "m65d-remount"
+        },
+        {
+          "symbol": "%m65d-media-kind"
+        },
+        {
+          "symbol": "%load-name-match-at"
+        }
+      ],
+      "name": "%m65d-before-write",
+      "name_obj": "0x021a"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 431,
+      "code_flags": 2,
+      "ext_addr": "0x0001af",
+      "flags": 0,
+      "kind": "function",
+      "length": 88,
+      "lit_count": 1,
+      "lit_first": 12,
+      "literals": [
+        128
+      ],
+      "name": "%m65d-mask",
+      "name_obj": "0x021c"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 519,
+      "code_flags": 2,
+      "ext_addr": "0x000207",
+      "flags": 0,
+      "kind": "function",
+      "length": 82,
+      "lit_count": 0,
+      "lit_first": 13,
+      "literals": [],
+      "name": "%m65d-bitmap-off",
+      "name_obj": "0x021e"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 601,
+      "code_flags": 2,
+      "ext_addr": "0x000259",
+      "flags": 0,
+      "kind": "function",
+      "length": 36,
+      "lit_count": 2,
+      "lit_first": 13,
+      "literals": [
+        {
+          "symbol": "%m65d-mask"
+        },
+        {
+          "symbol": "%m65d-bitmap-off"
+        }
+      ],
+      "name": "%m65d-bit-free-p",
+      "name_obj": "0x0220"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 637,
+      "code_flags": 2,
+      "ext_addr": "0x00027d",
+      "flags": 0,
+      "kind": "function",
+      "length": 57,
+      "lit_count": 1,
+      "lit_first": 15,
+      "literals": [
+        255
+      ],
+      "name": "%m65d-bam-header-ok-p",
+      "name_obj": "0x0222"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 694,
+      "code_flags": 2,
+      "ext_addr": "0x0002b6",
+      "flags": 0,
+      "kind": "function",
+      "length": 41,
+      "lit_count": 2,
+      "lit_first": 16,
+      "literals": [
+        {
+          "symbol": "%m65d-bit-free-p"
+        },
+        {
+          "symbol": "%m65d-count-free"
+        }
+      ],
+      "name": "%m65d-count-free",
+      "name_obj": "0x0224"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 735,
+      "code_flags": 2,
+      "ext_addr": "0x0002df",
+      "flags": 0,
+      "kind": "function",
+      "length": 87,
+      "lit_count": 2,
+      "lit_first": 18,
+      "literals": [
+        {
+          "symbol": "%m65d-bam-validate-tracks"
+        },
+        {
+          "symbol": "%m65d-count-free"
+        }
+      ],
+      "name": "%m65d-bam-validate-tracks",
+      "name_obj": "0x0226"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 822,
+      "code_flags": 2,
+      "ext_addr": "0x000336",
+      "flags": 0,
+      "kind": "function",
+      "length": 104,
+      "lit_count": 1,
+      "lit_first": 20,
+      "literals": [
+        {
+          "symbol": "%m65d-name-chars-ok-p"
+        }
+      ],
+      "name": "%m65d-name-chars-ok-p",
+      "name_obj": "0x0228"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 926,
+      "code_flags": 2,
+      "ext_addr": "0x00039e",
+      "flags": 0,
+      "kind": "function",
+      "length": 149,
+      "lit_count": 3,
+      "lit_first": 21,
+      "literals": [
+        {
+          "symbol": "%load-entry-byte"
+        },
+        256,
+        3160
+      ],
+      "name": "%m65d-entry-valid-p",
+      "name_obj": "0x022a"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 1075,
+      "code_flags": 2,
+      "ext_addr": "0x000433",
+      "flags": 0,
+      "kind": "function",
+      "length": 178,
+      "lit_count": 7,
+      "lit_first": 24,
+      "literals": [
+        {
+          "symbol": "%load-entry-used-p"
+        },
+        {
+          "symbol": "%m65d-entry-valid-p"
+        },
+        {
+          "symbol": "%load-entry-match-p"
+        },
+        {
+          "symbol": "%m65d-set"
+        },
+        {
+          "symbol": "%load-entry-byte"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%m65d-dir-entries"
+        }
+      ],
+      "name": "%m65d-dir-entries",
+      "name_obj": "0x022c"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 1253,
+      "code_flags": 2,
+      "ext_addr": "0x0004e5",
+      "flags": 0,
+      "kind": "function",
+      "length": 169,
+      "lit_count": 4,
+      "lit_first": 31,
+      "literals": [
+        {
+          "symbol": "%m65d-set"
+        },
+        {
+          "symbol": "%m65d-dir-entries"
+        },
+        {
+          "symbol": "m65d-status"
+        },
+        {
+          "symbol": "%m65d-dir-scan"
+        }
+      ],
+      "name": "%m65d-dir-scan",
+      "name_obj": "0x022e"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 1422,
+      "code_flags": 2,
+      "ext_addr": "0x00058e",
+      "flags": 0,
+      "kind": "function",
+      "length": 181,
+      "lit_count": 5,
+      "lit_first": 35,
+      "literals": [
+        {
+          "symbol": "reverse"
+        },
+        {
+          "symbol": "%m65d-bam-find"
+        },
+        {
+          "symbol": "%m65d-count-free"
+        },
+        {
+          "symbol": "%m65d-set"
+        },
+        {
+          "symbol": "%m65d-bit-free-p"
+        }
+      ],
+      "name": "%m65d-bam-find",
+      "name_obj": "0x0230"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 1603,
+      "code_flags": 2,
+      "ext_addr": "0x000643",
+      "flags": 0,
+      "kind": "function",
+      "length": 44,
+      "lit_count": 1,
+      "lit_first": 40,
+      "literals": [
+        {
+          "symbol": "%m65d-pair-member-p"
+        }
+      ],
+      "name": "%m65d-pair-member-p",
+      "name_obj": "0x0232"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 1647,
+      "code_flags": 2,
+      "ext_addr": "0x00066f",
+      "flags": 0,
+      "kind": "function",
+      "length": 201,
+      "lit_count": 5,
+      "lit_first": 41,
+      "literals": [
+        {
+          "symbol": "%m65d-set"
+        },
+        {
+          "symbol": "%m65d-pair-member-p"
+        },
+        255,
+        {
+          "symbol": "reverse"
+        },
+        {
+          "symbol": "%m65d-read-old-chain"
+        }
+      ],
+      "name": "%m65d-read-old-chain",
+      "name_obj": "0x0234"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 1848,
+      "code_flags": 2,
+      "ext_addr": "0x000738",
+      "flags": 0,
+      "kind": "function",
+      "length": 129,
+      "lit_count": 3,
+      "lit_first": 46,
+      "literals": [
+        {
+          "symbol": "%m65d-count-free"
+        },
+        {
+          "symbol": "%m65d-bit-free-p"
+        },
+        {
+          "symbol": "%m65d-chain-state"
+        }
+      ],
+      "name": "%m65d-chain-state",
+      "name_obj": "0x0236"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 1977,
+      "code_flags": 2,
+      "ext_addr": "0x0007b9",
+      "flags": 0,
+      "kind": "function",
+      "length": 43,
+      "lit_count": 2,
+      "lit_first": 49,
+      "literals": [
+        {
+          "symbol": "%m65d-bam-header-ok-p"
+        },
+        {
+          "symbol": "%m65d-chain-state"
+        }
+      ],
+      "name": "%m65d-check-old-half",
+      "name_obj": "0x0238"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2020,
+      "code_flags": 2,
+      "ext_addr": "0x0007e4",
+      "flags": 0,
+      "kind": "function",
+      "length": 47,
+      "lit_count": 1,
+      "lit_first": 51,
+      "literals": [
+        256
+      ],
+      "name": "%m65d-clear",
+      "name_obj": "0x023a"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2067,
+      "code_flags": 2,
+      "ext_addr": "0x000813",
+      "flags": 0,
+      "kind": "function",
+      "length": 66,
+      "lit_count": 0,
+      "lit_first": 52,
+      "literals": [],
+      "name": "%m65d-copy",
+      "name_obj": "0x023c"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2133,
+      "code_flags": 2,
+      "ext_addr": "0x000855",
+      "flags": 0,
+      "kind": "function",
+      "length": 139,
+      "lit_count": 5,
+      "lit_first": 52,
+      "literals": [
+        254,
+        {
+          "symbol": "%m65d-before-write"
+        },
+        {
+          "symbol": "%m65d-clear"
+        },
+        {
+          "symbol": "%m65d-copy"
+        },
+        {
+          "symbol": "%m65d-write-chain"
+        }
+      ],
+      "name": "%m65d-write-chain",
+      "name_obj": "0x023e"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2272,
+      "code_flags": 2,
+      "ext_addr": "0x0008e0",
+      "flags": 0,
+      "kind": "function",
+      "length": 138,
+      "lit_count": 3,
+      "lit_first": 57,
+      "literals": [
+        {
+          "symbol": "%m65d-bitmap-off"
+        },
+        {
+          "symbol": "%m65d-mask"
+        },
+        {
+          "symbol": "%m65d-bam-change"
+        }
+      ],
+      "name": "%m65d-bam-change",
+      "name_obj": "0x0240"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2410,
+      "code_flags": 2,
+      "ext_addr": "0x00096a",
+      "flags": 0,
+      "kind": "function",
+      "length": 120,
+      "lit_count": 5,
+      "lit_first": 60,
+      "literals": [
+        {
+          "symbol": "%m65d-before-write"
+        },
+        {
+          "symbol": "%m65d-bam-header-ok-p"
+        },
+        {
+          "symbol": "%m65d-chain-state"
+        },
+        {
+          "symbol": "%m65d-bam-change"
+        },
+        {
+          "symbol": "%m65d-set"
+        }
+      ],
+      "name": "%m65d-claim-new",
+      "name_obj": "0x0242"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2530,
+      "code_flags": 2,
+      "ext_addr": "0x0009e2",
+      "flags": 0,
+      "kind": "function",
+      "length": 82,
+      "lit_count": 4,
+      "lit_first": 65,
+      "literals": [
+        {
+          "symbol": "%m65d-before-write"
+        },
+        {
+          "symbol": "%m65d-bam-header-ok-p"
+        },
+        {
+          "symbol": "%m65d-chain-state"
+        },
+        {
+          "symbol": "%m65d-bam-change"
+        }
+      ],
+      "name": "%m65d-release-half",
+      "name_obj": "0x0244"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2612,
+      "code_flags": 2,
+      "ext_addr": "0x000a34",
+      "flags": 0,
+      "kind": "function",
+      "length": 63,
+      "lit_count": 3,
+      "lit_first": 69,
+      "literals": [
+        {
+          "symbol": "%load-fold-code"
+        },
+        160,
+        {
+          "symbol": "%m65d-dir-write-name"
+        }
+      ],
+      "name": "%m65d-dir-write-name",
+      "name_obj": "0x0246"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2675,
+      "code_flags": 2,
+      "ext_addr": "0x000a73",
+      "flags": 0,
+      "kind": "function",
+      "length": 115,
+      "lit_count": 2,
+      "lit_first": 72,
+      "literals": [
+        129,
+        {
+          "symbol": "%m65d-dir-write-name"
+        }
+      ],
+      "name": "%m65d-dir-fill",
+      "name_obj": "0x0248"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2790,
+      "code_flags": 2,
+      "ext_addr": "0x000ae6",
+      "flags": 0,
+      "kind": "function",
+      "length": 195,
+      "lit_count": 6,
+      "lit_first": 74,
+      "literals": [
+        {
+          "symbol": "%m65d-before-write"
+        },
+        {
+          "symbol": "%load-entry-used-p"
+        },
+        {
+          "symbol": "%load-entry-match-p"
+        },
+        {
+          "symbol": "%load-entry-byte"
+        },
+        {
+          "symbol": "%m65d-dir-fill"
+        },
+        {
+          "symbol": "%m65d-set"
+        }
+      ],
+      "name": "%m65d-commit-dir",
+      "name_obj": "0x024a"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 2985,
+      "code_flags": 2,
+      "ext_addr": "0x000ba9",
+      "flags": 0,
+      "kind": "function",
+      "length": 34,
+      "lit_count": 2,
+      "lit_first": 80,
+      "literals": [
+        254,
+        {
+          "symbol": "%m65d-blocks-for"
+        }
+      ],
+      "name": "%m65d-blocks-for",
+      "name_obj": "0x024c"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 3019,
+      "code_flags": 2,
+      "ext_addr": "0x000bcb",
+      "flags": 0,
+      "kind": "function",
+      "length": 68,
+      "lit_count": 3,
+      "lit_first": 82,
+      "literals": [
+        {
+          "symbol": "length"
+        },
+        {
+          "symbol": "%m65d-check-old-half"
+        },
+        {
+          "symbol": "%m65d-set"
+        }
+      ],
+      "name": "%m65d-old-validated",
+      "name_obj": "0x024e"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 3087,
+      "code_flags": 2,
+      "ext_addr": "0x000c0f",
+      "flags": 0,
+      "kind": "function",
+      "length": 252,
+      "lit_count": 8,
+      "lit_first": 85,
+      "literals": [
+        {
+          "symbol": "%m65d-bam-header-ok-p"
+        },
+        {
+          "symbol": "%m65d-bam-find"
+        },
+        {
+          "symbol": "m65d-status"
+        },
+        {
+          "symbol": "%m65d-set"
+        },
+        {
+          "symbol": "%m65d-write-chain"
+        },
+        {
+          "symbol": "%m65d-claim-new"
+        },
+        {
+          "symbol": "%m65d-commit-dir"
+        },
+        {
+          "symbol": "%m65d-release-half"
+        }
+      ],
+      "name": "%m65d-write-plan",
+      "name_obj": "0x0250"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 3339,
+      "code_flags": 2,
+      "ext_addr": "0x000d0b",
+      "flags": 0,
+      "kind": "function",
+      "length": 186,
+      "lit_count": 6,
+      "lit_first": 93,
+      "literals": [
+        {
+          "symbol": "%m65d-set"
+        },
+        {
+          "symbol": "%m65d-blocks-for"
+        },
+        {
+          "symbol": "%m65d-read-old-chain"
+        },
+        {
+          "symbol": "%m65d-old-validated"
+        },
+        {
+          "symbol": "m65d-status"
+        },
+        {
+          "symbol": "%m65d-write-plan"
+        }
+      ],
+      "name": "%m65d-run-record",
+      "name_obj": "0x0252"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 3525,
+      "code_flags": 2,
+      "ext_addr": "0x000dc5",
+      "flags": 0,
+      "kind": "function",
+      "length": 114,
+      "lit_count": 5,
+      "lit_first": 99,
+      "literals": [
+        {
+          "symbol": "%m65d-set"
+        },
+        8192,
+        {
+          "symbol": "%m65d-dir-scan"
+        },
+        {
+          "symbol": "%m65d-run-record"
+        },
+        {
+          "symbol": "m65d-status"
+        }
+      ],
+      "name": "%m65d-run-source",
+      "name_obj": "0x0254"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 3639,
+      "code_flags": 2,
+      "ext_addr": "0x000e37",
+      "flags": 0,
+      "kind": "function",
+      "length": 106,
+      "lit_count": 3,
+      "lit_first": 104,
+      "literals": [
+        {
+          "symbol": "%m65d-name-chars-ok-p"
+        },
+        {
+          "symbol": "%m65d-run-source"
+        },
+        {
+          "symbol": "%m65d-set"
+        }
+      ],
+      "name": "%m65d-run-authorized",
+      "name_obj": "0x0256"
+    },
+    {
+      "anonymous": true,
+      "blob_offset": 3745,
+      "code_flags": 2,
+      "ext_addr": "0x000ea1",
+      "flags": 0,
+      "kind": "function",
+      "length": 146,
+      "lit_count": 6,
+      "lit_first": 107,
+      "literals": [
+        {
+          "symbol": "m65d-remount"
+        },
+        {
+          "symbol": "%m65d-media-kind"
+        },
+        {
+          "symbol": "%m65d-set"
+        },
+        {
+          "symbol": "m65d-save"
+        },
+        {
+          "symbol": "%m65d-media-detail"
+        },
+        {
+          "symbol": "%m65d-run-authorized"
+        }
+      ],
+      "name": "%m65d-run",
+      "name_obj": "0x0258"
+    },
+    {
+      "anonymous": false,
+      "blob_offset": 3891,
+      "code_flags": 2,
+      "ext_addr": "0x000f33",
+      "flags": 0,
+      "kind": "function",
+      "length": 15,
+      "lit_count": 1,
+      "lit_first": 113,
+      "literals": [
+        {
+          "symbol": "%m65d-run"
+        }
+      ],
+      "name": "m65d-save",
+      "name_obj": "0x025a"
+    },
+    {
+      "anonymous": false,
+      "blob_offset": 3906,
+      "code_flags": 2,
+      "ext_addr": "0x000f42",
+      "flags": 0,
+      "kind": "function",
+      "length": 29,
+      "lit_count": 2,
+      "lit_first": 114,
+      "literals": [
+        {
+          "symbol": "%m65d-run"
+        },
+        {
+          "symbol": "%m65d-set"
+        }
+      ],
+      "name": "m65d-save-new",
+      "name_obj": "0x025c"
+    },
+    {
+      "anonymous": false,
+      "blob_offset": 3935,
+      "code_flags": 2,
+      "ext_addr": "0x000f5f",
+      "flags": 0,
+      "kind": "function",
+      "length": 148,
+      "lit_count": 7,
+      "lit_first": 116,
+      "literals": [
+        {
+          "symbol": "%m65d-media-kind"
+        },
+        {
+          "symbol": "%m65d-bam-header-ok-p"
+        },
+        {
+          "symbol": "%m65d-bam-validate-tracks"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%m65d-dir-scan"
+        },
+        {
+          "symbol": "m65d-remount"
+        },
+        {
+          "symbol": "%m65d-set"
+        }
+      ],
+      "name": "m65d-remount",
+      "name_obj": "0x025e"
+    }
+  ],
+  "exports": [],
+  "external_image": {
+    "bytes": 6573,
+    "code_bytes": 4083,
+    "code_offset": 4,
+    "file_header_bytes": 4,
+    "file_header_format": "u16 blob_len, u16 md_len",
+    "format": "lisp65-bytecode-p0-disk-lib-image-v1",
+    "load_addr": "0x000000",
+    "metadata_addr": "0x000ff3",
+    "metadata_bytes": 2486,
+    "metadata_format": {
+      "endianness": "little",
+      "entry_flags": {
+        "bit0": "macro entry; loader registers T_MACRO(BCODE) instead of a function cell"
+      },
+      "entry_record": "u16 name_off, u8 bank, u8 flags, u16 off, u16 len",
+      "header_bytes": 38,
+      "literal_index_record": "u16 node",
+      "literal_node_record": "u8 kind, u8 reserved, i16 value, u16 first, u16 count, u16 name_off_or_0xffff",
+      "literal_patch_record": "u16 blob_offset, u16 node",
+      "magic": "L65M",
+      "string_pool": "NUL-terminated UTF-8 strings referenced by name_off",
+      "version": 2
+    },
+    "metadata_offset": 4087,
+    "metadata_sha256": "c3ddb2c9d821fe4949f2efbbe7557646a264443a21c478816392e7fe43b43e4d",
+    "path": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.ext.bin",
+    "runtime_code_offset": 0,
+    "runtime_metadata_offset": 4083,
+    "sha256": "4a32837cc87480375c982a3d39ee8f1759b124c2e563cf4d1aaafd439a8e720e"
+  },
+  "format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+  "functions": [
+    "%m65d-set",
+    "m65d-status",
+    "%m65d-media-detail",
+    "%m65d-media-kind",
+    "%m65d-before-write",
+    "%m65d-mask",
+    "%m65d-bitmap-off",
+    "%m65d-bit-free-p",
+    "%m65d-bam-header-ok-p",
+    "%m65d-count-free",
+    "%m65d-bam-validate-tracks",
+    "%m65d-name-chars-ok-p",
+    "%m65d-entry-valid-p",
+    "%m65d-dir-entries",
+    "%m65d-dir-scan",
+    "%m65d-bam-find",
+    "%m65d-pair-member-p",
+    "%m65d-read-old-chain",
+    "%m65d-chain-state",
+    "%m65d-check-old-half",
+    "%m65d-clear",
+    "%m65d-copy",
+    "%m65d-write-chain",
+    "%m65d-bam-change",
+    "%m65d-claim-new",
+    "%m65d-release-half",
+    "%m65d-dir-write-name",
+    "%m65d-dir-fill",
+    "%m65d-commit-dir",
+    "%m65d-blocks-for",
+    "%m65d-old-validated",
+    "%m65d-write-plan",
+    "%m65d-run-record",
+    "%m65d-run-source",
+    "%m65d-run-authorized",
+    "%m65d-run",
+    "m65d-save",
+    "m65d-save-new",
+    "m65d-remount"
+  ],
+  "header": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.h",
+  "late_bound_exports": [],
+  "literal_format": {
+    "entry_fields": "lisp65_bytecode_stdlib_entries[].lit_first/lit_count map each code object's littab slots to literal_index nodes",
+    "index_table": "lisp65_bytecode_stdlib_literal_index",
+    "materialization": "boot loader walks literal_patches, materializes each node, and overwrites the raw host obj word at blob_offset before execution",
+    "node_table": "lisp65_bytecode_stdlib_literal_nodes",
+    "patch_fields": "lisp65_bytecode_stdlib_literal_patches[].blob_offset points at each raw 16-bit littab obj word; .node selects the materialized literal node",
+    "patch_table": "lisp65_bytecode_stdlib_literal_patches"
+  },
+  "literal_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122
+  ],
+  "literal_nodes": [
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-status",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-status",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 2,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "L65SYS",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-name-match-at",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 2,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-save",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 3,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-name-match-at",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 128
+    },
+    {
+      "count": 0,
+      "first": 5,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 6,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 255
+    },
+    {
+      "count": 0,
+      "first": 7,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 9,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 10,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 9,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 11,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-entry-byte",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 256
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 3160
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-entry-used-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 12,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-entry-match-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-entry-byte",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 13,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 13,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-status",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 14,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "reverse",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 15,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 9,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 7,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 16,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 16,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 255
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "reverse",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 17,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 9,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 7,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 18,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 8,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 18,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 256
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 254
+    },
+    {
+      "count": 0,
+      "first": 4,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 20,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 21,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 22,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 6,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 5,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 23,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 4,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 8,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 18,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 23,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 4,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 8,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 18,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 23,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-fold-code",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 160
+    },
+    {
+      "count": 0,
+      "first": 26,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 129
+    },
+    {
+      "count": 0,
+      "first": 26,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 4,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-entry-used-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-entry-match-p",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%load-entry-byte",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 27,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 254
+    },
+    {
+      "count": 0,
+      "first": 29,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "length",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 19,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 8,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 15,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-status",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 22,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 24,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 28,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 25,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 29,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 17,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 30,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-status",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 31,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 8192
+    },
+    {
+      "count": 0,
+      "first": 14,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 32,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-status",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 11,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 33,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 3,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-save",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 2,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 34,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 35,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 35,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 3,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 8,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 10,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 14,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "m65d-remount",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 8,
+      "name": null,
+      "value": 0
+    }
+  ],
+  "literal_note": "code-object literal-table obj words are host placeholders; native loaders must rewrite them from literal_format before running",
+  "literal_patches": [
+    {
+      "blob_offset": 7,
+      "node": 0
+    },
+    {
+      "blob_offset": 9,
+      "node": 1
+    },
+    {
+      "blob_offset": 53,
+      "node": 2
+    },
+    {
+      "blob_offset": 78,
+      "node": 3
+    },
+    {
+      "blob_offset": 162,
+      "node": 4
+    },
+    {
+      "blob_offset": 164,
+      "node": 5
+    },
+    {
+      "blob_offset": 166,
+      "node": 6
+    },
+    {
+      "blob_offset": 283,
+      "node": 7
+    },
+    {
+      "blob_offset": 285,
+      "node": 8
+    },
+    {
+      "blob_offset": 287,
+      "node": 9
+    },
+    {
+      "blob_offset": 289,
+      "node": 10
+    },
+    {
+      "blob_offset": 291,
+      "node": 11
+    },
+    {
+      "blob_offset": 438,
+      "node": 12
+    },
+    {
+      "blob_offset": 608,
+      "node": 13
+    },
+    {
+      "blob_offset": 610,
+      "node": 14
+    },
+    {
+      "blob_offset": 644,
+      "node": 15
+    },
+    {
+      "blob_offset": 701,
+      "node": 16
+    },
+    {
+      "blob_offset": 703,
+      "node": 17
+    },
+    {
+      "blob_offset": 742,
+      "node": 18
+    },
+    {
+      "blob_offset": 744,
+      "node": 19
+    },
+    {
+      "blob_offset": 829,
+      "node": 20
+    },
+    {
+      "blob_offset": 933,
+      "node": 21
+    },
+    {
+      "blob_offset": 935,
+      "node": 22
+    },
+    {
+      "blob_offset": 937,
+      "node": 23
+    },
+    {
+      "blob_offset": 1082,
+      "node": 24
+    },
+    {
+      "blob_offset": 1084,
+      "node": 25
+    },
+    {
+      "blob_offset": 1086,
+      "node": 26
+    },
+    {
+      "blob_offset": 1088,
+      "node": 27
+    },
+    {
+      "blob_offset": 1090,
+      "node": 28
+    },
+    {
+      "blob_offset": 1092,
+      "node": 29
+    },
+    {
+      "blob_offset": 1094,
+      "node": 30
+    },
+    {
+      "blob_offset": 1260,
+      "node": 31
+    },
+    {
+      "blob_offset": 1262,
+      "node": 32
+    },
+    {
+      "blob_offset": 1264,
+      "node": 33
+    },
+    {
+      "blob_offset": 1266,
+      "node": 34
+    },
+    {
+      "blob_offset": 1429,
+      "node": 35
+    },
+    {
+      "blob_offset": 1431,
+      "node": 36
+    },
+    {
+      "blob_offset": 1433,
+      "node": 37
+    },
+    {
+      "blob_offset": 1435,
+      "node": 38
+    },
+    {
+      "blob_offset": 1437,
+      "node": 39
+    },
+    {
+      "blob_offset": 1610,
+      "node": 40
+    },
+    {
+      "blob_offset": 1654,
+      "node": 41
+    },
+    {
+      "blob_offset": 1656,
+      "node": 42
+    },
+    {
+      "blob_offset": 1658,
+      "node": 43
+    },
+    {
+      "blob_offset": 1660,
+      "node": 44
+    },
+    {
+      "blob_offset": 1662,
+      "node": 45
+    },
+    {
+      "blob_offset": 1855,
+      "node": 46
+    },
+    {
+      "blob_offset": 1857,
+      "node": 47
+    },
+    {
+      "blob_offset": 1859,
+      "node": 48
+    },
+    {
+      "blob_offset": 1984,
+      "node": 49
+    },
+    {
+      "blob_offset": 1986,
+      "node": 50
+    },
+    {
+      "blob_offset": 2027,
+      "node": 51
+    },
+    {
+      "blob_offset": 2140,
+      "node": 52
+    },
+    {
+      "blob_offset": 2142,
+      "node": 53
+    },
+    {
+      "blob_offset": 2144,
+      "node": 54
+    },
+    {
+      "blob_offset": 2146,
+      "node": 55
+    },
+    {
+      "blob_offset": 2148,
+      "node": 56
+    },
+    {
+      "blob_offset": 2279,
+      "node": 57
+    },
+    {
+      "blob_offset": 2281,
+      "node": 58
+    },
+    {
+      "blob_offset": 2283,
+      "node": 59
+    },
+    {
+      "blob_offset": 2417,
+      "node": 60
+    },
+    {
+      "blob_offset": 2419,
+      "node": 61
+    },
+    {
+      "blob_offset": 2421,
+      "node": 62
+    },
+    {
+      "blob_offset": 2423,
+      "node": 63
+    },
+    {
+      "blob_offset": 2425,
+      "node": 64
+    },
+    {
+      "blob_offset": 2537,
+      "node": 65
+    },
+    {
+      "blob_offset": 2539,
+      "node": 66
+    },
+    {
+      "blob_offset": 2541,
+      "node": 67
+    },
+    {
+      "blob_offset": 2543,
+      "node": 68
+    },
+    {
+      "blob_offset": 2619,
+      "node": 69
+    },
+    {
+      "blob_offset": 2621,
+      "node": 70
+    },
+    {
+      "blob_offset": 2623,
+      "node": 71
+    },
+    {
+      "blob_offset": 2682,
+      "node": 72
+    },
+    {
+      "blob_offset": 2684,
+      "node": 73
+    },
+    {
+      "blob_offset": 2797,
+      "node": 74
+    },
+    {
+      "blob_offset": 2799,
+      "node": 75
+    },
+    {
+      "blob_offset": 2801,
+      "node": 76
+    },
+    {
+      "blob_offset": 2803,
+      "node": 77
+    },
+    {
+      "blob_offset": 2805,
+      "node": 78
+    },
+    {
+      "blob_offset": 2807,
+      "node": 79
+    },
+    {
+      "blob_offset": 2992,
+      "node": 80
+    },
+    {
+      "blob_offset": 2994,
+      "node": 81
+    },
+    {
+      "blob_offset": 3026,
+      "node": 82
+    },
+    {
+      "blob_offset": 3028,
+      "node": 83
+    },
+    {
+      "blob_offset": 3030,
+      "node": 84
+    },
+    {
+      "blob_offset": 3094,
+      "node": 85
+    },
+    {
+      "blob_offset": 3096,
+      "node": 86
+    },
+    {
+      "blob_offset": 3098,
+      "node": 87
+    },
+    {
+      "blob_offset": 3100,
+      "node": 88
+    },
+    {
+      "blob_offset": 3102,
+      "node": 89
+    },
+    {
+      "blob_offset": 3104,
+      "node": 90
+    },
+    {
+      "blob_offset": 3106,
+      "node": 91
+    },
+    {
+      "blob_offset": 3108,
+      "node": 92
+    },
+    {
+      "blob_offset": 3346,
+      "node": 93
+    },
+    {
+      "blob_offset": 3348,
+      "node": 94
+    },
+    {
+      "blob_offset": 3350,
+      "node": 95
+    },
+    {
+      "blob_offset": 3352,
+      "node": 96
+    },
+    {
+      "blob_offset": 3354,
+      "node": 97
+    },
+    {
+      "blob_offset": 3356,
+      "node": 98
+    },
+    {
+      "blob_offset": 3532,
+      "node": 99
+    },
+    {
+      "blob_offset": 3534,
+      "node": 100
+    },
+    {
+      "blob_offset": 3536,
+      "node": 101
+    },
+    {
+      "blob_offset": 3538,
+      "node": 102
+    },
+    {
+      "blob_offset": 3540,
+      "node": 103
+    },
+    {
+      "blob_offset": 3646,
+      "node": 104
+    },
+    {
+      "blob_offset": 3648,
+      "node": 105
+    },
+    {
+      "blob_offset": 3650,
+      "node": 106
+    },
+    {
+      "blob_offset": 3752,
+      "node": 107
+    },
+    {
+      "blob_offset": 3754,
+      "node": 108
+    },
+    {
+      "blob_offset": 3756,
+      "node": 109
+    },
+    {
+      "blob_offset": 3758,
+      "node": 110
+    },
+    {
+      "blob_offset": 3760,
+      "node": 111
+    },
+    {
+      "blob_offset": 3762,
+      "node": 112
+    },
+    {
+      "blob_offset": 3898,
+      "node": 113
+    },
+    {
+      "blob_offset": 3913,
+      "node": 114
+    },
+    {
+      "blob_offset": 3915,
+      "node": 115
+    },
+    {
+      "blob_offset": 3942,
+      "node": 116
+    },
+    {
+      "blob_offset": 3944,
+      "node": 117
+    },
+    {
+      "blob_offset": 3946,
+      "node": 118
+    },
+    {
+      "blob_offset": 3948,
+      "node": 119
+    },
+    {
+      "blob_offset": 3950,
+      "node": 120
+    },
+    {
+      "blob_offset": 3952,
+      "node": 121
+    },
+    {
+      "blob_offset": 3954,
+      "node": 122
+    }
+  ],
+  "name": "m65d",
+  "objects": 39,
+  "omission_gate": {
+    "defmacro_count": 0,
+    "defmacros": [],
+    "defun_count": 0,
+    "defuns": []
+  },
+  "override_exports": [],
+  "private_inline_functions": [
+    "%m65d-latched-p",
+    "%m65d-valid-ts-p",
+    "%m65d-bam-sector",
+    "%m65d-bam-base",
+    "%m65d-track-ok-p",
+    "%m65d-name-ok-p",
+    "%m65d-find-dir",
+    "%m65d-find-new-chain",
+    "%m65d-old-plan",
+    "%m65d-run-unlatched",
+    "%m65d-remount-finish",
+    "%m65d-release-old",
+    "%m65d-dir-target-ok-p",
+    "%m65d-remount-work"
+  ],
+  "provides": [
+    "m65d-save",
+    "m65d-save-new",
+    "m65d-status",
+    "m65d-remount"
+  ],
+  "relocation": {
+    "disk_lib_contract": "disk-lib files are [u16 blob_len][u16 md_len][blob][L65M]; entry bank/off and literal patch offsets are blob-relative; the device loader stages blob at lib_hw, trailer at lib_hw+blob_len, then supplies the final Bank-5 base",
+    "kind": "runtime-relative"
+  },
+  "requires": [
+    "core"
+  ],
+  "resident_overrides": [],
+  "resident_private_inline_functions": [],
+  "resident_suites": [
+    "build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json"
+  ],
+  "sources": [
+    "build/bytecode/dialect-v2/sources/lib/m65-disk.lisp"
+  ],
+  "strict_arity": true,
+  "suite": "build/bytecode/dialect-v2/suites/p0-m65d-lib.json",
+  "suite_format": "lisp65-bytecode-p0-disk-lib-suite-v1"
+}

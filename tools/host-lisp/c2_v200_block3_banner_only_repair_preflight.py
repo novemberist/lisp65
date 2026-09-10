@@ -23,6 +23,7 @@ import c2_packed_medium_transitive_closure as CLOSURE  # noqa: E402
 import c2_v190_native_prompt_editor_display_repair_r7 as DISPLAY  # noqa: E402
 import c2_v18_capture_hybrid_responsiveness_repair as RESPONSIVENESS  # noqa: E402
 import c2_v200_block3_return_pricing as PRICE  # noqa: E402
+import evidence_era as ERA
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -219,6 +220,7 @@ def run_surface(raw: bytes, label: str, stop_at_handoff: bool) -> dict[str, Any]
     macros = P0._macro_symbol_objs(heap, flags, resident)
     abi_profile, abi_ledger = P0._suite_abi(suite)
     vm = DISPLAY.TargetFrameVM(
+        historical_screen_era=DISPLAY.DISPLAY.SCREEN_ORACLE_ERA,
         heap=heap.clone(), directory=directory, macro_symbols=macros,
         max_steps=1_000_000, max_call_args=suite.get("max_call_args"),
         key_events=[97, 98, 99, 13], private_key_event_modes=True,
@@ -405,6 +407,7 @@ def write() -> dict[str, Any]:
     return value
 
 
+@ERA.in_host_source_world("520352a6")
 def check() -> dict[str, Any]:
     global BUILD, STDLIB_SUITE, IDE_SUITE, COMFORT_MANIFEST
     require(RECEIPT.is_file() and REPORT.is_file(), "repair preflight absent")

@@ -22,6 +22,7 @@ RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v2.0.0-public-surface-medium-projection.json")
 PROFILE_EVIDENCE_ERA = "1b19b81d5042f29ab2a9e8a50669231902c748ff"
+METADATA_EVIDENCE_ERA = "eb2d6e3a18a7a290cade7b69c01b066f7ecbc620"
 
 
 class ProjectionError(RuntimeError):
@@ -120,7 +121,14 @@ def derive() -> dict[str, Any]:
     evaluator_source, evaluator_binding = sealed_evaluator_source(spec)
     history_path = ROOT / spec["public_history_rebind"]
 
-    metadata = load(metadata_path)
+    # The released-medium projection owns its historical metadata population;
+    # the independent v11 metadata gate continues to validate the live index.
+    metadata_raw = era_blob(METADATA_EVIDENCE_ERA,
+                            metadata_path.relative_to(ROOT).as_posix())
+    metadata = json.loads(metadata_raw)
+    metadata_binding = {"path": metadata_path.relative_to(ROOT).as_posix(),
+                        "bytes": len(metadata_raw),
+                        "sha256": hashlib.sha256(metadata_raw).hexdigest()}
     build = load(authority_path)
     resident = load(resident_path)
     registry = load(registry_path)
@@ -141,7 +149,7 @@ def derive() -> dict[str, Any]:
 
     claims: dict[str, list[dict[str, str]]] = {str(name): [] for name in names}
     authorities: list[dict[str, Any]] = [
-        bind(CONTRACT), bind(metadata_path), bind(authority_path),
+        bind(CONTRACT), metadata_binding, bind(authority_path),
         bind(resident_path), bind(registry_path),
         era_bind(PROFILE_EVIDENCE_ERA, profile_path),
         evaluator_binding, bind(history_path), bind(runtime_path),
@@ -237,6 +245,16 @@ def selftest() -> list[str]:
         "live-evaluator-substituted-for-sealed-era": lambda value: next(
             row for row in value["authorities"]
             if row.get("path") == "src/eval.c").update(commit="WORKTREE"),
+        "live-metadata-substituted-for-sealed-era": lambda value: next(
+            row for row in value["authorities"]
+            if row.get("path") == load(CONTRACT)["metadata_index"]).update(
+                bind(ROOT / load(CONTRACT)["metadata_index"])),
+        "metadata-size-drift": lambda value: next(
+            row for row in value["authorities"]
+            if row.get("path") == load(CONTRACT)["metadata_index"]).update(bytes=0),
+        "metadata-unbound": lambda value: value.update(authorities=[
+            row for row in value["authorities"]
+            if row.get("path") != load(CONTRACT)["metadata_index"]]),
     }
     rejected = []
     for name, mutate in cases.items():

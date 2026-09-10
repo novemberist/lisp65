@@ -202,7 +202,10 @@ def validate_contract(contract: dict[str, Any], source: str) -> dict[str, Any]:
 
 
 def candidate_runtime_source() -> str:
-    runtime = REDISPATCH.candidate_runtime(load(REDISPATCH.CONTRACT))
+    # This candidate is the sealed 72-byte historical price, not today's
+    # iterative direct-values successor. Live source checks remain below.
+    runtime = REDISPATCH.candidate_runtime(
+        load(REDISPATCH.CONTRACT), commit=SEALED_COMMIT)
     require(
         "(%c2-top-level-macro-p (car form))" in runtime
         and "(defun %c2-top-level-macro-p (op)" in runtime
@@ -742,6 +745,19 @@ def selftest() -> dict[str, Any]:
     contract = load(CONTRACT)
     source = SOURCE.read_text(encoding="utf-8")
     validate_contract(contract, source)
+    original = REDISPATCH.candidate_runtime
+    try:
+        REDISPATCH.candidate_runtime = lambda value, **kwargs: original(
+            value, commit='57e79601')
+        try:
+            core_receipt()
+        except Exception as error:
+            require('candidate accounting drift' in str(error),
+                    'runtime-era mutation failed for an unrelated reason')
+        else:
+            raise RuntimeError('later runtime contaminated historical direct price')
+    finally:
+        REDISPATCH.candidate_runtime = original
     return {"status": "passed", "mutations": mutation_tests(contract, source)}
 
 

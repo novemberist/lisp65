@@ -18,9 +18,23 @@ import c2_v210_comfort_media_card as CARD
 from elf_truth import ElfTruth
 
 
-def model(truth, product_elf=None):
-    obj = (CARD.ROOT / "src/obj.h").read_text()
-    config = (CARD.ROOT / "config/workbench.mk").read_text()
+def model(truth, product_elf=None, *, source_era=None):
+    # Historical replays must consume the sources that their ELF consumed.
+    # Live calibration keeps reading the selected working-tree world.
+    from evidence_era import era_blob, era_bind
+    paths = ("src/obj.h", "src/mem.h", "src/mem.c", "config/workbench.mk")
+    sources = {p: (era_blob(source_era, p).decode() if source_era else
+                   (CARD.ROOT / p).read_text()) for p in paths}
+    bindings = [era_bind(source_era, p) if source_era else R.bind(CARD.ROOT / p)
+                for p in paths]
+    import hashlib
+    for p, binding in zip(paths, bindings):
+        raw = sources[p].encode()
+        R.require(binding['bytes'] == len(raw) and
+                  binding['sha256'] == hashlib.sha256(raw).hexdigest(),
+                  'allocator source content/binding divergence: ' + p)
+    obj = sources["src/obj.h"]
+    config = sources["config/workbench.mk"]
     width = int(re.search(r'sizeof\(Cell\) == (\d+)u, "target hot Cell', obj)[1])
     heap = truth.symbol("heap")
     R.require(heap.bytes % width == 0, "nonintegral product hot heap")
@@ -40,18 +54,17 @@ def model(truth, product_elf=None):
               bytes((0xc0, hot * 2)) in code and
               bytes((0xa6, f, 0xa4, f+1)) in code,
               "source nursery policy not consumed by final allocator")
-    mem = (CARD.ROOT / "src/mem.c").read_text()
+    mem = sources["src/mem.c"]
     R.require("gc_frozen && freelist != NIL" in mem and
               "#define EXT_OFF(i) ((uint16_t)(((i) - HEAP_CELLS) * 8))" in mem,
               "allocator/extended-cell ABI model changed")
     bank = int(re.search(r'#define EXT_BANK\s+(0x[0-9a-fA-F]+)u',
-                         (CARD.ROOT / "src/mem.h").read_text())[1], 16)
+                         sources["src/mem.h"])[1], 16)
     return {"product": R.bind(product_elf or CARD.PRODUCT_ELF), "hot_cells": hot,
             "hot_cell_bytes": width, "heap_address": heap.value,
             "nursery_hysteresis_allocations": threshold, "extended_bank": bank,
             "symbols": symbols, "allocator_emitted_hex": code.hex(),
-            "sources": [R.bind(CARD.ROOT / p) for p in
-                        ("src/obj.h", "src/mem.h", "src/mem.c", "config/workbench.mk")]}
+            "sources": bindings}
 
 
 def sample(m, authority, out, name, chain=False):
@@ -215,7 +228,7 @@ def row_binding(out):
     out = out.resolve()
     receipt = R.load(out / "receipt.json")
     # The accepted r2 row remains a receipt of its own executor generation.
-    # Only its two executor identities are historical; media, ELF, samples,
+    # Executors and allocator sources are historical; media, ELF, samples,
     # model operands and all framebuffer/memory oracles are still verified.
     sealed = out == (CARD.ROOT / 'build/v2.1/comfort-collection-calibration-r2').resolve()
     from evidence_era import era_bind
@@ -232,7 +245,8 @@ def row_binding(out):
     capture = next(row for row in session["rows"] if row["id"] == "C4")["collection"]
     data = receipt["collection_calibration"]
     authority = model(ElfTruth.read(CARD.PRODUCT_ELF, llvm_readobj=Path("/usr/bin/llvm-readobj"),
-                                   include_section_data=True))
+                                   include_section_data=True),
+                      source_era='bbbaed02' if sealed else None)
     samples = [(R.load(out / f"calibration-sample-{i}-typed.json"),
                 R.load(out / f"calibration-sample-{i}-deleted.json")) for i in (1,2)]
     derived = json.loads(json.dumps(derive(data["origin"], samples, capture, authority)))

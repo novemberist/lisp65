@@ -1,0 +1,260 @@
+{
+  "format": "lisp65-library-release-device-session-v1",
+  "recorded_on": "2026-09-09",
+  "authority": "9485e5f0",
+  "amendment": "b32695bb",
+  "predecessor": {
+    "path": "config/pound-a-device-session.json",
+    "bytes": 4391,
+    "sha256": "96f0ba5eb57ec6f586b80be9f95f3e4c2f671d539859a7d074e87dc887ec076b"
+  },
+  "status": "BOUND; NO UPLOAD OR CONTACT STARTED",
+  "contact_authorized": true,
+  "device_contacts_started": 0,
+  "remote_name": "R2LIB.D81",
+  "medium": {
+    "path": "build/library-delivery-final-medium-r8/packed/hardware-sp-seed.d81",
+    "sha256": "16bc67870b5adbcbc5b127993ca9367f70c252cea7c2d19d0a92964012458df6"
+  },
+  "elf": {
+    "path": "build/library-delivery-product-r8/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "3aaa6d111535fd0f63c62569467ffb1dde8d4f027454a9c5e08f11b59a8e6d8b"
+  },
+  "prg": {
+    "path": "build/library-delivery-product-r8/wplto/lisp65-c2-substitution-linked.prg",
+    "sha256": "f4e636377deeedffcf72afbbf19391a348763c332464727c172dc4c9078e615d"
+  },
+  "host_receipt": {
+    "path": "build/library-delivery-r13/closure.json",
+    "bytes": 3481,
+    "sha256": "3c3d88f8c824be094fe9f8371f01b3ba623c57dc720c65a0ac92861466beec38"
+  },
+  "full_source_receipt": {
+    "path": "build/library-delivery-r13/check-source-final-r3-receipt.json",
+    "bytes": 1119584,
+    "sha256": "e36ad6a88945cf50c2d668acafa7ffd795bad170b6a00ef952b6116542adb949"
+  },
+  "choreography": {
+    "variant": "B",
+    "transport": "established JTAG-monitor SD helper, not volatile RAM staging",
+    "order": [
+      "owner confirms disposable BASIC",
+      "SD upload and byte/SHA readback",
+      "power off at least 30 seconds",
+      "power on",
+      "owner Freezer-mounts R2LIB.D81",
+      "owner starts product",
+      "bound rows"
+    ],
+    "min_power_off_seconds": 30,
+    "preparation_helper_resets_expected": true,
+    "only_physical_keyboard_after_boot": true,
+    "no_F011_register_reads": true,
+    "no_live_transport_helper": true,
+    "red_action": "Stop at the first failed row; no further input or device repair; seal evidence and request any CPU-stop/RAM-read permission separately"
+  },
+  "rows": [
+    {
+      "id": "boot",
+      "expected": [
+        "WORKBENCH 2.0.0",
+        "lisp65> with cursor",
+        "no load error"
+      ]
+    },
+    {
+      "id": "backspace",
+      "physical_keyboard": true,
+      "type_without_return": "0123456789",
+      "backspaces": 10,
+      "expected": "empty input, one live cursor, no residual inverse white rectangles"
+    },
+    {
+      "id": "native-line-wrap",
+      "physical_keyboard": true,
+      "form": "(+ 41 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1)",
+      "characters": 84,
+      "expected": "42",
+      "type_without_return": true,
+      "backspaces_before_restore": 20,
+      "shortened_input": "(+ 41 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ",
+      "restore_suffix": "0 0 0 0 0 0 0 0 0 1)",
+      "actions": [
+        "Type the complete expression without Return; observe upward wrap, preserved prompt indent and tail on editor row.",
+        "Delete the bound suffix to cross the wrap; the released row must become completely blank.",
+        "Restore the exact suffix, then Return; result 42, wrapped rows handed back to sequential output."
+      ],
+      "source": {
+        "path": "config/pound-a-device-session.json",
+        "bytes": 4391,
+        "sha256": "96f0ba5eb57ec6f586b80be9f95f3e4c2f671d539859a7d074e87dc887ec076b"
+      }
+    },
+    {
+      "id": "pound",
+      "physical_keyboard": true,
+      "form": "\u00a3(1 ,(+ 1 1))",
+      "expected": "(1 2)"
+    },
+    {
+      "id": "depth-definition",
+      "form": "(defun sp-depth (n) (if (= n 0) 0 (+ 1 (sp-depth (- n 1)))))",
+      "expected": "sp-depth"
+    },
+    {
+      "id": "depth-12",
+      "form": "(sp-depth 12)",
+      "expected": "12"
+    },
+    {
+      "id": "depth-13",
+      "form": "(sp-depth 13)",
+      "expected": "13"
+    },
+    {
+      "id": "depth-16",
+      "form": "(sp-depth 16)",
+      "expected": "16"
+    },
+    {
+      "id": "depth-17",
+      "form": "(sp-depth 17)",
+      "expected": "*** vm: stack overflow",
+      "must_return_to_native_prompt": true,
+      "repeated_E29_is_red": true
+    },
+    {
+      "id": "depth-recovery",
+      "form": "(+ 4 5)",
+      "expected": "9"
+    },
+    {
+      "id": "require-place",
+      "form": "(require 'place)",
+      "expected": "t"
+    },
+    {
+      "id": "place-call-1",
+      "form": "(setf (car (list 1 2)) 9)",
+      "expected": "9"
+    },
+    {
+      "id": "require-string-extra",
+      "form": "(require 'string-extra)",
+      "expected": "t"
+    },
+    {
+      "id": "string-extra-call-1",
+      "form": "(capitalize \"abc\")",
+      "expected": "\"Abc\""
+    },
+    {
+      "id": "require-buffer",
+      "form": "(require 'buffer)",
+      "expected": "t"
+    },
+    {
+      "id": "buffer-call-1",
+      "form": "(buffer-length (make-buffer 3))",
+      "expected": "3"
+    },
+    {
+      "id": "require-defstruct",
+      "form": "(require 'defstruct)",
+      "expected": "t"
+    },
+    {
+      "id": "defstruct-call-1",
+      "form": "(defstruct point x)",
+      "expected": "t"
+    },
+    {
+      "id": "defstruct-call-2",
+      "form": "(point-x (make-point 42))",
+      "expected": "42"
+    },
+    {
+      "id": "require-inspect",
+      "form": "(require 'inspect)",
+      "expected": "t"
+    },
+    {
+      "id": "inspect-call-1",
+      "form": "(who-calls 'car)",
+      "expected": "nil"
+    },
+    {
+      "id": "smoke-definition",
+      "form": "(defun v20-perf-probe (x) (+ x 1))",
+      "expected": "v20-perf-probe"
+    },
+    {
+      "id": "smoke-1",
+      "form": "(time (car (cdr (list 1 2))))",
+      "value": "2",
+      "max_frames": 2
+    },
+    {
+      "id": "smoke-2",
+      "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+      "value": "(9 2)",
+      "max_frames": 2
+    },
+    {
+      "id": "smoke-3",
+      "form": "(time (string-ref \"abc\" 1))",
+      "value": "98",
+      "max_frames": 2
+    },
+    {
+      "id": "smoke-4",
+      "form": "(time (v20-perf-probe 41))",
+      "value": "42",
+      "max_frames": 2
+    },
+    {
+      "id": "D5",
+      "requires_separate_stop_and_RAM_read_permission": true,
+      "reads": [
+        {
+          "symbol": "nsym",
+          "address": 87,
+          "bytes": 2
+        },
+        {
+          "symbol": "npool",
+          "address": 48584,
+          "bytes": 2
+        }
+      ],
+      "further_reads": "C2D header first; derive entry span and persistent front from live header and final ELF; RAM only"
+    },
+    {
+      "id": "reset",
+      "owner_action": true,
+      "terminal": true,
+      "expected": "BASIC"
+    }
+  ],
+  "loaded_packages": [
+    "buffer",
+    "place",
+    "string-extra",
+    "inspect",
+    "defstruct"
+  ],
+  "D5_reference": {
+    "context": "pure five-package loading plus (+ 4 5), not this longer session",
+    "free_symbols": 32,
+    "free_name_bytes": 384,
+    "contiguous_user_code_bytes": 8593,
+    "source": {
+      "path": "build/library-delivery-r11/user-currency.json",
+      "bytes": 62645,
+      "sha256": "1174c4e2d377739f43ffcb5a0205b47f3d77bb5b3236e3205519b803b7439c29"
+    }
+  },
+  "D5_claim": "Measure the session stop without subtracting unmeasured estimates. Definitions, generated struct names and test code consume additional capacity; 32/384/8593 is NOT the expected equality after these forms.",
+  "bank2_owner_limit": 59168,
+  "claim_boundary": "A and pound reconfirmed; Backspace repair, R2 and manual library delivery require this device result. No INIT support, no string-require, no Ship or Publish."
+}

@@ -17,6 +17,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 from typing import Any
 
 
@@ -320,8 +321,62 @@ def section_sizes(path: Path) -> dict[str, int]:
     return rows
 
 
+def header_world() -> dict[str, bytes]:
+    names = subprocess.check_output(
+        ["git", "ls-tree", "-r", "--name-only", EVIDENCE_COMMIT, "--", "src"],
+        cwd=ROOT, text=True).splitlines()
+    result = {name: evidence_bytes(ROOT / name) for name in names if name.endswith('.h')}
+    require(bool(result), "historical native-header population empty")
+    return result
+
+
+def verify_header_world(directory: Path, expected: dict[str, bytes]) -> None:
+    actual = {('src/' + p.relative_to(directory).as_posix()): p.read_bytes()
+              for p in directory.rglob('*.h') if not p.is_symlink()}
+    require(actual == expected and not any(p.is_symlink() for p in directory.rglob('*')),
+            "historical native-header ownership/content drift")
+
+
+def verify_header_route(argv: list[str], directory: Path) -> None:
+    includes = [argv[i+1] for i in range(len(argv)-1) if argv[i] == '-I']
+    require(includes == [str(directory.relative_to(ROOT)), str(BUILD.relative_to(ROOT))],
+            "historical compiler imported a live/unbound include root")
+
+
+def materialize_header_world() -> Path:
+    expected = header_world()
+    directory = BUILD / 'era-native-headers'
+    directory.mkdir(parents=True, exist_ok=True)
+    for name, raw in expected.items():
+        path = directory / Path(name).relative_to('src')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(raw)
+    verify_header_world(directory, expected)
+    # Controls change the files the compiler would consume, not receipt text.
+    with tempfile.TemporaryDirectory(prefix='header-controls-', dir=BUILD) as tmp:
+        probe = Path(tmp)
+        for name, raw in expected.items():
+            path = probe / Path(name).relative_to('src')
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(raw)
+        first = probe / Path(next(iter(expected))).relative_to('src')
+        original = first.read_bytes()
+        for mutation in ('changed', 'missing'):
+            if mutation == 'changed': first.write_bytes(original + b'\n/* altered */\n')
+            else: first.unlink()
+            try: verify_header_world(probe, expected)
+            except PricingError: pass
+            else: raise PricingError('header-world mutation survived: ' + mutation)
+            first.write_bytes(original)
+        try: verify_header_route(['-I', 'src', '-I', str(BUILD.relative_to(ROOT))], directory)
+        except PricingError: pass
+        else: raise PricingError('live include-root mutation survived')
+    return directory
+
+
 def target_codegen(projection: dict[str, Any]) -> dict[str, Any]:
     BUILD.mkdir(parents=True, exist_ok=True)
+    headers = materialize_header_world()
     sources = {
         "baseline": evidence_bytes(REPL).decode(),
         "dynamic-uncomposed": bridge_source(dynamic=True, composed=False),
@@ -338,10 +393,12 @@ def target_codegen(projection: dict[str, Any]) -> dict[str, Any]:
         c_path.write_text(source, encoding="utf-8")
         argv = [str(COMPILER_BIN), "-Oz", "-Wall", "-fno-lto",
                 "-ffile-compilation-dir=.", "-fdebug-compilation-dir=.",
-                "-fcoverage-compilation-dir=.", "-I", "src", "-I",
+                "-fcoverage-compilation-dir=.", "-I", str(headers.relative_to(ROOT)), "-I",
                 str(BUILD.relative_to(ROOT)),
                 *[f"-D{row}" for row in definitions], "-c",
                 str(c_path.relative_to(ROOT)), "-o", str(obj.relative_to(ROOT))]
+        verify_header_world(headers, header_world())
+        verify_header_route(argv, headers)
         output = run(argv, f"target price compile {name}")
         results[name] = {"source": bind(c_path), "object": bind(obj),
                          "sections": section_sizes(obj),
@@ -455,6 +512,7 @@ def frame_row(source_path: Path, expr: str, expected: str,
     macros = P0._macro_symbol_objs(heap, flags, resident)
     abi_profile, abi_ledger = P0._suite_abi(suite)
     vm = DISPLAY.FrameVM(
+        historical_screen_era=DISPLAY.SCREEN_ORACLE_ERA,
         heap=heap.clone(), directory=directory, macro_symbols=macros,
         max_steps=1_000_000, max_call_args=suite.get("max_call_args"),
         key_events=events, private_key_event_modes=True,

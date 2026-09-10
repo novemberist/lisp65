@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import ast
 from copy import deepcopy
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -20,7 +22,18 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import r6_g6 as G6  # noqa: E402
 
 
-RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/block-2.6-card5-build-integrity-receipt.json"
+RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/block-2.6-card5-build-integrity-renderer-successor-receipt.json"
+AUTHORITY = "config/c2-v210-public-build-authority.json"
+LIFECYCLE_SOURCE = "tools/host-lisp/workbench_product.py"
+
+
+def release_authorities(source: str) -> list[str]:
+    rows = [node for node in ast.parse(source).body if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "RELEASES" for target in node.targets)]
+    require(len(rows) == 1, "release lifecycle population is not derivable")
+    releases = ast.literal_eval(rows[0].value)
+    require(bool(releases), "release lifecycle population is empty")
+    return sorted(row[2] for row in releases.values())
 
 
 class CardError(RuntimeError):
@@ -43,7 +56,8 @@ def sha(path: Path) -> str:
 def source_texts(root: Path) -> dict[str, str]:
     paths = ["Makefile", "mk/workbench.mk", "mk/toolchain.mk", "mk/gates.mk",
              "mk/runtime-core-v2-proof.mk", "README.md", "CONTRIBUTING.md",
-             "docs/development.md", "docs/toolchain-setup.md"]
+             "docs/development.md", "docs/toolchain-setup.md", LIFECYCLE_SOURCE]
+    paths += release_authorities((root / LIFECYCLE_SOURCE).read_text())
     return {name: (root / name).read_text(encoding="utf-8") for name in paths}
 
 
@@ -55,14 +69,19 @@ def validate(text: dict[str, str]) -> dict[str, Any]:
     all_make = "\n".join(text[name] for name in text if name == "Makefile" or name.startswith("mk/"))
     require("if test -f build/c2.3/" not in workbench,
             "product lifecycle still selects verify from artifact existence")
-    releases = ("", "-v160", "-v170", "-v180", "-v190", "-v200")
-    for release in releases:
-        require(f"workbench-product{release}-build:" in workbench
-                and f"workbench-product{release}-verify:" in workbench,
-                f"explicit product build/verify targets absent: {release or 'v150'}")
-        require(f"workbench-product{release}-build: toolchain-external-product-verify" in workbench
-                and f"workbench-product{release}-verify: toolchain-external-product-verify" in workbench,
-                f"product lifecycle bypasses toolchain verification: {release or 'v150'}")
+    entry = json.loads(text[AUTHORITY])["entry_point"]
+    require(re.fullmatch(r"make workbench-product-v\d+", entry) is not None,
+            "release authority lacks an explicit product entry point")
+    target = entry.removeprefix("make ")
+    targets = set(re.findall(r"^(workbench-product(?:-v\d+)?)-(?:build|verify):", workbench, re.M))
+    expected = {json.loads(text[path])["entry_point"].removeprefix("make ")
+                for path in release_authorities(text[LIFECYCLE_SOURCE])}
+    require(targets == expected, "product target population differs from producer authorities")
+    require(target in targets, "release authority has no living lifecycle")
+    for name in sorted(targets):
+        for action in ("build", "verify"):
+            require(f"{name}-{action}: toolchain-external-product-verify" in workbench,
+                    f"product lifecycle bypasses toolchain verification: {name}-{action}")
     require("python3 $(WORKBENCH_PRODUCT_TOOL) build --release" in workbench
             and "python3 $(WORKBENCH_PRODUCT_TOOL) verify --release" in workbench,
             "parameterized product lifecycle front end is not the target authority")
@@ -83,16 +102,23 @@ def validate(text: dict[str, str]) -> dict[str, Any]:
             "R6/G6 producer still writes tracked evidence or lacks explicit seal")
     development = text["docs/development.md"]
     require("sole build-command authority" in development
-            and "make workbench-product-v200-build" in development
-            and "make workbench-product-v200-verify" in development
+            and f"{entry}-build" in development
+            and f"{entry}-verify" in development
             and "mega65_ftp" in development and "cmp \"$D81\"" in development,
             "development guide lacks the clone-to-deploy authoritative flow")
-    for name in ("README.md", "CONTRIBUTING.md", "docs/toolchain-setup.md"):
+    readme_entry = json.loads(text["config/c2-v220-public-build-authority.json"])["entry_point"]
+    readme_commands = re.findall(r"make workbench-product[^\s`]*", text["README.md"])
+    require(sorted(readme_commands) == sorted([readme_entry + "-build", readme_entry + "-verify"])
+            and "Development Guide" in text["README.md"],
+            "README release command projection drift")
+    for name in ("CONTRIBUTING.md", "docs/toolchain-setup.md"):
         require("make workbench-product" not in text[name]
                 and "Development Guide" in text[name],
                 f"duplicate build authority remains in {name}")
     return {
-        "explicit_product_lifecycles": 6,
+        "explicit_product_lifecycles": len(targets),
+        "product_lifecycle_population": sorted(targets),
+        "guide_command_authority": {"path": AUTHORITY, "entry_point": entry},
         "toolchain_verified_on_product_path": True,
         "parse_time_shell_occurrences": 0,
         "tmp_log_occurrences": 0,
@@ -117,6 +143,15 @@ def selftest() -> dict[str, Any]:
     clean = source_texts(ROOT)
     validate(clean)
     mutations = {
+        "readme-build-omitted": ("README.md", clean["README.md"].replace(
+            json.loads(clean["config/c2-v220-public-build-authority.json"])["entry_point"] + "-build", "omitted")),
+        "readme-verify-era-drift": ("README.md", clean["README.md"].replace(
+            json.loads(clean["config/c2-v220-public-build-authority.json"])["entry_point"] + "-verify",
+            "make workbench-product-obsolete-verify")),
+        "guide-command-era-diverges": ("docs/development.md", clean["docs/development.md"].replace(
+            json.loads(clean[AUTHORITY])["entry_point"], "make workbench-product-obsolete")),
+        "lifecycle-target-population-omitted": ("mk/workbench.mk", re.sub(
+            r"^workbench-product-v160-(?:build|verify):.*$", "", clean["mk/workbench.mk"], flags=re.M)),
         "artifact-existence-selects-check": ("mk/workbench.mk", "\nif test -f build/c2.3/old; then :; fi\n"),
         "product-toolchain-edge-removed": ("mk/gates.mk", clean["mk/gates.mk"].replace(
             "check-product: check-host toolchain-external-product-verify", "check-product: check-host", 1)),
@@ -145,24 +180,20 @@ def selftest() -> dict[str, Any]:
 
 
 def check(write: bool) -> dict[str, Any]:
-    from evidence_era import era_bind
     facts = validate(source_texts(ROOT))
     mutations = selftest()
     inputs = [ROOT / name for name in source_texts(ROOT)] + [
-        ROOT / "tools/host-lisp/workbench_product.py",
         ROOT / "tools/host-lisp/make_recipe_value.py",
         ROOT / "tools/host-lisp/toolchain_external.py",
         ROOT / "tools/host-lisp/r6_g6.py",
         ROOT / "tools/host-lisp/block_26_build_integrity_card.py",
     ]
     receipt = {
-        "format": "lisp65-block-2.6-card5-build-integrity-v1",
+        "format": "lisp65-block-2.6-card5-build-integrity-renderer-successor-v1",
         "status": "passed",
         "facts": facts,
         "mutation_suite": mutations,
-        # Provenance belongs to the receipt's seal; all semantic validation
-        # and sharp mutations above still consume the living build sources.
-        "inputs": [{k: v for k, v in era_bind("55414fb3", path).items() if k != "bytes"}
+        "inputs": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha(path)}
                    for path in inputs],
         "product_builds": 0,
         "product_links": 0,
@@ -173,7 +204,7 @@ def check(write: bool) -> dict[str, Any]:
         RECEIPT.write_bytes(canonical(receipt))
     elif RECEIPT.read_bytes() != canonical(receipt):
         raise CardError("registered card-5 receipt differs from derived result")
-    print("block-2.6 card5: CHECK PASS targets=6 mutations=8 product-builds=0")
+    print(f"block-2.6 card5: CHECK PASS targets={facts['explicit_product_lifecycles']} mutations={mutations['count']} product-builds=0")
     return receipt
 
 

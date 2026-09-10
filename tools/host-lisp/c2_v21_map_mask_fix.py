@@ -239,8 +239,10 @@ def linked_gate(elf: Path) -> dict[str, Any]:
             "negative_self_covering": model["negative_self_covering"]}
 
 
-def derive() -> dict[str, Any]:
-    source = SOURCE.read_text(encoding="utf-8")
+def derive(*, source_text: str | None = None,
+           source_binding: dict[str, Any] | None = None,
+           driver_binding: dict[str, Any] | None = None) -> dict[str, Any]:
+    source = SOURCE.read_text(encoding="utf-8") if source_text is None else source_text
     body, reader_bytes = assemble(source)
     emitted = actual_byte_gate(body, reader_bytes)
     require(reader_bytes == 189, "fixed standalone reader price drift")
@@ -248,7 +250,8 @@ def derive() -> dict[str, Any]:
         "status": "HOST-GREEN: actual MAP tuple decode closes self-occlusion",
         "rule": "Decode the constructed runtime tuple, never design intent.",
         "authority": {"owner": authority(), "first_red": bind(FIRST_RED),
-                      "source": bind(SOURCE), "driver": bind(DRIVER)},
+                      "source": source_binding if source_binding is not None else bind(SOURCE),
+                      "driver": driver_binding if driver_binding is not None else bind(DRIVER)},
         "first_red": {"actual": "0xffc0", "required": "0x4fc0",
                       "reader_start": "0x2277",
                       "mechanism": first_red()["classification"]["name"]},

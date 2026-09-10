@@ -499,8 +499,10 @@ void lisp65_v14_opcode_view_witness_reset(void) {
  * reloads ONLY if another object used the buffer. Leaf calls into C prims (screen-*, car,
  * ...) never touch it -> the reload disappears entirely. Measured on the device:
  * 2405 code DMAs per editor keystroke (~1 s) — most of them unnecessary. */
-static uint8_t  vm_buf_bank = 0xFF;
-static uint16_t vm_buf_off  = 0xFFFF;
+/* Initialize the invalid owner in vm_init, not in the load image: LTO may
+ * promote these cells to ZP, whose initialized image has a fixed load slot. */
+static uint8_t  vm_buf_bank;
+static uint16_t vm_buf_off;
 
 #if defined(VM_STEP_LIMIT) || defined(LISP65_DMA_PROF) \
     || defined(LISP65_VM_FAULT_CAPTURE)
@@ -770,6 +772,19 @@ obj vm_dirmiss_detail(obj detail) {
     return detail;
 }
 
+/* The argument-pop loop of OP_CALL, OP_TAILCALL and OP_CALLPRIM: three copies of
+ * the same descending fill.  The body is what the POP macro expanded to at those
+ * sites -- same underflow guard against the caller's frame value base, same
+ * VM_BADOPCODE, same order -- and the callers keep their own `goto done`. */
+static __attribute__((noinline)) uint8_t vm_pop_args(obj *dst, uint8_t n, gc_rootsp_t vb_) {
+    unsigned i;
+    for (i = n; i > 0; i--) {
+        if (gc_rootsp <= vb_) { vm_status = VM_BADOPCODE; return 0; }
+        dst[i - 1] = gc_rootstack[--gc_rootsp];
+    }
+    return 1;
+}
+
 /* Bridge VM -> tree walker (K3): set by eval.c for CALL misses (symbol not compiled).
  * NULL = no bridge (a miss becomes VM_DIRMISS). */
 #ifndef LISP65_V2_CARRIER_CUT
@@ -835,7 +850,7 @@ static obj vm_upval_nth(uint8_t i) {                 /* i-te Upvalue-Listenzelle
 /* OP_CLOSURE: T_CLOSURE{a=MK_BCODE(di), b=(uv0..uvN-1)} aus nuv Stack-Werten bauen + pushen.
  * NIL = Erfolg; ein Fehler liefert sein Detail (nur VM_DIRMISS ist benannt).
  * GC-Semantik identisch zum alten Inline-Case. */
-static obj vm_op_closure(obj sym, uint8_t nuv, uint16_t stack_base) {
+static obj vm_op_closure(obj sym, uint8_t nuv, gc_rootsp_t stack_base) {
     obj lst = NIL, clo; uint8_t k;
     int di = IS_BCODE(sym) ? (int)BCODE_IDX(sym) : dir_find(sym);
     if (di < 0) return vm_dirmiss_detail(sym);
@@ -1136,6 +1151,8 @@ obj vm_native_apply(obj fn, obj arglist) {
 #endif /* LISP65_COMPILE_REPL || LISP65_VM_NATIVE_APPLY */
 
 void vm_init(void) {
+    vm_buf_bank = 0xFFu;
+    vm_buf_off = 0xFFFFu;
     vm_t = intern("t");
 #ifdef LISP65_V2_WORKBENCH_SERVICES
     vm_workbench_error_symbols[0] = intern("%fasl-error-entries-overflow");
@@ -1272,6 +1289,25 @@ static obj vm_workbench_compile_error(uint8_t pid) {
 }
 #endif
 
+/* Users live under MEGA65_F011_LOAD (cases 15/17/18) and MEGA65_F011_WRITE
+ * (case 21); case 18's own LISP65_DISK_LIBS guard is nested INSIDE the former,
+ * so those two defines are the whole condition. */
+#if defined(MEGA65_F011_LOAD) || defined(MEGA65_F011_WRITE)
+
+/* The disk primitives' own two-byte guard, factored out of five copies.  The
+ * decoded bytes come back in file-scope slots: absolute addressing beats
+ * pointer indirection on the 6502.  Not vm_byte_args: that one answers
+ * VM_ARITY on the count and rejects >255, this one answers VM_TYPEERROR for
+ * both and truncates, exactly as the call sites always did. */
+static uint8_t vm_arg_x, vm_arg_y;
+static __attribute__((noinline)) uint8_t
+vm_two_byte_args(const obj *a, uint8_t n) {
+    if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return 0; }
+    vm_arg_x = (uint8_t)FIXVAL(a[0]);
+    vm_arg_y = (uint8_t)FIXVAL(a[1]);
+    return 1;
+}
+#endif
 /* CALLPRIM-Dispatch: gefrorene Prim-ID (§4a) -> VM-native Implementierung. */
 /* noinline (Diaet 2026-07-02): inline in vm_run kostete 1752 B, out-of-line 1506 —
  * netto -246 B .text; CALLPRIM ist ohnehin ein Bridge-/Stringpfad, kein Zyklenzaehlen. */
@@ -1506,9 +1542,15 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         if (p != NIL) { vm_status = VM_TYPEERROR; return NIL; }
         return vm_native_call(a[0], argv, na);
 #else
-        uint16_t base = gc_rootsp; uint8_t i; obj lst, fn;
+        gc_rootsp_t base = gc_rootsp; uint8_t i; obj lst, fn;
         if (n < 1) { vm_status = VM_TYPEERROR; return NIL; }
         if (n == 1) return vm_native_apply(a[0], NIL);
+        /* n operands were popped before this primitive ran, but the arm needs
+         * n + 1 root slots (the args plus the list slot).  gc_rootsp == GC_ROOTS is
+         * a state the operand-push guard permits, so without this reserve the last
+         * write lands one past gc_rootstack (ASan: global-buffer-overflow).  Same
+         * status the VM already raises when it runs out of root stack. */
+        if (!GC_CAN_RESERVE((uint16_t)n + 1u)) { vm_status = VM_STACKOVER; return NIL; }
         for (i = 0; i < n; i++) GC_PUSH(a[i]);             /* fn + Prefix-Args + Liste rooten */
         lst = gc_rootstack[base + n - 1];                 /* letztes Arg = die Liste */
         GC_PUSH(lst);                                     /* Slot fuer die wachsende Argliste */
@@ -1527,12 +1569,18 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         if (n < 1) { vm_status = VM_TYPEERROR; return NIL; }
         return vm_native_call(a[0], a + 1, (uint8_t)(n - 1));
 #else
-        uint16_t base = gc_rootsp; uint8_t i; obj lst = NIL, fn;
+        gc_rootsp_t base = gc_rootsp; uint8_t i; obj lst = NIL, fn;
 #if defined(LISP65_COMPILE_REPL) || defined(LISP65_VM_NATIVE_APPLY)
         if (n < 1) { vm_status = VM_TYPEERROR; return NIL; }
 #else
         if (n < 1 || !vm_treewalk_apply) { vm_status = VM_BADOPCODE; return NIL; }
 #endif
+        /* n operands were popped before this primitive ran, but the arm needs
+         * n + 1 root slots (the args plus the list slot).  gc_rootsp == GC_ROOTS is
+         * a state the operand-push guard permits, so without this reserve the last
+         * write lands one past gc_rootstack (ASan: global-buffer-overflow).  Same
+         * status the VM already raises when it runs out of root stack. */
+        if (!GC_CAN_RESERVE((uint16_t)n + 1u)) { vm_status = VM_STACKOVER; return NIL; }
         for (i = 0; i < n; i++) GC_PUSH(a[i]);   /* alle Args rooten (inkl. fn) */
         GC_PUSH(NIL);                             /* Slot fuer lst */
         for (i = n; i > 1; i--) { lst = cons(gc_rootstack[base + i - 1], lst); GC_SET(gc_rootsp - 1, lst); }
@@ -1612,11 +1660,11 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #endif /* LISP65_VM_SCREEN_PRIMS */
 #ifdef MEGA65_F011_LOAD
     case 15:  /* %disk-read-sector */
-        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
+        if (!vm_two_byte_args(a, n)) return NIL;
         /* The mapped reader returns only after leaving its MAP window.
          * A failed read is not an absent directory entry: keep that failure
          * out of require's ordinary NIL/not-found route, as for source load. */
-        if (!io_disk_read_sector((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1]))) {
+        if (!io_disk_read_sector(vm_arg_x, vm_arg_y)) {
             lisp_abort_code(LISP65_ERR_LOAD_OPEN);
             return NIL;
         }
@@ -1625,9 +1673,8 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         if (n != 1 || !IS_FIX(a[0])) { vm_status = VM_TYPEERROR; return NIL; }
         return MKFIX(io_disk_byte((uint8_t)FIXVAL(a[0])));
     case 17:  /* %disk-load-file — io.c streamt die Datei aus EXT via load_source_stream */
-        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
-        if (!io_disk_load_chain((uint8_t)FIXVAL(a[0]),
-                                (uint8_t)FIXVAL(a[1]))) {
+        if (!vm_two_byte_args(a, n)) return NIL;
+        if (!io_disk_load_chain(vm_arg_x, vm_arg_y)) {
             lisp_abort_code(LISP65_ERR_LOAD_OPEN);
             return NIL;
         }
@@ -1637,12 +1684,9 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #ifdef LISP65_C2_PRODUCT_CUT
         if (n == 1)
             return c2_product_static_image_named(a[0]) ? vm_t : NIL;
-        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) {
-            vm_status = VM_TYPEERROR; return NIL;
-        }
+        if (!vm_two_byte_args(a, n)) return NIL;
         {
-            uint16_t staged = io_disk_stage_chain((uint8_t)FIXVAL(a[0]),
-                                                  (uint8_t)FIXVAL(a[1]));
+            uint16_t staged = io_disk_stage_chain(vm_arg_x, vm_arg_y);
             return staged && c2_product_append_staged(staged) ? vm_t : NIL;
         }
 #else
@@ -1651,14 +1695,14 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
             return io_attic_load_lib(a[0]) ? vm_t : NIL;
         }
 #endif
-        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
-        return io_disk_load_lib((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1])) ? vm_t : NIL;
+        if (!vm_two_byte_args(a, n)) return NIL;
+        return io_disk_load_lib(vm_arg_x, vm_arg_y) ? vm_t : NIL;
 #endif
 #endif
 #ifdef MEGA65_F011_WRITE
     case 21:  /* %disk-poke */
-        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
-        io_disk_scratch_poke((uint8_t)FIXVAL(a[0]), (uint8_t)(FIXVAL(a[1]) & 0xFF));
+        if (!vm_two_byte_args(a, n)) return NIL;
+        io_disk_scratch_poke(vm_arg_x, vm_arg_y);
         return a[1];
     case 22:  /* %disk-write-sector */
         if (n == 0) {
@@ -1912,9 +1956,10 @@ static inline __attribute__((always_inline)) uint16_t vm_frame_slots(
     return slots;
 }
 
-static uint16_t vm_frame_fill(uint16_t base, const obj *args, uint8_t n,
-                              uint8_t nargs, uint8_t nlocals, uint8_t flags) {
-    uint16_t i, vb = (uint16_t)(base + nargs + nlocals);
+static gc_rootsp_t vm_frame_fill(gc_rootsp_t base, const obj *args, uint8_t n,
+                                 uint8_t nargs, uint8_t nlocals, uint8_t flags) {
+    uint16_t i;
+    gc_rootsp_t vb = (gc_rootsp_t)(base + nargs + nlocals);
     for (i = 0; i < nargs;   i++) gc_rootstack[base + i]         = (i < n) ? args[i] : NIL;
     for (i = 0; i < nlocals; i++) gc_rootstack[base + nargs + i] = NIL;
     if (flags & CO_FLAG_REST) {      /* Rest-Liste aus Args[nargs..n) bauen (GC-gerootet ueber vb) */
@@ -1922,7 +1967,7 @@ static uint16_t vm_frame_fill(uint16_t base, const obj *args, uint8_t n,
         obj rest = NIL;
         for (j = 0; j < cnt; j++) gc_rootstack[vb + j] = args[nargs + j];
         gc_rootstack[vb + cnt] = NIL;
-        gc_rootsp = (uint16_t)(vb + cnt + 1);
+        gc_rootsp = (gc_rootsp_t)(vb + cnt + 1);
         for (j = cnt; j > 0; j--) { rest = cons(gc_rootstack[vb + j - 1], rest); gc_rootstack[vb + cnt] = rest; }
         gc_rootstack[base + nargs] = rest;   /* Rest-Slot */
     }
@@ -1966,6 +2011,105 @@ static uint8_t  vmr_nargs, vmr_nlocals, vmr_nlits, vmr_flags;
 static uint8_t  vmr_streaming;   /* 1 = Objekt groesser als Fenster -> WIN_ENSURE aktiv */
 static uint16_t vmr_hdrlen, vmr_poff, vmr_plen, vmr_pwmax, vmr_win, vmr_winlen;
 static const uint8_t *vmr_littab, *vmr_code;
+
+#ifdef LISP65_VM_SOFT_FRAMES
+/* R2 (soft frames): OP_CALL no longer re-enters vm_run_inner natively for a
+ * VM->VM call.  The caller's resumption state moves onto this explicit frame
+ * stack and the interpreter continues in the SAME activation, so a Lisp call
+ * level costs 0 bytes of the 256-byte 6502 hardware stack.
+ *
+ * Why a private array and not gc_rootstack: the GC scans gc_rootstack[0,
+ * gc_rootsp) as `obj` values.  bank/off/len/base/vb/pc are raw machine words,
+ * not tagged objects; storing them there would either be misread by the
+ * collector or need one 15-bit fixnum cell per byte pair.  The argument/local/
+ * operand state of a suspended frame DOES stay on gc_rootstack exactly as
+ * before, so GC root semantics are unchanged by this feature.  (The root-stack
+ * variant -- lever B of the host card -- reaches only 15 levels on the
+ * product's GC_ROOTS=128 budget against a 13-level cliff, which is why the
+ * private array is the bound deliverable.)
+ *
+ * The native re-entry boundary is unchanged: vm_run/vm_run_inner activations
+ * are still created by CALLPRIM re-entry (funcall/apply), the tree-walker
+ * bridge, the REPL and overlay entries.  Each activation owns the frame-stack
+ * region above the depth it observed at entry and restores that depth on every
+ * exit path it controls. */
+#ifndef VM_SOFT_FRAME_MAX
+/* Bound deliverable (v2.0.0-pre-plan, "R2's deliverable re-cut", 2026-09-07):
+ * a 16-level private frame array.  R2 closes the CLASS of the depth cliff --
+ * no hardware-stack growth per Lisp call and a clean VM_STACKOVER instead of
+ * the E29 loop -- while the numeric depth stays a priced parameter that BSS
+ * buys.  A profile that wants a different depth/BSS trade defines this
+ * explicitly. */
+#define VM_SOFT_FRAME_MAX 16
+#endif
+typedef struct {
+    uint16_t off;
+    uint16_t len;
+    gc_rootsp_t base;   /* narrowed with the root index (T11): one byte each */
+    gc_rootsp_t vb;     /* where the whole root stack fits in a byte */
+    uint16_t pc;        /* resume payload-PC of the CALL site (logical domain) */
+#ifdef VM_STEP_LIMIT
+    uint16_t steps;     /* per-frame watchdog, so the ON build keeps the OFF
+                         * build's per-activation step budget semantics */
+#endif
+#ifdef LISP65_VM_DIAGNOSTICS
+    obj run_fn;
+#endif
+    uint8_t bank;
+} vm_soft_frame;
+#if defined(__mos__) && defined(LISP65_C2_FIXED_RAW_BSS_OWNERS)
+/* R2 owns the high-bank BSS gap, never the fixed input-consumer interval. */
+#define VM_SOFT_BSS __attribute__((section(".lisp65_vm_soft_frames_bss")))
+#else
+#define VM_SOFT_BSS
+#endif
+static vm_soft_frame VM_SOFT_BSS vm_soft_stack[VM_SOFT_FRAME_MAX];
+static uint16_t VM_SOFT_BSS vm_soft_sp;
+#ifndef __mos__
+static uint16_t vm_soft_high_water;
+
+uint16_t vm_soft_frame_depth(void)     { return vm_soft_sp; }
+uint16_t vm_soft_frame_capacity(void)  { return (uint16_t)VM_SOFT_FRAME_MAX; }
+uint16_t vm_soft_frame_high_water(void){ return vm_soft_high_water; }
+void     vm_soft_frame_reset(void)     { vm_soft_sp = 0; vm_soft_high_water = 0; }
+#endif /* host inspection only */
+#endif
+
+/* Reload-on-return, out of line.  Expanded twice inside vm_run_inner (after
+ * OP_CALL's nested run and after OP_CALLPRIM's possible re-entry); the body is
+ * the former BUF_ENSURE_MINE macro verbatim, with the caller's `goto done`
+ * replaced by a null return.  Returns the resume cursor, never NULL on success
+ * (it always points into vm_codebuf). */
+static __attribute__((noinline)) const uint8_t *
+vm_buf_ensure_mine(uint8_t bank, uint16_t off, uint16_t len, uint16_t pcur_) {
+    uint8_t *cbuf = vm_codebuf;
+    if (vm_buf_bank != bank || vm_buf_off != off) {
+        /* a foreign fn is resident: load the header and re-parse ALL derivations */
+        if (!vm_object_load(bank, off, 0, (uint16_t)CO_OFF_LITTAB, cbuf)) { vm_status = VM_BADOPCODE; return 0; }
+        vmr_nargs   = cbuf[CO_OFF_NARGS];
+        vmr_nlocals = cbuf[CO_OFF_NLOCS];
+        vmr_flags   = cbuf[CO_OFF_FLAGS];
+        vmr_nlits   = cbuf[CO_OFF_NLITS];
+        vmr_hdrlen  = (uint16_t)(CO_OFF_LITTAB + 2 * (uint16_t)vmr_nlits);
+        if (!vm_object_load(bank, off, 0, vmr_hdrlen, cbuf)) { vm_status = VM_BADOPCODE; return 0; }
+        vmr_littab  = cbuf + CO_OFF_LITTAB;
+        vmr_code    = cbuf + vmr_hdrlen;
+        vmr_poff    = vmr_hdrlen;
+        vmr_plen    = (uint16_t)(len - vmr_hdrlen);
+        vmr_pwmax   = (uint16_t)(VM_CODEBUF - vmr_hdrlen);
+        vm_buf_bank = bank; vm_buf_off = off;
+        vmr_win = pcur_; vmr_winlen = 0; vmr_streaming = 1;
+        return vmr_code;
+    }
+    if (pcur_ >= vmr_win && (uint16_t)(pcur_ - vmr_win) < vmr_winlen) {
+        /* same fn, window covers the resume pc: globals valid, only the cursor
+         * moves (self-recursion fast path -- fully resident fns pay nothing) */
+        return vmr_code + (uint16_t)(pcur_ - vmr_win);
+    }
+    /* same fn, window moved: header globals valid, fetch the window again */
+    vmr_win = pcur_; vmr_winlen = 0; vmr_streaming = 1;
+    return vmr_code;
+}
 
 static __attribute__((noinline))
 obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
@@ -2017,7 +2161,7 @@ static __attribute__((noinline))
 obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
                  const obj *args, uint8_t nargs_actual) {
     uint8_t  op = 0;
-    uint16_t base, vb;
+    gc_rootsp_t base, vb;
     const uint8_t *ip;   /* Byte-Cursor im Fenster (ersetzt pc: 16-bit-Buchhaltung je Byte
                           * war ein Dispatch-Hauptposten — 1280 Zyklen/Op gemessen) */
 #ifdef LISP65_VM_DIAGNOSTICS
@@ -2037,6 +2181,20 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
 #define littab      vmr_littab
 #define code        vmr_code
     uint8_t *cbuf = vm_codebuf;
+#ifdef LISP65_VM_SOFT_FRAMES
+    gc_rootsp_t entry_base;
+    uint16_t entry_soft_sp;
+#endif
+    /* ONE argument buffer for OP_CALL/OP_TAILCALL/OP_CALLPRIM (each opcode used
+     * to declare its own) and the three parameters of the shared callee-entry
+     * sequence at the top of the dispatch switch. */
+    obj cargs[VM_MAXARGS];
+    const obj *enter_args;
+    uint16_t enter_di;
+    uint8_t enter_n;
+    /* Which entry reached the shared block: it decides the EXIT, and the exit
+     * is the error boundary.  See the block below. */
+    uint8_t enter_from_tail;
     obj a, b, r = NIL;
 #ifdef VM_STEP_LIMIT
     uint16_t vm_steps = 0;   /* Diagnose-Watchdog (16 bit, Limit <= 65000): Endlosschleife -> Fehler */
@@ -2058,6 +2216,18 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
 #endif
     base = gc_rootsp;
     vb = base;
+#ifdef LISP65_VM_SOFT_FRAMES
+    /* Native re-entry boundary.  A lisp_abort()/longjmp out of a deeper VM
+     * frame skips every `done:` epilogue, so frames can be left behind.  They
+     * are identifiable without touching the abort path: every LIVE frame has
+     * base < gc_rootsp (a callee's base is its caller's operand-stack top),
+     * while a stale frame's base is at or above the root stack pointer that
+     * the abort has already reset.  Dropping them here keeps the unwind local
+     * to vm.c; setjmp stays exactly where it is today. */
+    while (vm_soft_sp && vm_soft_stack[vm_soft_sp - 1].base >= base) vm_soft_sp--;
+    entry_soft_sp = vm_soft_sp;
+    entry_base = base;
+#endif
     HB(1); LA(4);   /* D: vm_run entry */
 
     /* Load the object and set up header/window (also for TAILCALL).
@@ -2096,30 +2266,9 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
      * The trigger is still the owner tag; a match means the callee was the same fn in the same
      * window, in which case the globals are correct too (header derivation is deterministic). */
 #define BUF_ENSURE_MINE(pcur_) do { \
-        if (vm_buf_bank != bank || vm_buf_off != off) { \
-            /* a foreign fn is resident: load the header and re-parse ALL derivations */ \
-            if (!vm_object_load(bank, off, 0, (uint16_t)CO_OFF_LITTAB, cbuf)) { vm_status = VM_BADOPCODE; goto done; } \
-            nargs   = cbuf[CO_OFF_NARGS]; \
-            nlocals = cbuf[CO_OFF_NLOCS]; \
-            flags   = cbuf[CO_OFF_FLAGS]; \
-            nlits   = cbuf[CO_OFF_NLITS]; \
-            hdrlen  = (uint16_t)(CO_OFF_LITTAB + 2 * (uint16_t)nlits); \
-            if (!vm_object_load(bank, off, 0, hdrlen, cbuf)) { vm_status = VM_BADOPCODE; goto done; } \
-            littab      = cbuf + CO_OFF_LITTAB; \
-            code        = cbuf + hdrlen; \
-            payload_off = hdrlen; \
-            payload_len = (uint16_t)(len - hdrlen); \
-            pwin_max    = (uint16_t)(VM_CODEBUF - hdrlen); \
-            vm_buf_bank = bank; vm_buf_off = off; \
-            win = (pcur_); winlen = 0; ip = code; streaming = 1; \
-        } else if ((pcur_) >= win && (uint16_t)((pcur_) - win) < winlen) { \
-            /* selbe Fn, Fenster deckt Resume-pc: Globals gueltig, nur Cursor setzen \
-             * (Selbstrekursions-Fastpath — voll residente Fns zahlen nichts) */ \
-            ip = code + (uint16_t)((pcur_) - win); \
-        } else { \
-            /* selbe Fn, Fenster verschoben: Header-Globals gueltig, Fenster neu holen */ \
-            win = (pcur_); winlen = 0; ip = code; streaming = 1; \
-        } \
+        const uint8_t *nip_ = vm_buf_ensure_mine(bank, off, len, (pcur_)); \
+        if (!nip_) goto done; \
+        ip = nip_; \
     } while (0)
 
     /* Sicherstellen, dass das Fenster [pc, min(pc+3, payload_len)) abdeckt (3 = max. Instr.-Laenge);
@@ -2160,21 +2309,12 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
     } while (0)
 #define RD8()  (*ip++)                              /* Byte am Cursor (nach WIN_ENSURE in-window) */
 
-    OBJ_SETUP();
-
-#ifdef LISP65_DIALECT_V2
-    if (!vm_arity_accepts(nargs_actual, nargs, flags)) { vm_status = VM_ARITY; goto done; }
-#endif
-
-    /* Frame-Guard NUR fuer Args+Locals (2026-07-06): die alte Pauschal-Reservierung
-     * von +VM_MAXARGS+1 Operanden-Slots je Frame (13!) begrenzte die Aufruftiefe auf
-     * ~9 Frames — der kalte (ide)-Start (~11 Frames) lief NUR dank verschluckter
-     * STACKOVER (s. klebriger Status). Operanden-Pushes sind einzeln PUSH-geprueft
-     * und brechen jetzt ehrlich ab -> die Reservierung darf auf das wirklich
-     * Geschriebene schrumpfen. Typischer Frame 17->5 Slots, Tiefe ~3x. */
-    if ((uint16_t)(base + vm_frame_slots(nargs_actual, nargs, nlocals, flags)) > GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }
-    vb = vm_frame_fill(base, args, nargs_actual, nargs, nlocals, flags);   /* fix + variadisch */
-    ip = code;
+    /* Enter this activation's own callee through the shared sequence below; the
+     * identity is already in bank/off/len, so it starts at enter_body.  The
+     * flag makes that block leave the way this prologue always left: straight
+     * into the dispatch loop, with no status test in between. */
+    enter_args = args; enter_n = nargs_actual; enter_from_tail = 0;
+    goto enter_body;
 
 #define PUSH(x)  do { if (gc_rootsp >= GC_ROOTS) { vm_status = VM_STACKOVER; goto done; } \
                       gc_rootstack[gc_rootsp++] = (obj)(x); } while (0)
@@ -2185,6 +2325,7 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
 #define NEEDFIX2 do { if (!IS_FIX(a) || !IS_FIX(b)) { vm_status = VM_TYPEERROR; goto done; } } while (0)
 
     for (;;) {
+dispatch_top:
         /* RUN/STOP auch in reinen VM-Schleifen: kompilierte Endlos-Loops ((ide), dotimes-
          * Lowering) waren sonst unabbrechbar — der Treewalker pollt in eval_env, die VM
          * tat es bis 2026-07-02 nie. Alle 256 Schritte, Kosten im Rauschen. */
@@ -2212,9 +2353,68 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
             bank, off, (uint16_t)(win + (uint16_t)(ip - code)),
             op, ip[0], ip[1]);
         switch (op) {
+        /* THE place that enters a callee.  Reached by goto only: from the
+         * prologue (identity already set) and from OP_TAILCALL (frame reuse,
+         * base untouched).  These six steps used to be written out twice. */
+enter_callee:
+            len = vm_directory_length(enter_di);
+            vm_directory_address(enter_di, &bank, &off);
+enter_body:
+            OBJ_SETUP();   /* Header + Payload-Fenster (streambar) */
+#ifdef LISP65_DIALECT_V2
+            if (!vm_arity_accepts(enter_n, nargs, flags)) { vm_status = VM_ARITY; goto done; }
+#endif
+            /* Frame-Guard NUR fuer Args+Locals (2026-07-06): die alte Pauschal-
+             * Reservierung von +VM_MAXARGS+1 Operanden-Slots je Frame (13!)
+             * begrenzte die Aufruftiefe auf ~9 Frames — der kalte (ide)-Start
+             * (~11 Frames) lief NUR dank verschluckter STACKOVER (s. klebriger
+             * Status). Operanden-Pushes sind einzeln PUSH-geprueft und brechen
+             * jetzt ehrlich ab -> die Reservierung darf auf das wirklich
+             * Geschriebene schrumpfen. Typischer Frame 17->5 Slots, Tiefe ~3x. */
+            if ((uint16_t)(base + vm_frame_slots(enter_n, nargs, nlocals, flags)) > GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }
+            vb = vm_frame_fill(base, enter_args, enter_n, nargs, nlocals, flags);   /* fix + variadisch */
+            ip = code;
+            /* THE error boundary this card must not move.  The tail path always
+             * crossed the bottom-of-loop status check; the initial entry never
+             * did, and a status can already be non-OK here because this VM keeps
+             * errors sticky until the abort site. */
+            if (enter_from_tail) break;
+            goto dispatch_top;
+
         case OP_HALT:
         case OP_RET:
             r = (gc_rootsp > vb) ? gc_rootstack[gc_rootsp - 1] : NIL;
+#ifdef LISP65_VM_SOFT_FRAMES
+#ifndef LISP65_V2_CARRIER_CUT
+            /* Also entered from OP_TAILCALL's tree-walker leg; that leg does
+             * not exist in the carrier-cut profile, so neither does the label. */
+soft_frame_return:
+#endif
+            if (vm_soft_sp > entry_soft_sp) {
+                /* Pop one VM frame and resume the caller in this activation.
+                 * Same order as the native path: drop the callee's slots, put
+                 * the caller's identity back, reload/repoint its code window,
+                 * then push the result. */
+                const vm_soft_frame *f_ = &vm_soft_stack[--vm_soft_sp];
+                uint16_t rpc_ = f_->pc;
+                vm_status = VM_OK;
+                gc_rootsp = base;          /* callee frame + operands gone */
+                bank = f_->bank; off = f_->off; len = f_->len;
+                base = f_->base; vb = f_->vb;
+#ifdef VM_STEP_LIMIT
+                vm_steps = f_->steps;
+#endif
+#ifdef LISP65_VM_DIAGNOSTICS
+                run_fn = f_->run_fn;
+#endif
+                LISP65_V14_RR_HELPER_RETURN(bank, off, rpc_, vm_status);
+                LISP65_V14_LADDER_FIRST_RETURN(bank, off, rpc_, vm_status);
+                BUF_ENSURE_MINE(rpc_);
+                LISP65_V14_WITNESS_RETURN(bank, off, rpc_);
+                PUSH(r);
+                break;
+            }
+#endif
             vm_status = VM_OK; goto done;
 
         case OP_PUSHI8:
@@ -2288,17 +2488,56 @@ relative_branch: {
             int di = IS_BCODE(sym) ? (int)BCODE_IDX(sym) : dir_find(sym);
             LISP65_V14_MECH_RESOLVE(
                 bank, off, (uint16_t)(win + (uint16_t)(ip - code)), sym, di);
-            obj cargs[VM_MAXARGS]; unsigned i; obj res;
+            obj res;
             /* Resume-pc VOR dem Nested-Call sichern: der Callee besitzt danach die
              * vmr_*-Fenster-Globals (C-Stack-Diaet) — win/code sind dann seine. */
             uint16_t pcur = (uint16_t)(win + (uint16_t)(ip - code));
+#ifdef LISP65_VM_SOFT_FRAMES
+            res = NIL;
+#endif
             if (n > VM_MAXARGS) { vm_status = VM_BADOPCODE; goto done; }
-            for (i = n; i > 0; i--) cargs[i-1] = POP();
+            if (!vm_pop_args(cargs, n, vb)) goto done;
             if (di >= 0 && vm_directory_length((uint16_t)di)) {
+#ifdef LISP65_VM_SOFT_FRAMES
+                /* R2: push the caller's resumption state and continue in THIS
+                 * activation.  Everything the callee's own native activation
+                 * would have done at entry is then replicated by the shared
+                 * callee-entry block, which this jumps into by the same door
+                 * the function prologue uses (enter_from_tail = 0): a fresh
+                 * callee entry never crossed the bottom-of-loop status check,
+                 * and that exit is the error boundary lever A had to preserve. */
+                {
+                    vm_soft_frame *f_;
+                    if (vm_soft_sp >= (uint16_t)VM_SOFT_FRAME_MAX) {
+                        vm_status = VM_STACKOVER; r = NIL; goto done;
+                    }
+                    f_ = &vm_soft_stack[vm_soft_sp++];
+#ifndef __mos__
+                    if (vm_soft_sp > vm_soft_high_water) vm_soft_high_water = vm_soft_sp;
+#endif
+                    f_->bank = bank; f_->off = off; f_->len = len;
+                    f_->base = base; f_->vb = vb;  f_->pc  = pcur;
+#ifdef VM_STEP_LIMIT
+                    f_->steps = vm_steps; vm_steps = 0;
+#endif
+#ifdef LISP65_VM_DIAGNOSTICS
+                    f_->run_fn = run_fn;
+                    run_fn = sym;
+                    vm_diag_valid = 0;
+                    vm_pending_fn = NIL;
+#endif
+                    r = NIL;
+                    base = gc_rootsp;          /* args are already popped */
+                    enter_di = (uint16_t)di; enter_n = n; enter_args = cargs;
+                    enter_from_tail = 0;
+                    goto enter_callee;
+                }
+#else
 #ifdef LISP65_VM_DIAGNOSTICS
                 vm_pending_fn = sym;
 #endif
                 res = vm_run_dir(di, cargs, n);  /* -> VM (anderer Puffer, Paritaet) */
+#endif
 #ifndef LISP65_V2_CARRIER_CUT
             } else if (vm_treewalk_call) {
                 res = vm_treewalk_call(sym, cargs, n);          /* -> Tree-Walker (kann re-entrant VM clobbern) */
@@ -2319,42 +2558,45 @@ relative_branch: {
             uint8_t li = RD8(), n = RD8();
             obj sym = LIT(li);
             int di = IS_BCODE(sym) ? (int)BCODE_IDX(sym) : dir_find(sym);
-            obj cargs[VM_MAXARGS]; unsigned i;
             if (n > VM_MAXARGS) { vm_status = VM_BADOPCODE; goto done; }
-            for (i = n; i > 0; i--) cargs[i-1] = POP();
+            if (!vm_pop_args(cargs, n, vb)) goto done;
             if (di < 0 || !vm_directory_length((uint16_t)di)) {   /* Tail-Aufruf an nicht-kompilierte Fn -> Tree-Walker, Ergebnis = Rueckgabe */
 #ifndef LISP65_V2_CARRIER_CUT
+                /* A tail call into an uncompiled function RETURNS from the
+                 * current Lisp frame with the tree-walker's value.  In the
+                 * native build "return" is the C return of this activation;
+                 * with soft frames it must pop exactly one VM frame instead,
+                 * or the value would be handed to the outermost native caller
+                 * and every suspended frame in between would be lost.  (Found
+                 * by the lcc self-compile fixpoint oracle on the host card;
+                 * carries its own regression row.) */
+#ifdef LISP65_VM_SOFT_FRAMES
+                if (vm_treewalk_call) {
+                    r = vm_treewalk_call(sym, cargs, n);
+                    if (vm_status != VM_OK) goto done;
+                    goto soft_frame_return;
+                }
+#else
                 if (vm_treewalk_call) { r = vm_treewalk_call(sym, cargs, n); goto done; }
+#endif
 #endif
                 r = vm_dirmiss_detail(sym); goto done;
             }
 #ifdef LISP65_VM_DIAGNOSTICS
             run_fn = sym;
 #endif
-            len = vm_directory_length((uint16_t)di);
-            vm_directory_address((uint16_t)di, &bank, &off);
-            OBJ_SETUP();   /* neues Objekt: Header + Payload-Fenster (streambar) */
-#ifdef LISP65_DIALECT_V2
-            if (!vm_arity_accepts(n, nargs, flags)) { vm_status = VM_ARITY; goto done; }
-#endif
-            /* Frame-Guard NUR fuer Args+Locals (2026-07-06): die alte Pauschal-Reservierung
-     * von +VM_MAXARGS+1 Operanden-Slots je Frame (13!) begrenzte die Aufruftiefe auf
-     * ~9 Frames — der kalte (ide)-Start (~11 Frames) lief NUR dank verschluckter
-     * STACKOVER (s. klebriger Status). Operanden-Pushes sind einzeln PUSH-geprueft
-     * und brechen jetzt ehrlich ab -> die Reservierung darf auf das wirklich
-     * Geschriebene schrumpfen. Typischer Frame 17->5 Slots, Tiefe ~3x. */
-    if ((uint16_t)(base + vm_frame_slots(n, nargs, nlocals, flags)) > GC_ROOTS) { vm_status = VM_STACKOVER; goto done; }
-            vb = vm_frame_fill(base, cargs, n, nargs, nlocals, flags);   /* fix + variadisch */
-            ip = code;
-            break;
+            /* Echtes TCO: base bleibt, nur die Identitaet wechselt. */
+            enter_di = (uint16_t)di; enter_n = n; enter_args = cargs;
+            enter_from_tail = 1;
+            goto enter_callee;
         }
         case OP_CALLPRIM: {
             LA(6);   /* F */
             uint8_t pid = RD8(), n = RD8();
-            obj cargs[VM_MAXARGS]; unsigned i; obj res;
+            obj res;
             uint16_t pcur = (uint16_t)(win + (uint16_t)(ip - code));   /* vor moegl. Re-Entry */
             if (n > VM_MAXARGS) { vm_status = VM_BADOPCODE; goto done; }
-            for (i = n; i > 0; i--) cargs[i-1] = POP();
+            if (!vm_pop_args(cargs, n, vb)) goto done;
             res = vm_callprim(pid, cargs, n);   /* funcall/apply (7/8) koennen re-entrant die VM clobbern */
             if (vm_status != VM_OK) { r = res; goto done; }
             BUF_ENSURE_MINE(pcur);   /* funcall/apply (7/8): Puffer+Globals reparsen falls geclobbert */
@@ -2403,7 +2645,17 @@ done:
         vm_diag_capture(vm_status, op, op_pc, sp, run_fn);
     }
 #endif
+#ifdef LISP65_VM_SOFT_FRAMES
+    /* One epilogue for the whole VM-frame chain this activation owns.  In the
+     * native build every level ran its own `gc_rootsp = base`; the bases are
+     * strictly increasing with depth, so resetting to the outermost one is the
+     * same net effect, and the frame stack returns to the depth this native
+     * activation inherited. */
+    gc_rootsp = entry_base;
+    vm_soft_sp = entry_soft_sp;
+#else
     gc_rootsp = base;
+#endif
     return r;
 
 #undef PUSH

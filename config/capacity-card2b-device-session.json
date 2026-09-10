@@ -1,0 +1,251 @@
+{
+  "authority": "ad60115a",
+  "choreography": {
+    "after_E29": "Reset; no later Lisp row on this state.",
+    "boot_wall_clock": "Record power-on to first live native prompt in seconds; B includes owner Freezer interaction. Also record product-start to prompt separately; do not call this automatic cold-boot time.",
+    "destructive_recursion_last": true,
+    "fresh_restore_and_sha_readback_before_qualifying_boot": true,
+    "ftp_may_run_between_live_rows": false,
+    "ftp_retrieval_terminal": true,
+    "preferred_variant": "B: power off >=30 seconds, power on, owner Freezer-mount then start",
+    "staging_order": "All three D81 files are staged and SHA-read back before product start. The JTAG FTP helper overwrites guest RAM and resets on exit; never invoke it while preserving a live Lisp world. Subsequent media changes use only owner Freezer mount. The original cold-start B observation is preserved; the owner-approved restart after restaging is reported separately, not as a new cold power cycle.",
+    "variant_A": "Only if owner confirms persistent autoboot setup; never presume RAM upload survives power loss."
+  },
+  "device_contacts_started": 0,
+  "elf": {
+    "path": "build/capacity/card2b-final-medium-r1/materialized/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "efe2585390e5583e6b7a49d810b9fabc8dc633680d98d60419341780ef74ffcf"
+  },
+  "extra_prefilter": {
+    "path": "build/capacity/card2b-session-extra-r1/receipt.json",
+    "sha256": "9d11f2cc96c07c7dc0ffa99d99f1d067e670680cff2f232b2be5e84a2bf07f54"
+  },
+  "host_acceptance": "d6d92e60",
+  "limits": [
+    "No Comfort, stack guard, iterative CALL or public Buffer claim.",
+    "No F011 register reads; RAM-only checkpoint reads separately authorized.",
+    "No formatting, existing-file replacement or device RAM fault injection.",
+    "128 is the product configuration, not a measured root watermark."
+  ],
+  "medium": {
+    "bytes": 819200,
+    "path": "build/capacity/card2b-final-medium-r1/packed/card2b-final-prefilter.d81",
+    "sha256": "9bcdc2dfd972c684f9765c9e95ba06c4ffb5d46eea3c9fca78461a5983a4baeb"
+  },
+  "new_product_images": 0,
+  "product_builds": 0,
+  "qualification": {
+    "path": "build/capacity/card2b-r1/final-qualification.json",
+    "sha256": "ecc5fe7540055b93b93e944851ce7b4ab41529ca7a0c92acc6dec8d8ac20b69f"
+  },
+  "readback_checkpoint": "Terminal retrieval only: complete saves, ROUND reload, member-error/recovery, macro coverage and final recursion/E29/reset first. Then retrieve CAP2BTST.D81 through the established resetting FTP transport and preserve/validate the returned image. No live-world continuation or diagnostic F011-register reads. Owner explicitly approved this choreography correction and restart.",
+  "release_note_claim": "Card 2b frees 414 ordinary-text bytes. The measured loader share of saves is about 3\u20137 emulated frames; complete 1\u201316-block save forms take about 1.6\u201311.9 emulated seconds. The larger total is the pre-existing Lisp save path (audit I5), not a latency newly introduced by this card. Device wall-clock observations remain pending.",
+  "rows": [
+    {
+      "expected": [
+        "WORKBENCH 2.0.0",
+        "lisp65> with cursor",
+        "no cannot open"
+      ],
+      "id": "boot",
+      "wall_seconds": null
+    },
+    {
+      "forms": [
+        {
+          "form": "(time (car (cdr (list 1 2))))",
+          "max_frames": 2,
+          "value": "2"
+        },
+        {
+          "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+          "max_frames": 2,
+          "value": "(9 2)"
+        },
+        {
+          "form": "(time (string-ref \"abc\" 1))",
+          "max_frames": 2,
+          "value": "98"
+        },
+        {
+          "form": "(time (v20-perf-probe 41))",
+          "max_frames": 2,
+          "value": "42"
+        }
+      ],
+      "id": "smokes",
+      "setup": "(defun v20-perf-probe (x) (+ x 1))"
+    },
+    {
+      "before": "library/helper/macro/depth definitions",
+      "expected_marker": "9",
+      "floors": {
+        "pool_bytes": 384,
+        "symbols": 32
+      },
+      "id": "D5",
+      "interpretation": "107/1467 is a host projection for its named population; device counters must be read and differences attributed.",
+      "marker": "(+ 4 5)",
+      "ram_counters": {
+        "npool": {
+          "address": 48572,
+          "bytes": 2,
+          "capacity": 10208,
+          "free": 1467,
+          "raw": "2522",
+          "used": 8741
+        },
+        "nsym": {
+          "address": 93,
+          "bytes": 2,
+          "capacity": 752,
+          "free": 107,
+          "raw": "8502",
+          "used": 645
+        }
+      }
+    },
+    {
+      "cases": [
+        {
+          "blocks": 1,
+          "bytes": 1,
+          "expected": "0",
+          "form": "(m65d-save-new \"cap1\" \"a\")"
+        },
+        {
+          "blocks": 16,
+          "bytes": 3811,
+          "expected": "0",
+          "form": "(m65d-save-new \"cap16\" captext)",
+          "prepare": "(progn (setq captext (buffer->string (make-buffer 3811))) 17)"
+        }
+      ],
+      "correctness": "After all live-world rows and the final E29/reset, JTAG-monitor retrieves CAP2BTST.D81 from SD. Independently verify CAP1=a, CAP16=3811 zero bytes, chains, BAM and directory; preserve raw returned image and SHA before parsing. Retrieval does not preserve the Lisp world and is never followed by a claimed resume.",
+      "device_reload": {
+        "authority": {
+          "path": "build/capacity/card2b-final-boot-roundtrip-r2/receipt.json",
+          "sha256": "6fab295d648167ca92ed4f5d4f5fab1c3fad67ab962e66576180dcbb05907f4d"
+        },
+        "claim": "Separate valid Lisp-source round trip; CAP1 and CAP16 are raw payloads, not executable Lisp. Their full contents are proved by returned D81.",
+        "effect": "roundtrip-value",
+        "expected": "0",
+        "expected_effect": "42",
+        "expected_load": "T",
+        "form": "(m65d-save-new \"round\" \"(setq roundtrip-value (+ 40 2))\")",
+        "load": "(load \"round\")",
+        "timing": "Outside both named save timing intervals; complete before final D81 retrieval."
+      },
+      "expected_load": "T",
+      "expected_remount": "0",
+      "expected_returned_files": {
+        "CAP1": "a",
+        "CAP16": "3811 zero bytes",
+        "ROUND": "(setq roundtrip-value (+ 40 2))"
+      },
+      "helper": {
+        "path": "build/bytecode/dialect-v2/libs/buffer.ext.bin",
+        "sha256": "184a86125cc96c59906a183d9c35c673665e7dc19ef7c08441cef8f89d8c4ad0"
+      },
+      "helper_load": "(load-lib \"buffer\")",
+      "helper_medium": {
+        "path": "build/capacity/card2b-device-session-r1/input-helper.d81",
+        "sha256": "e1804c2d13720cae4703e4ddfd5944d88b4c496e7ed755fbb2739feb0731e8b4"
+      },
+      "helper_scope": "Scratch-only input preparation, not product freight.",
+      "id": "save",
+      "load_m65d": "(load-lib \"m65d\")",
+      "preparation": [
+        "Load m65d from product medium.",
+        "Owner Freezer-mounts the PRESTAGED CAP2BIN.D81 without resetting the product; (m65d-remount) -> 0, (load-lib \"buffer\") -> T. No FTP invocation.",
+        "Owner Freezer-mounts the PRESTAGED CAP2BTST.D81 without resetting the product; (m65d-remount) -> 0. Both save cases target this initially empty disposable image. No FTP invocation."
+      ],
+      "remount": "(m65d-remount)",
+      "scratch": {
+        "path": "build/capacity/card2b-device-session-r1/scratch-empty.d81",
+        "sha256": "4db99a89050253b9b5750cab21589b73a1f274cc305616c0a30258c7832f57ed"
+      },
+      "transport": "Existing JTAG-monitor upload and return path; all uploads and SHA readbacks before product start. CAP2B.D81 is product, CAP2BIN.D81 is helper, CAP2BTST.D81 is initially empty writable scratch. Retrieval is terminal after all live-world rows: FTP overwrites guest RAM and resets. Retrieve to a NEW path, never overwrite scratch-empty.d81.",
+      "wall_clock": "Return key of save form to fresh result 0 and live prompt, seconds; preparation excluded."
+    },
+    {
+      "claim": "Keyboard-only invalid arity; no valid write call. Host framebuffer/RAM green; entry path is the accepted PID22 bridge.",
+      "id": "member-error-and-recovery",
+      "rows": [
+        {
+          "expected": "*** VM: TYPE ERROR",
+          "form": "(%disk-write-sector 0 0 0 0)",
+          "framebuffer": {
+            "path": "build/capacity/card2b-session-extra-r1/member-error.txt",
+            "sha256": "6e8fbc6f82c189afe092fc46baa905827d0414df880afe648a60c6183d11ab4f"
+          },
+          "id": "member-error",
+          "state": {
+            "rtov_busy": "00",
+            "vm_status": "00"
+          }
+        },
+        {
+          "expected": "9",
+          "form": "(+ 4 5)",
+          "framebuffer": {
+            "path": "build/capacity/card2b-session-extra-r1/recovery.txt",
+            "sha256": "13c97c03a516d83bb11d7e598265353edad5106dab2423ac0ecad413bd0ab200"
+          },
+          "id": "recovery",
+          "state": {
+            "rtov_busy": "00",
+            "vm_status": "00"
+          }
+        }
+      ]
+    },
+    {
+      "claim": "Large defmacro compiled on the unchanged 128-roots product, then macro use yields 42; not a root-exhaustion proof.",
+      "id": "lcc-128-roots-coverage",
+      "rows": [
+        {
+          "expected": "CAP-MACRO",
+          "form": "(defmacro cap-macro (x) (progn (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (+ 1 1) (list '+ x 1)))",
+          "framebuffer": {
+            "path": "build/capacity/card2b-session-extra-r1/large-defmacro.txt",
+            "sha256": "dce6c3143efd6e3e4fcc70ab508254e15e02eba563180b9000deb4161c361b47"
+          },
+          "id": "large-defmacro",
+          "state": {
+            "rtov_busy": "00",
+            "vm_status": "00"
+          }
+        },
+        {
+          "expected": "42",
+          "form": "(cap-macro 41)",
+          "framebuffer": {
+            "path": "build/capacity/card2b-session-extra-r1/macro-use.txt",
+            "sha256": "233ee00e3dfa26e188ea6cb19843e7464dd50985244f4c19518d42d3e2d7f748"
+          },
+          "id": "macro-use",
+          "state": {
+            "rtov_busy": "00",
+            "vm_status": "00"
+          }
+        }
+      ]
+    },
+    {
+      "expected": [
+        "SP-DEPTH",
+        "12",
+        "repeated E29"
+      ],
+      "forms": [
+        "(defun sp-depth (n) (if (= n 0) 0 (+ 1 (sp-depth (- n 1)))))",
+        "(sp-depth 12)",
+        "(sp-depth 13)"
+      ],
+      "id": "known-issue-final",
+      "then": "reset"
+    }
+  ],
+  "status": "BOUND: AWAIT OWNER READINESS; NO DEVICE CONTACT STARTED"
+}

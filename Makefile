@@ -644,7 +644,7 @@ include mk/runtime-core-v2-proof.mk
 include mk/ship-builder.mk
 
 .PHONY: all prelude mvp-vm-stdlib mvp-vm-stdlib-core mvp-vm-stdlib-disklibs mvp-vm-stdlib-hw-selftest mvp-vm-stdlib-known-open-diagnostic mvp-vm-stdlib-compile-repl mvp-vm-stdlib-crfit mvp-vm-stdlib-s5-proof mvp-vm-stdlib-einsuite mvp-vm-stdlib-einsuite-strip mvp-vm-stdlib-einsuite-full mvp-vm-stdlib-einsuite-fasl mvp-vm-stdlib-einsuite-core mvp-vm-stdlib-einsuite-core-edma-scroll mvp-vm-stdlib-einsuite-core-string-arena mvp-vm-stdlib-einsuite-core-arena-ide s5-source-d81 mvp-vm-stdlib-footprint-report mvp-vm-stdlib-compile-repl-footprint-report mvp-vm-stdlib-crfit-footprint-report mvp-vm-stdlib-einsuite-footprint-report mvp-vm-stdlib-einsuite-strip-footprint-report mvp-vm-stdlib-einsuite-full-footprint-report mvp-vm-stdlib-einsuite-fasl-footprint-report mvp-vm-stdlib-einsuite-core-footprint-report mvp-vm-stdlib-einsuite-core-edma-scroll-footprint-report mvp-vm-stdlib-einsuite-core-string-arena-footprint-report mvp-vm-stdlib-einsuite-core-arena-ide-footprint-report screen-edma-scroll-footprint-delta mvp-vm-stdlib-load-footprint-report mvp-vm-stdlib-boot-budget-report mvp-vm-stdlib-runtime-budget-report bank0-reclaim-report stdlib-footprint-rank workbench-ship-d81 workbench-d81-bam-sanity workbench-d81-bam-alloc-diff-selftest workbench-d81-chain-write-diff-selftest mvp-ship run run-mvp-vm-stdlib check clean FORCE
-.PHONY: host-oracle legacy-lisp64-oracle xmega65-safety-check fixed-point-check closure-surface-check ide-host-slice-check ide-bytecode-cost-report ide-render-callgraph ide-bytecode-dynamic-report bytecode-p0-oracle bytecode-p0-compiler-check bytecode-p0-program-check bytecode-p0-bundle-check bytecode-p0-stdlib-check bytecode-p0-stdlib-artifacts string-arena-probe bytecode-p0-disklib-check bytecode-p0-disklib-artifacts bytecode-p0-disklib-d81 l65m-contract-check l65m-native-loader-check fasl-emit-check bytecode-p0-ide-full-lib-check bytecode-p0-ide-lib-check bytecode-p0-ide-lib-artifacts bytecode-p0-ide-extra-lib-check bytecode-p0-ide-extra-lib-artifacts bytecode-p0-ide-lib-d81 bytecode-p0-format-lib-check bytecode-p0-format-lib-artifacts bytecode-p0-format-lib-d81 bytecode-p0-fixed-lib-check bytecode-p0-fixed-lib-artifacts bytecode-p0-fixed-lib-d81 bytecode-p0-strings-extra-lib-check bytecode-p0-strings-extra-lib-artifacts bytecode-p0-strings-extra-lib-d81 bytecode-p0-place-lib-check bytecode-p0-place-lib-artifacts bytecode-p0-place-lib-d81 bytecode-p0-pilot-libs-check bytecode-p0-pilot-libs-artifacts bytecode-p0-pilot-libs-d81 demo-suite-check demo-suite-d81 bytecode-known-open-diagnostic-artifacts bytecode-p0-drift-check bytecode-vm-compile-check runtime-known-open-check vm-smoke gc-smoke native-reader-conformance compile-smoke compile-run repl-session lcc-install-device-smoke lcc-install-overlay-smoke vm-boot-fastpath-smoke error-state-smoke prelude-compile-check prelude-load-run output-smoke eval-prims-smoke save-semantics-check
+.PHONY: host-oracle legacy-lisp64-oracle xmega65-safety-check fixed-point-check closure-surface-check ide-host-slice-check ide-bytecode-cost-report ide-render-callgraph ide-bytecode-dynamic-report bytecode-p0-oracle bytecode-p0-compiler-check bytecode-p0-program-check bytecode-p0-bundle-check bytecode-p0-stdlib-check bytecode-p0-stdlib-artifacts string-arena-probe bytecode-p0-disklib-check bytecode-p0-disklib-artifacts bytecode-p0-disklib-d81 l65m-contract-check l65m-native-loader-check fasl-emit-check bytecode-p0-ide-full-lib-check bytecode-p0-ide-lib-check bytecode-p0-ide-lib-artifacts bytecode-p0-ide-extra-lib-check bytecode-p0-ide-extra-lib-artifacts bytecode-p0-ide-lib-d81 bytecode-p0-format-lib-check bytecode-p0-format-lib-artifacts bytecode-p0-format-lib-d81 bytecode-p0-fixed-lib-check bytecode-p0-fixed-lib-artifacts bytecode-p0-fixed-lib-d81 bytecode-p0-strings-extra-lib-check bytecode-p0-strings-extra-lib-artifacts bytecode-p0-strings-extra-lib-d81 bytecode-p0-place-lib-check bytecode-p0-place-lib-artifacts bytecode-p0-place-lib-d81 bytecode-p0-pilot-libs-check bytecode-p0-pilot-libs-artifacts bytecode-p0-pilot-libs-d81 demo-suite-check demo-suite-d81 bytecode-known-open-diagnostic-artifacts bytecode-p0-drift-check bytecode-vm-compile-check runtime-known-open-check vm-smoke root-index-boundary-check vm-soft-frames-check gc-smoke native-reader-conformance compile-smoke compile-run repl-session lcc-install-device-smoke lcc-install-overlay-smoke vm-boot-fastpath-smoke error-state-smoke prelude-compile-check prelude-load-run output-smoke eval-prims-smoke save-semantics-check
 .PHONY: eval-bytecode-equivalence-check eval-surface-contract-check equivalence-check dialect-v2-prelude-control-selftest dialect-v2-prelude-control-check dialect-v2-prelude-control-matrix dialect-v2-prelude-evidence-selftest dialect-v2-prelude-evidence-check dialect-v2-prelude-evidence-live-check bytecode-p0-native-compiler-check post-mvp-stdlib-polish-check stdlib-embed-whatif stdlib-embed-whatif-check mvp-vm-stdlib-boot-budget-check mvp-vm-stdlib-runtime-budget-check xemu-mega65-prelude-gc-smoke hw-smoke-vm-stdlib hw-smoke-vm-stdlib-dry-run hw-smoke-vm-stdlib-selftest hw-smoke-vm-stdlib-selftest-dry-run hw-workbench-ux-smoke hw-workbench-ux-smoke-dry-run hw-workbench-bam-read-smoke hw-workbench-bam-read-smoke-dry-run hw-workbench-bam-alloc-smoke-prg hw-workbench-bam-alloc-smoke hw-workbench-bam-alloc-smoke-dry-run hw-workbench-chain-write-smoke-prg hw-workbench-chain-write-smoke hw-workbench-chain-write-smoke-dry-run hw-smoke-compile-repl hw-smoke-compile-repl-dry-run hw-known-open-diagnostic hw-known-open-diagnostic-dry-run hw-demo-suite hw-demo-suite-dry-run hw-stress-full hw-stress-full-dry-run hw-stress-dmaprof hw-stress-dmaprof-dry-run hw-stress-deep hw-stress-deep-dry-run hw-stress-deep1 hw-stress-deep1-dry-run hw-stress-deep2 hw-stress-deep2-dry-run hw-stress-redeploy hw-stress-redeploy-dry-run hw-stress-redeploy-deep hw-stress-redeploy-deep-dry-run hw-access-smoke-prg hw-access-smoke hw-access-smoke-dry-run hw-access-smoke-readback hw-access-smoke-readback-dry-run hw-color-ram-smoke-prg hw-color-ram-smoke hw-color-ram-smoke-dry-run hw-color-ram-smoke-readback hw-color-ram-smoke-readback-dry-run hw-edma-screen-smoke-prg hw-edma-screen-smoke hw-edma-screen-smoke-dry-run hw-edma-screen-smoke-readback hw-edma-screen-smoke-readback-dry-run hyppo-probe-matrix
 .PHONY: dialect-v2-eval-apply-funcall-selftest dialect-v2-eval-apply-funcall-check dialect-v2-eval-apply-funcall-matrix
 .PHONY: dialect-v2-lists-selftest dialect-v2-lists-check dialect-v2-lists-native-matrix dialect-v2-lists-p0-selftest dialect-v2-lists-p0-check dialect-v2-lists-lcc-selftest dialect-v2-lists-lcc-check dialect-v2-lists-matrix dialect-v2-lists-type-errors-check
@@ -3128,6 +3128,7 @@ bytecode-p0-oracle:
 	python3 tools/host-lisp/bytecode_p0_oracle.py
 
 bytecode-p0-compiler-check:
+	python3 tools/host-lisp/bytecode_p0_compiler.py --selftest
 	python3 tools/host-lisp/bytecode_p0_compiler.py --check
 
 bytecode-p0-program-check:
@@ -3142,6 +3143,7 @@ bytecode-p0-bundle-check:
 # suites and are excluded by derivation at recipe time (gate-drift card
 # 2026-09-05); no parse-time shell execution.
 bytecode-p0-stdlib-check:
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --screen-rvs-selftest
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $$(python3 -c "import glob,json;t=set(a['source_suite'] for a in json.load(open('config/v2-workbench-artifact-closure.json'))['artifacts']);print(' '.join(p for p in sorted(glob.glob('tests/bytecode/stdlib/*.json')) if p not in t))")
 
 bytecode-p0-stdlib-artifacts: | build/bytecode
@@ -3465,9 +3467,89 @@ $(VM_SMOKE_V2_HOST): scripts/vm-smoke-main.c $(BYTECODE_P0_C_VECTORS) src/vm.c s
 		-DLISP65_V2_NATIVE_CAPABILITIES -DLISP65_V2_NATIVE_STRING_CODECS \
 		-Isrc -Ibuild scripts/vm-smoke-main.c src/vm.c src/mem.c src/symbol.c src/interrupt.c src/screen.c -o $@
 
+# The root-stack overflow boundary must land on exactly GC_ROOTS whichever
+# index width the gc_rootsp_t typedef picks.  Runs the same probe below, at and
+# above the 255/256 threshold.
+ROOT_INDEX_BOUNDARY_SRCS := scripts/root-index-boundary-main.c src/vm.c src/mem.c src/symbol.c src/interrupt.c
+root-index-boundary-check: $(ROOT_INDEX_BOUNDARY_SRCS) | build
+	@set -e; for r in 4 32 128 200 255 256 512 1024; do \
+		$(HOSTCC) -std=c99 -Wall -Wextra -Werror=type-limits -Wno-unused-parameter \
+			-DHEAP_CELLS=2048 -DGC_ROOTS=$$r -DMAX_SYM=160 -DNAMEPOOL=2048 \
+			-Isrc $(ROOT_INDEX_BOUNDARY_SRCS) -o build/root-index-boundary-$$r; \
+		build/root-index-boundary-$$r; \
+	done
+
 vm-smoke: $(VM_SMOKE_HOST) $(VM_SMOKE_V2_HOST)
 	$(VM_SMOKE_HOST)
 	$(VM_SMOKE_V2_HOST)
+
+# R2 (soft frames): deep NON-tail VM recursion, the clean out-of-frames error,
+# and abort inside nested VM frames followed by a working next evaluation.
+# The feature is built OFF and ON, each with a fully resident code window and
+# with a forced streamed window (VM_CODEBUF=16), so the return path that
+# reloads an evicted caller window is covered.  The OFF builds must pass every
+# semantic expectation as well; that is the equivalence claim of this gate.
+#
+# Two profiles.  The wide one carries the depth-200/2000 equivalence rows; the
+# product-shaped one (GC_ROOTS=128 and the shipped 16-level bound) carries the
+# depth proof of the Known Issue: the depths that end in the device's E29 loop
+# today return, and the first depth past the bound refuses cleanly.
+VM_SOFT_FRAMES_CFLAGS := -std=c99 -Wall -Wextra -Wno-unused-parameter \
+	-DHEAP_CELLS=2048 -DGC_ROOTS=16384 -DMAX_SYM=160 -DNAMEPOOL=2048
+VM_SOFT_FRAMES_P_CFLAGS := -std=c99 -Wall -Wextra -Wno-unused-parameter \
+	-DHEAP_CELLS=2048 -DGC_ROOTS=128 -DMAX_SYM=160 -DNAMEPOOL=2048
+VM_SOFT_FRAMES_SRCS := scripts/vm-soft-frames-main.c src/vm.c src/mem.c src/symbol.c src/interrupt.c
+VM_SOFT_FRAMES_DEPS := scripts/vm-soft-frames-main.c src/vm.c src/vm.h src/mem.c src/mem.h src/symbol.c src/symbol.h src/interrupt.c src/interrupt.h
+
+build/vm-soft-frames-off: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_CFLAGS) -Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+build/vm-soft-frames-on: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_CFLAGS) -DLISP65_VM_SOFT_FRAMES -DVM_SOFT_FRAME_MAX=3000 \
+		-Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+build/vm-soft-frames-off-stream: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_CFLAGS) -DVM_CODEBUF=16 -Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+build/vm-soft-frames-on-stream: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_CFLAGS) -DVM_CODEBUF=16 -DLISP65_VM_SOFT_FRAMES -DVM_SOFT_FRAME_MAX=3000 \
+		-Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+build/vm-soft-frames-on-asan: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_CFLAGS) -fsanitize=address,undefined -g -O1 \
+		-DLISP65_VM_SOFT_FRAMES -DVM_SOFT_FRAME_MAX=3000 -Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+# Product-shaped: GC_ROOTS=128, the shipped VM_SOFT_FRAME_MAX default (16).
+build/vm-soft-frames-off-product: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_P_CFLAGS) -Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+build/vm-soft-frames-on-product: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_P_CFLAGS) -DLISP65_VM_SOFT_FRAMES \
+		-Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+build/vm-soft-frames-on-product-stream: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_P_CFLAGS) -DVM_CODEBUF=16 -DLISP65_VM_SOFT_FRAMES \
+		-Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+build/vm-soft-frames-on-product-asan: $(VM_SOFT_FRAMES_DEPS) | build
+	$(HOSTCC) $(VM_SOFT_FRAMES_P_CFLAGS) -fsanitize=address,undefined -g -O1 \
+		-DLISP65_VM_SOFT_FRAMES -Isrc $(VM_SOFT_FRAMES_SRCS) -o $@
+
+vm-soft-frames-check: build/vm-soft-frames-off build/vm-soft-frames-on \
+		build/vm-soft-frames-off-stream build/vm-soft-frames-on-stream \
+		build/vm-soft-frames-on-asan \
+		build/vm-soft-frames-off-product build/vm-soft-frames-on-product \
+		build/vm-soft-frames-on-product-stream \
+		build/vm-soft-frames-on-product-asan
+	build/vm-soft-frames-off
+	build/vm-soft-frames-on
+	build/vm-soft-frames-off-stream
+	build/vm-soft-frames-on-stream
+	build/vm-soft-frames-on-asan
+	build/vm-soft-frames-off-product
+	build/vm-soft-frames-on-product
+	build/vm-soft-frames-on-product-stream
+	build/vm-soft-frames-on-product-asan
 
 # GC-Smoke (Host): uebt den Fixpoint-Sweep-GC unter Druck. Schliesst die CI-Luecke, die den
 # mega65-GC-Freeze versteckte (bisher nur C64-GC getestet). HW-Entsprechung:

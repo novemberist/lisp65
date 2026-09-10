@@ -656,6 +656,72 @@ def _directory_only_selftest():
     return 0
 
 
+class _ScreenRowsProbe(object):
+    """Minimal stand-in for the oracle VM: only the screen fields are read."""
+
+    def __init__(self, cells, columns=8, rows=1):
+        self.screen_columns = columns
+        self.screen_rows = rows
+        self.screen_cells = list(cells)
+
+
+def _screen_rvs_selftest():
+    """Prove the modelled reverse-video bit survives the row comparison.
+
+    The oracle used to drop the attribute argument of screen-put-char, so a
+    reverse-video cell ($a0 = reverse space) was indistinguishable from a plain
+    space and a repaint that failed to reclaim the old cursor cell was invisible
+    to expect_screen_rows.  Two properties are pinned here: the cell model
+    mirrors src/screen.c, and an exact row expectation rejects the residue that
+    a masked row expectation still accepts.
+    """
+    cases = 0
+    for code, attr, want in (
+        (32, 129, 0xA0),      # scr_put_at: attr >= 0 with bit 7 -> RVS set
+        (32, 1, 0x20),        # attr >= 0 without bit 7 -> to_screen output
+        (97, 129, 0xE1),      # RVS applies to any glyph, not just the space
+        (32, -1, 0x20),       # attr < 0 leaves colour alone but clears RVS
+        (0xA0, 1, 0x20),      # bit 7 is never carried in from the code
+    ):
+        got = B._screen_cell(code, attr)
+        if got != want:
+            raise StdlibCheckError(
+                "screen cell model: code %d attr %d expected $%02x got $%02x"
+                % (code, attr, want, got)
+            )
+        cases += 1
+
+    # Mutation: one reverse space left behind where a plain space is required.
+    clean = [0x20] * 8
+    residue = [0x20] * 8
+    residue[3] = 0xA0
+    row_text = " " * 8
+    for cells, expect_masked_ok, expect_exact_ok in (
+        (clean, True, True),
+        (residue, True, False),
+    ):
+        for key, exact, expect_ok in (
+            ("expect_screen_rows", False, expect_masked_ok),
+            ("expect_screen_rows_exact", True, expect_exact_ok),
+        ):
+            case = {"name": "screen-rvs-selftest", key: {"0": row_text}}
+            probe = _ScreenRowsProbe(cells)
+            try:
+                _check_screen_rows(probe, case, "selftest", "source", key, exact)
+            except AssertionError:
+                ok = False
+            else:
+                ok = True
+            if ok != expect_ok:
+                raise StdlibCheckError(
+                    "screen row mutation: %s on %r expected %s"
+                    % (key, bytes(cells), "pass" if expect_ok else "fail")
+                )
+            cases += 1
+    print("bytecode-p0-screen-rvs selftest: PASS cases=%d" % cases)
+    return 0
+
+
 def _entry_definition_source(name, sources, resident_overrides,
                              definition_source_overrides=None):
     pattern = re.compile(r"\(def(?:un|macro)\s+" + re.escape(name) + r"(?=[\s()])")
@@ -1929,41 +1995,58 @@ def _validate_case_io(case, vm, path, lane, ignored_output_codes=()):
                 % (case["name"], path, lane, remaining, len(vm.key_events))
             )
         observed["key_events_remaining"] = len(vm.key_events)
-    if "expect_screen_rows" in case:
-        rows = case["expect_screen_rows"]
-        if (
-            not isinstance(rows, dict)
-            or not rows
-            or not all(
-                isinstance(raw_row, str)
-                and raw_row.isdigit()
-                and isinstance(text, str)
-                and len(text) <= vm.screen_columns
-                for raw_row, text in rows.items()
-            )
-        ):
-            raise StdlibCheckError(
-                "%s (%s): expect_screen_rows must map row numbers to text"
-                % (case["name"], path)
-            )
-        screen_rows = {}
-        for raw_row, text in rows.items():
-            row = int(raw_row)
-            if row < 0 or row >= vm.screen_rows:
-                raise StdlibCheckError(
-                    "%s (%s): screen row outside fixture: %d"
-                    % (case["name"], path, row)
-                )
-            start = row * vm.screen_columns
-            got = bytes(vm.screen_cells[start:start + len(text)]).decode("latin-1")
-            if got != text:
-                raise AssertionError(
-                    "%s (%s %s): screen row %d expected %r got %r"
-                    % (case["name"], path, lane, row, text, got)
-                )
-            screen_rows[raw_row] = got
-        observed["screen_rows"] = screen_rows
+    for key, observed_key, exact in (
+        ("expect_screen_rows", "screen_rows", False),
+        ("expect_screen_rows_exact", "screen_rows_exact", True),
+    ):
+        if key not in case:
+            continue
+        observed[observed_key] = _check_screen_rows(vm, case, path, lane, key, exact)
     return observed or None
+
+
+# The oracle models reverse video the way src/screen.c does (bit 7 of the stored
+# cell, see bytecode_p0._screen_cell).  Legacy `expect_screen_rows` fixtures were
+# written before that and therefore describe the *glyph* only, so they keep
+# comparing against `cell & 0x7f`.  A case that must also pin reverse-video
+# residue -- a cursor cell that a repaint failed to reclaim -- uses
+# `expect_screen_rows_exact`, which compares the stored byte unmasked.
+def _check_screen_rows(vm, case, path, lane, key, exact):
+    rows = case[key]
+    if (
+        not isinstance(rows, dict)
+        or not rows
+        or not all(
+            isinstance(raw_row, str)
+            and raw_row.isdigit()
+            and isinstance(text, str)
+            and len(text) <= vm.screen_columns
+            and all(ord(ch) <= 0xFF for ch in text)
+            for raw_row, text in rows.items()
+        )
+    ):
+        raise StdlibCheckError(
+            "%s (%s): %s must map row numbers to text" % (case["name"], path, key)
+        )
+    screen_rows = {}
+    for raw_row, text in rows.items():
+        row = int(raw_row)
+        if row < 0 or row >= vm.screen_rows:
+            raise StdlibCheckError(
+                "%s (%s): screen row outside fixture: %d" % (case["name"], path, row)
+            )
+        start = row * vm.screen_columns
+        cells = vm.screen_cells[start:start + len(text)]
+        if not exact:
+            cells = [cell & 0x7F for cell in cells]
+        got = bytes(cells).decode("latin-1")
+        if got != text:
+            raise AssertionError(
+                "%s (%s %s): screen row %d (%s) expected %r got %r"
+                % (case["name"], path, lane, row, key, text, got)
+            )
+        screen_rows[raw_row] = got
+    return screen_rows
 
 
 def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
@@ -3186,6 +3269,7 @@ def main(argv=None):
     ap.add_argument("--omission-contract-selftest", action="store_true")
     ap.add_argument("--omission-contract-audit", action="store_true")
     ap.add_argument("--directory-only-selftest", action="store_true")
+    ap.add_argument("--screen-rvs-selftest", action="store_true")
     ap.add_argument(
         "--emit-artifacts",
         metavar="PREFIX",
@@ -3213,6 +3297,8 @@ def main(argv=None):
         return _omission_contract_audit()
     if ns.directory_only_selftest:
         return _directory_only_selftest()
+    if ns.screen_rvs_selftest:
+        return _screen_rvs_selftest()
     if not ns.check and not ns.emit_artifacts:
         print("bytecode_p0_stdlib.py requires --check or --emit-artifacts", file=sys.stderr)
         return 2

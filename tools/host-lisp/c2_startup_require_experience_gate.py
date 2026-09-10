@@ -509,6 +509,10 @@ def require_execution(source: str) -> dict[str, Any]:
             "rendered_intent": "loading inspect...\n", "cases": 3}
 
 
+# This is the sealed Experience delta against DIRECT_RECEIPT, not a price of
+# later library/index freight. Live source validation and require execution
+# below remain live; only this historical artifact comparison uses its era.
+@ERA.in_host_source_world(DIRECT.EXPERIENCE_BASE_COMMIT)
 def require_artifact_price(value: dict[str, Any]) -> dict[str, Any]:
     prior = load(DIRECT_RECEIPT)
     before = prior["accounting"]

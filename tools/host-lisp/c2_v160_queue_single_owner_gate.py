@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from evidence_era import era_blob
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -20,6 +21,7 @@ CANDIDATE_RECEIPT = ROOT / (
     "c2.3-v1.6-recovery-sanitization-adapter-qualification-resume.json")
 OUT = ROOT / ("tests/bytecode/dialect-v2/evidence/architecture-blocks/"
              "c2.3-v1.6-queue-single-owner-gate-receipt.json")
+EVIDENCE_COMMIT = "334f4993"  # Commit sealing OUT, not the live product era.
 
 
 def require(value: bool, message: str) -> None:
@@ -97,7 +99,10 @@ def derive(source: str | None = None) -> dict[str, Any]:
         "format": "lisp65-c2-v160-queue-single-owner-gate-v1",
         "recorded_on": "2026-08-21",
         "status": "PASS: ARMED CAPTURE IS SOLE HARDWARE QUEUE OWNER",
-        "inputs": {"source": bind(SOURCE), "attribution": bind(ATTRIBUTION)},
+        "inputs": {"source": {"path": SOURCE.relative_to(ROOT).as_posix(),
+                              "bytes": len(text.encode()),
+                              "sha256": hashlib.sha256(text.encode()).hexdigest()},
+                   "attribution": bind(ATTRIBUTION)},
         "contract": {
             "capture_armed": "lisp_poll performs zero D60A/D619 reads or acks",
             "run_stop": "matrix-pending latch remains evaluator abort authority",
@@ -136,14 +141,24 @@ def current_candidate_reproof() -> dict[str, Any]:
             "linked_single_owner": linked}
 
 
-def receipt() -> dict[str, Any]:
-    value = derive()
+def receipt(source: str | None = None) -> dict[str, Any]:
+    value = derive(source)
     value["current_candidate_reproof"] = current_candidate_reproof()
     return value
 
 
+def live_owner_proof(historical: str, live: str | None = None) -> None:
+    current = SOURCE.read_text(encoding="utf-8") if live is None else live
+    derive(current)
+    require(function_body(current, "lisp_poll") ==
+            function_body(historical, "lisp_poll"),
+            "live queue-owner body differs from sealed linked proof")
+
+
 def validate_receipt(value: dict[str, Any]) -> None:
-    require(value == receipt(), "queue single-owner receipt drift")
+    historical = era_blob(EVIDENCE_COMMIT, SOURCE.relative_to(ROOT).as_posix()).decode()
+    require(value == receipt(historical), "queue single-owner receipt drift")
+    live_owner_proof(historical)
 
 
 def selftest(value: dict[str, Any]) -> None:
@@ -176,13 +191,26 @@ def selftest(value: dict[str, Any]) -> None:
         else: raise RuntimeError("queue single-owner candidate mutation survived")
     require(receipt_rejected == 2,
             "queue single-owner candidate mutation count drift")
+    historical = era_blob(EVIDENCE_COMMIT, SOURCE.relative_to(ROOT).as_posix()).decode()
+    live_owner_proof(historical, source + "\n/* unrelated source metadata */\n")
+    altered = source.replace("void lisp_poll(void) {", "void lisp_poll(void) { /* changed owner */", 1)
+    try: live_owner_proof(historical, altered)
+    except RuntimeError: pass
+    else: raise RuntimeError("changed live owner accepted as sealed proof")
+    trial = copy.deepcopy(value)
+    trial["inputs"]["source"]["sha256"] = "0" * 64
+    try: validate_receipt(trial)
+    except RuntimeError: pass
+    else: raise RuntimeError("unbound historical source accepted")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("action", choices=("write", "check", "selftest"))
     action = parser.parse_args().action
-    if action == "write": OUT.write_bytes(canonical(receipt()))
+    if action == "write":
+        historical = era_blob(EVIDENCE_COMMIT, SOURCE.relative_to(ROOT).as_posix()).decode()
+        OUT.write_bytes(canonical(receipt(historical)))
     value = json.loads(OUT.read_text(encoding="utf-8"))
     validate_receipt(value)
     if action == "selftest": selftest(value)

@@ -190,6 +190,9 @@ static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
             lisp_abort_code(LISP65_ERR_READER_INVALID_TOKEN);
         } else if (n < max - 1) {
             if (c == 0xA0) c = ' ';
+            /* $5c (`£`) is the quasiquote key and must reach buf[] unchanged:
+             * it is neither a control nor a letter band, so it falls through
+             * both conversions below as ASCII backslash 0x5c. */
 #ifdef LISP65_SCREEN_DRIVER
             /* PETSCII -> ASCII VOR dem Echo: unshifted Buchstaben ($41-$5A) -> klein,
              * geshiftete ($C1-$DA) -> GROSS; der Treiber mappt ASCII selbst. */

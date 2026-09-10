@@ -29,6 +29,7 @@ RECEIPT = ROOT / (
     "c2.2-v1.3-q-host-first-receipt.json"
 )
 PUBLIC_BUILD_RECEIPT = BUILD / "public-build-current-source-receipt.json"
+SUCCESSOR_RECEIPT = RECEIPT.with_name("c2.2-q-renderer-host-successor-receipt.json")
 Q_NAMES = [
     "%q-error",
     "%q-add2",
@@ -97,27 +98,26 @@ def atomic_json(path: Path, value: dict[str, Any]) -> None:
     temporary.replace(path)
 
 
-def preserve_sealed_receipt(path: Path, value: dict[str, Any]) -> None:
-    """Keep the sealed Q receipt when only manifest provenance has advanced."""
-    if not path.is_file():
-        atomic_json(path, value)
-        return
-    sealed = load(path)
-    normalized = copy.deepcopy(value)
-    for world in ("baseline", "candidate"):
-        current = value["artifacts"][world]["manifest"]
-        historical = sealed["artifacts"][world]["manifest"]
-        require(
-            {key: current.get(key) for key in ("path", "bytes")}
-            == {key: historical.get(key) for key in ("path", "bytes")},
-            f"sealed Q {world} manifest path/size drift",
-        )
-        normalized["artifacts"][world]["manifest"] = historical
-    require(normalized["authority"]["gate"]["path"]
-            == sealed["authority"]["gate"]["path"],
-            "historical Q gate identity drift")
-    normalized["authority"]["gate"] = sealed["authority"]["gate"]
-    require(normalized == sealed, "historical Q receipt semantic drift")
+def verify_successor(recorded: dict[str, Any], observed: dict[str, Any]) -> None:
+    require(recorded == observed, "Q successor semantic/provenance drift")
+
+
+def successor_mutations(value: dict[str, Any]) -> list[str]:
+    rejected = []
+    for name in ("stale-host-vm", "host-vm-omitted", "artifact-result-diverges"):
+        trial = copy.deepcopy(value)
+        if name == "stale-host-vm":
+            trial["authority"]["host_vm"]["sha256"] = "0" * 64
+        elif name == "host-vm-omitted":
+            trial["authority"].pop("host_vm")
+        else:
+            trial["artifacts"]["execution"] = {}
+        try:
+            verify_successor(trial, value)
+        except GateError:
+            rejected.append(name)
+    require(len(rejected) == 3, "Q successor mutation survived")
+    return rejected
 
 
 def _defun_block(source: str, name: str) -> str:
@@ -601,7 +601,7 @@ def artifact_gate() -> dict[str, Any]:
     }
 
 
-def main(*, public_build: bool = False) -> int:
+def main(*, public_build: bool = False, record_successor: bool = False) -> int:
     try:
         contract = load(CONTRACT)
         source = SOURCE.read_text(encoding="utf-8")
@@ -666,7 +666,15 @@ def main(*, public_build: bool = False) -> int:
         if public_build:
             atomic_json(receipt, value)
         else:
-            preserve_sealed_receipt(receipt, value)
+            value["format"] = "lisp65-q-renderer-host-successor-v1"
+            value["recorded_on"] = "2026-09-07"
+            value["predecessor"] = bind(RECEIPT)
+            value["next_gate"] = "Host successor requalification only; no new product or device claim."
+            value["successor_mutations"] = successor_mutations(value)
+            if record_successor:
+                atomic_json(SUCCESSOR_RECEIPT, value)
+            else:
+                verify_successor(load(SUCCESSOR_RECEIPT), value)
         delta = artifacts["delta"]
         projected = artifacts["projected_post_Link80"]
         print(
@@ -684,4 +692,7 @@ def main(*, public_build: bool = False) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--record-successor", action="store_true")
+    raise SystemExit(main(record_successor=parser.parse_args().record_successor))

@@ -236,8 +236,16 @@ def validate_texts(texts: dict[str, str], root_name: str,
 
 
 def source_texts() -> dict[str, str]:
-    return {role: path.read_text(encoding="utf-8")
-            for role, path in SOURCE_DOCS.items()}
+    bindings = sealed_release_result()["bindings"]
+    texts = {}
+    for role, path in SOURCE_DOCS.items():
+        raw = subprocess.check_output([
+            "git", "show", f"{SEALED_COMMIT}:{path.relative_to(ROOT).as_posix()}"], cwd=ROOT)
+        require(len(raw) == bindings[role]["bytes"]
+                and hashlib.sha256(raw).hexdigest() == bindings[role]["sha256"],
+                f"historical source document differs from bundled seal: {role}")
+        texts[role] = raw.decode("utf-8")
+    return texts
 
 
 def validate_bundle(root: Path) -> dict[str, Any]:

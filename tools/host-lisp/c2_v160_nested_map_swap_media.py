@@ -216,7 +216,7 @@ def materialize_candidate_publish_predecessors(final: Path, product: Path,
         window_bound.read_bytes()).hexdigest()
     prior["completion_facade_predecessor"] = {
         "authority": AUTHORIZATION, "source": REPAIR.FACADE_SECTION,
-        "bytes": REPAIR.FACADE_BYTES, "frozen_receipt": frozen_kernal,
+        "bytes": REPAIR.ERA_FACADE_BYTES, "frozen_receipt": frozen_kernal,
         "declared_publish_domains": ["kernal-window", "runtime-verifier"],
         "changed_bytes": len(changed),
         "rule": "facade precedes every candidate-declared publish-last domain"}

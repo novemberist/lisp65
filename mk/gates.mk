@@ -12,7 +12,7 @@ check-source: public-export-population-selftest
 
 .PHONY: v210-bundle-docs-check
 v210-bundle-docs-check:
-	python3 tools/host-lisp/c2_v210_bundle_docs_gate.py
+	python3 tools/host-lisp/c2_v210_bundle_docs_gate.py --historical-release-docs
 
 .PHONY: workspace-capacity-selftest workspace-capacity-check doctor doctor-selftest source-syntax-check ci-selftest document-index-selftest document-index-check c2-product-profile-parity-selftest c2-product-profile-parity-check c2-lite-v6-roots-fronts-product-profile-selftest c2-lite-v6-roots-fronts-product-profile-check c2-lite-media-acceptance-selftest c2-lite-public-clean-build-selftest c2-lite-public-clean-build-qualify c2-final-island-identity-check c2-append-final-hybrid-check c2-vm-badopcode-detail-check c2-install-phase-discriminator-check c2-phase06a-cutpoint-check c2-append-suffix-read-domain-check c2-l-full-keymap-end-to-end-check c2-crc-codegen-selftest c2-historical-gate-inheritance-selftest c2-historical-gate-inheritance-check c2-address-identity-contract-selftest c2-address-identity-contract-check c2-kernal-residency-audit-selftest c2-kernal-residency-audit-check c2-kernal-unmap-contract-check c2-kernal-unmap-contract-receipt-check c2-nested-append-v5-selftest c2-nested-append-v5-check c2-q-check upstream-verification-selftest upstream-verification-check proof-hooks-install evidence-archive-assets-selftest evidence-archive-assets-check evidence-archive-assets-remote-check evidence-archive-index-size-gate evidence-archive-history-size-gate history-transport-bootstrap history-transport-rewrite-check remote-source-binding-selftest remote-source-binding-receipt-check promotion-register-check promotion-preflight-check r4-product-candidate-check r5-global-g5-input-check r5-global-g5-seal-selftest r6-ship-selftest r6-g6-selftest r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check workbench-product-reproducibility-selftest workbench-product-reproducibility-check workbench-product-reproducibility-preflight media-guard-bank-attribution-check post-capture-planning-capacity-check chain-walker-inventory-check dialect-contract-selftest dialect-contract-check bytecode-abi-ledger-selftest bytecode-abi-ledger-check code-object-arity-contract-selftest code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check r3-product-block-build r3-current-product-block-check r3-g3-g6-contract-check r3-g3-g6-environment-check r3-product-block-check r3-product-reproducibility-check r3-g3-static-preflight-check r3-stager-probe-check workbench-ux-harness-selftest semantic-contracts-selftest semantic-contracts-lint semantic-contracts-g0 semantic-contracts-g1 semantic-contracts-g2 bytecode-p0-omission-contract-check ci-check-source ci-check-host check-source check-host check-product check-reference reference-diagnostics check-emulator check-hardware-dry-run check-hardware
 .PHONY: block-26-build-integrity-selftest block-26-build-integrity-check
@@ -34,6 +34,11 @@ block-26-build-integrity-selftest:
 block-26-build-integrity-check:
 	python3 tools/host-lisp/block_26_build_integrity_card.py check
 check-source: block-26-build-integrity-check
+
+.PHONY: native-cycle-stationary-check
+native-cycle-stationary-check:
+	python3 tools/host-lisp/native_cycle_stationary.py --selftest
+check-source: native-cycle-stationary-check
 
 block-26-small-hardening-selftest:
 	python3 tools/host-lisp/block_26_small_hardening_card.py selftest
@@ -4152,6 +4157,70 @@ comfort-stack-source-authority-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/comfort_entry_context_gate.py --output build/v2.1/comfort-stack-source-gates/admission.json
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/hardware_sp_link_authority.py
 
-# Source predicates and threshold-consumer mutations only. Final ELF, timing,
-# watermarks and packed-world admission remain separate candidate obligations.
-check-source: comfort-stack-source-authority-check
+# Descoped source predicates belong to the sealed Comfort restart world.
+# This explicit diagnostic target is not an admission of the renderer world.
+# Its historical inputs and witnesses are checked read-only by the restart seal.
+
+.PHONY: comfort-stack-restart-evidence-check
+comfort-stack-restart-evidence-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/hardware_sp_link_authority.py --restart-check
+
+check-source: comfort-stack-restart-evidence-check
+
+check-source: v210-bundle-docs-check
+
+# Shared VM entry must retain the distinct initial/tail status boundaries.
+VM_ENTRY_STATUS_SRCS := scripts/vm-entry-status-main.c src/vm.c src/mem.c src/symbol.c src/interrupt.c
+build/vm-entry-status: $(VM_ENTRY_STATUS_SRCS) | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Wno-unused-parameter \
+		-DHEAP_CELLS=2048 -DGC_ROOTS=1024 -DMAX_SYM=160 -DNAMEPOOL=2048 \
+		-Isrc $(VM_ENTRY_STATUS_SRCS) -o $@
+
+build/vm-entry-status-stream: $(VM_ENTRY_STATUS_SRCS) | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Wno-unused-parameter -DVM_CODEBUF=16 \
+		-DHEAP_CELLS=2048 -DGC_ROOTS=1024 -DMAX_SYM=160 -DNAMEPOOL=2048 \
+		-Isrc $(VM_ENTRY_STATUS_SRCS) -o $@
+
+.PHONY: vm-entry-status-check
+vm-entry-status-check: build/vm-entry-status build/vm-entry-status-stream
+	build/vm-entry-status
+	build/vm-entry-status-stream
+
+check-source: vm-entry-status-check
+
+# R2: execute the root-index boundaries and OFF/ON soft-frame contracts,
+# including the product's independently bounded 16-frame configuration.
+check-source: root-index-boundary-check vm-soft-frames-check
+
+.PHONY: c2-zp-owner-population-check
+c2-zp-owner-population-check:
+	PYTHONPATH=tools/host-lisp python3 -c 'import block_26_f011_replacement_product_card as g; g.zero_page_population_selftest(); print("ZP owner population: PASS")'
+check-source: c2-zp-owner-population-check
+
+.PHONY: c2-zp-initializer-load-check
+c2-zp-initializer-load-check:
+	PYTHONPATH=tools/host-lisp python3 -c 'import block_26_f011_replacement_product_card as g; g.initialized_zp_load_selftest(); print("ZP initializer load boundary: PASS")'
+check-source: c2-zp-initializer-load-check
+
+.PHONY: dwx-histogram-transport-check
+dwx-histogram-transport-check:
+	PYTHONPATH=tools/host-lisp python3 -c 'import dwx_mirrored_prefilter_rows as g; g.histogram_transport_selftest(); print("DWX histogram transport: PASS controls=4")'
+check-source: dwx-histogram-transport-check
+
+.PHONY: library-index-file-chain-check
+library-index-file-chain-check: v2-workbench-codemod
+	python3 tools/host-lisp/library_index_file_chain_gate.py
+check-source: library-index-file-chain-check
+
+.PHONY: c2-map-hot-range-check
+c2-map-hot-range-check:
+	PYTHONPATH=tools/host-lisp python3 -c 'import c2_product_substitution_link as g; g.map_cpu_hot_range_selftest(); print("MAP hot range: PASS linker controls=6")'
+check-source: c2-map-hot-range-check
+
+# Sealed descriptor-repair regression fixture. Product qualifiers may pass
+# their own final ELF to the same executable ABI gate.
+RETIREMENT_DESCRIPTOR_ELF ?= build/retirement-repair-product-r2/wplto/lisp65-c2-substitution-linked.prg.elf
+.PHONY: c2-retirement-descriptor-check
+c2-retirement-descriptor-check:
+	python3 tools/host-lisp/c2_v160_active_frame_liveness.py descriptor $(RETIREMENT_DESCRIPTOR_ELF)
+check-source: c2-retirement-descriptor-check

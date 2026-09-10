@@ -902,6 +902,13 @@ workbench-product-v210-build: toolchain-external-product-verify
 workbench-product-v210-verify: toolchain-external-product-verify
 	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v210
 
+.PHONY: workbench-product-v220 workbench-product-v220-build workbench-product-v220-verify
+workbench-product-v220: workbench-product-v220-build
+workbench-product-v220-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v220
+workbench-product-v220-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v220
+
 workbench-product-footprint-report: workbench-product
 	@test -f build/c2.2/canonical-product/final/substitution-balance.json
 

@@ -507,6 +507,31 @@ static uint16_t rtov_family_generation;
 #define RTOV_FAMILY_BASE(v)  ((uint8_t)((v) & 0x03u))
 #endif
 #endif
+#ifdef LISP65_RTOV_SESSION_RECORD_CACHE
+#if LISP65_RUNTIME_OVERLAY_FORMAT_VERSION != 4u || !defined(LISP65_C2_LITE_CHIP_RAM)
+#error "session record cache requires the qualified Chip-RAM v4 path"
+#endif
+#if !defined(LISP65_C2_LITE_BANK3_STAGING) || !defined(LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND)
+#error "session record cache requires staged identities and append invalidation"
+#endif
+#ifndef LISP65_RTOV_SESSION_RECORD_COUNT
+#error "session cache population must come from the producer catalog"
+#endif
+_Static_assert(LISP65_RTOV_SESSION_RECORD_COUNT > 0u &&
+               LISP65_RTOV_SESSION_RECORD_COUNT <=
+                   LISP65_RUNTIME_OVERLAY_HARD_MAX_SLICES - 2u,
+               "invalid session cache population");
+/* Separate from the append/batch tuple. Zero CRC is a legal value; readiness
+ * is published only after the complete contiguous application population. */
+static struct {
+    uint16_t record_crc[LISP65_RTOV_SESSION_RECORD_COUNT];
+    uint16_t generation, image_size, image_crc;
+    uint8_t count, ready;
+} rtov_session_cache;
+#define RTOV_SESSION_INVALIDATE() (rtov_session_cache.ready = 0u)
+#else
+#define RTOV_SESSION_INVALIDATE() ((void)0)
+#endif
 #ifdef LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH
 /* Valid only while one caller-owned append transaction is active. The cache
  * contains authenticated catalog outputs; record and payload checks remain
@@ -1046,6 +1071,7 @@ static uint8_t rtov_wipe(void) {
 
 #ifdef LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH
 static void rtov_transaction_invalidate(void) {
+    RTOV_SESSION_INVALIDATE();
 #ifdef LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND
     /* Clearing the discriminator makes the cached words unreachable. */
     rtov_transaction_count = RTOV_TRANSACTION_INACTIVE;
@@ -1107,6 +1133,7 @@ uint8_t rtov_transaction_context_if_ready(
 
 static vm_runtime_overlay_status LISP65_C2_FIXED_BANK0_CODE("rtov_fail")
 rtov_fail(vm_runtime_overlay_status status) {
+    RTOV_SESSION_INVALIDATE();
 #ifdef LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH
     rtov_transaction_invalidate();
 #endif
@@ -1225,6 +1252,7 @@ static vm_runtime_overlay_status name(uint16_t generation) {             \
         goto failed;                                                      \
     /* Generation invalidation is the first state change and precedes every\
      * byte of the replacement family. */                                 \
+    RTOV_SESSION_INVALIDATE();                                        \
     rtov_family = (uint8_t)((family_value) | RTOV_FAMILY_STAGING);        \
     rtov_family_generation = generation;                                 \
     if (!size || !expected) goto failed;                                 \
@@ -1503,6 +1531,19 @@ RTOV_RECORDFN uint8_t vm_runtime_overlay_record_verifier(void *opaque) {
 #else
     uint16_t end;
 #endif
+#ifdef LISP65_RTOV_SESSION_RECORD_CACHE
+    uint8_t cache_auth = 0u, requested_slot = context->slot;
+    if (rtov_family == LISP65_RUNTIME_OVERLAY_FAMILY_SESSION &&
+        !RTOV_TRANSACTION_ACTIVE() && !rtov_repeat &&
+        !rtov_session_cache.ready) {
+        if (context->count != LISP65_RTOV_SESSION_RECORD_COUNT + 2u)
+            return VM_RUNTIME_OVERLAY_ERR_DIRECTORY;
+        rtov_session_cache.count = 0u;
+        cache_auth = 1u;
+        context->slot = LISP65_RUNTIME_OVERLAY_APPLICATION_SLOT_BASE;
+    }
+rtov_verify_next_record:
+#endif
 
     context->read((uint16_t)(LISP65_RUNTIME_OVERLAY_HEADER_SIZE +
                              (uint16_t)context->slot *
@@ -1620,6 +1661,32 @@ RTOV_RECORDFN uint8_t vm_runtime_overlay_record_verifier(void *opaque) {
         RTOV_INSTALL_CONTEXT = context;
     }
 #endif
+#ifdef LISP65_RTOV_SESSION_RECORD_CACHE
+    if (cache_auth == 1u) {
+        uint8_t index = (uint8_t)(rtov_r_u16(record) - 2u);
+        if (index != rtov_session_cache.count ||
+            index >= LISP65_RTOV_SESSION_RECORD_COUNT)
+            return VM_RUNTIME_OVERLAY_ERR_SLOT;
+        rtov_session_cache.record_crc[index] =
+            rtov_crc_mem(record, LISP65_RUNTIME_OVERLAY_ENTRY_SIZE);
+        rtov_session_cache.count = (uint8_t)(index + 1u);
+        if (rtov_session_cache.count != LISP65_RTOV_SESSION_RECORD_COUNT) {
+            context->slot = (uint8_t)(index + 3u);
+            goto rtov_verify_next_record;
+        }
+        rtov_session_cache.generation = rtov_family_generation;
+        rtov_session_cache.image_size = rtov_family_stage_bindings[1].image_size;
+        rtov_session_cache.image_crc = rtov_family_stage_bindings[1].crc16;
+        rtov_session_cache.ready = 1u;
+        cache_auth = 2u;
+        context->slot = requested_slot;
+        goto rtov_verify_next_record;
+    }
+    if (cache_auth == 2u &&
+        rtov_crc_mem(record, LISP65_RUNTIME_OVERLAY_ENTRY_SIZE) !=
+            rtov_session_cache.record_crc[requested_slot - 2u])
+        return VM_RUNTIME_OVERLAY_ERR_CRC;
+#endif
     return VM_RUNTIME_OVERLAY_OK;
 }
 
@@ -1716,6 +1783,38 @@ vm_runtime_overlay_status vm_runtime_overlay_exec_family(
 
     verify.read = rtov_read;
     verify.slot = slot;
+#ifdef LISP65_RTOV_SESSION_RECORD_CACHE
+    if (rtov_family == LISP65_RUNTIME_OVERLAY_FAMILY_SESSION &&
+        !RTOV_TRANSACTION_ACTIVE() && !rtov_repeat && rtov_session_cache.ready) {
+        uint8_t *record = verify.buffer;
+        uint8_t index = (uint8_t)(slot - 2u);
+        if (index >= LISP65_RTOV_SESSION_RECORD_COUNT ||
+            rtov_session_cache.count != LISP65_RTOV_SESSION_RECORD_COUNT)
+            return rtov_fail(VM_RUNTIME_OVERLAY_ERR_SLOT);
+        if (rtov_session_cache.generation != rtov_family_generation ||
+            rtov_session_cache.image_size != rtov_family_stage_bindings[1].image_size ||
+            rtov_session_cache.image_crc != rtov_family_stage_bindings[1].crc16)
+            return rtov_fail(VM_RUNTIME_OVERLAY_ERR_FAMILY);
+        rtov_read((uint16_t)(LISP65_RUNTIME_OVERLAY_HEADER_SIZE +
+                  (uint16_t)slot * LISP65_RUNTIME_OVERLAY_ENTRY_SIZE),
+                  record, LISP65_RUNTIME_OVERLAY_ENTRY_SIZE);
+        /* No field, including length/source/entry, is consumed before this
+         * comparison with the previously authenticated whole-record digest. */
+        if (rtov_crc_mem(record, LISP65_RUNTIME_OVERLAY_ENTRY_SIZE) !=
+            rtov_session_cache.record_crc[index])
+            return rtov_fail(VM_RUNTIME_OVERLAY_ERR_CRC);
+#define RTOV_CACHED_U16(off) ((uint16_t)record[off] | ((uint16_t)record[(off)+1u] << 8))
+        verify.flags = RTOV_CACHED_U16(2u);
+        verify.file_off = RTOV_CACHED_U16(4u);
+        verify.file_len = RTOV_CACHED_U16(6u);
+        verify.entry_off = RTOV_CACHED_U16(12u);
+        verify.payload_crc = RTOV_CACHED_U16(20u);
+        verify.slot = record[25];
+        verify.count = record[26];
+#undef RTOV_CACHED_U16
+        goto rtov_record_verified;
+    }
+#endif
     verifier_index = 0;
 #ifdef LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH
 #ifdef LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND
@@ -1782,6 +1881,9 @@ vm_runtime_overlay_status vm_runtime_overlay_exec_family(
 #endif
     } while (++verifier_index != LISP65_RUNTIME_OVERLAY_APPLICATION_SLOT_BASE);
 
+#ifdef LISP65_RTOV_SESSION_RECORD_CACHE
+rtov_record_verified:
+#endif
     /* Recheck copy bounds at the resident trust boundary. */
     if (!verify.file_len ||
         verify.file_len > (verify.flags == LISP65_RUNTIME_OVERLAY_FLAG_BOOT
@@ -1846,6 +1948,7 @@ vm_runtime_overlay_status vm_runtime_overlay_transaction_begin(
         || expected_generation)
         return VM_RUNTIME_OVERLAY_ERR_FAMILY;
 #endif
+    RTOV_SESSION_INVALIDATE();
 #ifdef LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND
     rtov_transaction_payload_off = 0;
     rtov_transaction_image_limit = 0;
@@ -1901,6 +2004,7 @@ vm_runtime_overlay_status vm_runtime_overlay_select_family(
         return VM_RUNTIME_OVERLAY_ERR_FAMILY;
 #endif
     if (!rtov_wipe()) return rtov_fail(VM_RUNTIME_OVERLAY_ERR_WIPE);
+    RTOV_SESSION_INVALIDATE();
     rtov_family = family;
     rtov_family_generation = generation;
     return VM_RUNTIME_OVERLAY_OK;
@@ -2052,6 +2156,7 @@ vm_runtime_overlay_status vm_runtime_overlay_abort_cleanup(void) {
     uint8_t was_busy = rtov_busy;
 #endif
     rtov_repeat = 0;
+    RTOV_SESSION_INVALIDATE();
 #ifdef LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH
     rtov_transaction_invalidate();
 #endif
@@ -2091,6 +2196,7 @@ uint8_t vm_runtime_overlay_active(void) {
 }
 
 void vm_runtime_overlay_host_reset(void) {
+    RTOV_SESSION_INVALIDATE();
     (void)rtov_wipe();
     rtov_fault = 0;
     rtov_busy = 0;

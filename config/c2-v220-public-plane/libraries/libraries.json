@@ -1,0 +1,259 @@
+{
+  "claim": "Manifests re-emit the exact five device-accepted files; no INIT.",
+  "format": "lisp65-v220-public-libraries-v1",
+  "libraries": [
+    {
+      "artifact": {
+        "bytes": 398,
+        "sha256": "4f59387851a15101d9b2fb87aef32f5a32edcac4ba256fab41c6ace7c4eab66a"
+      },
+      "blob": {
+        "bytes": 104,
+        "path": "config/c2-v220-public-plane/libraries/buffer.blob.bin",
+        "sha256": "d218ff4ba23620eb02fbdb35c4b9795cf98404c0955091bcb7ded6487c24c747"
+      },
+      "consumed_manifest": {
+        "bytes": 8395,
+        "path": "build/library-delivery-r1/raw/buffer.manifest.json",
+        "sha256": "bfdd2f78b7bc86e2f8e788f0c0b581182f473a533472ebffce73bc029a2c54ba"
+      },
+      "dependencies": [],
+      "manifest": {
+        "bytes": 8088,
+        "path": "config/c2-v220-public-plane/libraries/buffer.manifest.json",
+        "sha256": "5df20db89861c8bf55895b64a3560fd77ee749ef403d4a79ef76e16c5ba27ce6"
+      },
+      "name": "buffer",
+      "recipe": [
+        "python3",
+        "tools/host-lisp/bytecode_p0_stdlib.py",
+        "--check",
+        "--emit-artifacts",
+        "@OUTPUT_PREFIX@",
+        "--artifact-role",
+        "disk-lib",
+        "--base-addr",
+        "0x000000",
+        "tests/bytecode/libs/p0-buffer-lib.json"
+      ],
+      "shelf": "buffer",
+      "sources": [
+        {
+          "bytes": 746,
+          "path": "lib/buffer.lisp",
+          "sha256": "2dfe92f2e1fd387e2f7ff36558af9bc6910419eb12762191f79753e127d3133d"
+        }
+      ],
+      "suite": {
+        "bytes": 1852,
+        "path": "tests/bytecode/libs/p0-buffer-lib.json",
+        "sha256": "ff502b77cc98463f4ab16e0063f29c8fd2d78db14372b1c36b2f38b39bc1efbc"
+      }
+    },
+    {
+      "artifact": {
+        "bytes": 1925,
+        "sha256": "f07a8a97d528060f125625f86d19f1d6a063daec9406830a253d094d49f31f12"
+      },
+      "blob": {
+        "bytes": 781,
+        "path": "config/c2-v220-public-plane/libraries/place.blob.bin",
+        "sha256": "0592c8437756442e43bf07f18bfae2c5c3482b1a271ef126e9a8f9c443a49d60"
+      },
+      "consumed_manifest": {
+        "bytes": 23309,
+        "path": "build/library-delivery-r1/raw/place.manifest.json",
+        "sha256": "5bb935340d90bda90a1b4d8235174b44b150ee2222f4c816e0f23b53168507f5"
+      },
+      "dependencies": [],
+      "manifest": {
+        "bytes": 23002,
+        "path": "config/c2-v220-public-plane/libraries/place.manifest.json",
+        "sha256": "8ba6a6f147ba4ee00ab4963350edfb20363bd9653d6cfb52efe047928d56cd1b"
+      },
+      "name": "place",
+      "recipe": [
+        "python3",
+        "tools/host-lisp/bytecode_p0_stdlib.py",
+        "--check",
+        "--emit-artifacts",
+        "@OUTPUT_PREFIX@",
+        "--artifact-role",
+        "disk-lib",
+        "--base-addr",
+        "0x000000",
+        "tests/bytecode/libs/p0-place-lib.json"
+      ],
+      "shelf": "place",
+      "sources": [
+        {
+          "bytes": 5717,
+          "path": "lib/stdlib-places.lisp",
+          "sha256": "605aba9cada3f5979b6b491c40ffa496c0e396f0d2fbe69df6c9faa40db3379a"
+        }
+      ],
+      "suite": {
+        "bytes": 2683,
+        "path": "tests/bytecode/libs/p0-place-lib.json",
+        "sha256": "f351fd4c4ad417a4b5de5bb598ddf8bff9253762c931765fd9e479b37f04fc10"
+      }
+    },
+    {
+      "artifact": {
+        "bytes": 506,
+        "sha256": "cb118d9add5e8b438f6244276017f96dcee29f0727c314e25f9d5047c6f9b10e"
+      },
+      "blob": {
+        "bytes": 152,
+        "path": "config/c2-v220-public-plane/libraries/string-extra.blob.bin",
+        "sha256": "b81f014ee4ad8561d176128ab25710e95730cf2c390df0af8fb0e7a969180757"
+      },
+      "consumed_manifest": {
+        "bytes": 9621,
+        "path": "build/library-delivery-r1/raw/string-extra.manifest.json",
+        "sha256": "0ac86d3e9583a0b812cec2dcc4d671fe3914bd4b72243dd4b19c4f9d7fa0dbfb"
+      },
+      "dependencies": [],
+      "manifest": {
+        "bytes": 9314,
+        "path": "config/c2-v220-public-plane/libraries/string-extra.manifest.json",
+        "sha256": "041a732a49ebe795db69dffd85b8407435ed4cdbf653b9274cfed5ff1f6be5c1"
+      },
+      "name": "string-extra",
+      "recipe": [
+        "python3",
+        "tools/host-lisp/bytecode_p0_stdlib.py",
+        "--check",
+        "--emit-artifacts",
+        "@OUTPUT_PREFIX@",
+        "--artifact-role",
+        "disk-lib",
+        "--base-addr",
+        "0x000000",
+        "tests/bytecode/libs/p0-string-extra.json"
+      ],
+      "shelf": "strext",
+      "sources": [
+        {
+          "bytes": 964,
+          "path": "lib/comfort-strings.lisp",
+          "sha256": "cf9a2eb3a4e649a633bd03c067bdf73842d38cceeedfd68f02019fed2a078124"
+        }
+      ],
+      "suite": {
+        "bytes": 1610,
+        "path": "tests/bytecode/libs/p0-string-extra.json",
+        "sha256": "71ec9eba5880e7f67c6c6a6af54d4f2b1e477a65a5c47098e059163532626025"
+      }
+    },
+    {
+      "artifact": {
+        "bytes": 5668,
+        "sha256": "ca1f7a79a7207b319fd285ee31af9887e70e76645095ac320e36356de5b4a1fa"
+      },
+      "blob": {
+        "bytes": 558,
+        "path": "config/c2-v220-public-plane/libraries/inspect.blob.bin",
+        "sha256": "a3ce82774fa73d5033a6ccf9880fb1b3d1df413c5620a29f3ad33da64dee1224"
+      },
+      "consumed_manifest": {
+        "bytes": 60200,
+        "path": "build/library-delivery-r1/raw/inspect.manifest.json",
+        "sha256": "763d536dbffc996117a9b00c639c35893a4cf0359ff4b69c71c65f3114126539"
+      },
+      "dependencies": [],
+      "manifest": {
+        "bytes": 59893,
+        "path": "config/c2-v220-public-plane/libraries/inspect.manifest.json",
+        "sha256": "9064c1f3bb21c9c870df3984d9c7dc8bdc40890a5faa8bc452efe2b76db2a9d4"
+      },
+      "name": "inspect",
+      "recipe": [
+        "python3",
+        "tools/host-lisp/bytecode_p0_stdlib.py",
+        "--check",
+        "--emit-artifacts",
+        "@OUTPUT_PREFIX@",
+        "--artifact-role",
+        "disk-lib",
+        "--base-addr",
+        "0x000000",
+        "tests/bytecode/libs/p0-inspect-trace.json"
+      ],
+      "shelf": "inspect",
+      "sources": [
+        {
+          "bytes": 3388,
+          "path": "lib/comfort-who-calls-generated.lisp",
+          "sha256": "a920c3c5f2f2ef2fb302c667253b0864d291de7205d5d707cd31f3f24bd37c98"
+        },
+        {
+          "bytes": 4181,
+          "path": "lib/inspect-trace.lisp",
+          "sha256": "f002158f002f81f59cd8b40f7c4bf4419a14cf64c9cc8c344be632221fa3faad"
+        }
+      ],
+      "suite": {
+        "bytes": 1667,
+        "path": "tests/bytecode/libs/p0-inspect-trace.json",
+        "sha256": "2904e0a48b0a5b8d20c293859ccaa2b1945346d76a904ed6579a40ea1ef7c3bc"
+      }
+    },
+    {
+      "artifact": {
+        "bytes": 2877,
+        "sha256": "2fbcde177890a72746fc38ee96a26a944fcbee773a3dbfbc3524a9995f3b0eec"
+      },
+      "blob": {
+        "bytes": 1031,
+        "path": "config/c2-v220-public-plane/libraries/defstruct.blob.bin",
+        "sha256": "0309dbc29dba1521a1fcc9ffd7a357086cc994bf0d88a4f7f70b8cd28296adcf"
+      },
+      "consumed_manifest": {
+        "bytes": 33649,
+        "path": "build/library-delivery-r1/raw/defstruct.manifest.json",
+        "sha256": "8b6d893782b17b06019472a56dd89a9a61a4266ad8b6ff656192fd5ff13f5e12"
+      },
+      "dependencies": [
+        1
+      ],
+      "manifest": {
+        "bytes": 33342,
+        "path": "config/c2-v220-public-plane/libraries/defstruct.manifest.json",
+        "sha256": "1f5292e095337e6b023209019cde0ffec393339400bb3ce77a27eb90ac45e2c0"
+      },
+      "name": "defstruct",
+      "recipe": [
+        "python3",
+        "tools/host-lisp/bytecode_p0_stdlib.py",
+        "--check",
+        "--emit-artifacts",
+        "@OUTPUT_PREFIX@",
+        "--artifact-role",
+        "disk-lib",
+        "--base-addr",
+        "0x000000",
+        "tests/bytecode/libs/p0-defstruct-v1-lib.json"
+      ],
+      "shelf": "struct",
+      "sources": [
+        {
+          "bytes": 5612,
+          "path": "lib/defstruct.lisp",
+          "sha256": "11c9ef05dc1acc58e2ac62002667e434c3c7fda2a0bb8681de86c2635cc8fcaa"
+        }
+      ],
+      "suite": {
+        "bytes": 1576,
+        "path": "tests/bytecode/libs/p0-defstruct-v1-lib.json",
+        "sha256": "dce570a49f1b429a5e5ce094c9f09c6352560d0e5c9acd6d3722ee100eac6651"
+      }
+    }
+  ],
+  "medium_provenance": {
+    "bytes": 819200,
+    "path": "build/retirement-repair-final-library-medium-r2/packed/hardware-sp-seed.d81",
+    "sha256": "36c98acfc591b9b0b0963d65b446498a2eaab399e88fbf6c10e4c85166304189"
+  },
+  "product_build_id": 2438469939
+}

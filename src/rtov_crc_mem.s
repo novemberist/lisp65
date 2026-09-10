@@ -44,20 +44,26 @@ rtov_crc_mem:
 	lda	(__rc4),z
 	eor	__rc7
 	sta	__rc7
-	ldy	#8
-.Lcrc_next_bit:
+	ldy	#2
+.Lcrc_next_nibble:
+	lda	__rc7
+	lsr
+	lsr
+	lsr
+	lsr
+	tax
+	.rept 4
 	asl	__rc6
 	rol	__rc7
-	bcc	.Lcrc_no_poly
+	.endr
 	lda	__rc6
-	eor	#$21
+	eor	rtov_crc_nibbles_low,x
 	sta	__rc6
 	lda	__rc7
-	eor	#$10
+	eor	rtov_crc_nibbles_high,x
 	sta	__rc7
-.Lcrc_no_poly:
 	dey
-	bne	.Lcrc_next_bit
+	bne	.Lcrc_next_nibble
 	inw	__rc4
 	bra	.Lcrc_next_byte
 
@@ -68,3 +74,15 @@ rtov_crc_mem:
 	rts
 .Lcrc_end:
 	.size	rtov_crc_mem, .Lcrc_end-rtov_crc_mem
+
+; Exactly 16 polynomial remainders, split into two 16-byte planes.
+; These are a separately priced read-only owner, not a 256-entry table.
+	.section .rodata.rtov_crc_nibbles,"a",@progbits
+	.type rtov_crc_nibbles_low,@object
+rtov_crc_nibbles_low:
+	.byte 0x00,0x21,0x42,0x63,0x84,0xa5,0xc6,0xe7,0x08,0x29,0x4a,0x6b,0x8c,0xad,0xce,0xef
+	.size rtov_crc_nibbles_low,16
+	.type rtov_crc_nibbles_high,@object
+rtov_crc_nibbles_high:
+	.byte 0x00,0x10,0x20,0x30,0x40,0x50,0x60,0x70,0x81,0x91,0xa1,0xb1,0xc1,0xd1,0xe1,0xf1
+	.size rtov_crc_nibbles_high,16

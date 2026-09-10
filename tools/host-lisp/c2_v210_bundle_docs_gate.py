@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 
 from c2_v201_bundle_docs_gate import inline_names, named_absence_subjects
 
@@ -14,6 +15,45 @@ DOCS={'release':'docs/release-notes.md','guide':'docs/user-guide.md',
       'reference':'docs/language-reference.md','issues':'docs/known-issues.md',
       'keymap':'docs/generated/ide-keymap.md'}
 TOP='lisp65-2.1.0'
+RESIDENT_SOURCES=('src/eval.c','src/vm.c','src/interrupt.c')
+RELEASE_DOC_COMMIT='f61ee9e00e644e797a9567fab7d96d4ea00bb27e'
+
+
+def resident_sources(root, authority, expected):
+    """Released native projection, not the current development product.
+
+    A source export has no private Git history: its actual files must match.
+    In the working repository use the frozen commit selected by the public
+    release authority. Missing Git objects are errors, never a live fallback.
+    """
+    commit=authority['frozen_native_source_commit']
+    require(re.fullmatch(r'[0-9a-f]{40}',commit),'invalid frozen source commit')
+    exported={name:(root/name).read_bytes() for name in RESIDENT_SOURCES}
+    matches=all(hashlib.sha256(raw).hexdigest()==expected[name] for name,raw in exported.items())
+    source={}
+    for name in RESIDENT_SOURCES:
+        if not matches and (root/'.git').exists():
+            source[name]=subprocess.check_output(['git','show',commit+':'+name],cwd=root)
+        else:
+            source[name]=exported[name]
+    def check(values):
+        require(set(values)==set(RESIDENT_SOURCES),'resident source population drift')
+        for name,raw in values.items():
+            require(hashlib.sha256(raw).hexdigest()==expected[name],
+                    'not the released renderer source world: '+name)
+    check(source)
+    rejected=[]
+    for name in RESIDENT_SOURCES:
+        for mutation in ('byte-change','omission'):
+            trial=dict(source)
+            if mutation=='byte-change':trial[name]+=b'\n'
+            else:del trial[name]
+            try:check(trial)
+            except ValueError:rejected.append(name+':'+mutation)
+            else:raise ValueError('resident source mutation survived: '+name)
+    return source,{'commit':commit,'mode':'exported-files' if matches else 'frozen-git-projection',
+        'bindings':[{'path':name,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
+                    for name,raw in source.items()], 'mutations_rejected':rejected}
 
 
 def require(ok, message):
@@ -36,9 +76,8 @@ def facts(root):
     profile=read('config/c2-v210-renderer-profile.txt')
     expected=dict(line.removeprefix('input_sha256=').rsplit(':',1)
                   for line in profile.splitlines() if line.startswith('input_sha256='))
-    evaluator=read('src/eval.c')
-    require(hashlib.sha256(evaluator.encode()).hexdigest()==expected['src/eval.c'],
-            'evaluator is not the renderer source world')
+    sources,source_era=resident_sources(root,authority,expected)
+    evaluator=sources['src/eval.c'].decode()
     base='config/c2-v200-public-plane/'
     resident=load(base+'static-plane/stdlib-p0.manifest.json')
     delivered=set(resident['functions'])
@@ -69,7 +108,7 @@ def facts(root):
         'exact_arities':sum(r['arity']['status']=='exact-code-object' for r in meta['records']),
         'unresolved_arities':sum(r['arity']['status']=='unresolved' for r in meta['records']),
         'key_bindings':len(keys),'examples':examples,'tier1_names':tier_names,
-        'D5':authority['measured_capacity'],'bindings':bindings}
+        'D5':authority['measured_capacity'],'bindings':bindings,'resident_source_era':source_era}
 
 
 def validate(texts, top, f):
@@ -113,6 +152,30 @@ def source_texts(root):
     return {k:(root/('docs/releases/2.1.0.md' if k=='release' else n)).read_text() for k,n in DOCS.items()}
 
 
+def historical_texts(root):
+    """Explicit private regression fixture; never used by export/bundle mode."""
+    paths={k:('docs/releases/2.1.0.md' if k=='release' else n) for k,n in DOCS.items()}
+    sealed={k:subprocess.check_output(
+        ['git','show',RELEASE_DOC_COMMIT+':'+n],cwd=root) for k,n in paths.items()}
+    expected={k:hashlib.sha256(raw).hexdigest() for k,raw in sealed.items()}
+    def check(values):
+        require(set(values)==set(expected),'historical document population drift')
+        for k,raw in values.items():
+            require(hashlib.sha256(raw).hexdigest()==expected[k],
+                    'historical document escaped release era: '+k)
+    check(sealed)
+    trial=dict(sealed);trial['guide']=(root/DOCS['guide']).read_bytes()
+    # Exercise a divergent live draft even on a checkout of the release itself.
+    if trial['guide']==sealed['guide']:trial['guide']+=b'\nLIVE-DRAFT-MUTATION\n'
+    try:check(trial)
+    except ValueError:pass
+    else:raise ValueError('live guide mutation survived historical binding')
+    return {k:raw.decode() for k,raw in sealed.items()}, {
+        'commit':RELEASE_DOC_COMMIT,'bindings':[
+            {'path':paths[k],'bytes':len(raw),'sha256':expected[k]} for k,raw in sealed.items()],
+        'mutations_rejected':['historical-gate-consumes-live-guide']}
+
+
 def selftest(texts, f):
     validate(texts,TOP,f)
     cases=[('stale-version','guide','# lisp65 2.1.0','# lisp65 2.0.1'),
@@ -139,11 +202,18 @@ def selftest(texts, f):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--source-root',type=Path,default=Path.cwd())
-    p.add_argument('--bundle',type=Path);p.add_argument('--receipt',type=Path);a=p.parse_args()
-    f=facts(a.source_root);texts=source_texts(a.source_root);mutations=selftest(texts,f)
+    p.add_argument('--bundle',type=Path);p.add_argument('--receipt',type=Path)
+    p.add_argument('--historical-release-docs',action='store_true');a=p.parse_args()
+    require(not (a.historical_release_docs and a.bundle),'historical mode cannot certify an actual bundle')
+    f=facts(a.source_root)
+    era=None
+    if a.historical_release_docs:texts,era=historical_texts(a.source_root)
+    else:texts=source_texts(a.source_root)
+    mutations=selftest(texts,f)
     if a.bundle:
         texts={k:(a.bundle/n).read_text() for k,n in DOCS.items()}
     result=validate(texts,a.bundle.name if a.bundle else TOP,f);result['mutations_rejected']=mutations
+    if era:result['historical_documents']=era
     if a.receipt:a.receipt.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
     print('PASS: bundle docs 2.1.0; names=%d outside=%d mutations=%d' %
           (result['documented_names'],len(f['outside']),len(mutations)))

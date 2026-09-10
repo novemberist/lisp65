@@ -1,0 +1,954 @@
+{
+  "authorization": "3c6eccf0",
+  "definitions": [
+    "LISP65_DIALECT_V2",
+    "LISP65_V2_CARRIER_CUT",
+    "LISP65_VM_NATIVE_APPLY",
+    "LISP65_V2_NATIVE_CAPABILITIES",
+    "LISP65_V2_NATIVE_STRING_CODECS",
+    "LISP65_V2_SERVICE_REGISTRY_CLOSED",
+    "LISP65_V2_WORKBENCH_SERVICES",
+    "LISP65_V2_TREE_PRIMITIVE_VIEW",
+    "LISP65_VM",
+    "LISP65_EMBED_STDLIB",
+    "LISP65_EMBED_DMA",
+    "LISP65_REPL",
+    "HEAP_CELLS=48",
+    "LISP65_MEGA65_MATH_OVERRIDE",
+    "LISP65_F011_GUARD_ASM",
+    "VM_CODEBUF=56",
+    "LISP65_SYMPOOL_EXT",
+    "LISP65_SYMVAL_EXT",
+    "LISP65_NAMEOFF_EXT",
+    "GC_ROOTS=128",
+    "LISP65_MARK_BITMAP",
+    "LISP65_EXT_HEAP",
+    "LISP65_SCREEN_DRIVER",
+    "LISP65_VM_SCREEN_PRIMS",
+    "LISP65_VM_STDLIB_IO_WRAPPERS",
+    "LISP65_VM_GLOBAL_PRIMS",
+    "LISP65_MACROEXPAND_PRIM",
+    "LISP65_TREEWALK_STDLIB_BRIDGES",
+    "LISP65_OUTPUT_WRAPPERS_IN_STDLIB",
+    "LISP65_SCREEN_BULK_P_IN_STDLIB",
+    "LISP65_TREEWALK_STRIP",
+    "MEGA65_F011_LOAD",
+    "MEGA65_F011_WRITE",
+    "IO_BUF_MAX=1",
+    "EXT_CELLS=1024",
+    "LISP65_NURSERY_HYSTERESIS=192",
+    "LISP65_STRING_ARENA",
+    "LISP65_FIRST_CLASS_BUFFER",
+    "STR_ARENA_SIZE=0x2480",
+    "DISK_EXT_BASE=0x6900",
+    "DISK_EXT_FILE_MAX=0x9600",
+    "LISP65_COMPILE_STRING",
+    "LISP65_SYMFN_EXT",
+    "SYMPOOL_EXT_OFF=0xc680",
+    "NAMEPOOL=11293",
+    "MAX_SYM=795",
+    "VM_DIR_MAX=608",
+    "REPL_BUF_MAX=192",
+    "HIST_MAX=64",
+    "LISP65_REPL_HISTORY_IN_BUF",
+    "LISP65_REPL_BANNER_REQUIRED",
+    "LISP65_STDLIB_BOOT_OVERLAY_CODE",
+    "LISP65_STAGED_BOOT_OVERLAY",
+    "LISP65_RUNTIME_OVERLAY",
+    "LISP65_RUNTIME_OVERLAY_LIFETIME_FAMILIES",
+    "LISP65_C2_RUNTIME_LIFETIME_FAMILIES",
+    "LISP65_STACK_GUARD",
+    "LISP65_C2_PRODUCT_CUT",
+    "LISP65_C2_SLICED_APPEND",
+    "C2_STREAM_PRODUCT_V3=1",
+    "LISP65_C2_KERNAL_UNMAP",
+    "LISP65_C2_PRODUCT_BUILD_ID=0x91581933UL",
+    "LISP65_C2_PRODUCT_SHELF_BYTES=96598UL",
+    "LISP65_ERROR_OVERLAY",
+    "LISP65_ERROR_OVERLAY_SLOT=47",
+    "LISP65_RUNTIME_ISLAND_INSTALL_SLOT=10",
+    "LISP65_RUNTIME_ISLAND_CARRIER_SLOT=11",
+    "LISP65_BUFFER_OVERLAY_READ_SLOT=48",
+    "LISP65_BUFFER_OVERLAY_WRITE_SLOT=49",
+    "LISP65_BUFFER_OVERLAY_ALLOC_SLOT=50",
+    "LISP65_INTERN_SESSION_SERVICE",
+    "LISP65_INTERN_SERVICE_SLOT=51",
+    "LISP65_C2_BANK3_STAGE_SESSION_SLOT=9",
+    "SYMFN_EXT_BANK=2u",
+    "SYMFN_EXT_OFF=59168UL",
+    "LISP65_C2_BANK2_CODE_LIMIT=59168UL",
+    "LISP65_VM_SOFT_FRAMES",
+    "LISP65_C2_DIRECT_HOT_REFILL",
+    "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+    "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+    "LISP65_C2_TRANSACTION_AUTH",
+    "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+    "LISP65_C2_NESTED_APPEND_V5",
+    "LISP65_C2_RESIDENCY_TRIAGE",
+    "LISP65_C2_E000_REOPEN",
+    "LISP65_C2_BSS_TRIAGE",
+    "LISP65_RUNTIME_OVERLAY_FORMAT_V4",
+    "LISP65_C2_PHASE11_SPLIT",
+    "LISP65_C2_LITE_COLD_EVICTION",
+    "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+    "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+    "LISP65_C2_LITE_BANK3_STAGING",
+    "LISP65_C2_LITE_BANK2_STAGING",
+    "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+    "LISP65_C2_LITE_VM_ARITY_E000",
+    "LISP65_C2_LITE_CHIP_RAM",
+    "LISP65_C2_APPEND_PLAN_FACADE",
+    "LISP65_C2_NUMERIC_EARLY_ERRORS",
+    "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT",
+    "LISP65_C2_TWO_REGION_SESSION_STORE",
+    "LISP65_C2_LITE_V6_JOURNAL_PREPARE_CORESIDENT",
+    "LISP65_C2_TERMINAL_RETURN_GUARD",
+    "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+    "LISP65_CODE_WINDOW_CONVERGENCE",
+    "LISP65_C2_MAP_CPU_TRANSPORT",
+    "LISP65_C2_REQUIRE_RESOLVER",
+    "LISP65_C2_PRODUCT_COLD_DISK_CHAIN",
+    "LISP65_C2_RTOV_CONTINUATION_LIVENESS",
+    "LISP65_V160_INPUT_CAPTURE",
+    "LISP65_V160_INPUT_HYBRID",
+    "LISP65_C2_RECOVERY_EMPTY_JOURNAL_BYPASS",
+    "LISP65_V200_SYMBOL22_FIRST_FAULT",
+    "LISP65_C2_F011_COLD",
+    "LISP65_C2_FIXED_RAW_BSS_OWNERS",
+    "LISP65_DMA_CONTENT_CONVERGENCE",
+    "LISP65_C2_ASM_CONVERGENCE",
+    "LISP65_C2_FULL_SPAN_CONVERGENCE",
+    "LISP65_C2_MUTABLE_CPU_READS",
+    "LISP65_C2_ABORT_DRIVER_FAR"
+  ],
+  "features": [
+    "LISP65_VM_SOFT_FRAMES",
+    "LISP65_C2_DIRECT_HOT_REFILL",
+    "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+    "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+    "LISP65_C2_TRANSACTION_AUTH",
+    "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+    "LISP65_C2_NESTED_APPEND_V5",
+    "LISP65_C2_RESIDENCY_TRIAGE",
+    "LISP65_C2_E000_REOPEN",
+    "LISP65_C2_BSS_TRIAGE",
+    "LISP65_RUNTIME_OVERLAY_FORMAT_V4",
+    "LISP65_C2_PHASE11_SPLIT",
+    "LISP65_C2_LITE_COLD_EVICTION",
+    "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+    "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+    "LISP65_C2_LITE_BANK3_STAGING",
+    "LISP65_C2_LITE_BANK2_STAGING",
+    "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+    "LISP65_C2_LITE_VM_ARITY_E000",
+    "LISP65_C2_LITE_CHIP_RAM",
+    "LISP65_C2_APPEND_PLAN_FACADE",
+    "LISP65_C2_NUMERIC_EARLY_ERRORS",
+    "LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT",
+    "LISP65_C2_TWO_REGION_SESSION_STORE",
+    "LISP65_C2_LITE_V6_JOURNAL_PREPARE_CORESIDENT",
+    "LISP65_C2_TERMINAL_RETURN_GUARD",
+    "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+    "LISP65_CODE_WINDOW_CONVERGENCE",
+    "LISP65_C2_MAP_CPU_TRANSPORT",
+    "LISP65_C2_REQUIRE_RESOLVER",
+    "LISP65_C2_PRODUCT_COLD_DISK_CHAIN",
+    "LISP65_C2_RTOV_CONTINUATION_LIVENESS",
+    "LISP65_V160_INPUT_CAPTURE",
+    "LISP65_V160_INPUT_HYBRID",
+    "LISP65_C2_RECOVERY_EMPTY_JOURNAL_BYPASS",
+    "LISP65_V200_SYMBOL22_FIRST_FAULT",
+    "LISP65_C2_F011_COLD"
+  ],
+  "format": "lisp65-v220-native-source-projection-v1",
+  "generated_translation_units": 36,
+  "linker_sources": [
+    {
+      "materialized_path": "build/retirement-repair-product-r2/wplto/c2-substitution.ld",
+      "source": {
+        "bytes": 88031,
+        "path": "config/c2-v220-public-native/linker/c2-substitution.ld",
+        "sha256": "5e52f7351093412a60224b9f76eb75da298b2c39298086603f339771ebd6ca8b"
+      }
+    },
+    {
+      "materialized_path": "build/retirement-repair-product-r2/wplto/full-map-linker/c.ld",
+      "source": {
+        "bytes": 3577,
+        "path": "config/c2-v220-public-native/linker/full-map-linker/c.ld",
+        "sha256": "a4a4a639d24a65900f531e5480122db45be8ec41f0a03a211ed921907861b4ca"
+      }
+    },
+    {
+      "materialized_path": "build/retirement-repair-product-r2/wplto/full-map-linker/commodore.ld",
+      "source": {
+        "bytes": 473,
+        "path": "config/c2-v220-public-native/linker/full-map-linker/commodore.ld",
+        "sha256": "a43d0071580155854bd31999c789a3adf6dff29fb669745d35a2a848034be8b5"
+      }
+    },
+    {
+      "materialized_path": "build/retirement-repair-product-r2/wplto/full-map-linker/zp-data.ld",
+      "source": {
+        "bytes": 89,
+        "path": "config/c2-v220-public-native/linker/full-map-linker/zp-data.ld",
+        "sha256": "5ee0e0672070f1a700ca488e29e9ae9eeb040bd785d621deed1694abb6254a8f"
+      }
+    }
+  ],
+  "ownership_link_flags": [
+    "-Wl,--no-check-sections",
+    "-Wl,--defsym=__lisp65_c2_mapped_far_required_param=1"
+  ],
+  "private_receipts_are_build_inputs": false,
+  "profile": {
+    "bytes": 14379,
+    "path": "config/c2-v220-public-native/resolved-profile.txt",
+    "sha256": "9177b121c72b89207a62a77b7352b8aea95a3405c93631a8f7004a8c6a142401"
+  },
+  "provenance": {
+    "accepted_elf_sha256": "95d8d7df3f46ad2e6d60ffd3dc095ec4e99b0bba1b92ded01414252503f354ec",
+    "accepted_profile_sha256": "9177b121c72b89207a62a77b7352b8aea95a3405c93631a8f7004a8c6a142401",
+    "meaning": "Source texts consumed by the accepted link; exact input identities and order from its resolved profile. The ordinary source tree remains available; basename equivalence is not asserted."
+  },
+  "release": "2.2.0",
+  "sources": [
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/buffer_overlay.c",
+      "source": {
+        "bytes": 5825,
+        "path": "src/buffer_overlay.c",
+        "sha256": "2acc83152b15eb87c106f253a991b49763e6c8b8e53adc09035b15a45110e7f1"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2_hot_literal.c",
+      "source": {
+        "bytes": 2405,
+        "path": "config/c2-v220-public-native/sources/c2_hot_literal.c",
+        "sha256": "242d0039c589fcb0bddd09718cda5ab25131afb22315044eb182c87fd35bf16d"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_kernal_runtime.c",
+      "source": {
+        "bytes": 5303,
+        "path": "src/c2_kernal_runtime.c",
+        "sha256": "3ef6cb8cca52ed6844652398215368acbbb9863f62dfe1b1e6a9ae90636335d2"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_phase_scratch.c",
+      "source": {
+        "bytes": 996,
+        "path": "src/c2_phase_scratch.c",
+        "sha256": "7a0d81a91f85a2a852dfcabb8368623d6810081fa5c0d07a98f440a1efb9409f"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2_platform_dma.c",
+      "source": {
+        "bytes": 12200,
+        "path": "config/c2-v220-public-native/sources/c2_platform_dma.c",
+        "sha256": "f4c4fac343c72e707638281b1d1e94a0ec265ac2cd927fb5e993fcbeb3c53e90"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2_product_runtime.c",
+      "source": {
+        "bytes": 169431,
+        "path": "config/c2-v220-public-native/sources/c2_product_runtime.c",
+        "sha256": "5a65a8f9592c1099d5af14b6a9aad45f8c8a0f4d294cdee2cb50801edd75112e"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2_session_emitter.c",
+      "source": {
+        "bytes": 26890,
+        "path": "config/c2-v220-public-native/sources/c2_session_emitter.c",
+        "sha256": "add02c0b764ce11b06a8f03d7f39d4ad2f9f9caa2a601d1a0d328ea6a9e4eb7f"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/compile.c",
+      "source": {
+        "bytes": 39800,
+        "path": "src/compile.c",
+        "sha256": "3da34db78de348af264fea23926f58e62324ee375d17554adbc4fdca9b37baf0"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/compile_repl.c",
+      "source": {
+        "bytes": 13123,
+        "path": "src/compile_repl.c",
+        "sha256": "48b79dfa7036f92d4500616da836b02b7567f00e8c77fff966fea75ffaf362da"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/error_overlay.c",
+      "source": {
+        "bytes": 8497,
+        "path": "src/error_overlay.c",
+        "sha256": "396645d2ef249fbde300533743916d973ac634112b3a561a42990af2591e8fef"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/eval.c",
+      "source": {
+        "bytes": 99082,
+        "path": "config/c2-v220-public-native/sources/eval.c",
+        "sha256": "273456250d71dad3a307ca7e17e5a14c4df97de86fbf53a36da1a3a8e0d0b9a5"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/intern_service_overlay.c",
+      "source": {
+        "bytes": 1017,
+        "path": "src/intern_service_overlay.c",
+        "sha256": "9a1576d7f5b589dcba469812d753cd758a99a9cb4cf2bafdaf67142f1bce05f7"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/interrupt.c",
+      "source": {
+        "bytes": 8080,
+        "path": "config/c2-v220-public-native/sources/interrupt.c",
+        "sha256": "68a6054295f685422463dedcf7660b15d34d1aa14c5ca2c886b8c15cb5506377"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/io.c",
+      "source": {
+        "bytes": 42491,
+        "path": "config/c2-v220-public-native/sources/io.c",
+        "sha256": "7ce4eae6a1ac99983bb025a44522041901c9bbc75be375f703e5c74b453f964a"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/main.c",
+      "source": {
+        "bytes": 9508,
+        "path": "src/main.c",
+        "sha256": "fd3aa5721306cbc8346e6070f780e0690bf4e859c38bba2c5388c8ddc184276d"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/mem.c",
+      "source": {
+        "bytes": 48667,
+        "path": "config/c2-v220-public-native/sources/mem.c",
+        "sha256": "9f32271d106adc3cb7054ef20fbd9dd4752d3b1233e032ab75b5b713323fdc98"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/printer.c",
+      "source": {
+        "bytes": 4638,
+        "path": "src/printer.c",
+        "sha256": "f0c4b1790ca2e6b5a15b27e079b4f9587b5931c03b58735e5570224a2b89c5bb"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/reader.c",
+      "source": {
+        "bytes": 11087,
+        "path": "config/c2-v220-public-native/sources/reader.c",
+        "sha256": "db8c075e0e1afd1dfe20375c0c4b4ad0a266ec4cd40322067c3ec92d844cd126"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/repl.c",
+      "source": {
+        "bytes": 16119,
+        "path": "src/repl.c",
+        "sha256": "9a213d6a087d23018aed0bbe5b11fa547af085a3fe83255b5696ded49805e608"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/screen.c",
+      "source": {
+        "bytes": 9687,
+        "path": "src/screen.c",
+        "sha256": "272a50f8867cef045c1650ae29f279f127eb75cb43566df9da06943abfaa0269"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/screen_scroll_overlay.c",
+      "source": {
+        "bytes": 3239,
+        "path": "src/screen_scroll_overlay.c",
+        "sha256": "a423f330e71a5e7c8f7d66e08384c272fd5216ebca52d9a5338c93e08bde10a9"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/symbol.c",
+      "source": {
+        "bytes": 13276,
+        "path": "src/symbol.c",
+        "sha256": "0193fcab960fe99fe4268542fa42e0aac62ec6dc5414d063d64d382a0cac4f38"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/vm.c",
+      "source": {
+        "bytes": 118650,
+        "path": "config/c2-v220-public-native/sources/vm.c",
+        "sha256": "381ca6249231fb08f7a1b47f737e72e430bf40acce5da61362324013b0828917"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/vm_boot_overlay.c",
+      "source": {
+        "bytes": 17137,
+        "path": "src/vm_boot_overlay.c",
+        "sha256": "78572685b2810b483fea1c32f93e70218ec6e203b89993ac39b3b57408ed6916"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/vm_runtime_overlay.c",
+      "source": {
+        "bytes": 93557,
+        "path": "config/c2-v220-public-native/sources/vm_runtime_overlay.c",
+        "sha256": "f7d600c3e69195f1f29d5f707bf11e9a7a0813dd7529ae10f3a2b8c7c2a53d21"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-init.c",
+      "source": {
+        "bytes": 310,
+        "path": "config/c2-v220-public-native/sources/c2-stream-init.c",
+        "sha256": "706b39a032572ace9460e555e45e02c64f08b784d4d5ba91f7a914a990d0d58a"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-00.c",
+      "source": {
+        "bytes": 57,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-00.c",
+        "sha256": "19ae4e96f3e4bb904c24c33d7ce3d385edd4cfa7e0781a318f437c5472a3ad75"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-00b.c",
+      "source": {
+        "bytes": 58,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-00b.c",
+        "sha256": "51f13be0111906cab8684eefc99512fe8165354dcfa0fe6759466dc4384198b5"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-01.c",
+      "source": {
+        "bytes": 57,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-01.c",
+        "sha256": "8490454e4f62b691ffd5b1cac42af2eba24bdd9fa116210b1c8667e3fc2ca267"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-02a.c",
+      "source": {
+        "bytes": 548,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-02a.c",
+        "sha256": "d33a16bd01cb0d0de13338f2f65aaca64691efc68a2fc480c8fd8dd803d1056a"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-02b.c",
+      "source": {
+        "bytes": 58,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-02b.c",
+        "sha256": "d5f499dd7a66a84406a8e479d94e47dd0879e87b19ebd9721fd5e104fb4e6ef9"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-03.c",
+      "source": {
+        "bytes": 57,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-03.c",
+        "sha256": "4b34f04d815306a3ab32c6b7a17ffe6d6baab3a0ff75a32c572c76441ceffa3a"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-03b.c",
+      "source": {
+        "bytes": 58,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-03b.c",
+        "sha256": "1529c8bfdd42d951f7d87d64f893901260860fcda6df269212f1534024b99165"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-04.c",
+      "source": {
+        "bytes": 57,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-04.c",
+        "sha256": "4b4009fa90367f5eddad4005dbd791c05bb7dff5d5441b5b9a7546e1836fbdb9"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-05a.c",
+      "source": {
+        "bytes": 58,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-05a.c",
+        "sha256": "bb2761c099c7bc4f4c6d11187a40bcffb05ed3e646038f08fc750110371450ea"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-05b.c",
+      "source": {
+        "bytes": 58,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-05b.c",
+        "sha256": "93f8d5f6f1fa208457de7e6d5e0914def72a724a06e8b39b646c50ef0b992375"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-06a.c",
+      "source": {
+        "bytes": 58,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-06a.c",
+        "sha256": "59d5e60b9844ffe11ae489a6b234eba08078145dee67b5165985e022a0b7ac57"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-phase-06b.c",
+      "source": {
+        "bytes": 58,
+        "path": "config/c2-v220-public-native/sources/c2-stream-phase-06b.c",
+        "sha256": "1491302046f8d90ecfc55e5302c160ab9d3818d67a13250281693d9566ff3e07"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-v2-phase-07.c",
+      "source": {
+        "bytes": 63,
+        "path": "config/c2-v220-public-native/sources/c2-stream-v2-phase-07.c",
+        "sha256": "d8f1bcb0ab4ecaa16eb9e264d93b52f654252fded7d34604bf42702929c88e09"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-v2-phase-08.c",
+      "source": {
+        "bytes": 63,
+        "path": "config/c2-v220-public-native/sources/c2-stream-v2-phase-08.c",
+        "sha256": "368887762d51ecd1d57e7ecbbedeac3f63a460e40103dce81df86502e07e452d"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-v2-phase-09.c",
+      "source": {
+        "bytes": 63,
+        "path": "config/c2-v220-public-native/sources/c2-stream-v2-phase-09.c",
+        "sha256": "7a86ebdc833548c108109d2ae37a53e025228d06bb3239cc245d833c1a9062d8"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-v2-phase-10.c",
+      "source": {
+        "bytes": 64,
+        "path": "config/c2-v220-public-native/sources/c2-stream-v2-phase-10.c",
+        "sha256": "0eed6be784711c5fc7f1a509308c2d5544c9c10bea7b054983db3b91c8a16647"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-v2-phase-11a.c",
+      "source": {
+        "bytes": 64,
+        "path": "config/c2-v220-public-native/sources/c2-stream-v2-phase-11a.c",
+        "sha256": "178f00aa156819966e591b8ed0ea69c0fd0b87ab2d265ba4c7e3941d8a5c05ab"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-v2-phase-11b.c",
+      "source": {
+        "bytes": 64,
+        "path": "config/c2-v220-public-native/sources/c2-stream-v2-phase-11b.c",
+        "sha256": "142135a6a2d89de240a84ccd1c8b511a2ba93f5919e2b282324ec8862768e29b"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-v2-phase-12.c",
+      "source": {
+        "bytes": 64,
+        "path": "config/c2-v220-public-native/sources/c2-stream-v2-phase-12.c",
+        "sha256": "88fb0ec64d09e73de4e4eb1ff4dd477de982c8bd7e3d76fd87d1e81ce29e13bb"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2-stream-v2-phase-13.c",
+      "source": {
+        "bytes": 64,
+        "path": "config/c2-v220-public-native/sources/c2-stream-v2-phase-13.c",
+        "sha256": "7936273fe746f8b9d9e4a983e010f74f529013f7ccc97f03a1328aa868eb6827"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/mega65_math.s",
+      "source": {
+        "bytes": 5016,
+        "path": "src/mega65_math.s",
+        "sha256": "40dd0b45cd585da15c987ecd507c47a3a66126bfe37eeed7122e32300137c956"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/f011_guarded_write.s",
+      "source": {
+        "bytes": 2085,
+        "path": "config/c2-v220-public-native/sources/f011_guarded_write.s",
+        "sha256": "f8b48d9f547ac22120729066d95ede25a7dcbfa4f3716fa750e8c6b98d8a1220"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/runtime_overlay_verifier_bindings.s",
+      "source": {
+        "bytes": 1270,
+        "path": "src/runtime_overlay_verifier_bindings.s",
+        "sha256": "4f0dc7d86131a3a1323fd9dc8ab689473a9c5923d453fa2ab4a75b6aa4f14f11"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_kernal_facade.s",
+      "source": {
+        "bytes": 1407,
+        "path": "src/c2_kernal_facade.s",
+        "sha256": "5441b50be28f03d7983ab877bc8d276633ebd4307261f7f82afdc70bf1c97164"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_kernal_map.s",
+      "source": {
+        "bytes": 1315,
+        "path": "src/c2_kernal_map.s",
+        "sha256": "9a6248653e92ede1b51daac5bf1f55d340e474fb2775a76057e14b55d22f1551"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2_kernal_window.s",
+      "source": {
+        "bytes": 4788,
+        "path": "config/c2-v220-public-native/sources/c2_kernal_window.s",
+        "sha256": "252b0defc5f2f4c206f86e52ea8237a53cf0b00de93e904a7f7ca77056ef5783"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_kernal_input_capture.s",
+      "source": {
+        "bytes": 2859,
+        "path": "src/optional/c2_kernal_input_capture.s",
+        "sha256": "66c40172c56a01b204fccc1d63ad4e052ef2ecd640681f2b1323212662aecd0e"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/rtov_crc_mem.s",
+      "source": {
+        "bytes": 1187,
+        "path": "config/c2-v220-public-native/sources/rtov_crc_mem.s",
+        "sha256": "e63328fb96cee962b970fc9965a3d5b78cf4423b770c58c353a5ba04f3102821"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_completion_mode_length.s",
+      "source": {
+        "bytes": 853,
+        "path": "src/c2_completion_mode_length.s",
+        "sha256": "19d70e59fbe9ac287cce6c6929183401e57d7fcd0178e0f6aa8466fbf52c5429"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/lisp65_ash_tagged.s",
+      "source": {
+        "bytes": 1925,
+        "path": "src/lisp65_ash_tagged.s",
+        "sha256": "20e43b29ee56ea8ad1d7e9e9512f6c827cd7889d958706df06064ceea67c65f0"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/l65e_bcode_ordinal.s",
+      "source": {
+        "bytes": 5937,
+        "path": "src/l65e_bcode_ordinal.s",
+        "sha256": "38da8d9972982be63840eabe4cb420fcb094269f280aa086366871b9e2340d04"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_append_plan_walk.s",
+      "source": {
+        "bytes": 1724,
+        "path": "src/c2_append_plan_walk.s",
+        "sha256": "23de2c4fd92044156e075ae5dfcf60a365613a5d511d24334c7dacee4aa65059"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/vm_c2d_byte.s",
+      "source": {
+        "bytes": 1989,
+        "path": "src/vm_c2d_byte.s",
+        "sha256": "36b7e90b3fd3f3a862f3cc62f424f3155dd2b1b7b075770bd26cf011e5a863f4"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_journal_prepare_select.s",
+      "source": {
+        "bytes": 1847,
+        "path": "src/c2_journal_prepare_select.s",
+        "sha256": "57b9d3683de9fd8a20057b0ae79e27d60603f17ac601f85d363f105f7f2bdf74"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_mapped_far_service_liveness_v4.s",
+      "source": {
+        "bytes": 6408,
+        "path": "src/optional/c2_mapped_far_service_liveness_v4.s",
+        "sha256": "16de9723198cdca7695695543307fae356b4d00ec25dfa619f79ce12736db128"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_mapped_far_convergence_full_span.s",
+      "source": {
+        "bytes": 13054,
+        "path": "src/optional/c2_mapped_far_convergence_full_span.s",
+        "sha256": "1343c3f51cbe9196407492a2daf8f6fd24dc64ea0f1b0e1b8c7cf8f952f75b0c"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_mapped_far_facade_padding_liveness_v3.s",
+      "source": {
+        "bytes": 1030,
+        "path": "src/optional/c2_mapped_far_facade_padding_liveness_v3.s",
+        "sha256": "da21b3dcefe9356369a6ae0ab8d4e8d2ee10c3686f9d108cfee09c44203446a6"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_map_cpu_read.s",
+      "source": {
+        "bytes": 6763,
+        "path": "src/optional/c2_map_cpu_read.s",
+        "sha256": "08e2d155197ae59711f63827a4eca5efb60eb9e5b7d8c878989eb85fd123ce14"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_kernal_input_consumer.s",
+      "source": {
+        "bytes": 1290,
+        "path": "src/optional/c2_kernal_input_consumer.s",
+        "sha256": "96ff601f74c05b820ce7a0a28d1922fdf44490943d16cf485fe3455dc37c84eb"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_product_cold_disk_chain.s",
+      "source": {
+        "bytes": 797,
+        "path": "src/optional/c2_product_cold_disk_chain.s",
+        "sha256": "5954ba03989223d6eb50be8eef5201a7017c4d904521a909c55626b85a392290"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_f011_cold_wrappers.s",
+      "source": {
+        "bytes": 1177,
+        "path": "src/optional/c2_f011_cold_wrappers.s",
+        "sha256": "a3a62476d2031c01a36f5dca525889299386981ebc3850cc30da6fb1725a3c20"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/optional/c2_symbol22_first_fault_latch.s",
+      "source": {
+        "bytes": 969,
+        "path": "src/optional/c2_symbol22_first_fault_latch.s",
+        "sha256": "cf0b2003428269b64c12690c4fe276942f560752ba2ba81ceccc198dd079b191"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_lite_bank3_stage_entry.s",
+      "source": {
+        "bytes": 977,
+        "path": "src/c2_lite_bank3_stage_entry.s",
+        "sha256": "317896b9f534247eb0b7eec6e1666aec2efb037762363dd261735232a578cafb"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "approved-consumed-source-projection",
+      "materialized_path": "build/retirement-repair-product-r2/wplto/generated-product-sources/c2_boot_chain_commit.s",
+      "source": {
+        "bytes": 3497,
+        "path": "config/c2-v220-public-native/sources/c2_boot_chain_commit.s",
+        "sha256": "5cc61839f26d74de5b65c841b1947094d26a452a4fe35c45dd81508954502c5e"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_kernal_facade_reopen.s",
+      "source": {
+        "bytes": 824,
+        "path": "src/c2_kernal_facade_reopen.s",
+        "sha256": "873891701fc955461d80725ecdcd3533b1b56faedd1d0341a4fbb4005b47958d"
+      },
+      "translation_unit": true
+    },
+    {
+      "kind": "tracked-source",
+      "materialized_path": "src/c2_kernal_window_equates.inc",
+      "source": {
+        "bytes": 2234,
+        "path": "src/c2_kernal_window_equates.inc",
+        "sha256": "5740152f5cc289282dec576ce3074cb8b3268f1eb0f4ceb4a794aacbf73cb65a"
+      },
+      "translation_unit": false
+    }
+  ],
+  "target_pair": {
+    "ELF": {
+      "bytes": 631540,
+      "path": "build/retirement-repair-product-r2/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "95d8d7df3f46ad2e6d60ffd3dc095ec4e99b0bba1b92ded01414252503f354ec"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/retirement-repair-product-r2/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "b48c7074d62432ae5edaf6f5f8c1587154757defcf1a98e9f7cc2bdd49a3d5a3"
+    },
+    "profile": {
+      "bytes": 14379,
+      "path": "build/retirement-repair-product-r2/wplto/resolved-profile.txt",
+      "sha256": "9177b121c72b89207a62a77b7352b8aea95a3405c93631a8f7004a8c6a142401"
+    }
+  }
+}

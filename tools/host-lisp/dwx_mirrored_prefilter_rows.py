@@ -267,11 +267,191 @@ def mutation_names(contract: dict[str, Any]) -> list[str]:
     return sorted(names)
 
 
+def histogram_transport_selftest() -> None:
+    """Execute delayed/partial replies and the former short-timeout mutation."""
+    import inspect
+    import tempfile
+    import textwrap
+    import threading
+
+    source = textwrap.dedent(inspect.getsource(Monitor.command))
+    needle = 'histogram = command == "~pcsave"'
+    require(source.count(needle) == 1, "histogram mutation anchor drift")
+    namespace = dict(Monitor.command.__globals__)
+    exec(source.replace(needle, 'histogram = False'), namespace)
+    old_timeout = namespace['command']
+    for name, invoke, reply, expected in (
+        ('delayed-complete', Monitor.command, b'DWX PC save: 0\n.\r\n', True),
+        ('short-timeout-mutant', old_timeout, b'DWX PC save: 0\n.\r\n', False),
+        ('truncated-response', Monitor.command, b'DWX PC save: 0', False),
+        ('failed-save', Monitor.command, b'DWX PC save: -1\n.\r\n', False),
+    ):
+        with tempfile.TemporaryDirectory(prefix='dwx-histogram-') as directory:
+            path = Path(directory) / 'monitor.sock'
+            server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            server.bind(str(path))
+            server.listen(1)
+            errors: list[Exception] = []
+
+            def serve() -> None:
+                try:
+                    client, _ = server.accept()
+                    with client:
+                        require(client.recv(100) == b'~pcsave\r', 'wrong test request')
+                        time.sleep(0.75)
+                        try:
+                            client.sendall(reply)
+                        except BrokenPipeError:
+                            require(name == 'short-timeout-mutant', 'unexpected broken pipe')
+                except Exception as error:
+                    errors.append(error)
+                finally:
+                    server.close()
+
+            worker = threading.Thread(target=serve)
+            worker.start()
+            try:
+                answer = invoke(Monitor(path), '~pcsave', timeout=0.6)
+                accepted = 'DWX PC save: 0\n' in answer and '\n.\r\n' in answer
+            except RowError:
+                accepted = False
+            finally:
+                worker.join(timeout=5)
+            require(not worker.is_alive() and not errors, f'transport harness failed: {errors}')
+            require(accepted == expected, f'histogram transport control failed: {name}')
+
+
+def breakpoint_transport_selftest() -> list[str]:
+    """Real Unix-socket peer: asynchronous report after the first reply.
+
+    Only the isolated child restores default SIGPIPE. The qualifying Xemu
+    process never suppresses a signal; early client close kills this child.
+    """
+    import multiprocessing
+    import signal
+    import tempfile
+    context = multiprocessing.get_context('fork')
+    controls = []
+    for early_close in (False, True):
+        with tempfile.TemporaryDirectory(prefix='dwx-breakpoint-') as directory:
+            path = Path(directory) / 'monitor.sock'
+            ready, release = context.Event(), context.Event()
+            def peer():
+                signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+                with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
+                    server.bind(str(path)); server.listen(1); ready.set()
+                    client, _ = server.accept()
+                    with client:
+                        client.settimeout(3)
+                        require(client.recv(100) == b'b ff09\r', 'fixture arm command')
+                        client.sendall(b'b ff09\r\n.\r\n')
+                        require(release.wait(3), 'fixture release timeout')
+                        client.sendall(b'\r\nPC SP\r\nFF09 01CC\r\n')
+                        require(client.recv(100) == b'r\r', 'fixture register command')
+                        client.sendall(b'r\r\nFF0A 01CC\r\n.\r\n')
+                        require(client.recv(100) == b'~pcclearbreak\r', 'fixture disarm command')
+                        client.sendall(b'DWX PC breakpoint cleared\n.\r\n')
+                        require(client.recv(1) == b'', 'connection not released after clear')
+            process = context.Process(target=peer)
+            process.start()
+            try:
+                require(ready.wait(3), 'fixture listener timeout')
+                monitor = Monitor(path)
+                if not early_close:
+                    monitor.begin_breakpoint_connection()
+                monitor.command('b ff09')
+                release.set()
+                if not early_close:
+                    response = monitor.command('r')
+                    require('FF09 01CC' in response and 'FF0A 01CC' in response,
+                            'asynchronous report or command reply lost')
+                    # Also exercises failure-cleanup's mandatory disarm.
+                    monitor.end_breakpoint_connection()
+                process.join(4)
+                require(process.exitcode == (-signal.SIGPIPE if early_close else 0),
+                        f'breakpoint lifetime control failed: {process.exitcode}')
+            finally:
+                if process.is_alive(): process.terminate(); process.join(2)
+            controls.append('early-close-SIGPIPE' if early_close else 'held-until-disarm')
+    return controls
+
+
+def owned_readiness(function):
+    """Hold the transport, without changing readiness or guest-cycle oracles."""
+    from functools import wraps
+    @wraps(function)
+    def run(self, *args, **kwargs):
+        self.begin_breakpoint_connection()
+        try:
+            return function(self, *args, **kwargs)
+        finally:
+            self.end_breakpoint_connection()
+    return run
+
+
 class Monitor:
     def __init__(self, path: Path):
         self.path = path
 
+    def begin_breakpoint_connection(self, timeout: float = 3.0) -> None:
+        """Own one socket before arming, until acknowledged breakpoint clear."""
+        require(getattr(self, '_breakpoint_socket', None) is None, 'nested monitor connection')
+        client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        client.settimeout(timeout)
+        try:
+            client.connect(str(self.path))
+        except BaseException:
+            client.close()
+            raise
+        self._breakpoint_socket = client
+        self._breakpoint_cleared = False
+        self._breakpoint_pending = b''
+
+    def end_breakpoint_connection(self) -> None:
+        client = getattr(self, '_breakpoint_socket', None)
+        require(client is not None, 'no owned monitor connection')
+        # On failed readiness, disarm on the still-owned connection too.
+        try:
+            if not self._breakpoint_cleared:
+                require('DWX PC breakpoint cleared' in self.command('~pcclearbreak'),
+                        'breakpoint disarm not acknowledged')
+        finally:
+            self._breakpoint_socket = None
+            client.close()
+
+    def _breakpoint_command(self, command: str, timeout: float) -> str:
+        client = self._breakpoint_socket
+        deadline = time.monotonic() + timeout
+        client.settimeout(timeout)
+        client.sendall(command.encode('ascii') + b'\r')
+        chunks = [self._breakpoint_pending]
+        self._breakpoint_pending = b''
+        while True:
+            remaining = deadline - time.monotonic()
+            require(remaining > 0, 'owned monitor response deadline')
+            client.settimeout(remaining)
+            block = client.recv(16384)
+            require(bool(block), 'owned monitor response incomplete')
+            chunks.append(block)
+            raw = b''.join(chunks)
+            if b'\n.\r\n' in raw:
+                end = raw.index(b'\n.\r\n') + len(b'\n.\r\n')
+                self._breakpoint_pending = raw[end:]
+                response = raw[:end].decode('utf-8', errors='replace')
+                if command == '~pcclearbreak':
+                    require('DWX PC breakpoint cleared' in response, 'missing clear acknowledgement')
+                    self._breakpoint_cleared = True
+                return response
+
     def command(self, command: str, timeout: float = 3.0) -> str:
+        # A stopped-CPU histogram dump can take longer than an ordinary UART
+        # reply. Closing its socket after 0.5 s caused host SIGPIPE in Xemu.
+        # This is a transport deadline, never a guest measurement exclusion.
+        histogram = command == "~pcsave"
+        if histogram:
+            timeout = max(timeout, 30.0)
+        if getattr(self, '_breakpoint_socket', None) is not None:
+            return self._breakpoint_command(command, timeout)
         deadline = time.monotonic() + timeout
         last_error: OSError | None = None
         while time.monotonic() < deadline:
@@ -282,13 +462,22 @@ class Monitor:
                 client.sendall(command.encode("ascii") + b"\r")
                 chunks: list[bytes] = []
                 while True:
+                    if histogram:
+                        remaining = deadline - time.monotonic()
+                        if remaining <= 0:
+                            raise TimeoutError("PC histogram response deadline")
+                        client.settimeout(remaining)
                     block = client.recv(16384)
                     if not block:
                         break
                     chunks.append(block)
                     if b"\n.\r\n" in b"".join(chunks):
                         break
-                return b"".join(chunks).decode("utf-8", errors="replace")
+                response = b"".join(chunks).decode("utf-8", errors="replace")
+                if histogram:
+                    require("\n.\r\n" in response,
+                            "PC histogram response incomplete")
+                return response
             except OSError as error:
                 last_error = error
                 time.sleep(0.02)
@@ -922,6 +1111,7 @@ def check() -> None:
 
 
 def selftest() -> None:
+    breakpoint_transport_selftest()
     contract = load(CONTRACT_PATH)
     validate_contract(contract)
     names = mutation_names(contract)

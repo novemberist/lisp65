@@ -60,10 +60,13 @@
               (apply (car form) (%c2-direct-values (cdr form)))))))
 
 (defun %c2-direct-values (forms)
-  (if forms
-      (cons (%c2-direct-expression (car forms))
-            (%c2-direct-values (cdr forms)))
-      nil))
+  ; Preserve left-to-right evaluation without one pending CONS frame per
+  ; argument. Only our freshly allocated spine is reversed.
+  (let ((acc nil))
+    (while forms
+      (setq acc (cons (%c2-direct-expression (car forms)) acc))
+      (setq forms (cdr forms)))
+    (nreverse acc)))
 
 (defun %c2-published-direct-call-p (form)
   (if (consp form)

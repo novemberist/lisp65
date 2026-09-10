@@ -8,14 +8,19 @@ from pathlib import Path
 import f011_buffered_repair_prefilter as P
 import dwx_comfort_collection_calibration as CAL
 from elf_truth import ElfTruth
-from evidence_era import stable_recorded_on
+from evidence_era import stable_recorded_on, era_bind
 
 C=P.C
 OUT=C.ROOT/'config/v2.1-comfort-buffered-repair-device-session.json'
 CHECK=C.BUILD/'qualification.json'
 CHOICE=C.ROOT/'config/v2.1-comfort-coldstart-owner-choice.json'
+SOURCE_ERA='a3a77416'  # Last accepted pre-R2 world; matches every sealed source binding.
 
 def bound(value):
+    if value['path'] in ('tools/host-lisp/dwx_comfort_resume.py',
+                         'tools/host-lisp/dwx_comfort_collection_calibration.py'):
+        assert era_bind(SOURCE_ERA,value['path'])==value,'sealed executor identity drift'
+        return
     assert C.C.bind(C.ROOT/value['path'])==value,'binding drift: '+value['path']
 
 def display(frames):
@@ -71,11 +76,21 @@ def derive():
     data=comfort['collection_calibration']
     session=P.RUN.load(P.COMFORT.SESSION)
     capture=next(r for r in session['rows'] if r['id']=='C4')['collection']
-    model=CAL.model(t,C.ELF)
+    model=CAL.model(t,C.ELF,source_era=SOURCE_ERA)
     samples=[(C.C.load(runtime/f'calibration-sample-{i}-typed.json'),
               C.C.load(runtime/f'calibration-sample-{i}-deleted.json')) for i in (1,2)]
     plan=json.loads(json.dumps(CAL.derive(data['origin'],samples,capture,model)))
     assert plan==data['plan']
+    later=CAL.model(t,C.ELF,source_era='663b69f0')
+    try:
+        assert json.loads(json.dumps(CAL.derive(data['origin'],samples,capture,later)))==data['plan']
+    except AssertionError:pass
+    else:raise AssertionError('later-source/historical-ELF mutation survived')
+    for key in ('executor','calibration_executor'):
+        altered=deepcopy(comfort[key]);altered['sha256']='0'*64
+        try:bound(altered)
+        except AssertionError:pass
+        else:raise AssertionError('sealed executor mutation survived: '+key)
     for key in ('origin','start'):CAL.verify_chain(data[key],model)
     CAL.validate_window(data['origin'],data['start'],data['end'])
     counters=bytes.fromhex(comfort['stopped']['capture']['raw'])

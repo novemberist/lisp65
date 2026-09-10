@@ -15,7 +15,11 @@ media artifacts, counts, geometry, readbacks -- stays live.
 from __future__ import annotations
 
 from datetime import date
+from contextlib import contextmanager
+import builtins
+from functools import wraps
 import hashlib
+import io
 import json
 from pathlib import Path
 import subprocess
@@ -28,6 +32,112 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class EraError(RuntimeError):
     pass
+
+
+@contextmanager
+def host_source_world(commit: str):
+    """Read-only historical Lisp/suite population for a sealed host replay.
+
+    Does not shadow receipts, configuration, native sources, tools or build
+    artifacts. Both content reads and metadata hashes see the same bytes.
+    A newly introduced source absent from this era fails instead of silently
+    importing it from HEAD. Scope is process-local and restored on exception.
+    Returned read population identifies every authority actually consumed.
+    """
+    original_open, original_io_open = builtins.open, io.open
+    reads, cache = {}, {}
+    def selected(path):
+        if not isinstance(path, (str, Path)):
+            return None
+        try:
+            rel = Path(path).resolve().relative_to(ROOT.resolve())
+        except ValueError:
+            return None
+        if ((rel.parts[0] == 'lib' and rel.suffix == '.lisp') or
+                (rel.parts[:3] in {('tests', 'bytecode', name) for name in
+                    ('libs', 'stdlib', 'runtime', 'demos', 'suites')}
+                 and rel.suffix == '.json')):
+            return rel.as_posix()
+        return None
+    def read(file, mode='r', *args, **kwargs):
+        rel = selected(file)
+        if rel is None:
+            return original_open(file, mode, *args, **kwargs)
+        if mode not in ('r', 'rt', 'rb'):
+            raise EraError('write attempted inside sealed host source world: '+rel)
+        if rel not in cache:
+            cache[rel] = era_blob(commit, rel)
+        raw = cache[rel]
+        reads[rel] = dict(commit=commit, path=rel, bytes=len(raw),
+                          sha256=hashlib.sha256(raw).hexdigest())
+        if 'b' in mode:
+            return io.BytesIO(raw)
+        encoding = kwargs.get('encoding') or (args[1] if len(args) > 1 else None) or 'utf-8'
+        errors = kwargs.get('errors') or (args[2] if len(args) > 2 else None)
+        newline = kwargs.get('newline', args[3] if len(args) > 3 else None)
+        return io.TextIOWrapper(io.BytesIO(raw), encoding=encoding, errors=errors, newline=newline)
+    builtins.open = io.open = read
+    try:
+        yield reads
+    finally:
+        builtins.open, io.open = original_open, original_io_open
+
+
+def in_host_source_world(commit: str):
+    """Label a historical verification, never a live product operation."""
+    def decorate(function):
+        @wraps(function)
+        def historical(*args, **kwargs):
+            host_source_controls(commit)
+            with host_source_world(commit) as reads:
+                result = function(*args, **kwargs)
+            if not reads:
+                raise EraError('historical verification consumed no host sources')
+            historical.last_source_reads = dict(reads)
+            return result
+        return historical
+    return decorate
+
+
+_tested_host_worlds = set()
+
+
+def host_source_controls(commit: str) -> None:
+    """Permanent sharp controls for content/metadata coupling and read-only scope."""
+    if commit in _tested_host_worlds:
+        return
+    path = ROOT/'lib/stdlib-read-line.lisp'
+    expected = era_blob(commit, path.relative_to(ROOT).as_posix())
+    old_open, old_io = builtins.open, io.open
+    with host_source_world(commit) as reads:
+        with open(path, 'rb') as stream:
+            if stream.read() != expected:
+                raise EraError('built-in open imported the live source')
+        if path.read_bytes() != expected or path.read_text().encode() != expected:
+            raise EraError('Path content/metadata world divergence')
+        recorded = reads[path.relative_to(ROOT).as_posix()]
+        if recorded != dict(commit=commit, **era_bind(commit,path)):
+            raise EraError('source bytes and binding disagree')
+        try:
+            path.open('w')
+        except EraError:
+            pass
+        else:
+            raise EraError('sealed-source write allowed')
+        try:
+            (ROOT/'lib/__missing_era_source_control__.lisp').read_bytes()
+        except EraError:
+            pass
+        else:
+            raise EraError('unbound source accepted')
+    if builtins.open is not old_open or io.open is not old_io:
+        raise EraError('source view leaked outside historical verification')
+    # Substituting the later wrap source while retaining the historical SHA
+    # is the exact "bound but not consumed" mutation from this conversion.
+    later = era_blob('c96979bc', path.relative_to(ROOT).as_posix())
+    if later == expected or hashlib.sha256(later).hexdigest() == recorded['sha256']:
+        raise EraError('later-content/historical-binding mutation did not distinguish worlds')
+    _tested_host_worlds.add(commit)
 
 
 def era_blob(commit: str, path: str) -> bytes:

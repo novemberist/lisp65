@@ -27,6 +27,7 @@ import c2_v200_release_strip_product_card as BASE  # noqa: E402
 import c2_v200_release_card as RELEASE  # noqa: E402
 import consolidated_consumption_authority as CONSUMPTION  # noqa: E402
 import sidx_symbol_domain_gate as DOMAIN  # noqa: E402
+import evidence_era as ERA
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -1002,6 +1003,7 @@ r1 remains frozen unqualified evidence.
     )
 
 
+@ERA.in_host_source_world("520352a6")
 def check() -> None:
     configure()
     BASE.CHAIN.setup_link_world()

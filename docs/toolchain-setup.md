@@ -21,19 +21,11 @@ complete installed tree. A source build at the pinned LLVM-MOS commits is valid
 for development, but it is not proof-equivalent merely because the commits
 match: it must first reproduce the sealed product-artifact SHAs.
 
-After verification, build the exact C2-lite 1.2 product and canonical media
-with:
-
-```sh
-make clean
-make workbench-product
-```
-
-The target requires `c1541` in addition to LLVM-MOS. It no longer composes the
-retired 1.1 compiler tiers: one C2 emitter supplies the Lisp plane, one WPLTO
-closure produces the resident product, and the final gate compares all 19
-roles with the sealed public-build authority. A mismatch is a build failure,
-not an accepted local variant.
+After verification, follow the single clone-to-deploy walkthrough in the
+[Development Guide](development.md). The product target requires `c1541` in
+addition to LLVM-MOS and verifies this pinned toolchain before it builds or
+checks any product bytes. A mismatch is a build failure, not an accepted local
+variant.
 
 Set `LLVM_MOS_ROOT` to use an installation elsewhere. The default remains
 `tools/llvm-mos`, so existing proof builds retain identical command lines.

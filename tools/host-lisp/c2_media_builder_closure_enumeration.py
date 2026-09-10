@@ -68,6 +68,14 @@ RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v20-receipt.json"
 # receipt advance together rather than rewriting the v19 evidence world.
 PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v21-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v22-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v23-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v24-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v25-receipt.json"
 # DWX Item 4 adds a focus-free packed-require producer.  Its stopped-memory
 # and framebuffer rows are part of the producer closure, not an unregistered
 # test-side copy of the medium.
@@ -99,7 +107,7 @@ DWX_FREEZER_FREE_MEDIA = ROOT / (
 DWX_MIRRORED_MEDIA = ROOT / (
     "tests/bytecode/dialect-v2/evidence/post-release/"
     "dwx-mirrored-prefilter-rows-receipt-20260902.json")
-FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v21"
+FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v23"
 SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 
 # The registry is deliberately explicit.  Discovery below is independent of
@@ -108,6 +116,12 @@ SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 # developer fixtures, but they cannot become a qualified product producer
 # without an explicit reclassification and packed-artifact closure.
 REGISTERED = {
+    "tools/host-lisp/c2_v220_public_libraries.py",
+    "tools/host-lisp/c2_v220_public_media.py",
+    "tools/host-lisp/capacity_prefilter_media.py",
+    "tools/host-lisp/c2_v210_public_media.py",
+    "tools/host-lisp/hardware_sp_seed_media.py",
+    "tools/host-lisp/renderer_native_session_media.py",
     "tools/host-lisp/c2_defstruct_foundations_gate.py",
     "tools/host-lisp/c2_defstruct_product_identity_rebind.py",
     "tools/host-lisp/c2_defstruct_session_record_identity_rebind.py",
@@ -192,6 +206,16 @@ REGISTERED = {
     "mk/workbench.mk",
 }
 CURRENT = {
+    "tools/host-lisp/c2_v220_public_libraries.py":
+        "current 2.2 release; twice-built library/index bytes read back in accepted D81",
+    "tools/host-lisp/c2_v220_public_media.py":
+        "current 2.2 release; packed closure/coherence and all roles from accepted reproduction",
+    "tools/host-lisp/capacity_prefilter_media.py":
+        "diagnostic-only renderer variants; unchanged product files and sealed library readback",
+    "tools/host-lisp/c2_v210_public_media.py":
+        "renderer public release producer; closure and coherence over readback bytes",
+    "tools/host-lisp/renderer_native_session_media.py":
+        "qualified renderer session medium; materialized facade and readback closure/coherence",
     "tools/host-lisp/c2_v20_far_payload_delivery.py":
         "registered packed-artifact registry in delivered media closure",
     "tools/host-lisp/c2_v21_loading_libraries_progress_media_repair.py":
@@ -339,7 +363,85 @@ def domain(path: str) -> str:
     return "sealed-c2-product-or-diagnostic-evidence"
 
 
+def v220_closure() -> dict[str, Any]:
+    base = ROOT / "build/release-v2.2.0/reproduction-2-sentinel-conversion"
+    path = base / "build/public-v2.2.0/media/receipt.json"
+    require(hashlib.sha256(path.read_bytes()).hexdigest() ==
+            "f0781578001715b629f65ce53624db8ed75770206f8d91027e3520070074ba20",
+            "accepted v220 packed closure receipt differs")
+    receipt = load(path)
+    authority = load(ROOT / "config/c2-v220-public-plane/media-authority.json")
+    producer = load(ROOT / "config/c2-v220-public-build-authority.json")
+    names = ["tools/host-lisp/c2_v220_public_libraries.py",
+             "tools/host-lisp/c2_v220_public_media.py"]
+    for name in names:
+        require(name in CURRENT, "active v220 producer classified noncurrent")
+        rows = [r for r in producer["producer_inputs"] if r["path"] == name]
+        require(len(rows) == 1 and hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
+                == rows[0]["sha256"], "v220 producer source differs: " + name)
+    require(receipt["closure"]["status"] == "PASS"
+            and not receipt["closure"]["failures"]
+            and receipt["coherence"]["status"].startswith("PASS")
+            and not receipt["coherence"]["failures"],
+            "v220 packed gates not closed")
+    require(receipt["libraries"]["construction_passes"] == 2
+            and receipt["libraries"]["init_present"] is False,
+            "v220 library readback or no-INIT boundary differs")
+    require(set(receipt["roles"]) == set(authority["roles"]),
+            "v220 role population differs")
+    rows = {**receipt["roles"], "system-medium": receipt["medium"]}
+    expected = {**authority["roles"], "system-medium": authority["medium"]}
+    for name, row in rows.items():
+        rel = Path(row["path"])
+        require(not rel.is_absolute() and ".." not in rel.parts,
+                "v220 artifact path escapes reproduction")
+        data = (base/rel).read_bytes()
+        identity = {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+        require(identity == expected[name], "v220 readback differs: " + name)
+    return {"producers": names, "receipt_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "packed_closure": True, "packed_coherence": True,
+            "role_count": len(receipt["roles"]), "readback_count": len(rows),
+            "library_construction_passes": 2, "init_present": False}
+
+
 def active_closure() -> dict[str, Any]:
+    import capacity_prefilter_media as C0
+    diagnostic = C0.check()
+    require(diagnostic.get("authorization") == "84d6c1c2"
+            and diagnostic.get("product_medium_unchanged") is True
+            and diagnostic.get("comfort_entry") is False
+            and diagnostic.get("comfort_claim") is False,
+            "capacity diagnostic medium claim drift")
+    source = ROOT / diagnostic["source_product"]["path"]
+    for role, row in diagnostic["media"].items():
+        medium = ROOT / row["medium"]["path"]
+        additions = {}
+        if role.startswith("init-"):
+            additions[b"INIT.L65"] = (ROOT / row["payload"]["path"]).read_bytes()
+        elif role == "library":
+            additions = {b"REPL-COMFORT": (ROOT / row["sealed_library"]["path"]).read_bytes(),
+                         b"L65INDEX": (ROOT / row["packed"]["index"]["path"]).read_bytes()}
+        C0.check_members(source, medium, additions)
+    diagnostic_registry = {"producer": "tools/host-lisp/capacity_prefilter_media.py",
+        "receipt_sha256": hashlib.sha256((C0.BUILD / "receipt.json").read_bytes()).hexdigest(),
+        "source_sha256": hashlib.sha256((HOST / "capacity_prefilter_media.py").read_bytes()).hexdigest(),
+        "packed_readback": True, "product_unchanged": True, "diagnostic_only": True,
+        "comfort_entry": False, "rows": len(diagnostic["rows"])}
+    renderer_producers = {}
+    for name in ("c2_v210_public_media.py", "renderer_native_session_media.py"):
+        path = HOST / name
+        source = path.read_text(encoding="utf-8")
+        require(all(token in source for token in (
+            "actual =", "readback", "CLOSURE.require_closed(closure)",
+            "COHERENCE.require_coherent(coherence)")) if name.startswith("c2_") else
+            all(token in source for token in (
+                "actual=", "readback", "CLOSURE.require_closed(closure)",
+                "COHERENCE.require_coherent(coherence)")),
+            f"renderer producer lacks packed-readback gates: {name}")
+        renderer_producers[path.relative_to(ROOT).as_posix()] = {
+            "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "packed_readback_closure_and_coherence": True,
+        }
     repair = load(REPAIR)
     breadcrumb = load(BREADCRUMB)
     repaired = repair.get("packed_artifact_gate_registry", {})
@@ -604,6 +706,8 @@ def active_closure() -> dict[str, Any]:
         and dwx_mirrored.get("device_acceptance_claimed") is False,
         "DWX mirrored-row medium lacks focus-free runtime or oracle closure")
     return {"current": dict(sorted(CURRENT.items())),
+            "capacity_diagnostic_registry": diagnostic_registry,
+            "renderer_producer_registry": renderer_producers,
             "repair_registry": repaired,
             "breadcrumb_registry": traced,
             "bank4_registry": bank4,
@@ -707,7 +811,7 @@ def derive() -> dict[str, Any]:
         domains.setdefault(domain(path), []).append(path)
     value = {
         "format": FORMAT,
-        "recorded_on": "2026-09-02",
+        "recorded_on": "2026-09-07",
         "status": "PASS: EVERY MEDIUM BUILDER IN TREE ENUMERATED",
         "builders": {
             "total": len(observed),
@@ -717,6 +821,7 @@ def derive() -> dict[str, Any]:
             "domains": dict(sorted(domains.items())),
         },
         "active_closure": active_closure(),
+        "v220_active_closure": v220_closure(),
         "rule": (
             "Every Python, shell, and Make medium producer is structurally "
             "enumerated. Current product/diagnostic producers run every "
@@ -734,6 +839,21 @@ def derive() -> dict[str, Any]:
 
 
 def audit(value: dict[str, Any]) -> None:
+    require(value.get("v220_active_closure") == v220_closure(),
+            "active v220 packed closure missing or changed")
+    capacity = value.get("active_closure", {}).get("capacity_diagnostic_registry", {})
+    require(capacity.get("packed_readback") is True
+            and capacity.get("product_unchanged") is True
+            and capacity.get("diagnostic_only") is True
+            and capacity.get("comfort_entry") is False
+            and capacity.get("rows") == 8,
+            "capacity diagnostic packed closure or claim boundary missing")
+    renderer_registry = value.get("active_closure", {}).get("renderer_producer_registry", {})
+    require(set(renderer_registry) == {
+        "tools/host-lisp/c2_v210_public_media.py", "tools/host-lisp/renderer_native_session_media.py"}
+        and all(row.get("packed_readback_closure_and_coherence") is True
+                for row in renderer_registry.values()),
+        "renderer producer packed gates missing")
     builders = value.get("builders", {})
     observed = builders.get("observed", {})
     domain_members = {
@@ -801,6 +921,22 @@ def mutations(base: dict[str, Any]) -> list[str]:
     except EnumerationError:
         rejected.append("builder-outside-enumeration")
     for name, mutate in (
+        ("drop-v220-active-closure", lambda x: x.pop("v220_active_closure")),
+        ("v220-packed-closure-omitted", lambda x: x["v220_active_closure"].update(packed_closure=False)),
+        ("v220-readback-omitted", lambda x: x["v220_active_closure"].update(readback_count=0)),
+        ("drop-v220-libraries", lambda x: x["builders"]["observed"].pop(
+            "tools/host-lisp/c2_v220_public_libraries.py")),
+        ("drop-v220-media", lambda x: x["builders"]["observed"].pop(
+            "tools/host-lisp/c2_v220_public_media.py")),
+        ("drop-capacity-producer", lambda x: x["builders"]["observed"].pop(
+            "tools/host-lisp/capacity_prefilter_media.py")),
+        ("drop-capacity-readback", lambda x: x["active_closure"]
+            ["capacity_diagnostic_registry"].update(packed_readback=False)),
+        ("promote-capacity-comfort", lambda x: x["active_closure"]
+            ["capacity_diagnostic_registry"].update(comfort_entry=True)),
+        ("drop-renderer-packed-gate", lambda x: x["active_closure"]
+            ["renderer_producer_registry"]["tools/host-lisp/c2_v210_public_media.py"]
+            .update(packed_readback_closure_and_coherence=False)),
         ("drop-enumerated-builder", lambda x: x["builders"]
             ["observed"].pop(next(iter(x["builders"]["observed"])))),
         ("drop-current-builder", lambda x: x["builders"]
@@ -853,7 +989,7 @@ def mutations(base: dict[str, Any]) -> list[str]:
             audit(trial)
         except EnumerationError:
             rejected.append(name)
-    require(len(rejected) == 19,
+    require(len(rejected) == 28,
             "media-builder enumeration mutation survived")
     return sorted(rejected)
 

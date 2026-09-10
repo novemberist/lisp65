@@ -7,6 +7,7 @@
 #include <string.h>
 #include "eval.h"
 #include "interrupt.h"
+#include "mem.h"
 #include "obj.h"
 #include "reader.h"
 #include "symbol.h"
@@ -107,6 +108,38 @@ static int expect_checked_register_dir_full(void) {
     return 0;
 }
 
+/* Register row "Root stack not unwound on `lcc-install` error paths": a failing
+ * install used to leave gc_rootsp above its entry watermark, and repeated
+ * failures walked toward the root bound.  The roots are the CALLERS' -- the
+ * installer restores its own -- and a longjmp skips their epilogues, so the
+ * unwind belongs at the abort producer (src/interrupt.c).  This row asserts the
+ * invariant on a harness landing that does NOT itself reset gc_rootsp, which is
+ * the only shape in which the leak is observable at all.  It is also what R2's
+ * orphaned-frame purge relies on. */
+static void expect_root_stack_unwound_on_error(void) {
+    char form[4096];
+    const char *err = 0;
+    int i, p, round;
+    for (round = 0; round < 3; round++) {
+        p = sprintf(form, "(lcc-run (quote (defun big%d (x) (progn ", round);
+        for (i = 0; i < 120; i++) p += sprintf(form + p, "(+ 1 1) ");
+        sprintf(form + p, "x))))");
+        (void)run_form(form, &err);
+        if (!err) {
+            printf("failing install %d => FAIL (expected an error)\n", round);
+            failed++;
+            return;
+        }
+        if (gc_rootsp != 0) {
+            printf("failing install %d => FAIL (gc_rootsp=%u after \"%s\")\n",
+                   round, (unsigned)gc_rootsp, err);
+            failed++;
+            return;
+        }
+    }
+    puts("root stack unwound after 3 failing installs                => OK");
+}
+
 int main(void) {
     eval_init();
     if (expect_checked_register_dir_full()) return 1;
@@ -135,6 +168,9 @@ int main(void) {
     puts("== defun with helper, capturing ==");
     expect_symbol("(lcc-run (quote (defun ad (n) (lambda (x) (+ x n)))))", "ad");
     expect_fix("(funcall (ad 10) 5)", 15);
+
+    puts("== the root stack is unwound on a failing install ==");
+    expect_root_stack_unwound_on_error();
 
     printf(failed ? "\nFAILED (%d)\n" : "\nALL PASS\n", failed);
     return failed ? 1 : 0;

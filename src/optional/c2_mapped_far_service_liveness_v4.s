@@ -1,3 +1,56 @@
+	; These are ABI-owned imaginary registers, not heuristically promoted
+	; C statics. Capture is before any compiler-generated abort prologue.
+	.zeropage __rc2
+	.zeropage __rc3
+	.section .text.lisp_abort_symbol,"ax",@progbits
+	.globl lisp_abort_symbol
+	.type lisp_abort_symbol,@function
+lisp_abort_symbol:
+	pha
+	phx
+	tsx
+	; Two local saves, then the low byte of the caller's actual return word.
+	inx
+	inx
+	inx
+	stx __rc3
+	plx
+	pla
+	jmp lisp_abort_symbol_captured
+	.size lisp_abort_symbol, .-lisp_abort_symbol
+
+	.section .text.lisp_abort_code,"ax",@progbits
+	.globl lisp_abort_code
+	.type lisp_abort_code,@function
+lisp_abort_code:
+	stz __rc2
+	ldx #0
+	; Tail transfer deliberately preserves the original caller's frame.
+	jmp lisp_abort_symbol
+	.size lisp_abort_code, .-lisp_abort_code
+
+	.section .text.lisp_abort,"ax",@progbits
+	.globl lisp_abort
+	.type lisp_abort,@function
+lisp_abort:
+	pha
+	phx
+	tsx
+	inx
+	inx
+	inx
+	; The extra byte argument owns A in this mixed-width C signature;
+	; the original one-pointer entrance used A/X. Marshal both explicitly.
+	txa
+	tay
+	plx
+	pla
+	sta __rc2
+	stx __rc3
+	tya
+	jmp lisp_abort_captured
+	.size lisp_abort, .-lisp_abort
+
 	.section .lisp65_c2_mapped_far_facade.entries,"ax",@progbits
 	.globl vm_code_load_converged
 	.type vm_code_load_converged,@function
@@ -100,24 +153,19 @@ c2_rtov_sanitize_recovery:
 	.globl c2_rtov_retire_continuations
 	.type c2_rtov_retire_continuations,@function
 c2_rtov_retire_continuations:
+	; A is the page-1 slot captured by the controlled abort entrance. Later
+	; C saves and JSRs cannot change its identity. Preserve it across CSR
+	; sanitation; never infer a frame from the walker's current SP.
+	pha
 	jsr c2_rtov_sanitize_saved_csrs
-
-	; The final-ELF control-flow population has one live-generation frame on
-	; the direct overlay -> lisp_abort_symbol path.  At this entry its stored
-	; JSR return word is the fourth hardware-stack frame: walker, facade,
-	; cleanup, then the retiring overlay.  Test the actual stored word against
-	; [overlay_start-1, overlay_end-2], because RTS adds one, and redirect only
-	; an in-generation member.  Resident abort callers remain byte-for-byte
-	; untouched.  This is retirement-only; no ordinary indirect call pays for
-	; a generation check.
-	tsx
-	txa
+	pla
 	tay
-	lda 0x0107,y
+	lda 0x0100,y
 	sec
 	sbc #mos16lo(__lisp65_workbench_overlay_start-1)
 	tax
-	lda 0x0108,y
+	iny
+	lda 0x0100,y
 	sbc #mos16hi(__lisp65_workbench_overlay_start-1)
 	bcc .Lretire_done
 	cmp #mos16hi(__lisp65_workbench_overlay_len)
@@ -126,10 +174,12 @@ c2_rtov_retire_continuations:
 	cpx #mos16lo(__lisp65_workbench_overlay_len)
 	bcs .Lretire_done
 .Lretire_active_frame:
+	dey
 	lda #mos16lo(c2_retired_continuation_stub-1)
-	sta 0x0107,y
+	sta 0x0100,y
+	iny
 	lda #mos16hi(c2_retired_continuation_stub-1)
-	sta 0x0108,y
+	sta 0x0100,y
 .Lretire_done:
 	rts
 	.size c2_rtov_retire_continuations, .-c2_rtov_retire_continuations

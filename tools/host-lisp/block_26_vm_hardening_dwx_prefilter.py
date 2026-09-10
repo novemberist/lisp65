@@ -312,8 +312,11 @@ def tool_identity() -> dict[str, Any]:
 
 
 def gc_bounds(elf: Path) -> dict[str, int]:
-    truth = ElfTruth.read(elf, llvm_readobj=CARD.READOBJ)
+    truth = ElfTruth.read(elf, llvm_readobj=CARD.READOBJ, include_section_data=True)
     symbol = truth.symbol("gc_collect")
+    section = truth.section(symbol.section)
+    require(truth.section_bytes(symbol.section)[symbol.value-section.address] == 0x18,
+            "GC first-opcode boundary no longer preserves entry SP (CLC)")
     output = subprocess.run([str(ROOT / "tools/llvm-mos/bin/llvm-objdump"),
         "-d", "--no-show-raw-insn", str(elf)], cwd=ROOT, check=True,
         text=True, stdout=subprocess.PIPE).stdout
@@ -413,6 +416,102 @@ def wait_register(monitor: CYCLES.ProbeMonitor,
     raise PrefilterError(f"{label} breakpoint timeout: {last}")
 
 
+def gc_registers(line: str) -> dict[str, int]:
+    fields = line.split()
+    require(len(fields) == 13 and 'E' in fields[-1],
+            'GC register schema/E=1 mode not established')
+    return {'pc': int(fields[0], 16), 'sp': int(fields[6], 16)}
+
+
+def gc_return_witness(entry_line: str, return_bytes: bytes) -> dict[str, Any]:
+    """c96979bc: derive caller PC/SP from this stopped callee-entry frame."""
+    entry = gc_registers(entry_line)
+    require(len(return_bytes) == 2 and entry['sp'] >> 8 == 1,
+            'GC hardware-stack return bytes absent')
+    low = (entry['sp']+1) & 255
+    high = (entry['sp']+2) & 255
+    saved = int.from_bytes(return_bytes, 'little')
+    return {'entry_pc': entry['pc'], 'callee_entry_sp': entry['sp'],
+            'caller_sp': 0x100 | high, 'return_pc': (saved+1) & 65535,
+            'stack_addresses': [0x100 | low, 0x100 | high],
+            'stack_return_bytes': return_bytes.hex(),
+            'derivation': 'E=1 JSR saved PC + 1; caller SP = callee SP + 2 modulo page 1'}
+
+
+def read_gc_return_witness(monitor, entry_line: str) -> dict[str, Any]:
+    sp = gc_registers(entry_line)['sp']
+    addresses = [0x100 | ((sp+i)&255) for i in (1,2)]
+    # Only the two return bytes are needed. Reading the entire stack page
+    # prolonged the stopped state past HWA's existing paste-stall budget.
+    blocks = {address & ~15: None for address in addresses}
+    for address in blocks:
+        blocks[address] = monitor.memory16(address)
+    raw = bytes(blocks[address & ~15][address & 15] for address in addresses)
+    return gc_return_witness(entry_line, raw)
+
+
+def gc_return_reached(line: str, witness: dict[str, Any]) -> bool:
+    current = gc_registers(line)
+    return current['pc'] == witness['return_pc'] and current['sp'] == witness['caller_sp']
+
+
+def gc_exit_selftest() -> None:
+    def row(pc, sp, a=0):
+        return f'{pc:04X} {a:02X} 00 00 00 00 {sp:04X} 8000 0000 18 00 00 --E---Z-'
+    for sp in range(256):
+        witness = gc_return_witness(row(0x1234, 0x100|sp), b'\xff\xff')
+        require(witness['return_pc'] == 0 and witness['caller_sp'] == (0x100|((sp+2)&255)),
+                'return PC/SP wrap derivation failed')
+        require(not gc_return_reached(row(0x1236, 0x100|sp, 0x60), witness),
+                'A=60 ended collection')
+        require(not gc_return_reached(row(0, 0x100|sp), witness), 'wrong caller SP accepted')
+        require(gc_return_reached(row(0, witness['caller_sp']), witness), 'valid return rejected')
+    try:
+        gc_return_reached(row(0, 0x100), {})
+    except KeyError:
+        pass
+    else:
+        raise PrefilterError('absent return witness accepted')
+
+
+def gc_exit_live_selftest(args, medium: Path, elf: Path, out: Path) -> dict[str, Any]:
+    """Execute counterexamples in unused RAM on the existing packed world."""
+    truth = ElfTruth.read(elf, llvm_readobj=CARD.READOBJ)
+    text = truth.section('.text'); slot = text.address+text.bytes
+    next_owner = min(s.address for s in truth.sections if s.bytes and
+                     'SHF_ALLOC' in s.flags and slot <= s.address < 0xC000)
+    require(next_owner-slot >= 16, 'GC witness diagnostic has no owned-free RAM')
+    frozen = [bind(elf), bind(medium)]
+    run = CYCLES.start_run('gc-return-witness-controls', medium, out, args)
+    monitor = run['monitor']; rows = []
+    try:
+        monitor.command('t1'); monitor.command('b ffff')
+        for wrong_sp in (False, True):
+            body = slot+8; target = slot+3
+            raw = b'\x20'+body.to_bytes(2,'little')+b'\xea'*5+b'\xa9\x60'
+            raw += (b'\x48\x4c'+target.to_bytes(2,'little')) if wrong_sp else b'\xea\x60'
+            monitor.command(f's {slot:08x} '+' '.join(f'{b:02x}' for b in raw))
+            require(monitor.memory_range(slot,len(raw)) == raw, 'diagnostic RAM readback differs')
+            monitor.command(f'g {slot:04x}'); monitor.command('t')
+            entry = register_line(monitor)
+            require(gc_registers(entry)['pc'] == body, 'diagnostic did not enter through JSR')
+            witness = read_gc_return_witness(monitor,entry)
+            monitor.command('t'); a60 = register_line(monitor)
+            require(bool(re.search(r'\s60\s+',a60)) and not gc_return_reached(a60,witness),
+                    'old register-based exit counterexample did not distinguish predicates')
+            monitor.command('t'); monitor.command('t'); exit_line = register_line(monitor)
+            require(gc_registers(exit_line)['pc'] == witness['return_pc'], 'return PC not reached')
+            require(gc_return_reached(exit_line,witness) == (not wrong_sp), 'wrong-SP control survived')
+            rows.append(dict(wrong_sp=wrong_sp,entry=entry,A60_body=a60,exit=exit_line,witness=witness))
+    finally:
+        # Graceful monitor shutdown also terminates the wrapped emulator;
+        # terminating just the safe-runner shell can leave its child alive.
+        CYCLES.finish_run(run)
+    require(frozen == [bind(elf),bind(medium)], 'GC controls changed product artifacts')
+    return dict(status='PASS',rows=rows,frozen=frozen,
+                claim='Live diagnostic RAM controls only; no product or medium modification.')
+
+
 def wait_counter(monitor: CYCLES.ProbeMonitor, expected: int,
                  timeout: float = 20.0) -> bytes:
     deadline = time.monotonic() + timeout
@@ -485,14 +584,19 @@ def measure_one(run_id: str, medium: Path, elf: Path) -> dict[str, Any]:
                 current = monitor.memory16(0xBCFC)[:4]
                 line = register_line(monitor)
                 if line.startswith(f"{bounds['entry_after_first_opcode']:04X} "):
+                    witness = read_gc_return_witness(monitor, line)
+                    require(gc_registers(register_line(monitor)) == gc_registers(line),
+                            'GC entry is not a stable stopped state')
                     before = monitor.cycle_count()
                     generation_before = int.from_bytes(
                         monitor.memory16(bounds["gc_runs"])[:2], "little")
                     monitor.command(f"b {bounds['exit_rts']:04x}")
                     monitor.command("t0")
                     exit_line = wait_register(monitor,
-                        lambda row: bool(re.search(r"\s60\s+", row)),
+                        lambda row: gc_return_reached(row, witness),
                         "gc_collect exit")
+                    require(gc_registers(register_line(monitor)) == gc_registers(exit_line),
+                            'GC return is not a stable stopped state')
                     after = monitor.cycle_count()
                     generation_after = int.from_bytes(
                         monitor.memory16(bounds["gc_runs"])[:2], "little")
@@ -501,6 +605,7 @@ def measure_one(run_id: str, medium: Path, elf: Path) -> dict[str, Any]:
                             "GC boundary did not span one collection")
                     measured = {"entry_registers": line,
                         "exit_registers": exit_line,
+                        "return_witness": witness,
                         "cycles_before": before, "cycles_after": after,
                         "cycles": after - before,
                         "gc_runs_before": generation_before,
@@ -919,6 +1024,7 @@ def check() -> None:
 
 
 def selftest() -> None:
+    gc_exit_selftest()
     value = load(PREFILTER_RECEIPT)
     if value["status"] == RED_STATUS:
         cases: dict[str, Callable[[dict[str, Any]], None]] = {

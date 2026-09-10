@@ -69,6 +69,27 @@ def is_ptr(o):
     return to_i16(o) != NIL and (to_i16(o) & 1) == 0
 
 
+SCREEN_RVS = 0x80
+
+
+def _screen_cell(code, attr):
+    """Mirror src/screen.c cell composition for the host screen model.
+
+    The product builds the stored byte as ``sc = to_screen(c)`` and then ORs in
+    bit 7 only when ``attr >= 0 && (attr & 0x80)`` (scr_put_at; scr_write_span
+    computes the same ``rvs`` once for the span).  ``to_screen`` never returns a
+    value with bit 7 set, so bit 7 of the stored cell is a pure function of the
+    attribute: a negative attribute leaves colour alone but still writes a cell
+    with bit 7 CLEAR -- it does not preserve the previous cell's reverse bit.
+    The host model keeps ASCII rather than screen codes, so the mirror is the
+    same masking applied to the ASCII code.
+    """
+    cell = code & 0x7F
+    if attr >= 0 and (attr & SCREEN_RVS):
+        cell |= SCREEN_RVS
+    return cell
+
+
 def obj_hex(o):
     return "0x%04x" % to_u16(o)
 
@@ -1730,11 +1751,13 @@ class P0VM:
                 [self.heap.intern("key"), mkfix(code), modifier_list]
             )
         if name == "symbol-value":
-            if len(args) != 1 or not self.heap.symbolp(args[0]):
-                raise VMError("TypeError", "symbol-value expects one symbol")
-            if to_i16(args[0]) not in self.heap.sym_values:
-                raise VMError("UnboundVariable", "symbol-value: unbound")
-            return self.heap.symbol_value(args[0])
+            # Single implementation: CALLPRIM 19 below. It mirrors src/vm.c
+            # case 19 and eval.c P_SYMVAL, which return sym_value() without a
+            # boundness check, so an unbound global reads as NIL (see the
+            # parked-items register row "Unbound global symbol reads as nil").
+            # This branch is reached only if the designator route above is
+            # bypassed; it must not diverge from the numeric path.
+            return self._callprim(19, len(args), list(args), native_base=native_base)
         if name == "boundp":
             if len(args) != 1 or not self.heap.symbolp(args[0]):
                 raise VMError("TypeError", "boundp expects one symbol")
@@ -1843,8 +1866,9 @@ class P0VM:
             if argc == 4 and not is_fix(args[3]):
                 raise VMError("TypeError", "screen-put-char attr must be a fixnum")
             x, y, code = (fixval(arg) for arg in args[:3])
+            attr = fixval(args[3]) if argc == 4 else -1
             if 0 <= x < self.screen_columns and 0 <= y < self.screen_rows:
-                self.screen_cells[y * self.screen_columns + x] = code & 0xFF
+                self.screen_cells[y * self.screen_columns + x] = _screen_cell(code, attr)
             self.io_counters["screen_put_char"] += 1
             return NIL
         if prim_id == 12:
@@ -1857,10 +1881,13 @@ class P0VM:
             if argc == 4 and not is_fix(args[3]):
                 raise VMError("TypeError", "screen-write-string attr must be a fixnum")
             x, y = fixval(args[0]), fixval(args[1])
+            attr = fixval(args[3]) if argc == 4 else -1
             for offset, character in enumerate(self.heap.string_to_text(args[2])):
                 column = x + offset
                 if 0 <= column < self.screen_columns and 0 <= y < self.screen_rows:
-                    self.screen_cells[y * self.screen_columns + column] = ord(character)
+                    self.screen_cells[y * self.screen_columns + column] = _screen_cell(
+                        ord(character), attr
+                    )
             return NIL
         if prim_id == 13:
             if argc != 0:

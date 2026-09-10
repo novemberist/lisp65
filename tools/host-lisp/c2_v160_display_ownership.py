@@ -4,10 +4,12 @@
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import hashlib
 import json
 from pathlib import Path
 import sys
+import types
 from typing import Any
 
 sys.setrecursionlimit(max(sys.getrecursionlimit(), 4096))
@@ -33,6 +35,23 @@ RECEIPT = ROOT / (
     "c2.3-v1.6-display-ownership-receipt.json"
 )
 SEALED_COMMIT = "36063046bf5b37a6700a85328ef66fa831b3337d"
+# Historical receipts used the pre-RVS screen oracle. This is an explicit
+# replay authority, never the default and never evidence of live attributes.
+SCREEN_ORACLE_ERA = "8e2e43af"
+SCREEN_ORACLE_SHA256 = "46ceb535f59702fa232b22cad74901f958b0c3ba350711cee3add3aa62267076"
+
+
+@lru_cache(maxsize=1)
+def historical_screen_dispatch(era: str):
+    require(era == SCREEN_ORACLE_ERA, "unbound historical screen oracle")
+    raw = ERA.era_blob(era, "tools/host-lisp/bytecode_p0.py")
+    require(hashlib.sha256(raw).hexdigest() == SCREEN_ORACLE_SHA256,
+            "historical screen oracle identity drift")
+    module = types.ModuleType("_sealed_pre_rvs_screen_oracle")
+    module.__file__ = str(HOST / "bytecode_p0.py")
+    sys.modules[module.__name__] = module
+    exec(compile(raw, module.__file__, "exec"), module.__dict__)
+    return module.P0VM._callprim
 
 EDITOR_FUNCTIONS = (
     "%rl-render", "%rl-cut", "%rl-move", "%rl-put", "%rl-dispatch",
@@ -194,8 +213,11 @@ def mutated_suite(label: str, *, editor: str | None = None,
 class FrameVM(B.P0VM):
     """Put direct-cell and sequential writes on one 80x25 surface."""
 
-    def __init__(self, *args: Any, stop_at_return: bool = False, **kwargs: Any):
+    def __init__(self, *args: Any, stop_at_return: bool = False,
+                 historical_screen_era: str | None = None, **kwargs: Any):
         super().__init__(*args, **kwargs)
+        self.historical_screen_dispatch = (None if historical_screen_era is None
+            else historical_screen_dispatch(historical_screen_era))
         self.cursor_row = self.screen_rows - 1
         self.cursor_column = 0
         self.newlines = 0
@@ -256,7 +278,10 @@ class FrameVM(B.P0VM):
                 self.sequential(code)
         if prim_id == 45 and args:  # write-char
             self.sequential(B.fixval(args[0]))
-        result = super()._callprim(
+        dispatch = (self.historical_screen_dispatch.__get__(self)
+                    if prim_id in (11, 12) and self.historical_screen_dispatch
+                    else super()._callprim)
+        result = dispatch(
             prim_id, argc, stack, pc=pc, native_base=native_base,
             frame_slots=frame_slots,
         )
@@ -435,6 +460,27 @@ def selftest() -> None:
             "display ownership selftest mutation count drift")
     require(bind(RECEIPT) == before,
             "display ownership check mutated its sealed receipt")
+    # Execute both primitives in both worlds. Removing the explicit era must
+    # break the historical expectation; using it for live proof must also fail.
+    controls = 0
+    for prim in (11, 12):
+        for era, expected in ((None, 0xA0), (SCREEN_ORACLE_ERA, 0x20)):
+            heap = B.Heap()
+            vm = FrameVM(heap=heap, directory={}, historical_screen_era=era)
+            glyph = B.mkfix(32) if prim == 11 else B.obj_from_json(heap, {"string": " "})
+            vm._callprim(prim, 4, [B.mkfix(2), B.mkfix(1), glyph, B.mkfix(129)])
+            got = vm.screen_cells[82]
+            require(got == expected, "screen oracle era boundary drift")
+            require(got != (0x20 if era is None else 0xA0),
+                    "missing-era/live-oracle substitution mutation survived")
+            controls += 2
+    try:
+        historical_screen_dispatch("HEAD")
+    except GateError:
+        controls += 1
+    else:
+        raise GateError("unsealed screen oracle mutation survived")
+    print(f"historical/live screen oracle controls: PASS cases={controls}")
 
 
 def check() -> dict[str, Any]:

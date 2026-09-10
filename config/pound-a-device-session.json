@@ -1,0 +1,133 @@
+{
+  "status": "SEALED BINDING: session stopped at wrap Backspace regression; A and pound accepted by dd618d0c; device released",
+  "authority": [
+    "468808aa",
+    "80382cd1",
+    "a8380207",
+    "a86ba569"
+  ],
+  "device_contacts_started": 1,
+  "contact_authorized": true,
+  "world": "accepted A plus pound quasiquote plus native line wrap; no Diet",
+  "medium": {
+    "path": "build/line-wrap-final-medium-r2/packed/hardware-sp-seed.d81",
+    "bytes": 819200,
+    "sha256": "f72d5e0650d9a2707683125d74f61607c6aa39a8c394d7b127a29b7739287972",
+    "role": "qualified final A/pound/wrap medium"
+  },
+  "elf": {
+    "path": "build/line-wrap-final-medium-r2/materialized/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "0ea2659ca3415b7103dd4c0e6f47bfc52341c40f934f1a34bf148128662793f4"
+  },
+  "host_receipt": "build/line-wrap-r1/final-resume-qualification.json",
+  "choreography": {
+    "variant": "B: power off at least 30 seconds, power on, owner Freezer-mount then start",
+    "fresh_restore_and_SHA_readback_before_qualifying_boot": true,
+    "transport": "established JTAG-monitor media staging before Lisp starts; RAM upload is not persistent storage",
+    "live_input": "only the owner's physical keyboard",
+    "no_F011_register_reads": true,
+    "RAM_read_checkpoints": "only after separate permission to stop and read",
+    "after_E29": "reset; no subsequent Lisp test on that state",
+    "staging": "Established JTAG SD helper while BASIC is disposable; helper resets expected. No transport helper after Lisp starts."
+  },
+  "rows": [
+    {
+      "id": "boot",
+      "expected": [
+        "WORKBENCH 2.0.0",
+        "lisp65> and cursor",
+        "no cannot open"
+      ]
+    },
+    {
+      "id": "pound",
+      "physical_keys_required": true,
+      "form": "£(1 ,(+ 1 1))",
+      "expected": "(1 2)",
+      "echo": "visible £, not a blank"
+    },
+    {
+      "id": "documented-car",
+      "form": "(car 1)",
+      "expected": "nil"
+    },
+    {
+      "id": "tier1-length",
+      "form": "(length \"abc\")",
+      "expected": "type error and live native prompt; string-length hint not required"
+    },
+    {
+      "id": "smokes",
+      "setup": "(defun v20-perf-probe (x) (+ x 1))",
+      "forms": [
+        {
+          "form": "(time (car (cdr (list 1 2))))",
+          "value": "2",
+          "max_frames": 2
+        },
+        {
+          "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+          "value": "(9 2)",
+          "max_frames": 2
+        },
+        {
+          "form": "(time (string-ref \"abc\" 1))",
+          "value": "98",
+          "max_frames": 2
+        },
+        {
+          "form": "(time (v20-perf-probe 41))",
+          "value": "42",
+          "max_frames": 2
+        }
+      ]
+    },
+    {
+      "id": "native-line-wrap",
+      "physical_keys_required": true,
+      "form": "(+ 41 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1)",
+      "expected": "42",
+      "checks": [
+        "more than 72 characters visible across rows with prompt indentation",
+        "Backspace crosses wrap and releases the upper input row",
+        "restore deleted suffix and accept; input rows released"
+      ]
+    },
+    {
+      "id": "D5",
+      "checkpoint": "after smokes, before defining sp-depth",
+      "projection": [
+        106,
+        1458
+      ],
+      "floors": [
+        32,
+        384
+      ],
+      "oracle": "stopped RAM and final ELF; permission required"
+    },
+    {
+      "id": "recursion-known-issue",
+      "setup": "(defun sp-depth (n) (if (= n 0) 0 (+ 1 (sp-depth (- n 1)))))",
+      "forms": [
+        {
+          "form": "(sp-depth 12)",
+          "expected": "12"
+        },
+        {
+          "form": "(sp-depth 13)",
+          "expected": "repeated E29",
+          "destructive_last_row": true
+        }
+      ]
+    }
+  ],
+  "claim_boundary": [
+    "A shared-entry preservation, physical pound spelling/echo and native line-wrap behavior on this composed world.",
+    "No Comfort, diet, stack guard, iterative CALL, Matcher/Blink or Tier 2 claim.",
+    "No release, Ship or Publish authorization. No contact starts from this file alone.",
+    "The host UART/HWA row does not replace physical £-key acceptance."
+  ],
+  "contact_word": "Owner requested A/£/wrap session, confirmed ready, then BASIC bereit after >=30-second power-off instruction.",
+  "remote_name": "APWRAP.D81"
+}

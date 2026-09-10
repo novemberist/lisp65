@@ -31,6 +31,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUT = ROOT / "build/c2.2/substitution/product-link"
 PRODUCT_ARTIFACTS_MANIFEST: Path | None = None
 PRODUCT_ARTIFACTS_MANIFEST_RESOLVER: object | None = None
+HARDWARE_SP_THRESHOLD_RESOLVER = None
 INITIAL_C2D = ROOT / "build/c2.2/substitution/initial.c2d-v3.bin"
 PRODUCT_SHELF = ROOT / "build/c2.2/substitution/product-shelf-v4-direct.bin"
 TOOLCHAIN = ROOT / "tools/llvm-mos/bin"
@@ -146,6 +147,8 @@ F011_COLD_BUILD_CONFIGURATION = {
 F011_COLD_FEATURE = str(F011_COLD_BUILD_CONFIGURATION["feature"])
 F011_COLD_SOURCE = Path(F011_COLD_BUILD_CONFIGURATION["source"])
 F011_COLD_ENABLED = False
+SESSION_RECORD_CACHE_FEATURE = "LISP65_RTOV_SESSION_RECORD_CACHE"
+SESSION_RECORD_CACHE_ENABLED = False
 F011_COLD_REQUESTED = False
 F011_STATUS_WITNESS_ENABLED = False
 RECOVERY_QUIESCENCE_ENABLED = False
@@ -359,6 +362,12 @@ def low_resident_lma_reset_mutation_selftest() -> dict[str, str]:
     return result
 
 
+ZP_INITIALIZER_LOAD_ASSERTION = (
+    '\nASSERT(LOADADDR(.zp.data) + SIZEOF(.zp.data) <= ADDR(.text), '
+    '"initialized ZP load image overlaps text")\n'
+)
+
+
 def full_map_platform_c_ld() -> str:
     """Return the owned replacement for llvm-mos' inherited ``c.ld``.
 
@@ -441,7 +450,7 @@ ASSERT(__lisp65_c2_symbol_metadata_bss_end <= 0xc000,
 } >c_writeable
 __lisp65_c2_ordinary_noinit_end = ADDR(.noinit) + SIZEOF(.noinit);
 __heap_start = 0xc354;
-'''
+''' + ZP_INITIALIZER_LOAD_ASSERTION
     return r'''/* Generated v1.8 full-map owner.  This file deliberately
  * replaces the platform c.ld include; it is not an INSERT overlay. */
 INCLUDE zp.ld
@@ -477,7 +486,7 @@ INCLUDE bss-symbols.ld
 } >c_writeable
 __lisp65_c2_ordinary_noinit_end = ADDR(.noinit) + SIZEOF(.noinit);
 __heap_start = 0xc354;
-'''
+''' + ZP_INITIALIZER_LOAD_ASSERTION
 
 
 def configure_fixed_raw_bss_owners() -> None:
@@ -601,13 +610,65 @@ def write_product_linker_sources(
         out: Path, probe_definitions: tuple[str, ...] = ()) -> None:
     """Write every linker source selected for one product-shaped link."""
     write(out / "c2-substitution.ld", linker_script(
-        ownership_opt_in=ownership_scope_selected(probe_definitions)))
+        ownership_opt_in=ownership_scope_selected(probe_definitions)) +
+        map_cpu_hot_range_assertions())
     if FULL_MAP_OWNERSHIP:
         include_dir = out / "full-map-linker"
         include_dir.mkdir(parents=True, exist_ok=True)
         write(include_dir / "c.ld", full_map_platform_c_ld())
         write(include_dir / "commodore.ld", full_map_platform_commodore_ld())
         write(include_dir / "zp-data.ld", full_map_platform_zp_data_ld())
+
+
+def map_cpu_hot_range_assertions() -> str:
+    """101e4414: local reader range only, never external caller colocation."""
+    return '''
+/* GC reader local copy/remap placement; symbols are emitted by its owner. */
+ASSERT(!DEFINED(c2_map_cpu_read) ||
+       (DEFINED(__lisp65_c2_map_cpu_hot_begin) &&
+        DEFINED(__lisp65_c2_map_cpu_hot_end) &&
+        (__lisp65_c2_map_cpu_hot_end > __lisp65_c2_map_cpu_hot_begin) &&
+        ((__lisp65_c2_map_cpu_hot_begin & 0xff00) ==
+         ((__lisp65_c2_map_cpu_hot_end - 1) & 0xff00))),
+       "MAP reader local copy/remap range crosses a CPU page");
+'''
+
+
+def map_cpu_hot_range_selftest() -> None:
+    """Execute the actual linker predicate on isolated, non-product fixtures."""
+    import tempfile
+    with tempfile.TemporaryDirectory(prefix="c2-map-hot-") as temporary:
+        out = Path(temporary)
+        obj = out / "empty.o"
+        subprocess.run([str(TOOLCHAIN / "mos-mega65-clang"), "-x", "assembler",
+                        "-c", "-o", str(obj), "-"],
+                       input=b'.text\n.byte 0xea\n', check=True,
+                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        script = out / "range.ld"
+        script.write_text('SECTIONS { .text 0x2000 : { *(.text) } }\n' +
+                          map_cpu_hot_range_assertions())
+        rows = (
+            ("aligned", 0x2300, 0x2354, True),
+            ("seed1-displaced", 0x22f4, 0x2348, False),
+            ("one-byte-short", 0x22ff, 0x2353, False),
+            ("empty", 0x2300, 0x2300, False),
+            ("missing-begin", None, 0x2354, False),
+            ("missing-end", 0x2300, None, False),
+        )
+        for name, begin, end, expected in rows:
+            command = [str(TOOLCHAIN / "ld.lld"), "-T", str(script),
+                       "-o", str(out / (name + ".elf")), str(obj),
+                       "--defsym=c2_map_cpu_read=0x2200"]
+            for symbol, value in (("__lisp65_c2_map_cpu_hot_begin", begin),
+                                  ("__lisp65_c2_map_cpu_hot_end", end)):
+                if value is not None:
+                    command.append(f"--defsym={symbol}={value}")
+            result = subprocess.run(command, stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+            if (result.returncode == 0) != expected:
+                raise AssertionError((name, result.stderr.decode()))
+            if not expected and b"MAP reader local copy/remap" not in result.stderr:
+                raise AssertionError((name, "wrong rejection", result.stderr.decode()))
 
 
 def configure_require_resolver_profile_geometry() -> None:
@@ -3889,7 +3950,21 @@ def scoped_probe_definitions(
     """Close every opt-in define bundle over its source-owner trigger."""
     if len(extra_definitions) != len(set(extra_definitions)):
         raise RuntimeError("duplicate probe definition")
+    if any(item.split("=", 1)[0] == "LISP65_RTOV_SESSION_RECORD_COUNT"
+           for item in extra_definitions):
+        raise RuntimeError("session record count must be producer-derived")
     result = list(extra_definitions)
+    if "LISP65_RTOV_SESSION_RECORD_CACHE" in result:
+        # This is the same population that the producer packs, including its
+        # configured append/service successors, not a historical slot count.
+        slots = [int(spec.split(":", 1)[0]) for spec in SESSION_SLICE_SPECS]
+        verifier_slots = [int(spec.split(":", 1)[0]) for spec in VERIFIER_SPECS]
+        if (verifier_slots != list(range(len(verifier_slots))) or
+                slots != list(range(len(slots))) or
+                len(slots) <= len(verifier_slots)):
+            raise RuntimeError("session cache requires a complete contiguous catalog")
+        result.append("LISP65_RTOV_SESSION_RECORD_COUNT=" +
+                      str(len(slots) - len(verifier_slots)))
     if FULL_MAP_OWNERSHIP and CONVERGENCE_FEATURE not in result:
         result.append(CONVERGENCE_FEATURE)
     if FIXED_RAW_BSS_OWNERS and "LISP65_C2_FIXED_RAW_BSS_OWNERS" not in result:
@@ -4135,6 +4210,12 @@ def compile_link(out: Path, name: str, headers: list[Path],
             "compile consumer artifacts diverge from bound product authority")
     product_definitions = definitions(artifacts)
     scoped_definitions = scoped_probe_definitions(probe_definitions)
+    # Resolve before any compiler invocation. There is no historical/default
+    # threshold: the measurement seed and final successor have distinct,
+    # explicitly bound authorities.
+    from hardware_sp_link_authority import link_flags as hardware_sp_link_flags
+    hardware_sp_flags, hardware_sp_authority = hardware_sp_link_flags(
+        target, probe_definitions, HARDWARE_SP_THRESHOLD_RESOLVER)
     compiler_sources = source_list(probe_definitions)
     input_capture_consumption_closure(
         probe_definitions, compiler_sources)
@@ -4187,7 +4268,7 @@ def compile_link(out: Path, name: str, headers: list[Path],
         compile_flags.extend(["-include", checkout_arg(header)])
     compile_flags.extend([
         "-I", checkout_arg(ROOT / "src"),
-        "-I", checkout_arg(ROOT / "scripts"),
+        "-I", checkout_arg(globals().get("BOUND_SCRIPT_INCLUDE_DIRECTORY", ROOT / "scripts")),
         "-I", checkout_arg(ROOT / "build/c2.2/substitution"),
         "-I", checkout_arg(out),
         "-I", checkout_arg(ROOT / "build/bytecode"),
@@ -4237,6 +4318,10 @@ def compile_link(out: Path, name: str, headers: list[Path],
     # The complete flag pair is part of the same opt-in closure as its sources
     # and linker layout; the canonical scope receives neither flag.
     link_flags.extend(ownership_link_flags(probe_definitions))
+    link_flags.extend(hardware_sp_flags)
+    if hardware_sp_authority is not None:
+        write(Path(str(target) + ".hardware-sp-authority.json"),
+              json.dumps(hardware_sp_authority, indent=2, sort_keys=True) + "\n")
     deterministic_objects = (
         os.environ.get("LISP65_DETERMINISTIC_OBJECTS") == "1")
     if deterministic_objects:
@@ -5240,6 +5325,22 @@ def _full_map_final_section_owners() -> list[dict[str, object]]:
                 raise RuntimeError("compiler static-stack owner authorities disagree")
             value = {**value, "capacity_bytes": end - start}
             policy = "candidate-derived-section-bytes"
+        # Ninety-eight was the facade's size for many releases, not its owned
+        # capacity.  The resident arena of the stack-overlay ownership contract
+        # is the independent authority: its start is the resident wall and its
+        # end_exclusive is the handoff bound.  Keep the sealed row as history;
+        # derive the live envelope from that arena, never from the candidate.
+        if name == ".lisp65_c2_mapped_far_facade":
+            arena = json.loads(
+                OWNERSHIP_CONTRACT.read_text(
+                    encoding="utf-8"))["mapped_far_service"]["resident"]
+            start = int(arena["start"], 0)
+            end = int(arena["end_exclusive"], 0)
+            if (start != int(str(value["address"]), 0)
+                    or end - start != int(arena["capacity_bytes"])):
+                raise RuntimeError("mapped far facade owner authorities disagree")
+            value = {**value, "capacity_bytes": end - start}
+            policy = "candidate-derived-section-bytes"
         if policy is None:
             policy = (
                 "candidate-derived-relocation-records"
@@ -5266,7 +5367,8 @@ def _full_map_final_section_owners() -> list[dict[str, object]]:
                 int(str(value["address"]), 0)
                 if name == ".lisp65_c2_mapped_far_facade" else None),
             "arena_end": (
-                int(str(value["address"]), 0) + 243
+                int(str(value["address"]), 0)
+                + int(value["capacity_bytes"])
                 if name == ".lisp65_c2_mapped_far_facade" else None),
             "text_floor_bytes": (
                 MAPPED_FACADE_TEXT_FLOOR_BYTES
@@ -5621,6 +5723,8 @@ def input_capture_compile_profile(
         (SYMBOL22_LATCH_FEATURE, SYMBOL22_LATCH_ENABLED,
          "symbol22-first-fault-latch"),
         (F011_COLD_FEATURE, F011_COLD_ENABLED, "block-26-f011-cold-read"),
+        (SESSION_RECORD_CACHE_FEATURE, SESSION_RECORD_CACHE_ENABLED,
+         "capacity-window-session-record-cache"),
     )
     for feature, enabled, label in features:
         count = definitions.count(feature)
@@ -5864,6 +5968,70 @@ def _final_section_inventory_violations(
     return violations
 
 
+MAPPED_FACADE_SEALED_CONTRACT_BYTES = 98
+MAPPED_FACADE_LIBRARY_CARD_BYTES = 119
+
+
+def _mapped_far_facade_derivation_selftest(
+        expected: list[str],
+        valid: list[dict[str, object]],
+        owners: list[dict[str, object]]) -> dict[str, str]:
+    """Prove the facade owner follows its arena, not the historical literal.
+
+    The mapped Far facade was exactly ninety-eight bytes for many releases.
+    Bank 2 as a second DMA source removes the constant-bank specialization of
+    the resident C wrapper around ``c2_dma_read_or_abort`` and the owner grows
+    to a hundred and nineteen bytes.  Both walls stay exact: the resident wall
+    is the arena start and the handoff bound is the arena end.  The mutations
+    below are the conversion's fail-closed evidence:
+
+    * the historical literal must reject the grown world (regression control),
+    * the grown world must be accepted by the derived envelope,
+    * a size past the handoff bound and an empty owner must both fail.
+    """
+    section = ".lisp65_c2_mapped_far_facade"
+    owner = next((row for row in owners if str(row["name"]) == section), None)
+    if owner is None:
+        return {"mapped-facade-derivation": "not-selected"}
+    if owner.get("size_policy") != "candidate-derived-section-bytes":
+        raise AssertionError("mapped facade owner is not arena-derived")
+    capacity = int(owner["capacity_bytes"])
+    if int(owner["address"]) + capacity != int(owner["arena_end"]):
+        raise AssertionError("mapped facade arena walls disagree")
+    if int(owner["bytes"]) != MAPPED_FACADE_SEALED_CONTRACT_BYTES:
+        raise AssertionError("sealed facade contract snapshot was rewritten")
+
+    def world(size: int) -> list[dict[str, object]]:
+        return [({**row, "bytes": size} if row["name"] == section
+                 else dict(row)) for row in valid]
+
+    grown = world(MAPPED_FACADE_LIBRARY_CARD_BYTES)
+    if _final_section_inventory_violations(expected, grown, owners):
+        raise AssertionError("arena-derived facade rejected the grown world")
+    sealed_owner = [({**row, "size_policy": "fixed-contract"}
+                     if str(row["name"]) == section else dict(row))
+                    for row in owners]
+    marker = f"full-map-owner-size:{section}"
+    if marker not in _final_section_inventory_violations(
+            expected, grown, sealed_owner):
+        raise AssertionError("historical 98-byte pin accepted the grown world")
+    for name, size in (("past-handoff-bound", capacity + 1),
+                       ("empty-owner", 0)):
+        if f"full-map-owner-capacity:{section}" not in \
+                _final_section_inventory_violations(
+                    expected, world(size), owners):
+            raise AssertionError(f"facade size mutation accepted: {name}")
+    return {
+        "mapped-facade-derivation": (
+            f"arena-derived-{int(owner['address']):#06x}"
+            f"..{int(owner['arena_end']):#06x}"),
+        "mapped-facade-historical-98-pin": "rejected-on-119-byte-world",
+        "mapped-facade-grown-119-byte-world": "accepted",
+        "mapped-facade-past-handoff-bound": "rejected",
+        "mapped-facade-empty-owner": "rejected",
+    }
+
+
 def _final_section_inventory_model_selftest() -> dict[str, str]:
     owners = _full_map_final_section_owners()
     expected = [".text", *(str(row["name"]) for row in owners),
@@ -5977,6 +6145,8 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
                     expected, resized, owners):
                 raise AssertionError(
                     f"fixed owner resized mutation accepted: {section}")
+    facade_derivation = _mapped_far_facade_derivation_selftest(
+        expected, valid, owners)
     stray = [*valid, {"name": ".lisp65_unowned_stray", "address": 0,
                       "bytes": 1, "flags": ["SHF_ALLOC"]}]
     if "section-name-set" not in _final_section_inventory_violations(
@@ -5992,7 +6162,8 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
                 f"rejected-{len(deletion_mutations)}-of-{len(owners)}",
             "full-map-moved-sections":
                 f"rejected-{len(movement_mutations)}-of-{len(owners)}",
-            "full-map-unowned-stray": "rejected"}
+            "full-map-unowned-stray": "rejected",
+            **facade_derivation}
 
 
 def final_section_inventory_check(target: Path) -> dict[str, object]:
@@ -9447,8 +9618,17 @@ def main() -> int:
         assert orphan_matrix["wrong-origin-object"] == "rejected"
         assert orphan_matrix["wrong-section"] == "rejected"
         inventory_matrix = _final_section_inventory_model_selftest()
-        assert len(inventory_matrix) == 10
+        assert len(inventory_matrix) == 15
         assert inventory_matrix["exact-pinned-inventory"] == "passed"
+        assert inventory_matrix["mapped-facade-derivation"] == (
+            "arena-derived-0xb3b0..0xb4a3")
+        assert inventory_matrix["mapped-facade-historical-98-pin"] == (
+            "rejected-on-119-byte-world")
+        assert inventory_matrix["mapped-facade-grown-119-byte-world"] == (
+            "accepted")
+        assert inventory_matrix["mapped-facade-past-handoff-bound"] == (
+            "rejected")
+        assert inventory_matrix["mapped-facade-empty-owner"] == "rejected"
         assert inventory_matrix["missing-section"] == "rejected"
         assert inventory_matrix["additional-section"] == "rejected"
         assert inventory_matrix["reordered-sections"] == "passed-provenance-only"
