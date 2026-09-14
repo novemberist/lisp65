@@ -811,9 +811,32 @@ def authority() -> dict[str, Any]:
     }
 
 
+def receipt_target(check: bool, candidate: Path) -> Path:
+    if check:
+        require(candidate.resolve().is_relative_to((ROOT / "build").resolve()),
+                "while check cannot write a registered receipt")
+    return candidate
+
+
+def output_selftest() -> None:
+    require(receipt_target(True, BUILD / "four-view-check.json") == BUILD / "four-view-check.json",
+            "while check output owner drift")
+    for candidate in (RECEIPT, ROOT / "build" / ".." / "tests" / "forbidden.json"):
+        try:
+            receipt_target(True, candidate)
+        except Exception as error:
+            require("while check cannot write a registered receipt" in str(error),
+                    "check-writer mutation failed outside output guard")
+        else:
+            raise AssertionError("check-writer mutation survived")
+
+
 def main() -> int:
     source_only = "--source-only" in sys.argv[1:]
+    check = "--check" in sys.argv[1:]
     try:
+        output_selftest()
+        protected = sha(RECEIPT) if check else None
         bundle = source_bundle()
         source = validate_sources(bundle)
         mutations = source_mutations(bundle)
@@ -851,7 +874,9 @@ def main() -> int:
                 "unconsumed."
             ),
         }
-        atomic_json(RECEIPT, receipt)
+        atomic_json(receipt_target(check, BUILD / "four-view-check.json" if check else RECEIPT), receipt)
+        if check:
+            require(sha(RECEIPT) == protected, "while check changed the historical receipt")
         stream = host["streamed_backedge"]
         print(
             "c2-while-gate: PASS "

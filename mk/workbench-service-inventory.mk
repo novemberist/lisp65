@@ -21,10 +21,11 @@ WORKBENCH_SERVICE_INVENTORY_ARTIFACTS := \
 workbench-service-call-inventory-selftest:
 	python3 tools/host-lisp/workbench_service_call_inventory.py --selftest
 
+# The prerequisites supply v2 artifacts only as falling old-path mutations.
+# The historical oracle builds and reads its own complete v1 source world.
 workbench-service-call-inventory-current: $(WORKBENCH_SERVICE_INVENTORY_ARTIFACTS)
 	python3 tools/host-lisp/workbench_service_call_inventory.py \
-		--contract "$(WORKBENCH_SERVICE_INVENTORY_CONTRACT)" \
-		--mode current --json-out "$(WORKBENCH_SERVICE_INVENTORY_REPORT)"
+		--era-check --json-out "$(WORKBENCH_SERVICE_INVENTORY_REPORT)"
 
 # C1 is the canonical Wave-1 product policy: the generated Workbench sources
 # retain the exact compiler tier until a persistent foreign allocation needs
@@ -125,8 +126,11 @@ v11-m-transactional-fasl-acceptance-selftest:
 v11-m-transactional-fasl-acceptance-collect: v11-m-transactional-fasl-acceptance-selftest v11-m-transactional-fasl-observations v2-workbench-library-composition-check workbench-overlay-stack-guard v2-fasl-save-host-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_m_transactional_fasl_acceptance.py collect
 
-v11-m-transactional-fasl-acceptance-check: v11-m-transactional-fasl-acceptance-selftest v11-m-transactional-fasl-observations v2-workbench-library-composition-check workbench-overlay-stack-guard v2-fasl-save-host-check
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_m_transactional_fasl_acceptance.py check
+.PHONY: v11-m-transactional-fasl-historical-seal-check
+v11-m-transactional-fasl-historical-seal-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_m_transactional_fasl_acceptance.py seal-check
+
+v11-m-transactional-fasl-acceptance-check: v11-m-transactional-fasl-historical-seal-check
 
 v11-g-green-surface-observations: v2-workbench-artifacts
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/bytecode_p0_stdlib.py --check \

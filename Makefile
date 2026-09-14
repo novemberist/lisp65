@@ -3042,7 +3042,8 @@ dialect-v2-prelude-evidence-check: dialect-v2-prelude-evidence-selftest
 	python3 tools/host-lisp/dialect_v2_prelude_evidence.py check
 
 dialect-v2-prelude-evidence-live-check: dialect-v2-prelude-control-matrix dialect-v2-prelude-evidence-check
-	python3 tools/host-lisp/dialect_v2_prelude_evidence.py check \
+	python3 tools/host-lisp/dialect_v2_prelude_evidence.py check --historical-build-provenance \
+		--build-receipt-v1 $(DIALECT_V1_EQUIVALENCE_BUILD) --build-receipt-v2 $(DIALECT_V2_EQUIVALENCE_BUILD) \
 		--verdict-dir build/bytecode/dialect-v2/prelude-control
 
 eval-surface-contract-check: $(EQUIVALENCE_HOST)
@@ -3106,23 +3107,18 @@ ide-host-slice-check:
 	python3 tools/host-lisp/ide_eval_request_eval_oracle.py
 	python3 tools/host-lisp/ide_ui_eval_oracle.py
 
-ide-bytecode-cost-report: bytecode-p0-stdlib-artifacts
-	python3 tools/host-lisp/ide_bytecode_cost_report.py \
-		--manifest "$(BYTECODE_STDLIB_PREFIX).manifest.json" \
-		--out "$(IDE_BYTECODE_COST_REPORT)" \
-		--check-render-contract
+ide-bytecode-cost-report:
+	python3 tools/host-lisp/ide_capacity_report.py --era-report cost \
+		--json-out "$(IDE_BYTECODE_COST_REPORT)"
 
 ide-render-callgraph: bytecode-p0-stdlib-artifacts
 	python3 tools/host-lisp/ide_render_callgraph.py \
 		--manifest "$(BYTECODE_STDLIB_PREFIX).manifest.json" \
 		--out "$(IDE_RENDER_CALLGRAPH_REPORT)"
 
-ide-bytecode-dynamic-report: bytecode-p0-stdlib-artifacts
-	python3 tools/host-lisp/ide_bytecode_dynamic_report.py \
-		--suite "$(BYTECODE_STDLIB_SUITE)" \
-		--out "$(IDE_BYTECODE_DYNAMIC_REPORT)" \
-		$(IDE_BYTECODE_DYNAMIC_BUDGET_ARGS) \
-		--check
+ide-bytecode-dynamic-report:
+	python3 tools/host-lisp/ide_capacity_report.py --era-report dynamic \
+		--json-out "$(IDE_BYTECODE_DYNAMIC_REPORT)"
 
 bytecode-p0-oracle:
 	python3 tools/host-lisp/bytecode_p0_oracle.py
@@ -3211,7 +3207,7 @@ $(L65M_V2_PRODUCT_HEADER): v2-workbench-artifacts v11-c1-compiler-tier-host-arti
 
 $(L65M_V2_PRODUCT_HOST): scripts/l65m-v2-product-main.c $(L65M_V2_PRODUCT_HEADER) \
 		src/l65m_commit_overlay.c src/l65m_validate.c src/vm_embed.c src/vm.c \
-		src/mem.c src/symbol.c src/interrupt.c \
+		src/mem.c src/symbol.c src/interrupt.c src/screen.c Makefile \
 		build/bytecode/dialect-v2/workbench/stdlib-p0.c | build
 	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -O1 -g \
 		-fsanitize=address,undefined -fno-omit-frame-pointer \
@@ -3220,7 +3216,7 @@ $(L65M_V2_PRODUCT_HOST): scripts/l65m-v2-product-main.c $(L65M_V2_PRODUCT_HEADER
 		-DLISP65_VM_NATIVE_APPLY -DLISP65_V2_NATIVE_CAPABILITIES \
 		-DLISP65_V2_NATIVE_STRING_CODECS -DLISP65_V2_SERVICE_REGISTRY_CLOSED \
 		-DLISP65_V2_WORKBENCH_SERVICES -DLISP65_VM_GLOBAL_PRIMS \
-		-DLISP65_DIRECTORY_ONLY_HARNESS -DLISP65_VM_DIAGNOSTICS \
+		-DLISP65_DIRECTORY_ONLY_HARNESS -DLISP65_VM_DIAGNOSTICS -DLISP65_VM_SCREEN_PRIMS \
 		-DL65M_COMMIT_OVERLAY_HOST_DIRECT \
 		-DLISP65_STDLIB_EXT_METADATA -DLISP65_EXT_HEAP -DLISP65_MARK_BITMAP \
 		-DLISP65_SYMPOOL_EXT \
@@ -3230,7 +3226,7 @@ $(L65M_V2_PRODUCT_HOST): scripts/l65m-v2-product-main.c $(L65M_V2_PRODUCT_HEADER
 		-Isrc -Ibuild/bytecode -Ibuild scripts/l65m-v2-product-main.c \
 		build/bytecode/dialect-v2/workbench/stdlib-p0.c \
 		src/l65m_commit_overlay.c src/l65m_validate.c src/vm_embed.c src/vm.c \
-		src/mem.c src/symbol.c src/interrupt.c -o $@
+		src/mem.c src/symbol.c src/interrupt.c src/screen.c -o $@
 
 directory-only-emitter-selftest:
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --directory-only-selftest
@@ -3240,6 +3236,7 @@ l65m-v2-product-check: directory-only-emitter-selftest $(L65M_V2_PRODUCT_HOST)
 	$(L65M_V2_PRODUCT_HOST) --transaction-matrix
 
 V11_REPL_BANNER_VM_HOST := build/v11-repl-banner-vm-host
+V11_REPL_BANNER_IO_DEFINES ?= -DMEGA65_F011_LOAD -DIO_BUF_MAX=1
 $(V11_REPL_BANNER_VM_HOST): scripts/v11-repl-banner-vm-main.c \
 		build/bytecode/dialect-v2/workbench/stdlib-p0.c \
 		build/bytecode/dialect-v2/workbench/stdlib-p0.h \
@@ -3259,6 +3256,7 @@ $(V11_REPL_BANNER_VM_HOST): scripts/v11-repl-banner-vm-main.c \
 		-DHEAP_CELLS=2048 -DEXT_CELLS=4096 -DGC_ROOTS=1024 \
 		-DMAX_SYM=752 -DNAMEPOOL=10208 -DVM_DIR_MAX=608 \
 		-DSTR_ARENA_SIZE=16384 -DVM_CODEBUF=56 \
+		$(V11_REPL_BANNER_IO_DEFINES) \
 		-Isrc -Ibuild/bytecode/dialect-v2/workbench \
 		scripts/v11-repl-banner-vm-main.c \
 		build/bytecode/dialect-v2/workbench/stdlib-p0.c \
@@ -3269,6 +3267,13 @@ v11-repl-banner-vm-check: $(V11_REPL_BANNER_VM_HOST)
 	python3 tools/host-lisp/vm_stream_branch_safety.py src/vm.c
 	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
 		$(V11_REPL_BANNER_VM_HOST)
+	$(MAKE) --no-print-directory V11_REPL_BANNER_VM_HOST=build/v11-repl-banner-vm-missing-f011 \
+		V11_REPL_BANNER_IO_DEFINES= build/v11-repl-banner-vm-missing-f011
+	@status=0; ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
+		build/v11-repl-banner-vm-missing-f011 > build/v11-repl-banner-vm-missing-f011.log 2>&1 || status=$$?; \
+		test "$$status" = 1 && \
+		rg -q 'status=2 .*bad bytecode.*row=0' build/v11-repl-banner-vm-missing-f011.log && \
+		echo 'v11-repl-banner-vm: missing-F011 regression mutation rejected'
 
 $(FASL_EMIT_CHECK_HOST): scripts/fasl-emit-check-main.c lib/lcc.lisp lib/lcc-fasl.lisp src/eval.c src/vm.c src/mem.c src/symbol.c src/reader.c src/printer.c src/io.c src/interrupt.c src/screen.c | build
 	@mkdir -p $(@D)
@@ -3293,14 +3298,16 @@ bytecode-p0-disklib-d81: bytecode-p0-disklib-artifacts
 		BYTECODE_LIB_FILES="$(BYTECODE_DISKLIB_EXT_BLOB):TESTLIB" \
 		sh scripts/build-bytecode-lib-d81.sh
 
-bytecode-p0-ide-full-lib-check:
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(BYTECODE_IDE_FULL_LIB_SUITE)
+# The sequential dialect-v1 full variant is retired. Its live core/extra
+# behavior is checked by the generated suites; historical partition/budget
+# assertions remain in the separately era-bound ide-capacity-check.
+bytecode-p0-ide-full-lib-check: v11-l-lite-keymap-dry-check
 
 bytecode-p0-private-inline-check:
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --private-inline-selftest
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check tests/bytecode/libs/p0-private-inline-test.json
 
-workbench-private-inline-composition-probe:
+workbench-private-inline-composition-probe: v2-workbench-codemod
 	python3 tools/host-lisp/workbench_private_inline_probe.py selftest
 	python3 tools/host-lisp/workbench_private_inline_probe.py check
 
@@ -3315,23 +3322,26 @@ bytecode-p0-omission-contract-check:
 ide-capacity-selftest:
 	python3 tools/host-lisp/ide_capacity_report.py --selftest
 
-ide-capacity-check: bytecode-p0-ide-extra-lib-artifacts bytecode-p0-m65d-lib-artifacts
+ide-capacity-check:
 	python3 tools/host-lisp/ide_capacity_report.py \
-		--contract config/ide-capacity-contract.json \
+		--era-check \
 		--json-out build/bytecode/ide-capacity-report.json
 
-bytecode-p0-ide-lib-check:
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(BYTECODE_IDE_LIB_SUITE)
+# Consumed by the Python-P0 adapter of semantic-contracts-g1. Keep that
+# executed adapter; only retire its raw dialect-v1 suite input.
+bytecode-p0-ide-lib-check: v2-workbench-codemod
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(V2_WORKBENCH_SUITE_DIR)/p0-ide-core-lib.json
 
-bytecode-p0-ide-lib-artifacts: | build/bytecode/libs
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_IDE_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(BYTECODE_IDE_LIB_SUITE)
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_IDE_FULL_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(BYTECODE_IDE_BASELINE_LIB_SUITE)
+# The historical full baseline belongs exclusively to ide-capacity-check's
+# sealed source world. Live consumers receive the generated core artifact.
+bytecode-p0-ide-lib-artifacts: v2-workbench-codemod | build/bytecode/libs
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_IDE_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(V2_WORKBENCH_SUITE_DIR)/p0-ide-core-lib.json
 
-bytecode-p0-ide-extra-lib-check:
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(BYTECODE_IDE_EXTRA_LIB_SUITE)
+bytecode-p0-ide-extra-lib-check: v2-workbench-codemod
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(V2_WORKBENCH_SUITE_DIR)/p0-ide-extra-lib.json
 
 bytecode-p0-ide-extra-lib-artifacts: bytecode-p0-ide-lib-artifacts | build/bytecode/libs
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_IDE_EXTRA_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(BYTECODE_IDE_EXTRA_LIB_SUITE)
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_IDE_EXTRA_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(V2_WORKBENCH_SUITE_DIR)/p0-ide-extra-lib.json
 
 m65d-blank-d81-oracle-selftest:
 	python3 tools/host-lisp/m65d_blank_d81_oracle.py --selftest
@@ -3340,8 +3350,8 @@ bytecode-p0-m65d-lib-check: m65d-blank-d81-oracle-selftest v2-workbench-codemod
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check \
 		$(V2_WORKBENCH_SUITE_DIR)/p0-m65d-lib.json
 
-bytecode-p0-m65d-lib-artifacts: | build/bytecode/libs
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_M65D_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(BYTECODE_M65D_LIB_SUITE)
+bytecode-p0-m65d-lib-artifacts: v2-workbench-codemod | build/bytecode/libs
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_M65D_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(V2_WORKBENCH_SUITE_DIR)/p0-m65d-lib.json
 
 bytecode-p0-buffer-lib-check: v2-native-function-registry-check v2-workbench-artifacts
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(BYTECODE_BUFFER_LIB_SUITE)

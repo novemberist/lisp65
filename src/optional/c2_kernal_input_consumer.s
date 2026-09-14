@@ -14,24 +14,16 @@ c2_kernal_input_take:
 	beq .Ltake_none
 	tay
 	lda C2K_INPUT_RING_BASE,y
-	cmp #$a0
-	beq .Ltake_high_normalize
-	cmp #$41
-	bcc .Ltake_commit
-	cmp #$5b
-	bcs .Ltake_shifted
-	ora #$20
+	cmp #160
+	bne .Lscalar_next_0
+	lda #255
 	bra .Ltake_commit
-.Ltake_shifted:
-	; $5c (`£`, the quasiquote key) enters here, fails the #$c1 bound and
-	; commits unchanged.  That pass-through is contractual: the reader wants
-	; the byte as ASCII backslash 0x5c, which is the same code.
-	cmp #$c1
-	bcc .Ltake_commit
-	cmp #$db
-	bcs .Ltake_commit
-.Ltake_high_normalize:
-	and #$7f
+.Lscalar_next_0:
+	cmp #193
+	bne .Lscalar_next_1
+	lda #120
+	bra .Ltake_commit
+.Lscalar_next_1:
 .Ltake_commit:
 	cpx #$03
 	bne .Ltake_advance

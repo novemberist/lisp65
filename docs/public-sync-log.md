@@ -4,6 +4,39 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v2.2.0 — published 2026-09-10
+
+The owner supplied separate Ship and Publish words after reviewer acceptance
+`ebd11c4e`. Public `main` and annotated tag `v2.2.0` were advanced atomically;
+the release was uploaded as a draft, downloaded and checked, then published
+and downloaded again. No product build or archive repack occurred.
+
+- Public commit: `f0114b352e46a413e65476ebb8cf084ef8ad810a`.
+- Annotated tag object: `80d1309a758bb06c4d6c2c4cfe5e3b86c8584ecf`.
+- Public tree: `9030d8ddfadebcd616c6ae5102d066c5799d7cc3`, exactly the tree of
+  sealed source projection `3609960e530f22e5af16d5852f8b4a2dfd985045`.
+  The public commit preserves the existing independent public history; the
+  source-projection commit and local Ship tag remain as preparation evidence.
+- Release: <https://github.com/novemberist/lisp65/releases/tag/v2.2.0>.
+  Published at `2026-09-10T17:53:35Z`; approved release-note body reread exactly.
+- Product archive SHA256:
+  `2d201a1aebb8a02d3afddcd0f47d78115f59df22501cd909bfc2c30119f39d71`.
+- Source archive SHA256:
+  `958bc552ca3ce1637a8627db22077179e7a73b11aff5fbd501b9cf5bfc433726`.
+- Manifest SHA256:
+  `d45f0163fcfafef942851166e5851b721391704550e4666bccefba63ce661ed6`.
+- Clean-build receipt SHA256:
+  `a42b85e5ca563039094e2ce18b4047ccd164ebdd35aa49fa6bbce97114d2cf19`.
+
+All four published downloads matched the sealed assets byte-for-byte. The
+readback receipt is `build/release-v2.2.0/publish-readback.json`, SHA256
+`44dd5609ae10c8d027988244acaa275c373421789590d7c59a1a1afe23818210`.
+Release scope and limitations are exactly those in `docs/releases/2.2.0.md`:
+R2, native wrap and Backspace recovery, pound quasiquote, capacity work and
+five manually loaded packages; no Comfort or general native-stack protection.
+The tolerated nineteen historical host-gate failures remain explicitly
+listed in the Before-Ship checklist, not relabeled as green.
+
 ## v1.9.0 — published 2026-08-30
 
 - Routed the native `lisp65>` prompt through the resident insertion-mode line

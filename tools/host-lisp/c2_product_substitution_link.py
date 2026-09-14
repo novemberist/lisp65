@@ -3073,7 +3073,7 @@ ASSERT(ADDR(.lisp65_c2_kernal_io_reveal) == 0xb5eb &&
        ADDR(.lisp65_c2_kernal_state) == 0xb602,
        "C2 fixed low-resident handoff geometry drift");
 
-ASSERT(ADDR(.zp) + SIZEOF(.zp) <= 0x89,
+ASSERT(ADDR(.zp) + SIZEOF(.zp) <= ADDR(.lisp65_c2_convergence_zp),
        "ordinary zero-page storage overlaps fixed C2 state");
 ASSERT(ADDR(.lisp65_c2_fixed_zp) == 0x89 &&
        SIZEOF(.lisp65_c2_fixed_zp) == 7 &&
@@ -8017,6 +8017,21 @@ def _owned_control_flow_gate(elf: Path, sections: dict[str, dict[str, int]],
     }
 
 
+def ordinary_bss_next_owner(truth: ElfTruth) -> dict[str, object]:
+    """Report real BSS room, not distance through intervening Bank-0 owners."""
+    bss = truth.section('.bss')
+    end = bss.address + bss.bytes
+    owners = [s for s in truth.sections if s.name != bss.name and s.bytes
+              and 'SHF_ALLOC' in s.flags and bss.address <= s.address < 0x10000]
+    if not owners:
+        raise RuntimeError('ordinary BSS next allocated owner absent')
+    owner = min(owners, key=lambda s: s.address)
+    if owner.address < end:
+        raise RuntimeError('ordinary BSS overlaps next allocated owner: '+owner.name)
+    return {'next_owner': owner.name, 'next_owner_start': owner.address,
+            'headroom_bytes': owner.address-end}
+
+
 def kernal_freedom_gate(out: Path, final: Path) -> dict[str, object]:
     elf = Path(str(final) + ".elf")
     truth = ElfTruth.read(elf, llvm_readobj=TOOLCHAIN / "llvm-readobj")
@@ -8100,7 +8115,8 @@ def kernal_freedom_gate(out: Path, final: Path) -> dict[str, object]:
     if not ordinary_bss:
         raise RuntimeError("KERNAL freedom red: ordinary Bank-0 BSS absent")
     ordinary_bss_end = ordinary_bss["address"] + ordinary_bss["bytes"]
-    ordinary_bss_headroom = FIXED_BANK0_BASE - ordinary_bss_end
+    ordinary_bss_owner = ordinary_bss_next_owner(truth)
+    ordinary_bss_headroom = ordinary_bss_owner['headroom_bytes']
     if ordinary_bss_headroom < 0:
         raise RuntimeError(
             f"KERNAL freedom red: ordinary Bank-0 headroom "
@@ -8167,6 +8183,8 @@ def kernal_freedom_gate(out: Path, final: Path) -> dict[str, object]:
                 "end_exclusive": ordinary_bss_end,
                 "fixed_c2_start": FIXED_BANK0_BASE,
                 "headroom_bytes": ordinary_bss_headroom,
+                "next_owner": ordinary_bss_owner['next_owner'],
+                "next_owner_start": ordinary_bss_owner['next_owner_start'],
                 "growth_policy": "full-no-new-resident-growth-budget",
             },
             "growth_policy": ((
@@ -9197,7 +9215,17 @@ def single_link(out: Path, *,
                 direct_entry_receipt: Path = DIRECT_ENTRY_CONTRACT_RECEIPT,
                 direct_entry_check_tool: str = "c2_direct_entry_contract.py",
                 extra_contract_lines: tuple[str, ...] = (),
-                seed_only: bool = False) -> Path | None:
+                seed_only: bool = False,
+                closing_seed_profile: Path | None = None,
+                closing_seed_parity: Path | None = None) -> Path | None:
+    if (closing_seed_profile is None) != (closing_seed_parity is None):
+        raise RuntimeError("seed closure requires profile and parity provenance")
+    # Snapshot before any producer writes; these are immutable inputs, not
+    # output paths which may later acquire a different profile.
+    seed_profile_bytes = (closing_seed_profile.read_bytes()
+                          if closing_seed_profile is not None else None)
+    seed_parity_bytes = (closing_seed_parity.read_bytes()
+                         if closing_seed_parity is not None else None)
     probe_definitions = input_capture_compile_profile(probe_definitions)
     extra_contract_lines = tuple(
         ("feature_defines=" + ",".join(probe_definitions)
@@ -9220,7 +9248,7 @@ def single_link(out: Path, *,
             "direct-entry identity override is valid only for a canonical "
             "public clean build and must be one lowercase SHA-256")
     out.mkdir(parents=True, exist_ok=True)
-    write_v2_profile_report(out, artifacts)
+    current_parity_report = write_v2_profile_report(out, artifacts)
     current_parity_identity = hashlib.sha256(
         (out / "v2-product-profile-parity.json").read_bytes()).hexdigest()
     if (SEALED_V2_PROFILE_PARITY_IDENTITY is not None
@@ -9295,7 +9323,31 @@ def single_link(out: Path, *,
         f"{KERNAL_EQUATES_INCLUDE.relative_to(ROOT)}:"
         f"{hashlib.sha256(KERNAL_EQUATES_INCLUDE.read_bytes()).hexdigest()}")
     contract = out / "resolved-profile.txt"
-    write(contract, "\n".join(contract_lines) + "\n")
+    profile_bytes = ("\n".join(contract_lines) + "\n").encode()
+    if seed_profile_bytes is not None:
+        from c2_product_profile_parity import bind_seed_profile
+        if SEALED_V2_PROFILE_PARITY_IDENTITY is not None:
+            raise RuntimeError("seed closure cannot combine identity overrides")
+        profile_bytes = bind_seed_profile(
+            profile_bytes, seed_profile_bytes, seed_parity_bytes,
+            current_parity_report)
+        # Preserve the original report as consumed identity, explicitly label
+        # its whole-Makefile SHA as historical, and expose the live semantic
+        # report separately. Never claim its old SHA describes today's file.
+        write(out / "v2-product-profile-parity-current.json",
+              json.dumps(current_parity_report, indent=2, sort_keys=True) + "\n")
+        (out / "v2-product-profile-parity.json").write_bytes(seed_parity_bytes)
+        write(out / "seed-profile-consumption.json", json.dumps({
+            "status": "passed-immutable-seed-profile-closure",
+            "profile": str(closing_seed_profile),
+            "profile_sha256": hashlib.sha256(seed_profile_bytes).hexdigest(),
+            "parity": str(closing_seed_parity),
+            "parity_sha256": hashlib.sha256(seed_parity_bytes).hexdigest(),
+            "historical_provenance_not_live_sha": json.loads(seed_parity_bytes)["truth_source"],
+            "live_product_parity": current_parity_report,
+            "all_other_profile_bytes_identical": True,
+        }, indent=2, sort_keys=True) + "\n")
+    contract.write_bytes(profile_bytes)
     runtime_prepared_standard = out / "runtime-overlay.prepare-standard.h"
     runtime_prepared = out / "runtime-overlay.prepare.h"
     island_prepared = out / "resident-island.prepare.h"
@@ -9568,6 +9620,8 @@ def main() -> int:
         assert len(lma_reset_matrix) == 7
         assert set(lma_reset_matrix.values()) == {"rejected"}
         profile_matrix = v2_profile_mutation_selftest()
+        from c2_product_profile_parity import closing_profile_selftest
+        assert closing_profile_selftest()["status"] == "PASS"
         assert profile_matrix["missing_define_mutations_rejected"] == 8
         assert list(profile_matrix["overbroad_define_mutation"].values()) == ["rejected"]
         dummy_artifacts = {

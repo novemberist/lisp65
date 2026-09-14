@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import sys
 from typing import Any
+import evidence_era as ERA
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -17,7 +18,9 @@ EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 RECEIPT = EVIDENCE / "block-2.6-closure-receipt.json"
 REPORT = ROOT / "docs/planning/2.6-correctness-and-build-integrity-block-report.md"
 DOMAIN = ROOT / "config/public-surface-domain-contract.json"
+DOMAIN_ERA = "b8f8783b"
 PARKED = ROOT / "docs/reference/parked-items-register.md"
+PARKED_ERA = "9f420483c2485fd4a7fbc1af8a1301ef0e4fa861"
 
 INPUTS = {
     "card1": EVIDENCE / "block-2.6-card1-sidx-product-r2-receipt.json",
@@ -50,8 +53,25 @@ def sha(path: Path) -> str:
 
 
 def load_inputs() -> dict[str, Any]:
-    return {name: json.loads(path.read_text(encoding="utf-8"))
+    return {name: json.loads(domain_input() if name == "domain_contract"
+                            else path.read_bytes())
             for name, path in INPUTS.items()}
+
+
+def domain_input(candidate: bytes | None = None) -> bytes:
+    """Replay the exact domain file named by the historical closing receipt."""
+    expected = ERA.era_blob(DOMAIN_ERA, DOMAIN.relative_to(ROOT).as_posix())
+    require(candidate is None or candidate == expected,
+            "historical closure cannot consume a live domain successor")
+    return expected
+
+
+def parked_input(candidate: bytes | None = None) -> bytes:
+    """The closed block consumes the register version in its sealed receipt."""
+    expected = ERA.era_blob(PARKED_ERA, PARKED.relative_to(ROOT).as_posix())
+    require(candidate is None or candidate == expected,
+            "historical closure cannot consume a live register successor")
+    return expected
 
 
 def nested_values(value: Any, key: str) -> list[Any]:
@@ -219,10 +239,11 @@ def receipt(data: dict[str, Any], facts: dict[str, Any]) -> dict[str, Any]:
         "facts": facts,
         "inputs": [
             {"role": name, "path": path.relative_to(ROOT).as_posix(),
-             "sha256": sha(path)}
+             "sha256": hashlib.sha256(domain_input()).hexdigest()
+                       if name == "domain_contract" else sha(path)}
             for name, path in INPUTS.items()
         ] + [{"role": "parked_register", "path": PARKED.relative_to(ROOT).as_posix(),
-              "sha256": sha(PARKED)}],
+              "sha256": hashlib.sha256(parked_input()).hexdigest()}],
         "terminal_certification": {
             "required_consecutive_full_runs": 2,
             "command": "make -k check-source",
@@ -344,8 +365,23 @@ def selftest(data: dict[str, Any], parked: str) -> None:
 
 
 def run(write: bool) -> None:
+    try:
+        parked_input(parked_input() + b'\nLive register successor\n')
+    except ClosureError:
+        pass
+    else:
+        raise ClosureError("live-register substitution mutation survived")
+    wrong_domain = json.loads(domain_input())
+    old_sha = wrong_domain["population"]["sha256"]
+    wrong_domain["population"]["sha256"] = ("0" if old_sha[0] != "0" else "1") + old_sha[1:]
+    try:
+        domain_input(canonical(wrong_domain))
+    except ClosureError:
+        pass
+    else:
+        raise ClosureError("live-domain substitution mutation survived")
     data = load_inputs()
-    parked = PARKED.read_text(encoding="utf-8")
+    parked = parked_input().decode("utf-8")
     selftest(data, parked)
     facts = validate(data, parked)
     expected_receipt = canonical(receipt(data, facts))
@@ -368,7 +404,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         data = load_inputs()
-        parked = PARKED.read_text(encoding="utf-8")
+        parked = parked_input().decode("utf-8")
         if args.action == "selftest":
             selftest(data, parked)
         else:

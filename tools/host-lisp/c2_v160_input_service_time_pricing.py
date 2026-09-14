@@ -321,6 +321,20 @@ class TimingVM(INPUT_GATE.AllocationVM):
 
 def combined_suite(source_path: Path, expr: str, expected: str,
                    events: list[int]) -> dict[str, Any]:
+    commit = ERA.host_source_commit()
+    if commit is not None:
+        # Consume the generating population of that era, not today's additions.
+        # Only this pure suite constructor is replayed; no historical CLI/build.
+        import ast
+        path = 'tools/host-lisp/c2_v160_input_service_time_pricing.py'
+        text = ERA.era_blob(commit, path).decode('utf-8')
+        node = next(n for n in ast.parse(text).body
+                    if isinstance(n, ast.FunctionDef) and n.name == 'combined_suite')
+        require('host_source_commit' not in ast.get_source_segment(text, node),
+                'historical suite constructor recursively selects an era')
+        namespace = dict(globals())
+        exec(compile(ast.Module(body=[node], type_ignores=[]), commit+':'+path, 'exec'), namespace)
+        return namespace['combined_suite'](source_path, expr, expected, events)
     resident = P0._read_suite(str(RESIDENT))
     disk = P0._read_suite(str(DISK_SUITE))
     suite = copy.deepcopy(resident)
@@ -329,6 +343,12 @@ def combined_suite(source_path: Path, expr: str, expected: str,
         for path in resident["sources"]
     ] + disk["sources"]
     suite["functions"] = resident["functions"] + disk["functions"]
+    # Live editor measurements consume the same Tier-1 list contract as the
+    # native product, including nthcdr's validation of the remaining spine.
+    domain = str(ROOT / "lib/domain-tier1.lisp")
+    suite["sources"].append(domain)
+    suite["functions"] = P0._append_unique(
+        suite["functions"], P0._defun_names([domain]))
     if "(defun %rl-screen-tail" not in source_path.read_text(encoding="utf-8"):
         suite["functions"] = [name for name in suite["functions"]
                               if name != "%rl-screen-tail"]

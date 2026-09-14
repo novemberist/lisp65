@@ -7,22 +7,26 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 2.2.0**, using **Dialect V2**. It is a
+The current release is **lisp65 2.3.0**, using **Dialect V2**. It is a
 product release: the qualified product still displays `WORKBENCH 2.0.0` in
-its boot banner; the package version is 2.2.0. See the
-[2.2.0 release notes](docs/releases/2.2.0.md) for the change summary and
+its boot banner; the package version is 2.3.0. See the
+[2.3.0 release notes](docs/releases/2.3.0.md) for the change summary and
 evidence boundary.
 
 ## Highlights
 
-- 2.2.0: non-tail Lisp calls run as VM frames on a soft stack (16 frames);
-  the documented device recursion test returns at depths 12, 13 and 16 and
-  refuses 17 with a live prompt. Not a general safe nesting depth; the
-  12-argument call/apply bound remains.
-- 2.2.0: the native prompt soft-wraps long lines onto the rows above, with
-  Backspace working across the wrap; the physical `£` key is quasiquote.
-- 2.2.0: five optional packages on the product disk (`buffer`, `place`,
-  `string-extra`, `inspect`, `defstruct`), loaded by hand with `require`.
+- 2.3.0: the product disk ships an `INIT.L65` that loads `place` and
+  `string-extra` at boot with no loading text and an unchanged banner;
+  `buffer`, `inspect` and `defstruct` load by hand. `require` accepts a string or a quoted symbol,
+  and library names are matched case-insensitively.
+- 2.3.0: the IDE minibuffer was reworked. Opening `M-x` or Find-file costs
+  about 21 M emulator cycles instead of about 278 M, and 16 typed keys 49.5 M
+  instead of 171.7 M; while it is active the bottom row shows only the prompt
+  and input. Emulator cycles at 40.5 MHz, not device wall-clock timings.
+- 2.3.0: the interactive Ship sample builds from the product sources again,
+  and the obsolete `IDE`, `IDEX` and `M65D` disk images are removed from the
+  product D81 (193 blocks reclaimed, 22 → 19 files); their static
+  implementations and `load-lib` routes remain.
 
 - Native REPL and self-hosted `lcc` compiler on the MEGA65
 - Lisp-2 semantics, macros, closures, higher-order functions, and strict arity
@@ -53,13 +57,13 @@ evidence boundary.
 
 ## Get the release
 
-Download `lisp65-2.2.0.tar.gz` from the
-[v2.2.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.2.0).
+Download `lisp65-2.3.0.tar.gz` from the
+[v2.3.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.3.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-2.2.0.tar.gz
-cd lisp65-2.2.0
+tar -xzf lisp65-2.3.0.tar.gz
+cd lisp65-2.3.0
 python3 verify.py
 ```
 
@@ -67,17 +71,17 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [2.2.0 release notes](docs/releases/2.2.0.md) for the complete change
+See the [2.3.0 release notes](docs/releases/2.3.0.md) for the complete change
 summary and evidence boundary.
 
 ## Reproduce this product
 
 Use the pinned toolchain declared by the source snapshot, then run
-`make workbench-product-v220-build` in a fresh checkout and
-`make workbench-product-v220-verify` to check the result. The build refuses
+`make workbench-product-v230-build` in a fresh checkout and
+`make workbench-product-v230-verify` to check the result. The build refuses
 an existing output directory; do not use an older default product target
-to reproduce this release. See `config/c2-v220-public-native/manifest.json`
-and `config/c2-v220-public-plane/README.md` for projection provenance. Two
+to reproduce this release. See `config/c2-v230-public-native/manifest.json`
+and `config/c2-v230-public-plane/README.md` for projection provenance. Two
 independent release-chain reproductions match PRG, ELF, profile, D81 and all
 16 media roles.
 
@@ -113,7 +117,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 2.2.0.
+identity. There is no on-device disk formatter in 2.3.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -121,7 +125,7 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 2.2.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 2.3.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
@@ -144,9 +148,9 @@ unattended operation, or large applications.
 | Function metadata is incomplete | Complete integrated help is not claimed for every native and macro entry. | Full metadata coverage and integrated help remain later work. |
 
 The five optional packages `buffer`, `place`, `string-extra`, `inspect` and
-`defstruct` ship on the 2.2.0 product disk and load by hand with `require`,
-for example `(require 'place)`; there is no `INIT.L65` on the system image
-and library loading from an INIT source is not supported in this release.
+`defstruct` ship on the 2.3.0 product disk. The shipped `INIT.L65` loads
+`place` and `string-extra` at boot; load `buffer`, `inspect` and `defstruct`
+by hand with `require`, for example `(require "buffer")`.
 The physical product-medium write-protect case is not
 applicable to the tested stock-core SD-D81 profile because it exposes no
 physical or virtual write-protect medium.
@@ -157,24 +161,24 @@ acceptance.
 
 ## Verification status
 
-Release 2.2.0 is a new product pair, device-accepted in one sealed session on
-one physical MEGA65 and reproduced twice from the public source projection:
+Release 2.3.0 is device-accepted on one physical MEGA65:
 
-- the documented recursion test returned at depths 12, 13 and 16 and refused
-  depth 17 with a stack-overflow error and a live prompt; a 40-argument call
-  returned the existing type error and a live prompt, then `(+ 4 5)` gave 9;
-- a long native-prompt line wrapped onto the row above, Backspace across the
-  wrap left no residue, and ten Backspaces left no inverse rectangles;
-- all five optional packages loaded with `require` and answered one call
-  each; the four native smokes returned `0 2`, `0 (9 2)`, `0 98` and `0 42`;
-- the stopped session after its own definitions retained 19 free symbol
-  slots, 273 free name bytes and 8,435 free user-code bytes; and
-- two independent clean-checkout reproductions matched PRG, ELF, profile,
-  D81 and all 16 media roles byte for byte.
+- the physical cold start from the new medium, through the ten-role stager,
+  completed, and the shipped `INIT.L65` loaded `place` and `string-extra`
+  without any loading text, with the banner unchanged;
+- `(load-lib "IDE")` and `(load-lib "ide")` both returned `t`, and a library
+  file the loader refuses returned `nil` with the running world and the
+  prompt intact;
+- 17 rapidly typed minibuffer characters appeared complete and in order — a
+  witness for that sequence, not a general zero-loss guarantee; `C-g`
+  restored the status row and a missing file name reported `source missing`;
+- the standalone interactive Ship sample booted to a blue screen, accepted
+  `alex` and Return, and printed `Hello, alex!`.
 
-Exact hashes and claim limits are recorded in the
-[2.2.0 release notes](docs/releases/2.2.0.md). The maintained limitations and
-retired exceptions are in
+Cycle figures quoted for this release are Xemu emulator cycles at 40.5 MHz;
+no device wall-clock timing is claimed. Exact hashes and claim limits are
+recorded in the [2.3.0 release notes](docs/releases/2.3.0.md). The maintained
+limitations and retired exceptions are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
 The public repository is a curated source snapshot with independent Git
@@ -211,6 +215,7 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
+- [Release Notes for 2.3.0](docs/releases/2.3.0.md)
 - [Release Notes for 2.2.0](docs/releases/2.2.0.md)
 - [Release Notes for 2.0.1](docs/releases/2.0.1.md)
 - [Release Notes for 2.0.0](docs/releases/2.0.0.md)

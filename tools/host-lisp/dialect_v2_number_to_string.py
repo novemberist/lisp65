@@ -17,7 +17,7 @@ import v2_workbench_codemod as CODEMOD
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_BINARY = ROOT / "build/equivalence/dialect-v2-equivalence-check"
 DEFAULT_FIXTURE = ROOT / "tests/bytecode/dialect-v2/number-to-string/cases.json"
-DEFAULT_RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/capability-carrier/number-to-string-prototype/four-engine-verdict.json"
+DEFAULT_RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/capability-carrier/number-to-string-prototype/four-engine-v230-verdict.json"
 EXPECTED = '"-16384"'
 ENGINES = (
     "native-c-treewalk",
@@ -142,6 +142,14 @@ def main() -> int:
             args.receipt.write_bytes(_canonical(actual))
             action = "WROTE"
         else:
+            stale = json.loads(json.dumps(actual))
+            stale["binary"]["sha256"] = "2b78c64d39eb758b4cf2b2f78063ecb3412660ec98e2d5f9d8a0eba50f768d6f"
+            if _canonical(stale) == _canonical(actual):
+                raise NumberToStringError("pre-INIT host binary mutation survived")
+            stale_tool = json.loads(json.dumps(actual))
+            next(row for row in stale_tool["inputs"] if row["path"] == "tools/host-lisp/v2_workbench_codemod.py")["sha256"] = "e79137c02ef6909f498f2e35d1a3a3ea8e809025c470b1ab0660e22e91abe384"
+            if _canonical(stale_tool) == _canonical(actual):
+                raise NumberToStringError("permissive-codemod provenance mutation survived")
             if _canonical(_load(args.receipt)) != _canonical(actual):
                 raise NumberToStringError("pinned four-engine receipt drift")
             action = "PASS"

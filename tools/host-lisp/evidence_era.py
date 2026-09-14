@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from datetime import date
 from contextlib import contextmanager
+from contextvars import ContextVar
 import builtins
 from functools import wraps
 import hashlib
@@ -28,6 +29,33 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
+_host_source_commit = ContextVar('host_source_commit', default=None)
+
+
+def host_source_commit():
+    """A process-local explicit historical replay, never inferred from filenames."""
+    return _host_source_commit.get()
+
+
+@contextmanager
+def generated_workbench_world(commit):
+    """Rebuild the historical generated suite AND sources as one host view."""
+    import bytecode_p0_stdlib as S
+    import v2_workbench_codemod as C
+    with tempfile.TemporaryDirectory(prefix='era-workbench-', dir=ROOT/'build') as raw:
+        target = Path(raw)
+        with host_source_world(commit) as reads:
+            C.generate(C.DEFAULT_CLOSURE, target)
+            original = S._read_suite
+            def read_suite(path, seen=None):
+                resolved = Path(path).resolve()
+                try: relative = resolved.relative_to(C.DEFAULT_OUTPUT.resolve())
+                except ValueError: pass
+                else: path = str(target/relative)
+                return original(path, seen)
+            S._read_suite = read_suite
+            try: yield reads
+            finally: S._read_suite = original
 
 
 class EraError(RuntimeError):
@@ -35,17 +63,19 @@ class EraError(RuntimeError):
 
 
 @contextmanager
-def host_source_world(commit: str):
+def host_source_world(commit: str, extra_paths=()):
     """Read-only historical Lisp/suite population for a sealed host replay.
 
     Does not shadow receipts, configuration, native sources, tools or build
-    artifacts. Both content reads and metadata hashes see the same bytes.
+    artifacts unless explicitly named in extra_paths. Both content reads and
+    metadata hashes see the same bytes; extra paths are exact, never globs.
     A newly introduced source absent from this era fails instead of silently
     importing it from HEAD. Scope is process-local and restored on exception.
     Returned read population identifies every authority actually consumed.
     """
     original_open, original_io_open = builtins.open, io.open
     reads, cache = {}, {}
+    extras = {Path(path).as_posix() for path in extra_paths}
     def selected(path):
         if not isinstance(path, (str, Path)):
             return None
@@ -53,7 +83,8 @@ def host_source_world(commit: str):
             rel = Path(path).resolve().relative_to(ROOT.resolve())
         except ValueError:
             return None
-        if ((rel.parts[0] == 'lib' and rel.suffix == '.lisp') or
+        if (rel.as_posix() in extras or
+                (rel.parts[0] == 'lib' and rel.suffix == '.lisp') or
                 (rel.parts[:3] in {('tests', 'bytecode', name) for name in
                     ('libs', 'stdlib', 'runtime', 'demos', 'suites')}
                  and rel.suffix == '.json')):
@@ -77,19 +108,21 @@ def host_source_world(commit: str):
         newline = kwargs.get('newline', args[3] if len(args) > 3 else None)
         return io.TextIOWrapper(io.BytesIO(raw), encoding=encoding, errors=errors, newline=newline)
     builtins.open = io.open = read
+    token = _host_source_commit.set(commit)
     try:
         yield reads
     finally:
+        _host_source_commit.reset(token)
         builtins.open, io.open = original_open, original_io_open
 
 
-def in_host_source_world(commit: str):
+def in_host_source_world(commit: str, extra_paths=(), control_path="lib/stdlib-read-line.lisp"):
     """Label a historical verification, never a live product operation."""
     def decorate(function):
         @wraps(function)
         def historical(*args, **kwargs):
-            host_source_controls(commit)
-            with host_source_world(commit) as reads:
+            host_source_controls(commit, control_path)
+            with host_source_world(commit, extra_paths) as reads:
                 result = function(*args, **kwargs)
             if not reads:
                 raise EraError('historical verification consumed no host sources')
@@ -102,11 +135,12 @@ def in_host_source_world(commit: str):
 _tested_host_worlds = set()
 
 
-def host_source_controls(commit: str) -> None:
+def host_source_controls(commit: str, control_path="lib/stdlib-read-line.lisp") -> None:
     """Permanent sharp controls for content/metadata coupling and read-only scope."""
-    if commit in _tested_host_worlds:
+    key = (commit, control_path)
+    if key in _tested_host_worlds:
         return
-    path = ROOT/'lib/stdlib-read-line.lisp'
+    path = ROOT/control_path
     expected = era_blob(commit, path.relative_to(ROOT).as_posix())
     old_open, old_io = builtins.open, io.open
     with host_source_world(commit) as reads:
@@ -137,7 +171,7 @@ def host_source_controls(commit: str) -> None:
     later = era_blob('c96979bc', path.relative_to(ROOT).as_posix())
     if later == expected or hashlib.sha256(later).hexdigest() == recorded['sha256']:
         raise EraError('later-content/historical-binding mutation did not distinguish worlds')
-    _tested_host_worlds.add(commit)
+    _tested_host_worlds.add(key)
 
 
 def era_blob(commit: str, path: str) -> bytes:

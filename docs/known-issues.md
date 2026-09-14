@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 2.2.0. Sealed
+This is the maintained user-facing issue register for lisp65 2.3.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -34,7 +34,7 @@ refused; 16 is not a general safe source-nesting depth. The compiler's measured
 self-compile peak is 26 frames, beyond this release's capacity.
 
 The first long-line device test exposed a separate retirement-cleanup defect.
-That defect is repaired in this candidate: the repeated 40-argument form now
+That defect is repaired in 2.2.0: the repeated 40-argument form now
 returns the existing type error and a live prompt, followed by `(+ 4 5)` → 9.
 Direct argument evaluation is iterative; this does not increase the existing
 12-argument call/apply limit. Host tests separately prove recovery from stack
@@ -62,33 +62,6 @@ error, the same permissive shape as the hot `car`/`cdr` opcodes above. A
 checked variant was priced (an estimated 37 additional bytes on a hot path,
 touching five suites that rely on unbound-reads-as-`nil` through
 `load-lib`) and is kept in the register as an option; it is not shipped.
-
-### Library packages load by hand; not yet supported from `INIT.L65`
-
-Status: **five packages now ship on the product disk; `INIT.L65` load unsupported this release**
-
-The product D81 carries `ide`, `idex`, `m65d`, and the five optional packages
-`buffer`, `place`, `string-extra`, `inspect`, and `defstruct`. Load an
-optional package at the native prompt with `require`, for example
-`(require 'place)`; `ide`, `idex`, and `m65d` keep loading with `load-lib`
-as before. This supersedes the older "optional library packages are not on
-the product disk" entry.
-
-| Package | Names it publishes |
-| --- | --- |
-| `buffer` | `make-buffer`, `buffer-ref`, `buffer-set!`, `buffer-length`, `bufferp`, `string->buffer`, `buffer->string` |
-| `place` | `setf`, `push`, `pop`, `incf`, `decf` |
-| `string-extra` | `capitalize`, `string-split` |
-| `inspect` | `who-calls`, `trace`, `untrace` |
-| `defstruct` | `defstruct` and its generated accessors |
-
-A library load inside `INIT.L65` is not supported in this release: it
-corrupts the source loader's sector scratch, so a `require` executed from
-`INIT.L65` can leave the reader in an unclosed-list state before the banner
-appears. Load packages by hand at the prompt instead; do not add a `require`
-to a derived `INIT.L65`. The repair is scheduled for the next release,
-together with default loading of `place` and `string-extra` from
-`INIT.L65`.
 
 ### Freezer during a definition
 
@@ -174,12 +147,15 @@ if the REPL does not recover. Preserve the preceding forms and approximate key
 count. Reopening the parked diagnosis requires a natural physical recurrence
 with a hardware arrival witness.
 
-## Names and packages not delivered in 2.2.0
+## Names and packages not delivered in 2.3.0
 
 The `inspect` package (`trace`/`untrace`) is now delivered again: the
 Link-92 mechanism was closed in 1.5.0 and the functions existed as a module,
 but no release between 1.6.0 and this one placed the `inspect` row on the
-selected medium. See "Library packages load by hand" above.
+selected medium. It is delivered on the 2.3.0 product disk and loads by
+hand with `require`; see
+"Retired in 2.3.0: library packages load by hand; not supported from
+`INIT.L65`" below.
 
 ### `gc`, `room` and `error`
 
@@ -235,6 +211,79 @@ unattributed. This is an informative measurement, not a GC latency claim.
 
 These entries are closed. They are kept for provenance and are not current
 product limitations.
+
+### Retired in 2.3.0: IDE minibuffer display
+
+Status: **reworked and device-accepted in 2.3.0**
+
+In 2.2.0 the IDE could display only the first character of a minibuffer input
+such as `demo1234`, and the cursor could appear inside the displayed prefix.
+Emulator measurements of 2.2.0 showed roughly 0.2 seconds per minibuffer key,
+increasing with input length, and 6.3 seconds to open the minibuffer.
+
+2.3.0 delivers the minibuffer rework. The open path no longer rebuilds the
+buffer area: opening `M-x` and Find-file went from about 278 M cycles
+(≈ 6.9 s) to about 21 M cycles (≈ 0.5 s), and 16 typed keys from 171.7 M
+cycles (≈ 4.2 s) to 49.5 M cycles (≈ 1.2 s). Every key is at or below its
+2.2.0 cost, per-key work is O(1) in input length, and the whole pending key
+queue is drained before one render. These are emulator cycles at 40.5 MHz,
+not device wall-clock timings.
+
+On the device, 17 rapidly typed characters appeared complete and in order.
+That is a witness for that sequence, not a general zero-loss guarantee.
+`C-g` restored the status row, re-entry showed empty input, and a missing
+file name reported `source missing` and returned the cursor to the buffer.
+While the minibuffer is active the bottom row shows only the prompt and the
+input; the status row returns on exit or cancel.
+
+### Retired in 2.3.0: interactive Ship sample cannot be built from the sources
+
+Status: **repaired and device-accepted in 2.3.0**
+
+The 2.2.0 interactive Ship sample's selected editor dependencies and input
+interface did not close over the standalone runtime, so that sample could not
+be built from the published 2.2.0 source archive. The main product was never
+affected, and the `hello`, `random-q`, `long-runner` and `parity-toy` samples
+were unaffected.
+
+2.3.0 derives a standalone editor variant from the same product source over
+the public input interface, and the sample builds again. On the device the
+standalone sample boots to a blue screen, accepts `alex` and Return, and
+prints `Hello, alex!`.
+
+### Retired in 2.3.0: library packages load by hand; not supported from `INIT.L65`
+
+Status: **default `INIT.L65` loading delivered in 2.3.0**
+
+In 2.2.0 a library load from `INIT.L65` corrupted the source loader's sector
+scratch, so a `require` executed from `INIT.L65` could leave the reader in an
+unclosed-list state before the banner appeared. Packages had to be loaded by
+hand at the prompt.
+
+The 2.3.0 product disk ships an `INIT.L65` containing `(require "place")` and
+`(require "string-extra")`. Both load at boot without any loading text —
+neither the loader's `LOADING` line nor `require`'s own `loading <name>...`
+echo — and the banner renders as it does without an `INIT.L65`. An
+interactive `(require ...)` at the prompt keeps its echo. `buffer`,
+`inspect` and `defstruct` continue to load by hand at the prompt. `require` now accepts a string as well as a quoted
+symbol and returns `nil` for a missing package. A nested `load` from a loading
+source is refused cleanly, without scratch corruption; `require` inside
+`INIT.L65` is supported and supplies the default loading described above.
+A library name longer than 16 characters is refused.
+
+The product D81 carries the static `ide`, `idex` and `m65d` implementations
+and their `load-lib` routes, plus the five optional packages:
+
+| Package | Names it publishes |
+| --- | --- |
+| `buffer` | `make-buffer`, `buffer-ref`, `buffer-set!`, `buffer-length`, `bufferp`, `string->buffer`, `buffer->string` |
+| `place` | `setf`, `push`, `pop`, `incf`, `decf` |
+| `string-extra` | `capitalize`, `string-split` |
+| `inspect` | `who-calls`, `trace`, `untrace` |
+| `defstruct` | `defstruct` and its generated accessors |
+
+With the IDE and all five packages loaded, the symbol reserve is exactly
+32 free symbols and 387 free name bytes, against the 32/384 floor.
 
 ### Retired in 1.9.0: ordinary prompt input lost around collection
 

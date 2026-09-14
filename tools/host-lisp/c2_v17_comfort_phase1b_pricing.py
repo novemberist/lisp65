@@ -17,6 +17,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import bytecode_p0 as B  # noqa: E402
+import evidence_era
 import bytecode_p0_compiler as COMPILER  # noqa: E402
 import bytecode_p0_stdlib as P0  # noqa: E402
 import c2_product_callprim_delivery_gate as DELIVERY  # noqa: E402
@@ -508,6 +509,7 @@ def derive() -> dict[str, Any]:
     }
 
 
+@evidence_era.in_host_source_world('870e5f53')
 def check_implemented_successor() -> None:
     require(OUT.is_file(), "Phase 1b pricing receipt absent")
     receipt = json.loads(OUT.read_text(encoding="utf-8"))

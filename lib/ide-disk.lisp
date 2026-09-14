@@ -524,7 +524,7 @@
    "Find file: "
    ""
    (%ide-disk-current-file (ide-state-buffer state))
-   (remove-if-not (function %ide-source-file-p) (cdr (dir)))))
+   (quote t)))
 
 (defun %ide-write-key (state)
   (%ide-mini-start
@@ -533,7 +533,7 @@
    "Write file: "
    ""
    (%ide-disk-current-file (ide-state-buffer state))
-   (remove-if-not (function %ide-source-file-p) (cdr (dir)))))
+   (quote t)))
 
 (defun %ide-mini-file-submit (state action file)
   (cond ((eq action 1002)

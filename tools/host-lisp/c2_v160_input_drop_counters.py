@@ -15,6 +15,7 @@ from typing import Any
 
 from elf_truth import ElfTruth
 import c2_product_substitution_link as PRODUCT
+from evidence_era import era_blob
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -57,7 +58,7 @@ def authority() -> dict[str, Any]:
     return {"commit": AUTHORITY, "path": name, "sha256": sha(raw)}
 
 
-def assemble() -> ElfTruth:
+def assemble(commit=None) -> ElfTruth:
     with tempfile.TemporaryDirectory(prefix="c2-v160-input-counters-") as name:
         root = Path(name)
         capture = root / "capture.o"
@@ -65,12 +66,17 @@ def assemble() -> ElfTruth:
         owner_source = root / "equate-owner.s"
         owner = root / "equate-owner.o"
         linked = root / "linked.o"
+        capture_source, consumer_source = CAPTURE, CONSUMER
+        if commit:
+            capture_source, consumer_source = root/'capture.s', root/'consumer.s'
+            capture_source.write_bytes(era_blob(commit, CAPTURE.relative_to(ROOT).as_posix()))
+            consumer_source.write_bytes(era_blob(commit, CONSUMER.relative_to(ROOT).as_posix()))
         owner_source.write_text(
             '.set C2K_EQUATE_OWNER, 1\n'
             '.include "c2_kernal_window_equates.inc"\n', encoding="utf-8")
-        subprocess.run([str(CLANG), "-Isrc", "-c", str(CAPTURE), "-o",
+        subprocess.run([str(CLANG), "-Isrc", "-c", str(capture_source), "-o",
                         str(capture)], cwd=ROOT, check=True)
-        subprocess.run([str(CLANG), "-Isrc", "-c", str(CONSUMER), "-o",
+        subprocess.run([str(CLANG), "-Isrc", "-c", str(consumer_source), "-o",
                         str(consumer)], cwd=ROOT, check=True)
         subprocess.run([str(CLANG), "-Isrc", "-c", str(owner_source), "-o",
                         str(owner)], cwd=ROOT, check=True)
@@ -92,7 +98,8 @@ def relocation_opcode(truth: ElfTruth, symbol: str) -> tuple[str, int, int]:
 
 
 def linked_shape() -> dict[str, Any]:
-    truth = assemble()
+    live = assemble()
+    truth = assemble('1520bc2f^')
     sizes = {name: truth.section(name).bytes for name in (
         ".lisp65_c2_kernal_window.irq_handler",
         ".lisp65_c2_kernal_window.input_capture_main",
@@ -100,6 +107,26 @@ def linked_shape() -> dict[str, Any]:
         ".lisp65_c2_kernal_window.input_consumer")}
     require(list(sizes.values()) == [74, 28, 40, 70],
             f"instrumented section shape drift: {sizes}")
+    # This instrument's 12-byte RAW-counter price is historical. Reconcile
+    # the encoded successor explicitly; never charge its bytes to that price.
+    delta = [live.section(n).bytes - size for n,size in sizes.items()]
+    require(delta == [0, 0, 72, -10], 'encoded capture/scalar price residue')
+    for path in (CAPTURE, CONSUMER, ROOT/'src/c2_kernal_window.s'):
+        require(path.read_bytes() == era_blob('1520bc2f', path.relative_to(ROOT).as_posix()),
+                'encoded successor differs from the bound modifier source')
+    driver_sizes=[]
+    with tempfile.TemporaryDirectory(prefix='input-driver-price-') as directory:
+        for index,commit in enumerate(('1520bc2f^','1520bc2f')):
+            text=era_blob(commit,'src/c2_kernal_window.s').decode()
+            start=text.index('\t.section .lisp65_c2_kernal_window.typed_queue_driver')
+            end=text.index('\n\t.section ',start+1)
+            source=Path(directory)/f'driver-{index}.s';obj=source.with_suffix('.o')
+            source.write_text('.include "c2_kernal_window_equates.inc"\n'+text[start:end])
+            subprocess.run([str(CLANG),'-Isrc','-c',str(source),'-o',str(obj)],cwd=ROOT,check=True)
+            driver_sizes.append(ElfTruth.read(obj,llvm_readobj=READOBJ).section(
+                '.lisp65_c2_kernal_window.typed_queue_driver').bytes)
+    require(driver_sizes[1]-driver_sizes[0] == 61 and sum(delta)+61 == 123,
+            'encoded modifier total does not reconcile to 123 bytes')
     base = truth.symbol("C2K_INPUT_RING_BASE").value
     slots = truth.symbol("C2K_INPUT_RING_SLOTS").value
     counters = {name: truth.symbol(name).value for name in (
@@ -118,6 +145,9 @@ def linked_shape() -> dict[str, Any]:
             and sites["C2K_INPUT_EVENTS_TAKEN"][0].endswith("input_consumer"),
             "counter ownership drift")
     return {"sections": sizes, "ring_base": base, "ring_index_values": slots,
+            "encoded_successor": {"commit": "1520bc2f", "section_deltas": delta,
+                "driver_sizes": driver_sizes, "E000_delta_bytes": sum(delta)+61,
+                "live_sections": {n:live.section(n).bytes for n in sizes}, "remainder": 0},
             "physical_allocation_bytes": 112, "usable_events": slots - 1,
             "counter_addresses": counters,
             "counter_sites": {name: {"section": row[0], "opcode_address": row[1],
@@ -217,6 +247,13 @@ def derive() -> dict[str, Any]:
 
 def validate(value: dict[str, Any]) -> None:
     shape = value["linked_shape"]
+    if 'encoded_successor' in shape:
+        successor = shape['encoded_successor']
+        require(successor['section_deltas'] == [0, 0, 72, -10]
+                and successor['driver_sizes'][1]-successor['driver_sizes'][0] == 61
+                and successor['E000_delta_bytes'] == 123 and successor['remainder'] == 0
+                and list(successor['live_sections'].values()) == [74, 28, 112, 60],
+                'encoded modifier price/ownership residue')
     behavior = value["behavior"]
     require(value["origin"] == {
         "phase": "Comfort activation", "closed_tail": "0xff",
@@ -300,6 +337,18 @@ def selftest() -> None:
         except CounterGateError:
             mutations += 1
     require(mutations == 5, "counter mutation suite drift")
+    live = derive()
+    validate(live)
+    for field, changed in [('section_deltas', [0, 0, 0, 0]),
+                           ('E000_delta_bytes', 122), ('remainder', 1)]:
+        mutant = deepcopy(live)
+        mutant['linked_shape']['encoded_successor'][field] = changed
+        try:
+            validate(mutant)
+        except CounterGateError:
+            pass
+        else:
+            raise CounterGateError('encoded successor mutation survived: '+field)
     print("v1.6 input counters: SELFTEST PASS mutations=5")
 
 

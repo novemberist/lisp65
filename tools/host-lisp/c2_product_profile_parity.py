@@ -114,7 +114,10 @@ def profile_report(definitions: list[str] | tuple[str, ...]) -> dict[str, object
         "status": "passed",
         "truth_source": {
             "path": str(MAKEFILE.relative_to(ROOT)),
-            "sha256": hashlib.sha256(MAKEFILE.read_bytes()).hexdigest(),
+            # Identity belongs to the selected product bundle, not unrelated
+            # recipes in its containing file. Full-file provenance is separate.
+            "defines_sha256": hashlib.sha256(json.dumps(
+                sorted(expected), separators=(",", ":")).encode()).hexdigest(),
             "variable": MAKE_VARIABLE,
         },
         "expected_defines": list(expected),
@@ -130,6 +133,84 @@ def profile_report(definitions: list[str] | tuple[str, ...]) -> dict[str, object
     }
 
 
+def bind_seed_profile(candidate: bytes, seed: bytes, seed_parity: bytes,
+                      current_report: dict[str, object]) -> bytes:
+    """Close an existing seed, preserving its identity, never its live-file claim.
+
+    Only the parity-report serialization may differ. Every other profile byte
+    (including source hashes, feature defines and linker contract) must match.
+    Callers seal the three input files; the historical report stays historical.
+    """
+    historical = json.loads(seed_parity)
+    for key in ("expected_defines", "actual_profile_defines", "missing",
+                "extra", "bidirectional", "status", "mutation_matrix"):
+        if historical.get(key) != current_report.get(key):
+            raise RuntimeError(f"seed product profile changed: {key}")
+    field = b"v2_profile_parity_sha256="
+    old_rows = [r for r in seed.splitlines() if r.startswith(field)]
+    new_rows = [r for r in candidate.splitlines() if r.startswith(field)]
+    if len(old_rows) != 1 or len(new_rows) != 1:
+        raise RuntimeError("seed parity binding is not unique")
+    if old_rows[0] != field + hashlib.sha256(seed_parity).hexdigest().encode():
+        raise RuntimeError("seed parity report does not match seed profile")
+    current_bytes = (json.dumps(current_report, indent=2, sort_keys=True)
+                     + "\n").encode()
+    if new_rows[0] != field + hashlib.sha256(current_bytes).hexdigest().encode():
+        raise RuntimeError("current parity report does not match candidate profile")
+    if candidate.replace(new_rows[0], old_rows[0], 1) != seed:
+        raise RuntimeError("closing profile fields differ from immutable seed")
+    return seed
+
+
+def closing_profile_selftest() -> dict[str, object]:
+    import copy
+    from unittest.mock import patch
+
+    source = MAKEFILE.read_text()
+    baseline = profile_report(canonical_v2_product_defines())
+    # Exercise the report producer, not merely a hash comparison helper.
+    with patch.object(Path, "read_text", return_value=source +
+                      "\nHOST_ONLY_RECIPE = changed\n"):
+        assert profile_report(canonical_v2_product_defines()) == baseline
+    changed = source.replace("-D" + canonical_v2_product_defines()[0],
+                             "-DLISP65_V2_CHANGED_PRODUCT", 1)
+    with patch.object(Path, "read_text", return_value=changed):
+        try:
+            profile_report(baseline["actual_profile_defines"])
+        except RuntimeError:
+            pass
+        else:
+            raise AssertionError("changed product definition survived")
+    encode = lambda value: (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+    historical = copy.deepcopy(baseline)
+    historical["truth_source"] = dict(path="Makefile", sha256="a" * 64,
+                                      variable=MAKE_VARIABLE)
+    old = encode(historical)
+    row = lambda raw: b"v2_profile_parity_sha256=" + hashlib.sha256(raw).hexdigest().encode() + b"\n"
+    seed = b"profile=test\nfeature_defines=A\ninput_sha256=file:abc\n" + row(old)
+    current = seed.replace(row(old), row(encode(baseline)))
+    assert bind_seed_profile(current, seed, old, baseline) == seed
+    mutations = {
+        "changed-profile-field": (current.replace(b"profile=test", b"profile=other"), seed, old, baseline),
+        "changed-feature": (current.replace(b"feature_defines=A", b"feature_defines=B"), seed, old, baseline),
+        "changed-source": (current.replace(b"file:abc", b"file:def"), seed, old, baseline),
+        "duplicate-parity": (current + row(encode(baseline)), seed, old, baseline),
+        "wrong-seed-report": (current, seed, encode(baseline), baseline),
+        "wrong-current-report": (current.replace(row(encode(baseline)), row(old)), seed, old, baseline),
+    }
+    wrong = copy.deepcopy(baseline)
+    wrong["actual_profile_defines"] = []
+    mutations["changed-product-defines"] = (current, seed, old, wrong)
+    for name, args in mutations.items():
+        try:
+            bind_seed_profile(*args)
+        except RuntimeError:
+            continue
+        raise AssertionError(f"closing profile mutation survived: {name}")
+    return dict(status="PASS", host_recipe_identity="unchanged",
+                product_definition_change="rejected", rejected=list(mutations))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--selftest", action="store_true")
@@ -137,9 +218,11 @@ def main() -> int:
     if not args.selftest:
         parser.error("--selftest is required; product checks run inside the C2 linker")
     report = mutation_selftest()
+    closure = closing_profile_selftest()
     print("c2-product-profile-parity: SELFTEST PASS "
           f"missing={report['missing_define_mutations_rejected']}/8 "
-          "overbroad=1/1 duplicate=1/1")
+          "overbroad=1/1 duplicate=1/1 "
+          f"seed-closure={len(closure['rejected'])}/7 host-neutral=PASS")
     return 0
 
 

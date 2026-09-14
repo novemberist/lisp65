@@ -20,8 +20,7 @@ DEFAULT_RECEIPT = ROOT / (
 )
 SUITES = {
     "m65d": {
-        "path": ROOT / "tests/bytecode/libs/p0-m65d-lib.json",
-        "existing_private": 13,
+        "path": ROOT / "build/bytecode/dialect-v2/suites/p0-m65d-lib.json",
         "candidates": [
             "%m65d-set", "%m65d-mask", "%m65d-bitmap-off",
             "%m65d-bit-free-p", "%m65d-bam-header-ok-p",
@@ -37,13 +36,13 @@ SUITES = {
             "code-object": 1,
             "recursive": 1,
             "unexpected": 0,
-            "passed": 1,
+            "passed": 0,
+            "already-private": 1,
         },
-        "eligible_but_not_applied": ["%m65d-dir-target-ok-p"],
+        "eligible_but_not_applied": [],
     },
     "idex": {
-        "path": ROOT / "tests/bytecode/libs/p0-ide-extra-lib.json",
-        "existing_private": 8,
+        "path": ROOT / "build/bytecode/dialect-v2/suites/p0-ide-extra-lib.json",
         "candidates": [
             "%ide-buffer-with-mark", "%ide-kill-region-lines",
             "%ide-apply-word-edit-command", "%ide-apply-region-command",
@@ -56,6 +55,7 @@ SUITES = {
             "recursive": 0,
             "unexpected": 0,
             "passed": 0,
+            "already-private": 0,
         },
         "eligible_but_not_applied": [],
     },
@@ -80,15 +80,24 @@ def classify(message: str) -> str:
     return "unexpected"
 
 
+def private_population(suite):
+    private = suite.get("private_inline_functions", [])
+    if (not isinstance(private, list) or not private
+            or any(not isinstance(name, str) for name in private)
+            or len(set(private)) != len(private)):
+        raise ProbeError("invalid private-inline population")
+    return private
+
+
 def render() -> dict[str, object]:
     suites: list[dict[str, object]] = []
     total = 0
     for suite_id, spec in SUITES.items():
         path = spec["path"]
         suite = Stdlib._read_suite(str(path))
-        private = suite.get("private_inline_functions", [])
-        if len(private) != spec["existing_private"]:
-            raise ProbeError(f"{suite_id} existing private-inline count drift")
+        private = private_population(suite)
+        # Validate the actual suite first, including its existing inliners.
+        Stdlib.check_suite(str(path), suite)
         results: list[dict[str, str]] = []
         counts = {
             "rel8": 0,
@@ -96,8 +105,15 @@ def render() -> dict[str, object]:
             "recursive": 0,
             "unexpected": 0,
             "passed": 0,
+            "already-private": 0,
         }
         for candidate in spec["candidates"]:
+            if candidate in private:
+                counts["already-private"] += 1
+                results.append({"candidate": candidate,
+                                "outcome": "already-private",
+                                "diagnostic": "existing inliner validated by full suite execution"})
+                continue
             probe = copy.deepcopy(suite)
             probe["private_inline_functions"].append(candidate)
             probe["min_private_inline_functions"] += 1
@@ -142,9 +158,12 @@ def render() -> dict[str, object]:
         "method": "each-candidate-added-individually-to-the-real-suite-and-fully-compiled",
         "candidate_count": total,
         "additional_private_symbols_reclaimed": 0,
-        "eligible_but_not_applied": ["m65d:%m65d-dir-target-ok-p"],
+        "eligible_but_not_applied": [
+            f"{row['id']}:{name}" for row in suites
+            for name in row["eligible_but_not_applied"]
+        ],
         "suites": suites,
-        "decision": "defer-incidental-single-symbol-reclaim-product-identity-stable",
+        "decision": "audit-live-v2-population-no-additional-product-inlining",
     }
 
 
@@ -177,7 +196,7 @@ def selftest() -> None:
     ]
     if len(candidates) != 25 or len(set(candidates)) != 25:
         raise ProbeError("candidate inventory must contain 25 unique names")
-    if SUITES["m65d"]["eligible_but_not_applied"] != ["%m65d-dir-target-ok-p"]:
+    if SUITES["m65d"]["eligible_but_not_applied"]:
         raise ProbeError("deferred eligible candidate drift")
     if SUITES["idex"]["eligible_but_not_applied"]:
         raise ProbeError("IDEX deferred eligible candidate drift")
@@ -189,7 +208,18 @@ def selftest() -> None:
         raise ProbeError("recursive classifier drift")
     if classify("other") != "unexpected":
         raise ProbeError("unexpected classifier drift")
-    print("workbench-private-inline-probe: SELFTEST PASS cases=5 candidates=25")
+    for malformed in ([], ['x', 'x'], ['x', 13]):
+        try:
+            private_population({'private_inline_functions': malformed})
+        except ProbeError:
+            pass
+        else:
+            raise ProbeError("malformed population mutation accepted")
+    for size in (12, 13, 14):
+        population = [f'private-{i}' for i in range(size)]
+        if private_population({'private_inline_functions': population}) != population:
+            raise ProbeError("population was replaced by a fixed count")
+    print("workbench-private-inline-probe: SELFTEST PASS cases=11 candidates=25")
 
 
 def main(argv: list[str] | None = None) -> int:

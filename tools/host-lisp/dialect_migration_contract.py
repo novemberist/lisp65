@@ -2906,6 +2906,8 @@ def selftest() -> None:
         return run
 
     _expect_failure("v1 hash", mutation(lambda contract, _selection: contract["source_profile"].update(dialect_contract_sha256="0" * 64)))
+    _expect_failure("pre-INIT ABI ledger", mutation(lambda contract, _selection: contract["target_profile"].update(
+        abi_ledger_sha256="f85f472900059506cbed35d8320df38c1c0a2fb7fcd49d9434db1bdf2d971f23")))
     _expect_failure("v1 features", mutation(lambda contract, _selection: contract["source_profile"].update(features="allowed")))
     _expect_failure("runtime release", mutation(lambda contract, _selection: contract["release_policy"].update(runtime_core="release")))
     _expect_failure("runtime receipt", mutation(lambda contract, _selection: contract["release_policy"].update(runtime_core_receipt_effect="family-advance")))

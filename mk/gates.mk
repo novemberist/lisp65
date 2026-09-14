@@ -1,5 +1,56 @@
 # Stable gate entry points and provider-neutral CI wrappers.
 
+.PHONY: legacy-ide-delivery-check
+legacy-ide-delivery-check:
+	python3 tools/host-lisp/legacy_ide_delivery.py selftest
+	python3 tools/host-lisp/legacy_ide_delivery.py host-gate
+	python3 tools/host-lisp/legacy_ide_delivery.py check
+check-source: legacy-ide-delivery-check
+
+.PHONY: init-echo-check
+init-echo-check:
+	python3 tools/host-lisp/init_echo_gate.py
+check-source: init-echo-check
+
+.PHONY: init-repair-host-check init-require-scratch-check ide-minibuffer-screen-check
+init-repair-host-check:
+	python3 tools/host-lisp/init_repair_host_gate.py
+init-require-scratch-check:
+	python3 tools/host-lisp/init_require_scratch_gate.py
+ide-minibuffer-screen-check: v2-workbench-codemod
+	python3 tools/host-lisp/ide_minibuffer_screen_check.py
+check-source: init-repair-host-check editor-product-list-domain-check c2-library-load-recovery-check
+
+.PHONY: c2-library-load-recovery-check
+c2-library-load-recovery-check:
+	python3 tools/host-lisp/c2_library_load_recovery_gate.py
+
+.PHONY: editor-product-list-domain-check
+editor-product-list-domain-check:
+	python3 tools/host-lisp/editor_product_list_domain.py
+check-host: init-require-scratch-check ide-minibuffer-screen-check
+.PHONY: c2-media-output-selftest
+c2-media-output-selftest:
+	python3 tools/host-lisp/c2_lite_media_product.py output-selftest
+check-source: c2-media-output-selftest
+.PHONY: gc-population-witness-selftest
+gc-population-witness-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 -c "import sys; sys.path.insert(0, 'tools/host-lisp'); import block_26_vm_hardening_dwx_prefilter as g; g.gc_exit_selftest(); g.gc_population_selftest(); print('GC population witness: PASS dropped-warmup/wrong-SP/generation controls=3')"
+check-source: gc-population-witness-selftest
+
+.PHONY: v220-bundle-docs-check
+v220-bundle-docs-check:
+	python3 tools/host-lisp/c2_v220_bundle_docs_gate.py --sealed-release
+check-source: v220-bundle-docs-check
+
+.PHONY: v230-bundle-docs-check v230-public-native-check
+v230-bundle-docs-check:
+	python3 tools/host-lisp/c2_v230_bundle_docs_gate.py
+v230-public-native-check:
+	python3 tools/host-lisp/c2_v230_public_native.py selftest
+	python3 tools/host-lisp/c2_v230_public_product.py preflight
+check-source: v230-bundle-docs-check v230-public-native-check
+
 .PHONY: public-export-population-selftest public-export-population-check
 public-export-population-selftest:
 	python3 tools/host-lisp/public_export_population.py --selftest
@@ -290,7 +341,7 @@ c2-interrupt-ownership-selftest:
 
 c2-interrupt-ownership-check: c2-interrupt-ownership-selftest
 	python3 tools/host-lisp/c2_interrupt_ownership_gate.py \
-		--receipt tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-interrupt-ownership-source-gate-receipt.json
+		--check-receipt tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-interrupt-ownership-source-gate-receipt.json
 
 c2-mapped-far-service-ownership-selftest:
 	python3 tools/host-lisp/c2_mapped_far_service_gate.py --selftest
@@ -894,7 +945,7 @@ c2-while-source-check:
 	python3 tools/host-lisp/c2_while_gate.py --source-only
 
 c2-while-check: equivalence-check
-	python3 tools/host-lisp/c2_while_gate.py
+	python3 tools/host-lisp/c2_while_gate.py --check
 
 c2-q-check:
 	python3 tools/host-lisp/c2_q_gate.py
@@ -2171,7 +2222,7 @@ c2-v17-state-ownership-phase-b-check: c2-v17-state-ownership-phase-b-selftest
 
 check-source: workspace-capacity-check doctor-selftest source-syntax-check ci-selftest document-index-check c2-product-profile-parity-check c2-lite-v6-roots-fronts-product-profile-check c2-lite-media-acceptance-selftest c2-final-island-identity-check c2-append-final-hybrid-check c2-vm-badopcode-detail-check c2-install-phase-discriminator-check c2-phase06a-cutpoint-check c2-append-suffix-read-domain-check c2-l-full-keymap-end-to-end-check c2-l-full-static-plane-check c2-historical-gate-inheritance-check c2-address-identity-contract-check c2-kernal-unmap-contract-check c2-nested-append-v5-selftest c2-overlay-transaction-auth-check promotion-register-check block-bank-delta-policy-check block-capacity-delta-policy-check dialect-contract-check bytecode-abi-ledger-check code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check dialect-v2-prelude-control-check dialect-v2-eval-apply-funcall-check dialect-v2-lists-check dialect-v2-lists-p0-selftest dialect-v2-lists-lcc-selftest dialect-v2-lists-type-errors-check dialect-v2-strings-check dialect-v2-strings-p0-selftest dialect-v2-strings-lcc-selftest dialect-v2-system-runtime-check dialect-v2-lcc-surface-selftest dialect-v2-prelude-evidence-check dialect-v2-ide-evidence-check dialect-v2-capacity-ledger-selftest r2-known-open-check directory-only-l65m-v2-probe-check l65m-v2-product-check r3-current-product-block-check r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check v2-prim-lowering-check v2-carrier-state-selftest v2-workbench-symbol-diff-check v2-workbench-deresidentization-audit-check v2-workbench-deresidentization-prototype-check v2-runtime-core-service-inventory-selftest v2-capability-carrier-internal-g5-check v2-capability-carrier-contract-check workbench-service-call-inventory-selftest v11-surface-delivery-parity-check v11-source-stream-lifetime-selftest v11-function-metadata-check workbench-product-contract-check workbench-ux-harness-selftest runtime-known-open-check semantic-contracts-selftest semantic-contracts-g0 bytecode-p0-omission-contract-check bank0-lifetime-selftest bank0-island-inventory-selftest resident-island-selftest vm-ext-code-reclaim-smoke asm-c-constant-contract-check mega65-math-override-check error-text-table-selftest error-code-contract-selftest error-overlay-smoke workbench-disk-lib-budget-selftest ide-capacity-selftest persistence-contract-check runtime-export-contract-check runtime-core-audit-selftest workbench-overlay-stage-selftest runtime-overlay-bank-selftest hw-ship-memory-readback-selftest xmega65-safety-check bytecode-p0-program-check bytecode-p0-bundle-check workbench-ship-verifier-selftest
 
-check-host: check-source ship-builder-sample-fleet-check ship-builder-reproducibility-check c2-while-check semantic-contracts-g1 host-oracle fixed-point-check closure-surface-check ide-host-slice-check eval-bytecode-equivalence-check equivalence-check dialect-v2-lcc-surface-check dialect-v2-capacity-ledger-check dialect-v2-number-to-string-check v2-fasl-save-host-check v11-m-transactional-fasl-acceptance-check v2-capability-carrier-check-host-3 dialect-v2-prelude-evidence-live-check post-mvp-stdlib-polish-check stdlib-embed-whatif-check bytecode-p0-stdlib-check string-arena-probe bytecode-p0-private-inline-check workbench-private-inline-composition-probe gc-symbol-scan-timing-check bytecode-p0-ide-full-lib-check bytecode-p0-ide-extra-lib-check bytecode-p0-m65d-lib-check bytecode-p0-ide-lib-artifacts d81-persistence-fault-selftest demo-suite-check ide-bytecode-cost-report ide-bytecode-dynamic-report runtime-core-smoke gc-smoke compile-smoke compile-run repl-session lcc-install-device-smoke lcc-install-overlay-smoke vm-boot-fastpath-smoke error-state-smoke prelude-compile-check prelude-load-run eval-prims-smoke save-semantics-check output-smoke screen-smoke v11-wave3-dry-smoke
+check-host: check-source ship-builder-sample-fleet-check ship-builder-reproducibility-check c2-while-check semantic-contracts-g1 host-oracle fixed-point-check closure-surface-check ide-host-slice-check eval-bytecode-equivalence-check equivalence-check dialect-v2-lcc-surface-check dialect-v2-capacity-ledger-check dialect-v2-number-to-string-check v2-fasl-save-host-check v11-m-transactional-fasl-historical-seal-check v11-repl-banner-visual-check v2-capability-carrier-check-host-3 dialect-v2-prelude-evidence-live-check post-mvp-stdlib-polish-check stdlib-embed-whatif-check bytecode-p0-stdlib-check string-arena-probe bytecode-p0-private-inline-check workbench-private-inline-composition-probe gc-symbol-scan-timing-check bytecode-p0-ide-full-lib-check bytecode-p0-ide-extra-lib-check bytecode-p0-m65d-lib-check bytecode-p0-ide-lib-artifacts d81-persistence-fault-selftest demo-suite-check ide-bytecode-cost-report ide-bytecode-dynamic-report runtime-core-smoke gc-smoke compile-smoke compile-run repl-session lcc-install-device-smoke lcc-install-overlay-smoke vm-boot-fastpath-smoke error-state-smoke prelude-compile-check prelude-load-run eval-prims-smoke save-semantics-check output-smoke screen-smoke v11-wave3-dry-smoke
 
 check-product: check-host toolchain-external-product-verify mvp-vm-stdlib-boot-budget-check mvp-vm-stdlib-runtime-budget-check bytecode-vm-compile-check workbench-overlay-bootstrap-smoke workbench-overlay-control-audit-selftest hw-stack-probe-readback-selftest workbench-product workbench-error-code-contract-check bank0-lifetime-report bank0-island-inventory-report runtime-core-prototype-check mvp-ship-artifacts bytecode-p0-ide-lib-check ide-capacity-check workbench-symfn-dynamic-report workbench-l65m-transport-ops-report workbench-l65m-commit-ops-report workbench-disk-lib-budget-check v2-workbench-library-composition-check workbench-d81-bam-sanity workbench-d81-bam-alloc-diff-selftest workbench-d81-chain-write-diff-selftest workbench-d81-dir-write-diff-selftest m65-disk-alloc-load-check m65-disk-alloc-var-load-check workbench-d81-save-new-diff-selftest workbench-d81-save-new-scan-diff-selftest workbench-d81-save-new-var-diff-selftest workbench-ship-artifacts-check semantic-contracts-g2
 
@@ -4211,6 +4262,23 @@ check-source: dwx-histogram-transport-check
 library-index-file-chain-check: v2-workbench-codemod
 	python3 tools/host-lisp/library_index_file_chain_gate.py
 check-source: library-index-file-chain-check
+
+# Group 4 assumptions: read-only over the release authority, never a build.
+.PHONY: host-d81-worlds-check
+host-d81-worlds-check:
+	python3 tools/host-lisp/host_d81_worlds.py --selftest --receipt build/host-d81-worlds/receipt.json
+check-host: host-d81-worlds-check
+
+.PHONY: stack-layout-assumptions-check hot-branch-page-check library-index-couplings-check release-capacity-assumptions-check
+stack-layout-assumptions-check:
+	python3 tools/host-lisp/stack_layout_assumptions_gate.py
+hot-branch-page-check:
+	python3 tools/host-lisp/hot_branch_page_gate.py
+library-index-couplings-check:
+	python3 tools/host-lisp/library_index_couplings_gate.py
+release-capacity-assumptions-check:
+	python3 tools/host-lisp/release_capacity_assumptions_gate.py
+check-source: stack-layout-assumptions-check hot-branch-page-check library-index-couplings-check release-capacity-assumptions-check chain-walker-inventory-check
 
 .PHONY: c2-map-hot-range-check
 c2-map-hot-range-check:

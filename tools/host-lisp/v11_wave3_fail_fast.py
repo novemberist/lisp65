@@ -10,6 +10,8 @@ from pathlib import Path
 import sys
 from typing import Any
 
+import v11_l_lite_keymap as Keymap
+
 
 ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "config/v11-wave3-fail-fast.json"
@@ -54,6 +56,12 @@ def validate(contract: dict[str, Any], matrix: dict[str, Any], workbench_profile
 
     cases = matrix.get("cases")
     require(isinstance(cases, list) and cases, "generated hardware cases missing")
+    source = Keymap.load_contract()
+    expected_rows = json.loads(Keymap.render_hardware_cases(source))["cases"]
+    expected = {row["id"]: row for row in expected_rows}
+    require(len(cases) == len(expected)
+            and {row.get("id") for row in cases} == set(expected),
+            "hardware case population drift")
     seen_old = False
     new_ids: list[str] = []
     for row in cases:
@@ -64,12 +72,11 @@ def validate(contract: dict[str, Any], matrix: dict[str, Any], workbench_profile
         else:
             require(not seen_old, f"new case appears after an old case: {row.get('id')}")
             new_ids.append(str(row.get("id")))
-        require(row.get("fidelity") == "emulator-dry-plus-hardware",
-                f"dry variant missing: {row.get('id')}")
-        require(row.get("receipt_policy") ==
-                "dry-variant-non-authoritative; hardware-exactly-once",
-                f"receipt policy drift: {row.get('id')}")
-    require(set(new_ids) == set(contract.get("new_cases_first", [])),
+        authoritative = expected[row["id"]]
+        require(row == authoritative,
+                f"generated hardware contract drift: {row.get('id')}")
+    modifiers = {f"binding-{row['id']}" for row in source["modifier_bindings"]}
+    require(set(new_ids) == set(contract.get("new_cases_first", [])) | modifiers,
             f"new-case inventory drift: matrix={sorted(new_ids)}")
 
     dry = contract.get("dry_variants")
@@ -142,7 +149,26 @@ def selftest() -> None:
         pass
     else:
         raise FailFastError("authority mutation was accepted")
-    print("v11-wave3-fail-fast: SELFTEST PASS mutations=2")
+    for label, mutate in (
+        ("hardware promoted to dry", lambda rows: rows.__setitem__(
+            next(i for i, r in enumerate(rows) if r['fidelity'] == 'hardware-exact'),
+            {**next(r for r in rows if r['fidelity'] == 'hardware-exact'),
+             'fidelity': 'emulator-dry-plus-hardware'})),
+        ("missing hardware case", lambda rows: rows.pop()),
+        ("unknown hardware case", lambda rows: rows[0].update(id='unbound-case')),
+        ("dry demoted to hardware", lambda rows: next(
+            r for r in rows if r['fidelity'] == 'emulator-dry-plus-hardware'
+        ).update(fidelity='hardware-exact')),
+    ):
+        changed = copy.deepcopy(args[1])
+        mutate(changed['cases'])
+        try:
+            validate(args[0], changed, *args[2:])
+        except FailFastError:
+            pass
+        else:
+            raise FailFastError(f"{label} mutation was accepted")
+    print("v11-wave3-fail-fast: SELFTEST PASS mutations=6")
 
 
 def main(argv: list[str]) -> int:

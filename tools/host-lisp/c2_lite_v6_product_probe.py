@@ -1004,7 +1004,8 @@ uint8_t c2_product_static_image_named(obj name) {
     length = str_len(name);
     while (at < sizeof names - 1u) {
         for (i = 0; names[at + i] && i < length
-                    && (uint8_t)names[at + i] == str_byte(name, i); ++i) { }
+                    && c2_library_name_fold((uint8_t)names[at + i])
+                       == c2_library_name_fold(str_byte(name, i)); ++i) { }
         if (i == length && names[at + i] == 0) return 1u;
         while (names[at++]) { }
     }

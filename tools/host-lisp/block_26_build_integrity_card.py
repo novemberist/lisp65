@@ -22,8 +22,9 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import r6_g6 as G6  # noqa: E402
 
 
-RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/block-2.6-card5-build-integrity-renderer-successor-receipt.json"
+RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/block-2.6-card5-build-integrity-v230-successor-receipt.json"
 AUTHORITY = "config/c2-v210-public-build-authority.json"
+README_AUTHORITY = "config/c2-v230-public-build-authority.json"
 LIFECYCLE_SOURCE = "tools/host-lisp/workbench_product.py"
 
 
@@ -106,7 +107,7 @@ def validate(text: dict[str, str]) -> dict[str, Any]:
             and f"{entry}-verify" in development
             and "mega65_ftp" in development and "cmp \"$D81\"" in development,
             "development guide lacks the clone-to-deploy authoritative flow")
-    readme_entry = json.loads(text["config/c2-v220-public-build-authority.json"])["entry_point"]
+    readme_entry = json.loads(text[README_AUTHORITY])["entry_point"]
     readme_commands = re.findall(r"make workbench-product[^\s`]*", text["README.md"])
     require(sorted(readme_commands) == sorted([readme_entry + "-build", readme_entry + "-verify"])
             and "Development Guide" in text["README.md"],
@@ -144,9 +145,9 @@ def selftest() -> dict[str, Any]:
     validate(clean)
     mutations = {
         "readme-build-omitted": ("README.md", clean["README.md"].replace(
-            json.loads(clean["config/c2-v220-public-build-authority.json"])["entry_point"] + "-build", "omitted")),
+            json.loads(clean[README_AUTHORITY])["entry_point"] + "-build", "omitted")),
         "readme-verify-era-drift": ("README.md", clean["README.md"].replace(
-            json.loads(clean["config/c2-v220-public-build-authority.json"])["entry_point"] + "-verify",
+            json.loads(clean[README_AUTHORITY])["entry_point"] + "-verify",
             "make workbench-product-obsolete-verify")),
         "guide-command-era-diverges": ("docs/development.md", clean["docs/development.md"].replace(
             json.loads(clean[AUTHORITY])["entry_point"], "make workbench-product-obsolete")),
@@ -163,6 +164,9 @@ def selftest() -> dict[str, Any]:
         "tracked-receipt-produced": ("Makefile", clean["Makefile"].replace(
             "R6_G6_PREFLIGHT_RECEIPT := build/", "R6_G6_PREFLIGHT_RECEIPT := tests/", 1)),
         "duplicate-build-authority": ("README.md", clean["README.md"] + "\nmake workbench-product-v200-build\n"),
+        "old-release-build-commands": ("README.md", clean["README.md"].replace(
+            json.loads(clean[README_AUTHORITY])["entry_point"],
+            json.loads(clean["config/c2-v220-public-build-authority.json"])["entry_point"])),
     }
     for name, (path, mutation) in mutations.items():
         changed = dict(clean)
@@ -189,7 +193,7 @@ def check(write: bool) -> dict[str, Any]:
         ROOT / "tools/host-lisp/block_26_build_integrity_card.py",
     ]
     receipt = {
-        "format": "lisp65-block-2.6-card5-build-integrity-renderer-successor-v1",
+        "format": "lisp65-block-2.6-card5-build-integrity-v230-successor-v1",
         "status": "passed",
         "facts": facts,
         "mutation_suite": mutations,

@@ -6,6 +6,7 @@
 #include "mem.h"     /* shared Bank-4 disk-scratch layout contract */
 #include "eval.h"    /* load_source_stream */
 #include "reader.h"  /* reader_from_fetch (FASL compile-file source stream) */
+#include "interrupt.h"
 #include "vm_runtime_overlay.h" /* persistent source fetch across C1 overlay swaps */
 #include "c2_mapped_far_service.h" /* optional cold disk-chain placement */
 #ifdef LISP65_DISK_LIBS
@@ -113,6 +114,28 @@ static unsigned int f011_read_at(unsigned char T, unsigned char S) {
 #define DISK_FILE_MAX  DISK_EXT_FILE_MAX
 #define DISK_CHAIN_FUEL ((unsigned int)(DISK_FILE_MAX / 254u + 2u))
 
+/* One owner for the DIR scratch while a source stream is parked in it
+ * (INIT/require repair).  disk_source_cur packs the sector the stream is
+ * parked in (layout of DISK_SOURCE_LINK_PACK below); bit 14 says the DIR
+ * scratch still holds that sector.  Every other writer of the scratch --
+ * %disk-read-sector (require's index reader, load, load-lib, IDE, M65D,
+ * FASL), %disk-poke and the native directory walk -- goes through
+ * io_disk_read_sector(_link_far) or io_disk_scratch_poke, which clear the
+ * bit.  The next source fetch then re-reads its parked sector instead of
+ * reading bytes another owner left behind. */
+#define DISK_SOURCE_OWNS_SCRATCH 0x4000u
+static unsigned int disk_source_cur;
+static unsigned char disk_source_active;
+
+unsigned char io_disk_source_idle(void) {
+    return !disk_source_active;
+}
+
+void io_disk_source_abort(void) {
+    disk_source_active = 0;
+    disk_source_cur = 0;
+}
+
 /* Decode one 1581 file-chain link without ever treating a corrupt 0/0 tail
  * as 255 payload bytes.  Product file APIs are capped by DISK_FILE_MAX, so
  * their walker fuel is derived from that public byte ceiling rather than an
@@ -137,6 +160,7 @@ unsigned int io_disk_read_sector_link_far(
     unsigned char track, unsigned char sector
 ) {
     unsigned int off, i, link;
+    disk_source_cur &= (unsigned int)~DISK_SOURCE_OWNS_SCRATCH;
     off = f011_read_at_far(track, sector);
     if (off == LISP65_F011_READ_FAILED) return LISP65_F011_READ_FAILED;
     link = (unsigned int)((volatile unsigned char *)0xDE00)[off] |
@@ -156,6 +180,7 @@ unsigned char io_disk_read_sector_far(unsigned char track, unsigned char sector)
 #else
 unsigned char io_disk_read_sector(unsigned char track, unsigned char sector) {
     unsigned int off, i;
+    disk_source_cur &= (unsigned int)~DISK_SOURCE_OWNS_SCRATCH;
     off = f011_read_at(track, sector);
     if (off == LISP65_F011_READ_FAILED) return 0;
     for (i = 0; i < 256; i++)
@@ -179,6 +204,7 @@ unsigned char io_disk_byte(unsigned char i) { return ext_disk_get((unsigned int)
  * aus DIESEM Puffer schreibt, ist Analogie zum HW-bewiesenen Leseweg. Das Readback-Verify in
  * io_disk_write_sector macht einen falschen Weg als sauberes 0 sichtbar -- NIE stille Korruption. */
 void io_disk_scratch_poke(unsigned char i, unsigned char v) {
+    disk_source_cur &= (unsigned int)~DISK_SOURCE_OWNS_SCRATCH;
     ext_disk_put((unsigned int)(DISK_EXT_DIR + i), v);
 }
 static unsigned char disk_dir_find(const char *name, unsigned char *st, unsigned char *ss);   /* s. unten */
@@ -404,7 +430,10 @@ static unsigned int disk_source_link;
 #if defined(__mos__) && defined(LISP65_C2_F011_COLD)
 LISP65_C2_MAPPED_F011_COLD_FN
 unsigned char disk_source_refill_far(void) {
-    unsigned int link = disk_source_link;
+    /* A valid current sector without the owner bit was displaced by another
+     * scratch owner: re-read it.  Otherwise advance along the chain. */
+    unsigned int link = (disk_source_cur & DISK_SOURCE_LINK_VALID)
+        ? disk_source_cur : disk_source_link;
     unsigned char t = DISK_SOURCE_LINK_TRACK(link);
     unsigned char s = DISK_SOURCE_LINK_SECTOR(link);
     unsigned char nt, ns;
@@ -426,6 +455,7 @@ unsigned char disk_source_refill_far(void) {
         return 0;
     }
     disk_source_link = DISK_SOURCE_LINK_PACK(nt, nt ? ns : 0u);
+    disk_source_cur = link | DISK_SOURCE_OWNS_SCRATCH;
     return 1;
 }
 #endif
@@ -444,11 +474,13 @@ static LISP65_RESIDENT_ISLAND_FN char disk_source_fetch(void) {
                             ((disk_file_pos >> 8) << 1));
     while (folded >= 254u) folded -= 254u;
     pos = (unsigned char)folded;
-    if (disk_file_pos && !pos) {
+    if (disk_file_pos && !pos) disk_source_cur = 0;   /* advance to the successor */
+    if (!(disk_source_cur & DISK_SOURCE_OWNS_SCRATCH)) {
 #if defined(__mos__) && defined(LISP65_C2_F011_COLD)
         if (!disk_source_refill()) return '\0';
 #else
-        link = disk_source_link;
+        link = (disk_source_cur & DISK_SOURCE_LINK_VALID)
+            ? disk_source_cur : disk_source_link;
         t = DISK_SOURCE_LINK_TRACK(link);
         s = DISK_SOURCE_LINK_SECTOR(link);
         if (!(link & DISK_SOURCE_LINK_VALID) || !t ||
@@ -463,6 +495,7 @@ static LISP65_RESIDENT_ISLAND_FN char disk_source_fetch(void) {
             return '\0';
         }
         disk_source_link = DISK_SOURCE_LINK_PACK(nt, nt ? ns : 0u);
+        disk_source_cur = link | DISK_SOURCE_OWNS_SCRATCH;
 #endif
     }
     ++disk_file_pos;
@@ -524,16 +557,24 @@ unsigned int io_disk_stage_chain(unsigned char track, unsigned char sector) {
 /* %disk-load-file: Datei ab (T,S) in den EXT-Puffer folgen, dann via load_source_stream in den
  * Reader streamen (Quelltext-LOAD). 1=ok, 0=leer. */
 unsigned char io_disk_load_chain(unsigned char track, unsigned char sector) {
-    unsigned char nt, ns;
-    unsigned int n = disk_chain_to_scratch(track, sector);
+    unsigned int n;
+    /* The reader and its lookahead are single-owner. Refuse before staging
+     * overwrites either source lifetime; abort cleanup releases this guard. */
+    if (disk_source_active) {
+        lisp_abort_static(LISP65_ERR_LOAD_OPEN, "cannot open");
+        return 0;
+    }
+    n = disk_chain_to_scratch(track, sector);
     if (!n) return 0;
     disk_file_len = n; disk_file_pos = 0;
-    if (!io_disk_read_sector(track, sector)) return 0;
-    nt = io_disk_byte(0); ns = io_disk_byte(1);
-    n = disk_chain_count(track, sector, nt, ns);
-    if (n > 254u) return 0;
-    disk_source_link = DISK_SOURCE_LINK_PACK(nt, nt ? ns : 0u);
+    /* The first fetch reads (track,sector) through the same refill as every
+     * later sector (disk_chain_to_scratch has validated the whole chain);
+     * the stream owns the DIR scratch only from that read on. */
+    disk_source_link = DISK_SOURCE_LINK_PACK(track, sector);
+    disk_source_cur = 0;
+    disk_source_active = 1;
     load_source_stream(disk_source_fetch);
+    disk_source_active = 0;
     return (unsigned char)((disk_source_link & DISK_SOURCE_LINK_VALID) != 0);
 }
 
@@ -587,7 +628,12 @@ static unsigned char disk_fold(unsigned char c) {
 /* 1581 directory walk (track 40): finds the entry for `name` (case-folded, as on load) and returns
  * the file's start track/sector. Extracted from io_disk_load_named — shared with the SAVE path. */
 static unsigned char disk_dir_find(const char *name, unsigned char *st, unsigned char *ss) {
-    unsigned char track = 40, sector = 0, fuel = 64;
+    unsigned char track = 40, sector = 3, fuel = 64;
+    unsigned char name_len = 0;
+    while (name[name_len]) {
+        if (name_len == 16u) return 0;
+        ++name_len;
+    }
     while (fuel--) {
         unsigned int e; unsigned char nt, ns;
         if (!io_disk_read_sector(track, sector)) return 0;

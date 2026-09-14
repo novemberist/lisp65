@@ -359,7 +359,9 @@ class ResolverVM(B.P0VM):
         native_base: int = 0,
         frame_slots: int = 0,
     ) -> int:
-        if prim_id not in (18, 67):
+        if prim_id not in (18, 67) or (prim_id == 18 and argc == 0):
+            # The private source-owner query belongs to the shared VM model;
+            # this adapter owns only name/locator loads and C2D publication.
             return super()._callprim(
                 prim_id, argc, stack, pc, native_base, frame_slots
             )

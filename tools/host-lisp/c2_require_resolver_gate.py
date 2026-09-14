@@ -534,7 +534,7 @@ def source_gate() -> dict[str, Any]:
         "(defun %require-fast-loaded-p (library)",
         "(defun %require-active-identities-at",
         "(if (equal state (nth 3 cache))",
-        "(if (%require-fast-loaded-p library)",
+        "(if (%require-fast-loaded-p name)",
         "(cons 0 256)",
         "(%disk-load-lib (nth 2 row) (nth 3 row))",
         "(crc-lo (%l65i-next-crc))",
@@ -638,7 +638,7 @@ def source_mutations() -> dict[str, str]:
             "(defun %require-fast-loaded-p (library)",
             "(defun %require-active-identities-at",
             "(if (equal state (nth 3 cache))",
-            "(if (%require-fast-loaded-p library)",
+            "(if (%require-fast-loaded-p name)",
             "(%disk-load-lib (nth 2 row) (nth 3 row))",
             "(crc-lo (%l65i-next-crc))",
             "(crc-hi (%l65i-next-crc))",
@@ -717,8 +717,11 @@ def source_mutations() -> dict[str, str]:
             "(defun %require-active-identities-at",
             "(defun %missing-active-identities-at", 1), runtime, vm),
         "idempotence-parser-order-reversed": (lisp.replace(
-            "(if (%require-fast-loaded-p library)",
+            "(if (%require-fast-loaded-p name)",
             "(if nil", 1), runtime, vm),
+        "unnormalized-cache-key": (lisp.replace(
+            "(if (%require-fast-loaded-p name)",
+            "(if (%require-fast-loaded-p library)", 1), runtime, vm),
         "append-seam-removed": (lisp.replace(
             "(%disk-load-lib (nth 2 row) (nth 3 row))", "t", 1), runtime, vm),
         "header-record-crc-low-omitted": (lisp.replace(

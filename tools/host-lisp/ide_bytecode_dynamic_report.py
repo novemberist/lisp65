@@ -175,6 +175,7 @@ class Runtime:
             abi_profile=self.abi_profile,
             abi_ledger=self.abi_ledger,
         )
+        self.last_vm = vm
         return vm.run(self.directory[sym], list(args))
 
     def has_function(self, name):

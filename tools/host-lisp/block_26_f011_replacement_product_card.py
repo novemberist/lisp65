@@ -155,7 +155,7 @@ def packed_link_model() -> dict[str, Any]:
 
 
 def source_checks(source: str, wrappers: str) -> dict[str, bool]:
-    return {
+    checks = {
         "one-packed-owner": source.count(
             "static unsigned int disk_source_link;") == 1,
         "old-five-cell-owner-absent": all(name not in source for name in (
@@ -179,6 +179,28 @@ def source_checks(source: str, wrappers: str) -> dict[str, bool]:
         "three-mapped-wrappers": wrappers.count(
             "jsr c2_mapped_far_enter") == 3,
     }
+    if '#define DISK_SOURCE_OWNS_SCRATCH' in source:
+        # INIT successor removes the duplicate priming read in load_chain.
+        # Derive validation/publication sites from the two actual refill
+        # bodies, rather than retaining a count for the retired third site.
+        from chain_walker_inventory import c_function
+        bodies=[c_function(source,n) for n in ('disk_source_refill_far','disk_source_fetch')]
+        publication='DISK_SOURCE_LINK_PACK(nt, nt ? ns : 0u)'
+        validator='count = disk_chain_count(t, s, nt, ns);'
+        checks['validated-publication']=(source.count(publication)==len(bodies) and all(
+            b.count(publication)==1 and b.count(validator)==1 and
+            b.index(validator)<b.index('if (count > 254u)')<b.index(publication)
+            for b in bodies))
+        validated_bodies=bodies+[c_function(source,'disk_chain_capacity')]
+        checks['shared-validator-retained']=(source.count(validator)==len(validated_bodies)
+            and all(b.count(validator)==1 for b in validated_bodies))
+        load=c_function(source,'io_disk_load_chain')
+        checks['single-initial-refill']=(
+            'disk_source_link = DISK_SOURCE_LINK_PACK(track, sector);' in load and
+            'disk_source_cur = 0;' in load and
+            'load_source_stream(disk_source_fetch);' in load and
+            'io_disk_read_sector' not in load and 'disk_chain_count' not in load)
+    return checks
 
 
 def source_contract(source: str, wrappers: str) -> dict[str, Any]:

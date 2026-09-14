@@ -140,7 +140,8 @@ def historical_metadata_bind(path: Path) -> dict[str, Any]:
     # The two integration checkers belong to the same sealed closure as
     # its metadata receipts. Their live successors are executed separately.
     require(path in (METADATA_INDEX, METADATA_RECEIPT,
-                     TOP_LEVEL_REDISPATCH, DIRECT_EXPRESSION),
+                     TOP_LEVEL_REDISPATCH, DIRECT_EXPRESSION,
+                     PRELUDE_INVENTORY, MIGRATION_CONTRACT, BUDGET_COMPARISON),
             "unregistered historical closure member")
     raw = era_blob(METADATA_CLOSURE_ERA, path.relative_to(ROOT).as_posix())
     result = {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw),
@@ -662,9 +663,9 @@ def record() -> None:
         "full_check_closure": {
             "historical_follow_on_checks": historical_follow_on_checks(),
             "derived_successor_indexes": {
-                "prelude_inventory": bind(PRELUDE_INVENTORY),
-                "dialect_migration_contract": bind(MIGRATION_CONTRACT),
-                "dialect_budget_comparison": bind(BUDGET_COMPARISON),
+                "prelude_inventory": historical_metadata_bind(PRELUDE_INVENTORY),
+                "dialect_migration_contract": historical_metadata_bind(MIGRATION_CONTRACT),
+                "dialect_budget_comparison": historical_metadata_bind(BUDGET_COMPARISON),
                 "function_metadata_index": historical_metadata_bind(METADATA_INDEX),
                 "function_metadata_receipt": historical_metadata_bind(METADATA_RECEIPT),
             },
@@ -763,9 +764,9 @@ def validate(value: dict[str, Any]) -> None:
     require(value.get("full_check_closure") == {
         "historical_follow_on_checks": historical_follow_on_checks(),
         "derived_successor_indexes": {
-            "prelude_inventory": bind(PRELUDE_INVENTORY),
-            "dialect_migration_contract": bind(MIGRATION_CONTRACT),
-            "dialect_budget_comparison": bind(BUDGET_COMPARISON),
+            "prelude_inventory": historical_metadata_bind(PRELUDE_INVENTORY),
+            "dialect_migration_contract": historical_metadata_bind(MIGRATION_CONTRACT),
+            "dialect_budget_comparison": historical_metadata_bind(BUDGET_COMPARISON),
             "function_metadata_index": historical_metadata_bind(METADATA_INDEX),
             "function_metadata_receipt": historical_metadata_bind(METADATA_RECEIPT),
         },

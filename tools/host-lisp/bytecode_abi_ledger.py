@@ -33,6 +33,12 @@ TOP_KEYS = {
     "prim_identities", "profiles",
 }
 EXTENSION_KEYS = {"prim_mode_extensions", "staged_prim_withdrawals"}
+RESOURCE_ERROR_MODE = {
+    "profile": "dialect-v2", "prim_id": 58, "argc": 1, "selector": 1,
+    "status": "VM_HEAPOOM", "error_code": 40,
+    "consumer": "lib/stdlib-require.lisp:%require-directory-capacities-p",
+    "authority": "c45dfdb3",
+}
 RESTART_LEDGER_COMMIT = "b7b744d1"
 POLICIES = {
     "id_reuse": "forbidden",
@@ -397,7 +403,12 @@ def validate(
     # The renderer ledger has no descoped seed extensions. If an extension
     # family is declared, its complete paired schema remains mandatory.
     extensions = bool(EXTENSION_KEYS & value.keys())
-    _exact(value, TOP_KEYS | (EXTENSION_KEYS if extensions else set()), "ledger")
+    resource = {"resource_error_mode"} if "resource_error_mode" in value else set()
+    _exact(value, TOP_KEYS | (EXTENSION_KEYS if extensions else set()) | resource, "ledger")
+    if resource and value["resource_error_mode"] != RESOURCE_ERROR_MODE:
+        raise LedgerError("private resource error mode drift")
+    if check_mirrors and "(%list-malformed-error 1)" in (ROOT / "lib/stdlib-require.lisp").read_text() and not resource:
+        raise LedgerError("live resource error mode omitted")
     if value["format"] != FORMAT or value["version"] != 1 or value["id_bits"] != 8:
         raise LedgerError("ledger format/version/id_bits drift")
     if value["policies"] != POLICIES or value["diagnostics"] != DIAGNOSTICS:
@@ -459,6 +470,8 @@ def validate(
     for mode in value.get("prim_mode_extensions", []):
         if mode["prim_id"] not in resolved[mode["profile"]]["prim_ids"]["active"]:
             raise LedgerError("mode extension does not belong to a living Prim-ID")
+    if resource and 58 not in resolved["dialect-v2"]["prim_ids"]["active"]:
+        raise LedgerError("resource mode belongs to an inactive Prim-ID")
 
     for child_id, parent_id in zip(order[1:], order[:-1]):
         for space in ("opcodes", "prim_ids"):

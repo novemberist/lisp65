@@ -26,6 +26,7 @@ import c2_product_substitution_link as PRODUCT  # noqa: E402
 import c2_v160_input_drop_counters as COUNTERS  # noqa: E402
 import c2_v160_input_service_hybrid_final_world as FINAL  # noqa: E402
 import c2_v160_queue_single_owner_gate as SINGLE_OWNER  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -39,6 +40,7 @@ SEALED_ELF = ROOT / \
     "build/c2.3/v1.7-comfort-phase1b-variant-b-adapter-r1/wplto/lisp65-c2-substitution-linked.prg.elf"
 READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 SEAL_COMMIT = "870e5f53"
+SOURCE_SUCCESSOR_ERA = "520352a6"
 CORE_SOURCES = (
     "src/optional/c2_kernal_input_capture.s",
     "src/optional/c2_kernal_input_consumer.s",
@@ -84,12 +86,15 @@ def assembly_body(raw: bytes) -> bytes:
                     if not line.lstrip().startswith(b';'))
 
 
+@ERA.in_host_source_world(SOURCE_SUCCESSOR_ERA,
+                         extra_paths=CORE_SOURCES + ("src/repl.c",))
 def source_inventory() -> dict[str, Any]:
     rows: dict[str, Any] = {}
     for name in CORE_SOURCES:
         # The excluded Comfort freight is the pricing-era sealed library;
         # its later display repair is qualified by the v2.1 successor gate.
-        # Capture/interrupt source checks below remain live and unchanged.
+        # Capture/interrupt sources belong to the accepted successor era.
+        # The encoded-ring successor is independently priced by COUNTERS.
         current = sealed_blob(name) if name == "lib/repl-comfort.lisp" else (ROOT / name).read_bytes()
         old = sealed_blob(name)
         rows[name] = {"current_sha256": sha(current),
@@ -313,7 +318,8 @@ def validate(value: dict[str, Any]) -> None:
 
 
 def selftest(value: dict[str, Any]) -> None:
-    consumer = (ROOT / "src/optional/c2_kernal_input_consumer.s").read_bytes()
+    consumer = ERA.era_blob(SOURCE_SUCCESSOR_ERA,
+                           "src/optional/c2_kernal_input_consumer.s")
     require(consumer.count(b'cmp #$5b') == 1, "normalization boundary population drift")
     require(assembly_body(consumer.replace(b'cmp #$5b', b'cmp #$5c')) != assembly_body(consumer),
             "changed normalization instruction was hidden as a comment")

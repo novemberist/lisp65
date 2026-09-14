@@ -11,9 +11,13 @@ import argparse
 from collections import Counter, defaultdict
 from copy import deepcopy
 import hashlib
+import io
 import json
+import os
 from pathlib import Path
+import subprocess
 import sys
+import tarfile
 import tempfile
 from typing import Any, Callable
 
@@ -76,6 +80,93 @@ CLOSURE_ARTIFACT_IDS = ["resident", "ide", "idex", "m65d"]
 
 class InventoryError(RuntimeError):
     pass
+
+
+# Immediate parent of the atomic capability/carrier promotion (44fcdf95).
+# Reconstruct the complete pre-migration source world, not four live aliases.
+INVENTORY_ERA = "eb4add7b3a4be811f8d5699723ea405d2bf4b803"
+
+
+def era_archive(commit: str = INVENTORY_ERA) -> bytes:
+    if commit != INVENTORY_ERA:
+        raise InventoryError("pre-migration inventory era drift")
+    return subprocess.check_output(["git", "archive", commit], cwd=ROOT)
+
+
+def validate_era_archive(raw: bytes) -> None:
+    expected = {}
+    for row in subprocess.check_output(
+            ["git", "ls-tree", "-rz", INVENTORY_ERA], cwd=ROOT).split(b"\0"):
+        if not row:
+            continue
+        meta, path = row.split(b"\t", 1)
+        mode, kind, oid = meta.split()
+        if kind != b"blob" or mode not in (b"100644", b"100755"):
+            raise InventoryError("non-file inventory-era input")
+        expected[path.decode()] = oid.decode()
+    actual = {}
+    with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+        for member in archive:
+            if member.isdir():
+                continue
+            if not member.isfile() or member.name in actual:
+                raise InventoryError("invalid inventory-era member")
+            data = archive.extractfile(member).read()
+            actual[member.name] = hashlib.sha1(
+                b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
+    if actual != expected:
+        raise InventoryError("inventory-era source closure drift")
+
+
+def era_check(output: Path | None) -> None:
+    raw = era_archive()
+    validate_era_archive(raw)
+    try:
+        era_archive("HEAD")
+    except InventoryError:
+        pass
+    else:
+        raise InventoryError("live era mutation survived")
+    with tempfile.TemporaryDirectory(prefix="lisp65-service-inventory-era-") as folder:
+        archived = Path(folder)
+        with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+            archive.extractall(archived, filter="data")
+        env = {k: v for k, v in os.environ.items()
+               if k not in ("MAKEFLAGS", "MFLAGS", "MAKEOVERRIDES")}
+        subprocess.run(["make", "workbench-service-call-inventory-current",
+                        "workbench-service-call-inventory-selftest"],
+                       cwd=archived, env=env, check=True)
+        report = load_json(archived / "build/bytecode/workbench-service-call-inventory.json")
+        # Each old live path is a separate regression mutation. The archived
+        # checker must reject today's v2 artifact in place of its v1 input.
+        registry = load_json(archived / "config/workbench-native-service-registry.json")
+        mutations = []
+        for item in registry["artifacts"]:
+            target = archived / item["manifest"]
+            old = target.read_bytes()
+            live = ROOT / item["manifest"]
+            if not live.is_file():
+                raise InventoryError(f"old-path mutation requires live artifact: {live}")
+            try:
+                target.write_bytes(live.read_bytes())
+                check = subprocess.run(
+                    [sys.executable, "tools/host-lisp/workbench_service_call_inventory.py", "--mode", "current"],
+                    cwd=archived, env=env, capture_output=True, text=True)
+                if check.returncode != 1 or "manifest suite drift" not in check.stderr:
+                    raise InventoryError(f"old-path mutation did not fail at suite identity: {item['id']}")
+                mutations.append({"artifact": item["id"], "rejected": True,
+                                  "diagnostic": check.stderr.strip(),
+                                  "live_manifest_sha256": hashlib.sha256(live.read_bytes()).hexdigest()})
+            finally:
+                target.write_bytes(old)
+        report["era_binding"] = {
+            "commit": INVENTORY_ERA, "source_archive_sha256": hashlib.sha256(raw).hexdigest(),
+            "live_product_claim": False, "old_path_mutations": mutations,
+            "live_era_mutation_rejected": True,
+        }
+        if output:
+            _write_json(output, report)
+    print("workbench service inventory era: PASS; unchanged v1 oracle; old-path mutations=4")
 
 
 def _strict_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -806,9 +897,15 @@ def main() -> int:
     parser.add_argument("--mode", choices=("current", "staging", "zero-miss"), default="current")
     parser.add_argument("--json-out", type=Path)
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--era-check", action="store_true")
     args = parser.parse_args()
     if args.selftest:
         selftest(); return 0
+    if args.era_check:
+        if args.mode != "current" or args.contract != DEFAULT_CONTRACT or args.closure:
+            raise InventoryError("era check has no live contract/closure override")
+        era_check(args.json_out)
+        return 0
     contract = load_json(args.contract)
     validate_contract(contract)
     closure = None

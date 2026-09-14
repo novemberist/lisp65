@@ -721,6 +721,7 @@ def gate_wiring() -> list[str]:
     return rows
 
 
+@ERA.in_host_source_world(SEAL_COMMIT)
 def core_receipt() -> dict[str, Any]:
     value = load(CONTRACT)
     texts = source_texts()
@@ -774,6 +775,7 @@ def core_receipt() -> dict[str, Any]:
     }
 
 
+@ERA.in_host_source_world(SEAL_COMMIT)
 def selftest() -> dict[str, Any]:
     value = load(CONTRACT)
     texts = source_texts()

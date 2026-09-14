@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -366,12 +367,16 @@ def write() -> dict[str, Any]:
     return receipt
 
 
+def verify_index(actual, expected):
+    require(actual == expected, "function metadata index drift")
+
+
 def check() -> dict[str, Any]:
     expected_index, expected_receipt = collect()
     actual_index = load(INDEX)
     actual_receipt = load(RECEIPT)
     validate(actual_index)
-    require(actual_index == expected_index, "function metadata index drift")
+    verify_index(actual_index, expected_index)
     require(actual_receipt == expected_receipt, "function metadata receipt drift")
     require(actual_receipt["index"]["sha256"] == sha(INDEX.read_bytes()),
             "function metadata index SHA binding drift")
@@ -380,6 +385,17 @@ def check() -> dict[str, Any]:
 
 def selftest() -> None:
     index, _receipt = collect()
+    verify_index(index, copy.deepcopy(index))
+    for field, wrong in (("ordinal", -1), ("code_object", {"sha256": "0" * 64})):
+        mutant = copy.deepcopy(index)
+        target = next(r for r in mutant['records'] if 'code_object' in r['authority'])
+        target['authority'][field] = wrong
+        try:
+            verify_index(mutant, index)
+        except MetadataError:
+            pass
+        else:
+            raise MetadataError('stale code/ordinal binding mutation survived')
     mutations = []
     duplicate = json.loads(json.dumps(index))
     duplicate["records"].append(dict(duplicate["records"][0]))

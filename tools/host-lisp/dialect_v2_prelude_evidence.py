@@ -15,9 +15,12 @@ from typing import Any
 
 import dialect_contract as V1
 import dialect_v2_family_artifact as FAMILY_ARTIFACT
+import evidence_era as ERA
+import dialect_v2_prelude_control as CONTROL
 
 
 ROOT = Path(__file__).resolve().parents[2]
+PRELUDE_EVIDENCE_ERA = "2bf446a5ef6e6137efe48b0fd17e02b9a2251a9f"
 DEFAULT_CONTRACT = ROOT / "config/dialect-migration-contract.json"
 PROFILES = ("dialect-v1", "dialect-v2")
 FAMILY_CONFIGS = {
@@ -1196,6 +1199,109 @@ def check_evidence(rendered: dict[str, bytes], evidence_dir: Path) -> None:
             raise EvidenceError(f"generated evidence drift: {name}")
 
 
+def historical_build_witnesses(paths) -> dict[str, dict[str, Any]]:
+    witnesses = {}
+    for profile, path in zip(PROFILES, paths):
+        if path is None:
+            raise EvidenceError("historical comparison requires both current build witnesses")
+        value = _load(path, "current build witness")
+        binary_name = value.get("make_target", "")
+        if (not binary_name or PurePosixPath(binary_name).is_absolute()
+                or ".." in PurePosixPath(binary_name).parts):
+            raise EvidenceError("build witness binary escapes repository")
+        if (value.get("profile") != profile
+                or value.get("binary_sha256") != _sha_file(ROOT / binary_name)
+                or value.get("build_profile_sha256") != CONTROL._build_profile_sha(value)):
+            raise EvidenceError("current build witness identity drift")
+        witnesses[profile] = value
+    return witnesses
+
+
+def historical_build_comparison(rendered: dict[str, bytes], evidence_dir: Path,
+                                witnesses: dict[str, dict[str, Any]]) -> dict[str, bytes]:
+    """Separate rebuilt host binary identities from their sealed verdicts.
+
+    All observations, fixture/preload identities, source commit, engine and
+    profile remain exact. Only binary/build-profile identities differ.
+    The return value is a comparison projection, never emitted as new evidence.
+    """
+    if FAMILY != "prelude-control":
+        raise EvidenceError("historical build comparison is Prelude-only")
+    result = dict(rendered)
+    receipt = json.loads(rendered["differential-receipt.json"])
+    for profile in PROFILES:
+        old_builds = []
+        for engine in ENGINES:
+            name = _verdict_name(profile, engine)
+            path = evidence_dir / name
+            sealed = ERA.era_blob(PRELUDE_EVIDENCE_ERA, _relative(path))
+            if path.read_bytes() != sealed:
+                raise EvidenceError("sealed Prelude verdict changed")
+            old = json.loads(sealed)
+            current = json.loads(rendered[name])
+            for field in ("binary_sha256", "build_profile_sha256"):
+                if current["provenance"][field] != witnesses.get(profile, {}).get(field):
+                    raise EvidenceError("unwitnessed rebuilt host identity")
+                current["provenance"][field] = old["provenance"][field]
+            if current != old:
+                raise EvidenceError("Prelude differs beyond historical build provenance")
+            result[name] = sealed
+            old_builds.append(old["provenance"])
+        for field in ("binary_sha256", "build_profile_sha256", "source_commit"):
+            if any(old[field] != old_builds[0][field] for old in old_builds[1:]):
+                raise EvidenceError("sealed build differs between engines")
+        for build in receipt["profile_builds"]:
+            if build["profile"] == profile:
+                for field in ("binary_sha256", "build_profile_sha256"):
+                    build[field] = old_builds[0][field]
+    for row in receipt["engine_results"]:
+        row["baseline_verdict_sha256"] = _sha_bytes(
+            result[_verdict_name("dialect-v1", row["engine"])])
+        row["candidate_verdict_sha256"] = _sha_bytes(
+            result[_verdict_name("dialect-v2", row["engine"])])
+    result["differential-receipt.json"] = _canonical(receipt)
+    return result
+
+
+def historical_build_controls(rendered: dict[str, bytes], evidence_dir: Path, witnesses) -> int:
+    rejected = 0
+    population = [(profile, kind) for profile in PROFILES for kind in
+                  ("case", "source", "preload", "extra", "missing-case", "binary", "build")]
+    for profile, kind in population:
+        name = _verdict_name(profile, ENGINES[0])
+        mutated = dict(rendered)
+        value = json.loads(mutated[name])
+        if kind == "case":
+            value["cases"][0]["result_sha256"] = "0" * 64
+        elif kind == "source":
+            value["provenance"]["source_commit"] = "0" * 40
+        elif kind == "preload":
+            value["provenance"]["preload_sha256"] = "0" * 64
+        elif kind == "extra":
+            value["provenance"]["unbound"] = True
+        elif kind in ("binary", "build"):
+            field = "binary_sha256" if kind == "binary" else "build_profile_sha256"
+            value["provenance"][field] = "0" * 64
+        else:
+            value["cases"].pop()
+        mutated[name] = _canonical(value)
+        try:
+            historical_build_comparison(mutated, evidence_dir, witnesses)
+        except EvidenceError:
+            rejected += 1
+    try:
+        historical_build_comparison(rendered, evidence_dir, {})
+    except EvidenceError:
+        rejected += 1
+    try:
+        check_evidence(rendered, evidence_dir)
+    except EvidenceError:
+        rejected += 1
+    if rejected != 16:
+        raise EvidenceError("historical Prelude comparison controls drift")
+    return rejected
+
+
 def _synthetic_verdicts(directory: Path, fixture_path: Path) -> None:
     fixture = _load(fixture_path, "selftest fixture")
     cases = _fixture_cases(fixture)
@@ -1318,6 +1424,9 @@ def main(argv: list[str]) -> int:
     check = subparsers.add_parser("check")
     check.add_argument("--evidence-dir", type=Path)
     check.add_argument("--verdict-dir", type=Path)
+    check.add_argument("--historical-build-provenance", action="store_true")
+    check.add_argument("--build-receipt-v1", type=Path)
+    check.add_argument("--build-receipt-v2", type=Path)
     subparsers.add_parser("selftest")
     args = parser.parse_args(argv)
     _configure(args.family)
@@ -1348,6 +1457,12 @@ def main(argv: list[str]) -> int:
         evidence = evidence_arg if evidence_arg.is_absolute() else ROOT / evidence_arg
         verdicts = verdict_arg if verdict_arg.is_absolute() else ROOT / verdict_arg
         rendered = render_evidence(contract, fixture, verdicts, evidence)
+        if args.historical_build_provenance:
+            witnesses = historical_build_witnesses((args.build_receipt_v1, args.build_receipt_v2))
+            historical_build_controls(rendered, evidence, witnesses)
+            rendered = historical_build_comparison(rendered, evidence, witnesses)
+            print(f"prelude-build-comparison: era={PRELUDE_EVIDENCE_ERA[:8]} "
+                  "controls=16 observations=exact historical-binary-reproduction-not-claimed")
         check_evidence(rendered, evidence)
         print(
             f"dialect-v2-family-evidence: PASS family={FAMILY} files={len(GENERATED_NAMES)} "

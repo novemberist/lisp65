@@ -16,6 +16,7 @@ from typing import Any
 
 import bytecode_p0_stdlib as STDLIB
 import block_bank_delta_policy as BANK_DELTA
+import evidence_era as ERA
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,6 +28,7 @@ CAPABILITY_CONTRACT = ROOT / "config/v2-capability-carrier-block.json"
 CAPABILITY_RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-5-receipt.json"
 R2_STACK_GUARD_DIAGNOSIS = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/r2-stack-guard-diagnosis.json"
 R2_BANK_DEBIT_AUTHORIZATION = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/r2-bank-debit-authorization.json"
+CAPACITY_ERA = "92da3f24238d3eeb64c8b6b700bbfc7d05603990"
 DIRECTORY_ONLY_LINK_REPORT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-product-link-report.json"
 DIRECTORY_ONLY_BANK_DEBIT_AUTHORIZATION = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-bank-debit-authorization.json"
 PROFILES = ("dialect-v1", "dialect-v2")
@@ -512,6 +514,8 @@ def _projection(contract: dict[str, Any], family_id: str) -> tuple[dict[str, Any
     return deepcopy(family["projection"]), measurement_status
 
 
+@ERA.in_host_source_world(CAPACITY_ERA, ("config/dialect-migration-contract.json",),
+                          control_path="lib/lcc.lisp")
 def render_ledger(contract_path: Path, evidence_dir: Path, block_path: Path) -> dict[str, Any]:
     contract = _load(contract_path, "dialect migration contract")
     family_ids = ("lists", "strings", "system-runtime", "ide")
@@ -1053,6 +1057,23 @@ def main(argv: list[str] | None = None) -> int:
         validate_ledger(expected)
         if _canonical(expected) != _canonical(rendered):
             raise LedgerError("pinned capacity ledger differs from rebuilt artifacts")
+        # Sharp regression: the former live-source path must not certify this
+        # completed migration's costs. Keep the actual cost oracle intact.
+        try:
+            live = render_ledger.__wrapped__(args.contract, args.evidence_dir,
+                                             args.blocked_capability)
+            validate_ledger(live)
+            if _canonical(live) != _canonical(expected):
+                raise LedgerError("live migration input differs from sealed ledger")
+        except LedgerError:
+            pass
+        else:
+            raise LedgerError("live-source regression mutation survived")
+        reads = render_ledger.last_source_reads
+        contract_name = "config/dialect-migration-contract.json"
+        if reads.get(contract_name) != dict(commit=CAPACITY_ERA,
+                **ERA.era_bind(CAPACITY_ERA, contract_name)):
+            raise LedgerError("historical migration contract not consumed")
         if args.json_out:
             args.json_out.parent.mkdir(parents=True, exist_ok=True)
             args.json_out.write_bytes(_canonical(rendered))
@@ -1062,7 +1083,8 @@ def main(argv: list[str] | None = None) -> int:
             f"families={len(rendered['family_measurements'])} "
             f"net_dir={net['directory_entries']:+d} "
             f"net_names={net['raw_namepool_bytes']:+d} "
-            f"net_code={net['code_bytes']:+d} net_ext={net['ext_bytes']:+d}"
+            f"net_code={net['code_bytes']:+d} net_ext={net['ext_bytes']:+d} "
+            f"era={CAPACITY_ERA[:8]} live-product-claim=no live-path-mutation=rejected"
         )
         return 0
     except (LedgerError, OSError, KeyError, TypeError, ValueError) as exc:

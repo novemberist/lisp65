@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import sys
+import mvp_prelude_m1_eval_oracle as E
 
 from mvp_prelude_m1_eval_oracle import (
     DEFAULT_PRELUDE,
@@ -30,6 +31,36 @@ DEFAULT_CASES = ROOT / "lib" / "tests" / "ide-ui-eval-cases.json"
 DEFAULT_KEYMAP_CASES = ROOT / "lib" / "tests" / "ide-keymap-eval-cases.generated.json"
 
 
+def install_screen():
+    """80x25 product-profile screen for functional keymap execution.
+
+    Preserve writes and attributes; the native renderer gate owns glyph bytes.
+    This oracle does not claim native timing or framebuffer acceptance.
+    """
+    cells = [(32, 7)] * (80 * 25)
+    def size(args):
+        if args:
+            raise EvalError('vm: type error')
+        return [80, 25]
+    def put(args):
+        if len(args) not in (3, 4) or not all(type(a) is int for a in args):
+            raise EvalError('vm: type error')
+        x, y, code = [a & 255 for a in args[:3]]
+        if x < 80 and y < 25:
+            cells[y*80+x] = (code, args[3] if len(args)==4 else cells[y*80+x][1])
+        return E.NIL
+    E.FUNCTIONS['SCREEN-SIZE'] = E.Primitive('SCREEN-SIZE', size)
+    E.FUNCTIONS['SCREEN-PUT-CHAR'] = E.Primitive('SCREEN-PUT-CHAR', put)
+    assert size([]) == [80, 25]
+    put([79, 24, 65, 128]); assert cells[-1] == (65, 128)
+    for args in ([1], [0, 0, 'A']):
+        try: put(args)
+        except EvalError: pass
+        else: raise AssertionError('screen arity/type mutation survived')
+    cells[:] = [(32, 7)] * (80 * 25)
+    return cells
+
+
 def main(argv: list[str]) -> int:
     sys.setrecursionlimit(max(sys.getrecursionlimit(), 20000))
     prelude = Path(argv[1]) if len(argv) > 1 else DEFAULT_PRELUDE
@@ -42,6 +73,9 @@ def main(argv: list[str]) -> int:
 
     try:
         load_prelude(prelude, reset=True)
+        screen = install_screen()
+        from editor_product_list_domain import load_eval_domain
+        load_eval_domain()
         load_prelude(strings_lib, reset=False)
         load_prelude(buffer_lib, reset=False)
         load_prelude(status_lib, reset=False)

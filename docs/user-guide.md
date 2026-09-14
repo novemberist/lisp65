@@ -1,9 +1,9 @@
-# lisp65 2.2.0 User Guide
+# lisp65 2.3.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-2.2.0` release bundle
+- The extracted `lisp65-2.3.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -13,6 +13,14 @@ work disk. The product image contains the resident prompt editor, the IDE,
 IDEX, and M65D libraries, and the five optional packages described in
 [Product-resident libraries](#product-resident-libraries); there is no
 separate optional-library medium.
+
+Since 2.3.0, `IDE`, `IDEX` and `M65D` no longer appear as separate disk
+files: their implementations remain in the static product, and the three
+`load-lib` forms below still work. This reclaims 193 disk blocks and takes the
+medium from 22 to 19 files, without changing the runtime or library code.
+`BUFFER` remains on disk as the optional L65S package loaded by
+`(require "buffer")`; it is not a retired IDE image. The physical cold start
+from this medium, through the ten-role stager, was accepted on the device.
 
 ## Verify the bundle
 
@@ -88,18 +96,49 @@ already exists on the mounted disk. Any other destination name sets the
 publish a library under an arbitrary name, use `compile-string` directly, as
 shown below.
 
-The selected 2.2.0 product checks for `INIT.L65` after the resident world is
-ready and before the first banner. The release medium deliberately omits the
-file, so the normal release boot takes the silent absence path. On a derived
-medium that supplies it, the file is evaluated once per cold boot. An open or
+The selected 2.3.0 product checks for `INIT.L65` after the resident world is
+ready and before the first banner. The release medium supplies the file, so
+the normal release boot evaluates it once per cold boot. An open or
 evaluation error returns to one live `lisp65>` prompt and is not retried.
 
-Do not put a library `require` inside a derived `INIT.L65` in this release: it
-corrupts the source loader's sector scratch and can leave the reader stuck
-before the banner appears. See
-[Known Issues](known-issues.md) for the mechanism. The repair, together with a
-default-loaded `INIT.L65` shipping `place` and `string-extra`, is scheduled
-for the next release.
+The shipped `INIT.L65` contains `(require "place")` and
+`(require "string-extra")`. Both packages load at boot without any loading
+text: neither the loader's `LOADING` progress line nor `require`'s own
+`loading <name>...` echo appears, and the banner renders exactly as it does
+without an `INIT.L65`. An interactive `(require ...)` typed at the prompt
+keeps its `loading <name>...` echo. `buffer`, `inspect` and `defstruct` are
+loaded by hand at the prompt.
+
+`require` accepts a string as well as a quoted symbol: `(require "place")`
+returns `nil` if the package is absent. If the resolution table is full, it
+reports the existing out-of-memory error; restart from the product disk
+before loading further packages. A nested `load` from a loading source is
+refused cleanly, with the existing `LOAD: CANNOT OPEN` error and no scratch
+corruption, before it can replace the active source stream. `require` inside
+`INIT.L65` is supported and supplies the default loading described above.
+A library name longer than 16 characters is refused.
+
+Loading both packages by default consumes space earlier; it does not load
+them a second time when they are later explicitly required. With the IDE and
+all five packages loaded, the symbol reserve is exactly **32 free symbols and
+387 free name bytes**, against the 32/384 floor. The symbol floor is met
+exactly and the name floor has three bytes of margin. These independent
+limits are not a promise that all can be exhausted simultaneously.
+
+The prompt-only minibuffer frame changes physical heap placement: nine live
+cons cells move from the local to the external heap. Its named cost is
+**37,665 additional emulated cycles per collection**, about **0.93 ms** at
+40.5 MHz, with unchanged collector code and fully attributed CPU/DMA costs.
+The fixed 1,160-event input sequence collects once in each world, including
+warmup. This is a measured heap-layout cost, not a relaxed GC limit or a
+worst-case pause guarantee. Emulator cycle figures are never device
+wall-clock timings. Further resident-symbol additions, including Comfort,
+require the storage-owner card.
+
+The native prompt also moves up on wrapped lines: when the input wraps,
+`lisp65>` stays beside the start of the input on the upper row. Shrinking
+back across the wrap boundary moves the prompt down and leaves the released
+upper row empty.
 
 A call passes at most 12 arguments, at the prompt and in compiled code, and
 `apply` takes a list of at most 12 elements; longer argument lists report a
@@ -155,8 +194,8 @@ Example:
 
 ### Product-resident libraries
 
-The 2.2.0 product D81 contains `ide`, `idex`, and `m65d`, and the five
-optional packages `buffer`, `place`, `string-extra`, `inspect`, and
+The 2.3.0 product D81 carries the static `ide`, `idex`, and `m65d`
+implementations, and the five optional packages `buffer`, `place`, `string-extra`, `inspect`, and
 `defstruct`. Load the libraries you need before swapping to the work disk.
 If M65D is already active when the mounted image changes, run
 `(m65d-remount)` before loading or saving.
@@ -170,15 +209,20 @@ releases:
 (load-lib "m65d")
 ```
 
-Load an optional package at the native prompt with `require` and a quoted
-symbol, for example `(require 'place)`. `require` interns the package name
-symbol as an ordinary side effect of resolving it, the same as typing any
-other symbol. This release's `require` does not accept a string in place of
-the symbol; packages listed as dependencies in the library index are loaded first.
-None of the five packages is loaded automatically: putting a `require` in a
-derived `INIT.L65` is not supported this release (see
-[Known Issues](known-issues.md)), so load them by hand after the banner, or
-from your own source once it is running.
+Load an optional package at the native prompt with `require` and either a
+string or a quoted symbol, for example `(require "place")` or
+`(require 'place)`. `require` interns the package name symbol as an ordinary
+side effect of resolving it, the same as typing any other symbol, and returns
+`nil` for a missing package; packages listed as dependencies in the library
+index are loaded first. Library names given to `load-lib` and `require` are
+matched case-insensitively, so `(load-lib "IDE")` and `(load-lib "ide")` are
+equivalent. A library file the loader refuses — wrong format, or larger than
+the 8,192-byte envelope — returns `nil` and leaves the running world and the
+prompt intact.
+
+`place` and `string-extra` are loaded automatically by the `INIT.L65` on the
+product disk. Load `buffer`, `inspect` and `defstruct` by hand after the
+banner, or from your own source once it is running.
 
 | Package | Names it publishes |
 | --- | --- |
@@ -189,20 +233,13 @@ from your own source once it is running.
 | `defstruct` | `defstruct` and its generated accessors |
 
 User code shares symbol, name and code capacity with the libraries, so
-what you load changes how much room your own program has. The release-terminal
-capacity reading (host figure) is:
-
-| Loaded | Free symbol slots | Free name bytes | User-code bytes |
-| --- | ---: | ---: | ---: |
-| earlier R2 world, no optional packages (historical comparison) | 106 | 1,458 | — |
-| all five optional packages | 32 | 384 | 8,576 |
-
-At the end of the release's device session, after its own definitions and
-tests, the stopped machine showed 19 free symbol slots, 273 free name bytes
-and 8,435 free user-code bytes: a session's own definitions draw on the same
-pools. The required floor for this release is 32 free symbol slots and 384 free
-name bytes with all five packages loaded; loading fewer packages leaves more
-of both. These are host figures, not yet device-measured in this exact form.
+what you load changes how much room your own program has. The 2.3.0 reserve
+reading, with the IDE and all five packages loaded, is exactly 32 free symbol
+slots and 387 free name bytes, against the required floor of 32/384. A
+session's own definitions draw on the same pools, so a working session shows
+less. Loading fewer packages leaves more of both. These are host figures, not
+device-measured in this exact form, and the two pools cannot be assumed to be
+exhaustible simultaneously.
 
 Interactive Shift-Space is normalized to ordinary space. This matters for the
 natural Lisp typing sequence `) (`, where Shift may remain held between the two
@@ -407,6 +444,13 @@ of that same authority.
 
 Important conventions:
 
+Since 2.3.0 the prompt-only minibuffer gives the active input the complete
+bottom row: for example `M-x [find-file]`, `Find file: [scratch]` or
+`Goto line: `. The buffer name, modified mark and symbol counter are hidden
+while entering a command; the cursor follows the displayed input. Leaving or
+cancelling the minibuffer restores the normal status row. A missing file name
+reports `source missing` and returns the cursor to the buffer.
+
 - `C-x Space` sets the mark. `C-Space` is unavailable because code zero is the
   GETIN empty-queue sentinel.
 - `C-x x` and `C-x Return` open the exact-name command launcher; physical
@@ -435,11 +479,11 @@ is reserved for the immutable-code/mutable-session architecture.
 ## Buffers
 
 The optional `buffer` package provides fixed-length mutable byte buffers. It
-ships on the 2.2.0 product disk; load it by hand with `require`, as described
+ships on the 2.3.0 product disk; load it by hand with `require`, as described
 in [Product-resident libraries](#product-resident-libraries):
 
 ```lisp
-(require 'buffer)
+(require "buffer")
 (setq b (make-buffer 16))
 (buffer-set! b 0 65)
 (buffer-ref b 0)                  ; => 65

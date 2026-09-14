@@ -19,6 +19,7 @@ if str(HOST_TOOLS) not in sys.path:
     sys.path.insert(0, str(HOST_TOOLS))
 
 import bytecode_p0_stdlib as Stdlib  # noqa: E402
+import evidence_era as ERA
 
 
 DEFAULT_CLOSURE = ROOT / "config" / "v2-workbench-artifact-closure.json"
@@ -30,6 +31,7 @@ LCC_PROFILE = "lib/dialect-v2/lcc-profile.lisp"
 EVAL_RUNTIME = "lib/dialect-v2/eval-runtime.lisp"
 EVAL_RUNTIME_PRIVATE_INLINE = ("%number->string-result",)
 FILTER_CANONICAL_SOURCE = "lib/dialect-v2/lists-core.lisp"
+PRODUCT_LIST_DOMAIN = "lib/domain-tier1.lisp"
 FILTER_RESIDENT_FUNCTIONS = ("%v2-reverse-into", "%v2-filter-into", "filter")
 FILTER_TAILCALL_SELF = ("%v2-reverse-into", "%v2-filter-into")
 FILTER_PRODUCT_CASES_PATH = "config/v11-filter-product-cases.json"
@@ -91,6 +93,15 @@ RESOLUTION_KEYS = {
 
 class CodemodError(RuntimeError):
     pass
+
+
+def validate_list_domain_cases(cases):
+    expected = {'append-dotted-tail', 'quasiquote-dotted-splice'}
+    selected = [c for c in cases if c.get('name') in expected]
+    if {c['name'] for c in selected} != expected or len(selected) != 2:
+        raise CodemodError('proper-list regression case population drift')
+    if any(c.get('expect_vm_error') != 'TypeError' or 'expect' in c for c in selected):
+        raise CodemodError('permissive dotted-list expectation in product domain')
 
 
 def _sha(data: bytes) -> str:
@@ -502,6 +513,31 @@ def generate(closure_path: Path, output_root: Path) -> Path:
     resolved["resident"]["sources"] = Stdlib._append_unique(
         resolved["resident"]["sources"], (FILTER_CANONICAL_SOURCE,)
     )
+    # The IDE/editor executes the product's strict proper-list domain.  The
+    # earlier Prelude implementation of nthcdr is not its runtime contract.
+    era = ERA.host_source_commit()
+    domain_selected = era is None or PRODUCT_LIST_DOMAIN.encode() in ERA.era_blob(
+        era, 'tools/host-lisp/v2_workbench_codemod.py')
+    if domain_selected:
+        resolved["resident"]["sources"] = Stdlib._append_unique(
+            resolved["resident"]["sources"], (PRODUCT_LIST_DOMAIN,)
+        )
+        resolved["resident"]["functions"] = Stdlib._append_unique(
+            resolved["resident"]["functions"], Stdlib._defun_names([PRODUCT_LIST_DOMAIN])
+        )
+        # The old Workbench cases predate the proper-list contract. Preserve
+        # their expressions, but require the documented error in this world.
+        domain_cases = {
+            'append-dotted-tail': "(append '(a b) 'c)",
+            'quasiquote-dotted-splice': '`(a ,@(list 1 2) . z)',
+        }
+        for case in resolved['resident'].get('cases', []):
+            if case.get('name') in domain_cases:
+                if case['expr'] != domain_cases[case['name']]:
+                    raise CodemodError('list-domain case expression drift')
+                case.pop('expect', None)
+                case['expect_vm_error'] = 'TypeError'
+        validate_list_domain_cases(resolved['resident'].get('cases', []))
     resolved["resident"]["functions"] = Stdlib._append_unique(
         resolved["resident"]["functions"], FILTER_RESIDENT_FUNCTIONS
     )
@@ -795,6 +831,18 @@ def _number_to_string_selftest(output_root: Path) -> int:
 
 
 def selftest() -> None:
+    positive = [dict(name=n, expect_vm_error='TypeError') for n in
+                ('append-dotted-tail', 'quasiquote-dotted-splice')]
+    validate_list_domain_cases(positive)
+    for name in ('append-dotted-tail', 'quasiquote-dotted-splice'):
+        mutant = json.loads(json.dumps(positive))
+        next(c for c in mutant if c['name'] == name)['expect'] = '(a b . c)'
+        try:
+            validate_list_domain_cases(mutant)
+        except CodemodError:
+            pass
+        else:
+            raise CodemodError('permissive list-case mutation survived')
     sample = (
         '(string->list x) "string->list \\" list->string" '
         'string->listing my-list->string\n'

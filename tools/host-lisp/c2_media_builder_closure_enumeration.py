@@ -76,6 +76,10 @@ PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v24-receipt.json"
 PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v25-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v26-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v27-receipt.json"
 # DWX Item 4 adds a focus-free packed-require producer.  Its stopped-memory
 # and framebuffer rows are part of the producer closure, not an unregistered
 # test-side copy of the medium.
@@ -116,6 +120,9 @@ SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 # developer fixtures, but they cannot become a qualified product producer
 # without an explicit reclassification and packed-artifact closure.
 REGISTERED = {
+    "tools/host-lisp/c2_v230_public_libraries.py",
+    "tools/host-lisp/c2_v230_public_media.py",
+    "tools/host-lisp/legacy_ide_delivery.py",
     "tools/host-lisp/c2_v220_public_libraries.py",
     "tools/host-lisp/c2_v220_public_media.py",
     "tools/host-lisp/capacity_prefilter_media.py",
@@ -206,6 +213,12 @@ REGISTERED = {
     "mk/workbench.mk",
 }
 CURRENT = {
+    "tools/host-lisp/c2_v230_public_libraries.py":
+        "2.3 release; five packages and INIT, twice-built index with complete file readback",
+    "tools/host-lisp/c2_v230_public_media.py":
+        "2.3 release; ten-role stager and packed closure from two exact clean reproductions",
+    "tools/host-lisp/legacy_ide_delivery.py":
+        "current ten-role stager composition; unchanged runtime and BUFFER; executed packed closure",
     "tools/host-lisp/c2_v220_public_libraries.py":
         "current 2.2 release; twice-built library/index bytes read back in accepted D81",
     "tools/host-lisp/c2_v220_public_media.py":
@@ -402,6 +415,52 @@ def v220_closure() -> dict[str, Any]:
             "packed_closure": True, "packed_coherence": True,
             "role_count": len(receipt["roles"]), "readback_count": len(rows),
             "library_construction_passes": 2, "init_present": False}
+
+
+def v230_closure() -> dict[str, Any]:
+    import d81_persistence_fault as D81
+    base = ROOT / "build/release-v2.3.0/reproduction-2"
+    path = base / "build/public-v2.3.0/media/receipt.json"
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    require(digest == "4d53e6311b467873176a5b4e09ed4667d5330e50427037649f6fc00e96e0b246",
+            "accepted v230 packed receipt differs")
+    receipt = load(path)
+    authority = load(ROOT / "config/c2-v230-public-plane/media-authority.json")
+    producer = load(ROOT / "config/c2-v230-public-build-authority.json")
+    names = ["tools/host-lisp/c2_v230_public_libraries.py",
+             "tools/host-lisp/c2_v230_public_media.py"]
+    for name in names:
+        rows = [r for r in producer["producer_inputs"] if r["path"] == name]
+        require(name in CURRENT and len(rows) == 1
+                and hashlib.sha256((ROOT/name).read_bytes()).hexdigest() == rows[0]["sha256"],
+                "v230 producer binding differs: " + name)
+    require(receipt["closure"]["status"] == "PASS" and not receipt["closure"]["failures"]
+            and receipt["coherence"]["status"].startswith("PASS")
+            and not receipt["coherence"]["failures"], "v230 packed gates not closed")
+    require(receipt["libraries"]["construction_passes"] == 2
+            and receipt["libraries"]["init_present"] is True
+            and len(receipt["descriptor"]) == 10, "v230 INIT/stager population differs")
+    require(set(receipt["roles"]) == set(authority["roles"]), "v230 role population differs")
+    rows = {**receipt["roles"], "system-medium": receipt["medium"]}
+    expected = {**authority["roles"], "system-medium": authority["medium"]}
+    for name, row in rows.items():
+        rel = Path(row["path"])
+        require(not rel.is_absolute() and ".." not in rel.parts,
+                "v230 artifact path escapes reproduction")
+        raw = (base/rel).read_bytes()
+        require({"bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()} == expected[name],
+                "v230 readback differs: " + name)
+    visible = D81.visible_files((base/receipt["medium"]["path"]).read_bytes())
+    actual = {name.decode(): {"bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
+              for name, raw in visible.items()}
+    require(actual == authority["files"], "v230 delivered file population differs")
+    require(b"BUFFER" in visible and all(n not in visible for n in (b"IDE",b"IDEX",b"M65D")),
+            "v230 legacy-role/BUFFER boundary differs")
+    return {"producers": names, "receipt_sha256": digest, "packed_closure": True,
+            "packed_coherence": True, "role_count": len(receipt["roles"]),
+            "readback_count": len(rows), "delivered_files": len(visible),
+            "boot_roles": len(receipt["descriptor"]), "library_construction_passes": 2,
+            "init_present": True, "buffer_retained": True}
 
 
 def active_closure() -> dict[str, Any]:
@@ -705,7 +764,16 @@ def active_closure() -> dict[str, Any]:
             "desktop_focus_input") is False
         and dwx_mirrored.get("device_acceptance_claimed") is False,
         "DWX mirrored-row medium lacks focus-free runtime or oracle closure")
+    import legacy_ide_delivery as DELIVERY
+    delivery=DELIVERY.derive()
+    delivery_proof=DELIVERY.packed_gates(delivery,ROOT/delivery['cfg']['output'])
+    delivery_registry={"producer":"tools/host-lisp/legacy_ide_delivery.py",
+                       "complete":delivery_proof['registry']['complete'],
+                       "packed_closure":True,"packed_coherence":True,
+                       "runtime_byteidentical":delivery_proof['runtime_byteidentical'],
+                       "buffer_retained":"BUFFER" in delivery_proof['registry']['executed']}
     return {"current": dict(sorted(CURRENT.items())),
+            "legacy_ide_delivery_registry":delivery_registry,
             "capacity_diagnostic_registry": diagnostic_registry,
             "renderer_producer_registry": renderer_producers,
             "repair_registry": repaired,
@@ -811,7 +879,7 @@ def derive() -> dict[str, Any]:
         domains.setdefault(domain(path), []).append(path)
     value = {
         "format": FORMAT,
-        "recorded_on": "2026-09-07",
+        "recorded_on": "2026-09-14",
         "status": "PASS: EVERY MEDIUM BUILDER IN TREE ENUMERATED",
         "builders": {
             "total": len(observed),
@@ -822,6 +890,7 @@ def derive() -> dict[str, Any]:
         },
         "active_closure": active_closure(),
         "v220_active_closure": v220_closure(),
+        "v230_active_closure": v230_closure(),
         "rule": (
             "Every Python, shell, and Make medium producer is structurally "
             "enumerated. Current product/diagnostic producers run every "
@@ -839,6 +908,12 @@ def derive() -> dict[str, Any]:
 
 
 def audit(value: dict[str, Any]) -> None:
+    require(value.get("v230_active_closure") == v230_closure(),
+            "active v230 packed closure missing or changed")
+    delivery=value.get('active_closure',{}).get('legacy_ide_delivery_registry',{})
+    require(delivery.get('producer')=='tools/host-lisp/legacy_ide_delivery.py'
+            and all(delivery.get(k) is True for k in ('complete','packed_closure','packed_coherence','runtime_byteidentical','buffer_retained')),
+            'three-role delivery packed closure missing')
     require(value.get("v220_active_closure") == v220_closure(),
             "active v220 packed closure missing or changed")
     capacity = value.get("active_closure", {}).get("capacity_diagnostic_registry", {})
@@ -921,6 +996,15 @@ def mutations(base: dict[str, Any]) -> list[str]:
     except EnumerationError:
         rejected.append("builder-outside-enumeration")
     for name, mutate in (
+        ("drop-v230-active-closure", lambda x: x.pop("v230_active_closure")),
+        ("v230-packed-closure-omitted", lambda x: x["v230_active_closure"].update(packed_closure=False)),
+        ("v230-readback-omitted", lambda x: x["v230_active_closure"].update(readback_count=0)),
+        ("v230-buffer-removed", lambda x: x["v230_active_closure"].update(buffer_retained=False)),
+        ("v230-legacy-descriptor-restored", lambda x: x["v230_active_closure"].update(boot_roles=13)),
+        ("drop-v230-libraries", lambda x: x["builders"]["observed"].pop("tools/host-lisp/c2_v230_public_libraries.py")),
+        ("drop-v230-media", lambda x: x["builders"]["observed"].pop("tools/host-lisp/c2_v230_public_media.py")),
+        ("drop-three-role-delivery-closure", lambda x: x['active_closure'].pop('legacy_ide_delivery_registry')),
+        ("drop-delivery-buffer", lambda x: x['active_closure']['legacy_ide_delivery_registry'].update(buffer_retained=False)),
         ("drop-v220-active-closure", lambda x: x.pop("v220_active_closure")),
         ("v220-packed-closure-omitted", lambda x: x["v220_active_closure"].update(packed_closure=False)),
         ("v220-readback-omitted", lambda x: x["v220_active_closure"].update(readback_count=0)),
@@ -989,7 +1073,9 @@ def mutations(base: dict[str, Any]) -> list[str]:
             audit(trial)
         except EnumerationError:
             rejected.append(name)
-    require(len(rejected) == 28,
+        else:
+            raise EnumerationError("media-builder enumeration mutation survived: " + name)
+    require(len(rejected) == 37,
             "media-builder enumeration mutation survived")
     return sorted(rejected)
 

@@ -666,6 +666,104 @@ def measure_one(run_id: str, medium: Path, elf: Path) -> dict[str, Any]:
         raise
 
 
+def validate_gc_population(start: int, end: int, rows: list[dict[str, Any]]) -> None:
+    require(((end-start) & 65535) == len(rows), 'unwitnessed collection in input population')
+    for index, row in enumerate(rows):
+        require(row['gc_runs_before'] == ((start+index) & 65535)
+                and row['gc_runs_after'] == ((start+index+1) & 65535),
+                'collection generation discontinuity')
+        require(gc_return_reached(row['exit_registers'], row['return_witness']),
+                'collection return witness missing or mismatched')
+
+
+def gc_population_selftest() -> None:
+    entry='1234 00 00 00 00 00 01F0 8000 0000 18 00 00 --E---Z-'
+    witness=gc_return_witness(entry,b'\x55\x34')
+    row=dict(gc_runs_before=5,gc_runs_after=6,phase='warmup',return_witness=witness,
+             exit_registers='3456 00 00 00 00 00 01F2 8000 0000 18 00 00 --E---Z-')
+    validate_gc_population(5,6,[row])
+    for trial in ([], [dict(row,exit_registers=entry)], [dict(row,gc_runs_before=4)]):
+        try: validate_gc_population(5,6,trial)
+        except PrefilterError: pass
+        else: raise PrefilterError('GC population mutation survived')
+
+
+def measure_gc_population(run_id: str, medium: Path, elf: Path) -> dict[str, Any]:
+    """9e525cf5: fixed stimuli, every warmup/measured GC, no exclusions.
+
+    Historical measure_one and its sealed claims remain unchanged.
+    """
+    runtime=BUILD/'runtime';runtime.mkdir(parents=True,exist_ok=True)
+    args=SimpleNamespace(sd_image=SD_IMAGE,rom=ROM,xemu=XEMU,timeout=360)
+    bounds=gc_bounds(elf)
+    truth=ElfTruth.read(elf,llvm_readobj=CARD.READOBJ)
+    free=truth.symbol('freelist');require(free.bytes==2,'freelist width drift')
+    run=CYCLES.start_run(run_id,medium,runtime,args)
+    monitor=PersistentProbeMonitor(run['monitor_path']);run['monitor']=monitor
+    rows=[]
+    def generation(): return int.from_bytes(monitor.memory16(bounds['gc_runs'])[:2],'little')
+    try:
+        monitor.type_text(CONTROLLER)
+        deadline=time.monotonic()+12
+        while time.monotonic()<deadline:
+            if monitor.memory16(0xFF8D)[0]!=0xFF and monitor.memory16(0xBCFC)[:4]==bytes(4): break
+            time.sleep(.05)
+        else: raise PrefilterError('population controller never armed fresh ring')
+        monitor.command('t1')
+        start=generation();free_before=monitor.memory16(free.value)[:2].hex()
+        monitor.command(f"b {bounds['entry']:04x}");monitor.command('t0')
+        chunks=[]
+        for phase,passes in [('warmup',WARMUP_PASSES),('measured',PASSES)]:
+            for _ in range(passes): chunks.extend([(phase,PATTERN),(phase,'\x08'*len(PATTERN))])
+        chunks.extend([('measured',FINAL[:-1]),('measured','\n')])
+        counter=0;warmup_end=None
+        for index,(phase,chunk) in enumerate(chunks):
+            expected=(counter+len(chunk)) & 255
+            response=monitor.command('~typehex '+chunk.encode('ascii').hex())
+            require('DWX HWA input queued' in response,'population input not queued')
+            deadline=time.monotonic()+60
+            while time.monotonic()<deadline:
+                line=register_line(monitor)
+                if gc_registers(line)['pc']==bounds['entry_after_first_opcode']:
+                    witness=read_gc_return_witness(monitor,line)
+                    require(gc_registers(register_line(monitor))==gc_registers(line),'unstable GC entry')
+                    before=monitor.cycle_count();gen_before=generation()
+                    monitor.command(f"b {bounds['exit_rts']:04x}");monitor.command('t0')
+                    exit_line=wait_register(monitor,lambda r:gc_return_reached(r,witness),'population GC return')
+                    require(gc_registers(register_line(monitor))==gc_registers(exit_line),'unstable GC return')
+                    after=monitor.cycle_count();gen_after=generation()
+                    require(gen_after==((gen_before+1)&65535) and after>before,'GC interval invalid')
+                    rows.append(dict(phase=phase,trigger_chunk_index=index,entry_registers=line,
+                        exit_registers=exit_line,return_witness=witness,gc_runs_before=gen_before,
+                        gc_runs_after=gen_after,cycles_before=before,cycles_after=after,cycles=after-before))
+                    validate_gc_population(start,gen_after,rows)
+                    (run['dir']/'collections.json').write_text(json.dumps(rows,indent=2)+'\n')
+                    monitor.command(f"b {bounds['entry']:04x}");monitor.command('t0')
+                    continue
+                if monitor.memory16(0xBCFC)[:4]==bytes((expected,))*4:
+                    counter=expected;break
+                time.sleep(.10)
+            else: raise PrefilterError(f'population chunk timed out: {index}')
+            if index==WARMUP_PASSES*2-1:
+                warmup_end=generation();validate_gc_population(start,warmup_end,rows)
+                require(counter==0,'warmup counter not modulo neutral')
+        frame=monitor.wait_screen(['\n7\n','\n9\n'])
+        monitor.command('t1');end=generation()
+        validate_gc_population(start,end,rows)
+        require(rows and counter==EXPECTED_COUNTER and monitor.memory16(0xBCFC)[:4]==bytes((counter,))*4,
+                'population final count/oracle invalid')
+        free_after=monitor.memory16(free.value)[:2].hex()
+        outputs=CYCLES.finish_run(run,monitor.screen());monitor.close()
+        return dict(id=run_id,medium=bind(medium),ELF=bind(elf),gc_bounds=bounds,
+            gc_runs_start=start,gc_runs_warmup_end=warmup_end,gc_runs_end=end,
+            collection_count=len(rows),warmup_collection_count=sum(r['phase']=='warmup' for r in rows),
+            collections=rows,freelist=dict(address=free.value,before=free_before,after=free_after),
+            outputs=outputs,physical_events=sum(len(c) for _,c in chunks),counter=counter,
+            excluded_collections=0,claim='All collections in unchanged warmup plus measured stimuli; no device claim')
+    except BaseException:
+        monitor.close();CYCLES.abort_run(run);raise
+
+
 def statistics(rows: list[dict[str, Any]]) -> dict[str, Any]:
     values = [row["cycles"] for row in rows]
     return {"runs": len(values), "values": values, "minimum": min(values),

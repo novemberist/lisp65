@@ -209,7 +209,10 @@ def validate(bundle: dict[str, Any], *, run_oracle: bool) -> dict[str, Any]:
         "MEGA65 core authority is not the pinned source identity")
 
     window = bundle["window"]
-    queue_start = window.index("\n.Lqueue_next:")
+    # The encoded ring decoder precedes the physical queue path. Its TAY
+    # is not the modifier sample for the hardware head. Follow that owner
+    # through the common event store, not the first textual TAY in the poller.
+    queue_start = window.index("\n.Lhardware_queue:")
     queue_end = window.index("\n.Lqueue_empty:", queue_start)
     queue_window = window[queue_start:queue_end]
     capture_steps = [
@@ -218,7 +221,11 @@ def validate(bundle: dict[str, Any], *, run_oracle: bool) -> dict[str, Any]:
         "tay",
         "lda $d619",
         "sta $d619",
+        ".Lstore_event:",
+        "ldz #$00",
         "sta (__rc2),z",
+        "inz",
+        "tya",
     ]
     capture_positions = [queue_window.find(step) for step in capture_steps]
     require(
@@ -373,6 +380,10 @@ def mutation_tests(bundle: dict[str, Any]) -> int:
         ".Lstore_event:\n\tldz #$00\n\tsta (__rc2),z",
         ".Lstore_event:\n\tldz #$00\n\tsta C2K_EVENT_CODE",
         1)}))
+    add("queue-modifier-store", lambda b: b.update({"window": b["window"].replace(
+        "\tinz\n\ttya\n\tsta (__rc2),z", "\tinz\n\tlda #0\n\tsta (__rc2),z", 1)}))
+    add("queue-head-not-advanced", lambda b: b.update({"window": b["window"].replace(
+        "\tsta $d619", "\tnop", 1)}))
     add("normalization", lambda b: b.update({"normalization_h":
         b["normalization_h"].replace(
             "return (uint8_t)(code + 0x20u);",

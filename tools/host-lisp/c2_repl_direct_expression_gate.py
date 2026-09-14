@@ -659,7 +659,9 @@ def core_receipt() -> dict[str, Any]:
     require(prior["stage_prices"]["transient_install_execute_rollback"]
             ["derived_whole_envelope_frames_cold_warm"] == [60, 62],
             "60/62-frame baseline drift")
-    with tempfile.TemporaryDirectory(prefix="lisp65-repl-direct-") as directory:
+    # Replay the sealed candidate under its own list domain; source/contract
+    # checks above remain live. This is not a current-product measurement.
+    with ERA.host_source_world(SEALED_COMMIT), tempfile.TemporaryDirectory(prefix="lisp65-repl-direct-") as directory:
         emitted, candidate, candidate_runtime = emit_candidate(
             Path(directory) / "stdlib-p0"
         )
@@ -750,7 +752,8 @@ def selftest() -> dict[str, Any]:
         REDISPATCH.candidate_runtime = lambda value, **kwargs: original(
             value, commit='57e79601')
         try:
-            core_receipt()
+            with ERA.host_source_world('57e79601'):
+                core_receipt()
         except Exception as error:
             require('candidate accounting drift' in str(error),
                     'runtime-era mutation failed for an unrelated reason')

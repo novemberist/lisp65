@@ -1682,6 +1682,10 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #if defined(LISP65_DISK_LIBS) || defined(LISP65_C2_PRODUCT_CUT)
     case 18:  /* %disk-load-lib — Bytecode-Lib nach Bank 5 stagen + registrieren (Stufe 2) */
 #ifdef LISP65_C2_PRODUCT_CUT
+        /* Private zero-argument query: suppress require's intent echo while
+         * a source loader owns input. Existing name/sector modes unchanged. */
+        if (n == 0)
+            return io_disk_source_idle() ? vm_t : NIL;
         if (n == 1)
             return c2_product_static_image_named(a[0]) ? vm_t : NIL;
         if (!vm_two_byte_args(a, n)) return NIL;
@@ -1786,6 +1790,9 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         }
         return sym_boundp(a[0]) ? vm_t : NIL;
     case 58: /* %list-malformed-error -- internal public-error-channel emitter */
+        /* Private resource-exhaustion mode; the zero-argument ABI below
+         * retains its malformed-list meaning. No new primitive or text. */
+        if (n == 1 && a[0] == MKFIX(1)) { vm_status = VM_HEAPOOM; return NIL; }
         if (n != 0) { vm_status = VM_ARITY; return NIL; }
         vm_status = VM_TYPEERROR; return NIL;
     case 59: /* set */

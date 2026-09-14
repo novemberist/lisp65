@@ -187,7 +187,7 @@ $(V11_BUFFER_CARRIER_HOST): scripts/v11-buffer-carrier-main.c src/buffer_overlay
 		scripts/v11-buffer-carrier-main.c src/buffer_overlay.c src/mem.c \
 		src/symbol.c src/interrupt.c -o '$@'
 
-v11-first-class-buffer-check: v2-native-function-registry-check bytecode-p0-buffer-lib-artifacts attic-library-shelf-check v11-buffer-library-composition-check $(V11_BUFFER_MEMORY_HOST) $(V11_BUFFER_CARRIER_HOST)
+v11-first-class-buffer-check: v2-native-function-registry-check bytecode-p0-buffer-lib-artifacts v11-buffer-library-composition-check $(V11_BUFFER_MEMORY_HOST) $(V11_BUFFER_CARRIER_HOST)
 	output="$$(ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 $(V11_BUFFER_MEMORY_HOST))"; \
 		test "$$output" = '?' || { echo "v11-buffer-printer: FAIL output=$$output" >&2; exit 1; }; \
 		echo 'v11-buffer-printer: PASS output=?'
@@ -309,10 +309,8 @@ v11-c1-gate-check: v2-native-function-registry-check bytecode-abi-ledger-check \
 	python3 $(WORKBENCH_C1_GATE_TOOL) --out '$(WORKBENCH_C1_GATE_RECEIPT)'
 
 $(WORKBENCH_ATTIC_SHELF_IMAGE) $(WORKBENCH_ATTIC_SHELF_MANIFEST) &: \
-		$(WORKBENCH_ATTIC_SHELF_TOOL) $(WORKBENCH_ATTIC_SHELF_CONTRACT) \
-		v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts \
-		v11-c1-compiler-tier-host-artifacts
-	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
+		$(WORKBENCH_ATTIC_SHELF_TOOL)
+	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --era-check --out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
 
 $(WORKBENCH_ATTIC_SHELF_HOST): scripts/attic-library-shelf-smoke-main.c src/attic_library_shelf.c src/attic_library_shelf.h src/io.h | build
 	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -fsanitize=address,undefined \
@@ -320,15 +318,12 @@ $(WORKBENCH_ATTIC_SHELF_HOST): scripts/attic-library-shelf-smoke-main.c src/atti
 		-DDISK_EXT_FILE_MAX=0x9600u -Isrc \
 		scripts/attic-library-shelf-smoke-main.c src/attic_library_shelf.c -o '$@'
 
-attic-library-shelf-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-host-artifacts
-	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --selftest \
+# Explicit historical entry: no live check-host prerequisite may own this shelf.
+attic-library-shelf-selftest:
+	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --era-check \
 		--out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
 
-attic-library-shelf-check: attic-library-shelf-selftest $(WORKBENCH_ATTIC_SHELF_IMAGE) $(WORKBENCH_ATTIC_SHELF_MANIFEST) $(WORKBENCH_ATTIC_SHELF_HOST)
-	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --verify \
-		--out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
-	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
-		$(WORKBENCH_ATTIC_SHELF_HOST) '$(WORKBENCH_ATTIC_SHELF_IMAGE)'
+attic-library-shelf-check: attic-library-shelf-selftest
 
 $(WORKBENCH_L65M_BULKREAD_FIXTURE_HEADER): $(WORKBENCH_L65M_BULKREAD_FIXTURE_TOOL) tools/host-lisp/l65m_contract.py | build
 	python3 $(WORKBENCH_L65M_BULKREAD_FIXTURE_TOOL) --emit-c-header '$@'
@@ -794,7 +789,7 @@ workbench-overlay-stack-probe: workbench-overlay-stack-probe-smoke hw-stack-prob
 		WORKBENCH_OVERLAY_EXTRA_DEFINES='$(WORKBENCH_OVERLAY_PROBE_DEFINES)' \
 		workbench-overlay-footprint-audit
 
-workbench-overlay-stack-guard: asm-c-constant-contract-check v2-workbench-artifacts attic-library-shelf-check
+workbench-overlay-stack-guard: asm-c-constant-contract-check v2-workbench-artifacts
 	$(MAKE) --no-print-directory \
 		WORKBENCH_PROFILE_ID=dialect-v2-capability-carrier-workbench-staging \
 		WORKBENCH_SUITE=build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json \
@@ -909,6 +904,13 @@ workbench-product-v220-build: toolchain-external-product-verify
 workbench-product-v220-verify: toolchain-external-product-verify
 	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v220
 
+.PHONY: workbench-product-v230 workbench-product-v230-build workbench-product-v230-verify
+workbench-product-v230: workbench-product-v230-build
+workbench-product-v230-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v230
+workbench-product-v230-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v230
+
 workbench-product-footprint-report: workbench-product
 	@test -f build/c2.2/canonical-product/final/substitution-balance.json
 
@@ -916,8 +918,6 @@ workbench-product-footprint-report: workbench-product
 # product. Deliberately check-only to avoid a second FORCE-driven overlay link.
 workbench-product-input-ready:
 	@test -f '$(WORKBENCH_PRG)'
-	@test -f '$(WORKBENCH_ATTIC_SHELF_IMAGE)'
-	@test -f '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
 	@test -f '$(WORKBENCH_PRODUCT_PRELOAD)'
 	@test -f '$(WORKBENCH_PRODUCT_RUNTIME_OVERLAY)'
 	@test -f '$(WORKBENCH_PRODUCT_RUNTIME_OVERLAY_MANIFEST)'
@@ -1065,8 +1065,11 @@ workbench-symfn-dynamic-report: bytecode-p0-ide-lib-check
 
 workbench-persistence-gate: check-product check-hardware-dry-run
 
-bytecode-p0-workbench-stdlib-artifacts:
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(WORKBENCH_STDLIB_PREFIX) $(WORKBENCH_SUITE)
+# Live successor of the raw dialect-v1 recipe (post-2.2.0 inventory row 1).
+# Keep the legacy output paths and all four host compile checks for consumers;
+# the source claim belongs to the generated suite, as in v2-workbench-artifacts.
+bytecode-p0-workbench-stdlib-artifacts: v2-workbench-codemod
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(WORKBENCH_STDLIB_PREFIX) $(V2_WORKBENCH_SUITE_DIR)/p0-stdlib-einsuite-core-workbench-subset.json
 	$(HOSTCC) -std=c99 -Wall -I. -include $(WORKBENCH_STDLIB_HEADER) -x c -c /dev/null -o $(WORKBENCH_BYTECODE_DIR)/header-smoke.o
 	$(HOSTCC) -std=c99 -Wall -DLISP65_VM -I. -Isrc -include $(WORKBENCH_STDLIB_HEADER) -x c -c /dev/null -o $(WORKBENCH_BYTECODE_DIR)/vm-header-smoke.o
 	$(HOSTCC) -std=c99 -Wall -DLISP65_VM -I. -Isrc -I$(WORKBENCH_BYTECODE_DIR) -c $(WORKBENCH_STDLIB_C) -o $(WORKBENCH_BYTECODE_DIR)/c-smoke.o

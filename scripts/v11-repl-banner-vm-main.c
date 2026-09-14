@@ -7,6 +7,7 @@
  */
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "interrupt.h"
@@ -36,7 +37,20 @@ void vm_code_load(uint8_t bank, uint16_t off, uint16_t len, uint8_t *dst) {
     memcpy(dst, ext_code + off, len);
 }
 
-/* Only write-char is reached after the direct-at banner operations. */
+/* The INIT probe precedes drawing. Present an empty directory through the
+ * same F011 interface that is compiled into the product profile. */
+unsigned char io_disk_read_sector(unsigned char track, unsigned char sector) {
+    (void)track; (void)sector; return 1;
+}
+unsigned char io_disk_byte(unsigned char index) { (void)index; return 0; }
+unsigned char io_disk_load_chain(unsigned char track, unsigned char sector) {
+    (void)track; (void)sector; return 0;
+}
+/* This fixture owns no active source. Unexpected cleanup is a test failure,
+ * not a simulated successful file-source recovery. */
+void io_disk_source_abort(void) { abort(); }
+
+/* Only write-char is reached here after the direct-at banner operations. */
 uint8_t eval_v2_workbench_service(uint8_t id, const obj *args, obj *result) {
     if (id != 45u || !IS_FIX(args[0])) return 0;
     scr_putc((char)(FIXVAL(args[0]) & 0xff));

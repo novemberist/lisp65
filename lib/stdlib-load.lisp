@@ -22,10 +22,10 @@
 
 (defun %load-name-match-at (codes base index)
   (if (= index 16)
-      t
+      (null codes)
       (if (= (%load-fold-code (%load-entry-byte base (+ 5 index)))
-             (%load-name-code-at codes index))
-          (%load-name-match-at codes base (1+ index))
+             (%load-name-code-at codes 0))
+          (%load-name-match-at (if codes (cdr codes) nil) base (1+ index))
           nil)))
 
 (defun %load-entry-match-p (codes base)

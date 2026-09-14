@@ -4,10 +4,13 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path
+import re
 import sys
+import tempfile
 
 import bytecode_p0 as B
 import bytecode_p0_stdlib as S
@@ -16,7 +19,7 @@ import bytecode_p0_stdlib as S
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SUITE = ROOT / "build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json"
 DEFAULT_SOURCE = ROOT / "build/bytecode/dialect-v2/sources/lib/repl-banner.lisp"
-RELEASE_AUTHORITY = ROOT / "config/v12-known-issues.json"
+RELEASE_AUTHORITY = ROOT / "config/c2-v220-public-build-authority.json"
 RUN_STREAM = "&AC'BC(CC)DC*EC+FC(DJ&EK%FK3AS3BS3CS3DS3ES3FW;AU<BS<CS<DS<ES;FUAAWABSACWEDSEESAFWIAWIBSMBSICWIDSIESIFSQAWQBSQCWQDSUDSQESUESQFWYAWYBSYCW]DS]ESYFW%GY"
 SUBTITLE_PREFIX = "WORKBENCH "
 SUBTITLE_CENTER_COLUMN = 55
@@ -34,12 +37,18 @@ class BannerError(RuntimeError):
 
 def subtitle() -> str:
     authority = json.loads(RELEASE_AUTHORITY.read_text())
-    release = authority.get(
-        "product_banner_release", authority.get("release"),
-    )
-    if not isinstance(release, str) or not release:
-        raise BannerError("release authority has no non-empty .release")
-    return SUBTITLE_PREFIX + release
+    sources = [row for row in authority.get("producer_inputs", [])
+               if row.get("path", "").endswith("-repl-banner.lisp")]
+    if len(sources) != 1:
+        raise BannerError("release authority must bind exactly one delivered banner source")
+    source = sources[0]
+    raw = (ROOT / source["path"]).read_bytes()
+    if len(raw) != source["bytes"] or hashlib.sha256(raw).hexdigest() != source["sha256"]:
+        raise BannerError("delivered banner source identity drift")
+    matches = re.findall(r'\(defun %banner-subtitle \(\)\s*\(let \(\(text "(WORKBENCH [0-9]+\.[0-9]+\.[0-9]+)"\)\)', raw.decode())
+    if len(matches) != 1:
+        raise BannerError("delivered banner subtitle is not structurally unique")
+    return matches[0]
 
 
 def subtitle_start(text: str) -> int:
@@ -131,8 +140,13 @@ def validate_observation(
         raise BannerError("banner result is not nil")
     expected_writes = expected_screen_writes()
     if screen_writes != expected_writes:
+        index = next((i for i, pair in enumerate(zip(expected_writes, screen_writes))
+                      if pair[0] != pair[1]), min(len(expected_writes), len(screen_writes)))
+        expected = expected_writes[index] if index < len(expected_writes) else None
+        actual = screen_writes[index] if index < len(screen_writes) else None
         raise BannerError(
-            f"screen-write mismatch: expected {len(expected_writes)}, got {len(screen_writes)}"
+            f"screen-write mismatch: expected {len(expected_writes)}, got {len(screen_writes)}; "
+            f"first index={index} expected={expected!r} actual={actual!r}"
         )
     if screen_put_calls != len(expected_writes) or screen_span_calls != 0:
         raise BannerError(
@@ -210,11 +224,64 @@ def observe(suite_path: Path) -> tuple[dict, ObservingVM]:
 
 
 def selftest() -> None:
+    global RELEASE_AUTHORITY
+    authority = RELEASE_AUTHORITY
+    try:
+        RELEASE_AUTHORITY = ROOT / "config/v12-known-issues.json"
+        try:
+            subtitle()
+        except BannerError:
+            pass
+        else:
+            raise AssertionError("old v1.4 release authority accepted")
+    finally:
+        RELEASE_AUTHORITY = authority
+    original = json.loads(authority.read_text())
+    for kind in ("missing", "duplicate", "wrong-sha"):
+        changed = copy.deepcopy(original)
+        rows = changed["producer_inputs"]
+        selected = next(row for row in rows if row["path"].endswith("-repl-banner.lisp"))
+        if kind == "missing":
+            rows.remove(selected)
+        elif kind == "duplicate":
+            rows.append(copy.deepcopy(selected))
+        else:
+            selected["sha256"] = "0" * 64
+        with tempfile.TemporaryDirectory(prefix="banner-authority-test-") as folder:
+            path = Path(folder) / "authority.json"
+            path.write_text(json.dumps(changed))
+            try:
+                RELEASE_AUTHORITY = path
+                try:
+                    subtitle()
+                except BannerError:
+                    pass
+                else:
+                    raise AssertionError(f"banner source {kind} mutation accepted")
+            finally:
+                RELEASE_AUTHORITY = authority
     writes = expected_screen_writes()
     pokes = expected_pokes()
     call_count = len(writes)
     valid = (B.NIL, writes, call_count, 0, [10] * 9, pokes)
     validate_observation(*valid)
+    old_version = json.loads((ROOT / "config/v12-known-issues.json").read_text())["product_banner_release"]
+    old_text = SUBTITLE_PREFIX + old_version
+    old_writes = writes[:-len(subtitle())] + [
+        (subtitle_start(old_text) + i, 7, ord(char), 15) for i, char in enumerate(old_text)]
+    try:
+        validate_observation(B.NIL, old_writes, len(old_writes), 0, [10] * 9, pokes)
+    except BannerError as error:
+        assert "first index=" in str(error)
+    else:
+        raise AssertionError("stale v1.4 expected writes accepted")
+    try:
+        validate_observation(B.NIL, [(999,) + writes[0][1:]] + writes[1:],
+                             call_count, 0, [10] * 9, pokes)
+    except BannerError as error:
+        assert "first index=0" in str(error) and "actual=(999," in str(error)
+    else:
+        raise AssertionError("first-difference diagnostic mutation accepted")
     mutations = [
         (B.NIL, [(writes[0][0] + 1,) + writes[0][1:]] + writes[1:], call_count, 0, [10] * 9, pokes),
         (B.NIL, writes, call_count - 1, 0, [10] * 9, pokes),
@@ -228,7 +295,7 @@ def selftest() -> None:
         except BannerError:
             continue
         raise AssertionError(f"mutation {index} was accepted")
-    print(f"v11-repl-banner-visual: SELFTEST PASS mutations={len(mutations)}")
+    print(f"v11-repl-banner-visual: SELFTEST PASS mutations={len(mutations) + 6}")
 
 
 def main(argv: list[str] | None = None) -> int:

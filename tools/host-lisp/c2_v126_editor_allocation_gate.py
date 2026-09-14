@@ -36,6 +36,7 @@ DEFAULT_FIRST_RED = (
     "c2-v126-editor-allocation-first-red-receipt.json"
 )
 FORMAT = "lisp65-c2-v126-editor-allocation-gate-receipt-v1"
+LIVE_RECEIPT = DEFAULT_RECEIPT.with_name("c2-v126-editor-allocation-live-successor.json")
 SCREEN_COLUMNS = 80
 SCREEN_ROWS = 25
 
@@ -79,6 +80,10 @@ def atomic_json(path: Path, value: dict[str, Any]) -> None:
         temporary = Path(handle.name)
         handle.write(payload)
     temporary.replace(path)
+
+
+def verify_successor(actual: dict, expected: dict) -> None:
+    require(actual == expected, "editor allocation live successor drift")
 
 
 def summarize(values: list[int]) -> dict[str, int | float]:
@@ -709,7 +714,7 @@ def build_receipt(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "command", choices=("check", "probe-first-red", "selftest")
+        "command", choices=("check", "probe-first-red", "selftest", "record-successor")
     )
     parser.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
     parser.add_argument("--suite", type=Path, default=DEFAULT_SUITE)
@@ -723,6 +728,14 @@ def main(argv: list[str] | None = None) -> int:
         validate_contract(contract)
         if args.command == "selftest":
             mutations = mutation_selftest(contract)
+            control = {"historical": "sealed", "current": {"status": "passed"}}
+            verify_successor(control, copy.deepcopy(control))
+            try:
+                verify_successor({"historical": "live", "current": control["current"]}, control)
+            except GateError:
+                mutations += 1
+            else:
+                raise GateError("historical receipt replacement mutation survived")
             print(
                 "c2-v126-editor-allocation: SELFTEST PASS "
                 f"mutations={mutations}"
@@ -746,8 +759,15 @@ def main(argv: list[str] | None = None) -> int:
             receipt["status"] == "passed",
             "; ".join(receipt["failures"]),
         )
-        out = args.out.resolve() if args.out else DEFAULT_RECEIPT
-        atomic_json(out, receipt)
+        successor = {"authority": "00ba3afa", "historical": bind(DEFAULT_RECEIPT),
+                     "claim": "Executed live allocation/coalescing successor; historical receipt unchanged",
+                     "current": receipt}
+        out = args.out.resolve() if args.out else LIVE_RECEIPT
+        require(out != DEFAULT_RECEIPT, "historical receipt is read-only")
+        if args.command == "record-successor":
+            atomic_json(out, successor)
+        else:
+            verify_successor(read_json(out), successor)
         print(
             "c2-v126-editor-allocation: PASS "
             f"keys={receipt['execution_witness']['keys']} "

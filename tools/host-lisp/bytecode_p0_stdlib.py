@@ -1585,6 +1585,10 @@ def _add_code_to_directory(heap, directory, names, code_by_name, label):
 
 
 def _compile_suite(suite, base_addr=PB.DEFAULT_BASE_ADDR, include_cases=True):
+    # Fail before code generation if an editor harness supplies a different
+    # list contract from the delivered product (a242a968).
+    from editor_product_list_domain import check_suite
+    check_suite(suite)
     prebuilt_primitives = suite.get("format") == SUITE_FORMAT_DISK_LIB
     functions, forms_by_name, macro_names, inliner = _suite_functions_and_forms(suite)
     cases = list(suite.get("cases", []))
@@ -1677,6 +1681,28 @@ def _compile_suite(suite, base_addr=PB.DEFAULT_BASE_ADDR, include_cases=True):
         entry_names,
         inliner,
     )
+
+
+# Widened host D81 world keys (docs/planning/host-d81-model-widening.md).
+# A case value overrides the suite value; absent keys keep the legacy model.
+DISK_WORLD_KEYS = (
+    "d81_directory_sectors",
+    "d81_full_geometry",
+    "disk_raw_sectors",
+    "disk_read_fail_sectors",
+    "disk_failure_semantics",
+    "disk_file_max",
+)
+
+
+def _disk_world_kwargs(suite, case):
+    out = {}
+    for key in DISK_WORLD_KEYS:
+        if key in case:
+            out[key] = case[key]
+        elif key in suite:
+            out[key] = suite[key]
+    return out
 
 
 def _suite_abi(suite):
@@ -2089,6 +2115,7 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
             max_call_args=max_call_args,
             disk_files=case.get("disk_files", suite.get("disk_files")),
             d81_bam_model=suite.get("d81_bam_model", False),
+            **_disk_world_kwargs(suite, case),
             disk_read_fail_ops=case.get("disk_read_fail_ops"),
             disk_write_fail_ops=case.get("disk_write_fail_ops"),
             disk_mount_token=case.get("disk_mount_token"),
@@ -2859,6 +2886,7 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
             max_call_args=max_call_args,
             disk_files=case.get("disk_files", suite.get("disk_files")),
             d81_bam_model=suite.get("d81_bam_model", False),
+            **_disk_world_kwargs(suite, case),
             disk_read_fail_ops=case.get("disk_read_fail_ops"),
             disk_write_fail_ops=case.get("disk_write_fail_ops"),
             disk_mount_token=case.get("disk_mount_token"),

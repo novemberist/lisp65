@@ -303,7 +303,10 @@ def selftest() -> dict[str, Any]:
     mutated = json.loads(json.dumps(observed))
     mutated["authority"].pop("user_guide")
     reject(mutated, "omitted user-guide provenance")
-    return {"observed": observed, "mutations_rejected": 6,
+    mutated = json.loads(json.dumps(observed))
+    mutated["authority"]["metadata"]["sha256"] = "b75ef18404affe81931c14aefb5f205b69e157ef38bb494de8b38bba7e5058c6"
+    reject(mutated, "pre-minibuffer metadata provenance")
+    return {"observed": observed, "mutations_rejected": 7,
             "media_claim_controls": 3}
 
 

@@ -466,6 +466,18 @@ def check() -> dict[str, Any]:
 def selftest() -> dict[str, Any]:
     observed = derive_recorded_world(load(CONTRACT))
     mutated = json.loads(json.dumps(observed))
+    mutated["population"]["sha256"] = "b30c9a0b8a459b51346ee7b20b77aff96599e490d63bb37a5df1052a8277b1e9"
+    require(stable_projection(mutated) != stable_projection(observed),
+            "pre-INIT metadata identity mutation survived")
+    mutated = json.loads(json.dumps(observed))
+    mutated["population"]["sha256"] = "b75ef18404affe81931c14aefb5f205b69e157ef38bb494de8b38bba7e5058c6"
+    require(stable_projection(mutated) != stable_projection(observed),
+            "pre-minibuffer metadata identity mutation survived")
+    mutated = json.loads(json.dumps(observed))
+    mutated["population"]["sha256"] = "8f9affaa19771205144605f6d949dee7dbf550aadfa1e3233593cf5298c1f104"
+    require(stable_projection(mutated) != stable_projection(observed),
+            "pre-Frame metadata identity mutation survived")
+    mutated = json.loads(json.dumps(observed))
     mutated["rows"].pop()
     require(stable_projection(mutated) != stable_projection(observed),
             "removed public row mutation survived")
@@ -504,7 +516,7 @@ def selftest() -> dict[str, Any]:
             "invented delivered primitive mutation survived")
     require(12 in observed["product_profile"]["tombstoned_ids"],
             "product profile lost tombstone 12")
-    return {"mutations_rejected": 5, "diagnostic_mutations_ignored": 2,
+    return {"mutations_rejected": 8, "diagnostic_mutations_ignored": 2,
             "observed": observed}
 
 

@@ -5,9 +5,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
+import os
 from pathlib import Path
+import subprocess
 import struct
+import tarfile
 import tempfile
 import zlib
 import re
@@ -26,6 +30,103 @@ PAYLOAD_OFF = 192
 
 class ShelfError(RuntimeError):
     pass
+
+
+SHELF_ERA = "ca8666ab2ce4696efe7463583e47daddc7bb7cec"  # v1.1.0
+
+
+def shelf_era_archive(commit: str = SHELF_ERA) -> bytes:
+    if commit != SHELF_ERA:
+        raise ShelfError("retired shelf era drift")
+    return subprocess.check_output(["git", "archive", commit], cwd=ROOT)
+
+
+def validate_shelf_archive(raw: bytes) -> None:
+    expected = {}
+    for row in subprocess.check_output(["git", "ls-tree", "-rz", SHELF_ERA], cwd=ROOT).split(b"\0"):
+        if not row:
+            continue
+        meta, name = row.split(b"\t", 1)
+        mode, kind, oid = meta.split()
+        if kind != b"blob" or mode not in (b"100644", b"100755"):
+            raise ShelfError("non-file shelf-era input")
+        expected[name.decode()] = oid.decode()
+    actual = {}
+    with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+        for member in archive:
+            if member.isdir():
+                continue
+            if not member.isfile() or member.name in actual:
+                raise ShelfError("invalid shelf-era member")
+            data = archive.extractfile(member).read()
+            actual[member.name] = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
+    if actual != expected:
+        raise ShelfError("shelf-era source population/bytes drift")
+
+
+def require_era_path(path: Path, folder: Path) -> None:
+    if not path.resolve().is_relative_to(folder.resolve()):
+        raise ShelfError("old live path outside shelf-era owner")
+
+
+def era_check(out: Path, manifest_out: Path) -> None:
+    raw = shelf_era_archive()
+    validate_shelf_archive(raw)
+    try:
+        shelf_era_archive("HEAD")
+    except ShelfError:
+        pass
+    else:
+        raise ShelfError("live-era mutation survived")
+    # The contract itself is byte-identical across eras. Do not claim its
+    # substitution is a falling mutation; test changed/missing bytes here,
+    # and the actual old live path against the archive owner after the build.
+    for replacement in ((ROOT / "config/v11-attic-library-shelf.json").read_bytes() + b"\n", None):
+        changed = io.BytesIO()
+        with tarfile.open(fileobj=io.BytesIO(raw)) as source, tarfile.open(fileobj=changed, mode="w") as target:
+            for member in source:
+                data = source.extractfile(member).read() if member.isfile() else None
+                if member.name == "config/v11-attic-library-shelf.json":
+                    if replacement is None:
+                        continue
+                    data = replacement
+                    member.size = len(data)
+                target.addfile(member, io.BytesIO(data) if data is not None else None)
+        try:
+            validate_shelf_archive(changed.getvalue())
+        except ShelfError:
+            pass
+        else:
+            raise ShelfError("old-path/missing source mutation survived")
+    with tempfile.TemporaryDirectory(prefix="lisp65-attic-shelf-v110-") as directory:
+        folder = Path(directory)
+        with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+            archive.extractall(folder, filter="data")
+        env = {k: v for k, v in os.environ.items() if k not in ("MAKEFLAGS", "MFLAGS", "MAKEOVERRIDES")}
+        subprocess.run(["make", "attic-library-shelf-check"], cwd=folder, env=env, check=True)
+        image = folder / "build/bytecode/dialect-v2/shelf/library-shelf.bin"
+        historical_manifest = folder / "build/bytecode/dialect-v2/shelf/library-shelf-manifest.json"
+        data = image.read_bytes()
+        manifest = json.loads(historical_manifest.read_text())
+        for item in load_json(folder / "config/v11-attic-library-shelf.json")["containers"]:
+            artifact_path = item["manifest"]
+            require_era_path(folder / artifact_path, folder)
+            container = load_json(folder / artifact_path)["external_image"]["path"]
+            require_era_path(folder / container, folder)
+            try:
+                require_era_path(ROOT / artifact_path, folder)
+            except ShelfError:
+                pass
+            else:
+                raise ShelfError("live old-path artifact owner mutation survived")
+        manifest["era_binding"] = {"commit": SHELF_ERA, "source_archive_sha256": sha_bytes(raw),
+                                   "historical_manifest_sha256": sha_file(historical_manifest),
+                                   "live_product_claim": False, "mutations": 8}
+        out.parent.mkdir(parents=True, exist_ok=True)
+        manifest_out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_bytes(data)
+        manifest_out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    print(f"attic-shelf-era: PASS bytes={len(data)} host-only mutations=8")
 
 
 def verify_scratch_binding() -> None:
@@ -228,7 +329,13 @@ def main() -> int:
     parser.add_argument("--manifest-out", type=Path, default=ROOT / "build/bytecode/dialect-v2/shelf/library-shelf-manifest.json")
     parser.add_argument("--verify", action="store_true")
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--era-check", action="store_true")
     args = parser.parse_args()
+    if args.era_check:
+        if args.selftest or args.verify:
+            raise ShelfError("era check runs the archived selftest and verifier; no live override")
+        era_check(args.out, args.manifest_out)
+        return 0
     if args.selftest:
         selftest()
         print("v11-attic-library-shelf: SELFTEST PASS mutations=3 scratch-binding=shared")

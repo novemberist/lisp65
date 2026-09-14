@@ -361,7 +361,7 @@
   },
   {
    "name": "ide-step-minibuffer-types-character",
-   "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 100 nil)))) (car (cdr (cdr (if (boundp (quote ide-step)) (symbol-value (quote ide-step)) nil)))))",
+   "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 100 nil)))) (progn (%ide-mini-fold) (%ide-mini-carrier)))",
    "expect": "\"d\""
   },
   {

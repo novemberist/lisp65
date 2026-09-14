@@ -9,9 +9,16 @@
 #include "l65m_overlay_abi.h"
 #include "l65m_validate.h"
 #include "mem.h"
+#include "screen.h"
 #include "symbol.h"
 #include "vm.h"
 #include "vm_embed.h"
+
+/* The current M-x handoff reaches screen-size and screen-put-char.  Keep the
+ * host proof on the product implementation, not a permissive stub profile. */
+#ifndef LISP65_VM_SCREEN_PRIMS
+#error "L65M product fixture requires the product screen primitives"
+#endif
 
 static uint8_t bank5[65536];
 static int failures;
@@ -295,7 +302,7 @@ static void check_designators(const uint8_t *image, const l65m_plan *plan) {
         uint16_t literal_off = (uint16_t)(u16(entry + 4) + 7u + 2u * site->literal_slot);
         obj fn = (obj)u16(bank5 + plan->code_base + literal_off);
         const char *text = "x";
-        obj expected = site_index == 0 ? NIL : intern("t");
+        obj expected = site->expected_true ? intern("t") : NIL;
         uint8_t route;
         check(site->id, "designator literal did not resolve to the contracted ordinal",
               fn == MK_BCODE((uint16_t)(dir_base + site->target_ordinal)));
@@ -504,6 +511,7 @@ int main(int argc, char **argv) {
     uint8_t transaction_mode = (uint8_t)(argc == 2
         && !strcmp(argv[1], "--transaction-matrix"));
     memset(bank5, 0xa5, sizeof bank5);
+    scr_init();
     mem_init();
     vm_dir_reset();
     vm_init();
@@ -526,10 +534,11 @@ int main(int argc, char **argv) {
         fprintf(stderr, "l65m-v2-product: FAIL failures=%d\n", failures);
         return 1;
     }
-    printf("l65m-v2-product: PASS mode=%s entries=%u anonymous=%u entry_refs=%u c1_entries=%u designator_routes=12 hook_sequence=%u\n",
+    printf("l65m-v2-product: PASS mode=%s entries=%u anonymous=%u entry_refs=%u c1_entries=%u designator_routes=%u hook_sequence=%u\n",
            transaction_mode ? "transaction-matrix" : "late-bound-sequence",
            (unsigned)L65M_V2_IDE_ENTRIES, (unsigned)L65M_V2_IDE_ANONYMOUS,
            (unsigned)L65M_V2_IDE_ENTRY_REFS, (unsigned)L65M_V2_LCC_ENTRIES,
+           (unsigned)L65M_V2_DESIGNATOR_SITE_COUNT * 3u,
            transaction_mode ? 0u : 1u);
     return 0;
 }

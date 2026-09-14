@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import re
 import sys
+import subprocess
 from typing import Any
 
 
@@ -41,6 +42,93 @@ LEGACY_SLOT_FUNCTIONS = (
 
 class AcceptanceError(RuntimeError):
     pass
+
+
+SEAL_ERA = "b4b1420818499b179197b69433857eb26cdf2de2"
+SEAL_TARGET = "v11-m-transactional-fasl-historical-seal-check"
+
+
+def era_bytes(path: Path) -> bytes:
+    return subprocess.check_output(
+        ["git", "show", f"{SEAL_ERA}:{rel(path)}"], cwd=ROOT)
+
+
+def validate_seal(raw: bytes) -> dict[str, Any]:
+    require(raw == era_bytes(RECEIPT), "historical receipt seal changed")
+    value = json.loads(raw)
+    for item in value["source_bindings"]:
+        source = era_bytes(ROOT / item["path"])
+        require(len(source) == item["bytes"] and
+                hashlib.sha256(source).hexdigest() == item["sha256"],
+                f"era source binding changed: {item['path']}")
+    authorization = json.loads(era_bytes(AUTHORIZATION))
+    require(authorization["status"] == "owner-authorized", "authorization status")
+    before = copy.deepcopy(value)
+    before["status"] = "implemented-passed-not-promoted"
+    before["capacity_authorization"] = "pending-owner-review"
+    before["source_bindings"] = [b for b in before["source_bindings"]
+                                 if b["path"] != rel(AUTHORIZATION)]
+    require(authorization["implementation_receipt_before_authorization"] ==
+            {"path": rel(RECEIPT), "sha256": object_sha(before)},
+            "pre-authorization receipt SHA mismatch")
+    cap = value["capacity"]
+    delta = {k: cap["candidate"][k] - v for k, v in cap["baseline"].items()}
+    require(delta == cap["delta_from_wave1"], "capacity arithmetic mismatch")
+    require(authorization["capacity"] == {
+        "baseline": cap["baseline"], "candidate": cap["candidate"],
+        "authorized_delta": delta}, "authorized capacity mismatch")
+    return value
+
+
+def validate_seal_recipe(text: str, gates: str) -> None:
+    # Exact host-only leaf and compatibility alias; no prerequisite can
+    # reintroduce the historical FORCE/CC_M65 guard chain through this edge.
+    expected = (f"{SEAL_TARGET}:\n"
+                "\tPYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/"
+                "v11_m_transactional_fasl_acceptance.py seal-check\n")
+    blocks = re.findall(rf"^{SEAL_TARGET}:[^\n]*\n(?:\t[^\n]*\n)*", text, re.M)
+    require(blocks == [expected], "historical seal target is not a host-only leaf")
+    alias = re.findall(r"^v11-m-transactional-fasl-acceptance-check:[^\n]*\n(?:\t[^\n]*\n)*", text, re.M)
+    require(alias == [f"v11-m-transactional-fasl-acceptance-check: {SEAL_TARGET}\n"],
+            "historical acceptance alias can relink")
+    host = re.findall(r"^check-host:([^\n]*)", gates, re.M)
+    require(any(SEAL_TARGET in row.split() for row in host), "host seal edge absent")
+    require(any("v11-repl-banner-visual-check" in row.split() for row in host),
+            "live banner coverage lost with historical acceptance prerequisites")
+    require(all("v11-m-transactional-fasl-acceptance-check" not in row.split()
+                for row in host), "host still names artifact acceptance")
+
+
+def seal_check() -> None:
+    raw = era_bytes(RECEIPT)
+    value = validate_seal(raw)
+    makefile = (ROOT / "mk/workbench-service-inventory.mk").read_text()
+    gates = (ROOT / "mk/gates.mk").read_text()
+    validate_seal_recipe(makefile, gates)
+    altered = json.loads(raw)
+    altered["capacity"]["candidate"]["fixed_overlay_bytes"] += 1
+    mutations = (
+        ("altered receipt", lambda: validate_seal(json.dumps(altered).encode())),
+        ("live relink prerequisite", lambda: validate_seal_recipe(
+            makefile.replace(f"{SEAL_TARGET}:\n",
+                             f"{SEAL_TARGET}: workbench-overlay-stack-guard\n"), gates)),
+        ("live relink recipe", lambda: validate_seal_recipe(
+            makefile.replace("v11_m_transactional_fasl_acceptance.py seal-check\n",
+                             "v11_m_transactional_fasl_acceptance.py seal-check\n\t$(MAKE) workbench-overlay-stack-guard\n"), gates)),
+        ("old acceptance edge", lambda: validate_seal_recipe(makefile,
+            gates.replace(SEAL_TARGET, "v11-m-transactional-fasl-acceptance-check"))),
+        ("lost live banner edge", lambda: validate_seal_recipe(makefile,
+            gates.replace(" v11-repl-banner-visual-check", ""))),
+    )
+    for name, run in mutations:
+        try:
+            run()
+        except AcceptanceError:
+            continue
+        raise AcceptanceError(f"seal mutation survived: {name}")
+    print(f"historical Guard/FASL receipt seal: PASS era={SEAL_ERA} "
+          f"sources={len(value['source_bindings'])} mutations={len(mutations)} "
+          "artifact-reacceptance=false lost-artifacts=5 product-builds=0")
 
 
 def require(condition: bool, message: str) -> None:
@@ -326,10 +414,13 @@ def selftest() -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("collect", "check", "selftest"))
+    parser.add_argument("command", choices=("collect", "check", "selftest", "seal-check"))
     parser.add_argument("--receipt", type=Path, default=RECEIPT)
     args = parser.parse_args()
     try:
+        if args.command == "seal-check":
+            seal_check()
+            return 0
         if args.command == "selftest":
             selftest()
             print("v11-m-transactional-fasl-acceptance: SELFTEST PASS mutations=2")

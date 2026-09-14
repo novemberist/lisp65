@@ -32,6 +32,7 @@ import bytecode_p0_stdlib as Stdlib  # noqa: E402
 from elf_truth import ElfTruth  # noqa: E402
 import l65p_v1 as L65P  # noqa: E402
 import runtime_export_preload as Preload  # noqa: E402
+import ship_editor_lowering as EditorLowering  # noqa: E402
 
 
 CONTRACT = ROOT / "config" / "ship-builder-v1.json"
@@ -443,9 +444,113 @@ def closure_for(
     return suite, closure
 
 
+def selected_catalog(catalog: dict[str, Any], out: Path, *, root: Path = ROOT) -> dict[str, Any]:
+    """Resolve editor ownership from the public producer, then lower its seam."""
+    catalog = json.loads(json.dumps(catalog))
+    selectors = [s for lib in catalog['libraries'] for s in lib['sources']
+                 if isinstance(s, dict)]
+    if not selectors:
+        return catalog
+    authority = load_json(root / 'config/c2-v220-public-build-authority.json', 'product authority')
+    projection_name = 'config/c2-v220-public-plane/inputs.json'
+    rows = [r for r in authority['producer_inputs'] if r['path'] == projection_name]
+    require(len(rows) == 1, 'product projection owner is not unique')
+
+    def bound(row):
+        local = Path(row['path'])
+        require(not local.is_absolute() and '..' not in local.parts, 'non-local source owner')
+        path = root / local
+        require(path.is_file() and not path.is_symlink(), 'missing source owner: ' + str(local))
+        require(path.stat().st_size == row['bytes'] and sha(path) == row['sha256'],
+                'source owner identity drift: ' + str(local))
+        return path
+
+    projection = load_json(bound(rows[0]), 'product projection')
+    owners: dict[str, list[Path]] = {}
+    for row in projection['inputs']:
+        if Path(row['source']['path']).suffix != '.lisp':
+            continue
+        path = bound(row['source'])
+        definitions, _ = top_definitions([path])
+        for name in definitions:
+            owners.setdefault(name, []).append(path)
+    bindings = []
+    domains = []
+    for lib in catalog['libraries']:
+        for i, source in enumerate(lib['sources']):
+            if not isinstance(source, dict):
+                continue
+            if set(source) == {'base_source', 'product_list_domain'}:
+                inputs = []
+                for key in ('base_source', 'product_list_domain'):
+                    local = Path(source[key])
+                    require(not local.is_absolute() and '..' not in local.parts,
+                            'non-local domain source')
+                    path = root / local
+                    require(path.is_file() and not path.is_symlink(), 'missing domain source')
+                    inputs.append(path)
+                require(source['product_list_domain'] == 'lib/domain-tier1.lisp',
+                        'not the product list-domain authority')
+                try:
+                    text, proof = EditorLowering.compose_list_domain(
+                        inputs[0].read_text(), inputs[1].read_text())
+                except EditorLowering.LoweringError as exc:
+                    raise ShipError('domain composition: ' + str(exc)) from exc
+                target = root / 'build/ship-domain-projection' / proof['output_sha256'] / 'prelude.lisp'
+                target.parent.mkdir(parents=True, exist_ok=True)
+                if target.exists():
+                    require(target.read_text() == text, 'edited domain projection')
+                else:
+                    target.write_text(text)
+                domains.append(dict(inputs=[bind(p, root=root) for p in inputs],
+                                    projection=proof, output=bind(target, root=root)))
+                lib['sources'][i] = str(target.resolve())
+                continue
+            require(set(source) == {'product_definition', 'input_variant', 'authored_source'}
+                    and source['input_variant'] == 'public', 'unknown source selector')
+            matches = owners.get(source['product_definition'], [])
+            require(len(matches) == 1, 'selected product definition owner is not unique')
+            # Stable derived path: independent build directories must not
+            # change the catalogue identity of identical editor bytes.
+            authored_path = Path(source['authored_source'])
+            require(not authored_path.is_absolute() and '..' not in authored_path.parts,
+                    'non-local authored editor')
+            authored = root / authored_path
+            require(authored.is_file() and not authored.is_symlink(), 'missing authored editor')
+            try:
+                product_text, product_proof = EditorLowering.product_source(
+                    authored.read_text(), matches[0].read_text())
+                directory = root / 'build/ship-editor-projection' / product_proof['output_sha256']
+                product_path = directory / 'product.lisp'
+                directory.mkdir(parents=True, exist_ok=True)
+                if product_path.exists():
+                    require(product_path.read_text() == product_text, 'edited product projection')
+                else:
+                    product_path.write_text(product_text)
+                target = directory / 'public.lisp'
+                proof = EditorLowering.materialize(product_path, target)
+            except EditorLowering.LoweringError as exc:
+                raise ShipError('editor lowering: ' + str(exc)) from exc
+            bindings.append(dict(product=bind(matches[0], root=root), lowering=proof,
+                                 authored=bind(authored, root=root), product_projection=product_proof,
+                                 selected_product=bind(product_path, root=root),
+                                 output=bind(target, root=root)))
+            lib['sources'][i] = str(target.resolve())
+    write_json(out / 'editor-lowering.json', dict(bindings=bindings))
+    write_json(out / 'list-domain-projection.json', dict(bindings=domains))
+    return catalog
+
+
+def validate_emitted_closure(suite):
+    require(not suite.get('allowed_external_calls'), 'external-call exemptions forbidden')
+    compiled = Stdlib._compile_suite(suite, include_cases=False)
+    heap, _names, code, _flags, _resident, _bundle, directory, *_ = compiled
+    return Stdlib._validate_dependency_expectations(suite, heap, code, directory)
+
+
 def prepare(form: str, project_path: Path, out: Path, *, root: Path = ROOT) -> dict[str, Any]:
     contract = load_json(root / CONTRACT.relative_to(ROOT), "ship contract")
-    catalog = load_json(root / CATALOG.relative_to(ROOT), "ship catalog")
+    catalog = selected_catalog(load_json(root / CATALOG.relative_to(ROOT), "ship catalog"), out, root=root)
     validate_contract(contract, catalog, root=root)
     name, entry = parse_ship_form(form)
     project, project_bytes = read_project(project_path, name)
@@ -462,6 +567,7 @@ def prepare(form: str, project_path: Path, out: Path, *, root: Path = ROOT) -> d
     except L65P.L65PError as exc:
         raise ShipError(f"dependency-resolution:{exc}") from exc
     suite, closure = closure_for(project, project_path, entry, catalog, lock, root=root)
+    validate_emitted_closure(suite)
     out.mkdir(parents=True, exist_ok=True)
     write_json(out / "suite.json", suite)
     write_json(out / "closure.json", closure)
@@ -962,7 +1068,8 @@ def build(
 
 def contract_selftest() -> dict[str, Any]:
     contract = load_json(CONTRACT, "ship contract")
-    catalog = load_json(CATALOG, "ship catalog")
+    catalog = selected_catalog(load_json(CATALOG, "ship catalog"),
+                               ROOT / 'build/ship-builder/catalog-selftest')
     validate_contract(contract, catalog)
     good = parse_ship_form("(ship \"probe\" :entry 'main)")
     require(good == ("probe", "main"), "ship form oracle drift")

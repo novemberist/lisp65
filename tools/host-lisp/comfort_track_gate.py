@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from collections import Counter
+from contextlib import nullcontext
 import hashlib
 import json
 from pathlib import Path
@@ -24,6 +26,7 @@ import evidence_era as ERA  # noqa: E402
 CONTRACT = ROOT / "config/comfort-track-contract.json"
 RECEIPT = (ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
            / "comfort-track-host-first-receipt.json")
+LIVE_RECEIPT = RECEIPT.with_name('comfort-track-live-domain-receipt.json')
 PUBLIC_SURFACE = ROOT / "config/dialect-v2-surface.json"
 RECORDED_ON = "2026-08-06"
 SEALED_COMMIT = "361c95df369f332224a5d8ac71a6b6de5465370a"
@@ -479,6 +482,41 @@ def selftest() -> None:
     require(len(mutations) == 3, "comfort selftest mutation count drift")
 
 
+def runtime_successor():
+    """Keep the sealed 7,480-step claim, execute and attribute its live successor."""
+    original = B.P0VM
+    counts = Counter()
+    class VM(original):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.code_names.update({id(c): self.heap.obj_to_text(n)
+                                    for n,c in self.directory.items()})
+        def _trace_instruction(self, name, code, pc, spec, operand):
+            counts[name] += 1
+            return super()._trace_instruction(name, code, pc, spec, operand)
+    worlds = {}
+    try:
+        B.P0VM = VM
+        for label, context in [('historical', ERA.generated_workbench_world('520352a6')),
+                               ('live', nullcontext())]:
+            counts.clear()
+            with context:
+                path = ROOT/load(CONTRACT)['suite']
+                result = S.check_suite(str(path), S._read_suite(str(path)))
+            worlds[label] = dict(steps=result['steps'], functions=dict(sorted(counts.items())))
+    finally:
+        B.P0VM = original
+    a,b = worlds.values()
+    delta = {n:b['functions'].get(n,0)-a['functions'].get(n,0)
+             for n in sorted(set(a['functions'])|set(b['functions']))}
+    delta = {n:v for n,v in delta.items() if v}
+    require(a['steps'] == load(RECEIPT)['artifact']['source_steps'], 'historical Comfort steps drift')
+    require(sum(delta.values()) == b['steps']-a['steps'], 'Comfort step attribution residue')
+    return dict(authority='00ba3afa', historical_receipt_sha256=sha(RECEIPT),
+                historical_world='520352a6', worlds=worlds, delta=delta, remainder=0,
+                live_domain=bind(ROOT/'lib/domain-tier1.lisp'), product_builds=0)
+
+
 def main(argv: list[str]) -> int:
     command = argv[1] if len(argv) > 1 else "check"
     if command == "selftest":
@@ -489,11 +527,24 @@ def main(argv: list[str]) -> int:
     if command == "show":
         sys.stdout.write(canonical(receipt))
         return 0
-    if command != "check":
+    if command not in ('check', 'write-live'):
         raise ComfortError(f"unknown command: {command}")
+    successor = runtime_successor()
+    require(receipt['artifact']['source_steps'] == successor['worlds']['live']['steps'],
+            'Comfort live receipt/measurement world mismatch')
+    # Compare all original facts unchanged; only the explicitly separated
+    # measured live row must not overwrite its historical predecessor.
+    receipt['artifact']['source_steps'] = successor['worlds']['historical']['steps']
     require(RECEIPT.is_file(), "comfort receipt absent")
     require(RECEIPT.read_text(encoding="utf-8") == canonical(receipt),
             "comfort host-first receipt drift")
+    if command == 'write-live':
+        LIVE_RECEIPT.write_text(canonical(successor), encoding='utf-8')
+    else:
+        require(LIVE_RECEIPT.read_text(encoding='utf-8') == canonical(successor),
+                'Comfort live-domain successor drift')
+    print('comfort runtime successor: historical=%d live=%d remainder=0' % (
+        successor['worlds']['historical']['steps'], successor['worlds']['live']['steps']))
     print(
         "comfort-track: PASS functions=%d cases=%d edges=%d mutations=%d "
         "bank2=+%d headroom=%d resident=+0 device=0 release=deferred"

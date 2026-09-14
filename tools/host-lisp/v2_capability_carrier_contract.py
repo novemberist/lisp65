@@ -16,6 +16,7 @@ from typing import Any, Callable
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONTRACT = ROOT / "config/v2-capability-carrier-block.json"
 DEFAULT_FIXTURE = ROOT / "tests/bytecode/dialect-v2/capability-carrier/surface.json"
+PREMIGRATION_REPORT = ROOT / "build/bytecode/workbench-service-call-inventory.json"
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 CHECKPOINT_IDS = (
     "contract-surface-fixtures",
@@ -898,6 +899,45 @@ def selftest(contract_path: Path, fixture_path: Path) -> None:
     print(f"v2-capability-carrier-contract-selftest: PASS mutations={len(mutations) + len(fixture_mutations)}")
 
 
+def validate_premigration_report(report: dict[str, Any]) -> None:
+    """CP2's current-mode report is historical; CP4's staging report is not."""
+    import workbench_service_call_inventory as inventory
+
+    binding = report.get("era_binding", {})
+    if (binding.get("commit") != inventory.INVENTORY_ERA
+            or binding.get("source_archive_sha256") != hashlib.sha256(inventory.era_archive()).hexdigest()
+            or binding.get("live_product_claim") is not False):
+        raise ContractError("checkpoint 2 requires the sealed v1 inventory, not live old paths")
+    import subprocess
+    historical = json.loads(subprocess.check_output(
+        ["git", "show", inventory.INVENTORY_ERA +
+         ":tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-2-receipt.json"], cwd=ROOT))
+    summary = report.get("summary", {})
+    for key in ("unresolved_calls", "unresolved_targets", "native_service_calls",
+                "intentional_error_sentinel_calls", "callprim_calls", "directory_calls"):
+        if summary.get(key) != historical["metrics"][key]:
+            raise ContractError(f"checkpoint 2 historical inventory metric drift: {key}")
+
+
+def check_premigration_report(path: Path) -> None:
+    report = _load(path, "pre-migration inventory")
+    validate_premigration_report(report)
+    for kind in ("old-path", "wrong-era", "miss-hidden"):
+        mutated = deepcopy(report)
+        if kind == "old-path":
+            mutated.pop("era_binding", None)
+        elif kind == "wrong-era":
+            mutated["era_binding"]["commit"] = "HEAD"
+        else:
+            mutated["summary"]["unresolved_calls"] = 0
+        try:
+            validate_premigration_report(mutated)
+        except ContractError:
+            pass
+        else:
+            raise ContractError(f"checkpoint 2 {kind} mutation survived")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
@@ -932,6 +972,8 @@ def main(argv: list[str] | None = None) -> int:
             item = contract["checkpoints"][args.number - 1]
             if item["status"] != "passed":
                 raise ContractError(f"checkpoint {args.number} is pending; implementation receipt required")
+            if args.number == 2:
+                check_premigration_report(PREMIGRATION_REPORT)
             print(f"v2-capability-carrier-check-host-{args.number}: PASS id={item['id']}")
             return 0
         passed = sum(item["status"] == "passed" for item in contract["checkpoints"])

@@ -41,6 +41,64 @@
           (car s6)
           (car s7))))
 
+;; These are fixed fields of private records built by this editor: MINI has
+;; six cells, the status cache nine, STATE eight. Direct CDR access preserves
+;; the proper list; the public nthcdr domain is unchanged and remains tested.
+(defun %ide-mini-pending ()
+  ((lambda (mini) (if mini (car (cdr (cdr (cdr (cdr (cdr mini)))))) (cons 0 nil)))
+    (symbol-value (quote ide-step))))
+
+;; ONE typed character: two conses, no string walk, no allocation proportional
+;; to the input.  This is the whole of the per-key work on the D key path.
+(defun %ide-mini-push (state code)
+  ((lambda
+     (mini)
+     (progn
+       (set-symbol-value
+         (quote ide-step)
+         ((lambda
+            (pend)
+            (list
+              (car mini)
+              (car (cdr mini))
+              (car (cdr (cdr mini)))
+              (car (cdr (cdr (cdr mini))))
+              (car (cdr (cdr (cdr (cdr mini)))))
+              (cons (+ (car pend) 1) (cons code (cdr pend)))))
+           (car (cdr (cdr (cdr (cdr (cdr mini))))))))
+       (%ide-state-with-message state 1005)))
+    (symbol-value (quote ide-step))))
+
+;; Bring the carrier string up to date.  Called once per full repaint and once
+;; per non-character key, never per typed character.
+(defun %ide-mini-fold ()
+  ((lambda
+     (mini)
+     (if
+       mini
+       ((lambda
+          (pend)
+          (if
+            (> (car pend) 0)
+            (progn
+              (set-symbol-value
+                (quote ide-step)
+                (list
+                  (car mini)
+                  (car (cdr mini))
+                  (list->string
+                    (append
+                      (string->list (car (cdr (cdr mini))))
+                      (%ide-rev-onto (cdr pend) nil)))
+                  (car (cdr (cdr (cdr mini))))
+                  (car (cdr (cdr (cdr (cdr mini)))))
+                  (cons 0 nil)))
+              nil)
+            nil))
+         (car (cdr (cdr (cdr (cdr (cdr mini)))))))
+       nil))
+    (symbol-value (quote ide-step))))
+
 (defun %ide-mini-status-line ()
   ((lambda (mini)
      ((lambda (prompt input default)
@@ -52,15 +110,60 @@
       (car (cdr mini))
       (car (cdr (cdr mini)))
       (car (cdr (cdr (cdr mini))))))
-   (symbol-value (quote ide-step))))
+   (progn (%ide-mini-fold) (symbol-value (quote ide-step)))))
 
 (defun %ide-mini-set (state action prompt input default options)
   (progn
-    (set-symbol-value (quote ide-step) (list action prompt input default options))
+    ;; Slot 5 is the O(1) input carrier: (count . reversed-codes).  Typed
+    ;; characters are pushed onto it; the string in slot 2 is brought up to
+    ;; date only by %ide-mini-fold.
+    (set-symbol-value (quote ide-step)
+                      (list action prompt input default options (cons 0 nil)))
     (%ide-state-with-message state 1005)))
 
+;; The one minibuffer status composition.  The renderer paints these parts and
+;; the render cursor and idle blink sum their lengths, so the cursor column
+;; always follows the drawn input (a list, not a concatenated copy per key).
+(defun %ide-mini-status-parts (buffer)
+  (let* ((mini (progn (%ide-mini-fold) (symbol-value (quote ide-step))))
+         (input (car (cdr (cdr mini))))
+         (default (car (cdr (cdr (cdr mini)))))
+         (show-default (if (> (string-length input) 0) nil
+                           (> (string-length default) 0))))
+    ;; Active input owns the whole row; retain the action's prompt exactly
+    ;; once. The normal buffer/status frame is restored on leaving input.
+    (list (car (cdr mini))
+          (if show-default "[" "")
+          (if show-default default input)
+          (if show-default "]" ""))))
+
+(defun %ide-mini-status-width (parts x)
+  (if parts
+      (%ide-mini-status-width (cdr parts) (+ x (string-length (car parts))))
+      x))
+
 (defun %ide-mini-start (state action prompt input default options)
-  (%ide-mini-set state action prompt (if input input "") (if default default "") options))
+  (progn
+    ;; Hand off the existing cursor cell, not the buffer renderer.  Cached
+    ;; visible lines already contain its underlying character; beyond EOL
+    ;; the underlying cell is a space, not the cursor's underscore.
+    (if (eq (car (cdr state)) 1005)
+        nil
+        (let* ((point (car (cdr (cdr (cdr (car state))))))
+               (x (cdr point))
+               (y (- (car point) (car (cdr (cdr state)))))
+               (size (screen-size)))
+          (if (and (>= x 0) (< x (car size))
+                   (>= y 0) (< y (- (car (cdr size)) 1)))
+              (let ((line (%ide-line-at
+                           (car (cdr (cdr (cdr state)))) y)))
+                (screen-put-char x y
+                  (if (< x (string-length line)) (string-ref line x) 32) 7))
+              nil)))
+    ((lambda (size)
+       (%ide-pad-eol 0 (car size) (- (car (cdr size)) 1) 7))
+     (screen-size))
+    (%ide-mini-set state action prompt (if input input "") (if default default "") options)))
 
 (defun %ide-mini-tab-value (input default options first seen)
   (if options
@@ -89,8 +192,10 @@
          fallback))
    (symbol-value (quote %ide-mini-history))))
 
+;; Slow edit operations return the new input. Form D owns printable appends
+;; in its pending carrier; no separately interned append witness is needed.
 (defun %ide-mini-input-value (code action input default options)
-  (cond ((= code 9)
+   (cond ((= code 9)
          (%ide-mini-tab-value input default options nil nil))
         ((or (= code 20) (= code 127))
          (if (> (string-length input) 0)
@@ -105,7 +210,28 @@
         (t nil)))
 
 (defun %ide-mini-step (state event)
-  ((lambda (code mini)
+  ((lambda (code)
+     (if (ide-printable-code-p code)
+         (%ide-mini-push state code)
+         (%ide-mini-step-slow state code)))
+   (ide-event-code event)))
+
+;; Everything that is not a plain character needs the whole input, so it folds
+;; the carrier first.  Once per such key, never per typed character.
+;; T is a private lazy-options marker, consumed only by TAB. NIL is a
+;; completed empty population, so an empty directory is not rescanned.
+(defun %ide-mini-options (code mini)
+  (let ((options (car (nthcdr 4 mini))))
+    (if (if (= code 9) (eq options (quote t)) nil)
+        (if (= (car mini) 1008)
+            (remove-if-not (function %ide-fasl-slot-p) (dir))
+            (remove-if-not (function %ide-source-file-p) (cdr (dir))))
+        options)))
+
+(defun %ide-mini-step-slow (state code)
+  (progn
+   (%ide-mini-fold)
+   ((lambda (mini)
      ((lambda (action prompt input default options)
         (if (or (= code 13) (or (= code 10) (and (eq action 'search) (= code 19))))
             (progn
@@ -130,11 +256,10 @@
       (car (cdr mini))
       (car (cdr (cdr mini)))
       (car (cdr (cdr (cdr mini))))
-      (car (cdr (cdr (cdr (cdr mini)))))))
-   (ide-event-code event)
-   ;; This path is reached only after %ide-mini-start initialized the carrier;
-   ;; the invariant also keeps the compiled object below its 255-byte cap.
-   (symbol-value (quote ide-step))))
+      (%ide-mini-options code mini)))
+    ;; This path is reached only after %ide-mini-start initialized the carrier;
+    ;; the invariant also keeps the compiled object below its 255-byte cap.
+    (symbol-value (quote ide-step)))))
 
 ;; SCROLLING (2026-07-07, user request): clamp row-offset so the cursor remains
 ;; visible in the body (rows-1 lines). Runs BEFORE every render; an offset
@@ -529,7 +654,7 @@
    "Compile+load: "
    ""
    "fasl0"
-   (remove-if-not (function %ide-fasl-slot-p) (dir))))
+   (quote t)))
 
 (defun %ide-motion-key (state command)
   (cond ((eq command 1012)
@@ -742,13 +867,15 @@
         (%ide-render-string-codes-at text (+ x 1) y attr len))
       nil))
 
+;; Returns the column after the last painted cell, so an incremental status
+;; repaint can continue from it.
 (defun %ide-render-string-part-at (text source x y attr len)
   (if (< source len)
       (progn
         (screen-put-char x y (string-ref text source) attr)
         (%ide-render-string-part-at
          text (+ source 1) (+ x 1) y attr len))
-      nil))
+      x))
 
 (defun %ide-pad-eol (col columns y attr)
   (if (< col columns)
@@ -795,22 +922,44 @@
 ;; then paint stable string components directly.  The old implementation
 ;; repeatedly concatenated those components into a temporary string (about
 ;; 140 heap cells on every vertical move).
+;; The live minibuffer identity: the carrier cons while characters are
+;; pending (a fresh cons per key), the carrier string otherwise.  EQ separates
+;; two inputs without walking their characters.
+(defun %ide-mini-input ()
+  ((lambda
+     (mini)
+     (if
+       mini
+       ((lambda (pend) (if (> (car pend) 0) pend (car (cdr (cdr mini)))))
+         (car (cdr (cdr (cdr (cdr (cdr mini)))))))
+       nil))
+    (symbol-value (quote ide-step))))
+
 (defun %ide-status-current-p (state)
-  (let* ((buffer (car state))
-         (cache (if (boundp (quote ide-status-line)) (symbol-value (quote ide-status-line)) nil))
-         (name (car buffer))
-         (line (car (car (cdr (cdr (cdr buffer))))))
-         (mod (car (cdr (cdr (cdr (cdr (cdr buffer)))))))
-         (msg (car (cdr state))))
-    (if cache
-        (if (eq name (car cache))
-            (if (eq mod (car (cdr cache)))
-                (if (eq msg (car (cdr (cdr cache))))
-                    (= line (car (cdr (cdr (cdr cache)))))
-                    nil)
-                nil)
+  (let*
+    ((buffer (car state))
+      (cache
+        (if (boundp (quote ide-status-line)) (symbol-value (quote ide-status-line)) nil))
+      (name (car buffer))
+      (line (car (car (cdr (cdr (cdr buffer))))))
+      (mod (car (cdr (cdr (cdr (cdr (cdr buffer)))))))
+      (msg (car (cdr state))))
+    (if
+      cache
+      (if
+        (eq name (car cache))
+        (if
+          (eq mod (car (cdr cache)))
+          (if
+            (eq msg (car (cdr (cdr cache))))
+            (if
+              (= line (car (cdr (cdr (cdr cache)))))
+              (eq (%ide-mini-input) (car (cdr (cdr (cdr (cdr cache))))))
+              nil)
             nil)
-        nil)))
+          nil)
+        nil)
+      nil)))
 
 ;; Compatibility query for the existing IDE surface.  The renderer no longer
 ;; consumes a materialized status string per key, but callers of this private
@@ -829,10 +978,12 @@
          (x2 (%ide-render-status-part display-name x1 y)))
     (if modified (%ide-render-status-part " *" x2 y) x2)))
 
+;; The two trailing status components, without the pad to end of row.
+(defun %ide-render-status-suffix (budget x y)
+  (%ide-render-status-part budget (%ide-render-status-part " -- " x y) y))
+
 (defun %ide-render-status-finish (budget x width y)
-  (let* ((x1 (%ide-render-status-part " -- " x y))
-         (x2 (%ide-render-status-part budget x1 y)))
-    (%ide-pad-eol x2 width y 7)))
+  (%ide-pad-eol (%ide-render-status-suffix budget x y) width y 7))
 
 (defun %ide-render-status-line-direct
     (name modified point budget width y)
@@ -852,12 +1003,11 @@
               (number->string (+ (car point) 1)) x4 y)))
     (%ide-render-status-finish budget x5 width y)))
 
-(defun %ide-render-status-mini-direct
-    (name modified budget width y)
-  (let* ((x1 (%ide-render-status-prefix name modified y))
-         (x2 (%ide-render-status-part " M-x " x1 y))
-         (x3 (%ide-render-status-part (%ide-mini-status-line) x2 y)))
-    (%ide-render-status-finish budget x3 width y)))
+(defun %ide-render-status-mini-direct (parts x budget width y)
+  (if parts
+      (%ide-render-status-mini-direct
+       (cdr parts) (%ide-render-status-part (car parts) x y) budget width y)
+      (%ide-pad-eol x width y 7)))
 
 (defun %ide-render-status-direct (state width y)
   (let* ((buffer (car state))
@@ -868,25 +1018,154 @@
          (modified (car (cdr (cdr (cdr (cdr (cdr buffer))))))))
     (if (eq message 1005)
         (%ide-render-status-mini-direct
-         name modified budget width y)
+         (%ide-mini-status-parts buffer) 0 budget width y)
         (if message
             (%ide-render-status-msg-direct
              name modified message point budget width y)
             (%ide-render-status-line-direct
              name modified point budget width y)))))
 
+
+;; FORM C (deferred status repaint).  Per key only the minibuffer cells that
+;; gained a character are painted; the trailing components and the pad are not
+;; touched, so a burst of keys pays one cell per key.  The row is completed by
+;; %ide-status-flush on the first poll that finds no key pending, so a burst
+;; pays exactly one full repaint, at its end.
+(defun %ide-render-status-append (col drawn y)
+  ((lambda (pend)
+     (progn
+       ;; The newest codes sit at the front of the reversed carrier, so they
+       ;; are painted right to left and the walk stops at COL.
+       (%ide-render-reverse-codes-at
+        (cdr pend) (- (+ col (- (car pend) drawn)) 1) y col 7)
+       nil))
+   (%ide-mini-pending)))
+
+;; A ninth cache cell owns the deferred flag in its car. The first eight
+;; fields retain their meanings and the spine always ends in nil, as the
+;; product's strict nthcdr/length domain requires. No symbol is allocated.
+(defun %ide-status-flush-cursor (state width y)
+  ((lambda (x)
+     (screen-put-char (if (< x width) x (- width 1)) y 95 129))
+   (%ide-mini-drawn state)))
+
+(defun %ide-status-flush (state width y)
+  ((lambda
+     (tail)
+     (if
+       (if tail (car tail) nil)
+       (progn
+         (rplaca tail nil)
+         ;; Appended input owns the row too: never restore the idle counter
+         ;; while a minibuffer is active. Its tail was cleared on entry.
+         (%ide-status-flush-cursor state width y)
+         (quote t))
+       nil))
+    (if
+      (boundp (quote ide-status-line))
+      (cdr
+        (cdr (cdr (cdr (cdr (cdr (cdr (cdr (symbol-value (quote ide-status-line))))))))))
+      nil)))
+
+;; APPEND BASE.  Non-nil means: the row on screen already carries the drawn
+;; minibuffer text of the cached input, and the live input is that input with
+;; one character appended.  The value is the column that drawn text ended at,
+;; so the repaint may start there instead of at column zero. A coalesced burst
+;; paints every pending code after the last drawn count in one operation.
+(defun %ide-mini-carrier ()
+  ((lambda (mini) (if mini (car (cdr (cdr mini))) nil))
+   (symbol-value (quote ide-step))))
+
+(defun %ide-mini-append-base (cache name mod line)
+  (if
+    (if
+      cache
+      (if
+        (eq (car cache) name)
+        (if
+          (eq (car (cdr cache)) mod)
+          (if
+            (eq (car (cdr (cdr cache))) 1005)
+            (= line (car (cdr (cdr (cdr cache)))))
+            nil)
+          nil)
+        nil)
+      nil)
+    ((lambda
+       (carrier drawn pend)
+       (if
+         (eq carrier (%ide-mini-carrier))
+         (if
+           (> (car pend) drawn)
+           (cons
+             (if
+               (if (> drawn 0) (quote t) (> (string-length carrier) 0))
+               (car (cdr (cdr (cdr (cdr (cdr cache))))))
+               ((lambda
+                  (n)
+                  (- (car (cdr (cdr (cdr (cdr (cdr cache)))))) (if (> n 0) (+ n 2) 0)))
+                 (string-length (car (cdr (cdr (cdr (symbol-value (quote ide-step)))))))))
+             drawn)
+           nil)
+         nil))
+      (car (cdr (cdr (cdr (cdr (cdr (cdr cache)))))))
+      (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr cache))))))))
+      (%ide-mini-pending))
+    nil))
+
+;; Paint first, then record what is on the row. The first typed character
+;; clears the old [default] and suffix from its origin to the end of the row.
+;; A full repaint folds the carrier; write the cache after painting in either
+;; case, and never rebuild the buffer body merely for minibuffer characters.
+(defun %ide-status-store (state width y base)
+  (progn
+    (if
+      base
+      (progn
+        (if
+          (if (= (cdr base) 0) (= (string-length (%ide-mini-carrier)) 0) nil)
+          (%ide-pad-eol (car base) width y 7)
+          nil)
+        (%ide-render-status-append (car base) (cdr base) y))
+      (%ide-render-status-direct state width y))
+    (%ide-status-cache-put state base)
+    nil))
+
+(defun %ide-status-cache-put (state base)
+  (let* ((buffer (car state))
+         (msg (car (cdr state)))
+         (pend (%ide-mini-pending))
+         (carrier (if (eq msg 1005) (%ide-mini-carrier) nil)))
+    (set-symbol-value
+     (quote ide-status-line)
+     (list (car buffer)
+           (car (cdr (cdr (cdr (cdr (cdr buffer))))))
+           msg
+           (car (car (cdr (cdr (cdr buffer)))))
+           (%ide-mini-input)
+           (if base
+               (+ (car base) (- (car pend) (cdr base)))
+               (if carrier
+                   (%ide-mini-status-width (%ide-mini-status-parts buffer) 0)
+                   0))
+           carrier
+           (car pend)
+           (if base (quote t) nil)))))
+
 (defun %ide-render-status-cached (state width y)
   (if (%ide-status-current-p state)
       nil
-      (let* ((buffer (car state))
-             (name (car buffer))
-             (line (car (car (cdr (cdr (cdr buffer))))))
-             (mod (car (cdr (cdr (cdr (cdr (cdr buffer)))))))
-             (msg (car (cdr state))))
-        (progn
-          (set-symbol-value (quote ide-status-line)
-                            (list name mod msg line))
-          (%ide-render-status-direct state width y)))))
+      (let* ((buffer (car state)))
+        (%ide-status-store
+         state width y
+         (if (eq (car (cdr state)) 1005)
+             (%ide-mini-append-base
+              (if (boundp (quote ide-status-line))
+                  (symbol-value (quote ide-status-line)) nil)
+              (car buffer)
+              (car (cdr (cdr (cdr (cdr (cdr buffer))))))
+              (car (car (cdr (cdr (cdr buffer))))))
+             nil)))))
 
 ;; FAST PATH per key (DESTRUCTIVE in the render cache, only two rplaca calls):
 ;;  - Status line: paint only when its text changes (cache EQ test).
@@ -996,11 +1275,22 @@
 
 ;; COMPUTE-LINES-ONCE (2026-07-07): accepts the already materialized line list
 ;; instead of reconstructing (ide-buffer-lines buffer) again.
+;; The drawn minibuffer width, from the status cache the paint just stored.
+;; Only a render that painted nothing has to recompose the parts.
+(defun %ide-mini-drawn (state)
+  ((lambda
+     (cache)
+     (if
+       (if cache (eq (car (cdr (cdr cache))) 1005) nil)
+       (car (cdr (cdr (cdr (cdr (cdr cache))))))
+       (%ide-mini-status-width (%ide-mini-status-parts (ide-state-buffer state)) 0)))
+    (if (boundp (quote ide-status-line)) (symbol-value (quote ide-status-line)) nil)))
+
 (defun ide-render-cursor-from (state lines columns rows attr)
   (if (eq (car (cdr state)) 1005)
       ((lambda (x)
          (screen-put-char (if (< x columns) x (- columns 1)) (- rows 1) 95 attr))
-       (string-length (ide-status-line state columns)))
+       (%ide-mini-drawn state))
       (let* ((buffer (ide-state-buffer state))
              (point (ide-buffer-point buffer))
              (line-index (car point))
@@ -1155,15 +1445,7 @@
 ;; allocates no adapter representation on an idle tick.
 (defun %ide-idle-mini-start (state)
   (let* ((idle (symbol-value (quote %ide-idle)))
-         (mini (symbol-value (quote ide-step)))
-         (prompt (car (cdr mini)))
-         (input (car (cdr (cdr mini))))
-         (default (car (cdr (cdr (cdr mini)))))
-         (point (+ (string-length prompt)
-                   (if (> (string-length input) 0)
-                       (string-length input)
-                       (if (> (string-length default) 0)
-                           (+ (string-length default) 2) 0)))))
+         (point (%ide-mini-drawn state)))
     (progn
       (rplaca (nthcdr 2 idle) point)
       (rplaca (nthcdr 3 idle) 0)
@@ -1339,7 +1621,7 @@
            ((lambda (next)
               (if (eq (ide-state-message next) 1015)
                   (%ide-persist-state (%ide-state-with-message next nil))
-                  (ide-run (ide-render next))))
+                  (ide-run (%ide-input-render next))))
             (%ide-drain-pending (ide-step state key))))
          (let* ((idle (symbol-value (quote %ide-idle)))
                 (phase (car (cdr idle)))
@@ -1358,14 +1640,50 @@
                                        (%ide-paint answer))
                                    nil))
                              nil)))))
-           (progn (%ide-blink state painted) (%ide-poll state)))))
+           (progn
+             (%ide-status-flush state
+                                (ide-state-render-columns state)
+                                (- (ide-state-render-rows state) 1))
+             (%ide-blink state painted) (%ide-poll state)))))
    (%ide-idle 4 nil nil nil nil nil nil nil nil)))
 
 ;; C-x C-c is the only editor exit. RUN/STOP remains exclusively the global
 ;; evaluation abort, and ESC remains a minibuffer cancel key. Persistence runs
 ;; once before the nonblocking poll loop and after every rendered input batch.
+;; Complete one drained batch before waiting again. The product's lean loop
+;; and the diagnostic idle loop use this same paint/suffix boundary.
+(defun %ide-input-render (state)
+  (let*
+    ((size (screen-size))
+      (width (car size))
+      (y (- (car (cdr size)) 1))
+      (mini (symbol-value (quote ide-step))))
+    (if
+      (if
+        mini
+        (if
+          (eq (car (cdr state)) 1005)
+          (quote t)
+          nil)
+        nil)
+      (progn
+        (%ide-render-status-cached state width y)
+        (if
+          (%ide-status-flush state width y)
+          nil
+          (%ide-status-flush-cursor state width y))
+        state)
+      (let ((next (ide-render state))) (progn (%ide-status-flush next width y) next)))))
+
+(defun %ide-input-open ()
+  (if (= (peek 255 141) 255)
+      (progn (poke 255 140 0) (poke 255 141 0))
+      nil))
+
 (defun ide-run (state)
-  (%ide-poll (%ide-persist-state state)))
+  (progn
+    (%ide-input-open)
+    (%ide-poll (%ide-persist-state state))))
 
 ;; ---- Buffer persistence plus MULTIPLE named buffers (hardware user finding/request,
 ;; 2026-07-05) ----
@@ -1461,9 +1779,15 @@
                            (ide-cursor-row state rows) columns))))
     (progn (set-symbol-value (quote %ide-idle) idle) state)))
 
+(defun %ide-input-finish (state)
+  (progn
+    (poke 255 141 255)
+    (%ide-store-buffer (ide-state-buffer state))))
+
 (defun ide (&rest name)
-  (%ide-store-buffer
-   (ide-state-buffer
-    (ide-run (%ide-init (ide-render (ide-make-state
-                                     (%ide-resume-buffer
-                                      (if name (car name) nil)))))))))
+  (progn
+    (dotimes (counter 4 nil) (poke 188 (+ 252 counter) 0))
+    (%ide-input-finish
+     (ide-run (%ide-init (ide-render (ide-make-state
+                                      (%ide-resume-buffer
+                                       (if name (car name) nil)))))))))

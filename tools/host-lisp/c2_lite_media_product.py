@@ -134,7 +134,7 @@ def bind(path: Path, role: str | None = None,
 
 def run(command: list[str], label: str) -> str:
     result = subprocess.run(
-        command, cwd=ROOT, text=True, stdout=subprocess.PIPE,
+        command, cwd=ROOT, text=True, encoding="utf-8", errors="backslashreplace", stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT, check=False)
     if result.returncode:
         raise MediaError(
@@ -1248,8 +1248,17 @@ def check() -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "action", choices=("build", "check", "reset-domain-selftest"))
+        "action", choices=("build", "check", "reset-domain-selftest", "output-selftest"))
     args = parser.parse_args()
+    if args.action == 'output-selftest':
+        command=[sys.executable,'-c','import sys;sys.stdout.buffer.write(bytes([0xc9]))']
+        require(run(command,'non-UTF8 output')=='\\xc9','tool output byte was lost')
+        try:run(command[:-1]+[command[-1]+';sys.exit(7)'],'nonzero output')
+        except MediaError as error:
+            require('(7)' in str(error) and '\\xc9' in str(error),'exit code/output was lost')
+        else:raise MediaError('nonzero tool status accepted')
+        print('c2-lite-media-output: PASS controls=2 product-builds=0')
+        return 0
     if args.action == "reset-domain-selftest":
         value = reset_domain_mutation_gate(load(CONTRACT))
         print(

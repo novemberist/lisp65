@@ -530,7 +530,10 @@ def section_bytes(truth: ElfTruth, section: str) -> bytes:
     return truth.section_bytes(section)
 
 
+@ERA.in_host_source_world("1520bc2f^", extra_paths=(WINDOW.relative_to(ROOT).as_posix(),))
 def target_object_gate() -> dict[str, Any]:
+    # Historical four-section object proof. The live encoded successor and
+    # its exact +123-byte price are checked by c2-v160-input-drop-counters.
     current_obj, current_tmp = assemble_window()
     old_raw = ERA.era_blob(
         BASELINE_COMMIT, BASELINE_WINDOW.relative_to(ROOT).as_posix())

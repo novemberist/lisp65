@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 2.2.0**. The language remains
+This living reference describes **lisp65 2.3.0**. The language remains
 Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
@@ -158,11 +158,12 @@ The IDE library adds `(ide)`, `(ide-buffers)`, `(dir)`,
 `(m65d-save-new name string)`. Both libraries live on the product disk and
 must be loaded with `load-lib`; see the [User Guide](user-guide.md).
 
-### Optional names on the 2.2.0 medium
+### Optional names on the 2.3.0 medium
 
 The generated public-surface metadata index is a host-side population. The
-following optional libraries are delivered on the 2.2.0 product disk and
-loaded manually with symbol-form `require`; they are not loaded at boot:
+following optional libraries are delivered on the 2.3.0 product disk. The
+`INIT.L65` on that disk loads `place` and `string-extra` at boot; `buffer`,
+`inspect` and `defstruct` are loaded by hand with `require`:
 
 - generalized places from the `place` library: `setf`, `push`, `pop`, `incf`,
   `decf`;
@@ -284,7 +285,8 @@ publishes ordinary functions that carry no public-surface metadata.
 
 Byte buffers print as the opaque marker `?`, which is not a readable
 representation; read their contents with `buffer-ref` and their length with
-`buffer-length`. The `buffer` library is on the 2.2.0 product disk; load it with `(require 'buffer)`.
+`buffer-length`. The `buffer` library is on the 2.3.0 product disk; load it
+by hand with `(require "buffer")`.
 
 ## Interactive latency boundary
 
@@ -313,6 +315,12 @@ status and recovery rules are documented separately in the [User Guide](user-gui
 stops at the first error; it does not roll back libraries already installed.
 Load IDE, optional IDEX, and M65D from the product disk before the one-drive
 swap described in the [User Guide](user-guide.md).
+
+`require` accepts either a string or a quoted symbol: `(require "place")` and
+`(require 'place)` are equivalent, and a missing package returns `nil`.
+Library names given to `load-lib` and `require` are matched
+case-insensitively, so `(load-lib "IDE")` and `(load-lib "ide")` name the same
+library.
 
 ## Deliberate limits
 

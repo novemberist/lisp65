@@ -1,6 +1,7 @@
 /* Block 2.6 Card 3: execute malformed bytecode against the real VM. */
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "eval.h"
@@ -14,6 +15,8 @@ static uint8_t poke_value;
 static int failures;
 
 /* Device-owned seams are deterministic in this source-bound host fixture. */
+/* No file source is active here. Unexpected longjmp cleanup is not success. */
+void io_disk_source_abort(void) { abort(); }
 unsigned char io_disk_read_sector(unsigned char track, unsigned char sector) {
     (void)track; (void)sector; return 0;
 }

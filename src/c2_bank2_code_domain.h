@@ -4,6 +4,9 @@
 #ifndef LISP65_C2_BANK2_CODE_DOMAIN_H
 #define LISP65_C2_BANK2_CODE_DOMAIN_H
 #include <stdint.h>
+#if defined(LISP65_C2_LITE_COLD_EVICTION) && !defined(LISP65_C2_BANK2_CODE_LIMIT)
+#error "Cold-eviction product requires its explicit Bank-2 owner boundary"
+#endif
 #ifndef LISP65_C2_BANK2_CODE_LIMIT
 #define LISP65_C2_BANK2_CODE_LIMIT 65536UL
 #endif

@@ -986,6 +986,14 @@ uint16_t c2_product_dir_count(void) {
     return c2_ready ? c2_runtime.entry_count : 0u;
 }
 
+/* The static shortcut and the directory fallback share the same PETSCII
+ * name domain: discard the high bit, then fold ASCII letters to uppercase. */
+static uint8_t c2_library_name_fold(uint8_t code) {
+    code &= 127u;
+    if (code >= 'a' && code <= 'z') code -= 'a' - 'A';
+    return code;
+}
+
 uint8_t c2_product_static_image_named(obj name) {
     uint8_t record[32], image;
     uint16_t length, i;
@@ -995,7 +1003,9 @@ uint8_t c2_product_static_image_named(obj name) {
     for (image = 0; image < 6u && image < c2_runtime.image_count; ++image) {
         if (!c2_stream_shelf_read(32u + (uint32_t)image * 32u,
                                   record, sizeof record)) return 0u;
-        for (i = 0; i < length && record[i] == str_byte(name, i); ++i) { }
+        for (i = 0; i < length
+                    && c2_library_name_fold(record[i])
+                       == c2_library_name_fold(str_byte(name, i)); ++i) { }
         if (i == length && (length == 8u || record[length] == 0u))
             return 1u;
     }
@@ -3511,10 +3521,10 @@ static C2_KERNAL_RESIDENT uint8_t c2_append_begin(uint16_t length,
 #ifdef LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT
     if (!c2_overlay_call_range(LISP65_C2_APPEND_ENVELOPE_SLOT,
                                LISP65_C2_APPEND_CRC_METADATA_SLOT, &c2aw))
-        goto v5_fail;
+        goto v5_reject;
     C2AW_ROOTS_FRONTS_MARK(&c2aw) = C2_ROOTS_REQUEST_MARK;
     if (!c2_overlay_call(LISP65_C2_APPEND_ROOTS_FRONTS_SLOT, &c2aw))
-        goto v5_fail;
+        goto v5_reject;
     C2AW_ROOTS_FRONTS_MARK(&c2aw) = C2_FRONTS_REQUEST_MARK;
     if (!c2_overlay_call(LISP65_C2_APPEND_ROOTS_FRONTS_SLOT, &c2aw)
 #else
@@ -3536,7 +3546,12 @@ static C2_KERNAL_RESIDENT uint8_t c2_append_begin(uint16_t length,
                 ? LISP65_C2_APPEND_RESERVE_TRANSIENT_SLOT
                 : LISP65_C2_APPEND_RESERVE_PERSISTENT_SLOT, &c2aw)
 #endif
-        || !c2_append_run_stage_plan(&c2aw)) {
+        ) goto v5_reject;
+    /* Everything above validates the envelope and computes reservations in
+     * scratch only.  The stage plan is the first journal/world writer.  A
+     * rejection before it has no prepared rollback (nor initialized bounds)
+     * and must not run the rollback plan against stale scratch fields. */
+    if (!c2_append_run_stage_plan(&c2aw)) {
 #else
     if (!c2_overlay_call(LISP65_C2_APPEND_ENVELOPE_SLOT, &c2aw)
         || !c2_overlay_call(LISP65_C2_APPEND_CRC_SLOT, &c2aw)
@@ -3618,6 +3633,7 @@ v5_fail:
         c2_ready = 0;
         c2aw.append.error = 0u;
     }
+v5_reject:
     (void)c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_APPEND);
     return 0u;
 #endif

@@ -32,6 +32,7 @@ import c2_product_substitution_link as PRODUCT  # noqa: E402
 import c2_v160_display_ownership as DISPLAY  # noqa: E402
 import c2_v160_input_service_time_pricing as PRICE  # noqa: E402
 import c2_v180_substrate_device_result as DEVICE  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -699,6 +700,7 @@ def mutation_selftest(value: dict[str, Any]) -> dict[str, str]:
     return rejected
 
 
+@ERA.in_host_source_world(EVIDENCE_COMMIT)
 def derive() -> dict[str, Any]:
     block_a = load(BLOCK_A)
     require(block_a["status"] ==

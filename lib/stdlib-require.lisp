@@ -792,7 +792,7 @@
                 (nth 3 state) (nth 3 total) (nth 2 fronts))
               (%require-space-p
                 (nth 4 state) (nth 4 total) (nth 3 fronts))
-              nil)
+              (%list-malformed-error 1))
           nil)
       nil))
 
@@ -880,10 +880,12 @@
                 nil)))
         nil)))
 
+; The key is the canonical name string from require; equal is eql on atoms,
+; so two equal-content strings are compared with string=.
 (defun %require-fast-loaded-p (library)
   (let ((cache (symbol-value '*require-fast*)))
     (if cache
-        (if (equal library (nth 0 cache))
+        (if (string= library (nth 0 cache))
             (if (if (symbol-value '*require-index-lock*)
                     (equal
                       (symbol-value '*require-index-lock*)
@@ -909,8 +911,7 @@
                 t)
             nil)
         (let ((world (%require-world rows))
-              (ordinal (%require-index-name
-                         rows (symbol-name library) 0)))
+              (ordinal (%require-index-name rows library 0)))
           (if (if world ordinal nil)
               (if (%require-run-plan
                     ordinal rows lock (nth 0 world)
@@ -921,10 +922,25 @@
               nil))
         nil)))
 
+; The one resolution site: a symbol or a string becomes the canonical index
+; name here, so the fast cache (string=), the index lookup (string=) and the
+; resolver see one key.  (require "place") interns no package-name symbol.
 (defun require (library)
-  (if (symbolp library)
-      (if (%require-fast-loaded-p library)
-          t
-          (let ((index (%l65i-parse)))
-            (if index (%require-resolve library index) nil)))
-      nil))
+  (let ((name (if (stringp library)
+                  library
+                  (if (symbolp library) (symbol-name library) nil))))
+    (if name
+        (progn
+          ; Query the existing native loader owner without interning a name.
+          ; Keep interactive intent echoes, including already-loaded packages.
+          (if (%disk-load-lib)
+              (progn
+                (write-string "loading ")
+                (write-string name)
+                (write-string "...")
+                (terpri)))
+          (if (%require-fast-loaded-p name)
+              t
+              (let ((index (%l65i-parse)))
+                (if index (%require-resolve name index) nil))))
+        nil)))

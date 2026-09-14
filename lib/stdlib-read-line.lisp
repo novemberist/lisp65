@@ -272,6 +272,21 @@
 ; that spills past it walks on.  CURSOR -1 on an indented origin still clears
 ; every owned row across the full screen width, which is how an accepted line
 ; hands its rows back to sequential output.
+(defun %rl-label (row top clear)
+  (if (< row -2)
+      (let* ((native (< row -34))
+             (text (if native "lisp65> " "l65> "))
+             (base (- (if native (- -34 row) (- -2 row)) top)))
+        (dotimes (at (string-length text) nil)
+          (screen-put-char at base (if clear 32 (string-ref text at)) 1)))
+      nil))
+
+(defun %rl-lift (row top next-top columns)
+  (progn
+    (%rl-label row top 't)
+    (%rl-label row next-top nil)
+    (if columns (%rl-screen-tail nil 0 columns -2 top columns row) nil)))
+
 (defun %rl-screen-tail (codes index stop cursor top columns row)
   (if (= row -2)
       (let ((text "lisp65> "))
@@ -326,7 +341,7 @@
           (%rl-screen-tail (nthcdr next-position (cdr head)) next-position
                            (+ next-length 2) next-position next-top columns row)
           (progn
-            (%rl-screen-tail nil 0 columns -2 top columns row)
+            (%rl-lift row top next-top columns)
             (%rl-screen-tail (cdr head) 0 (* columns (+ next-top 1))
                              next-position next-top columns row)))
       (%read-line-loop state))))
@@ -369,16 +384,19 @@
             (%rl-put next-code state inserted dirty)
             (let* ((columns (car s6))
                    (top (car s5))
+                   (row (car (cdr s6)))
                    (next-top (/ (car s4) columns)))
             (progn
               (rplaca s5 next-top)
               (if (= next-top top)
                   (%rl-screen-tail
                    (nthcdr dirty (cdr (car state))) dirty (+ (car s4) 1)
-                   next-position next-top columns (car (cdr s6)))
-                  (%rl-screen-tail
-                   (cdr (car state)) 0 (* columns (+ next-top 1))
-                   next-position next-top columns (car (cdr s6))))
+                   next-position next-top columns row)
+                  (progn
+                    (%rl-lift row top next-top nil)
+                    (%rl-screen-tail
+                     (cdr (car state)) 0 (* columns (+ next-top 1))
+                     next-position next-top columns row)))
               (%read-line-loop state))))))))
 
 (defun %rl-dispatch (command state)
@@ -407,6 +425,27 @@
        (if (car (nthcdr 8 state)) command (%read-line-loop state)))
       (t (%read-line-loop state)))))
 
+; Direct painting and sequential output have distinct cursors. Clear the
+; temporary input surface, then hand the accepted line to sequential output
+; with its prompt first. No cursor positioning escape or native ABI is added.
+(defun %rl-end (state)
+  (let* ((codes (cdr (car state)))
+         (row (car (nthcdr 7 state)))
+         (text (%string-from-codes codes)))
+    (progn
+      (if (< row -2)
+          (progn
+            (%rl-screen-tail nil 0 0 -1 (car (nthcdr 5 state))
+                             (car (nthcdr 6 state)) row)
+            (write-string (if (< row -34) "lisp65> " "l65> "))
+            (write-string text))
+          (let ((position (car (nthcdr 3 state))))
+            (%rl-screen-tail (nthcdr position codes) position (+ position 1)
+                             -1 (car (nthcdr 5 state))
+                             (car (nthcdr 6 state)) row)))
+      (write-char 10)
+      text)))
+
 (defun %read-line-loop (state)
   (let* ((event (%rl-poll state))
          (code (if (numberp event) event (if event (cadr event) 0))))
@@ -423,18 +462,7 @@
 ;; END GENERATED REPL LINE KEYMAP
                ))
           (if (= command 1109)
-              (let* ((head (car state))
-                     (position (car (nthcdr 3 state)))
-                     (top (car (nthcdr 5 state)))
-                     (columns (car (nthcdr 6 state)))
-                     (row (car (nthcdr 7 state)))
-                     (codes (cdr head)))
-                (progn
-                  (%rl-screen-tail
-                   (nthcdr position codes) position (+ position 1)
-                   -1 top columns row)
-                  (write-char 10)
-                  (%string-from-codes codes)))
+              (%rl-end state)
               (%rl-dispatch command state))))))
 
 (defun %native-prompt (row)

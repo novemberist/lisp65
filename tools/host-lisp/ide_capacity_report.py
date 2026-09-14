@@ -9,11 +9,16 @@ Both modes reject an incomplete/overlapping partition and Core -> Extra calls.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import io
 from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
 import sys
+import subprocess
+import tarfile
+import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bytecode_p0 as B  # noqa: E402
@@ -27,6 +32,129 @@ L65M_ENTRY_BYTES = 8
 L65M_LITERAL_INDEX_BYTES = 2
 L65M_LITERAL_NODE_BYTES = 10
 L65M_LITERAL_PATCH_BYTES = 4
+
+# Completed capacity decision, not a live product projection. Its complete
+# source closure is read from Git, never from the current generated suites.
+CAPACITY_ERA = "18c9e789151c73b3c1ca957884461962cdc34b95"
+
+
+def capacity_era_archive(commit=CAPACITY_ERA):
+    if commit != CAPACITY_ERA:
+        raise CapacityError("capacity era drift: live/following worlds are not the baseline")
+    return subprocess.check_output(["git", "archive", "--format=tar", commit], cwd=ROOT)
+
+
+def validate_era_archive(raw):
+    expected = {}
+    for row in subprocess.check_output(
+            ["git", "ls-tree", "-rz", CAPACITY_ERA], cwd=ROOT).split(b"\0"):
+        if not row:
+            continue
+        meta, path = row.split(b"\t", 1)
+        mode, kind, oid = meta.split()
+        if kind != b"blob" or mode not in (b"100644", b"100755"):
+            raise CapacityError("non-file capacity-era input")
+        expected[path.decode()] = oid.decode()
+    with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+        actual = {}
+        for member in archive:
+            if member.isdir():
+                continue
+            if not member.isfile() or member.name in actual:
+                raise CapacityError("invalid/duplicate capacity-era member")
+            data = archive.extractfile(member).read()
+            actual[member.name] = hashlib.sha1(
+                b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
+    if actual != expected:
+        raise CapacityError("capacity-era archive population or bytes drift")
+
+
+def era_check(output=None, report=None):
+    reports = {
+        "cost": ("ide-bytecode-cost-report", "build/bytecode/ide-bytecode-costs.txt"),
+        "dynamic": ("ide-bytecode-dynamic-report", "build/bytecode/ide-bytecode-dynamic.txt"),
+    }
+    if report is not None and report not in reports:
+        raise CapacityError("unbound historical IDE report")
+    if report:
+        target = reports[report][0]
+        make_text = (ROOT / "Makefile").read_text()
+        def recipe_guard(text):
+            header = next((line for line in text.splitlines()
+                           if line.startswith(target + ":")), None)
+            if header != target + ":":
+                raise CapacityError("historical IDE report imports a live prerequisite")
+            body = text.split(header + "\n", 1)[1].split("\n\n", 1)[0]
+            variable = "IDE_BYTECODE_COST_REPORT" if report == "cost" else "IDE_BYTECODE_DYNAMIC_REPORT"
+            expected = (f'python3 tools/host-lisp/ide_capacity_report.py --era-report {report} '
+                        f'--json-out "$({variable})"')
+            if " ".join(body.replace("\\\n", " ").split()) != expected:
+                raise CapacityError("historical IDE report recipe reads live artifact paths")
+        recipe_guard(make_text)
+        try:
+            recipe_guard(make_text.replace(target + ":\n",
+                target + ": bytecode-p0-stdlib-artifacts\n", 1))
+        except CapacityError:
+            pass
+        else:
+            raise CapacityError("old live-artifact edge mutation survived")
+    raw = capacity_era_archive()
+    validate_era_archive(raw)
+    # Regression controls: a current-world binding and a changed/missing
+    # historical input must not silently fall back to the working tree.
+    try:
+        capacity_era_archive("HEAD")
+    except CapacityError:
+        pass
+    else:
+        raise CapacityError("live-era mutation survived")
+    for remove in (False, True):
+        mutated = io.BytesIO()
+        with tarfile.open(fileobj=io.BytesIO(raw)) as source, tarfile.open(fileobj=mutated, mode="w") as target:
+            for member in source:
+                data = source.extractfile(member).read() if member.isfile() else None
+                if member.name == "config/ide-capacity-contract.json":
+                    if remove:
+                        continue
+                    data += b"\n"
+                    member.size = len(data)
+                target.addfile(member, io.BytesIO(data) if data is not None else None)
+        try:
+            validate_era_archive(mutated.getvalue())
+        except CapacityError:
+            pass
+        else:
+            raise CapacityError("missing/changed era input mutation survived")
+    with tempfile.TemporaryDirectory(prefix="lisp65-ide-capacity-era-") as folder:
+        with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+            archive.extractall(folder, filter="data")
+        env = {k: v for k, v in os.environ.items()
+               if k not in ("MAKEFLAGS", "MFLAGS", "MAKEOVERRIDES")}
+        targets = ([reports[report][0]] if report else
+                   ["bytecode-p0-workbench-stdlib-artifacts", "ide-capacity-check"])
+        subprocess.run(["make", *targets], cwd=folder, env=env, check=True)
+        if report:
+            body = (Path(folder)/reports[report][1]).read_bytes()
+            if not body:
+                raise CapacityError("historical IDE report is empty")
+            result = {"status": "pass", "target": reports[report][0],
+                      "report_sha256": hashlib.sha256(body).hexdigest(),
+                      "report_bytes": len(body)}
+        else:
+            result = json.loads((Path(folder)/"build/bytecode/ide-capacity-report.json").read_text())
+        if result.get("status") != "pass":
+            raise CapacityError("historical capacity comparison failed")
+        result["era_binding"] = {"commit": CAPACITY_ERA,
+            "source_archive_sha256": hashlib.sha256(raw).hexdigest(),
+            "live_product_claim": False, "mutations": 4 if report else 3}
+        if output:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            if report:
+                output.write_bytes(body)
+                output = output.with_suffix(output.suffix + ".receipt.json")
+            output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    print(f"ide-capacity-era: PASS unchanged historical oracle; mutations={4 if report else 3}")
+    return 0
 
 
 class CapacityError(Exception):
@@ -983,7 +1111,11 @@ def main(argv=None) -> int:
     parser.add_argument("--json-out", type=Path)
     parser.add_argument("--report-only", action="store_true", help="return success even when gates fail")
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--era-check", action="store_true")
+    parser.add_argument("--era-report", choices=("cost", "dynamic"))
     args = parser.parse_args(argv)
+    if args.era_check or args.era_report:
+        return era_check(args.json_out, args.era_report)
     if args.selftest:
         return selftest()
     try:

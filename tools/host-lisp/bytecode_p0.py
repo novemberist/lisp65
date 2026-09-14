@@ -762,6 +762,52 @@ def disassemble_code_object(code, *, profile_id="dialect-v1", abi_ledger=None):
     return lines
 
 
+# Host D81 geometry, mirrored from the product's 1581 walkers
+# (src/io.c disk_dir_find / disk_chain_to_scratch, lib/stdlib-load.lisp,
+# lib/stdlib-load-lib.lisp, lib/stdlib-require.lisp, lib/ide-disk.lisp,
+# lib/m65-disk.lisp).  See docs/planning/host-d81-model-widening.md.
+D81_TRACKS = 80
+D81_SECTORS = 40
+D81_SECTOR_BYTES = 256
+D81_DIR_TRACK = 40
+D81_DIR_FIRST_SECTOR = 3
+D81_DIR_MAX_SECTORS = D81_SECTORS - D81_DIR_FIRST_SECTOR  # 40/3 .. 40/39
+D81_ENTRIES_PER_SECTOR = 8
+D81_NAME_BYTES = 16
+# Product profile value (io.c DISK_FILE_MAX = DISK_EXT_FILE_MAX = 0x9600 in
+# the product build; src/obj.h's fallback default is 0x9300).
+D81_PRODUCT_DISK_FILE_MAX = 0x9600
+DISK_FAILURE_SEMANTICS = ("host-nil", "product-abort")
+
+
+def _d81_fold(code):
+    """src/io.c disk_fold == lib/stdlib-load.lisp %load-fold-code."""
+    code &= 0xFF
+    if code > 127:
+        code -= 128
+    if 97 <= code <= 122:
+        code -= 32
+    return code
+
+
+def _d81_ts(value):
+    if isinstance(value, str):
+        track, sector = value.split("/")
+        return int(track, 0), int(sector, 0)
+    track, sector = value
+    return int(track), int(sector)
+
+
+def _d81_sector_bytes(value):
+    if isinstance(value, str):
+        data = bytes.fromhex(value)
+    else:
+        data = bytes(value)
+    if len(data) > D81_SECTOR_BYTES:
+        raise ValueError("raw D81 sector longer than 256 bytes")
+    return list(data.ljust(D81_SECTOR_BYTES, b"\0"))
+
+
 class P0VM:
     def __init__(
         self,
@@ -786,6 +832,12 @@ class P0VM:
         private_key_event_modes=False,
         memory_read_sequences=None,
         abi_profile="dialect-v1",
+        d81_directory_sectors=None,
+        d81_full_geometry=False,
+        disk_raw_sectors=None,
+        disk_read_fail_sectors=None,
+        disk_failure_semantics="host-nil",
+        disk_file_max=D81_PRODUCT_DISK_FILE_MAX,
         abi_ledger=None,
         delivered_callprims=None,
     ):
@@ -860,7 +912,31 @@ class P0VM:
                 ):
                     raise ValueError("mount-token injections must map positive operations to five bytes")
                 target[operation] = changed
+        if disk_failure_semantics not in DISK_FAILURE_SEMANTICS:
+            raise ValueError("disk_failure_semantics must be one of %s"
+                             % (DISK_FAILURE_SEMANTICS,))
+        self.disk_failure_semantics = disk_failure_semantics
+        self.disk_file_max = int(disk_file_max)
+        self.d81_full_geometry = bool(d81_full_geometry)
+        self.disk_raw_sectors = {
+            _d81_ts(key): _d81_sector_bytes(value)
+            for key, value in dict(disk_raw_sectors or {}).items()
+        }
+        self.disk_read_fail_sectors = {
+            _d81_ts(item) for item in (disk_read_fail_sectors or ())
+        }
+        self.disk_loaded_sources = []
+        self.disk_chain_trace = []
         self.disk_files = self._init_disk_files(disk_files)
+        needed = max(1, -(-len(self.disk_files) // D81_ENTRIES_PER_SECTOR))
+        requested = int(d81_directory_sectors or 0)
+        self.d81_directory_sector_count = max(needed, requested)
+        if self.d81_directory_sector_count > D81_DIR_MAX_SECTORS:
+            raise VMError(
+                "DiskFull",
+                "D81 directory needs %d sectors; track 40 holds %d (40/3..40/39)"
+                % (self.d81_directory_sector_count, D81_DIR_MAX_SECTORS),
+            )
         self.d81_bam_model = bool(d81_bam_model)
         self.fasl_stage = [0] * 16384
         self.compile_source_forms = []
@@ -988,6 +1064,7 @@ class P0VM:
         }
         self.disk_read_trace = []
         self.disk_write_trace = []
+        self.disk_chain_trace = []
         self.memory_read_trace = []
         self.memory_write_trace = []
 
@@ -1061,45 +1138,156 @@ class P0VM:
         return self.fasl_stage[index]
 
     def _init_disk_files(self, disk_files):
+        """Build the fixture's files.
+
+        Legacy form (unchanged): name -> text, or name -> {content, capacity};
+        files are allocated sequentially from 1/2, skipping track 40.
+        Widened form: a dict spec may also carry "bytes" (bytes/list) or
+        "content_hex", an explicit start "track"/"sector" (the chain then
+        continues sequentially, skipping track 40), or a complete "sectors"
+        list, and an entry "type" byte (default 0x82).  Explicit files are
+        placed first; the rest keep the legacy sequential allocator.
+        """
         if disk_files is None:
             disk_files = {
                 "TESTLIB": "alpha\nbeta",
                 "WORK": {"content": "", "capacity": 254},
                 "DEMO": "(defun demo-numbers-run () 42)\n",
             }
-        out = {}
-        track = 1
-        sector = 2
+        specs = []
         for name, spec in disk_files.items():
-            key = self._disk_key(name)
+            key = self._disk_fixture_name(name)
+            if any(prior[0] == key for prior in specs):
+                raise VMError(
+                    "DuplicateName",
+                    "D81 fixture names %r fold to the same 16-byte directory name" % key,
+                )
+            entry_type = 0x82
+            start = None
+            explicit = None
             if isinstance(spec, dict):
-                content = spec.get("content", "")
+                if "bytes" in spec:
+                    content = bytes(spec["bytes"]).decode("latin-1")
+                elif "content_hex" in spec:
+                    content = bytes.fromhex(spec["content_hex"]).decode("latin-1")
+                else:
+                    content = spec.get("content", "")
+                    if isinstance(content, (bytes, bytearray)):
+                        content = bytes(content).decode("latin-1")
                 capacity = int(spec.get("capacity", max(254, len(content))))
+                entry_type = int(spec.get("type", 0x82)) & 0xFF
+                if "sectors" in spec:
+                    explicit = [_d81_ts(item) for item in spec["sectors"]]
+                elif "track" in spec or "sector" in spec:
+                    start = (int(spec["track"]), int(spec["sector"]))
+            elif isinstance(spec, (bytes, bytearray)):
+                content = bytes(spec).decode("latin-1")
+                capacity = max(254, len(content))
             else:
                 content = str(spec)
                 capacity = max(254, len(content))
-            sectors = []
-            for _ in range(max(1, (capacity + 253) // 254)):
-                if track == 40:
-                    track = 41
-                if track > 80:
-                    raise VMError("DiskFull", "disk fixture exceeds D81 data tracks")
-                sectors.append((track, sector))
-                sector += 1
-                if sector == 40:
-                    track += 1
-                    sector = 0
+            count = max(1, (capacity + 253) // 254)
+            specs.append((key, content, capacity, entry_type, count, start, explicit))
+
+        claimed = set()
+
+        def claim(address, key):
+            track, sector = address
+            if not (1 <= track <= D81_TRACKS and 0 <= sector < D81_SECTORS):
+                raise VMError("DiskFull", "%s: %d/%d outside the 1581 geometry"
+                              % (key, track, sector))
+            if track == D81_DIR_TRACK:
+                raise VMError("DiskOverlap", "%s: %d/%d is on directory track 40"
+                              % (key, track, sector))
+            if address in claimed:
+                raise VMError("DiskOverlap", "%s: %d/%d already allocated"
+                              % (key, track, sector))
+            claimed.add(address)
+
+        def successor(track, sector):
+            sector += 1
+            if sector == D81_SECTORS:
+                track += 1
+                sector = 0
+            if track == D81_DIR_TRACK:
+                track += 1
+            return track, sector
+
+        placed = {}
+        for key, _content, _capacity, _type, count, start, explicit in specs:
+            if explicit is not None:
+                if len(explicit) != count:
+                    raise VMError("DiskOverlap", "%s: %d sectors listed, %d needed"
+                                  % (key, len(explicit), count))
+                sectors = explicit
+            elif start is not None:
+                sectors = [start]
+                while len(sectors) < count:
+                    sectors.append(successor(*sectors[-1]))
+            else:
+                continue
+            for address in sectors:
+                claim(address, key)
+            placed[key] = sectors
+
+        out = {}
+        track = 1
+        sector = 2
+        for key, content, capacity, entry_type, count, _start, _explicit in specs:
+            sectors = placed.get(key)
+            if sectors is None:
+                sectors = []
+                for _ in range(count):
+                    while True:
+                        if track == D81_DIR_TRACK:
+                            track = D81_DIR_TRACK + 1
+                        if track > D81_TRACKS:
+                            raise VMError("DiskFull", "disk fixture exceeds D81 data tracks")
+                        if (track, sector) not in claimed:
+                            break
+                        sector += 1
+                        if sector == D81_SECTORS:
+                            track += 1
+                            sector = 0
+                    sectors.append((track, sector))
+                    claimed.add((track, sector))
+                    sector += 1
+                    if sector == D81_SECTORS:
+                        track += 1
+                        sector = 0
             out[key] = {
                 "content": content,
                 "capacity": capacity,
                 "track": sectors[0][0],
                 "sector": sectors[0][1],
                 "sectors": sectors,
+                "type": entry_type,
             }
         return out
 
+    def _disk_fixture_name(self, name):
+        """A directory can store exactly 16 name bytes (lib/m65-disk.lisp
+        %m65d-name-ok-p rejects longer names); a longer fixture name cannot
+        exist on product media and is refused instead of truncated."""
+        text = str(name)
+        folded = "".join(chr(_d81_fold(ord(ch))) for ch in text).rstrip(" ")
+        if not folded or len(folded) > D81_NAME_BYTES:
+            raise VMError(
+                "BadName",
+                "D81 fixture name %r is not 1..16 directory bytes" % text,
+            )
+        return folded
+
     def _disk_key(self, name):
-        return str(name).upper()[:16]
+        """Product lookup key: disk_dir_find / %load-name-match-at compare
+        exactly 16 folded positions, name end padded with spaces, so a
+        longer lookup name matches the entry named by its first 16 bytes."""
+        codes = []
+        for ch in str(name)[:D81_NAME_BYTES]:
+            if ch == "\0":
+                break
+            codes.append(chr(_d81_fold(ord(ch))))
+        return "".join(codes).rstrip(" ")
 
     def _disk_find_by_sector(self, track, sector):
         for name, meta in self.disk_files.items():
@@ -1914,11 +2102,26 @@ class P0VM:
             if argc != 2 or not all(is_fix(arg) for arg in args):
                 raise VMError("TypeError", "%disk-load-file expects track and sector")
             track, sector = fixval(args[0]), fixval(args[1])
-            if (track, sector) != (1, 2):
+            payload, last = self._disk_chain_payload("%disk-load-file", track, sector)
+            if payload is None:
+                if self.disk_failure_semantics == "product-abort":
+                    raise VMError("LoadOpen", "%%disk-load-file failed at %d/%d"
+                                  % (track, sector))
                 return NIL
             self.disk_loaded.append((track, sector))
+            self.disk_loaded_sources.append(
+                {"track": track, "sector": sector, "bytes": bytes(payload)}
+            )
+            # The source stream refills the shared DIR scratch sector by
+            # sector (io.c disk_source_fetch); after the stream it holds the
+            # chain's last sector.  Form evaluation is not modelled.
+            self.disk_buf = list(last)
             return self.heap.t_obj
         if prim_id == 18:
+            if argc == 0:
+                # Private C2 require echo query. The base disk model does not
+                # evaluate source forms; source-stream harnesses bind ownership.
+                return NIL if getattr(self, "disk_source_active", False) else self.heap.t_obj
             if argc == 1 and self.heap.stringp(args[0]):
                 # Host suites model the reset-persistent shelf as absent unless
                 # a focused shelf fixture supplies it; load-lib must then take
@@ -1927,8 +2130,10 @@ class P0VM:
             if argc != 2 or not all(is_fix(arg) for arg in args):
                 raise VMError("TypeError", "%disk-load-lib expects name or track and sector")
             track, sector = fixval(args[0]), fixval(args[1])
-            if (track, sector) != (1, 2):
+            payload, _last = self._disk_chain_payload("%disk-load-lib", track, sector)
+            if payload is None:
                 return NIL
+            # Container validation (L65M/C2D append) is not modelled.
             self.disk_loaded_libs.append((track, sector))
             return self.heap.t_obj
         if prim_id == 19:
@@ -2103,6 +2308,8 @@ class P0VM:
                 raise VMError("TypeError", "boundp expects one symbol")
             return self.heap.t_obj if to_i16(args[0]) in self.heap.sym_values else NIL
         if prim_id == 58:
+            if argc == 1 and args[0] == mkfix(1):
+                raise VMError("HeapOOM", "vm: out of memory", error_code=40)
             if argc != 0:
                 raise VMError("ArityError", "%list-malformed-error expects no arguments")
             raise VMError(
@@ -2322,18 +2529,97 @@ class P0VM:
             self.disk_read_trace.append(
                 {"operation": operation, "track": track, "sector": sector, "success": False}
             )
-            return False
+            return self._disk_read_failed("%disk-read-sector", track, sector)
+        if (track, sector) in self.disk_read_fail_sectors:
+            self.disk_buf = [0] * 256
+            self.disk_read_trace.append(
+                {"operation": operation, "track": track, "sector": sector,
+                 "success": False, "reason": "injected-sector-fault"}
+            )
+            return self._disk_read_failed("%disk-read-sector", track, sector)
         success = self._disk_read_sector_impl(track, sector)
         self.disk_read_trace.append(
             {"operation": operation, "track": track, "sector": sector, "success": success}
         )
+        if not success:
+            return self._disk_read_failed("%disk-read-sector", track, sector)
         return success
+
+    def _disk_read_failed(self, source, track, sector):
+        """host-nil: the historical host answer (NIL).  product-abort: src/vm.c
+        CALLPRIM 15/17 call lisp_abort_code(LISP65_ERR_LOAD_OPEN)."""
+        if self.disk_failure_semantics == "product-abort":
+            raise VMError("LoadOpen", "%s failed at %d/%d" % (source, track, sector))
+        return False
+
+    def _disk_chain_read(self, source, track, sector):
+        """One F011 read inside a native chain walk (prims 17/18).  It does
+        not touch the %disk-read-sector operation counter and restores the
+        DIR scratch, as disk_chain_to_scratch reads via $DE00 only."""
+        if (track, sector) in self.disk_read_fail_sectors:
+            self.disk_chain_trace.append(
+                {"source": source, "track": track, "sector": sector,
+                 "success": False, "reason": "injected-sector-fault"}
+            )
+            return None
+        saved = self.disk_buf
+        try:
+            ok = self._disk_read_sector_impl(track, sector)
+            data = list(self.disk_buf)
+        finally:
+            self.disk_buf = saved
+        self.disk_chain_trace.append(
+            {"source": source, "track": track, "sector": sector, "success": bool(ok)}
+        )
+        return data if ok else None
+
+    def _disk_chain_payload(self, source, track, sector):
+        """src/io.c disk_chain_to_scratch: follow the chain from (T,S),
+        reject 0/0 tails, links beyond 80/39 and self-links, stop at
+        DISK_FILE_MAX.  Returns (payload bytes, last sector image) or
+        (None, None) on any failure; an empty payload is a failure too."""
+        payload = []
+        last = None
+        t, s = track, sector
+        while t:
+            data = self._disk_chain_read(source, t, s)
+            if data is None:
+                return None, None
+            nt, ns = data[0], data[1]
+            if (not nt and not ns) or (nt and (nt > 80 or ns > 39 or (nt == t and ns == s))):
+                return None, None
+            count = 254 if nt else ns - 1
+            if count > self.disk_file_max - len(payload):
+                return None, None
+            payload.extend(data[2 : 2 + count])
+            last = data
+            t, s = nt, ns
+        if not payload:
+            return None, None
+        return payload, last
+
+    def disk_fault_report(self):
+        """Every failed read the model answered, by source and sector."""
+        rows = [
+            {"source": "%disk-read-sector", "track": row["track"],
+             "sector": row["sector"], "reason": row.get("reason", "operation-fault")}
+            for row in self.disk_read_trace if not row["success"]
+        ]
+        rows.extend(
+            {"source": row["source"], "track": row["track"], "sector": row["sector"],
+             "reason": row.get("reason", "unreadable")}
+            for row in self.disk_chain_trace if not row["success"]
+        )
+        return rows
 
     def _disk_read_sector_impl(self, track, sector):
         self.disk_buf = [0] * 256
         key = (track, sector)
         if key in self.disk_written:
             self.disk_buf = list(self.disk_written[key])
+            return True
+        if key in self.disk_raw_sectors:
+            self.disk_buf = list(self.disk_raw_sectors[key])
             return True
         if self.d81_bam_model and track == 40 and sector in (1, 2):
             self.disk_buf = self._disk_bam_sector(sector)
@@ -2361,13 +2647,25 @@ class P0VM:
             self.disk_buf[25] = ord("3")
             self.disk_buf[26] = ord("D")
             self.disk_buf[27] = 0xA0
+            # 1581 header padding: $14-$15 and $1B-$1C are $A0 on real media.
+            self.disk_buf[20] = 0xA0
+            self.disk_buf[21] = 0xA0
+            self.disk_buf[28] = 0xA0
             return True
-        if (track, sector) == (40, 3):
-            self.disk_buf[0] = 0
-            self.disk_buf[1] = 0xFF
-            for entry, (name, meta) in enumerate(list(self.disk_files.items())[:8]):
+        index = sector - D81_DIR_FIRST_SECTOR
+        if track == D81_DIR_TRACK and 0 <= index < self.d81_directory_sector_count:
+            # 1581 directory chain 40/3 -> 40/4 -> ...; last link 00/FF.
+            if index + 1 < self.d81_directory_sector_count:
+                self.disk_buf[0] = D81_DIR_TRACK
+                self.disk_buf[1] = sector + 1
+            else:
+                self.disk_buf[0] = 0
+                self.disk_buf[1] = 0xFF
+            first = index * D81_ENTRIES_PER_SECTOR
+            rows = list(self.disk_files.items())[first : first + D81_ENTRIES_PER_SECTOR]
+            for entry, (name, meta) in enumerate(rows):
                 base = entry * 32
-                self.disk_buf[base + 2] = 0x82
+                self.disk_buf[base + 2] = meta.get("type", 0x82)
                 self.disk_buf[base + 3] = meta["track"]
                 self.disk_buf[base + 4] = meta["sector"]
                 blocks = len(meta["sectors"])
@@ -2378,6 +2676,14 @@ class P0VM:
             return True
         _name, meta, chunk = self._disk_find_sector_chunk(track, sector)
         if meta is None:
+            if (
+                self.d81_full_geometry
+                and 1 <= track <= D81_TRACKS
+                and 0 <= sector < D81_SECTORS
+            ):
+                # A formatted 1581 image: every in-geometry sector is
+                # readable; unallocated ones hold zeroes.
+                return True
             return False
         payload_len = min(max(0, int(meta["capacity"]) - chunk * 254), 254)
         content = meta["content"][chunk * 254 : chunk * 254 + payload_len]

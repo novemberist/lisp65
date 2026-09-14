@@ -212,6 +212,14 @@ def policy_gate(policy: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def known_document_contract(text: str) -> None:
+    text = " ".join(text.split()).casefold()
+    require("interrupt-generating cartridges" in text
+            and "raster-delimited episode" in text
+            and "interrupt storm" in text,
+            "public cartridge storm boundary missing")
+
+
 def documentation_gate() -> dict[str, Any]:
     known = load(KNOWN)
     active = {row["id"]: row for row in known["active"]}
@@ -225,12 +233,7 @@ def documentation_gate() -> dict[str, Any]:
     # Markdown heading capitalization is presentation, not part of the
     # public hardware boundary.  Bind the three semantic clauses without
     # turning title case into a second spelling authority.
-    known_text = " ".join(
-        KNOWN_DOC.read_text(encoding="utf-8").split()).casefold()
-    require("interrupt-generating cartridges" in known_text
-            and "raster-delimited episode" in known_text
-            and "interrupt storm" in known_text,
-            "public cartridge storm boundary missing")
+    known_document_contract(KNOWN_DOC.read_text(encoding="utf-8"))
     upstream = " ".join(UPSTREAM.read_text(encoding="utf-8").split())
     require("### L11 — Audio-DMA interrupt documentation" in upstream
             and "gs4510.vhdl#L4533-L4549" in upstream
@@ -245,7 +248,9 @@ def documentation_gate() -> dict[str, Any]:
             in hardware["session_rule"],
             "bundled hardware row drift")
     return {
-        "public_known_issue": binding(KNOWN_DOC),
+        # Current semantic clauses were checked above; preserve the original
+        # witness's document provenance rather than resealing unrelated prose.
+        "public_known_issue": era_bind("b8f8783b", KNOWN_DOC),
         "known_issue_authority": binding(KNOWN),
         # The live L11 content was checked above; later upstream items do not
         # rewrite the provenance of this sealed interrupt-ownership witness.
@@ -501,6 +506,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--elf", type=Path)
     parser.add_argument("--receipt", type=Path)
+    parser.add_argument("--check-receipt", type=Path)
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     elf = args.elf
@@ -510,7 +516,33 @@ def main() -> int:
     if args.selftest:
         require(value["mutations"]["rejected"] == 16,
                 "ownership selftest mutation census drift")
+        live = " ".join(KNOWN_DOC.read_text(encoding="utf-8").split()).casefold()
+        for clause in ("interrupt-generating cartridges", "raster-delimited episode", "interrupt storm"):
+            try:
+                known_document_contract(live.replace(clause, "removed-clause"))
+            except Exception as error:
+                require("public cartridge storm boundary missing" in str(error),
+                        "live documentation mutation failed outside contract")
+            else:
+                raise AssertionError("live documentation mutation survived: " + clause)
     rendered = json.dumps(value, indent=2, sort_keys=True) + "\n"
+    def receipt_equal(actual):
+        require(actual == rendered, 'registered interrupt-ownership receipt drift')
+    if args.selftest:
+        receipt_equal(rendered)
+        try:
+            receipt_equal(rendered + '\n')
+        except Exception as error:
+            require('registered interrupt-ownership receipt drift' in str(error),
+                    'receipt mutation failed outside comparison')
+        else:
+            raise AssertionError('receipt drift mutation survived')
+    require(not (args.receipt and args.check_receipt), 'choose write or read-only receipt mode')
+    if args.check_receipt is not None:
+        receipt = args.check_receipt
+        if not receipt.is_absolute():
+            receipt = ROOT / receipt
+        receipt_equal(receipt.read_text(encoding='utf-8'))
     if args.receipt is not None:
         receipt = args.receipt
         if not receipt.is_absolute():

@@ -5,8 +5,14 @@ SHIP_BUILDER_CC := $(abspath $(CC_M65))
 
 .PHONY: ship-builder-contract-check ship-builder-sample-fleet-check
 .PHONY: ship-builder-reproducibility-check ship-builder-clean-reproducibility-check
+.PHONY: ship-editor-lowering-check
 
-ship-builder-contract-check:
+check-source: ship-editor-lowering-check
+
+ship-editor-lowering-check:
+	python3 tools/host-lisp/ship_editor_gate.py
+
+ship-builder-contract-check: ship-editor-lowering-check
 	python3 $(SHIP_BUILDER_TOOL) selftest
 
 ship-builder-sample-fleet-check: ship-builder-contract-check | build

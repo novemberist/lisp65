@@ -34,6 +34,8 @@ def main(argv: list[str]) -> int:
 
     try:
         load_prelude(prelude, reset=True)
+        from editor_product_list_domain import load_eval_domain
+        load_eval_domain()
         load_prelude(strings_lib, reset=False)
         load_prelude(buffer_lib, reset=False)
         load_prelude(eval_lib, reset=False)

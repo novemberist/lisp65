@@ -52,6 +52,13 @@ class GateError(RuntimeError):
     pass
 
 
+LIVE_RECEIPT = RECEIPT.with_name("c2-ship-boot-inheritance-live-successor.json")
+
+
+def verify_successor(actual, expected):
+    require(actual == expected, "Ship boot live successor drift")
+
+
 def require(value: bool, message: str) -> None:
     if not value:
         raise GateError(message)
@@ -426,6 +433,7 @@ def inspect_target_irq() -> dict[str, Any]:
 
 def main() -> int:
     try:
+        require(sys.argv[1:] in ([], ["--record-successor"]), "use --record-successor only to write")
         contract = load(CONTRACT)
         shared = SHARED.read_text(encoding="utf-8")
         workbench = WORKBENCH.read_text(encoding="utf-8")
@@ -486,7 +494,21 @@ def main() -> int:
             },
             "next_gate": "one Link 88 plus one physical Ada+RETURN acceptance row",
         }
-        write(RECEIPT, value)
+        successor = {"authority": "00ba3afa", "historical": bind(RECEIPT),
+                     "claim": "Live boot-inheritance verification; historical receipt unchanged",
+                     "current": value}
+        verify_successor(successor, json.loads(json.dumps(successor)))
+        bad = dict(successor, historical={"unbound": True})
+        try:
+            verify_successor(bad, successor)
+        except GateError:
+            pass
+        else:
+            raise GateError("historical receipt replacement mutation survived")
+        if sys.argv[1:]:
+            write(LIVE_RECEIPT, successor)
+        else:
+            verify_successor(load(LIVE_RECEIPT), successor)
         print(
             "c2-ship-boot-inheritance-gate: PASS executions=3 "
             f"mutations={len(rejected)} target-object={target_object['bytes']} "

@@ -11,6 +11,7 @@ from pathlib import Path, PurePosixPath
 import block_bank_delta_policy as BANK_DELTA
 import workbench_product_reproducibility as REPRO
 import r3_product_reproducibility as R3_REPRO
+import bytecode_p0_compiler as READER
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -228,6 +229,36 @@ def bytes_initializer(data: bytes) -> str:
     )
 
 
+def live_designators(manifest: dict, targets: set[str]) -> dict:
+    """Every selected source function-designator, not the retired call sites."""
+    names = {row['name'] for row in manifest['entries']}
+    sites = set()
+    def walk(form, caller):
+        if not isinstance(form, list) or not form:
+            return
+        if form[0] == 'quote':
+            return
+        if len(form) == 2 and form[0] == 'function' and isinstance(form[1], str) and form[1] in targets:
+            sites.add((caller, form[1]))
+            return
+        for child in form:
+            walk(child, caller)
+    for name in manifest['sources']:
+        for form in READER.parse_all((ROOT/name).read_text()):
+            if isinstance(form, list) and len(form) >= 4 and form[0] == 'defun' and form[1] in names:
+                for body in form[3:]:
+                    walk(body, form[1])
+    if {target for _, target in sites} != targets:
+        raise ProductCaseError('designator predicate population drift')
+    return {caller + ':' + target: (caller, target, ['apply', 'direct', 'funcall'])
+            for caller, target in sorted(sites)}
+
+
+def cover_sites(expected, observed):
+    if set(observed) != set(expected):
+        raise ProductCaseError(f"designator site coverage drift: {sorted(observed)}")
+
+
 def collect() -> tuple[dict, list[dict]]:
     policy = load(IMPLEMENTATION)
     interlibrary = load(INTERLIBRARY)
@@ -244,6 +275,12 @@ def collect() -> tuple[dict, list[dict]]:
     }
     if len(expected) != 4 or any(routes != ["apply", "direct", "funcall"] for _, _, routes in expected.values()):
         raise ProductCaseError("four-site designator matrix drift")
+    # Preserve the historical matrix as historical policy. The live literal
+    # owners move when eager options become lazy; derive them before matching.
+    targets = {target for _, target, _ in expected.values()}
+    if targets != {'%ide-fasl-slot-p', '%ide-source-file-p'}:
+        raise ProductCaseError('contracted designator predicates changed')
+    expected = live_designators(load(LIBDIR/'ide.manifest.json'), targets)
     resident_image = RESIDENT_PREFIX.with_suffix(".ext.bin").read_bytes()
     resident_manifest = load(RESIDENT_PREFIX.with_suffix(".manifest.json"))
     if (
@@ -304,6 +341,7 @@ def collect() -> tuple[dict, list[dict]]:
                         "caller_ordinal": ordinals[caller],
                         "target_ordinal": int(ref["target_ordinal"]),
                         "literal_slot": int(ref["literal_slot"]),
+                        "expected_true": int(target == '%ide-source-file-p'),
                     }
         libraries.append({
             "name": library,
@@ -340,8 +378,24 @@ def collect() -> tuple[dict, list[dict]]:
         "anonymous": int(lcc_directory_only["anonymous_entries"]),
         "entry_refs": int(lcc_directory_only["entry_ref_nodes"]),
     })
-    if set(observed_sites) != set(expected):
-        raise ProductCaseError(f"designator site coverage drift: {sorted(observed_sites)}")
+    cover_sites(expected, observed_sites)
+    for missing in observed_sites:
+        trial = dict(observed_sites)
+        del trial[missing]
+        try:
+            cover_sites(expected, trial)
+        except ProductCaseError:
+            pass
+        else:
+            raise ProductCaseError('missing designator reference mutation survived')
+    old_sites = {r.get('materialized_caller', r['caller']) + ':' + r['target']: r
+                 for r in policy['designator_matrix']}
+    try:
+        cover_sites(expected, old_sites)
+    except ProductCaseError:
+        pass
+    else:
+        raise ProductCaseError('historical caller matrix survived as live population')
     entry_names = {
         library: {entry["name"] for entry in manifests[library]["entries"]}
         for library in ("ide", "idex")
@@ -397,7 +451,7 @@ def emit(path: Path) -> None:
         "#ifndef LISP65_L65M_V2_PRODUCT_CASES_H",
         "#define LISP65_L65M_V2_PRODUCT_CASES_H",
         "#include <stdint.h>",
-        "typedef struct { const char *id; uint16_t caller_ordinal, target_ordinal; uint8_t literal_slot; } l65m_v2_designator_site;",
+        "typedef struct { const char *id; uint16_t caller_ordinal, target_ordinal; uint8_t literal_slot, expected_true; } l65m_v2_designator_site;",
     ]
     for library in libraries:
         lines.extend([
@@ -413,11 +467,11 @@ def emit(path: Path) -> None:
     lines.append("static const l65m_v2_designator_site l65m_v2_designator_sites[] = {")
     for site in sites:
         lines.append(
-            f"    {{ \"{site['id']}\", {site['caller_ordinal']}u, {site['target_ordinal']}u, {site['literal_slot']}u }},"
+            f"    {{ \"{site['id']}\", {site['caller_ordinal']}u, {site['target_ordinal']}u, {site['literal_slot']}u, {site['expected_true']}u }},"
         )
     lines.extend([
         "};",
-        "#define L65M_V2_DESIGNATOR_SITE_COUNT 4u",
+        f"#define L65M_V2_DESIGNATOR_SITE_COUNT {len(sites)}u",
         "#endif",
         "",
     ])

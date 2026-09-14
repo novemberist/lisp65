@@ -30,6 +30,8 @@ def main(argv: list[str]) -> int:
 
     try:
         load_prelude(prelude, reset=True)
+        from editor_product_list_domain import load_eval_domain
+        load_eval_domain()
         load_prelude(ide_lib, reset=False)
     except (EvalError, ReaderError) as exc:
         print(f"FAIL ide-buffer load: {exc}", file=sys.stderr)

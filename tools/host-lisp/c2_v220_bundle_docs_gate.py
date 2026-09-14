@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Exact approved 2.2 documentation; check actual files, never Git fallback."""
+"""Exact 2.2 release seal or actual export/bundle files; never implicit fallback."""
 import argparse
 import hashlib
 import json
+import re
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -23,17 +25,29 @@ def validate(files, expected):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=ROOT,
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--root", type=Path, default=ROOT,
                         help="actual source or extracted bundle root; no history fallback")
+    mode.add_argument("--sealed-release", action="store_true",
+                      help="explicit historical source check; not an export or bundle check")
     parser.add_argument("--bundle", action="store_true",
                         help="release notes occupy docs/release-notes.md in the bundle")
     args = parser.parse_args()
     contract = json.loads((ROOT / "config/c2-v220-bundle-docs.json").read_text())
     assert contract["release"] == "2.2.0"
     expected = contract["documents"]
-    files = {p: (args.root / ("docs/release-notes.md"
-              if args.bundle and p == "docs/releases/2.2.0.md" else p)).read_bytes()
-             for p in expected}
+    if args.sealed_release:
+        if args.bundle:
+            parser.error("a bundle must be checked from its actual files")
+        commit = contract["historical_source_commit"]
+        if not re.fullmatch(r"[0-9a-f]{40}", commit):
+            raise ValueError("unbound historical release commit")
+        files = {p: subprocess.check_output(["git", "show", commit + ":" + p], cwd=ROOT)
+                 for p in expected}
+    else:
+        files = {p: (args.root / ("docs/release-notes.md"
+                  if args.bundle and p == "docs/releases/2.2.0.md" else p)).read_bytes()
+                 for p in expected}
     validate(files, expected)
     rejected = []
     for path in expected:
@@ -57,8 +71,19 @@ def main():
                 rejected.append(path + ":" + kind)
             else:
                 raise ValueError("document mutation survived")
-    print("2.2 bundle-docs: PASS actual-files=%d mutations=%d approval=%s" %
-          (len(files), len(rejected), contract["approval"]))
+    # Neither a historical nor an actual-file check may accept a live draft
+    # merely because the other source population is available.
+    trial = dict(files)
+    trial["docs/user-guide.md"] += b"\nLive successor draft\n"
+    try:
+        validate(trial, expected)
+    except ValueError:
+        rejected.append("live-successor-substitution")
+    else:
+        raise ValueError("live successor accepted as released documentation")
+    print("2.2 bundle-docs: PASS mode=%s files=%d mutations=%d approval=%s" %
+          ("historical-seal" if args.sealed_release else "actual-files",
+           len(files), len(rejected), contract["approval"]))
 
 
 if __name__ == "__main__":

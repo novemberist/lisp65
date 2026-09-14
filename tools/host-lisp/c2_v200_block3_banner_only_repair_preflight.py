@@ -179,6 +179,37 @@ def candidate_emit() -> tuple[dict[str, Any], tuple[tuple[str, str, Path], ...]]
     old = (PRICE.BUILD, PRICE.STDLIB_SUITE, PRICE.IDE_SUITE,
            PRICE.COMFORT_MANIFEST)
     old_suite = PRICE.candidate_stdlib_suite
+    old_ide = PRICE.HISTORICAL_IDE_SUITE
+    old_ide_builder = PRICE.candidate_ide_suite
+    old_emit = PRICE.emit
+    # Reconstruct the IDE population and its generated sources together;
+    # the live generated suite may contain later private helpers.
+    import v2_workbench_codemod as CODEMOD
+    historical_root = BUILD.with_name(BUILD.name + "-historical-ide-codemod")
+    ERA.host_source_controls(CANDIDATE_EVIDENCE_ERA)
+    with ERA.host_source_world(CANDIDATE_EVIDENCE_ERA):
+        CODEMOD.generate(CODEMOD.DEFAULT_CLOSURE, historical_root)
+    # A descope can restore the live population to the historical contents.
+    # Bind the selected source authority, not a coincidental content mismatch.
+    historical_suite = historical_root / "suites/p0-ide-core-lib.json"
+
+    def sealed_ide_suite() -> dict[str, Any]:
+        require(PRICE.HISTORICAL_IDE_SUITE.resolve() == historical_suite.resolve(),
+                "historical IDE source authority drift")
+        return old_ide_builder()
+
+    try:
+        PRICE.HISTORICAL_IDE_SUITE = (
+            CODEMOD.DEFAULT_OUTPUT / "suites/p0-ide-core-lib.json")
+        sealed_ide_suite()
+    except RepairError as exc:
+        require(str(exc) == "historical IDE source authority drift",
+                "historical IDE control failed for another reason")
+        pass
+    else:
+        raise RepairError("live IDE population accepted as historical")
+    finally:
+        PRICE.HISTORICAL_IDE_SUITE = old_ide
 
     def sealed_suite() -> dict[str, Any]:
         value = old_suite()
@@ -193,12 +224,27 @@ def candidate_emit() -> tuple[dict[str, Any], tuple[tuple[str, str, Path], ...]]
         PRICE.STDLIB_SUITE = STDLIB_SUITE
         PRICE.IDE_SUITE = IDE_SUITE
         PRICE.COMFORT_MANIFEST = COMFORT_MANIFEST
+        PRICE.HISTORICAL_IDE_SUITE = historical_suite
+        PRICE.candidate_ide_suite = sealed_ide_suite
         PRICE.candidate_stdlib_suite = sealed_suite
+        def historical_emit(prefix, suite, role):
+            # Keep this historical host compilation in the same explicit
+            # process-local era as its source projection (no live CLI child).
+            import bytecode_p0_stdlib as S
+            with ERA.host_source_world(CANDIDATE_EVIDENCE_ERA):
+                value = S._read_suite(str(suite))
+                S.check_suite(str(suite), value)
+                S.emit_artifacts(str(suite), value, str(prefix), artifact_role=role,
+                                base_addr=0 if role == 'disk-lib' else S.PB.DEFAULT_BASE_ADDR)
+        PRICE.emit = historical_emit
         return PRICE.emit_candidate()
     finally:
         (PRICE.BUILD, PRICE.STDLIB_SUITE, PRICE.IDE_SUITE,
          PRICE.COMFORT_MANIFEST) = old
         PRICE.candidate_stdlib_suite = old_suite
+        PRICE.HISTORICAL_IDE_SUITE = old_ide
+        PRICE.candidate_ide_suite = old_ide_builder
+        PRICE.emit = old_emit
 
 
 def run_surface(raw: bytes, label: str, stop_at_handoff: bool) -> dict[str, Any]:

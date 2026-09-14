@@ -24,6 +24,18 @@ class GateError(RuntimeError):
 
 WALKERS: tuple[dict[str, Any], ...] = (
     {
+        "id": "library-index-directory", "path": "lib/stdlib-require.lisp",
+        "language": "lisp", "name": "%l65i-find", "kind": "directory",
+        "sector_limit": 64, "large_case": "not-applicable",
+        "requires": ["(> fuel 0)", "(1- fuel)", "%disk-directory-link-valid-p"],
+    },
+    {
+        "id": "library-index-byte", "path": "lib/stdlib-require.lisp",
+        "language": "lisp", "name": "%l65i-next-byte", "kind": "file-data",
+        "sector_limit": 7, "large_case": "reject",
+        "requires": ["%disk-file-link-valid-p", "%l65i-open-sector", "(< (symbol-value '*l65i-offset*) 256)"],
+    },
+    {
         "id": "cold-stager-file",
         "path": "scripts/r3-cold-stager-main.c", "language": "c", "name": "scan_file",
         "kind": "file-data", "sector_limit": 3226, "large_case": "accept",
@@ -214,7 +226,7 @@ static unsigned char sector_payload[254], descriptor[1024];
 static unsigned char c2_v21_stage_trace[32], c2_v21_stage_trace_role, c2_v21_stage_trace_attempt;
 static const unsigned char stage_domain=0;
 #define LISP65_RESIDENT_ISLAND_FN
-static unsigned int disk_file_len=1, disk_file_pos=1, disk_source_link;
+static unsigned int disk_file_len=1, disk_file_pos=1, disk_source_link, disk_source_cur;
 static void lisp65_f011_unmap_buffer(void) {}
 static void edma_copy(uint32_t a,uint32_t b,uint16_t n) {}
 static unsigned char io_disk_read_sector(unsigned char t,unsigned char s) {
@@ -269,7 +281,7 @@ static uint8_t name_matches(const volatile uint8_t *p,const char *n) {return 0;}
         prelude += '\n'.join(c_macro(source, key) for key in (
             'DISK_FILE_MAX','DISK_EXT_FILE','DISK_CHAIN_FUEL','LISP65_F011_READ_FAILED',
             'DISK_SOURCE_LINK_VALID','DISK_SOURCE_LINK_PACK','DISK_SOURCE_LINK_TRACK',
-            'DISK_SOURCE_LINK_SECTOR'))+'\n'
+            'DISK_SOURCE_LINK_SECTOR','DISK_SOURCE_OWNS_SCRATCH'))+'\n'
         prelude += c_function(source,'disk_chain_count')+'\n'
     calls = {
         # A valid payload CRC prevents an omitted fuel guard from looking
@@ -347,6 +359,15 @@ static uint8_t name_matches(const volatile uint8_t *p,const char *n) {return 0;}
 
 
 LISP_EXIT_EXPRESSIONS = {
+    'library-index-directory': '(%l65i-find nil 40 3 0)',
+    'library-index-byte': """(progn
+      (set-symbol-value '*l65i-fuel* 0)
+      (set-symbol-value '*l65i-offset* 256)
+      (set-symbol-value '*l65i-track* 18)
+      (set-symbol-value '*l65i-sector* 34)
+      (set-symbol-value '*l65i-next-track* 18)
+      (set-symbol-value '*l65i-next-sector* 35)
+      (%l65i-next-byte))""",
     'ide-effective-count': '(%ide-disk-effective-count 1 0 0 12 10)',
     'ide-read-chain': "(%ide-disk-read-chain 1 0 0 1 nil '(77))",
     'ide-directory': '(%ide-disk-find nil 40 0 0)',
@@ -367,7 +388,8 @@ def lisp_exits(exits):
         raise GateError('Lisp execution adapter population incomplete')
     sources = sorted({row['path'] for row in specs} | {'lib/ide-buffer.lisp','lib/dialect-v2/lists-core.lisp'})
     suite = dict(format='lisp65-bytecode-p0-stdlib-subset-v1',
-        sources=sources, functions=[row['name'] for row in specs]+['%ide-rev-onto','%m65d-set','m65d-status','list'],
+        sources=sources, functions=[row['name'] for row in specs]+['%ide-rev-onto','%m65d-set','m65d-status','list',
+            '%l65i-open-sector', '%disk-file-link-valid-p'],
         strict_arity=True, max_call_args=12, abi_profile='dialect-v2',
         cases=[dict(name=row['id'],expr=LISP_EXIT_EXPRESSIONS[row['id']],expect=exits[row['id']]['value']) for row in specs])
     result = H.check_suite(str(EXIT_CONTRACT), suite)
@@ -577,7 +599,12 @@ def verify() -> dict[str, Any]:
         missing = [token for token in spec["requires"] if token not in body]
         if missing:
             raise GateError(f"{spec['id']} misses structural guards: {missing}")
-        observed_large = data_case(spec["kind"], spec["sector_limit"], "greater-than-255-sectors")
+        limit = spec['sector_limit']
+        if spec['id'] == 'library-index-byte':
+            import library_index_couplings_gate as coupling
+            writer, reader = coupling.values(coupling.WRITER.read_text(), coupling.READER.read_text())
+            limit = coupling.validate(writer, reader)['derived_sector_fuel']
+        observed_large = data_case(spec["kind"], limit, "greater-than-255-sectors")
         if observed_large != spec["large_case"]:
             raise GateError(f"{spec['id']} large-chain classification drift")
         rows.append({
@@ -586,9 +613,9 @@ def verify() -> dict[str, Any]:
             "sector_accounting": (
                 "16-bit-or-fixnum-for-file-data; bounded-8-bit-for-40/64-sector-directory-domain"
             ),
-            "sector_limit": spec["sector_limit"],
-            "corrupt_zero_tail": data_case(spec["kind"], spec["sector_limit"], "zero-tail"),
-            "self_reference": data_case(spec["kind"], spec["sector_limit"], "self-reference"),
+            "sector_limit": limit,
+            "corrupt_zero_tail": data_case(spec["kind"], limit, "zero-tail"),
+            "self_reference": data_case(spec["kind"], limit, "self-reference"),
             "greater_than_255_sectors": observed_large,
             "status": "pass",
         })
@@ -659,7 +686,7 @@ def main() -> int:
     try:
         if args.selftest:
             selftest()
-            print("chain-walker-inventory: SELFTEST PASS models=4 executed-return-controls=8 declaration-omissions=18 partial-result=1")
+            print(f"chain-walker-inventory: SELFTEST PASS models=4 executed-return-controls=8 declaration-omissions={len(WALKERS)} partial-result=1")
             return 0
         receipt = verify()
         if args.out:

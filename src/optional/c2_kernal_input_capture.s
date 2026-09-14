@@ -92,8 +92,55 @@ c2_kernal_input_capture_commit:
 .Lcapture_next:
 	cpx C2K_INPUT_RING_TAIL
 	beq .Lcapture_commit_done
+	taz
+	cmp #$a0
+	beq .Lencode_high_normalize
+	cmp #$41
+	bcc .Lencoded_test
+	cmp #$5b
+	bcs .Lencode_shifted
+	ora #$20
+	bra .Lencoded_test
+.Lencode_shifted:
+	; $5c (`£`, the quasiquote key) enters here, fails the #$c1 bound and
+	; commits unchanged.  That pass-through is contractual: the reader wants
+	; the byte as ASCII backslash 0x5c, which is the same code.
+	cmp #$c1
+	bcc .Lencoded_test
+	cmp #$db
+	bcs .Lencoded_test
+.Lencode_high_normalize:
+	and #$7f
+.Lencoded_test:
+	cmp #255
+	bne .Lenc_next_0
+	lda $d60a
+	and #4
+	cmp #4
+	bne .Lenc_plain_0
+	lda #160
+	bra .Lenc_store
+.Lenc_plain_0:
+	lda #255
+	bra .Lenc_store
+.Lenc_next_0:
+	cmp #120
+	bne .Lenc_next_1
+	lda $d60a
+	and #16
+	cmp #16
+	bne .Lenc_plain_1
+	lda #193
+	bra .Lenc_store
+.Lenc_plain_1:
+	lda #120
+	bra .Lenc_store
+.Lenc_next_1:
+.Lenc_store:
 	ldy C2K_INPUT_RING_HEAD
 	sta C2K_INPUT_RING_BASE,y
+	tza
+	ldz #0
 	sta $d619
 	stx C2K_INPUT_RING_HEAD
 	inc C2K_INPUT_EVENTS_STORED
