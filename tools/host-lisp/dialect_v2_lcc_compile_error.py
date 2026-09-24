@@ -25,12 +25,13 @@ import bytecode_p0 as P0  # noqa: E402
 import bytecode_p0_compiler as P0C  # noqa: E402
 import bytecode_p0_stdlib as Stdlib  # noqa: E402
 import v2_workbench_codemod as Codemod  # noqa: E402
+import equivalence_live_hosts as LIVE
 
 
 DEFAULT_FIXTURE = (
     ROOT / "tests/bytecode/dialect-v2/lcc-surface/invalid-parameter-list.json"
 )
-DEFAULT_BINARY = ROOT / "build/equivalence/dialect-v2-equivalence-check"
+DEFAULT_BINARY = LIVE.V2
 DEFAULT_MANIFEST = (
     ROOT / "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json"
 )

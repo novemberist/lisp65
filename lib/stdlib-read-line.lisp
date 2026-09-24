@@ -368,7 +368,7 @@
 ; wrap lift redraws only from the first dirty index through the cell after the
 ; new end; a batch that lifted the block redraws every owned row, because all
 ; of them moved up by one.
-(defun %rl-put (code state cursor dirty)
+(defun %rl-put (code state cursor dirty anchor)
   (let* ((s1 (cdr state)) (s2 (cdr s1)) (s3 (cdr s2))
          (s4 (cdr s3)) (s5 (cdr s4)) (s6 (cdr s5))
          (inserted (cons code (cdr cursor)))
@@ -381,7 +381,7 @@
       (rplaca s4 (+ (car s4) 1))
       (let* ((next-code (if (= (car s4) 250) nil (key-event 3))))
         (if next-code
-            (%rl-put next-code state inserted dirty)
+            (%rl-put next-code state inserted dirty anchor)
             (let* ((columns (car s6))
                    (top (car s5))
                    (row (car (cdr s6)))
@@ -390,7 +390,7 @@
               (rplaca s5 next-top)
               (if (= next-top top)
                   (%rl-screen-tail
-                   (nthcdr dirty (cdr (car state))) dirty (+ (car s4) 1)
+                   (cdr anchor) dirty (+ (car s4) 1)
                    next-position next-top columns row)
                   (progn
                     (%rl-lift row top next-top nil)
@@ -452,7 +452,7 @@
     (if (and (>= code 32) (<= code 126))
         (if (< (car (nthcdr 4 state)) 250)
             (%rl-put code state (car (cdr state))
-                     (car (nthcdr 3 state)))
+                     (car (nthcdr 3 state)) (car (cdr state)))
             (%read-line-loop state))
         (let* ((command
 ;; BEGIN GENERATED REPL LINE KEYMAP

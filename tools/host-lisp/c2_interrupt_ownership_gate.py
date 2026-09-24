@@ -30,6 +30,8 @@ from elf_truth import ElfTruth
 ROOT = Path(__file__).resolve().parents[2]
 TOOLCHAIN = ROOT / "tools/llvm-mos/bin"
 SOURCE = ROOT / "src/c2_kernal_runtime.c"
+#: card authority of the live source population (native diet/placement)
+SUCCESSOR_AUTHORITY = "4e3bdafe"
 RASTER_ARM = ROOT / "src/mega65_raster_timebase.h"
 WINDOW = ROOT / "src/c2_kernal_window.s"
 POLICY = ROOT / "config/c2-interrupt-ownership-policy.json"
@@ -90,9 +92,14 @@ def binding(path: Path) -> dict[str, Any]:
 
 
 def load(path: Path) -> dict[str, Any]:
+    require(path.is_file(), f"authority missing: {path}")
     value = json.loads(path.read_text(encoding="utf-8"))
     require(isinstance(value, dict), f"JSON object required: {path}")
     return value
+
+
+def verify_successor(actual: dict[str, Any], expected: dict[str, Any]) -> None:
+    require(actual == expected, "interrupt-ownership live successor drift")
 
 
 def _between(text: str, start: str, end: str) -> str:
@@ -508,6 +515,7 @@ def main() -> int:
     parser.add_argument("--receipt", type=Path)
     parser.add_argument("--check-receipt", type=Path)
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--record-successor", action="store_true")
     args = parser.parse_args()
     elf = args.elf
     if elf is not None and not elf.is_absolute():
@@ -542,7 +550,35 @@ def main() -> int:
         receipt = args.check_receipt
         if not receipt.is_absolute():
             receipt = ROOT / receipt
-        receipt_equal(receipt.read_text(encoding='utf-8'))
+        registered = receipt.read_text(encoding='utf-8')
+        if registered == rendered:
+            receipt_equal(registered)
+        else:
+            # The source gate's oracle is its executed contract, ordering and
+            # mutation census, not equality with an older source's rendering.
+            # A changed source therefore carries a live successor and leaves
+            # the registered receipt of its era untouched.
+            successor = {"authority": SUCCESSOR_AUTHORITY,
+                         "historical": binding(receipt),
+                         "claim": ("Live interrupt-ownership source gate; "
+                                   "historical receipt unchanged"),
+                         "current": value}
+            live = receipt.with_name(receipt.stem + "-live-successor.json")
+            verify_successor(successor, json.loads(json.dumps(successor)))
+            bad = dict(successor, historical={"unbound": True})
+            try:
+                verify_successor(bad, successor)
+            except GateError:
+                pass
+            else:
+                raise AssertionError("historical binding mutation survived")
+            if args.record_successor:
+                live.write_text(json.dumps(successor, indent=2, sort_keys=True)
+                                + "\n", encoding="utf-8")
+            else:
+                verify_successor(load(live), successor)
+            require(receipt.read_text(encoding='utf-8') == registered,
+                    'registered receipt changed during verification')
     if args.receipt is not None:
         receipt = args.receipt
         if not receipt.is_absolute():

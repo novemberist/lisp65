@@ -164,8 +164,9 @@ $(WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_HOST): scripts/runtime-overlay-transacti
 		-DLISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND -Isrc \
 		scripts/runtime-overlay-transaction-main.c src/vm_runtime_overlay.c -o '$@'
 
-runtime-overlay-transaction-auth-smoke: $(WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_HOST)
-	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 $(WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_HOST)
+runtime-overlay-transaction-auth-smoke:
+	python3 tools/host-lisp/isolated_host_check.py --workspace overlay-transaction -- sh -c \
+		'$(MAKE) WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_HOST=build/overlay-transaction-check/runtime-overlay-transaction-host build/overlay-transaction-check/runtime-overlay-transaction-host && ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 build/overlay-transaction-check/runtime-overlay-transaction-host'
 
 c2-overlay-transaction-auth-check: runtime-overlay-transaction-auth-smoke
 	python3 tools/host-lisp/c2_overlay_transaction_auth_island.py selftest
@@ -910,6 +911,13 @@ workbench-product-v230-build: toolchain-external-product-verify
 	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v230
 workbench-product-v230-verify: toolchain-external-product-verify
 	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v230
+
+.PHONY: workbench-product-v240 workbench-product-v240-build workbench-product-v240-verify
+workbench-product-v240: workbench-product-v240-build
+workbench-product-v240-build: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) build --release v240
+workbench-product-v240-verify: toolchain-external-product-verify
+	python3 $(WORKBENCH_PRODUCT_TOOL) verify --release v240
 
 workbench-product-footprint-report: workbench-product
 	@test -f build/c2.2/canonical-product/final/substitution-balance.json

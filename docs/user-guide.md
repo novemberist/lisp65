@@ -1,9 +1,9 @@
-# lisp65 2.3.0 User Guide
+# lisp65 2.4.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-2.3.0` release bundle
+- The extracted `lisp65-2.4.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -49,7 +49,8 @@ the live repository or network.
    ```
 
 5. Follow the three visible phases — `STAGING MEDIA`, `BUILDING HEAP`, and
-   `LOADING LIBRARIES` — then wait for the lisp65 banner and REPL.
+   `LOADING LIBRARIES` — then `Initializing...` until the lisp65 banner and
+   REPL appear.
 6. Use Cursor Left/Right, insertion, and deletion directly at `lisp65>`; the
    one-line prompt editor is resident and needs no library load.
 7. Load the workbench composition while `L65SYS` remains mounted. These are the
@@ -96,7 +97,7 @@ already exists on the mounted disk. Any other destination name sets the
 publish a library under an arbitrary name, use `compile-string` directly, as
 shown below.
 
-The selected 2.3.0 product checks for `INIT.L65` after the resident world is
+The selected 2.4.0 product checks for `INIT.L65` after the resident world is
 ready and before the first banner. The release medium supplies the file, so
 the normal release boot evaluates it once per cold boot. An open or
 evaluation error returns to one live `lisp65>` prompt and is not retried.
@@ -194,7 +195,7 @@ Example:
 
 ### Product-resident libraries
 
-The 2.3.0 product D81 carries the static `ide`, `idex`, and `m65d`
+The 2.4.0 product D81 carries the static `ide`, `idex`, and `m65d`
 implementations, and the five optional packages `buffer`, `place`, `string-extra`, `inspect`, and
 `defstruct`. Load the libraries you need before swapping to the work disk.
 If M65D is already active when the mounted image changes, run
@@ -233,13 +234,15 @@ banner, or from your own source once it is running.
 | `defstruct` | `defstruct` and its generated accessors |
 
 User code shares symbol, name and code capacity with the libraries, so
-what you load changes how much room your own program has. The 2.3.0 reserve
-reading, with the IDE and all five packages loaded, is exactly 32 free symbol
-slots and 387 free name bytes, against the required floor of 32/384. A
-session's own definitions draw on the same pools, so a working session shows
-less. Loading fewer packages leaves more of both. These are host figures, not
-device-measured in this exact form, and the two pools cannot be assumed to be
-exhaustible simultaneously.
+what you load changes how much room your own program has. Since 2.4.0 the
+symbol table holds 1,008 symbols; the name pool occupies the top of bank 1.
+In the 2.4.0 device session, with the IDE and all five packages loaded, the
+IDE status row showed 761 of 1,008 symbols in use. The 2.3.0 reading was
+exactly 32 free symbol slots and 387 free name bytes, against the floor of
+32/384. A session's own definitions draw on the same pools, so a working
+session shows less. Loading fewer packages leaves more. Symbols, name bytes
+and the 64 code images of a session are independent limits and cannot be
+assumed to be exhaustible simultaneously.
 
 Interactive Shift-Space is normalized to ordinary space. This matters for the
 natural Lisp typing sequence `) (`, where Shift may remain held between the two
@@ -405,7 +408,10 @@ The compiler supports `let`, `let*`, local `setq`, ordinary parameters and
 `&rest`, `while`, `dotimes`, `dolist`, `when`, `unless`, `cond`, `case`,
 `lambda` and closures, `defun`, and `defmacro`. These are compiler-lowered
 language forms, not ordinary functions; generated function lists therefore do
-not contain all of their names.
+not contain all of their names. An anonymous `lambda` is supported inside a
+`defun` body; at the top level it is refused with `VM: BAD BYTECODE`, the
+prompt recovers and nothing already defined is affected (see
+[Known Issues](known-issues.md)).
 
 Characters are numeric fixnum codes. There is no separate character type and
 no `#\` literal syntax (`#'` function quote is the reader's supported `#`
@@ -479,7 +485,7 @@ is reserved for the immutable-code/mutable-session architecture.
 ## Buffers
 
 The optional `buffer` package provides fixed-length mutable byte buffers. It
-ships on the 2.3.0 product disk; load it by hand with `require`, as described
+ships on the 2.4.0 product disk; load it by hand with `require`, as described
 in [Product-resident libraries](#product-resident-libraries):
 
 ```lisp

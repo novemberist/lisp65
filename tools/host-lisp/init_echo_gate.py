@@ -35,6 +35,24 @@ def main():
     assert vm.loaded == ['place', 'string-extra'] and not vm.output_chars
     assert vm.evaluate('(capitalize "abc")') == '"Abc"'
     assert vm.heap.intern('setf') in vm.directory
+    # The source-stream fixture must not mask the new admission seam: one
+    # allocated transient handle prevents package publication, even in INIT.
+    blocked = world.vm(H.build_disk(H.FIXTURE_TEXT), 'owner-token')
+    handles = blocked.owner_native.expected_owner(6)
+    blocked.owner_header[8:10] = (handles - 1).to_bytes(2, 'little')
+    blocked.evaluate('(load "init.l65")')
+    assert not blocked.loaded and not blocked.output_chars
+    fixtures=H.HOST_FIXTURES
+    old=tuple(f.replace('(library row lock rows previous)',
+                        '(library row lock rows)') for f in fixtures)
+    assert old!=fixtures
+    try:
+        H.HOST_FIXTURES=old
+        stale=H.World().vm(H.build_disk(H.FIXTURE_TEXT),'owner-token')
+        stale.evaluate('(load "init.l65")')
+        assert stale.loaded!=['place','string-extra'], 'old fast-note arity survived'
+    finally:
+        H.HOST_FIXTURES=fixtures
     for name, answer in (('place', 't'), ('no-such', 'nil')):
         vm.output_chars.clear()
         assert vm.evaluate(f'(require "{name}")') == answer
@@ -74,7 +92,7 @@ def main():
     else:
         raise AssertionError('old specialized arity model survived')
     print('PASS: INIT silent, interactive echo retained, recovery to interactivity; '
-          '256 owner states and four falling controls. Native boot/error pixels are separate witnesses.')
+          '256 owner states and five falling controls. Native boot/error pixels are separate witnesses.')
 
 
 if __name__ == '__main__':

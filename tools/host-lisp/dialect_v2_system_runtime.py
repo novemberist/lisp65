@@ -17,14 +17,15 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import bytecode_p0 as P0  # noqa: E402
 import bytecode_p0_compiler as P0C  # noqa: E402
+import equivalence_live_hosts as LIVE
 
 
 FIXTURE = ROOT / "tests/bytecode/dialect-v2/system-runtime/cases.json"
 V1_BINARY = ROOT / "build/equivalence/frozen-v1-f6527d25/equivalence-check"
-V2_BINARY = ROOT / "build/equivalence/dialect-v2-equivalence-check"
+V2_BINARY = LIVE.V2
 V1_ROOT = ROOT / "build/equivalence/frozen-v1-f6527d25/source"
 V1_BUILD = ROOT / "build/equivalence/frozen-v1-f6527d25/build-receipt.json"
-V2_BUILD = ROOT / "build/equivalence/dialect-v2-build-receipt.json"
+V2_BUILD = LIVE.V2_BUILD_RECEIPT
 OUTPUT = ROOT / "build/bytecode/dialect-v2/system-runtime"
 PROFILES = ("dialect-v1", "dialect-v2")
 ENGINES = (

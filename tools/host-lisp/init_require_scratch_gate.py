@@ -30,6 +30,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import ctypes
+from functools import lru_cache
 from pathlib import Path
 import sys
 
@@ -65,7 +67,7 @@ HOST_FIXTURES = (
     " (%disk-load-lib (nth 2 row) (nth 3 row))))",
     "(defun %require-host-member (x xs)"
     " (if xs (if (string= x (car xs)) t (%require-host-member x (cdr xs))) nil))",
-    "(defun %require-fast-note (library row lock rows)"
+    "(defun %require-fast-note (library row lock rows previous)"
     " (set-symbol-value '*require-fast*"
     " (cons library (symbol-value '*require-fast*))) t)",
     "(defun %require-fast-loaded-p (library)"
@@ -307,6 +309,17 @@ class DiskVM(B.P0VM):
         self.loaded: list[str] = []
         self.transcript: list[dict] = []
         self.locators = {ts: name for name, ts in LIB_TS.items()}
+        # This source-stream fixture owns no transient code. Derive its empty
+        # handle front and capacity query from the actual native owner, rather
+        # than silently returning zero through the reference VM's old seam.
+        self.owner_native = source_owner_model()
+        self.owner_header = bytearray(28)
+        self.owner_header[:8] = b'C2D\0\6\x30\x20\x0a'
+        def word(at, value):
+            self.owner_header[at:at+2] = value.to_bytes(2, 'little')
+        word(8, self.owner_native.expected_owner(6)); word(10, 1); word(12, 6)
+        for field in range(1, 5):
+            word(10 + 4 * field, self.owner_native.expected_owner(field))
 
     def _disk_read_sector_impl(self, track, sector):
         self.loader.cur &= ~OWNS
@@ -332,6 +345,17 @@ class DiskVM(B.P0VM):
 
     def _callprim(self, prim_id, argc, stack, pc=None, native_base=0,
                   frame_slots=0):
+        if prim_id == 67:
+            args = self._pop_args(argc, stack)
+            if argc not in (1, 2) or not all(B.is_fix(a) and 0 <= B.fixval(a) <= 255 for a in args):
+                raise B.VMError('TypeError', 'product owner byte domain')
+            if argc == 1:
+                self.owner_native.set_header(ctypes.create_string_buffer(bytes(self.owner_header)))
+                value = self.owner_native.c2_resolver_owner_part(B.fixval(args[0]))
+                return B.NIL if value == 65535 else B.mkfix(value)
+            at = B.fixval(args[0]) + 256 * B.fixval(args[1])
+            check(at < len(self.owner_header), 'source fixture reached an unmodelled C2D row')
+            return B.mkfix(self.owner_header[at])
         if prim_id == 18 and argc == 0:
             return super()._callprim(prim_id, argc, stack, pc, native_base,
                                      frame_slots)
@@ -399,6 +423,12 @@ class DiskVM(B.P0VM):
                 self.transcript.append({"form": text, "error": str(error)[:120]})
                 return
             self.transcript.append({"form": text, "value": value})
+
+
+@lru_cache(maxsize=1)
+def source_owner_model():
+    import resolver_owner_gate as OWNER
+    return OWNER.build(ROOT / 'build/init-require-owner-fixture')
 
 
 class World:

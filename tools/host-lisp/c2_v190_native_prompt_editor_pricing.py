@@ -11,6 +11,7 @@ unselectable until the separately owner-gated Block C closes.
 from __future__ import annotations
 
 import copy
+import ast
 import hashlib
 import json
 from pathlib import Path
@@ -292,12 +293,71 @@ def profile_definitions() -> tuple[list[str], list[str]]:
             features = [row for row in line.split("=", 1)[1].split(",") if row]
     require(features and len(features) == len(set(features)),
             "materialized feature profile absent/duplicated")
-    definitions = PRODUCT.definitions(artifacts) + features
+    definitions = historical_product_definitions(artifacts) + features
     require(len(definitions) == len(set(definitions))
             and "LISP65_V160_INPUT_CAPTURE" in definitions
             and "LISP65_V160_INPUT_HYBRID" in definitions,
             "Block-A target definition world drift")
     return definitions, features
+
+
+def historical_product_definitions(artifacts: dict[str, Any]) -> list[str]:
+    """Execute the era's definition renderer and its derived constant closure.
+
+    No current producer defaults and no second hand-maintained define list.
+    The capability list comes from the same era's Makefile; all other
+    globals are derived from the historical module, not current defaults.
+    """
+    source = evidence_bytes(Path(PRODUCT.__file__).resolve()).decode()
+    tree = ast.parse(source)
+    functions = [n for n in tree.body if isinstance(n, ast.FunctionDef)
+                 and n.name == "definitions"]
+    require(len(functions) == 1, "historical definition renderer absent")
+    capabilities = PRODUCT.canonical_v2_product_defines(
+        evidence_bytes(ROOT / "Makefile").decode())
+    namespace: dict[str, Any] = {
+        "__builtins__": {"len": len, "list": list, "dict": dict,
+                         "str": str, "object": object},
+        "canonical_v2_product_defines": lambda: list(capabilities),
+    }
+    assignments = {target.id: n.value for n in tree.body
+                   if isinstance(n, ast.Assign) for target in n.targets
+                   if isinstance(target, ast.Name)}
+    active: set[str] = set()
+    def resolve(name: str) -> None:
+        if name in namespace or name in namespace["__builtins__"]:
+            return
+        require(name in assignments and name not in active,
+                "unbound historical definition dependency: " + name)
+        active.add(name)
+        expression = assignments[name]
+        for child in ast.walk(expression):
+            if isinstance(child, ast.Name) and isinstance(child.ctx, ast.Load):
+                resolve(child.id)
+        namespace[name] = eval(compile(ast.Expression(expression),
+                                      "historical-definition-constant", "eval"), namespace)
+        active.remove(name)
+    function = functions[0]
+    locals_ = {a.arg for a in function.args.args} | {
+        n.id for n in ast.walk(function) if isinstance(n, ast.Name)
+        and isinstance(n.ctx, ast.Store)}
+    for node in ast.walk(function):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and node.id not in locals_:
+            resolve(node.id)
+    exec(compile(ast.Module(body=[function], type_ignores=[]),
+                 "historical-definition-renderer", "exec"), namespace)
+    result = namespace["definitions"](artifacts)
+    def verify(candidate: list[str]) -> None:
+        require(candidate == result, "historical compiler imported a live/altered define population")
+    verify(result)
+    for wrong in (result[1:], result + ["LISP65_UNBOUND_LAYOUT"], PRODUCT.definitions(artifacts)):
+        try:
+            verify(wrong)
+        except PricingError:
+            pass
+        else:
+            raise PricingError("historical definition-route mutation survived")
+    return result
 
 
 def header_projection(ordinal: int) -> str:
@@ -867,6 +927,9 @@ def main() -> int:
     action = sys.argv[1] if len(sys.argv) > 1 else ""
     require(action in ("record", "check", "selftest"),
             "usage: record|check|selftest")
+    if action != "record":
+        from historical_price_artifacts import check
+        return check(sys.modules[__name__])
     value = derive()
     if action == "record":
         RECEIPT.write_bytes(canonical(value))

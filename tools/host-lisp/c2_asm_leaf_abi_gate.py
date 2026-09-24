@@ -85,7 +85,7 @@ ABI_POLICIES = {
         "section_token": ".section .text.vm_boot_overlay_chain_commit",
         "linked": "bank3-chain-required",
         "abi": (
-            "ASM->C ov_crc16: pointer __rc2/__rc3; length A/X; "
+            "ASM->ASM rtov_crc_mem: pointer __rc2/__rc3; length A/X; "
             "result A/X"),
     },
     "vm_bank3_boot_stage_entry": {
@@ -370,7 +370,15 @@ def _one(rows: list[Relocation], *, target: str, relocation_type: str,
     return matches[0]
 
 
-def _validate_crc_model(model: list[dict[str, str]]) -> None:
+# The commit leaf's CRC callee by era: the accepted worlds up to the export
+# publication card call the bit-serial `ov_crc16`; from the ov_crc16 card on
+# (authority 0a41035d) the leaf calls the proven `rtov_crc_mem` directly.
+# Era ELFs are audited by consumers that replay sealed worlds, so both are
+# admitted, exactly one call, the same six-instruction register setup.
+COMMIT_LEAF_CRC_CALLEES = ("ov_crc16", "rtov_crc_mem")
+
+
+def _validate_crc_model(model: list[dict[str, str]], callee: str) -> None:
     expected = [
         {"opcode": "lda", "target": "pointer", "part": "lo"},
         {"opcode": "sta", "target": "__rc2", "part": "zp"},
@@ -378,10 +386,10 @@ def _validate_crc_model(model: list[dict[str, str]]) -> None:
         {"opcode": "sta", "target": "__rc3", "part": "zp"},
         {"opcode": "lda", "target": "length", "part": "lo"},
         {"opcode": "ldx", "target": "length", "part": "hi"},
-        {"opcode": "jsr", "target": "ov_crc16", "part": "call"},
+        {"opcode": "jsr", "target": callee, "part": "call"},
     ]
     require(model == expected,
-            "ov_crc16 ABI dataflow is not pointer->__rc2/__rc3, "
+            f"{callee} ABI dataflow is not pointer->__rc2/__rc3, "
             "length->A/X")
 
 
@@ -390,10 +398,13 @@ def _crc_call_gate(truth: ElfTruth, rows: list[dict[str, Any]]) \
     owner = truth.symbol("vm_boot_overlay_chain_commit")
     body = _body(rows, owner)
     relocs = _relocations(truth, owner)
-    calls = [row for row in relocs if row.target == "ov_crc16"
+    calls = [row for row in relocs if row.target in COMMIT_LEAF_CRC_CALLEES
              and row.relocation_type == "R_MOS_ADDR16"]
-    require(len(calls) == 1, "commit leaf must call ov_crc16 exactly once")
+    require(len(calls) == 1,
+            "commit leaf must call its CRC callee (ov_crc16 or rtov_crc_mem) "
+            "exactly once")
     call = calls[0]
+    callee = call.target
     base = call.offset
     specs = (
         (base - 12, "__lisp65_workbench_overlay_start",
@@ -423,14 +434,14 @@ def _crc_call_gate(truth: ElfTruth, rows: list[dict[str, Any]]) \
                          "resolved_value": truth.symbol(target).value
                          + relocation.addend})
     call_row = _row_at_operand(body, call.offset)
-    require(call_row["opcode"] == "jsr", "ov_crc16 edge is not JSR")
-    model.append({"opcode": "jsr", "target": "ov_crc16", "part": "call"})
-    _validate_crc_model(model)
+    require(call_row["opcode"] == "jsr", f"{callee} edge is not JSR")
+    model.append({"opcode": "jsr", "target": callee, "part": "call"})
+    _validate_crc_model(model, callee)
     return {
         "status": "passed-pointer-rc2-rc3-length-a-x",
         "owner": {"section": owner.section, "address": owner.value,
                   "bytes": owner.bytes},
-        "callee": "ov_crc16",
+        "callee": callee,
         "bindings": bindings,
         "call": {"instruction_address": call.offset - 1,
                  "relocation_offset": call.offset},
@@ -1532,9 +1543,9 @@ def selftest() -> dict[str, str]:
         {"opcode": "sta", "target": "__rc3", "part": "zp"},
         {"opcode": "lda", "target": "length", "part": "lo"},
         {"opcode": "ldx", "target": "length", "part": "hi"},
-        {"opcode": "jsr", "target": "ov_crc16", "part": "call"},
+        {"opcode": "jsr", "target": "rtov_crc_mem", "part": "call"},
     ]
-    _validate_crc_model(base)
+    _validate_crc_model(base, "rtov_crc_mem")
     mutations = {
         "pointer-length-swap": {0: "length", 2: "length",
                                 4: "pointer", 5: "pointer"},
@@ -1549,7 +1560,7 @@ def selftest() -> dict[str, str]:
         for index, target in changes.items():
             trial[index]["target"] = target
         try:
-            _validate_crc_model(trial)
+            _validate_crc_model(trial, "rtov_crc_mem")
         except GateError:
             rejected[name] = "rejected"
         else:

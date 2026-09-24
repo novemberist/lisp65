@@ -2090,6 +2090,19 @@ class P0VM:
                 raise VMError("TypeError", "%disk-read-sector expects track and sector")
             return self.heap.t_obj if self._disk_read_sector(fixval(args[0]), fixval(args[1])) else NIL
         if prim_id == 16:
+            if argc == 2:
+                state, value = args
+                if not self.heap.consp(state):
+                    raise VMError("TypeError", "%disk-byte CRC state must be a cons")
+                lo, hi = self.heap.car(state), self.heap.cdr(state)
+                if not all(is_fix(x) and 0 <= fixval(x) <= 255 for x in (lo, hi, value)):
+                    raise VMError("TypeError", "%disk-byte CRC operands must be bytes")
+                crc = (fixval(lo) | (fixval(hi) << 8)) ^ (fixval(value) << 8)
+                for _ in range(8):
+                    crc = ((crc << 1) ^ (0x1021 if crc & 0x8000 else 0)) & 0xffff
+                self.heap.cell(state).a = mkfix(crc & 255)
+                self.heap.cell(state).b = mkfix(crc >> 8)
+                return value
             if argc != 1 or not is_fix(args[0]):
                 raise VMError("TypeError", "%disk-byte expects an index")
             index = fixval(args[0])

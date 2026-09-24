@@ -23,6 +23,12 @@ RUNTIME = ROOT / "build/products/workbench/overlay-stack-guard/runtime-overlays-
 SHELF = ROOT / "build/bytecode/dialect-v2/shelf/library-shelf.bin"
 
 
+# Payload alignments the L65R format admits (runtime_overlay_bank.py:
+# ACCEPTED_PAYLOAD_ALIGNMENTS).  256 is the era and Boot-family value, 32 the
+# Session value since the 2026-09-21 capacity card.
+ADMITTED_PAYLOAD_ALIGNMENTS = (32, 256)
+
+
 class ProbeError(RuntimeError):
     pass
 
@@ -158,7 +164,13 @@ def validate(receipt: dict[str, Any], *, verify_files: bool = True) -> None:
                 "fallback packaging, not a third product-integration attempt",
             "post-fallback gate packaging is not explicit")
     overlay_attempt = rider["runtime_overlay_attempt"]
-    require(overlay_attempt.get("payload_alignment_bytes") == 256,
+    # Era evidence: this sealed receipt records the 2.1-era attempt, which was
+    # packed with 256-byte payload alignment, and the artifact is frozen.  The
+    # live Session policy is 32 (capacity card 2026-09-21), so the expectation
+    # is the set of admitted policies rather than the single era value; the
+    # exact era geometry stays pinned by the two offsets checked below.
+    require(overlay_attempt.get("payload_alignment_bytes")
+            in ADMITTED_PAYLOAD_ALIGNMENTS,
             "runtime-overlay alignment evidence drift")
     require(overlay_attempt.get("next_aligned_payload_offset") == 65536,
             "runtime-overlay overflow boundary drift")

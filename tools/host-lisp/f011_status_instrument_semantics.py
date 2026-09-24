@@ -2,6 +2,8 @@
 """Execute pricing bodies on a host MMIO trace; not device qualification."""
 import json
 import re
+import tempfile
+from pathlib import Path
 from f011_status_instrument_pricing import ROOT, OUT, HEADER, io_successor, run, bind
 
 def bodies(s):
@@ -67,8 +69,7 @@ int main(void){
 }
 '''
 
-def main():
-    OUT.mkdir(parents=True,exist_ok=True)
+def check(work):
     source=run(['git','show','f0c467cd:src/io.c']).decode()
     base=bodies(source).replace('f011_wait_not_busy','base_wait').replace('f011_read_at','base_read')
     header=(ROOT/'src/f011_status_witness.h').read_text()
@@ -84,13 +85,24 @@ def main():
     import subprocess
     results={}
     for name,h in variants.items():
-        src=OUT/('semantics-'+name+'.c'); exe=src.with_suffix('')
+        src=work/('semantics-'+name+'.c'); exe=src.with_suffix('')
         src.write_text(PRE+base+'\n#define LISP65_F011_INSTRUMENT_BODY\n'+h+'\n'+bodies(io_successor(source))+POST)
         run(['/usr/bin/cc','-std=c11','-O2',src,'-o',exe])
         p=subprocess.run([str(exe)],stdout=subprocess.PIPE,stderr=subprocess.PIPE, start_new_session=True)
-        results[name]={'exit_code':p.returncode,'source':bind(src)}
+        import hashlib
+        payload=src.read_bytes()
+        # Preserve the historical logical source identity, while executing
+        # fresh bytes in an unsealed workspace. The bytes/SHA must still match.
+        identity={'path':str((OUT/src.name).relative_to(ROOT)),
+                  'bytes':len(payload),'sha256':hashlib.sha256(payload).hexdigest()}
+        results[name]={'exit_code':p.returncode,'source':identity}
         assert (p.returncode==0)==(name=='control'),name
     receipt={'cases':1536,'checks':['return value and original MMIO trace unchanged','exact consumed D082','both timeout phases','first success then immutable first failure','no D087 access','D083 reads only on record publication'], 'mutations':results,'claim':'host extracted C bodies, not final ELF or hardware; D083 read semantics remain device-bound'}
-    (OUT/'semantics-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+    from check_result_receipt import verify
+    verify(OUT/'semantics-receipt.json', receipt)
     print(json.dumps(receipt,indent=2))
+
+def main():
+    with tempfile.TemporaryDirectory(prefix='f011-status-oracle-') as tmp:
+        check(Path(tmp))
 if __name__=='__main__': main()

@@ -1230,6 +1230,8 @@ C2_PHASE_SOURCES = [
     ROOT / "scripts/c2-stream-v2-phase-08.c",
     ROOT / "scripts/c2-stream-v2-phase-09.c",
     ROOT / "scripts/c2-stream-v2-phase-10.c",
+    ROOT / "scripts/c2-stream-v2-phase-10a.c",
+    ROOT / "scripts/c2-stream-v2-phase-10b.c",
     ROOT / "scripts/c2-stream-v2-phase-11.c",
     ROOT / "scripts/c2-stream-v2-phase-12.c",
     ROOT / "scripts/c2-stream-v2-phase-13.c",
@@ -1332,6 +1334,9 @@ def ownership_link_flags(
             "__lisp65_c2_mapped_far_facade_padding_required_param=1")
     return tuple(flags)
 
+# src/vm_runtime_overlay.h:LISP65_RUNTIME_OVERLAY_HARD_MAX_SLICES
+LISP65_RUNTIME_OVERLAY_HARD_MAX_SLICES = 64
+
 C2_DECODER_SLICES = [
     ("00", "c2_stream_phase_00"),
     ("00b", "c2_stream_phase_00b"),
@@ -1405,6 +1410,13 @@ C2_APPEND_V5_SLICES = [
 BOOT_DECODER_SLICES = C2_DECODER_SLICES[:6]
 SESSION_DECODER_SLICES = C2_DECODER_SLICES[6:]
 BANK3_STAGING_SLICES = False
+# The two boot-only name-index decoder records, off by default.
+BOOT_NAME_INDEX_SLICES = False
+BOOT_NAME_INDEX_ROWS = [("10a", "c2_stream_phase_10a"),
+                        ("10b", "c2_stream_phase_10b")]
+# Set by configure_boot_name_index_slices(); the product link pins
+# it against LISP65_C2_PHASE_10A_SLOT in src/c2_product_runtime.h.
+BOOT_NAME_INDEX_SLOT_BASE = None
 BOOT_BANK3_STAGE_SLOT = 2 + len(BOOT_DECODER_SLICES)
 BOOT_ISLAND_SLOT = 2 + len(BOOT_DECODER_SLICES)
 BOOT_ISLAND_CARRIER_SLOT = BOOT_ISLAND_SLOT + 1
@@ -1429,6 +1441,10 @@ def session_service_specs() -> list[str]:
     if INTERN_SESSION_SERVICE:
         rows.append(
             f"{SESSION_SERVICE_SLOT_BASE + 4}:intern-session-service:.lisp65_rt_intern_service:__lisp65_rt_intern_service_start:__lisp65_rt_intern_service_end:__lisp65_rt_intern_service_entry:runtime+reusable:1:0:lisp65_intern_service_entry")
+    # The two boot-only name-index records are NOT rendered here: this helper
+    # only knows the slots this module generates itself, while the live Session
+    # catalog can carry a record a predecessor card appended to it directly.
+    # configure_boot_name_index_slices() appends them to that live catalog.
     return rows
 
 
@@ -1510,6 +1526,12 @@ def configure_append_slices(slices: list[tuple[str, str]]) -> None:
     """
     global C2_APPEND_SLICES, SESSION_SERVICE_SLOT_BASE
     global APPEND_PUBLIC_NAMES, SESSION_SLICE_SPECS, UNIQUE_SLICE_COUNT
+    if BOOT_NAME_INDEX_SLICES:
+        # A rebuild re-renders the catalog from this module's generators only,
+        # which would drop both the boot-name-index tail append and any record
+        # a card appended directly.  The append is final by construction.
+        raise RuntimeError(
+            "append ABI reselected after the boot-name-index tail append")
     C2_APPEND_SLICES = list(slices)
     APPEND_PUBLIC_NAMES = checked_public_projection(
         [name for name, _entry in C2_APPEND_SLICES])
@@ -1538,6 +1560,57 @@ def configure_intern_session_service() -> None:
         return
     INTERN_SESSION_SERVICE = True
     configure_append_slices(list(C2_APPEND_SLICES))
+
+
+def configure_boot_name_index_slices() -> None:
+    """Install the two boot-only name-index decoder records exactly once.
+
+    The records are Session-family, like every decoder phase from 04 on, and are
+    appended at the catalog tail so no existing slot moves.  Adding them to
+    C2_DECODER_SLICES is what gives them their linker-script output sections and
+    their start/end/entry symbols.
+
+    The catalog placement appends to the LIVE Session catalog instead of
+    re-rendering it through configure_append_slices().  Two reasons, both
+    observed: a rebuild is derived from this module's own generators, so a
+    record a predecessor card appended to SESSION_SLICE_SPECS directly (the
+    private f011-write-member at the live tail) is silently dropped; and a base
+    derived from the generated service rows alone lands on exactly that
+    record's slot, double-booking it.  The live tail is therefore the only
+    correct base, and the append is the last catalog selection a product may
+    make -- configure_append_slices() refuses to run afterwards.
+    """
+    global BOOT_NAME_INDEX_SLICES, C2_DECODER_SLICES
+    global BOOT_NAME_INDEX_SLOT_BASE, SESSION_SLICE_SPECS, UNIQUE_SLICE_COUNT
+    if BOOT_NAME_INDEX_SLICES:
+        return
+    names = [name for name, _entry in C2_DECODER_SLICES]
+    if "10" not in names:
+        raise RuntimeError("boot-name-index anchor phase 10 absent")
+    for name, _entry in BOOT_NAME_INDEX_ROWS:
+        if name in names:
+            raise RuntimeError(f"decoder record already registered: {name}")
+    for base_name, moved in (("SESSION_EMITTER_SLOT_BASE", SESSION_EMITTER_SLOT_BASE),
+                             ("SESSION_APPEND_SLOT_BASE", SESSION_APPEND_SLOT_BASE),
+                             ("SESSION_SERVICE_SLOT_BASE", SESSION_SERVICE_SLOT_BASE)):
+        if moved is None:
+            raise RuntimeError(f"{base_name} unset before the tail append")
+    slots = [int(spec.split(":", 1)[0]) for spec in SESSION_SLICE_SPECS]
+    if slots != list(range(len(slots))):
+        raise RuntimeError(f"live Session catalog is not dense: {slots}")
+    base = len(SESSION_SLICE_SPECS)
+    rows = [
+        f"{base + index}:c2-decode-{name}:.lisp65_rt_c2d_{name}:__lisp65_rt_c2d_{name}_start:__lisp65_rt_c2d_{name}_end:__lisp65_rt_c2d_{name}_entry:runtime+reusable:1:0:{entry}"
+        for index, (name, entry) in enumerate(BOOT_NAME_INDEX_ROWS)]
+    if base + len(rows) > LISP65_RUNTIME_OVERLAY_HARD_MAX_SLICES:
+        raise RuntimeError("Session overlay catalog exceeds its hard maximum: "
+                           f"{base + len(rows)}")
+    BOOT_NAME_INDEX_SLICES = True
+    BOOT_NAME_INDEX_SLOT_BASE = base
+    C2_DECODER_SLICES = list(C2_DECODER_SLICES) + list(BOOT_NAME_INDEX_ROWS)
+    SESSION_SLICE_SPECS = list(SESSION_SLICE_SPECS) + rows
+    UNIQUE_SLICE_COUNT += 2
+    assert_unique_public_specs()
 
 
 def configure_runtime_overlay_v4(region1_names: set[str]) -> None:
@@ -4144,6 +4217,7 @@ def source_owner_scope_selftest() -> dict[str, object]:
 
 
 def definitions(artifacts: dict[str, object]) -> list[str]:
+    from symbol_layout_manifest import definitions as symbol_layout_definitions
     result = [
         *canonical_v2_product_defines(),
         "LISP65_VM", "LISP65_EMBED_STDLIB", "LISP65_EMBED_DMA", "LISP65_REPL",
@@ -4157,7 +4231,7 @@ def definitions(artifacts: dict[str, object]) -> list[str]:
         "EXT_CELLS=1024", "LISP65_NURSERY_HYSTERESIS=192", "LISP65_STRING_ARENA",
         "LISP65_FIRST_CLASS_BUFFER", "STR_ARENA_SIZE=0x2480", "DISK_EXT_BASE=0x6900",
         "DISK_EXT_FILE_MAX=0x9600", "LISP65_COMPILE_STRING", "LISP65_SYMFN_EXT",
-        "SYMPOOL_EXT_OFF=0xc680", "NAMEPOOL=10208", "MAX_SYM=752", "VM_DIR_MAX=608",
+        *symbol_layout_definitions(), "VM_DIR_MAX=608",
         "REPL_BUF_MAX=192", "HIST_MAX=64", "LISP65_REPL_HISTORY_IN_BUF",
         "LISP65_REPL_BANNER_REQUIRED", "LISP65_STDLIB_BOOT_OVERLAY_CODE",
         "LISP65_STAGED_BOOT_OVERLAY", "LISP65_RUNTIME_OVERLAY",
@@ -4322,6 +4396,13 @@ def compile_link(out: Path, name: str, headers: list[Path],
     if hardware_sp_authority is not None:
         write(Path(str(target) + ".hardware-sp-authority.json"),
               json.dumps(hardware_sp_authority, indent=2, sort_keys=True) + "\n")
+    # Storage-owner admission must precede even the first per-source compile,
+    # not merely the final linker. It reads these exact consumer flag vectors.
+    from storage_owner_consumption import before_compile as storage_owner_before_compile
+    storage_owner_before_compile(product_definitions,
+        globals().get("STORAGE_OWNER_CONSUMER_GATE"), target=target,
+        compile_flags=compile_flags, link_flags=link_flags,
+        compiler_sources=compiler_sources)
     deterministic_objects = (
         os.environ.get("LISP65_DETERMINISTIC_OBJECTS") == "1")
     if deterministic_objects:
@@ -6168,6 +6249,7 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
 
 def final_section_inventory_check(target: Path) -> dict[str, object]:
     """Check one immutable target without writing beside it."""
+    from ordinary_rodata_owner import measure as measure_ordinary_rodata
     elf = Path(str(target) + ".elf")
     expectation = final_section_inventory_expectation()
     expected = list(expectation["names"])
@@ -6176,6 +6258,7 @@ def final_section_inventory_check(target: Path) -> dict[str, object]:
     # shape check the real emitted section types.  Type is an acceptance
     # input, not a new field in every historical inventory report.
     truth = ElfTruth.read(elf, llvm_readobj=TOOLCHAIN / "llvm-readobj")
+    ordinary_rodata = measure_ordinary_rodata(truth)
     section_types = {row.name: row.section_type for row in truth.sections
                      if row.name}
     checked_sections = [
@@ -6205,6 +6288,7 @@ def final_section_inventory_check(target: Path) -> dict[str, object]:
                      if row["name"] == ".llvm_sympart")
     report = {
         "format": "lisp65-c2-final-elf-section-inventory-v1",
+        "ordinary_rodata_owner": ordinary_rodata,
         "status": "passed",
         "target": str(target.relative_to(ROOT)),
         "final_elf_sha256": hashlib.sha256(elf.read_bytes()).hexdigest(),

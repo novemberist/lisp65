@@ -595,3 +595,259 @@ uint8_t c2_stream_materialize_entry(c2_stream_context *c, uint16_t ordinal,
 #endif
 #endif
 #endif
+
+/* Boot-time name index, shape C.  Two new boot-only decoder phases share one
+ * transient owner in the Bank-5 free tail.  Decoder phase 10 above is NOT
+ * touched: it keeps resolving every session append, every `require` and every
+ * interactive interning on the historical linear path, so `image_first != 0`
+ * always takes the unchanged code.  Phase 10a walks the same records and only
+ * records name coordinates; phase 10b builds the index once and resolves the
+ * queue IN QUEUE ORDER, which is the record walk order, so new symbols are
+ * created at exactly the indices the unsplit walk produces and the three
+ * Bank-5 symbol tables, the length-class table and the Bank-1 name pool come
+ * out identical.
+ *
+ * The owner holds no truth.  A tag match is never taken as equality: the full
+ * canonical name decides, compared against the stored spelling and never
+ * through `sym_name_scratch`, which the confirmation itself overwrites.
+ * Absence is provable only because the symbol count is caught up first.  Every
+ * read of the owner leaves the bank through the convergence seam, reached by
+ * the one exported, owner-confined entry `c2_boot_name_index_read` (the mapped
+ * facade itself is static, beside the symbol-table readers); every write uses
+ * the ordinary DMA facade.  The
+ * resident driver invalidates the whole owner on return and on abort. */
+#if C2_STREAM_V2_PHASE == 16 || C2_STREAM_V2_PHASE == 17
+
+#include "c2_kernal_facade.h"
+/* The mapped facade that reaches the convergence seam is static in
+ * src/c2_platform_dma.c, beside every historical Bank-5 table reader.  This
+ * owner gets its own narrow exported seam there instead; it confines the offset
+ * to the owner and aborts on anything outside it, so no read here needs an
+ * error return. */
+uint8_t c2_boot_name_index_read(uint16_t offset, uint8_t *destination,
+                                uint8_t length);
+
+#define C2_BNX_BANK 5u
+#define C2_BNX_INDEX 0xde80u
+#define C2_BNX_SLOTS 1024u
+#define C2_BNX_QUEUE (uint16_t)(C2_BNX_INDEX + C2_BNX_SLOTS * 2u)
+#define C2_BNX_ENTRY 6u
+#define C2_BNX_BATCH 1024u
+#define C2_BNX_HEAD (uint16_t)(C2_BNX_QUEUE + C2_BNX_BATCH * C2_BNX_ENTRY)
+#define C2_BNX_HEAD_BYTES 10u
+#define C2_BNX_DONE 0xffffu
+
+/* Slice placement without `noinline`: these helpers are paid for in the slice
+ * that uses them, and stay inlinable there. */
+#ifdef C2_STREAM_PRODUCT_V3
+#define C2_BNX_SECTION(n) __attribute__((section(".lisp65_rt_c2d_" n)))
+#else
+#define C2_BNX_SECTION(n) __attribute__((section(".lisp65_rt_l65m_" n)))
+#endif
+#if C2_STREAM_V2_PHASE == 17
+#define C2_BNX_HERE C2_BNX_SECTION("10a")
+#else
+#define C2_BNX_HERE C2_BNX_SECTION("10b")
+#endif
+
+/* Resumption state lives in the transient owner, NOT in c2_stream_context:
+ * that context is pinned at 46 bytes by a host gate, is a fixed Bank-0 BSS
+ * owner, is nested in the Append work area, and two functions hold one on the
+ * soft-frame stack where the stack-cliff known issue lives.  Header layout:
+ *   [0..1] next image for the collecting walk, C2_BNX_DONE when complete
+ *   [2..3] next literal record inside that image -- the batch boundary does
+ *          NOT fall on an image boundary: the measured plane holds 766, 363,
+ *          124, 27, 0 and 284 kind-5/8 records, so the first batch of 1,024
+ *          ends inside the second image
+ *   [4..5] queue entries pending in the current batch
+ *   [6..7] symbols already present in the index
+ *   [8]    index-built flag
+ *   [9]    reserved, always zero -- a non-zero byte fails the phase closed */
+/* Both phases read and write the header, and neither slice has room for its
+ * own copy of the seam, so it is resident and paid once (src/c2_product_runtime.c
+ * -- the same owner that invalidates the header on return and on abort). */
+void c2_boot_name_index_head_get(uint8_t *head);
+void c2_boot_name_index_head_put(const uint8_t *head);
+#define v2_bnx_head_get c2_boot_name_index_head_get
+#define v2_bnx_head_put c2_boot_name_index_head_put
+#endif
+
+/* Boot-only collecting phase.  The record walk of decoder phase 10 with the
+ * interning and the resolution write replaced by one six-byte queue entry.
+ * Nothing is interned here, so the collecting walk creates no symbol on its
+ * own authority and an abort before the resolving phase creates none at all --
+ * that is the one stated behavioural difference from today's abort path. */
+#if C2_STREAM_V2_PHASE == 17
+/* One queue entry: 24-bit shelf payload offset, name length, resolution slot. */
+__attribute__((noinline)) static void v2_bnx_post(uint16_t n, uint32_t payload,
+                                    uint16_t length, uint16_t slot) {
+    uint8_t e[C2_BNX_ENTRY];
+    e[0] = (uint8_t)payload; e[1] = (uint8_t)(payload >> 8);
+    e[2] = (uint8_t)(payload >> 16); e[3] = (uint8_t)length;
+    v2_w16(e + 4, slot);
+    c2_facade_c2_dma((uint16_t)(uintptr_t)e, 0u,
+                     (uint16_t)(C2_BNX_QUEUE + n * C2_BNX_ENTRY),
+                     C2_BNX_BANK, C2_BNX_ENTRY);
+}
+C2_V2_SLICE(10a) uint8_t c2_stream_phase_10a(void *opaque) {
+    c2_stream_context *c = opaque;
+    uint8_t im[20], h[24], r[8], head[C2_BNX_HEAD_BYTES];
+    uint16_t image, i, lc, lo, so, sb, base, a, queued = 0, resume, cursor;
+    uint32_t meta, payload, arg1;
+    if (!c || c->phase != 10u || c->error || c->image_first)
+        return C2_STREAM_ERR_STATE;
+    v2_bnx_head_get(head);
+    /* A pending batch means the resolving phase did not run: fail closed
+     * rather than overwrite queue entries that own resolutions. */
+    if (head[9] || v2_r16(head + 4) || v2_r16(head) == C2_BNX_DONE)
+        return v2_fail(c, C2_STREAM_ERR_STATE);
+    resume = v2_r16(head); cursor = v2_r16(head + 2);
+    for (image = resume; image < c->image_count; ++image) {
+        if (!v2_image_read(c, image, im)) return v2_fail(c, C2_STREAM_ERR_IO);
+        meta = v2_r24(im + 13); base = v2_r16(im + 6);
+        if (!c2_stream_shelf_read(meta, h, sizeof(h)))
+            return v2_fail(c, C2_STREAM_ERR_IO);
+        lc = v2_r16(h + 12); lo = v2_r16(h + 16);
+        so = v2_r16(h + 18); sb = v2_r16(h + 20);
+        for (i = (image == resume) ? cursor : 0u; i < lc; ++i) {
+            uint8_t kind;
+            if (!c2_stream_shelf_read(meta + lo + (uint32_t)i * 8u, r, sizeof(r)))
+                return v2_fail(c, C2_STREAM_ERR_IO);
+            kind = r[0];
+            if (kind != 5u && kind != 8u) continue;
+            a = v2_r16(r + 2); arg1 = v2_r24(r + 4);
+            if (r[1] || r[7] || !v2_string_record(meta + so, sb, arg1, a, &payload)
+                || !v2_canonical_name(payload, a))
+                return v2_fail(c, C2_STREAM_ERR_RESOLUTION);
+            /* The batch is full: suspend on THIS record, which is not yet
+             * queued, and let the resolving phase drain.  Suspending inside an
+             * image is what removes the queue's dependence on any per-image
+             * record bound: no admission assumption is left in the runtime. */
+            if (queued == C2_BNX_BATCH) {
+                v2_w16(head, image); v2_w16(head + 2, i);
+                v2_w16(head + 4, queued);
+                v2_bnx_head_put(head);
+                return C2_STREAM_OK;    /* phase stays 10: resume after 10b */
+            }
+            v2_bnx_post(queued++, payload, a, (uint16_t)(base + i));
+        }
+    }
+    v2_w16(head, C2_BNX_DONE); v2_w16(head + 2, 0u);
+    v2_w16(head + 4, queued);
+    v2_bnx_head_put(head);
+    return C2_STREAM_OK;
+}
+#endif
+
+/* Boot-only resolving phase. */
+#if C2_STREAM_V2_PHASE == 16
+#include "symbol.h"
+#include "mem.h"
+/* `intern` keeps its own linear path for append, require and interactive
+ * interning; the resolving phase creates a symbol it has already proven
+ * absent, so it needs the creation half on its own. */
+extern obj sym_create(const char *name);
+
+C2_BNX_HERE static uint16_t v2_bnx_hash(const char *p) {
+    uint16_t h = 0;
+    while (*p) h = (uint16_t)((uint16_t)(h << 5) + h) ^ (uint8_t)*p++;
+    return h;
+}
+C2_BNX_HERE static uint16_t v2_bnx_get(uint16_t slot) {
+    uint8_t b[2];
+    (void)c2_boot_name_index_read((uint16_t)(C2_BNX_INDEX + slot * 2u), b, 2u);
+    return v2_r16(b);
+}
+C2_BNX_HERE static void v2_bnx_put(uint16_t slot, uint16_t word) {
+    uint8_t b[2];
+    v2_w16(b, word);
+    c2_facade_c2_dma((uint16_t)(uintptr_t)b, 0u,
+                     (uint16_t)(C2_BNX_INDEX + slot * 2u), C2_BNX_BANK, 2u);
+}
+/* Returns the symbol, or NIL with *slot at the first empty probe slot.  A tag
+ * match is never taken as equality: the full canonical name decides.  This
+ * probe does not fit beside the phase body inside the 1,792-byte slice; it is
+ * the card's named resident spend. */
+__attribute__((noinline)) static obj v2_bnx_find(const char *name, uint16_t h,
+                                                 uint16_t *slot) {
+    uint16_t s = h & (C2_BNX_SLOTS - 1u), word, idx;
+    while ((word = v2_bnx_get(s)) != 0u) {
+        idx = (uint16_t)((word & 0x3ffu) - 1u);
+        if ((uint8_t)(word >> 10) == (uint8_t)(h >> 10 & 0x3fu)) {
+            const char *known = symname(MK_SYMI(idx)); uint8_t i = 0;
+            while (known[i] == name[i] && name[i]) ++i;
+            if (known[i] == name[i]) return MK_SYMI(idx);
+        }
+        s = (uint16_t)((s + 1u) & (C2_BNX_SLOTS - 1u));
+    }
+    *slot = s;
+    return NIL;
+}
+/* Absence is only provable while every symbol below *indexed is in the index. */
+C2_V2_SLICE(10b) void v2_bnx_catch_up(uint16_t *indexed) {
+    char name[LISP65_SYMBOL_NAME_BUFFER]; uint16_t slot, h; uint8_t i;
+    while (*indexed < sym_count()) {
+        const char *known = symname(MK_SYMI(*indexed));
+        for (i = 0; (name[i] = known[i]) != 0; ++i) {}
+        h = v2_bnx_hash(name);
+        (void)v2_bnx_find(name, h, &slot);
+        v2_bnx_put(slot, (uint16_t)((*indexed + 1u)
+            | (uint16_t)(h >> 10 & 0x3fu) << 10));
+        ++*indexed;
+    }
+}
+C2_V2_SLICE(10b) uint16_t v2_bnx_build(void) {
+    uint16_t h, indexed = 0;
+    for (h = 0; h < C2_BNX_SLOTS; ++h) v2_bnx_put(h, 0u);
+    v2_bnx_catch_up(&indexed);
+    return indexed;
+}
+C2_V2_SLICE(10b) uint8_t c2_stream_phase_10b(void *opaque) {
+    c2_stream_context *c = opaque;
+    uint8_t e[C2_BNX_ENTRY], b[2], head[C2_BNX_HEAD_BYTES];
+    char name[LISP65_SYMBOL_NAME_BUFFER];
+    uint16_t n, count, indexed, h, slot; uint32_t payload; obj s;
+    if (!c || c->phase != 10u || c->error || c->image_first)
+        return C2_STREAM_ERR_STATE;
+    v2_bnx_head_get(head);
+    count = v2_r16(head + 4);
+    if (head[9] || count > C2_BNX_BATCH) return v2_fail(c, C2_STREAM_ERR_STATE);
+    if (!head[8]) { v2_w16(head + 6, v2_bnx_build()); head[8] = 1u; }
+    indexed = v2_r16(head + 6);
+    for (n = 0; n < count; ++n) {
+        (void)c2_boot_name_index_read(
+            (uint16_t)(C2_BNX_QUEUE + n * C2_BNX_ENTRY), e, C2_BNX_ENTRY);
+        payload = v2_r24(e);
+        /* The query name lives here, never in sym_name_scratch: confirming a
+         * hit calls symname(), which overwrites that buffer. */
+        if (!e[3] || e[3] > LISP65_SYMBOL_NAME_MAX
+            || !c2_stream_shelf_read(payload, (uint8_t *)name, e[3]))
+            return v2_fail(c, C2_STREAM_ERR_IO);
+        name[e[3]] = 0;
+        v2_bnx_catch_up(&indexed);
+        h = v2_bnx_hash(name);
+        s = v2_bnx_find(name, h, &slot);
+        if (s == NIL) {
+            s = sym_create(name);
+            if (s == NIL || mem_oom)
+                return v2_fail(c, C2_STREAM_ERR_RESOLUTION);
+            if (SYMI_IDX(s) == indexed) {
+                v2_bnx_put(slot, (uint16_t)((indexed + 1u)
+                    | (uint16_t)(h >> 10 & 0x3fu) << 10));
+                ++indexed;
+            }
+        }
+        v2_w16(b, (uint16_t)s);
+        if (!c2_stream_c2d_write((uint16_t)(c->resolutions_offset
+            + v2_r16(e + 4) * 2u), b, 2)) return v2_fail(c, C2_STREAM_ERR_IO);
+        ++c->resolution_cursor;
+    }
+    v2_w16(head + 4, 0u);
+    v2_w16(head + 6, indexed);
+    /* Last batch: leave phase 10 so the resident driver's alternation ends.
+     * The driver invalidates the owner on that return and on abort. */
+    if (v2_r16(head) == C2_BNX_DONE) c->phase = 11;
+    v2_bnx_head_put(head);
+    return C2_STREAM_OK;
+}
+#endif

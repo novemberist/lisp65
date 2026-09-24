@@ -1,5 +1,24 @@
 # Stable gate entry points and provider-neutral CI wrappers.
 
+.PHONY: index-crc-check
+.PHONY: resolver-owner-check
+resolver-owner-check:
+	python3 tools/host-lisp/isolated_host_check.py --workspace resolver -- sh -c 'python3 tools/host-lisp/resolver_owner_gate.py && python3 tools/host-lisp/transient_retirement_guard_gate.py'
+check-source: resolver-owner-check
+
+index-crc-check:
+	python3 tools/host-lisp/isolated_host_check.py --workspace index-crc -- python3 tools/host-lisp/index_crc_gate.py
+check-source: index-crc-check
+
+.PHONY: startup-feedback-check startup-feedback-placement-check
+startup-feedback-check:
+	python3 tools/host-lisp/startup_feedback_gate.py
+check-source: startup-feedback-check
+startup-feedback-placement-check:
+	python3 tools/host-lisp/startup_feedback_placement.py
+	python3 tools/host-lisp/ordinary_rodata_owner.py
+check-source: startup-feedback-placement-check
+
 .PHONY: legacy-ide-delivery-check
 legacy-ide-delivery-check:
 	python3 tools/host-lisp/legacy_ide_delivery.py selftest
@@ -45,11 +64,26 @@ check-source: v220-bundle-docs-check
 
 .PHONY: v230-bundle-docs-check v230-public-native-check
 v230-bundle-docs-check:
-	python3 tools/host-lisp/c2_v230_bundle_docs_gate.py
+	python3 tools/host-lisp/c2_v230_bundle_docs_gate.py --historical
 v230-public-native-check:
-	python3 tools/host-lisp/c2_v230_public_native.py selftest
-	python3 tools/host-lisp/c2_v230_public_product.py preflight
+	python3 tools/host-lisp/c2_v230_release_preflight.py
 check-source: v230-bundle-docs-check v230-public-native-check
+
+.PHONY: v240-bundle-docs-check v240-public-native-check
+v240-bundle-docs-check:
+	python3 tools/host-lisp/c2_v240_bundle_docs_gate.py
+v240-public-native-check:
+	python3 tools/host-lisp/c2_v240_public_native.py selftest
+	python3 tools/host-lisp/c2_v240_public_product.py preflight
+check-source: v240-bundle-docs-check v240-public-native-check
+
+# 2.4.0 Before-Ship dispositions of inherited register items.
+.PHONY: c2-v20-convergence-granularity-era-check hot-branch-page-v240-check
+c2-v20-convergence-granularity-era-check:
+	python3 tools/host-lisp/c2_v20_convergence_granularity_era.py
+hot-branch-page-v240-check:
+	python3 tools/host-lisp/hot_branch_page_v240_gate.py
+check-source: c2-v20-convergence-granularity-era-check hot-branch-page-v240-check
 
 .PHONY: public-export-population-selftest public-export-population-check
 public-export-population-selftest:
@@ -284,6 +318,12 @@ document-index-selftest:
 
 document-index-check: document-index-selftest
 	python3 tools/host-lisp/document_index.py
+
+.PHONY: slice-capacity-preflight-selftest
+slice-capacity-preflight-selftest:
+	python3 tools/host-lisp/slice_capacity_preflight.py --selftest
+
+check-source: slice-capacity-preflight-selftest
 
 c2-product-profile-parity-selftest:
 	python3 tools/host-lisp/c2_product_profile_parity.py --selftest
@@ -615,11 +655,24 @@ c2-v20-map-tuple-media: c2-v20-map-tuple-media-selftest
 c2-v20-map-tuple-media-check: c2-v20-map-tuple-media-selftest
 	python3 tools/host-lisp/c2_v20_map_tuple_media.py check
 
+# c2_v20_map_tuple_d1_e25.py's own selftest hardcodes the boot decoder call
+# site as the historical one-liner and goes red as "decoder/publication
+# split drift" once commit 227e59e9 turned it into the feature-guarded
+# boot-name-index-invalidation block (source form only; the decoder/
+# publication split is intact). The 2026-09-22 successor re-derives the
+# same D1/E25 evidence with a decoder-site check widened to accept exactly
+# that historical-or-current pair, while re-verifying the base tool's
+# historical receipt and the 2026-08-14 rebind receipt unchanged by sha256;
+# both this selftest target and the check below now route through it.
+# 2026-09-23: dated retained-callable repair successor (runtime member 2),
+# wrapping the Put-Kit successor with its bytes and receipt bound unchanged.
+# 2026-09-23: dated nested-error recovery successor (fast-path runtime
+# change), wrapping the repair successor with its bytes and receipt bound.
 c2-v20-map-tuple-d1-e25-selftest: c2-v20-map-tuple-media-check
-	python3 tools/host-lisp/c2_v20_map_tuple_d1_e25.py selftest
+	python3 tools/host-lisp/nested_error_recovery_d1_e25_successor.py selftest
 
 c2-v20-map-tuple-d1-e25-check: c2-v20-map-tuple-d1-e25-selftest
-	python3 tools/host-lisp/c2_v20_map_tuple_d1_e25_rebind_20260814.py check
+	python3 tools/host-lisp/nested_error_recovery_d1_e25_successor.py check
 
 c2-v20-map-tuple-d1-e25-result-selftest: c2-v20-map-tuple-d1-e25-check
 	python3 tools/host-lisp/c2_v20_map_tuple_d1_e25_result.py selftest
@@ -649,8 +702,18 @@ c2-v20-phase02a-site-result-check: c2-v20-phase02a-site-result-selftest
 c2-v20-source-authoritative-oracle-selftest: c2-v20-phase02a-site-result-check
 	python3 tools/host-lisp/c2_v20_source_authoritative_oracle.py selftest
 
+# The 2026-08-14 rebind's own `check` went red on 2026-09-21: the parked
+# boot-name-index card added two accepted-but-uncompiled phase wrappers
+# (scripts/c2-stream-v2-phase-10a.c, -10b.c) to the phase-source list the
+# live oracle walks, moving two projection paths its four-path allowance
+# does not cover. The 2026-09-21 successor keeps that receipt and tool
+# completely unchanged (it re-verifies the 2026-08-14 receipt's bytes on
+# every run as its bound historical predecessor) and widens the allowance
+# by exactly the two wrapper-population paths, with the cause -- both
+# wrapper files and the BOOT_NAME_INDEX_ROWS source lines that queued them
+# -- bound by sha256/commit. Only this call is retargeted; nothing is lost.
 c2-v20-source-authoritative-oracle-check: c2-v20-source-authoritative-oracle-selftest
-	python3 tools/host-lisp/c2_v20_source_authoritative_oracle_rebind_20260814.py check
+	python3 tools/host-lisp/c2_v20_source_authoritative_oracle_rebind_20260921.py check
 
 c2-v20-source-authoritative-oracle-card-selftest: c2-v20-source-authoritative-oracle-check
 	python3 tools/host-lisp/c2_v20_source_authoritative_oracle_card.py selftest
@@ -933,7 +996,7 @@ c2-v112-ownership-opt-in-closure-check: c2-v112-ownership-opt-in-closure-selftes
 # does not.  Make the generator a real prerequisite so the public entry point
 # never depends on a neighbouring or pre-existing build directory.
 c2-random-base-check: v2-workbench-codemod
-	python3 tools/host-lisp/c2_random_base_gate.py
+	python3 tools/host-lisp/isolated_host_check.py --workspace random -- python3 tools/host-lisp/c2_random_base_gate.py
 
 c2-repl-banner-version-selftest:
 	python3 tools/host-lisp/c2_repl_banner_version_gate.py --selftest
@@ -948,10 +1011,10 @@ c2-while-check: equivalence-check
 	python3 tools/host-lisp/c2_while_gate.py --check
 
 c2-q-check:
-	python3 tools/host-lisp/c2_q_gate.py
+	python3 tools/host-lisp/isolated_host_check.py --workspace q -- python3 tools/host-lisp/c2_q_gate.py
 
 c2-m65-hw-check:
-	python3 tools/host-lisp/c2_m65_hw_gate.py
+	python3 tools/host-lisp/isolated_host_check.py --workspace m65-hw -- python3 tools/host-lisp/c2_m65_hw_gate.py
 
 c2-ship-input-wait-check:
 	python3 tools/host-lisp/c2_ship_input_wait_gate.py
@@ -969,10 +1032,10 @@ c2-v130-static-input-carrier-check: c2-v130-static-input-carrier-selftest
 	python3 tools/host-lisp/c2_v130_static_input_carrier.py check
 
 c2-v124-time-check:
-	python3 tools/host-lisp/c2_v124_time_gate.py
+	python3 tools/host-lisp/isolated_host_check.py --workspace time -- python3 tools/host-lisp/c2_v124_time_gate.py
 
 c2-require-prior-append-option-a-check:
-	python3 tools/host-lisp/c2_require_prior_append_option_a_gate.py
+	python3 tools/host-lisp/isolated_host_check.py --workspace option-a -- python3 tools/host-lisp/c2_require_prior_append_option_a_gate.py
 
 c2-final-island-identity-check:
 	python3 tools/host-lisp/c2_final_island_identity_gate.py check-source
@@ -1562,10 +1625,10 @@ check-source: c2-v21-loading-libraries-stage-breadcrumb-contact-check
 .PHONY: c2-v21-attic-write-convergence-selftest
 .PHONY: c2-v21-attic-write-convergence-check
 c2-v21-attic-write-convergence-selftest: c2-v21-loading-libraries-stage-breadcrumb-contact-check
-	python3 tools/host-lisp/c2_v21_attic_write_convergence_attribution.py selftest >/dev/null
+	python3 tools/host-lisp/stager_attic_era.py selftest >/dev/null
 
 c2-v21-attic-write-convergence-check: c2-v21-attic-write-convergence-selftest
-	python3 tools/host-lisp/c2_v21_attic_write_convergence_attribution.py check >/dev/null
+	python3 tools/host-lisp/stager_attic_era.py check >/dev/null
 
 check-source: c2-v21-attic-write-convergence-check
 
@@ -3953,7 +4016,7 @@ check-source: c2-v200-block3-return-pricing-check
 
 .PHONY: c2-v200-block3-banner-only-repair-preflight-check
 c2-v200-block3-banner-only-repair-preflight-check: packed-medium-transitive-closure-selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_banner_only_repair_preflight.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace banner -- python3 tools/host-lisp/c2_v200_block3_banner_only_repair_preflight.py check
 
 check-source: c2-v200-block3-banner-only-repair-preflight-check
 
@@ -3965,7 +4028,7 @@ check-source: c2-v200-block3-banner-repair-product-check
 
 .PHONY: c2-v200-block3-banner-repair-media-check
 c2-v200-block3-banner-repair-media-check: c2-v200-block3-banner-repair-product-check
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_block3_banner_repair_device_media.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace banner-media -- python3 tools/host-lisp/c2_v200_block3_banner_repair_device_media.py check
 
 check-source: c2-v200-block3-banner-repair-media-check
 
@@ -4146,6 +4209,12 @@ c2-v200-release-strip-device-result-check: c2-v200-release-strip-device-media-ch
 
 check-source: c2-v200-release-strip-device-result-check
 
+.PHONY: d81-package-locators-check
+d81-package-locators-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/d81_package_locators.py --selftest
+
+check-source: d81-package-locators-check
+
 .PHONY: c2-v200-release-device-attribution-check
 c2-v200-release-device-attribution-check: c2-v200-release-strip-device-result-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_release_device_attributions.py check
@@ -4243,6 +4312,16 @@ check-source: vm-entry-status-check
 # including the product's independently bounded 16-frame configuration.
 check-source: root-index-boundary-check vm-soft-frames-check
 
+.PHONY: storage-owner-preflight-check
+storage-owner-preflight-check: root-index-boundary-check vm-soft-frames-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_preflight.py --elf build/startup-feedback-product-r3/wplto/lisp65-c2-substitution-linked.prg.elf --object build/startup-feedback-product-r3/wplto/lisp65-c2-substitution-linked.prg.lto.o --output build/storage-owner-preflight-check/owners.json
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_symbol_check.py --output build/storage-owner-preflight-check/symbols
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_reader_check.py --output build/storage-owner-preflight-check/readers
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_linker.py --predecessor build/startup-feedback-product-r3/wplto --output build/storage-owner-preflight-check/linker
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_consumption.py --predecessor build/startup-feedback-product-r3/wplto --artifacts build/startup-feedback-product-r3-preflight/setup-owned/static-plane/narrow-static/product/substitution-artifacts.json --output build/storage-owner-preflight-check/consumption
+
+check-source: storage-owner-preflight-check
+
 .PHONY: c2-zp-owner-population-check
 c2-zp-owner-population-check:
 	PYTHONPATH=tools/host-lisp python3 -c 'import block_26_f011_replacement_product_card as g; g.zero_page_population_selftest(); print("ZP owner population: PASS")'
@@ -4292,3 +4371,13 @@ RETIREMENT_DESCRIPTOR_ELF ?= build/retirement-repair-product-r2/wplto/lisp65-c2-
 c2-retirement-descriptor-check:
 	python3 tools/host-lisp/c2_v160_active_frame_liveness.py descriptor $(RETIREMENT_DESCRIPTOR_ELF)
 check-source: c2-retirement-descriptor-check
+
+.PHONY: boot-only-carrier-contract-check
+boot-only-carrier-contract-check:
+	python3 tools/host-lisp/boot_only_carrier_contract.py
+check-source: boot-only-carrier-contract-check
+
+.PHONY: put-kit-contract-check
+put-kit-contract-check:
+	python3 tools/host-lisp/put_kit_contract.py
+check-source: put-kit-contract-check

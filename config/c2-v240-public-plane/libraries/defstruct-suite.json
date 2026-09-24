@@ -1,0 +1,61 @@
+{
+  "abi_profile": "dialect-v2",
+  "allowed_external_calls": [
+    "%setf-register",
+    "%setf-register-commit",
+    "%setf-register-abort"
+  ],
+  "cases": [
+    {
+      "expect": "make-point",
+      "expr": "(%defstruct-symbol \"make-\" 'point \"\")",
+      "name": "defstruct-generated-name-seam"
+    },
+    {
+      "expect": "macro",
+      "expr": "(function-kind 'defstruct)",
+      "name": "defstruct-kind"
+    }
+  ],
+  "d81_name": "DEFSTRUCT",
+  "description": "Host-first defstruct v1 freight: positional tagged-list structures with readers, functional updates, copy, predicate and canonical setf-place registration.",
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "functions": [
+    "%defstruct-symbol",
+    "%defstruct-slot-symbol",
+    "%defstruct-member",
+    "%defstruct-slots-valid-p",
+    "%defstruct-names-free-p",
+    "%defstruct-slot-names",
+    "%defstruct-generated-names",
+    "%defstruct-constructor-form",
+    "%defstruct-predicate-form",
+    "%defstruct-copy-form",
+    "%defstruct-instance-p",
+    "%defstruct-copy",
+    "%defstruct-read",
+    "%defstruct-set",
+    "%defstruct-with",
+    "%defstruct-one-slot-forms",
+    "%defstruct-slot-forms",
+    "%defstruct-register-forms",
+    "%defstruct-register-layout",
+    "%defstruct-expansion",
+    "defstruct"
+  ],
+  "max_call_args": 12,
+  "name": "defstruct",
+  "provides": [
+    "defstruct"
+  ],
+  "require_all_defmacros": true,
+  "require_all_defuns": true,
+  "requires": [
+    "place"
+  ],
+  "resident_suite": "tests/bytecode/libs/p0-stdlib-require-resolver.json",
+  "sources": [
+    "lib/defstruct.lisp"
+  ],
+  "strict_arity": true
+}

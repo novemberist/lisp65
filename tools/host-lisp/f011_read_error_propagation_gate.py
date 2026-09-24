@@ -9,14 +9,48 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 import tempfile
 
 from evidence_era import stable_recorded_on
+from terminal_ingress_artifacts import ArtifactError, read_only
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'src/vm.c'
 OUT = ROOT / 'build/v2.1/f011-followup-host-preflight'
 RECEIPT = OUT / 'primitive15-receipt.json'
+# The live successor is tracked evidence, not an anonymous temporary file under
+# build/check-result-successors/ that nothing ever reads back again.
+LIVE_SUCCESSOR = ROOT / ('tests/bytecode/dialect-v2/evidence/architecture-blocks/'
+                         'f011-primitive15-live-successor.json')
+SUCCESSOR_AUTHORITY = '4e3bdafe'
+
+
+class GateError(RuntimeError):
+    pass
+
+
+def require(value, message):
+    if not value:
+        raise GateError(message)
+
+
+def bind(path):
+    data = path.read_bytes()
+    return {'path': path.relative_to(ROOT).as_posix(), 'bytes': len(data),
+            'sha256': hashlib.sha256(data).hexdigest()}
+
+
+def load(path):
+    require(path.is_file(),
+            f'live successor absent; record it with --record-successor: {path}')
+    value = json.loads(path.read_text(encoding='utf-8'))
+    require(isinstance(value, dict), f'JSON object required: {path}')
+    return value
+
+
+def verify_successor(actual, expected):
+    require(actual == expected, 'f011 primitive-15 live successor drift')
 
 PREFIX = r'''
 #include <setjmp.h>
@@ -71,6 +105,9 @@ int main(void) {
 '''
 
 def main():
+    require(sys.argv[1:] in ([], ['--record-successor']),
+            'use --record-successor only to write the tracked live successor')
+    record = sys.argv[1:] == ['--record-successor']
     source = SOURCE.read_text()
     begin = source.index('    case 15:  /* %disk-read-sector */')
     end = source.index('    case 16:', begin)
@@ -123,7 +160,42 @@ def main():
         'results':outcomes, 'product_wplto':0, 'product_links':0,
         'device_contacts':0, 'final_elf_qualified':False, 'packed_prefilter_qualified':False,
         'claim':'actual C primitive case, stubbed I/O result; missing error transfer mutation fails'}
-    RECEIPT.write_text(json.dumps(receipt,indent=2)+'\n')
+    # The executed cases (error transfer present/removed, dependency omission)
+    # are this gate's oracle, not equality with an older source's receipt; a
+    # changed source therefore records a live successor and leaves the
+    # historical receipt untouched. The successor is tracked, so source_sha256
+    # and extracted_body_sha256 are read back and compared on every run.
+    before = RECEIPT.read_bytes()
+    with read_only():
+        try:
+            RECEIPT.open('wb')
+        except ArtifactError:
+            pass
+        else:
+            raise GateError('receipt-write mutation survived')
+    successor = {'authority': SUCCESSOR_AUTHORITY, 'historical': bind(RECEIPT),
+                 'claim': ('Live primitive-15 host semantic gate; '
+                           'historical receipt unchanged'),
+                 'current': receipt}
+    verify_successor(successor, json.loads(json.dumps(successor)))
+    bad = dict(successor, historical={'unbound': True})
+    try:
+        verify_successor(bad, successor)
+    except GateError:
+        pass
+    else:
+        raise AssertionError('historical binding mutation survived')
+    if record:
+        LIVE_SUCCESSOR.parent.mkdir(parents=True, exist_ok=True)
+        LIVE_SUCCESSOR.write_text(
+            json.dumps(successor, indent=2, sort_keys=True)+'\n', encoding='utf-8')
+    else:
+        verify_successor(load(LIVE_SUCCESSOR), successor)
+    require(RECEIPT.read_bytes() == before,
+            'historical receipt changed during verification')
+    print('f011-primitive15: live successor '
+          + ('recorded' if record else 'verified')
+          + '; rejected-write=1; changed-receipts=0')
     print(json.dumps(receipt,indent=2))
 
 if __name__ == '__main__':

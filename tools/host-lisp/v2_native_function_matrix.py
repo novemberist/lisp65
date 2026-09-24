@@ -15,13 +15,14 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "host-lisp"))
 
 import eval_surface_contract as E  # noqa: E402
+import equivalence_live_hosts as LIVE
 
 
 REGISTRY = ROOT / "config" / "v2-native-function-registry.json"
 HEADER = ROOT / "src" / "v2_native_function_dispatch.h"
 FIXTURE = ROOT / "tests" / "bytecode" / "dialect-v2" / "native-function-routes" / "cases.generated.json"
 RECEIPT = ROOT / "tests" / "bytecode" / "dialect-v2" / "evidence" / "capability-carrier" / "native-function-route-matrix.json"
-DEFAULT_BINARY = ROOT / "build" / "equivalence" / "dialect-v2-equivalence-check"
+DEFAULT_BINARY = LIVE.V2
 
 
 class MatrixError(RuntimeError):

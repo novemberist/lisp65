@@ -22,6 +22,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 from elf_truth import ElfTruth  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 import c2_v190_native_prompt_editor_r6_card as R6  # noqa: E402
 
 
@@ -406,6 +407,7 @@ class TargetFrameVM(DISPLAY.FrameVM):
             raise
 
 
+@ERA.in_host_source_world("dcfd49c71a68692ac4371abc350c11ce77d4cf9a")
 def run_surface(source: Path, expr: str, expected: str,
                 events: list[int]) -> bytes:
     suite = PRICE.live_suite(source, expr, expected, events)

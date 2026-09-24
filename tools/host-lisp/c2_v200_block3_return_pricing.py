@@ -210,8 +210,17 @@ def current_specs() -> list[tuple[str, str, Path]]:
 
 def emit_candidate() -> tuple[dict[str, Any], tuple[tuple[str, str, Path], ...]]:
     if BUILD.exists():
-        shutil.rmtree(BUILD)
-    BUILD.mkdir(parents=True)
+        # An isolated checker owns a mounted scratch root. Clear every child,
+        # but do not attempt to unlink the mount point itself.
+        import os
+        owned_roots = json.loads(os.environ.get('LISP65_ISOLATED_HOST_ROOTS', '[]'))
+        if BUILD.relative_to(ROOT).as_posix() in owned_roots:
+            for child in BUILD.iterdir():
+                if child.is_dir() and not child.is_symlink(): shutil.rmtree(child)
+                else: child.unlink()
+        else:
+            shutil.rmtree(BUILD)
+    BUILD.mkdir(parents=True, exist_ok=True)
     run(["make", "v2-workbench-codemod"], "current v2 Workbench codemod")
     STDLIB_SUITE.write_bytes(ordered_json(candidate_stdlib_suite()))
     IDE_SUITE.write_bytes(ordered_json(candidate_ide_suite()))

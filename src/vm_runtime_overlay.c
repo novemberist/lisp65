@@ -53,6 +53,41 @@
 #if defined(LISP65_RUNTIME_OVERLAY) || defined(LISP65_RUNTIME_OVERLAY_HOST_TEST)
 #include "vm.h"
 
+/* These constants are private to this translation unit on purpose: the
+ * public header is content-bound by the accepted include authority, and
+ * no other unit checks a payload offset. */
+/* Per-slice payload alignment the transport accepts inside an L65R image.
+ *
+ * 32 bytes, not 256: the Session overlay bank (region 0, the 64-KB Attic
+ * window) filled up at 49 slices because 256-byte payload alignment wasted
+ * ≈ 5.1 KB.  With 32 the same population plus the two pending slices leaves
+ * ≈ 1.9 KB free.  The source is addressed byte-granularly by rtov_read() and
+ * by the F018/EDMA descriptor builders, so no read path needs the coarser
+ * value.
+ *
+ * Two alignments deliberately stay at 256:
+ *   - the catalog end (payload_offset, LISP65_RUNTIME_OVERLAY_CATALOG_ALIGNMENT
+ *     below) remains 256-aligned, which keeps the directory geometry and every
+ *     sealed era manifest valid;
+ *   - the boot family keeps packing its payloads at 256
+ *     (tools/host-lisp/workbench_ship.py owns that constant).
+ * Both are multiples of 32, so 256-aligned images satisfy this check and boot
+ * images and era artifacts remain acceptable without re-packing. */
+#define LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGNMENT 32u
+#define LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGN_MASK \
+    (LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGNMENT - 1u)
+/* Catalog end rounding: frozen at 256 (see above). */
+#define LISP65_RUNTIME_OVERLAY_CATALOG_ALIGNMENT 256u
+#if (LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGNMENT < 1u) || \
+    (LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGNMENT > 256u) || \
+    (LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGNMENT & \
+     LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGN_MASK)
+#error "runtime-overlay payload alignment must be a power of two in 1..256"
+#endif
+#if LISP65_RUNTIME_OVERLAY_CATALOG_ALIGNMENT != 256u
+#error "runtime-overlay catalog end rounding is frozen at 256 bytes"
+#endif
+
 #ifdef LISP65_RUNTIME_OVERLAY_HOST_TEST
 #define LISP65_RESIDENT_ISLAND_BUILD_ID 0x13579bdfUL
 #define LISP65_RESIDENT_ISLAND_ADDRESS LISP65_RUNTIME_ISLAND_ADDRESS
@@ -866,7 +901,8 @@ RTOV_ISLANDFN uint8_t vm_resident_island_install(void *opaque) {
         end = (uint16_t)(file_off + file_len);
         if (!file_len ||
             file_len > LISP65_RUNTIME_OVERLAY_HARD_MAX_SLICE ||
-            (file_off & 255u) || file_off < frame->payload_off ||
+            (file_off & LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGN_MASK) ||
+            file_off < frame->payload_off ||
             (end < file_off && end != 0) ||
             (frame->image_limit &&
              (end < file_off || end > frame->image_limit)))
@@ -955,7 +991,7 @@ RTOV_ISLAND2FN uint8_t vm_resident_island_finalize(void *opaque) {
     RTOV_INSTALL_CONTEXT = 0;
     if (!file_off || !file_len ||
         file_len > LISP65_RUNTIME_OVERLAY_HARD_MAX_SLICE ||
-        (file_off & 255u))
+        (file_off & LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGN_MASK))
         return VM_RUNTIME_ISLAND_ERR_BINDING;
     rtov_read(file_off, (uint8_t *)RTOV_ISLAND_TARGET, file_len);
 #ifdef LISP65_RUNTIME_OVERLAY_HOST_TEST
@@ -1440,7 +1476,8 @@ RTOV_CATALOGFN uint8_t vm_runtime_overlay_catalog_verifier(void *opaque) {
     context->payload_off = rtov_c_u16(record + 18);
     end = (uint16_t)(LISP65_RUNTIME_OVERLAY_HEADER_SIZE +
                      (uint16_t)count * LISP65_RUNTIME_OVERLAY_ENTRY_SIZE);
-    end = (uint16_t)((end + 255u) & 0xff00u);
+    end = (uint16_t)((end + (LISP65_RUNTIME_OVERLAY_CATALOG_ALIGNMENT - 1u)) &
+                     ~(LISP65_RUNTIME_OVERLAY_CATALOG_ALIGNMENT - 1u));
     if (context->payload_off != end) return VM_RUNTIME_OVERLAY_ERR_DIRECTORY;
     context->image_limit = rtov_c_u16(record + 20);
     image_full = record[22] == 1 && !record[23] && !context->image_limit;
@@ -1601,7 +1638,7 @@ rtov_verify_next_record:
 #if LISP65_RUNTIME_OVERLAY_FORMAT_VERSION < 3u
         rtov_r_u16(record + 22) ||
 #endif
-        (context->file_off & 255u))
+        (context->file_off & LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGN_MASK))
         return VM_RUNTIME_OVERLAY_ERR_LENGTH;
 #if LISP65_RUNTIME_OVERLAY_FORMAT_VERSION == 4u
     /* The canonical emitter validates region-qualified source bounds, then
@@ -2079,6 +2116,10 @@ vm_runtime_overlay_status vm_runtime_overlay_exec_batch(
 vm_runtime_overlay_status rtov_install_island_finalize(void);
 #endif
 
+#ifdef LISP65_BOOT_ONLY_CARRIER
+/* The PRG carrier remains intact across every common-window load and return. */
+__attribute__((section(".lisp65_boot_carrier")))
+#endif
 RTOV_NOINLINE
 vm_runtime_overlay_status vm_runtime_overlay_install_island(void) {
 #if LISP65_RUNTIME_OVERLAY_FORMAT_VERSION == 1u

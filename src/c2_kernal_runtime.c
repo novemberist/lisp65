@@ -58,16 +58,16 @@ static C2K_SECTION void c2k_copy(uint32_t source, uint32_t target,
 /* This verifier is consumed exactly once while ownership is being acquired.
  * Keep the fixed handoff for the code that must remain on its pinned facade;
  * ordinary resident text is already owned when this boot-only body runs. */
-static C2K_BOOT_ONLY uint16_t c2k_crc16(
-        const volatile uint8_t *source, uint16_t length) {
-    uint16_t crc = 0xffffu;
-    while (length--) {
-        uint8_t bit;
-        crc ^= (uint16_t)*source++ << 8;
-        for (bit = 0; bit < 8u; ++bit)
-            crc = (crc & 0x8000u) ? (uint16_t)((crc << 1) ^ 0x1021u)
-                                  : (uint16_t)(crc << 1);
-    }
+/* CRC-16/CCITT-FALSE of the mapped window through the one linked assembler
+ * leaf (low resident text, no calls). The leaf ABI gate admits only a direct
+ * JSR that sets pointer and length locally, so the constants live here and
+ * the tail call is suppressed. The caller's JSR/compare sequence stays the
+ * site the linker patches with the window CRC. */
+extern uint16_t rtov_crc_mem(const uint8_t *p, uint16_t n);
+static C2K_BOOT_ONLY uint16_t c2k_crc16(void) {
+    uint16_t crc = rtov_crc_mem((const uint8_t *)C2_KERNAL_WINDOW_CPU_BASE,
+                                C2_KERNAL_WINDOW_BYTES);
+    __asm__ volatile("" ::: "memory");   /* keep a JSR edge, no tail JMP */
     return crc;
 }
 
@@ -111,8 +111,7 @@ C2K_SECTION uint8_t c2_kernal_take_ownership(void) {
              C2_KERNAL_WINDOW_CPU_BASE, C2_KERNAL_WINDOW_BYTES);
     c2_kernal_map_window();
 
-    if (c2k_crc16((volatile const uint8_t *)C2_KERNAL_WINDOW_CPU_BASE,
-                  C2_KERNAL_WINDOW_BYTES) != C2_KERNAL_WINDOW_CRC16)
+    if (c2k_crc16() != C2_KERNAL_WINDOW_CRC16)
         return 0u;
 
     C2K_MAP_GENERATION = 1u;

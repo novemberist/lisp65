@@ -90,6 +90,10 @@ def close_packed_artifacts(
     require(set(artifacts) == set(gates) and bool(artifacts),
             "packed-artifact closure omits an artifact or registered gate")
     results = {name: gates[name](artifacts[name]) for name in artifacts}
+    from d81_package_locators import qualify
+    for path in artifacts.values():
+        if path.suffix.lower() == '.d81':
+            qualify(path.read_bytes())
     return {
         "complete": True,
         "registered": sorted(gates),

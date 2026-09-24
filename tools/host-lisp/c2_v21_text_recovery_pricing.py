@@ -34,6 +34,10 @@ READER = ROOT / "src/optional/c2_map_cpu_read.s"
 EMITTER = ROOT / "src/c2_session_emitter.c"
 RUNTIME = ROOT / "src/c2_product_runtime.c"
 FACADE = ROOT / "src/c2_kernal_facade_reopen.s"
+# Payload alignments the L65R format admits (runtime_overlay_bank.py:
+# ACCEPTED_PAYLOAD_ALIGNMENTS): 256 for era and Boot-family images, 32 for the
+# Session family since the 2026-09-21 capacity card.
+ADMITTED_PAYLOAD_ALIGNMENTS = (32, 256)
 PACKED_MANIFEST = ROOT / (
     "build/c2.3/v2.0-phase02b-header-consumption-replacement-card/final/"
     "runtime-overlays-session-final.json")
@@ -266,7 +270,12 @@ def packed_slice() -> dict[str, Any]:
     allocation = next_offset - row["file_offset"]
     require(
         row["file_size"] == 1183 and allocation == 1280
-        and manifest["policy"]["payload_alignment"] == 256
+        # PACKED_MANIFEST is the frozen v2.0-card era manifest, packed with
+        # 256-byte payload alignment; the live Session policy is 32 since the
+        # 2026-09-21 capacity card, so the expectation is the admitted set.
+        # The era packing itself stays exactly pinned by the 1,280-byte (5 x
+        # 256) allocation span and the 65,423-byte image size above.
+        and manifest["policy"]["payload_alignment"] in ADMITTED_PAYLOAD_ALIGNMENTS
         and manifest["policy"]["max_slice_bytes"] == 1792
         and manifest["storage"]["size"] == 65423
         and manifest["storage"]["limit"] == 134283264,

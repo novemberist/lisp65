@@ -36,6 +36,7 @@ sys.modules[SPEC.name] = CAP
 SPEC.loader.exec_module(CAP)
 
 from elf_truth import ElfTruth, ElfTruthError  # noqa: E402
+import symbol_layout_manifest as SYMBOL_LAYOUT  # noqa: E402
 
 
 PLAN = ROOT / "docs/planning/v1.5.0-release-work-plan.md"
@@ -101,11 +102,35 @@ def git_bind(commit: str, path: str) -> dict[str, Any]:
 
 
 def mk_int(name: str) -> int:
-    source = WORKBENCH.read_text(encoding="utf-8")
+    # All callers reconstruct the sealed v1.5/Link-116/Item-1 D5 worlds.
+    # Their 752/10208 limits must never follow a later product layout.
+    source = historical_workbench()
     matches = re.findall(rf"^(?:\s*-D)?{re.escape(name)}\s*(?::=|=)\s*(0x[0-9a-fA-F]+|[0-9]+)",
                          source, re.MULTILINE)
     require(len(matches) == 1, f"Workbench integer authority drift: {name}")
     return int(matches[0], 0)
+
+
+def verify_workbench_bytes(raw: bytes) -> None:
+    expected = load(RECEIPT)["authority"]["workbench_profile"]
+    require(expected == SYMBOL_LAYOUT.historical_workbench_binding(),
+            "name-freight historical profile authority differs")
+    require(len(raw) == expected["bytes"] and sha(raw) == expected["sha256"],
+            "name-freight imported a live or altered Workbench profile")
+
+
+def historical_workbench() -> str:
+    raw = SYMBOL_LAYOUT.historical_workbench().encode()
+    verify_workbench_bytes(raw)
+    # Mutate the actual consumed profile, not a result or its tolerance.
+    for wrong in (b"", raw + b"\nMAX_SYM=1008\n"):
+        try:
+            verify_workbench_bytes(wrong)
+        except PricingError:
+            pass
+        else:
+            raise PricingError("historical Workbench mutation survived")
+    return raw.decode()
 
 
 def cold_link97_names() -> set[str]:

@@ -12,12 +12,16 @@ import tempfile
 import dialect_v2_lcc_surface as LCC
 import dialect_v2_prelude_control as NATIVE
 import v2_workbench_codemod as CODEMOD
+import equivalence_live_hosts as LIVE
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_BINARY = ROOT / "build/equivalence/dialect-v2-equivalence-check"
+DEFAULT_BINARY = LIVE.V2
 DEFAULT_FIXTURE = ROOT / "tests/bytecode/dialect-v2/number-to-string/cases.json"
-DEFAULT_RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/capability-carrier/number-to-string-prototype/four-engine-v230-verdict.json"
+# 2026-09-24 dated successor for the 2.4.0 Before-Ship: the live equivalence
+# host path (equivalence-live) and four inputs moved in this cycle; the four
+# engines still agree. four-engine-v230-verdict.json stays unchanged.
+DEFAULT_RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/capability-carrier/number-to-string-prototype/four-engine-v240-verdict.json"
 EXPECTED = '"-16384"'
 ENGINES = (
     "native-c-treewalk",
@@ -122,7 +126,7 @@ def render(binary: Path, fixture_path: Path) -> dict:
         "case": "number-to-string-fixnum-min",
         "expected": EXPECTED,
         "observations": observed,
-        "binary": {"path": "build/equivalence/dialect-v2-equivalence-check", "sha256": _sha(binary)},
+        "binary": {"path": str(binary.relative_to(ROOT)), "sha256": _sha(binary)},
         "inputs": bindings,
         "result": "passed",
     }

@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 
 ROOT=Path(__file__).resolve().parents[2]
 DOCS={'README.md','docs/user-guide.md','docs/known-issues.md',
@@ -53,16 +54,40 @@ def validate(files,expected,authority):
     final_claims(files)
 
 
-def check(root,bundle=False):
+def historical_files(contract, reader=None):
+    commit=contract['historical_commit']
+    if commit!='e94da0f1b3246924c9b261ba033279a78ae4c1b5':
+        raise ValueError('historical 2.3.0 document era drift')
+    if reader is None:
+        reader=lambda revision,path:subprocess.check_output(
+            ['git','show',revision+':'+path],cwd=ROOT)
+    return {p:reader(commit,p) for p in DOCS}
+
+
+def check(root,bundle=False,historical=False):
     contract=json.loads((ROOT/'config/c2-v230-bundle-docs.json').read_bytes())
     authority=json.loads((ROOT/'config/c2-v230-public-build-authority.json').read_bytes())
     if contract['release']!='2.3.0':
         raise ValueError('wrong document release')
-    files={p:(root/('docs/release-notes.md' if bundle and p=='docs/releases/2.3.0.md' else p)).read_bytes()
-           for p in DOCS}
+    if historical and (bundle or root.resolve()!=ROOT.resolve()):
+        raise ValueError('historical selection is not an export/bundle fallback')
+    files=historical_files(contract) if historical else {
+        p:(root/('docs/release-notes.md' if bundle and p=='docs/releases/2.3.0.md' else p)).read_bytes()
+        for p in DOCS}
     expected=contract['documents']
     validate(files,expected,authority)
     rejected=[]
+    if historical:
+        drift=dict(contract);drift['historical_commit']='HEAD'
+        try:historical_files(drift)
+        except ValueError:rejected.append('historical:live-revision')
+        else:raise ValueError('historical live revision survived')
+        # Deliberately feed a live-successor document to the sealed reader.
+        trial=dict(files)
+        trial['docs/known-issues.md']+=b'\nLive successor issue, not a release-era document\n'
+        try:validate(trial,expected,authority)
+        except ValueError:rejected.append('historical:live-document')
+        else:raise ValueError('historical live-document mutation survived')
     for path in sorted(DOCS):
         for kind in ('contract-omission','file-omission','change'):
             trial=dict(files);binding=dict(expected)
@@ -101,8 +126,8 @@ def check(root,bundle=False):
         source=contract['measurement_source']
         if hashlib.sha256((root/source['bundle_path']).read_bytes()).hexdigest()!=source['sha256']:
             raise ValueError('bundled measurement source differs')
-    return dict(status='PASS: ACTUAL 2.3.0 BUNDLE DOCUMENTS',files=len(files),
-        mutations=rejected,mode='extracted-bundle' if bundle else 'actual-source',
+    return dict(status='PASS: HISTORICAL 2.3.0 DOCUMENTS' if historical else 'PASS: ACTUAL 2.3.0 BUNDLE DOCUMENTS',files=len(files),
+        mutations=rejected,mode='historical-release' if historical else ('extracted-bundle' if bundle else 'actual-source'),
         approval=contract['approval'],commands=commands(authority))
 
 
@@ -110,8 +135,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,default=ROOT)
     parser.add_argument('--bundle',action='store_true')
+    parser.add_argument('--historical',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(check(args.root,args.bundle),indent=2))
+    print(json.dumps(check(args.root,args.bundle,args.historical),indent=2))
 
 
 if __name__=='__main__':main()

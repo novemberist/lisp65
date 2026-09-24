@@ -159,6 +159,19 @@ def validate(value: dict[str, Any]) -> None:
 
 
 def build() -> None:
+    """Closed: the era world this card records cannot be rebuilt.
+
+    RECEIPT is tracked and this card is one-shot, so this path was already
+    unreachable; it also asked `make` for build/equivalence/dialect-v2-
+    equivalence-check, an era artifact eleven tracked receipts bind by SHA, a
+    sealed check mounts read-only and no rule produces any more. check()
+    compares the current source against the receipt through
+    era_bind(EVIDENCE_ERA), i.e. against the era's source, not the working
+    tree; rebuilding against the live host (equivalence_live_hosts.V2) would
+    therefore be a different, non-comparable world. The rebuild below is kept
+    only as the record of how RECEIPT was produced and never executes.
+    """
+    raise GateError("historical build path; the era artifact is sealed")
     require(not RECEIPT.exists(), "sidx domain gate is one-shot")
     text = SOURCE.read_text(encoding="utf-8")
     model = source_model(text)

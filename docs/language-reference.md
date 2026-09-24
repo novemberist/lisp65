@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 2.3.0**. The language remains
+This living reference describes **lisp65 2.4.0**. The language remains
 Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
@@ -158,10 +158,10 @@ The IDE library adds `(ide)`, `(ide-buffers)`, `(dir)`,
 `(m65d-save-new name string)`. Both libraries live on the product disk and
 must be loaded with `load-lib`; see the [User Guide](user-guide.md).
 
-### Optional names on the 2.3.0 medium
+### Optional names on the 2.4.0 medium
 
 The generated public-surface metadata index is a host-side population. The
-following optional libraries are delivered on the 2.3.0 product disk. The
+following optional libraries are delivered on the 2.4.0 product disk. The
 `INIT.L65` on that disk loads `place` and `string-extra` at boot; `buffer`,
 `inspect` and `defstruct` are loaded by hand with `require`:
 
@@ -285,7 +285,7 @@ publishes ordinary functions that carry no public-surface metadata.
 
 Byte buffers print as the opaque marker `?`, which is not a readable
 representation; read their contents with `buffer-ref` and their length with
-`buffer-length`. The `buffer` library is on the 2.3.0 product disk; load it
+`buffer-length`. The `buffer` library is on the 2.4.0 product disk; load it
 by hand with `(require "buffer")`.
 
 ## Interactive latency boundary
@@ -327,3 +327,8 @@ library.
 Dialect V2 has no CLOS, packages, keyword arguments, bignums, ratios, floats,
 multiple values, restart system, or general on-device disk formatter. These are
 limits of the released product, not implied roadmap promises.
+
+An anonymous `lambda` is supported inside a `defun` body, including closures
+returned from such a function. At the top level, outside a `defun` body, it is
+refused with `VM: BAD BYTECODE`; the prompt recovers and nothing already
+defined is affected. See [Known Issues](known-issues.md).

@@ -90,6 +90,10 @@ defines = ['LISP65_C2_NESTED_APPEND_V5', 'LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESID
            'LISP65_C2_LITE_V6_PUBLISH_CLEAR_CORESIDENT']
 header = '\n'.join('#define '+x+' 1' for x in defines)
 header += '\n' + '\n'.join('#define '+x+' '+str(i+1) for i,x in enumerate(slots))
+capacity_defines = re.findall(
+    r'^#define C2_APPEND_(?:BEGIN_CAPACITY|CAPACITY_CAUSE) .+$', raw, re.M)
+assert len(capacity_defines) == 2, 'append capacity cause/result population drift'
+header += '\n' + '\n'.join(capacity_defines)
 header += r'''
 #include <stdint.h>
 #include <string.h>
@@ -131,7 +135,7 @@ static c2_stream_context c2_runtime, *c2_decode_active;
 static uint8_t c2_ready, c2_journal_count;
 static uint16_t c2_pending_roots;
 static uint8_t bytes[8192];
-static int call_no,fail_at,rollback_calls,stage_calls,releases,world;
+static int call_no,fail_at,rollback_calls,stage_calls,releases,world,capacity_fault;
 static uint8_t ext_disk_get(uint16_t at) { assert(at>=256); return bytes[at-256]; }
 static uint16_t c2_stage_u16(uint16_t at) { return bytes[at]|(uint16_t)bytes[at+1]<<8; }
 static uint32_t c2_stage_u24(uint16_t at) { return c2_stage_u16(at)|(uint32_t)bytes[at+2]<<16; }
@@ -140,7 +144,11 @@ static int c2_phase_scratch_acquire(int owner) { (void)owner; return 1; }
 static int c2_phase_scratch_release(int owner) { (void)owner; releases++; return 1; }
 '''
 seams = r'''
-static int check(void) { return ++call_no != fail_at; }
+static int check(void) {
+ if (++call_no != fail_at) return 1;
+ if (capacity_fault) c2aw.append.error=C2_APPEND_CAPACITY_CAUSE;
+ return 0;
+}
 static int c2_overlay_call_range(int first,int last,void *p) {
  (void)last;
  if(first==LISP65_C2_APPEND_ENVELOPE_SLOT && c2_append_envelope_phase(p)!=C2_STREAM_OK) return 0;
@@ -163,7 +171,7 @@ main = r'''
 static void put(uint16_t at,uint32_t v,int n) { while(n--) {bytes[at++]=v;v>>=8;} }
 static void reset(void) {
  memset(&c2aw,0xa5,sizeof c2aw); memset(bytes,0,sizeof bytes);
- c2_ready=1; world=9; call_no=stage_calls=rollback_calls=releases=0; fail_at=0;
+ c2_ready=1; world=9; call_no=stage_calls=rollback_calls=releases=0; fail_at=capacity_fault=0;
  memcpy(bytes,"L65S",4); bytes[4]=4;bytes[5]=32;bytes[6]=32;bytes[7]=1;
  put(8,32,2);put(10,64,3);put(13,88,3);put(16,32,2);
  put(22,LISP65_C2_PRODUCT_BUILD_ID,4);put(26,1,2);
@@ -218,6 +226,18 @@ for name, body in [('generic',generic),('consumed',generated[0])]:
     assert old != body
     rows.append(run('names-'+name+'-case-sensitive',name_header+fold+old+name_main,False))
 rows.append(run('append-reject',header+envelope+seams+begin+main))
+capacity_main = main.replace(' return 0;\n}', '''
+ reset();fail_at=5;capacity_fault=1;
+ assert(c2_append_begin(89,&before,&ordinal,0)==C2_APPEND_BEGIN_CAPACITY);
+ assert(c2_ready && world==9 && !stage_calls && !rollback_calls && releases==1);
+ return 0;
+}''')
+assert capacity_main != main
+rows.append(run('append-capacity',header+envelope+seams+begin+capacity_main))
+old_capacity = begin.replace('? C2_APPEND_BEGIN_CAPACITY : 0u', '? 0u : 0u')
+assert old_capacity != begin
+rows.append(run('append-capacity-as-generic-reject',
+                header+envelope+seams+old_capacity+capacity_main,False))
 old=function(subprocess.check_output(['git','show','412454ec:src/c2_product_runtime.c'],
                                     cwd=ROOT,text=True),'c2_append_begin')
 rows.append(run('append-old-rollback',header+envelope+seams+old+main,False))

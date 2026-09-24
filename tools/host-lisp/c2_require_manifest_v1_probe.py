@@ -376,7 +376,8 @@ receipt = {
     "next_gate": "Class-C freight review before any target require implementation; recommended first library is defstruct",
     "claim_limit": "Host parser/index/resolution/preflight/transaction model only. No target require, product, hardware, defstruct or random claim.",
 }
-RECEIPT.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+from check_result_receipt import report
+report(RECEIPT, receipt)
 print(
     "REQUIRE V1 HOST PASS "
     f"libs={len(index['libraries'])} cutpoints={len(cutpoints)} "

@@ -19,6 +19,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 from elf_truth import ElfTruth  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 import c2_v190_native_prompt_editor_display_repair_r7 as R7  # noqa: E402
 import c2_v160_input_service_hybrid_final_world as FINAL  # noqa: E402
 
@@ -309,6 +310,7 @@ class LinkedRouteVM(R7.TargetFrameVM):
             native_base=native_base, frame_slots=frame_slots)
 
 
+@ERA.in_host_source_world("f3da30c35673d9f054db32b312197208f1f20791")
 def run_delivered_consumer(source: Path, elf: Path,
                            expect_success: bool) -> dict[str, Any]:
     printable = "0123456789" * 9 + "abc"

@@ -17,6 +17,13 @@ def require(ok,msg):
 def sha(raw):return hashlib.sha256(raw).hexdigest()
 def bind(p):return dict(path=str(p.resolve()),bytes=p.stat().st_size,sha256=sha(p.read_bytes()))
 def checked(b):
+    if 'commit' in b:
+        raw=subprocess.check_output(['git','show',b['commit']+':'+b['path']],cwd=ROOT)
+        require(sha(raw)==b['sha256'],'historical source identity: '+b['path'])
+        p=ROOT/'build/legacy-ide-era-inputs'/b['commit']/b['path']
+        if p.exists():require(p.read_bytes()==raw,'historical materialization drift')
+        else:p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(raw)
+        return p
     p=ROOT/b['path'];require(sha(p.read_bytes())==b['sha256'],str(p)+' identity');return p
 def write(p,value):p.write_text(json.dumps(value,indent=2)+'\n')
 def off(t,s):
@@ -216,7 +223,13 @@ def selftest(d):
         raise AssertionError('mutation accepted: '+name)
     old=d['files']['BOOT.ID']['data']
     require(data[6]!=old[6] and len(data)!=len(old) and data[8:12]!=old[8:12],'new-descriptor-old-stager')
-    return list(cases)+['new-descriptor-old-stager']
+    extra=[]
+    if 'commit' in d['cfg']['source']:
+        live=dict(d['cfg']['source']);live.pop('commit')
+        try:checked(live)
+        except ValueError:extra.append('historical-gate-fed-live-stager')
+        else:raise AssertionError('historical gate accepted live stager')
+    return list(cases)+['new-descriptor-old-stager']+extra
 def prepare(d,out):
     require(not (out/'stager-build-started.json').exists(),'stager budget already started')
     out.mkdir(parents=True,exist_ok=True)

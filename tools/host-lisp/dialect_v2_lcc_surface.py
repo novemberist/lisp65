@@ -16,15 +16,16 @@ from typing import Any
 
 import bytecode_p0 as P0
 import bytecode_p0_compiler as P0C
+import equivalence_live_hosts as LIVE
 
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURE = ROOT / "tests/bytecode/dialect-v2/lcc-surface/cases.json"
 DEFAULT_V1_SOURCE_ROOT = ROOT / "build/equivalence/frozen-v1-f6527d25/source"
 DEFAULT_V1_BINARY = ROOT / "build/equivalence/frozen-v1-f6527d25/equivalence-check"
-DEFAULT_V2_BINARY = ROOT / "build/equivalence/dialect-v2-equivalence-check"
+DEFAULT_V2_BINARY = LIVE.V2
 DEFAULT_V1_BUILD = ROOT / "build/equivalence/frozen-v1-f6527d25/build-receipt.json"
-DEFAULT_V2_BUILD = ROOT / "build/equivalence/dialect-v2-build-receipt.json"
+DEFAULT_V2_BUILD = LIVE.V2_BUILD_RECEIPT
 DEFAULT_LISTS_FIXTURE = ROOT / "tests/bytecode/dialect-v2/lists/cases.json"
 DEFAULT_LISTS_OUTPUT = ROOT / "build/bytecode/dialect-v2/lists"
 DEFAULT_STRINGS_FIXTURE = ROOT / "tests/bytecode/dialect-v2/strings/cases.json"

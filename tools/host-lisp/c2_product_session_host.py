@@ -718,10 +718,13 @@ def target_overlay_reload_gate(out: Path) -> dict[str, Any]:
         vm_source.index("case 68:"):
         vm_source.index("#endif", vm_source.index("case 68:"))
     ]
+    # The facade ends at its own closing brace. Set A (81d321d2) placed the
+    # Buffer stage transport right behind it, so the old "}\n\n#endif" anchor
+    # no longer follows the facade and made this oracle red in check-host.
+    facade_start = vm_source.index(
+        "static LISP65_RESIDENT_ISLAND_FN obj vm_buffer_call(")
     facade = vm_source[
-        vm_source.index("static LISP65_RESIDENT_ISLAND_FN obj vm_buffer_call("):
-        vm_source.index("\n}\n\n#endif", vm_source.index(
-            "static LISP65_RESIDENT_ISLAND_FN obj vm_buffer_call(")) + 2
+        facade_start:vm_source.index("\n}\n", facade_start) + 2
     ]
     callprim = vm_source[
         vm_source.index("case OP_CALLPRIM:"):

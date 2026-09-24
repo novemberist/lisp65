@@ -18,6 +18,7 @@ import re
 import struct
 import sys
 from typing import Any
+import symbol_layout_manifest as SYMBOL_LAYOUT
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -58,7 +59,7 @@ FORMAT = "lisp65-c2.2-phase-m2-gc-envelope-attribution-v1"
 HEAP_CELLS = 48
 EXT_CELLS = 1024
 GC_ROOTS = 128
-MAX_SYM = 752
+MAX_SYM = SYMBOL_LAYOUT.historical_values()['MAX_SYM']
 C2_ROOT_CAP = 1536
 C2_ROOTS_PER_BLOCK = 16
 
@@ -199,7 +200,7 @@ def captured_geometry() -> dict[str, Any]:
 def source_gate() -> dict[str, Any]:
     mem = MEM.read_text(encoding="utf-8")
     runtime = RUNTIME.read_text(encoding="utf-8")
-    workbench = WORKBENCH.read_text(encoding="utf-8")
+    workbench = SYMBOL_LAYOUT.historical_workbench()
     required_defines = (
         "WORKBENCH_HEAP_CELLS := 48",
         "-DGC_ROOTS=128",
@@ -208,7 +209,7 @@ def source_gate() -> dict[str, Any]:
         "-DLISP65_STRING_ARENA",
         "-DLISP65_SYMVAL_EXT",
         "-DLISP65_SYMFN_EXT",
-        "-DMAX_SYM=752",
+        f"-DMAX_SYM={MAX_SYM}",
     )
     require(all(token in workbench for token in required_defines),
             "Workbench GC geometry define drift")
@@ -460,7 +461,7 @@ def main() -> int:
             "authority": {
                 "collector_source": bind(MEM),
                 "C2_root_walker_source": bind(RUNTIME),
-                "workbench_geometry": bind(WORKBENCH),
+                "workbench_geometry": SYMBOL_LAYOUT.historical_workbench_binding(),
                 "Link57": bind(LINK57),
                 "Link66": bind(LINK66),
                 "final_G5": bind(G5),

@@ -20,14 +20,16 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_FIXTURE = ROOT / "tests/equivalence/quote-emission-parity.json"
-DEFAULT_READER = ROOT / "build/reader-conformance-host"
-DEFAULT_BINARY = ROOT / "build/equivalence/equivalence-check"
-DEFAULT_OUT = ROOT / "build/equivalence/quote-emission-parity.json"
-FORMAT = "lisp65-quote-emission-parity-v1"
 
 sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import bytecode_p0_compiler as P0  # noqa: E402
+import equivalence_live_hosts as LIVE  # noqa: E402
+
+DEFAULT_FIXTURE = ROOT / "tests/equivalence/quote-emission-parity.json"
+DEFAULT_READER = ROOT / "build/reader-conformance-host"
+DEFAULT_BINARY = LIVE.V1
+DEFAULT_OUT = LIVE.LIVE_DIR / "quote-emission-parity.json"
+FORMAT = "lisp65-quote-emission-parity-v1"
 
 
 class ParityError(RuntimeError):

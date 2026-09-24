@@ -41,7 +41,7 @@ RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.2-require-resolver-source-index-gate-receipt.json")
 SUCCESSOR_RECEIPT = RECEIPT.with_name(
-    "library-require-resolver-source-successor-receipt.json")
+    "library-require-resolver-nested-error-recovery-successor-20260923.json")
 HOST_PROBE = ROOT / "tools/host-lisp/c2_require_manifest_v1_probe.py"
 
 HEADER_BYTES = 32
@@ -535,7 +535,7 @@ def source_gate() -> dict[str, Any]:
         "(defun %require-active-identities-at",
         "(if (equal state (nth 3 cache))",
         "(if (%require-fast-loaded-p name)",
-        "(cons 0 256)",
+        "(%require-owner-pair 0)",
         "(%disk-load-lib (nth 2 row) (nth 3 row))",
         "(crc-lo (%l65i-next-crc))",
         "(crc-hi (%l65i-next-crc))",
@@ -563,6 +563,8 @@ def source_gate() -> dict[str, Any]:
     )
     require(all(token in lisp for token in required_lisp),
             "target resolver source seam drift")
+    require("(cons 0 256)" not in lisp,
+            "resolver used the obsolete bank-end literal")
     primitive_start = vm.index("case 67:")
     primitive_end = vm.index("\n#else", primitive_start)
     primitive_body = vm[primitive_start:primitive_end]
@@ -603,6 +605,7 @@ def source_gate() -> dict[str, Any]:
         "new_session_records": 0,
         "claimed_resident_state_bytes": 0,
         "native_policy_decisions": 0,
+        "native_owner_capacity_predicate": True,
         "bank2_decisions": [
             "active persistent identity universe",
             "ordinary persistent row geometry before package classification",
@@ -626,6 +629,9 @@ def source_mutations() -> dict[str, str]:
                  vm_source: str, leaf_source: str) -> None:
         require("(set-symbol-value '*loaded-libs*" not in lisp_source,
                 "loaded-registry")
+        require("(%require-owner-pair 0)" in lisp_source
+                and "(cons 0 256)" not in lisp_source,
+                "obsolete-bank-end-literal")
         for token in (
             "(%c2d-byte (car address) (cdr address))",
             "(defun %require-static-prefix",
@@ -683,6 +689,8 @@ def source_mutations() -> dict[str, str]:
             "native-policy")
 
     variants = {
+        "obsolete-bank-end-literal": (lisp.replace(
+            "(%require-owner-pair 0)", "(cons 0 256)"), runtime, vm),
         "registry-introduced": (
             lisp + "\n(set-symbol-value '*loaded-libs* nil)\n", runtime, vm),
         "raw-c2d-read-removed": (lisp.replace(

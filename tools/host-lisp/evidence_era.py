@@ -22,6 +22,7 @@ from functools import wraps
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -42,7 +43,7 @@ def generated_workbench_world(commit):
     """Rebuild the historical generated suite AND sources as one host view."""
     import bytecode_p0_stdlib as S
     import v2_workbench_codemod as C
-    with tempfile.TemporaryDirectory(prefix='era-workbench-', dir=ROOT/'build') as raw:
+    with tempfile.TemporaryDirectory(prefix='era-workbench-', dir=os.environ.get('LISP65_CHECK_SCRATCH_ROOT', ROOT/'build')) as raw:
         target = Path(raw)
         with host_source_world(commit) as reads:
             C.generate(C.DEFAULT_CLOSURE, target)

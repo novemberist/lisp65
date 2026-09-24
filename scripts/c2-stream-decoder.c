@@ -53,45 +53,60 @@ C2_LOCAL uint8_t magic4(const uint8_t *p, const char *s) {
 C2_LOCAL uint8_t fail(c2_stream_context *c, uint8_t status) {
     c->error = status; return status;
 }
-C2_LOCAL uint32_t crc32_update(uint32_t crc, const uint8_t *p, uint16_t n) {
-    uint16_t i; uint8_t bit;
-    for (i = 0; i < n; ++i) {
-        crc ^= p[i];
-        for (bit = 0; bit < 8; ++bit) {
-#ifdef LISP65_C2_MAP_CPU_TRANSPORT
-            if (crc & 1u) crc = (crc >> 1) ^ 0xedb88320UL;
-            else crc >>= 1;
+/* Exactly one owner for the 64-byte table, in ordinary text. */
+#if C2_STREAM_PHASE == 1
+const uint32_t c2_crc32_nibbles[16]
+    __attribute__((section(".text.c2_crc32_nibbles"), used)) = { 0x00000000UL, 0x1db71064UL, 0x3b6e20c8UL, 0x26d930acUL, 0x76dc4190UL, 0x6b6b51f4UL, 0x4db26158UL, 0x5005713cUL, 0xedb88320UL, 0xf00f9344UL, 0xd6d6a3e8UL, 0xcb61b38cUL, 0x9b64c2b0UL, 0x86d3d2d4UL, 0xa00ae278UL, 0xbdbdf21cUL };
 #else
-            crc = (crc >> 1)
-                ^ (0xedb88320UL & (uint32_t)-(int32_t)(crc & 1u));
+extern const uint32_t c2_crc32_nibbles[16];
 #endif
-        }
+C2_LOCAL __attribute__((noinline)) uint32_t crc32_update(uint32_t crc, const uint8_t *p, uint16_t n) {
+    while (n--) {
+        crc ^= *p++;
+        uint8_t part = 2;
+        do { crc = (crc >> 4) ^ c2_crc32_nibbles[crc & 15u]; } while (--part);
     }
     return crc;
 }
-C2_LOCAL uint8_t shelf_crc32(uint32_t at, uint32_t bytes, uint32_t *result) {
-    uint8_t block[32]; uint32_t crc = 0xffffffffUL;
+#if C2_STREAM_PHASE == 1
+#define C2_CRC_HELPER C2_SLICE(01)
+#elif C2_STREAM_PHASE == 3
+#define C2_CRC_HELPER C2_SLICE(03)
+#else
+#define C2_CRC_HELPER __attribute__((noinline))
+#endif
+/* Same reads, lengths and failure ordering; share the accumulator loop
+ * between the single-range and two-range checks inside the loaded phase. */
+C2_LOCAL C2_CRC_HELPER uint8_t shelf_crc32_extend(uint32_t at, uint16_t bytes, uint32_t *crc) {
+    uint8_t block[32];
     while (bytes) {
         uint16_t n = bytes > sizeof(block) ? sizeof(block) : (uint16_t)bytes;
         if (!c2_stream_shelf_read(at, block, n)) return 0;
-        crc = crc32_update(crc, block, n); at += n; bytes -= n;
+        *crc = crc32_update(*crc, block, n);
+        at += n; bytes -= n;
     }
-    *result = ~crc; return 1;
+    return 1;
+}
+
+#if C2_STREAM_PHASE == 3
+#define C2_CRC_RANGE C2_SLICE(03)
+#else
+#define C2_CRC_RANGE
+#endif
+C2_LOCAL C2_CRC_RANGE uint8_t shelf_crc32(uint32_t at, uint16_t bytes, uint32_t *result) {
+    uint32_t crc = 0xffffffffUL;
+    if (!shelf_crc32_extend(at, bytes, &crc)) return 0;
+    *result = ~crc;
+    return 1;
 }
 C2_LOCAL uint8_t shelf_crc32_pair(uint32_t first_at, uint16_t first_bytes,
                                 uint32_t second_at, uint16_t second_bytes,
                                 uint32_t *result) {
-    uint8_t block[32]; uint32_t crc = 0xffffffffUL, at = first_at;
-    uint32_t left = first_bytes; uint8_t part;
-    for (part = 0; part < 2u; ++part) {
-        while (left) {
-            uint16_t n = left > sizeof(block) ? sizeof(block) : (uint16_t)left;
-            if (!c2_stream_shelf_read(at, block, n)) return 0;
-            crc = crc32_update(crc, block, n); at += n; left -= n;
-        }
-        at = second_at; left = second_bytes;
-    }
-    *result = ~crc; return 1;
+    uint32_t crc = 0xffffffffUL;
+    if (!shelf_crc32_extend(first_at, first_bytes, &crc)
+        || !shelf_crc32_extend(second_at, second_bytes, &crc)) return 0;
+    *result = ~crc;
+    return 1;
 }
 #ifdef LISP65_C2_LITE_BANK2_STAGING
 /*

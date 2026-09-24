@@ -43,52 +43,31 @@
               nil)
           nil)
       t)
-  (if (< (symbol-value '*l65i-offset*) 256)
+  ; Last-sector byte 1 is payload length plus one, not a next-sector number.
+  ; Never let zero-filled sector slack stand in for a truncated index byte.
+  (if (and (< (symbol-value '*l65i-offset*) 256)
+           (or (> (symbol-value '*l65i-next-track*) 0)
+               (<= (symbol-value '*l65i-offset*)
+                   (symbol-value '*l65i-next-sector*))))
       (let ((value (%disk-byte (symbol-value '*l65i-offset*))))
         (set-symbol-value '*l65i-offset*
                           (1+ (symbol-value '*l65i-offset*)))
         value)
       nil))
 
-(defun %l65i-crc-bits (count)
-  (if (> count 0)
-      (let ((hi (symbol-value '*l65i-crc-hi*))
-            (lo (symbol-value '*l65i-crc-lo*)))
-        (let ((top (> hi 127))
-              (next-hi (mod (+ (* hi 2) (if (> lo 127) 1 0)) 256))
-              (next-lo (mod (* lo 2) 256)))
-          (set-symbol-value '*l65i-crc-hi*
-            (if top (logxor next-hi 16) next-hi))
-          (set-symbol-value '*l65i-crc-lo*
-            (if top (logxor next-lo 33) next-lo))
-          (%l65i-crc-bits (1- count))))
-      t))
-
-(defun %l65i-crc-byte (value)
-  (set-symbol-value '*l65i-crc-hi*
-                    (logxor (symbol-value '*l65i-crc-hi*) value))
-  (%l65i-crc-bits 8)
-  value)
-
 (defun %l65i-next-crc ()
   (let ((value (%l65i-next-byte)))
-    (if (numberp value) (%l65i-crc-byte value) nil)))
-
-(defun %l65i-row-crc-byte (value)
-  (let ((overall-hi (symbol-value '*l65i-crc-hi*))
-        (overall-lo (symbol-value '*l65i-crc-lo*)))
-    (set-symbol-value '*l65i-crc-hi* (symbol-value '*l65i-row-hi*))
-    (set-symbol-value '*l65i-crc-lo* (symbol-value '*l65i-row-lo*))
-    (%l65i-crc-byte value)
-    (set-symbol-value '*l65i-row-hi* (symbol-value '*l65i-crc-hi*))
-    (set-symbol-value '*l65i-row-lo* (symbol-value '*l65i-crc-lo*))
-    (set-symbol-value '*l65i-crc-hi* overall-hi)
-    (set-symbol-value '*l65i-crc-lo* overall-lo)
-    (%l65i-crc-byte value)))
+    (if (numberp value)
+        (%disk-byte (symbol-value '*l65i-crc-hi*) value)
+        nil)))
 
 (defun %l65i-next-row ()
   (let ((value (%l65i-next-byte)))
-    (if (numberp value) (%l65i-row-crc-byte value) nil)))
+    (if (numberp value)
+        (progn
+          (%disk-byte (symbol-value '*l65i-row-hi*) value)
+          (%disk-byte (symbol-value '*l65i-crc-hi*) value))
+        nil)))
 
 (defun %l65i-u16 (row-p)
   (let ((lo (if row-p (%l65i-next-row) (%l65i-next-crc))))
@@ -146,7 +125,7 @@
       (if (if (numberp track) (> track 0) nil)
           (if (if (numberp sector) (< sector 40) nil)
               (if (if identity (= (length identity) 4) nil)
-                  (if dependencies (= source 2) nil)
+                  (if dependencies (if (numberp source) (= source 2) nil) nil)
                   nil)
               nil)
           nil)
@@ -167,15 +146,14 @@
       nil))
 
 (defun %l65i-row-crc-p (lo hi reserved)
-  (if (= reserved 0)
-      (if (= lo (symbol-value '*l65i-row-lo*))
-          (= hi (symbol-value '*l65i-row-hi*))
+  (if (and (numberp reserved) (numberp lo) (numberp hi) (= reserved 0))
+      (if (= lo (car (symbol-value '*l65i-row-hi*)))
+          (= hi (cdr (symbol-value '*l65i-row-hi*)))
           nil)
       nil))
 
 (defun %l65i-row-crc-reset ()
-  (set-symbol-value '*l65i-row-hi* 255)
-  (set-symbol-value '*l65i-row-lo* 255))
+  (set-symbol-value '*l65i-row-hi* (cons 255 255)))
 
 (defun %l65i-read-row-fixed (rows)
   (%l65i-row-crc-reset)
@@ -224,7 +202,9 @@
 
 (defun %l65i-zeroes (count)
   (if (> count 0)
-      (if (= (%l65i-next-byte) 0) (%l65i-zeroes (1- count)) nil)
+      (let ((value (%l65i-next-byte)))
+        (if (and (numberp value) (= value 0))
+            (%l65i-zeroes (1- count)) nil))
       t))
 
 (defun %l65i-header ()
@@ -240,7 +220,7 @@
           (identity (%l65i-read-bytes 4 nil nil)))
       (let ((header-crc-lo (%l65i-next-byte))
             (header-crc-hi (%l65i-next-byte)))
-      (if (if (equal magic '(76 54 53 73))
+      (if (if (and (numberp header-crc-hi) (equal magic '(76 54 53 73)))
               (if (= version 1)
                   (if (= header-bytes 32)
                       (if (= row-bytes 48)
@@ -250,10 +230,9 @@
                                             (* (cdr records-bytes) 256))
                                          (* rows 48))
                                       (if (= header-crc-lo
-                                             (symbol-value '*l65i-crc-lo*))
+                                             (car (symbol-value '*l65i-crc-hi*)))
                                           (if (= header-crc-hi
-                                                 (symbol-value
-                                                   '*l65i-crc-hi*))
+                                                 (cdr (symbol-value '*l65i-crc-hi*)))
                                               (%l65i-zeroes 13)
                                               nil)
                                           nil)
@@ -297,39 +276,53 @@
   ; L65I-v1: 32-byte header + at most 32 rows of 48 bytes = 1,568 bytes;
   ; ceil(1,568 / 254) = seven sectors, including the initial sector.
   (set-symbol-value '*l65i-fuel* 7)
+  ; CRC pairs are working state, not retained index data. Clear stale state
+  ; from an interrupted parse before opening, and release on success or nil.
+  (set-symbol-value '*l65i-crc-hi* nil)
+  (set-symbol-value '*l65i-row-hi* nil)
   (let ((entry (%l65i-find (%string-codes "l65index") 40 3 64)))
-    (if entry
-        (if (%l65i-open-sector (car entry) (cdr entry))
-            (progn
-              (set-symbol-value '*l65i-crc-hi* 255)
-              (set-symbol-value '*l65i-crc-lo* 255)
-              (let ((header (%l65i-header)))
-              (if header
-                  (progn
-                    (set-symbol-value '*l65i-crc-hi* 255)
-                    (set-symbol-value '*l65i-crc-lo* 255)
-                    (let ((rows (%l65i-read-rows
-                                  (car header) (car header) nil)))
-                      (if (if rows
-                              (if (= (symbol-value '*l65i-crc-lo*)
-                                     (car (cdr header)))
-                                  (= (symbol-value '*l65i-crc-hi*)
-                                     (car (cdr (cdr header))))
-                                  nil)
-                              nil)
-                          (cons
-                            (cons (car (cdr header))
-                              (cons (car (cdr (cdr header)))
-                                (car (cdr (cdr (cdr header))))))
-                            rows)
-                          nil)))
-                  nil)))
-            nil)
-        nil)))
+    (let ((index
+            (if entry
+                (if (%l65i-open-sector (car entry) (cdr entry))
+                    (progn
+                      (set-symbol-value '*l65i-crc-hi* (cons 255 255))
+                      (let ((header (%l65i-header)))
+                        (if header
+                            (progn
+                              (set-symbol-value '*l65i-crc-hi* (cons 255 255))
+                              (let ((rows (%l65i-read-rows
+                                            (car header) (car header) nil)))
+                                (if (if rows
+                                        (if (= (car (symbol-value '*l65i-crc-hi*))
+                                               (car (cdr header)))
+                                            (= (cdr (symbol-value '*l65i-crc-hi*))
+                                               (car (cdr (cdr header))))
+                                            nil)
+                                        nil)
+                                    (cons
+                                      (cons (car (cdr header))
+                                        (cons (car (cdr (cdr header)))
+                                          (car (cdr (cdr (cdr header))))))
+                                      rows)
+                                    nil)))
+                            nil)))
+                    nil)
+                nil)))
+      (set-symbol-value '*l65i-crc-hi* nil)
+      (set-symbol-value '*l65i-row-hi* nil)
+      index)))
 
-; The one native require operation reads one byte from the authenticated C2D
-; plane.  Everything below it -- identities, active-universe validation,
-; transient fronts and capacity arithmetic -- is Lisp orchestration.
+; Prim 67 retains its two-byte address mode. Its unary private mode reads
+; low/high parts from the native reservation/export owners, never a Lisp
+; copy of their capacities. Field IDs: code, images, entries, resolutions,
+; roots, transient depth, handles, export scratch.
+(defun %require-owner-pair (field)
+  (let ((selector (* field 2)))
+    (cons (%c2d-byte selector) (%c2d-byte (1+ selector)))))
+
+(defun %require-owner-value (field)
+  (%require-u16-value (%require-owner-pair field)))
+
 (defun %require-c2d-byte (address)
   (let ((value (%c2d-byte (car address) (cdr address))))
     (if (numberp value) value nil)))
@@ -391,60 +384,27 @@
   (%require-c2d-bytes=
     (cons 0 0) '(67 50 68 0 6 48 32 10)))
 
-(defun %require-c2d-header-caps-p ()
-  (if (%require-c2d-bytes= (cons 14 0) '(64 0))
-      (if (%require-c2d-bytes= (cons 18 0) '(0 8))
-          (if (%require-c2d-bytes= (cons 22 0) '(0 16))
-              (%require-c2d-bytes= (cons 26 0) '(0 6))
-              nil)
-          nil)
-      nil))
-
 (defun %require-c2d-header-layout-p ()
   (%require-c2d-bytes=
     (cons 28 0)
     '(48 0 48 8 48 88 48 120 48 132 6 0)))
 
-(defun %require-c2d-state-core-p (generation images entries)
-  (if generation
-      (if (%require-u16-zero-p generation)
-          nil
-          (if (if (numberp images)
-                  (if (>= images 6) (<= images 64) nil)
-                  nil)
-              (if (numberp entries) (<= entries 2048) nil)
-              nil))
-      nil))
-
-(defun %require-c2d-state-tail-p (resolutions roots watermark)
-  (if (if (numberp resolutions) (<= resolutions 4096) nil)
-      (if (if (numberp roots) (<= roots 1536) nil)
-          (if (numberp watermark)
-              (if (>= watermark 2048) (<= watermark 4096) nil)
-              nil)
-          nil)
-      nil))
-
 (defun %require-c2d-state-values ()
-  (let ((generation (%require-c2d-u16 (cons 10 0)))
+  (if (= (%c2d-byte 16) 1)
+    (let ((generation (%require-c2d-u16 (cons 10 0)))
         (images (%require-u16-value (%require-c2d-u16 (cons 12 0))))
         (entries (%require-u16-value (%require-c2d-u16 (cons 16 0)))))
     (let ((resolutions
             (%require-u16-value (%require-c2d-u16 (cons 20 0))))
           (roots (%require-u16-value (%require-c2d-u16 (cons 24 0))))
           (watermark (%require-u16-value (%require-c2d-u16 (cons 8 0)))))
-      (if (%require-c2d-state-core-p generation images entries)
-          (if (%require-c2d-state-tail-p resolutions roots watermark)
-              (list generation images entries resolutions roots watermark)
-              nil)
-          nil))))
+      (list generation images entries resolutions roots watermark)))
+    nil))
 
 (defun %require-c2d-state ()
   (if (%require-c2d-header-shape-p)
-      (if (%require-c2d-header-caps-p)
-          (if (%require-c2d-header-layout-p)
-              (%require-c2d-state-values)
-              nil)
+      (if (%require-c2d-header-layout-p)
+          (%require-c2d-state-values)
           nil)
       nil))
 
@@ -658,9 +618,10 @@
 
 (defun %require-transient-fronts-at
   (depth generation watermark entries resolutions roots code-high)
-  (if (< depth 4)
+  (if (< depth (%require-owner-value 5))
       (let ((base
-              (%require-address (cons 48 0) (- 63 depth) 32)))
+              (%require-address (cons 48 0)
+                (- (1- (%require-owner-value 1)) depth) 32)))
         (if (= (%require-row-byte base 0) 2)
             (let ((row
                     (%require-transient-row-p
@@ -671,16 +632,18 @@
                     (1+ depth) generation watermark
                     (nth 1 row) (nth 2 row) (nth 3 row) (car row))
                   nil))
-            (if (= watermark (+ entries 2048))
+            (if (= watermark (+ entries (%require-owner-value 2)))
                 (list depth entries resolutions roots code-high)
                 nil)))
-      (if (= watermark (+ entries 2048))
+      (if (= watermark (+ entries (%require-owner-value 2)))
           (list depth entries resolutions roots code-high)
           nil)))
 
 (defun %require-transient-fronts (state)
   (%require-transient-fronts-at
-    0 (nth 0 state) (nth 5 state) 2048 4096 1536 (cons 0 256)))
+    0 (nth 0 state) (nth 5 state)
+    (%require-owner-value 2) (%require-owner-value 3)
+    (%require-owner-value 4) (%require-owner-pair 0)))
 
 (defun %require-index-name (rows name ordinal)
   (if rows
@@ -785,7 +748,7 @@
 
 (defun %require-directory-capacities-p (total state fronts)
   (if (%require-space-p
-        (nth 1 state) (nth 1 total) (- 64 (nth 0 fronts)))
+        (nth 1 state) (nth 1 total) (- (%require-owner-value 1) (nth 0 fronts)))
       (if (%require-space-p
             (nth 2 state) (nth 2 total) (nth 1 fronts))
           (if (%require-space-p
@@ -800,7 +763,7 @@
   (let ((bank2 (%require-u16-add-wide code-low (nth 0 total))))
     (if (if bank2 (%require-u16<= bank2 (nth 4 fronts)) nil)
         (if (%require-directory-capacities-p total state fronts)
-            (%require-u16<= (nth 5 total) (cons 208 56))
+            (%require-u16<= (nth 5 total) (%require-owner-pair 7))
             nil)
         nil)))
 
@@ -843,25 +806,44 @@
               nil)))
       nil))
 
+(defun %require-world-tail (rows state first code-base)
+  (let ((code-low
+          (%require-active-prefix
+            first (nth 1 state) rows (nth 0 state) code-base))
+        (fronts (%require-transient-fronts state)))
+    (if (if code-low fronts nil)
+        (list state code-low fronts)
+        nil)))
+
 (defun %require-world (rows)
   (let ((state (%require-c2d-state)))
     (if state
-        (let ((static-low
-                (%require-static-prefix
-                  0 (nth 0 state) (cons 0 0))))
-          (let ((code-low
-                  (if static-low
-                      (%require-active-prefix
-                        6 (nth 1 state) rows (nth 0 state) static-low)
-                      nil))
-                (fronts (%require-transient-fronts state)))
-            (if (if code-low fronts nil)
-                (list state code-low fronts)
-                nil)))
+        (let ((low (%require-static-prefix 0 (nth 0 state) (cons 0 0))))
+          (if low (%require-world-tail rows state 6 low) nil))
         nil)))
 
-(defun %require-fast-note (library row lock rows)
-  (let ((world (%require-world rows)))
+; The native persistent append publishes only new image rows. Reuse the
+; already validated prefix only within this synchronous load operation:
+; same generation, monotone persistent counters, unchanged transient mark.
+; The native write-population proof is a prerequisite of this optimization.
+; Newly published rows and the transient fronts are still validated below.
+(defun %require-state-advance-p (old new count)
+  (if (> count 0)
+      (if (<= (car old) (car new))
+          (%require-state-advance-p (cdr old) (cdr new) (1- count))
+          nil)
+      (= (car old) (car new))))
+
+
+(defun %require-fast-note (library row lock rows previous)
+  (let ((world (let ((state (%require-c2d-state)) (old (nth 0 previous)))
+    (if state
+        (if (%require-u16= (nth 0 old) (nth 0 state))
+            (if (%require-state-advance-p (cdr old) (cdr state) 4)
+                (%require-world-tail rows state (nth 1 old) (nth 1 previous))
+                nil)
+            nil)
+        nil))))
     (if world
         (let ((state (nth 0 world))
               (identity (car (cdr row))))
@@ -917,7 +899,7 @@
                     ordinal rows lock (nth 0 world)
                     (nth 2 world) (nth 1 world))
                   (%require-fast-note
-                    library (nth ordinal rows) lock rows)
+                    library (nth ordinal rows) lock rows world)
                   nil)
               nil))
         nil)))
@@ -929,7 +911,15 @@
   (let ((name (if (stringp library)
                   library
                   (if (symbolp library) (symbol-name library) nil))))
-    (if name
+    ; Until retirement can protect persistent appends, reject before the
+    ; fast cache, index read, or publication. The validated watermark equals
+    ; the native handle owner only when no transient handles are allocated.
+    (if (if name
+            (if (= (%c2d-byte 16) 1)
+                (%require-u16= (%require-c2d-u16 (cons 8 0))
+                              (%require-owner-pair 6))
+                nil)
+            nil)
         (progn
           ; Query the existing native loader owner without interning a name.
           ; Keep interactive intent echoes, including already-loaded packages.

@@ -216,6 +216,10 @@ WORKBENCH_MATH_LINK_ALIASES := \
 	-Wl,--defsym=__divhi3=lisp65_hw_divhi3 \
 	-Wl,--defsym=__modhi3=lisp65_hw_modhi3
 WORKBENCH_LDFLAGS := -Wl,--icf=all $(WORKBENCH_MATH_LINK_ALIASES)
+WORKBENCH_SYMBOL_DEFINES := $(shell python3 tools/host-lisp/symbol_layout_manifest.py defines)
+ifeq ($(strip $(WORKBENCH_SYMBOL_DEFINES)),)
+$(error Storage-owner symbol manifest could not be resolved)
+endif
 WORKBENCH_DEFINES := \
 	-DLISP65_MEGA65_MATH_OVERRIDE \
 	-DLISP65_F011_GUARD_ASM \
@@ -258,18 +262,19 @@ WORKBENCH_DEFINES := \
 	-DDISK_EXT_FILE_MAX=0x9600 \
 	-DLISP65_COMPILE_STRING \
 	-DLISP65_SYMFN_EXT \
-	-DSYMPOOL_EXT_OFF=0xc680 \
-	-DNAMEPOOL=10208 \
-	-DMAX_SYM=752 \
+	$(WORKBENCH_SYMBOL_DEFINES) \
 	-DVM_DIR_MAX=608 \
 	-DREPL_BUF_MAX=192 \
 	-DHIST_MAX=64 \
 	-DLISP65_REPL_HISTORY_IN_BUF \
 	-DLISP65_REPL_BANNER_REQUIRED
 
-# Derive the staging ceiling from the canonical profile define.  Descriptor
-# plus payload must remain below the Bank-5 namepool, not merely below $10000.
-WORKBENCH_OVERLAY_STAGE_LIMIT = $(patsubst -DSYMPOOL_EXT_OFF=%,%,$(filter -DSYMPOOL_EXT_OFF=%,$(WORKBENCH_DEFINES)))
+# Staging is Bank 5: names can live in another bank. Its first table owner,
+# not the name-pool offset, is the ceiling derived from the same manifest.
+WORKBENCH_OVERLAY_STAGE_LIMIT := $(shell python3 tools/host-lisp/symbol_layout_manifest.py stage-limit)
+ifeq ($(strip $(WORKBENCH_OVERLAY_STAGE_LIMIT)),)
+$(error Storage-owner staging ceiling could not be resolved)
+endif
 
 WORKBENCH_MIN_STACK_GAP := 1450
 WORKBENCH_MIN_BOOT_STACK_GAP := 512

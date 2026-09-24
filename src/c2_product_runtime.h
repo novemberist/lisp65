@@ -14,6 +14,11 @@
 /* Resident Bank-5 C2D transport.  Public consumers must impose their own
  * narrower semantic domain before calling the region-level reader. */
 uint8_t c2_stream_c2d_read(uint16_t offset, void *dst, uint16_t length);
+/* Private resolver owner query: selectors 0..15 return low/high parts
+ * (high part 256 at the exclusive bank endpoint). Selector 16 validates
+ * published C2D capacity/count fields, returning 0 or 1. Invalid selectors
+ * return 0xffff. No allocation, publication or shared scratch. */
+uint16_t c2_resolver_owner_part(uint8_t query);
 #define LISP65_C2_SHELF_PHYSICAL 0x08100000UL
 #define LISP65_C2_SESSION_PHYSICAL 0x08400000UL
 #define LISP65_C2_SESSION_BYTES 0x00100000UL
@@ -588,6 +593,19 @@ uint8_t c2_stream_c2d_read(uint16_t offset, void *dst, uint16_t length);
 #endif
 #endif
 
+/* Boot-time name index: two new boot-only decoder phases.  Slot numbers are
+ * storage identities, not semantic order, so both records are appended at the
+ * tail of the Session catalog and no existing slot moves -- unlike the
+ * phase-11 cut, which had to renumber every later record. */
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+#ifndef LISP65_C2_LITE_V6_CORESIDENT_DIET
+#error "the boot-time name index requires the complete v6 aggregate diet ABI"
+#endif
+#define LISP65_C2_PHASE_10A_SLOT 53u
+#define LISP65_C2_PHASE_10B_SLOT 54u
+void c2_boot_name_index_invalidate(void);
+#endif
+
 #if defined(LISP65_C2_LITE_COLD_EVICTION) \
     && (!defined(LISP65_C2_PHASE11_SPLIT) \
         || !defined(LISP65_C2_NESTED_APPEND_V5))
@@ -604,6 +622,12 @@ void c2_product_physical_copy(uint32_t source, uint32_t target,
 
 /* Boot validates, resolves and publishes the immutable six-image product. */
 uint8_t c2_product_boot(void);
+
+/* Prim-66 emission owns one bounded authentication scope, never a Lisp
+ * continuation. The runtime supplies its live Session generation. */
+#ifdef LISP65_C2_TRANSACTION_AUTH
+uint8_t c2_product_emitter_auth_begin(void);
+#endif
 
 /* Directory and refill seams consumed by vm.c.  `relative` is relative to the
  * normalized code object, never a physical address and never a C pointer. */
@@ -640,6 +664,8 @@ obj c2_product_install(obj fnlist, obj definition_name);
 
 /* Load an already staged one-record C2 image (persistent compile output). */
 uint8_t c2_product_append_staged(uint16_t length);
+/* Compiler-declared complete group: typed capacity failure, one publication. */
+obj c2_product_publish_staged(uint16_t length);
 
 /* Return nonzero only for an exact immutable image in the
  * generation-bound shelf. */

@@ -24,6 +24,7 @@ import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_compiler as C  # noqa: E402
 import bytecode_p0_stdlib as STD  # noqa: E402
 import public_surface_domain_audit as AUDIT  # noqa: E402
+from evidence_era import in_host_source_world  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -376,6 +377,7 @@ def run(command: list[str], label: str) -> str:
     return result.stdout
 
 
+@in_host_source_world(EVIDENCE_ERA, control_path="lib/repl-banner.lisp")
 def emit() -> None:
     if BUILD.exists():
         shutil.rmtree(BUILD)
@@ -683,6 +685,9 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=("record", "check"))
     args = parser.parse_args()
+    if args.command == "check":
+        from historical_receipt_seal import check
+        return check('tier1')
     raw = canonical(derive())
     if args.command == "record":
         RECEIPT.parent.mkdir(parents=True, exist_ok=True)

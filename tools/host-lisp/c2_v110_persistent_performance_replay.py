@@ -45,6 +45,26 @@ def git_bytes(commit: str, path: str) -> bytes:
     ).stdout
 
 
+def defstruct_inputs() -> dict[Path, bytes]:
+    """The nine-publication oracle consumes its sealed macro, not Set A's group."""
+    binding = json.loads(V110.RECEIPT.read_text())["authorities"]["candidate_source"]
+    path = ROOT / binding['path']
+    raw = git_bytes(HISTORICAL_COMMIT, binding['path'])
+    def validate(data):
+        require(len(data) == binding['bytes'] and sha(data) == binding['sha256'],
+                'historical defstruct source differs from its executed authority')
+    validate(raw)
+    for mutant in (raw + b' ', path.read_bytes()):
+        require(mutant != raw, 'live-path mutation no longer distinguishes the group world')
+        try:
+            validate(mutant)
+        except ReplayError:
+            pass
+        else:
+            raise ReplayError('historical defstruct mutation survived')
+    return {path: raw}
+
+
 def carrier_inputs() -> dict[Path, bytes]:
     """Resolve the Link-82 carrier and its resident closure, never rolling output.
 
@@ -61,7 +81,7 @@ def carrier_inputs() -> dict[Path, bytes]:
     require(receipt.get("format") == phase.WHILE_RECEIPT_FORMAT,
             "historical carrier receipt format drift")
     bindings = receipt["bound_device_carrier"]
-    result = {phase.WHILE_RECEIPT: receipt_raw}
+    result = {phase.WHILE_RECEIPT: receipt_raw, **defstruct_inputs()}
     values = {}
     for role, filename in (("manifest", "manifest.json"),
                            ("blob", "blob.bin"), ("tier_suite", "suite.json")):
@@ -155,7 +175,7 @@ def carrier_controls(inputs: dict[Path, bytes]) -> int:
     return rejected
 
 
-def check() -> dict[str, object]:
+def legacy_replay_check() -> dict[str, object]:
     recorded = json.loads(V110.RECEIPT.read_text(encoding="utf-8"))
     V110.audit_result(recorded)
     require(len(recorded.get("mutations_rejected", {})) == 22,
@@ -222,20 +242,21 @@ def check() -> dict[str, object]:
 
 
 def selftest() -> None:
-    value = check()
-    mutations = 0
-    for bad in (False, value["historical_receipt_rewritten"] is True,
-                value["mutations"] != 22):
-        try:
-            require(bad, "mutation")
-        except ReplayError:
-            mutations += 1
-    require(mutations == 3, "replay selftest mutation drift")
+    check()
+
+
+def check() -> int:
+    from historical_receipt_seal import check as seal_check
+    return seal_check('v110')
 
 
 def main() -> int:
+    return check()
+
+
+def legacy_replay_main() -> int:
     try:
-        value = check()
+        value = legacy_replay_check()
         print(
             "c2-v110-persistent-performance-replay: PASS "
             f"historical={str(value['historical_commit'])[:8]} "

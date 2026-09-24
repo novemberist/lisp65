@@ -7,26 +7,26 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 2.3.0**, using **Dialect V2**. It is a
+The current release is **lisp65 2.4.0**, using **Dialect V2**. It is a
 product release: the qualified product still displays `WORKBENCH 2.0.0` in
-its boot banner; the package version is 2.3.0. See the
-[2.3.0 release notes](docs/releases/2.3.0.md) for the change summary and
+its boot banner; the package version is 2.4.0. See the
+[2.4.0 release notes](docs/releases/2.4.0.md) for the change summary and
 evidence boundary.
 
 ## Highlights
 
-- 2.3.0: the product disk ships an `INIT.L65` that loads `place` and
-  `string-extra` at boot with no loading text and an unchanged banner;
-  `buffer`, `inspect` and `defstruct` load by hand. `require` accepts a string or a quoted symbol,
-  and library names are matched case-insensitively.
-- 2.3.0: the IDE minibuffer was reworked. Opening `M-x` or Find-file costs
-  about 21 M emulator cycles instead of about 278 M, and 16 typed keys 49.5 M
-  instead of 171.7 M; while it is active the bottom row shows only the prompt
-  and input. Emulator cycles at 40.5 MHz, not device wall-clock timings.
-- 2.3.0: the interactive Ship sample builds from the product sources again,
-  and the obsolete `IDE`, `IDEX` and `M65D` disk images are removed from the
-  product D81 (193 blocks reclaimed, 22 → 19 files); their static
-  implementations and `load-lib` routes remain.
+- 2.4.0: faster start and use. On the device, RUN to the prompt took 32.7 s
+  (tool clock), with `Initializing...` shown until the banner is ready. On
+  the emulator, each `require` is at least 11.24 s faster, a five-slot
+  `defstruct` fell from 31.21 s to 16.84 s, and the cost per typed key at the
+  native prompt by about 38 %.
+- 2.4.0: the symbol table holds 1,008 symbols instead of 795, a `defstruct`
+  publishes as one code image, `compile-string` works, and a definition
+  group beyond the 64-image capacity is refused with `OUT OF MEMORY` at a
+  live prompt.
+- 2.4.0: two 2.3.0 defects are fixed. A `defun` published from inside a
+  running form survives, and an error raised through `eval` inside a running
+  form returns to a live prompt with the exact error.
 
 - Native REPL and self-hosted `lcc` compiler on the MEGA65
 - Lisp-2 semantics, macros, closures, higher-order functions, and strict arity
@@ -57,13 +57,13 @@ evidence boundary.
 
 ## Get the release
 
-Download `lisp65-2.3.0.tar.gz` from the
-[v2.3.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.3.0).
+Download `lisp65-2.4.0.tar.gz` from the
+[v2.4.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.4.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-2.3.0.tar.gz
-cd lisp65-2.3.0
+tar -xzf lisp65-2.4.0.tar.gz
+cd lisp65-2.4.0
 python3 verify.py
 ```
 
@@ -71,19 +71,20 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [2.3.0 release notes](docs/releases/2.3.0.md) for the complete change
+See the [2.4.0 release notes](docs/releases/2.4.0.md) for the complete change
 summary and evidence boundary.
 
 ## Reproduce this product
 
 Use the pinned toolchain declared by the source snapshot, then run
-`make workbench-product-v230-build` in a fresh checkout and
-`make workbench-product-v230-verify` to check the result. The build refuses
+`make workbench-product-v240-build` in a fresh checkout and
+`make workbench-product-v240-verify` to check the result. The build refuses
 an existing output directory; do not use an older default product target
-to reproduce this release. See `config/c2-v230-public-native/manifest.json`
-and `config/c2-v230-public-plane/README.md` for projection provenance. Two
-independent release-chain reproductions match PRG, ELF, profile, D81 and all
-16 media roles.
+to reproduce this release. See `config/c2-v240-public-native/manifest.json`
+and `config/c2-v240-public-plane/README.md` for projection provenance. Two
+independent release-chain reproductions match the ELF, the linked and the
+completed PRG, the profile, all 13 media artifact roles, all 19 delivered
+files and the D81.
 
 ## First start from BASIC
 
@@ -99,7 +100,8 @@ independent release-chain reproductions match PRG, ELF, profile, D81 and all
    RUN
    ```
 
-5. Follow the three visible boot phases, then wait for the banner and REPL.
+5. Follow the three visible boot phases and `Initializing...`, then wait for
+   the banner and REPL.
 6. Use Cursor Left/Right, insertion and deletion directly at `lisp65>`.
 7. Load the composition from `L65SYS`:
 
@@ -117,7 +119,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 2.3.0.
+identity. There is no on-device disk formatter in 2.4.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -125,7 +127,7 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 2.3.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 2.4.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
@@ -135,7 +137,8 @@ unattended operation, or large applications.
 | Focused REPL editing | The native `lisp65>` prompt has lossless insertion-mode line editing. Balanced multiline input, history and Comfort are not delivered. | Type-ahead during evaluation and Comfort remain later work. |
 | Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v2.0 makes no matcher/blink claim. |
 | Permissive hot `car`/`cdr` opcodes | Tier-1 library functions raise a VM type error on an unsupported domain, but the hot opcodes stay permissive: `(car nil)` and `(car 1)` both return `nil`. | A fully checked Tier-2 implementation was measured but did not fit the resident text budget; it remains sealed for the 2.x series. |
-| Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`; exhaustion requires a product-disk restart. | The C2D session store separates immutable code from mutable session state; dependency-aware reclamation remains later work. |
+| Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`. A session has 64 code images; a redefinition consumes a new one. At capacity a definition is refused with `OUT OF MEMORY` at a live prompt; a product-disk restart frees the images. | The C2D session store separates immutable code from mutable session state; slot reuse and dependency-aware reclamation remain later work. |
+| Top-level anonymous `lambda` refused | An anonymous `lambda` outside a `defun` body is refused with `VM: BAD BYTECODE`; the prompt recovers and nothing already defined is affected. Lambdas inside `defun` bodies work. | Promotion of escaping callables to persistent publications is planned for the next cycle. |
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
 | Fresh-session workflow | RUN/STOP aborts evaluation but keeps the session. The MEGA65 Reset button returns to BASIC rather than restarting lisp65. | Restart from the product disk for a fresh session; power-cycle for a cold start. `restart-repl` returns with C2.3. |
@@ -148,7 +151,7 @@ unattended operation, or large applications.
 | Function metadata is incomplete | Complete integrated help is not claimed for every native and macro entry. | Full metadata coverage and integrated help remain later work. |
 
 The five optional packages `buffer`, `place`, `string-extra`, `inspect` and
-`defstruct` ship on the 2.3.0 product disk. The shipped `INIT.L65` loads
+`defstruct` ship on the 2.4.0 product disk. The shipped `INIT.L65` loads
 `place` and `string-extra` at boot; load `buffer`, `inspect` and `defstruct`
 by hand with `require`, for example `(require "buffer")`.
 The physical product-medium write-protect case is not
@@ -161,24 +164,26 @@ acceptance.
 
 ## Verification status
 
-Release 2.3.0 is device-accepted on one physical MEGA65:
+Release 2.4.0 was checked on one physical MEGA65 in an automated session
+(virtual keyboard, owner not at the machine):
 
-- the physical cold start from the new medium, through the ten-role stager,
-  completed, and the shipped `INIT.L65` loaded `place` and `string-extra`
-  without any loading text, with the banner unchanged;
-- `(load-lib "IDE")` and `(load-lib "ide")` both returned `t`, and a library
-  file the loader refuses returned `nil` with the running world and the
-  prompt intact;
-- 17 rapidly typed minibuffer characters appeared complete and in order — a
-  witness for that sequence, not a general zero-loss guarantee; `C-g`
-  restored the status row and a missing file name reported `source missing`;
-- the standalone interactive Ship sample booted to a blue screen, accepted
-  `alex` and Return, and printed `Hello, alex!`.
+- the product D81 booted to a settled prompt, RUN to the prompt in 32.7 s
+  (tool clock, not a stopwatch);
+- the IDE and the five packages loaded; `setf`, `capitalize`, `who-calls`
+  and `buffer-length` answered;
+- `M-x` with 17 typed characters and a 17-character REPL line arrived
+  complete and in order;
+- three five-slot structures took the session from 761 to 822 symbols, each
+  accessor returning 42;
+- a `defun` published inside `dotimes`/`eval` returned 7, a nested `eval`
+  error returned to a live prompt with the exact error, and a definition loop
+  past the image capacity stopped with `OUT OF MEMORY` at a live prompt.
 
-Cycle figures quoted for this release are Xemu emulator cycles at 40.5 MHz;
-no device wall-clock timing is claimed. Exact hashes and claim limits are
-recorded in the [2.3.0 release notes](docs/releases/2.3.0.md). The maintained
-limitations and retired exceptions are in
+RUN/STOP inside a running form, a cold power cycle, the physical `C-x C-c`
+IDE exit and the compile/save/reload row were not run on this medium. Exact
+hashes and claim limits are recorded in the
+[2.4.0 release notes](docs/releases/2.4.0.md). The maintained limitations and
+retired exceptions are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
 The public repository is a curated source snapshot with independent Git
@@ -215,6 +220,7 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
+- [Release Notes for 2.4.0](docs/releases/2.4.0.md)
 - [Release Notes for 2.3.0](docs/releases/2.3.0.md)
 - [Release Notes for 2.2.0](docs/releases/2.2.0.md)
 - [Release Notes for 2.0.1](docs/releases/2.0.1.md)

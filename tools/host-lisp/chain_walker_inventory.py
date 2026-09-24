@@ -453,8 +453,8 @@ def execute_exits(*, controls=False):
         declarations=dict(path=str(EXIT_CONTRACT.relative_to(ROOT)),sha256=sha256(EXIT_CONTRACT),exits=exits),
         c=rows,lisp=lisp,mutations=mutations,observed=sorted(observed),
         claim='Executed exhausted-budget exits only. Host RAM/I/O seams and debugger-supplied local budgets; no target ABI, timing or full-chain validity claim.')
-    EXECUTION_RECEIPT.parent.mkdir(parents=True,exist_ok=True)
-    EXECUTION_RECEIPT.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
+    from check_result_receipt import report
+    report(EXECUTION_RECEIPT, result)
     return result
 
 
@@ -690,8 +690,8 @@ def main() -> int:
             return 0
         receipt = verify()
         if args.out:
-            args.out.parent.mkdir(parents=True, exist_ok=True)
-            args.out.write_text(json.dumps(receipt, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+            from check_result_receipt import report
+            report(args.out, receipt)
         print(f"chain-walker-inventory: PASS walkers={len(receipt['walkers'])} cases=3 deviations=0")
         return 0
     except (GateError, OSError, UnicodeError) as exc:

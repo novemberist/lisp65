@@ -59,7 +59,28 @@ REGION1_ADDRESS = 0xBD00
 REGION1_RUNTIME_SOURCE_BASE = (REGION1_BANK << 16) + REGION1_ADDRESS
 REGION1_CAPACITY = 0x07F0
 REGION1_LIMIT = REGION1_ADDRESS + REGION1_CAPACITY
-PAYLOAD_ALIGNMENT = 0x100
+# Per-slice payload alignment inside a region.  32, not 256: the Session
+# overlay bank filled up at 49 slices because 256-byte payload alignment wasted
+# ~5.1 KB of region 0 (capacity card, 2026-09-21).  The runtime accepts any
+# power of two <= 256 (LISP65_RUNTIME_OVERLAY_PAYLOAD_ALIGNMENT), so 256-aligned
+# images stay valid: the Boot family keeps packing at 256 (workbench_ship.py owns
+# that constant) and every sealed era image carries its own policy value, which
+# the verification side reads from the manifest instead of assuming this one.
+PAYLOAD_ALIGNMENT = 0x20
+# The Boot family's Attic tenant and the alignment it keeps (owner word
+# 2026-09-21: only the Session family moves to 32).
+BOOT_FAMILY_SOURCE_BASE = 0x08200000
+BOOT_FAMILY_PAYLOAD_ALIGNMENT = 0x100
+# The catalog end (payload_offset) stays 256-aligned: the directory geometry and
+# the generated verifier bindings are frozen on that value, and the runtime's
+# own catalog-end rounding is unchanged.
+CATALOG_ALIGNMENT = 0x100
+# Region source bases are absolute tenant addresses, unrelated to slice packing.
+SOURCE_BASE_ALIGNMENT = 0x100
+# Policy values the verification side accepts: the Boot/era value and the
+# Session value.  Both are powers of two in 1..256 and 256 is a multiple of 32,
+# so an era image satisfies the smaller runtime check unchanged.
+ACCEPTED_PAYLOAD_ALIGNMENTS = (0x20, 0x100)
 CRC16_INIT = 0xFFFF
 CRC16_POLY = 0x1021
 
@@ -198,6 +219,30 @@ def _fail(code: str, detail: str) -> None:
 
 def _align(value: int, alignment: int = PAYLOAD_ALIGNMENT) -> int:
     return (value + alignment - 1) & ~(alignment - 1)
+
+
+def _check_payload_alignment(alignment: Any, label: str) -> int:
+    """Accept only a policy alignment this format admits.
+
+    The set is closed on purpose: any power of two would also admit values the
+    packer never emits, and the negative matrix pins that rejection."""
+    if (type(alignment) is not int
+            or alignment not in ACCEPTED_PAYLOAD_ALIGNMENTS):
+        _fail(
+            "payload-alignment",
+            f"{label} must be one of {ACCEPTED_PAYLOAD_ALIGNMENTS}, "
+            f"got {alignment!r}",
+        )
+    return alignment
+
+
+def _payload_alignment_arg(value: str) -> int:
+    alignment = _parse_int(value, "payload alignment", 1, 0x100)
+    if alignment not in ACCEPTED_PAYLOAD_ALIGNMENTS:
+        raise argparse.ArgumentTypeError(
+            "payload alignment must be one of "
+            f"{ACCEPTED_PAYLOAD_ALIGNMENTS}, got {alignment}")
+    return alignment
 
 
 def _parse_int(value: str, label: str, minimum: int, maximum: int) -> int:
@@ -694,6 +739,7 @@ def build_region_images(
     format_version: int = VERSION,
     main_source_base: int = STORAGE_BASE,
     overflow_source_base: int = REGION1_RUNTIME_SOURCE_BASE,
+    payload_alignment: int = PAYLOAD_ALIGNMENT,
 ) -> tuple[bytes, bytes, ParsedBank]:
     if format_version not in (VERSION, VERSION_V2, VERSION_V3, VERSION_V4):
         _fail("bad-version", f"unsupported catalog version {format_version}")
@@ -710,10 +756,11 @@ def build_region_images(
     ):
         if (type(source_base) is not int
                 or not 0 <= source_base <= 0x0FFFFFFF
-                or source_base & (PAYLOAD_ALIGNMENT - 1)):
+                or source_base & (SOURCE_BASE_ALIGNMENT - 1)):
             _fail(
                 "source-address",
-                f"{label} source base must be a 28-bit 256-byte-aligned address",
+                f"{label} source base must be a 28-bit "
+                f"{SOURCE_BASE_ALIGNMENT}-byte-aligned address",
             )
     ordered = sorted(slices, key=lambda item: item.spec.id)
     _check_specs([item.spec for item in ordered])
@@ -721,7 +768,9 @@ def build_region_images(
            for item in ordered):
         _fail("vma-mismatch", "slice VMA differs from its executable or data destination")
 
-    payload_offset = _align(HEADER_SIZE + len(ordered) * ENTRY_SIZE)
+    _check_payload_alignment(payload_alignment, "payload alignment")
+    payload_offset = _align(
+        HEADER_SIZE + len(ordered) * ENTRY_SIZE, CATALOG_ALIGNMENT)
     if payload_offset > 0xFFFF:
         _fail("catalog-size", "catalog payload offset does not fit uint16")
     cursors = {
@@ -756,7 +805,7 @@ def build_region_images(
             _fail("invalid-vma", f"slice {spec.name} exceeds Bank 0")
         if not spec.data_only and not item.vma <= item.entry < item.end:
             _fail("entry-range", f"slice {spec.name} entry lies outside the payload")
-        cursor = _align(cursors[region_id])
+        cursor = _align(cursors[region_id], payload_alignment)
         if cursor > 0xFFFF:
             _fail(
                 "bank-overflow",
@@ -897,6 +946,7 @@ def build_region_images(
         format_version=format_version,
         main_source_base=main_source_base,
         overflow_source_base=overflow_source_base,
+        payload_alignment=payload_alignment,
     )
     return result, overflow_result, parsed_bank
 
@@ -938,9 +988,21 @@ def validate_region_images(
     format_version: int = VERSION,
     main_source_base: int = STORAGE_BASE,
     overflow_source_base: int = REGION1_RUNTIME_SOURCE_BASE,
+    payload_alignment: int | None = None,
 ) -> ParsedBank:
+    """Strictly reconstruct a region pair.
+
+    ``payload_alignment`` pins the per-slice packing policy.  Left out, the
+    policy is inferred from the image and then held for every remaining record,
+    so one image cannot mix policies: era and Boot-family images (256) and
+    Session images (32) both reconstruct without the caller knowing which."""
     if format_version not in (VERSION, VERSION_V2, VERSION_V3, VERSION_V4):
         _fail("bad-version", f"unsupported catalog version {format_version}")
+    if payload_alignment is not None:
+        _check_payload_alignment(payload_alignment, "payload alignment")
+    candidates = (
+        (payload_alignment,) if payload_alignment is not None
+        else tuple(sorted(ACCEPTED_PAYLOAD_ALIGNMENTS, reverse=True)))
     if type(max_vma) is not int or not 0 <= max_vma <= 0xFFFF:
         _fail("invalid-vma", "maximum VMA does not fit uint16")
     if type(expected_vma) is not int or not 0 <= expected_vma <= max_vma:
@@ -950,10 +1012,11 @@ def validate_region_images(
     ):
         if (type(source_base) is not int
                 or not 0 <= source_base <= 0x0FFFFFFF
-                or source_base & (PAYLOAD_ALIGNMENT - 1)):
+                or source_base & (SOURCE_BASE_ALIGNMENT - 1)):
             _fail(
                 "source-address",
-                f"{label} source base must be a 28-bit 256-byte-aligned address",
+                f"{label} source base must be a 28-bit "
+                f"{SOURCE_BASE_ALIGNMENT}-byte-aligned address",
             )
     data = bytes(image)
     overflow_data = bytes(overflow_image)
@@ -1022,7 +1085,7 @@ def validate_region_images(
     if directory_offset != HEADER_SIZE:
         _fail("directory-offset", f"directory offset is {directory_offset}")
     directory_end = directory_offset + count * ENTRY_SIZE
-    canonical_payload = _align(directory_end)
+    canonical_payload = _align(directory_end, CATALOG_ALIGNMENT)
     if payload_offset != canonical_payload or payload_offset > len(data):
         _fail("payload-offset", f"payload offset is {payload_offset}, expected {canonical_payload}")
     if image_size != len(data) or image_size > BANK_SIZE:
@@ -1104,29 +1167,40 @@ def validate_region_images(
             capability_mask = region_word
             source_address = 0
         cursor = cursors[region_id]
-        canonical_offset = _align(cursor)
-        if format_version == VERSION_V4:
-            source_base = (
-                main_source_base if region_id == REGION_MAIN
-                else overflow_source_base)
-            expected_source = source_base + canonical_offset
-            if source_address != expected_source:
+        source_base = (
+            main_source_base if region_id == REGION_MAIN
+            else overflow_source_base)
+        # Payloads are densely packed: each record sits at the first offset at
+        # or after the cursor that satisfies the image's packing policy.  The
+        # accepted policies are narrowed record by record, so an image that
+        # switches policy mid-catalog is rejected exactly like a bad offset.
+        observed = (
+            source_address - source_base if format_version == VERSION_V4
+            else encoded_offset)
+        matching = tuple(
+            candidate for candidate in candidates
+            if _align(cursor, candidate) == observed)
+        if not matching:
+            canonical_offset = _align(cursor, max(candidates))
+            if format_version == VERSION_V4:
                 _fail(
                     "source-address",
                     f"slice[{index}] source is 0x{source_address:07x}, "
-                    f"expected 0x{expected_source:07x}",
+                    f"expected 0x{source_base + canonical_offset:07x}",
                 )
-            file_offset = canonical_offset
-        else:
-            file_offset = encoded_offset
-            if file_offset != canonical_offset:
-                _fail(
-                    "file-offset",
-                    f"slice[{index}] file offset is {file_offset}, "
-                    f"expected {canonical_offset}",
-                )
-        if file_offset & (PAYLOAD_ALIGNMENT - 1):
-            _fail("payload-alignment", f"slice[{index}] payload is not 256-byte aligned")
+            _fail(
+                "file-offset",
+                f"slice[{index}] file offset is {encoded_offset}, "
+                f"expected {canonical_offset}",
+            )
+        candidates = matching
+        file_offset = observed
+        if file_offset % min(ACCEPTED_PAYLOAD_ALIGNMENTS):
+            _fail(
+                "payload-alignment",
+                f"slice[{index}] payload is not a multiple of "
+                f"{min(ACCEPTED_PAYLOAD_ALIGNMENTS)} bytes",
+            )
         region_data = data if region_id == REGION_MAIN else overflow_data
         if any(region_data[cursor:file_offset]):
             _fail("nonzero-padding", f"padding before slice[{index}] is not zero")
@@ -1312,7 +1386,9 @@ def _manifest(
     expected_vma: int,
     max_slice_bytes: int,
     format_version: int = VERSION,
+    payload_alignment: int = PAYLOAD_ALIGNMENT,
 ) -> dict[str, Any]:
+    _check_payload_alignment(payload_alignment, "payload alignment")
     by_id = {item.spec.id: item for item in slices}
     records: list[dict[str, Any]] = []
     for entry in parsed.slices:
@@ -1392,7 +1468,7 @@ def _manifest(
             "max_slices": MAX_SLICES,
             "max_slice_bytes": max_slice_bytes,
             "max_boot_slice_bytes": MAX_BOOT_SLICE_BYTES,
-            "payload_alignment": PAYLOAD_ALIGNMENT,
+            "payload_alignment": payload_alignment,
             "common_vma": expected_vma,
             "entry_abi": ENTRY_ABI,
         },
@@ -1432,7 +1508,18 @@ def _shape(value: Any, fields: set[str], label: str) -> None:
         )
 
 
-def validate_manifest(value: dict[str, Any]) -> None:
+def validate_manifest(
+    value: dict[str, Any],
+    *,
+    payload_alignment: int | None = None,
+) -> None:
+    """Strict manifest shape and policy check.
+
+    The payload alignment is read from the manifest and checked against the
+    accepted set, not against this module's own constant: era manifests carry
+    256 and the Session family now carries 32, and both must validate.  A
+    caller that knows which policy packed the image pins it with
+    ``payload_alignment``."""
     catalog_version = value.get("catalog", {}).get("version")
     _shape(
         value,
@@ -1535,10 +1622,17 @@ def validate_manifest(value: dict[str, Any]) -> None:
         policy.get("max_slices") != MAX_SLICES
         or policy.get("max_slice_bytes") != MAX_SLICE_BYTES
         or policy.get("max_boot_slice_bytes") != MAX_BOOT_SLICE_BYTES
-        or policy.get("payload_alignment") != PAYLOAD_ALIGNMENT
         or policy.get("entry_abi") != ENTRY_ABI
     ):
         _fail("manifest-policy", "manifest policy constants are invalid")
+    manifest_alignment = _check_payload_alignment(
+        policy.get("payload_alignment"), "manifest policy payload alignment")
+    if payload_alignment is not None and manifest_alignment != payload_alignment:
+        _fail(
+            "manifest-policy",
+            f"manifest policy payload alignment is {manifest_alignment}, "
+            f"expected {payload_alignment}",
+        )
     if (
         type(policy.get("common_vma")) is not int
         or not 0 <= policy["common_vma"] <= MAX_VMA
@@ -1590,7 +1684,7 @@ def validate_manifest(value: dict[str, Any]) -> None:
                     or record.get("capability_mask") != 0
                     or type(source_address) is not int
                     or not 0 <= source_address <= 0x0FFFFFFF
-                    or source_address & (PAYLOAD_ALIGNMENT - 1)):
+                    or source_address % manifest_alignment):
                 _fail(
                     "manifest-region",
                     f"slice[{index}] has invalid v4 region/source identity",
@@ -1619,6 +1713,7 @@ def materialize(
     format_version: int = VERSION,
     main_source_base: int = STORAGE_BASE,
     overflow_source_base: int = REGION1_RUNTIME_SOURCE_BASE,
+    payload_alignment: int = PAYLOAD_ALIGNMENT,
 ) -> Materialized:
     if not profile or "\x00" in profile:
         _fail("profile", "profile must be a non-empty NUL-free string")
@@ -1648,6 +1743,7 @@ def materialize(
         format_version=format_version,
         main_source_base=main_source_base,
         overflow_source_base=overflow_source_base,
+        payload_alignment=payload_alignment,
     )
     header = render_header(
         profile_build_id=build_id,
@@ -1670,8 +1766,9 @@ def materialize(
         expected_vma=expected_vma,
         max_slice_bytes=max_slice_bytes,
         format_version=format_version,
+        payload_alignment=payload_alignment,
     )
-    validate_manifest(manifest)
+    validate_manifest(manifest, payload_alignment=payload_alignment)
     return Materialized(image, manifest, header, overflow_image)
 
 
@@ -1687,6 +1784,7 @@ def _verify_outputs(
     format_version: int,
     main_source_base: int,
     overflow_source_base: int,
+    payload_alignment: int = PAYLOAD_ALIGNMENT,
 ) -> None:
     inputs = [
         (image_path, "overlay bank image"),
@@ -1713,6 +1811,7 @@ def _verify_outputs(
         format_version=format_version,
         main_source_base=main_source_base,
         overflow_source_base=overflow_source_base,
+        payload_alignment=payload_alignment,
     )
     if actual_image != expected.image:
         _fail("image-mismatch", "overlay bank image is not the canonical extraction of the ELF")
@@ -1722,7 +1821,7 @@ def _verify_outputs(
             "overflow image is not the canonical extraction of the ELF",
         )
     actual_manifest = _read_json(manifest_path, "overlay bank manifest")
-    validate_manifest(actual_manifest)
+    validate_manifest(actual_manifest, payload_alignment=payload_alignment)
     if actual_manifest != expected.manifest:
         _fail("manifest-mismatch", "manifest is not the exact binding of inputs and image")
     try:
@@ -1733,7 +1832,22 @@ def _verify_outputs(
         _fail("header-mismatch", "C config header is stale or noncanonical")
 
 
+def _family_payload_alignment(args: argparse.Namespace) -> int:
+    """The Session-bank capacity card (2026-09-21) lowered the per-slice
+    payload alignment to 32 for the Session family only; the Boot family keeps
+    packing at 256, as its owner word says.  The link tool names no family on
+    the command line, but it does name the family's main source base, so the
+    default follows that: the Boot-family Attic tenant packs at 256, every
+    other family at PAYLOAD_ALIGNMENT.  An explicit --payload-alignment wins."""
+    if args.payload_alignment is not None:
+        return args.payload_alignment
+    if getattr(args, "main_source_base", None) == BOOT_FAMILY_SOURCE_BASE:
+        return BOOT_FAMILY_PAYLOAD_ALIGNMENT
+    return PAYLOAD_ALIGNMENT
+
+
 def pack(args: argparse.Namespace) -> None:
+    args.payload_alignment = _family_payload_alignment(args)
     expected = materialize(
         elf=args.elf,
         nm=args.nm,
@@ -1749,6 +1863,7 @@ def pack(args: argparse.Namespace) -> None:
         format_version=args.format_version,
         main_source_base=args.main_source_base,
         overflow_source_base=args.overflow_source_base,
+        payload_alignment=args.payload_alignment,
     )
     outputs = [
         (args.image, expected.image),
@@ -1783,6 +1898,7 @@ def pack(args: argparse.Namespace) -> None:
         format_version=args.format_version,
         main_source_base=args.main_source_base,
         overflow_source_base=args.overflow_source_base,
+        payload_alignment=args.payload_alignment,
     )
 
 
@@ -1802,6 +1918,7 @@ def verify(args: argparse.Namespace) -> None:
         format_version=args.format_version,
         main_source_base=args.main_source_base,
         overflow_source_base=args.overflow_source_base,
+        payload_alignment=args.payload_alignment,
     )
     _verify_outputs(
         expected,
@@ -1814,6 +1931,7 @@ def verify(args: argparse.Namespace) -> None:
         format_version=args.format_version,
         main_source_base=args.main_source_base,
         overflow_source_base=args.overflow_source_base,
+        payload_alignment=args.payload_alignment,
     )
 
 
@@ -2026,8 +2144,87 @@ def selftest() -> None:
     ) != MAX_SLICES or len(capacity_parsed.slices) != MAX_SLICES:
         raise AssertionError("full-capacity image parse mismatch")
 
+    # Payload-alignment policy matrix (capacity card, 2026-09-21).  The Session
+    # family packs at 32; era and Boot-family images were packed at 256.  Both
+    # must pack, reconstruct with the policy pinned, and reconstruct with the
+    # policy inferred from the image; the catalog end stays 256-aligned in both.
+    alignment_matrix: dict[int, int] = {}
+    alignment_images: dict[int, bytes] = {}
+    for alignment in ACCEPTED_PAYLOAD_ALIGNMENTS:
+        packed, packed_overflow, packed_parsed = build_region_images(
+            slices,
+            profile_build_id=build_id,
+            expected_vma=vma,
+            max_slice_bytes=max_bytes,
+            payload_alignment=alignment,
+        )
+        if packed_overflow:
+            raise AssertionError("single-region fixture produced an overflow image")
+        if packed_parsed.payload_offset % CATALOG_ALIGNMENT:
+            raise AssertionError(
+                f"catalog end is not {CATALOG_ALIGNMENT}-aligned at "
+                f"payload alignment {alignment}")
+        if any(entry.file_offset % alignment for entry in packed_parsed.slices):
+            raise AssertionError(
+                f"packed offsets are not {alignment}-aligned")
+        for pin in (alignment, None):
+            if validate_region_images(
+                packed, b"",
+                expected_build_id=build_id,
+                expected_vma=vma,
+                max_slice_bytes=max_bytes,
+                payload_alignment=pin,
+            ) != packed_parsed:
+                raise AssertionError(
+                    f"payload alignment {alignment} did not reconstruct "
+                    f"with pin {pin}")
+        alignment_matrix[alignment] = packed_parsed.image_size
+        alignment_images[alignment] = packed
+    if alignment_matrix[0x20] >= alignment_matrix[0x100]:
+        raise AssertionError("32-byte packing did not shrink the image")
+
     failures: list[str] = []
     mutation_count = 0
+
+    def reject_alignment(name: str, call: Any, expected: str) -> None:
+        nonlocal mutation_count
+        mutation_count += 1
+        try:
+            call()
+        except OverlayBankError as exc:
+            if exc.code != expected:
+                failures.append(f"{name}: expected {expected}, got {exc.code}")
+        else:
+            failures.append(f"{name}: accepted")
+
+    def _pinned(image_alignment: int, pin: int) -> Any:
+        def call() -> None:
+            validate_region_images(
+                alignment_images[image_alignment], b"",
+                expected_build_id=build_id,
+                expected_vma=vma,
+                max_slice_bytes=max_bytes,
+                payload_alignment=pin,
+            )
+        return call
+
+    # A pinned policy that did not pack the image is rejected in both
+    # directions: acceptance is per-image, never "any multiple of 32".
+    reject_alignment("alignment-pin-32-on-256",
+                     _pinned(0x100, 0x20), "file-offset")
+    reject_alignment("alignment-pin-256-on-32",
+                     _pinned(0x20, 0x100), "file-offset")
+    # A policy the format does not admit is rejected on the write and the
+    # verify side, so nothing can pack or accept e.g. 2-byte alignment.
+    reject_alignment(
+        "alignment-policy-2-pack",
+        lambda: build_region_images(
+            slices, profile_build_id=build_id, expected_vma=vma,
+            max_slice_bytes=max_bytes, payload_alignment=2),
+        "payload-alignment")
+    reject_alignment(
+        "alignment-policy-2-verify",
+        _pinned(0x20, 2), "payload-alignment")
 
     def reject(name: str, mutate: Any, *, refresh: bool = False, expected: str | None = None) -> None:
         nonlocal mutation_count
@@ -2049,6 +2246,12 @@ def selftest() -> None:
         else:
             failures.append(f"{name}: mutation passed")
 
+    reject(
+        "slice-offset-16",
+        lambda b: _replace_u16(b, HEADER_SIZE + 4, 16),
+        refresh=True,
+        expected="file-offset",
+    )
     reject("magic", lambda b: b.__setitem__(0, ord("X")), expected="bad-magic")
     reject("version", lambda b: b.__setitem__(4, 2), expected="bad-version")
     reject("header-size", lambda b: b.__setitem__(5, 31), expected="bad-header-size")
@@ -2282,6 +2485,32 @@ def selftest() -> None:
         reject_manifest("manifest-sha", lambda m: m["storage"].__setitem__("sha256", "0"))
         reject_manifest("manifest-catalog", lambda m: m["catalog"].__setitem__("magic", "L65O"))
         reject_manifest("manifest-policy", lambda m: m["policy"].__setitem__("payload_alignment", 2))
+        # Both admitted policies validate: era and Boot-family manifests carry
+        # 256, the Session family now writes 32.
+        for accepted in ACCEPTED_PAYLOAD_ALIGNMENTS:
+            mutation_count += 1
+            candidate = json.loads(json.dumps(manifest))
+            candidate["policy"]["payload_alignment"] = accepted
+            try:
+                validate_manifest(candidate)
+            except OverlayBankError as exc:
+                failures.append(
+                    f"manifest-policy-{accepted}: rejected ({exc.code})")
+        # A caller that knows which policy packed the image still pins it.
+        mutation_count += 1
+        try:
+            validate_manifest(
+                manifest,
+                payload_alignment=next(
+                    a for a in ACCEPTED_PAYLOAD_ALIGNMENTS
+                    if a != manifest["policy"]["payload_alignment"]),
+            )
+        except OverlayBankError as exc:
+            if exc.code != "manifest-policy":
+                failures.append(
+                    f"manifest-policy-pin: expected manifest-policy, got {exc.code}")
+        else:
+            failures.append("manifest-policy-pin: accepted")
         reject_manifest("manifest-vma", lambda m: m["policy"].__setitem__("common_vma", MAX_VMA + 1))
         reject_manifest("manifest-order", lambda m: m["slices"].reverse())
         reject_manifest("manifest-duplicate", lambda m: m["slices"][1].__setitem__("id", 0))
@@ -2365,6 +2594,19 @@ def _common(parser: argparse.ArgumentParser) -> None:
     )
     parser.add_argument("--abi-contract", type=Path, required=True)
     parser.add_argument("--vma", type=_address, required=True, help="common Bank-0 slice VMA")
+    parser.add_argument(
+        "--payload-alignment",
+        type=_payload_alignment_arg,
+        default=None,
+        help=(
+            "per-slice payload alignment; one of "
+            f"{ACCEPTED_PAYLOAD_ALIGNMENTS}. Default by family: the Boot-family "
+            f"tenant (main source base {BOOT_FAMILY_SOURCE_BASE:#x}) keeps "
+            f"{BOOT_FAMILY_PAYLOAD_ALIGNMENT}, every other family packs at "
+            f"{PAYLOAD_ALIGNMENT}. Era images were packed with 256; verify "
+            "infers the policy from the image unless pinned"
+        ),
+    )
     parser.add_argument(
         "--max-slice-bytes",
         type=_slice_limit,

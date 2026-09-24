@@ -25,6 +25,7 @@ import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_stdlib as STD  # noqa: E402
 import evidence_era as ERA  # noqa: E402
 from elf_truth import ElfTruth  # noqa: E402
+import symbol_layout_manifest as SYMBOL_LAYOUT
 
 
 PLAN = ROOT / "docs/planning/v1.6.0-freight-work-plan.md"
@@ -196,15 +197,17 @@ def derive() -> dict[str, Any]:
         "candidate dynamic-holder symbol geometry drift",
     )
     profile_strings = set(all_strings(load(PROFILE_RECEIPT)))
+    historical = SYMBOL_LAYOUT.historical_values()
     needed = {
-        "GC_ROOTS=128", "SYMPOOL_EXT_OFF=0xc680", "NAMEPOOL=10208",
-        "MAX_SYM=752", "LISP65_SYMVAL_EXT", "LISP65_NAMEOFF_EXT",
+        "GC_ROOTS=128", f"SYMPOOL_EXT_OFF={historical['SYMPOOL_EXT_OFF']:#x}",
+        f"NAMEPOOL={historical['NAMEPOOL']}",
+        f"MAX_SYM={historical['MAX_SYM']}", "LISP65_SYMVAL_EXT", "LISP65_NAMEOFF_EXT",
         "LISP65_SYMFN_EXT",
     }
     require(needed <= profile_strings, "candidate extended-symbol profile drift")
-    sympool = 0xC680
-    namepool = 10208
-    max_sym = 752
+    sympool = historical['SYMPOOL_EXT_OFF']
+    namepool = historical['NAMEPOOL']
+    max_sym = historical['MAX_SYM']
     symval = sympool + namepool
     nameoff = symval + max_sym * 2
     symfn = nameoff + max_sym * 2
@@ -247,7 +250,7 @@ def derive() -> dict[str, Any]:
         {
             "space": "physical-bank5", "first": f"0x05{sympool:04x}",
             "last": f"0x05{symend - 1:04x}", "bytes": symend - sympool,
-            "owner": "namepool + symval + nameoff + symfn for MAX_SYM=752",
+            "owner": f"namepool + symval + nameoff + symfn for MAX_SYM={max_sym}",
             "purpose": "resolve every dynamic value/function publication by name and value",
         },
     ]

@@ -15,17 +15,22 @@ ship-editor-lowering-check:
 ship-builder-contract-check: ship-editor-lowering-check
 	python3 $(SHIP_BUILDER_TOOL) selftest
 
+# The sealed check tree keeps build/generated read-only: its stager include is
+# bound by sealed media-builder receipts. Both check lanes therefore run in an
+# isolated same-path workspace (2026-09-24, 2.4.0 Before-Ship conversion).
 ship-builder-sample-fleet-check: ship-builder-contract-check | build
-	@tmp=$$(mktemp -d build/ship-builder-fleet.XXXXXX); \
+	@mkdir -p build/ship-builder-check; tmp=$$(mktemp -d build/ship-builder-check/fleet.XXXXXX); \
 	trap 'rm -rf "$$tmp"' EXIT; \
-	python3 $(SHIP_BUILDER_TOOL) fleet --out "$$tmp/fleet" --cc '$(SHIP_BUILDER_CC)'
+	python3 tools/host-lisp/isolated_host_check.py --workspace ship-builder -- \
+		python3 $(SHIP_BUILDER_TOOL) fleet --out "$$tmp/fleet" --cc '$(SHIP_BUILDER_CC)'
 
 # Fast permanent lane: two empty output trees, one source tree.  The stricter
 # fresh-checkout form below is required by the release/acceptance ritual.
 ship-builder-reproducibility-check: ship-builder-contract-check | build
-	@tmp=$$(mktemp -d build/ship-builder-repro.XXXXXX); \
+	@mkdir -p build/ship-builder-check; tmp=$$(mktemp -d build/ship-builder-check/repro.XXXXXX); \
 	trap 'rm -rf "$$tmp"' EXIT; \
-	python3 $(SHIP_BUILDER_TOOL) repro \
+	python3 tools/host-lisp/isolated_host_check.py --workspace ship-builder -- \
+		python3 $(SHIP_BUILDER_TOOL) repro \
 		--form '(ship "hello" :entry '\''main)' \
 		--project examples/ship/hello/project.l65p \
 		--out "$$tmp/repro" --cc '$(SHIP_BUILDER_CC)'

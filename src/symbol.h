@@ -28,6 +28,11 @@ uint8_t sym_function_ptrp(obj s);    /* 1 if the function cell holds a heap obje
 /* GC roots: every interned symbol is permanent. Gensyms are plain GC-managed heap cells
  * (not registered here) and are collected normally. */
 uint16_t sym_count(void);
+/* Create a symbol whose absence the caller has already proven (boot-time
+ * name index only; without the feature the creation half stays private). */
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+obj sym_create(const char *name);
+#endif
 uint16_t sym_pool_used(void);
 uint16_t sym_max(void);          /* symbol cap (MAX_SYM), for the budget display */
 uint16_t sym_pool_capacity(void);

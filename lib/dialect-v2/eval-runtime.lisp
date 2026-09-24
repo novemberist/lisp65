@@ -90,6 +90,30 @@
           (lcc-run (car forms)))
       nil))
 
+(defun %c2-definition-group-p (forms)
+  ; A producer declares the group. Never infer one from an ordinary progn.
+  ; Compile every admitted definition before publishing anything.
+  (let ((valid t))
+    (while (if forms valid nil)
+      (if (consp forms)
+          (let ((form (car forms)))
+            (if (if (consp form) (eq (car form) 'defun) nil)
+                nil (setq valid nil))
+            (setq forms (cdr forms)))
+          (setq valid nil)))
+    valid))
+
+(defun %c2-run-definition-group (forms)
+  (if (%c2-definition-group-p forms)
+      (if (%c2-control 0 nil)
+          (progn
+            (while forms
+              (%c2-source-form (car forms))
+              (setq forms (cdr forms)))
+            (%c2-control 3 nil))
+          nil)
+      (%c2-top-level-run-forms forms)))
+
 (defun %c2-run-expanded (form)
   ; A tree made solely of published bytecode calls, bound variable reads and
   ; already-direct values is a complete execution object.  Evaluate that tree
@@ -99,7 +123,11 @@
   ; malformed lists, unbound names and undefined operators retain the proven
   ; compiler path; no persistent form can enter this branch.
   (cond ((if (consp form) (eq (car form) 'progn) nil)
-         (%c2-top-level-run-forms (cdr form)))
+         ; The producer's quoted marker is executable ordinary Lisp too:
+         ; nested compilation must not call a nonexistent marker function.
+         (if (equal (car (cdr form)) '(quote %c2-definition-group))
+             (%c2-run-definition-group (cdr (cdr form)))
+             (%c2-top-level-run-forms (cdr form))))
         ((%c2-published-direct-call-p form)
          (%c2-direct-expression form))
         (t

@@ -1,0 +1,874 @@
+{
+  "authorization": "c4045372",
+  "budget_per_reproduction": {
+    "final_C_LTO": 1,
+    "link": 1,
+    "seed": 1
+  },
+  "candidate_manifest_path": "build/public-v2.4.0/media/receipt.json",
+  "claim": "Two independent native 1/1/1 builds from the converted producer still required; the halted attempt is not a qualifying reproduction; fixture preflight is not reproduction.",
+  "consumer_preflight": "73 TUs in each phase against transitive path/SHA authority; both kernel inputs sentinel; 75 commands identical to the accepted Seed modulo root; copied-output completion and copied-stager media exact",
+  "entry_point": "make workbench-product-v240",
+  "format": "lisp65-v240-public-build-authority-v1",
+  "halted_attempts": [
+    {
+      "budget_consumed": {
+        "final_C_LTO": 0,
+        "link": 0,
+        "seed": 1
+      },
+      "cause": "The producer module is imported twice (as the build script and by the include gate). Its boot-carrier inventory addition was not idempotent, so the second configuration wrapped the first and refused the already admitted carrier section pair in final_section_inventory_check after the Seed link.",
+      "conversion": "Carrier section insertion made idempotent with exact-count and exact-order checks; no product input, command or byte changed. Verified by a double-import inventory check on the halted Seed and a full build-flow preflight with copied link outputs.",
+      "error": "carrier section already admitted",
+      "label": "reproduction-1",
+      "phase": "seed-invoked",
+      "seed_elf_byteidentical": true,
+      "seed_prg_byteidentical": true
+    }
+  ],
+  "include_conversion_authorization": "c4045372",
+  "medium": {
+    "bytes": 819200,
+    "path": "build/nested-error-recovery-seed-medium-r1/packed/hardware-sp-seed.d81",
+    "sha256": "87cb0f6ea9b2dc690f66ee11d9c76d5138e11f28452254a9b5730c78cabc5f5d"
+  },
+  "native_projection": {
+    "bytes": 37430,
+    "path": "config/c2-v240-public-native/manifest.json",
+    "sha256": "3c863740244400a17f515b3882d892f9c7b9d638e55b18f452c96b19c4a2ab79"
+  },
+  "private_evidence_is_build_input": false,
+  "producer": "tools/host-lisp/c2_v240_public_product.py",
+  "producer_inputs": [
+    {
+      "bytes": 39145,
+      "path": "config/c2-v240-public-native/include-closure.json",
+      "sha256": "82988a2198fe3161b039fc9d07b6167a0238cc79c8e1aee4dd96fff5c71b188d"
+    },
+    {
+      "bytes": 42178,
+      "path": "config/c2-v240-public-native/includes/c2-stream-decoder.c",
+      "sha256": "78042ba1b677728c95f1059fe9b5f60cc735c7e0c982088e210d6666c6079558"
+    },
+    {
+      "bytes": 6846,
+      "path": "config/c2-v240-public-native/includes/c2-stream-decoder.h",
+      "sha256": "670eeb833f1da04c88b2ba21e9cdbf9fe7ad3d879d7695aad9d181bb0995d0f9"
+    },
+    {
+      "bytes": 40775,
+      "path": "config/c2-v240-public-native/includes/c2-stream-v2-decoder.c",
+      "sha256": "c6633ac6134f23f1cbc0e4e23da523367d2c9c6ca194a4194578e6932e69e61a"
+    },
+    {
+      "bytes": 2006,
+      "path": "config/c2-v240-public-native/includes/c2-stream-v2-decoder.h",
+      "sha256": "a26e0d00d95c23ce1eb6d7008d1307798efad515a4b74a205d1abb59e5f397f0"
+    },
+    {
+      "bytes": 3349,
+      "path": "config/c2-v240-public-native/includes/stdlib-p0.h",
+      "sha256": "d82fd6cba788beca362e59baef980b1a3c21bf22965660819e3d84b67092c539"
+    },
+    {
+      "bytes": 93097,
+      "path": "config/c2-v240-public-native/linker/c2-substitution.ld",
+      "sha256": "e8f78225e3e8f8de8eb3fb9adf6a3be0af651db05ea0cdebc410e18027868390"
+    },
+    {
+      "bytes": 3837,
+      "path": "config/c2-v240-public-native/linker/full-map-linker/c.ld",
+      "sha256": "faa4fd8cd19209a79902c199ca999d5d09c7469be4cbbfd00505f07c26a5cdd9"
+    },
+    {
+      "bytes": 542,
+      "path": "config/c2-v240-public-native/linker/full-map-linker/commodore.ld",
+      "sha256": "e31148cfefef2f94fc97916678e0e4c5a485b8dd1f7e156af3f958b7a06bffc9"
+    },
+    {
+      "bytes": 89,
+      "path": "config/c2-v240-public-native/linker/full-map-linker/zp-data.ld",
+      "sha256": "5ee0e0672070f1a700ca488e29e9ae9eeb040bd785d621deed1694abb6254a8f"
+    },
+    {
+      "bytes": 37430,
+      "path": "config/c2-v240-public-native/manifest.json",
+      "sha256": "3c863740244400a17f515b3882d892f9c7b9d638e55b18f452c96b19c4a2ab79"
+    },
+    {
+      "bytes": 16386,
+      "path": "config/c2-v240-public-native/resolved-profile.txt",
+      "sha256": "d106b1ac6ec0fbecec14a601d72c065cbd9ce9319d2616c894abc164c39c3d86"
+    },
+    {
+      "bytes": 310,
+      "path": "config/c2-v240-public-native/sources/c2-stream-init.c",
+      "sha256": "706b39a032572ace9460e555e45e02c64f08b784d4d5ba91f7a914a990d0d58a"
+    },
+    {
+      "bytes": 57,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-00.c",
+      "sha256": "19ae4e96f3e4bb904c24c33d7ce3d385edd4cfa7e0781a318f437c5472a3ad75"
+    },
+    {
+      "bytes": 58,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-00b.c",
+      "sha256": "51f13be0111906cab8684eefc99512fe8165354dcfa0fe6759466dc4384198b5"
+    },
+    {
+      "bytes": 57,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-01.c",
+      "sha256": "8490454e4f62b691ffd5b1cac42af2eba24bdd9fa116210b1c8667e3fc2ca267"
+    },
+    {
+      "bytes": 548,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-02a.c",
+      "sha256": "6479b4a2377710dc50c0f860b4d2574f39196b161eb42cb885f99b922f318579"
+    },
+    {
+      "bytes": 58,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-02b.c",
+      "sha256": "d5f499dd7a66a84406a8e479d94e47dd0879e87b19ebd9721fd5e104fb4e6ef9"
+    },
+    {
+      "bytes": 57,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-03.c",
+      "sha256": "4b34f04d815306a3ab32c6b7a17ffe6d6baab3a0ff75a32c572c76441ceffa3a"
+    },
+    {
+      "bytes": 58,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-03b.c",
+      "sha256": "1529c8bfdd42d951f7d87d64f893901260860fcda6df269212f1534024b99165"
+    },
+    {
+      "bytes": 57,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-04.c",
+      "sha256": "4b4009fa90367f5eddad4005dbd791c05bb7dff5d5441b5b9a7546e1836fbdb9"
+    },
+    {
+      "bytes": 58,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-05a.c",
+      "sha256": "bb2761c099c7bc4f4c6d11187a40bcffb05ed3e646038f08fc750110371450ea"
+    },
+    {
+      "bytes": 58,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-05b.c",
+      "sha256": "93f8d5f6f1fa208457de7e6d5e0914def72a724a06e8b39b646c50ef0b992375"
+    },
+    {
+      "bytes": 58,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-06a.c",
+      "sha256": "59d5e60b9844ffe11ae489a6b234eba08078145dee67b5165985e022a0b7ac57"
+    },
+    {
+      "bytes": 58,
+      "path": "config/c2-v240-public-native/sources/c2-stream-phase-06b.c",
+      "sha256": "1491302046f8d90ecfc55e5302c160ab9d3818d67a13250281693d9566ff3e07"
+    },
+    {
+      "bytes": 63,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-07.c",
+      "sha256": "d8f1bcb0ab4ecaa16eb9e264d93b52f654252fded7d34604bf42702929c88e09"
+    },
+    {
+      "bytes": 63,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-08.c",
+      "sha256": "368887762d51ecd1d57e7ecbbedeac3f63a460e40103dce81df86502e07e452d"
+    },
+    {
+      "bytes": 63,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-09.c",
+      "sha256": "7a86ebdc833548c108109d2ae37a53e025228d06bb3239cc245d833c1a9062d8"
+    },
+    {
+      "bytes": 64,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-10.c",
+      "sha256": "0eed6be784711c5fc7f1a509308c2d5544c9c10bea7b054983db3b91c8a16647"
+    },
+    {
+      "bytes": 64,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-10a.c",
+      "sha256": "7d3634ff40da3720aa3195d93f0d4d1cbcd284f95dcc9a43c424257d9bde2b33"
+    },
+    {
+      "bytes": 64,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-10b.c",
+      "sha256": "ab75d3500410eec6d7d7c8b8314b70a07a3858226fb803a8b790b4782b5705b6"
+    },
+    {
+      "bytes": 64,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-11a.c",
+      "sha256": "178f00aa156819966e591b8ed0ea69c0fd0b87ab2d265ba4c7e3941d8a5c05ab"
+    },
+    {
+      "bytes": 64,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-11b.c",
+      "sha256": "142135a6a2d89de240a84ccd1c8b511a2ba93f5919e2b282324ec8862768e29b"
+    },
+    {
+      "bytes": 64,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-12.c",
+      "sha256": "88fb0ec64d09e73de4e4eb1ff4dd477de982c8bd7e3d76fd87d1e81ce29e13bb"
+    },
+    {
+      "bytes": 64,
+      "path": "config/c2-v240-public-native/sources/c2-stream-v2-phase-13.c",
+      "sha256": "7936273fe746f8b9d9e4a983e010f74f529013f7ccc97f03a1328aa868eb6827"
+    },
+    {
+      "bytes": 3653,
+      "path": "config/c2-v240-public-native/sources/c2_boot_chain_commit.s",
+      "sha256": "3fbb6b8c4e7d2a2f3a70a03438e60055a8d8f5c652b9e5da7d4d4b979a88eb87"
+    },
+    {
+      "bytes": 2405,
+      "path": "config/c2-v240-public-native/sources/c2_hot_literal.c",
+      "sha256": "242d0039c589fcb0bddd09718cda5ab25131afb22315044eb182c87fd35bf16d"
+    },
+    {
+      "bytes": 5315,
+      "path": "config/c2-v240-public-native/sources/c2_kernal_window.s",
+      "sha256": "4bf39318a2b21868a542ed2d6b2f0b4ee97c8beff9de44ae48b2d26f736ee650"
+    },
+    {
+      "bytes": 16995,
+      "path": "config/c2-v240-public-native/sources/c2_platform_dma.c",
+      "sha256": "506ea04d906cfe316a429673e609908d9e490b23dc01a36a0a47ed874641706e"
+    },
+    {
+      "bytes": 182532,
+      "path": "config/c2-v240-public-native/sources/c2_product_runtime.c",
+      "sha256": "ac9ad9ed90a01d9f6c393d7e97fc5348f53174bfe97d5f05c090ef7083060f1b"
+    },
+    {
+      "bytes": 27514,
+      "path": "config/c2-v240-public-native/sources/c2_session_emitter.c",
+      "sha256": "22bea40a473bc968ca37ca1d726091838d5d9a74fd5037597cdf063af940d1f5"
+    },
+    {
+      "bytes": 99082,
+      "path": "config/c2-v240-public-native/sources/eval.c",
+      "sha256": "273456250d71dad3a307ca7e17e5a14c4df97de86fbf53a36da1a3a8e0d0b9a5"
+    },
+    {
+      "bytes": 2085,
+      "path": "config/c2-v240-public-native/sources/f011_guarded_write.s",
+      "sha256": "f8b48d9f547ac22120729066d95ede25a7dcbfa4f3716fa750e8c6b98d8a1220"
+    },
+    {
+      "bytes": 8186,
+      "path": "config/c2-v240-public-native/sources/interrupt.c",
+      "sha256": "5abfbb90ae4dea852206cad87f7e5213527fd7221bd7b89025960ccde8f01a4c"
+    },
+    {
+      "bytes": 44638,
+      "path": "config/c2-v240-public-native/sources/io.c",
+      "sha256": "c0639efc8111fda3ad1aa77afa5e974a9a9b101e64debef7b0d5ec393809e7c9"
+    },
+    {
+      "bytes": 48781,
+      "path": "config/c2-v240-public-native/sources/mem.c",
+      "sha256": "ea944377e77cedd98ff7973e0e4b6a7163a739b5d0568d29ef6be33ea1035f75"
+    },
+    {
+      "bytes": 11087,
+      "path": "config/c2-v240-public-native/sources/reader.c",
+      "sha256": "db8c075e0e1afd1dfe20375c0c4b4ad0a266ec4cd40322067c3ec92d844cd126"
+    },
+    {
+      "bytes": 16700,
+      "path": "config/c2-v240-public-native/sources/repl.c",
+      "sha256": "d9364779f465f999eeb8f1b27333eb46734a8a0db27a83821650965ca003c969"
+    },
+    {
+      "bytes": 1187,
+      "path": "config/c2-v240-public-native/sources/rtov_crc_mem.s",
+      "sha256": "e63328fb96cee962b970fc9965a3d5b78cf4423b770c58c353a5ba04f3102821"
+    },
+    {
+      "bytes": 120681,
+      "path": "config/c2-v240-public-native/sources/vm.c",
+      "sha256": "42b1c4450e7fbb60ceee93f78da96947ceba0117f696bf263ab7fcc41682b24f"
+    },
+    {
+      "bytes": 18688,
+      "path": "config/c2-v240-public-native/sources/vm_boot_overlay.c",
+      "sha256": "46bf61a2ed380101dbc0c8c0ec5880a97ff5007dc3b73801f395b69c0bddb387"
+    },
+    {
+      "bytes": 95819,
+      "path": "config/c2-v240-public-native/sources/vm_runtime_overlay.c",
+      "sha256": "b78967467f0417f835cfee3eb084ce0096e5fbe06c179d89de26034d6b7c660c"
+    },
+    {
+      "bytes": 1978,
+      "path": "config/c2-v240-public-plane/README.md",
+      "sha256": "538c9af236bc8a3ac59fb1ca47d21b9e920ba3ec1f6a8f48b57894ea3fa58cd4"
+    },
+    {
+      "bytes": 518,
+      "path": "config/c2-v240-public-plane/historical-sources/README.md",
+      "sha256": "744a45f0930664df38941f362bca5a8e5c45d94531aaa9b087204b6fe8eaa0b2"
+    },
+    {
+      "bytes": 5612,
+      "path": "config/c2-v240-public-plane/historical-sources/defstruct-d13bd166.lisp",
+      "sha256": "11c9ef05dc1acc58e2ac62002667e434c3c7fda2a0bb8681de86c2635cc8fcaa"
+    },
+    {
+      "bytes": 49130,
+      "path": "config/c2-v240-public-plane/inputs.json",
+      "sha256": "8e30665ec07d2a323302bb3eb0bceca3569a8dc6dd62f2afadeef25cfd55d4c9"
+    },
+    {
+      "bytes": 12695,
+      "path": "config/c2-v240-public-plane/layout/projected-full-map-authority.json",
+      "sha256": "044074ac0e8d0988473ad5aa7657850f4375cd84699f79eb701816220e3b4f0f"
+    },
+    {
+      "bytes": 15873,
+      "path": "config/c2-v240-public-plane/layout/projected-ownership-contract.json",
+      "sha256": "a6fb3ee0368ed367a662350f9587daa6ba88bbcd460f0f1cc90213d148e502b1"
+    },
+    {
+      "bytes": 43,
+      "path": "config/c2-v240-public-plane/libraries/INIT.L65",
+      "sha256": "e4a868bd6858fb90167a9c45b59a69818769edef8bde4aa0400ec96c8633acee"
+    },
+    {
+      "bytes": 104,
+      "path": "config/c2-v240-public-plane/libraries/buffer.blob.bin",
+      "sha256": "d218ff4ba23620eb02fbdb35c4b9795cf98404c0955091bcb7ded6487c24c747"
+    },
+    {
+      "bytes": 8088,
+      "path": "config/c2-v240-public-plane/libraries/buffer.manifest.json",
+      "sha256": "0e01f3325b482ec6b9e3085dcb3136d8ee026ce124e7bc9c7276effa7515739b"
+    },
+    {
+      "bytes": 1620,
+      "path": "config/c2-v240-public-plane/libraries/defstruct-suite.json",
+      "sha256": "08dc43aa90a5c77e7eda6de8b610f7de29c74652b38e0e6b92e943b383c5e1e8"
+    },
+    {
+      "bytes": 1038,
+      "path": "config/c2-v240-public-plane/libraries/defstruct.blob.bin",
+      "sha256": "6c92c4e0bc343bfebfe8d4aae442e1530de0de3bcc05c90a5796fe82a6a30791"
+    },
+    {
+      "bytes": 33804,
+      "path": "config/c2-v240-public-plane/libraries/defstruct.manifest.json",
+      "sha256": "8799153721c8ef81ad0af492c7f53230393f88ed148975929c93080117908eb5"
+    },
+    {
+      "bytes": 558,
+      "path": "config/c2-v240-public-plane/libraries/inspect.blob.bin",
+      "sha256": "a3ce82774fa73d5033a6ccf9880fb1b3d1df413c5620a29f3ad33da64dee1224"
+    },
+    {
+      "bytes": 59893,
+      "path": "config/c2-v240-public-plane/libraries/inspect.manifest.json",
+      "sha256": "b64b57cb4bac508e3620b88092b3ea88df3e20f34f872b6a95ac09f680e6bfa8"
+    },
+    {
+      "bytes": 8998,
+      "path": "config/c2-v240-public-plane/libraries/libraries.json",
+      "sha256": "529d4641912630cdd51f98941c71cae8eca5c5e5400dc8fb9925aadb2d0aa319"
+    },
+    {
+      "bytes": 781,
+      "path": "config/c2-v240-public-plane/libraries/place.blob.bin",
+      "sha256": "0592c8437756442e43bf07f18bfae2c5c3482b1a271ef126e9a8f9c443a49d60"
+    },
+    {
+      "bytes": 23002,
+      "path": "config/c2-v240-public-plane/libraries/place.manifest.json",
+      "sha256": "6ce624ac42aa8e5309f7cb97ebc414a5963377c917af92bb07ec97b9a5862cb4"
+    },
+    {
+      "bytes": 152,
+      "path": "config/c2-v240-public-plane/libraries/string-extra.blob.bin",
+      "sha256": "b81f014ee4ad8561d176128ab25710e95730cf2c390df0af8fb0e7a969180757"
+    },
+    {
+      "bytes": 9314,
+      "path": "config/c2-v240-public-plane/libraries/string-extra.manifest.json",
+      "sha256": "61996008ca577cf6c7b84ca44586063c5c6d65f70345449f08caa5e37fefa650"
+    },
+    {
+      "bytes": 6202,
+      "path": "config/c2-v240-public-plane/media-authority.json",
+      "sha256": "e095a6b6c7534082b21f796ee12747693a9fc30f2410f912a26b8550d1394bc8"
+    },
+    {
+      "bytes": 54972,
+      "path": "config/c2-v240-public-plane/native-recipe.json",
+      "sha256": "2115c63d0fe04b043664904f129ad4c5cdc5956ee14cdfca935e3bb69fb9ab1b"
+    },
+    {
+      "bytes": 28730,
+      "path": "config/c2-v240-public-plane/plane/c2-lite-execution-contract.json",
+      "sha256": "cec47a0acaf0417ab58d6e928a29d02e1a22cc259683c56c35a2e8b83a3fd03a"
+    },
+    {
+      "bytes": 293,
+      "path": "config/c2-v240-public-plane/plane/c2_lite_static_plane.h",
+      "sha256": "8d5042307232e27506ea9ddd74e6fb4a1fe085333ff6facea2669df01b996544"
+    },
+    {
+      "bytes": 6659,
+      "path": "config/c2-v240-public-plane/plane/candidate-profile.json",
+      "sha256": "5b5fe93036a4ca6c696df9ecc7310fcced7df832b3d12edf3449df94a95521fe"
+    },
+    {
+      "bytes": 13544,
+      "path": "config/c2-v240-public-plane/plane/ide.blob.bin",
+      "sha256": "f40007a12d8ff06c69291958e5e1e355bceac979c8cced8b80ad09097a7eadea"
+    },
+    {
+      "bytes": 196027,
+      "path": "config/c2-v240-public-plane/plane/ide.c",
+      "sha256": "174f4701e32a4aa7cb7da6cbf70dda185f84e3af3c2db6e71a8c5352220d3244"
+    },
+    {
+      "bytes": 38499,
+      "path": "config/c2-v240-public-plane/plane/ide.diagnostic-map.json",
+      "sha256": "d2d847e0ed9f89f570cdce296150e9dd5b203e1af96ccc8387c215f3558ee630"
+    },
+    {
+      "bytes": 1274,
+      "path": "config/c2-v240-public-plane/plane/ide.dir.bin",
+      "sha256": "3cfac406ead00439a4b292201bbdd6e5e41c823c7703f98985869b166b7e13d6"
+    },
+    {
+      "bytes": 31886,
+      "path": "config/c2-v240-public-plane/plane/ide.ext.bin",
+      "sha256": "bb38d5c62d5a827ca58442e3a50d714ab0da909b5bed99d05f04dfebcd3ea083"
+    },
+    {
+      "bytes": 3240,
+      "path": "config/c2-v240-public-plane/plane/ide.h",
+      "sha256": "8f0b51b79366983262b7c36533bf028081b2932803df62edcdd3692b6b633d35"
+    },
+    {
+      "bytes": 342391,
+      "path": "config/c2-v240-public-plane/plane/ide.manifest.json",
+      "sha256": "7cd5ac54a06a769d26c4e6c69a60ab08610e08b631bf12f454ab099cefb93439"
+    },
+    {
+      "bytes": 230,
+      "path": "config/c2-v240-public-plane/plane/product/buffer.c2i.bin",
+      "sha256": "4ce0a9615726636bc2f6f1ce98e487a32bbf9f7e9d6f44422a8f6ed5b3f34387"
+    },
+    {
+      "bytes": 104,
+      "path": "config/c2-v240-public-plane/plane/product/buffer.code.bin",
+      "sha256": "d218ff4ba23620eb02fbdb35c4b9795cf98404c0955091bcb7ded6487c24c747"
+    },
+    {
+      "bytes": 15216,
+      "path": "config/c2-v240-public-plane/plane/product/ide.c2i.bin",
+      "sha256": "cd67f7c5b6a0cde770407436ba27eda2f283b2e1a67f9bc855b2c1ead8d47078"
+    },
+    {
+      "bytes": 14992,
+      "path": "config/c2-v240-public-plane/plane/product/ide.code.bin",
+      "sha256": "2dbe149f1755284a141f47a0b946d3b8d39c064985a39df8cebf4ae5f9cff1cb"
+    },
+    {
+      "bytes": 3152,
+      "path": "config/c2-v240-public-plane/plane/product/idex.c2i.bin",
+      "sha256": "707b9e968475d753b23fb2032f5a2360977f337c294f6003690d3bf91fabff20"
+    },
+    {
+      "bytes": 2940,
+      "path": "config/c2-v240-public-plane/plane/product/idex.code.bin",
+      "sha256": "1daacb6cf39f361d1608556107b7e943a85ca4cc20e1d6314ce944f6c51abd91"
+    },
+    {
+      "bytes": 33840,
+      "path": "config/c2-v240-public-plane/plane/product/initial.c2d-v3.bin",
+      "sha256": "280955216d1e39af853c39e6636f3b61c50c61f1c42da9c6ffe0e5cecf717586"
+    },
+    {
+      "bytes": 7588,
+      "path": "config/c2-v240-public-plane/plane/product/lcc.c2i.bin",
+      "sha256": "e10c56843f23c99b101e158e6882189e91b7d87f18cb9f74790e9b5079af7261"
+    },
+    {
+      "bytes": 8134,
+      "path": "config/c2-v240-public-plane/plane/product/lcc.code.bin",
+      "sha256": "550532b308e44e4fccc38a1b38fd8c5c956a0c77c529b6bfcefee1921353dbe2"
+    },
+    {
+      "bytes": 1814,
+      "path": "config/c2-v240-public-plane/plane/product/m65d.c2i.bin",
+      "sha256": "891e95792d8469d38fcda9a27394ae32171a58d8d632aeec8c8fce2eeeedadc2"
+    },
+    {
+      "bytes": 4083,
+      "path": "config/c2-v240-public-plane/plane/product/m65d.code.bin",
+      "sha256": "d92fe2e752a044bcb9f65c5e23c126e73e0b0b04d6e1689bc7f675f5971af079"
+    },
+    {
+      "bytes": 99222,
+      "path": "config/c2-v240-public-plane/plane/product/product-shelf-v4-direct.bin",
+      "sha256": "3b76b94ba727fdd337c2ecc5eff34a91d1f78cf7e16fcd0bcc4c1af0fc3c1912"
+    },
+    {
+      "bytes": 21240,
+      "path": "config/c2-v240-public-plane/plane/product/stdlib-p0.c2i.bin",
+      "sha256": "17699b138454d8f8a551d3e3d10777a5417e44e7288e5ff5e5f26a29b44b5c17"
+    },
+    {
+      "bytes": 19505,
+      "path": "config/c2-v240-public-plane/plane/product/stdlib-p0.code.bin",
+      "sha256": "e0424a9a1668dcd971b1cf54ddba035491c1001fabd839b3858c2fb8befda6c2"
+    },
+    {
+      "bytes": 2400,
+      "path": "config/c2-v240-public-plane/plane/product/substitution-artifacts.json",
+      "sha256": "1009a74427353a6242aca201dd8f28bc6b9a516789479a57ec24807905a468d6"
+    },
+    {
+      "bytes": 13442,
+      "path": "config/c2-v240-public-plane/plane/resolved-profile.txt",
+      "sha256": "887fc1dae6d4a328cbdcb493df2598b06b356bb6c81dcfa8962cce4a64e83df8"
+    },
+    {
+      "bytes": 1711,
+      "path": "config/c2-v240-public-plane/plane/set-a-plane-receipt.json",
+      "sha256": "963e9a3f22ab27bc607f4d7e070aed10251064dcdf555fd412ab58c7200f2241"
+    },
+    {
+      "bytes": 19505,
+      "path": "config/c2-v240-public-plane/plane/stdlib-p0.blob.bin",
+      "sha256": "456e3a7e1ab28f3353be41c3d3dfeff01fddb4f5f0098f8d606bea6b032261ff"
+    },
+    {
+      "bytes": 294918,
+      "path": "config/c2-v240-public-plane/plane/stdlib-p0.c",
+      "sha256": "4ec4a643137817fcff5ec8a180c40a51a37506e7d03b9c8df3587b0cf6193f10"
+    },
+    {
+      "bytes": 2821,
+      "path": "config/c2-v240-public-plane/plane/stdlib-p0.dir.bin",
+      "sha256": "ed58180c0248934051a1c38e793da91f9dc7902a35620c1331d9e9449ecc96da"
+    },
+    {
+      "bytes": 44049,
+      "path": "config/c2-v240-public-plane/plane/stdlib-p0.ext.bin",
+      "sha256": "7b92a8835e05e2a200c784ca317dcfcf8a11d030c065d508be7ae8e190fb0772"
+    },
+    {
+      "bytes": 3349,
+      "path": "config/c2-v240-public-plane/plane/stdlib-p0.h",
+      "sha256": "d82fd6cba788beca362e59baef980b1a3c21bf22965660819e3d84b67092c539"
+    },
+    {
+      "bytes": 359206,
+      "path": "config/c2-v240-public-plane/plane/stdlib-p0.manifest.json",
+      "sha256": "ccc3524e49e1d48d3ca2c84195396c330e9cc0962f37a927b418098797b32e19"
+    },
+    {
+      "bytes": 49758,
+      "path": "config/c2-v240-public-plane/plane/v6-semantics/bank2-static-code.bin",
+      "sha256": "642809cf0c799f449b87eaab89d1c9d456dd8665cef951ea16039b1e09be359d"
+    },
+    {
+      "bytes": 96,
+      "path": "config/c2-v240-public-plane/plane/v6-semantics/c2-lite-dynamic.code.bin",
+      "sha256": "30cd1f8189513e20a5f0b8412055da8f4aeb8613eeb7d53a12226ee6d4745ae1"
+    },
+    {
+      "bytes": 3060,
+      "path": "config/c2-v240-public-plane/plane/v6-semantics/c2-lite-dynamic.manifest.json",
+      "sha256": "4ee35197f04fb21f04d5ec74fe45d403f251ddf6637ada29d2d1e5643914323e"
+    },
+    {
+      "bytes": 33840,
+      "path": "config/c2-v240-public-plane/plane/v6-semantics/initial.c2d-v6.bin",
+      "sha256": "1b25750fcb3fd92f2dffe80afb842950e89b29dfa521b1242bec0798aefe52a7"
+    },
+    {
+      "bytes": 3349,
+      "path": "config/c2-v240-public-plane/plane/workbench/stdlib-p0.h",
+      "sha256": "d82fd6cba788beca362e59baef980b1a3c21bf22965660819e3d84b67092c539"
+    },
+    {
+      "bytes": 33840,
+      "path": "config/c2-v240-public-plane/referenced/038-initial.c2d-v3.bin",
+      "sha256": "280955216d1e39af853c39e6636f3b61c50c61f1c42da9c6ffe0e5cecf717586"
+    },
+    {
+      "bytes": 99222,
+      "path": "config/c2-v240-public-plane/referenced/039-product-shelf-v4-direct.bin",
+      "sha256": "3b76b94ba727fdd337c2ecc5eff34a91d1f78cf7e16fcd0bcc4c1af0fc3c1912"
+    },
+    {
+      "bytes": 359206,
+      "path": "config/c2-v240-public-plane/referenced/040-stdlib-p0.manifest.json",
+      "sha256": "ccc3524e49e1d48d3ca2c84195396c330e9cc0962f37a927b418098797b32e19"
+    },
+    {
+      "bytes": 370874,
+      "path": "config/c2-v240-public-plane/referenced/041-ide.manifest.json",
+      "sha256": "234e3d8b0bd67772865e0e397329abcf575ffd646d36647857e71fddf45d0587"
+    },
+    {
+      "bytes": 70458,
+      "path": "config/c2-v240-public-plane/referenced/042-idex.manifest.json",
+      "sha256": "168b17833fa832e651826fc4e3ff66e9eff363bf27aa49a3a36c2f434fba4770"
+    },
+    {
+      "bytes": 64154,
+      "path": "config/c2-v240-public-plane/referenced/043-m65d.manifest.json",
+      "sha256": "f68b989f9d51e2b39ed728d64f88408ef7855751d1ddc3c3231c149b72d9dbfa"
+    },
+    {
+      "bytes": 8086,
+      "path": "config/c2-v240-public-plane/referenced/044-buffer.manifest.json",
+      "sha256": "59d6ff0d107682ab5d35d2e201c3e3393472899a5b61855b41e809b9668e6a3f"
+    },
+    {
+      "bytes": 213511,
+      "path": "config/c2-v240-public-plane/referenced/045-lcc.manifest.json",
+      "sha256": "a8dbbe0ed701ea2738334d4e8a04c234f959dfedfbd249523834f9eadb3f6105"
+    },
+    {
+      "bytes": 5106,
+      "path": "config/c2-v240-public-plane/sources/000-prelude-m1.lisp",
+      "sha256": "47728f08c472e269d6ce81defbcf820ff70d1e25eb1da4c1de2ed7fc35090f42"
+    },
+    {
+      "bytes": 984,
+      "path": "config/c2-v240-public-plane/sources/001-stdlib-bytecode-bridges.lisp",
+      "sha256": "c98ffd14a00d7b4b41c1f892f310c4998255a2c3baccae230ba5e3accc3721dd"
+    },
+    {
+      "bytes": 2037,
+      "path": "config/c2-v240-public-plane/sources/002-stdlib-einsuite-bridges.lisp",
+      "sha256": "09f6091eb1c165cec372b3379e74fd9833c698ac0855b9ad44788550f3c59647"
+    },
+    {
+      "bytes": 103,
+      "path": "config/c2-v240-public-plane/sources/003-stdlib-screen-fallback.lisp",
+      "sha256": "58f837a4ce5a9e6d9894a792dc9ed5de229605049f64368bdc887709efef717f"
+    },
+    {
+      "bytes": 605,
+      "path": "config/c2-v240-public-plane/sources/004-stdlib-output.lisp",
+      "sha256": "4baf4ea6f432299bf9510606874bacbd10cebdcc398c33eb719fbb1df442598e"
+    },
+    {
+      "bytes": 1358,
+      "path": "config/c2-v240-public-plane/sources/005-stdlib-control.lisp",
+      "sha256": "73164e778f14ab049413473f8fe600ea411f6d76bac0fcbe381075819ef0ca6a"
+    },
+    {
+      "bytes": 2513,
+      "path": "config/c2-v240-public-plane/sources/006-stdlib-lists.lisp",
+      "sha256": "919fa42b00733e0001d7a2f0aa31c1918d3fe3deefac8c0289e4996898f26f4b"
+    },
+    {
+      "bytes": 649,
+      "path": "config/c2-v240-public-plane/sources/007-stdlib-sequences.lisp",
+      "sha256": "29e5869de76f6ee22de09713defb8d257300e06f388e8ba45db2d4ac702b0492"
+    },
+    {
+      "bytes": 693,
+      "path": "config/c2-v240-public-plane/sources/008-stdlib-math.lisp",
+      "sha256": "c311c2f9c2fd0349287bf0d8319af125c6ac4dc0132c506bc3a2ad7413745734"
+    },
+    {
+      "bytes": 592,
+      "path": "config/c2-v240-public-plane/sources/009-stdlib-plists.lisp",
+      "sha256": "31fe87ecc6ff3649f1910f78843a0644aacb8387154a818ada1602ea62f6d33d"
+    },
+    {
+      "bytes": 3922,
+      "path": "config/c2-v240-public-plane/sources/010-stdlib-strings.lisp",
+      "sha256": "1f3e520a49354272171dcbb8d055d59596dc0f64647dc4ecbedc838b2b4cace2"
+    },
+    {
+      "bytes": 2819,
+      "path": "config/c2-v240-public-plane/sources/011-stdlib-p0-stdlib-load.lisp",
+      "sha256": "d68ed4595c69f6767592fabb962628159ee663f579858a4c4af3154e7462a4b3"
+    },
+    {
+      "bytes": 15142,
+      "path": "config/c2-v240-public-plane/sources/012-lcc-fasl.lisp",
+      "sha256": "a46606f13546107d0d1de82b2b1e82063dfba06586bb18217fee8853c715a1f0"
+    },
+    {
+      "bytes": 3389,
+      "path": "config/c2-v240-public-plane/sources/013-stdlib-load-lib.lisp",
+      "sha256": "5986278d2818d24b389d503c35d3084cf2b4862ab8214ab7f80b0446e24dc9bd"
+    },
+    {
+      "bytes": 1422,
+      "path": "config/c2-v240-public-plane/sources/014-ide-launch.lisp",
+      "sha256": "85f8261ea52efc0cfeac6dae7893647da708a1e555392acaf48f4a576d6a3c8b"
+    },
+    {
+      "bytes": 1982,
+      "path": "config/c2-v240-public-plane/sources/015-repl-banner-consumed.lisp",
+      "sha256": "ffd6f43d95f592ca94eb857bc8da2068c0416b0217ef17f7b21272bb9b5dc0ef"
+    },
+    {
+      "bytes": 8437,
+      "path": "config/c2-v240-public-plane/sources/016-eval-runtime-consumed.lisp",
+      "sha256": "778db0bcdd5cf526b207e7401aa249c769e123720ae9d72595db6fde0a5603c7"
+    },
+    {
+      "bytes": 532,
+      "path": "config/c2-v240-public-plane/sources/017-lists-core.lisp",
+      "sha256": "28819b63744cda0f94cddf9a73c55f6de59b5711490c8921d0a4dc9f8c0435d2"
+    },
+    {
+      "bytes": 34718,
+      "path": "config/c2-v240-public-plane/sources/018-stdlib-require-consumed.lisp",
+      "sha256": "2fa8d979309a21121af859a6182a5d4134c56c5625c48b4ba583e5f3a1e982fd"
+    },
+    {
+      "bytes": 2853,
+      "path": "config/c2-v240-public-plane/sources/019-stdlib-random.lisp",
+      "sha256": "389225da8fddb04294b8a7ea925f216df748be7ea5d1f2348a36231820a26f9d"
+    },
+    {
+      "bytes": 5826,
+      "path": "config/c2-v240-public-plane/sources/020-stdlib-q.lisp",
+      "sha256": "de9f66d3f8b2ce50f668f3118016eda4f1d0123a4d30252c5aaaa51c81ab90d3"
+    },
+    {
+      "bytes": 1618,
+      "path": "config/c2-v240-public-plane/sources/021-stdlib-time.lisp",
+      "sha256": "4c4970829642b0424a26a7d36695751809417cb3e11b72a8881eb33418f2d61b"
+    },
+    {
+      "bytes": 7021,
+      "path": "config/c2-v240-public-plane/sources/022-product-editor.lisp",
+      "sha256": "a34beaa7aee872741b76aff63897e15378ebd92b1158bba0fb9438b282fb300f"
+    },
+    {
+      "bytes": 426,
+      "path": "config/c2-v240-public-plane/sources/023-stdlib-wait.lisp",
+      "sha256": "99228eb2a178360e242ca4627c6b1f4fa0e3922633f5393f98a83b885b67e0a8"
+    },
+    {
+      "bytes": 5592,
+      "path": "config/c2-v240-public-plane/sources/024-domain-tier1-sealed.lisp",
+      "sha256": "f60046dd70282e640e6ff3db4c79e80f2ef84575d17279752e87c9d8a90f2b35"
+    },
+    {
+      "bytes": 6435,
+      "path": "config/public-export-policy.json",
+      "sha256": "da6d20bebdf88ae7a068245538b34b9b544a41697f885f3c4ea8e7c0ad9f36e8"
+    },
+    {
+      "bytes": 1225,
+      "path": "config/storage-owner-manifest.json",
+      "sha256": "fed06c0d29457b9f318a491576293fdfd0fad9a53c2026106617f7da82629798"
+    },
+    {
+      "bytes": 81589,
+      "path": "mk/workbench.mk",
+      "sha256": "1e399c3ba4d024c2bdf0f504ea05111dbe36f350a587989212514113b292a0fa"
+    },
+    {
+      "bytes": 44831,
+      "path": "scripts/r3-cold-stager-main.c",
+      "sha256": "787d280f3fe7ebbf97ff503528c88a8d1e6509f4cdeb88b10fd7f616c814ac0b"
+    },
+    {
+      "bytes": 4320,
+      "path": "tools/host-lisp/boot_only_carrier_elf_gate.py",
+      "sha256": "44491c9b06bff82b3bf4a5fb4ba230a7e74808982fed2bd19c30aad63113357a"
+    },
+    {
+      "bytes": 7413,
+      "path": "tools/host-lisp/boot_only_carrier_prg.py",
+      "sha256": "49d4379953a7368c2e549c0c116b988f857b719214d7cf923fcec59c11c6a5f4"
+    },
+    {
+      "bytes": 468813,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "9e8c048ab750e6609601d37ddd00f4f785a39554d73347e09ea99af702db3abf"
+    },
+    {
+      "bytes": 9418,
+      "path": "tools/host-lisp/c2_v240_public_includes.py",
+      "sha256": "73cf2a66607b99b153dcdeb9a7156a6918aa680c9a62b0b196d2f880f643b166"
+    },
+    {
+      "bytes": 3308,
+      "path": "tools/host-lisp/c2_v240_public_libraries.py",
+      "sha256": "e8a4487f97552acbd89863a1e58a705a6b9998fd6ada946c8ed3390a8758d4f7"
+    },
+    {
+      "bytes": 13222,
+      "path": "tools/host-lisp/c2_v240_public_media.py",
+      "sha256": "9233797f1df9d53b32791e22a4095ec03b693decf7bc344c4bd51a151c2a6ceb"
+    },
+    {
+      "bytes": 6179,
+      "path": "tools/host-lisp/c2_v240_public_native.py",
+      "sha256": "d43e7f69eea3d0b10ffd0f9c919c5fc8890601ed63590dfc8b3741a8ba318ba5"
+    },
+    {
+      "bytes": 13291,
+      "path": "tools/host-lisp/c2_v240_public_overlays.py",
+      "sha256": "785b05b85963b1f37de3eb19603ae541b7d0db36b0f0d16c3ed0683ddc6709d4"
+    },
+    {
+      "bytes": 23033,
+      "path": "tools/host-lisp/c2_v240_public_product.py",
+      "sha256": "b28882174700488639c0069342ed671da412b82187efcb6335736455e181cacd"
+    },
+    {
+      "bytes": 9243,
+      "path": "tools/host-lisp/storage_owner_consumption.py",
+      "sha256": "5a7a436dc26583602d2a59be58536b6311d1eb8f0fb68b2da80bb564961c80de"
+    },
+    {
+      "bytes": 3992,
+      "path": "tools/host-lisp/symbol_layout_manifest.py",
+      "sha256": "3ac61a8ee8b64abe19f29aac57a26dd3ed18694bef241b9033ae419c26d3159e"
+    },
+    {
+      "bytes": 11918,
+      "path": "tools/host-lisp/workbench_product.py",
+      "sha256": "c6e46c876ada051e012abb12230c98b48e78d6d81ff2f1b4af9db307331bfaa5"
+    }
+  ],
+  "producer_preflight_complete": true,
+  "product_repair_allowed": false,
+  "publish_authorized": false,
+  "raw_pair": {
+    "ELF": {
+      "bytes": 662744,
+      "path": "build/nested-error-recovery-final-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "66165507a8e5ad1d857afdd967f9056be2ce7bbccc332d5328e981398078b47b"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/nested-error-recovery-final-r1/wplto/lisp65-c2-substitution-linked.prg",
+      "sha256": "18b6aa85d2b21af8e16bf8aed1fa6b6ad06a6a7f501c6480d7c89d20558c3903"
+    },
+    "profile": {
+      "bytes": 16386,
+      "path": "build/nested-error-recovery-final-r1/wplto/resolved-profile.txt",
+      "sha256": "d106b1ac6ec0fbecec14a601d72c065cbd9ce9319d2616c894abc164c39c3d86"
+    }
+  },
+  "release": "2.4.0",
+  "reproduction_authorization": "c4045372",
+  "reproductions": 2,
+  "ship_authorized": false,
+  "target_materialized_runtime": {
+    "bytes": 41811,
+    "path": "build/nested-error-recovery-seed-medium-r1/materialized/lisp65-c2-substitution-linked.prg",
+    "sha256": "f8696def7c3546114008d5734e6b0fedb9fb23a7e8f325da71df15d1db15d90b"
+  },
+  "third_attempt_allowed": false
+}

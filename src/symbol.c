@@ -156,7 +156,19 @@ static int sympool_streq(uint16_t off, const char *name) {
 
 /* Legt ein neues Symbol an (ohne Dedup-Suche); kopiert den Namen in den Pool.
  * Bei voller Tabelle/Pool: sauberer Abbruch statt Speicher-Korruption. */
+/* Exported for the boot-time name index: the resolving decoder phase
+ * creates a symbol it has already proven absent, so it needs the creation
+ * half without the linear search.  `intern` below keeps its own linear
+ * path unchanged for append, require and interactive interning.  Without
+ * the feature the function is exactly the private `new_symbol` of the
+ * accepted world, so a world that carries this source with the feature off
+ * compiles a byte-identical object. */
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+__attribute__((noinline)) obj sym_create(const char *name) {
+#else
+#define sym_create new_symbol
 static obj new_symbol(const char *name) {
+#endif
     /* strnlen mit Deckel: ein Muell-/unterminierter Name darf NIE zu einem 64K-strcpy
      * fuehren. Vorher wrappte `npool + len + 1` bei len~0xFFFF auf npool -> Check bestand
      * -> strcpy walzte den Speicher (HW-Diagnose 2026-07-01). Reader-Tokens sind <=31. */
@@ -197,7 +209,7 @@ uint8_t sym_lookup(const char *name, obj *out) {
 obj intern(const char *name) {
     obj found;
     if (sym_lookup(name, &found)) return found;
-    return new_symbol(name);
+    return sym_create(name);
 }
 
 /* The symtab index from either symbol form (SYMI immediate | gensym T_SYM cell). */

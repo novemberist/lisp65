@@ -28,7 +28,10 @@ HISTORICAL_RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/capability-carrier/"
     "string-codec-workload-receipt.json"
 )
-DEFAULT_OUTPUT = HISTORICAL_RECEIPT.with_name('string-codec-workload-v230-receipt.json')
+# 2026-09-24 dated successor for the 2.4.0 Before-Ship: only three generated
+# input identities moved (eval-runtime, repl-banner, einsuite subset); every
+# workload measurement is unchanged. The v230 live receipt stays.
+DEFAULT_OUTPUT = HISTORICAL_RECEIPT.with_name('string-codec-workload-v240-receipt.json')
 V2_IDE_SUITE = ROOT / "build/bytecode/dialect-v2/suites/p0-ide-core-lib.json"
 FORMAT_SUITE = ROOT / "tests/bytecode/libs/p0-format-lib.json"
 FORMAT = "lisp65-v2-string-codec-workload-receipt-v1"

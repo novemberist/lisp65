@@ -373,6 +373,16 @@ def isolated_build_defstruct(
 
 
 def execute(out: Path) -> dict[str, Any]:
+    import c2_v110_persistent_performance_replay as REPLAY
+    inputs = REPLAY.defstruct_inputs()
+    with REPLAY.carrier_world(inputs) as reads:
+        result = _execute(out)
+    require(set(reads) == {p.relative_to(ROOT).as_posix() for p in inputs},
+            'historical defstruct source was bound but not consumed')
+    return result
+
+
+def _execute(out: Path) -> dict[str, Any]:
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
@@ -624,6 +634,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("run", "check", "selftest"))
     args = parser.parse_args()
+    if args.action in ('check', 'selftest'):
+        from historical_price_artifacts import check
+        return check(sys.modules[__name__])
     try:
         if args.action == "selftest":
             audit_contract(load(CONTRACT))

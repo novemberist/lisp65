@@ -62,18 +62,31 @@ call(2,a);return vm_status!=VM_ARITY;}
 
 
 def resource_test():
+    import resolver_owner_gate as OWNER
+    native=OWNER.build(ROOT/'build/init-repair-resource-owner')
+    class OwnerVM(D.B.P0VM):
+        def _callprim(self,pid,argc,stack,pc=None,native_base=0,frame_slots=0):
+            if pid==67 and argc==1:
+                arg=self._pop_args(argc,stack)[0]
+                if not D.B.is_fix(arg) or not 0<=D.B.fixval(arg)<=255:
+                    raise D.B.VMError('TypeError','owner selector byte domain')
+                value=native.c2_resolver_owner_part(D.B.fixval(arg))
+                return D.B.NIL if value==65535 else D.B.mkfix(value)
+            return super()._callprim(pid,argc,stack,pc,native_base,frame_slots)
     full = "(%require-directory-capacities-p (list '(0 . 0) '(0 . 0) '(0 . 0) '(1 . 0) '(0 . 0) '(0 . 0)) '(0 0 0 4096 0 0) '(0 2048 4096 1536))"
     absent = '(require "no-such-package")'
     suite = D.LispSuite('tests/bytecode/libs/p0-stdlib-require-resolver.json', [full, absent])
     world = D.PRESETS['w4-index-2-t18s34']
-    value, _ = suite.run(full, world)
+    value, _ = suite.run(full, world, vm_class=OwnerVM)
     assert isinstance(value, dict) and value['error'] == 'HeapOOM', value
-    missing, _ = suite.run(absent, world)
+    missing, _ = suite.run(absent, world, vm_class=OwnerVM)
     assert missing == 'nil', missing
     heap, directory = suite.mutated('lib/stdlib-require.lisp',
         '(%list-malformed-error 1)', 'nil', ('%require-directory-capacities-p',))
-    old, _ = suite.run(full, world, heap=heap, directory=directory)
+    old, _ = suite.run(full, world, heap=heap, directory=directory, vm_class=OwnerVM)
     assert old == 'nil', old
+    unbound, _ = suite.run(full, world)
+    assert isinstance(unbound,dict) and unbound['error']=='TypeError'
     ledger = ABI.load_json(ABI.DEFAULT_LEDGER)
     assert ledger['resource_error_mode'] == ABI.RESOURCE_ERROR_MODE
     for key in ('selector', 'error_code', 'prim_id'):

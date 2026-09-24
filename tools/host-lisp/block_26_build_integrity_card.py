@@ -22,9 +22,30 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import r6_g6 as G6  # noqa: E402
 
 
-RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/block-2.6-card5-build-integrity-v230-successor-receipt.json"
+# Dated successor: Put-Kit's isolated contract gate changes only provenance.
+# The carrier receipt, facts and all mutation expectations remain intact.
+# 2026-09-23 dated successor: the retained-callable repair routes the D1/E25
+# make recipes to its dated wrapper (provenance only; facts and mutations kept).
+# Predecessor block-2.6-card5-build-integrity-guide-v230-receipt-20260923.json stays.
+# 2026-09-23 dated successor: the nested-error recovery routes the D1/E25 make
+# recipes to its dated wrapper (provenance only; facts and mutations kept).
+# Predecessor block-2.6-card5-build-integrity-retained-callable-repair-receipt-20260923.json stays.
+# 2026-09-24 dated successor: release 2.4.0 moves the README and development
+# guide product commands to the v240 public build authority (provenance and
+# command era only; facts and mutations kept).
+# Predecessor block-2.6-card5-build-integrity-nested-error-recovery-receipt-20260923.json stays.
+# 2026-09-24 second dated successor: the v240 authority records the halted
+# reproduction attempt 1 (provenance only; facts and mutations kept).
+# Predecessor block-2.6-card5-build-integrity-release-v240-receipt-20260924.json stays.
+# 2026-09-24 third dated successor: gates.mk gains the v240 release gates and
+# the Before-Ship dispositions (provenance only; facts and mutations kept).
+# Predecessor block-2.6-card5-build-integrity-release-v240-r2-receipt-20260924.json stays.
+# 2026-09-24 fourth dated successor: the first sealed full check-host's writer
+# and environment conversions touch Makefile and mk (provenance only).
+# Predecessor block-2.6-card5-build-integrity-release-v240-r3-receipt-20260924.json stays.
+RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/block-2.6-card5-build-integrity-release-v240-r4-receipt-20260924.json"
 AUTHORITY = "config/c2-v210-public-build-authority.json"
-README_AUTHORITY = "config/c2-v230-public-build-authority.json"
+README_AUTHORITY = "config/c2-v240-public-build-authority.json"
 LIFECYCLE_SOURCE = "tools/host-lisp/workbench_product.py"
 
 
@@ -102,9 +123,10 @@ def validate(text: dict[str, str]) -> dict[str, Any]:
             and "r6-g6-receipts-seal:" in make,
             "R6/G6 producer still writes tracked evidence or lacks explicit seal")
     development = text["docs/development.md"]
+    guide_entry = json.loads(text[README_AUTHORITY])["entry_point"]
     require("sole build-command authority" in development
-            and f"{entry}-build" in development
-            and f"{entry}-verify" in development
+            and f"{guide_entry}-build" in development
+            and f"{guide_entry}-verify" in development
             and "mega65_ftp" in development and "cmp \"$D81\"" in development,
             "development guide lacks the clone-to-deploy authoritative flow")
     readme_entry = json.loads(text[README_AUTHORITY])["entry_point"]
@@ -119,7 +141,7 @@ def validate(text: dict[str, str]) -> dict[str, Any]:
     return {
         "explicit_product_lifecycles": len(targets),
         "product_lifecycle_population": sorted(targets),
-        "guide_command_authority": {"path": AUTHORITY, "entry_point": entry},
+        "guide_command_authority": {"path": README_AUTHORITY, "entry_point": guide_entry},
         "toolchain_verified_on_product_path": True,
         "parse_time_shell_occurrences": 0,
         "tmp_log_occurrences": 0,
@@ -150,7 +172,7 @@ def selftest() -> dict[str, Any]:
             json.loads(clean[README_AUTHORITY])["entry_point"] + "-verify",
             "make workbench-product-obsolete-verify")),
         "guide-command-era-diverges": ("docs/development.md", clean["docs/development.md"].replace(
-            json.loads(clean[AUTHORITY])["entry_point"], "make workbench-product-obsolete")),
+            json.loads(clean[README_AUTHORITY])["entry_point"], "make workbench-product-obsolete")),
         "lifecycle-target-population-omitted": ("mk/workbench.mk", re.sub(
             r"^workbench-product-v160-(?:build|verify):.*$", "", clean["mk/workbench.mk"], flags=re.M)),
         "artifact-existence-selects-check": ("mk/workbench.mk", "\nif test -f build/c2.3/old; then :; fi\n"),

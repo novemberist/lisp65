@@ -14,6 +14,7 @@ from collections import Counter
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -145,7 +146,8 @@ def execute(raw_source: bytes, world: str) -> dict[str, Any]:
     events = [97] * 40 + [13]
     ROOT.joinpath("build").mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(
-            dir=ROOT / "build", prefix="v18-responsiveness-") as name:
+            dir=os.environ.get("LISP65_CHECK_SCRATCH_ROOT", ROOT / "build"),
+            prefix="v18-responsiveness-") as name:
         source = Path(name) / "stdlib-read-line.lisp"
         source.write_bytes(raw_source)
         suite = PRICE.combined_suite(

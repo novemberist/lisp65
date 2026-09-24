@@ -59,8 +59,8 @@ matches `src/`, `lib/`, the release authority, and the release driver:
 
 ```sh
 make clean
-make workbench-product-v210-build
-make workbench-product-v210-verify
+make workbench-product-v240-build
+make workbench-product-v240-verify
 ```
 
 Both product paths verify the exact LLVM-MOS installation before using it.
@@ -72,7 +72,7 @@ of guessing an output path:
 
 ```sh
 D81=$(python3 tools/host-lisp/workbench_product.py artifact \
-  --release v210 --role product-d81)
+  --release v240 --role product-d81)
 c1541 "$D81" -list
 ```
 

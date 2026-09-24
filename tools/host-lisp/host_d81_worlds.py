@@ -252,12 +252,12 @@ class LispSuite:
                 directory[heap.intern(helper)] = helper_code
         return heap, directory
 
-    def run(self, expr: str, spec: dict, heap=None, directory=None, **extra):
+    def run(self, expr: str, spec: dict, heap=None, directory=None, vm_class=None, **extra):
         heap = (heap or self.heap).clone()
         directory = directory or self.directory
         kwargs = dict(world_kwargs(spec))
         kwargs.update(extra)
-        vm = B.P0VM(heap=heap, directory=directory, macro_symbols=self.macros,
+        vm = (vm_class or B.P0VM)(heap=heap, directory=directory, macro_symbols=self.macros,
                     max_steps=20_000_000, max_call_args=self.suite.get("max_call_args"),
                     abi_profile=self.abi, abi_ledger=self.ledger, **kwargs)
         try:

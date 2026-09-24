@@ -25,15 +25,16 @@ import subprocess
 import sys
 import tempfile
 from typing import Any
+import equivalence_live_hosts as LIVE
 
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURE = ROOT / "tests/bytecode/dialect-v2/prelude-control/cases.json"
 DEFAULT_V1_SOURCE_ROOT = ROOT / "build/equivalence/frozen-v1-f6527d25/source"
 DEFAULT_V1_BINARY = ROOT / "build/equivalence/frozen-v1-f6527d25/equivalence-check"
-DEFAULT_V2_BINARY = ROOT / "build/equivalence/dialect-v2-equivalence-check"
+DEFAULT_V2_BINARY = LIVE.V2
 DEFAULT_V1_BUILD = ROOT / "build/equivalence/frozen-v1-f6527d25/build-receipt.json"
-DEFAULT_V2_BUILD = ROOT / "build/equivalence/dialect-v2-build-receipt.json"
+DEFAULT_V2_BUILD = LIVE.V2_BUILD_RECEIPT
 FROZEN_V1_COMMIT = "f6527d25e2035eae5a98dae7431d641515e2fd2e"
 PROFILES = ("dialect-v1", "dialect-v2")
 ENGINES = ("native-c-treewalk", "native-c-compiler-vm")

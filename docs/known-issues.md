@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 2.3.0. Sealed
+This is the maintained user-facing issue register for lisp65 2.4.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -9,6 +9,115 @@ live, names that are deliberately not delivered, and informative measurements.
 The final section preserves entries that were closed in an earlier release.
 
 ## Active product limitations
+
+### Anonymous `lambda` outside `defun` bodies refused
+
+Status: **known limitation of 2.4.0; designed refusal until promotion of
+escaping callables**
+
+Anonymous `lambda` forms are supported inside `defun` bodies; at the top
+level they are refused with `VM: BAD BYTECODE`, the prompt recovers and
+nothing already defined is affected.
+
+This applies to every anonymous `lambda` in a top-level form outside a
+`defun` body: `setq`/`setf`, `mapcar`, `funcall` and `let` forms alike.
+Closures returned from functions defined with `defun` work. On the 2.4.0
+device session, `(progn (setq savedlambda (lambda () 27)) 19)` gave the
+exact `*** VM: BAD BYTECODE` at a live prompt, and `(+ 4 5)` then returned 9.
+The same refusal occurs in 2.3.0. A top-level anonymous callable lives in a
+temporary code image that is retired at the end of its form; until such
+callables can be promoted to persistent publications, the refusal prevents
+a later call through a dangling handle. Workaround: place the `lambda`
+inside a `defun` body, or define a named function with `defun` instead.
+
+### `require` inside a temporary compiled form
+
+Status: **safe rejection shipped in 2.4.0 (accepted on device on a development world); full retirement repair deferred**
+
+The transient-retirement fallback refuses `require` whenever temporary code
+handles are live, before reading or publishing a package. This includes
+already-loaded packages: `(time (require "inspect"))` returns `nil`, not a
+load-time measurement. Use plain `require`, then use the package from a
+separate prompt form. Native tests cover all five packages, subsequent use,
+and byteidentity of previously published code after normal return and abort.
+This contains the loading route; it does not repair general temporary-code
+retirement. The full repair needs a separate placement card. See the
+[fallback device report](planning/transient-retirement-device-report.md).
+
+On the affected Storage-Owner and native-CRC worlds, `require` inside
+`time`, or another form whose temporary code reaches the
+Bank-2 code limit, can return `nil` without loading the package. For example,
+`(time (require "inspect"))` is rejected while plain `(require "inspect")`
+loads successfully. Use the plain form; a timed rejection is not a package
+load measurement.
+
+The affected resolver assumed the bank-end value 65,536 where the native
+allocator uses its reserved-owner boundary, 60,758 on these worlds. This
+is a resolver capacity-check defect, not evidence of an index-CRC or F011
+failure. The Resolver successor consumes the native ownership facts; all
+five fresh packages return `t` inside `time` on the native emulator and recover
+to the prompt. That return is not sufficient to establish a usable load:
+on the quarantined, unguarded Resolver successor, fresh `(time (require "defstruct"))` returns
+frames and `t`, but the enclosing temporary-form cleanup wipes the package's
+1,031 code bytes while retaining its directory entries. A subsequent
+`defstruct` fails with `VM: BAD BYTECODE`, even with one slot. Plain
+`require` in a fresh session passes the corresponding five-slot control.
+Do not use that quarantined development world. The abort control also
+demonstrates seven retained `buffer` entries with 104 erased code bytes.
+The physical `467 t`
+is a return witness only, not acceptance of package usability. See the
+[timed-package attribution](planning/resolver-timed-package-attribution.md).
+The earlier device rejection is not reclassified as a successful load. The reproduction
+establishes these development worlds; it does not claim a new test of the
+public 2.3.0 release. See the
+[executed attribution](planning/index-crc-device-time-attribution.md) and
+[host closure](planning/resolver-owner-final-report.md).
+
+### 64 persistent code-image slots
+
+Status: **2.4.0 ships grouped publication and a clean capacity refusal; slot reuse and persistent retirement remain open**
+
+In 2.4.0 a session has 64 code-image slots. A definition group that no longer
+fits is refused with `*** VM: OUT OF MEMORY`; the prompt stays live and earlier
+definitions keep working. This includes a definition loop running inside a
+form: on the 2.4.0 device session, from 15 images,
+`(dotimes (n 60) (eval '(defun capn () 7)))` stopped at 63/64 images with
+`*** VM: OUT OF MEMORY`, and `(capn)` then returned 7. A redefinition still
+consumes an image, and slots are not reused. The development-world history
+below explains how the limit was measured.
+
+On the accepted post-2.3.0 world `cd656ff9…`, the directory has 64 image
+slots. Eight are occupied after standard boot, eleven after all five packages
+are loaded. A successful persistent definition consumes another image,
+including a redefinition of the same function. A package may contain several
+functions in one image; image count is not function count or free code bytes.
+
+A five-slot `defstruct` generates **18** separate definitions: constructor,
+predicate, copier, and reader/setter/functional-updater for each slot. From
+eleven images, two such structures reach 47. The third publishes seventeen
+definitions, reaches 64, and fails on the eighteenth with `VM: BAD BYTECODE`
+instead of a capacity message. The partially defined structure is not an
+atomic success; do not rely on it. A further ordinary definition is refused
+with the same misleading message. In the measured native sequence the prompt
+remains live, arithmetic and a previous structure's accessor still work,
+and previous code-object bytes remain unchanged. This is not a general
+failure-atomicity guarantee for compound forms.
+
+Restart from the product medium before exhausting this capacity. Raising
+symbol or code-byte limits alone does not raise the image limit. These are
+executed development-world measurements, not a fresh test of public 2.3.0.
+
+Set-A successor (2026-09-17): a five-slot group now publishes its 18 entries
+in **one** image. The complete group at image 64 passes; the next group is
+refused with OOM, with prior directory/code unchanged, recovery 9 and the old
+accessor 42. On 2026-09-23 the physical Put-Kit batch also reached 64,
+refused the next group with OOM, preserved all 897 previous directory/code
+objects, and returned recovery 9 and accessor 42. See the
+[device report](planning/put-kit-device-report.md). Redefinition still
+consumes images; persistent slot reuse and
+compaction remain Set B. The historical three-structure failure above must
+not be presented as the current development behavior. See the
+[Set-A final report](planning/definition-set-a-final-report.md).
 
 ### Non-tail recursion depth bound (raised from the 2.0.1/2.1.0 cliff)
 
@@ -147,13 +256,32 @@ if the REPL does not recover. Preserve the preceding forms and approximate key
 count. Reopening the parked diagnosis requires a natural physical recurrence
 with a hardware arrival witness.
 
-## Names and packages not delivered in 2.3.0
+### 2.4.0 rows not yet verified on the device
 
-The `inspect` package (`trace`/`untrace`) is now delivered again: the
-Link-92 mechanism was closed in 1.5.0 and the functions existed as a module,
-but no release between 1.6.0 and this one placed the `inspect` row on the
-selected medium. It is delivered on the 2.3.0 product disk and loads by
-hand with `require`; see
+Status: **open; owner rows**
+
+The 2.4.0 device session was driven automatically, without the owner at the
+machine. These rows were not run on the 2.4.0 medium and no claim is made
+for them:
+
+- RUN/STOP inside a running form. The host cannot inject it; the product
+  reads RUN/STOP from the keyboard matrix.
+- A cold power cycle, and the stopwatch feel of boot and typing.
+- The physical `C-x C-c` exit from the IDE. The virtual keyboard cannot
+  deliver `C-c`, because the product drains key-queue code `$03`; the IDE
+  was left by a normal reset instead.
+- Compile, save, reload and call on a writable copy of the medium, and the
+  end-of-session SD readback of the uploaded files.
+
+See the [device report](planning/release-candidate-device-report-2026-09-24.md).
+
+## Names and packages not delivered in 2.4.0
+
+The `inspect` package (`trace`/`untrace`) is delivered again since 2.3.0:
+the Link-92 mechanism was closed in 1.5.0 and the functions existed as a
+module, but no release between 1.6.0 and 2.3.0 placed the `inspect` row on
+the selected medium. It is delivered on the 2.3.0 and 2.4.0 product disks
+and loads by hand with `require`; see
 "Retired in 2.3.0: library packages load by hand; not supported from
 `INIT.L65`" below.
 
@@ -211,6 +339,64 @@ unattributed. This is an informative measurement, not a GC latency claim.
 
 These entries are closed. They are kept for provenance and are not current
 product limitations.
+
+### Retired in 2.4.0: a `defun` published inside a running form is destroyed
+
+Status: **defect shipped in 2.3.0; fixed in 2.4.0**
+
+In 2.3.0, a `defun` published from inside a running form (e.g. `eval` inside
+`dotimes`) is silently destroyed; the next call fails with
+`VM: BAD BYTECODE`; earlier definitions are intact. Workaround in 2.3.0:
+define functions at top level. The cleanup of the form's temporary code
+used the location of the last persistent publication and wiped that live
+object.
+
+2.4.0 fixes it: the cleanup wipes only the retiring temporary image's own
+code. On the 2.4.0 device session, `(dotimes (n 1) (eval '(defun f1 () 7)))`
+returned `NIL` and `(f1)` then returned 7.
+
+### Retired in 2.4.0: an error inside `eval` within a running form loses the session
+
+Status: **defect shipped in 2.3.0; fixed in 2.4.0**
+
+In 2.3.0, an error inside `eval` called from within a running form (e.g.
+inside `dotimes` or `let`) leaves the REPL without a prompt; reset required;
+nothing already defined is lost. The fast recovery path ran its rollback
+without first writing the journal, timed out and disabled every published
+Lisp call, including the prompt. A definition loop running past the 64-image
+cap inside a form is one instance.
+
+2.4.0 fixes it: recovery retires the form's temporary code exactly as a
+normal form does. On the 2.4.0 device session,
+`(let ((q 1)) (eval '(capzz)))` gave the exact
+`*** UNDEFINED FUNCTION: CAPZZ` at a live prompt and `(+ 4 5)` then returned
+9. RUN/STOP inside a running form was not tested on the device (see above).
+
+### Retired in 2.4.0: `compile-string` missing private compiler bridge
+
+Status: **inherited defect found after 2.3.0; fixed in 2.4.0 (Set A); confirmed on the physical Put-Kit development world, not re-run on the 2.4.0 medium**
+
+The documented form `(compile-string "(defun answer () 42)" "answer")`
+is affected by a missing private primitive lowering: the delivered source
+compiler calls the absent `%c2-control` function instead of primitive 66.
+On the accepted development world, a positive compilation fails with
+`UNDEFINED FUNCTION: %C2-CONTROL`; subsequent `(+ 4 5)` returns 9.
+Do not treat the presence of `compile-string`, or its successful rejection
+of invalid arguments, as evidence that compiling and saving works.
+
+The Definitions card carries the bridge correction and a separate anonymous
+helper relocation correction. Its acceptance must compile, publish, and call
+the result natively, including a later definition containing a lambda helper.
+Both corrections subsequently passed native host acceptance in
+[Definitions Set A](planning/definition-set-a-final-report.md), including
+compile/save/reload/call returning 7 and a later anonymous helper returning
+42. On 2026-09-22 the same positive paths passed on the physical Put-Kit
+world: first call 7, later helper 42, followed by SD readback of both new
+files and all 19 previous files unchanged. See the
+[current device report](planning/put-kit-device-report.md). This does not
+change the published 2.3.0 bytes. The failure description above records
+the predecessor. See the
+[prerequisite attribution](planning/definition-group-pricing-r2.md).
 
 ### Retired in 2.3.0: IDE minibuffer display
 

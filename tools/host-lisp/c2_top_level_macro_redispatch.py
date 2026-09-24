@@ -155,7 +155,7 @@ def candidate_runtime(value: dict[str, Any], *, commit: str | None = None) -> st
 def preload_text(
     value: dict[str, Any], *, compiler_override: str | None = None,
     product_runtime_override: str | None = None,
-    commission: bool = False,
+    commission: bool = False, install_product_bridges: bool = True,
 ) -> str:
     sources = value["sources"]
     commit = value["redispatch_first_red_commit"] if commission else None
@@ -178,13 +178,26 @@ def preload_text(
     parts.append("(defun %c2-compile-form (form) (%c1-compile-form form))")
     parts.append(runtime.split(marker, 1)[0])
     parts.extend(value["macro_preload"])
+    if install_product_bridges:
+        # The delivered dispatcher now consumes public equal, whose actual
+        # implementation consumes atom. Treewalk defuns are not VM directory
+        # entries: install the unchanged product bodies through the real LCC.
+        import v2_workbench_codemod as CODEMOD
+        bridge = (ROOT/'lib/stdlib-bytecode-bridges.lisp').read_text()
+        forms = [bridge[a:b] for a,b in CODEMOD._top_level_forms(bridge)
+                 if CODEMOD._form_atoms(bridge[a:b]) in
+                 (['defun', 'atom'], ['defun', 'equal'])]
+        require([CODEMOD._form_atoms(f)[1] for f in forms] == ['atom', 'equal'],
+                'product equal dependency population drift')
+        parts.extend('(lcc-install (%c1-compile-form (quote '+f+')) (quote '+
+                     CODEMOD._form_atoms(f)[1]+'))' for f in forms)
     return "\n".join(parts) + "\n"
 
 
 def run_actual_lcc(
     value: dict[str, Any], *, compiler_override: str | None = None,
     product_runtime_override: str | None = None,
-    commission: bool = False,
+    commission: bool = False, install_product_bridges: bool = True,
 ) -> list[dict[str, str]]:
     binary = ROOT / value["sources"]["actual_lcc_binary"]
     require(binary.is_file() and not binary.is_symlink(),
@@ -202,6 +215,7 @@ def run_actual_lcc(
                 value, compiler_override=compiler_override,
                 product_runtime_override=product_runtime_override,
                 commission=commission,
+                install_product_bridges=install_product_bridges,
             ),
             encoding="utf-8",
         )
@@ -409,6 +423,13 @@ def build_receipt(value: dict[str, Any]) -> dict[str, Any]:
     source_claim = validate_source(value, compiler, runtime)
     current = run_actual_lcc(value, product_runtime_override=runtime)
     validate_current_execution(value, current)
+    missing_bridges = run_actual_lcc(value, product_runtime_override=runtime,
+                                    install_product_bridges=False)
+    changed = [row for row, good in zip(missing_bridges, current) if row != good]
+    require(len(changed) == 1
+            and changed[0]['id'] == 'macro-generated-top-level-progn'
+            and changed[0]['observed'] == '!error:undefined-public-name',
+            'missing product bridge mutation did not fail at ordinary progn')
     # Live semantics above remain compulsory. The fixed 208-byte price and
     # sealed provenance below belong to the consumed historical runtime, not
     # to later direct-argument implementation changes.

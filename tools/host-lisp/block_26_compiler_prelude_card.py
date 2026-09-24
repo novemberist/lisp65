@@ -69,10 +69,12 @@ BUDGET_COMPARISON = ROOT / (
     "tests/bytecode/dialect-v2/evidence/dialect-v2-budget-comparison.json")
 METADATA_INDEX = ARCH / "v11-function-metadata-index.json"
 METADATA_RECEIPT = ARCH / "v11-function-metadata-contract-receipt.json"
-MEASURED = ARCH / "block-2.6-card4-compiler-prelude-domain-contract.json"
-RECEIPT = ARCH / "block-2.6-card4-compiler-prelude-receipt.json"
+HISTORICAL_MEASURED = ARCH / "block-2.6-card4-compiler-prelude-domain-contract.json"
+HISTORICAL_RECEIPT = ARCH / "block-2.6-card4-compiler-prelude-receipt.json"
+MEASURED = ARCH / "block-2.6-card4-live-successor-domain-contract.json"
+RECEIPT = ARCH / "block-2.6-card4-live-successor-receipt.json"
 METADATA_CLOSURE_ERA = "036b13e1778d81aee754fe75a679f9227908923e"
-REPORT = ROOT / "docs/planning/block-2.6-card4-compiler-prelude-report.md"
+REPORT = ROOT / "docs/planning/block-2.6-card4-live-successor-report.md"
 BASE_SUITE = ROOT / "config/c2-v200-public-plane/resident-interactive-stdlib-suite.json"
 DURABLE_CONTRACT = ROOT / "config/public-surface-domain-contract.json"
 PROMOTION_AUTHORIZATION = "441ca870"
@@ -628,6 +630,8 @@ def record() -> None:
     receipt = {
         "format": FORMAT, "recorded_on": "2026-09-04",
         "status": "PASS: BLOCK 2.6 CARD 4 COMPILER/PRELUDE GREEN",
+        "predecessor": bind(HISTORICAL_RECEIPT),
+        "claim_limit": "Live source/artifact successor; historical price and device evidence are unchanged.",
         "authority": authority(),
         "sources": {name: bind(path) for name, path in {
             "lcc": LCC, "prelude": PRELUDE, "prelude_macros": PRELUDE_MACROS,
@@ -728,6 +732,17 @@ def record() -> None:
           f"changed={len(delta)} mutations={len(mutations)}")
 
 
+def verify_successor_artifacts(value: dict[str, Any], artifacts: dict[str, Any]) -> None:
+    require(value.get("predecessor") == bind(HISTORICAL_RECEIPT),
+            "Card 4 historical predecessor binding drift")
+    require(value["successor_artifacts"] == artifacts,
+            "Card 4 successor artifact derivation drift")
+    require(value["successor_artifacts"]["manifest"] == bind(MANIFEST)
+            and value["successor_artifacts"]["blob"] == bind(BLOB)
+            and value["domain_contract"]["measurement"] == bind(MEASURED),
+            "Card 4 successor artifact binding drift")
+
+
 def validate(value: dict[str, Any]) -> None:
     require(value.get("format") == FORMAT
             and value.get("status") ==
@@ -741,12 +756,7 @@ def validate(value: dict[str, Any]) -> None:
         require(value["sources"][name] == bind(path),
                 f"Card 4 source binding drift: {name}")
     artifacts = materialize(comfort_source_ref=PROMOTION_AUTHORIZATION)
-    require(value["successor_artifacts"] == artifacts,
-            "Card 4 successor artifact derivation drift")
-    require(value["successor_artifacts"]["manifest"] == bind(MANIFEST)
-            and value["successor_artifacts"]["blob"] == bind(BLOB)
-            and value["domain_contract"]["measurement"] == bind(MEASURED),
-            "Card 4 successor artifact binding drift")
+    verify_successor_artifacts(value, artifacts)
     require(len(value["mutations_rejected"]) == 8
             and value["budget"] == {"WPLTO_runs": 0, "product_links": 0,
                                     "media_builds": 0, "device_contacts": 0},
@@ -792,7 +802,8 @@ def validate(value: dict[str, Any]) -> None:
 
 
 def check() -> None:
-    validate(load(RECEIPT))
+    from historical_price_artifacts import check as artifact_check
+    artifact_check(sys.modules[__name__])
     require(REPORT.is_file(), "Card 4 report absent")
     print("block-2.6-card4: CHECK PASS mutations=8 WPLTO=0 links=0 contacts=0")
 
@@ -845,7 +856,23 @@ def selftest() -> None:
     rejected = mutation_gate(texts)
     require(len(rejected) == 8, "Card 4 selftest mutation count drift")
     provenance = historical_follow_on_mutations()
-    print(f"block-2.6-card4: SELFTEST PASS mutations=8 historical-binding-mutations={len(provenance)}")
+    current = load(RECEIPT)
+    verify_successor_artifacts(current, current["successor_artifacts"])
+    historical = load(HISTORICAL_RECEIPT)
+    for field, replacement in (
+        ("successor_artifacts", historical["successor_artifacts"]),
+        ("predecessor", {}),
+        ("domain_contract", historical["domain_contract"]),
+    ):
+        changed = deepcopy(current)
+        changed[field] = replacement
+        try:
+            verify_successor_artifacts(changed, current["successor_artifacts"])
+        except CardError:
+            pass
+        else:
+            raise CardError(f"live successor accepted historical/missing {field}")
+    print(f"block-2.6-card4: SELFTEST PASS mutations=8 historical-binding-mutations={len(provenance)} live-binding-mutations=3")
 
 
 def main() -> int:

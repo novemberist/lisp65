@@ -1,0 +1,113 @@
+{
+  "ceiling_elf": {
+    "bytes": 662744,
+    "path": "build/nested-error-recovery-final-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "sha256": "66165507a8e5ad1d857afdd967f9056be2ce7bbccc332d5328e981398078b47b"
+  },
+  "ceilings": {
+    "c2_mapped_far_vm_code_load_converged": 0,
+    "gc_collect": 2,
+    "lisp_input_event": 0,
+    "vm_run_inner": 7
+  },
+  "exceedances": {
+    "vm_run_inner": {
+      "attribution": "Placement class, not new branch work: the function has 192 internal short branches (194 in 2.2.0/2.3.0) and moved from $467f (2.3.0) to $4bc4 as resident code before it grew during this cycle; its size fell from 6,051 to 5,941 bytes. Which of its branches cross a page depends only on that placement. 2.3.0 already shipped 4 against the 2.2.0 ceiling of 3 because the A7 gate evaluated only the 2.2.0 ELF. The dynamic cost of every placement in this cycle is contained in the whole-system lanes each card measured and accepted (for the release candidate: natural lanes 1.00096 / 1.00091 against the repair Final; the anchor typing lane 0.617x of Put-Kit), and the GC named costs are recorded per card. The 2.4.0 counts are the ceilings for every later world.",
+      "v2_2_0_ceiling": 3,
+      "v2_3_0_shipped": 4,
+      "v2_4_0": 7
+    }
+  },
+  "format": "lisp65-a7-hot-branch-ceilings-v240-v1",
+  "owners": {
+    "c2_mapped_far_vm_code_load_converged": {
+      "v2_2_0": {
+        "branches": 7,
+        "bytes": 199,
+        "start": "0x7a31"
+      },
+      "v2_3_0": {
+        "branches": 7,
+        "bytes": 199,
+        "start": "0x7a31"
+      },
+      "v2_4_0": {
+        "branches": 7,
+        "bytes": 199,
+        "start": "0x7a31"
+      }
+    },
+    "gc_collect": {
+      "v2_2_0": {
+        "branches": 69,
+        "bytes": 1489,
+        "start": "0x3b84"
+      },
+      "v2_3_0": {
+        "branches": 69,
+        "bytes": 1491,
+        "start": "0x3b55"
+      },
+      "v2_4_0": {
+        "branches": 69,
+        "bytes": 1491,
+        "start": "0x3c28"
+      }
+    },
+    "lisp_input_event": {
+      "v2_2_0": {
+        "branches": 5,
+        "bytes": 76,
+        "start": "0x7caf"
+      },
+      "v2_3_0": {
+        "branches": 5,
+        "bytes": 76,
+        "start": "0x7ceb"
+      },
+      "v2_4_0": {
+        "branches": 5,
+        "bytes": 76,
+        "start": "0x8455"
+      }
+    },
+    "vm_run_inner": {
+      "v2_2_0": {
+        "branches": 194,
+        "bytes": 6051,
+        "start": "0x46ac"
+      },
+      "v2_3_0": {
+        "branches": 194,
+        "bytes": 6051,
+        "start": "0x467f"
+      },
+      "v2_4_0": {
+        "branches": 192,
+        "bytes": 5941,
+        "start": "0x4bc4"
+      }
+    }
+  },
+  "predecessor": {
+    "authority": "config/c2-v220-public-build-authority.json",
+    "ceilings": {
+      "c2_mapped_far_vm_code_load_converged": 0,
+      "gc_collect": 6,
+      "lisp_input_event": 0,
+      "vm_run_inner": 3
+    },
+    "elf_sha256": "95d8d7df3f46ad2e6d60ffd3dc095ec4e99b0bba1b92ded01414252503f354ec"
+  },
+  "release": "2.4.0",
+  "rule": "Ratchet: later worlds are checked against the 2.4.0 counts with --elf; the 2.2.0 gate stays as its historical control.",
+  "shipped_2_3_0": {
+    "counts": {
+      "c2_mapped_far_vm_code_load_converged": 0,
+      "gc_collect": 0,
+      "lisp_input_event": 0,
+      "vm_run_inner": 4
+    },
+    "elf_sha256": "6a144e8aeebf94d26dba68d4ce72c44d3db8e4f6a4d733ce2a3f32ecf0ba7375"
+  }
+}

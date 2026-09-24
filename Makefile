@@ -1,3 +1,15 @@
+# Aggregated checks use a protected tree and a private generated Workbench.
+# Explicit production targets retain their ordinary output paths.
+ifeq ($(LISP65_SEALED_CHECK),)
+ifneq ($(filter check-source check-host %-check %-selftest,$(MAKECMDGOALS)),)
+LISP65_WRAP_CHECK := 1
+endif
+endif
+ifeq ($(LISP65_WRAP_CHECK),1)
+.PHONY: $(filter check-source check-host %-check %-selftest,$(MAKECMDGOALS))
+$(filter check-source check-host %-check %-selftest,$(MAKECMDGOALS)):
+	python3 -B tools/host-lisp/sealed_check_run.py --generated-tree build/bytecode/dialect-v2 -- $(MAKE) -k $@
+else
 # lisp65 — Build (llvm-mos)
 # make        -> build/lisp65-mega65.prg  (natives MEGA65-Target)
 # make prelude -> build/lisp65-mega65-prelude.prg (eingebettete M1-Prelude)
@@ -194,13 +206,16 @@ BYTECODE_P0_VECTOR_JSON := tests/bytecode/p0-golden-vectors.json
 BYTECODE_P0_C_VECTORS := build/bytecode-p0-vectors.h
 BYTECODE_P0_NATIVE_COMPILE_VECTORS := build/bytecode-p0-native-compile-vectors.h
 BYTECODE_P0_NATIVE_COMPILER_HOST := build/bytecode-p0-native-compiler-host
-EQUIVALENCE_HOST := build/equivalence/equivalence-check
+# Class-2 conversion: live equivalence hosts build outside build/equivalence/,
+# whose artifacts tracked receipts bind by SHA (see tools/host-lisp/equivalence_live_hosts.py).
+EQUIVALENCE_LIVE_DIR := build/equivalence-live
+EQUIVALENCE_HOST := $(EQUIVALENCE_LIVE_DIR)/equivalence-check
 DIALECT_V1_SOURCE_ROOT := build/equivalence/frozen-v1-f6527d25/source
 DIALECT_V1_SOURCE_MANIFEST := $(DIALECT_V1_SOURCE_ROOT)/export-manifest.json
 DIALECT_V1_EQUIVALENCE_HOST := build/equivalence/frozen-v1-f6527d25/equivalence-check
-DIALECT_V2_EQUIVALENCE_HOST := build/equivalence/dialect-v2-equivalence-check
+DIALECT_V2_EQUIVALENCE_HOST := $(EQUIVALENCE_LIVE_DIR)/dialect-v2-equivalence-check
 DIALECT_V1_EQUIVALENCE_BUILD := build/equivalence/frozen-v1-f6527d25/build-receipt.json
-DIALECT_V2_EQUIVALENCE_BUILD := build/equivalence/dialect-v2-build-receipt.json
+DIALECT_V2_EQUIVALENCE_BUILD := $(EQUIVALENCE_LIVE_DIR)/dialect-v2-build-receipt.json
 DIALECT_V2_PRELUDE_FIXTURE := tests/bytecode/dialect-v2/prelude-control/cases.json
 DIALECT_V2_LISTS_FIXTURE := tests/bytecode/dialect-v2/lists/cases.json
 DIALECT_V2_STRINGS_FIXTURE := tests/bytecode/dialect-v2/strings/cases.json
@@ -328,8 +343,8 @@ L65M_CONTRACT_HEADER := build/l65m-contract-cases.h
 L65M_NATIVE_LOADER_HOST := build/l65m-native-loader-host
 L65M_V2_PRODUCT_HEADER := build/l65m-v2-product-cases.h
 L65M_V2_PRODUCT_HOST := build/l65m-v2-product-host
-FASL_EMIT_CHECK_HOST := build/equivalence/fasl-emit-check
-FASL_EMIT_CHECK_ARTIFACT := build/equivalence/fasl-test.bin
+FASL_EMIT_CHECK_HOST := $(EQUIVALENCE_LIVE_DIR)/fasl-emit-check
+FASL_EMIT_CHECK_ARTIFACT := $(EQUIVALENCE_LIVE_DIR)/fasl-test.bin
 BYTECODE_IDE_LIB_PREFIX := build/bytecode/libs/ide
 BYTECODE_IDE_FULL_LIB_PREFIX := build/bytecode/libs/ide-full
 BYTECODE_IDE_EXTRA_LIB_PREFIX := build/bytecode/libs/idex
@@ -467,7 +482,9 @@ PRELUDE_COMPILE_CHECK_HOST := build/prelude-compile-check-host
 PRELUDE_LOAD_RUN_HOST := build/prelude-load-run-host
 OUTPUT_SMOKE_HOST := build/output-smoke-host
 EVAL_PRIMS_SMOKE_HOST := build/eval-prims-smoke-host
-READER_CONFORMANCE_HOST := build/reader-conformance-host
+# The era host build/reader-conformance-host is receipt-bound (Link 64); live
+# gates build and run the current-source host beside the live equivalence hosts.
+READER_CONFORMANCE_HOST := build/equivalence-live/reader-conformance-host
 READER_CONFORMANCE_ARENA_HOST := build/reader-conformance-arena-host
 READER_ROOT_GUARD_HOST := build/reader-root-guard-host
 SAVE_SEMANTICS_SLOTS ?= loadall l00 stdlib
@@ -3053,7 +3070,7 @@ eval-surface-contract-check: $(EQUIVALENCE_HOST)
 	python3 tools/host-lisp/eval_surface_contract.py --engine lisp-lcc --binary $(EQUIVALENCE_HOST) tests/bytecode/runtime/p0-eval-surface.json
 
 equivalence-check: $(READER_CONFORMANCE_HOST)
-	sh scripts/equivalence-check.sh
+	LISP65_EQUIVALENCE_LIVE_DIR=$(EQUIVALENCE_LIVE_DIR) sh scripts/equivalence-check.sh
 
 .PHONY: equivalence-completion-canary-selftest equivalence-completion-canary-check
 equivalence-completion-canary-selftest:
@@ -3061,7 +3078,7 @@ equivalence-completion-canary-selftest:
 
 equivalence-completion-canary-check: equivalence-completion-canary-selftest equivalence-check
 	python3 tools/host-lisp/equivalence_completion_canary.py check \
-		--receipt build/equivalence/equivalence-completion.json
+		--receipt $(EQUIVALENCE_LIVE_DIR)/equivalence-completion.json
 
 .PHONY: c2-product-session-host-check
 c2-product-session-host-check:
@@ -3272,7 +3289,7 @@ v11-repl-banner-vm-check: $(V11_REPL_BANNER_VM_HOST)
 	@status=0; ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
 		build/v11-repl-banner-vm-missing-f011 > build/v11-repl-banner-vm-missing-f011.log 2>&1 || status=$$?; \
 		test "$$status" = 1 && \
-		rg -q 'status=2 .*bad bytecode.*row=0' build/v11-repl-banner-vm-missing-f011.log && \
+		grep -Eq 'status=2 .*bad bytecode.*row=0' build/v11-repl-banner-vm-missing-f011.log && \
 		echo 'v11-repl-banner-vm: missing-F011 regression mutation rejected'
 
 $(FASL_EMIT_CHECK_HOST): scripts/fasl-emit-check-main.c lib/lcc.lisp lib/lcc-fasl.lisp src/eval.c src/vm.c src/mem.c src/symbol.c src/reader.c src/printer.c src/io.c src/interrupt.c src/screen.c | build
@@ -3287,6 +3304,7 @@ $(FASL_EMIT_CHECK_HOST): scripts/fasl-emit-check-main.c lib/lcc.lisp lib/lcc-fas
 		src/screen.c -o $@
 
 $(FASL_EMIT_CHECK_ARTIFACT): $(FASL_EMIT_CHECK_HOST) lib/lcc.lisp lib/lcc-fasl.lisp
+	@mkdir -p $(@D)
 	$(FASL_EMIT_CHECK_HOST) $@
 
 fasl-emit-check: $(FASL_EMIT_CHECK_ARTIFACT)
@@ -3311,9 +3329,12 @@ workbench-private-inline-composition-probe: v2-workbench-codemod
 	python3 tools/host-lisp/workbench_private_inline_probe.py selftest
 	python3 tools/host-lisp/workbench_private_inline_probe.py check
 
+# The historical report under build/reports/workbench is receipt-bound; the
+# live measurement writes its own successor report.
 gc-symbol-scan-timing-check:
 	python3 tools/host-lisp/gc_symbol_scan_timing.py \
-		--max-symbols 752 --baseline-symbols 720 --namepool 10208
+		--max-symbols 752 --baseline-symbols 720 --namepool 10208 \
+		--out build/reports/workbench-live/gc-symbol-scan-timing.json
 
 bytecode-p0-omission-contract-check:
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --omission-contract-selftest
@@ -3582,6 +3603,7 @@ READER_CONFORMANCE_CFLAGS := -std=c99 -Wall -Wextra -fsanitize=address,undefined
 READER_CONFORMANCE_SRCS := scripts/reader-conformance-main.c src/reader.c src/mem.c src/symbol.c src/interrupt.c
 
 $(READER_CONFORMANCE_HOST): $(READER_CONFORMANCE_SRCS) src/reader.h src/mem.h src/obj.h | build
+	@mkdir -p $(@D)
 	$(HOSTCC) $(READER_CONFORMANCE_CFLAGS) -DGC_ROOTS=128 $(READER_CONFORMANCE_SRCS) -o $@
 
 $(READER_CONFORMANCE_ARENA_HOST): $(READER_CONFORMANCE_SRCS) src/reader.h src/mem.h src/obj.h | build
@@ -3774,3 +3796,4 @@ build/demos:
 
 clean:
 	rm -rf build $(PRELUDE_GEN) $(LOAD_SMOKE_GEN) $(STDLIB_STRINGS_GEN) $(STDLIB_SEQUENCES_GEN) $(STDLIB_MATH_GEN) $(STDLIB_PLISTS_GEN) $(STDLIB_FORMAT_GEN) $(STDLIB_CONTROL_GEN) $(BYTECODE_VM_M65_OBJ) $(BYTECODE_P0_C_VECTORS) $(VM_SMOKE_HOST) $(VM_SMOKE_V2_HOST) $(OUTPUT_SMOKE_HOST) $(EVAL_PRIMS_SMOKE_HOST)
+endif

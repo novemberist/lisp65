@@ -88,6 +88,10 @@ enum {
     VM_DIRMISS, VM_STEPLIMIT, VM_ARITY, VM_NOTDESIGNATOR
 };
 extern uint8_t vm_status;
+#ifdef LISP65_C2_PRODUCT_CUT
+/* Resident transport seam; the allocator itself remains an overlay owner. */
+obj vm_buffer_from_stage(uint16_t length);
+#endif
 const char *vm_status_message(void);   /* kurz; mit LISP65_VM_DIAGNOSTICS inkl. PC/Opcode/Stack/Funktion */
 lisp65_error_code vm_status_error_code(uint8_t status);
 /* One VM_DIRMISS seam: status travels in vm_status and the already-live

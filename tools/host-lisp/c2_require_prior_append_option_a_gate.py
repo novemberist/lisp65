@@ -10,6 +10,7 @@ against product-identity-bound package media.
 from __future__ import annotations
 
 import json
+import ctypes
 import os
 from pathlib import Path
 import struct
@@ -28,6 +29,7 @@ import c2_defstruct_foundations_gate as FOUNDATION  # noqa: E402
 import c2_require_resolver_gate as RESOLVER  # noqa: E402
 import c2_v124_require_prior_append_h1 as H1  # noqa: E402
 import evidence_era as ERA  # noqa: E402
+import resolver_owner_gate as OWNER  # noqa: E402
 
 
 SOURCE_GATE = ROOT / "tools/host-lisp/c2_require_resolver_gate.py"
@@ -55,6 +57,24 @@ CURRENT_COMPILER_SUITE = FIXTURE / "compiler/p0-c2-compiler-tier.json"
 
 class OptionAError(RuntimeError):
     pass
+
+
+class CurrentResolverVM(R.ResolverVM):
+    """Live unary owner queries execute C; the historical adapter stays intact."""
+    owner = None
+
+    def _callprim(self, prim_id, argc, stack, pc=None, native_base=0, frame_slots=0):
+        if prim_id != 67 or argc != 1:
+            return super()._callprim(prim_id, argc, stack, pc, native_base, frame_slots)
+        args = self._custom_args(prim_id, argc, stack, pc)
+        if not B.is_fix(args[0]) or not 0 <= B.fixval(args[0]) <= 255:
+            raise B.VMError('TypeError', 'product owner selector byte domain')
+        if CurrentResolverVM.owner is None:
+            CurrentResolverVM.owner = OWNER.build(FIXTURE / 'owner-query')
+        native = CurrentResolverVM.owner
+        native.set_header(ctypes.create_string_buffer(bytes(self.live_plane.data[:28])))
+        value = native.c2_resolver_owner_part(B.fixval(args[0]))
+        return B.NIL if value == 65535 else B.mkfix(value)
 
 
 def require(value: bool, message: str) -> None:
@@ -361,7 +381,7 @@ def run_case(
     identities = {
         row["combined_crc32"]: row["name"] for row in index_rows
     }
-    vm = R.ResolverVM(bound, plane, data, locators)
+    vm = CurrentResolverVM(bound, plane, data, locators)
     trace = H1.ResolverTrace()
     vm.trace = trace
     result = vm.run(
@@ -533,7 +553,7 @@ def execute_mutation(
 
     media = medium.read_bytes()
     locators, _payloads = R.media_locators(media)
-    vm = R.ResolverVM(bound, plane, media, locators)
+    vm = CurrentResolverVM(bound, plane, media, locators)
     result = vm.run(
         bound.directory[bound.require_symbol],
         [bound.heap.intern("place")],

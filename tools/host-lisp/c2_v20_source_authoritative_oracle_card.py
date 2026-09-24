@@ -31,6 +31,72 @@ import c2_v20_map_tuple_fix_replacement_card as REPLACEMENT  # noqa: E402
 import c2_v20_source_authoritative_oracle as ORACLE  # noqa: E402
 
 
+class _OracleWithSuccessorRebind:
+    """The oracle module with the dated 2026-09-21 successor rebind applied.
+
+    The oracle module is bound to its sealing era by both dated rebinds and
+    cannot change.  Its validate() explains drift only through the
+    2026-08-14 source/driver rebind; the parked boot-time name index card
+    then added two phase wrappers, which moved the live wrapper population
+    and translation-unit count.  The successor rebind admits exactly those
+    two paths after proving the semantic projection unchanged.  This proxy
+    verifies that successor receipt fail-closed and validates a normalized
+    copy of the candidate, so every caller that reaches the oracle through
+    this module (this card, the replacement cards) keeps reading the sealed
+    historical values afterwards.  Everything else is delegated unchanged.
+    """
+
+    def __init__(self, module: Any) -> None:
+        self._module = module
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._module, name)
+
+    def validate(self, candidate: dict[str, Any]) -> None:
+        from copy import deepcopy
+        probe = deepcopy(candidate)
+        _apply_wrapper_population_rebind(probe, self._module)
+        self._module.validate(probe)
+
+
+def _apply_wrapper_population_rebind(value: dict[str, Any], module: Any) -> None:
+    import c2_v20_source_authoritative_oracle_rebind_20260921 as SUCCESSOR
+    successor = SUCCESSOR.load(SUCCESSOR.RECEIPT)
+    successor.pop("mutations_rejected", None)
+    SUCCESSOR.validate(successor, verify=True)
+    live = module.value()
+    historical = module.load(module.RECEIPT)
+    paths = [path for path in successor["change"]["allowed_paths"]
+             if not path.startswith("authority.")]
+
+    def population(candidate: dict[str, Any]) -> tuple[Any, ...]:
+        result = []
+        for path in paths:
+            cursor = candidate
+            for key in path.split("."):
+                cursor = cursor[key]
+            result.append(cursor)
+        return tuple(result)
+
+    # A dated rebind authorizes two exact populations, not arbitrary input
+    # values at these paths. Check the candidate before normalizing its copy.
+    observed = population(value)
+    module.require(all(type(item) is int for item in observed)
+                   and observed in (population(historical), population(live)),
+                   "oracle wrapper population is neither historical nor current")
+    for path in successor["change"]["allowed_paths"]:
+        if path.startswith("authority."):
+            continue
+        keys = path.split(".")
+        cursor_value, cursor_live = value, live
+        for key in keys[:-1]:
+            cursor_value = cursor_value[key]; cursor_live = cursor_live[key]
+        cursor_value[keys[-1]] = cursor_live[keys[-1]]
+
+
+ORACLE = _OracleWithSuccessorRebind(ORACLE)
+
+
 EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 PLAN = ROOT / "docs/planning/2.0-ownership-recharter-work-plan.md"
 BUILD = ROOT / "build/c2.3/v2.0-source-authoritative-oracle-card"
@@ -397,7 +463,33 @@ def selftest() -> None:
     value = preflight_value(); validate_preflight(value)
     require(len(preflight_mutations(value)) == 7,
             "source-oracle card selftest mutation drift")
-    print("2.0 source-oracle card: SELFTEST PASS preflight=7 card=unused")
+    from copy import deepcopy
+    historical = load(ORACLE.RECEIPT)
+    historical.pop("mutations_rejected", None)
+    live = ORACLE.value()
+    for candidate in (historical, live):
+        before = deepcopy(candidate)
+        ORACLE.validate(candidate)
+        require(candidate == before, "oracle proxy changed its input")
+    rejected = 0
+    for field, key, replacement in (
+            ("target_codegen", "translation_units", 999),
+            ("target_codegen", "translation_units", 1),
+            ("target_codegen", "translation_units", True),
+            ("target_codegen", "translation_units", 18.0),
+            ("target_codegen", "translation_units", live["target_codegen"]["translation_units"]),
+            ("symbol_ownership", "phase_wrappers", 999),
+            ("symbol_ownership", "phase_wrappers", live["source_gate"]["symbol_ownership"]["phase_wrappers"]),
+            ("timeout_pricing", "selected_frames", 63)):
+        candidate = deepcopy(historical)
+        parent = candidate["source_gate"] if field == "symbol_ownership" else candidate
+        parent[field][key] = replacement
+        try:
+            ORACLE.validate(candidate)
+        except ORACLE.OracleError:
+            rejected += 1
+    require(rejected == 8, "oracle proxy candidate mutation survived")
+    print("2.0 source-oracle card: SELFTEST PASS preflight=7 proxy=8 card=unused")
 
 
 def check() -> None:

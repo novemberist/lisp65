@@ -725,6 +725,9 @@ def main() -> int:
     action = sys.argv[1] if len(sys.argv) > 1 else ""
     require(action in {"record", "check", "selftest"},
             "usage: record|check|selftest")
+    if action != "record":
+        from historical_price_artifacts import check
+        return check(sys.modules[__name__])
     value = derive()
     if action == "record":
         RECEIPT.write_bytes(canonical(value))

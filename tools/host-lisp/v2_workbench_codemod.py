@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import sys
@@ -41,6 +42,7 @@ COMPILER_TIER_SOURCES = (
     "lib/dialect-v2/lcc-profile.lisp",
 )
 C2_RESIDENT_COMPILER_SEAM = (
+    "%c2-run-definition-group",
     "%c2-source-form",
     "%c2-source-forms",
     "%c2-compile-source",
@@ -485,7 +487,12 @@ def generate(closure_path: Path, output_root: Path) -> Path:
     compiler_functions: set[str] = set()
     for source in COMPILER_TIER_SOURCES:
         compiler_functions.update(Stdlib._defun_names([source]))
-    resident_keep = set(C2_RESIDENT_COMPILER_SEAM)
+    seam, prebuilt = _era_compiler_seam()
+    resident_keep = set(seam)
+    # The public compiler bridge is prebuilt runtime code, not a REPL form.
+    # Derive its private primitive lowering from the same kept population.
+    if prebuilt:
+        resolved["resident"]["prebuilt_primitive_functions"] = list(seam)
     resolved["resident"]["sources"] = [
         source for source in resolved["resident"]["sources"]
         if source not in COMPILER_TIER_SOURCES
@@ -495,7 +502,7 @@ def generate(closure_path: Path, output_root: Path) -> Path:
             name for name in resolved["resident"].get("functions", [])
             if name not in compiler_functions or name in resident_keep
         ],
-        C2_RESIDENT_COMPILER_SEAM,
+        seam,
     )
     resolved["resident"]["allow_omitted_defuns"] = [
         row for row in resolved["resident"].get("allow_omitted_defuns", [])
@@ -830,6 +837,68 @@ def _number_to_string_selftest(output_root: Path) -> int:
     return len(cases)
 
 
+def _era_compiler_seam() -> tuple[tuple[str, ...], bool]:
+    """The compiler seam of the selected source era, not always the live one.
+
+    A sealed historical replay (ERA.host_source_commit) reads that era's Lisp
+    sources, so the resident seam and its private-lowering declaration must be
+    the ones that era's codemod generated: the Set-A group runner and the
+    prebuilt-primitive lowering did not exist in earlier eras. Live generation
+    is unchanged.
+    """
+    era = ERA.host_source_commit()
+    if era is None:
+        return C2_RESIDENT_COMPILER_SEAM, True
+    import ast
+    blob = ERA.era_blob(era, 'tools/host-lisp/v2_workbench_codemod.py').decode()
+    tree = ast.parse(blob)
+    seams = [ast.literal_eval(node.value) for node in tree.body
+             if isinstance(node, ast.Assign)
+             and any(getattr(t, 'id', None) == 'C2_RESIDENT_COMPILER_SEAM' for t in node.targets)]
+    if len(seams) != 1:
+        raise CodemodError('era compiler seam is not uniquely declared')
+    return tuple(seams[0]), '"prebuilt_primitive_functions"' in blob
+
+
+def _compiler_bridge_selftest(output: Path) -> None:
+    """Consume the generated suite's private-lowering declaration end to end."""
+    receipt = json.loads((output / "codemod-receipt.json").read_text())
+    record = next(row for row in receipt["artifacts"] if row["id"] == "resident")
+    suite = Stdlib._read_suite(ROOT / record["output_suite"])
+    if suite.get("prebuilt_primitive_functions") != list(C2_RESIDENT_COMPILER_SEAM):
+        raise CodemodError("compiler bridge lowering population drift")
+    functions, forms, macros, _inliner = Stdlib._suite_functions_and_forms(suite)
+    names = list(C2_RESIDENT_COMPILER_SEAM)
+    if not set(names).issubset(functions):
+        raise CodemodError("compiler bridge missing from generated resident")
+    def compiled(population):
+        return Stdlib._compile_function_objects(
+            names, forms, Stdlib.C.prepare_heap([]), macro_names=macros,
+            strict_arity=True, abi_profile=suite["abi_profile"],
+            prebuilt_primitive_functions=population,
+        )[1]
+    before, after = compiled(()), compiled(names)
+    changed = {name for name in names if before[name].payload != after[name].payload}
+    expected = {"%c2-source-form", "%c2-source-forms", "%c2-compile-source", "%c2-compile-save",
+                "%c2-run-definition-group"}
+    if changed != expected:
+        raise CodemodError("compiler bridge old-lowering mutation population drift")
+    def size(code):
+        return 7 + 2 * len(code.littab) + len(code.payload)
+    # Keep the original four-function bridge price as its own regression.
+    # The group runner is a new consumer, not a rewrite of that witness.
+    if sum(size(after[n]) - size(before[n]) for n in names
+           if n != "%c2-run-definition-group") != -5:
+        raise CodemodError("compiler bridge price drift")
+    for population in ("all", ["not-a-bridge-function"]):
+        try:
+            compiled(population)
+        except Stdlib.StdlibCheckError:
+            pass
+        else:
+            raise CodemodError("invalid compiler bridge population accepted")
+
+
 def selftest() -> None:
     positive = [dict(name=n, expect_vm_error='TypeError') for n in
                 ('append-dotted-tail', 'quasiquote-dotted-splice')]
@@ -900,7 +969,7 @@ def selftest() -> None:
 
     (ROOT / "build").mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(
-        prefix="v2-workbench-codemod-", dir=ROOT / "build"
+        prefix="v2-workbench-codemod-", dir=os.environ.get('LISP65_CHECK_SCRATCH_ROOT', ROOT / "build")
     ) as raw:
         output = Path(raw) / "out"
         generate(DEFAULT_CLOSURE, output)
@@ -916,6 +985,7 @@ def selftest() -> None:
         if first != second:
             raise CodemodError("generation is not deterministic")
         semantic_cases = _number_to_string_selftest(output)
+        _compiler_bridge_selftest(output)
     if semantic_cases != 15:
         raise CodemodError("number->string semantic case count drift")
 

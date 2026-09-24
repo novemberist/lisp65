@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 from collections import Counter
-from contextlib import nullcontext
+from contextlib import nullcontext, contextmanager
+import ast
 import hashlib
 import json
 from pathlib import Path
@@ -482,6 +483,34 @@ def selftest() -> None:
     require(len(mutations) == 3, "comfort selftest mutation count drift")
 
 
+@contextmanager
+def historical_workbench(commit):
+    """The old generated suite must use its own compiler-seam population."""
+    import v2_workbench_codemod as C
+    tree = ast.parse(ERA.era_blob(commit, 'tools/host-lisp/v2_workbench_codemod.py'))
+    values = [ast.literal_eval(n.value) for n in tree.body
+              if isinstance(n, ast.Assign) and any(
+                  isinstance(t, ast.Name) and t.id == 'C2_RESIDENT_COMPILER_SEAM'
+                  for t in n.targets)]
+    require(len(values) == 1, 'historical compiler-seam authority absent')
+    saved = C.C2_RESIDENT_COMPILER_SEAM
+    C.C2_RESIDENT_COMPILER_SEAM = values[0]
+    try:
+        with ERA.generated_workbench_world(commit) as reads:
+            present = set(C.Stdlib._defun_names([C.EVAL_RUNTIME, C.LCC_PROFILE]))
+            require(set(values[0]) <= present, 'historical seam lacks an implementation')
+            try:
+                require(set(values[0]) | {'%c2-run-definition-group'} <= present,
+                        'live group helper leaked into the historical compiler seam')
+            except ComfortError:
+                pass
+            else:
+                raise ComfortError('old live-population mutation survived')
+            yield reads
+    finally:
+        C.C2_RESIDENT_COMPILER_SEAM = saved
+
+
 def runtime_successor():
     """Keep the sealed 7,480-step claim, execute and attribute its live successor."""
     original = B.P0VM
@@ -497,7 +526,7 @@ def runtime_successor():
     worlds = {}
     try:
         B.P0VM = VM
-        for label, context in [('historical', ERA.generated_workbench_world('520352a6')),
+        for label, context in [('historical', historical_workbench('520352a6')),
                                ('live', nullcontext())]:
             counts.clear()
             with context:

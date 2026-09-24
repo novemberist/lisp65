@@ -170,5 +170,7 @@ def run():
            'nesting_paths':paths,'abort_mutation_paths':mutant,
            'attribution_scope_acceptance_DWX':'not claimed by this proof'}
     C.require(before==[C.bind(C.ELF),C.bind(C.PRG)],'read-only proof changed pair')
-    OUT.write_bytes(C.canonical(value));print(json.dumps({k:value[k] for k in ['text_reserve','BSS_record_reserve','cold_bytes','record_owner']},indent=2))
+    from check_result_receipt import verify
+    verify(OUT, value)
+    print(json.dumps({k:value[k] for k in ['text_reserve','BSS_record_reserve','cold_bytes','record_owner']},indent=2))
 if __name__=='__main__':run()

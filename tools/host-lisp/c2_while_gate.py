@@ -22,6 +22,7 @@ if str(HOST) not in sys.path:
 import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_compiler as C  # noqa: E402
 import bytecode_p0_stdlib as STD  # noqa: E402
+import equivalence_live_hosts as LIVE
 
 
 CONTRACT = ROOT / "config/c2-while-contract.json"
@@ -35,11 +36,29 @@ MIGRATION = ROOT / "config/dialect-migration-contract.json"
 LEDGER = ROOT / "config/bytecode-abi-ledger.json"
 TIER_TOOL = ROOT / "tools/host-lisp/c2_product_compiler_tier.py"
 GC_FIXTURE = ROOT / "tests/equivalence/while-gc-forms.lisp"
-EQUIVALENCE = ROOT / "build/equivalence/equivalence-check"
-BUILD = ROOT / "build/post-promotion/phase-v/while/gate"
+EQUIVALENCE = LIVE.V1
+# The era directory holds the artifacts the historical four-view receipt and
+# ten further tracked receipts bind; sealed runs mount them read-only. A
+# --check run is a running oracle (census class 2): it regenerates its
+# compiler tier, carrier and boundary files in a separate live directory and
+# never writes the era directory (2026-09-24 conversion for the 2.4.0
+# Before-Ship; facts, expectations and mutations unchanged).
+ERA_BUILD = ROOT / "build/post-promotion/phase-v/while/gate"
+LIVE_BUILD = ROOT / "build/post-promotion/phase-v/while-live/gate"
+BUILD = ERA_BUILD
 TIER_SUITE = BUILD / "compiler-tier/suite.json"
 TIER_RECEIPT = BUILD / "compiler-tier/tier-generation.json"
 CARRIER_PREFIX = BUILD / "carrier/lcc"
+
+
+def select_output_root(check: bool) -> Path:
+    """Bind every generated output of this run to one owner directory."""
+    global BUILD, TIER_SUITE, TIER_RECEIPT, CARRIER_PREFIX
+    BUILD = LIVE_BUILD if check else ERA_BUILD
+    TIER_SUITE = BUILD / "compiler-tier/suite.json"
+    TIER_RECEIPT = BUILD / "compiler-tier/tier-generation.json"
+    CARRIER_PREFIX = BUILD / "carrier/lcc"
+    return BUILD
 RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.2-v2-while-four-view-receipt.json"
@@ -624,7 +643,7 @@ def native_equivalence_proof() -> dict[str, Any]:
         lcc_rel8_results == ["127", "!error", "128", "!error"],
         f"device LCC signed rel8 outcome drift: {lcc_rel8_results}",
     )
-    completion = ROOT / "build/equivalence/equivalence-completion.json"
+    completion = LIVE.COMPLETION
     require(completion.is_file(), "equivalence completion canary absent")
     return {
         "status": "passed-treewalk-native-compiler-device-LCC-parity",
@@ -815,11 +834,13 @@ def receipt_target(check: bool, candidate: Path) -> Path:
     if check:
         require(candidate.resolve().is_relative_to((ROOT / "build").resolve()),
                 "while check cannot write a registered receipt")
+        require(not candidate.resolve().is_relative_to(ERA_BUILD.resolve()),
+                "while check cannot write the sealed era directory")
     return candidate
 
 
 def output_selftest() -> None:
-    require(receipt_target(True, BUILD / "four-view-check.json") == BUILD / "four-view-check.json",
+    require(receipt_target(True, LIVE_BUILD / "four-view-check.json") == LIVE_BUILD / "four-view-check.json",
             "while check output owner drift")
     for candidate in (RECEIPT, ROOT / "build" / ".." / "tests" / "forbidden.json"):
         try:
@@ -829,6 +850,15 @@ def output_selftest() -> None:
                     "check-writer mutation failed outside output guard")
         else:
             raise AssertionError("check-writer mutation survived")
+    for candidate in (ERA_BUILD / "four-view-check.json",
+                      ERA_BUILD / "carrier/lcc.manifest.json"):
+        try:
+            receipt_target(True, candidate)
+        except Exception as error:
+            require("while check cannot write the sealed era directory" in str(error),
+                    "era-writer mutation failed outside output guard")
+        else:
+            raise AssertionError("era-writer mutation survived")
 
 
 def main() -> int:
@@ -836,6 +866,7 @@ def main() -> int:
     check = "--check" in sys.argv[1:]
     try:
         output_selftest()
+        select_output_root(check)
         protected = sha(RECEIPT) if check else None
         bundle = source_bundle()
         source = validate_sources(bundle)

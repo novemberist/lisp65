@@ -144,17 +144,15 @@
         (%setf-register-abort))))
 
 (defun %defstruct-expansion (name slots)
-  (cons 'progn
-        (cons (list '%setf-register-begin)
+  (list 'progn
+        (list '%setf-register-begin)
+        (cons 'progn
+              (cons (list 'quote '%c2-definition-group)
               (cons (%defstruct-constructor-form name slots)
                     (cons (%defstruct-predicate-form name)
                           (cons (%defstruct-copy-form name)
-                                (append
-                                 (%defstruct-slot-forms
-                                  name slots slots 1)
-                                 (list
-                                  (%defstruct-register-forms
-                                   name slots)))))))))
+                                (%defstruct-slot-forms name slots slots 1))))))
+        (%defstruct-register-forms name slots)))
 
 (defmacro defstruct (name &rest slots)
   (if (if (symbolp name)

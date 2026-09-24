@@ -17,6 +17,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import c2_append_phase_plan_gate as APPEND_GATE  # noqa: E402
+import symbol_layout_manifest as SYMBOL_LAYOUT
 
 
 MATRIX = ROOT / (
@@ -48,8 +49,8 @@ EXPECTED = {
     PRODUCT: "7d568ceb7edab95a237ff3079fcf689768373a9ea48a5a43f355f6275ddc5df8",
     ELF: "306ba2aca61bbd2b924f3b52fd03fbbd9db95330f9c81e1190329abc147bf950",
 }
-MAX_SYM = 752
-NAMEPOOL = 10208
+MAX_SYM = SYMBOL_LAYOUT.historical_values()['MAX_SYM']
+NAMEPOOL = SYMBOL_LAYOUT.historical_values()['NAMEPOOL']
 TOO_MANY_SYMBOLS = 34
 
 
@@ -252,8 +253,8 @@ def build_receipt() -> dict[str, Any]:
     for path, expected in EXPECTED.items():
         require(path.is_file() and sha(path) == expected,
                 f"immutable Link-57 input drift: {path}")
-    profile = PROFILE.read_text(encoding="utf-8")
-    require("-DNAMEPOOL=10208" in profile and "-DMAX_SYM=752" in profile,
+    profile = SYMBOL_LAYOUT.historical_workbench()
+    require(f"-DNAMEPOOL={NAMEPOOL}" in profile and f"-DMAX_SYM={MAX_SYM}" in profile,
             "product symbol-capacity authority drift")
     errors = json.loads(ERROR_TEXTS.read_text(encoding="utf-8"))
     error = next(row for row in errors["entries"]
@@ -290,7 +291,7 @@ def build_receipt() -> dict[str, Any]:
             "link57_structural_receipt": bind(STRUCTURAL),
             "link57_product": bind(PRODUCT),
             "link57_elf": bind(ELF),
-            "product_profile": bind(PROFILE),
+            "product_profile": SYMBOL_LAYOUT.historical_workbench_binding(),
             "symbol_allocator": bind(SYMBOL),
             "append_runtime": bind(RUNTIME),
             "error_codes": bind(ERROR_CODES),

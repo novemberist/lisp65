@@ -74,6 +74,33 @@
 #define C2_APPEND_FLAG_REBUILD 1u
 #define C2_APPEND_FLAG_TRANSIENT 0x80u
 #define C2_APPEND_BEGIN_OK 1u
+#define C2_APPEND_BEGIN_CAPACITY 2u
+/* Private pre-stage cause in the owned append scratch, not a decoder status.
+ * It is consumed before releasing scratch; loader callers still return bool. */
+#define C2_APPEND_CAPACITY_CAUSE 0xfeu
+/* Values are supplied by the same definitions consumed by reservation and
+ * export. The named, sized data object belongs to ordinary text: the product
+ * rodata arena has no spare bytes. Selector order is the private Prim-67 ABI. */
+#define C2_OWNER_PARTS(value) ((value) & 255u), ((value) >> 8)
+static const uint16_t c2_resolver_owner_parts[]
+    __attribute__((section(".text.c2_resolver_owner_data"), used)) = {
+    C2_OWNER_PARTS(LISP65_C2_BANK2_CODE_LIMIT),
+    C2_OWNER_PARTS(C2D_IMAGE_CAP),
+    C2_OWNER_PARTS(C2D_ENTRY_CAP),
+    C2_OWNER_PARTS(C2D_RESOLUTION_CAP),
+    C2_OWNER_PARTS(C2D_ROOT_CAP),
+    C2_OWNER_PARTS(C2D_MAX_TRANSIENT_DEPTH),
+    C2_OWNER_PARTS(C2D_HANDLE_CAP),
+    C2_OWNER_PARTS(C2_EXPORT_PLAN_LIMIT - C2_EXPORT_JOURNAL_BASE)
+};
+#undef C2_OWNER_PARTS
+static uint8_t c2_resolver_header_capacities(void);
+uint16_t c2_resolver_owner_part(uint8_t query) {
+    if (query == 16u) return c2_resolver_header_capacities();
+    if (query >= sizeof(c2_resolver_owner_parts) / sizeof(c2_resolver_owner_parts[0]))
+        return 0xffffu;
+    return c2_resolver_owner_parts[query];
+}
 static inline void c2_header_watermark(uint8_t header[48], uint16_t value);
 #endif
 #define C2_APPEND_SECTION(name) __attribute__((noinline, section(".lisp65_rt_c2append_" name)))
@@ -436,6 +463,26 @@ uint8_t C2_PHYSICAL_READ_CONVERGED_IMPL(
 static uint16_t c2_u16(const uint8_t *p) {
     return (uint16_t)p[0] | (uint16_t)p[1] << 8;
 }
+#ifdef LISP65_C2_NESTED_APPEND_V5
+/* Same capacity/count domain as the Lisp resolver, from native owners.
+ * Header offsets and the six immutable images belong to the C2D-v6 format.
+ * Use the existing owner table; do not grow ordinary rodata. */
+static uint8_t c2_resolver_header_capacities(void) {
+    uint8_t h[28];
+    if (!c2_stream_c2d_read(0u, h, sizeof h)) return 0u;
+    /* Capacity bytes equal, count <= capacity, compared bytewise; the same
+     * four owners in selector order as the table (exhausted per count). */
+#define FIELD(at, cap) (h[(at)+2] == ((cap)&255u) && h[(at)+3] == ((cap)>>8) \
+    && (h[(at)+1] < ((cap)>>8) || (h[(at)+1] == ((cap)>>8) && h[at] <= ((cap)&255u))))
+    if (!FIELD(12, C2D_IMAGE_CAP) || !FIELD(16, C2D_ENTRY_CAP)
+        || !FIELD(20, C2D_RESOLUTION_CAP) || !FIELD(24, C2D_ROOT_CAP)) return 0u;
+#undef FIELD
+    return c2_u16(h + 10) != 0u
+        && c2_u16(h + 12) >= 6u
+        && c2_u16(h + 8) >= C2D_ENTRY_CAP
+        && c2_u16(h + 8) <= C2D_HANDLE_CAP;
+}
+#endif
 static uint32_t c2_u24(const uint8_t *p) {
     return (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16;
 }
@@ -881,6 +928,67 @@ static C2_KERNAL_RESIDENT uint8_t c2_append_run_rollback_plan(void *context) {
 
 #endif
 
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+/* Transient boot-name-index owner: the tail of the Bank-5 free region behind
+ * the three resident symbol tables.  The two boot phases own its contents; the
+ * resident side owns the ten-byte resume header, because both phases read and
+ * write it and neither slice has the room for its own copy -- the header seam
+ * is therefore paid once here instead of twice inside the slices.
+ *
+ * Invalidation is required at the end of the boot publication AND on abort.
+ * After a rollback a deterministic retry re-creates the same names in the same
+ * order at the same indices, so a stale index can be accidentally right; it
+ * only breaks when something is interned between the abort and the retry --
+ * which is exactly what recovery does.
+ *
+ * The owner's validity extends past the decoder: the export publication that
+ * follows it resolves its plan rows through the same index.  The resume header
+ * is the only carrier of that permission, and the boot decoder is the only
+ * writer that can make it say DONE/built/drained, so appends, `require` and
+ * interactive interning -- which never enter the collecting walk -- always meet
+ * a zero header and take the unchanged linear path. */
+#define LISP65_C2_BNX_BANK 5u
+#define LISP65_C2_BNX_INDEX 0xde80u
+#define LISP65_C2_BNX_SLOTS 1024u
+/* Probe bound for the read-only publication lookup.  Any bound is safe: an
+ * exhausted chain is a miss and a miss is the linear path.  255 is above every
+ * cluster this owner carries at its measured load, and it keeps the counter a
+ * single byte. */
+#define LISP65_C2_BNX_PROBE_MAX 255u
+#define LISP65_C2_BNX_HEAD 0xfe80u
+#define LISP65_C2_BNX_HEAD_BYTES 10u
+#define LISP65_C2_BNX_DONE 0xffffu
+/* src/c2_platform_dma.c owns the only exported read seam for this owner; the
+ * mapped facade it wraps is static there, beside the symbol-table readers.
+ *
+ * The head reader is called by the two slices only, never by the resident
+ * driver, and it reaches the seam in ordinary text.  It therefore lives in
+ * ordinary text as well: code in the E000 window may leave the window only
+ * through the fixed host-facade vectors, and the fixed-facade gate rejects
+ * any other low edge (the third Seed linked `jmp` from the window into the
+ * seam).  The writer and the invalidation stay resident: they leave the
+ * window through `c2_facade_c2_dma`, which is such a vector. */
+uint8_t c2_boot_name_index_read(uint16_t offset, uint8_t *destination,
+                                uint8_t length);
+__attribute__((noinline, used))
+void c2_boot_name_index_head_get(uint8_t *head) {
+    (void)c2_boot_name_index_read(LISP65_C2_BNX_HEAD, head,
+                                  LISP65_C2_BNX_HEAD_BYTES);
+}
+__attribute__((noinline, used))
+C2_KERNAL_RESIDENT void c2_boot_name_index_head_put(const uint8_t *head) {
+    c2_facade_c2_dma((uint16_t)(uintptr_t)head, 0u,
+                     LISP65_C2_BNX_HEAD, LISP65_C2_BNX_BANK,
+                     LISP65_C2_BNX_HEAD_BYTES);
+}
+__attribute__((noinline, used))
+C2_KERNAL_RESIDENT void c2_boot_name_index_invalidate(void) {
+    uint8_t zero[LISP65_C2_BNX_HEAD_BYTES]; uint8_t i;
+    for (i = 0; i < LISP65_C2_BNX_HEAD_BYTES; ++i) zero[i] = 0u;
+    c2_boot_name_index_head_put(zero);
+}
+#endif
+
 /* Execute each proven logical decoder phase through one authenticated
  * transport.  Link 24's cursor split paid catalog/record/payload verification
  * more than 21,000 times during one boot; whole-phase residents preserve the
@@ -937,7 +1045,33 @@ static C2_KERNAL_RESIDENT uint8_t c2_decode_from(c2_stream_context *stream, uint
     if (first <= 7u && !c2_overlay_call(LISP65_C2_PHASE_07_SLOT, stream)) return 0;
     if (first <= 8u && !c2_overlay_call(LISP65_C2_PHASE_08_SLOT, stream)) return 0;
     if (first <= 9u && !c2_overlay_call(LISP65_C2_PHASE_09_SLOT, stream)) return 0;
-    if (first <= 10u && !c2_overlay_call(LISP65_C2_PHASE_10_SLOT, stream)) return 0;
+    if (first <= 10u) {
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+        /* Boot only: the collecting phase records name coordinates into the
+         * transient Bank-5 queue and the resolving phase drains it through the
+         * index.  More than one batch of pending names switches back to
+         * collecting, so the two phases alternate until the resolving phase
+         * leaves phase 10.  Every session append, every `require` and every
+         * interactive interning keeps the unchanged phase-10 path below. */
+        if (!stream->image_first) {
+            if (stream->phase != 10u) return 0;
+            c2_boot_name_index_invalidate();
+            while (stream->phase == 10u) {
+                if (!c2_overlay_call(LISP65_C2_PHASE_10A_SLOT, stream)
+                    || !c2_overlay_call(LISP65_C2_PHASE_10B_SLOT, stream)) {
+                    c2_boot_name_index_invalidate();
+                    return 0;
+                }
+            }
+            /* No invalidation here: the owner stays valid across this return
+             * so the export publication can resolve over it.  Every path out
+             * of the window -- phases 11/12 failing (c2_product_boot),
+             * the publication itself (c2_publish_exports_from) and the
+             * non-local abort (c2_product_abort_recover) -- invalidates. */
+        } else
+#endif
+        if (!c2_overlay_call(LISP65_C2_PHASE_10_SLOT, stream)) return 0;
+    }
     if (first <= 11u
 #ifdef LISP65_C2_PHASE11_SPLIT
         && (!c2_overlay_call(LISP65_C2_PHASE_11A_SLOT, stream)
@@ -1185,7 +1319,15 @@ uint8_t c2_product_boot(void) {
     c2_stream_init(&c2_runtime, (uint32_t)LISP65_C2_PRODUCT_SHELF_BYTES,
                    LISP65_C2D_BYTES);
     c2_decode_active = &c2_runtime;
-    if (!c2_decode_from(&c2_runtime, 0u)) return 0;
+    if (!c2_decode_from(&c2_runtime, 0u)) {
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+        /* Phases 11 and 12 run after the collecting/resolving window and can
+         * fail with the owner still valid.  Boot then never reaches the
+         * publication, so this is that window's only invalidation site. */
+        c2_boot_name_index_invalidate();
+#endif
+        return 0;
+    }
     c2_pending_roots = c2_runtime.c2_root_count;
     c2_committed_roots = c2_runtime.c2_root_count;
     c2_decode_active = &c2_runtime;
@@ -1942,12 +2084,19 @@ uint8_t c2_append_reserve_persistent_bounds_phase(void *opaque) {
     w->new_entries = (uint16_t)(w->old_entries + w->entries);
     w->new_res = (uint16_t)(w->old_res + w->literals);
     w->new_roots = (uint16_t)(w->old_roots + w->roots);
-    if (w->new_images > 64u || w->new_entries > high_entries
-        || w->new_res > high_res || w->new_roots > high_roots)
+    if (w->new_images > C2D_IMAGE_CAP - C2AW_FRONT_DEPTH(w)
+        || w->new_entries > high_entries
+        || w->new_res > high_res || w->new_roots > high_roots) {
+        w->append.error = C2_APPEND_CAPACITY_CAUSE;
         return C2_STREAM_ERR_C2D;
+    }
     w->attic = c2_attic_watermark();
-    if (w->attic == 0xffffffffUL || w->attic + w->length > high_attic)
+    if (w->attic == 0xffffffffUL)
         return C2_STREAM_ERR_STATE;
+    if (w->attic + w->length > high_attic) {
+        w->append.error = C2_APPEND_CAPACITY_CAUSE;
+        return C2_STREAM_ERR_C2D;
+    }
     C2AW_RESERVE_MARK(w) = C2_RESERVE_PERSISTENT_MARK;
     return C2_STREAM_OK;
 }
@@ -1967,8 +2116,10 @@ uint8_t c2_append_reserve_persistent_code_phase(void *opaque) {
         || C2AW_RESERVE_MARK(w) != C2_RESERVE_PERSISTENT_MARK)
         return C2_STREAM_ERR_STATE;
     code_low = c2_u32(w->record + 12); code_high = c2_u32(w->record + 16);
-    if (code_low + w->code_len > code_high)
+    if (code_low + w->code_len > code_high) {
+        w->append.error = C2_APPEND_CAPACITY_CAUSE;
         return C2_STREAM_ERR_C2D;
+    }
     c2_record_u16(w->record + 28, (uint16_t)code_low);
     C2AW_RESERVE_MARK(w) = 0u;
     return C2_STREAM_OK;
@@ -2338,6 +2489,14 @@ uint8_t c2_append_rollback_prepare_phase(void *opaque) {
      * handle/code fronts; unreachable cold scratch and Bank-2 bytes need no
      * post-READY source reconstruction or wipe. */
     w->attic = 0u; w->length = 0u;
+    /* The retirement wipe covers the retiring transient image's own
+     * published code span (row bytes 18..19 chip base, 21..22 length), not
+     * the span left in phase scratch by the preceding persistent
+     * publication.  Byte copies of the two little-endian fields are the
+     * smallest measured form. */
+    w->record[28] = row[18]; w->record[29] = row[19];
+    ((uint8_t *)&w->code_len)[0] = row[21];
+    ((uint8_t *)&w->code_len)[1] = row[22];
 #else
     w->attic = c2_u24(row + 18);
     w->length = (uint16_t)(c2_u24(row + 23) + c2_u16(row + 26)
@@ -2943,6 +3102,42 @@ C2TR_BODY_USED C2_APPEND_SECTION("publish_plan_scan") uint8_t c2_append_publish_
 C2TR_DEFINE_PHASE_WRAPPER(c2_append_publish_plan_scan_phase,
                           publish_plan_scan, 2)
 
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+/* Put-Kit experiment: owner live only during boot publication.
+ * The caller's indexed frontier is local, not a second persistent truth.
+ * Any incomplete owner falls back to the existing linear interner. */
+extern uint16_t v2_bnx_hash(const char *name);
+extern obj v2_bnx_find(const char *name, uint16_t hash, uint16_t *slot);
+extern void v2_bnx_put(uint16_t slot, uint16_t word);
+extern void v2_bnx_catch_up(uint16_t *indexed);
+extern obj sym_create(const char *name);
+#define C2_PUBLISH_BNX_LIVE(head) \
+    ((head)[8] == 1u && (head)[9] == 0u \
+     && c2_u16(head) == LISP65_C2_BNX_DONE && c2_u16((head) + 4) == 0u \
+     && c2_u16((head) + 6) <= sym_count())
+C2_APPEND_SECTION("publish_plan_resolve")
+static obj c2_publish_bnx_lookup(const uint8_t *row, uint16_t *indexed) {
+    char name[LISP65_SYMBOL_NAME_BUFFER];
+    uint16_t h, slot; obj symbol;
+    uint8_t length = row[3];
+    if (*indexed == 0xffffu || !length || length > LISP65_SYMBOL_NAME_MAX
+        || !c2_stream_shelf_read(c2_u24(row) + 2u, name, length)) return NIL;
+    name[length] = 0;
+    v2_bnx_catch_up(indexed);
+    if (*indexed != sym_count()) return NIL;
+    h = v2_bnx_hash(name);
+    symbol = v2_bnx_find(name, h, &slot);
+    if (symbol != NIL) return symbol;
+    if (slot == 0xffffu) { *indexed = 0xffffu; return NIL; }
+    symbol = sym_create(name);
+    if (symbol == NIL || mem_oom) return NIL;
+    v2_bnx_put(slot, (uint16_t)((SYMI_IDX(symbol) + 1u)
+        | (uint16_t)(h >> 10 & 0x3fu) << 10));
+    *indexed = sym_count();
+    return symbol;
+}
+#endif
+
 #if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
 #define c2_append_publish_plan_resolve_phase c2tr_publish_plan_resolve_body
 #endif
@@ -2951,10 +3146,20 @@ C2TR_BODY_USED C2_APPEND_SECTION("publish_plan_resolve") uint8_t c2_append_publi
     C2_INSTALL_TRACE_STAMP_SLOT(LISP65_C2_APPEND_PUBLISH_PLAN_RESOLVE_SLOT);
     c2_append_state *w = opaque; uint8_t row[8];
     uint16_t i, count, symbol, target; uint8_t length; uint32_t at;
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+    uint8_t head[LISP65_C2_BNX_HEAD_BYTES], live;
+    uint16_t indexed;
+#endif
     if (!w || C2AW_PLAN_MARK(w) != C2_EXPORT_PLAN_MARK)
         return C2_STREAM_ERR_STATE;
     count = c2_u16(w->meta + 22);
     if (count > C2D_ENTRY_CAP) return C2_STREAM_ERR_STATE;
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+    /* The index may grow; the header frontier stays conservative. */
+    c2_boot_name_index_head_get(head);
+    live = (uint8_t)C2_PUBLISH_BNX_LIVE(head);
+    indexed = c2_u16(head + 6);
+#endif
     for (i = 0; i < count; ++i) {
         if (!c2_stream_c2d_read((uint16_t)(C2_EXPORT_JOURNAL_BASE
                 + i * C2_EXPORT_PLAN_RECORD_BYTES), row, sizeof row)
@@ -2962,8 +3167,16 @@ C2TR_BODY_USED C2_APPEND_SECTION("publish_plan_resolve") uint8_t c2_append_publi
             return C2_STREAM_ERR_STATE;
         at = c2_u24(row); length = row[3]; target = c2_u16(row + 4);
         if (row[6] & 1u) target |= 0x8000u;
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+        symbol = live ? (uint16_t)c2_publish_bnx_lookup(row, &indexed)
+                      : (uint16_t)NIL;
+        if (symbol == (uint16_t)NIL
+            && !c2_stream_name_value(8u, at + 2u, length, &symbol))
+            return C2_STREAM_ERR_STATE;
+#else
         if (!c2_stream_name_value(8u, at + 2u, length, &symbol))
             return C2_STREAM_ERR_STATE;
+#endif
         c2_record_u16(row, symbol);
         c2_record_u16(row + 2, (uint16_t)sym_function((obj)symbol));
         c2_record_u16(row + 4, target); row[6] = 0u; row[7] = 0u;
@@ -3175,7 +3388,12 @@ rollback:
 
 static uint8_t c2_publish_exports_from(uint16_t first) {
     uint8_t ok;
-    if (!c2_phase_scratch_acquire(LISP65_C2_PHASE_OWNER_APPEND)) return 0;
+    if (!c2_phase_scratch_acquire(LISP65_C2_PHASE_OWNER_APPEND)) {
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+        c2_boot_name_index_invalidate();
+#endif
+        return 0;
+    }
     c2aw.old_entries = first; c2aw.committed = 1; c2aw.staged = 0;
     c2aw.append = c2_runtime;
     c2aw.main_ordinal = 0; c2aw.rollback_rebuild_header = 0;
@@ -3217,6 +3435,12 @@ static uint8_t c2_publish_exports_from(uint16_t first) {
         (void)c2_overlay_call(LISP65_C2_APPEND_ROLLBACK_SLOT, &c2aw);
 #endif
     }
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+    /* End of the extended validity window, on success and on every failure
+     * the rollback plan above absorbs.  It sits before the scratch release so
+     * a failing release cannot leave the owner alive either. */
+    c2_boot_name_index_invalidate();
+#endif
     if (!c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_APPEND)) return 0;
     return ok;
 }
@@ -3634,8 +3858,12 @@ v5_fail:
         c2aw.append.error = 0u;
     }
 v5_reject:
-    (void)c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_APPEND);
-    return 0u;
+    {
+        uint8_t result = c2aw.append.error == C2_APPEND_CAPACITY_CAUSE
+            ? C2_APPEND_BEGIN_CAPACITY : 0u;
+        if (!c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_APPEND)) return 0u;
+        return result;
+    }
 #endif
 }
 
@@ -3860,9 +4088,14 @@ done:
 
 /* Bypass only the journal validation/reconstruction pair after deriving the
  * complete physical C2J as empty.  The two front/prepare overlays still run;
- * a transient obligation continues through the existing rollback-plan body.
- * Every read failure or nonzero journal byte releases the borrowed scratch and
- * selects the byte-identical serial abort driver below.
+ * a transient obligation (a running top-level form left by a non-local abort)
+ * is retired exactly as c2_append_rollback retires it after every form: write
+ * and activate the prepared C2J, then run the rollback plan, whose barrier
+ * station polls that journal.  Repeat until no transient image remains, at
+ * most C2D_MAX_TRANSIENT_DEPTH retirements; past the cap READY stays set and
+ * the serial driver runs.  Every read failure or nonzero journal byte
+ * releases the borrowed scratch and selects the byte-identical serial abort
+ * driver below.
  *
  * Keep this body in permanently visible ordinary text: c2_stream_c2d_read
  * enters/leaves the MAP-CPU transport, so executing it from a mapped tenant
@@ -3882,29 +4115,36 @@ uint8_t c2_abort_empty_journal_derived(void) {
     for (i = 0u; i < C2D_UNWIND_BYTES; ++i)
         if (facts[i]) goto done;
 
-    c2aw.main_ordinal = 0u;
-    C2AW_JOURNAL_RESULT(&c2aw) = C2J_RESULT_NONE;
-    C2AW_COMPLETION_MARK(&c2aw) = 0u;
+    for (i = 0u;; ++i) {
+        c2aw.main_ordinal = 0u;
+        C2AW_JOURNAL_RESULT(&c2aw) = C2J_RESULT_NONE;
+        C2AW_COMPLETION_MARK(&c2aw) = 0u;
 #ifdef LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT
-    C2AW_ROOTS_FRONTS_MARK(&c2aw) = C2_FRONTS_REQUEST_MARK;
+        C2AW_ROOTS_FRONTS_MARK(&c2aw) = C2_FRONTS_REQUEST_MARK;
 #endif
-    if (!c2_overlay_call(LISP65_C2_APPEND_FRONTS_SLOT, &c2aw)
-        || !c2_overlay_call(LISP65_C2_APPEND_ROLLBACK_PREPARE_SLOT, &c2aw))
-        goto failed;
-    if (C2AW_JOURNAL_RESULT(&c2aw) == C2J_RESULT_NONE) {
-        ok = 1u;
-    } else if (C2AW_JOURNAL_RESULT(&c2aw) ==
+        if (!c2_overlay_call(LISP65_C2_APPEND_FRONTS_SLOT, &c2aw)
+            || !c2_overlay_call(LISP65_C2_APPEND_ROLLBACK_PREPARE_SLOT, &c2aw))
+            goto failed;
+        if (C2AW_JOURNAL_RESULT(&c2aw) == C2J_RESULT_NONE) {
+            ok = 1u;
+            goto done;
+        }
+        if (i == C2D_MAX_TRANSIENT_DEPTH) goto done;
+        if (C2AW_JOURNAL_RESULT(&c2aw) !=
 #ifdef LISP65_C2_LITE_V6_JOURNAL_PREPARE_CORESIDENT
-               C2J_RESULT_PREPARED
+            C2J_RESULT_PREPARED
 #else
-               C2J_RESULT_ACTIVE
+            C2J_RESULT_ACTIVE
 #endif
-               && c2_append_run_rollback_plan(&c2aw)) {
-        ok = 1u;
-    } else {
-failed:
-        c2_ready = 0u;
+            ) goto failed;
+        c2_journal_count = 0u;
+        if (!c2_overlay_call(LISP65_C2_APPEND_JOURNAL_WRITE_SLOT, &c2aw)
+            || !c2_overlay_call(LISP65_C2_APPEND_HEADER_SLOT, &c2aw)
+            || !c2_append_run_rollback_plan(&c2aw))
+            goto failed;
     }
+failed:
+    c2_ready = 0u;
 
 done:
     if (!c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_APPEND)) return 0u;
@@ -3929,6 +4169,12 @@ uint8_t c2_product_abort_cleanup(void) {
 
 __attribute__((noinline, used))
 uint8_t c2_product_abort_recover(void) {
+#ifdef LISP65_C2_BOOT_NAME_INDEX
+    /* The falling control of the host differential: recovery interns between
+     * the abort and the retry, so a surviving index would answer for a symbol
+     * table that no longer matches it. */
+    c2_boot_name_index_invalidate();
+#endif
     /* E000 is not callable before ownership.  The formal reopening keeps the
      * harmless pre-READY landing in the low seam; ordinary profiles retain
      * their byte-pinned guard in c2_abort_driver itself. */
@@ -3954,7 +4200,7 @@ uint8_t c2_product_abort_recover(void) {
 #ifdef LISP65_C2_TRANSACTION_AUTH_NOINLINE
 __attribute__((noinline, used))
 #endif
-uint8_t c2_product_append_staged(uint16_t length) {
+static uint8_t c2_product_append_staged_result(uint16_t length) {
     c2_stream_context before; uint16_t main;
 #ifdef LISP65_C2_TRANSACTION_AUTH
     uint8_t ok;
@@ -3975,6 +4221,27 @@ uint8_t c2_product_append_staged(uint16_t length) {
 #endif
                            );
 #endif
+}
+
+#ifdef LISP65_C2_TRANSACTION_AUTH
+uint8_t c2_product_emitter_auth_begin(void) {
+    return vm_runtime_overlay_transaction_begin(
+        LISP65_RUNTIME_OVERLAY_FAMILY_SESSION,
+        c2_runtime.generation) == VM_RUNTIME_OVERLAY_OK;
+}
+#endif
+
+/* File loaders keep their nil-on-rejection contract. A nonzero capacity
+ * status must never be mistaken for a published image. */
+uint8_t c2_product_append_staged(uint16_t length) {
+    return c2_product_append_staged_result(length) == C2_APPEND_BEGIN_OK;
+}
+
+obj c2_product_publish_staged(uint16_t length) {
+    uint8_t result = c2_product_append_staged_result(length);
+    if (result == C2_APPEND_BEGIN_OK) return lisp_t;
+    vm_status = result == C2_APPEND_BEGIN_CAPACITY ? VM_HEAPOOM : VM_BADOPCODE;
+    return NIL;
 }
 
 #ifdef LISP65_C2_TRANSACTION_AUTH_NOINLINE
@@ -4004,11 +4271,12 @@ obj c2_product_install(obj fnlist, obj definition_name) {
                                                 , transient
 #endif
                                                 );
-    if (emit != C2_EMIT_OK || !append_ok) {
+    if (emit != C2_EMIT_OK || append_ok != C2_APPEND_BEGIN_OK) {
 #ifdef LISP65_C2_TRANSACTION_AUTH
         (void)vm_runtime_overlay_transaction_end();
 #endif
-        vm_status = VM_BADOPCODE; return NIL;
+        vm_status = append_ok == C2_APPEND_BEGIN_CAPACITY ? VM_HEAPOOM : VM_BADOPCODE;
+        return NIL;
     }
     if (!transient) {
 #ifdef LISP65_C2_TRANSACTION_AUTH

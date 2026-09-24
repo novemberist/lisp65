@@ -1308,6 +1308,33 @@ vm_two_byte_args(const obj *a, uint8_t n) {
     return 1;
 }
 #endif
+#ifdef MEGA65_F011_LOAD
+/* Private %disk-byte mode: CCITT-FALSE update of a resolver-owned (lo . hi)
+ * cons. Validate every argument before mutation; no table or native state. */
+static __attribute__((noinline)) obj vm_index_crc_step(obj state, obj value) {
+    obj lo, hi;
+    uint16_t crc;
+    uint8_t bits = 8;
+    if (!IS_PTR(state) || cell_type(state) != T_CONS
+        || ((uint16_t)value & 0xfe01u) != 1u) goto bad;
+    lo = cell_a(state); hi = cell_b(state);
+    if (((uint16_t)lo & 0xfe01u) != 1u
+        || ((uint16_t)hi & 0xfe01u) != 1u) goto bad;
+    crc = ((uint16_t)lo >> 1) | (((uint16_t)hi >> 1) << 8);
+    crc ^= ((uint16_t)value >> 1) << 8;
+    do {
+        crc = (crc & 0x8000u) ? (uint16_t)((crc << 1) ^ 0x1021u)
+                            : (uint16_t)(crc << 1);
+    } while (--bits);
+    cell_set_a(state, MKFIX(crc & 255u));
+    cell_set_b(state, MKFIX(crc >> 8));
+    return value;
+bad:
+    vm_status = VM_TYPEERROR;
+    return NIL;
+}
+#endif
+
 /* CALLPRIM-Dispatch: gefrorene Prim-ID (§4a) -> VM-native Implementierung. */
 /* noinline (Diaet 2026-07-02): inline in vm_run kostete 1752 B, out-of-line 1506 —
  * netto -246 B .text; CALLPRIM ist ohnehin ein Bridge-/Stringpfad, kein Zyklenzaehlen. */
@@ -1407,6 +1434,13 @@ static __attribute__((noinline)) obj vm_buffer_call(
 #endif
     return context->result;
 }
+
+#ifdef LISP65_C2_PRODUCT_CUT
+obj vm_buffer_from_stage(uint16_t length) {
+    obj args[2] = { MKFIX(2), MKFIX((int16_t)length) };
+    return vm_buffer_call(LISP65_BUFFER_PRIM_ALLOC, args, 2);
+}
+#endif
 
 #endif
 
@@ -1670,6 +1704,7 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         }
         return vm_t;
     case 16:  /* %disk-byte */
+        if (n == 2) return vm_index_crc_step(a[0], a[1]);
         if (n != 1 || !IS_FIX(a[0])) { vm_status = VM_TYPEERROR; return NIL; }
         return MKFIX(io_disk_byte((uint8_t)FIXVAL(a[0])));
     case 17:  /* %disk-load-file — io.c streamt die Datei aus EXT via load_source_stream */
@@ -1919,6 +1954,14 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         if (n != 2) { vm_status = VM_ARITY; return NIL; }
         return c2_session_emit_control(a[0], a[1]);
     case 67: /* %c2d-byte -- private read-only published-C2D seam */
+#ifdef LISP65_C2_NESTED_APPEND_V5
+        if (n == 1) {
+            uint16_t part;
+            if (!vm_byte_args(a, n, 1u)) return NIL;
+            part = c2_resolver_owner_part((uint8_t)FIXVAL(a[0]));
+            return part == 0xffffu ? NIL : MKFIX(part);
+        }
+#endif
         if (!vm_byte_args(a, n, 2u)) return NIL;
         return vm_c2d_byte(a);
 #else
@@ -2065,7 +2108,8 @@ typedef struct {
     uint8_t bank;
 } vm_soft_frame;
 #if defined(__mos__) && defined(LISP65_C2_FIXED_RAW_BSS_OWNERS)
-/* R2 owns the high-bank BSS gap, never the fixed input-consumer interval. */
+/* R2 owns this named BSS section. The storage-owner linker places it in
+ * the reserved low gap, never in the fixed input-consumer interval. */
 #define VM_SOFT_BSS __attribute__((section(".lisp65_vm_soft_frames_bss")))
 #else
 #define VM_SOFT_BSS

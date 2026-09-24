@@ -3,7 +3,8 @@
 set -e
 cd "$(dirname "$0")/.."
 cc="${HOSTCC:-cc}"
-out=build/equivalence
+# Live oracle: see the class-2 note in scripts/equivalence-check.sh.
+out=${LISP65_EQUIVALENCE_LIVE_DIR:-build/equivalence-live}
 mkdir -p "$out"
 
 $cc -std=c99 -Wall -Wno-unused-function \

@@ -176,6 +176,14 @@ def source_gate() -> dict[str, Any]:
 
 
 def candidate_emit() -> tuple[dict[str, Any], tuple[tuple[str, str, Path], ...]]:
+    # Bind the generated function population as well as the historical text.
+    # The context includes a falling control for the live group-only helper.
+    import comfort_track_gate as comfort
+    with comfort.historical_workbench(CANDIDATE_EVIDENCE_ERA):
+        return historical_candidate_emit()
+
+
+def historical_candidate_emit() -> tuple[dict[str, Any], tuple[tuple[str, str, Path], ...]]:
     old = (PRICE.BUILD, PRICE.STDLIB_SUITE, PRICE.IDE_SUITE,
            PRICE.COMFORT_MANIFEST)
     old_suite = PRICE.candidate_stdlib_suite

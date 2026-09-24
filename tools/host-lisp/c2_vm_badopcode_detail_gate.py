@@ -98,7 +98,8 @@ def source_gate(parts: dict[str, str] | None = None,
             and "install_failed:" not in install
             and install.count("C2_INSTALL_TRACE_ENTER_INNER();") == 1
             and install.count("if (vm_status != VM_OK) return NIL;") == 3
-            and install.count("vm_status = VM_BADOPCODE; return NIL;") == 7
+            and install.count("vm_status = VM_BADOPCODE; return NIL;") == 6
+            and install.count("vm_status = append_ok == C2_APPEND_BEGIN_CAPACITY ? VM_HEAPOOM : VM_BADOPCODE;") == 1
             and "if (vm_status != VM_OK) return result;" not in install
             and install.count("return result;") == 1,
             "install status-only failures or inner-status precedence drift")
@@ -150,6 +151,12 @@ def source_gate(parts: dict[str, str] | None = None,
     rejected: dict[str, str] = {}
     if mutations:
         trials: dict[str, dict[str, str]] = {}
+        trial = dict(text)
+        trial["runtime"] = trial["runtime"].replace(
+            "vm_status = append_ok == C2_APPEND_BEGIN_CAPACITY ? VM_HEAPOOM : VM_BADOPCODE;",
+            "vm_status = VM_BADOPCODE;", 1)
+        require(trial != text, "capacity-status mutation anchor absent")
+        trials["capacity-misreported-as-bad-bytecode"] = trial
 
         def inject(name: str, owner: str, needle: str, addition: str) -> None:
             require(needle in text[owner], f"mutation anchor absent: {name}")

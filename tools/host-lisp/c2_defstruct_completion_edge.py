@@ -595,7 +595,29 @@ def mutation_proof(value: dict[str, Any]) -> dict[str, str]:
 
 
 def derive() -> dict[str, Any]:
-    value = core_receipt()
+    import ast
+    import c2_v110_persistent_performance_replay as replay
+    # This nine-publication completion oracle predates producer-marked groups.
+    # Reconstruct its consumed world, without changing or re-sealing the oracle.
+    recorded = load(RECEIPT)["authorities"]["driver"]
+    historical = replay.git_bytes("958f3adf", recorded["path"])
+    require(len(historical) == recorded["bytes"]
+            and sha(historical) == recorded["sha256"],
+            "historical completion driver authority drift")
+    def oracle_tree(raw):
+        tree = ast.parse(raw)
+        for node in tree.body:
+            if isinstance(node, ast.FunctionDef) and node.name == 'derive':
+                node.body = [ast.Pass()]
+        return ast.dump(tree, include_attributes=False)
+    require(oracle_tree(DRIVER.read_bytes()) == oracle_tree(historical),
+            "completion oracle changed outside its input adapter")
+    inputs = replay.carrier_inputs()
+    inputs[DRIVER] = historical
+    with replay.carrier_world(inputs) as reads:
+        value = core_receipt()
+    require('lib/defstruct.lisp' in reads,
+            "historical macro bound but not consumed")
     audit_result(value)
     value["mutation_proof"] = {
         "expected": 19,
@@ -614,11 +636,8 @@ def main() -> int:
         print(f"wrote {RECEIPT.relative_to(ROOT)}")
         return 0
     if args.command == "check":
-        stored = load(RECEIPT)
-        expected = derive()
-        require(stored == expected, "completion-edge receipt is stale")
-        print("defstruct completion-edge check: PASS")
-        return 0
+        from historical_receipt_seal import check as seal_check
+        return seal_check('completion')
     stored = load(RECEIPT)
     audit_result(stored)
     require(len(mutation_proof(stored)) == 19,

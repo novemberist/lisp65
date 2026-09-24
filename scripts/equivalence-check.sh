@@ -5,7 +5,11 @@
 set -e
 cc="${HOSTCC:-cc}"
 corpus="${1:-tests/equivalence/forms.lisp}"
-out=build/equivalence
+# Class-2 conversion: this is a live oracle over the current sources. Its
+# outputs must not land in build/equivalence/, whose artifacts tracked receipts
+# bind by SHA and a sealed check mounts read-only. See
+# tools/host-lisp/equivalence_live_hosts.py and Makefile EQUIVALENCE_LIVE_DIR.
+out=${LISP65_EQUIVALENCE_LIVE_DIR:-build/equivalence-live}
 mkdir -p "$out"
 completion_journal="$out/equivalence-completion.lanes"
 completion_receipt="$out/equivalence-completion.json"
@@ -118,7 +122,7 @@ mark_lane lcc-byte-oracle "$(grep -c '=> OK$' "$out/lcc-oracle.out" || true)" 10
 # LCC/Python emission, and exact c2_session_emit_add input as one identity.
 if python3 tools/host-lisp/quote_emission_parity.py \
     --binary "$out/equivalence-check" \
-    --reader build/reader-conformance-host \
+    --reader build/equivalence-live/reader-conformance-host \
     --fixture tests/equivalence/quote-emission-parity.json \
     --out "$out/quote-emission-parity.json" \
     > "$out/quote-emission-parity.out" 2>&1; then

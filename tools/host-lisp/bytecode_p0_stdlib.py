@@ -1503,12 +1503,20 @@ def _resident_suites(suite, seen=None):
 def _compile_function_objects(
     functions, forms_by_name, heap, macro_names=None, existing_names=None, label="suite",
     strict_arity=False, abi_profile=None, prebuilt_primitives=False,
+    prebuilt_primitive_functions=(),
 ):
     names = []
     code_by_name = {}
     entry_flags_by_name = {}
     macro_names = set(macro_names or [])
     seen = set(existing_names or [])
+    if not isinstance(prebuilt_primitive_functions, (list, tuple)) or any(
+        not isinstance(name, str) for name in prebuilt_primitive_functions
+    ):
+        raise StdlibCheckError("%s invalid prebuilt primitive population" % label)
+    private_population = set(prebuilt_primitive_functions)
+    if not private_population.issubset(functions):
+        raise StdlibCheckError("%s prebuilt primitive population outside functions" % label)
     for name in functions:
         if name in seen:
             raise StdlibCheckError("%s duplicate code object: %s" % (label, name))
@@ -1519,7 +1527,7 @@ def _compile_function_objects(
             compiled_name, code, helpers = C.compile_top_form_with_helpers(
                 form, heap, strict_arity=strict_arity,
                 abi_profile=abi_profile,
-                prebuilt_primitives=prebuilt_primitives,
+                prebuilt_primitives=prebuilt_primitives or name in private_population,
             )
         except Exception as error:
             raise StdlibCheckError(
@@ -1556,6 +1564,7 @@ def _compile_resident_code(suite, heap):
             label="resident suite",
             strict_arity=bool(resident.get("strict_arity", False)),
             abi_profile=resident.get("abi_profile"),
+            prebuilt_primitive_functions=resident.get("prebuilt_primitive_functions", ()),
         )
         resident_names.extend(names)
         resident_code_by_name.update(code_by_name)
@@ -1635,6 +1644,7 @@ def _compile_suite(suite, base_addr=PB.DEFAULT_BASE_ADDR, include_cases=True):
         strict_arity=bool(suite.get("strict_arity", False)),
         abi_profile=suite.get("abi_profile"),
         prebuilt_primitives=prebuilt_primitives,
+        prebuilt_primitive_functions=suite.get("prebuilt_primitive_functions", ()),
     )
 
     if include_cases:

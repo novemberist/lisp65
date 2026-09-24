@@ -1190,17 +1190,9 @@ def main() -> int:
         RECEIPT.write_bytes(canonical(value))
         print(f"defstruct terminal-ingress sister: WROTE {RECEIPT.relative_to(ROOT)}")
         return 0
-    gate_wiring(); runner_audit()
-    value = load(RECEIPT)
-    validate(value, reproduce=(action == "check"))
-    rejected = mutations(value)
-    if action == "check":
-        require(load(DEPLOY)["status"] == "host-green-session-authorized-not-run",
-                "diagnostic deployment status drift")
-        print("defstruct terminal-ingress sister: PASS host-green session-ready")
-    else:
-        print(f"defstruct terminal-ingress sister selftest: PASS mutations={len(rejected)}")
-    return 0
+    # Historical checks consume sealed artifacts, never the record producer.
+    import terminal_ingress_artifacts
+    return terminal_ingress_artifacts.main(sys.modules[__name__])
 
 
 if __name__ == "__main__":

@@ -247,6 +247,10 @@ def visible_files(image: bytes | bytearray) -> dict[bytes, bytes]:
         if name in result:
             raise ValueError("duplicate visible directory name %r" % name)
         result[name] = read_record_payload(image, slot.record)
+    # This is the common completed-media readback, not a provisional pack.
+    # Payload SHA equality alone does not validate embedded physical locators.
+    from d81_package_locators import validate_visible
+    validate_visible(image, result)
     return result
 
 
