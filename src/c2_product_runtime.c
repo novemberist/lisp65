@@ -460,6 +460,10 @@ uint8_t C2_PHYSICAL_READ_CONVERGED_IMPL(
 #endif
 #endif
 
+#ifdef LISP65_SET_B
+#include "optional/set_b_retire_common.h"
+#endif
+
 static uint16_t c2_u16(const uint8_t *p) {
     return (uint16_t)p[0] | (uint16_t)p[1] << 8;
 }
@@ -875,8 +879,18 @@ uint8_t c2_facade_target_overlay_call_family(uint8_t family,
 /* Hidden but non-static: the non-LTO plan walker is an ordinary linked caller
  * of this one generic Session seam. */
 __attribute__((noinline, used, visibility("hidden")))
-C2_KERNAL_RESIDENT uint8_t c2_overlay_call(
+/* Set B shares gap1 with vm_c2d_byte; both remain in the mapped window.
+ * This moves code away from the fixed Comfort capture boundary. */
+#ifdef LISP65_SET_B
+__attribute__((section(".lisp65_c2_kernal_window.reopen_gap1")))
+#else
+C2_KERNAL_RESIDENT
+#endif
+uint8_t c2_overlay_call(
         uint8_t slot, void *context) {
+#ifdef LISP65_SET_B
+    if(slot>=56u && slot<=61u && !c2_ready)return 0;
+#endif
     return c2_facade_overlay_call_family(
         LISP65_RUNTIME_OVERLAY_FAMILY_SESSION,
         c2_runtime.generation, slot, context);
@@ -1204,6 +1218,9 @@ uint8_t c2_product_entry_read(uint16_t ordinal, uint16_t relative,
  * the window must never bind directly to moving gc_mark. */
 C2_KERNAL_RESIDENT void c2_product_gc_mark_roots(void) {
     uint8_t b[32];
+#ifdef LISP65_SET_B
+    c2r_gc_failed=0;
+#endif
     uint16_t i, n, done = 0, scan = c2_committed_roots;
     if (c2_pending_roots > scan) scan = c2_pending_roots;
     while (done < scan) {
@@ -1212,7 +1229,12 @@ C2_KERNAL_RESIDENT void c2_product_gc_mark_roots(void) {
             n = (uint16_t)(sizeof b / 2u);
         if (!c2_stream_c2d_read(
                 (uint16_t)(c2_runtime.roots_offset + done * 2u),
-                b, (uint16_t)(n * 2u))) break;
+                b, (uint16_t)(n * 2u))) {
+#ifdef LISP65_SET_B
+            c2r_gc_failed=1;
+#endif
+            break;
+        }
         for (i = 0; i < n; ++i)
             c2_facade_gc_mark((obj)((uint16_t)b[i * 2u]
                 | (uint16_t)b[i * 2u + 1u] << 8));
@@ -1220,7 +1242,12 @@ C2_KERNAL_RESIDENT void c2_product_gc_mark_roots(void) {
     }
     for (i = 0; i < c2_journal_count; ++i) {
         if (!c2_stream_c2d_read((uint16_t)(C2_EXPORT_JOURNAL_BASE
-                + i * C2_EXPORT_JOURNAL_RECORD_BYTES), b, sizeof b)) break;
+                + i * C2_EXPORT_JOURNAL_RECORD_BYTES), b, sizeof b)) {
+#ifdef LISP65_SET_B
+            c2r_gc_failed=1;
+#endif
+            break;
+        }
         c2_facade_gc_mark((obj)((uint16_t)b[2]
             | (uint16_t)b[3] << 8));
     }
@@ -1334,6 +1361,16 @@ uint8_t c2_product_boot(void) {
     if (!c2_publish_exports_from(0)) {
         c2_ready = 0; return 0;
     }
+#ifdef LISP65_CARD_L_STAGE
+    /* Set B admits tenants only after full staging and journal reset. */
+#ifdef LISP65_SET_B
+    c2r_boot_count = 0; /* Untrusted until staging AND reset complete. */
+    if (c2_overlay_call(55u, (void *)0))
+        (void)c2_overlay_call(62u, &c2_runtime);
+#else
+    (void)c2_overlay_call(55u, (void *)0);
+#endif
+#endif
     /* READY is the product commit marker.  The cold plan, header identity and
      * every export cell are complete before this single publication. */
     c2_ready = 1;
@@ -4183,6 +4220,9 @@ uint8_t c2_product_abort_recover(void) {
     extern uint8_t c2_abort_driver_facade(void);
 #ifdef LISP65_C2_RECOVERY_EMPTY_JOURNAL_BYPASS
     if (!c2_ready) return 1u;
+#ifdef LISP65_SET_B
+    (void)c2_retire_run(1u); /* Replay failure enters the existing fatal sink. */
+#endif
     if (c2_abort_empty_journal_derived()) return 1u;
     return !c2_ready || c2_abort_driver_facade();
 #else
@@ -4327,3 +4367,55 @@ obj c2_product_install(obj fnlist, obj definition_name) {
 }
 
 #endif /* LISP65_C2_PRODUCT_CUT */
+
+#ifdef LISP65_SET_B
+#include "optional/set_b_retire_scan_a.c"
+#include "optional/set_b_retire_scan_b.c"
+#include "optional/set_b_retire_commit_a.c"
+#include "optional/set_b_retire_commit_b.c"
+#include "optional/set_b_retire_commit_c.c"
+#include "optional/set_b_retire_control.c"
+#include "optional/set_b_retire_reset.c"
+/* This loop must survive replacement of C356. Every tenant returns before fetch. */
+/* Transaction ownership belongs to the resident caller, outside C356.
+ * Cleanup still runs when transaction_end refuses; its failure is propagated
+ * after the tenant releases scratch, preserving replay-before-disarm. */
+__attribute__((noinline)) static uint8_t c2_retire_call(c2r_dispatch *d){
+ uint8_t ok=1;
+ if(d->next==56u){
+  if(d->mode==0u && !d->auth){
+   if(vm_runtime_overlay_transaction_begin(LISP65_RUNTIME_OVERLAY_FAMILY_SESSION,c2_runtime.generation)!=VM_RUNTIME_OVERLAY_OK)return 0;
+   d->auth=1u;
+  }
+  if(d->mode>=3u && d->auth){
+   d->auth=0;
+   if(vm_runtime_overlay_transaction_end()!=VM_RUNTIME_OVERLAY_OK)ok=0;
+  }
+ }
+ return c2_overlay_call(d->next,d) && ok;
+}
+__attribute__((noinline,used)) uint8_t c2_retire_run(uint8_t mode){
+ c2r_dispatch d={56u,mode,mode,0u,0u};
+ if(!(c2r_boot_count&128u))return 1;
+ while(d.next){
+  if(!c2_retire_call(&d)){
+   /* Never abandon a possibly published journal. Replay before disarming;
+      a second failure cannot establish consistency and uses the fatal sink. */
+   if(d.recovery){
+    extern void c2_kernal_fail_closed(void) __attribute__((noreturn));
+    c2_kernal_fail_closed();
+   }
+   d.recovery=1u;d.mode=1u;d.next=56u;
+  }
+ }
+ if(d.recovery){
+  /* Consistency is established. Cleanup is best effort, not replay failure;
+     disarm even if its tenant cannot be fetched. READY belongs to Card L. */
+  c2r_boot_count=0;
+  d.next=56u;
+  (void)c2_retire_call(&d);
+ }
+ return 1;
+}
+
+#endif

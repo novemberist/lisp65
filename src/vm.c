@@ -2734,3 +2734,9 @@ done:
 #undef littab
 #undef code
 }
+
+#ifdef LISP65_SET_B
+
+__attribute__((noinline,used,section(".lisp65_rt_c2append_retire_control"))) uint8_t vm_retire_prompt_quiescent(void){if(gc_rootsp)return 0;vm_soft_sp=0;return 1;}
+
+#endif

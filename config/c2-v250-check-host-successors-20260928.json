@@ -1,0 +1,76 @@
+{
+  "date": "2026-09-27",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "format": "lisp65-v250-check-host-successors-20260928",
+  "make_routing_changed": true,
+  "predecessors": {
+    "config/c2-v250-check-host-successors-20260927.json": "7defc7ec1865cf03d83af959770e72d32cba11bc5e69d2b5ea47e455af55c187",
+    "tools/host-lisp/comfort_default_card5_r2_20260927.py": "633366bde7a0ec71cdc56265af2f5e51328c7af8f759f89a1688cd6cfdf0d6d2",
+    "tools/host-lisp/comfort_default_media_census_20260927.py": "856024b6f15ef76bce31835f32f41c8967fe082b52949e305bb4cfda9aff9083"
+  },
+  "routing_disposition": "mk/gates.mk chains on d2730710 Comfort-default routes; Makefile Comfort routes retained. Distinct 20260928 suffix is an era identifier.",
+  "sealed_check_host_run": false,
+  "successors": [
+    {
+      "commands": [
+        "python3 -B tools/host-lisp/c2_v250_v240_bundle_era_20260928.py"
+      ],
+      "consumer": "v240-bundle-docs-check",
+      "reason": "Preserve v240 sealed document era; live v250 docs have a separate gate.",
+      "successor": "tools/host-lisp/c2_v250_v240_bundle_era_20260928.py"
+    },
+    {
+      "commands": [
+        "python3 -B tools/host-lisp/c2_v250_bundle_docs_gate.py"
+      ],
+      "consumer": "new v250-bundle-docs-check",
+      "reason": "Bind actual v250 bundle source documents and proof documents.",
+      "successor": "tools/host-lisp/c2_v250_bundle_docs_gate.py"
+    },
+    {
+      "commands": [
+        "python3 -B tools/host-lisp/c2_v250_public_native.py selftest",
+        "python3 -B tools/host-lisp/c2_v250_public_product.py preflight"
+      ],
+      "consumer": "new v250-public-native-check",
+      "reason": "Comfort-default source/include authority and Final identity; independent source replay pending",
+      "successor": "tools/host-lisp/c2_v250_public_native.py"
+    },
+    {
+      "commands": [
+        "python3 -B tools/host-lisp/c2_v250_card5_20260928.py selftest",
+        "python3 -B tools/host-lisp/c2_v250_card5_20260928.py check"
+      ],
+      "consumer": "block-26-build-integrity-selftest/check",
+      "reason": "Inherit Comfort-default Card-5 r2 and its Makefile routes",
+      "successor": "tools/host-lisp/c2_v250_card5_20260928.py"
+    },
+    {
+      "commands": [
+        "python3 -B tools/host-lisp/c2_v250_media_census_20260928.py selftest",
+        "python3 -B tools/host-lisp/c2_v250_media_census_20260928.py check"
+      ],
+      "consumer": "c2-media-builder-closure-enumeration-selftest/check",
+      "reason": "Inherit Comfort-default census; wrapper delegates to registered builder",
+      "successor": "tools/host-lisp/c2_v250_media_census_20260928.py"
+    },
+    {
+      "commands": [
+        "python3 -B tools/host-lisp/c2_v250_keymap_20260928.py selftest",
+        "python3 -B tools/host-lisp/c2_v250_keymap_20260928.py check"
+      ],
+      "consumer": "v11-l-lite-keymap-selftest/check",
+      "reason": "Bundle label 2.5.0; all six non-document generated outputs unchanged.",
+      "successor": "tools/host-lisp/c2_v250_keymap_20260928.py"
+    }
+  ],
+  "unchanged_consumers": [
+    "Makefile: comfort_default_housekeeping_20260927.py",
+    "Makefile: comfort_default_elf_truth_20260927.py",
+    "Makefile: comfort_default_linked_format_20260927.py",
+    "mk/gates.mk: comfort_default_d1_e25_20260927.py",
+    "mk/gates.mk: comfort_default_option_a_20260927.py"
+  ]
+}

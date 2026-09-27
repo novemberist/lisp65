@@ -184,4 +184,11 @@ obj      buf_freeze(obj buffer);
 
 #endif
 
+/* Set B: native prompt maintenance only; never callable from Lisp. */
+#ifdef LISP65_SET_B
+uint8_t gc_cell_marked(uint16_t i);
+uint16_t gc_scan_high(void);
+uint16_t gc_scan_frozen(void);
+#endif
+
 #endif /* LISP65_MEM_H */

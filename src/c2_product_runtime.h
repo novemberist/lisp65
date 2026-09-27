@@ -671,4 +671,9 @@ obj c2_product_publish_staged(uint16_t length);
  * generation-bound shelf. */
 uint8_t c2_product_static_image_named(obj name);
 
+/* Set B: native prompt maintenance only; never callable from Lisp. */
+#ifdef LISP65_SET_B
+uint8_t c2_retire_run(uint8_t mode);
+#endif
+
 #endif

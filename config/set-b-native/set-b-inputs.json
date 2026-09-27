@@ -1,0 +1,263 @@
+{
+  "format": "lisp65-set-b-source-inputs-v1",
+  "authorization": "AUTH_PENDING",
+  "diff_base": "e40eb1854bd118f1d8e63778ca847ab9a482cf3a",
+  "source": {
+    "path": "src/optional/card_l_stage.c",
+    "bytes": 2795,
+    "sha256": "6bcea14d630c583f31682eb87e374765720b48a0a3bed916636ca8157dca13e7"
+  },
+  "slot": 55,
+  "spec": "55:card-l-stage:.lisp65_rt_card_l_stage:__lisp65_rt_card_l_stage_start:__lisp65_rt_card_l_stage_end:__lisp65_rt_card_l_stage_entry:runtime+reusable:1:0:card_l_stage_entry",
+  "feature": "LISP65_CARD_L_STAGE",
+  "image": {
+    "size": 8192,
+    "sha256": null,
+    "crc16": null,
+    "status": "ELF-derived after AUTH; tenant payloads zero-padded to bound intervals, 0xA5 tail after aligned_extent"
+  },
+  "binding": {
+    "section": ".lisp65_rt_card_l_binding",
+    "bytes": 4,
+    "image_size": 8192,
+    "crc16": null,
+    "status": "producer post-link write; source placeholders remain zero"
+  },
+  "attic": {
+    "address": 136334848,
+    "capacity": 8192,
+    "boot_offset": 19968,
+    "record_sizes": [
+      1792,
+      1792,
+      1792,
+      1792,
+      1024
+    ],
+    "boot_count": 17,
+    "placement_header": "config/set-b-native/set-b-placement.h"
+  },
+  "owners": [
+    {
+      "name": "card_l_gap",
+      "address": 384544,
+      "bytes": 96,
+      "tenant": {
+        "name": "retirement-journal",
+        "bytes": 72,
+        "unassigned": 24
+      }
+    },
+    {
+      "name": "card_l_late",
+      "address": 384640,
+      "bytes": 8192,
+      "tenant": "slots56..62"
+    }
+  ],
+  "header": {
+    "address": 392832,
+    "bytes": 10
+  },
+  "bank5_tail_floor": 374,
+  "linker_predecessors": [
+    {
+      "path": "config/card-l-native/linker/c2-substitution.ld",
+      "bytes": 97724,
+      "sha256": "60660edc5c35a5d774bbd97eaf0839b3ab09cd2906a3833ad7532601e8733a5f"
+    },
+    {
+      "path": "config/card-l-native/linker/full-map-linker/c.ld",
+      "bytes": 4718,
+      "sha256": "2dfa87904704dafadd7d660060f0e5767bfcaee90953fe806097ea76e539171e"
+    },
+    {
+      "path": "config/card-l-native/linker/full-map-linker/commodore.ld",
+      "bytes": 663,
+      "sha256": "287c307deb4a42fd141581fe33dd2695d0b84c50873e8e5ca5fb7d309f597539"
+    },
+    {
+      "path": "config/card-l-native/linker/full-map-linker/zp-data.ld",
+      "bytes": 89,
+      "sha256": "5ee0e0672070f1a700ca488e29e9ae9eeb040bd785d621deed1694abb6254a8f"
+    }
+  ],
+  "tenants": [
+    {
+      "slot": 56,
+      "name": "set-b-control",
+      "section": ".lisp65_rt_c2append_retire_control",
+      "start_symbol": "__lisp65_rt_set_b_control_start",
+      "end_symbol": "__lisp65_rt_set_b_control_end",
+      "entry_symbol": "__lisp65_rt_set_b_control_entry",
+      "entry_target": "c2_retire_control",
+      "offset": 0,
+      "projected_bytes": 426,
+      "region": 3,
+      "source_address": 384640
+    },
+    {
+      "slot": 57,
+      "name": "set-b-scan-a",
+      "section": ".lisp65_rt_c2append_retire_scan_a",
+      "start_symbol": "__lisp65_rt_set_b_scan_a_start",
+      "end_symbol": "__lisp65_rt_set_b_scan_a_end",
+      "entry_symbol": "__lisp65_rt_set_b_scan_a_entry",
+      "entry_target": "c2_retire_scan_phase",
+      "offset": 448,
+      "projected_bytes": 1474,
+      "region": 3,
+      "source_address": 385088
+    },
+    {
+      "slot": 58,
+      "name": "set-b-scan-b",
+      "section": ".lisp65_rt_c2append_retire_scan_b",
+      "start_symbol": "__lisp65_rt_set_b_scan_b_start",
+      "end_symbol": "__lisp65_rt_set_b_scan_b_end",
+      "entry_symbol": "__lisp65_rt_set_b_scan_b_entry",
+      "entry_target": "c2_retire_scan_b",
+      "offset": 2016,
+      "projected_bytes": 1376,
+      "region": 3,
+      "source_address": 386656
+    },
+    {
+      "slot": 59,
+      "name": "set-b-prepare",
+      "section": ".lisp65_rt_c2append_retire_prepare",
+      "start_symbol": "__lisp65_rt_set_b_prepare_start",
+      "end_symbol": "__lisp65_rt_set_b_prepare_end",
+      "entry_symbol": "__lisp65_rt_set_b_prepare_entry",
+      "entry_target": "c2_retire_commit_phase",
+      "offset": 3424,
+      "projected_bytes": 989,
+      "region": 3,
+      "source_address": 388064
+    },
+    {
+      "slot": 60,
+      "name": "set-b-move",
+      "section": ".lisp65_rt_c2append_retire_move",
+      "start_symbol": "__lisp65_rt_set_b_move_start",
+      "end_symbol": "__lisp65_rt_set_b_move_end",
+      "entry_symbol": "__lisp65_rt_set_b_move_entry",
+      "entry_target": "c2_retire_move",
+      "offset": 4448,
+      "projected_bytes": 1362,
+      "region": 3,
+      "source_address": 389088
+    },
+    {
+      "slot": 61,
+      "name": "set-b-final",
+      "section": ".lisp65_rt_c2append_retire_final",
+      "start_symbol": "__lisp65_rt_set_b_final_start",
+      "end_symbol": "__lisp65_rt_set_b_final_end",
+      "entry_symbol": "__lisp65_rt_set_b_final_entry",
+      "entry_target": "c2_retire_final",
+      "offset": 5856,
+      "projected_bytes": 612,
+      "region": 3,
+      "source_address": 390496
+    },
+    {
+      "slot": 62,
+      "name": "set-b-reset",
+      "section": ".lisp65_rt_c2append_retire_reset",
+      "start_symbol": "__lisp65_rt_set_b_reset_start",
+      "end_symbol": "__lisp65_rt_set_b_reset_end",
+      "entry_symbol": "__lisp65_rt_set_b_reset_entry",
+      "entry_target": "c2_retire_reset",
+      "offset": 6496,
+      "projected_bytes": 211,
+      "region": 3,
+      "source_address": 391136
+    }
+  ],
+  "session_count": 63,
+  "boot_count": 17,
+  "aligned_extent": 6752,
+  "sources": [
+    {
+      "path": "src/c2_product_runtime.c",
+      "bytes": 185815,
+      "sha256": "5a644b78a1e9f2f00ce73b61e0acf69c971718a8cb0e51d3e47364c860d07b78"
+    },
+    {
+      "path": "src/c2_product_runtime.h",
+      "bytes": 28854,
+      "sha256": "ce5432dfd5127f6cfe5a8ca4144754a6495f447fa52280bacd3c6a7d63c9311b"
+    },
+    {
+      "path": "src/mem.c",
+      "bytes": 49198,
+      "sha256": "f674c1e3378bc47075cb9291329d63cd1d03ea14fa6c55d35b243819852b6657"
+    },
+    {
+      "path": "src/mem.h",
+      "bytes": 8939,
+      "sha256": "afa300bf25fe02f0c352438719c60d3eafc17dc63656c1a5bd841b904b626b1b"
+    },
+    {
+      "path": "src/optional/card_l_stage.c",
+      "bytes": 2795,
+      "sha256": "6bcea14d630c583f31682eb87e374765720b48a0a3bed916636ca8157dca13e7"
+    },
+    {
+      "path": "src/optional/set_b_retire_commit_a.c",
+      "bytes": 1850,
+      "sha256": "f2565ff5c25644243cd6c5e5ef470fca97f03b4eeda471127cba6b4ee7c5fa25"
+    },
+    {
+      "path": "src/optional/set_b_retire_commit_b.c",
+      "bytes": 1997,
+      "sha256": "dd9442c520f0b18123f99cbc58fe5440d647c85ae9bdcf76e2ed37679c64bc44"
+    },
+    {
+      "path": "src/optional/set_b_retire_commit_c.c",
+      "bytes": 1438,
+      "sha256": "836185e1b68dad6b0f81824f6f9d024045085a59f73fd65cd79e91bcdc32ac2f"
+    },
+    {
+      "path": "src/optional/set_b_retire_common.h",
+      "bytes": 1505,
+      "sha256": "fdd9a7d888c92a2a76321dc73becf172492bf6d9c3c275c65cdaa4313ef38576"
+    },
+    {
+      "path": "src/optional/set_b_retire_control.c",
+      "bytes": 1349,
+      "sha256": "f6ff6a8a2c8bae94b15c65791b9216b2db46badbcbc7ceac650971b649dd53b6"
+    },
+    {
+      "path": "src/optional/set_b_retire_reset.c",
+      "bytes": 600,
+      "sha256": "fea1ba30dc5a2e52d1b0f91c248572e588035ddc68f266d756b76233cb08a125"
+    },
+    {
+      "path": "src/optional/set_b_retire_scan_a.c",
+      "bytes": 2164,
+      "sha256": "0e3e6bad57dc63d5b07ec0c536619823f0bb496e428c2113183b3ffdfb28c791"
+    },
+    {
+      "path": "src/optional/set_b_retire_scan_b.c",
+      "bytes": 1837,
+      "sha256": "e667de90f1f10e14d852b044f05f3c94cd232c25423af86eec7a63ca30afe321"
+    },
+    {
+      "path": "src/repl.c",
+      "bytes": 16810,
+      "sha256": "3d54f9d8b8043c966c148baea28db1f8e9ca8cfc19920b8dc40c515ae363e274"
+    },
+    {
+      "path": "src/vm.c",
+      "bytes": 120104,
+      "sha256": "adc0c2531d8daf9bc50a5f10c5e23c237e3b0d90aae7e93ccb2d133f5c10ca35"
+    },
+    {
+      "path": "src/vm.h",
+      "bytes": 8260,
+      "sha256": "90b6b94890593d43b0d8c5abc2b0b38652d94b22942b34baf1f09079e04b013b"
+    }
+  ]
+}

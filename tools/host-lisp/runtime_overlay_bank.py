@@ -47,7 +47,10 @@ STORAGE_ADDRESS_BITS = 28
 STORAGE_PERSISTENCE = "reset-stable-power-volatile"
 REGION_MAIN = 0
 REGION_C2D_OVERFLOW = 1
-KNOWN_REGIONS = (REGION_MAIN, REGION_C2D_OVERFLOW)
+REGION_LATE = 3
+REGION3_SOURCE_BASE = 0x5DE80
+REGION3_CAPACITY = 8192
+KNOWN_REGIONS = (REGION_MAIN, REGION_C2D_OVERFLOW, REGION_LATE)
 REGION1_KIND = "chip-ram-bank5-session-overflow"
 REGION1_SOURCE_KIND = "attic-ram-stage-source"
 # Region 1 is staged only after the product shelf has finished using Bank-5
@@ -203,6 +206,7 @@ class ParsedBank:
     slices: tuple[ParsedSlice, ...]
     overflow_used: int = 0
     overflow_crc16: int = 0
+    late_image: bytes = b""
 
 
 @dataclass(frozen=True)
@@ -211,6 +215,7 @@ class Materialized:
     manifest: dict[str, Any]
     header: bytes
     overflow_image: bytes = b""
+    late_image: bytes = b""
 
 
 def _fail(code: str, detail: str) -> None:
@@ -467,7 +472,7 @@ def _slice_spec(value: str) -> SliceSpec:
     ) = core
     region_id = (
         _parse_int(fields[10], "slice region", REGION_MAIN,
-                   REGION_C2D_OVERFLOW)
+                   REGION_LATE)
         if len(fields) == 11 else REGION_MAIN
     )
     slice_id = _parse_int(id_text, "slice ID", 0, MAX_SLICES - 1)
@@ -486,6 +491,8 @@ def _slice_spec(value: str) -> SliceSpec:
         raise argparse.ArgumentTypeError("data-only records require --data-slice")
     abi_version = _parse_int(abi_text, "ABI version", ENTRY_ABI, ENTRY_ABI)
     capabilities = _parse_int(caps_text, "capability mask", 0, 0xFFFFFFFF)
+    if region_id not in KNOWN_REGIONS:
+        _fail("bad-region", "private or unknown region")
     return SliceSpec(
         slice_id, name, section, start, end, entry, flags, abi_version,
         capabilities, entry_target, False, 0, region_id
@@ -505,7 +512,7 @@ def _data_slice_spec(value: str) -> SliceSpec:
     ) = fields[:8]
     region_id = (
         _parse_int(fields[8], "data-slice region", REGION_MAIN,
-                   REGION_C2D_OVERFLOW)
+                   REGION_LATE)
         if len(fields) == 9 else REGION_MAIN
     )
     slice_id = _parse_int(id_text, "data-slice ID", 0, MAX_SLICES - 1)
@@ -525,6 +532,8 @@ def _data_slice_spec(value: str) -> SliceSpec:
     capabilities = _parse_int(caps_text, "data-slice capability mask", 0, 0xFFFFFFFF)
     if capabilities:
         raise argparse.ArgumentTypeError("data-only records require capability mask zero")
+    if region_id not in KNOWN_REGIONS:
+        _fail("bad-region", "private or unknown region")
     return SliceSpec(
         slice_id, name, section, start, end, "", flags, 0, capabilities,
         "", True, destination, region_id,
@@ -534,6 +543,8 @@ def _data_slice_spec(value: str) -> SliceSpec:
 def _check_specs(specs: Sequence[SliceSpec]) -> list[SliceSpec]:
     if not specs:
         _fail("empty-slices", "at least one slice is required")
+    if any(spec.region_id not in KNOWN_REGIONS for spec in specs):
+        _fail("bad-region", "private or unknown region in extraction specification")
     if len(specs) > MAX_SLICES:
         _fail("too-many-slices", f"slice count {len(specs)} exceeds {MAX_SLICES}")
     for label, values in (
@@ -776,6 +787,7 @@ def build_region_images(
     cursors = {
         REGION_MAIN: payload_offset,
         REGION_C2D_OVERFLOW: 0,
+        REGION_LATE: 0,
     }
     records: list[bytes] = []
     payloads: list[tuple[int, int, bytes]] = []
@@ -786,6 +798,8 @@ def build_region_images(
         _check_flags(spec.flags, f"slice {spec.name} flags")
         if region_id not in KNOWN_REGIONS:
             _fail("bad-region", f"slice {spec.name} has unknown region {region_id}")
+        if region_id == REGION_LATE and (spec.data_only or spec.flags != FLAG_RUNTIME | FLAG_REUSABLE):
+            _fail("late-kind", "late tenants must be reusable runtime CODE")
         if format_version != VERSION_V4 and region_id != REGION_MAIN:
             _fail("bad-version", "region-qualified records require L65R-v4")
         if format_version == VERSION_V4 and spec.capability_mask:
@@ -812,7 +826,8 @@ def build_region_images(
                 f"slice {spec.name} file offset does not fit uint16",
             )
         region_limit = (
-            BANK_SIZE if region_id == REGION_MAIN else REGION1_CAPACITY)
+            BANK_SIZE if region_id == REGION_MAIN else
+            REGION3_CAPACITY if region_id == REGION_LATE else REGION1_CAPACITY)
         if cursor + len(item.data) > region_limit:
             _fail(
                 "bank-overflow",
@@ -824,6 +839,7 @@ def build_region_images(
                         else item.entry - item.vma)
         source_base = (
             main_source_base if region_id == REGION_MAIN
+            else REGION3_SOURCE_BASE if region_id == REGION_LATE
             else overflow_source_base)
         source_address = source_base + cursor
         if source_address > 0x0FFFFFFF:
@@ -891,6 +907,14 @@ def build_region_images(
     for region_id, offset, data in payloads:
         if region_id == REGION_C2D_OVERFLOW:
             overflow[offset : offset + len(data)] = data
+    late = bytearray(REGION3_CAPACITY if cursors[REGION_LATE] else 0)
+    for region_id, offset, data in payloads:
+        if region_id == REGION_LATE:
+            late[offset:offset+len(data)] = data
+    if late:
+        tail = _align(cursors[REGION_LATE], 32)
+        late[tail:] = bytes([0xa5]) * (REGION3_CAPACITY-tail)
+    late_result = bytes(late)
     overflow_result = bytes(overflow)
     overflow_crc = (
         crc16_ccitt_false(overflow_result) if overflow_result else 0)
@@ -935,10 +959,12 @@ def build_region_images(
         tuple(parsed),
         overflow_used,
         overflow_crc,
+        late_result,
     )
     validate_region_images(
         result,
         overflow_result,
+        late_image=late_result,
         expected_build_id=profile_build_id,
         expected_vma=expected_vma,
         max_slice_bytes=max_slice_bytes,
@@ -974,6 +1000,8 @@ def build_image(
             "overflow-output-required",
             "L65R-v4 region-1 payloads require the multi-image materializer",
         )
+    if parsed.late_image:
+        _fail("late-output-required", "region-3 payloads require the multi-image materializer")
     return image, parsed
 
 
@@ -981,6 +1009,7 @@ def validate_region_images(
     image: bytes,
     overflow_image: bytes,
     *,
+    late_image: bytes = b"",
     expected_build_id: int,
     expected_vma: int,
     max_slice_bytes: int,
@@ -1020,6 +1049,9 @@ def validate_region_images(
             )
     data = bytes(image)
     overflow_data = bytes(overflow_image)
+    late_data = bytes(late_image)
+    if late_data and (format_version != VERSION_V4 or len(late_data) != REGION3_CAPACITY):
+        _fail("late-size", "late region requires a complete 8192-byte v4 image")
     if format_version != VERSION_V4 and overflow_data:
         _fail("bad-version", "pre-v4 catalog cannot bind an overflow image")
     if len(overflow_data) > REGION1_CAPACITY:
@@ -1106,6 +1138,7 @@ def validate_region_images(
     cursors = {
         REGION_MAIN: payload_offset,
         REGION_C2D_OVERFLOW: 0,
+        REGION_LATE: 0,
     }
     for index in range(count):
         values = ENTRY.unpack_from(directory, index * ENTRY_SIZE)
@@ -1166,9 +1199,12 @@ def validate_region_images(
             region_id = REGION_MAIN
             capability_mask = region_word
             source_address = 0
+        if region_id == REGION_LATE and slice_flags != FLAG_RUNTIME | FLAG_REUSABLE:
+            _fail("late-kind", "late tenants must be reusable runtime CODE")
         cursor = cursors[region_id]
         source_base = (
             main_source_base if region_id == REGION_MAIN
+            else REGION3_SOURCE_BASE if region_id == REGION_LATE
             else overflow_source_base)
         # Payloads are densely packed: each record sits at the first offset at
         # or after the cursor that satisfies the image's packing policy.  The
@@ -1201,7 +1237,8 @@ def validate_region_images(
                 f"slice[{index}] payload is not a multiple of "
                 f"{min(ACCEPTED_PAYLOAD_ALIGNMENTS)} bytes",
             )
-        region_data = data if region_id == REGION_MAIN else overflow_data
+        region_data = (data if region_id == REGION_MAIN else
+                       late_data if region_id == REGION_LATE else overflow_data)
         if any(region_data[cursor:file_offset]):
             _fail("nonzero-padding", f"padding before slice[{index}] is not zero")
         if not 1 <= file_size <= _payload_limit(slice_flags, max_slice_bytes):
@@ -1262,6 +1299,10 @@ def validate_region_images(
             f"last overflow slice ends at {cursors[REGION_C2D_OVERFLOW]}, "
             f"image ends at {len(overflow_data)}",
         )
+    if (bool(cursors[REGION_LATE]) != bool(late_data)
+            or any(late_data[cursors[REGION_LATE]:_align(cursors[REGION_LATE], 32)])
+            or (late_data and late_data[_align(cursors[REGION_LATE], 32):] != bytes([0xa5]) * (REGION3_CAPACITY-_align(cursors[REGION_LATE], 32)))):
+        _fail("late-padding", "late image has missing records or nonzero trailing padding")
     return ParsedBank(
         build_id,
         payload_offset,
@@ -1271,6 +1312,7 @@ def validate_region_images(
         tuple(slices),
         len(overflow_data),
         overflow_crc,
+        late_data,
     )
 
 
@@ -1523,7 +1565,7 @@ def validate_manifest(
     catalog_version = value.get("catalog", {}).get("version")
     _shape(
         value,
-        TOP_FIELDS_V4 if catalog_version == VERSION_V4 else TOP_FIELDS,
+        (TOP_FIELDS_V4 | ({"late_storage"} if "late_storage" in value else set())) if catalog_version == VERSION_V4 else TOP_FIELDS,
         "manifest",
     )
     _shape(value["abi"], ABI_FIELDS, "manifest.abi")
@@ -1691,6 +1733,22 @@ def validate_manifest(
                 )
         if record.get("slice_build_id") != expected_build_id:
             _fail("manifest-build-id", f"slice[{index}] build ID differs from the profile")
+    has_late = any(r.get("region_id") == REGION_LATE for r in slices)
+    if has_late != ("late_storage" in value):
+        _fail("manifest-late", "late storage/record presence differs")
+    if has_late:
+        late = value["late_storage"]
+        _shape(late, {"file", "address", "size", "sha256", "crc16"}, "manifest.late_storage")
+        if (late["address"] != REGION3_SOURCE_BASE or late["size"] != REGION3_CAPACITY
+                or not isinstance(late["file"], str) or not late["file"]
+                or not isinstance(late["sha256"], str) or not SHA256_RE.fullmatch(late["sha256"])
+                or type(late["crc16"]) is not int or not 0 <= late["crc16"] <= 65535):
+            _fail("manifest-late", "invalid late storage binding")
+        for r in slices:
+            if r.get("region_id") == REGION_LATE and (r["flags"] != FLAG_RUNTIME | FLAG_REUSABLE
+                    or r["source_address"] != REGION3_SOURCE_BASE + r["file_offset"]
+                    or r["file_offset"] + r["file_size"] > REGION3_CAPACITY):
+                _fail("manifest-late", "late record outside its owner")
     if any(type(item) is not int for item in ids) or ids != list(range(len(ids))):
         _fail("manifest-id-order", "manifest slice IDs must be the dense sequence 0..count-1")
     if catalog.get("slice_count") != len(slices):
@@ -1709,6 +1767,7 @@ def materialize(
     max_slice_bytes: int,
     image_path: Path,
     overflow_image_path: Path | None,
+    late_image_path: Path | None = None,
     header_path: Path,
     format_version: int = VERSION,
     main_source_base: int = STORAGE_BASE,
@@ -1768,8 +1827,12 @@ def materialize(
         format_version=format_version,
         payload_alignment=payload_alignment,
     )
+    if parsed.late_image:
+        if late_image_path is None:
+            _fail("late-output-required", "late tenants require a late image path")
+        manifest["late_storage"] = dict(file=late_image_path.name, address=REGION3_SOURCE_BASE, size=REGION3_CAPACITY, sha256=_sha256_bytes(parsed.late_image), crc16=crc16_ccitt_false(parsed.late_image))
     validate_manifest(manifest, payload_alignment=payload_alignment)
-    return Materialized(image, manifest, header, overflow_image)
+    return Materialized(image, manifest, header, overflow_image, parsed.late_image)
 
 
 def _verify_outputs(
@@ -1777,6 +1840,7 @@ def _verify_outputs(
     *,
     image_path: Path,
     overflow_image_path: Path | None,
+    late_image_path: Path | None = None,
     manifest_path: Path,
     header_path: Path,
     expected_vma: int,
@@ -1802,9 +1866,13 @@ def _verify_outputs(
         overflow_image_path.read_bytes()
         if overflow_image_path is not None else b""
     )
+    actual_late = late_image_path.read_bytes() if late_image_path else b""
+    if actual_late != expected.late_image:
+        _fail("image-mismatch", "late image differs from ELF extraction")
     validate_region_images(
         actual_image,
         actual_overflow,
+        late_image=actual_late,
         expected_build_id=expected.manifest["profile_build_id"],
         expected_vma=expected_vma,
         max_slice_bytes=max_slice_bytes,
@@ -1859,6 +1927,7 @@ def pack(args: argparse.Namespace) -> None:
         max_slice_bytes=args.max_slice_bytes,
         image_path=args.image,
         overflow_image_path=args.overflow_image,
+        late_image_path=getattr(args, "late_image", None),
         header_path=args.header,
         format_version=args.format_version,
         main_source_base=args.main_source_base,
@@ -1873,6 +1942,8 @@ def pack(args: argparse.Namespace) -> None:
         if args.overflow_image is None:
             _fail("overflow-output-required", "L65R-v4 requires --overflow-image")
         outputs.append((args.overflow_image, expected.overflow_image))
+    if expected.late_image:
+        outputs.append((args.late_image, expected.late_image))
     if args.header_mode == "write":
         outputs.append((args.header, expected.header))
     else:
@@ -1891,6 +1962,7 @@ def pack(args: argparse.Namespace) -> None:
         expected,
         image_path=args.image,
         overflow_image_path=args.overflow_image,
+        late_image_path=getattr(args, "late_image", None),
         manifest_path=args.manifest,
         header_path=args.header,
         expected_vma=args.vma,
@@ -1914,6 +1986,7 @@ def verify(args: argparse.Namespace) -> None:
         max_slice_bytes=args.max_slice_bytes,
         image_path=args.image,
         overflow_image_path=args.overflow_image,
+        late_image_path=getattr(args, "late_image", None),
         header_path=args.header,
         format_version=args.format_version,
         main_source_base=args.main_source_base,
@@ -1924,6 +1997,7 @@ def verify(args: argparse.Namespace) -> None:
         expected,
         image_path=args.image,
         overflow_image_path=args.overflow_image,
+        late_image_path=getattr(args, "late_image", None),
         manifest_path=args.manifest,
         header_path=args.header,
         expected_vma=args.vma,
@@ -1959,6 +2033,50 @@ def _replace_u16(data: bytearray, offset: int, value: int) -> None:
 
 def _replace_u32(data: bytearray, offset: int, value: int) -> None:
     struct.pack_into("<I", data, offset, value)
+
+
+def _late_region_selftest() -> None:
+    """Region 3 is explicit; private region 2 never becomes a public region."""
+    sizes = (431, 1531, 1376, 953, 1356, 602, 203)
+    items = []
+    for i, size in enumerate(sizes):
+        spec = SliceSpec(i, f"late-{i}", f".late_{i}", f"late_{i}_start",
+                         f"late_{i}_end", f"late_{i}_entry", 6, 1, 0,
+                         region_id=REGION_LATE)
+        items.append(ExtractedSlice(spec, MAX_VMA, MAX_VMA + size, MAX_VMA,
+                                    bytes([i + 1]) * size))
+    kw = dict(profile_build_id=0x12345678, expected_vma=MAX_VMA,
+              max_slice_bytes=MAX_SLICE_BYTES, format_version=VERSION_V4,
+              payload_alignment=32)
+    image, overflow, parsed = build_region_images(items, **kw)
+    assert len(parsed.late_image) == REGION3_CAPACITY and not overflow
+    assert [s.file_offset for s in parsed.slices] == [0, 448, 1984, 3360, 4320, 5696, 6304]
+    verify_kw = dict(expected_build_id=kw["profile_build_id"], expected_vma=MAX_VMA,
+                     max_slice_bytes=MAX_SLICE_BYTES, format_version=VERSION_V4,
+                     payload_alignment=32)
+    assert validate_region_images(image, overflow, late_image=parsed.late_image,
+                                  **verify_kw) == parsed
+    for region in (2, 4):
+        bad = bytearray(image)
+        bad[HEADER_SIZE + 24] = region
+        struct.pack_into("<H", bad, HEADER_SIZE + 22, 0)
+        struct.pack_into("<H", bad, HEADER_SIZE + 22,
+                         crc16_ccitt_false(bad[HEADER_SIZE:HEADER_SIZE + ENTRY_SIZE]))
+        _refresh_catalog_crcs(bad)
+        try:
+            validate_region_images(bad, overflow, late_image=parsed.late_image,
+                                   **verify_kw)
+        except OverlayBankError as exc:
+            assert exc.code == "bad-region"
+        else:
+            raise AssertionError("private/unknown region accepted")
+    for late in (parsed.late_image[:-1], bytes(REGION3_CAPACITY)):
+        try:
+            validate_region_images(image, overflow, late_image=late, **verify_kw)
+        except OverlayBankError:
+            pass
+        else:
+            raise AssertionError("missing/corrupt late image accepted")
 
 
 def selftest() -> None:
@@ -2564,6 +2682,7 @@ def selftest() -> None:
 
 
 def _common(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--late-image", type=Path)
     parser.add_argument("--elf", type=Path, required=True, help="final linked ELF")
     parser.add_argument("--nm", type=Path, required=True, help="llvm-nm executable")
     parser.add_argument("--objcopy", type=Path, required=True, help="llvm-objcopy executable")
@@ -2735,6 +2854,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.command == "selftest":
             selftest()
+            _late_region_selftest()
+            print("runtime-overlay-bank late-region selftest: PASS seven tenants, four negative controls")
         elif args.command == "lint-layout":
             lint_layout(args)
             print(

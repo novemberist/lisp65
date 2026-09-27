@@ -71,10 +71,9 @@ check-source: v230-bundle-docs-check v230-public-native-check
 
 .PHONY: v240-bundle-docs-check v240-public-native-check
 v240-bundle-docs-check:
-	python3 tools/host-lisp/c2_v240_bundle_docs_gate.py
+	python3 tools/host-lisp/c2_v250_v240_bundle_era_20260928.py
 v240-public-native-check:
-	python3 tools/host-lisp/c2_v240_public_native.py selftest
-	python3 tools/host-lisp/c2_v240_public_product.py preflight
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v240_release_preflight_20260928.py
 check-source: v240-bundle-docs-check v240-public-native-check
 
 # 2.4.0 Before-Ship dispositions of inherited register items.
@@ -114,10 +113,10 @@ block-26-closure-check: block-26-closure-selftest
 check-source: block-26-closure-check
 
 block-26-build-integrity-selftest:
-	python3 tools/host-lisp/block_26_build_integrity_card.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_card5_20260928.py selftest
 
 block-26-build-integrity-check:
-	python3 tools/host-lisp/block_26_build_integrity_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_card5_20260928.py check
 check-source: block-26-build-integrity-check
 
 .PHONY: native-cycle-stationary-check
@@ -320,8 +319,10 @@ document-index-check: document-index-selftest
 	python3 tools/host-lisp/document_index.py
 
 .PHONY: slice-capacity-preflight-selftest
+# 2026-09-24: preserve the predecessor and its receipts; the dated wrapper
+# adds catalog-page growth checks and runs both generations of selftests.
 slice-capacity-preflight-selftest:
-	python3 tools/host-lisp/slice_capacity_preflight.py --selftest
+	python3 tools/host-lisp/slice_capacity_preflight_20260924.py --selftest
 
 check-source: slice-capacity-preflight-selftest
 
@@ -332,10 +333,10 @@ c2-product-profile-parity-check: c2-product-profile-parity-selftest
 	python3 tools/host-lisp/c2_product_substitution_link.py --selftest
 
 c2-lite-v6-roots-fronts-product-profile-selftest:
-	python3 tools/host-lisp/c2_lite_v6_roots_fronts_product_profile.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/card_l_media_manifest_20260925.py selftest
 
 c2-lite-v6-roots-fronts-product-profile-check: c2-lite-v6-roots-fronts-product-profile-selftest
-	python3 tools/host-lisp/c2_lite_v6_roots_fronts_product_profile.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/card_l_media_manifest_20260925.py check
 
 c2-lite-media-acceptance-selftest:
 	python3 tools/host-lisp/c2_lite_product_reproducibility.py selftest
@@ -669,10 +670,10 @@ c2-v20-map-tuple-media-check: c2-v20-map-tuple-media-selftest
 # 2026-09-23: dated nested-error recovery successor (fast-path runtime
 # change), wrapping the repair successor with its bytes and receipt bound.
 c2-v20-map-tuple-d1-e25-selftest: c2-v20-map-tuple-media-check
-	python3 tools/host-lisp/nested_error_recovery_d1_e25_successor.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/comfort_default_d1_e25_20260927.py selftest
 
 c2-v20-map-tuple-d1-e25-check: c2-v20-map-tuple-d1-e25-selftest
-	python3 tools/host-lisp/nested_error_recovery_d1_e25_successor.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/comfort_default_d1_e25_20260927.py check
 
 c2-v20-map-tuple-d1-e25-result-selftest: c2-v20-map-tuple-d1-e25-check
 	python3 tools/host-lisp/c2_v20_map_tuple_d1_e25_result.py selftest
@@ -1035,7 +1036,7 @@ c2-v124-time-check:
 	python3 tools/host-lisp/isolated_host_check.py --workspace time -- python3 tools/host-lisp/c2_v124_time_gate.py
 
 c2-require-prior-append-option-a-check:
-	python3 tools/host-lisp/isolated_host_check.py --workspace option-a -- python3 tools/host-lisp/c2_require_prior_append_option_a_gate.py
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/isolated_host_check.py --workspace option-a -- python3 -B tools/host-lisp/comfort_default_option_a_20260927.py check
 
 c2-final-island-identity-check:
 	python3 tools/host-lisp/c2_final_island_identity_gate.py check-source
@@ -1053,8 +1054,8 @@ c2-append-suffix-read-domain-check:
 	python3 tools/host-lisp/c2_append_suffix_read_domain_gate.py check-source
 
 c2-l-full-keymap-end-to-end-check:
-	python3 tools/host-lisp/v11_l_lite_keymap.py selftest
-	python3 tools/host-lisp/v11_l_lite_keymap.py check
+	python3 tools/host-lisp/c2_v250_keymap_20260928.py selftest
+	python3 tools/host-lisp/c2_v250_keymap_20260928.py check
 	python3 tools/host-lisp/c2_l_full_keymap_end_to_end_gate.py
 
 c2-l-full-static-plane-check:
@@ -1603,10 +1604,10 @@ c2-v21-loading-libraries-stage-breadcrumb-media-check: c2-v21-loading-libraries-
 .PHONY: c2-media-builder-closure-enumeration-selftest
 .PHONY: c2-media-builder-closure-enumeration-check
 c2-media-builder-closure-enumeration-selftest: c2-v21-loading-libraries-stage-breadcrumb-media-check
-	python3 tools/host-lisp/c2_media_builder_closure_enumeration.py selftest >/dev/null
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_media_census_20260928.py selftest >/dev/null
 
 c2-media-builder-closure-enumeration-check: c2-media-builder-closure-enumeration-selftest c2-v160-item1-only-media-check
-	python3 tools/host-lisp/c2_media_builder_closure_enumeration.py check >/dev/null
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_media_census_20260928.py check >/dev/null
 
 check-source: c2-media-builder-closure-enumeration-check
 
@@ -3906,10 +3907,10 @@ check-source: public-surface-domain-audit-check
 
 .PHONY: public-naming-audit-selftest public-naming-audit-check
 public-naming-audit-selftest:
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/public_naming_audit.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v250_public_naming_20260928.py selftest
 
 public-naming-audit-check: public-naming-audit-selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/public_naming_audit.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v250_public_naming_20260928.py check
 
 check-source: public-naming-audit-check
 
@@ -4314,7 +4315,8 @@ check-source: root-index-boundary-check vm-soft-frames-check
 
 .PHONY: storage-owner-preflight-check
 storage-owner-preflight-check: root-index-boundary-check vm-soft-frames-check
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_preflight.py --elf build/startup-feedback-product-r3/wplto/lisp65-c2-substitution-linked.prg.elf --object build/startup-feedback-product-r3/wplto/lisp65-c2-substitution-linked.prg.lto.o --output build/storage-owner-preflight-check/owners.json
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/card_l_storage_owner_20260925.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/card_l_storage_owner_20260925.py check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_symbol_check.py --output build/storage-owner-preflight-check/symbols
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_reader_check.py --output build/storage-owner-preflight-check/readers
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/isolated_host_check.py --workspace storage -- python3 tools/host-lisp/storage_owner_linker.py --predecessor build/startup-feedback-product-r3/wplto --output build/storage-owner-preflight-check/linker
@@ -4381,3 +4383,12 @@ check-source: boot-only-carrier-contract-check
 put-kit-contract-check:
 	python3 tools/host-lisp/put_kit_contract.py
 check-source: put-kit-contract-check
+
+# 2.5.0 preparation successors; immutable Comfort-default predecessors retained.
+.PHONY: v250-bundle-docs-check v250-public-authority-check
+v250-bundle-docs-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_bundle_docs_gate.py
+v250-public-authority-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_public_product.py preflight
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_reproduction_gate.py check
+check-host: v250-bundle-docs-check v250-public-authority-check

@@ -3,8 +3,8 @@
 .PHONY: v11-c1-repl-latency-check v11-source-stream-lifetime-selftest v11-source-stream-lifetime-check v11-wave2-error-text-library-check v11-wave2-list-unification-selftest v11-wave2-list-unification-check v11-wave2-policy-name-implementation-collect v11-wave2-policy-name-implementation-check v11-wave2-common-repin-collect v11-wave2-common-repin-check v11-function-metadata-selftest v11-function-metadata-check v11-l-lite-keymap-check v11-l-lite-keymap-dry-check v11-color-scroll-binding-check v11-wave3-fail-fast-check v11-wave3-dry-smoke v11-l-lite-probe-check v11-wave3-l-lite-repin-collect v11-wave3-l-lite-repin-check
 
 v11-l-lite-keymap-check:
-	python3 tools/host-lisp/v11_l_lite_keymap.py selftest
-	python3 tools/host-lisp/v11_l_lite_keymap.py check
+	python3 tools/host-lisp/c2_v250_keymap_20260928.py selftest
+	python3 tools/host-lisp/c2_v250_keymap_20260928.py check
 
 v11-color-scroll-binding-check:
 	python3 tools/host-lisp/v11_color_scroll_binding.py selftest

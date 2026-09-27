@@ -1,5 +1,27 @@
 # lisp65
 
+## Comfort by default (2.5.0 candidate)
+
+The product starts in Comfort at `l65>`. Balanced multiline input, automatic
+indentation, string/comment-aware parenthesis tracking and ten-line Up/Down
+history are available immediately. Excess closing parentheses print
+`*** reader: unmatched close parenthesis` without evaluating the input.
+Errors, RUN/STOP aborts and refusals return to `l65>` with definitions and
+history intact. An empty line leaves to `lisp65>` and stays native; `(repl)`
+re-arms Comfort. Top-level anonymous lambdas outside `defun` remain refused.
+
+Boot takes about +8 s over 2.4.0 in the emulator (+7.65 s measured); the device
+figure is pending. Starting in Comfort costs +8 symbols, +105 name bytes,
++1 code image, +7 C2D entries/roots and five more boot collections. After exit
+to the native prompt, the matched forced collection has +12 live cells and
++2.1% cycles; natural collection cycles are −1.7%. These are emulator
+measurements, not device timings or worst-case pause guarantees. Owner
+acceptance of the named GC cost remains open.
+
+Known-issues wording proposal, pending the owner's word: IDE `C-x C-c` does
+not reach the IDE; RUN/STOP leaves it with the buffer kept. Backspace latency
+remains; its card is after 2.5.0.
+
 lisp65 is a native, interactive Lisp workbench for the
 [MEGA65](https://mega65.org/). It combines a Common Lisp-inspired language,
 an on-device bytecode compiler, an Emacs-style full-screen editor, and
@@ -134,11 +156,11 @@ unattended operation, or large applications.
 
 | Current limitation | Practical effect | Planned direction |
 | --- | --- | --- |
-| Focused REPL editing | The native `lisp65>` prompt has lossless insertion-mode line editing. Balanced multiline input, history and Comfort are not delivered. | Type-ahead during evaluation and Comfort remain later work. |
+| Focused REPL editing | The native `lisp65>` prompt has lossless insertion-mode line editing. Default Comfort adds balanced multiline input and history. | Type-ahead during evaluation remains later work. |
 | Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v2.0 makes no matcher/blink claim. |
 | Permissive hot `car`/`cdr` opcodes | Tier-1 library functions raise a VM type error on an unsupported domain, but the hot opcodes stay permissive: `(car nil)` and `(car 1)` both return `nil`. | A fully checked Tier-2 implementation was measured but did not fit the resident text budget; it remains sealed for the 2.x series. |
 | Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`. A session has 64 code images; a redefinition consumes a new one. At capacity a definition is refused with `OUT OF MEMORY` at a live prompt; a product-disk restart frees the images. | The C2D session store separates immutable code from mutable session state; slot reuse and dependency-aware reclamation remain later work. |
-| Top-level anonymous `lambda` refused | An anonymous `lambda` outside a `defun` body is refused with `VM: BAD BYTECODE`; the prompt recovers and nothing already defined is affected. Lambdas inside `defun` bodies work. | Promotion of escaping callables to persistent publications is planned for the next cycle. |
+| Top-level anonymous `lambda` refused | An anonymous `lambda` outside a `defun` body is refused with `VM: BAD BYTECODE`; the prompt recovers and nothing already defined is affected. Lambdas inside `defun` bodies work. | Set B is frozen; this limitation remains in 2.5.0. |
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
 | Fresh-session workflow | RUN/STOP aborts evaluation but keeps the session. The MEGA65 Reset button returns to BASIC rather than restarting lisp65. | Restart from the product disk for a fresh session; power-cycle for a cold start. `restart-repl` returns with C2.3. |
@@ -150,9 +172,9 @@ unattended operation, or large applications.
 | Banner colors persist after scrolling | The screen driver scrolls character cells but not color RAM, so text crossing the former banner rows can inherit its colors. Data and program state are unaffected. | A later color-RAM-aware scroll path must preserve the native post-boot ownership contract. |
 | Function metadata is incomplete | Complete integrated help is not claimed for every native and macro entry. | Full metadata coverage and integrated help remain later work. |
 
-The five optional packages `buffer`, `place`, `string-extra`, `inspect` and
-`defstruct` ship on the 2.4.0 product disk. The shipped `INIT.L65` loads
-`place` and `string-extra` at boot; load `buffer`, `inspect` and `defstruct`
+The six disk packages include `buffer`, `place`, `string-extra`, `inspect`,
+`defstruct` and `repl-comfort`. The 2.5.0 candidate `INIT.L65` loads
+`place`, `string-extra` and `repl-comfort` at boot; load the other three
 by hand with `require`, for example `(require "buffer")`.
 The physical product-medium write-protect case is not
 applicable to the tested stock-core SD-D81 profile because it exposes no

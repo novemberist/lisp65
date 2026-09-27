@@ -1191,3 +1191,11 @@ uint16_t str_copy_out(obj s, char *dst, uint16_t max) {
     return l;
 }
 #endif /* LISP65_STRING_ARENA */
+
+#ifdef LISP65_SET_B
+
+__attribute__((noinline,used,section(".lisp65_rt_c2append_retire_scan_a"))) uint8_t gc_cell_marked(uint16_t i){return MARK_GET(i)?1u:0u;}
+__attribute__((noinline,used,section(".lisp65_rt_c2append_retire_scan_a"))) uint16_t gc_scan_high(void){return alloc_high;}
+__attribute__((noinline,used,section(".lisp65_rt_c2append_retire_scan_a"))) uint16_t gc_scan_frozen(void){return gc_frozen;}
+
+#endif

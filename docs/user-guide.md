@@ -1,23 +1,45 @@
-# lisp65 2.4.0 User Guide
+# lisp65 2.5.0 Candidate User Guide
+
+## Comfort by default (2.5.0 candidate)
+
+The product starts in Comfort at `l65>`. Balanced multiline input, automatic
+indentation, string/comment-aware parenthesis tracking and ten-line Up/Down
+history are available immediately. Excess closing parentheses print
+`*** reader: unmatched close parenthesis` without evaluating the input.
+Errors, RUN/STOP aborts and refusals return to `l65>` with definitions and
+history intact. An empty line leaves to `lisp65>` and stays native; `(repl)`
+re-arms Comfort. Top-level anonymous lambdas outside `defun` remain refused.
+
+Boot takes about +8 s over 2.4.0 in the emulator (+7.65 s measured); the device
+figure is pending. Starting in Comfort costs +8 symbols, +105 name bytes,
++1 code image, +7 C2D entries/roots and five more boot collections. After exit
+to the native prompt, the matched forced collection has +12 live cells and
++2.1% cycles; natural collection cycles are −1.7%. These are emulator
+measurements, not device timings or worst-case pause guarantees. Owner
+acceptance of the named GC cost remains open.
+
+Known-issues wording proposal, pending the owner's word: IDE `C-x C-c` does
+not reach the IDE; RUN/STOP leaves it with the buffer kept. Backspace latency
+remains; its card is after 2.5.0.
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-2.4.0` release bundle
+- The prepared `lisp65-2.5.0` candidate bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
 The bundle supplies `media/lisp65-product.d81` and a blank convenience image,
 `media/lisp65-work.d81`. Any valid non-product 1581 image may be used as the
 work disk. The product image contains the resident prompt editor, the IDE,
-IDEX, and M65D libraries, and the five optional packages described in
+IDEX, and M65D libraries, and the six disk packages described in
 [Product-resident libraries](#product-resident-libraries); there is no
 separate optional-library medium.
 
 Since 2.3.0, `IDE`, `IDEX` and `M65D` no longer appear as separate disk
 files: their implementations remain in the static product, and the three
 `load-lib` forms below still work. This reclaims 193 disk blocks and takes the
-medium from 22 to 19 files, without changing the runtime or library code.
+2.4.0 medium from 22 to 19 files. The 2.5.0 Comfort-default medium has 20 files.
 `BUFFER` remains on disk as the optional L65S package loaded by
 `(require "buffer")`; it is not a retired IDE image. The physical cold start
 from this medium, through the ten-role stager, was accepted on the device.
@@ -30,9 +52,9 @@ Run from the extracted bundle directory:
 python3 verify.py
 ```
 
-Do not use a bundle that fails. The verifier checks every packaged file, all 19
-product artifacts, and the embedded hardware-acceptance evidence without using
-the live repository or network.
+Do not use a bundle that fails. The released 2.4.0 verifier covers its packaged
+files and evidence. A qualified 2.5.0 bundle and independent public-source
+reproductions remain pending; retained Final readback is not bundle verification.
 
 ## Start from BASIC and perform the one-drive swap
 
@@ -50,9 +72,9 @@ the live repository or network.
 
 5. Follow the three visible phases — `STAGING MEDIA`, `BUILDING HEAP`, and
    `LOADING LIBRARIES` — then `Initializing...` until the lisp65 banner and
-   REPL appear.
-6. Use Cursor Left/Right, insertion, and deletion directly at `lisp65>`; the
-   one-line prompt editor is resident and needs no library load.
+   Comfort prompt `l65>` appear.
+6. Use the Comfort editor immediately. An empty line leaves to the native
+   `lisp65>` editor; `(repl)` re-arms Comfort.
 7. Load the workbench composition while `L65SYS` remains mounted. These are the
    full-screen editor and persistence libraries, not the prompt editor:
 
@@ -97,13 +119,13 @@ already exists on the mounted disk. Any other destination name sets the
 publish a library under an arbitrary name, use `compile-string` directly, as
 shown below.
 
-The selected 2.4.0 product checks for `INIT.L65` after the resident world is
+The selected 2.5.0 product checks for `INIT.L65` after the resident world is
 ready and before the first banner. The release medium supplies the file, so
 the normal release boot evaluates it once per cold boot. An open or
 evaluation error returns to one live `lisp65>` prompt and is not retried.
 
-The shipped `INIT.L65` contains `(require "place")` and
-`(require "string-extra")`. Both packages load at boot without any loading
+The candidate `INIT.L65` requires `place`, `string-extra` and `repl-comfort`,
+then requests deferred Comfort entry after INIT returns. The packages load without any loading
 text: neither the loader's `LOADING` progress line nor `require`'s own
 `loading <name>...` echo appears, and the banner renders exactly as it does
 without an `INIT.L65`. An interactive `(require ...)` typed at the prompt
@@ -120,10 +142,9 @@ corruption, before it can replace the active source stream. `require` inside
 A library name longer than 16 characters is refused.
 
 Loading both packages by default consumes space earlier; it does not load
-them a second time when they are later explicitly required. With the IDE and
-all five packages loaded, the symbol reserve is exactly **32 free symbols and
-387 free name bytes**, against the 32/384 floor. The symbol floor is met
-exactly and the name floor has three bytes of margin. These independent
+them a second time when they are later explicitly required. On the 2.5.0 candidate, with the IDE and
+all six packages including Comfort loaded, capacity is finite; the optional-library
+244/5,415 reserve measurement is historical, not a default-product measurement. These independent
 limits are not a promise that all can be exhausted simultaneously.
 
 The prompt-only minibuffer frame changes physical heap placement: nine live
@@ -133,8 +154,7 @@ cons cells move from the local to the external heap. Its named cost is
 The fixed 1,160-event input sequence collects once in each world, including
 warmup. This is a measured heap-layout cost, not a relaxed GC limit or a
 worst-case pause guarantee. Emulator cycle figures are never device
-wall-clock timings. Further resident-symbol additions, including Comfort,
-require the storage-owner card.
+wall-clock timings. Comfort uses a disk library plus the resident recovery hook.
 
 The native prompt also moves up on wrapped lines: when the input wraps,
 `lisp65>` stays beside the start of the input on the upper row. Shrinking
@@ -156,7 +176,8 @@ focused insertion-mode editor. Cursor Left/Right and `C-b`/`C-f` move by one
 character; `C-a` and `C-e` move to the endpoints; Delete removes backward and
 `C-d` removes forward. Movement or deletion beyond an endpoint is a no-op.
 The cursor-following viewport preserves the 250-character limit. Prompt, editable input and cursor share an editor-owned logical line,
-which may occupy several screen rows. This is still a single-logical-line editor, not the deferred balanced multiline/history Comfort REPL.
+which may occupy several screen rows. This is a single-logical-line editor. Default Comfort adds
+balanced multiline input and history.
 
 A logical line longer than the screen row now soft-wraps onto the row(s)
 above it instead of scrolling its own content sideways: the line is laid out
@@ -195,9 +216,9 @@ Example:
 
 ### Product-resident libraries
 
-The 2.4.0 product D81 carries the static `ide`, `idex`, and `m65d`
-implementations, and the five optional packages `buffer`, `place`, `string-extra`, `inspect`, and
-`defstruct`. Load the libraries you need before swapping to the work disk.
+The 2.5.0 product D81 carries the static `ide`, `idex`, and `m65d`
+implementations, and six disk packages: `buffer`, `place`, `string-extra`,
+`inspect`, `defstruct` and `repl-comfort`. Load the libraries you need before swapping to the work disk.
 If M65D is already active when the mounted image changes, run
 `(m65d-remount)` before loading or saving.
 
@@ -461,7 +482,7 @@ reports `source missing` and returns the cursor to the buffer.
   GETIN empty-queue sentinel.
 - `C-x x` and `C-x Return` open the exact-name command launcher; physical
   Meta/Alt identity is not claimed.
-- `C-x C-c` returns to the REPL and preserves the active buffer.
+- Known-issues wording proposal: `C-x C-c` does not reach the IDE; RUN/STOP leaves it and keeps the active buffer.
 - RUN/STOP is not an editor key. During evaluation it aborts to a usable REPL
   with `stopped (run/stop)`; while idle it has no product action.
 

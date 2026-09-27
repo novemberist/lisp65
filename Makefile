@@ -690,22 +690,22 @@ include mk/ship-builder.mk
 all: $(M65PRG)
 
 c2-elf-truth-migration-selftest:
-	python3 tools/host-lisp/c2_elf_truth_migration_gate.py --selftest
+	python3 tools/host-lisp/comfort_default_elf_truth_20260927.py selftest
 
 c2-elf-truth-migration-check:
-	python3 tools/host-lisp/c2_elf_truth_migration_gate.py
+	python3 tools/host-lisp/comfort_default_elf_truth_20260927.py check
 
 c2-linked-format-decoder-closure-selftest:
-	python3 tools/host-lisp/c2_linked_format_decoder_closure.py --selftest
+	python3 tools/host-lisp/comfort_default_linked_format_20260927.py selftest
 
 c2-linked-format-decoder-closure-check: c2-linked-format-decoder-closure-selftest
-	python3 tools/host-lisp/c2_linked_format_decoder_closure.py
+	python3 tools/host-lisp/comfort_default_linked_format_20260927.py check
 
 post-v1.2-housekeeping-selftest:
-	python3 tools/host-lisp/post_12_housekeeping.py --selftest
+	python3 tools/host-lisp/comfort_default_housekeeping_20260927.py selftest
 
 post-v1.2-housekeeping-check:
-	python3 tools/host-lisp/post_12_housekeeping.py
+	python3 tools/host-lisp/comfort_default_housekeeping_20260927.py check
 
 $(M65PRG): $(SRCS) | build
 	$(CC_M65) $(CFLAGS) $(SRCS) -o $@

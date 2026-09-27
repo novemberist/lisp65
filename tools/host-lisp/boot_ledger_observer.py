@@ -6,9 +6,11 @@ sys.path.insert(0,str(ROOT/'tools/host-lisp'))
 from elf_truth import ElfTruth
 def bind(p):
     b=p.read_bytes();return dict(path=str(p.relative_to(ROOT)),bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
-def configure(out):
-    p=ROOT/'build/definition-set-a-final-medium-r1/packed-receipt.json';r=json.loads(p.read_text())
-    paths=[p.parent/'packed/autoboot.c65.elf',ROOT/r['elf']['path']]
+def configure(out, *, paths=None, inputs=None, medium=None):
+    if paths is None:
+        p=ROOT/'build/definition-set-a-final-medium-r1/packed-receipt.json';r=json.loads(p.read_text())
+        paths=[p.parent/'packed/autoboot.c65.elf',ROOT/r['elf']['path']]
+        inputs=[p];medium=r['medium']
     worlds=[ElfTruth.read(p,llvm_readobj=ROOT/'tools/llvm-mos/bin/llvm-readobj',include_section_data=True) for p in paths]
     specs=[(0,'_start'),(0,'main'),(0,'product_media_identity'),(0,'disk_record'),
            (1,'_init'),(1,'main'),(1,'vm_install_staged_boot_overlay'),(1,'c2_product_install'),
@@ -38,7 +40,7 @@ def configure(out):
     lines+=['};','#define BOOT_N (sizeof(boot_boundaries)/sizeof(boot_boundaries[0]))']
     (out/'observer/xemu/boot_boundaries.h').write_text('\n'.join(lines)+'\n')
     (out/'configuration.json').write_text(json.dumps(dict(status='CONFIGURED; NOT A TIMING CLAIM',boundaries=rows,
-        inputs=[bind(p)]+[bind(q) for q in paths],medium=r['medium'],product_builds=0),indent=2)+'\n')
+        inputs=[bind(p) for p in (inputs or [])]+[bind(q) for q in paths],medium=medium,product_builds=0),indent=2)+'\n')
 def build(out):
     base=ROOT/'build/minibuffer-frame-attribution-r1/cycle-observer'
     out.mkdir(exist_ok=False)

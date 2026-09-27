@@ -86,6 +86,12 @@ PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v29-receipt.json"
 PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v30-receipt.json"
+# The comfort-library card adds the Comfort medium producer (the 2.4.0 D81
+# plus the sixth package and a six-row index, every other file proved
+# byte-identical to the 2.4.0 media authority).  The population moved, so the
+# enumeration mints its successor; the v30 record stays as it was.
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v31-receipt.json"
 # DWX Item 4 adds a focus-free packed-require producer.  Its stopped-memory
 # and framebuffer rows are part of the producer closure, not an unregistered
 # test-side copy of the medium.
@@ -126,6 +132,7 @@ SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 # developer fixtures, but they cannot become a qualified product producer
 # without an explicit reclassification and packed-artifact closure.
 REGISTERED = {
+    "tools/host-lisp/comfort_library_medium.py",
     "tools/host-lisp/c2_v240_public_libraries.py",
     "tools/host-lisp/c2_v240_public_media.py",
     "tools/host-lisp/stager_crc32_card.py",

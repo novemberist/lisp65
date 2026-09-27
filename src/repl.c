@@ -314,6 +314,9 @@ void repl(void) {
 #ifndef LISP65_BYTECODE_STDLIB_NATIVE_READ_LINE_ENTRY
         emit_str("lisp65> ");
 #endif
+#ifdef LISP65_SET_B
+        if(!c2_retire_run(0u))lisp_abort_code(vm_status_error_code(VM_BADOPCODE));
+#endif
         st = read_line(buf, &n, BUF_MAX);
 #ifndef LISP65_BYTECODE_STDLIB_NATIVE_READ_LINE_ENTRY
         if (st == 1) emit('\n');

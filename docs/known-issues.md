@@ -1,5 +1,31 @@
 # Known Issues and Retired Exceptions
 
+## 2.5.0 release wording
+
+Ship and Publish are delegated to the reviewer by the owner (2026-09-28
+plan journal); the 2.4.0 register below is retained historically.
+
+The product starts at `l65>`. Errors, RUN/STOP aborts and refusals stay in
+Comfort with definitions and history intact. An empty line leaves to
+`lisp65>`; `(repl)` re-arms it. The anonymous-lambda limitation remains.
+
+- Physical IDE `C-x C-c` does not reach the IDE. RUN/STOP leaves it, buffer kept.
+- Backspace latency remains; the follow-up card is after 2.5.0.
+- Boot is about +8 s over 2.4.0 in the emulator; the automated device session
+  measured about +6.7 s (40.4 s to the prompt, host tool clock).
+- Pending device confirmation: stopwatch cold power cycle, physical RUN/STOP
+  key, and physical typing feel. Virtual-matrix RUN/STOP passed.
+- Named GC cost: +8 symbols, +105 name bytes, +1 code image, +7 C2D
+  entries/roots, five more boot collections; after exit, +12 live cells and
+  +2.1% forced-collection cycles (matched natural cycles −1.7%). The owner
+  accepted this named GC cost. These are emulator measurements, not device
+  timings or worst-case pause guarantees.
+- An absent `(require "<absent>")` prints `LOADING ...` before returning `NIL`.
+
+See the [Comfort-default report](planning/comfort-default-final-report.md#7-gc-accepted-cycle-probe-adapter-586875f6).
+
+## Retained 2.4.0 register
+
 This is the maintained user-facing issue register for lisp65 2.4.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.

@@ -39,6 +39,50 @@ def population():
             if p.is_relative_to(ROOT / 'build') and p.is_file(): sealed.add(p)
     return [n for n in names if n], sorted(sealed)
 
+# Directories under build/ and the evidence tree whose complete recursive
+# content is protected (no symlinks, no unprotected file) are mounted
+# read-only as one directory instead of file by file: tens of thousands of
+# per-file mounts, rebound again by nested bwrap workspaces, exceed
+# fs.mount-max (2026-09-27, Set B evidence). Every file is still verified
+# individually below; a directory mount additionally forbids new files there.
+# Directories inside or above a generated world are never collapsed.
+COLLAPSE_BASES = ('build', 'tests/bytecode/dialect-v2/evidence')
+# Gate output directories that receive fresh scratch entries during a check
+# keep per-file protection (never collapsed, nor any ancestor of them).
+WRITABLE_OUTPUT_DIRS = ('build/v2.1/f011-followup-host-preflight',)
+
+def collapse(protected, generated=()):
+    pset = {str(p) for p in protected}
+    root = str(ROOT)
+    worlds = [str(g) for g in generated] + [str(ROOT/w) for w in WRITABLE_OUTPUT_DIRS]
+    tops = set()
+    for p in pset:
+        rel = os.path.relpath(p, root).split(os.sep)
+        for base in COLLAPSE_BASES:
+            b = base.split('/')
+            if rel[:len(b)] == b and len(rel) > len(b) + 1:
+                tops.add(os.path.join(root, *rel[:len(b) + 1]))
+    full = {}
+    for top in sorted(tops):
+        for dp, dns, fns in os.walk(top, topdown=False):
+            ok = bool(fns or dns) and not any(
+                dp == w or dp.startswith(w + os.sep) or w.startswith(dp + os.sep) for w in worlds)
+            for f in fns:
+                q = os.path.join(dp, f)
+                if not ok or os.path.islink(q) or q not in pset: ok = False; break
+            for n in dns:
+                q = os.path.join(dp, n)
+                if not ok or os.path.islink(q) or not full.get(q, False): ok = False; break
+            full[dp] = ok
+    dirs = sorted(d for d, ok in full.items() if ok and not full.get(os.path.dirname(d), False))
+    marks = set(dirs)
+    covered, individual = [], []
+    for p in sorted(pset):
+        d = os.path.dirname(p)
+        while d.startswith(root + os.sep) and d not in marks: d = os.path.dirname(d)
+        (covered if d in marks else individual).append(p)
+    return individual, dirs, covered
+
 def snapshot(names):
     return {n: hashlib.sha256((ROOT/n).read_bytes()).hexdigest() for n in names if (ROOT/n).is_file()}
 
@@ -46,7 +90,7 @@ def main():
     if sys.argv[1:2] == ['--mount-check']:
         value = json.loads(Path(sys.argv[2]).read_text())
         libc = ctypes.CDLL(None, use_errno=True)
-        for name in value['sealed']:
+        for name in value.get('sealed_dirs', []) + value['sealed']:
             p = os.fsencode(name)
             if libc.mount(p, p, None, 4096, None) != 0:
                 raise OSError(ctypes.get_errno(), 'bind sealed artifact', name)
@@ -55,7 +99,7 @@ def main():
             if libc.mount(None, p, None, 4096 | 32 | 1 | 2 | 4, None) != 0:
                 raise OSError(ctypes.get_errno(), 'read-only sealed artifact', name)
         # Test the original holdings before mounting fresh generated worlds.
-        for name in value['sealed']:
+        for name in value['sealed'] + value.get('covered', []):
             try: fd = os.open(name, os.O_WRONLY)
             except OSError as error:
                 if error.errno not in (13, 30): raise
@@ -77,7 +121,7 @@ def main():
             raise OSError(ctypes.get_errno(), 'clear capabilities')
         if libc.prctl(38, 1, 0, 0, 0) != 0:
             raise OSError(ctypes.get_errno(), 'no new privileges')
-        for name in value['sealed']:
+        for name in value['sealed'] + value.get('covered', []):
             if any(Path(name).is_relative_to(row['logical']) for row in value.get('generated', [])):
                 continue  # The original passed above; this is a writable copy.
             if not os.statvfs(name).f_flag & os.ST_RDONLY:
@@ -156,8 +200,10 @@ def main():
         path.mkdir(mode=0o700)
         options += ['--setenv', key, str(path)]
     config = args.out/'mounts.json'
-    config.write_text(json.dumps(dict(sealed=[str(p) for p in protected], command=command,
-                                     generated=generated)))
+    individual, sealed_dirs, covered = collapse(protected, [row['logical'] for row in generated])
+    config.write_text(json.dumps(dict(sealed=[str(p) for p in individual], command=command,
+                                     sealed_dirs=[str(d) for d in sealed_dirs],
+                                     covered=[str(p) for p in covered], generated=generated)))
     start = time.monotonic()
     with (args.out/'check-source.log').open('w') as log:
         result = subprocess.run(['bwrap', *options, '--', sys.executable, '-B', str(Path(__file__).resolve()),
@@ -176,6 +222,8 @@ def main():
         changed_files=changed, log=dict(path=str(log.relative_to(ROOT)),
         sha256=hashlib.sha256(log.read_bytes()).hexdigest()))
     receipt['isolated_generated_trees'] = generated
+    receipt['read_only_mounts'] = dict(individual=len(individual), directories=len(sealed_dirs),
+                                       files_under_directories=len(covered))
     receipt['changed_sealed_artifacts'] = changed_sealed
     receipt['changed_protected_files'] = len(set(changed) | set(changed_sealed))
     (args.out/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')

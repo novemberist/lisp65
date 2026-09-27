@@ -176,4 +176,9 @@ uint16_t vm_soft_frame_high_water(void);
 void     vm_soft_frame_reset(void);
 #endif
 
+/* Set B: native prompt maintenance only; never callable from Lisp. */
+#ifdef LISP65_SET_B
+uint8_t vm_retire_prompt_quiescent(void);
+#endif
+
 #endif /* LISP65_VM_H */

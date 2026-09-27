@@ -43,7 +43,10 @@ import r6_g6 as G6  # noqa: E402
 # 2026-09-24 fourth dated successor: the first sealed full check-host's writer
 # and environment conversions touch Makefile and mk (provenance only).
 # Predecessor block-2.6-card5-build-integrity-release-v240-r3-receipt-20260924.json stays.
-RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/block-2.6-card5-build-integrity-release-v240-r4-receipt-20260924.json"
+# 2026-09-25 dated successor: gates.mk routes slice-capacity preflight to
+# its dated directory-growth wrapper (provenance only; facts and mutations kept).
+# Predecessor block-2.6-card5-build-integrity-release-v240-r4-receipt-20260924.json stays.
+RECEIPT = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks/block-2.6-card5-build-integrity-slice-capacity-receipt-20260925.json"
 AUTHORITY = "config/c2-v210-public-build-authority.json"
 README_AUTHORITY = "config/c2-v240-public-build-authority.json"
 LIFECYCLE_SOURCE = "tools/host-lisp/workbench_product.py"

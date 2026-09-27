@@ -1,0 +1,32 @@
+{
+  "status": "Phase A static projection; linked placement awaits replacement Seed",
+  "base_elf": {
+    "path": "build/nested-error-recovery-final-r1/wplto/lisp65-c2-substitution-linked.prg.elf",
+    "bytes": 662744,
+    "sha256": "66165507a8e5ad1d857afdd967f9056be2ce7bbccc332d5328e981398078b47b"
+  },
+  "owners": [
+    {
+      "name": "lisp65_comfort_state",
+      "source": "config/comfort-default-native/sources/repl.c",
+      "input_section": ".bss.lisp65_comfort_state",
+      "output_section": ".lisp65_comfort_state_bss",
+      "linker": "config/comfort-default-native/linker/full-map-linker/c.ld",
+      "address": "0xbff6",
+      "bytes": 1,
+      "states": {
+        "0": "none",
+        "1": "requested",
+        "2": "pending"
+      },
+      "initialization": "Within __bss_start..__bss_end startup zeroing span"
+    }
+  ],
+  "high_bss": {
+    "base_free": 10,
+    "added": 1,
+    "free": 9,
+    "floor": 5
+  },
+  "export_generator": "tools/host-lisp/c2_m65_hw_registers.py"
+}
