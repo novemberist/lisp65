@@ -1,6 +1,6 @@
-# lisp65 2.5.0 Candidate User Guide
+# lisp65 2.5.1 Candidate User Guide
 
-## Comfort by default (2.5.0 candidate)
+## Comfort by default (2.5.1 candidate)
 
 The product starts in Comfort at `l65>`. Balanced multiline input, automatic
 indentation, string/comment-aware parenthesis tracking and ten-line Up/Down
@@ -10,22 +10,31 @@ Errors, RUN/STOP aborts and refusals return to `l65>` with definitions and
 history intact. An empty line leaves to `lisp65>` and stays native; `(repl)`
 re-arms Comfort. Top-level anonymous lambdas outside `defun` remain refused.
 
-Boot takes about +8 s over 2.4.0 in the emulator (+7.65 s measured); the device
-figure is pending. Starting in Comfort costs +8 symbols, +105 name bytes,
+Boot takes about +8 s over 2.4.0 in the emulator (+7.65 s measured); the 2.5.0 automated device session
+reported about +6.7 s on a host tool clock. Starting in Comfort costs +8 symbols, +105 name bytes,
 +1 code image, +7 C2D entries/roots and five more boot collections. After exit
 to the native prompt, the matched forced collection has +12 live cells and
 +2.1% cycles; natural collection cycles are −1.7%. These are emulator
-measurements, not device timings or worst-case pause guarantees. Owner
-acceptance of the named GC cost remains open.
+measurements, not device timings or worst-case pause guarantees. The owner
+accepted this named GC cost for the inherited Comfort product.
 
-Known-issues wording proposal, pending the owner's word: IDE `C-x C-c` does
-not reach the IDE; RUN/STOP leaves it with the buffer kept. Backspace latency
-remains; its card is after 2.5.0.
+Use `C-x q` to exit the IDE normally with buffers preserved; release Ctrl
+before q. The IDE-exit device rows passed through the virtual keyboard.
+Physical `C-x C-c` does not reach the IDE and remains a known issue.
+Typing latency in the MEASURED native lane falls from 3.24 M -> 1.58 M
+cycles/key (approximately 80 -> 39 ms). Backspace code-object reads fall from
+roughly 1,200–1,800 -> 53 reads/key in the projected lane; device feel remains
+pending the owner session. The earlier small Backspace tail change also
+reduces host VM instructions. Comfort multi-line strings now evaluate and
+display correctly, preserving typed spaces without automatic indentation
+inside strings. Continuation lines are not editable after Return; Up/Down
+always walk history. The multi-line editing card follows.
+See the [2.5.1 release notes](releases/2.5.1.md).
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The prepared `lisp65-2.5.0` candidate bundle
+- The prepared `lisp65-2.5.1` candidate bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -39,10 +48,10 @@ separate optional-library medium.
 Since 2.3.0, `IDE`, `IDEX` and `M65D` no longer appear as separate disk
 files: their implementations remain in the static product, and the three
 `load-lib` forms below still work. This reclaims 193 disk blocks and takes the
-2.4.0 medium from 22 to 19 files. The 2.5.0 Comfort-default medium has 20 files.
+2.4.0 medium from 22 to 19 files. The 2.5.1 Comfort-default medium has 20 files.
 `BUFFER` remains on disk as the optional L65S package loaded by
-`(require "buffer")`; it is not a retired IDE image. The physical cold start
-from this medium, through the ten-role stager, was accepted on the device.
+`(require "buffer")`; it is not a retired IDE image. The inherited ten-role stager passed earlier device sessions; the Strings
+Final physical device session remains pending.
 
 ## Verify the bundle
 
@@ -52,9 +61,10 @@ Run from the extracted bundle directory:
 python3 verify.py
 ```
 
-Do not use a bundle that fails. The released 2.4.0 verifier covers its packaged
-files and evidence. A qualified 2.5.0 bundle and independent public-source
-reproductions remain pending; retained Final readback is not bundle verification.
+Do not use a bundle that fails. The package verifier checks its own files
+and evidence. The 2.5.1 preparation report records two independent public-source
+reproductions; reviewer sealing and the fresh-medium device session remain
+release steps. Retained Final readback is not bundle verification.
 
 ## Start from BASIC and perform the one-drive swap
 
@@ -119,7 +129,7 @@ already exists on the mounted disk. Any other destination name sets the
 publish a library under an arbitrary name, use `compile-string` directly, as
 shown below.
 
-The selected 2.5.0 product checks for `INIT.L65` after the resident world is
+The selected 2.5.1 product checks for `INIT.L65` after the resident world is
 ready and before the first banner. The release medium supplies the file, so
 the normal release boot evaluates it once per cold boot. An open or
 evaluation error returns to one live `lisp65>` prompt and is not retried.
@@ -142,7 +152,7 @@ corruption, before it can replace the active source stream. `require` inside
 A library name longer than 16 characters is refused.
 
 Loading both packages by default consumes space earlier; it does not load
-them a second time when they are later explicitly required. On the 2.5.0 candidate, with the IDE and
+them a second time when they are later explicitly required. On the 2.5.1 candidate, with the IDE and
 all six packages including Comfort loaded, capacity is finite; the optional-library
 244/5,415 reserve measurement is historical, not a default-product measurement. These independent
 limits are not a promise that all can be exhausted simultaneously.
@@ -216,7 +226,7 @@ Example:
 
 ### Product-resident libraries
 
-The 2.5.0 product D81 carries the static `ide`, `idex`, and `m65d`
+The 2.5.1 product D81 carries the static `ide`, `idex`, and `m65d`
 implementations, and six disk packages: `buffer`, `place`, `string-extra`,
 `inspect`, `defstruct` and `repl-comfort`. Load the libraries you need before swapping to the work disk.
 If M65D is already active when the mounted image changes, run
@@ -464,7 +474,7 @@ Use direct operations such as `search`, `substring`, `string-prefix-p`,
 
 The authoritative L-full keymap is generated from the same source as its
 tests:
-[Workbench key bindings](generated/ide-keymap.md). It contains 41 bindings,
+[Workbench key bindings](generated/ide-keymap.md). It contains 42 bindings,
 generated from `config/v11-l-lite-keymap.json`, whose status is the L-full
 product table. The generated page and the executable consumers are projections
 of that same authority.
@@ -482,7 +492,10 @@ reports `source missing` and returns the cursor to the buffer.
   GETIN empty-queue sentinel.
 - `C-x x` and `C-x Return` open the exact-name command launcher; physical
   Meta/Alt identity is not claimed.
-- Known-issues wording proposal: `C-x C-c` does not reach the IDE; RUN/STOP leaves it and keeps the active buffer.
+- `C-x q` exits normally and preserves buffers; release Ctrl before q. The
+  IDE-exit predecessor passed virtual-keyboard device rows; physical keys remain open.
+- `C-x C-c` remains logically bound, but physical Ctrl-C is drained before
+  the IDE and leaves any pending C-x prefix waiting for the next delivered key.
 - RUN/STOP is not an editor key. During evaluation it aborts to a usable REPL
   with `stopped (run/stop)`; while idle it has no product action.
 

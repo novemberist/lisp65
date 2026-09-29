@@ -1907,15 +1907,15 @@ dwx-xemu-item1-selftest:
 
 .PHONY: dwx-prefilter-blind-spot-contract-check
 dwx-prefilter-blind-spot-contract-check: dwx-xemu-item1-selftest
-	python3 tools/host-lisp/dwx_keymap_transport.py --check
+	python3 tools/host-lisp/dwx_keymap_transport_ide_exit_20260928.py check
 	python3 tools/host-lisp/dwx_comfort_resume.py --selftest
-	python3 tools/host-lisp/dwx_prefilter_blind_spot_contract.py --selftest
-	python3 tools/host-lisp/dwx_prefilter_blind_spot_contract.py --check
+	python3 tools/host-lisp/dwx_prefilter_blind_spot_contract_ide_exit_20260928.py selftest
+	python3 tools/host-lisp/dwx_prefilter_blind_spot_contract_ide_exit_20260928.py check
 
 .PHONY: dwx-freezer-free-boot-variants-check
 dwx-freezer-free-boot-variants-check: dwx-prefilter-blind-spot-contract-check
-	python3 tools/host-lisp/dwx_freezer_free_boot_variants.py selftest
-	python3 tools/host-lisp/dwx_freezer_free_boot_variants.py check
+	python3 tools/host-lisp/dwx_freezer_free_boot_variants_ide_exit_20260928.py selftest
+	python3 tools/host-lisp/dwx_freezer_free_boot_variants_ide_exit_20260928.py check
 
 .PHONY: dwx-mirrored-prefilter-rows-check
 dwx-mirrored-prefilter-rows-check: dwx-freezer-free-boot-variants-check
@@ -1925,8 +1925,8 @@ dwx-mirrored-prefilter-rows-check: dwx-freezer-free-boot-variants-check
 
 .PHONY: dwx-media-admission-gate-check
 dwx-media-admission-gate-check: dwx-mirrored-prefilter-rows-check
-	python3 tools/host-lisp/dwx_media_admission_gate.py selftest
-	python3 tools/host-lisp/dwx_media_admission_gate.py check
+	python3 tools/host-lisp/dwx_media_admission_gate_ide_exit_20260928.py selftest
+	python3 tools/host-lisp/dwx_media_admission_gate_ide_exit_20260928.py check
 
 .PHONY: dwx-retroactive-red-replay-check
 dwx-retroactive-red-replay-check: dwx-media-admission-gate-check
@@ -2118,10 +2118,10 @@ dialect-v2-strings-lcc-stage3-check: dialect-v2-strings-lcc-selftest $(DIALECT_V
 dialect-v2-strings-matrix: dialect-v2-strings-native-matrix dialect-v2-strings-p0-check dialect-v2-strings-lcc-check
 
 v2-string-codec-workload-selftest: v2-workbench-codemod
-	python3 tools/host-lisp/v2_string_codec_workloads.py selftest
+	python3 tools/host-lisp/v2_string_codec_workloads_r251_20260929.py selftest
 
 v2-string-codec-workload-check: v2-string-codec-workload-selftest
-	python3 tools/host-lisp/v2_string_codec_workloads.py check
+	python3 tools/host-lisp/v2_string_codec_workloads_r251_20260929.py check
 
 v2-prim-lowering-check:
 	python3 tools/host-lisp/v2_prim_lowering.py
@@ -3337,8 +3337,7 @@ gc-symbol-scan-timing-check:
 		--out build/reports/workbench-live/gc-symbol-scan-timing.json
 
 bytecode-p0-omission-contract-check:
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --omission-contract-selftest
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --omission-contract-audit
+	python3 tools/host-lisp/bytecode_p0_omissions_strings_20260928.py
 
 ide-capacity-selftest:
 	python3 tools/host-lisp/ide_capacity_report.py --selftest

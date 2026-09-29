@@ -207,6 +207,11 @@
       "expect": "1013"
     },
     {
+      "name": "l-lite-binding-cx-exit-q",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 24 nil)) (ide-event-command (list (quote key) 113 nil)))",
+      "expect": "1015"
+    },
+    {
       "name": "l-full-binding-control-space",
       "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 255 (list (quote control)))))",
       "expect": "1115"
@@ -259,6 +264,36 @@
     {
       "name": "l-lite-control-space-unreachable",
       "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 0 nil)))",
+      "expect": "nil"
+    },
+    {
+      "name": "ide-exit-plain-q-inserts",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 113 nil)))",
+      "expect": "1110"
+    },
+    {
+      "name": "ide-exit-shift-q-inserts",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 81 nil)))",
+      "expect": "1110"
+    },
+    {
+      "name": "ide-exit-control-q-moves-down",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 17 nil)))",
+      "expect": "1003"
+    },
+    {
+      "name": "ide-exit-cx-shift-q-does-not-exit",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 24 nil)) (ide-event-command (list (quote key) 81 nil)))",
+      "expect": "nil"
+    },
+    {
+      "name": "ide-exit-cx-control-q-or-cursor-down-does-not-exit",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 24 nil)) (ide-event-command (list (quote key) 17 nil)))",
+      "expect": "nil"
+    },
+    {
+      "name": "ide-exit-q-clears-prefix",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 24 nil)) (ide-event-command (list (quote key) 113 nil)) (symbol-value (quote ide-event-command)))",
       "expect": "nil"
     }
   ]

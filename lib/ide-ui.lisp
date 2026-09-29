@@ -1647,7 +1647,8 @@
              (%ide-blink state painted) (%ide-poll state)))))
    (%ide-idle 4 nil nil nil nil nil nil nil nil)))
 
-;; C-x C-c is the only editor exit. RUN/STOP remains exclusively the global
+;; C-x q exits normally; C-x C-c remains logical (physical Ctrl-C is drained).
+;; RUN/STOP remains exclusively the global
 ;; evaluation abort, and ESC remains a minibuffer cancel key. Persistence runs
 ;; once before the nonblocking poll loop and after every rendered input batch.
 ;; Complete one drained batch before waiting again. The product's lean loop
@@ -1697,7 +1698,7 @@
 ;; Global access is NATIVE through CALLPRIM 19/20
 ;; (symbol-value/set-symbol-value). The old eval detour from the v2a era broke
 ;; in the development core because there was no eval primitive and no budget.
-;; C-x C-c
+;; C-x q (and synthetic C-x C-c)
 ;; persists through this same path, preserving the historical B4 guarantee.
 (defun %ide-buffers-alist ()
   (symbol-value (quote ide-buffers)))

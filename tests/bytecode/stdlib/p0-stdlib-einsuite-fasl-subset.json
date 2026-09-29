@@ -3,6 +3,7 @@
  "description": "B3-Opt-in-Profil: Ein-Suite-Strip plus Disk-load/save und lib/lcc-fasl.lisp; Bulk-Render bleibt Bytecode-Fallback, damit compile-file/FASL in Bank 0 passt. Host-Cases pruefen nur Entry-Praesenz und sichere Load-Fehlerfaelle, nicht F011-I/O. B3-Diaet: OHNE IDE-Libs (Beweis-Vehikel; 402 Objekte sprengten VM_DIR_MAX=408 nach align8).",
  "extends": "p0-stdlib-einsuite-subset.json",
  "allow_omitted_defuns": [
+    {"name": "%sexp-line-state", "reason": "Comfort-only continuation scanner; not emitted by the resident or IDE."},
   {
    "name": "%ide-line-net-depth",
    "reason": "IDE-only indentation helper shares the matcher source but remains disk-library freight"

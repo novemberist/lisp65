@@ -1,0 +1,67 @@
+{
+  "abi_profile": "dialect-v2",
+  "cases": [
+    {
+      "expect": "t",
+      "expr": "(bufferp (make-buffer 3))",
+      "name": "buffer-predicate-normalizes"
+    },
+    {
+      "expect": "nil",
+      "expr": "(bufferp \"abc\")",
+      "name": "buffer-predicate-rejects-string"
+    },
+    {
+      "expect": "(3 0 0)",
+      "expr": "(let ((test-buffer (make-buffer 3))) (cons (buffer-length test-buffer) (cons (buffer-ref test-buffer 0) (cons (buffer-ref test-buffer 2) nil))))",
+      "name": "buffer-is-zero-filled-and-zero-based"
+    },
+    {
+      "expect": "255",
+      "expr": "(let ((test-buffer (make-buffer 2))) (buffer-set! test-buffer 1 255))",
+      "name": "buffer-set-returns-byte"
+    },
+    {
+      "expect": "\"aZc\"",
+      "expr": "(let ((test-buffer (string->buffer \"abc\"))) (buffer-set! test-buffer 1 90) (buffer->string test-buffer))",
+      "name": "buffer-mutation-freezes-byte-exactly"
+    },
+    {
+      "expect": "nil",
+      "expr": "(let ((test-buffer (make-buffer 1))) (buffer->string test-buffer) (bufferp test-buffer))",
+      "name": "freeze-transfers-ownership"
+    }
+  ],
+  "d81_name": "BUFFER",
+  "description": "Public first-class byte-buffer wrappers over the private overlay carriers.",
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "functions": [
+    "bufferp",
+    "make-buffer",
+    "buffer-length",
+    "buffer-ref",
+    "buffer-set!",
+    "buffer->string",
+    "string->buffer"
+  ],
+  "max_call_args": 12,
+  "name": "buffer",
+  "provides": [
+    "bufferp",
+    "make-buffer",
+    "buffer-length",
+    "buffer-ref",
+    "buffer-set!",
+    "buffer->string",
+    "string->buffer"
+  ],
+  "require_all_defuns": true,
+  "requires": [
+    "core"
+  ],
+  "resident_suite": "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json",
+  "sources": [
+    "config/c2-v251-r2-20260929-public-plane/lib/buffer.lisp"
+  ],
+  "strict_arity": true
+}

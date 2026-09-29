@@ -33,7 +33,7 @@ def replace(raw, changes):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--prompt',choices=['native','comfort'],required=True);p.add_argument('--attempt',required=True);p.add_argument('--native-candidate',choices=['v240-init','product'],default='v240-init');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--prompt',choices=['native','comfort'],required=True);p.add_argument('--attempt',required=True);p.add_argument('--native-candidate',choices=['v240-init','product','walks'],default='v240-init');a=p.parse_args()
     original_mutations=N.selftest()+N.completion_selftest()+N.readiness_selftest()
     # Generalize only historical readiness counts after a typed prelude. The
     # algorithm, costs, samples, counters and all completion predicates stay.
@@ -88,7 +88,7 @@ def main():
     # prelude would never fire at l65>. Each step waits for its prompt.
     readiness='''
         steps = ([('LISP65>','(require "repl-comfort")\\n','LISP65>'),('LISP65>','(repl)\\n','L65>')] if role=='anchor' and PROMPT=='comfort' else
-                 [('L65>',None,'LISP65>')] if role=='candidate' and PROMPT=='native' and NATIVE_CANDIDATE=='product' else [])
+                 [('L65>',None,'LISP65>')] if role=='candidate' and PROMPT=='native' and NATIVE_CANDIDATE in ('product','walks') else [])
         for wanted,text,after in steps:
             limit=time.monotonic()+240
             while D.L.active(self.screen())!=wanted:

@@ -35,8 +35,16 @@ WORLD = {
     'v240-init': (MEDIA / 'control-v240-init/control-v240-init.d81',
                   '70fd05aa501bd11c2eeec5424ebaedf456eb889c66d50986f85cdc0a34cacbbc', ELF),
     'base': (L.BASE, L.EXPECT['base'], L.ELF),
+    'walks': (ROOT / 'build/walks-product-r1/media-r1/walks.d81',
+              '67e37ff37b9294ac81031159174320bf08abd4dc8ae4a7d302fdd66ac5707401',
+              ROOT / 'build/walks-product-r1/wplto/resident-island-seed.prg.elf'),
+    'strings': (ROOT / 'build/strings-product-r3/media-r1/strings.d81',
+                '9978daa146b89cf71ad1d3f290d80cf74b197911e7854859f9e4aa9bb2fce441',
+                ROOT / 'build/strings-product-r3/wplto/resident-island-seed.prg.elf'),
 }
-ELF_SHA = {ELF: 'd555f01fbac51bb5fbc035b2b595e95e3c8e3bedc584c87112bca8b073e31444', L.ELF: L.EXPECT['elf']}
+ELF_SHA = {ELF: 'd555f01fbac51bb5fbc035b2b595e95e3c8e3bedc584c87112bca8b073e31444', L.ELF: L.EXPECT['elf'],
+           ROOT / 'build/walks-product-r1/wplto/resident-island-seed.prg.elf': '7b8dbf3dd53f08872322035ac260bb36d5fcd941fdeb4ff148e386d09d794449',
+           ROOT / 'build/strings-product-r3/wplto/resident-island-seed.prg.elf': 'd514e4980c636cab0c6ae1ee9bea77afdd3a4fdf58f01995aba5ff822e89ed05'}
 N, C, K, OVER, UP, DOWN = L.N, L.C, L.K, L.OVER, L.UP, L.DOWN
 CAPZZ = "(let ((q 1)) (eval '(capzz)))\n"
 
@@ -112,8 +120,18 @@ V240_EXTRA = [
     ('ctl-exit', 'control', ['\n'], N, ['NIL'], [], False),
     ('ctl-native-after', 'control', ['(+ 4 5)\n'], N, ['9'], [], True),
 ]
-PLAN = {'product': PRODUCT, 'no-comfort': NATIVE_CONTROL, 'v240-init': NATIVE_CONTROL + V240_EXTRA, 'base': []}
-BOOT_PROMPT = {'product': C, 'no-comfort': N, 'v240-init': N, 'base': N}
+# Multi-line strings (owner device finding 2026-09-28): the scanner must carry
+# the in-string state across continuation lines; indentation must not enter it.
+STRINGS = [
+    ('str-owner-example', 'strings', ['(print "hello\n', '     world")\n'], C, ['     WORLD"'], [], False),
+    ('str-three-lines', 'strings', ['(string-length "a\n', 'b\n', 'c")\n'], C, ['5'], [], False),
+    ('str-escaped-quote', 'strings', ['(string-length "x\\"\n', 'y")\n'], C, ['4'], [], False),
+    ('str-parens-inside', 'strings', ['(string-length "((\n', '))")\n'], C, ['5'], [], False),
+    ('str-then-eval', 'strings', ['(+ 1 2)\n'], C, ['3'], [], False),
+    ('str-overclose-still', 'strings', ['(+ 1 2))\n'], C, [OVER], ['3'], False),
+]
+PLAN = {'strings': STRINGS + PRODUCT, 'product': PRODUCT, 'no-comfort': NATIVE_CONTROL, 'v240-init': NATIVE_CONTROL + V240_EXTRA, 'base': [], 'walks': PRODUCT}
+BOOT_PROMPT = {'strings': C, 'product': C, 'no-comfort': N, 'v240-init': N, 'base': N, 'walks': C}
 
 
 def matches(got, prompt):

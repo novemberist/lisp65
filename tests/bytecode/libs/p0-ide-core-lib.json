@@ -35,6 +35,7 @@
   ],
   "min_private_inline_functions": 29,
   "remove_functions": [
+    "%sexp-line-state",
     "%sexp-code",
     "%sexp-rest",
     "%sexp-step",
@@ -94,6 +95,7 @@
     "%ide-execute-command-submit"
   ],
   "allow_omitted_defuns": [
+    {"name": "%sexp-line-state", "reason": "Comfort-only continuation scanner; not emitted by the IDE."},
     {
       "name": "%sexp-code",
       "reason": "shared matcher core is delivered once by the resident Workbench stdlib"

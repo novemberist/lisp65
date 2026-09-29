@@ -1,0 +1,167 @@
+{
+  "abi_profile": "dialect-v2",
+  "cases": [
+    {
+      "expect": "bytecode",
+      "expr": "(function-kind (quote %ide-x))",
+      "name": "ide-extra-hook-overrides-core"
+    },
+    {
+      "expect": "(0 . 3)",
+      "expr": "(ide-buffer-point (ide-move-word-right (ide-make-buffer \"scratch\" (list \"abc def\"))))",
+      "name": "ide-extra-word-right"
+    },
+    {
+      "expect": "(2 . 0)",
+      "expr": "(ide-buffer-point (ide-page-down (ide-make-buffer \"scratch\" (list \"a\" \"b\" \"c\")) 2))",
+      "name": "ide-extra-page-down"
+    },
+    {
+      "expect": "\"M-x [find-file]\"",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 120 nil)))) (%ide-mini-status-line)))",
+      "name": "ide-extra-mx"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%ide-command-named \"not-a-command\")",
+      "name": "ide-extra-unknown-mx-command-rejected"
+    },
+    {
+      "expect": "((1 . 0) \"found\")",
+      "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"abc\" \"needle\" \"tail\")))) (s1 (ide-step s0 (list (quote key) 19 nil))) (s2 (ide-step s1 (list (quote key) 110 nil))) (s3 (ide-step s2 (list (quote key) 13 nil)))) (list (ide-buffer-point (ide-state-buffer s3)) (ide-state-message s3)))",
+      "name": "ide-extra-search"
+    },
+    {
+      "expect": "1002",
+      "expr": "(%ide-command-named \"find-file\")",
+      "name": "l-lite-mx-exact-find-file"
+    },
+    {
+      "expect": "1001",
+      "expr": "(%ide-command-named \"save-buffer\")",
+      "name": "l-lite-mx-exact-save-buffer"
+    },
+    {
+      "expect": "1008",
+      "expr": "(%ide-command-named \"compile-load\")",
+      "name": "l-lite-mx-exact-compile-load"
+    },
+    {
+      "expect": "1012",
+      "expr": "(%ide-command-named \"goto-line\")",
+      "name": "l-lite-mx-exact-goto-line"
+    },
+    {
+      "expect": "1014",
+      "expr": "(%ide-command-named \"eval-buffer\")",
+      "name": "l-lite-mx-exact-eval-buffer"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%ide-command-named \"fi\")",
+      "name": "l-lite-mx-rejects-two-character-prefix"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%ide-command-named \"save-buffer-junk\")",
+      "name": "l-lite-mx-rejects-trailing-junk"
+    }
+  ],
+  "d81_name": "IDEX",
+  "description": "Optional Workbench IDE word/page/region/search/M-x comfort tier.",
+  "directory_only_prefixes": [
+    "%"
+  ],
+  "exports": [
+    "%ide-x"
+  ],
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "functions": [
+    "ide-buffer-mark",
+    "%ide-buffer-with-mark",
+    "%ide-point<=",
+    "%ide-region-bounds",
+    "%ide-region-parts-tail",
+    "%ide-region-parts",
+    "ide-region-text",
+    "ide-set-mark",
+    "ide-exchange-point-and-mark",
+    "%ide-kill-region-single",
+    "%ide-kill-region-lines",
+    "ide-kill-region",
+    "ide-copy-region-as-kill",
+    "%ide-clamp-line",
+    "ide-move-line-relative",
+    "ide-buffer-start",
+    "ide-buffer-end",
+    "ide-page-down",
+    "ide-page-up",
+    "%ide-word-scan",
+    "ide-move-word-right",
+    "ide-move-word-left",
+    "ide-kill-word",
+    "ide-backward-kill-word",
+    "%ide-page-rows",
+    "%ide-word-edit-command-p",
+    "%ide-region-command-p",
+    "%ide-page-command-p",
+    "%ide-apply-word-edit-command",
+    "%ide-apply-region-command",
+    "%ide-apply-page-command",
+    "%ide-apply-rare-edit-command",
+    "%ide-search-lines",
+    "%ide-search-lines-from",
+    "%ide-mini-search-submit",
+    "ide-command-names",
+    "%ide-command-named",
+    "%ide-execute-command-key",
+    "%ide-execute-command-submit",
+    "%ide-x"
+  ],
+  "late_bound_exports": [
+    "%ide-x"
+  ],
+  "max_call_args": 12,
+  "min_private_inline_functions": 8,
+  "name": "ide-extra",
+  "override_exports": [
+    "%ide-x"
+  ],
+  "private_inline_functions": [
+    "%ide-clamp-line",
+    "%ide-point<=",
+    "%ide-execute-command-key",
+    "%ide-page-command-p",
+    "%ide-region-command-p",
+    "%ide-word-edit-command-p",
+    "%ide-kill-region-single",
+    "%ide-command-named"
+  ],
+  "provides": [
+    "ide-extra"
+  ],
+  "requires": [
+    "core",
+    "ide"
+  ],
+  "resident_overrides": [
+    "%ide-x"
+  ],
+  "resident_private_inline_functions": [
+    "%ide-buffer-with-point",
+    "%ide-min",
+    "%ide-char-take",
+    "%ide-mini-history-input"
+  ],
+  "resident_suite": "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/suites/p0-ide-core-lib.json",
+  "sources": [
+    "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/sources/lib/ide-status.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/sources/lib/ide-syntax.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/sources/lib/ide-buffer.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/sources/lib/ide-keymap-generated.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/sources/lib/ide-ui.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/sources/lib/ide-disk.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/bytecode/dialect-v2/sources/lib/ide-extra.lisp"
+  ],
+  "strict_arity": true
+}

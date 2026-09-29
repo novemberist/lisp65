@@ -1,23 +1,26 @@
 {
-  "abi_profile": "dialect-v2",
-  "allowed_external_calls": [
-    "%read-line-loop",
-    "%rl-render",
-    "%rl-screen-tail",
-    "lcc-run"
+  "ignored_output_codes": [
+    17,
+    19
   ],
-  "cases": [
-    {
-      "expect": "nil",
-      "expr": "nil",
-      "name": "emission-only-placeholder-not-executed"
-    }
-  ],
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "repl-comfort",
   "d81_name": "REPL",
   "description": "Comfort default emission-only successor. Runtime gates are pending; no cases executed.",
-  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "provides": [
+    "repl-comfort"
+  ],
+  "requires": [
+    "core"
+  ],
+  "sources": [
+    "lib/comfort-state-address.lisp",
+    "lib/sexp-depth.lisp",
+    "lib/repl-comfort-v250.lisp"
+  ],
   "functions": [
-    "%ide-line-net-depth",
+    "%sexp-step",
+    "%sexp-line-state",
     "%repl-read",
     "%repl-prompt",
     "%repl-step",
@@ -27,35 +30,33 @@
     "%comfort-state-hi",
     "%comfort-state-lo"
   ],
-  "ignored_output_codes": [
-    17,
-    19
-  ],
-  "max_call_args": 12,
-  "name": "repl-comfort",
-  "private_inline_functions": [
-    "%comfort-state-hi",
-    "%comfort-state-lo"
-  ],
-  "private_key_event_modes": true,
-  "provides": [
-    "repl-comfort"
-  ],
   "require_all_defuns": false,
-  "requires": [
-    "core"
-  ],
-  "resident_suite": "tests/bytecode/libs/p0-repl-comfort-v240-resident.json",
-  "sources": [
-    "lib/comfort-state-address.lisp",
-    "lib/sexp-depth.lisp",
-    "lib/repl-comfort-v250.lisp"
-  ],
-  "strict_arity": true,
   "tailcall_self": [
-    "%ide-line-net-depth",
+    "%sexp-line-state",
     "%repl-read",
     "%repl-step",
     "%repl-loop"
+  ],
+  "resident_suite": "../../../tests/bytecode/libs/p0-repl-comfort-v240-resident.json",
+  "allowed_external_calls": [
+    "%read-line-loop",
+    "%rl-render",
+    "%rl-screen-tail",
+    "lcc-run"
+  ],
+  "abi_profile": "dialect-v2",
+  "strict_arity": true,
+  "private_key_event_modes": true,
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "emission-only-placeholder-not-executed",
+      "expr": "nil",
+      "expect": "nil"
+    }
+  ],
+  "private_inline_functions": [
+    "%comfort-state-hi",
+    "%comfort-state-lo"
   ]
 }

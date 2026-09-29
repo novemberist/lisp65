@@ -15,28 +15,54 @@ import shutil
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
+EVIDENCE_BASE = Path('tests/bytecode/dialect-v2/evidence/architecture-blocks')
+
+def evidence_member(path):
+    """Only frozen Set B bundle directories admit receipt-only members."""
+    try: parts = path.relative_to(ROOT / EVIDENCE_BASE).parts
+    except ValueError: return False
+    return len(parts) > 1 and parts[0].startswith('set-b-')
+
+def has_symlink(path):
+    return any(p.is_symlink() for p in (path, *path.parents))
+
+def binding_rows(value):
+    if isinstance(value, dict):
+        if isinstance(value.get('path'), str) and 'sha256' in value:
+            yield value
+        for child in value.values(): yield from binding_rows(child)
+    elif isinstance(value, list):
+        for child in value: yield from binding_rows(child)
 
 def bindings(value):
-    if isinstance(value, dict):
-        if 'path' in value and 'sha256' in value and isinstance(value['path'], str):
-            yield value['path']
-        for child in value.values(): yield from bindings(child)
-    elif isinstance(value, list):
-        for child in value: yield from bindings(child)
+    for row in binding_rows(value): yield row['path']
 
 def population():
     names = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
     sealed = set()
+    tracked = set(names)
+    evidence_hashes = {}
     for name in names:
         if not name.endswith('.json'): continue
         try: value = json.loads((ROOT / name).read_text())
         except (OSError, ValueError): continue
-        for item in bindings(value):
-            p = (ROOT / item).resolve()
+        for row in binding_rows(value):
+            lexical = Path(os.path.abspath(ROOT / row['path']))
+            p = lexical.resolve()
             if p.is_relative_to(ROOT / 'build') and p.is_file(): sealed.add(p)
+            if evidence_member(lexical) and str(lexical.relative_to(ROOT)) not in tracked:
+                if has_symlink(lexical) or not lexical.is_file():
+                    raise ValueError('missing or symlink seal-bound evidence: '+str(lexical))
+                evidence_hashes.setdefault(lexical, set()).add(row['sha256'])
+    for path, expected in evidence_hashes.items():
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual not in expected:
+            raise ValueError('seal-bound evidence hash mismatch: '+str(path))
+        sealed.add(path)
     return [n for n in names if n], sorted(sealed)
 
 # Directories under build/ and the evidence tree whose complete recursive
@@ -64,6 +90,7 @@ def collapse(protected, generated=()):
                 tops.add(os.path.join(root, *rel[:len(b) + 1]))
     full = {}
     for top in sorted(tops):
+        if has_symlink(Path(top)): continue
         for dp, dns, fns in os.walk(top, topdown=False):
             ok = bool(fns or dns) and not any(
                 dp == w or dp.startswith(w + os.sep) or w.startswith(dp + os.sep) for w in worlds)
@@ -85,6 +112,96 @@ def collapse(protected, generated=()):
 
 def snapshot(names):
     return {n: hashlib.sha256((ROOT/n).read_bytes()).hexdigest() for n in names if (ROOT/n).is_file()}
+
+def selftest():
+    """Mutate a synthetic world; never mount or run a child check."""
+    global ROOT
+    from contextlib import redirect_stdout
+    from io import StringIO
+    from unittest.mock import patch
+    original = ROOT
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            ROOT = Path(tmp)
+            bundle = ROOT / EVIDENCE_BASE / 'set-b-test'
+            bundle.mkdir(parents=True)
+            (bundle.parent/'unprotected-neighbor').write_text('scratch')
+            member = bundle/'tracked'
+            member.write_text('tracked')
+            protected = {member}
+            def check(collapsed, generated=()):
+                individual, dirs, covered = collapse(protected, generated)
+                assert (str(bundle) in dirs) == collapsed
+                assert set(individual) | set(covered) == {str(p) for p in protected}
+                assert not set(individual) & set(covered)
+            check(True)
+            extra = bundle/'ignored.log'
+            extra.write_text('receipt-only')
+            check(False)  # One unprotected file vetoes its ancestors.
+            protected.add(extra)
+            check(True)  # Tracked or verified receipt-bound growth stays one mount.
+            receipt = ROOT/'seal.json'
+            receipt.write_text(json.dumps(dict(path=str(extra.relative_to(ROOT)),
+                sha256=hashlib.sha256(extra.read_bytes()).hexdigest())))
+            with patch.object(subprocess, 'check_output', return_value=b'seal.json\0'):
+                assert population()[1] == [extra]
+                def rejected():
+                    try: population()
+                    except ValueError: return
+                    raise AssertionError('invalid evidence admitted')
+                extra.write_text('mutated')
+                rejected()
+                extra.unlink()
+                rejected()
+                extra.symlink_to(member)
+                rejected()
+                extra.unlink()
+                extra.write_text('receipt-only')
+            check(False, [bundle/'generated'/'world'])
+            check(False, [bundle])
+            check(False, [bundle.parent])
+            empty = bundle/'empty'
+            empty.mkdir()
+            check(False)
+            empty.rmdir()
+            link = bundle/'link'
+            link.symlink_to(member)
+            protected.add(link)
+            check(False)
+            protected.remove(link)
+            link.unlink()
+            link.symlink_to(bundle, target_is_directory=True)
+            check(False)
+            link.unlink()
+            alias = bundle.parent/'set-b-alias'
+            alias.symlink_to(bundle, target_is_directory=True)
+            assert not collapse([alias/'tracked'])[1]
+            top_alias = ROOT/'build/alias'
+            top_alias.parent.mkdir()
+            top_alias.symlink_to(bundle, target_is_directory=True)
+            assert not collapse([top_alias/'tracked'])[1]
+            writable = ROOT/WRITABLE_OUTPUT_DIRS[0]
+            writable.mkdir(parents=True)
+            output = writable/'receipt'
+            output.write_text('bound')
+            assert collapse([output]) == ([str(output)], [], [])
+            world = ROOT/'build/generated/world'
+            world.mkdir(parents=True)
+            source = world/'input'
+            source.write_text('bound')
+            assert collapse([source], [world]) == ([str(source)], [], [])
+            plan_output = StringIO()
+            with patch.object(sys, 'argv', ['sealed_check_run.py', '--plan',
+                    '--out', str(ROOT/'must-not-exist'), '--', 'must-not-run']), \
+                    patch(__name__+'.population', return_value=([], [member])), \
+                    patch.object(subprocess, 'run', side_effect=AssertionError('plan ran a command')), \
+                    redirect_stdout(plan_output):
+                main()
+            assert json.loads(plan_output.getvalue())['protected_files'] == 1
+            assert not (ROOT/'must-not-exist').exists()
+    finally:
+        ROOT = original
+    print('sealed-check: SELFTEST PASS (unknown files, growth, generated ancestors, writable outputs, symlinks, empty directories)')
 
 def main():
     if sys.argv[1:2] == ['--mount-check']:
@@ -136,9 +253,32 @@ def main():
         os.execvp(value['command'][0], value['command'])
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path)
+    parser.add_argument('--plan', action='store_true', help='print mount split without creating outputs or executing a check')
+    parser.add_argument('--selftest', action='store_true')
     parser.add_argument('--generated-tree', action='append', default=[])
     parser.add_argument('command', nargs=argparse.REMAINDER)
     args = parser.parse_args()
+    if args.selftest:
+        selftest()
+        return
+    worlds = [(ROOT/name).resolve() for name in args.generated_tree]
+    for logical in worlds:
+        if logical != ROOT/'build/bytecode/dialect-v2':
+            raise ValueError('unregistered generated world: '+str(logical))
+    if args.plan:
+        names, sealed = population()
+        protected = set(sealed) | {(ROOT/n).resolve() for n in names if (ROOT/n).is_file()}
+        individual, dirs, covered = collapse(protected, worlds)
+        print(json.dumps(dict(tracked=len(names), receipt_named=len(sealed),
+            protected_files=len(protected), individual=len(individual), directories=len(dirs),
+            files_under_directories=len(covered), total_mounts=len(individual)+len(dirs),
+            generated_trees=[str(p) for p in worlds],
+            set_b=dict(individual=sum(evidence_member(Path(p)) or
+                Path(p).parent == ROOT/EVIDENCE_BASE and Path(p).name.startswith('set-b-')
+                for p in individual),
+                directories=sum(evidence_member(Path(d)/'_') for d in dirs),
+                files_under_directories=sum(evidence_member(Path(p)) for p in covered))), indent=2))
+        return
     args.out = (args.out or ROOT/'build/sealed-check-runs'/str(time.time_ns())).resolve()
     command = args.command
     if command[:1] == ['--']: command = command[1:]

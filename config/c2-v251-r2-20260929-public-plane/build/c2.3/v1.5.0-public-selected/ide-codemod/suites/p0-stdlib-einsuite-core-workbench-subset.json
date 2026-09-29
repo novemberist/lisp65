@@ -1,0 +1,1394 @@
+{
+  "abi_profile": "dialect-v2",
+  "allow_omitted_defuns": [
+    {
+      "name": "screen-write-string",
+      "reason": "excluded from the canonical Workbench product; screen-bulk-p pins the supported fallback path"
+    },
+    {
+      "name": "compile-file",
+      "reason": "excluded from the compile-string Workbench profile"
+    },
+    {
+      "name": "fasl-emit-scratch",
+      "reason": "excluded from the compile-string Workbench profile"
+    }
+  ],
+  "cases": [
+    {
+      "expect": "(1 2 3)",
+      "expr": "(list 1 2 3)",
+      "name": "list-rest"
+    },
+    {
+      "expect": "nil",
+      "expr": "(list)",
+      "name": "list-empty"
+    },
+    {
+      "expect": "t",
+      "expr": "(funcall (function consp) '(a . b))",
+      "name": "named-consp-true"
+    },
+    {
+      "expect": "nil",
+      "expr": "(funcall (function consp) nil)",
+      "name": "named-consp-false"
+    },
+    {
+      "expect": "nil",
+      "expr": "(funcall (function atom) '(a . b))",
+      "name": "named-atom-cons-false"
+    },
+    {
+      "expect": "t",
+      "expr": "(funcall (function atom) 'a)",
+      "name": "named-atom-symbol-true"
+    },
+    {
+      "expect": "t",
+      "expr": "(funcall (function null) nil)",
+      "name": "named-null-nil-true"
+    },
+    {
+      "expect": "nil",
+      "expr": "(funcall (function null) 'a)",
+      "name": "named-null-symbol-false"
+    },
+    {
+      "expect": "42",
+      "expr": "(funcall (function /) 84 2)",
+      "name": "named-div-binary"
+    },
+    {
+      "expect": "10",
+      "expr": "(funcall (function +) 1 2 3 4)",
+      "name": "named-plus-variadic"
+    },
+    {
+      "expect": "-5",
+      "expr": "(funcall (function -) 5)",
+      "name": "named-minus-unary"
+    },
+    {
+      "expect": "t",
+      "expr": "(funcall (function <) 1 2 3)",
+      "name": "named-less-chain"
+    },
+    {
+      "expect": "4",
+      "expr": "(funcall (function string-length) \"ABCD\")",
+      "name": "named-string-length"
+    },
+    {
+      "expect": "nil",
+      "expr": "(screen-bulk-p)",
+      "name": "screen-bulk-p-fallback"
+    },
+    {
+      "expect": "t",
+      "expr": "(equal (list 'a (cons 'b 'c) 3) (list 'a (cons 'b 'c) 3))",
+      "name": "equal-nested-true"
+    },
+    {
+      "expect": "nil",
+      "expr": "(equal (list 'a (cons 'b 'c) 3) (list 'a (cons 'b 'd) 3))",
+      "name": "equal-nested-false"
+    },
+    {
+      "expect": "3",
+      "expr": "(length '(1 2 3))",
+      "name": "length-list"
+    },
+    {
+      "expect": "5",
+      "expr": "(nth 1 '(4 5 6))",
+      "name": "nth-list"
+    },
+    {
+      "expect": "(3 2 1)",
+      "expr": "(reverse '(1 2 3))",
+      "name": "reverse-list"
+    },
+    {
+      "expect": "(b c)",
+      "expr": "(member 'b '(a b c))",
+      "name": "member-symbol"
+    },
+    {
+      "expect": "(b 2)",
+      "expr": "(assoc 'b '((a 1) (b 2) (c 3)))",
+      "name": "assoc-symbol"
+    },
+    {
+      "expect": "(b 2)",
+      "expr": "(assq 'b '((a 1) (b 2)))",
+      "name": "assq-symbol"
+    },
+    {
+      "expect": "(b c)",
+      "expr": "(remove 'a '(a b a c))",
+      "name": "remove-symbol"
+    },
+    {
+      "expect": "2",
+      "expr": "(position 'c '(a b c))",
+      "name": "position-symbol"
+    },
+    {
+      "expect": "(a b c)",
+      "expr": "(copy-list '(a b c))",
+      "name": "copy-list"
+    },
+    {
+      "expect": "2",
+      "expr": "(count 'a '(a b a c))",
+      "name": "count-symbol"
+    },
+    {
+      "expect": "t",
+      "expr": "(%distinct-from-all 'a '(b c))",
+      "name": "distinct-true"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%distinct-from-all 'a '(b a))",
+      "name": "distinct-false"
+    },
+    {
+      "expect": "(1 2 3 4)",
+      "expr": "(%append2 '(1 2) '(3 4))",
+      "name": "append2-list"
+    },
+    {
+      "expect": "t",
+      "expr": "(/= 1 2 3)",
+      "name": "not-eql-true"
+    },
+    {
+      "expect": "nil",
+      "expr": "(/= 1 2 1)",
+      "name": "not-eql-false"
+    },
+    {
+      "expect": "(1 2 3 4 5)",
+      "expr": "(append '(1 2) '(3) nil '(4 5))",
+      "name": "append-rest"
+    },
+    {
+      "expect": "(a b . c)",
+      "expr": "(append '(a b) 'c)",
+      "name": "append-dotted-tail"
+    },
+    {
+      "expect": "(or (eql g (quote a)) (eql g (quote b)))",
+      "expr": "(%case-key-tests 'g '(a b))",
+      "name": "case-key-tests-two"
+    },
+    {
+      "expect": "t",
+      "expr": "(%case-key-test 'g 'otherwise)",
+      "name": "case-key-test-otherwise"
+    },
+    {
+      "expect": "(or (eql g (quote a)) (eql g (quote b)))",
+      "expr": "(%case-key-test 'g '(a b))",
+      "name": "case-key-test-list"
+    },
+    {
+      "expect": "(((or (eql g (quote a)) (eql g (quote b))) 1) (t 2))",
+      "expr": "(%case-clauses 'g '(((a b) 1) (otherwise 2)))",
+      "name": "case-clauses"
+    },
+    {
+      "expect": "(1 2 3 4)",
+      "expr": "(%list*-from '(1 2 (3 4)))",
+      "name": "list-star-from"
+    },
+    {
+      "expect": "(1 2 3 4)",
+      "expr": "(list* 1 2 '(3 4))",
+      "name": "list-star-rest"
+    },
+    {
+      "expect": "(a b)",
+      "expr": "(%take '(a b c d) 2)",
+      "name": "take-prefix"
+    },
+    {
+      "expect": "(a b)",
+      "expr": "(butlast '(a b c))",
+      "name": "butlast-default"
+    },
+    {
+      "expect": "(a b)",
+      "expr": "(butlast '(a b c d) 2)",
+      "name": "butlast-count"
+    },
+    {
+      "expect": "t",
+      "expr": "(%any-null '((1) nil (3)))",
+      "name": "any-null-true"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%any-null '((1) (2)))",
+      "name": "any-null-false"
+    },
+    {
+      "expect": "(1 2)",
+      "expr": "(%cars '((1 a) (2 b)))",
+      "name": "cars"
+    },
+    {
+      "expect": "((a) (b))",
+      "expr": "(%cdrs '((1 a) (2 b)))",
+      "name": "cdrs"
+    },
+    {
+      "expect": "(1 2 3)",
+      "expr": "(mapc (function identity) '(1 2 3))",
+      "name": "mapc-identity"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%mapc (function identity) '(1 2 3))",
+      "name": "mapc-internal"
+    },
+    {
+      "expect": "(x y)",
+      "expr": "(%let-vars '((x 1) (y 2)))",
+      "name": "let-vars"
+    },
+    {
+      "expect": "(1 nil)",
+      "expr": "(%let-vals '((x 1) (y)))",
+      "name": "let-vals"
+    },
+    {
+      "expect": "i",
+      "expr": "(%binding-var '(i 0 (1+ i)))",
+      "name": "binding-var"
+    },
+    {
+      "expect": "0",
+      "expr": "(%binding-init '(i 0 (1+ i)))",
+      "name": "binding-init"
+    },
+    {
+      "expect": "(1+ i)",
+      "expr": "(%binding-step '(i 0 (1+ i)))",
+      "name": "binding-step-explicit"
+    },
+    {
+      "expect": "i",
+      "expr": "(%binding-step '(i 0))",
+      "name": "binding-step-default"
+    },
+    {
+      "expect": "done",
+      "expr": "(%optional-third '(i 10 done))",
+      "name": "optional-third-hit"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%optional-third '(i 10))",
+      "name": "optional-third-miss"
+    },
+    {
+      "expect": "nil",
+      "expr": "(if nil 1)",
+      "name": "if-without-else-false"
+    },
+    {
+      "expect": "(a 2 3 4)",
+      "expr": "`(a ,(1+ 1) ,@(list 3 4))",
+      "name": "quasiquote-splice"
+    },
+    {
+      "expect": "42",
+      "expr": "(when t 41 42)",
+      "name": "when-true"
+    },
+    {
+      "expect": "nil",
+      "expr": "(when nil 41)",
+      "name": "when-false"
+    },
+    {
+      "expect": "nil",
+      "expr": "(unless t 41)",
+      "name": "unless-true"
+    },
+    {
+      "expect": "7",
+      "expr": "(unless nil 6 7)",
+      "name": "unless-false"
+    },
+    {
+      "expect": "2",
+      "expr": "(let* ((x 1) (y (1+ x))) y)",
+      "name": "let-star-chain"
+    },
+    {
+      "expect": "2",
+      "expr": "(case 'b ((a c) 1) ((b d) 2) (otherwise 3))",
+      "name": "case-list-hit"
+    },
+    {
+      "expect": "9",
+      "expr": "(case 'z (a 1) (z 9) (otherwise 3))",
+      "name": "case-atom-hit"
+    },
+    {
+      "expect": "3",
+      "expr": "(case 'q ((a c) 1) (otherwise 3))",
+      "name": "case-default"
+    },
+    {
+      "expect": "(11 22 33)",
+      "expr": "(mapcar (function +) '(1 2 3) '(10 20 30))",
+      "name": "mapcar-two-lists"
+    },
+    {
+      "expect": "(2 3 4)",
+      "expr": "(mapcar (function (lambda (x) (1+ x))) '(1 2 3))",
+      "name": "mapcar-inline-lambda"
+    },
+    {
+      "expect": "(1 2 3)",
+      "expr": "(mapcan (function list) '(1 2 3))",
+      "name": "mapcan-list"
+    },
+    {
+      "expect": "(1 2 3 4)",
+      "expr": "(mapcan (function (lambda (x) (list x (1+ x)))) '(1 3))",
+      "name": "mapcan-inline-lambda"
+    },
+    {
+      "expect": "(1 2 3 4)",
+      "expr": "(mapcan (lambda (x) (list x (1+ x))) '(1 3))",
+      "name": "mapcan-bare-lambda"
+    },
+    {
+      "expect": "(a b)",
+      "expr": "(remove-if (function numberp) '(a 1 b 2))",
+      "name": "remove-if-numberp"
+    },
+    {
+      "expect": "(b c)",
+      "expr": "(remove-if (function (lambda (x) (eql x 'a))) '(a b a c))",
+      "name": "remove-if-inline-lambda"
+    },
+    {
+      "expect": "(1 2)",
+      "expr": "(remove-if (lambda (x) (> x 2)) '(1 2 3 4))",
+      "name": "remove-if-bare-lambda"
+    },
+    {
+      "expect": "(1 2)",
+      "expr": "(remove-if-not (function numberp) '(a 1 b 2))",
+      "name": "remove-if-not-numberp"
+    },
+    {
+      "expect": "(3 4)",
+      "expr": "(remove-if-not (lambda (x) (> x 2)) '(1 2 3 4))",
+      "name": "remove-if-not-bare-lambda"
+    },
+    {
+      "expect": "3",
+      "expr": "(find-if (function numberp) '(a b 3 c))",
+      "name": "find-if-numberp"
+    },
+    {
+      "expect": "3",
+      "expr": "(find-if (lambda (x) (> x 2)) '(1 2 3 4))",
+      "name": "find-if-bare-lambda"
+    },
+    {
+      "expect": "2",
+      "expr": "(position-if (function numberp) '(a b 3 c))",
+      "name": "position-if-numberp"
+    },
+    {
+      "expect": "2",
+      "expr": "(position-if (lambda (x) (> x 2)) '(1 2 3 4))",
+      "name": "position-if-bare-lambda"
+    },
+    {
+      "expect": "2",
+      "expr": "(count-if (function numberp) '(a 1 b 2))",
+      "name": "count-if-numberp"
+    },
+    {
+      "expect": "2",
+      "expr": "(count-if (function (lambda (x) (> x 1))) '(1 2 3))",
+      "name": "count-if-inline-lambda"
+    },
+    {
+      "expect": "2",
+      "expr": "(count-if (lambda (x) (> x 1)) '(1 2 3))",
+      "name": "count-if-bare-lambda"
+    },
+    {
+      "expect": "5",
+      "expr": "(%max-from 1 '(5 3 4))",
+      "name": "max-from"
+    },
+    {
+      "expect": "5",
+      "expr": "(max 1 5 3 4)",
+      "name": "max-rest"
+    },
+    {
+      "expect": "3",
+      "expr": "(%min-from 9 '(5 3 4))",
+      "name": "min-from"
+    },
+    {
+      "expect": "3",
+      "expr": "(min 9 5 3 4)",
+      "name": "min-rest"
+    },
+    {
+      "expect": "7",
+      "expr": "(abs -7)",
+      "name": "abs-negative"
+    },
+    {
+      "expect": "1",
+      "expr": "(signum 12)",
+      "name": "signum-positive"
+    },
+    {
+      "expect": "t",
+      "expr": "(evenp -4)",
+      "name": "evenp-negative"
+    },
+    {
+      "expect": "t",
+      "expr": "(oddp -3)",
+      "name": "oddp-negative"
+    },
+    {
+      "expect": "t",
+      "expr": "(integerp 7)",
+      "name": "integerp-number"
+    },
+    {
+      "expect": "nil",
+      "expr": "(integerp 'a)",
+      "name": "integerp-symbol"
+    },
+    {
+      "expect": "t",
+      "expr": "(nonnegativep 0)",
+      "name": "nonnegativep-zero"
+    },
+    {
+      "expect": "t",
+      "expr": "(nonpositivep 0)",
+      "name": "nonpositivep-zero"
+    },
+    {
+      "expect": "1",
+      "expr": "(clamp -2 1 5)",
+      "name": "clamp-low"
+    },
+    {
+      "expect": "5",
+      "expr": "(clamp 9 1 5)",
+      "name": "clamp-high"
+    },
+    {
+      "expect": "3",
+      "expr": "(clamp 3 1 5)",
+      "name": "clamp-inside"
+    },
+    {
+      "expect": "10",
+      "expr": "(reduce (function +) '(1 2 3 4))",
+      "name": "reduce-plus"
+    },
+    {
+      "expect": "10",
+      "expr": "(reduce (function (lambda (a b) (+ a b))) '(1 2 3 4))",
+      "name": "reduce-inline-lambda"
+    },
+    {
+      "expect": "nil",
+      "expr": "(reduce (function +) nil)",
+      "name": "reduce-empty"
+    },
+    {
+      "expect": "t",
+      "expr": "(every (function plusp) '(1 2 3))",
+      "name": "every-plusp-true"
+    },
+    {
+      "expect": "nil",
+      "expr": "(every (function plusp) '(1 0 3))",
+      "name": "every-plusp-false"
+    },
+    {
+      "expect": "t",
+      "expr": "(every (lambda (x) (> x 0)) '(1 2 3))",
+      "name": "every-bare-lambda"
+    },
+    {
+      "expect": "2",
+      "expr": "(some (function identity) '(nil 2 3))",
+      "name": "some-identity"
+    },
+    {
+      "expect": "3",
+      "expr": "(some (function (lambda (x) (if (> x 2) x nil))) '(1 2 3))",
+      "name": "some-inline-lambda"
+    },
+    {
+      "expect": "3",
+      "expr": "(some (lambda (x) (if (> x 2) x nil)) '(1 2 3))",
+      "name": "some-bare-lambda"
+    },
+    {
+      "expect": "2",
+      "expr": "(%getf '(a 1 b 2) 'b 99)",
+      "name": "getf-hit"
+    },
+    {
+      "expect": "99",
+      "expr": "(%getf '(a 1 b 2) 'c 99)",
+      "name": "getf-default"
+    },
+    {
+      "expect": "1",
+      "expr": "(getf '(a 1 b 2) 'a)",
+      "name": "getf-rest-hit"
+    },
+    {
+      "expect": "99",
+      "expr": "(getf '(a 1 b 2) 'c 99)",
+      "name": "getf-rest-default"
+    },
+    {
+      "expect": "(b 2)",
+      "expr": "(remf '(a 1 b 2) 'a)",
+      "name": "remf-head"
+    },
+    {
+      "expect": "(a 1 c 3)",
+      "expr": "(remf '(a 1 b 2 c 3) 'b)",
+      "name": "remf-middle"
+    },
+    {
+      "expect": "(a 1 b 2)",
+      "expr": "(remf '(a 1 b 2) 'z)",
+      "name": "remf-miss"
+    },
+    {
+      "expect": "t",
+      "expr": "(%char-list= '(97 98) '(97 98))",
+      "name": "char-list-equal"
+    },
+    {
+      "expect": "t",
+      "expr": "(string= (%string-from-codes '(97 98)) (%string-from-codes '(97 98)))",
+      "name": "string-equal"
+    },
+    {
+      "expect": "t",
+      "expr": "(string/= \"ab\" \"ac\")",
+      "name": "string-not-equal"
+    },
+    {
+      "expect": "t",
+      "expr": "(string< (%string-from-codes '(97 98)) (%string-from-codes '(97 99)))",
+      "name": "string-less"
+    },
+    {
+      "expect": "t",
+      "expr": "(string> \"ac\" \"ab\")",
+      "name": "string-greater"
+    },
+    {
+      "expect": "t",
+      "expr": "(string<= \"ab\" \"ab\")",
+      "name": "string-less-equal-equal"
+    },
+    {
+      "expect": "nil",
+      "expr": "(string>= \"ab\" \"ac\")",
+      "name": "string-greater-equal-false"
+    },
+    {
+      "expect": "t",
+      "expr": "(string-equal \"Az\" \"aZ\")",
+      "name": "string-equal-case-fold"
+    },
+    {
+      "expect": "t",
+      "expr": "(string-prefix-p \"ab\" \"abcd\")",
+      "name": "string-prefix"
+    },
+    {
+      "expect": "t",
+      "expr": "(string-suffix-p \"cd\" \"abcd\")",
+      "name": "string-suffix"
+    },
+    {
+      "expect": "1",
+      "expr": "(search \"bc\" \"abcd\")",
+      "name": "string-search-hit"
+    },
+    {
+      "expect": "nil",
+      "expr": "(search \"zz\" \"abcd\")",
+      "name": "string-search-miss"
+    },
+    {
+      "expect": "t",
+      "expr": "(string-contains-p \"bc\" \"abcd\")",
+      "name": "string-contains"
+    },
+    {
+      "expect": "\"hi\"",
+      "expr": "(string-trim \" -\" \" --hi- \")",
+      "name": "string-trim"
+    },
+    {
+      "expect": "\"ABC\"",
+      "expr": "\"ABC\"",
+      "name": "string-literal-self"
+    },
+    {
+      "expect": "4",
+      "expr": "(string-length \"ABCD\")",
+      "name": "string-length-literal"
+    },
+    {
+      "expect": "\"ABC\"",
+      "expr": "(string-append (%string-from-codes '(65 66)) (%string-from-codes '(67)))",
+      "name": "string-append"
+    },
+    {
+      "expect": "\"ABC\"",
+      "expr": "(string-append \"AB\" \"C\")",
+      "name": "string-append-literals"
+    },
+    {
+      "expect": "(66 67)",
+      "expr": "(%subseq-list '(65 66 67 68) 1 3 0)",
+      "name": "subseq-list"
+    },
+    {
+      "expect": "\"BC\"",
+      "expr": "(substring (%string-from-codes '(65 66 67 68)) 1 3)",
+      "name": "substring-end"
+    },
+    {
+      "expect": "\"BCD\"",
+      "expr": "(substring (%string-from-codes '(65 66 67 68)) 1)",
+      "name": "substring-default-end"
+    },
+    {
+      "expect": "90",
+      "expr": "(char-upcase 122)",
+      "name": "char-upcase"
+    },
+    {
+      "expect": "97",
+      "expr": "(char-downcase 65)",
+      "name": "char-downcase"
+    },
+    {
+      "expect": "66",
+      "expr": "(char (%string-from-codes '(65 66)) 1)",
+      "name": "char-ref"
+    },
+    {
+      "expect": "\"Z\"",
+      "expr": "(char->string 90)",
+      "name": "char-to-string"
+    },
+    {
+      "expect": "\"ABZ\"",
+      "expr": "(string-upcase (%string-from-codes '(97 66 122)))",
+      "name": "string-upcase"
+    },
+    {
+      "expect": "\"abz\"",
+      "expr": "(string-downcase (%string-from-codes '(65 98 90)))",
+      "name": "string-downcase"
+    },
+    {
+      "expect": "(\"a\" \"bc\")",
+      "expr": "`(\"a\" ,(string-append \"b\" \"c\"))",
+      "name": "quasiquote-string-literal"
+    },
+    {
+      "expect": "(a . b)",
+      "expr": "'(a . b)",
+      "name": "dotted-pair-literal"
+    },
+    {
+      "expect": "(2 . 3)",
+      "expr": "(cdr '(1 2 . 3))",
+      "name": "dotted-list-cdr"
+    },
+    {
+      "expect": "3",
+      "expr": "(cdr (cdr '(1 2 . 3)))",
+      "name": "dotted-list-cddr"
+    },
+    {
+      "expect": "(a . b)",
+      "expr": "`(a . ,(quote b))",
+      "name": "quasiquote-dotted-tail-symbol"
+    },
+    {
+      "expect": "(a 1 2)",
+      "expr": "`(a . ,(list 1 2))",
+      "name": "quasiquote-dotted-tail-list"
+    },
+    {
+      "expect": "(a 1 2 . z)",
+      "expr": "`(a ,@(list 1 2) . z)",
+      "name": "quasiquote-dotted-splice"
+    },
+    {
+      "expect": "(a b c)",
+      "expr": "(nthcdr 0 '(a b c))",
+      "name": "nthcdr-zero"
+    },
+    {
+      "expect": "nil",
+      "expr": "(nthcdr 5 '(a b))",
+      "name": "nthcdr-past-end"
+    },
+    {
+      "expect": "(only)",
+      "expr": "(last '(only))",
+      "name": "last-single"
+    },
+    {
+      "expect": "nil",
+      "expr": "(member 'z '(a b c))",
+      "name": "member-miss"
+    },
+    {
+      "expect": "nil",
+      "expr": "(assoc 'z '((a 1) (b 2)))",
+      "name": "assoc-miss"
+    },
+    {
+      "expect": "(a b c)",
+      "expr": "(remove 'z '(a b c))",
+      "name": "remove-miss"
+    },
+    {
+      "expect": "b",
+      "expr": "(find 'b '(a b c))",
+      "name": "find-hit"
+    },
+    {
+      "expect": "nil",
+      "expr": "(position 'z '(a b c))",
+      "name": "position-miss"
+    },
+    {
+      "expect": "(111 222)",
+      "expr": "(mapcar (function +) '(1 2) '(10 20) '(100 200))",
+      "name": "mapcar-three-lists"
+    },
+    {
+      "expect": "(11 22)",
+      "expr": "(mapcan (lambda (a b) (list (+ a b))) '(1 2) '(10 20))",
+      "name": "mapcan-two-lists-lambda"
+    },
+    {
+      "expect": "24",
+      "expr": "(reduce (function *) '(2 3 4))",
+      "name": "reduce-multiply"
+    },
+    {
+      "expect": "\"out\"",
+      "expr": "(write-string \"out\")",
+      "name": "write-string-return"
+    },
+    {
+      "expect": "nil",
+      "expr": "(terpri)",
+      "name": "terpri-return"
+    },
+    {
+      "expect": "\"raw\"",
+      "expr": "(princ \"raw\")",
+      "name": "princ-string-return"
+    },
+    {
+      "expect": "abc",
+      "expr": "(prin1 'abc)",
+      "name": "prin1-symbol-return"
+    },
+    {
+      "expect": "abc",
+      "expr": "(write 'abc)",
+      "name": "write-symbol-return"
+    },
+    {
+      "expect": "7",
+      "expr": "(print 7)",
+      "name": "print-number-return"
+    },
+    {
+      "expect": "\"line\"",
+      "expr": "(write-line \"line\")",
+      "name": "write-line-return"
+    },
+    {
+      "expect": "(4 3 2 1 0)",
+      "expr": "(let ((acc nil)) (dotimes (i 5 acc) (setq acc (cons i acc))))",
+      "name": "dotimes-accumulator-loop"
+    },
+    {
+      "expect": "3",
+      "expr": "(dotimes (i 3 i))",
+      "name": "dotimes-result-var-is-count"
+    },
+    {
+      "expect": "6",
+      "expr": "(let ((s 0)) (dolist (x '(1 2 3) s) (setq s (+ s x))))",
+      "name": "dolist-sum-loop"
+    },
+    {
+      "expect": "nil",
+      "expr": "(dolist (x '(1 2 3) x))",
+      "name": "dolist-result-var-is-nil"
+    },
+    {
+      "expect": "42",
+      "expr": "(if (not nil) (if (zerop 0) (if (plusp 3) (if (minusp -1) 42 0) 0) 0) 0)",
+      "name": "predicates"
+    },
+    {
+      "expect": "nil",
+      "expr": "(load \"missing\")",
+      "name": "fasl-load-missing"
+    },
+    {
+      "expect": "nil",
+      "expr": "(load 7)",
+      "name": "fasl-load-non-string"
+    },
+    {
+      "expect": "bytecode",
+      "expr": "(function-kind 'load-lib)",
+      "name": "dev-core-load-lib-bytecode"
+    },
+    {
+      "expect": "bytecode",
+      "expr": "(function-kind 'load-libs)",
+      "name": "dev-core-load-libs-bytecode"
+    },
+    {
+      "expect": "bytecode",
+      "expr": "(function-kind 'edit)",
+      "name": "dev-core-edit-bytecode"
+    },
+    {
+      "expect": "nil",
+      "expr": "(ide-loaded-p)",
+      "name": "dev-core-ide-unloaded"
+    },
+    {
+      "expect": "t",
+      "expr": "(load-lib \"testlib\")",
+      "name": "dev-core-load-lib-testlib"
+    },
+    {
+      "expect": "t",
+      "expr": "(progn (load-lib \"testlib\") (%load-lib-loaded-p (%string-codes \"testlib\") (symbol-value '*loaded-libs*)))",
+      "name": "dev-core-load-lib-registry-after-testlib"
+    },
+    {
+      "expect": "nil",
+      "expr": "(load-lib \"missing\")",
+      "name": "dev-core-load-lib-missing"
+    },
+    {
+      "expect": "t",
+      "expr": "(load-libs)",
+      "name": "dev-core-load-libs-empty"
+    },
+    {
+      "expect": "t",
+      "expr": "(%disk-directory-link-valid-p 40 3 0 0)",
+      "name": "workbench-directory-link-valid-tail"
+    },
+    {
+      "expect": "t",
+      "expr": "(%disk-directory-link-valid-p 40 3 40 4)",
+      "name": "workbench-directory-link-valid-next"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%disk-directory-link-valid-p 40 3 39 4)",
+      "name": "workbench-directory-link-rejects-wrong-track"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%disk-directory-link-valid-p 40 3 40 3)",
+      "name": "workbench-directory-link-rejects-self-reference"
+    },
+    {
+      "expect": "nil",
+      "expr": "(%repl-banner)",
+      "name": "workbench-repl-banner-return"
+    },
+    {
+      "expect": "42",
+      "expr": "(read-from-string \"42\")",
+      "name": "v11-g-read-from-string-direct"
+    },
+    {
+      "expect": "42",
+      "expr": "(funcall (function read-from-string) \"42\")",
+      "name": "v11-g-read-from-string-funcall"
+    },
+    {
+      "expect": "42",
+      "expr": "(apply (function read-from-string) (list \"42\"))",
+      "name": "v11-g-read-from-string-apply"
+    },
+    {
+      "expect": "42",
+      "expr": "(read-from-string \"42 7\")",
+      "name": "v11-g-read-from-string-first-object"
+    },
+    {
+      "expect_vm_error": "TypeError",
+      "expr": "(read-from-string 42)",
+      "name": "v11-g-read-from-string-type-error"
+    },
+    {
+      "expect_vm_error": "ArityError",
+      "expr": "(read-from-string)",
+      "name": "v11-g-read-from-string-arity-zero"
+    },
+    {
+      "expect_vm_error": "ArityError",
+      "expr": "(read-from-string \"42\" \"7\")",
+      "name": "v11-g-read-from-string-arity-extra"
+    },
+    {
+      "expect": "(bytecode bytecode)",
+      "expr": "(list (function-kind 'mod) (function-kind 'remainder))",
+      "name": "workbench-mod-remainder-bytecode"
+    },
+    {
+      "expect": "(1 2)",
+      "expr": "(list (funcall (function mod) -5 3) (funcall (function remainder) 5 -3))",
+      "name": "workbench-mod-remainder-funcall"
+    },
+    {
+      "expect": "bytecode",
+      "expr": "(function-kind 'compile-string)",
+      "name": "workbench-compile-string-bytecode"
+    },
+    {
+      "expect": "bytecode",
+      "expr": "(function-kind 'compile-error)",
+      "name": "workbench-compile-error-bytecode"
+    },
+    {
+      "expect": "nil",
+      "expr": "(compile-string 7 \"noslot\")",
+      "name": "workbench-compile-string-bad-source"
+    },
+    {
+      "expect": "\"bad source\"",
+      "expr": "(progn (compile-string 7 \"noslot\") (compile-error))",
+      "name": "workbench-compile-string-bad-source-error"
+    },
+    {
+      "expect": "nil",
+      "expr": "(compile-string \"(defun x () 1)\" 7)",
+      "name": "workbench-compile-string-bad-destination"
+    },
+    {
+      "expect": "\"bad destination\"",
+      "expr": "(progn (compile-string \"(defun x () 1)\" 7) (compile-error))",
+      "name": "workbench-compile-string-bad-destination-error"
+    },
+    {
+      "expect": "(2 3)",
+      "expr": "(apply (function filter) (list (function numberp) '(a 2 b 3)))",
+      "name": "v11-filter-apply"
+    },
+    {
+      "expect": "(2 3)",
+      "expr": "(filter (function numberp) '(a 2 b 3))",
+      "name": "v11-filter-direct"
+    },
+    {
+      "expect": "(2 3)",
+      "expr": "(funcall (function filter) (function numberp) '(a 2 b 3))",
+      "name": "v11-filter-funcall"
+    }
+  ],
+  "description": "Workbench-Kandidat: Arena-IDE + compile-string-Slow-Path. Basis einsuite-core (mit lcc + lcc-fasl.lisp-Emitter), aber der teure native Disk-Source-Compile-Pfad ist DRAUSSEN: compile-file (nutzt %fasl-src -> io_fasl_open_source -> disk_dir_find) und der Diagnose-Entry fasl-emit-scratch werden entfernt (Codex-Handoff 2026-07-08). compile-string(source-text dst) liest die Formen aus dem IDE-Buffer-STRING (Prim %cs-read-open, kein Disk), kompiliert via lcc und schreibt FASL/L65M nach dst. Gebaut mit -DLISP65_COMPILE_STRING statt -DLISP65_FASL (spart ~die Disk-Source-C-Schicht).",
+  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+  "functions": [
+    "not",
+    "identity",
+    "list",
+    "%add-list",
+    "+",
+    "%mul-list",
+    "*",
+    "%sub-list",
+    "-",
+    "%lt-chain",
+    "<",
+    "%gt-chain",
+    ">",
+    "%num=-chain",
+    "=",
+    "%le-chain",
+    "<=",
+    "%ge-chain",
+    ">=",
+    "cons",
+    "car",
+    "cdr",
+    "eq",
+    "eql",
+    "consp",
+    "atom",
+    "null",
+    "/",
+    "mod",
+    "remainder",
+    "stringp",
+    "numberp",
+    "symbolp",
+    "string-length",
+    "string-ref",
+    "screen-size",
+    "screen-clear",
+    "screen-put-char",
+    "read-key",
+    "poll-key",
+    "screen-bulk-p",
+    "equal",
+    "%write-string-codes",
+    "write-string",
+    "terpri",
+    "princ",
+    "write",
+    "print",
+    "write-line",
+    "caar",
+    "cadr",
+    "cdar",
+    "cddr",
+    "first",
+    "rest",
+    "second",
+    "1+",
+    "1-",
+    "zerop",
+    "plusp",
+    "minusp",
+    "%distinct-from-all",
+    "%case-key-tests",
+    "%case-key-test",
+    "%case-clauses",
+    "/=",
+    "%append2",
+    "%append2-rev",
+    "append",
+    "%append-lists",
+    "length",
+    "%length-from",
+    "nth",
+    "nthcdr",
+    "%reverse-into",
+    "reverse",
+    "last",
+    "member",
+    "assoc",
+    "remove",
+    "%remove-into",
+    "find",
+    "%position-from",
+    "position",
+    "%mapc",
+    "mapc",
+    "%let-vars",
+    "%let-vals",
+    "%binding-var",
+    "%binding-init",
+    "%binding-step",
+    "%optional-third",
+    "assq",
+    "%take",
+    "%take-into",
+    "butlast",
+    "%any-null",
+    "%cars",
+    "%cdrs",
+    "mapcar",
+    "%mapcar-into",
+    "mapcan",
+    "remove-if",
+    "%remove-if-into",
+    "remove-if-not",
+    "%remove-if-not-into",
+    "copy-list",
+    "find-if",
+    "%position-if-from",
+    "position-if",
+    "count",
+    "%count-from",
+    "count-if",
+    "%count-if-from",
+    "%list*-from",
+    "list*",
+    "%reduce-from",
+    "reduce",
+    "every",
+    "some",
+    "%max-from",
+    "max",
+    "%min-from",
+    "min",
+    "abs",
+    "signum",
+    "evenp",
+    "oddp",
+    "integerp",
+    "nonnegativep",
+    "nonpositivep",
+    "clamp",
+    "%getf",
+    "getf",
+    "remf",
+    "%remf-into",
+    "%char-list=",
+    "string=",
+    "string/=",
+    "%char-list<",
+    "string<",
+    "string>",
+    "string<=",
+    "string>=",
+    "string-append",
+    "%subseq-list",
+    "%subseq-list-into",
+    "substring",
+    "%upcase-code",
+    "%downcase-code",
+    "%case-fold-list",
+    "%case-fold-list-into",
+    "string-equal",
+    "%char-list-prefix-p",
+    "string-prefix-p",
+    "%drop-list",
+    "string-suffix-p",
+    "%char-list-search",
+    "search",
+    "string-contains-p",
+    "%char-member-p",
+    "%trim-left-list",
+    "%trim-right-list",
+    "string-trim",
+    "char-upcase",
+    "char-downcase",
+    "char",
+    "char->string",
+    "string-upcase",
+    "string-downcase",
+    "lcc-run",
+    "%load-fold-code",
+    "%load-name-code-at",
+    "%load-entry-byte",
+    "%load-entry-used-p",
+    "%load-name-match-at",
+    "%load-entry-match-p",
+    "%load-from-entry",
+    "%load-scan-entries",
+    "%disk-directory-link-valid-p",
+    "%load-scan-directory",
+    "load",
+    "%fasl-get",
+    "%fasl-set",
+    "%fasl-len2",
+    "%fasl-len",
+    "%fasl-app2",
+    "%fs-ocur",
+    "%fs-ne",
+    "%fs-nn",
+    "%fs-np",
+    "%fs-slen",
+    "%fs-base",
+    "%fasl-fs",
+    "%fasl-w8",
+    "%fasl-w16",
+    "%fasl-b",
+    "%fasl-u16",
+    "%fasl-blist",
+    "%fasl-zeros",
+    "%fasl-strw",
+    "%fasl-straddn",
+    "%fasl-node",
+    "%fasl-patchadd",
+    "%fasl-entadd",
+    "%fasl-hname",
+    "%fasl-litnode",
+    "%fasl-patchlits",
+    "%fasl-obj",
+    "%fasl-form2",
+    "%fasl-form",
+    "%fasl-forms",
+    "%fasl-copy",
+    "%fasl-hdr1",
+    "%fasl-hdr2",
+    "%fasl-hdr3",
+    "%fasl-copies",
+    "%fasl-finish",
+    "%c1-compile-source",
+    "%c1-compile",
+    "%fasl-stream-forms",
+    "compile-error",
+    "%compile-slot-scan-entries",
+    "%compile-slot-find",
+    "%compile-slot-capacity",
+    "compile-string",
+    "%load-lib-from-entry",
+    "%load-lib-scan-entries",
+    "%load-lib-scan-directory",
+    "%load-lib-codes-equal-p",
+    "%load-lib-loaded-p",
+    "%load-lib-note-loaded",
+    "load-lib",
+    "%load-libs-seq",
+    "load-libs",
+    "ide-loaded-p",
+    "edit",
+    "%banner-separator",
+    "%banner-run",
+    "%banner-runs",
+    "%banner-subtitle",
+    "%repl-banner",
+    "eval",
+    "logand",
+    "logior",
+    "logxor",
+    "ash",
+    "%c2-direct-quoted-value-p",
+    "%c2-direct-value-p",
+    "%c2-direct-values-p",
+    "%c2-direct-value",
+    "%c2-direct-expression-p",
+    "%c2-direct-expression",
+    "%c2-direct-values",
+    "%c2-published-direct-call-p",
+    "%c2-top-level-expand",
+    "%c2-top-level-run-forms",
+    "%c2-run-expanded",
+    "%number->string-result",
+    "number->string",
+    "read-from-string",
+    "%c2-source-form",
+    "%c2-source-forms",
+    "%c2-compile-source",
+    "%c2-compile-save",
+    "%v2-reverse-into",
+    "%v2-filter-into",
+    "filter"
+  ],
+  "max_call_args": 12,
+  "min_private_inline_functions": 4,
+  "min_vm_dir_headroom": 8,
+  "private_inline_functions": [
+    "%banner-runs",
+    "%banner-subtitle",
+    "%number->string-result",
+    "%load-lib-note-loaded"
+  ],
+  "require_all_defuns": true,
+  "sources": [
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/prelude-m1.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-bytecode-bridges.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-einsuite-bridges.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-screen-fallback.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-output.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-control.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-lists.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-sequences.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-math.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-plists.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-strings.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-load.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/lcc-fasl.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/stdlib-load-lib.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/ide-launch.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/repl-banner.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/dialect-v2/eval-runtime.lisp",
+    "config/c2-v251-r2-20260929-public-plane/build/c2.3/v1.5.0-public-selected/ide-codemod/sources/lib/dialect-v2/lists-core.lisp"
+  ],
+  "strict_arity": true,
+  "tailcall_self": [
+    "%append2-rev",
+    "%append-lists",
+    "%length-from",
+    "nth",
+    "nthcdr",
+    "%reverse-into",
+    "last",
+    "member",
+    "assoc",
+    "%remove-into",
+    "%position-from",
+    "%mapc",
+    "%take-into",
+    "%any-null",
+    "%mapcar-into",
+    "%remove-if-into",
+    "%remove-if-not-into",
+    "find-if",
+    "%position-if-from",
+    "%count-from",
+    "%count-if-from",
+    "%reduce-from",
+    "every",
+    "%getf",
+    "%remf-into",
+    "%char-list=",
+    "%char-list<",
+    "%subseq-list-into",
+    "%case-fold-list-into",
+    "%char-list-prefix-p",
+    "%drop-list",
+    "%char-list-search",
+    "%char-member-p",
+    "%trim-left-list",
+    "%fasl-len2",
+    "%fasl-blist",
+    "%fasl-zeros",
+    "%fasl-strw",
+    "%fasl-patchlits",
+    "%fasl-form2",
+    "%fasl-forms",
+    "%fasl-copy",
+    "%fasl-stream-forms",
+    "%compile-slot-scan-entries",
+    "%compile-slot-find",
+    "%compile-slot-capacity",
+    "%v2-reverse-into",
+    "%v2-filter-into"
+  ],
+  "vm_dir_align8_after_boot": true,
+  "vm_dir_max": 448
+}

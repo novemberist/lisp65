@@ -1,0 +1,62 @@
+{
+  "abi_profile": "dialect-v2",
+  "allowed_external_calls": [
+    "%read-line-loop",
+    "%rl-render",
+    "%rl-screen-tail",
+    "lcc-run"
+  ],
+  "cases": [
+    {
+      "expect": "nil",
+      "expr": "nil",
+      "name": "emission-only-placeholder-not-executed"
+    }
+  ],
+  "d81_name": "REPL",
+  "description": "Comfort default emission-only successor. Runtime gates are pending; no cases executed.",
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "functions": [
+    "%sexp-step",
+    "%sexp-line-state",
+    "%repl-read",
+    "%repl-prompt",
+    "%repl-step",
+    "repl",
+    "%repl-loop",
+    "%comfort-request",
+    "%comfort-state-hi",
+    "%comfort-state-lo"
+  ],
+  "ignored_output_codes": [
+    17,
+    19
+  ],
+  "max_call_args": 12,
+  "name": "repl-comfort",
+  "private_inline_functions": [
+    "%comfort-state-hi",
+    "%comfort-state-lo"
+  ],
+  "private_key_event_modes": true,
+  "provides": [
+    "repl-comfort"
+  ],
+  "require_all_defuns": false,
+  "requires": [
+    "core"
+  ],
+  "resident_suite": "../../../tests/bytecode/libs/p0-repl-comfort-v240-resident.json",
+  "sources": [
+    "config/c2-v251-r2-20260929-public-plane/lib/comfort-state-address.lisp",
+    "config/c2-v251-r2-20260929-public-plane/lib/sexp-depth.lisp",
+    "config/c2-v251-r2-20260929-public-plane/lib/repl-comfort-v250.lisp"
+  ],
+  "strict_arity": true,
+  "tailcall_self": [
+    "%sexp-line-state",
+    "%repl-read",
+    "%repl-step",
+    "%repl-loop"
+  ]
+}

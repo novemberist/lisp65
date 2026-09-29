@@ -1,6 +1,6 @@
 # lisp65
 
-## Comfort by default (2.5.0 candidate)
+## Comfort by default (2.5.1 candidate)
 
 The product starts in Comfort at `l65>`. Balanced multiline input, automatic
 indentation, string/comment-aware parenthesis tracking and ten-line Up/Down
@@ -10,17 +10,26 @@ Errors, RUN/STOP aborts and refusals return to `l65>` with definitions and
 history intact. An empty line leaves to `lisp65>` and stays native; `(repl)`
 re-arms Comfort. Top-level anonymous lambdas outside `defun` remain refused.
 
-Boot takes about +8 s over 2.4.0 in the emulator (+7.65 s measured); the device
-figure is pending. Starting in Comfort costs +8 symbols, +105 name bytes,
+Boot takes about +8 s over 2.4.0 in the emulator (+7.65 s measured); the 2.5.0 automated device session
+reported about +6.7 s on a host tool clock. Starting in Comfort costs +8 symbols, +105 name bytes,
 +1 code image, +7 C2D entries/roots and five more boot collections. After exit
 to the native prompt, the matched forced collection has +12 live cells and
 +2.1% cycles; natural collection cycles are −1.7%. These are emulator
-measurements, not device timings or worst-case pause guarantees. Owner
-acceptance of the named GC cost remains open.
+measurements, not device timings or worst-case pause guarantees. The owner
+accepted this named GC cost for the inherited Comfort product.
 
-Known-issues wording proposal, pending the owner's word: IDE `C-x C-c` does
-not reach the IDE; RUN/STOP leaves it with the buffer kept. Backspace latency
-remains; its card is after 2.5.0.
+Use `C-x q` to exit the IDE normally with buffers preserved; release Ctrl
+before q. The IDE-exit device rows passed through the virtual keyboard.
+Physical `C-x C-c` does not reach the IDE and remains a known issue.
+Typing latency in the MEASURED native lane falls from 3.24 M -> 1.58 M
+cycles/key (approximately 80 -> 39 ms). Backspace code-object reads fall from
+roughly 1,200–1,800 -> 53 reads/key in the projected lane; device feel remains
+pending the owner session. The earlier small Backspace tail change also
+reduces host VM instructions. Comfort multi-line strings now evaluate and
+display correctly, preserving typed spaces without automatic indentation
+inside strings. Continuation lines are not editable after Return; Up/Down
+always walk history. The multi-line editing card follows.
+See the [2.5.1 release notes](docs/releases/2.5.1.md).
 
 lisp65 is a native, interactive Lisp workbench for the
 [MEGA65](https://mega65.org/). It combines a Common Lisp-inspired language,
@@ -29,13 +38,17 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 2.4.0**, using **Dialect V2**. It is a
+The published baseline is **lisp65 2.5.0**; **2.5.1** is in preparation, using **Dialect V2**. It is a
 product release: the qualified product still displays `WORKBENCH 2.0.0` in
-its boot banner; the package version is 2.4.0. See the
-[2.4.0 release notes](docs/releases/2.4.0.md) for the change summary and
+its boot banner; the candidate package version is 2.5.1. See the
+[2.5.1 release notes](docs/releases/2.5.1.md) for the change summary and
 evidence boundary.
 
 ## Highlights
+
+- 2.5.1: C-x q exits the IDE; editor list walks reduce measured native typing
+  latency; Comfort multi-line strings evaluate and display correctly.
+- 2.5.0: Comfort starts automatically at `l65>`.
 
 - 2.4.0: faster start and use. On the device, RUN to the prompt took 32.7 s
   (tool clock), with `Initializing...` shown until the banner is ready. On
@@ -79,13 +92,13 @@ evidence boundary.
 
 ## Get the release
 
-Download `lisp65-2.4.0.tar.gz` from the
-[v2.4.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.4.0).
+2.5.1 is in preparation. The published baseline is `lisp65-2.5.0.tar.gz` from
+the [v2.5.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.5.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-2.4.0.tar.gz
-cd lisp65-2.4.0
+tar -xzf lisp65-2.5.0.tar.gz
+cd lisp65-2.5.0
 python3 verify.py
 ```
 
@@ -96,7 +109,21 @@ hardware-acceptance bindings without consulting the repository or the network.
 See the [2.4.0 release notes](docs/releases/2.4.0.md) for the complete change
 summary and evidence boundary.
 
-## Reproduce this product
+## Reproduce the 2.5.1 candidate
+
+Export a fresh source tree with `tools/host-lisp/c2_v251_r2_20260929_public_source.py`,
+install the pinned LLVM-MOS toolchain there, and run sequentially:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 nice -n 18 ionice -c3 python3 -B tools/host-lisp/c2_v251_r2_20260929_public_product.py build
+PYTHONDONTWRITEBYTECODE=1 nice -n 18 ionice -c3 python3 -B tools/host-lisp/c2_v251_r2_20260929_public_product.py check
+```
+
+The build requires no existing build directory. It checks the Strings Final
+ELF, PRG, LTO and D81 identities and records every child command. See
+`config/c2-v251-r2-20260929-public-build-authority.json` and the 2.5.1 release notes.
+
+## Historical 2.4.0 reproduction
 
 Use the pinned toolchain declared by the source snapshot, then run
 `make workbench-product-v240-build` in a fresh checkout and
@@ -173,7 +200,7 @@ unattended operation, or large applications.
 | Function metadata is incomplete | Complete integrated help is not claimed for every native and macro entry. | Full metadata coverage and integrated help remain later work. |
 
 The six disk packages include `buffer`, `place`, `string-extra`, `inspect`,
-`defstruct` and `repl-comfort`. The 2.5.0 candidate `INIT.L65` loads
+`defstruct` and `repl-comfort`. The 2.5.1 candidate `INIT.L65` loads
 `place`, `string-extra` and `repl-comfort` at boot; load the other three
 by hand with `require`, for example `(require "buffer")`.
 The physical product-medium write-protect case is not

@@ -39,6 +39,7 @@
  ],
  "require_all_defuns": true,
  "allow_omitted_defuns": [
+    {"name": "%sexp-line-state", "reason": "Comfort-only continuation scanner; not emitted by the resident or IDE."},
   {
    "name": "%sexp-code",
    "reason": "shared matcher core is delivered once by the resident Workbench stdlib"
@@ -113,6 +114,7 @@
   }
  ],
  "remove_functions": [
+  "%sexp-line-state",
   "%sexp-code",
   "%sexp-rest",
   "%sexp-step",

@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-## 2.5.0 release wording
+## 2.5.1 release wording
 
 Ship and Publish are delegated to the reviewer by the owner (2026-09-28
 plan journal); the 2.4.0 register below is retained historically.
@@ -10,7 +10,19 @@ Comfort with definitions and history intact. An empty line leaves to
 `lisp65>`; `(repl)` re-arms it. The anonymous-lambda limitation remains.
 
 - Physical IDE `C-x C-c` does not reach the IDE. RUN/STOP leaves it, buffer kept.
-- Backspace latency remains; the follow-up card is after 2.5.0.
+- C-x q is the working IDE exit (release Ctrl before q); virtual-keyboard device rows passed on the IDE-exit predecessor.
+- Typing latency: MEASURED native lane 3.24 M -> 1.58 M cycles/key
+  (approximately 80 -> 39 ms). Backspace 1,200–1,800 -> 53 code-object
+  reads/key is projected; device feel remains pending the owner session.
+- Continuation lines are not editable after Return. Up/Down always walk
+  history, not pending multi-line input; the multi-line editing card follows.
+- Fixed in 2.5.1: Comfort multi-line strings now evaluate and display
+  correctly. In 2.5.0, `(print "hello` Return, five spaces then `world")`
+  Return did not evaluate; the recorded workaround was a line containing
+  only `)`. The fix carries lexical state and preserves typed spaces, with
+  no automatic indentation inside an open string.
+- Physical C-x q remains to be confirmed on the MEGA65 keyboard (the virtual
+  keyboard passed).
 - Boot is about +8 s over 2.4.0 in the emulator; the automated device session
   measured about +6.7 s (40.4 s to the prompt, host tool clock).
 - Pending device confirmation: stopwatch cold power cycle, physical RUN/STOP
