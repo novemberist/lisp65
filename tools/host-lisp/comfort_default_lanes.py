@@ -33,7 +33,7 @@ def replace(raw, changes):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--prompt',choices=['native','comfort'],required=True);p.add_argument('--attempt',required=True);p.add_argument('--native-candidate',choices=['v240-init','product','walks'],default='v240-init');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--prompt',choices=['native','comfort'],required=True);p.add_argument('--attempt',required=True);p.add_argument('--native-candidate',choices=['v240-init','product','walks','strings','lite'],default='v240-init');p.add_argument('--comfort-candidate',choices=['product','strings','lite'],default='product');a=p.parse_args()
     original_mutations=N.selftest()+N.completion_selftest()+N.readiness_selftest()
     # Generalize only historical readiness counts after a typed prelude. The
     # algorithm, costs, samples, counters and all completion predicates stay.
@@ -68,7 +68,7 @@ def main():
         # Native prompt: the Seed ELF on the 2.4.0-INIT control (same loaded
         # packages as 2.4.0) isolates the resident change; the observer binary's
         # HWA input does not reach the Comfort reader, so no l65> prelude.
-        if role=='candidate': medium,sha,elf=D.WORLD[a.native_candidate if a.prompt=='native' else 'product']
+        if role=='candidate': medium,sha,elf=D.WORLD[a.native_candidate if a.prompt=='native' else a.comfort_candidate]
         elif a.prompt=='native': medium,sha,elf=D.WORLD['base']
         else: medium,sha,elf=D.L.MEDIUM,D.L.EXPECT['medium'],D.L.ELF
         assert N.bind(medium)['sha256']==sha
@@ -88,7 +88,7 @@ def main():
     # prelude would never fire at l65>. Each step waits for its prompt.
     readiness='''
         steps = ([('LISP65>','(require "repl-comfort")\\n','LISP65>'),('LISP65>','(repl)\\n','L65>')] if role=='anchor' and PROMPT=='comfort' else
-                 [('L65>',None,'LISP65>')] if role=='candidate' and PROMPT=='native' and NATIVE_CANDIDATE in ('product','walks') else [])
+                 [('L65>',None,'LISP65>')] if role=='candidate' and PROMPT=='native' and NATIVE_CANDIDATE in ('product','walks','strings','lite') else [])
         for wanted,text,after in steps:
             limit=time.monotonic()+240
             while D.L.active(self.screen())!=wanted:

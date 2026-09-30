@@ -429,6 +429,12 @@
                      next-position next-top columns row)))
               (%read-line-loop state))))))))
 
+; Only the point-zero Backspace branch pays for this cold boundary test.
+(defun %rl-empty-backspace (state length command)
+  (if (and (= length 0) (numberp (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr (cdr (cdr state))))))))))))
+      command
+      (%read-line-loop state)))
+
 (defun %rl-dispatch (command state)
   (let* ((cursor (car (cdr state)))
          (position (car (cdr (cdr (cdr state)))))
@@ -437,7 +443,7 @@
       ((= command 1101)
        (if (> position 0)
            (%rl-cut state (car (car (car state))) cursor)
-           (%read-line-loop state)))
+           (%rl-empty-backspace state length command)))
       ((= command 1102)
        (if (cdr cursor) (%rl-cut state cursor (cdr cursor))
            (%read-line-loop state)))
@@ -462,15 +468,17 @@
 ; Plain unprompted read-line retains its existing direct-screen contract.
 ; No cursor positioning escape or native ABI is added.
 (defun %rl-end (state)
+  ; Point will not move again. Release predecessor links before output copying.
+  (rplaca (car state) nil)
   (let* ((codes (cdr (car state)))
          (row (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr state)))))))))
          (text (%string-from-codes codes)))
     (progn
-      (if (or (< row -2) (numberp (car (nthcdr 9 state))))
+      (if (or (< row -2) (numberp (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr (cdr (cdr state))))))))))))
           (progn
             (%rl-screen-tail nil 0
-                             (* (car (nthcdr 6 state))
-                                (+ (car (nthcdr 5 state)) 1)) -1 (car (cdr (cdr (cdr (cdr (cdr state))))))
+                             (* (car (cdr (cdr (cdr (cdr (cdr (cdr state)))))))
+                                (+ (car (cdr (cdr (cdr (cdr (cdr state)))))) 1)) -1 (car (cdr (cdr (cdr (cdr (cdr state))))))
                              (car (cdr (cdr (cdr (cdr (cdr (cdr state))))))) row)
             (if (< row -2)
                 (write-string (if (< row -34) "lisp65> " "l65> "))
@@ -485,7 +493,7 @@
 
 (defun %read-line-loop (state)
   (let* ((event (%rl-poll state))
-         (code (if (numberp event) event (if event (cadr event) 0))))
+         (code (if (numberp event) event (if event (car (cdr event)) 0))))
     (if (and (>= code 32) (<= code 126))
         (if (< (car (cdr (cdr (cdr (cdr state))))) 250)
             (%rl-put code state (car (cdr state))

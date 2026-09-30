@@ -7,8 +7,8 @@ V2_WORKBENCH_SERVICE_REPORT := build/bytecode/dialect-v2/workbench-service-call-
 V2_WORKBENCH_SUITE_DIR := build/bytecode/dialect-v2/suites
 V2_WORKBENCH_ARTIFACT_DIR := build/bytecode/dialect-v2/workbench
 V2_WORKBENCH_LIB_DIR := build/bytecode/dialect-v2/libs
-V2_WORKBENCH_COMPOSITION_REPORT := build/bytecode/dialect-v2/workbench-library-composition-budget.json
-V11_BUFFER_COMPOSITION_REPORT := build/bytecode/dialect-v2/workbench-buffer-composition-budget.json
+V2_WORKBENCH_COMPOSITION_REPORT := build/bytecode/dialect-v2/workbench-library-composition-budget-disk-r7-20260930.json
+V11_BUFFER_COMPOSITION_REPORT := build/bytecode/dialect-v2/workbench-buffer-composition-budget-disk-r7-20260930.json
 V11_REPL_BANNER_VISUAL_REPORT := build/bytecode/dialect-v2/repl-banner-visual-oracle.json
 WORKBENCH_SERVICE_INVENTORY_ARTIFACTS := \
 	bytecode-p0-workbench-stdlib-artifacts \
@@ -30,7 +30,7 @@ workbench-service-call-inventory-current: $(WORKBENCH_SERVICE_INVENTORY_ARTIFACT
 # C1 is the canonical Wave-1 product policy: the generated Workbench sources
 # retain the exact compiler tier until a persistent foreign allocation needs
 # its region. Diagnostic builds may still override this tool explicitly.
-V2_WORKBENCH_CODEMOD_TOOL ?= tools/host-lisp/v11_c1_lease_codemod.py
+V2_WORKBENCH_CODEMOD_TOOL ?= tools/host-lisp/v2_workbench_codemod_disk_r7_20260930.py
 
 v2-workbench-codemod:
 	PYTHONDONTWRITEBYTECODE=1 python3 $(V2_WORKBENCH_CODEMOD_TOOL) --selftest
@@ -114,11 +114,9 @@ v11-buffer-library-composition-check: v2-workbench-artifacts bytecode-p0-buffer-
 
 v11-m-transactional-fasl-observations: v2-workbench-artifacts
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/bytecode_p0_stdlib.py --check \
-		--observation-report build/bytecode/dialect-v2/v11-m-implementation-observations.json \
+		--observation-report build/bytecode/dialect-v2/v11-m-implementation-observations-disk-r7-20260930.json \
 		$(V2_WORKBENCH_SUITE_DIR)/p0-m65d-lib.json
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/chain_walker_inventory.py --selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/chain_walker_inventory.py \
-		--out build/bytecode/dialect-v2/chain-walker-inventory.json
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/chain_walker_inventory_disk_r7_20260930.py check
 
 v11-m-transactional-fasl-acceptance-selftest:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_m_transactional_fasl_acceptance.py selftest

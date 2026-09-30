@@ -96,7 +96,7 @@ check-source: public-export-population-selftest
 
 .PHONY: v210-bundle-docs-check
 v210-bundle-docs-check:
-	python3 tools/host-lisp/c2_v251_r2_20260929_v210_bundle_docs.py check
+	python3 tools/host-lisp/c2_v252_r1_v210_bundle_docs.py check
 
 .PHONY: workspace-capacity-selftest workspace-capacity-check doctor doctor-selftest source-syntax-check ci-selftest document-index-selftest document-index-check c2-product-profile-parity-selftest c2-product-profile-parity-check c2-lite-v6-roots-fronts-product-profile-selftest c2-lite-v6-roots-fronts-product-profile-check c2-lite-media-acceptance-selftest c2-lite-public-clean-build-selftest c2-lite-public-clean-build-qualify c2-final-island-identity-check c2-append-final-hybrid-check c2-vm-badopcode-detail-check c2-install-phase-discriminator-check c2-phase06a-cutpoint-check c2-append-suffix-read-domain-check c2-l-full-keymap-end-to-end-check c2-crc-codegen-selftest c2-historical-gate-inheritance-selftest c2-historical-gate-inheritance-check c2-address-identity-contract-selftest c2-address-identity-contract-check c2-kernal-residency-audit-selftest c2-kernal-residency-audit-check c2-kernal-unmap-contract-check c2-kernal-unmap-contract-receipt-check c2-nested-append-v5-selftest c2-nested-append-v5-check c2-q-check upstream-verification-selftest upstream-verification-check proof-hooks-install evidence-archive-assets-selftest evidence-archive-assets-check evidence-archive-assets-remote-check evidence-archive-index-size-gate evidence-archive-history-size-gate history-transport-bootstrap history-transport-rewrite-check remote-source-binding-selftest remote-source-binding-receipt-check promotion-register-check promotion-preflight-check r4-product-candidate-check r5-global-g5-input-check r5-global-g5-seal-selftest r6-ship-selftest r6-g6-selftest r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check workbench-product-reproducibility-selftest workbench-product-reproducibility-check workbench-product-reproducibility-preflight media-guard-bank-attribution-check post-capture-planning-capacity-check chain-walker-inventory-check dialect-contract-selftest dialect-contract-check bytecode-abi-ledger-selftest bytecode-abi-ledger-check code-object-arity-contract-selftest code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check r3-product-block-build r3-current-product-block-check r3-g3-g6-contract-check r3-g3-g6-environment-check r3-product-block-check r3-product-reproducibility-check r3-g3-static-preflight-check r3-stager-probe-check workbench-ux-harness-selftest semantic-contracts-selftest semantic-contracts-lint semantic-contracts-g0 semantic-contracts-g1 semantic-contracts-g2 bytecode-p0-omission-contract-check ci-check-source ci-check-host check-source check-host check-product check-reference reference-diagnostics check-emulator check-hardware-dry-run check-hardware
 .PHONY: block-26-build-integrity-selftest block-26-build-integrity-check
@@ -113,10 +113,10 @@ block-26-closure-check: block-26-closure-selftest
 check-source: block-26-closure-check
 
 block-26-build-integrity-selftest:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_check_host_r2_20260929_card5.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_card5.py selftest
 
 block-26-build-integrity-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_check_host_r2_20260929_card5.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_card5.py check
 check-source: block-26-build-integrity-check
 
 .PHONY: native-cycle-stationary-check
@@ -853,12 +853,12 @@ c2-v20-map-cpu-transport-probe-check: c2-v20-map-cpu-transport-probe-selftest
 	scripts/c2-v20-loading-libraries-progress-map-hw.sh dry-run
 
 comfort-track-selftest:
-	python3 tools/host-lisp/comfort_track_strings_20260928.py selftest
+	python3 tools/host-lisp/comfort_track_o2_lite_20260929.py selftest
 
 # Host-only development freight.  This target compiles and executes the
 # Bank-2 suite, but makes no product, packaging, release or device claim.
 comfort-track-check: comfort-track-selftest
-	python3 tools/host-lisp/comfort_track_strings_20260928.py check
+	python3 tools/host-lisp/comfort_track_o2_lite_20260929.py check
 
 c2-v110-persistent-performance-selftest:
 	python3 tools/host-lisp/c2_v110_persistent_performance.py selftest
@@ -1012,10 +1012,10 @@ c2-while-check: equivalence-check
 	python3 tools/host-lisp/c2_while_gate.py --check
 
 c2-q-check:
-	python3 tools/host-lisp/isolated_host_check.py --workspace q -- python3 tools/host-lisp/c2_q_strings_r2_20260928.py check
+	python3 tools/host-lisp/isolated_host_check.py --workspace q -- python3 tools/host-lisp/c2_q_o2_lite_20260929.py check
 
 c2-m65-hw-check:
-	python3 tools/host-lisp/isolated_host_check.py --workspace m65-hw -- python3 tools/host-lisp/c2_m65_hw_gate.py
+	python3 tools/host-lisp/isolated_host_check.py --workspace m65-hw -- python3 tools/host-lisp/c2_m65_hw_o2_lite_20260929.py
 
 c2-ship-input-wait-check:
 	python3 tools/host-lisp/c2_ship_input_wait_gate.py
@@ -1036,7 +1036,7 @@ c2-v124-time-check:
 	python3 tools/host-lisp/isolated_host_check.py --workspace time -- python3 tools/host-lisp/c2_v124_time_gate.py
 
 c2-require-prior-append-option-a-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/isolated_host_check.py --workspace option-a -- python3 -B tools/host-lisp/comfort_default_option_a_strings_r2_20260928.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/isolated_host_check.py --workspace option-a -- python3 -B tools/host-lisp/comfort_default_option_a_o2_lite_20260929.py check
 
 c2-final-island-identity-check:
 	python3 tools/host-lisp/c2_final_island_identity_gate.py check-source
@@ -1054,9 +1054,9 @@ c2-append-suffix-read-domain-check:
 	python3 tools/host-lisp/c2_append_suffix_read_domain_gate.py check-source
 
 c2-l-full-keymap-end-to-end-check:
-	python3 tools/host-lisp/c2_v251_r2_20260929_keymap.py selftest
-	python3 tools/host-lisp/c2_v251_r2_20260929_keymap.py check
-	python3 tools/host-lisp/c2_v251_r2_20260929_keymap_receipt.py check
+	python3 tools/host-lisp/c2_v252_r1_keymap.py selftest
+	python3 tools/host-lisp/c2_v252_r1_keymap.py check
+	python3 tools/host-lisp/c2_v252_r1_keymap_receipt.py check
 	python3 tools/host-lisp/c2_ide_exit_key_path_20260928.py
 
 c2-l-full-static-plane-check:
@@ -1176,9 +1176,11 @@ post-capture-planning-capacity-check:
 	python3 tools/host-lisp/post_capture_planning_capacity.py check
 
 chain-walker-inventory-check:
-	python3 tools/host-lisp/chain_walker_inventory.py --selftest
-	python3 tools/host-lisp/chain_walker_inventory.py \
-		--out build/bytecode/dialect-v2/wave1-chain-walker-inventory-receipt.json
+	python3 tools/host-lisp/chain_walker_inventory_disk_r7_20260930.py check
+
+.PHONY: disk-r7-source-check
+disk-r7-source-check:
+	python3 tools/host-lisp/disk_r7_consumers_20260930.py check
 
 r4-product-candidate-check: c2-bound-artifact-source-parity-required-check
 	python3 tools/host-lisp/promotion_archive.py product-candidate-check
@@ -1605,10 +1607,10 @@ c2-v21-loading-libraries-stage-breadcrumb-media-check: c2-v21-loading-libraries-
 .PHONY: c2-media-builder-closure-enumeration-selftest
 .PHONY: c2-media-builder-closure-enumeration-check
 c2-media-builder-closure-enumeration-selftest: c2-v21-loading-libraries-stage-breadcrumb-media-check
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_r2_20260929_media_census.py selftest >/dev/null
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_media_census.py selftest >/dev/null
 
 c2-media-builder-closure-enumeration-check: c2-media-builder-closure-enumeration-selftest c2-v160-item1-only-media-check
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_r2_20260929_media_census.py check >/dev/null
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_media_census.py check >/dev/null
 
 check-source: c2-media-builder-closure-enumeration-check
 
@@ -1925,10 +1927,10 @@ c2-v16-vm-progress-noninterference-check: c2-v16-vm-progress-noninterference-sel
 
 .PHONY: c2-v126-editor-allocation-selftest c2-v126-editor-allocation-check
 c2-v126-editor-allocation-selftest:
-	python3 tools/host-lisp/c2_v126_editor_allocation_strings_r2_20260928.py selftest
+	python3 tools/host-lisp/c2_v126_editor_allocation_o2_lite_20260929.py selftest
 
 c2-v126-editor-allocation-check: c2-v126-editor-allocation-selftest v2-workbench-artifacts
-	python3 tools/host-lisp/c2_v126_editor_allocation_strings_r2_20260928.py check
+	python3 tools/host-lisp/c2_v126_editor_allocation_o2_lite_20260929.py check
 
 .PHONY: c2-v16-defstruct-phase-a-selftest c2-v16-defstruct-phase-a-check
 c2-v16-defstruct-phase-a-selftest:
@@ -2965,10 +2967,10 @@ check-source: c2-v160-comfort-repl-symbol-pricing-check
 
 .PHONY: c2-v160-comfort-repl-selftest c2-v160-comfort-repl-check
 c2-v160-comfort-repl-selftest: c2-v160-comfort-repl-symbol-pricing-check
-	python3 tools/host-lisp/c2_v160_comfort_repl_strings_r2_20260928.py selftest
+	python3 tools/host-lisp/c2_v160_comfort_repl_o2_lite_20260929.py selftest
 
 c2-v160-comfort-repl-check: c2-v160-comfort-repl-selftest
-	python3 tools/host-lisp/c2_v160_comfort_repl_strings_r2_20260928.py check
+	python3 tools/host-lisp/c2_v160_comfort_repl_o2_lite_20260929.py check
 
 check-source: c2-v160-comfort-repl-check
 
@@ -3001,10 +3003,10 @@ check-source: c2-v160-input-service-time-pricing-check
 
 .PHONY: c2-v160-input-service-hybrid-selftest c2-v160-input-service-hybrid-check
 c2-v160-input-service-hybrid-selftest:
-	python3 tools/host-lisp/c2_v160_hybrid_strings_r2_20260928.py selftest
+	python3 tools/host-lisp/c2_v160_hybrid_disk_r7_20260930.py selftest
 
 c2-v160-input-service-hybrid-check: c2-v160-input-service-hybrid-selftest
-	python3 tools/host-lisp/c2_v160_hybrid_strings_r2_20260928.py check
+	python3 tools/host-lisp/c2_v160_hybrid_disk_r7_20260930.py check
 
 .PHONY: c2-v160-input-service-hybrid-reclaim-pricing-selftest c2-v160-input-service-hybrid-reclaim-pricing-check
 c2-v160-input-service-hybrid-reclaim-pricing-selftest:
@@ -3015,10 +3017,10 @@ c2-v160-input-service-hybrid-reclaim-pricing-check: c2-v160-input-service-hybrid
 
 .PHONY: c2-v160-input-service-hybrid-capacity-world-attribution-selftest c2-v160-input-service-hybrid-capacity-world-attribution-check
 c2-v160-input-service-hybrid-capacity-world-attribution-selftest:
-	python3 tools/host-lisp/c2_v160_hybrid_capacity_strings_r2_20260928.py selftest
+	python3 tools/host-lisp/c2_v160_hybrid_capacity_disk_r7_20260930.py selftest
 
 c2-v160-input-service-hybrid-capacity-world-attribution-check: c2-v160-input-service-hybrid-capacity-world-attribution-selftest
-	python3 tools/host-lisp/c2_v160_hybrid_capacity_strings_r2_20260928.py check
+	python3 tools/host-lisp/c2_v160_hybrid_capacity_disk_r7_20260930.py check
 
 .PHONY: c2-v160-hybrid-consumer-absence-attribution-selftest c2-v160-hybrid-consumer-absence-attribution-check
 c2-v160-hybrid-consumer-absence-attribution-selftest:
@@ -3300,7 +3302,7 @@ c2-v17-comfort-phase1b-pricing-check: c2-product-callprim-delivery-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_comfort_phase1b_pricing.py --check
 
 c2-v17-comfort-phase1b-qualification-check: c2-v17-comfort-phase1b-pricing-check
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_comfort_phase1b_strings_r2_20260928.py qualification-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_comfort_phase1b_disk_r7_20260930.py qualification-check
 
 c2-v17-comfort-phase1b-media-check: c2-v17-comfort-phase1b-qualification-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_comfort_phase1b_acceptance_media.py check
@@ -3321,7 +3323,7 @@ c2-v17-sexp-scanner-paint-card-check: c2-v17-editing-surface-polish-pricing-chec
 check-source: c2-v17-sexp-scanner-paint-card-check
 
 c2-v17-repl-idle-blink-card-check: c2-v17-sexp-scanner-paint-card-check
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_repl_idle_blink_strings_r2_20260928.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_repl_idle_blink_disk_r7_20260930.py check
 
 check-source: c2-v17-repl-idle-blink-card-check
 
@@ -3908,10 +3910,10 @@ check-source: public-surface-domain-audit-check
 
 .PHONY: public-naming-audit-selftest public-naming-audit-check
 public-naming-audit-selftest:
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v251_r2_20260929_public_naming.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v252_r1_public_naming.py selftest
 
 public-naming-audit-check: public-naming-audit-selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v251_r2_20260929_public_naming.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v252_r1_public_naming.py check
 
 check-source: public-naming-audit-check
 
@@ -4388,7 +4390,7 @@ check-source: put-kit-contract-check
 # 2.5.0 preparation successors; immutable Comfort-default predecessors retained.
 .PHONY: v250-bundle-docs-check v250-public-authority-check
 v250-bundle-docs-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_r2_20260929_bundle_docs_gate.py
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_bundle_docs_gate.py
 v250-public-authority-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_v250_release_era.py
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_reproduction_gate.py check
@@ -4396,20 +4398,61 @@ check-host: v250-bundle-docs-check v250-public-authority-check
 
 .PHONY: backspace-stdlib-artifacts-check
 backspace-stdlib-artifacts-check:
-	python3 tools/host-lisp/stdlib_artifacts_strings_r3_20260928.py check
+	python3 tools/host-lisp/stdlib_artifacts_disk_r7_20260930.py check
 
 check-source: backspace-stdlib-artifacts-check
 
 # 2.5.1 Backspace Final public authority; reviewer runs sealed check-host.
 .PHONY: v251-public-authority-check
 v251-public-authority-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_r2_20260929_public_product.py preflight
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_v251_release_era.py check
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_r2_20260929_reproduction_gate.py check
 check-host: v251-public-authority-check
 
 # Comfort multiline strings: live library content and aggregate growth.
 .PHONY: comfort-strings-artifacts-check
 comfort-strings-artifacts-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/stdlib_artifacts_strings_r3_20260928.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/stdlib_artifacts_disk_r7_20260930.py check
 
 check-source: comfort-strings-artifacts-check
+
+# Seed r7 product bytes do not exist until Chunk C completes. These consumers
+# never invoke the producer and fail closed while complete.json is absent.
+.PHONY: disk-r7-product-receipt-build disk-r7-static-plane-check disk-r7-media-check
+disk-r7-product-receipt-build:
+	python3 tools/host-lisp/disk_r7_product_receipts_20260930.py build
+
+disk-r7-static-plane-check:
+	python3 tools/host-lisp/disk_r7_product_receipts_20260930.py check
+
+disk-r7-media-check:
+	python3 tools/host-lisp/disk_r7_product_receipts_20260930.py check
+
+.PHONY: disk-r7-product-selftest
+disk-r7-product-selftest:
+	python3 tools/host-lisp/disk_r7_product_receipts_20260930.py selftest
+
+.PHONY: disk-r7-product-card5-receipt-build disk-r7-product-card5-check
+disk-r7-product-card5-receipt-build:
+	python3 tools/host-lisp/c2_v252_r1_card5_product.py build
+
+disk-r7-product-card5-check: block-26-build-integrity-check disk-r7-static-plane-check disk-r7-media-check
+	python3 tools/host-lisp/c2_v252_r1_card5_product.py check
+
+.PHONY: disk-r7-consumer-mutation-check
+disk-r7-consumer-mutation-check:
+	python3 tools/host-lisp/disk_r7_consumer_mutations_20260930.py check
+
+# 2.5.2 O2-lite r7c Final public authority; the reproduction gate is red until
+# two clean public-source reproductions have been recorded (release step 4).
+.PHONY: v252-public-authority-check v252-document-index-check
+v252-public-authority-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_toolchain.py --selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_reproduction_gate.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_public_product.py preflight
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_reproduction_gate.py check
+check-host: v252-public-authority-check
+
+# Prospective document population including the untracked 2.5.2 release note.
+v252-document-index-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_document_index.py

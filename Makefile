@@ -319,7 +319,7 @@ BYTECODE_IDE_FULL_LIB_SUITE := tests/bytecode/libs/p0-ide-sequential-full-lib.js
 BYTECODE_IDE_BASELINE_LIB_SUITE := tests/bytecode/libs/p0-ide-full-lib.json
 BYTECODE_IDE_LIB_SUITE := tests/bytecode/libs/p0-ide-core-lib.json
 BYTECODE_IDE_EXTRA_LIB_SUITE := tests/bytecode/libs/p0-ide-extra-lib.json
-BYTECODE_M65D_LIB_SUITE := tests/bytecode/libs/p0-m65d-lib.json
+BYTECODE_M65D_LIB_SUITE := tests/bytecode/libs/p0-m65d-lib-disk-r7-20260930.json
 BYTECODE_BUFFER_LIB_SUITE := tests/bytecode/libs/p0-buffer-lib.json
 BYTECODE_FIXED_SUITE := tests/bytecode/stdlib/p0-fixed-point-subset.json
 BYTECODE_STRING_POLISH_SUITE := tests/bytecode/stdlib/p0-string-polish-subset.json
@@ -1884,6 +1884,7 @@ run-mvp-vm-stdlib: $(M65VMSTDLIBPRG)
 	$(ETHERLOAD) -5 -r $(M65VMSTDLIBPRG)
 
 include mk/workbench-service-inventory.mk
+include mk/disk-r7-consumers.mk
 include mk/gates.mk
 
 .PHONY: dialect-v2-lcc-surface-selftest dialect-v2-lcc-surface-check
@@ -2059,8 +2060,8 @@ dialect-v2-lists-matrix: dialect-v2-lists-native-matrix dialect-v2-lists-p0-chec
 dialect-v2-lists-type-errors-check:
 	python3 tools/host-lisp/dialect_v2_lists_type_errors.py check
 
-dialect-v2-system-runtime-check: $(DIALECT_V1_EQUIVALENCE_BUILD) $(DIALECT_V2_EQUIVALENCE_BUILD)
-	python3 tools/host-lisp/dialect_v2_system_runtime.py check
+dialect-v2-system-runtime-check: $(DISK_R7_V1_BUILD) $(DISK_R7_V2_BUILD)
+	python3 tools/host-lisp/dialect_v2_system_runtime_disk_r7_20260930.py check
 
 dialect-v2-strings-selftest:
 	python3 tools/host-lisp/dialect_v2_prelude_control.py --fixture $(DIALECT_V2_STRINGS_FIXTURE) selftest
@@ -2118,10 +2119,10 @@ dialect-v2-strings-lcc-stage3-check: dialect-v2-strings-lcc-selftest $(DIALECT_V
 dialect-v2-strings-matrix: dialect-v2-strings-native-matrix dialect-v2-strings-p0-check dialect-v2-strings-lcc-check
 
 v2-string-codec-workload-selftest: v2-workbench-codemod
-	python3 tools/host-lisp/v2_string_codec_workloads_r251_20260929.py selftest
+	python3 tools/host-lisp/v2_string_codec_workloads_disk_r7_20260930.py selftest
 
 v2-string-codec-workload-check: v2-string-codec-workload-selftest
-	python3 tools/host-lisp/v2_string_codec_workloads_r251_20260929.py check
+	python3 tools/host-lisp/v2_string_codec_workloads_disk_r7_20260930.py check
 
 v2-prim-lowering-check:
 	python3 tools/host-lisp/v2_prim_lowering.py
@@ -2186,13 +2187,13 @@ dialect-v2-strings-evidence-check: dialect-v2-strings-evidence-build
 	python3 tools/host-lisp/dialect_v2_prelude_evidence.py --family strings check
 
 dialect-v2-system-runtime-evidence-selftest:
-	python3 tools/host-lisp/dialect_v2_prelude_evidence.py --family system-runtime selftest
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_20260930.py --family system-runtime selftest
 
 dialect-v2-system-runtime-evidence-build: dialect-v2-system-runtime-check dialect-v2-system-runtime-evidence-selftest
-	python3 tools/host-lisp/dialect_v2_prelude_evidence.py --family system-runtime generate
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_20260930.py --family system-runtime generate
 
 dialect-v2-system-runtime-evidence-check: dialect-v2-system-runtime-evidence-build
-	python3 tools/host-lisp/dialect_v2_prelude_evidence.py --family system-runtime check
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_20260930.py --family system-runtime check
 
 dialect-v2-ide-evidence-check:
 	python3 tools/host-lisp/dialect_v2_ide_evidence.py check
@@ -3325,9 +3326,11 @@ bytecode-p0-private-inline-check:
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --private-inline-selftest
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check tests/bytecode/libs/p0-private-inline-test.json
 
+# 2.5.2 successor receipt: the directory-link fix added three m65d suite cases
+# (suite SHA only; rejection distribution unchanged). The original is retained.
 workbench-private-inline-composition-probe: v2-workbench-codemod
 	python3 tools/host-lisp/workbench_private_inline_probe.py selftest
-	python3 tools/host-lisp/workbench_private_inline_probe.py check
+	python3 tools/host-lisp/workbench_private_inline_probe.py --receipt tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-private-inline-composition-probe-v252-20260930.json check
 
 # The historical report under build/reports/workbench is receipt-bound; the
 # live measurement writes its own successor report.
@@ -3337,7 +3340,7 @@ gc-symbol-scan-timing-check:
 		--out build/reports/workbench-live/gc-symbol-scan-timing.json
 
 bytecode-p0-omission-contract-check:
-	python3 tools/host-lisp/bytecode_p0_omissions_strings_20260928.py
+	python3 tools/host-lisp/bytecode_p0_omissions_o2_lite_20260929.py
 
 ide-capacity-selftest:
 	python3 tools/host-lisp/ide_capacity_report.py --selftest

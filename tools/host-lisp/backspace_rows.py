@@ -27,6 +27,7 @@ import comfort_default_rows as D  # noqa: E402
 
 R, L = D.R, D.L
 WORLD = {
+    'lite': (ROOT / 'build/o2-lite-product-r7c/media-r7/o2lite.d81', 'ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d'),
     'seed': (ROOT / 'build/backspace-product-r1/media-r1/backspace.d81', 'a2872fbd8aa53690da0f'),
     'base': (ROOT / 'build/ide-exit-final-r1/media/ide-exit.d81', '8901407117b87814009a'),
     'walks': (ROOT / 'build/walks-product-r1/media-r1/walks.d81', '67e37ff37b9294ac8103'),

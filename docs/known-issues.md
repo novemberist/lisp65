@@ -1,19 +1,46 @@
+# lisp65 2.5.2 — current release boundary
+
+2.5.2 is 2.5.1 plus faster line editing, reopening earlier Comfort input and
+a disk-directory fix. At an empty Comfort continuation line, Backspace reopens
+the previous line (`[edit previous line]`); delete any automatic indentation
+first. Up/Down still browse history. Comfort input limits: up to 32 pending
+continuation lines, 640 bytes of accepted source including line-feed bytes
+and indentation, 250 characters in the active editor line, and ten history
+entries of at most 250 bytes each.
+
+Measured emulator typing cost for the 40-character Comfort test falls from
+1,635,493 to 1,130,909 cycles/key (−30.85%, about 40.4 → 27.9 ms/key at
+40.5 MHz); these are emulator cycle measurements, not physical keyboard
+timings. Saving into the first entry of a directory sector no longer erases
+the link to the next directory sector. Individual string literals over 255
+bytes still fail to compile with `*** VM: BAD BYTECODE`; the 640-byte source
+limit does not enlarge the literal format. See the
+[2.5.2 release notes](releases/2.5.2.md) for the complete list.
+
+The 2.5.1 text below is historical. Its statement that continuation lines are
+not editable after Return and its older typing figures describe that
+predecessor, not 2.5.2.
+
+---
+
 # Known Issues and Retired Exceptions
 
-## 2.5.1 release wording
+## Published 2.5.1 baseline
 
-Ship and Publish are delegated to the reviewer by the owner (2026-09-28
-plan journal); the 2.4.0 register below is retained historically.
+2.5.1 was published on 2026-09-29. The [published release note](releases/2.5.1-before-ship-r3.md)
+records the device session and remaining evidence limits. The 2.4.0 register
+below is retained historically; its live limitations also apply to 2.5.1.
 
 The product starts at `l65>`. Errors, RUN/STOP aborts and refusals stay in
 Comfort with definitions and history intact. An empty line leaves to
 `lisp65>`; `(repl)` re-arms it. The anonymous-lambda limitation remains.
 
 - Physical IDE `C-x C-c` does not reach the IDE. RUN/STOP leaves it, buffer kept.
-- C-x q is the working IDE exit (release Ctrl before q); virtual-keyboard device rows passed on the IDE-exit predecessor.
+- C-x q is the working IDE exit (release Ctrl before q); the owner physically confirmed it on the released Strings Final.
 - Typing latency: MEASURED native lane 3.24 M -> 1.58 M cycles/key
   (approximately 80 -> 39 ms). Backspace 1,200–1,800 -> 53 code-object
-  reads/key is projected; device feel remains pending the owner session.
+  reads/key is projected; the owner physically confirmed considerably improved
+  normal typing and Backspace feel.
 - Continuation lines are not editable after Return. Up/Down always walk
   history, not pending multi-line input; the multi-line editing card follows.
 - Fixed in 2.5.1: Comfort multi-line strings now evaluate and display
@@ -21,12 +48,13 @@ Comfort with definitions and history intact. An empty line leaves to
   Return did not evaluate; the recorded workaround was a line containing
   only `)`. The fix carries lexical state and preserves typed spaces, with
   no automatic indentation inside an open string.
-- Physical C-x q remains to be confirmed on the MEGA65 keyboard (the virtual
-  keyboard passed).
-- Boot is about +8 s over 2.4.0 in the emulator; the automated device session
-  measured about +6.7 s (40.4 s to the prompt, host tool clock).
+- The owner physically confirmed the multi-line string example; escaped-quote
+  input retains emulator-only evidence because the virtual keyboard lacks a backslash mapping.
+- Boot is about +8 s over 2.4.0 in the emulator; the 2.5.0 automated device session
+  measured about +6.7 s (40.4 s to the prompt, host tool clock). The 2.5.1
+  session measured 40.5 s to l65> on the host tool clock, not a stopwatch.
 - Pending device confirmation: stopwatch cold power cycle, physical RUN/STOP
-  key, and physical typing feel. Virtual-matrix RUN/STOP passed.
+  key. Virtual-matrix RUN/STOP passed.
 - Named GC cost: +8 symbols, +105 name bytes, +1 code image, +7 C2D
   entries/roots, five more boot collections; after exit, +12 live cells and
   +2.1% forced-collection cycles (matched natural cycles −1.7%). The owner
@@ -38,9 +66,9 @@ See the [Comfort-default report](planning/comfort-default-final-report.md#7-gc-a
 
 ## Retained 2.4.0 register
 
-This is the maintained user-facing issue register for lisp65 2.4.0. Sealed
+The entries below retain the 2.4.0 measurements and release history. Sealed
 historical documents retain the wording that was true when they were issued;
-this page states the current product boundary.
+the 2.5.1 section above states the updated release and device boundary.
 
 The first three sections describe the current product: limitations that are
 live, names that are deliberately not delivered, and informative measurements.

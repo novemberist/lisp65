@@ -28,6 +28,9 @@ from elf_truth import ElfTruth  # noqa: E402
 MEDIA = ROOT / 'build/comfort-default-r2/seed/media-r2'
 ELF = ROOT / 'build/comfort-default-product-r2/wplto/resident-island-seed.prg.elf'
 WORLD = {
+    'lite': (ROOT / 'build/o2-lite-product-r7c/media-r7/o2lite.d81',
+             'ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d',
+             ROOT / 'build/o2-lite-product-r7c/wplto/resident-island-seed.prg.elf'),
     'product': (MEDIA / 'comfort-default/comfort-default.d81',
                 '137bfa51589f096eb715bc1e71c66196b79a365db65c1373696ea82f04dc34e5', ELF),
     'no-comfort': (MEDIA / 'control-no-comfort/control-no-comfort.d81',
@@ -42,7 +45,8 @@ WORLD = {
                 '9978daa146b89cf71ad1d3f290d80cf74b197911e7854859f9e4aa9bb2fce441',
                 ROOT / 'build/strings-product-r3/wplto/resident-island-seed.prg.elf'),
 }
-ELF_SHA = {ELF: 'd555f01fbac51bb5fbc035b2b595e95e3c8e3bedc584c87112bca8b073e31444', L.ELF: L.EXPECT['elf'],
+ELF_SHA = {ROOT / 'build/strings-final-r1/wplto/resident-island-seed.prg.elf': 'd514e4980c636cab0c6ae1ee9bea77afdd3a4fdf58f01995aba5ff822e89ed05', ELF: 'd555f01fbac51bb5fbc035b2b595e95e3c8e3bedc584c87112bca8b073e31444', L.ELF: L.EXPECT['elf'],
+           ROOT / 'build/o2-lite-product-r7c/wplto/resident-island-seed.prg.elf': '4edcc037a3fd729cc124ae40d8c85349889ba17941e3468f1ffe8c2de2aa4abd',
            ROOT / 'build/walks-product-r1/wplto/resident-island-seed.prg.elf': '7b8dbf3dd53f08872322035ac260bb36d5fcd941fdeb4ff148e386d09d794449',
            ROOT / 'build/strings-product-r3/wplto/resident-island-seed.prg.elf': 'd514e4980c636cab0c6ae1ee9bea77afdd3a4fdf58f01995aba5ff822e89ed05'}
 N, C, K, OVER, UP, DOWN = L.N, L.C, L.K, L.OVER, L.UP, L.DOWN
@@ -130,12 +134,63 @@ STRINGS = [
     ('str-then-eval', 'strings', ['(+ 1 2)\n'], C, ['3'], [], False),
     ('str-overclose-still', 'strings', ['(+ 1 2))\n'], C, [OVER], ['3'], False),
 ]
-PLAN = {'strings': STRINGS + PRODUCT, 'product': PRODUCT, 'no-comfort': NATIVE_CONTROL, 'v240-init': NATIVE_CONTROL + V240_EXTRA, 'base': [], 'walks': PRODUCT}
-BOOT_PROMPT = {'strings': C, 'product': C, 'no-comfort': N, 'v240-init': N, 'base': N, 'walks': C}
+# Return with no printable text must use queue_one(13): a lone pasted LF
+# is lost by the emulator. The three deletes remove two indent bytes then pop.
+LITE = [
+    ('lite-owner-five-spaces', 'lite', ['(print "hello\n', '     world")\n'], C, ['     WORLD"'], [], False),
+    ('lite-three-lines', 'lite', ['(string-length "a\n', 'b\n', 'c")\n'], C, ['5'], [], False),
+    ('lite-escaped-quote', 'lite', ['(string-length "x\\"\n', 'y")\n'], C, ['4'], [], False),
+    ('lite-indent-reopen', 'lite', ['(+ 1\n', 20, 20, 20, ' 2)\n'], C,
+     ['[EDIT PREVIOUS LINE]', '(+ 1 2)', '3'], [], False),
+    ('lite-reopen-twice', 'lite', ['(+ 1\n', '2\n', 20, 20, 20, 20, 20, 20, 20, ' 3)\n'], C,
+     ['[EDIT PREVIOUS LINE]', '(+ 1 3)', '4'], [], False),
+    ('lite-reopen-return', 'lite', ['(+ 1\n', 20, 20, 20, 13, '2)\n'], C,
+     ['[EDIT PREVIOUS LINE]', '3'], [], False),
+    ('lite-overclose', 'lite', ['(+ 1 2))\n'], C, [OVER], ['3'], False),
+    ('lite-after', 'lite', ['(+ 1 2)\n'], C, ['3'], [], False),
+    # 641 source bytes, including three intervening LFs; each active line
+    # stays within its weighted allowance so this isolates the form-byte cap.
+    ('lite-input-641', 'lite', ['"' + 'a'*199 + '\n', 'b'*200 + '\n',
+     'c'*200 + '\n', 'd'*37 + '"\n'], C, ['*** INPUT LIMIT'], [], False),
+    ('lite-history-omission', 'lite', ['(string-length "' + 'a'*120 + '\n',
+     'b'*120 + '")\n'], C, ['*** HISTORY LIMIT', '241'], [], False),
+    ('lite-history-seed', 'lite', ['(+ 7 8)\n'], C, ['15'], [], False),
+    ('lite-history-up', 'lite', [UP, 13], C, ['15'], [], False),
+    ('lite-history-down', 'lite', [UP, DOWN, '(+ 9 8)\n'], C, ['17'], [], False),
+]
+PLAN = {'lite': LITE + PRODUCT, 'strings': STRINGS + PRODUCT, 'product': PRODUCT, 'no-comfort': NATIVE_CONTROL, 'v240-init': NATIVE_CONTROL + V240_EXTRA, 'base': [], 'walks': PRODUCT}
+BOOT_PROMPT = {'lite': C, 'strings': C, 'product': C, 'no-comfort': N, 'v240-init': N, 'base': N, 'walks': C}
 
 
 def matches(got, prompt):
     return got in prompt if isinstance(prompt, tuple) else got == prompt
+
+
+def send_counted(m, keys, taken_address, *, timeout=240, now=time.monotonic, sleep=time.sleep):
+    """Singleton HWA events, acknowledged by the product consumer counter.
+
+    typebusy=0 also means Xemu abandoned a stalled paste. In particular, a
+    large continuation Return can outlast the injector's 60-frame timeout.
+    Only queue the next byte after the product took this one; no paste buffer
+    or timeout-discard path is involved. This is a boundary oracle, not timing.
+    """
+    sent = 0
+    for key in keys:
+        codes = [key] if isinstance(key, int) else [13 if c == '\n' else ord(c) for c in key]
+        for code in codes:
+            before = m.memory_range(taken_address, 1)[0]
+            m.queue_one(code)
+            deadline = now()+timeout
+            while True:
+                after = m.memory_range(taken_address, 1)[0]
+                delta = (after-before) & 255
+                if delta:
+                    R.require(delta == 1, 'unexpected extra input consumption')
+                    break
+                R.require(now() < deadline, 'product did not consume singleton input')
+                sleep(0.02)
+            sent += 1
+    return dict(transport='singleton-HWA/product-events-taken', sent=sent, consumed=sent)
 
 
 def main():
@@ -197,12 +252,16 @@ def main():
         for rid, member, keys, prompt, want, forbid, read in PLAN[a.medium]:
             before = m.screen()
             t0 = time.monotonic()
-            for k in keys:
-                if isinstance(k, int):
-                    m.queue_one(k)
-                    time.sleep(0.5)
-                else:
-                    m.type_text(k)
+            delivery = None
+            if member == 'lite':
+                delivery = send_counted(m, keys, truth.symbol('C2K_INPUT_EVENTS_TAKEN').value)
+            else:
+                for k in keys:
+                    if isinstance(k, int):
+                        m.queue_one(k)
+                        time.sleep(0.5)
+                    else:
+                        m.type_text(k)
             last, since, deadline = None, time.monotonic(), time.monotonic() + 240
             while time.monotonic() < deadline:
                 s = m.screen()
@@ -223,7 +282,7 @@ def main():
             rows.append(dict(id=rid, member=member, keys=keys, want_prompt=prompt, want_fresh=want,
                              forbid_fresh=forbid, active=got, new_lines=L.new_lines(before, s),
                              tail=L.lines(s)[-8:], seconds=round(time.monotonic() - t0, 2),
-                             screen=R.bind(path), values=values(m) if read else None,
+                             screen=R.bind(path), values=values(m) if read else None, delivery=delivery,
                              result=('PASS' if ok else 'FAIL') if prompt is not None or want else 'OBSERVED'))
             print(rid, rows[-1]['result'], repr(got), rows[-1]['tail'][-3:], flush=True)
             (out / 'rows.json').write_text(json.dumps(rows, indent=1) + '\n')

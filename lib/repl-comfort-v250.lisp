@@ -16,33 +16,45 @@
 ; Comfort paints only l65> on that input row. It must never call the -2
 ; native painter on the preceding output row (that overwrites diagnostics).
 
-(defun %repl-read (prefix history history-index columns row)
+(defun %lt-read (prefix history history-index columns row reopen)
   (if (numberp prefix)
       (if (>= (length history) 10) (butlast history) history)
-      (let* ((codes (%string-codes prefix))
+      (if (or (> (string-length prefix) 250)
+              (and (> history-index 0)
+                   (> (+ (string-length prefix) (string-length reopen)) 640))) -2
+          (%lt-result (%lt-editor prefix history history-index columns row)
+                      history history-index columns row reopen))))
+
+; This boundary helper returns only after the resident editor has finished.
+(defun %lt-editor (prefix history history-index columns row)
+  (let* ((codes (%string-codes prefix))
          (length (length codes))
          (head (cons 0 codes))
          (tail (last head))
          (top (/ length columns))
          (state (list head tail tail length length top columns row
-                      history history-index))
-         (result
-          (progn
-            (%rl-screen-tail codes 0 (* columns (+ top 1)) length top
-                             columns row)
-            (%read-line-loop state))))
-    (progn
-      (if (numberp result)
-          (let* ((next-index
-                  (if (= result 1108)
-                      (if (< history-index (length history))
-                          (+ history-index 1) history-index)
-                      (if (> history-index 0) (- history-index 1) 0)))
-                 (next-prefix
-                  (if (= next-index 0) ""
-                      (car (nthcdr (- next-index 1) history)))))
-            (%repl-read next-prefix history next-index columns row))
-          result)))))
+                      history history-index)))
+    (%rl-screen-tail codes 0 (* columns (+ top 1)) length top columns row)
+    ; The inlined caller survives polling: release deleted prefix chains for
+    ; both reopen and history recall (the latter also affected 2.5.1).
+    (setq codes nil)
+    (%read-line-loop state)))
+
+(defun %lt-result (result history history-index columns row reopen)
+  (if (or (eq result 1108) (eq result 1003))
+      (let* ((next-index
+              (if (= result 1108)
+                  (if (< history-index (length history))
+                      (+ history-index 1) history-index)
+                  (if (> history-index 0) (- history-index 1) 0)))
+             (next-prefix
+              (if (= next-index 0) ""
+                  (car (nthcdr (- next-index 1) history)))))
+        (%lt-read next-prefix history next-index columns row reopen))
+      (if (eq result 1101)
+          (if (> (string-length reopen) 0) result
+              (%lt-read "" history history-index columns row reopen))
+          result)))
 
 
 ; The product has no screen-write-string (CALLPRIM 12 is compiled out; the
@@ -56,36 +68,13 @@
     (screen-put-char 4 row 32 1)))
 
 ; packed carries depth and lexical state with pending; zero is a fresh prompt.
+(defun %repl-read (prefix history history-index columns row)
+  (%lt-read prefix history history-index columns row ""))
+
 (defun %repl-step (history pending packed)
-  (let* ((state (mod packed 4))
-         (depth (/ (- packed state) 4))
-         (size (screen-size))
-         (columns (car size))
-         (row (- (car (cdr size)) 1))
-         (top (= packed 0))
-         (indent (substring "                    " 0
-                            (* 2 (if (= state 2) 0 (if (> depth 10) 10 depth)))))
-         (line
-          (progn
-            (if top
-                (%repl-prompt row)
-                nil)
-            (%repl-read indent history 0
-                        (if top (- columns 5) columns)
-                        (if top (- 0 (+ row 2)) row))))
-         (next-state (%sexp-line-state (%string-codes line) packed))
-         (source
-          (if (> (string-length pending) 0)
-              (string-append pending (%string-from-codes (list 10)) line)
-              line)))
-    (cond
-      ((< next-state 0)
-       (progn
-         (write-line "*** reader: unmatched close parenthesis")
-         (%repl-step history "" 0)))
-      ((> next-state 0) (%repl-step history source next-state))
-      ((= (string-length source) 0) nil)
-      (t source))))
+  (if (and (<= (length history) 10) (%lt-history history))
+      (%lt-drive history pending packed nil)
+      (progn (write-line "*** history limit") nil)))
 
 ; History is published before evaluation, so a native unwind preserves it.
 (defun %repl-loop (history)
@@ -93,8 +82,10 @@
     (if source
         (let* ((ready (%comfort-request 1))
                (saved (set-symbol-value '%comfort-history
-                       (cons source (%repl-read -1 history nil 0 0))))
-               (form (read-from-string (string-append "(progn " source "
+                       (if (<= (string-length source) 250)
+                           (cons source (%repl-read -1 history nil 0 0))
+                           (progn (write-line "*** history limit") history))))
+               (form (read-from-string (%lt-cat "(progn " source "
 )")))
                (result (progn (poke 255 141 255) (lcc-run form))))
           (poke 255 140 0)

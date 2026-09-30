@@ -451,7 +451,9 @@
 
 (defun %m65d-dir-fill (base name first blocks)
   (progn
-    (dotimes (i 32 nil) (%disk-poke (+ base i) 0))
+    ;; Bytes 0-1 of entry 0 hold the directory sector's next-sector link;
+    ;; clearing them cuts the directory chain. Clear only bytes 2-31.
+    (dotimes (i 30 nil) (%disk-poke (+ base (+ i 2)) 0))
     (%disk-poke (+ base 2) 129)
     (%disk-poke (+ base 3) (car first))
     (%disk-poke (+ base 4) (cdr first))

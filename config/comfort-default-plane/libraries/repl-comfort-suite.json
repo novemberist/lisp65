@@ -15,8 +15,9 @@
   ],
   "sources": [
     "lib/comfort-state-address.lisp",
-    "lib/sexp-depth.lisp",
-    "lib/repl-comfort-v250.lisp"
+    "lib/lite-hot.lisp",
+    "lib/repl-comfort-v250.lisp",
+    "lib/lite.lisp"
   ],
   "functions": [
     "%sexp-step",
@@ -28,14 +29,27 @@
     "%repl-loop",
     "%comfort-request",
     "%comfort-state-hi",
-    "%comfort-state-lo"
+    "%comfort-state-lo",
+    "%lt-read",
+    "%lt-line",
+    "%lt-drive",
+    "%lt-cat",
+    "%lt-buffer-cat",
+    "%lt-buffer-slice",
+    "%lt-history",
+    "%lt-count",
+    "%lt-checkpoint",
+    "%lt-reopen",
+    "%lt-slice",
+    "%lt-editor",
+    "%lt-result"
   ],
   "require_all_defuns": false,
   "tailcall_self": [
     "%sexp-line-state",
-    "%repl-read",
-    "%repl-step",
-    "%repl-loop"
+    "%repl-loop",
+    "%lt-drive",
+    "%lt-history"
   ],
   "resident_suite": "../../../tests/bytecode/libs/p0-repl-comfort-v240-resident.json",
   "allowed_external_calls": [
@@ -57,6 +71,8 @@
   ],
   "private_inline_functions": [
     "%comfort-state-hi",
-    "%comfort-state-lo"
+    "%comfort-state-lo",
+    "%sexp-step",
+    "%lt-editor"
   ]
 }

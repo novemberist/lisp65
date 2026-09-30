@@ -1,6 +1,31 @@
-# lisp65 2.5.1 Candidate User Guide
+# lisp65 2.5.2 — current release boundary
 
-## Comfort by default (2.5.1 candidate)
+2.5.2 is 2.5.1 plus faster line editing, reopening earlier Comfort input and
+a disk-directory fix. At an empty Comfort continuation line, Backspace reopens
+the previous line (`[edit previous line]`); delete any automatic indentation
+first. Up/Down still browse history. Comfort input limits: up to 32 pending
+continuation lines, 640 bytes of accepted source including line-feed bytes
+and indentation, 250 characters in the active editor line, and ten history
+entries of at most 250 bytes each.
+
+Measured emulator typing cost for the 40-character Comfort test falls from
+1,635,493 to 1,130,909 cycles/key (−30.85%, about 40.4 → 27.9 ms/key at
+40.5 MHz); these are emulator cycle measurements, not physical keyboard
+timings. Saving into the first entry of a directory sector no longer erases
+the link to the next directory sector. Individual string literals over 255
+bytes still fail to compile with `*** VM: BAD BYTECODE`; the 640-byte source
+limit does not enlarge the literal format. See the
+[2.5.2 release notes](releases/2.5.2.md) for the complete list.
+
+The 2.5.1 text below is historical. Its statement that continuation lines are
+not editable after Return and its older typing figures describe that
+predecessor, not 2.5.2.
+
+---
+
+# lisp65 2.5.1 User Guide
+
+## Comfort by default (2.5.1)
 
 The product starts in Comfort at `l65>`. Balanced multiline input, automatic
 indentation, string/comment-aware parenthesis tracking and ten-line Up/Down
@@ -19,22 +44,22 @@ measurements, not device timings or worst-case pause guarantees. The owner
 accepted this named GC cost for the inherited Comfort product.
 
 Use `C-x q` to exit the IDE normally with buffers preserved; release Ctrl
-before q. The IDE-exit device rows passed through the virtual keyboard.
+before q. The owner physically confirmed C-x q on the released product.
 Physical `C-x C-c` does not reach the IDE and remains a known issue.
 Typing latency in the MEASURED native lane falls from 3.24 M -> 1.58 M
 cycles/key (approximately 80 -> 39 ms). Backspace code-object reads fall from
-roughly 1,200–1,800 -> 53 reads/key in the projected lane; device feel remains
-pending the owner session. The earlier small Backspace tail change also
+roughly 1,200–1,800 -> 53 reads/key in the projected lane. The owner physically
+confirmed considerably improved normal typing and Backspace feel. The earlier small Backspace tail change also
 reduces host VM instructions. Comfort multi-line strings now evaluate and
 display correctly, preserving typed spaces without automatic indentation
 inside strings. Continuation lines are not editable after Return; Up/Down
 always walk history. The multi-line editing card follows.
-See the [2.5.1 release notes](releases/2.5.1.md).
+See the [2.5.1 release notes](releases/2.5.1-before-ship-r3.md).
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The prepared `lisp65-2.5.1` candidate bundle
+- The published `lisp65-2.5.1` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -50,8 +75,8 @@ files: their implementations remain in the static product, and the three
 `load-lib` forms below still work. This reclaims 193 disk blocks and takes the
 2.4.0 medium from 22 to 19 files. The 2.5.1 Comfort-default medium has 20 files.
 `BUFFER` remains on disk as the optional L65S package loaded by
-`(require "buffer")`; it is not a retired IDE image. The inherited ten-role stager passed earlier device sessions; the Strings
-Final physical device session remains pending.
+`(require "buffer")`; it is not a retired IDE image. The released Strings Final medium passed 13/13 automated device rows on
+2026-09-29; the owner physically confirmed C-x q and the multi-line string example.
 
 ## Verify the bundle
 
@@ -62,9 +87,10 @@ python3 verify.py
 ```
 
 Do not use a bundle that fails. The package verifier checks its own files
-and evidence. The 2.5.1 preparation report records two independent public-source
-reproductions; reviewer sealing and the fresh-medium device session remain
-release steps. Retained Final readback is not bundle verification.
+and evidence. 2.5.1 was published on 2026-09-29 after independent public-source
+reproductions, reviewer sealing and the fresh-medium device session. See the
+[published release note](releases/2.5.1-before-ship-r3.md) for evidence limits.
+Retained Final readback is not bundle verification.
 
 ## Start from BASIC and perform the one-drive swap
 
@@ -134,7 +160,7 @@ ready and before the first banner. The release medium supplies the file, so
 the normal release boot evaluates it once per cold boot. An open or
 evaluation error returns to one live `lisp65>` prompt and is not retried.
 
-The candidate `INIT.L65` requires `place`, `string-extra` and `repl-comfort`,
+The released `INIT.L65` requires `place`, `string-extra` and `repl-comfort`,
 then requests deferred Comfort entry after INIT returns. The packages load without any loading
 text: neither the loader's `LOADING` progress line nor `require`'s own
 `loading <name>...` echo appears, and the banner renders exactly as it does
@@ -152,7 +178,7 @@ corruption, before it can replace the active source stream. `require` inside
 A library name longer than 16 characters is refused.
 
 Loading both packages by default consumes space earlier; it does not load
-them a second time when they are later explicitly required. On the 2.5.1 candidate, with the IDE and
+them a second time when they are later explicitly required. On the 2.5.1 product, with the IDE and
 all six packages including Comfort loaded, capacity is finite; the optional-library
 244/5,415 reserve measurement is historical, not a default-product measurement. These independent
 limits are not a promise that all can be exhausted simultaneously.

@@ -1,0 +1,628 @@
+{
+  "artifacts": {
+    "D81": {
+      "bytes": 819200,
+      "path": "build/o2-lite-final-r7c/media-r7/o2lite.d81",
+      "sha256": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d"
+    },
+    "ELF": {
+      "bytes": 662816,
+      "path": "build/o2-lite-final-r7c/wplto/resident-island-seed.prg.elf",
+      "sha256": "4edcc037a3fd729cc124ae40d8c85349889ba17941e3468f1ffe8c2de2aa4abd"
+    },
+    "LTO": {
+      "bytes": 649716,
+      "path": "build/o2-lite-final-r7c/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "af01c0a83d94429fcc747534cfcd76ad920a050a52d72cba3b07430966c1cf2a"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/o2-lite-final-r7c/wplto/resident-island-seed.prg",
+      "sha256": "f74ca2df859d0f521f3926a6e9306f0cb9d53e7fe686c35899239eaca3281972"
+    }
+  },
+  "final_identity": {
+    "bytes": 3117,
+    "path": "build/o2-lite-final-r7c/final-identity.json",
+    "sha256": "280a0d08e755c249dbb30e23b02b42703a291c946704383ea493b57b30bfd057"
+  },
+  "format": "lisp65-v252-target-acceptance-v1",
+  "gates": {
+    "backspace-rows": {
+      "checks": [
+        {
+          "equals": "DONE",
+          "pointer": "/status"
+        },
+        {
+          "equals": null,
+          "pointer": "/error"
+        },
+        {
+          "equals": "backspace",
+          "pointer": "/card"
+        },
+        {
+          "equals": 7,
+          "pointer": "/passed"
+        },
+        {
+          "equals": [],
+          "pointer": "/failed"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/world/medium/sha256"
+        },
+        {
+          "equals": "eol-delete",
+          "pointer": "/rows/0/id"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/0/result"
+        },
+        {
+          "equals": "multi-delete",
+          "pointer": "/rows/1/id"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/1/result"
+        },
+        {
+          "equals": "wrap-delete",
+          "pointer": "/rows/2/id"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/2/result"
+        },
+        {
+          "equals": "continuation-delete",
+          "pointer": "/rows/3/id"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/3/result"
+        },
+        {
+          "equals": "history-recall-delete",
+          "pointer": "/rows/4/id"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/4/result"
+        },
+        {
+          "equals": "native-eol-delete",
+          "pointer": "/rows/5/id"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/5/result"
+        },
+        {
+          "equals": "native-multi-delete",
+          "pointer": "/rows/6/id"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/6/result"
+        }
+      ],
+      "receipt": {
+        "bytes": 3218,
+        "path": "build/lite-bs-rows-r7c/receipt.json",
+        "sha256": "06ac427fb4d132dec9915e1bcdfb1d44e74bbc1e70a49f0eeef29cd81317cf2d"
+      },
+      "status": "PASS"
+    },
+    "comfort-rows": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "history-limit",
+          "pointer": "/rows/0/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/0/status"
+        },
+        {
+          "equals": "history-ring-10",
+          "pointer": "/rows/1/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/1/status"
+        },
+        {
+          "equals": "default",
+          "pointer": "/rows/2/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/2/status"
+        },
+        {
+          "equals": "str-owner-example",
+          "pointer": "/rows/3/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/3/status"
+        },
+        {
+          "equals": "str-three-lines",
+          "pointer": "/rows/4/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/4/status"
+        },
+        {
+          "equals": "str-parens-inside",
+          "pointer": "/rows/5/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/5/status"
+        },
+        {
+          "equals": "str-then-eval",
+          "pointer": "/rows/6/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/6/status"
+        },
+        {
+          "equals": "str-overclose-still",
+          "pointer": "/rows/7/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/7/status"
+        },
+        {
+          "equals": "ide-load",
+          "pointer": "/rows/12/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/12/status"
+        },
+        {
+          "equals": "ide-exit-cxq",
+          "pointer": "/rows/13/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/13/status"
+        },
+        {
+          "equals": "ide-reenter-kept",
+          "pointer": "/rows/14/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/14/status"
+        }
+      ],
+      "receipt": {
+        "bytes": 27013,
+        "path": "build/device-252-prep/rows-04/receipt-r7c.json",
+        "sha256": "bdecce2cb27e08815e57952e24d779a1c5472aea27b34729ed62ebbf1f8d769b"
+      },
+      "scope_note": "Reviewer scope note: the reopen-previous-line rows and the 641-byte input limit are not in any PASS raw receipt (rows-02 is HALT with 2 PASS rows and a RUNNING row; the limit row was completed by hand, only screens.jsonl). PASS here means only that the asserted fields of the bound rows-04 receipt hold; the two rows above are covered by the device report, not by this record.",
+      "status": "PASS"
+    },
+    "device-boot": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": false,
+          "pointer": "/boot_reset"
+        },
+        {
+          "equals": "run",
+          "pointer": "/steps/2/form"
+        },
+        {
+          "equals": true,
+          "pointer": "/steps/2/display_verified_before_return"
+        },
+        {
+          "equals": 20.913,
+          "pointer": "/steps/2/run_to_initializing_first_seen_seconds"
+        },
+        {
+          "equals": 40.879,
+          "pointer": "/steps/2/run_to_first_empty_l65_seconds_upper"
+        },
+        {
+          "equals": "l65>",
+          "pointer": "/final_screen_case/2"
+        },
+        {
+          "equals": "tool clock: host monotonic/UTC around monitor polls; not a stopwatch",
+          "pointer": "/clock"
+        }
+      ],
+      "receipt": {
+        "bytes": 4043,
+        "path": "build/device-252-prep/boot-01/receipt-r7c.json",
+        "sha256": "d58cfde073b759368a0ba84d3de0f2171a0327ad36609fd82460a63ea74c2e4a"
+      },
+      "status": "PASS"
+    },
+    "device-rows": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "4edcc037a3fd729cc124ae40d8c85349889ba17941e3468f1ffe8c2de2aa4abd",
+          "pointer": "/elf/sha256"
+        },
+        {
+          "equals": "history-limit",
+          "pointer": "/rows/0/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/0/status"
+        },
+        {
+          "equals": "history-ring-10",
+          "pointer": "/rows/1/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/1/status"
+        },
+        {
+          "equals": "default",
+          "pointer": "/rows/2/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/2/status"
+        },
+        {
+          "equals": "str-owner-example",
+          "pointer": "/rows/3/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/3/status"
+        },
+        {
+          "equals": "str-three-lines",
+          "pointer": "/rows/4/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/4/status"
+        },
+        {
+          "equals": "str-parens-inside",
+          "pointer": "/rows/5/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/5/status"
+        },
+        {
+          "equals": "str-then-eval",
+          "pointer": "/rows/6/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/6/status"
+        },
+        {
+          "equals": "str-overclose-still",
+          "pointer": "/rows/7/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/7/status"
+        },
+        {
+          "equals": "bs-eol",
+          "pointer": "/rows/8/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/8/status"
+        },
+        {
+          "equals": "bs-multi",
+          "pointer": "/rows/9/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/9/status"
+        },
+        {
+          "equals": "bs-long",
+          "pointer": "/rows/10/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/10/status"
+        },
+        {
+          "equals": "bs-continuation",
+          "pointer": "/rows/11/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/11/status"
+        },
+        {
+          "equals": "ide-load",
+          "pointer": "/rows/12/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/12/status"
+        },
+        {
+          "equals": "ide-exit-cxq",
+          "pointer": "/rows/13/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/13/status"
+        },
+        {
+          "equals": "ide-reenter-kept",
+          "pointer": "/rows/14/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/14/status"
+        },
+        {
+          "equals": "runstop-virtual",
+          "pointer": "/rows/15/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/15/status"
+        },
+        {
+          "equals": "ide-runstop-virtual",
+          "pointer": "/rows/16/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/16/status"
+        },
+        {
+          "equals": "disk-load-libraries",
+          "pointer": "/rows/17/row"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/17/status"
+        }
+      ],
+      "receipt": {
+        "bytes": 27013,
+        "path": "build/device-252-prep/rows-04/receipt-r7c.json",
+        "sha256": "bdecce2cb27e08815e57952e24d779a1c5472aea27b34729ed62ebbf1f8d769b"
+      },
+      "status": "PASS"
+    },
+    "device-upload": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "4edcc037a3fd729cc124ae40d8c85349889ba17941e3468f1ffe8c2de2aa4abd",
+          "pointer": "/elf/sha256"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/readback/sha256"
+        },
+        {
+          "equals": true,
+          "pointer": "/new_file_witness"
+        },
+        {
+          "equals": true,
+          "pointer": "/physical_power_cycle_operator_ack"
+        },
+        {
+          "equals": 0,
+          "pointer": "/product_ram_writes"
+        },
+        {
+          "equals": "D252.D81",
+          "pointer": "/remote"
+        },
+        {
+          "equals": "D252U.D81",
+          "pointer": "/user_remote"
+        }
+      ],
+      "receipt": {
+        "bytes": 4537,
+        "path": "build/device-252-prep/upload-01/receipt-r7c.json",
+        "sha256": "8e3ae758c0de47b0f4c4189a9902d45500776d7d4d49fe4c695eebe70a0ed5f1"
+      },
+      "status": "PASS"
+    },
+    "gc-session": {
+      "checks": [
+        {
+          "equals": "reopen-home-delete-refill250",
+          "pointer": "/scenario"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "4edcc037a3fd729cc124ae40d8c85349889ba17941e3468f1ffe8c2de2aa4abd",
+          "pointer": "/ELF/sha256"
+        },
+        {
+          "equals": 535,
+          "pointer": "/collections/534/allocation"
+        },
+        {
+          "equals": 1009,
+          "pointer": "/collections/534/after/live_cells"
+        },
+        {
+          "equals": 0,
+          "pointer": "/collections/534/before/mem_oom"
+        },
+        {
+          "equals": 0,
+          "pointer": "/collections/534/after/mem_oom"
+        }
+      ],
+      "receipt": {
+        "bytes": 971838,
+        "path": "build/gc-stress-r7c-reopen-home-delete-refill250-b/progress.json",
+        "sha256": "9fae67d06e2f9261249b4eccbd6ebc96f41b9bc679743d49f72fea6205d78024"
+      },
+      "scope_note": "Reviewer scope note: the only retained 2.5.2 forced-GC receipts are HALT (harness timeout); facts checked below are true (peak 1,009 live cells, mem_oom 0 over 535 collections) but no scenario completed. PASS here means only that the asserted fields of the bound HALT progress file hold; it is not a completed forced-collection scenario.",
+      "status": "PASS"
+    },
+    "owner-rows": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "c6e9f7aa8ccc22d0ffc7a2048d3dee9edaa8762cf5e9685bf914846d7ef80491",
+          "pointer": "/observations/sha256"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/0/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/1/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/2/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/3/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/4/status"
+        }
+      ],
+      "receipt": {
+        "bytes": 1490,
+        "path": "build/device-252-prep/owner-rows-r1.json",
+        "sha256": "6eb3c49f52f9bb16d44fecbb5e62c17792a141a238ac3bf85634b3778483eafa"
+      },
+      "status": "PASS"
+    },
+    "paired-typing": {
+      "checks": [
+        {
+          "equals": 1635493.425,
+          "pointer": "/baseline/mean_cycles_per_key"
+        },
+        {
+          "equals": 1130909.475,
+          "pointer": "/candidate/mean_cycles_per_key"
+        },
+        {
+          "equals": "9978daa146b89cf71ad1d3f290d80cf74b197911e7854859f9e4aa9bb2fce441",
+          "pointer": "/baseline/medium_sha256"
+        },
+        {
+          "equals": "ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d",
+          "pointer": "/candidate/medium_sha256"
+        },
+        {
+          "equals": 40,
+          "pointer": "/baseline/characters"
+        },
+        {
+          "equals": 40,
+          "pointer": "/candidate/characters"
+        },
+        {
+          "equals": 1,
+          "pointer": "/baseline/batch_cap"
+        },
+        {
+          "equals": 1,
+          "pointer": "/candidate/batch_cap"
+        },
+        {
+          "equals": 1635493,
+          "pointer": "/rounded_cycles_per_key/baseline"
+        },
+        {
+          "equals": 1130909,
+          "pointer": "/rounded_cycles_per_key/candidate"
+        },
+        {
+          "equals": 30.85,
+          "pointer": "/reduction_percent_2dp"
+        }
+      ],
+      "receipt": {
+        "bytes": 1528,
+        "path": "build/release-v2.5.2/paired-typing-r1.json",
+        "sha256": "0fa0d6a0295ba1e91cb30db43c1183fe8928aad8b3460cc826f69f5ee0b153d3"
+      },
+      "status": "PASS"
+    }
+  },
+  "pending_physical_rows": [
+    "Stopwatch cold boot (only host tool-clock boot times measured on the device)",
+    "Physical IDE C-x C-c (known issue; C-x q is the supported exit)",
+    "Standalone Ship RUN/STOP (independently unverified; carried from earlier releases)"
+  ],
+  "status": "PASS"
+}

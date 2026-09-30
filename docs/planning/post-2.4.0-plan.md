@@ -60,6 +60,215 @@ none is claimed for 2.4.0:
 
 ## Journal
 
+### 2.5.2 Before-Ship prepared; sealed host run green on the third attempt — 2026-09-30
+
+Public-source reproductions (option A): two clean roots from the export,
+`build/release-v2.5.2/repro-r3-1` and `repro-r3-2`, ELF/PRG/LTO/D81 byte-equal
+to the Final `ae4e2931…`. Sealed `make -k check-host`: r1 on `ec4a279a` red
+(`workbench-private-inline-composition-probe` pinned the m65d suite SHA that the
+directory-link fix changed; dated successor receipt, Makefile route, Card-5
+receipts r4 in `6f2cbe99`); r2 on `6f2cbe99` red (`workbench-ux-harness-selftest`
+timed out at 30 s under `ionice -c3` beside a foreign profiling job; 19 s idle);
+r3 on the same HEAD green (`build/release-v2.5.2-check-host-r3`, exit 0, 3,824 s,
+0 changed files). Timeout not changed: watch item in the register. Before-Ship
+document `release-2.5.2-before-ship.md`, target-acceptance record, reviewer
+adapter receipts for the device gates and the release contract are prepared for
+review. The acceptance record asserts named fields only: the forced-GC harness
+receipts are all HALT and the comfort rows are split over three receipts
+(stated in the document). Next: commit the explicit path list, pin the contract
+hash, run `seal-after-commit-r7c.py --final`, then package and publish as
+separate steps.
+
+### Owner word: 2.5.2 with full release discipline (option A) — 2026-09-30
+
+The r7c product changes the whole static plane, so the 2.5.1 public
+reproduction path (library-only packer) does not carry over
+(`build/release-v2.5.2/step3-report.md`). Owner chose **option A**: two clean
+independent reproductions from the public source export, which needs a new
+standalone public packer for all 20 media payloads plus the v252 public
+tools, docs/naming/keymap successors and the Card-5 chain (estimate 1–2
+working days). Option B (publish with the Final replay as the independent
+rebuild, no public-source reproduction) was declined.
+
+### Owner word: 2.5.2 Ship and Publish — 2026-09-30
+
+"2.5.2 Mein Wort: Ja" — the full 2.5.2 chain including Ship and Publish is
+authorised (after the passing device session). Final: `build/o2-lite-final-r7c`.
+
+### 2.5.2 device session PASS — 2026-09-30
+
+[Device report](release-2.5.2-device-report.md): Final medium `ae4e2931…`
+uploaded fresh after a power cycle; 21/21 automated groups, owner physical rows
+PASS ("Tippgefühl ist sehr gut"), directory-link fix confirmed on a real user
+disk (F8 survives saving F0 in entry 0; readback verified). Remaining for the
+release: Before-Ship, Ship and Publish — **Ship/Publish of 2.5.2 need the
+owner's word**. Also recorded: GC stress (forced collection at every
+allocation) showed no OOM but up to 1,009/1,071 live cells in the 250-char and
+reopen+refill scenarios; the harness is too slow near a full heap to finish
+all scenarios (watch item for 2.5.3).
+
+### 2.5.2 Final (Seed r7c) byte-identical and sealed — 2026-09-30
+
+Sealed check-source `build/o2-lite-check-source-r7c-final-r3` on `c4711ed2`:
+exit 0, 3,389 s, HEAD unchanged, 0 changed protected files. Final
+`build/o2-lite-final-r7c` (one product link, media re-derived without the Seed):
+D81 `ae4e2931…`, ELF `4edcc037…` byte-identical to Seed r7c; seal PASS
+(9,528 bindings) and seal check PASS. Content: O2-lite (reopen previous line,
+admission limits, r6 review repairs), editor slot walks (Comfort typing
+1,635,493 → 1,130,909 cycles/key, −30.9 %), `%rl-end` Return heap fix,
+directory-link fix in `%m65d-dir-fill`. Emulator on r7c: lite rows 79/79,
+backspace rows 7/7. Independent reviews: 2.5.2 candidate diff "freigabefähig",
+r7c medium "all deviations explained", Final tooling hardened (F1–F4) and
+fixed (r3). Way there: Seed attempts r7/r7b halted on tool issues (retained);
+sealed runs final-r1 aborted (uncommitted tree), final-r2 red (replay bound
+gate-rebuilt build outputs; fixed in `c4711ed2`). Open: owner device session
+(`build/device-252-prep/runbook.md`), then Before-Ship/Ship/Publish — Ship
+and Publish of 2.5.2 need the owner's word.
+
+### 2.5.3 scope decisions (delegated to the reviewer) — 2026-09-30
+
+Owner delegated the open 2.5.3 decisions ("Die offenen Entscheidungen überlasse
+ich dir"). Basis: `build/scope-253-r1/report.md` (deduplicated inventory,
+architecture classes A1–A8, prices) and the architecture review.
+
+- **Scope (one Seed / one Final):** A1 object lifetime — packed IDE join
+  (save/eval without whole-buffer list, `build/ide-save-heap-fix-r1/`),
+  `eval-buffer` reader-source root (F1), `%set-macro` temporary-name root (F2);
+  A2 IDE state — single-buffer switch text loss, stale mark positions;
+  A6 LCC multi-pair `setq` (and builtin argument counts if confirmed on the
+  product path); A5 disk D2 ownership check before write enable, D3 lossless
+  load (trailing spaces/empty lines/CR), D5 full directory remount.
+- **D4 (leaked blocks after aborted saves):** 2.5.3 gets the **bounded
+  mitigation** only (diagnose inconsistent allocation, refuse further writes on
+  unsafe media); the permanent reclaim is a separate 2.5.4 design/repair card.
+  Reason: no content loss is evidenced (195 cut points), and a correct reclaim
+  needs its own ownership design; bundling it would break the one-cycle budget.
+  This replaces the earlier "D4 fix in 2.5.3" wording.
+- **Native growth:** 2.5.3 may grow native `.text` by at most **+256 B**, only
+  for the F2 fix (measured isolated +215 B, +1 B metadata); no BSS growth.
+  No kernel diet in 2.5.3 (VM changes would add risk to a correctness
+  release). Colour RAM (+49 B) and the STOP cursor remnant (+354 B) are
+  deferred until a 2.5.4 kernel-diet card restores headroom (diet 2/3 found
+  −689 B .text in total).
+- **Stop rule:** if the candidate does not close D2 or does not fit before the
+  Seed, halt cleanly before the Seed and re-scope; no series of attempts.
+
+### Disk review results (partial) and Seed r7 scope — 2026-09-29
+
+The independent disk/recovery review was repeatedly interrupted by Codex's
+cyber-safety check and produced no final report; the reviewer evaluated its
+recorded data (`build/external-review-disk-integrity-r1/matrix-results.json`,
+`supplement-results.json`): 195 injected cut/fail points over 8 save
+transactions — no content loss (old or new file always intact), 33 points
+leave 1–3 leaked BAM blocks; 17 edge cases (full disk, full directory,
+empty, oversize, retry after aborted claim) handled; the only real defect is
+the entry-0 directory link (fixed). Loader drops trailing spaces, trailing
+empty lines and CR. RUN/STOP recovery part not completed. Owner words:
+**Seed r7 = O2-lite + directory-link fix**; leaked blocks and loader
+whitespace are known issues in 2.5.2, fixes in 2.5.3.
+
+### Directory-chain defect found; owner: fix it in 2.5.2 — 2026-09-29
+
+Independent disk review (in progress, `build/external-review-disk-integrity-r1/`):
+`%m65d-dir-fill` (`lib/m65-disk.lisp`) zeroes all 32 bytes of the target
+directory entry, including bytes 0–1, which for entry 0 of a directory
+sector hold the link to the next directory sector. Saving into entry 0 on
+a disk with more than one directory sector cuts the chain: later files
+disappear from the directory while save reports success (data blocks and BAM
+stay allocated). Present since the copy-on-write persistence commit
+`34d3c4ee` (all releases since 1.0.0, incl. published 2.5.1). Fix: zero
+only bytes 2–31. Owner words: **fix in 2.5.2** (new Seed r7, new sealed
+run); the running sealed check-source r3 on `d425eb87` was stopped as
+superseded; the Final waits for the complete disk review.
+
+### GC-root review: eval-buffer can silently stop early; owner keeps fix for 2.5.3, directly after 2.5.2 — 2026-09-29
+
+`build/external-review-gc-roots-r1/report.md`: (F1, blocking, in 2.5.1)
+`eval-buffer` passes an unrooted joined source string to `%cs-read-open`; a
+GC during compilation reuses it — host native probe reads 1 of 5 forms with
+no error. (F2) `%set-macro` may reuse a collected temporary (gensym) name.
+(V1, conditional) an aborted C2 root scan does not prevent the sweep.
+Candidate fix `build/ide-save-heap-fix-r1/` roots the reader source.
+Owner words: **stay with 2.5.3**, started **directly after 2.5.2**; 2.5.2
+release notes carry the known issue incl. the silent partial evaluation.
+2.5.3 scope: IDE save/eval without whole-buffer list + reader root (F1) +
+`%set-macro` (F2).
+
+### IDE save/eval heap defect confirmed; owner: known issue in 2.5.2, fix in 2.5.3 — 2026-09-29
+
+Independent review `build/external-review-ide-save-heap-r1/report.md`
+(host measurement): IDE save (`C-x C-s`) and `eval-buffer` join the whole
+buffer into a cons character list (`lib/ide-disk.lisp` `%ide-join-codes-into`
+/ `%ide-join`); 50 × 40 chars need ~2,207 cells against ~588 free, so
+save/eval fail with `*** VM: OUT OF MEMORY` beyond roughly 20×20, 10–12×40
+or 6–7×70 (before any disk write; file and buffer kept). `eval-buffer` also
+does not root the reader source string. Present in published 2.5.1.
+Owner words: **known issue in the 2.5.2 release notes, fix in 2.5.3**.
+Candidate fix study: `build/ide-save-heap-fix-r1/`. Same day, the O2-lite
+review (`build/external-review-o2-lite-r1/`) found a blocking reopen heap
+case (Home + Delete + refill: 784 cells); Seed r6 fixes it before the Final.
+
+### O2-lite host closure reviewed; owner accepts admission limits; STOP remnant = follow-up card — 2026-09-29
+
+`build/multiline-lite-r2/` (not committed): library 2,864 B (≤ 3,000),
+shared resident/native +0; 31 + 7 baseline + 14 admission host rows PASS;
+worst case 1,056/1,072 heap cells and 5,846/9,344 arena bytes including a
+measured runtime reserve (483 live cells at the empty Comfort prompt).
+Owner words: **accept the weighted admission contract** — pending form
+≤ 32 lines / 640 B, active line `floor((500−3N)/2)` (250 → 202 at 32
+lines), history keeps only forms ≤ 250 B (`*** input limit`,
+`*** history limit`). **STOP remnant fix** (`build/stop-remnant-r1/`:
++141 B shared resident, clears all reverse video on reentry) becomes a
+**separate follow-up card**; seek a narrower cursor-only fix there.
+Next: O2-lite successor Seed per `build/multiline-lite-r2/seed-plan.md`.
+
+### Multi-line editing: owner chooses O2-lite; STOP cursor remnant as own card — 2026-09-29
+
+O2 round 2 (`build/multiline-proto-r2/`): 5,278 B library (+278 B shared
+resident), over the 3,000 B ceiling; no cosmetic cut closes the gap.
+O2-lite (`build/multiline-lite-r1/`): 2,446 B (+1,386), shared resident
+and native +0, ordinary typing −37 instructions/key, 31/31 host rows.
+Owner words: **implement O2-lite** (Backspace at an empty continuation
+reopens the previous line; marker `[edit previous line]`, corrected line
+re-echoed, old transcript kept; Up/Down stay history); a proven form
+admission bound precedes the Seed. **Fix the inherited STOP remnant**
+(stale reverse cursor after RUN/STOP following Home on a wrapped line,
+reproduces on 2.5.1) as its own small card, may ship together.
+
+### Multi-line editing: O2 prototype r1 reviewed; owner: round 2 + O2-lite, bound ≤ 3,000 B — 2026-09-29
+
+Host prototype `build/multiline-proto-r1/` (not committed): behaviour 70/70,
+ordinary typing/Backspace −6…−14 % VM instructions, native/shared resident
++0; but library 1,060 → 4,667 B (+3,607; package +5,851), heap RED
+(per-character cons chains for retained lines vs a 1,072-cell heap),
+cross-line keys 35–90 k instructions, multi-line wrap repaints the whole
+viewport, one STOP cursor-cleanup gap. Not Seed-ready; no bound requested.
+Owner words: **round 2 of O2** (compact inactive lines, form admission
+limit, dirty-row repaint, STOP cleanup, reuse resident editor primitives)
+**plus an exact O2-lite price** as fallback; **Comfort library ≤ 3,000 B**
+is the owner's worth-it ceiling for O2.
+
+### Multi-line editing: owner decisions after preflight — 2026-09-29
+
+[Preflight](multiline-editing-preflight.md). Owner words: the complaint
+meant **lines after Return** (continuations), not soft wrap; scope **O2**
+(Backspace at true column zero joins the previous line; Up/Down move
+inside the pending form; Return on an earlier line advances, submit only
+from the last line when balanced); history is entered **above the first
+visual row** or at a fresh empty prompt, an empty continuation stays in
+the form, Down returns to the saved draft; **host price prototype first**,
+then the reviewer presents the revised library bound for approval before
+any Seed. The 1,100 B STRINGS bound stays sealed for its era.
+
+### 2.5.1 PUBLISHED — 2026-09-29
+
+[Publish report](release-2.5.1-publish.md). Public main `2817f0cf` (parent
+v2.5.0 `07491638`), tag `v2.5.1`, release latest, four assets read back
+byte-identical from draft and published release. Local `proof/v2.5.1` →
+`09140968`. Open: stopwatch cold boot, physical RUN/STOP, physical C-x C-c
+(known issue). Next: multi-line editing card (preflight; owner word for the
+surface change), then the code-object cache decision after re-measurement.
+
 ### 2.5.1: sealed host r4 green, device and owner rows PASS; Before-Ship r3 — 2026-09-29
 
 [Before-Ship](release-2.5.1-before-ship.md) and

@@ -3,12 +3,15 @@
 This index is the curated entry point for the live lisp65 documentation.
 Documents not linked from the first three sections are implementation records,
 machine-bound contracts, proposals, or historical material; they are not user
-instructions for the 2.5.1 candidate.
+instructions for the published 2.5.1 baseline. 2.5.2 is in release
+preparation: its Final is sealed and its device session passed; it is not yet
+published. See the [2.5.2 release notes](releases/2.5.2.md).
 
 ## Users
 
-- [Release Notes 2.5.1](releases/2.5.1.md) — IDE exit, faster editing and multi-line strings candidate
-- [Release Notes 2.5.0](releases/2.5.0.md) — published Comfort-default baseline
+- [Release Notes 2.5.2](releases/2.5.2.md) — release in preparation: faster editing, reopening earlier Comfort input and a disk-directory fix
+- [Release Notes 2.5.1](releases/2.5.1-before-ship-r3.md) — published baseline: IDE exit, faster editing and multi-line strings
+- [Release Notes 2.5.0](releases/2.5.0.md) — historical Comfort-default release
 - [Release Notes 2.4.0](releases/2.4.0.md) — historical recovery release
 
 - [User Guide](user-guide.md) — verify, boot, edit, save, and recover
