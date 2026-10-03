@@ -53,11 +53,14 @@ python3 tools/host-lisp/toolchain_external.py fetch --tool-root tools
 make doctor DOCTOR_GATE=G2
 ```
 
-The published baseline is 2.5.1 (2026-09-29). Follow the
-[2.5.1 reproduction instructions](../README.md#reproduce-the-251-release) in a fresh
+The published baseline is 2.5.2 (2026-09-30). Follow the
+[2.5.2 reproduction instructions](../README.md#reproduce-the-252-release) in a fresh
 exported source tree with no build directory. Its explicit entry points are
-`c2_v251_r2_20260929_public_product.py build` and `check`; these verify the
-Strings Final identities. 2.5.2 (O2-lite) is in preparation, not yet Final.
+`c2_v252_r1_public_product.py build` and `check`; these verify the 2.5.2 Final
+identities. The 2.5.1 entry points (`c2_v251_r2_20260929_public_product.py`)
+remain for the earlier release. 2.5.3 is a release candidate with a sealed
+Final (see the [2.5.3 release notes](releases/2.5.3.md)); its public-source
+reproductions are pending.
 
 ### Historical 2.4.0 build and deployment
 

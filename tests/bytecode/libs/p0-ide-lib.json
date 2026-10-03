@@ -136,7 +136,7 @@
  ],
  "private_inline_functions": [
   "%ide-fill-column",
-  "%ide-join-codes",
+  "%ide-copy-line",
   "%ide-buffers-remove",
   "%ide-persist-state",
   "%ide-take-lines",
@@ -191,17 +191,23 @@
  "disk_files": {
   "IDE": {
    "content": "",
-   "capacity": 254
+   "capacity": 0
   },
-  "TESTLIB": "alpha\nbeta",
+  "TESTLIB": {
+   "content": "alpha\nbeta",
+   "capacity": 10
+  },
   "WORK": {
    "content": "",
    "capacity": 254
   },
-  "DEMO": "(defun demo-numbers-run () 42)\n",
+  "DEMO": {
+   "content": "(defun demo-numbers-run () 42)",
+   "capacity": 30
+  },
   "FASL2": {
    "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nabcdefghijklmnopqrst\r\nboundary-Z\n\nc  \ntail  \r\n  ",
-   "capacity": 8192
+   "capacity": 281
   }
  },
  "cases": [
@@ -711,7 +717,7 @@
   {
    "name": "ide-disk-streams-multisector-lines",
    "expr": "((lambda (lines) (list (string-length (car lines)) (cdr lines))) (%ide-disk-read-lines \"fasl2\"))",
-   "expect": "(232 (\"abcdefghijklmnopqrst\" \"boundary-Z\" \"\" \"c  \" \"tail\"))",
+   "expect": "(232 (\"abcdefghijklmnopqrst\r\" \"boundary-Z\" \"\" \"c  \" \"tail  \r\" \"  \"))",
    "max_steps": 500000
   },
   {
@@ -901,7 +907,8 @@
   "%ide-line-net-depth",
   "%ide-depth-above",
   "%ide-insert-spaces",
-  "%ide-join-codes-into",
+  "%ide-source-size",
+  "%ide-copy-lines",
   "%ide-dir-entry-name-codes",
   "%ide-dir-scan-entries",
   "%ide-dir-scan-directory",
@@ -910,7 +917,7 @@
   "%ide-disk-sector-into",
   "%ide-disk-read-chain",
   "%ide-disk-trim-rev",
-  "eval-buffer",
+  "%ide-eval-source",
   "%ide-search-lines-from",
   "%ide-buffers-find",
   "%ide-last-buffer",

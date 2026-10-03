@@ -30,15 +30,16 @@
       (%length-from (cdr xs) (1+ n))
       (if xs (%list-malformed-error) n)))
 
+(defun %nth-after-domain-check (n xs)
+  (if (zerop n)
+      (if (consp xs) (car xs) nil)
+      (if (consp xs) (%nth-after-domain-check (1- n) (cdr xs)) nil)))
+
 (defun nth (n xs)
   (if (numberp n)
       (if (< n 0)
           (%list-malformed-error)
-          (if (zerop n)
-              (if (consp xs) (car xs) (if xs (%list-malformed-error) nil))
-              (if (consp xs)
-                  (nth (1- n) (cdr xs))
-                  (if xs (%list-malformed-error) nil))))
+          (progn (length xs) (%nth-after-domain-check n xs)))
       (%list-malformed-error)))
 
 (defun nthcdr (n xs)

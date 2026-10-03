@@ -30,7 +30,7 @@ workbench-service-call-inventory-current: $(WORKBENCH_SERVICE_INVENTORY_ARTIFACT
 # C1 is the canonical Wave-1 product policy: the generated Workbench sources
 # retain the exact compiler tier until a persistent foreign allocation needs
 # its region. Diagnostic builds may still override this tool explicitly.
-V2_WORKBENCH_CODEMOD_TOOL ?= tools/host-lisp/v2_workbench_codemod_disk_r7_20260930.py
+V2_WORKBENCH_CODEMOD_TOOL ?= tools/host-lisp/v2_workbench_codemod_disk_r8_20261001.py
 
 v2-workbench-codemod:
 	PYTHONDONTWRITEBYTECODE=1 python3 $(V2_WORKBENCH_CODEMOD_TOOL) --selftest
@@ -116,7 +116,7 @@ v11-m-transactional-fasl-observations: v2-workbench-artifacts
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/bytecode_p0_stdlib.py --check \
 		--observation-report build/bytecode/dialect-v2/v11-m-implementation-observations-disk-r7-20260930.json \
 		$(V2_WORKBENCH_SUITE_DIR)/p0-m65d-lib.json
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/chain_walker_inventory_disk_r7_20260930.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/chain_walker_inventory_disk_r7_v253_20260930.py check
 
 v11-m-transactional-fasl-acceptance-selftest:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_m_transactional_fasl_acceptance.py selftest

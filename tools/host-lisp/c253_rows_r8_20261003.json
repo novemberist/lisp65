@@ -1,0 +1,428 @@
+{
+ "format": "card253-rows-v2",
+ "status": "r8 additions; expected texts from the ladder/OOM host receipts (emulator not run)",
+ "authority": "ccc08061b621f43ab4fde7f5a651045d4c87c247",
+ "ladder_receipt": {
+  "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/lcc-nesting-ladder-v253-20261002.json",
+  "bytes": 45138,
+  "sha256": "d6ca4762a2db8ed5d314a28fb7652611ebe0c59cf8961a8a3cb4da60195ffad4"
+ },
+ "oom_receipt": {
+  "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/repl-oom-recovery-v253-20261002.json",
+  "bytes": 1908,
+  "sha256": "bad64629215f992c40067c7b07ea2db93a2cf22f72dfb623e71b84162183a080"
+ },
+ "screen_rule": "as c253_rows_20261001.json",
+ "rows": [
+  {
+   "id": "lcc-f2-regression",
+   "group": "lcc-depth",
+   "title": "F2: the reported dotimes/setq/peek forms compile and run (r7: STACK OVERFLOW)",
+   "setup": [
+    "REPL, fresh l65>"
+   ],
+   "steps": [
+    "(let ((s 0)) (dotimes (i 1) (setq s (+ s (peek 23 (+ 160 i))))) s)",
+    "(let ((s 0)) (dotimes (i 96) (setq s (logior s (peek 23 (+ 160 i))))) s)",
+    "(defun f96 () (let ((s 0)) (dotimes (i 96) (setq s (logior s (peek 23 (+ 160 i))))) s))",
+    "(f96)",
+    "(let ((s 0)) (dotimes (i 1) (setq s (+ s (+ 1 (+ 160 i))))) s)"
+   ],
+   "expect": "0 / 0 / F96 / 0 / 161; never *** VM: STACK OVERFLOW",
+   "oracle": "lcc-nesting-ladder-check f2_form (2.5.2 ok, r7 overflow:frames, candidate ok); peek values = the 2.5.2 Final r7c emulator result 0 (build/card-253-f1f2-compare-r1, 252-both); the last form is the peek-free host-checkable twin",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((s 0)) (dotimes (i 1) (setq s (+ s (peek 23 (+ 160 i))))) s)",
+      "screen": "0"
+     },
+     {
+      "input": "(let ((s 0)) (dotimes (i 96) (setq s (logior s (peek 23 (+ 160 i))))) s)",
+      "screen": "0"
+     },
+     {
+      "input": "(defun f96 () (let ((s 0)) (dotimes (i 96) (setq s (logior s (peek 23 (+ 160 i))))) s))",
+      "screen": "F96"
+     },
+     {
+      "input": "(f96)",
+      "screen": "0"
+     },
+     {
+      "input": "(let ((s 0)) (dotimes (i 1) (setq s (+ s (+ 1 (+ 160 i))))) s)",
+      "screen": "161"
+     }
+    ]
+   },
+   "oracle_253": "ladder receipt tests/bytecode/dialect-v2/evidence/capability-carrier/lcc-nesting-ladder-v253-20261002.json",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "new_in_r8": true
+  },
+  {
+   "id": "lcc-ladder-calibrated",
+   "group": "lcc-depth",
+   "title": "Nesting ladder at the emulator-calibrated points: max depth compiles, max+1 overflows",
+   "setup": [
+    "REPL, same session after lcc-f2-regression"
+   ],
+   "steps": [
+    "(let ((i 1)(s 0)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+    "(let ((i 1)(s 0)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))) s)",
+    "(let ((s 0)) (dotimes (i 1) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+    "(let ((s 0)) (dotimes (i 1) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+    "(let ((i 1)) (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))))",
+    "(let ((i 1)) (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))))))",
+    "(let ((s 0)) (dotimes (i 1) (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+    "(let ((s 0)) (dotimes (i 1) (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+    "(let ((s 0)(i 1)) (while (< s 1) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+    "(let ((s 0)(i 1)) (while (< s 1) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+    "(defun dz (i) (let ((s 0)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))) s))",
+    "(defun dz (i) (let ((s 0)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s))",
+    "(dz 1)"
+   ],
+   "expect": "value at the 2.5.2 depth, *** VM: STACK OVERFLOW one level deeper, prompt back after each",
+   "oracle": "candidate column of the ladder receipt (frames limit, host model calibrated on 9 emulator points); 2.5.2: let-setq 8, let-dotimes-setq 6, let-arith 10; r7: 7/5/10, let-dotimes 7, let-while-setq 5, defun-let-setq 7",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((i 1)(s 0)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+      "screen": "9"
+     },
+     {
+      "input": "(let ((i 1)(s 0)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))) s)",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(let ((s 0)) (dotimes (i 1) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+      "screen": "6"
+     },
+     {
+      "input": "(let ((s 0)) (dotimes (i 1) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(let ((i 1)) (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))))",
+      "screen": "11"
+     },
+     {
+      "input": "(let ((i 1)) (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))))))",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(let ((s 0)) (dotimes (i 1) (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+      "screen": "0"
+     },
+     {
+      "input": "(let ((s 0)) (dotimes (i 1) (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(let ((s 0)(i 1)) (while (< s 1) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+      "screen": "7"
+     },
+     {
+      "input": "(let ((s 0)(i 1)) (while (< s 1) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(defun dz (i) (let ((s 0)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))) s))",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(defun dz (i) (let ((s 0)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s))",
+      "screen": "DZ"
+     },
+     {
+      "input": "(dz 1)",
+      "screen": "9"
+     }
+    ]
+   },
+   "oracle_253": "ladder receipt tests/bytecode/dialect-v2/evidence/capability-carrier/lcc-nesting-ladder-v253-20261002.json",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "new_in_r8": true
+  },
+  {
+   "id": "lcc-ladder-host-only",
+   "group": "lcc-depth",
+   "title": "Nesting ladder, host-model points without an emulator calibration (OBSERVED)",
+   "setup": [
+    "REPL, same session"
+   ],
+   "steps": [
+    "(let ((s 0)) (dolist (i '(1)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+    "(let ((s 0)) (dolist (i '(1)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+    "(let ((i 1)) (setq g253 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))))",
+    "(let ((i 1)) (setq g253 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))))))",
+    "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+    "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+    "(let ((i 1)(s 0)) (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s i)))))))))))",
+    "(let ((i 1)(s 0)) (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s i))))))))))))"
+   ],
+   "expect": "as the host model; a one-level difference is recorded, not a release blocker (root/frame allowance uncalibrated)",
+   "oracle": "candidate column of the ladder receipt; r7 values let-dolist-setq 5, global-setq 8, upvalue-setq 4, nested-setq 5",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((s 0)) (dolist (i '(1)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+      "screen": "7"
+     },
+     {
+      "input": "(let ((s 0)) (dolist (i '(1)) (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(let ((i 1)) (setq g253 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))))",
+      "screen": "10"
+     },
+     {
+      "input": "(let ((i 1)) (setq g253 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))))))",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)",
+      "screen": "6"
+     },
+     {
+      "input": "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+      "screen": "*** VM: STACK OVERFLOW"
+     },
+     {
+      "input": "(let ((i 1)(s 0)) (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s i)))))))))))",
+      "screen": "1"
+     },
+     {
+      "input": "(let ((i 1)(s 0)) (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s (setq s i))))))))))))",
+      "screen": "*** VM: STACK OVERFLOW"
+     }
+    ]
+   },
+   "oracle_253": "ladder receipt tests/bytecode/dialect-v2/evidence/capability-carrier/lcc-nesting-ladder-v253-20261002.json",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "new_in_r8": true
+  },
+  {
+   "id": "oom-repl-local",
+   "group": "oom",
+   "title": "Plain REPL OOM (let-local garbage): the prompt returns, memory is usable again",
+   "setup": [
+    "session oom, fresh boot"
+   ],
+   "steps": [
+    "(let ((a nil)) (while t (setq a (cons 1 a))))",
+    "(+ 1 2)",
+    "(length (list 1 2 3))"
+   ],
+   "expect": "*** VM: OUT OF MEMORY once, then 3, 3",
+   "oracle": "repl-oom-recovery-check (host repl() landing), flagfix-garbage emulator run (build/card-253-oom-hang-r1: clearing $8F by monitor restored the prompt)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((a nil)) (while t (setq a (cons 1 a))))",
+      "screen": "*** VM: OUT OF MEMORY"
+     },
+     {
+      "input": "(+ 1 2)",
+      "screen": "3"
+     },
+     {
+      "input": "(length (list 1 2 3))",
+      "screen": "3"
+     }
+    ]
+   },
+   "oracle_253": "host receipt tests/bytecode/dialect-v2/evidence/capability-carrier/repl-oom-recovery-v253-20261002.json",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "new_in_r8": true
+  },
+  {
+   "id": "oom-repl-global",
+   "group": "oom",
+   "title": "Genuine full heap (global list): one report per input, no livelock; recovery after the drop",
+   "setup": [
+    "session oom, after oom-repl-local"
+   ],
+   "steps": [
+    "(setq l nil)",
+    "(while t (setq l (cons 1 l)))",
+    "(+ 1 2) x2",
+    "(setq l nil) (up to 2x) / (set-symbol-value (quote l) nil)",
+    "(length (list 1 2 3))",
+    "(+ 3 4)"
+   ],
+   "expect": "NIL, *** VM: OUT OF MEMORY, then each input either its value or ONE *** VM: OUT OF MEMORY with the prompt back; after a drop that returns NIL: 3, 7.  FAIL-NO-DROP = no livelock but no drop form fit into the full heap (owner wording decision)",
+   "oracle": "host receipt after.transcript: 3 | OOM | 7 | OOM | 11 | OOM | 15 | OOM | nil | 40 | 19 (RECOVERED); emulator flagfix run: with a live global list (setq l nil) was a genuine OOM again",
+   "expected": {
+    "screen": [
+     {
+      "input": "(setq l nil)",
+      "screen": "NIL"
+     },
+     {
+      "input": "(while t (setq l (cons 1 l)))",
+      "screen": "*** VM: OUT OF MEMORY"
+     }
+    ],
+    "any_of": {
+     "(+ 1 2)": [
+      "3",
+      "*** VM: OUT OF MEMORY"
+     ],
+     "(setq l nil)": [
+      "NIL",
+      "*** VM: OUT OF MEMORY"
+     ],
+     "(length (list 1 2 3))": [
+      "3"
+     ],
+     "(+ 3 4)": [
+      "7"
+     ]
+    }
+   },
+   "oracle_253": "host receipt tests/bytecode/dialect-v2/evidence/capability-carrier/repl-oom-recovery-v253-20261002.json",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "new_in_r8": true
+  },
+  {
+   "id": "oom-ide-save-100x40-recovery",
+   "group": "oom",
+   "title": "IDE 100x40 save: after its OOM the prompt returns and memory recovers",
+   "setup": [
+    "disk session group C-100x40 (same Xemu as ide-save-100x40-refusal)"
+   ],
+   "steps": [
+    "(save-buffer-to \"out100x40\" \"big\")",
+    "(+ 1 2)",
+    "(set-symbol-value (quote ide-buffers) nil)",
+    "(+ 3 4)",
+    "(length (list 1 2 3))"
+   ],
+   "expect": "save: T or *** VM: OUT OF MEMORY (prompt back, no livelock); then 3, NIL, 7, 3; OUT100X40 absent or byte-identical",
+   "oracle": "flagfix-save100x40-b emulator run (build/card-253-oom-hang-r1): after clearing the flag (+ 1 2)=3, (setq l nil) NIL, (+ 3 4)=7",
+   "expected": {
+    "screen": [
+     {
+      "input": "(+ 1 2)",
+      "screen": "3"
+     },
+     {
+      "input": "(set-symbol-value (quote ide-buffers) nil)",
+      "screen": "NIL"
+     },
+     {
+      "input": "(+ 3 4)",
+      "screen": "7"
+     },
+     {
+      "input": "(length (list 1 2 3))",
+      "screen": "3"
+     }
+    ]
+   },
+   "oracle_253": "host receipt tests/bytecode/dialect-v2/evidence/capability-carrier/repl-oom-recovery-v253-20261002.json",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "new_in_r8": true
+  }
+ ],
+ "oracle_receipt": {
+  "path": "build/card-253-row-oracles-dry-r8a/receipt.json",
+  "sha256": "772cab90b8dcb6257adfbd8509003a8c0b684d748393a789cd9f53c7fa838f27",
+  "checked": [
+   "let-setq",
+   "let-dotimes-setq",
+   "let-arith",
+   "let-dotimes",
+   "let-while-setq",
+   "let-dolist-setq",
+   "global-setq",
+   "nested-setq"
+  ],
+  "host_vm_unmodelled": {
+   "upvalue-setq": "unsupported opcode 64"
+  }
+ },
+ "expected_overrides": {
+  "source": "build/card-253-rows-r8/notes.txt (rows agent copies): the product prints the refusal symbol after COMPILE FAILED, and a progn-wrapped top-level car goes the direct path (WRONG ARGUMENT COUNT); the r7 table c253_rows_20261001.json stays byte-identical",
+  "rows": {
+   "lcc-setq-odd": [
+    {
+     "input": "(setq a 1 b)",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(defun h () (let ((a 0)) (setq a 1 b)))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    }
+   ],
+   "lcc-car-2args": [
+    {
+     "input": "(defun k () (car (quote (1)) 2))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    }
+   ],
+   "lcc-arity-compiled": [
+    {
+     "input": "(defun ka () (car (quote (1)) 2))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(defun kb () (cdr))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(defun kc (x) (consp x x))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(defun kd (x) (not x x))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(defun ke () (null))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(defun kf (x) (cons x))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(defun kg (x) (cons x x x))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(defun kh (x) (mod x))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST"
+    },
+    {
+     "input": "(progn (car (quote (1)) 2))",
+     "was": "*** COMPILE FAILED",
+     "screen": "*** WRONG ARGUMENT COUNT"
+    }
+   ]
+  }
+ }
+}

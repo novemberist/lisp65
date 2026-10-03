@@ -1,6 +1,99 @@
-# lisp65 2.5.2 — current release boundary
+# lisp65 2.5.3 — current release boundary
 
-2.5.2 is 2.5.1 plus faster line editing, reopening earlier Comfort input and
+2.5.3 is the current release candidate: its Final is built and sealed, it is not published, its physical-device session passed on 2026-10-03 (see the [device report](planning/release-2.5.3-device-report.md)), and its Before-Ship record is pending. The published release is 2.5.2.
+
+2.5.3 is 2.5.2 plus larger IDE saves and `eval-buffer` runs, IDE editing fixes,
+compiler fixes and safer disk handling. `C-x C-s`, `save-buffer-to` and
+`eval-buffer` no longer build a character list for the whole buffer, and
+`eval-buffer` keeps its source alive during compilation instead of stopping
+early without a message. With one buffer open, switching buffers no longer
+loses text, and every text edit now clears the mark. The compiler assigns
+every pair of a multi-pair `setq` and refuses `car`, `cdr`, `consp`, `not`,
+`null` (one argument) and `cons`, `mod` (two arguments) with other counts,
+including on the product compiler path; the screen shows
+`*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST`. `nth` refuses dotted
+tails anywhere in the list.
+
+Disks: M65D writes only after a remount that has checked the whole disk
+(every file chain against the allocation map). A disk with a doubly used
+block, a live block marked free or an allocated block no file owns is refused
+with status 13 (`disk allocation inconsistent; disk not written`), and after
+an aborted save the next save is refused until a remount passes. There is no
+reclaim of leaked blocks yet; a refused disk is repaired with an external
+1581 tool or its files are copied to a fresh disk. Loading a file keeps its
+exact bytes (trailing spaces, trailing empty lines and carriage returns; a
+carriage return is drawn as a blank cell); files written by the pre-1.0
+overwrite-in-place `save` now show their space padding. A full 144-file
+directory remounts again. IDE save/eval limits in host fixtures are listed in
+the [2.5.3 release notes](releases/2.5.3.md); they are test results, not
+guaranteed limits.
+
+Fixed in 2.5.3 (known in 2.5.2): after `*** VM: OUT OF MEMORY` the prompt
+returns. The sticky out-of-memory flag is now cleared where the REPL regains
+control. In emulator runs the prompt came back after runaway garbage in a
+`let`-local, after a failed 100x40 IDE save, and while typing a 249-character
+line with four IDE buffers (the keys typed after the error land on a new
+`L65>` prompt as a continuation line).
+
+New known issue in 2.5.3: a heap filled by data the program still holds (for
+example a global list) cannot be released from the keyboard. The prompt
+returns and short forms such as `(+ 1 2)` work, but typing the form that would
+drop the data (`(setq l nil)`) runs out of memory while it is being typed,
+because typing itself needs memory; the Comfort prompt `L65>` is replaced by
+the native `LISP65>`, the same keys keep failing and the data stays live. A
+reset is required. Runaway garbage, `let`-locals and failed IDE saves recover.
+Observed in the emulator; on the device the message and the returning prompt
+were seen and the freeing attempt was not repeated.
+
+Observed once on the device in 2.5.3, cause unknown: after mounting a disk
+through the Freezer and returning with F3 the display went black and the Freezer
+hung; a power cycle was needed and the host readback showed every disk intact.
+It did not recur in three later swaps. Save work and keep backups before a
+Freezer swap. A physical `C-x C-s` on a 50x40 buffer took several minutes once
+(the file was written correctly; wait for SAVED).
+
+Still open in 2.5.3: `mapcan` with more than 12 input elements; individual
+string literals over 255 bytes (`*** VM: BAD BYTECODE`); closures that capture
+a `let` variable (`*** VM: BAD BYTECODE` at the Comfort prompt, the
+anonymous-`lambda` limitation, also in 2.5.2); physical `C-x C-c`
+(use `C-x q`); disks with REL files, GEOS files or a 1581 boot sector are
+refused for writing; a byte-identical clone disk swapped in after the remount
+is not detected; a swap before the first write of a save reports status 12;
+no reclaim of leaked blocks; a disk chain changed between the loader's two
+read passes is not rejected. Comfort input limits are unchanged from 2.5.2
+(32 pending lines, 640 bytes, 250-character line, ten history entries of at
+most 250 bytes each).
+
+The compile-time nesting depth of `setq` and `let` forms equals 2.5.2 (gate
+`lcc-nesting-ladder-check`, 35 shapes).
+
+Measured so far, in the emulator on the Seed r8 medium (its D81 and ELF are
+byte-identical to the Final r8, so the rows ran on the identical medium; see
+the release notes): Comfort rows 79/79, Backspace rows 7/7, boot to `l65>`
++4.2 % to +4.4 % cycles against 2.5.2 (unchanged against the unshipped r7
+candidate), Comfort typing mean 1,146,728 against 1,130,909 cycles/key
+(+1.40 %, per-key median unchanged), native `.text` +340 B (cap +368 B, owner
+decision 2026-10-02). These are emulator cycle measurements, not device
+timings. Device results for 2.5.3: PASSED on a physical MEGA65 on 2026-10-03 (tool clock: 42.8 s to the first empty `l65>`; owner stopwatch about 43 s from `run`). Capacity (emulator, measured on
+the r7 medium of an unshipped candidate and not repeated on r8): 7,088 bytes
+of code space free at boot; `require` of `defstruct` costs 1,038 bytes and 24
+symbols, `inspect` 558 bytes and 67 symbols, `buffer` 104 bytes; at most 64
+code images. Running out of code space or images prints
+`*** VM: OUT OF MEMORY` and the prompt returns. See the
+[2.5.3 release notes](releases/2.5.3.md) for the complete list.
+
+The 2.5.2 and 2.5.1 text below is historical. Statements there that save and
+`eval-buffer` build a whole-buffer list, that the loader removes trailing
+spaces and carriage returns, that a full directory is rejected on remount,
+that a damaged allocation map can pass mounting, that switching a single
+buffer loses text, that a stale mark can misplace typing, and that LCC drops
+later `setq` pairs describe 2.5.2, not 2.5.3.
+
+---
+
+# lisp65 2.5.2 — previous release boundary (historical)
+
+2.5.2 was 2.5.1 plus faster line editing, reopening earlier Comfort input and
 a disk-directory fix. At an empty Comfort continuation line, Backspace reopens
 the previous line (`[edit previous line]`); delete any automatic indentation
 first. Up/Down still browse history. Comfort input limits: up to 32 pending
@@ -15,7 +108,8 @@ timings. Saving into the first entry of a directory sector no longer erases
 the link to the next directory sector. Individual string literals over 255
 bytes still fail to compile with `*** VM: BAD BYTECODE`; the 640-byte source
 limit does not enlarge the literal format. See the
-[2.5.2 release notes](releases/2.5.2.md) for the complete list.
+[2.5.2 release notes](releases/2.5.2.md) for the complete list. 2.5.2 was
+published on 2026-09-30.
 
 The 2.5.1 text below is historical. Its statement that continuation lines are
 not editable after Return and its older typing figures describe that
@@ -95,6 +189,13 @@ temporary code image that is retired at the end of its form; until such
 callables can be promoted to persistent publications, the refusal prevents
 a later call through a dangling handle. Workaround: place the `lambda`
 inside a `defun` body, or define a named function with `defun` instead.
+
+2.5.3 observation (emulator, Seed r8 medium; probes `bb-r8`, `bb-253`,
+`bb-252` in `build/card-253-rows-r8`): at the Comfort prompt, `funcall` of an
+anonymous `lambda` that captures a `let` variable, even
+`(funcall (lambda () (setq s i)))`, gives `*** VM: BAD BYTECODE` and the prompt
+returns. This is the same top-level refusal; it is identical on 2.5.2 and on
+the unshipped 2.5.3 r7 candidate.
 
 ### `require` inside a temporary compiled form
 

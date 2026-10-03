@@ -5,7 +5,17 @@
 ;;   5 directory-full, 6 read-invalid, 7 write-verify-failed,
 ;;   8 needs-remount, 9 committed-with-leak, 10 product-media-read-only,
 ;;   11 retired wrong-work-media tombstone (never emitted by this version),
-;;   12 media-changed-during-transaction (terminal; explicit restart only).
+;;   12 media-changed-during-transaction (terminal; explicit restart only),
+;;   13 allocation-inconsistent (remount refused; latched).
+;;
+;; Write enable (D2/D4): only a successful m65d-remount enables writes.  It
+;; checks BAM counts, the directory and full block ownership (every block of
+;; every visible file chain is allocated, no block is owned twice, and no
+;; allocated data block is unowned), then binds the enable to the checked
+;; medium's header identity.  m65d-save stays a cons while a transaction
+;; runs, so a non-local exit (RUN/STOP, VM error) leaves the media latched:
+;; the next write needs a remount, which repeats the check and refuses a
+;; medium with leaked or conflicting blocks.  Nothing is reclaimed here.
 ;;
 ;; The new chain is selected from exactly one BAM sector.  The visible commit
 ;; point is the directory-sector write; the old chain is released afterwards.
@@ -15,10 +25,9 @@
 ;; private state names and additional directory entries.
 
 (defun %m65d-set (code latch)
-  ;; Status 11 is retired and never emitted.  In the dense live status range,
-  ;; 9 + 12 = 21 is therefore the unique overwrite pair that must be blocked:
-  ;; a post-commit leak warning may not erase terminal media-change status.
-  (if (= (+ code (m65d-status)) 21)
+  ;; A post-commit leak warning (9) may not erase terminal media-change
+  ;; status (12).  Explicit pair test: a sum test would also block 8 after 13.
+  (if (if (= code 9) (= (m65d-status) 12) nil)
       12
       (progn
         (set-symbol-value (quote m65d-status) code)
@@ -29,7 +38,10 @@
 ;; non-NIL status code and returns NIL; this is the compact form of SET/DROP/NIL.
 
 (defun %m65d-latched-p ()
-  (eq (if (boundp (quote m65d-remount)) (symbol-value (quote m65d-remount)) t) t))
+  ;; m65d-save is bound whenever m65d-remount holds a mount identity.
+  (if (eq (if (boundp (quote m65d-remount)) (symbol-value (quote m65d-remount)) t) t)
+      t
+      (consp (symbol-value (quote m65d-save)))))
 
 (defun m65d-status ()
   (if (boundp (quote m65d-status)) (symbol-value (quote m65d-status)) 0))
@@ -124,27 +136,18 @@
 (defun %m65d-bam-base (track)
   (+ 16 (* 6 (if (< track 41) (- track 1) (- track 41)))))
 
+;; 2.5.3 offset diet for the D2/D4 owner check: shift/divide/logand opcodes
+;; replace the former if-chains (same results for sector 0..39).
 (defun %m65d-mask (sector)
-  (let ((r (mod sector 8)))
-    (if (= r 0) 1
-        (if (= r 1) 2
-            (if (= r 2) 4
-                (if (= r 3) 8
-                    (if (= r 4) 16
-                        (if (= r 5) 32
-                            (if (= r 6) 64 128)))))))))
+  (ash 1 (mod sector 8)))
 
 (defun %m65d-bitmap-off (track sector)
-  (+ (+ (%m65d-bam-base track) 1)
-     (if (< sector 8) 0
-         (if (< sector 16) 1
-             (if (< sector 24) 2 (if (< sector 32) 3 4))))))
+  (+ (+ (%m65d-bam-base track) 1) (/ sector 8)))
 
 (defun %m65d-bit-free-p (track sector)
-  (let ((mask (%m65d-mask sector)))
-    (>= (mod (%disk-byte (%m65d-bitmap-off track sector))
-             (+ mask mask))
-        mask)))
+  (not (= (logand (%disk-byte (%m65d-bitmap-off track sector))
+                  (%m65d-mask sector))
+          0)))
 
 (defun %m65d-bam-header-ok-p (bam)
   (if (= bam 1)
@@ -215,26 +218,35 @@
                 nil)))))
 
 (defun %m65d-dir-entries (codes entry track sector free)
+  ;; Long branches sit in tail (else) position so rel8 jumps stay short.
   (if (= entry 8)
       free
       (let ((base (* entry 32)))
-        (if (%load-entry-used-p base)
-            (if (%m65d-entry-valid-p base)
-                (if (%load-entry-match-p codes base)
-                    (if (if free (= (car free) 1) nil)
-                        (not (%m65d-set 6 nil))
-                        (%m65d-dir-entries
-                         codes (+ entry 1) track sector
-                         (list 1 track sector entry
-                               (%load-entry-byte base 3)
-                               (%load-entry-byte base 4)
-                               (%load-entry-byte base 30)
-                               (%load-entry-byte base 31))))
-                    (%m65d-dir-entries codes (+ entry 1) track sector free))
-                (not (%m65d-set 6 nil)))
+        (if (not (%load-entry-used-p base))
             (%m65d-dir-entries
              codes (+ entry 1) track sector
-             (if free free (list 0 track sector entry)))))))
+             (if free free (list 0 track sector entry)))
+            (if (not (%m65d-entry-valid-p base))
+                (not (%m65d-set 6 nil))
+                (if (consp codes)
+                    (if (%load-entry-match-p codes base)
+                        (if (if free (= (car free) 1) nil)
+                            (not (%m65d-set 6 nil))
+                            (%m65d-dir-entries
+                             codes (+ entry 1) track sector
+                             (list 1 track sector entry
+                                   (%load-entry-byte base 3)
+                                   (%load-entry-byte base 4)
+                                   (%load-entry-byte base 30)
+                                   (%load-entry-byte base 31))))
+                        (%m65d-dir-entries codes (+ entry 1) track sector free))
+                    ;; Remount ownership mode: CODES is the owner map.
+                    (if (%m65d-own-chain codes
+                                         (%load-entry-byte base 3)
+                                         (%load-entry-byte base 4)
+                                         track sector)
+                        (%m65d-dir-entries codes (+ entry 1) track sector free)
+                        (not (%m65d-set 13 nil)))))))))
 
 (defun %m65d-dir-scan (codes track sector fuel free)
   (if (= fuel 0)
@@ -247,7 +259,7 @@
                         ;; 32-byte regions is a directory slot.
                         (if (if (= track 40) (= sector 0) nil) 8 0)
                         track sector free)))
-            (if (= (m65d-status) 6)
+            (if (> (m65d-status) 5)
                 nil
                 (let ((next-track (%disk-byte 0))
                       (next-sector (%disk-byte 1)))
@@ -262,6 +274,40 @@
                               (not (%m65d-set 6 nil)))
                           (not (%m65d-set 6 nil)))))))
           (not (%m65d-set 6 nil)))))
+
+;; Owner map OWN: a zeroed 512-byte buffer with the byte layout of BAM1
+;; (offset 0) and BAM2 (offset 256); a set bit = owned by a visible chain.
+;; Each block must be a data sector (tracks 1-80 except 40, sector < 40) not
+;; yet owned; an owned block means a cross-link or a cycle.  At the chain
+;; end the directory sector DT/DS is reloaded for the caller.  One sector
+;; read per owned block, no cons per block.
+(defun %m65d-own-chain (own track sector dt ds)
+  (if (= track 0)
+      (%disk-read-sector dt ds)
+      (if (if (< sector 40) (if (< track 81) (not (= track 40)) nil) nil)
+          (let ((off (+ (%m65d-bitmap-off track sector) (if (< track 41) 0 256)))
+                (mask (%m65d-mask sector)))
+            (let ((byte (%buffer-read 2 own off)))
+              (if (if (= (logand byte mask) 0)
+                      (%disk-read-sector track sector)
+                      nil)
+                  (progn
+                    (%buffer-write own off (+ byte mask))
+                    (%m65d-own-chain own (%disk-byte 0) (%disk-byte 1) dt ds))
+                  nil)))
+          nil)))
+
+;; Allocated == owned: each bitmap byte of tracks 1-39 and 41-80 must be
+;; the exact complement of the owner byte.  Offsets = 4 (mod 6) are
+;; free-count bytes; BAM1 stops before track 40 (offset 250).
+(defun %m65d-own-cmp (own off last shift)
+  (if (> off last)
+      t
+      (if (if (= (mod off 6) 4)
+              t
+              (= (+ (%disk-byte off) (%buffer-read 2 own (+ off shift))) 255))
+          (%m65d-own-cmp own (+ off 1) last shift)
+          nil)))
 
 (defun %m65d-find-dir (name)
   (%m65d-dir-scan (string->list name) 40 0 40 nil))
@@ -558,12 +604,12 @@
       (if (= kind 0)
           (progn
             (%disk-write-sector)
+            ;; Identity = the checked mount identity; a medium swapped since
+            ;; the remount fails the first before-write check unwritten.
             (set-symbol-value
              (quote m65d-save)
              (cons (symbol-value (quote m65d-remount))
-                   (cons (%disk-byte 22)
-                         (cons (%disk-byte 23)
-                               (%m65d-media-detail 15 nil)))))
+                   (symbol-value (quote m65d-remount))))
             ;; A Freezer swap can interpose during read-only planning after
             ;; token capture.  The one-argument capability reclassifies only
             ;; read-invalid with a changed native token from 6 to terminal 12;
@@ -572,9 +618,12 @@
             ;; exact value returned to the caller through m65d-status as well.
             ;; Planning still precedes every write, so status 12 is terminal
             ;; for this call but does not require the partial-write latch.
-            (%m65d-set
-             (%disk-write-sector (%m65d-run-authorized name src new-only))
-             nil))
+            ;; Normal return closes the transaction (m65d-save := status).
+            (set-symbol-value
+             (quote m65d-save)
+             (%m65d-set
+              (%disk-write-sector (%m65d-run-authorized name src new-only))
+              nil)))
           (%m65d-set kind t)))))
 
 (defun %m65d-run (name src new-only)
@@ -591,12 +640,31 @@
 (defun m65d-save-new (name src)
   (if (stringp src) (%m65d-run name src t) (%m65d-set 3 nil)))
 
-(defun %m65d-remount-finish ()
-  (if (%m65d-dir-scan (list 0) 40 0 40 nil)
-      (progn
-        (set-symbol-value (quote m65d-remount) (cons nil nil))
-        (%m65d-set 0 nil))
-      (%m65d-set 6 nil)))
+(defun %m65d-remount-finish (own)
+  ;; The scan result may be NIL for a full directory; only the status
+  ;; decides (0 = directory valid and every chain owned exactly once).
+  ;; Long branches sit in tail (else) position to keep rel8 jumps short.
+  (progn
+    (%m65d-dir-scan own 40 0 40 nil)
+    (if (not (= (m65d-status) 0))
+        (m65d-status)
+        (if (not (if (%disk-read-sector 40 1)
+                     (if (%m65d-own-cmp own 16 249 0)
+                         (if (%disk-read-sector 40 2)
+                             (%m65d-own-cmp own 16 255 256)
+                             nil)
+                         nil)
+                     nil))
+            (%m65d-set 13 t)
+            (if (not (= (%m65d-media-kind) 0))
+                (%m65d-set 6 t)
+                (progn
+                  (set-symbol-value (quote m65d-save) nil)
+                  (set-symbol-value
+                   (quote m65d-remount)
+                   (cons (%disk-byte 22)
+                         (cons (%disk-byte 23) (%m65d-media-detail 15 nil))))
+                  0))))))
 
 (defun %m65d-remount-work ()
   (if (if (%disk-read-sector 40 1)
@@ -610,11 +678,12 @@
                   nil)
               nil)
           nil)
-      (%m65d-remount-finish)
-      (%m65d-set 6 nil)))
+      (%m65d-remount-finish (%buffer-alloc 0 512))
+      (%m65d-set 6 t)))
 
 (defun m65d-remount ()
-  (let ((kind (%m65d-media-kind)))
+  ;; Clear stale status and withdraw write enable until the check passes.
+  (let ((kind (progn (%m65d-set 0 t) (%m65d-media-kind))))
     (if (= kind 0)
         (%m65d-remount-work)
         (%m65d-set kind t))))

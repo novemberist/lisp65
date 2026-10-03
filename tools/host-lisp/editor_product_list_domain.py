@@ -1,12 +1,27 @@
 """Require the live V2 editor's resolved list functions to match the product."""
 from pathlib import Path
 import copy
+import json
 
 ROOT = Path(__file__).resolve().parents[2]
+SUCCESSOR_CONFIG = ROOT / 'config/editor-product-list-domain-successor-20260930.json'
+
+def successor_contract():
+    config = json.loads(SUCCESSOR_CONFIG.read_text())
+    if config.get('format') != 'lisp65-editor-product-list-domain-successor-v1':
+        raise ValueError('unsupported editor product list domain successor')
+    contract = ROOT / config['contract']
+    if (not contract.is_file()
+            or config.get('source') != 'lib/domain-tier1.lisp'
+            or config.get('functions') != ['length', '%length-from', 'nth', 'nthcdr']
+            or 'proper finite list spine' not in config.get('nth_domain', '')):
+        raise ValueError('missing editor product list domain successor contract')
+    return config
 
 def product_forms():
     import bytecode_p0_stdlib as S
     from v2_workbench_codemod import rewrite_tokens
+    successor_contract()
     return {f[1]: f for f in S.C.parse_all(rewrite_tokens(
         (ROOT / 'lib/domain-tier1.lisp').read_text())[0])
         if isinstance(f, list) and f and f[0] == 'defun'}

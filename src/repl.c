@@ -253,6 +253,10 @@ void repl(void) {
         (void)lisp65_error_render_pending();
         emit('\n');
         lisp65_error_clear();
+        /* The abort crossed the mem_oom report below: left set, the first
+         * allocating VM op of the next read-line entry reports OOM again,
+         * forever.  Clear it at every landing (2.5.3 OOM-hang fix). */
+        mem_oom = 0;
         gc_rootsp = 0;                                    /* Roots der abgebrochenen eval verwerfen */
     }
     lisp_toplevel_active = 1;

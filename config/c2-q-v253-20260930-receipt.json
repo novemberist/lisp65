@@ -1,0 +1,374 @@
+{
+  "claim_limit": "Host source and bytecode only",
+  "current": {
+    "artifacts": {
+      "baseline": {
+        "code_bytes": 16543,
+        "manifest": {
+          "bytes": 316115,
+          "content": "@scratch/base/stdlib-p0.manifest.json",
+          "sha256": "5823b6c964c720bcba3e8932b1fe6b41ef3cdccbe60daae045600821415f3751"
+        },
+        "objects": 365
+      },
+      "candidate": {
+        "code_bytes": 17994,
+        "manifest": {
+          "bytes": 341327,
+          "content": "@scratch/candidate/stdlib-p0.manifest.json",
+          "sha256": "a6afe6adf33dc62c44c999757a7b96f63e4d026151a4ccb4bfae600060b14eb7"
+        },
+        "objects": 391
+      },
+      "current_composition": {
+        "bank2_headroom_bytes": 19597,
+        "bank2_static_code_bytes": 45939,
+        "direct_entry_refs": 674,
+        "entries": 753,
+        "entry_headroom": 1295,
+        "resolution_headroom": 1176,
+        "resolutions": 2920,
+        "root_headroom": 1186,
+        "roots": 350
+      },
+      "delta": {
+        "bank2_code_bytes": 1451,
+        "directory_bytes": 182,
+        "objects": 26,
+        "resident_bytes": 0,
+        "resolution_words": 71
+      },
+      "execution": {
+        "artifact_cases_total": 259,
+        "independent_oracle_cases_per_lane": 36,
+        "math_io_witness_rows": 38,
+        "observations": {
+          "bytes": 34443,
+          "content": "@scratch/candidate/observations.json",
+          "sha256": "8c14c98a2d4b6a7f2a09ed4249e99cc3390daf169851cdb753683602362e40d8"
+        },
+        "source_cases_total": 259,
+        "source_stdout": [
+          "bytecode-p0-stdlib-check: PASS suites=1 functions=390 cases=259 objects=665 code_bytes=23645 dir_bytes=4655 steps=85540",
+          "bytecode-p0-stdlib-artifacts: WROTE @scratch/candidate/stdlib-p0 objects=391 code_bytes=17994 ext_bytes=40826 dir_bytes=2737 manifest=@scratch/candidate/stdlib-p0.manifest.json disasm=@scratch/candidate/stdlib-p0.disasm.txt",
+          "bytecode-p0-stdlib-embed-check: PASS cases=259 objects=391 literal_nodes=868 literal_patches=818 steps=85540"
+        ],
+        "tracked_q_cases_per_lane": 12
+      },
+      "projected_post_Link80": {
+        "bank2_headroom_bytes": 22600,
+        "bank2_static_code_bytes": 42936,
+        "direct_entry_refs": 656,
+        "entries": 722,
+        "entry_headroom": 1326,
+        "resolution_headroom": 1265,
+        "resolutions": 2831,
+        "root_headroom": 1186,
+        "roots": 350
+      }
+    },
+    "authority": {
+      "base_suite": {
+        "bytes": 1726,
+        "path": "tests/bytecode/libs/p0-stdlib-random-base.json",
+        "sha256": "e0cf8deb82d41a44f013632f923d76c61237436ecc4d7573f4519faad7824722"
+      },
+      "contract": {
+        "bytes": 4351,
+        "path": "config/c2-q-contract.json",
+        "sha256": "4f884536eceb1a8852df8a92c57d5827904084f4fe7c9c94e9ec64e9f16b602e"
+      },
+      "design": {
+        "bytes": 10548,
+        "path": "docs/planning/1.3-ship-builder-work-plan.md",
+        "sha256": "cef44642805ad5c258607e299342c56f0c1d1a3b66bd9542abcf7a754f4fd517"
+      },
+      "gate": {
+        "bytes": 26018,
+        "path": "tools/host-lisp/c2_q_gate.py",
+        "sha256": "7f4e812521b501b63eb7177eae41e0587e58b4e9cbaebdb446207946dc3162a8"
+      },
+      "host_vm": {
+        "bytes": 115963,
+        "path": "tools/host-lisp/bytecode_p0.py",
+        "sha256": "957c473e3fc576ab005d28df177def635d1840de8a8f4e14265c31a5749bcccf"
+      },
+      "profile": {
+        "bytes": 6456,
+        "path": "config/c2-l-full-product-profile.json",
+        "sha256": "01893e5c4743bbe2a5a6dacabdf9f8f9cede3de57148c8a0b0feb0f0e2caa228"
+      },
+      "source": {
+        "bytes": 5826,
+        "path": "lib/stdlib-q.lisp",
+        "sha256": "de9f66d3f8b2ce50f668f3118016eda4f1d0123a4d30252c5aaaa51c81ab90d3"
+      },
+      "stdlib_runner": {
+        "bytes": 136327,
+        "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+        "sha256": "39d91ab5d63232bfae13e19bffa45a280245239930e61c65f2073b36e3201528"
+      },
+      "suite": {
+        "bytes": 2680,
+        "path": "tests/bytecode/libs/p0-stdlib-q-base.json",
+        "sha256": "c80ea37e281befc109730fa06c2085fd2686ff494f8acda8a34276f72902b6a2"
+      }
+    },
+    "claim_limit": "Independent host arithmetic, source/artifact P0 execution over a modeled math register file and projected capacity only; no target register or on-metal q claim.",
+    "composition": {
+      "product_build_id": "0x14d980c3",
+      "successors": [
+        "time",
+        "require-option-A",
+        "ship-v1.3"
+      ]
+    },
+    "format": "lisp65-q-renderer-host-successor-v1",
+    "hardware_runs": 0,
+    "mutations_rejected": {
+      "built-but-not-executed": "q execution witness absent: q-multiply-main",
+      "legacy-public-alias": "q public surface revived a legacy fx alias",
+      "legacy-source-reintroduced": "q revived its legacy implementation or require dependency",
+      "math-inside-multiply-transaction": "arithmetic entered the shared math-unit transaction",
+      "parked-defstruct-dependency": "q base-composition suite drift",
+      "require-dependency": "q revived its legacy implementation or require dependency",
+      "resident-byte": "q placement contract drift",
+      "scale-256": "q semantic contract drift",
+      "truncate-rounding": "q semantic contract drift",
+      "wrong-fraction-contract-byte": "q math-register contract drift",
+      "wrong-fraction-high-byte": "q result-register read drift",
+      "wrong-product-low-byte": "q result-register read drift"
+    },
+    "next_gate": "Host successor requalification only; no new product or device claim.",
+    "predecessor": {
+      "bytes": 6057,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.3-q-host-first-receipt.json",
+      "sha256": "54349debb44bc6b3b638de52ed0a1d68ac1ad866a84a3896e558b8a93289cb50"
+    },
+    "product_links": 0,
+    "promotable": false,
+    "recorded_on": "2026-09-07",
+    "source_contract": {
+      "private_functions": 18,
+      "public_functions": [
+        "q",
+        "int->q",
+        "q->int",
+        "q+",
+        "q-",
+        "q*",
+        "q/",
+        "q->string"
+      ],
+      "require_dependency": false,
+      "resident_delta_bytes": 0,
+      "runtime_overlay_records": 0,
+      "status": "passed-Q8.7-source-and-transaction-contract",
+      "transaction_input_writes": 8
+    },
+    "status": "passed-q-host-reference-modeled-register-and-capacity",
+    "successor_mutations": [
+      "stale-host-vm",
+      "host-vm-omitted",
+      "artifact-result-diverges"
+    ]
+  },
+  "date": "2026-09-29",
+  "device_contacts": 0,
+  "format": "lisp65-o2-lite-consumer-successor-v1",
+  "inputs": [
+    {
+      "bytes": 870,
+      "path": "tools/host-lisp/c2_q_o2_lite_20260929.py",
+      "sha256": "1714becc11966f6e64ba792c6e64bf1ca8ac41c435eceb63c671bd9525ab4eac"
+    },
+    {
+      "bytes": 3285,
+      "path": "tools/host-lisp/c2_q_o2_lite_v253_20260930.py",
+      "sha256": "82cb21b3476a10889f209d0106f9a55f2c4afaf4f787ecf523b00a5b5aa48773"
+    },
+    {
+      "bytes": 2246,
+      "path": "tools/host-lisp/c2_q_strings_r2_20260928.py",
+      "sha256": "a46ef6044b29bb267e160b58c95b193e0aea9429626c89feab42e9641ea0f2ab"
+    },
+    {
+      "bytes": 1627,
+      "path": "config/comfort-default-plane/libraries/repl-comfort-suite.json",
+      "sha256": "b64e297d15b1da2990f46583d43c5e6fa4a15abc24ff529e752ab7d8d9c5ebe9"
+    },
+    {
+      "bytes": 296127,
+      "path": "config/strings-source-baseline-r2-20260928.json",
+      "sha256": "5ffa21ce2806310091a17b6e14bed5a99d10f9acb9fa228c35c16fc2d2a1e55a"
+    },
+    {
+      "bytes": 4645,
+      "path": "config/v2-workbench-artifact-closure.json",
+      "sha256": "14063936184dd194964f69899801558ab0d287e5ff62cc2f942571d2bf77d610"
+    },
+    {
+      "bytes": 1114,
+      "path": "lib/lite-hot.lisp",
+      "sha256": "70ae2b48cccdddf8ccfdd0671de20141a391fefcf56586dad1eff2237198c92f"
+    },
+    {
+      "bytes": 4111,
+      "path": "lib/lite.lisp",
+      "sha256": "367d07dc3b5adf8a60c2ad655e9ca2bab867f0b7295a90eae0287c88786d3ffc"
+    },
+    {
+      "bytes": 5103,
+      "path": "lib/repl-comfort-v250.lisp",
+      "sha256": "138127b73e3cf3fc36844d1e548da75146589f1e5d9aa3bec963d8875669a293"
+    },
+    {
+      "bytes": 6815,
+      "path": "lib/sexp-depth.lisp",
+      "sha256": "05b436332b15c87c7fd5a5edd38c4194392a5e4c3a91a99927f31f617adcebac"
+    },
+    {
+      "bytes": 25680,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "5e758c50ac07bbf8e826da15ef274c59c274c8604014825f849b5dfb7743f597"
+    },
+    {
+      "bytes": 9585,
+      "path": "tests/bytecode/libs/p0-ide-core-lib.json",
+      "sha256": "efc0058c870ff0a7e91f449947d66f14ef79cb19c6235854115b7476f3f068d5"
+    },
+    {
+      "bytes": 44813,
+      "path": "tests/bytecode/libs/p0-ide-lib.json",
+      "sha256": "ccbf4d5835cbe3cbbbcc51d7cf008a2c557f16a99c6739248bd87f7881d272c6"
+    },
+    {
+      "bytes": 20937,
+      "path": "tests/bytecode/libs/p0-repl-comfort-v240.json",
+      "sha256": "3b28254ae0fee5ea6d86934f3d34e99ef423d96a55f8c804aecb028e91d9cdd6"
+    },
+    {
+      "bytes": 9468,
+      "path": "tests/bytecode/libs/p0-repl-comfort-v250.json",
+      "sha256": "d573c13ed7221c8d0ab0473a2224c51b189ff7a83ac5887af6d8e0417f093eb9"
+    },
+    {
+      "bytes": 8471,
+      "path": "tests/bytecode/libs/p0-stdlib-m65-hw-base-o2-lite-20260929.json",
+      "sha256": "4ebeea30d2ed336ee0dc135c39e5d4c15aaeb68a97a213dd53b8b99e9a133966"
+    },
+    {
+      "bytes": 7562,
+      "path": "tests/bytecode/libs/p0-stdlib-m65-hw-base.json",
+      "sha256": "02258f69e1c52f14cb00bc844cea5c1f7a315db9cebb529235563d47a0441a5a"
+    },
+    {
+      "bytes": 23878,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base-o2-lite-20260929.json",
+      "sha256": "5228e3d1717f407aef94eb987cec66df3afcaee34634e80053d99c4005b2e659"
+    },
+    {
+      "bytes": 23833,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "sha256": "3b1e7d7b1463ead39560fc87f760d816fbdabcec4b0920ea12d94dbe8f889243"
+    },
+    {
+      "bytes": 5473,
+      "path": "tests/bytecode/libs/p0-v160-comfort-device-delta-o2-lite-20260929.json",
+      "sha256": "52a2323d86b63acfcf3817be0c312945910b63debb91992e59812de9d82d2230"
+    },
+    {
+      "bytes": 5273,
+      "path": "tests/bytecode/libs/p0-v160-comfort-device-delta.json",
+      "sha256": "43cdca749b0c0be86ca9e2609c43f9081148a0880e7f152f77e25108970ea126"
+    },
+    {
+      "bytes": 3498,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-subset.json",
+      "sha256": "1954ff4d05a449700b7e8e474c366d7f3d060489f32aa34bdaa73db91084d780"
+    },
+    {
+      "bytes": 5731,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+      "sha256": "cb59849ff0514772ef058e816fb8cfa155dc59077f1189b2497c9d2b8fb69769"
+    },
+    {
+      "bytes": 7969,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-fasl-subset.json",
+      "sha256": "612e0ddfb6863ce61457b8e18503bf9688b74a655bdaac3c200b04c5d6dbc854"
+    },
+    {
+      "bytes": 48076,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-subset.json",
+      "sha256": "69710c7274c8180ea75246c84612f17f4cb967f6c97aec84d7f9bdfdd2b5b83a"
+    },
+    {
+      "bytes": 44224,
+      "path": "tests/bytecode/stdlib/p0-stdlib-subset.json",
+      "sha256": "c4e9bde7ded67444ca1a106cefc2d9883933970c65f8a5b26034c46120930acb"
+    },
+    {
+      "bytes": 42596,
+      "path": "tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json",
+      "sha256": "b1f2c811497ceaed47fdefd79651e61607d712d0919c3e0bc28ac8bf7f300f58"
+    },
+    {
+      "bytes": 136327,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "39d91ab5d63232bfae13e19bffa45a280245239930e61c65f2073b36e3201528"
+    },
+    {
+      "bytes": 26018,
+      "path": "tools/host-lisp/c2_q_gate.py",
+      "sha256": "7f4e812521b501b63eb7177eae41e0587e58b4e9cbaebdb446207946dc3162a8"
+    },
+    {
+      "bytes": 870,
+      "path": "tools/host-lisp/c2_q_o2_lite_20260929.py",
+      "sha256": "1714becc11966f6e64ba792c6e64bf1ca8ac41c435eceb63c671bd9525ab4eac"
+    },
+    {
+      "bytes": 2246,
+      "path": "tools/host-lisp/c2_q_strings_r2_20260928.py",
+      "sha256": "a46ef6044b29bb267e160b58c95b193e0aea9429626c89feab42e9641ea0f2ab"
+    },
+    {
+      "bytes": 7941,
+      "path": "tools/host-lisp/o2_lite_consumers_20260929.py",
+      "sha256": "cc3d578a2c706a7ea8050eba1b653fa73bea03d9fbc7fb07eac10d101d25035f"
+    },
+    {
+      "bytes": 2054,
+      "path": "tools/host-lisp/strings_generated_r11_20260929.py",
+      "sha256": "d152a963539c29be99dbe4bb2fcae3a5d8efa6154436b0184e86c2fb6cab9cc4"
+    },
+    {
+      "bytes": 2819,
+      "path": "tools/host-lisp/strings_scratch_20260928.py",
+      "sha256": "8f28c1d4b5999632f1e6f582eb9563c33807d5fea7fad4e257a2badb03c5e98c"
+    },
+    {
+      "bytes": 5892,
+      "path": "tools/host-lisp/strings_successor_r2_20260928.py",
+      "sha256": "356dde1d524bee27322ab30c2c573835ea6193586e128ceaf174b60152e9380e"
+    },
+    {
+      "bytes": 41312,
+      "path": "tools/host-lisp/v2_workbench_codemod.py",
+      "sha256": "f6eb888d507971701ece085586b6d61d47db9af813ae10e91ef7c67bcb6f5b6a"
+    }
+  ],
+  "predecessor": {
+    "config/c2-q-o2-lite-receipt-20260929.json": "9de815cf3f114fedf93777ac65f9c946756358c652dcaa43c03d5eee1b886b21",
+    "config/c2-q-receipt-strings-20260928.json": "3fba8689db7c007fe7919a34b59173ba7619c7c1a048d1f77e1fc76e6356d7d4",
+    "config/c2-q-receipt-strings-r2-20260928.json": "3c164559de6af3f2c5eb8acea86bdfd2e1e34f26200cd972b0d5bec47a7c9780",
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-q-renderer-host-successor-receipt.json": "16af5d0def9d363b0f58682f52fcd909d3f6f1586443d31a42346b4512cf7cd7",
+    "tools/host-lisp/c2_q_gate.py": "7f4e812521b501b63eb7177eae41e0587e58b4e9cbaebdb446207946dc3162a8",
+    "tools/host-lisp/c2_q_o2_lite_20260929.py": "1714becc11966f6e64ba792c6e64bf1ca8ac41c435eceb63c671bd9525ab4eac",
+    "tools/host-lisp/c2_q_strings_20260928.py": "f24c59d4524b4dc70b0521039041490010012ddada060b8e07d25f28421b07e3",
+    "tools/host-lisp/c2_q_strings_r2_20260928.py": "a46ef6044b29bb267e160b58c95b193e0aea9429626c89feab42e9641ea0f2ab"
+  },
+  "product_links": 0,
+  "status": "PASS",
+  "xemu_runs": 0
+}

@@ -1,0 +1,1102 @@
+{
+ "format": "card253-rows-v2",
+ "status": "expected texts fixed on the host 2026-10-01 (D-6); emulator/device not run",
+ "authority": "worktree@d1937e4bf35618303b7e316426ef13f159a19a3a",
+ "oracle_receipt": {
+  "path": "build/card-253-row-oracles-dry-r3/receipt.json",
+  "sha256": "de67944318d6dfb251043c0edf1de3ff427f6c71be4b0dde7ac32596774cfc88"
+ },
+ "preflight": {
+  "path": "build/card-253-preflight-dry-rehearsal-r3/receipt.json",
+  "bytes": 116865,
+  "sha256": "6fd62ed4727bc73ea0f1533358e629bff8c1bb5d822aabe27ff4e5bc4536d977"
+ },
+ "screen_rule": "REPL echo upper-cased (screen decode, as the 2.5.2 rows: T, NIL); errors \"*** \" + upper(config/error-texts.json text of the stable code)",
+ "draft": {
+  "path": "build/card-253-seed-prep-r1/rows-253.json",
+  "sha256": "2b9b7af8b956adf27d4231c591047a985e813775b378e46139fa683782201bbe"
+ },
+ "inherited_2_5_2": {
+  "emulator": [
+   "o2_lite_emulator rows 79/79",
+   "backspace 7/7",
+   "lanes",
+   "return timing",
+   "GC stress scenarios return250,pending32,history10,join640,reopen,reopen-home-delete-refill250,history-home-delete-refill250 (+compare vs v252)"
+  ],
+  "device": "d252 21 automated groups + DISK row + owner physical rows"
+ },
+ "rows": [
+  {
+   "id": "ide-save-20x40",
+   "group": "ide-save",
+   "title": "Save a 20x40-byte buffer (distinct numbered lines, spaces, blank lines)",
+   "setup": [
+    "host-prepared user D81 containing file SRC20X40 (bytes fixed by the row generator) mounted as unit 8 via m65d",
+    "(load-file-to-buffer \"src20x40\")"
+   ],
+   "steps": [
+    "command path: (save-buffer-to \"out20x40\")",
+    "IDE-key path (one row per size): (ide) -> C-x C-s -> name prompt -> Return -> C-x q",
+    "(m65d-remount)",
+    "(dir)",
+    "(load-file-to-buffer \"out20x40\")"
+   ],
+   "expect": "No \"*** VM: OUT OF MEMORY\"; prompt returns; modified mark clears; saved bytes == source bytes (host readback of the D81 after emulator exit, compare every byte, line count, order); reload equals buffer.",
+   "oracle": "host: byte comparison of D81 payload; 2.5.2 baseline: 50x40 ended in OUT OF MEMORY before any disk write (external-review-ide-save-heap-r1)",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(save-buffer-to \"out20x40\" \"big\")",
+      "screen": "T"
+     },
+     {
+      "input": "(ide-error)",
+      "screen": "NIL"
+     }
+    ],
+    "readback": {
+     "lines": 20,
+     "bytes": 739,
+     "sha256": "7ec3bb2a766395589a33604957cda50de033701ff830b3e4050bc5a9c9d115d4",
+     "rule": "file bytes = lines joined by LF, no trailing LF; reload lines identical"
+    },
+    "fixture_lines": [
+     "000 abcdefghij klmnopqrst uvwxyz0123    ",
+     "001 abcdefghij klmnopqrst uvwxyz0123 456",
+     "002 abcdefghij klmnopqrst uvwxyz0123 456",
+     "003 abcdefghij klmnopqrst uvwxyz0123 456",
+     "004 abcdefghij klmnopqrst uvwxyz0123 456",
+     "005 abcdefghij klmnopqrst uvwxyz0123 456",
+     "006 abcdefghij klmnopqrst uvwxyz0123 456",
+     "007 abcdefghij klmnopqrst uvwxyz0123    ",
+     "008 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "010 abcdefghij klmnopqrst uvwxyz0123 456",
+     "011 abcdefghij klmnopqrst uvwxyz0123 456",
+     "012 abcdefghij klmnopqrst uvwxyz0123 456",
+     "013 abcdefghij klmnopqrst uvwxyz0123 456",
+     "014 abcdefghij klmnopqrst uvwxyz0123    ",
+     "015 abcdefghij klmnopqrst uvwxyz0123 456",
+     "016 abcdefghij klmnopqrst uvwxyz0123 456",
+     "017 abcdefghij klmnopqrst uvwxyz0123 456",
+     "018 abcdefghij klmnopqrst uvwxyz0123 456",
+     ""
+    ],
+    "host_result_head": "(t nil (\"000 abcdefghij klmnopqrst uvwxyz0123    \" \"001 abcd",
+    "host_note": "host heap model, not the 9,344 B device arena: a device OOM is still possible and is what the row measures"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "ide-save-50x40",
+   "group": "ide-save",
+   "title": "Save a 50x40-byte buffer (distinct numbered lines, spaces, blank lines)",
+   "setup": [
+    "host-prepared user D81 containing file SRC50X40 (bytes fixed by the row generator) mounted as unit 8 via m65d",
+    "(load-file-to-buffer \"src50x40\")"
+   ],
+   "steps": [
+    "command path: (save-buffer-to \"out50x40\")",
+    "IDE-key path (one row per size): (ide) -> C-x C-s -> name prompt -> Return -> C-x q",
+    "(m65d-remount)",
+    "(dir)",
+    "(load-file-to-buffer \"out50x40\")"
+   ],
+   "expect": "No \"*** VM: OUT OF MEMORY\"; prompt returns; modified mark clears; saved bytes == source bytes (host readback of the D81 after emulator exit, compare every byte, line count, order); reload equals buffer.",
+   "oracle": "host: byte comparison of D81 payload; 2.5.2 baseline: 50x40 ended in OUT OF MEMORY before any disk write (external-review-ide-save-heap-r1)",
+   "path": "emulator+device",
+   "forced_gc_variant": true,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(save-buffer-to \"out50x40\" \"big\")",
+      "screen": "T"
+     },
+     {
+      "input": "(ide-error)",
+      "screen": "NIL"
+     }
+    ],
+    "readback": {
+     "lines": 50,
+     "bytes": 1849,
+     "sha256": "289e9b144bf8a6798201751903c201e9d5c926c50f18f590b1ccd7a433158dd2",
+     "rule": "file bytes = lines joined by LF, no trailing LF; reload lines identical"
+    },
+    "fixture_lines": [
+     "000 abcdefghij klmnopqrst uvwxyz0123    ",
+     "001 abcdefghij klmnopqrst uvwxyz0123 456",
+     "002 abcdefghij klmnopqrst uvwxyz0123 456",
+     "003 abcdefghij klmnopqrst uvwxyz0123 456",
+     "004 abcdefghij klmnopqrst uvwxyz0123 456",
+     "005 abcdefghij klmnopqrst uvwxyz0123 456",
+     "006 abcdefghij klmnopqrst uvwxyz0123 456",
+     "007 abcdefghij klmnopqrst uvwxyz0123    ",
+     "008 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "010 abcdefghij klmnopqrst uvwxyz0123 456",
+     "011 abcdefghij klmnopqrst uvwxyz0123 456",
+     "012 abcdefghij klmnopqrst uvwxyz0123 456",
+     "013 abcdefghij klmnopqrst uvwxyz0123 456",
+     "014 abcdefghij klmnopqrst uvwxyz0123    ",
+     "015 abcdefghij klmnopqrst uvwxyz0123 456",
+     "016 abcdefghij klmnopqrst uvwxyz0123 456",
+     "017 abcdefghij klmnopqrst uvwxyz0123 456",
+     "018 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "020 abcdefghij klmnopqrst uvwxyz0123 456",
+     "021 abcdefghij klmnopqrst uvwxyz0123    ",
+     "022 abcdefghij klmnopqrst uvwxyz0123 456",
+     "023 abcdefghij klmnopqrst uvwxyz0123 456",
+     "024 abcdefghij klmnopqrst uvwxyz0123 456",
+     "025 abcdefghij klmnopqrst uvwxyz0123 456",
+     "026 abcdefghij klmnopqrst uvwxyz0123 456",
+     "027 abcdefghij klmnopqrst uvwxyz0123 456",
+     "028 abcdefghij klmnopqrst uvwxyz0123    ",
+     "",
+     "030 abcdefghij klmnopqrst uvwxyz0123 456",
+     "031 abcdefghij klmnopqrst uvwxyz0123 456",
+     "032 abcdefghij klmnopqrst uvwxyz0123 456",
+     "033 abcdefghij klmnopqrst uvwxyz0123 456",
+     "034 abcdefghij klmnopqrst uvwxyz0123 456",
+     "035 abcdefghij klmnopqrst uvwxyz0123    ",
+     "036 abcdefghij klmnopqrst uvwxyz0123 456",
+     "037 abcdefghij klmnopqrst uvwxyz0123 456",
+     "038 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "040 abcdefghij klmnopqrst uvwxyz0123 456",
+     "041 abcdefghij klmnopqrst uvwxyz0123 456",
+     "042 abcdefghij klmnopqrst uvwxyz0123    ",
+     "043 abcdefghij klmnopqrst uvwxyz0123 456",
+     "044 abcdefghij klmnopqrst uvwxyz0123 456",
+     "045 abcdefghij klmnopqrst uvwxyz0123 456",
+     "046 abcdefghij klmnopqrst uvwxyz0123 456",
+     "047 abcdefghij klmnopqrst uvwxyz0123 456",
+     "048 abcdefghij klmnopqrst uvwxyz0123 456",
+     ""
+    ],
+    "host_result_head": "(t nil (\"000 abcdefghij klmnopqrst uvwxyz0123    \" \"001 abcd",
+    "host_note": "host heap model, not the 9,344 B device arena: a device OOM is still possible and is what the row measures"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "ide-save-100x20",
+   "group": "ide-save",
+   "title": "Save a 100x20-byte buffer (distinct numbered lines, spaces, blank lines)",
+   "setup": [
+    "host-prepared user D81 containing file SRC100X20 (bytes fixed by the row generator) mounted as unit 8 via m65d",
+    "(load-file-to-buffer \"src100x20\")"
+   ],
+   "steps": [
+    "command path: (save-buffer-to \"out100x20\")",
+    "IDE-key path (one row per size): (ide) -> C-x C-s -> name prompt -> Return -> C-x q",
+    "(m65d-remount)",
+    "(dir)",
+    "(load-file-to-buffer \"out100x20\")"
+   ],
+   "expect": "No \"*** VM: OUT OF MEMORY\"; prompt returns; modified mark clears; saved bytes == source bytes (host readback of the D81 after emulator exit, compare every byte, line count, order); reload equals buffer.",
+   "oracle": "host: byte comparison of D81 payload; 2.5.2 baseline: 50x40 ended in OUT OF MEMORY before any disk write (external-review-ide-save-heap-r1)",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(save-buffer-to \"out100x20\" \"big\")",
+      "screen": "T"
+     },
+     {
+      "input": "(ide-error)",
+      "screen": "NIL"
+     }
+    ],
+    "readback": {
+     "lines": 100,
+     "bytes": 1899,
+     "sha256": "2abb52ba8d7cb54068ee421fcce35bd85d1cf78d94b18a3fc3aa3431f058bfdc",
+     "rule": "file bytes = lines joined by LF, no trailing LF; reload lines identical"
+    },
+    "fixture_lines": [
+     "000 abcdefghij kl   ",
+     "001 abcdefghij klmno",
+     "002 abcdefghij klmno",
+     "003 abcdefghij klmno",
+     "004 abcdefghij klmno",
+     "005 abcdefghij klmno",
+     "006 abcdefghij klmno",
+     "007 abcdefghij kl   ",
+     "008 abcdefghij klmno",
+     "",
+     "010 abcdefghij klmno",
+     "011 abcdefghij klmno",
+     "012 abcdefghij klmno",
+     "013 abcdefghij klmno",
+     "014 abcdefghij kl   ",
+     "015 abcdefghij klmno",
+     "016 abcdefghij klmno",
+     "017 abcdefghij klmno",
+     "018 abcdefghij klmno",
+     "",
+     "020 abcdefghij klmno",
+     "021 abcdefghij kl   ",
+     "022 abcdefghij klmno",
+     "023 abcdefghij klmno",
+     "024 abcdefghij klmno",
+     "025 abcdefghij klmno",
+     "026 abcdefghij klmno",
+     "027 abcdefghij klmno",
+     "028 abcdefghij kl   ",
+     "",
+     "030 abcdefghij klmno",
+     "031 abcdefghij klmno",
+     "032 abcdefghij klmno",
+     "033 abcdefghij klmno",
+     "034 abcdefghij klmno",
+     "035 abcdefghij kl   ",
+     "036 abcdefghij klmno",
+     "037 abcdefghij klmno",
+     "038 abcdefghij klmno",
+     "",
+     "040 abcdefghij klmno",
+     "041 abcdefghij klmno",
+     "042 abcdefghij kl   ",
+     "043 abcdefghij klmno",
+     "044 abcdefghij klmno",
+     "045 abcdefghij klmno",
+     "046 abcdefghij klmno",
+     "047 abcdefghij klmno",
+     "048 abcdefghij klmno",
+     "",
+     "050 abcdefghij klmno",
+     "051 abcdefghij klmno",
+     "052 abcdefghij klmno",
+     "053 abcdefghij klmno",
+     "054 abcdefghij klmno",
+     "055 abcdefghij klmno",
+     "056 abcdefghij kl   ",
+     "057 abcdefghij klmno",
+     "058 abcdefghij klmno",
+     "",
+     "060 abcdefghij klmno",
+     "061 abcdefghij klmno",
+     "062 abcdefghij klmno",
+     "063 abcdefghij kl   ",
+     "064 abcdefghij klmno",
+     "065 abcdefghij klmno",
+     "066 abcdefghij klmno",
+     "067 abcdefghij klmno",
+     "068 abcdefghij klmno",
+     "",
+     "070 abcdefghij kl   ",
+     "071 abcdefghij klmno",
+     "072 abcdefghij klmno",
+     "073 abcdefghij klmno",
+     "074 abcdefghij klmno",
+     "075 abcdefghij klmno",
+     "076 abcdefghij klmno",
+     "077 abcdefghij kl   ",
+     "078 abcdefghij klmno",
+     "",
+     "080 abcdefghij klmno",
+     "081 abcdefghij klmno",
+     "082 abcdefghij klmno",
+     "083 abcdefghij klmno",
+     "084 abcdefghij kl   ",
+     "085 abcdefghij klmno",
+     "086 abcdefghij klmno",
+     "087 abcdefghij klmno",
+     "088 abcdefghij klmno",
+     "",
+     "090 abcdefghij klmno",
+     "091 abcdefghij kl   ",
+     "092 abcdefghij klmno",
+     "093 abcdefghij klmno",
+     "094 abcdefghij klmno",
+     "095 abcdefghij klmno",
+     "096 abcdefghij klmno",
+     "097 abcdefghij klmno",
+     "098 abcdefghij kl   ",
+     ""
+    ],
+    "host_result_head": "(t nil (\"000 abcdefghij kl   \" \"001 abcdefghij klmno\" \"002 a",
+    "host_note": "host heap model, not the 9,344 B device arena: a device OOM is still possible and is what the row measures"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "ide-save-100x40-refusal",
+   "group": "ide-save",
+   "title": "100x40 capacity row: controlled refusal or success, never a crash or data loss",
+   "setup": [
+    "load a 100x40 source (4,000 B) if the loader admits it, else build by appending"
+   ],
+   "steps": [
+    "(save-buffer-to \"out100x40\")"
+   ],
+   "expect": "Either success with byte-identical readback, or a named refusal; in both cases previous file content and the unsaved buffer stay intact and the prompt is usable.",
+   "oracle": "Historical arena total 9,406 B > 9,344 B: refusal is the expected outcome; record the exact message and live-cell/arena floor.",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(save-buffer-to \"out100x40\" \"big\")",
+      "screen": "*** VM: OUT OF MEMORY"
+     }
+    ],
+    "fixture_lines": [
+     "000 abcdefghij klmnopqrst uvwxyz0123    ",
+     "001 abcdefghij klmnopqrst uvwxyz0123 456",
+     "002 abcdefghij klmnopqrst uvwxyz0123 456",
+     "003 abcdefghij klmnopqrst uvwxyz0123 456",
+     "004 abcdefghij klmnopqrst uvwxyz0123 456",
+     "005 abcdefghij klmnopqrst uvwxyz0123 456",
+     "006 abcdefghij klmnopqrst uvwxyz0123 456",
+     "007 abcdefghij klmnopqrst uvwxyz0123    ",
+     "008 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "010 abcdefghij klmnopqrst uvwxyz0123 456",
+     "011 abcdefghij klmnopqrst uvwxyz0123 456",
+     "012 abcdefghij klmnopqrst uvwxyz0123 456",
+     "013 abcdefghij klmnopqrst uvwxyz0123 456",
+     "014 abcdefghij klmnopqrst uvwxyz0123    ",
+     "015 abcdefghij klmnopqrst uvwxyz0123 456",
+     "016 abcdefghij klmnopqrst uvwxyz0123 456",
+     "017 abcdefghij klmnopqrst uvwxyz0123 456",
+     "018 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "020 abcdefghij klmnopqrst uvwxyz0123 456",
+     "021 abcdefghij klmnopqrst uvwxyz0123    ",
+     "022 abcdefghij klmnopqrst uvwxyz0123 456",
+     "023 abcdefghij klmnopqrst uvwxyz0123 456",
+     "024 abcdefghij klmnopqrst uvwxyz0123 456",
+     "025 abcdefghij klmnopqrst uvwxyz0123 456",
+     "026 abcdefghij klmnopqrst uvwxyz0123 456",
+     "027 abcdefghij klmnopqrst uvwxyz0123 456",
+     "028 abcdefghij klmnopqrst uvwxyz0123    ",
+     "",
+     "030 abcdefghij klmnopqrst uvwxyz0123 456",
+     "031 abcdefghij klmnopqrst uvwxyz0123 456",
+     "032 abcdefghij klmnopqrst uvwxyz0123 456",
+     "033 abcdefghij klmnopqrst uvwxyz0123 456",
+     "034 abcdefghij klmnopqrst uvwxyz0123 456",
+     "035 abcdefghij klmnopqrst uvwxyz0123    ",
+     "036 abcdefghij klmnopqrst uvwxyz0123 456",
+     "037 abcdefghij klmnopqrst uvwxyz0123 456",
+     "038 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "040 abcdefghij klmnopqrst uvwxyz0123 456",
+     "041 abcdefghij klmnopqrst uvwxyz0123 456",
+     "042 abcdefghij klmnopqrst uvwxyz0123    ",
+     "043 abcdefghij klmnopqrst uvwxyz0123 456",
+     "044 abcdefghij klmnopqrst uvwxyz0123 456",
+     "045 abcdefghij klmnopqrst uvwxyz0123 456",
+     "046 abcdefghij klmnopqrst uvwxyz0123 456",
+     "047 abcdefghij klmnopqrst uvwxyz0123 456",
+     "048 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "050 abcdefghij klmnopqrst uvwxyz0123 456",
+     "051 abcdefghij klmnopqrst uvwxyz0123 456",
+     "052 abcdefghij klmnopqrst uvwxyz0123 456",
+     "053 abcdefghij klmnopqrst uvwxyz0123 456",
+     "054 abcdefghij klmnopqrst uvwxyz0123 456",
+     "055 abcdefghij klmnopqrst uvwxyz0123 456",
+     "056 abcdefghij klmnopqrst uvwxyz0123    ",
+     "057 abcdefghij klmnopqrst uvwxyz0123 456",
+     "058 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "060 abcdefghij klmnopqrst uvwxyz0123 456",
+     "061 abcdefghij klmnopqrst uvwxyz0123 456",
+     "062 abcdefghij klmnopqrst uvwxyz0123 456",
+     "063 abcdefghij klmnopqrst uvwxyz0123    ",
+     "064 abcdefghij klmnopqrst uvwxyz0123 456",
+     "065 abcdefghij klmnopqrst uvwxyz0123 456",
+     "066 abcdefghij klmnopqrst uvwxyz0123 456",
+     "067 abcdefghij klmnopqrst uvwxyz0123 456",
+     "068 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "070 abcdefghij klmnopqrst uvwxyz0123    ",
+     "071 abcdefghij klmnopqrst uvwxyz0123 456",
+     "072 abcdefghij klmnopqrst uvwxyz0123 456",
+     "073 abcdefghij klmnopqrst uvwxyz0123 456",
+     "074 abcdefghij klmnopqrst uvwxyz0123 456",
+     "075 abcdefghij klmnopqrst uvwxyz0123 456",
+     "076 abcdefghij klmnopqrst uvwxyz0123 456",
+     "077 abcdefghij klmnopqrst uvwxyz0123    ",
+     "078 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "080 abcdefghij klmnopqrst uvwxyz0123 456",
+     "081 abcdefghij klmnopqrst uvwxyz0123 456",
+     "082 abcdefghij klmnopqrst uvwxyz0123 456",
+     "083 abcdefghij klmnopqrst uvwxyz0123 456",
+     "084 abcdefghij klmnopqrst uvwxyz0123    ",
+     "085 abcdefghij klmnopqrst uvwxyz0123 456",
+     "086 abcdefghij klmnopqrst uvwxyz0123 456",
+     "087 abcdefghij klmnopqrst uvwxyz0123 456",
+     "088 abcdefghij klmnopqrst uvwxyz0123 456",
+     "",
+     "090 abcdefghij klmnopqrst uvwxyz0123 456",
+     "091 abcdefghij klmnopqrst uvwxyz0123    ",
+     "092 abcdefghij klmnopqrst uvwxyz0123 456",
+     "093 abcdefghij klmnopqrst uvwxyz0123 456",
+     "094 abcdefghij klmnopqrst uvwxyz0123 456",
+     "095 abcdefghij klmnopqrst uvwxyz0123 456",
+     "096 abcdefghij klmnopqrst uvwxyz0123 456",
+     "097 abcdefghij klmnopqrst uvwxyz0123 456",
+     "098 abcdefghij klmnopqrst uvwxyz0123    ",
+     ""
+    ],
+    "host_note": "host model exhausts its heap index (HeapOOM -> code 40). Device: either a successful byte-identical save or a refusal/OOM with the previous file and the buffer intact; never a crash or a corrupted file"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "ide-save-cow-controls",
+   "group": "ide-save",
+   "title": "5 COW traces (normal + write failures 1-4) on the new Final medium",
+   "setup": [
+    "fault-injection D81 fixtures per d81_persistence_fault; emulator only"
+   ],
+   "steps": [
+    "save with injected failure k=1..4"
+   ],
+   "expect": "Pre-join arena failure: zero disk writes, OLD-CONTENT preserved, buffer reachable; failure 4 keeps committed-new behaviour (not generalised).",
+   "oracle": "build/ide-save-heap-fix-r1 traces",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true
+  },
+  {
+   "id": "eval-buffer-5",
+   "group": "eval-buffer",
+   "title": "eval-buffer of a 5-form buffer completes all forms",
+   "setup": [
+    "counter fixture: (setq c 0) then 4 more forms, each asserting prior count and incrementing; last form sets sentinel"
+   ],
+   "steps": [
+    "(eval-buffer \"ev5\")",
+    "(list c sentinel order-error)"
+   ],
+   "expect": "c=5, sentinel set, no order error, prompt returned.",
+   "oracle": "2.5.2: native host probe read 1 of 5 forms after a GC during compilation (external-review-gc-roots-r1 F1)",
+   "path": "emulator+device",
+   "forced_gc_variant": true,
+   "new_in_253": true,
+   "expected": {
+    "repl_before": [
+     "(setq c 0)",
+     "(setq order-error nil)",
+     "(setq sentinel nil)"
+    ],
+    "buffer_text": "(if (= c 0) (setq c (+ c 1)) (setq order-error t))\n(if (= c 1) (setq c (+ c 1)) (setq order-error t))\n(if (= c 2) (setq c (+ c 1)) (setq order-error t))\n(if (= c 3) (setq c (+ c 1)) (setq order-error t))\n(progn (if (= c 4) (setq c (+ c 1)) (setq order-error t)) (setq sentinel (quote done)))\n",
+    "screen": [
+     {
+      "input": "(eval-buffer \"ev5\")",
+      "screen": "T"
+     },
+     {
+      "input": "(list c sentinel order-error)",
+      "screen": "(5 DONE NIL)"
+     }
+    ],
+    "host_note": "fixture forms compiled/run one by one through the packed product LCC carrier (eval-buffer = lcc-run per form, returns T at EOF). %cs-read-open and the GC root (F1) are native-only: evidence build/card-253-prep-r1/native-results.json (50 forms in order, rooted, GC every allocation)"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "eval-buffer-50",
+   "group": "eval-buffer",
+   "title": "eval-buffer of a 50-form buffer (stateful counter/order/sentinel), real allocation pressure",
+   "setup": [
+    "50 numbered forms, each: (if (= c i) (setq c (+ c 1)) (setq order-error t)); last form sets sentinel; source size recorded and <= measured arena (not an OOM mask)"
+   ],
+   "steps": [
+    "(eval-buffer \"ev50\")"
+   ],
+   "expect": "c=50, order-error nil, sentinel set, usable next prompt; repeat after an edit and after an ordinary eval error.",
+   "oracle": "per-iteration progress retained, not only an aggregate GC count",
+   "path": "emulator+device",
+   "forced_gc_variant": true,
+   "new_in_253": true,
+   "expected": {
+    "repl_before": [
+     "(setq c 0)",
+     "(setq order-error nil)",
+     "(setq sentinel nil)"
+    ],
+    "buffer_text": "(if (= c 0) (setq c (+ c 1)) (setq order-error t))\n(if (= c 1) (setq c (+ c 1)) (setq order-error t))\n(if (= c 2) (setq c (+ c 1)) (setq order-error t))\n(if (= c 3) (setq c (+ c 1)) (setq order-error t))\n(if (= c 4) (setq c (+ c 1)) (setq order-error t))\n(if (= c 5) (setq c (+ c 1)) (setq order-error t))\n(if (= c 6) (setq c (+ c 1)) (setq order-error t))\n(if (= c 7) (setq c (+ c 1)) (setq order-error t))\n(if (= c 8) (setq c (+ c 1)) (setq order-error t))\n(if (= c 9) (setq c (+ c 1)) (setq order-error t))\n(if (= c 10) (setq c (+ c 1)) (setq order-error t))\n(if (= c 11) (setq c (+ c 1)) (setq order-error t))\n(if (= c 12) (setq c (+ c 1)) (setq order-error t))\n(if (= c 13) (setq c (+ c 1)) (setq order-error t))\n(if (= c 14) (setq c (+ c 1)) (setq order-error t))\n(if (= c 15) (setq c (+ c 1)) (setq order-error t))\n(if (= c 16) (setq c (+ c 1)) (setq order-error t))\n(if (= c 17) (setq c (+ c 1)) (setq order-error t))\n(if (= c 18) (setq c (+ c 1)) (setq order-error t))\n(if (= c 19) (setq c (+ c 1)) (setq order-error t))\n(if (= c 20) (setq c (+ c 1)) (setq order-error t))\n(if (= c 21) (setq c (+ c 1)) (setq order-error t))\n(if (= c 22) (setq c (+ c 1)) (setq order-error t))\n(if (= c 23) (setq c (+ c 1)) (setq order-error t))\n(if (= c 24) (setq c (+ c 1)) (setq order-error t))\n(if (= c 25) (setq c (+ c 1)) (setq order-error t))\n(if (= c 26) (setq c (+ c 1)) (setq order-error t))\n(if (= c 27) (setq c (+ c 1)) (setq order-error t))\n(if (= c 28) (setq c (+ c 1)) (setq order-error t))\n(if (= c 29) (setq c (+ c 1)) (setq order-error t))\n(if (= c 30) (setq c (+ c 1)) (setq order-error t))\n(if (= c 31) (setq c (+ c 1)) (setq order-error t))\n(if (= c 32) (setq c (+ c 1)) (setq order-error t))\n(if (= c 33) (setq c (+ c 1)) (setq order-error t))\n(if (= c 34) (setq c (+ c 1)) (setq order-error t))\n(if (= c 35) (setq c (+ c 1)) (setq order-error t))\n(if (= c 36) (setq c (+ c 1)) (setq order-error t))\n(if (= c 37) (setq c (+ c 1)) (setq order-error t))\n(if (= c 38) (setq c (+ c 1)) (setq order-error t))\n(if (= c 39) (setq c (+ c 1)) (setq order-error t))\n(if (= c 40) (setq c (+ c 1)) (setq order-error t))\n(if (= c 41) (setq c (+ c 1)) (setq order-error t))\n(if (= c 42) (setq c (+ c 1)) (setq order-error t))\n(if (= c 43) (setq c (+ c 1)) (setq order-error t))\n(if (= c 44) (setq c (+ c 1)) (setq order-error t))\n(if (= c 45) (setq c (+ c 1)) (setq order-error t))\n(if (= c 46) (setq c (+ c 1)) (setq order-error t))\n(if (= c 47) (setq c (+ c 1)) (setq order-error t))\n(if (= c 48) (setq c (+ c 1)) (setq order-error t))\n(progn (if (= c 49) (setq c (+ c 1)) (setq order-error t)) (setq sentinel (quote done)))\n",
+    "screen": [
+     {
+      "input": "(eval-buffer \"ev50\")",
+      "screen": "T"
+     },
+     {
+      "input": "(list c sentinel order-error)",
+      "screen": "(50 DONE NIL)"
+     }
+    ],
+    "host_note": "fixture forms compiled/run one by one through the packed product LCC carrier (eval-buffer = lcc-run per form, returns T at EOF). %cs-read-open and the GC root (F1) are native-only: evidence build/card-253-prep-r1/native-results.json (50 forms in order, rooted, GC every allocation)"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "eval-dirty-cache",
+   "group": "eval-buffer",
+   "title": "eval of a buffer with one dirty edit cache, empty source, EOF comment, multi-line form",
+   "setup": [
+    "one dirty line edit before eval"
+   ],
+   "steps": [
+    "(eval-buffer ...) variants"
+   ],
+   "expect": "each completes or refuses cleanly; global reader is non-reentrant (no nested eval claim).",
+   "oracle": "plan F1 lifetime variants",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true
+  },
+  {
+   "id": "set-macro-forced-gc",
+   "group": "set-macro",
+   "title": "%set-macro temporary-name/macro cell survives a collection at alloc(T_MACRO)",
+   "setup": [
+    "emulator alloc-seam forcing (c253_gc_stress.py scenario defmacro-gc)"
+   ],
+   "steps": [
+    "(defmacro my-id (x) x)",
+    "(my-id 7)"
+   ],
+   "expect": "echo MY-ID, expansion result 7, no root leak; interned control name and fresh gensym name both exercised.",
+   "oracle": "oracle strings MUST be confirmed on an unforced run first; native host probes (build/card-253-prep-r1/native-probe*) are the lower-level evidence",
+   "path": "emulator (device only if instrumentation trustworthy)",
+   "forced_gc_variant": true,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(defmacro my-id (x) x)",
+      "screen": "MY-ID"
+     },
+     {
+      "input": "(my-id 7)",
+      "screen": "7"
+     }
+    ],
+    "host_note": "NOT host-executed: the host VM has no %set-macro/macroexpand-1. MY-ID = src/eval.c case 35 returns its name argument; 7 = identity expansion. GC-root evidence: native-results.json macro rows (after: name_type_at_store 1, error false)"
+   },
+   "oracle_253": "source/native-probe (see expected.host_note)"
+  },
+  {
+   "id": "macro-normal",
+   "group": "set-macro",
+   "title": "ordinary defmacro / use / redefine / macroexpand-1",
+   "setup": "[]",
+   "steps": [
+    "(defmacro twice (x) (list (quote +) x x))",
+    "(twice 4)",
+    "(macroexpand-1 (quote (twice 4)))"
+   ],
+   "expect": "8 / (+ 4 4)",
+   "oracle": "regression of LCC macro install",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(defmacro twice (x) (list (quote +) x x))",
+      "screen": "TWICE"
+     },
+     {
+      "input": "(twice 4)",
+      "screen": "8"
+     },
+     {
+      "input": "(macroexpand-1 (quote (twice 4)))",
+      "screen": "(+ 4 4)"
+     }
+    ],
+    "host_note": "NOT host-executed (no %set-macro in the host VM); source semantics"
+   },
+   "oracle_253": "source/native-probe (see expected.host_note)"
+  },
+  {
+   "id": "lcc-setq-multi",
+   "group": "lcc",
+   "title": "LCC multi-pair setq compiles and runs",
+   "setup": [
+    "REPL, compiled path (defun) and direct expression"
+   ],
+   "steps": [
+    "(defun f () (let ((a 0) (b 0) (c 0)) (setq a 1 b 2 c 3) (+ a (+ b c))))",
+    "(f)",
+    "(setq g1 1 g2 2 g3 3)",
+    "(list g1 g2 g3)"
+   ],
+   "expect": "6 / 3 then (1 2 3)",
+   "oracle": "host: c2_while_gate.py --check (the r5 red %lcc-setq-pairs rel8 overflow must be gone at the authority commit)",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(defun f () (let ((a 0) (b 0) (c 0)) (setq a 1 b 2 c 3) (+ a (+ b c))))",
+      "screen": "F"
+     },
+     {
+      "input": "(f)",
+      "screen": "6"
+     },
+     {
+      "input": "(setq g1 1 g2 2 g3 3)",
+      "screen": "3"
+     },
+     {
+      "input": "(list g1 g2 g3)",
+      "screen": "(1 2 3)"
+     }
+    ]
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "lcc-setq-odd",
+   "group": "lcc",
+   "title": "setq with an odd argument count is refused",
+   "setup": "[]",
+   "steps": [
+    "(defun h () (let ((a 0)) (setq a 1 b)))"
+   ],
+   "expect": "controlled compile error (text fixed by the host oracle), no crash, prompt usable",
+   "oracle": "oracle: host gate receipt for the authority commit",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(setq a 1 b)",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun h () (let ((a 0)) (setq a 1 b)))",
+      "screen": "*** COMPILE FAILED"
+     }
+    ],
+    "host_note": "%lcc-error-invalid-parameter-list -> stable code 59, text \"compile failed\""
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "lcc-car-2args",
+   "group": "lcc",
+   "title": "car with two arguments is refused on the product path",
+   "setup": "[]",
+   "steps": [
+    "(car (quote (1 2)) 2)",
+    "(defun k () (car (quote (1)) 2))"
+   ],
+   "expect": "argument-count error both interpreted and compiled; single-argument car unchanged: (car (quote (9))) -> 9",
+   "oracle": "oracle: host receipt (builtin arity check)",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(car 1 2)",
+      "screen": "*** WRONG ARGUMENT COUNT"
+     },
+     {
+      "input": "(car (quote (1 2)) 2)",
+      "screen": "*** WRONG ARGUMENT COUNT"
+     },
+     {
+      "input": "(defun k () (car (quote (1)) 2))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(car (quote (9)))",
+      "screen": "9"
+     }
+    ],
+    "host_note": "top level: C2 direct path (resident bytecode car, strict arity, code 48); compiled code: reviewer arity fix in lib/dialect-v2/lcc-profile.lisp (%lcc-v2-unary) refuses at compile time (%lcc-error-invalid-parameter-list, code 59 \"compile failed\")"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "nth-dotted",
+   "group": "domain",
+   "title": "nth on a dotted list is refused (length domain check first); proper lists unchanged",
+   "setup": "[]",
+   "steps": [
+    "(nth 1 (quote (1 . 2)))",
+    "(nth 0 (quote (1 . 2)))",
+    "(nth 2 (quote (a b c)))",
+    "(nth 5 (quote (a b)))",
+    "(nth -1 (quote (a)))",
+    "(nth (quote x) (quote (a)))"
+   ],
+   "expect": "first two: list-malformed error (note: (nth 0 dotted) now errors too because length runs first); C; NIL; error; error",
+   "oracle": "docs/nth-domain-successor-20260930.md + c2_v200_domain_tier1_pricing",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(nth 0 (quote (1 2 . 3)))",
+      "screen": "*** VM: TYPE ERROR"
+     },
+     {
+      "input": "(nth 1 (quote (1 . 2)))",
+      "screen": "*** VM: TYPE ERROR"
+     },
+     {
+      "input": "(nth 0 (quote (1 . 2)))",
+      "screen": "*** VM: TYPE ERROR"
+     },
+     {
+      "input": "(nth 2 (quote (a b c)))",
+      "screen": "C"
+     },
+     {
+      "input": "(nth 5 (quote (a b)))",
+      "screen": "NIL"
+     },
+     {
+      "input": "(nth -1 (quote (a)))",
+      "screen": "*** VM: TYPE ERROR"
+     },
+     {
+      "input": "(nth (quote x) (quote (a)))",
+      "screen": "*** VM: TYPE ERROR"
+     }
+    ],
+    "host_note": "top-level nth with direct-value arguments takes the C2 direct path (published bytecode call) -> resident nth -> %list-malformed-error = code 38"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "ide-buffer-switch",
+   "group": "ide-state",
+   "title": "single-buffer switch keeps current text (no revert to stale stored text)",
+   "setup": [
+    "(ide) with exactly one buffer, unsaved edits"
+   ],
+   "steps": [
+    "type 3 lines",
+    "buffer-switch key (see lib/ide-keymap-generated.lisp)",
+    "switch back"
+   ],
+   "expect": "text identical to before the switch; modified flag preserved",
+   "oracle": "lib/ide-ui.lisp %ide-next-buffer fix",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "keys": "x (120), C-x C-n (24 14), C-x C-p (24 16) on a single buffer \"a\" (\"one\")",
+    "host_result": "((\"xone\") (\"xone\") (\"xone\") t)",
+    "expect": "lines after typing, after C-x C-n and after C-x C-p all (\"xone\"); modified flag T"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "ide-buffer-switch-two",
+   "group": "ide-state",
+   "title": "two-buffer switch both directions, wrap, rename collision",
+   "setup": "two buffers A/B with distinct unsaved text",
+   "steps": [
+    "switch forward, forward, backward"
+   ],
+   "expect": "each buffer shows its own latest text",
+   "oracle": "regression of the same fix",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "keys": "buffers a (\"one\") current, b (\"bee\") stored; x, C-x C-n, C-x C-n, C-x C-p",
+    "host_result": "(\"a\" (\"xone\") \"b\" (\"bee\") \"a\" (\"xone\"))",
+    "expect": "a (\"xone\") -> b (\"bee\") -> a (\"xone\") -> back: each buffer keeps its own latest text"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "ide-mark-stale",
+   "group": "ide-state",
+   "title": "mark is cleared when buffer lines/point are replaced (no stale mark position)",
+   "setup": [
+    "(ide), C-x Space sets the mark, then an operation that goes through %ide-buffer-with-lines-point (e.g. undo/replace/load)"
+   ],
+   "steps": [
+    "region command after the operation"
+   ],
+   "expect": "no region over stale positions; mark nil; no crash",
+   "oracle": "lib/ide-buffer.lisp (car b4) -> nil",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "host_result": "((0 . 1) nil)",
+    "expect": "mark (0 . 1) before; NIL after %ide-buffer-with-lines-point (lines/point replaced)"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "disk-d2-ownership",
+   "group": "disk",
+   "title": "D2: ownership check before write enable (foreign/wrong-owner medium)",
+   "setup": [
+    "host fixture: user D81 whose header/ownership the loader must refuse to write"
+   ],
+   "steps": [
+    "(m65d-save ...) on the fixture"
+   ],
+   "expect": "refusal before any write-enable; medium bytes unchanged (host diff)",
+   "oracle": "OWNED BY THE D2-D5 DISK CARD (build/card-253-disk-d2d4-r1, d3d5-r1): rows to be taken from its final receipts",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "oracle_case": "tests/bytecode/libs/p0-m65d-lib-disk-r8-20261001.json d2d4-leaked-block-refused -> (13 t 8 13)",
+    "expect": "remount of a medium with a leaked/unowned block returns 13, latches, later save returns 8 without writing"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "disk-d3-lossless",
+   "group": "disk",
+   "title": "D3: load is lossless for trailing spaces, empty lines, CR",
+   "setup": [
+    "host-prepared file with trailing spaces, trailing empty lines, CR bytes"
+   ],
+   "steps": [
+    "(load-file-to-buffer ...)",
+    "(save-buffer-to ...)",
+    "host readback"
+   ],
+   "expect": "round-trip byte-identical",
+   "oracle": "disk card receipts",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "fixture": "a  \n\n  b\r\nc\r\n  \n\n",
+    "host_result": "((\"a  \" \"\" \"  b\r\" \"c\r\" \"  \" \"\" \"\") t t 17)",
+    "expect": "load lines (\"a  \" \"\" \"  b\\r\" \"c\\r\" \"  \" \"\" \"\"), save returns T, saved file string= source (17 bytes)"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "disk-d5-remount",
+   "group": "disk",
+   "title": "D5: full directory remount with >1 directory sector (F0/F8 fixture retained from 2.5.2)",
+   "setup": [
+    "d252 user-before.d81 fixture (F0 at T40/S3 entry 0, F8 in S4)"
+   ],
+   "steps": [
+    "(m65d-remount)",
+    "(dir)",
+    "(m65d-save \"f0\" \"new0\")",
+    "(m65d-remount)",
+    "(dir)"
+   ],
+   "expect": "all nine names before/after; F8 survives; readback verified",
+   "oracle": "retained 2.5.2 DISK row + D5 additions",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "fixture": "144 files F000..F143 (\"file N\", one block each)",
+    "host_result": "(0 0 0 0)",
+    "expect": "(m65d-remount) 0, (m65d-status) 0, (m65d-save \"f000\" \"new0\") 0, (m65d-remount) 0 on a full 144-file directory"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "disk-d4-mitigation",
+   "group": "disk",
+   "title": "D4 bounded mitigation: inconsistent allocation diagnosed, further writes refused",
+   "setup": [
+    "fixture with leaked BAM blocks (from build/external-review-disk-integrity-r1 matrix)"
+   ],
+   "steps": [
+    "(m65d-save ...)"
+   ],
+   "expect": "write refused with a clear message; reads still work; nothing else modified",
+   "oracle": "disk card receipts; permanent reclaim is 2.5.4",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(save-buffer-to \"leak\" \"s\") on the leaked-block fixture",
+      "screen": "NIL"
+     },
+     {
+      "input": "(ide-error)",
+      "screen": "\"DISK ALLOCATION INCONSISTENT; DISK NOT WRITTEN\""
+     }
+    ],
+    "host_result": "(nil \"disk allocation inconsistent; disk not written\" 13)",
+    "status_13_text": "disk allocation inconsistent; disk not written",
+    "host_note": "IDE C-x C-s / save-buffer-to: m65d-save 8 -> remount -> 13 -> message; m65d-status 13; zero writes"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "lcc-arity-compiled",
+   "group": "lcc",
+   "title": "Compiled fixed-arity opcodes refuse wrong argument counts (reviewer fix, lcc-profile.lisp)",
+   "setup": [],
+   "steps": [
+    "each defun form below at the REPL",
+    "valid control and (kv (quote (1 2)) 7)"
+   ],
+   "expect": "see expected.screen",
+   "oracle": "host carrier over the projected product LCC",
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(defun ka () (car (quote (1)) 2))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun kb () (cdr))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun kc (x) (consp x x))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun kd (x) (not x x))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun ke () (null))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun kf (x) (cons x))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun kg (x) (cons x x x))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun kh (x) (mod x))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(progn (car (quote (1)) 2))",
+      "screen": "*** COMPILE FAILED"
+     },
+     {
+      "input": "(defun kv (x y) (list (car x) (cdr x) (cons y x) (mod y 3) (consp x) (not y) (null x)))",
+      "screen": "KV"
+     },
+     {
+      "input": "(kv (quote (1 2)) 7)",
+      "screen": "(1 (2) (7 1 2) 1 T NIL NIL)"
+     }
+    ],
+    "host_note": "every fixed-arity LCC opcode form with a wrong argument count fails to compile; valid forms unchanged; bitops (logand/logior/logxor/ash) deliberately unchanged"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  },
+  {
+   "id": "lcc-setq-probes",
+   "group": "lcc",
+   "title": "Multi-pair setq value position and long loops on the product LCC",
+   "setup": [],
+   "steps": [
+    "defun main, then (main)"
+   ],
+   "expect": "see expected.screen",
+   "oracle": "host carrier",
+   "path": "emulator",
+   "forced_gc_variant": false,
+   "new_in_253": true,
+   "expected": {
+    "screen": [
+     {
+      "input": "(defun main () (let ((a 0) (b 0)) (+ 100 (setq a 1 b 2))))",
+      "screen": "MAIN",
+      "max_native_stack": null
+     },
+     {
+      "input": "(main)",
+      "screen": "102",
+      "max_native_stack": 6
+     },
+     {
+      "input": "(defun main () (let ((a 0) (b 0)) (list 100 (setq a 1 b 2) 7)))",
+      "screen": "MAIN",
+      "max_native_stack": null
+     },
+     {
+      "input": "(main)",
+      "screen": "(100 2 7)",
+      "max_native_stack": 7
+     },
+     {
+      "input": "(defun main () (+ 100 (setq zz1 1 zz2 2)))",
+      "screen": "MAIN",
+      "max_native_stack": null
+     },
+     {
+      "input": "(main)",
+      "screen": "102",
+      "max_native_stack": 5
+     },
+     {
+      "input": "(defun main () (let ((a 0) (b 0)) (dotimes (i 600) (setq a i b i)) (+ a b)))",
+      "screen": "MAIN",
+      "max_native_stack": null
+     },
+     {
+      "input": "(main)",
+      "screen": "1198",
+      "max_native_stack": 10
+     },
+     {
+      "input": "(defun main () (let ((a 0) (b 0)) (dotimes (i 2000) (setq a i b i)) (+ a b)))",
+      "screen": "MAIN",
+      "max_native_stack": null
+     },
+     {
+      "input": "(main)",
+      "screen": "3998",
+      "max_native_stack": 10
+     },
+     {
+      "input": "(defun main () (let ((a 0) (b 0)) (dotimes (i 600) (progn (setq a i) (setq b i))) (+ a b)))",
+      "screen": "MAIN",
+      "max_native_stack": null
+     },
+     {
+      "input": "(main)",
+      "screen": "1198",
+      "max_native_stack": 10
+     }
+    ],
+    "host_note": "value position 102 / (100 2 7), loop 1198 (600) and 3998 (2000) with the same max native stack (bounded, no per-iteration growth)"
+   },
+   "oracle_253": "host bytecode VM over the 2.5.3 preflight r3 product worlds (c253_row_oracles.py, build/card-253-row-oracles-dry-r3; dry world = working tree d1937e4b + lib/lcc.lisp P5 fix)"
+  }
+ ]
+}

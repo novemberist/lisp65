@@ -1,0 +1,1726 @@
+{
+  "abi_profile": "dialect-v2",
+  "artifact_role": "disk-lib",
+  "base_addr": "0x000000",
+  "blob": "config/c2-v253-r1-public-plane/build/o2-lite-product-r6/media-r6/repl-comfort.blob.bin",
+  "blob_sha256": "a785ce7fce29d1b6330f6649ff1c3a63c4e1d541b4bfb17e7ac0a2cce4c5d2e6",
+  "c_source": "build/o2-lite-product-r6/media-r6/repl-comfort.c",
+  "cases": [
+    "emission-only-placeholder-not-executed"
+  ],
+  "code_bytes": 2095,
+  "cost": {
+    "dependency_gate": {
+      "allowed_external_calls": [
+        "%read-line-loop",
+        "%rl-render",
+        "%rl-screen-tail",
+        "lcc-run"
+      ],
+      "checked": true,
+      "known_targets": 449
+    },
+    "dir_slots": 19,
+    "dir_slots_after_align8": 24,
+    "largest_code_object": "%lt-drive",
+    "largest_code_object_bytes": 253,
+    "macro_entries": 0,
+    "max_code_object_bytes": 255,
+    "private_inline_gate": {
+      "expansions": 4,
+      "functions": 4,
+      "names": [
+        "%comfort-state-hi",
+        "%comfort-state-lo",
+        "%sexp-step",
+        "%lt-editor"
+      ],
+      "resident_functions": 0
+    },
+    "region_bytes": 2095,
+    "symbol_count_estimate": 34,
+    "symbol_names": [
+      "%comfort-history",
+      "%comfort-request",
+      "%lt-buffer-cat",
+      "%lt-buffer-slice",
+      "%lt-cat",
+      "%lt-checkpoint",
+      "%lt-count",
+      "%lt-drive",
+      "%lt-history",
+      "%lt-line",
+      "%lt-read",
+      "%lt-reopen",
+      "%lt-result",
+      "%lt-slice",
+      "%read-line-loop",
+      "%repl-loop",
+      "%repl-prompt",
+      "%repl-read",
+      "%repl-step",
+      "%rl-screen-tail",
+      "%sexp-line-state",
+      "butlast",
+      "last",
+      "lcc-run",
+      "length",
+      "list",
+      "nthcdr",
+      "read-from-string",
+      "repl",
+      "string-append",
+      "substring",
+      "terpri",
+      "write",
+      "write-line"
+    ],
+    "vm_dir_budget": null
+  },
+  "d81_name": "REPL",
+  "directory": "build/o2-lite-product-r6/media-r6/repl-comfort.dir.bin",
+  "directory_bytes": 133,
+  "directory_note": "raw dir.bin uses host-heap name_obj values; native loaders should intern entries[].name and call vm_dir_add()",
+  "directory_sha256": "cb0c2ffece8c1fb9d598b4b7cb1f49b767aa2cf18fd6ca8a7684b81834d1ec9d",
+  "disasm": "build/o2-lite-product-r6/media-r6/repl-comfort.disasm.txt",
+  "disasm_sha256": "f7e45e5c25a40415b31dffff85d0cdc69beadd161cf06e277ae3eb3964abc1f2",
+  "embed": {
+    "address_encoding": "vm_embed_entry.bank/off/len are derived from each object's ext_addr/length",
+    "bank_symbol": "lisp65_stdlib_bank",
+    "base_addr_macro": "LISP65_BYTECODE_STDLIB_BASE_ADDR",
+    "blob_len_symbol": "lisp65_stdlib_blob_len",
+    "blob_symbol": "lisp65_stdlib_blob",
+    "compat_blob_macro": "lisp65_bytecode_stdlib_blob",
+    "compat_table_macro": "lisp65_bytecode_stdlib_embed",
+    "count_macro": "LISP65_BYTECODE_STDLIB_EMBED_COUNT",
+    "count_symbol": "lisp65_embed_count",
+    "entry_type": "vm_embed_entry",
+    "flags_field": "vm_embed_entry.flags bit0 marks macro entries; all other bits are reserved and must be zero",
+    "name_field": "vm_embed_entry.name is a NUL-terminated runtime string; native registration interns that name",
+    "off_symbol": "lisp65_stdlib_off",
+    "table_symbol": "lisp65_embed"
+  },
+  "entries": [
+    {
+      "blob_offset": 0,
+      "code_flags": 2,
+      "ext_addr": "0x000000",
+      "flags": 0,
+      "kind": "function",
+      "length": 206,
+      "lit_count": 1,
+      "lit_first": 0,
+      "literals": [
+        {
+          "symbol": "%sexp-line-state"
+        }
+      ],
+      "name": "%sexp-line-state",
+      "name_obj": "0x0332"
+    },
+    {
+      "blob_offset": 206,
+      "code_flags": 2,
+      "ext_addr": "0x0000ce",
+      "flags": 0,
+      "kind": "function",
+      "length": 23,
+      "lit_count": 2,
+      "lit_first": 1,
+      "literals": [
+        {
+          "string": ""
+        },
+        {
+          "symbol": "%lt-read"
+        }
+      ],
+      "name": "%repl-read",
+      "name_obj": "0x0334"
+    },
+    {
+      "blob_offset": 229,
+      "code_flags": 2,
+      "ext_addr": "0x0000e5",
+      "flags": 0,
+      "kind": "function",
+      "length": 62,
+      "lit_count": 0,
+      "lit_first": 3,
+      "literals": [],
+      "name": "%repl-prompt",
+      "name_obj": "0x0336"
+    },
+    {
+      "blob_offset": 291,
+      "code_flags": 2,
+      "ext_addr": "0x000123",
+      "flags": 0,
+      "kind": "function",
+      "length": 51,
+      "lit_count": 5,
+      "lit_first": 3,
+      "literals": [
+        {
+          "symbol": "length"
+        },
+        {
+          "symbol": "%lt-history"
+        },
+        {
+          "symbol": "%lt-drive"
+        },
+        {
+          "string": "*** history limit"
+        },
+        {
+          "symbol": "write-line"
+        }
+      ],
+      "name": "%repl-step",
+      "name_obj": "0x0338"
+    },
+    {
+      "blob_offset": 342,
+      "code_flags": 2,
+      "ext_addr": "0x000156",
+      "flags": 0,
+      "kind": "function",
+      "length": 127,
+      "lit_count": 8,
+      "lit_first": 8,
+      "literals": [
+        {
+          "symbol": "%comfort-request"
+        },
+        {
+          "symbol": "%comfort-history"
+        },
+        255,
+        141,
+        140,
+        188,
+        252,
+        {
+          "symbol": "%repl-loop"
+        }
+      ],
+      "name": "repl",
+      "name_obj": "0x033a"
+    },
+    {
+      "blob_offset": 469,
+      "code_flags": 2,
+      "ext_addr": "0x0001d5",
+      "flags": 0,
+      "kind": "function",
+      "length": 191,
+      "lit_count": 19,
+      "lit_first": 16,
+      "literals": [
+        {
+          "string": ""
+        },
+        {
+          "symbol": "%repl-step"
+        },
+        {
+          "symbol": "%comfort-request"
+        },
+        {
+          "symbol": "%comfort-history"
+        },
+        250,
+        {
+          "symbol": "%repl-read"
+        },
+        {
+          "string": "*** history limit"
+        },
+        {
+          "symbol": "write-line"
+        },
+        {
+          "string": "(progn "
+        },
+        {
+          "string": "\n)"
+        },
+        {
+          "symbol": "%lt-cat"
+        },
+        {
+          "symbol": "read-from-string"
+        },
+        255,
+        141,
+        {
+          "symbol": "lcc-run"
+        },
+        140,
+        {
+          "symbol": "write"
+        },
+        {
+          "symbol": "terpri"
+        },
+        {
+          "symbol": "%repl-loop"
+        }
+      ],
+      "name": "%repl-loop",
+      "name_obj": "0x033c"
+    },
+    {
+      "blob_offset": 660,
+      "code_flags": 2,
+      "ext_addr": "0x000294",
+      "flags": 0,
+      "kind": "function",
+      "length": 20,
+      "lit_count": 2,
+      "lit_first": 35,
+      "literals": [
+        191,
+        246
+      ],
+      "name": "%comfort-request",
+      "name_obj": "0x033e"
+    },
+    {
+      "blob_offset": 680,
+      "code_flags": 2,
+      "ext_addr": "0x0002a8",
+      "flags": 0,
+      "kind": "function",
+      "length": 214,
+      "lit_count": 9,
+      "lit_first": 37,
+      "literals": [
+        {
+          "symbol": "length"
+        },
+        {
+          "symbol": "butlast"
+        },
+        250,
+        640,
+        {
+          "symbol": "last"
+        },
+        {
+          "symbol": "list"
+        },
+        {
+          "symbol": "%rl-screen-tail"
+        },
+        {
+          "symbol": "%read-line-loop"
+        },
+        {
+          "symbol": "%lt-result"
+        }
+      ],
+      "name": "%lt-read",
+      "name_obj": "0x0340"
+    },
+    {
+      "blob_offset": 894,
+      "code_flags": 2,
+      "ext_addr": "0x00037e",
+      "flags": 0,
+      "kind": "function",
+      "length": 161,
+      "lit_count": 4,
+      "lit_first": 46,
+      "literals": [
+        {
+          "string": "                    "
+        },
+        {
+          "symbol": "substring"
+        },
+        {
+          "symbol": "%repl-prompt"
+        },
+        {
+          "symbol": "%lt-read"
+        }
+      ],
+      "name": "%lt-line",
+      "name_obj": "0x0342"
+    },
+    {
+      "blob_offset": 1055,
+      "code_flags": 2,
+      "ext_addr": "0x00041f",
+      "flags": 0,
+      "kind": "function",
+      "length": 253,
+      "lit_count": 13,
+      "lit_first": 50,
+      "literals": [
+        {
+          "symbol": "%lt-line"
+        },
+        {
+          "symbol": "%sexp-line-state"
+        },
+        {
+          "string": "*** input limit"
+        },
+        {
+          "symbol": "write-line"
+        },
+        {
+          "string": ""
+        },
+        {
+          "symbol": "%lt-drive"
+        },
+        1101,
+        {
+          "symbol": "%lt-reopen"
+        },
+        {
+          "string": "*** reader: unmatched close parenthesis"
+        },
+        640,
+        {
+          "symbol": "%lt-count"
+        },
+        {
+          "string": "\n"
+        },
+        {
+          "symbol": "%lt-cat"
+        }
+      ],
+      "name": "%lt-drive",
+      "name_obj": "0x0344"
+    },
+    {
+      "blob_offset": 1308,
+      "code_flags": 2,
+      "ext_addr": "0x00051c",
+      "flags": 0,
+      "kind": "function",
+      "length": 61,
+      "lit_count": 3,
+      "lit_first": 63,
+      "literals": [
+        259,
+        {
+          "symbol": "string-append"
+        },
+        {
+          "symbol": "%lt-buffer-cat"
+        }
+      ],
+      "name": "%lt-cat",
+      "name_obj": "0x0346"
+    },
+    {
+      "blob_offset": 1369,
+      "code_flags": 2,
+      "ext_addr": "0x000559",
+      "flags": 0,
+      "kind": "function",
+      "length": 134,
+      "lit_count": 1,
+      "lit_first": 66,
+      "literals": [
+        {
+          "symbol": "list"
+        }
+      ],
+      "name": "%lt-buffer-cat",
+      "name_obj": "0x0348"
+    },
+    {
+      "blob_offset": 1503,
+      "code_flags": 2,
+      "ext_addr": "0x0005df",
+      "flags": 0,
+      "kind": "function",
+      "length": 72,
+      "lit_count": 0,
+      "lit_first": 67,
+      "literals": [],
+      "name": "%lt-buffer-slice",
+      "name_obj": "0x034a"
+    },
+    {
+      "blob_offset": 1575,
+      "code_flags": 2,
+      "ext_addr": "0x000627",
+      "flags": 0,
+      "kind": "function",
+      "length": 34,
+      "lit_count": 2,
+      "lit_first": 67,
+      "literals": [
+        250,
+        {
+          "symbol": "%lt-history"
+        }
+      ],
+      "name": "%lt-history",
+      "name_obj": "0x034c"
+    },
+    {
+      "blob_offset": 1609,
+      "code_flags": 2,
+      "ext_addr": "0x000649",
+      "flags": 0,
+      "kind": "function",
+      "length": 70,
+      "lit_count": 0,
+      "lit_first": 69,
+      "literals": [],
+      "name": "%lt-count",
+      "name_obj": "0x034e"
+    },
+    {
+      "blob_offset": 1679,
+      "code_flags": 2,
+      "ext_addr": "0x00068f",
+      "flags": 0,
+      "kind": "function",
+      "length": 98,
+      "lit_count": 2,
+      "lit_first": 69,
+      "literals": [
+        {
+          "symbol": "%lt-slice"
+        },
+        {
+          "symbol": "%sexp-line-state"
+        }
+      ],
+      "name": "%lt-checkpoint",
+      "name_obj": "0x0350"
+    },
+    {
+      "blob_offset": 1777,
+      "code_flags": 2,
+      "ext_addr": "0x0006f1",
+      "flags": 0,
+      "kind": "function",
+      "length": 133,
+      "lit_count": 5,
+      "lit_first": 71,
+      "literals": [
+        {
+          "symbol": "%lt-slice"
+        },
+        {
+          "symbol": "%lt-checkpoint"
+        },
+        {
+          "string": "[edit previous line]"
+        },
+        {
+          "symbol": "write-line"
+        },
+        {
+          "symbol": "%lt-drive"
+        }
+      ],
+      "name": "%lt-reopen",
+      "name_obj": "0x0352"
+    },
+    {
+      "blob_offset": 1910,
+      "code_flags": 2,
+      "ext_addr": "0x000776",
+      "flags": 0,
+      "kind": "function",
+      "length": 35,
+      "lit_count": 3,
+      "lit_first": 76,
+      "literals": [
+        250,
+        {
+          "symbol": "substring"
+        },
+        {
+          "symbol": "%lt-buffer-slice"
+        }
+      ],
+      "name": "%lt-slice",
+      "name_obj": "0x0354"
+    },
+    {
+      "blob_offset": 1945,
+      "code_flags": 2,
+      "ext_addr": "0x000799",
+      "flags": 0,
+      "kind": "function",
+      "length": 150,
+      "lit_count": 7,
+      "lit_first": 79,
+      "literals": [
+        1108,
+        1003,
+        {
+          "symbol": "length"
+        },
+        {
+          "string": ""
+        },
+        {
+          "symbol": "nthcdr"
+        },
+        {
+          "symbol": "%lt-read"
+        },
+        1101
+      ],
+      "name": "%lt-result",
+      "name_obj": "0x0356"
+    }
+  ],
+  "exports": [],
+  "external_image": {
+    "bytes": 4171,
+    "code_bytes": 2095,
+    "code_offset": 4,
+    "file_header_bytes": 4,
+    "file_header_format": "u16 blob_len, u16 md_len",
+    "format": "lisp65-bytecode-p0-disk-lib-image-v1",
+    "load_addr": "0x000000",
+    "metadata_addr": "0x00082f",
+    "metadata_bytes": 2072,
+    "metadata_format": {
+      "endianness": "little",
+      "entry_flags": {
+        "bit0": "macro entry; loader registers T_MACRO(BCODE) instead of a function cell"
+      },
+      "entry_record": "u16 name_off, u8 bank, u8 flags, u16 off, u16 len",
+      "header_bytes": 38,
+      "literal_index_record": "u16 node",
+      "literal_node_record": "u8 kind, u8 reserved, i16 value, u16 first, u16 count, u16 name_off_or_0xffff",
+      "literal_patch_record": "u16 blob_offset, u16 node",
+      "magic": "L65M",
+      "string_pool": "NUL-terminated UTF-8 strings referenced by name_off",
+      "version": 1
+    },
+    "metadata_offset": 2099,
+    "metadata_sha256": "f9f076a40db7cb3924cf2fb52df246f05f54bdae1dd6dcf1f3f1450ba50b26d4",
+    "path": "build/o2-lite-product-r6/media-r6/repl-comfort.ext.bin",
+    "runtime_code_offset": 0,
+    "runtime_metadata_offset": 2095,
+    "sha256": "22f63390a53e4fce33471a8338b01468a8d7846371f7629c115c8a28f22bccb6"
+  },
+  "format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+  "functions": [
+    "%sexp-line-state",
+    "%repl-read",
+    "%repl-prompt",
+    "%repl-step",
+    "repl",
+    "%repl-loop",
+    "%comfort-request",
+    "%lt-read",
+    "%lt-line",
+    "%lt-drive",
+    "%lt-cat",
+    "%lt-buffer-cat",
+    "%lt-buffer-slice",
+    "%lt-history",
+    "%lt-count",
+    "%lt-checkpoint",
+    "%lt-reopen",
+    "%lt-slice",
+    "%lt-result"
+  ],
+  "header": "build/o2-lite-product-r6/media-r6/repl-comfort.h",
+  "late_bound_exports": [],
+  "literal_format": {
+    "entry_fields": "lisp65_bytecode_stdlib_entries[].lit_first/lit_count map each code object's littab slots to literal_index nodes",
+    "index_table": "lisp65_bytecode_stdlib_literal_index",
+    "materialization": "boot loader walks literal_patches, materializes each node, and overwrites the raw host obj word at blob_offset before execution",
+    "node_table": "lisp65_bytecode_stdlib_literal_nodes",
+    "patch_fields": "lisp65_bytecode_stdlib_literal_patches[].blob_offset points at each raw 16-bit littab obj word; .node selects the materialized literal node",
+    "patch_table": "lisp65_bytecode_stdlib_literal_patches"
+  },
+  "literal_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85
+  ],
+  "literal_nodes": [
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%sexp-line-state",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-read",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "length",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-history",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-drive",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "*** history limit",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "write-line",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%comfort-request",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%comfort-history",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 255
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 141
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 140
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 188
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 252
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%repl-loop",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%repl-step",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%comfort-request",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%comfort-history",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 250
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%repl-read",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "*** history limit",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "write-line",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "(progn ",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "\n)",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-cat",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "read-from-string",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 255
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 141
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "lcc-run",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 140
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "write",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "terpri",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%repl-loop",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 191
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 246
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "length",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "butlast",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 250
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 640
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "last",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%rl-screen-tail",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%read-line-loop",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-result",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "                    ",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "substring",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%repl-prompt",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-read",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-line",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%sexp-line-state",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "*** input limit",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "write-line",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-drive",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 1101
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-reopen",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "*** reader: unmatched close parenthesis",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 640
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-count",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "\n",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-cat",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 259
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "string-append",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-buffer-cat",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "list",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 250
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-history",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-slice",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%sexp-line-state",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-slice",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-checkpoint",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "[edit previous line]",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "write-line",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-drive",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 250
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "substring",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-buffer-slice",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 1108
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 1003
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "length",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 7,
+      "name": "",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "nthcdr",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 4,
+      "name": "%lt-read",
+      "value": 0
+    },
+    {
+      "count": 0,
+      "first": 0,
+      "kind": 1,
+      "name": null,
+      "value": 1101
+    }
+  ],
+  "literal_note": "code-object literal-table obj words are host placeholders; native loaders must rewrite them from literal_format before running",
+  "literal_patches": [
+    {
+      "blob_offset": 7,
+      "node": 0
+    },
+    {
+      "blob_offset": 213,
+      "node": 1
+    },
+    {
+      "blob_offset": 215,
+      "node": 2
+    },
+    {
+      "blob_offset": 298,
+      "node": 3
+    },
+    {
+      "blob_offset": 300,
+      "node": 4
+    },
+    {
+      "blob_offset": 302,
+      "node": 5
+    },
+    {
+      "blob_offset": 304,
+      "node": 6
+    },
+    {
+      "blob_offset": 306,
+      "node": 7
+    },
+    {
+      "blob_offset": 349,
+      "node": 8
+    },
+    {
+      "blob_offset": 351,
+      "node": 9
+    },
+    {
+      "blob_offset": 353,
+      "node": 10
+    },
+    {
+      "blob_offset": 355,
+      "node": 11
+    },
+    {
+      "blob_offset": 357,
+      "node": 12
+    },
+    {
+      "blob_offset": 359,
+      "node": 13
+    },
+    {
+      "blob_offset": 361,
+      "node": 14
+    },
+    {
+      "blob_offset": 363,
+      "node": 15
+    },
+    {
+      "blob_offset": 476,
+      "node": 16
+    },
+    {
+      "blob_offset": 478,
+      "node": 17
+    },
+    {
+      "blob_offset": 480,
+      "node": 18
+    },
+    {
+      "blob_offset": 482,
+      "node": 19
+    },
+    {
+      "blob_offset": 484,
+      "node": 20
+    },
+    {
+      "blob_offset": 486,
+      "node": 21
+    },
+    {
+      "blob_offset": 488,
+      "node": 22
+    },
+    {
+      "blob_offset": 490,
+      "node": 23
+    },
+    {
+      "blob_offset": 492,
+      "node": 24
+    },
+    {
+      "blob_offset": 494,
+      "node": 25
+    },
+    {
+      "blob_offset": 496,
+      "node": 26
+    },
+    {
+      "blob_offset": 498,
+      "node": 27
+    },
+    {
+      "blob_offset": 500,
+      "node": 28
+    },
+    {
+      "blob_offset": 502,
+      "node": 29
+    },
+    {
+      "blob_offset": 504,
+      "node": 30
+    },
+    {
+      "blob_offset": 506,
+      "node": 31
+    },
+    {
+      "blob_offset": 508,
+      "node": 32
+    },
+    {
+      "blob_offset": 510,
+      "node": 33
+    },
+    {
+      "blob_offset": 512,
+      "node": 34
+    },
+    {
+      "blob_offset": 667,
+      "node": 35
+    },
+    {
+      "blob_offset": 669,
+      "node": 36
+    },
+    {
+      "blob_offset": 687,
+      "node": 37
+    },
+    {
+      "blob_offset": 689,
+      "node": 38
+    },
+    {
+      "blob_offset": 691,
+      "node": 39
+    },
+    {
+      "blob_offset": 693,
+      "node": 40
+    },
+    {
+      "blob_offset": 695,
+      "node": 41
+    },
+    {
+      "blob_offset": 697,
+      "node": 42
+    },
+    {
+      "blob_offset": 699,
+      "node": 43
+    },
+    {
+      "blob_offset": 701,
+      "node": 44
+    },
+    {
+      "blob_offset": 703,
+      "node": 45
+    },
+    {
+      "blob_offset": 901,
+      "node": 46
+    },
+    {
+      "blob_offset": 903,
+      "node": 47
+    },
+    {
+      "blob_offset": 905,
+      "node": 48
+    },
+    {
+      "blob_offset": 907,
+      "node": 49
+    },
+    {
+      "blob_offset": 1062,
+      "node": 50
+    },
+    {
+      "blob_offset": 1064,
+      "node": 51
+    },
+    {
+      "blob_offset": 1066,
+      "node": 52
+    },
+    {
+      "blob_offset": 1068,
+      "node": 53
+    },
+    {
+      "blob_offset": 1070,
+      "node": 54
+    },
+    {
+      "blob_offset": 1072,
+      "node": 55
+    },
+    {
+      "blob_offset": 1074,
+      "node": 56
+    },
+    {
+      "blob_offset": 1076,
+      "node": 57
+    },
+    {
+      "blob_offset": 1078,
+      "node": 58
+    },
+    {
+      "blob_offset": 1080,
+      "node": 59
+    },
+    {
+      "blob_offset": 1082,
+      "node": 60
+    },
+    {
+      "blob_offset": 1084,
+      "node": 61
+    },
+    {
+      "blob_offset": 1086,
+      "node": 62
+    },
+    {
+      "blob_offset": 1315,
+      "node": 63
+    },
+    {
+      "blob_offset": 1317,
+      "node": 64
+    },
+    {
+      "blob_offset": 1319,
+      "node": 65
+    },
+    {
+      "blob_offset": 1376,
+      "node": 66
+    },
+    {
+      "blob_offset": 1582,
+      "node": 67
+    },
+    {
+      "blob_offset": 1584,
+      "node": 68
+    },
+    {
+      "blob_offset": 1686,
+      "node": 69
+    },
+    {
+      "blob_offset": 1688,
+      "node": 70
+    },
+    {
+      "blob_offset": 1784,
+      "node": 71
+    },
+    {
+      "blob_offset": 1786,
+      "node": 72
+    },
+    {
+      "blob_offset": 1788,
+      "node": 73
+    },
+    {
+      "blob_offset": 1790,
+      "node": 74
+    },
+    {
+      "blob_offset": 1792,
+      "node": 75
+    },
+    {
+      "blob_offset": 1917,
+      "node": 76
+    },
+    {
+      "blob_offset": 1919,
+      "node": 77
+    },
+    {
+      "blob_offset": 1921,
+      "node": 78
+    },
+    {
+      "blob_offset": 1952,
+      "node": 79
+    },
+    {
+      "blob_offset": 1954,
+      "node": 80
+    },
+    {
+      "blob_offset": 1956,
+      "node": 81
+    },
+    {
+      "blob_offset": 1958,
+      "node": 82
+    },
+    {
+      "blob_offset": 1960,
+      "node": 83
+    },
+    {
+      "blob_offset": 1962,
+      "node": 84
+    },
+    {
+      "blob_offset": 1964,
+      "node": 85
+    }
+  ],
+  "name": "repl-comfort",
+  "objects": 19,
+  "omission_gate": {
+    "defmacro_count": 0,
+    "defmacros": [],
+    "defun_count": 0,
+    "defuns": []
+  },
+  "override_exports": [],
+  "private_inline_functions": [
+    "%comfort-state-hi",
+    "%comfort-state-lo",
+    "%sexp-step",
+    "%lt-editor"
+  ],
+  "provides": [
+    "repl-comfort"
+  ],
+  "relocation": {
+    "disk_lib_contract": "disk-lib files are [u16 blob_len][u16 md_len][blob][L65M]; entry bank/off and literal patch offsets are blob-relative; the device loader stages blob at lib_hw, trailer at lib_hw+blob_len, then supplies the final Bank-5 base",
+    "kind": "runtime-relative"
+  },
+  "requires": [
+    "core"
+  ],
+  "resident_overrides": [],
+  "resident_private_inline_functions": [],
+  "resident_suites": [
+    "build/o2-lite-r4-slots-preflight/planes/resident.json"
+  ],
+  "sources": [
+    "lib/comfort-state-address.lisp",
+    "lib/lite-hot.lisp",
+    "lib/repl-comfort-v250.lisp",
+    "lib/lite.lisp"
+  ],
+  "strict_arity": true,
+  "suite": "config/comfort-default-plane/libraries/repl-comfort-suite.json",
+  "suite_format": "lisp65-bytecode-p0-disk-lib-suite-v1"
+}

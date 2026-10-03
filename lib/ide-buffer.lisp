@@ -120,7 +120,7 @@
           (car b1)
           lines
           point
-          (car b4)
+          nil
           't
           (car b6)
           (if maybe-locals (car maybe-locals) nil)

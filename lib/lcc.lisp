@@ -393,7 +393,7 @@
 ; ---- setq: local/parameter -> expr + STOREL + LOADL (reload the value, like
 ; the reference); unbound -> GLOBAL through PUSHLIT sym, expr, CALLPRIM 20 2,
 ; as in src/compile.c. ----
-(defun %lcc-setq (cs lvls args)
+(defun %lcc-setq-one (cs lvls args)
   ((lambda (e)
      (if e
          (%lcc-emit2 (%lcc-emit2 (%lcc-expr cs lvls (car (cdr args)))
@@ -410,6 +410,24 @@
                            2)))
           (%lcc-resolve-uv (car args) lvls))))
    (%lcc-env-find (%lcc-top-env lvls) (car args))))
+
+; Pairs are compiled one assignment at a time. %lcc-setq-one is the 2.5.2
+; single-pair body, unchanged: it assigns the pair at the head of args. The
+; last (usually only) pair is a tail call, so compiling its value costs no VM
+; frame or root slot beyond 2.5.2 (nesting ladder gate); only a leading pair
+; of a multi-pair setq pays one extra frame, for the DROP between pairs.
+(defun %lcc-setq-pairs (cs lvls args)
+  (if args
+      (if (cdr args)
+          (if (cdr (cdr args))
+              (%lcc-setq-pairs (%lcc-emit-op (%lcc-setq-one cs lvls args) 'drop)
+                               lvls (cdr (cdr args)))
+              (%lcc-setq-one cs lvls args))
+          (%lcc-error-invalid-parameter-list))
+      (%lcc-push-value cs nil)))
+
+(defun %lcc-setq (cs lvls args)
+  (%lcc-setq-pairs cs lvls args))
 
 ; ---- Calls: arguments first, then CALLPRIM pid n or CALL <callee-lit> n ----
 (defun %lcc-args (cs lvls args n)
@@ -570,6 +588,9 @@
       (if (%lcc-consp (cdr args)) (eq (cdr (cdr args)) nil) nil)
       nil))
 
+(defun %lcc-1args-p (args)
+  (if (%lcc-consp args) (eq (cdr args) nil) nil))
+
 ; Variadic operations: opcode name ONLY as a fast-path candidate, with the
 ; arity guard in %lcc-expr-ops.
 (defun %lcc-vop (op)
@@ -591,15 +612,21 @@
            (t (%lcc-expr-ops2 cs lvls op args form))))
    (%lcc-vop op)))
 
+(defun %lcc-unary-checked (cs lvls args opname)
+  (if (%lcc-1args-p args) (%lcc-unary cs lvls args opname) (%lcc-error-invalid-parameter-list)))
+
+(defun %lcc-binary-checked (cs lvls args opname)
+  (if (%lcc-2args-p args) (%lcc-binary cs lvls args opname) (%lcc-error-invalid-parameter-list)))
+
 (defun %lcc-expr-ops2 (cs lvls op args form)
-  (cond ((eq op 'mod) (%lcc-binary cs lvls args 'mod))
-        ((eq op 'remainder) (%lcc-binary cs lvls args 'remainder))
-        ((eq op 'cons) (%lcc-binary cs lvls args 'cons))
-        ((eq op 'car)  (%lcc-unary cs lvls args 'car))
-        ((eq op 'cdr)  (%lcc-unary cs lvls args 'cdr))
-        ((eq op 'consp) (%lcc-unary cs lvls args 'consp))
-        ((eq op 'not)  (%lcc-unary cs lvls args 'not))
-        ((eq op 'null) (%lcc-unary cs lvls args 'not))
+  (cond ((eq op 'mod) (%lcc-binary-checked cs lvls args 'mod))
+        ((eq op 'remainder) (%lcc-binary-checked cs lvls args 'remainder))
+        ((eq op 'cons) (%lcc-binary-checked cs lvls args 'cons))
+        ((eq op 'car)  (%lcc-unary-checked cs lvls args 'car))
+        ((eq op 'cdr)  (%lcc-unary-checked cs lvls args 'cdr))
+        ((eq op 'consp) (%lcc-unary-checked cs lvls args 'consp))
+        ((eq op 'not)  (%lcc-unary-checked cs lvls args 'not))
+        ((eq op 'null) (%lcc-unary-checked cs lvls args 'not))
         ((%lcc-macro-p op) (%lcc-expr cs lvls (macroexpand-1 form)))
         (t (%lcc-call cs lvls op args))))
 

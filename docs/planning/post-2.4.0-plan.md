@@ -60,6 +60,138 @@ none is claimed for 2.4.0:
 
 ## Journal
 
+### 2.5.3 device session passed; owner word for Ship and Publish — 2026-10-03
+
+[Device report](release-2.5.3-device-report.md): Final r8 medium `7df9db67…`
+(ELF `5eb056e0…`), two rounds. Every executed acceptance group passed (49:
+product disk 33, user disk 12, other-identity disk 1, leaked-block disk 1,
+144-file disk 2), uploads read back byte-identical, owner physical rows 1 to 4
+and 6 PASS (typing feel good), row 5 (physical `C-x C-s` on a 50x40 buffer)
+SAVED but took several minutes, stopwatch boot about 43 s from `run` (tool
+clock 42.8 s; 2.5.2: 40.9 s). Round 1 ended with a black screen after a Freezer
+disk swap (cause unknown, not reproduced in three later swaps; the readback
+proved every disk intact); round 2 ran after a power cycle with a fresh upload.
+Documented table adaptations: the four `peek` forms of `lcc-f2-ladder` read the
+scratch gap `$17A0..`, which is not zero on the device; phase O was re-ordered
+after the fresh session (a save without a verified remount returns 8, correct
+D2 behaviour; the swap test became remount of the other disk, then swap to the
+144-file disk: 12, then 8). The exploratory DMA row aborted at its precondition
+(gap not free, check 255): 2.6 needs another device-verified DMA scratch area;
+line mode is untested. `oom-last`: message and returning prompt on the device,
+reset required for data held by a global list. Not verified: the cause of the
+black screen, `ide-save-cow-controls`, DMA line mode.
+
+**Owner word 2026-10-03:** "Dann mach weiter. Freigabe für Ship und Publish
+erteilt" — Ship and Publish of 2.5.3 are authorised (Final r8, after the passing
+device session). Remaining: the Before-Ship record (new sealed check-host on the
+documentation commit, contract, seal), proof commit and tag, source projection,
+publication with readbacks.
+
+### 2.5.3 r8: regression fixed, out-of-memory hang fixed; Final r8 sealed — 2026-10-03
+
+The device-session pre-check in the emulator found a regression in Final r7
+(`build/card-253-f1f2-compare-r1`): the new `setq` code cost one VM frame per
+`setq` while LCC compiles, so ordinary forms such as
+`(let ((s 0)) (dotimes (i 1) (setq s (+ s (peek 23 (+ 160 i))))) s)` failed with
+`*** VM: STACK OVERFLOW` (2.5.2 compiles them). **Owner decision 2026-10-02:**
+Final r7 does not ship; r8 = the nesting-depth fix plus the one-line
+out-of-memory landing fix (`mem_oom = 0;` in the `repl()` setjmp landing), and
+the native cap is raised slightly ("Obergrenze leicht anheben"): `.text` cap
++368 B over 2.5.2.
+
+Source `ccc08061` (sealed check-source r8a green): nesting ladder over 35
+shapes equal to 2.5.2 (new gate `lcc-nesting-ladder-check`), new host gate
+`repl-oom-recovery-check`. Seed r8 (`build/card-253-product-r8`, tools
+`b42aaade`): `.text` +340 B, changed exactly `eval_v2_workbench_service`
+(+336), `main` (+2), `repl` (+2). Emulator rows on Seed r8
+(`build/card-253-rows-r8`): F2 forms compile, ladder 12/12, the prompt returns
+after `*** VM: OUT OF MEMORY` (plain REPL, IDE 100x40 save, 249-character line
+with four IDE buffers); a heap filled by data still held (a global list) cannot
+be dropped from the keyboard because typing itself needs memory — reset
+required; closures capturing a `let` variable give `*** VM: BAD BYTECODE` at
+the Comfort prompt (same in 2.5.2 and r7). Comfort 79/79, Backspace 7/7,
+typing and boot equal to r7.
+
+Final r8 (`build/card-253-final-r8`, sealed run
+`build/card-253-check-source-final-r8` on `751973de` green): 75 commands, one
+link, D81 `7df9db67…`, ELF `5eb056e0…`, LTO `0491996a…`, PRG `6bf9dbd5…`, all
+byte-identical to Seed r8; seal PASS (11,088 bindings, 1,425 receipt copies),
+`seal.json` `bb4a509f…`. Links spent for 2.5.3: r6, r7, Final r7, Seed r8,
+Final r8. Next: release chain on r8 (documents — the out-of-memory hang is
+now fixed, reproductions, check-host), device session (owner), Before-Ship;
+Ship/Publish need the owner's word.
+
+### 2.5.3 Final r7 byte-identical and sealed; owner decisions; feature roadmap — 2026-10-02
+
+**Source authority** `fe248d46` (chain `63b3f580` → `29c2bdc4` → `c2f19de2` →
+`94d4e89f` → `d1937e4b` → `fe248d46`): packed IDE join and `eval-buffer` source
+root, `%set-macro` root, IDE buffer-switch/mark state, LCC multi-pair `setq`
+(with `DROP` between pairs — an independent review found the stack leak), LCC
+arity refusal on the product path (`lib/dialect-v2/lcc-profile.lisp`), `nth`
+refusing dotted tails, D2 write enable only after a verified remount, D4
+bounded mitigation (status 13, no reclaim), D3 lossless load, D5 full-directory
+remount. Sealed `check-source` r3 on `ab4474e8` green.
+
+**Seed.** r5 halted before any compile (the r7c recipe lists one input
+twice); r6 linked and halted at the native cap: `.text` 36,559 → 36,897
+(+338 B; only `eval_v2_workbench_service` +336 and `main` +2 changed; isolated
+price had been +215). **Owner decision 2026-10-01:** accept +338 B, cap +352 B,
+replacement Seed r7 with unchanged source. Seed r7 passed
+(`build/card-253-product-r7`), ELF byte-identical to the r6 link. Links spent:
+r6, r7, Final.
+
+**Final.** Sealed `check-source` `build/card-253-check-source-final-r7c` on
+`0a27db52` green (two earlier attempts died with a desktop-app crash, no
+receipt, no link spent; long runs now start as systemd user services). Final
+`build/card-253-final-r7`: 75 commands, one link, ELF `47519653…`, D81
+`abc9bb49…`, all artifacts byte-identical to the Seed; seal PASS (10,758
+bindings, 1,393 receipt copies), `seal.json` sha256 `c1f5d8cf…`.
+
+**Emulator rows on the Seed medium** (`build/card-253-rows-r7`): Comfort 79/79,
+Backspace 7/7, boot +4.4 % (43.3 s emulator time), typing +1.4 % mean (steady
+state unchanged); new rows green for IDE save 20×40/50×40/100×20 with
+byte-identical reload, `eval-buffer` 5/50 forms, `%set-macro` incl. forced GC,
+`setq`, `nth`, buffer switch/mark and all disk rows. Arity refusal text is
+`*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST`.
+
+**Known issue, owner decision 2026-10-01:** after `*** VM: OUT OF MEMORY` the
+prompt never returns (`mem_oom` is never cleared on the abort path). Present in
+2.5.2 as well (`build/card-253-oom-hang-r1`); 2.5.3 only raises the size at
+which a save runs out of memory. Documented in 2.5.3; the one-line fix in
+`src/repl.c` is the first item of 2.5.4.
+
+**Other reviewer decisions:** D2/D4 accepted at +298 B m65d (guideline was
+about 300 B); structural native attribution for the Seed; legacy pre-1.0
+padded files show their padding after D3 (release-note item); `mapcan` beyond
+12 arguments stays a known issue.
+
+**Feature roadmap, owner word 2026-10-02 ("Empfehlungen angenommen")**, basis
+`build/feature-prestudy-r1/feature-prestudy.txt`: 2.5.4 = OOM fix, E3, two or
+three small corrections, a general IDE keymap/extension seam, and a measurement
+of the code space loaded packages consume. 2.6 = sound, then graphics, then the
+structure editor, all as loadable disk packages, none loaded by default.
+Graphics 320×144 in 256 colours without native code (320×200 after a kernel
+diet); no GPL code copied from brilliance65 (methods and parameters only);
+structure editor text-based on the line buffer; keys `C-x` + letter; packages
+`m65-gfx` / `m65-sound` with `gfx-`/`snd-` function names; sound blocking in
+2.6 (tick hook or IRQ player is its own card); a native `%dma` primitive only
+after a diet and a device measurement; the DMA line-mode device check joins
+the 2.5.3 device session.
+
+**Open before Ship:** release documents, public-source reproductions, sealed
+check-host, device session (owner), Before-Ship; Ship/Publish 2.5.3 need the
+owner's word.
+
+### 2.5.2 published — 2026-09-30
+
+Public main `fde9fb13` (parent `2817f0cf`, tree `78458839`, exact source
+projection `52a59370`), annotated tag `v2.5.2`, GitHub release published as
+latest with four assets; draft and published readbacks PASS (release body,
+downloaded assets byte-equal, remote refs, source tree). Private proof commit
+`054ab18d`, tag `proof/v2.5.2`; contract sha256 `ca4ac8ae…`. Next: 2.5.3 per
+the scope decisions above (IDE save heap, eval-buffer GC root, LCC setq and
+argument checks, set-macro fix).
+
 ### 2.5.2 Before-Ship prepared; sealed host run green on the third attempt — 2026-09-30
 
 Public-source reproductions (option A): two clean roots from the export,

@@ -22,20 +22,30 @@
 ;; lisp65.
 
 ;; ---- Buffer lines -> ONE source string (lines joined with \n) ----
-(defun %ide-join-codes-into (lines acc)
+(defun %ide-source-size (lines total)
   (if lines
-      (%ide-join-codes-into
-       (cdr lines)
-       (if (cdr lines)
-           (cons 10 (%ide-rev-onto (string->list (car lines)) acc))
-           (%ide-rev-onto (string->list (car lines)) acc)))
-      (%ide-rev-onto acc nil)))
+      (%ide-source-size (cdr lines)
+        (+ total (+ (string-length (car lines)) (if (cdr lines) 1 0))))
+      total))
 
-(defun %ide-join-codes (lines)
-  (%ide-join-codes-into lines nil))
+(defun %ide-copy-line (out line at)
+  (let ((len (string-length line)))
+    (dotimes (i len nil)
+      (%buffer-write out (+ at i) (string-ref line i)))
+    (+ at len)))
+
+(defun %ide-copy-lines (lines out at)
+  (if lines
+      (let ((next (%ide-copy-line out (car lines) at)))
+        (if (cdr lines)
+            (progn
+              (%buffer-write out next 10)
+              (%ide-copy-lines (cdr lines) out (1+ next)))
+            (%buffer-read 3 out)))
+      (%buffer-read 3 out)))
 
 (defun %ide-join (lines)
-  (list->string (%ide-join-codes lines)))
+  (%ide-copy-lines lines (%buffer-alloc 0 (%ide-source-size lines 0)) 0))
 
 (defun %ide-current-buffer ()
   ((lambda (alist) (if alist (cdr (car alist)) nil))
@@ -76,24 +86,14 @@
           nil)
       nil))
 
-;; ---- Read chain: SAVE slots are preallocated and padded with spaces on the right.
-;; First determine the effective length without cons cells, then read only
-;; those bytes into the line list.
-(defun %ide-disk-effective-sector (i limit count last)
-  (if (> i limit)
-      (cons count last)
-      ((lambda (c)
-         ((lambda (count2)
-            (%ide-disk-effective-sector
-             (1+ i) limit count2
-             (if (= c 32)
-                 last
-                 (if (= c 10)
-                     last
-                     (if (= c 13) last count2)))))
-          (1+ count)))
-       (%disk-byte i))))
-
+;; ---- Read chain: lossless load ----
+;; The loaded text is exactly the payload bytes of the chain (bytes 2..limit of
+;; every sector; limit = 255 for inner sectors, the end marker for the last
+;; one).  Nothing is trimmed and nothing is dropped: trailing spaces, trailing
+;; empty lines and CR bytes survive load and save.  LF (10) is the only line
+;; separator; CR (13) stays in the line text and is drawn as a blank cell
+;; (screen.c to_screen maps unknown codes to space).  Files written by the old
+;; preallocated SAVE slots keep their right-hand space padding on load.
 (defun %ide-disk-link-valid-p (track sector next-track next-sector)
   (if (= next-track 0)
       (> next-sector 0)
@@ -101,16 +101,16 @@
           (not (and (= next-track track) (= next-sector sector)))
           nil)))
 
-(defun %ide-disk-effective-count (track sector fuel count last)
+(defun %ide-disk-effective-count (track sector fuel count)
   (if (> fuel 0)
       (if (%disk-read-sector track sector)
           ((lambda (nt ns)
              (if (%ide-disk-link-valid-p track sector nt ns)
-                 ((lambda (pair)
+                 ((lambda (count2)
                     (if (> nt 0)
-                        (%ide-disk-effective-count nt ns (1- fuel) (car pair) (cdr pair))
-                        (cdr pair)))
-                  (%ide-disk-effective-sector 2 (if (> nt 0) 255 ns) count last))
+                        (%ide-disk-effective-count nt ns (1- fuel) count2)
+                        count2))
+                  (+ count (- (if (> nt 0) 255 ns) 1)))
                  -1))
            (%disk-byte 0) (%disk-byte 1))
           -1)
@@ -128,11 +128,8 @@
              (%ide-disk-sector-into
               (1+ i) limit (1- remaining) nil
               (cons (list->string (nreverse cur)) acc))
-             (if (= c 13)
-                 (%ide-disk-sector-into
-                  (1+ i) limit (1- remaining) cur acc)
-                 (%ide-disk-sector-into
-                  (1+ i) limit (1- remaining) (cons c cur) acc))))
+             (%ide-disk-sector-into
+              (1+ i) limit (1- remaining) (cons c cur) acc)))
        (%disk-byte i))))
 
 (defun %ide-disk-read-chain (track sector fuel remaining cur acc)
@@ -156,8 +153,8 @@
               nil)
           nil)))
 
-;; Strip save padding: spaces and line endings at FILE END are at the HEAD of
-;; the reversed list.
+;; Strips trailing blanks from a directory entry name (reversed code list);
+;; no longer used by the file loader.
 (defun %ide-disk-trim-rev (rcodes)
   (if rcodes
       ((lambda (c)
@@ -176,7 +173,7 @@
             (if (< keep 0)
                 nil
                 (%ide-disk-read-chain (car start) (cdr start) 255 keep nil nil)))
-          (%ide-disk-effective-count (car start) (cdr start) 255 0 0))
+          (%ide-disk-effective-count (car start) (cdr start) 255 0))
          nil))
    (%ide-disk-find (string->list name) 40 3 64)))
 
@@ -187,14 +184,15 @@
 
 ;; ---- COW persistence: load M65D only on the first save ----
 (defun %ide-m65d-message (status)
-  (if (if (> status 0) (< status 13) nil)
+  (if (if (> status 0) (< status 14) nil)
       (nth
        (1- status)
        (quote ("bad name" "duplicate name" "too large" "no space"
                "directory full" "disk invalid" "write/verify failed"
                "remount required" "saved; old space leaked"
                "product media is read-only" "persistence failed"
-               "medium changed during write; check both disks")))
+               "medium changed during write; check both disks"
+               "disk allocation inconsistent; disk not written")))
       "persistence failed"))
 
 (defun %ide-cow-save (file source)
@@ -362,23 +360,27 @@
       (progn (set-symbol-value (quote ide-error) "not source") nil)))
 
 ;; ---- Public API: buffer -> transient live session ----
+(defun %ide-eval-source (source)
+  ((lambda (form)
+     (if (eq form (quote %fasl-eof))
+         't
+         (progn (lcc-run form) (%ide-eval-source source))))
+   (%fasl-read-form)))
+
+(defun %ide-eval-open (source)
+  (%cs-read-open source)
+  (%ide-eval-source source))
+
 (defun eval-buffer (buffer-name)
-  (if (eq buffer-name 0)
-      ((lambda (form)
-         (if (eq form (quote %fasl-eof))
-             't
-             (progn (lcc-run form) (eval-buffer 0))))
-       (%fasl-read-form))
-      ((lambda (buf)
-         (if buf
-             (progn
-               (set-symbol-value (quote ide-error) nil)
-               (%cs-read-open (%ide-buffer-source buf))
-               (eval-buffer 0))
-             (progn
-               (set-symbol-value (quote ide-error) "buffer missing")
-               nil)))
-       (%ide-buffers-find buffer-name (%ide-buffers-alist)))))
+  ((lambda (buf)
+     (if buf
+         (progn
+           (set-symbol-value (quote ide-error) nil)
+           (%ide-eval-open (%ide-buffer-source buf)))
+         (progn
+           (set-symbol-value (quote ide-error) "buffer missing")
+           nil)))
+   (%ide-buffers-find buffer-name (%ide-buffers-alist))))
 
 ;; ---- Editor-Keybindings: C-x C-s / C-x C-f / C-x C-w ----
 (defun %ide-disk-current-file (buffer)

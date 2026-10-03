@@ -2,6 +2,504 @@
  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
  "description": "Readable demo programs.  These are packaged as source on the demo D81, compiled on the MEGA65 with compile-file, and checked here against the resident Ein-Suite surface.",
  "extends": "../stdlib/p0-stdlib-einsuite-subset.json",
+ "allow_omitted_defuns": [
+ {
+  "name": "%sexp-line-state",
+  "reason": "Comfort-only continuation scanner; not emitted by the resident or IDE."
+ },
+ {
+  "name": "%lcc-proper-list-p",
+  "reason": "device-LCC private helper is delivered by the resident compiler carrier, not ordinary stdlib or demo source"
+ },
+ {
+  "name": "%lcc-rel8",
+  "reason": "device-LCC private branch helper is delivered by the resident compiler carrier, not ordinary stdlib or demo source"
+ },
+ {
+  "name": "%lcc-while",
+  "reason": "device-LCC private while lowerer is delivered by the resident compiler carrier, not ordinary stdlib or demo source"
+ },
+ {
+  "name": "%ide-x",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-blink",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-clear",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-close",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-idle",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-idle-mini-start",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-init",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-kind",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-open",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-paint",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-poll",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-scan",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "%ide-start",
+  "reason": "IDE idle/blink private object is excluded from the resident and demo profiles"
+ },
+ {
+  "name": "screen-write-string",
+  "reason": "optional native bulk capability; canonical Workbench uses the screen-bulk-p fallback"
+ },
+ {
+  "name": "%c1-compile-form",
+  "reason": "temporary C1 compiler-tier export is outside the resident Ein-Suite profile"
+ },
+ {
+  "name": "ide-event-modifiers",
+  "reason": "generated L-full keymap helper is delivered by the IDE library, not the resident Ein-Suite profile"
+ },
+ {
+  "name": "%ide-modifier-command",
+  "reason": "generated L-full keymap helper is delivered by the IDE library, not the resident Ein-Suite profile"
+ },
+ {
+  "name": "%ide-dispatch-route-low",
+  "reason": "IDE interaction helper is delivered by the IDE library, not the resident Ein-Suite profile"
+ },
+ {
+  "name": "%ide-dispatch-route-mid",
+  "reason": "IDE interaction helper is delivered by the IDE library, not the resident Ein-Suite profile"
+ },
+ {
+  "name": "%ide-dispatch-route-high",
+  "reason": "IDE interaction helper is delivered by the IDE library, not the resident Ein-Suite profile"
+ },
+ {
+  "name": "%ide-state-with-message",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-mini-set",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-mini-status-line",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-mini-start",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-mini-history-input",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-mini-input-value",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-mini-tab-value",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-mini-step",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-prefix-command",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-switch-key",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-compile-key",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-motion-key",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-directory-key",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-last-buffer",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-cycle-buffer-find",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-cycle-buffer",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-word-scan",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-move-word-right",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-move-word-left",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-kill-word",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-clamp-line",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-buffer-with-mark",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-point<=",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-region-bounds",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-last-line",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-lines-replace-range",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-region-parts-tail",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-region-parts",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-yank-parts-tail",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-yank-parts-lines",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-region-text",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-set-mark",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-exchange-point-and-mark",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-kill-region-single",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-kill-region-lines",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-kill-region",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-copy-region-as-kill",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-move-line-relative",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-buffer-start",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-buffer-end",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-page-down",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-page-up",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "ide-backward-kill-word",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-page-rows",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-word-edit-command-p",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-region-command-p",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-page-command-p",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-apply-word-edit-command",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-apply-region-command",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-apply-page-command",
+  "reason": "IDE interaction helper excluded from the core Workbench stdlib profile"
+ },
+ {
+  "name": "%ide-cached-code-at",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-last-cell",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-blank-body-into",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-cached-line-at",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-cached-next-row",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-cached-suffix-at",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-changed-lines-at",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-fast-cached-row",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-fast-dispatch",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-frame-lines-from",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-materialized-fast",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-materialized-full",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-reverse-codes-at",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-status-cached",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-status-direct",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-status-finish",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-status-line-direct",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-status-mini-direct",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-status-msg-direct",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-status-part",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-status-prefix",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-string-codes-at",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-string-part-at",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-render-visible-body-into",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-status-current-p",
+  "reason": "private v1.2.6 IDE renderer helper is delivered by the IDE library"
+ },
+ {
+  "name": "%ide-input-finish",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-input-open",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-input-render",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-append-base",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-carrier",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-drawn",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-fold",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-input",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-options",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-pending",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-push",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-status-parts",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-status-width",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-mini-step-slow",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-render-status-append",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-render-status-suffix",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-status-cache-put",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-status-flush",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-status-flush-cursor",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%ide-status-store",
+  "reason": "Minibuffer library owner in lib/ide-ui.lisp; not part of the demo program selection."
+ },
+ {
+  "name": "%lcc-1args-p",
+  "reason": "device-LCC private helper is delivered by the C2 compiler carrier, not the resident Workbench stdlib"
+ },
+ {
+  "name": "%lcc-unary-checked",
+  "reason": "device-LCC private helper is delivered by the C2 compiler carrier, not the resident Workbench stdlib"
+ },
+ {
+  "name": "%lcc-binary-checked",
+  "reason": "device-LCC private helper is delivered by the C2 compiler carrier, not the resident Workbench stdlib"
+ },
+ {
+  "name": "%lcc-setq-one",
+  "reason": "device-LCC private helper is delivered by the C2 compiler carrier, not the resident Workbench stdlib"
+ },
+ {
+  "name": "%lcc-setq-pairs",
+  "reason": "device-LCC private helper is delivered by the C2 compiler carrier, not the resident Workbench stdlib"
+ }
+],
  "vm_dir_max": 512,
  "sources": [
   "demos/d00-simplify.lisp",

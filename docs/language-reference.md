@@ -43,9 +43,13 @@ Core definition and control forms include `defun`, `defmacro`, `lambda`,
 `quote`, `function`, `if`, `cond`, `let`, `let*`, `setq`, `progn`, `and`,
 `or`, `when`, `unless`, `case`, `dotimes`, `dolist`, and `while`. Function
 parameters may include `&rest`, and `setq` updates local bindings as well as
-global values. These forms are lowered by the compiler; they are language
-syntax rather than function bindings, so their absence from a generated
-function-name list does not mean that the language lacks them.
+global values; with several name/value pairs it assigns every pair in order
+and yields the last value (an odd number of arguments is refused). These forms
+are lowered by the compiler; they are language syntax rather than function
+bindings, so their absence from a generated function-name list does not mean
+that the language lacks them. The compiler also refuses `car`, `cdr`, `consp`,
+`not` and `null` with other than one argument, and `cons` and `mod` with other
+than two.
 
 Two global-definition macros, `defvar` and `defparameter`, complete the set:
 
@@ -211,7 +215,9 @@ number.
 The functions with this behavior are `append`, `length`, `nth`, `nthcdr`,
 `reverse`, `last`, `member`, `assoc`, `mapcar`, `mapcan`, `mapc`, `find`,
 `position`, `butlast`, `copy-list`, `count`, `reduce`, `every`, `some`,
-`getf` and `remf`. Improper (dotted) list spines are rejected the same way.
+`getf` and `remf`. Improper (dotted) list spines are rejected the same way;
+`nth` checks the whole list, so a dotted tail behind the requested element is
+also rejected.
 
 The hot `car` and `cdr` opcodes are deliberately excluded from this
 discipline: `(car nil)` and `(car 1)` both return `nil`. A fully checked

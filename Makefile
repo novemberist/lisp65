@@ -319,7 +319,7 @@ BYTECODE_IDE_FULL_LIB_SUITE := tests/bytecode/libs/p0-ide-sequential-full-lib.js
 BYTECODE_IDE_BASELINE_LIB_SUITE := tests/bytecode/libs/p0-ide-full-lib.json
 BYTECODE_IDE_LIB_SUITE := tests/bytecode/libs/p0-ide-core-lib.json
 BYTECODE_IDE_EXTRA_LIB_SUITE := tests/bytecode/libs/p0-ide-extra-lib.json
-BYTECODE_M65D_LIB_SUITE := tests/bytecode/libs/p0-m65d-lib-disk-r7-20260930.json
+BYTECODE_M65D_LIB_SUITE := tests/bytecode/libs/p0-m65d-lib-disk-r8-20261001.json
 BYTECODE_BUFFER_LIB_SUITE := tests/bytecode/libs/p0-buffer-lib.json
 BYTECODE_FIXED_SUITE := tests/bytecode/stdlib/p0-fixed-point-subset.json
 BYTECODE_STRING_POLISH_SUITE := tests/bytecode/stdlib/p0-string-polish-subset.json
@@ -2061,7 +2061,7 @@ dialect-v2-lists-type-errors-check:
 	python3 tools/host-lisp/dialect_v2_lists_type_errors.py check
 
 dialect-v2-system-runtime-check: $(DISK_R7_V1_BUILD) $(DISK_R7_V2_BUILD)
-	python3 tools/host-lisp/dialect_v2_system_runtime_disk_r7_20260930.py check
+	python3 tools/host-lisp/dialect_v2_system_runtime_disk_r7_v253_20260930.py check
 
 dialect-v2-strings-selftest:
 	python3 tools/host-lisp/dialect_v2_prelude_control.py --fixture $(DIALECT_V2_STRINGS_FIXTURE) selftest
@@ -2119,10 +2119,10 @@ dialect-v2-strings-lcc-stage3-check: dialect-v2-strings-lcc-selftest $(DIALECT_V
 dialect-v2-strings-matrix: dialect-v2-strings-native-matrix dialect-v2-strings-p0-check dialect-v2-strings-lcc-check
 
 v2-string-codec-workload-selftest: v2-workbench-codemod
-	python3 tools/host-lisp/v2_string_codec_workloads_disk_r7_20260930.py selftest
+	python3 tools/host-lisp/v2_string_codec_workloads_v253_r2_20261001.py selftest
 
 v2-string-codec-workload-check: v2-string-codec-workload-selftest
-	python3 tools/host-lisp/v2_string_codec_workloads_disk_r7_20260930.py check
+	python3 tools/host-lisp/v2_string_codec_workloads_v253_r2_20261001.py check
 
 v2-prim-lowering-check:
 	python3 tools/host-lisp/v2_prim_lowering.py
@@ -2187,13 +2187,13 @@ dialect-v2-strings-evidence-check: dialect-v2-strings-evidence-build
 	python3 tools/host-lisp/dialect_v2_prelude_evidence.py --family strings check
 
 dialect-v2-system-runtime-evidence-selftest:
-	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_20260930.py --family system-runtime selftest
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_v253_20260930.py --family system-runtime selftest
 
 dialect-v2-system-runtime-evidence-build: dialect-v2-system-runtime-check dialect-v2-system-runtime-evidence-selftest
 	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_20260930.py --family system-runtime generate
 
 dialect-v2-system-runtime-evidence-check: dialect-v2-system-runtime-evidence-build
-	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_20260930.py --family system-runtime check
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_v253_20260930.py --family system-runtime check
 
 dialect-v2-ide-evidence-check:
 	python3 tools/host-lisp/dialect_v2_ide_evidence.py check
@@ -3004,8 +3004,11 @@ v2-fasl-save-host-selftest:
 v2-fasl-save-host-check: v2-fasl-save-host-selftest
 	python3 tools/host-lisp/v2_fasl_save_host_acceptance.py check
 
+# 2.5.3 successor (2026-10-02): src/eval.c moved, hence the live equivalence
+# binary hash; the successor asserts that is the only delta against the
+# retained v240 verdict. The original tool and receipts stay unchanged.
 dialect-v2-number-to-string-check: $(DIALECT_V2_EQUIVALENCE_BUILD)
-	python3 tools/host-lisp/dialect_v2_number_to_string.py check
+	python3 tools/host-lisp/dialect_v2_number_to_string_v253_20261002.py check
 
 # Live attribution consumes two caller-built, real MOS relocatable ELFs. It
 # explains ownership, but never replaces the LTO/ICF product-floor metric.
@@ -3054,13 +3057,13 @@ dialect-v2-lcc-surface-check: dialect-v2-lcc-surface-selftest $(DIALECT_V1_EQUIV
 		--source-root-v1 $(DIALECT_V1_SOURCE_ROOT) --source-root-v2 .
 
 dialect-v2-prelude-evidence-selftest:
-	python3 tools/host-lisp/dialect_v2_prelude_evidence.py selftest
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_v253_20260930.py selftest
 
 dialect-v2-prelude-evidence-check: dialect-v2-prelude-evidence-selftest
-	python3 tools/host-lisp/dialect_v2_prelude_evidence.py check
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_v253_20260930.py check
 
 dialect-v2-prelude-evidence-live-check: dialect-v2-prelude-control-matrix dialect-v2-prelude-evidence-check
-	python3 tools/host-lisp/dialect_v2_prelude_evidence.py check --historical-build-provenance \
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_v253_20260930.py check --historical-build-provenance \
 		--build-receipt-v1 $(DIALECT_V1_EQUIVALENCE_BUILD) --build-receipt-v2 $(DIALECT_V2_EQUIVALENCE_BUILD) \
 		--verdict-dir build/bytecode/dialect-v2/prelude-control
 
@@ -3156,9 +3159,15 @@ bytecode-p0-bundle-check:
 # source_suite entries) only run as their generated dialect-v2 product
 # suites and are excluded by derivation at recipe time (gate-drift card
 # 2026-09-05); no parse-time shell execution.
+# 2.5.3 successor (2026-10-02): the Werkbank suite is receipt-bound by SHA and
+# stays byte-identical, but its contract no longer matches the live sources
+# (D3 removed %ide-disk-effective-sector; %ide-join now needs %buffer-alloc,
+# which the legacy v1 profile does not run as a primitive). The dated
+# p0-stdlib-werkbank-subset-v253-20261002.json drops those two names and the
+# case ide-disk-join-len; the recipe excludes the frozen original.
 bytecode-p0-stdlib-check:
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --screen-rvs-selftest
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $$(python3 -c "import glob,json;t=set(a['source_suite'] for a in json.load(open('config/v2-workbench-artifact-closure.json'))['artifacts']);print(' '.join(p for p in sorted(glob.glob('tests/bytecode/stdlib/*.json')) if p not in t))")
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $$(python3 -c "import glob,json;t=set(a['source_suite'] for a in json.load(open('config/v2-workbench-artifact-closure.json'))['artifacts'])|{'tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json'};print(' '.join(p for p in sorted(glob.glob('tests/bytecode/stdlib/*.json')) if p not in t))")
 
 bytecode-p0-stdlib-artifacts: | build/bytecode
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_STDLIB_PREFIX) $(BYTECODE_STDLIB_SUITE)
@@ -3328,9 +3337,13 @@ bytecode-p0-private-inline-check:
 
 # 2.5.2 successor receipt: the directory-link fix added three m65d suite cases
 # (suite SHA only; rejection distribution unchanged). The original is retained.
+# 2.5.3 successor (2026-10-02): D2/D4 reshaped lib/m65-disk.lisp; the dated
+# v253-20261002 tool asserts the exact m65d delta against the v253-20260930
+# receipt (one candidate now eligible, one more code-object rejection).
 workbench-private-inline-composition-probe: v2-workbench-codemod
 	python3 tools/host-lisp/workbench_private_inline_probe.py selftest
-	python3 tools/host-lisp/workbench_private_inline_probe.py --receipt tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-private-inline-composition-probe-v252-20260930.json check
+	python3 tools/host-lisp/workbench_private_inline_probe_v253_20261002.py selftest
+	python3 tools/host-lisp/workbench_private_inline_probe_v253_20261002.py --receipt tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-private-inline-composition-probe-v253-20261002.json check
 
 # The historical report under build/reports/workbench is receipt-bound; the
 # live measurement writes its own successor report.

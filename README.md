@@ -1,6 +1,6 @@
 # lisp65
 
-## Comfort by default (2.5.1)
+## Comfort by default (since 2.5.0)
 
 The product starts in Comfort at `l65>`. Balanced multiline input, automatic
 indentation, string/comment-aware parenthesis tracking and ten-line Up/Down
@@ -27,9 +27,10 @@ roughly 1,200–1,800 -> 53 reads/key in the projected lane. The owner physicall
 confirmed considerably improved normal typing and Backspace feel. The earlier small Backspace tail change also
 reduces host VM instructions. Comfort multi-line strings now evaluate and
 display correctly, preserving typed spaces without automatic indentation
-inside strings. Continuation lines are not editable after Return; Up/Down
-always walk history. The multi-line editing card follows.
-See the [2.5.1 release notes](docs/releases/2.5.1-before-ship-r3.md).
+inside strings. Since 2.5.2, Backspace at an empty continuation line reopens
+the previous line (`[edit previous line]`); Up/Down browse history.
+See the [2.5.1 release notes](docs/releases/2.5.1-before-ship-r3.md) and the
+[2.5.2 release notes](docs/releases/2.5.2.md).
 
 lisp65 is a native, interactive Lisp workbench for the
 [MEGA65](https://mega65.org/). It combines a Common Lisp-inspired language,
@@ -38,15 +39,28 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The published baseline is **lisp65 2.5.1**, published on 2026-09-29, using
-**Dialect V2**. **2.5.2** is in release preparation: its Final is sealed and its device session passed; it is not yet published (see the [2.5.2 release notes](docs/releases/2.5.2.md)). 2.5.1 is a
-product release: the qualified product still displays `WORKBENCH 2.0.0` in
-its boot banner; the published package version is 2.5.1. See the
-[2.5.1 release notes](docs/releases/2.5.1-before-ship-r3.md) for the change summary and
-evidence boundary.
+The published baseline is **lisp65 2.5.2**, published on 2026-09-30, using
+**Dialect V2**. **2.5.3** is the current release candidate: its Final is built
+and sealed and its device session passed, but it is not published and its
+Before-Ship record is pending (see the [2.5.3 release notes](docs/releases/2.5.3.md)
+and the [device report](docs/planning/release-2.5.3-device-report.md)). 2.5.2 is a product
+release: the qualified product still displays `WORKBENCH 2.0.0` in its boot
+banner; the published package version is 2.5.2. See the
+[2.5.2 release notes](docs/releases/2.5.2.md) for the change summary and
+evidence boundary. The known issues listed there apply to the published
+release; several are fixed in the 2.5.3 candidate.
 
 ## Highlights
 
+- 2.5.3 (release candidate, not published): larger IDE saves and
+  `eval-buffer` runs, a lossless file load, disk writes only after a check of
+  the whole disk, multi-pair `setq` and builtin argument counts in the
+  compiler, and the prompt now returns after `*** VM: OUT OF MEMORY` (a heap
+  filled by data the program still holds, such as a global list, still cannot
+  be released from the keyboard and needs a reset).
+- 2.5.2: Backspace reopens the previous Comfort line; measured emulator typing
+  cost per key falls by 30.85 %; saving into the first entry of a directory
+  sector no longer hides later directory entries.
 - 2.5.1: C-x q exits the IDE; editor list walks reduce measured native typing
   latency; Comfort multi-line strings evaluate and display correctly.
 - 2.5.0: Comfort starts automatically at `l65>`.
@@ -93,13 +107,14 @@ evidence boundary.
 
 ## Get the release
 
-The published baseline is `lisp65-2.5.1.tar.gz` from
-the [v2.5.1 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.5.1).
+The published baseline is `lisp65-2.5.2.tar.gz` from
+the [v2.5.2 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.5.2).
+2.5.3 is a release candidate and is not available as a release.
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-2.5.1.tar.gz
-cd lisp65-2.5.1
+tar -xzf lisp65-2.5.2.tar.gz
+cd lisp65-2.5.2
 python3 verify.py
 ```
 
@@ -107,22 +122,24 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [2.5.1 release notes](docs/releases/2.5.1-before-ship-r3.md) for the complete change
+See the [2.5.2 release notes](docs/releases/2.5.2.md) for the complete change
 summary and evidence boundary.
 
-## Reproduce the 2.5.1 release
+## Reproduce the 2.5.2 release
 
-Export a fresh source tree with `tools/host-lisp/c2_v251_r2_20260929_public_source.py`,
+Export a fresh source tree with `tools/host-lisp/c2_v252_r1_public_source.py`,
 install the pinned LLVM-MOS toolchain there, and run sequentially:
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 nice -n 18 ionice -c3 python3 -B tools/host-lisp/c2_v251_r2_20260929_public_product.py build
-PYTHONDONTWRITEBYTECODE=1 nice -n 18 ionice -c3 python3 -B tools/host-lisp/c2_v251_r2_20260929_public_product.py check
+PYTHONDONTWRITEBYTECODE=1 nice -n 18 ionice -c3 python3 -B tools/host-lisp/c2_v252_r1_public_product.py build
+PYTHONDONTWRITEBYTECODE=1 nice -n 18 ionice -c3 python3 -B tools/host-lisp/c2_v252_r1_public_product.py check
 ```
 
-The build requires no existing build directory. It checks the Strings Final
+The build requires no existing build directory. It checks the 2.5.2 Final
 ELF, PRG, LTO and D81 identities and records every child command. See
-`config/c2-v251-r2-20260929-public-build-authority.json` and the 2.5.1 release notes.
+`config/c2-v252-r1-public-build-authority.json` and the 2.5.2 release notes.
+The 2.5.1 reproduction remains available through
+`tools/host-lisp/c2_v251_r2_20260929_public_product.py`.
 
 ## Historical 2.4.0 reproduction
 
@@ -169,7 +186,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 2.5.1.
+identity. There is no on-device disk formatter in 2.5.2.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -177,7 +194,7 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 2.5.1 is an early, hardware-validated release.** It is suitable for
+**lisp65 2.5.2 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
@@ -188,8 +205,9 @@ unattended operation, or large applications.
 | Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v2.0 makes no matcher/blink claim. |
 | Permissive hot `car`/`cdr` opcodes | Tier-1 library functions raise a VM type error on an unsupported domain, but the hot opcodes stay permissive: `(car nil)` and `(car 1)` both return `nil`. | A fully checked Tier-2 implementation was measured but did not fit the resident text budget; it remains sealed for the 2.x series. |
 | Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`. A session has 64 code images; a redefinition consumes a new one. At capacity a definition is refused with `OUT OF MEMORY` at a live prompt; a product-disk restart frees the images. | The C2D session store separates immutable code from mutable session state; slot reuse and dependency-aware reclamation remain later work. |
-| Top-level anonymous `lambda` refused | An anonymous `lambda` outside a `defun` body is refused with `VM: BAD BYTECODE`; the prompt recovers and nothing already defined is affected. Lambdas inside `defun` bodies work. | Set B is frozen; this limitation remains in 2.5.1. |
+| Top-level anonymous `lambda` refused | An anonymous `lambda` outside a `defun` body is refused with `VM: BAD BYTECODE`; the prompt recovers and nothing already defined is affected. Lambdas inside `defun` bodies work. This includes `(funcall (lambda () ...))` at the Comfort prompt when the lambda captures a `let` variable (same in 2.5.2 and 2.5.3). | Set B is frozen; this limitation remains in 2.5.2. |
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
+| Heap held by live data cannot be released from the keyboard | In 2.5.2 the prompt could stay dead after `*** VM: OUT OF MEMORY`; the 2.5.3 candidate returns to the prompt (runaway garbage in a `let`-local, a failed IDE save, typing with many IDE buffers). If the heap is filled by data the program still holds, for example a global list, typing the form that drops it runs out of memory while it is typed, the Comfort prompt gives way to the native `LISP65>` and the data stays live. Observed in emulator runs. | Reset (power cycle); unsaved buffers are lost. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
 | Fresh-session workflow | RUN/STOP aborts evaluation but keeps the session. The MEGA65 Reset button returns to BASIC rather than restarting lisp65. | Restart from the product disk for a fresh session; power-cycle for a cold start. `restart-repl` returns with C2.3. |
 | Standalone scope | The Ship Builder packages L65P-v1 projects; it does not capture arbitrary live Workbench session state. | Start from one of the five supplied Ship projects and declare the entry and library closure. |
@@ -213,6 +231,30 @@ remains conditional on measured capacity, reproducible builds, and hardware
 acceptance.
 
 ## Verification status
+
+The published 2.5.2 medium (D81 SHA-256 `ae4e2931bb79bc6d963a2334d67e0777e924c9b34db42ef16567f472c87a300d`)
+passed a device session on 2026-09-30: all 21 automated groups passed, the
+host tool clock measured 40.9 s to the `l65>` prompt, and the owner
+physically confirmed typing and Backspace feel, reopening the previous line,
+C-x q and RUN/STOP during a running form. The directory-link fix was confirmed
+with a real user disk. Stopwatch cold boot remains open and physical C-x C-c
+remains unavailable. See the
+[2.5.2 release notes](docs/releases/2.5.2.md).
+
+The 2.5.3 release candidate passed a device session on 2026-10-03 (two rounds,
+Final r8 medium D81 SHA-256 `7df9db67f16c7218e56c9e4b64dfc0ed512c43771c9c39d9ccd56ddc76e55c2f`):
+all 49 executed automated groups passed, the host tool clock measured 42.8 s to
+the `l65>` prompt (owner stopwatch about 43 s), and the owner physically
+confirmed typing and Backspace feel, reopening the previous line, the string
+example, C-x q, RUN/STOP and a physical C-x C-s on a 50x40 buffer. Two
+observations remain unexplained: the display went black once after a Freezer
+disk swap (every disk was intact afterwards; it did not recur in three later
+swaps), and the physical save of the 50x40 buffer took several minutes. See
+the [device report](docs/planning/release-2.5.3-device-report.md) and the
+[2.5.3 release notes](docs/releases/2.5.3.md). The Before-Ship record and
+publication are pending.
+
+### Historical 2.5.1 verification
 
 The published 2.5.1 medium passed 13/13 automated device rows on 2026-09-29.
 The owner physically confirmed C-x q, the multi-line string example, and
@@ -267,8 +309,9 @@ The [Development Guide](docs/development.md) is the single authority for the
 clone, doctor, build, D81 inspection, and deploy commands. Aggregate proof gates
 that consume sealed evidence are available only in the private proof repository.
 The public product path uses the single C2 emitter, one WPLTO closure, and the
-canonical media packer. The 2.5.1 reproduction checks the Strings Final native and media identities;
-its product medium contains 20 files. The line editor is resident product freight.
+canonical media packer. The 2.5.2 reproduction checks the O2-lite Final native and media identities
+(ELF, PRG, LTO object and D81); the 2.5.1 reproduction checks the Strings Final.
+The 2.5.1 product medium contains 20 files. The line editor is resident product freight.
 The independently verifiable release bundle remains the
 authority for hardware-acceptance claims.
 
@@ -277,6 +320,8 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
+- [Release Notes for 2.5.3 (release candidate)](docs/releases/2.5.3.md)
+- [Release Notes for 2.5.2](docs/releases/2.5.2.md)
 - [Release Notes for 2.5.1](docs/releases/2.5.1-before-ship-r3.md)
 - [Release Notes for 2.5.0](docs/releases/2.5.0.md)
 - [Release Notes for 2.4.0](docs/releases/2.4.0.md)

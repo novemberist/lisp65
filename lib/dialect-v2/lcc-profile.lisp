@@ -263,6 +263,18 @@
   (cond ((eq op 'dotimes) t) ((eq op 'dolist) t)
         ((eq op 'while) t) (t nil)))
 
+;; Fixed-arity opcodes refuse other argument counts, as src/compile.c does
+;; (compile_unary/compile_binary); surplus arguments are never dropped.
+(defun %lcc-v2-unary (cs lvls args opname)
+  (if (%lcc-1args-p args)
+      (%lcc-unary cs lvls args opname)
+      (%lcc-error-invalid-parameter-list)))
+
+(defun %lcc-v2-binary (cs lvls args opname)
+  (if (%lcc-2args-p args)
+      (%lcc-binary cs lvls args opname)
+      (%lcc-error-invalid-parameter-list)))
+
 ; `remainder` remains an internal opcode mnemonic for decoding old P0
 ; artifacts. It is deliberately absent from the v2 source-operation dispatch.
 (defun %lcc-expr-ops2 (cs lvls op args form)
@@ -270,13 +282,13 @@
         ((eq op 'logior) (%lcc-v2-bitop-binary cs lvls args 'logior))
         ((eq op 'logxor) (%lcc-v2-bitop-binary cs lvls args 'logxor))
         ((eq op 'ash) (%lcc-v2-bitop-binary cs lvls args 'ash))
-        ((eq op 'mod) (%lcc-binary cs lvls args 'mod))
-        ((eq op 'cons) (%lcc-binary cs lvls args 'cons))
-        ((eq op 'car)  (%lcc-unary cs lvls args 'car))
-        ((eq op 'cdr)  (%lcc-unary cs lvls args 'cdr))
-        ((eq op 'consp) (%lcc-unary cs lvls args 'consp))
-        ((eq op 'not)  (%lcc-unary cs lvls args 'not))
-        ((eq op 'null) (%lcc-unary cs lvls args 'not))
+        ((eq op 'mod) (%lcc-v2-binary cs lvls args 'mod))
+        ((eq op 'cons) (%lcc-v2-binary cs lvls args 'cons))
+        ((eq op 'car)  (%lcc-v2-unary cs lvls args 'car))
+        ((eq op 'cdr)  (%lcc-v2-unary cs lvls args 'cdr))
+        ((eq op 'consp) (%lcc-v2-unary cs lvls args 'consp))
+        ((eq op 'not)  (%lcc-v2-unary cs lvls args 'not))
+        ((eq op 'null) (%lcc-v2-unary cs lvls args 'not))
         ((%lcc-macro-p op) (%lcc-expr cs lvls (macroexpand-1 form)))
         (t (%lcc-call cs lvls op args))))
 

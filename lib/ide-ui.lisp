@@ -602,8 +602,10 @@
       (if (string= name (car (car alist)))
           (cons
            (if forward
-               (if (cdr alist) (cdr (car (cdr alist))) wrap)
-               (if previous previous wrap))
+               (if (cdr alist) (cdr (car (cdr alist)))
+                   (if (string= name (ide-buffer-name wrap)) clean wrap))
+               (if previous previous
+                   (if (string= name (ide-buffer-name wrap)) clean wrap)))
            (%ide-rev-onto
             acc
             (cons (cons name clean) (cdr alist))))

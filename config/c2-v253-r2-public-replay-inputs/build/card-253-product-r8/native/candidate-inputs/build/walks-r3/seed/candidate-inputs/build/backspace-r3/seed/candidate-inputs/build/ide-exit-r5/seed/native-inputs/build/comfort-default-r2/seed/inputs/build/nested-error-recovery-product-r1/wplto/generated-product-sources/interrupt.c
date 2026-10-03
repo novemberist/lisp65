@@ -1,0 +1,236 @@
+/* lisp65 — Abbruch/Fehler (Lane K) */
+#include "interrupt.h"
+#include "mem.h"
+#ifdef MEGA65_F011_LOAD
+#include "io.h"
+#endif
+
+#if defined(LISP65_RUNTIME_OVERLAY) && !defined(LISP65_C2_PRODUCT_CUT)
+#include "l65m_commit_overlay.h"
+#endif
+#ifdef LISP65_RUNTIME_OVERLAY
+#include "vm_runtime_overlay.h"
+#endif
+#ifdef LISP65_C2_NESTED_APPEND_V5
+#include "c2_product_runtime.h"
+#endif
+
+#if defined(__MEGA65__) || defined(__C64__) || defined(__CBM__)
+#define DEVICE 1
+#endif
+
+jmp_buf     lisp_toplevel;
+uint8_t     lisp_toplevel_active = 0;
+const char *lisp_error_msg = 0;
+static lisp65_error_code pending_code = LISP65_ERR_NONE;
+static obj pending_symbol = NIL;
+#if defined(__mos__)
+/* Zero-byte linker identities for the resident execution-boundary landing.
+ * The C cells retain internal linkage; these aliases allocate no storage and
+ * let assembler consume the active final world's addresses. */
+__asm__(".globl c2_backstop_pending_code\n"
+        ".set c2_backstop_pending_code, pending_code\n"
+        ".globl c2_backstop_pending_symbol\n"
+        ".set c2_backstop_pending_symbol, pending_symbol\n");
+#endif
+static const char numeric_error_sentinel[] = "";
+
+/* Optional resident dispatcher. A strong product definition may use the runtime
+ * transport; the transient renderer itself must never override this symbol. */
+#ifdef LISP65_NUMERIC_ERRORS
+extern uint8_t lisp65_error_render_code(lisp65_error_code, obj);
+extern void emit(char);
+#else
+extern uint8_t lisp65_error_render_code(lisp65_error_code, obj)
+    __attribute__((weak));
+extern void emit(char) __attribute__((weak));
+extern void emit_str(const char *) __attribute__((weak));
+#endif
+
+#ifdef LISP65_NUMERIC_ERRORS
+static char error_hex_digit(uint8_t digit) {
+    digit &= 15u;
+    return (char)(digit + (digit < 10u ? '0' : (uint8_t)('a' - 10)));
+}
+
+#ifndef LISP65_C2_NUMERIC_EARLY_ERRORS
+static uint8_t error_render_resident(lisp65_error_code code) {
+    const char *text;
+    if (code == LISP65_ERR_RUNTIME_CATALOG)
+        text = "E2e catalog missing; redeploy";
+    else if (code == LISP65_ERR_RUNTIME_ISLAND)
+        text = "E2f runtime island invalid; redeploy";
+    else if (code == LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT)
+        text = "E3d runtime transport timeout; reboot";
+    else if (code == LISP65_ERR_RUNTIME_FAMILY_STAGE)
+        text = "E3e runtime family staging failed; redeploy";
+    else return 0;
+    while (*text) emit(*text++);
+    return 1;
+}
+#endif
+#endif
+
+#if defined(__mos__) && defined(LISP65_C2_RTOV_CONTINUATION_LIVENESS)
+#define ABORT_FRAME_CAPTURED 1
+#define ABORT_FRAME_PARAM uint8_t return_slot
+#define ABORT_FRAME_ARG return_slot
+#else
+#define ABORT_FRAME_PARAM void
+#define ABORT_FRAME_ARG
+#endif
+
+static void lisp_abort_jump(ABORT_FRAME_PARAM) {
+    if (!lisp_toplevel_active) return;
+#ifdef LISP65_RUNTIME_OVERLAY
+#ifndef LISP65_C2_PRODUCT_CUT
+    l65m_commit_abort_cleanup();
+#endif
+#ifdef LISP65_C2_NESTED_APPEND_V5
+    /* Errors and RUN/STOP share this exact landing.  C2J cleanup therefore
+     * cannot drift into an error-only rollback mechanism. */
+    (void)c2_product_abort_cleanup(ABORT_FRAME_ARG);
+#else
+    (void)vm_runtime_overlay_abort_cleanup();
+#endif
+#endif
+    /* Unwind the root stack HERE, at the producer, not only at the landing.
+     * A longjmp skips every intermediate `gc_rootsp = base` epilogue, so every
+     * caller between the raise and the landing leaks its roots.  The REPL
+     * landing (src/repl.c) has always reset gc_rootsp for exactly that reason,
+     * which is why the product never accumulated the leak; landings that do
+     * NOT reset -- host harnesses, overlay and embedder entries -- did, at a
+     * measured 4 slots per abort raised from inside a VM run, and the register
+     * row "Root stack not unwound on lcc-install error paths" is one instance
+     * of that (the roots there are the caller's, not lcc-install's; the
+     * installer itself already restores its own watermark).  Doing it once at
+     * the producer makes the invariant hold for every landing.
+     *
+     * It is also what R2's soft frames want: with gc_rootsp back at 0 the
+     * entry-time orphaned-frame purge in vm.c drops every frame the longjmp
+     * skipped, instead of only those whose base survives above a leaked
+     * pointer.  Placed after the overlay cleanups above, which still run with
+     * the roots they were written against. */
+    gc_rootsp = 0;
+#ifdef MEGA65_F011_LOAD
+    io_disk_source_abort();
+#endif
+    longjmp(lisp_toplevel, 1);
+}
+
+#ifdef ABORT_FRAME_CAPTURED
+/* Assembly entrances capture the actual page-1 return slot before any C
+ * prologue. The descriptor remains a C argument through cleanup. */
+void lisp_abort_captured(const char *msg, uint8_t return_slot) {
+#else
+void lisp_abort(const char *msg) {
+#endif
+    pending_code = LISP65_ERR_NONE;
+    pending_symbol = NIL;
+    lisp_error_msg = msg;
+    lisp_abort_jump(ABORT_FRAME_ARG);
+    /* kein Toplevel aktiv (z. B. Smoke/Oracle): nur Meldung merken, normal zurueck */
+}
+
+#ifdef ABORT_FRAME_CAPTURED
+void lisp_abort_symbol_captured(lisp65_error_code code, obj symbol,
+                                uint8_t return_slot) {
+#else
+void lisp_abort_symbol(lisp65_error_code code, obj symbol) {
+#endif
+    pending_code = code;
+    pending_symbol = symbol;
+    lisp_error_msg = numeric_error_sentinel;
+    lisp_abort_jump(ABORT_FRAME_ARG);
+}
+
+#ifndef ABORT_FRAME_CAPTURED
+void lisp_abort_code(lisp65_error_code code) {
+    lisp_abort_symbol(code, NIL);
+}
+#endif
+
+lisp65_error_code lisp65_error_pending_code(void) { return pending_code; }
+obj lisp65_error_pending_symbol(void) { return pending_symbol; }
+
+void lisp65_error_clear(void) {
+    pending_code = LISP65_ERR_NONE;
+    pending_symbol = NIL;
+    lisp_error_msg = 0;
+}
+
+uint8_t lisp65_error_render_pending(void) {
+#ifndef LISP65_NUMERIC_ERRORS
+    if (pending_code == LISP65_ERR_NONE) {
+        if (!emit_str) return 0;
+        emit_str(lisp_error_msg ? lisp_error_msg : "abort");
+        return 1;
+    }
+#else
+    uint8_t code = pending_code;
+
+    /* The Workbench owns only numeric errors; dynamic text remains a host API. */
+    if (code == LISP65_ERR_NONE) return 0;
+#ifndef LISP65_C2_NUMERIC_EARLY_ERRORS
+    if (error_render_resident(code)) return 1;
+#endif
+#endif
+#ifdef LISP65_NUMERIC_ERRORS
+    if (lisp65_error_render_code(code, pending_symbol)) return 1;
+#else
+    if (lisp65_error_render_code
+        && lisp65_error_render_code(pending_code, pending_symbol)) return 1;
+    if (!emit) return 0;
+#endif
+    emit('E');
+#ifdef LISP65_NUMERIC_ERRORS
+    emit(error_hex_digit((uint8_t)(code >> 4)));
+    emit(error_hex_digit(code));
+#else
+    {
+        static const char hex[] = "0123456789abcdef";
+        emit(hex[(pending_code >> 4) & 15u]);
+        emit(hex[pending_code & 15u]);
+    }
+#endif
+    return 1;
+}
+
+void lisp_poll(void) {
+#ifdef DEVICE
+#ifdef LISP65_C2_KERNAL_UNMAP
+    lisp65_key_event event;
+    if (C2K_INPUT_RING_TAIL != C2K_INPUT_RING_CLOSED) {
+        if (C2K_BREAK_PENDING) {
+            C2K_BREAK_PENDING = 0u;
+            lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
+        }
+        return;
+    }
+    /* Evaluator polling prioritises the one global safety event.  Ordinary
+     * keystrokes typed while computation is running are not editor input and
+     * are deliberately drained rather than represented a second time. */
+    while (c2_kernal_event_poll(&event))
+        if (event.code == LISP65_KEY_RUN_STOP)
+            lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
+#else
+    /* STKEY $91 == $7F, wenn RUN/STOP gedrueckt (KERNAL-IRQ aktualisiert es). */
+    if (*(volatile unsigned char *)0x91 == 0x7F)
+        lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
+#endif
+#endif
+}
+
+#ifdef LISP65_C2_KERNAL_UNMAP
+uint8_t lisp_input_event(uint8_t blocking, uint8_t idle,
+                         lisp65_key_event *event) {
+    do {
+        if (!c2_kernal_event_poll(event)) continue;
+        if (event->code != LISP65_KEY_RUN_STOP) return 1u;
+        if (!idle)
+            lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
+        /* RUN/STOP at an idle REPL has exactly no meaning. */
+    } while (blocking);
+    return 0u;
+}
+#endif
