@@ -1,0 +1,660 @@
+{
+  "artifacts": {
+    "D81": {
+      "bytes": 819200,
+      "path": "build/card-254-final-r1/media-254/c254.d81",
+      "sha256": "250fdc763ae9e5b04cf149a6f2a7a3aa9fb293ff8da58e9a703e0c601efaef5d"
+    },
+    "ELF": {
+      "bytes": 664176,
+      "path": "build/card-254-final-r1/wplto/resident-island-seed.prg.elf",
+      "sha256": "7b951eb9c92bc8797278903465b7483b3168a0eb935237a8f62ea3757f205244"
+    },
+    "LTO": {
+      "bytes": 651076,
+      "path": "build/card-254-final-r1/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "e9d6dc850e01dac45efb0dc1163ac3b463a5d26e00a49c3107380073da472afc"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/card-254-final-r1/wplto/resident-island-seed.prg",
+      "sha256": "192138eb70b4dc46a992e95651f52180a4e1687cd138b9347f8e3b77e37d70c4"
+    }
+  },
+  "final_identity": {
+    "bytes": 3112,
+    "path": "build/card-254-final-r1/final-identity.json",
+    "sha256": "d8668cf201b9c3e477a53df57fc6b85a2d1d629083e15fa0e129b8fcf49f5efe"
+  },
+  "format": "lisp65-v254-target-acceptance-v1",
+  "gates": {
+    "backspace-rows": {
+      "checks": [
+        {
+          "equals": "DONE",
+          "pointer": "/status"
+        },
+        {
+          "equals": null,
+          "pointer": "/error"
+        },
+        {
+          "equals": 7,
+          "pointer": "/passed"
+        },
+        {
+          "equals": [],
+          "pointer": "/failed"
+        }
+      ],
+      "receipt": {
+        "bytes": 3262,
+        "path": "build/card-254-rows-r1c/backspace/receipt.json",
+        "sha256": "7d3c0cb1710498cc93e83a0bd9bde6346d934fe3b6a7fa7b23eed154302bd13e"
+      },
+      "status": "PASS"
+    },
+    "comfort-rows": {
+      "checks": [
+        {
+          "equals": "DONE",
+          "pointer": "/status"
+        },
+        {
+          "equals": null,
+          "pointer": "/error"
+        },
+        {
+          "equals": 79,
+          "pointer": "/passed"
+        },
+        {
+          "equals": [],
+          "pointer": "/failed"
+        }
+      ],
+      "receipt": {
+        "bytes": 64147,
+        "path": "build/card-254-rows-r1c/comfort/receipt.json",
+        "sha256": "a9952cc90095d82b75da461ffdb91e65abe49cd7c0a048b628f41b8db16e7e12"
+      },
+      "status": "PASS"
+    },
+    "device-upload": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "250fdc763ae9e5b04cf149a6f2a7a3aa9fb293ff8da58e9a703e0c601efaef5d",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "7b951eb9c92bc8797278903465b7483b3168a0eb935237a8f62ea3757f205244",
+          "pointer": "/elf/sha256"
+        },
+        {
+          "equals": "250fdc763ae9e5b04cf149a6f2a7a3aa9fb293ff8da58e9a703e0c601efaef5d",
+          "pointer": "/readback/sha256"
+        },
+        {
+          "equals": true,
+          "pointer": "/new_file_witness"
+        },
+        {
+          "equals": 0,
+          "pointer": "/product_ram_writes"
+        },
+        {
+          "equals": "D254.D81",
+          "pointer": "/remote"
+        },
+        {
+          "equals": "D254U.D81",
+          "pointer": "/user_remote"
+        },
+        {
+          "equals": true,
+          "pointer": "/post_session_readback/product_unchanged"
+        },
+        {
+          "equals": true,
+          "pointer": "/post_session_readback/out20x40_equals_src20x40"
+        },
+        {
+          "equals": true,
+          "pointer": "/post_session_readback/bam_valid"
+        },
+        {
+          "equals": null,
+          "pointer": "/driver"
+        }
+      ],
+      "receipt": {
+        "bytes": 3244,
+        "path": "build/release-v2.5.4/device-upload-r1.json",
+        "sha256": "b97af10dee946a53c02566335da68eee2b78f8d4c695fac366dedc587b5a0e39"
+      },
+      "status": "PASS"
+    },
+    "emulator-rows": {
+      "checks": [
+        {
+          "equals": [],
+          "pointer": "/still_unreviewed"
+        },
+        {
+          "equals": "78baa455405e8810468d715774f94a48268f28fe3cb037e174f0aff5b9a3b4f5",
+          "pointer": "/run/receipt_sha256"
+        },
+        {
+          "equals": "FAIL",
+          "pointer": "/verdict"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/arity-bitops-eq-refused"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/arity-toplevel-direct"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/closure-compile"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/closure-still-refused"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/d703-dma-format-probe"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/disk-d2-aborted-save-8"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/disk-d3-lossless"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/disk-d4-mitigation"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/disk-d4-swapped-identity"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/disk-remount-check"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-pending-cx-reset"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-pending-cx-reset-bound"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-stop-after-burst"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-stop-backspace-mix"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-stop-during-render"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-stop-idle"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-stop-long-line-return"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-stop-mid-burst"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/e3-stop-return-burst"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/hist1-recall-comment"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/hist1-recall-two-comments"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/ide-buffer-switch"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/ide-buffer-switch-two"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/ide-mark-stale"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/ide-save-100x20"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/ide-save-100x20-reset"
+        },
+        {
+          "equals": "OBSERVED",
+          "pointer": "/rows/ide-save-100x40-refusal"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/ide-save-20x40"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/ide-save-50x40"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lcc-arity-compiled"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lcc-car-2args"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lcc-f2-regression"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lcc-ladder-calibrated"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lcc-ladder-closure"
+        },
+        {
+          "equals": "OBSERVED-MATCH",
+          "pointer": "/rows/lcc-ladder-host-only"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lcc-setq-multi"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lcc-setq-odd"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lcc-setq-probes"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/lib1-defstruct-collision"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/macro-normal"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/mapcan-beyond-12"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/mapcan-heap-edge"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/nth-dotted"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/oom-ide-save-100x40-recovery"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/prep-load-libs"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/rp1-accepted-large"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/rp1-bounded-result"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/rp1-depth8-reentry"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/rp1-flat-1101-heap"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/save-refused-during-load"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/seam-bind-buffer"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/seam-builtin-not-overridable"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/seam-control-cancels"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/seam-message-result"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/seam-nil-result"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/seam-prepare"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/seam-registry-value"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/seam-unbound-unknown"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/set-macro-forced-gc"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/stop-probe"
+        }
+      ],
+      "receipt": {
+        "bytes": 8765,
+        "path": "build/card-254-rows-r1-review/reviewed.json",
+        "sha256": "8f98fbb9d83877c6571ceef9f923f6e5dddb096ba1d3adced45b1b32e37efc3e"
+      },
+      "scope_note": "Reviewed record of the new 2.5.4 emulator rows on the Seed medium (byte-identical to the Final). Every row is PASS or an OBSERVED record and nothing is unreviewed. The top-level verdict of the review is FAIL and is asserted as such: it reflects the sessions run r1 lost to a host transport fault, which the continuation build/card-254-rows-r1c repeated (reviewer confirmation 2026-10-04).",
+      "status": "REVIEWED"
+    },
+    "gc-session": {
+      "checks": [
+        {
+          "equals": "gc-session",
+          "pointer": "/gate"
+        },
+        {
+          "equals": "FAIL",
+          "pointer": "/status"
+        },
+        {
+          "equals": "250fdc763ae9e5b04cf149a6f2a7a3aa9fb293ff8da58e9a703e0c601efaef5d",
+          "pointer": "/final/medium_sha256"
+        },
+        {
+          "equals": "7b951eb9c92bc8797278903465b7483b3168a0eb935237a8f62ea3757f205244",
+          "pointer": "/final/elf_sha256"
+        },
+        {
+          "equals": "7b70c025ef66de595e1d2c050e6d65d54ed9d34243c807c8faf4618fda8e5603",
+          "pointer": "/final/seal_sha256"
+        },
+        {
+          "equals": [
+            "history10",
+            "history-home-delete-refill250",
+            "compare:return250",
+            "compare:defmacro-gc"
+          ],
+          "pointer": "/not_pass"
+        },
+        {
+          "equals": 1070,
+          "pointer": "/ceiling/live_cells"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/0/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/1/status"
+        },
+        {
+          "equals": "STALL",
+          "pointer": "/scenarios/2/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/3/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/4/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/5/status"
+        },
+        {
+          "equals": "STALL",
+          "pointer": "/scenarios/6/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/7/status"
+        },
+        {
+          "equals": false,
+          "pointer": "/scenarios/0/mem_oom_ever_set"
+        },
+        {
+          "equals": false,
+          "pointer": "/scenarios/1/mem_oom_ever_set"
+        },
+        {
+          "equals": false,
+          "pointer": "/scenarios/2/mem_oom_ever_set"
+        },
+        {
+          "equals": false,
+          "pointer": "/scenarios/3/mem_oom_ever_set"
+        },
+        {
+          "equals": false,
+          "pointer": "/scenarios/4/mem_oom_ever_set"
+        },
+        {
+          "equals": false,
+          "pointer": "/scenarios/5/mem_oom_ever_set"
+        },
+        {
+          "equals": false,
+          "pointer": "/scenarios/6/mem_oom_ever_set"
+        },
+        {
+          "equals": false,
+          "pointer": "/scenarios/7/mem_oom_ever_set"
+        },
+        {
+          "equals": "FAIL",
+          "pointer": "/comparison_with_v253_final/defmacro-gc/status"
+        },
+        {
+          "equals": "FAIL",
+          "pointer": "/comparison_with_v253_final/return250/status"
+        },
+        {
+          "equals": [
+            3
+          ],
+          "pointer": "/comparison_with_v253_final/defmacro-gc/measured/delta_at_every_collection/live_cells"
+        },
+        {
+          "equals": [
+            3
+          ],
+          "pointer": "/comparison_with_v253_final/return250/measured/delta_at_every_collection/live_cells"
+        },
+        {
+          "equals": [
+            88
+          ],
+          "pointer": "/comparison_with_v253_final/defmacro-gc/measured/delta_at_every_collection/arena_bytes"
+        },
+        {
+          "equals": [
+            88
+          ],
+          "pointer": "/comparison_with_v253_final/return250/measured/delta_at_every_collection/arena_bytes"
+        }
+      ],
+      "receipt": {
+        "bytes": 11235,
+        "path": "build/card-254-gc-r2/summary.json",
+        "sha256": "4cfb7007acefd9409795793a748d6dc83e2dacf17cf26bcd5360feacc66ed069"
+      },
+      "scope_note": "GC-stress session on the sealed 2.5.4 Final (forced collection at every allocation of each measured transition; emulator). Status FAIL by the committed rules, bound as recorded and not reworded: (i) history10 and history-home-delete-refill250 STALL on a pre-existing display defect that the 2.5.3 records show identically (a recalled 250-character entry at the bottom of the screen is drawn over the rows above without scrolling); (ii) both peak comparisons exceed the 2.5.3 Final by a constant +3 live cells and +88 arena bytes. Six of eight scenarios PASS, no out-of-memory in any scenario; headroom at the highest peak 43 of 1,070 cells (2.5.3: 46). Not covered: Return of a recalled 250-character entry and delete/refill inside one under forced collection. Whether the release ships with this FAIL is the owner decision; it is bound through the authorization record (owner word 2026-10-06 in the observations file).",
+      "status": "FAIL"
+    },
+    "owner-rows": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "250fdc763ae9e5b04cf149a6f2a7a3aa9fb293ff8da58e9a703e0c601efaef5d",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "MEASURED",
+          "pointer": "/rows/0/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/1/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/2/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/3/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/4/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/5/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/6/status"
+        },
+        {
+          "equals": "FINDING",
+          "pointer": "/rows/7/status"
+        },
+        {
+          "equals": "FINDING",
+          "pointer": "/rows/8/status"
+        },
+        {
+          "equals": "FINDING",
+          "pointer": "/rows/9/status"
+        },
+        {
+          "equals": [
+            "additional REPL rows of the checklist",
+            "large saves (50x40, 100x20)",
+            "out-of-memory rows",
+            "$D703 check (stays open on hardware)",
+            "physical C-x C-s (the save row used save-buffer-to)",
+            "comparison of IDE typing with the 2.5.3 IDE on the device"
+          ],
+          "pointer": "/not_done"
+        }
+      ],
+      "receipt": {
+        "bytes": 4868,
+        "path": "build/release-v2.5.4/owner-rows-r1.json",
+        "sha256": "cdbddbf09fd69bcd0390850ae176b602044383c86351f3caa393bee71629836c"
+      },
+      "status": "PASS"
+    },
+    "paired-typing": {
+      "checks": [
+        {
+          "equals": 1146728.225,
+          "pointer": "/baseline/mean_cycles_per_key"
+        },
+        {
+          "equals": 1146714.175,
+          "pointer": "/candidate/mean_cycles_per_key"
+        },
+        {
+          "equals": "250fdc763ae9e5b04cf149a6f2a7a3aa9fb293ff8da58e9a703e0c601efaef5d",
+          "pointer": "/candidate/medium_sha256"
+        },
+        {
+          "equals": "7b951eb9c92bc8797278903465b7483b3168a0eb935237a8f62ea3757f205244",
+          "pointer": "/candidate/elf_sha256"
+        },
+        {
+          "equals": true,
+          "pointer": "/candidate/equal_to_final_d81"
+        }
+      ],
+      "receipt": {
+        "bytes": 1776,
+        "path": "build/release-v2.5.4/paired-typing-r1.json",
+        "sha256": "e25203133d1ae1a8219049af3847be5d7d09055f8c3cb69926c2713579167519"
+      },
+      "status": "PASS"
+    }
+  },
+  "pending_physical_rows": [
+    "No device driver session: no tool-clock boot receipt and no automated device rows exist for 2.5.4 (the 2.5.3 gates device-boot and device-rows have no 2.5.4 counterpart); boot is an owner stopwatch value",
+    "gc-session FAIL by the committed rules: two of eight scenarios (history10, history-home-delete-refill250) STALL on a pre-existing display defect (recall of a 250-character history entry at the bottom of the screen is drawn over the rows above; identical in the 2.5.3 records); six PASS; no out-of-memory",
+    "Memory cost against the 2.5.3 Final: constant +3 live cells and +88 arena bytes at every collection (reasoned cause: the bounded result print); headroom at the highest forced peak 43 of 1,070 cells (2.5.3: 46)",
+    "Not covered under forced collection: Return of a recalled 250-character entry and delete/refill inside one",
+    "Not recorded: whether the MEGA65 was power-cycled before the upload",
+    "Not done on the device: additional REPL rows, large saves (50x40, 100x20), out-of-memory rows, physical C-x C-s",
+    "$D703 check: open on hardware (emulator probe survived; emulator DMA semantics not shown)",
+    "Edit persistence with a RUN/STOP in the middle of a key burst: emulator rows only (not possible by hand on the device)",
+    "Finding: type-ahead typed while the editor is still opening is lost (not a 2.5.4 regression by current evidence)",
+    "Finding: typing in the IDE editor is clearly slower than at the REPL (keys are not lost, they appear late); emulator comparison: 2.5.4 is 1.3 to 1.7 % slower per editor key than 2.5.3 (constant +1.8 ms); the editor is about 30 times slower per key than the REPL in both versions",
+    "Finding: (m65d-remount) takes very long on the device (owner: believed unchanged; m65d image byte-identical to 2.5.3)",
+    "Not green in the emulator and unchanged from 2.5.3: ide-buffer-switch-two-keys and ide-save-100x20-keys (harness expectation), oom-repl-global (known behaviour)",
+    "Physical IDE C-x C-c remains unavailable (known issue; C-x q is the supported exit)"
+  ],
+  "status": "FAIL-GATE-RECORDED: gc-session"
+}

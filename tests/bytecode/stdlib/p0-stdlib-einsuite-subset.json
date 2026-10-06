@@ -3,6 +3,7 @@
  "description": "Ein-Suite-Kandidat (P6c): Werkbank-Kern (Stdlib+IDE ohne Disk-Glue) + lcc (der Self-Hosting-Compiler als Blob; docs/lcc-device-design.md) Gate-drift card 2026-09-05: case ide-render-long-line-truncates-left left this resident corpus because the v1.2.6 renderer split (d47dca64) delivers ide-render's helpers from the IDE library; the same case runs in the generated IDE library suite build/bytecode/dialect-v2/suites/p0-ide-core-lib.json. Case ide-syntax-depth-closers-negative now expects -1: the v1.7 shared scanner (0c1486a4) binds sticky negative depth, checked as shared-depth-scanner-keeps-overclose-sticky in that suite.",
  "require_all_defuns": true,
  "allow_omitted_defuns": [
+    {"name": "ide-bind-key", "reason": "2.5.4 IDE editor-loop helper in lib/ide-ui.lisp (key extension seam registry); delivered by the IDE library, not part of this suite selection."},
     {"name": "%sexp-line-state", "reason": "Comfort-only continuation scanner; not emitted by the resident or IDE."},
   {
    "name": "%lcc-1args-p",

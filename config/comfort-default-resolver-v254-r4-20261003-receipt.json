@@ -1,0 +1,503 @@
+{
+  "claim_limit": "Host source and bytecode only",
+  "current": {
+    "artifacts": {
+      "D81": {
+        "bytes": 819200,
+        "content": "@scratch/resolver/require-resolver-fixture.d81",
+        "sha256": "0b4b0e98593dddc36db7429f58b3c56e67e3fb3eb90b8ca8e2e9108927dc3a0e"
+      },
+      "index": {
+        "bytes": 128,
+        "content": "@scratch/resolver/l65index",
+        "sha256": "aab7953b6dbebc532b99e8b2e0ab7c0d5800cbd7bde4056cca68b20fa5fa76e5"
+      },
+      "libraries": [
+        {
+          "bytes": 268,
+          "content": "@scratch/resolver/testlib.l65s",
+          "sha256": "4890834c6db97c40ce8b91b8ad9caef6ce554de7112992d94709694b8c78ae61"
+        },
+        {
+          "bytes": 398,
+          "content": "@scratch/resolver/buffer.l65s",
+          "sha256": "cd7d85e54792f5a729469271e324e8aa7bb42e037329aa72ec0082724de648f3"
+        }
+      ]
+    },
+    "authority": {
+      "assembler_leaf": {
+        "bytes": 1989,
+        "path": "src/vm_c2d_byte.s",
+        "sha256": "36b7e90b3fd3f3a862f3cc62f424f3155dd2b1b7b075770bd26cf011e5a863f4"
+      },
+      "contract": {
+        "bytes": 14883,
+        "path": "config/c2-require-resolver-contract.json",
+        "sha256": "fcbe437e133a078a29b5543d45ffd422549cf5e9dc9117c24a85c53c8b52fe14"
+      },
+      "gate": {
+        "bytes": 46707,
+        "path": "tools/host-lisp/c2_require_resolver_gate.py",
+        "sha256": "2918b08e7aa52d4d146af9887d6af0cdde100c00f2727e43b33f51f8add231fb"
+      },
+      "host_receipt": {
+        "bytes": 7950,
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-manifest-v1-host-probe-receipt.json",
+        "sha256": "3473510510c50c18845cfcfebf9532570a235f5aa6d5762c9ce2f9a105467716"
+      },
+      "lisp": {
+        "bytes": 34933,
+        "path": "lib/stdlib-require.lisp",
+        "sha256": "64c8b4d8fae9a5e8d69f3de928604861e3e1cc25127f9650d4d1e9c7aad11676"
+      },
+      "note": {
+        "bytes": 5916,
+        "path": "docs/planning/c2.2-require-resolver-product-probe.md",
+        "sha256": "7c64b19f7b0c5db1a282aa826b74780e66b6e93ebe16ec7d0ea415fb8dc35832"
+      },
+      "ramp": {
+        "bytes": 9803,
+        "path": "config/c2.2-workbench-era-ramp.json",
+        "sha256": "a0c68dd3a4d8470c320aab0225d2020da1a5e0eb2a62b91205c84f6ddd7eeb1f"
+      },
+      "runtime": {
+        "bytes": 185815,
+        "path": "src/c2_product_runtime.c",
+        "sha256": "5a644b78a1e9f2f00ce73b61e0acf69c971718a8cb0e51d3e47364c860d07b78"
+      },
+      "suite": {
+        "bytes": 3377,
+        "path": "tests/bytecode/libs/p0-stdlib-require-resolver.json",
+        "sha256": "c4e401ebd33a1908a2093cdded18d0ddd41d266821b90146244ae6c22cdfffe4"
+      },
+      "vm": {
+        "bytes": 120104,
+        "path": "src/vm.c",
+        "sha256": "adc0c2531d8daf9bc50a5f10c5e23c237e3b0d90aae7e93ccb2d133f5c10ca35"
+      }
+    },
+    "binary_index": {
+      "capacity_exact_meets": 6,
+      "capacity_one_byte_overflows": {
+        "bank2-one-byte-overflow": "resolve-capacity",
+        "entries-one-byte-overflow": "resolve-capacity",
+        "images-one-byte-overflow": "resolve-capacity",
+        "resolutions-one-byte-overflow": "resolve-capacity",
+        "roots-one-byte-overflow": "resolve-capacity",
+        "scratch-one-byte-overflow": "resolve-capacity"
+      },
+      "dependency_order": [
+        "testlib",
+        "buffer"
+      ],
+      "duplicate_indexed_identity_rejected": {
+        "duplicate-indexed-identity": "resolve-active-index-universe"
+      },
+      "format": "L65I-v1",
+      "generation_idempotence": "passed-empty-partial-complete",
+      "index_crc16": "0x154c",
+      "index_identity_crc32": "0x04673daa",
+      "mutations_rejected": {
+        "artifact-identity": "index-artifact-identity",
+        "artifact-length": "index-artifact-length",
+        "artifact-zero": "index-row-zero-authority",
+        "bank2-zero": "index-row-zero-authority",
+        "dependency-count": "index-row-dependency-count",
+        "dependency-padding": "index-row-dependency-padding",
+        "dependency-self": "index-row-dependency",
+        "dependency-width": "index-widths",
+        "duplicate-identity": "index-artifact-identity",
+        "duplicate-name": "index-artifact-length",
+        "empty-name": "index-row-name",
+        "execution-source": "index-row-source",
+        "header-crc": "index-header-crc",
+        "header-reserved": "index-header-reserved",
+        "header-seal-magic-identity-only": "index-header-crc",
+        "header-seal-magic-record-crc-identity-only": "index-header-crc",
+        "header-seal-omits-record-crc-fields": "index-header-crc",
+        "header-width": "index-widths",
+        "identity": "index-identity",
+        "images-zero": "index-row-zero-authority",
+        "magic": "index-magic",
+        "name-padding": "index-row-name",
+        "record-bytes": "index-record-bytes",
+        "record-crc": "index-record-crc",
+        "row-crc": "index-record-crc",
+        "row-reserved": "index-row-reserved",
+        "row-width": "index-widths",
+        "sector-range": "index-row-locator",
+        "track-zero": "index-row-locator",
+        "version": "index-version",
+        "zero-identity": "index-row-zero-authority",
+        "zero-rows": "index-count"
+      },
+      "ordinary_persistent_non_index_identity": "accepted-and-excluded-from-library-idempotence",
+      "rows": [
+        {
+          "artifact_bytes": 268,
+          "bank2": 36,
+          "combined_crc32": 1696933232,
+          "dependencies": [],
+          "entries": 3,
+          "execution_source": 2,
+          "images": 1,
+          "name": "testlib",
+          "resolutions": 7,
+          "roots": 4,
+          "scratch": 24,
+          "sector": 1,
+          "track": 39
+        },
+        {
+          "artifact_bytes": 398,
+          "bank2": 104,
+          "combined_crc32": 3346070175,
+          "dependencies": [
+            0
+          ],
+          "entries": 7,
+          "execution_source": 2,
+          "images": 1,
+          "name": "buffer",
+          "resolutions": 0,
+          "roots": 0,
+          "scratch": 56,
+          "sector": 3,
+          "track": 39
+        }
+      ]
+    },
+    "claim_limit": "Source, real-artifact L65I and host semantics only; WPLTO, product link, hardware and defstruct are not claimed.",
+    "format": "lisp65-library-resolver-live-successor-v1",
+    "hardware_runs": 0,
+    "host_first_prerequisite": {
+      "binding": "same dependency/rollback/preflight semantics are implemented by the gated Bank-2 Lisp functions",
+      "cutpoints": 12,
+      "fresh_replay": "REQUIRE V1 HOST PASS libs=2 cutpoints=12 mutations=38 resident=0 product=0",
+      "mode": "private-proof-authority",
+      "mutations": 38,
+      "private_evidence_inputs": 1
+    },
+    "predecessor": {
+      "bytes": 10060,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-resolver-source-index-gate-receipt.json",
+      "sha256": "97bc875ed944b674dc4d6feecd309edae3c2f811afe8a1d42d3a8e97d14dd386"
+    },
+    "product_links": 0,
+    "promotable": false,
+    "recorded_on": "2026-09-28",
+    "source_gate": {
+      "arguments": [
+        "offset-low-byte",
+        "offset-high-byte"
+      ],
+      "assembler_leaf": "vm_c2d_byte",
+      "assembler_leaf_tokens": 8,
+      "bank2_decisions": [
+        "active persistent identity universe",
+        "ordinary persistent row geometry before package classification",
+        "canonical static Bank-2 edge from C2D slots 0..5",
+        "persistent Bank-2 low edge",
+        "transient C2D and Bank-2 high edges",
+        "six-currency aggregate preflight",
+        "dependency order and idempotence"
+      ],
+      "claimed_resident_state_bytes": 0,
+      "lisp_tokens": 21,
+      "native_owner_capacity_predicate": true,
+      "native_policy_decisions": 0,
+      "new_session_records": 0,
+      "overlay_roundtrips": 0,
+      "prim_id": 67,
+      "primitive_tokens": 3,
+      "published_c2d_bytes": 33840,
+      "read_bytes": 1,
+      "retired_string_query_protocol": true,
+      "status": "passed-private-C2D-byte-primitive-bank2-orchestration"
+    },
+    "source_mutations": {
+      "active-prefix-removed": "lisp-seam",
+      "append-seam-removed": "lisp-seam",
+      "assembler-leaf-edge": "primitive-seam",
+      "byte-args-arity": "primitive-seam",
+      "byte-args-helper-removed": "primitive-seam",
+      "c2d-read-address": "primitive-seam",
+      "c2d-read-width": "primitive-seam",
+      "capacity-orchestration-removed": "lisp-seam",
+      "dependency-width-omitted": "lisp-seam",
+      "header-record-crc-high-omitted": "lisp-seam",
+      "header-record-crc-low-omitted": "lisp-seam",
+      "header-version-omitted": "lisp-seam",
+      "header-width-omitted": "lisp-seam",
+      "idempotence-active-identities-removed": "lisp-seam",
+      "idempotence-fastpath-removed": "lisp-seam",
+      "idempotence-parser-order-reversed": "lisp-seam",
+      "idempotence-state-check-removed": "lisp-seam",
+      "leaf-length-high-Z-nonzero": "assembler-leaf-seam",
+      "leaf-proof-precondition": "assembler-leaf-seam",
+      "leaf-published-high-bound": "assembler-leaf-seam",
+      "leaf-published-low-bound": "assembler-leaf-seam",
+      "leaf-reader-Z": "assembler-leaf-seam",
+      "leaf-reader-edge": "assembler-leaf-seam",
+      "leaf-size": "assembler-leaf-seam",
+      "native-policy-reintroduced": "native-policy",
+      "obsolete-bank-end-literal": "obsolete-bank-end-literal",
+      "old-query-protocol": "retired-query-protocol",
+      "ordinary-persistent-row-rejected": "lisp-seam",
+      "persistent-row-size-removed": "lisp-seam",
+      "prim-id": "primitive-seam",
+      "raw-c2d-read-removed": "lisp-seam",
+      "registry-introduced": "loaded-registry",
+      "row-count-omitted": "lisp-seam",
+      "row-width-omitted": "lisp-seam",
+      "static-prefix-removed": "lisp-seam",
+      "transient-fronts-removed": "lisp-seam",
+      "typed-result": "primitive-seam",
+      "unnormalized-cache-key": "lisp-seam"
+    },
+    "status": "passed-bank2-orchestrated-require-and-private-c2d-byte-gates",
+    "successor_mutations": [
+      "stale-manifest-size",
+      "stale-source-sha",
+      "missing-capacity-wall"
+    ],
+    "target_bank2_compile": {
+      "manifest": {
+        "bytes": 305364,
+        "content": "@scratch/resolver/stdlib-p0.manifest.json",
+        "sha256": "3f03b35fe981b04dc4264f17fb5633706fdd9d3fc159b4b9f104a94bb801e75e"
+      },
+      "status": "passed",
+      "summary": [
+        "bytecode-p0-stdlib-check: PASS suites=1 functions=353 cases=204 objects=573 code_bytes=20439 dir_bytes=4011 steps=26114",
+        "bytecode-p0-stdlib-artifacts: WROTE @scratch/resolver/stdlib-p0 objects=354 code_bytes=16100 ext_bytes=36486 dir_bytes=2478 manifest=@scratch/resolver/stdlib-p0.manifest.json disasm=@scratch/resolver/stdlib-p0.disasm.txt",
+        "bytecode-p0-stdlib-embed-check: PASS cases=204 objects=354 literal_nodes=767 literal_patches=717 steps=26114"
+      ]
+    }
+  },
+  "date": "2026-09-29",
+  "device_contacts": 0,
+  "format": "lisp65-o2-lite-consumer-successor-v1",
+  "inputs": [
+    {
+      "bytes": 4565,
+      "path": "tools/host-lisp/comfort_default_resolver_o2_lite_v253_20260930.py",
+      "sha256": "4568372cfc8771c56ba80a431b15715c774a87df03f26b5aaee064e000552007"
+    },
+    {
+      "bytes": 1319,
+      "path": "tools/host-lisp/comfort_default_resolver_o2_lite_v253_r3_20261001.py",
+      "sha256": "e498b8c48d649ae721ab9f7e343f2bd63f3c5bdf2df91b902698c5af9423b88b"
+    },
+    {
+      "bytes": 2575,
+      "path": "tools/host-lisp/comfort_default_resolver_o2_lite_v254_r4_20261003.py",
+      "sha256": "6a2dedecbad5fae6afdc4db38abdd4ffb7c8385d60369fe1f85b61b9adc01b86"
+    },
+    {
+      "bytes": 3069,
+      "path": "tools/host-lisp/o2_lite_consumers_v254_20261003.py",
+      "sha256": "55b235ef5aee216fb7fde032f3b2ad118ed41c887809da686995e40be44cbe17"
+    },
+    {
+      "bytes": 1659,
+      "path": "config/comfort-default-plane/libraries/repl-comfort-suite.json",
+      "sha256": "c5e7a54832692b7595eb91fd1498c8fe22ce26f087f49a0f275f7d0009d67353"
+    },
+    {
+      "bytes": 296127,
+      "path": "config/strings-source-baseline-r2-20260928.json",
+      "sha256": "5ffa21ce2806310091a17b6e14bed5a99d10f9acb9fa228c35c16fc2d2a1e55a"
+    },
+    {
+      "bytes": 4645,
+      "path": "config/v2-workbench-artifact-closure.json",
+      "sha256": "14063936184dd194964f69899801558ab0d287e5ff62cc2f942571d2bf77d610"
+    },
+    {
+      "bytes": 1096,
+      "path": "lib/lite-hot.lisp",
+      "sha256": "fe689dadc3071ab5f3617615b59bd2d0c5126e04aa7b4532d52d6b1f0fae3ba3"
+    },
+    {
+      "bytes": 4111,
+      "path": "lib/lite.lisp",
+      "sha256": "367d07dc3b5adf8a60c2ad655e9ca2bab867f0b7295a90eae0287c88786d3ffc"
+    },
+    {
+      "bytes": 5601,
+      "path": "lib/repl-comfort-v250.lisp",
+      "sha256": "053fb998c2bdaa3051162def72eee5fe5183dfaf5a0d88459312d007efc691de"
+    },
+    {
+      "bytes": 6815,
+      "path": "lib/sexp-depth.lisp",
+      "sha256": "05b436332b15c87c7fd5a5edd38c4194392a5e4c3a91a99927f31f617adcebac"
+    },
+    {
+      "bytes": 25680,
+      "path": "lib/stdlib-read-line.lisp",
+      "sha256": "5e758c50ac07bbf8e826da15ef274c59c274c8604014825f849b5dfb7743f597"
+    },
+    {
+      "bytes": 9585,
+      "path": "tests/bytecode/libs/p0-ide-core-lib.json",
+      "sha256": "efc0058c870ff0a7e91f449947d66f14ef79cb19c6235854115b7476f3f068d5"
+    },
+    {
+      "bytes": 44877,
+      "path": "tests/bytecode/libs/p0-ide-lib.json",
+      "sha256": "852460f84387b0d466cb0144c3e50059a8fa1004dbf3446405eefe418025dc18"
+    },
+    {
+      "bytes": 20937,
+      "path": "tests/bytecode/libs/p0-repl-comfort-v240.json",
+      "sha256": "3b28254ae0fee5ea6d86934f3d34e99ef423d96a55f8c804aecb028e91d9cdd6"
+    },
+    {
+      "bytes": 9468,
+      "path": "tests/bytecode/libs/p0-repl-comfort-v250.json",
+      "sha256": "d573c13ed7221c8d0ab0473a2224c51b189ff7a83ac5887af6d8e0417f093eb9"
+    },
+    {
+      "bytes": 8471,
+      "path": "tests/bytecode/libs/p0-stdlib-m65-hw-base-o2-lite-20260929.json",
+      "sha256": "4ebeea30d2ed336ee0dc135c39e5d4c15aaeb68a97a213dd53b8b99e9a133966"
+    },
+    {
+      "bytes": 7562,
+      "path": "tests/bytecode/libs/p0-stdlib-m65-hw-base.json",
+      "sha256": "02258f69e1c52f14cb00bc844cea5c1f7a315db9cebb529235563d47a0441a5a"
+    },
+    {
+      "bytes": 23878,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base-o2-lite-20260929.json",
+      "sha256": "5228e3d1717f407aef94eb987cec66df3afcaee34634e80053d99c4005b2e659"
+    },
+    {
+      "bytes": 23833,
+      "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "sha256": "3b1e7d7b1463ead39560fc87f760d816fbdabcec4b0920ea12d94dbe8f889243"
+    },
+    {
+      "bytes": 5473,
+      "path": "tests/bytecode/libs/p0-v160-comfort-device-delta-o2-lite-20260929.json",
+      "sha256": "52a2323d86b63acfcf3817be0c312945910b63debb91992e59812de9d82d2230"
+    },
+    {
+      "bytes": 5273,
+      "path": "tests/bytecode/libs/p0-v160-comfort-device-delta.json",
+      "sha256": "43cdca749b0c0be86ca9e2609c43f9081148a0880e7f152f77e25108970ea126"
+    },
+    {
+      "bytes": 3795,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-subset.json",
+      "sha256": "16124df0ed37ec8b688acee52e1580f36ad091d4a7408982321eccb982dc8e96"
+    },
+    {
+      "bytes": 6048,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+      "sha256": "df35aadc9d114e17e3df6109bcf828b88f76bea58f84c736316001337f2a26df"
+    },
+    {
+      "bytes": 8270,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-fasl-subset.json",
+      "sha256": "41779cec9c0b9d81746d6332bb26d89bf151c86878294131861a9a61db5e76d2"
+    },
+    {
+      "bytes": 48593,
+      "path": "tests/bytecode/stdlib/p0-stdlib-einsuite-subset.json",
+      "sha256": "8a1bd7b388a3db26f4fb91ccdf2a815702980098a9731bf23433f2631c7f3d5f"
+    },
+    {
+      "bytes": 44410,
+      "path": "tests/bytecode/stdlib/p0-stdlib-subset.json",
+      "sha256": "48196404573fe161c807813a104c29e61518dff7052e43779c34155c09cd5b10"
+    },
+    {
+      "bytes": 42596,
+      "path": "tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json",
+      "sha256": "b1f2c811497ceaed47fdefd79651e61607d712d0919c3e0bc28ac8bf7f300f58"
+    },
+    {
+      "bytes": 136327,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "39d91ab5d63232bfae13e19bffa45a280245239930e61c65f2073b36e3201528"
+    },
+    {
+      "bytes": 46707,
+      "path": "tools/host-lisp/c2_require_resolver_gate.py",
+      "sha256": "2918b08e7aa52d4d146af9887d6af0cdde100c00f2727e43b33f51f8add231fb"
+    },
+    {
+      "bytes": 1044,
+      "path": "tools/host-lisp/comfort_default_resolver_o2_lite_20260929.py",
+      "sha256": "82e5d6afd9af9d263b4fa5b27d696276e2e4107119109856f7546d6c7b20f7fd"
+    },
+    {
+      "bytes": 4565,
+      "path": "tools/host-lisp/comfort_default_resolver_o2_lite_v253_20260930.py",
+      "sha256": "4568372cfc8771c56ba80a431b15715c774a87df03f26b5aaee064e000552007"
+    },
+    {
+      "bytes": 931,
+      "path": "tools/host-lisp/comfort_default_resolver_o2_lite_v253_r2_20260930.py",
+      "sha256": "cb27510824670c76d77ab7018f3ae6d31c2a49320492970b102979b31c74e2c1"
+    },
+    {
+      "bytes": 1319,
+      "path": "tools/host-lisp/comfort_default_resolver_o2_lite_v253_r3_20261001.py",
+      "sha256": "e498b8c48d649ae721ab9f7e343f2bd63f3c5bdf2df91b902698c5af9423b88b"
+    },
+    {
+      "bytes": 2839,
+      "path": "tools/host-lisp/comfort_default_resolver_strings_r2_20260928.py",
+      "sha256": "3ed1f18768d2e05e3513edb886131217ab80ef47ef492d620843f9fe10d145cf"
+    },
+    {
+      "bytes": 7941,
+      "path": "tools/host-lisp/o2_lite_consumers_20260929.py",
+      "sha256": "cc3d578a2c706a7ea8050eba1b653fa73bea03d9fbc7fb07eac10d101d25035f"
+    },
+    {
+      "bytes": 2054,
+      "path": "tools/host-lisp/strings_generated_r11_20260929.py",
+      "sha256": "d152a963539c29be99dbe4bb2fcae3a5d8efa6154436b0184e86c2fb6cab9cc4"
+    },
+    {
+      "bytes": 2819,
+      "path": "tools/host-lisp/strings_scratch_20260928.py",
+      "sha256": "8f28c1d4b5999632f1e6f582eb9563c33807d5fea7fad4e257a2badb03c5e98c"
+    },
+    {
+      "bytes": 5892,
+      "path": "tools/host-lisp/strings_successor_r2_20260928.py",
+      "sha256": "356dde1d524bee27322ab30c2c573835ea6193586e128ceaf174b60152e9380e"
+    },
+    {
+      "bytes": 41312,
+      "path": "tools/host-lisp/v2_workbench_codemod.py",
+      "sha256": "f6eb888d507971701ece085586b6d61d47db9af813ae10e91ef7c67bcb6f5b6a"
+    }
+  ],
+  "predecessor": {
+    "config/c2-require-resolver-receipt-strings-20260928.json": "1bb1e8c12ed927bc0ff29dc27e08c164e83760b20c1419de0a3ff9674f35a142",
+    "config/c2-require-resolver-receipt-strings-r2-20260928.json": "0eda200554ad434068979aa163be59f2deab99c0826d1cacf95889f25f751da6",
+    "config/comfort-default-resolver-o2-lite-receipt-20260929.json": "3cce1358d7b102923a8d3fe543648956664b092d93b0f32d15bf82d0dab52ac8",
+    "config/comfort-default-resolver-v253-20260930-receipt.json": "61210bf432cee776570e917971462832d4bd3e9e2bfd80e75387d56fe756d3de",
+    "config/comfort-default-resolver-v253-r2-20260930-receipt.json": "06cb2a77d0f68a6227ac03b9b442cb2bf50cccff54a7b3066aca8bbe2f3aea22",
+    "config/comfort-default-resolver-v253-r3-20261001-receipt.json": "e1afd9b8f0389ed3e17891bb3764417093754b823fd06a3b0f70523259b1017c",
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/library-require-resolver-comfort-default-successor-20260927.json": "21abcfb43535a2c3ae3463a0a075c5645e0700d2f62f2fd94437eb549b8a2b16",
+    "tools/host-lisp/comfort_default_resolver_20260927.py": "462850a50d3c33006875a51e41c76006ff15d5a0d0a05b03a2d0a0b5ef3288e6",
+    "tools/host-lisp/comfort_default_resolver_o2_lite_20260929.py": "82e5d6afd9af9d263b4fa5b27d696276e2e4107119109856f7546d6c7b20f7fd",
+    "tools/host-lisp/comfort_default_resolver_o2_lite_v253_20260930.py": "4568372cfc8771c56ba80a431b15715c774a87df03f26b5aaee064e000552007",
+    "tools/host-lisp/comfort_default_resolver_o2_lite_v253_r2_20260930.py": "cb27510824670c76d77ab7018f3ae6d31c2a49320492970b102979b31c74e2c1",
+    "tools/host-lisp/comfort_default_resolver_o2_lite_v253_r3_20261001.py": "e498b8c48d649ae721ab9f7e343f2bd63f3c5bdf2df91b902698c5af9423b88b",
+    "tools/host-lisp/comfort_default_resolver_strings_20260928.py": "7087b9381aef2d8e1a3af227952f251823c7d02874565d92307872e081cf820f",
+    "tools/host-lisp/comfort_default_resolver_strings_r2_20260928.py": "3ed1f18768d2e05e3513edb886131217ab80ef47ef492d620843f9fe10d145cf"
+  },
+  "product_links": 0,
+  "status": "PASS",
+  "xemu_runs": 0
+}

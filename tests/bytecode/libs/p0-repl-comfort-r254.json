@@ -1,0 +1,223 @@
+{
+ "extends": "p0-repl-comfort-v250.json",
+ "name": "repl-comfort-r254",
+ "description": "2.5.4 packages: RP1 bounded Comfort result print (cycle/depth/size refusal) and HIST1 recalled-history comment scan, with unchanged-output controls.",
+ "cases": [
+  {
+   "name": "rp1-cdr-cycle-refused",
+   "expr": "(let ((x (cons 1 nil))) (rplacd x x) (%lt-write x))",
+   "expect": "\"*** result too deep, too large or circular\"",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-car-cycle-refused",
+   "expr": "(let ((x (cons 1 nil))) (rplaca x x) (%lt-write x))",
+   "expect": "\"*** result too deep, too large or circular\"",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-two-cell-cycle-refused",
+   "expr": "(let ((a (list 1 2))) (rplacd (cdr a) a) (%lt-write a))",
+   "expect": "\"*** result too deep, too large or circular\"",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-car-cdr-cycle-pair-refused",
+   "expr": "(let ((a (list 1)) (b (list 2))) (rplaca a b) (rplaca b a) (%lt-write a))",
+   "expect": "\"*** result too deep, too large or circular\"",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-nest-8-fits",
+   "expr": "(let ((x nil) (i 0)) (while (< i 8) (setq x (list x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "nil",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-nest-9-refused",
+   "expr": "(let ((x nil) (i 0)) (while (< i 9) (setq x (list x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "t",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-nest-20-refused",
+   "expr": "(let ((x nil) (i 0)) (while (< i 20) (setq x (list x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "t",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-list-3-conses-fits",
+   "expr": "(let ((x nil) (i 0)) (while (< i 3) (setq x (cons i x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "nil",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-list-1000-conses-fits",
+   "expr": "(let ((x nil) (i 0)) (while (< i 1000) (setq x (cons i x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "nil",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-list-1099-conses-fits",
+   "expr": "(let ((x nil) (i 0)) (while (< i 1099) (setq x (cons i x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "nil",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-list-1100-conses-fits",
+   "expr": "(let ((x nil) (i 0)) (while (< i 1100) (setq x (cons i x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "nil",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-list-1101-conses-refused",
+   "expr": "(let ((x nil) (i 0)) (while (< i 1101) (setq x (cons i x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "t",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-list-5000-conses-refused",
+   "expr": "(let ((x nil) (i 0)) (while (< i 5000) (setq x (cons i x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "t",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-dag-6x5-refused",
+   "expr": "(let ((x (list 1)) (i 0)) (while (< i 5) (setq x (list x x x x x x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "t",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-dag-2x7-fits",
+   "expr": "(let ((x (list 1)) (i 0)) (while (< i 7) (setq x (list x x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "nil",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-dag-2x20-refused",
+   "expr": "(let ((x (list 1)) (i 0)) (while (< i 20) (setq x (list x x)) (setq i (+ i 1))) (< (%lt-fit x 1100 8) 0))",
+   "expect": "t",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-write-atom",
+   "expr": "(%lt-write 42)",
+   "expect": "42",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-write-string",
+   "expr": "(%lt-write \"hello\")",
+   "expect": "\"hello\"",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-write-list-unchanged",
+   "expr": "(%lt-write (list 1 (list 2 (list 3 \"x\")) (quote sym)))",
+   "expect": "(1 (2 (3 \"x\")) sym)",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-write-dotted-unchanged",
+   "expr": "(%lt-write (cons 1 (cons 2 3)))",
+   "expect": "(1 2 . 3)",
+   "max_steps": 3000000
+  },
+  {
+   "name": "rp1-write-nil",
+   "expr": "(%lt-write nil)",
+   "expect": "nil",
+   "max_steps": 3000000
+  },
+  {
+   "name": "hist1-comment-lf-closes",
+   "expr": "(progn (set-symbol-value (quote %comfort-history) (list \"(progn ;c\n 42)\")) (%repl-step (symbol-value (quote %comfort-history)) \"\" 0))",
+   "expect": "\"(progn ;c\n 42)\"",
+   "key_events": [
+    145,
+    13
+   ],
+   "expect_key_events_remaining": 0,
+   "max_steps": 3000000
+  },
+  {
+   "name": "hist1-two-comments-close",
+   "expr": "(progn (set-symbol-value (quote %comfort-history) (list \"(progn ;a\n ;b\n 42)\")) (%repl-step (symbol-value (quote %comfort-history)) \"\" 0))",
+   "expect": "\"(progn ;a\n ;b\n 42)\"",
+   "key_events": [
+    145,
+    13
+   ],
+   "expect_key_events_remaining": 0,
+   "max_steps": 3000000
+  },
+  {
+   "name": "hist1-comment-hides-paren-before-lf",
+   "expr": "(progn (set-symbol-value (quote %comfort-history) (list \"(list 1 ;x)\n 2)\")) (%repl-step (symbol-value (quote %comfort-history)) \"\" 0))",
+   "expect": "\"(list 1 ;x)\n 2)\"",
+   "key_events": [
+    145,
+    13
+   ],
+   "expect_key_events_remaining": 0,
+   "max_steps": 3000000
+  },
+  {
+   "name": "hist1-string-with-semicolon-and-lf",
+   "expr": "(progn (set-symbol-value (quote %comfort-history) (list (string-append (string-append (string-append (string-append \"(list \" (char->string 34)) \"a;b\n)\") (char->string 34)) \" 1)\"))) (%repl-step (symbol-value (quote %comfort-history)) \"\" 0))",
+   "expect": "\"(list \"a;b\n)\" 1)\"",
+   "key_events": [
+    145,
+    13
+   ],
+   "expect_key_events_remaining": 0,
+   "max_steps": 3000000
+  },
+  {
+   "name": "hist1-comment-then-string",
+   "expr": "(progn (set-symbol-value (quote %comfort-history) (list (string-append (string-append (string-append (string-append \"(list 1 ;c\n \" (char->string 34)) \"x;y\") (char->string 34)) \")\"))) (%repl-step (symbol-value (quote %comfort-history)) \"\" 0))",
+   "expect": "\"(list 1 ;c\n \"x;y\")\"",
+   "key_events": [
+    145,
+    13
+   ],
+   "expect_key_events_remaining": 0,
+   "max_steps": 3000000
+  },
+  {
+   "name": "hist1-single-line-trailing-comment",
+   "expr": "(progn (set-symbol-value (quote %comfort-history) (list \"(+ 1 2) ;note\")) (%repl-step (symbol-value (quote %comfort-history)) \"\" 0))",
+   "expect": "\"(+ 1 2) ;note\"",
+   "key_events": [
+    145,
+    13
+   ],
+   "expect_key_events_remaining": 0,
+   "max_steps": 3000000
+  },
+  {
+   "name": "hist1-plain-two-lines-unchanged",
+   "expr": "(progn (set-symbol-value (quote %comfort-history) (list \"(progn\n 42)\")) (%repl-step (symbol-value (quote %comfort-history)) \"\" 0))",
+   "expect": "\"(progn\n 42)\"",
+   "key_events": [
+    145,
+    13
+   ],
+   "expect_key_events_remaining": 0,
+   "max_steps": 3000000
+  },
+  {
+   "name": "hist1-open-form-still-continues",
+   "expr": "(progn (set-symbol-value (quote %comfort-history) (list \"(progn ;c\n 42\")) (%repl-step (symbol-value (quote %comfort-history)) \"\" 0))",
+   "expect": "\"(progn ;c\n 42\n  )\"",
+   "key_events": [
+    145,
+    13,
+    41,
+    13
+   ],
+   "expect_key_events_remaining": 0,
+   "max_steps": 3000000
+  }
+ ]
+}

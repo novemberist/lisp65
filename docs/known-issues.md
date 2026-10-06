@@ -1,6 +1,73 @@
-# lisp65 2.5.3 — current release boundary
+# lisp65 2.5.4 — current release boundary
 
-2.5.3 is the current release candidate: its Final is built and sealed, it is not published, its physical-device session passed on 2026-10-03 (see the [device report](planning/release-2.5.3-device-report.md)), and its Before-Ship record is pending. The published release is 2.5.2.
+2.5.4 is the current release candidate: its Final is built and sealed; it is
+not published. Device results for 2.5.4: PASSED on a physical MEGA65 on 2026-10-05 in a manual owner session (boot 42 s by stopwatch; see the [device report](planning/release-2.5.4-device-report.md)); large saves, out-of-memory rows and the `$D703` check were not done on the device, and type-ahead typed while the IDE editor opens is lost. The Before-Ship record is pending. The published release is
+2.5.3. Emulator rows on the Seed medium (byte-identical to the Final medium) showed no product failure; three rows are not green and unchanged from 2.5.3 (see the release notes).
+The 2.5.3, 2.5.2 and 2.5.1 text below is historical.
+
+2.5.4 is 2.5.3 plus edit persistence in the IDE, a key-binding seam, a cheaper
+IDE save string and small compiler, library and package corrections. An IDE
+edit that is interrupted (for example by RUN/STOP while typing) keeps every
+editing step that had already finished; the key being processed at the abort
+may be lost. A direct `m65d-save` call is not protected by this mechanism, only
+the IDE path is. The host proof covers aborts at VM instruction boundaries on
+the delivered IDE image; it does not cover aborts inside native primitives,
+garbage collection or out-of-memory; those are the subject of emulator rows
+(passed on the Seed medium with a monitor write to the break flag as the
+RUN/STOP stand-in, which counts for the emulator only) and of one physical
+RUN/STOP row (passed on the device for text that was visible before the stop;
+a stop in the middle of a key burst cannot be produced by hand).
+
+`(ide-bind-key KEY FUNCTION)` lets a loaded package bind `C-x` plus a printable
+key that the built-in keymap leaves unbound; built-in keys cannot be
+overridden, and an unbound `C-x` plus printable key shows `unknown command`.
+`C-x C-s`, `save-buffer-to` and `eval-buffer` build the source string through
+the staging primitive instead of one Buffer call per byte (the cause of the
+minutes-long physical save of 2.5.3); every IDE save is refused while a source
+file is being loaded (`save refused while a file loads`), and a direct
+`m65d-save` outside the IDE is not guarded. On the device the 20x40 save took
+5 s by stopwatch (2.5.3: 37.7 s); larger saves were not measured there.
+
+`(funcall (lambda ...) args)` is compiled as the direct form; a lambda stored in
+a top-level form stays refused. `mapcan` accepts more than 12 results. `eq`,
+`eql`, `logand`, `logior`, `logxor` and `ash` are refused with other than two
+arguments (`*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST`). At the
+Comfort prompt a result deeper than 8 levels, larger than 1,100 conses or
+circular is refused with `*** result too deep, too large or circular`; explicit
+`prin1`/`print` and the native `LISP65>` prompt stay unbounded. `defstruct`
+rejects colliding generated names, and a recalled history entry with a comment
+is submitted at once. Native `.text` is unchanged at 36,899 B. See the
+[2.5.4 release notes](releases/2.5.4.md); the figures there are host, build
+or emulator facts, not device results.
+
+Found in the 2.5.4 device session, none a 2.5.4 regression by current
+evidence: type-ahead typed while the IDE editor is still opening is lost (wait
+for the editor); typing in the IDE editor is clearly slower than at the REPL
+(keys are not lost, they appear late; an editor latency card is planned for the
+next cycle; in the emulator a 2.5.4 editor key costs 124 to 150 ms against 122
+to 148 ms in 2.5.3 and 4.17 ms at the REPL); `(m65d-remount)` is slow on the
+device. The `$D703` (DMA format) check was not done on hardware. With the
+prompt at the bottom of the screen, recalling a very long history entry (250
+characters) draws it over the rows above without scrolling (display only, also
+in 2.5.3). 2.5.4 has 3 heap cells and 88 arena bytes less than 2.5.3; its
+garbage-collection stress session is recorded as FAIL by the committed rules;
+the owner accepted that cost on 2026-10-06 (see the release notes).
+
+Carried over from 2.5.3: the Freezer black screen (cause unknown), the heap
+held by live data that cannot be released from the keyboard, the disk limits
+(REL/GEOS/1581-boot-sector disks refused for writing, no reclaim of leaked
+blocks), string literals over 255 bytes, physical `C-x C-c`.
+
+---
+
+# lisp65 2.5.3 — previous release boundary (historical, published)
+
+2.5.3 was published on 2026-10-03 (public main `bf9d7c0c`, tag `v2.5.3`). The
+text below is the 2.5.3 boundary as it stood at publication; where it names
+`mapcan` with more than 12 elements, `eq`/`eql` surplus arguments or the
+minutes-long physical save as open, see 2.5.4 above and its release notes.
+
+(Historical 2.5.3 summary:) its physical-device session passed on 2026-10-03 (see the [device report](planning/release-2.5.3-device-report.md)).
 
 2.5.3 is 2.5.2 plus larger IDE saves and `eval-buffer` runs, IDE editing fixes,
 compiler fixes and safer disk handling. `C-x C-s`, `save-buffer-to` and
@@ -171,6 +238,11 @@ The final section preserves entries that were closed in an earlier release.
 ## Active product limitations
 
 ### Anonymous `lambda` outside `defun` bodies refused
+
+2.5.4 (candidate): `(funcall (lambda (p ...) body) a ...)` is compiled as the
+direct form `((lambda (p ...) body) a ...)`; a lambda that is stored in a
+top-level form (`setq`, `mapcar`, `let` binding) stays refused as described
+below. The emulator rows on the Seed medium passed for both cases.
 
 Status: **known limitation of 2.4.0; designed refusal until promotion of
 escaping callables**

@@ -54,8 +54,10 @@
       nil))
 
 (defun mapcan (function &rest lists)
-  (apply (function append)
-         (apply (function mapcar) (cons function lists))))
+  (let* ((rev (reverse (apply (function mapcar) (cons function lists))))
+         (acc (car rev)))
+    (dolist (x (cdr rev) acc)
+      (setq acc (append x acc)))))
 
 (defun %v2-reduce-from (function acc xs)
   (if (consp xs)

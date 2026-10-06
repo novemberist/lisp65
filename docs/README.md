@@ -3,16 +3,19 @@
 This index is the curated entry point for the live lisp65 documentation.
 Documents not linked from the first three sections are implementation records,
 machine-bound contracts, proposals, or historical material; they are not user
-instructions for the published 2.5.2 baseline. 2.5.3 is the current release
+instructions for the published 2.5.3 baseline. 2.5.4 is the current release
 candidate: its Final is sealed and its device session passed; it is not
 published and its Before-Ship record is pending. See the
+[2.5.4 release notes](releases/2.5.4.md) and the
+[device report](planning/release-2.5.4-device-report.md); the published
 [2.5.3 release notes](releases/2.5.3.md) and the
-[device report](planning/release-2.5.3-device-report.md).
+[device report](planning/release-2.5.3-device-report.md) describe the baseline.
 
 ## Users
 
-- [Release Notes 2.5.3](releases/2.5.3.md) — release candidate, not published: larger IDE saves, safer disk writes and compiler fixes
-- [Release Notes 2.5.2](releases/2.5.2.md) — published baseline: faster editing, reopening earlier Comfort input and a disk-directory fix
+- [Release Notes 2.5.4](releases/2.5.4.md) — release candidate, not published: edit persistence, IDE key bindings, faster IDE save, compiler and package corrections
+- [Release Notes 2.5.3](releases/2.5.3.md) — published baseline: larger IDE saves, safer disk writes and compiler fixes
+- [Release Notes 2.5.2](releases/2.5.2.md) — historical: faster editing, reopening earlier Comfort input and a disk-directory fix
 - [Release Notes 2.5.1](releases/2.5.1-before-ship-r3.md) — historical: IDE exit, faster editing and multi-line strings
 - [Release Notes 2.5.0](releases/2.5.0.md) — historical Comfort-default release
 - [Release Notes 2.4.0](releases/2.4.0.md) — historical recovery release

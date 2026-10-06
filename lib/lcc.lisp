@@ -560,6 +560,12 @@
         ((eq op 'lambda) (%lcc-lambda cs lvls form))
         ((eq op 'quote) (%lcc-push-value cs (car args)))
         ((eq op 'progn) (%lcc-seq cs lvls args))
+        ; (funcall (lambda (p..) body) a..) lowers like the immediate lambda
+        ; ((lambda (p..) body) a..): no helper, no transient BCODE literal.
+        ((if (eq op 'funcall)
+             (if (%lcc-consp (car args)) (eq (car (car args)) 'lambda) nil)
+             nil)
+         (%lcc-expr cs lvls args))
         ((eq op 'if)    (%lcc-if cs lvls args))
         ((eq op 'let)   (%lcc-let cs lvls args nil))
         ((eq op 'let*)  (%lcc-let cs lvls args t))
@@ -601,14 +607,14 @@
 ; use a GENERIC call to the variadic bridge (Ein suite) or the C primitive
 ; (host bridge): ONE semantic path, with no more silent argument dropping.
 ; (- 9 2 3) once returned 7 instead of 4, found by the M3 hardware self-test.
-; eq/eql remain unguarded because exact-two is also their primitive semantics
-; (extra arguments are ignored).
+; eq/eql refuse other argument counts like the other fixed-arity operations
+; (surplus arguments used to be dropped unevaluated).
 (defun %lcc-expr-ops (cs lvls op args form)
   ((lambda (vop)
      (cond ((if vop (%lcc-2args-p args) nil) (%lcc-binary cs lvls args vop))
            (vop (%lcc-call cs lvls op args))
-           ((eq op 'eq)  (%lcc-binary cs lvls args 'eq))
-           ((eq op 'eql) (%lcc-binary cs lvls args 'eql))
+           ((eq op 'eq)  (%lcc-binary-checked cs lvls args 'eq))
+           ((eq op 'eql) (%lcc-binary-checked cs lvls args 'eql))
            (t (%lcc-expr-ops2 cs lvls op args form))))
    (%lcc-vop op)))
 

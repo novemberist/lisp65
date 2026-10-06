@@ -10,9 +10,11 @@
         ((eq name 'logxor) 22) ((eq name 'ash) 23) (t nil)))
 
 (defun %lcc-v2-bitop-binary (cs lvls args opname)
-  (%lcc-emit (%lcc-expr (%lcc-expr cs lvls (car args))
-                         lvls (car (cdr args)))
-             (%lcc-v2-bitop opname)))
+  (if (%lcc-2args-p args)
+      (%lcc-emit (%lcc-expr (%lcc-expr cs lvls (car args))
+                             lvls (car (cdr args)))
+                 (%lcc-v2-bitop opname))
+      (%lcc-error-invalid-parameter-list)))
 
 (defun %lcc-v2-prim2 (name)
   (cond ((eq name 'symbol-value) 19) ((eq name 'set-symbol-value) 20)

@@ -60,6 +60,336 @@ none is claimed for 2.4.0:
 
 ## Journal
 
+### 2.5.4: device session, typing comparison, GC session, owner decisions — 2026-10-06
+
+**Sealed check-host.** r3 to r5 on `645d3243` were red for environment
+reasons: the user quota of `/tmp` (12.8 GB, filled by another project's data),
+and in r4 the reviewer's own redirection of `TMPDIR` into the repository,
+which the sealed runner cannot serve. With `/tmp` freed (owner permission to
+move the other project's directory to disk) r6 is green: exit 0, 4,767 s,
+HEAD unchanged, no changed file.
+
+**Device session, 2026-10-05, owner at the physical MEGA65** (record:
+`docs/planning/release-2.5.4-device-report.md`). Media uploaded and read back
+byte-identical. Boot by stopwatch 20 s to `Initializing` plus 22 s to the
+prompt. The physical RUN/STOP key aborts a running form. Edit persistence:
+text visible in the editor before RUN/STOP is complete after re-entry. Keymap
+seam: `C-x f` unbound reports `UNKNOWN COMMAND`, bound it inserts the
+character. IDE save of the 20 by 40 buffer: 5 s (2.5.3: about 38 s), the file
+byte-identical to its source on host readback after a power cycle. Not done on
+the device: the additional REPL rows, the large saves, the out-of-memory rows
+and the `$D703` check.
+
+**Device findings, none new in 2.5.4.** Typing in the IDE editor is clearly
+slower than at the REPL; keys are not lost but appear late. Keys typed while
+the editor is still opening are lost (entry resets the encoded-input counters;
+code older than 2.5.3; type-ahead during evaluation was never claimed).
+`(m65d-remount)` takes very long (package byte-identical to 2.5.3).
+
+**Typing comparison in the emulator** (`build/card-254-ide-typing-r1`): editor
+insert 122.3 to 148.0 ms per key in 2.5.3 and 124.2 to 150.0 ms in 2.5.4, a
+constant 1.8 ms more per key (about 1.5 %); REPL insert 4.17 ms in both. A
+collection of about 120 ms falls on roughly every fifth or sixth editor key in
+both versions, and a burst is rendered once at its end in both.
+
+**GC session on the sealed Final** (`build/card-254-gc-r2`, wrapper
+`c254_gc_session_20261006.py`): six of eight scenarios pass without
+out-of-memory; `return250` and `reopen-home-delete-refill250` completed for
+the first time. `history10` and `history-home-delete-refill250` stall on a
+display defect that the 2.5.3 records show identically: with the prompt at the
+bottom of the screen a recalled 250-character entry is drawn over the rows
+above without scrolling. Cursor keys, delete and Return work. Against the
+2.5.3 Final every collection shows 3 more live cells and 88 more arena bytes;
+the highest peak leaves 43 of 1,070 cells (2.5.3: 46). The reasoned cause is
+the bounded result print. By its committed rules the gate is recorded as FAIL.
+
+**Owner decisions.** 2026-10-05: the three device findings are released as
+known limits; speeding up editor typing is the first card of the next cycle,
+before sound. 2026-10-06: the memory price of 3 cells and 88 bytes is
+accepted, and 2.5.4 is published with the GC gate recorded as it is.
+
+**Ship-time layer.** Release note and status documents with these results,
+Before-Ship and device report, document gates r2, Card-5 r5. Six changed
+routes ran as single sealed targets, all exit 0.
+
+### 2.5.4: sealed check-host on the new host, two follow-ups — 2026-10-05
+
+Sealed check-host r1 on `5fb181fd` was red in four targets with one cause,
+`dialect-v1 build compiler SHA drift`: both equivalence binaries under
+`build/` had been built with the Fedora 44 gcc and survived the host move as
+stale make products (make does not track the compiler). They were moved aside
+and rebuilt by their own rules; no tracked file changed. After a host compiler
+change the two equivalence receipt targets must be rebuilt before a sealed
+run.
+
+Sealed check-host r2 on the same commit was red in one target,
+`dialect-v2-number-to-string-check`: the committed four-engine verdict pins
+the hash of the live v2 equivalence binary, which the rebuild moved from
+`335e11a9…` to `2d465206…`. Engine results, case, inputs and result are
+identical. Successor `dialect_v2_number_to_string_v254_20261005.py` with the
+receipt `four-engine-v254-20261005-verdict.json`: it fails on any difference
+from the earlier verdicts other than that binary hash. Route retargeted,
+Card-5 r4.
+
+Outside every aggregate and not a host effect:
+`dialect-v2-eval-apply-funcall-matrix` fails 6 of 40 runs, with the Fedora 44
+binaries as well. It goes into the register with the ship-time documents.
+
+Device: `D254.D81` and `D254U.D81` uploaded on 2026-10-05 and read back
+byte-identical (`build/device-254-prep/upload-01`). The session is the
+owner's; no result is recorded yet.
+
+### 2.5.4: Final sealed, public authority, reproductions on a new host — 2026-10-04
+
+**Owner word 2026-10-04.** Ship and Publish are pre-approved for 2.5.4. The
+release chain, including the device session with the owner, stays the
+condition; a device finding stops the publication and goes back to the owner.
+Legacy stdlib suites: correct the record (done in the register). Order for
+2.6: sound as a disk package, kernel diet, graphics, structure editor.
+
+**Final r1.** Sealed check-source on `4dd1802e`
+(`build/card-254-check-source-final-r1`): exit 0, 3,681 s, HEAD unchanged, no
+changed file. Final chain: probe, final, seal and seal check pass, one product
+link. `build/card-254-final-r1`: ELF `7b951eb9…`, PRG `192138eb…`, LTO
+`e9d6dc85…`, D81 `250fdc76…ef5d`, all four byte-identical to the Seed. Link
+budget kept: one Seed link, one Final link.
+
+**Release layer (candidate time).** Release note `docs/releases/2.5.4.md` and
+the status documents; every device statement reads pending. Successors of the
+hash-pinned document gates, Card-5 r3, the 2.5.4 public-source authority
+(`c2_v254_r1_public_*`, `config/c2-v254-r1-public-*`). The Lisp plane travels
+as compiled manifests and blobs, which covers the projected product IDE with
+its two reviewed seams; REPL-COMFORT and DEFSTRUCT travel in the same form and
+are re-emitted from the public sources as a check. Accepted without exact
+precedent: the slack rule that re-derives the 2.5.3 package index for four
+residual `L65INDEX` bytes, and the DEFSTRUCT list-domain waiver as for
+REPL-COMFORT. A permanent make route for the product-world E3 proof is not
+part of this release; it is a card for the next source candidate.
+
+**Build host moved to Fedora 45** on 2026-10-04, after Final r1 and before the
+public reproductions (gcc 16.2.1, LLVM 23.1.2, util-linux 2.42.4, Python
+3.15.0rc2). The Fedora 44 host tools are not restored. Final r1 was linked
+with the Fedora 44 tools; the two public-source reproductions ran with the
+Fedora 45 tools and reproduced ELF, PRG, LTO and D81 byte for byte. The merged
+bitcode written by `/usr/bin/llvm-link` is a host-dependent intermediate
+(Final host 250,796 B `728903b9…`, reproduction host 265,228 B `e2c2d6a1…`);
+it is recorded, not compared.
+
+**Rule "historical host pin"** (`tools/host-lisp/historical_host_pin_20261004.py`):
+a host tool row of a past release is accepted when its recorded hash equals
+the pin in that release's own committed reproduction policy; the live
+`/usr/bin` binary is verified only for the current release (2.5.4,
+`c2_v254_r1_toolchain.py`). The rule refuses the current release, a hash that
+is not the release's own pin, and a missing record. Affected routes:
+`v252-public-authority-check` and `v253-public-authority-check` (era readers
+run unchanged under the rule; the live-host selftest is the 2.5.4 toolchain
+tool; the 2.5.3 reproduction-gate selftest left the route, its receipt check
+stays), `disk-r7-static-plane-check`, `disk-r7-media-check`,
+`disk-r7-product-card5-check`, `v254-public-authority-check`. The Before-Ship
+contract accepts the three sealed host tools as drift class "host". No
+committed tool or receipt was edited. Three committed tools still fail when
+called directly on the new host; no route calls them.
+
+### 2.5.4: Seed r1b complete, emulator rows, Final tools — 2026-10-04
+
+**Seed.** `c254_seed_continue_r1b.py continue` finished on the retained r1
+link: `build/card-254-product-r1b`, medium `media-254/c254.d81` 819,200 B,
+sha256 `250fdc76…ef5d`, ELF sha256 `7b951eb9…5244`, build id `0x829db958`,
+`.text` 36,899 B, 0 unclassified bytes, product links of the attempt 1.
+
+**Emulator rows on the Seed medium** (`build/card-254-rows-r1`, continuation
+`build/card-254-rows-r1c`, review `build/card-254-rows-r1-review`):
+
+- New 2.5.4 rows: 31 pass automatically, 30 capture-then-review rows accepted
+  by the reviewer, no row fails. All 20 E3 abort points and both pending-C-x
+  rows read `OK`; the E3 group and the keymap seam group ran in separate
+  boots. The RUN/STOP stand-in is a monitor write to the break flag and is
+  accepted for the emulator only; the physical key stays a device row.
+- `$D703` probe: the write applied, the product survived a library load.
+  Whether the emulator's DMA honours the bit is not shown.
+- Regression: disk rows pass (including the 144-file remount row), comfort
+  79 of 79, backspace 7 of 7, lanes measured.
+- Not green, unchanged from 2.5.3: `ide-buffer-switch-two-keys` and
+  `ide-save-100x20-keys` fail identically on the 2.5.3 Seed r8 control
+  (harness expectation, the first one already recorded so in 2.5.3);
+  `oom-repl-global` halts on the strict transport, and with the tolerant
+  2.5.3 method the global list is still not released after 8 attempts, the
+  2.5.3 r8 result. That row is not accepted; it stays a known behaviour.
+- Run r1 lost its last sessions to a host transport fault, not to the
+  product: the pinned headless emulator dies of SIGPIPE when the stock monitor
+  command closes a connection early under host load. `c254_rows.py` now uses
+  one patient connection per command, also for the legacy instruments, and
+  counts lost groups as run errors.
+- Product observation, same in 2.5.3: the IDE status row is not redrawn when
+  its text equals the one drawn last, and old status rows stay on screen
+  after an abort or `C-x q`.
+
+**Final tools.** `c254_final_pins.py`, `c254_final.py`, `c254_replay.py`,
+`c254_seal.py`, `c254_final_rehearsal.py`, `c254_gc_stress.py`,
+`c254_emulator.py`, `c254_rows.py`. Receipts come from r1b, link coordinates
+from r1; the continuation tool is pinned separately; the Final inventory runs
+inside the reviewed pair class. Replay `build/final-254-prep/reviewed-r1`
+(12,185 inputs, sha256 `291b347f…0021`), Final selftest 122 tests, rehearsal
+phases pass with 0 compiles and 0 links.
+
+### 2.5.4 Seed r1: halt after the link, reviewed continuation r1b — 2026-10-04
+
+**Pre-chain r1** on tools commit `11da63b3` (authority `04294d56`): selftests,
+preflight, exhaustive product-world E3 (381,706 and 52,091 points, 0
+violations; controls fail with 170,774, 36,380 and 7,262) and the pre-link
+rehearsal passed with the values of the dry chain (build id `0x829db958`,
+SHELF 101,155 B, static code 50,901 B, no immediate flag).
+
+**Seed r1** (`build/card-254-product-r1`): all 75 frozen commands ran,
+including the one product link. The post-link inventory then halted:
+`.lisp65_rt_c2d_00b` held a change no class explains. `.text` is 36,899 B,
+changed `[]`, immediate only `main`; no section moved or changed size; error
+call sites 51. The unexplained bytes are one adjacent instruction pair in
+`c2_stream_phase_00b` at `$C473`: before `sta $0a` / `clc`, now `clc` /
+`sta $0a` (bytes `85 0a 18` to `18 85 0a`, the `R_MOS_ADDR8 __rc8` relocation
+moves from `$C474` to `$C475`). STA reads A and writes the cell, CLC writes
+carry only; no symbol, branch target or inbound relocation lies in the three
+bytes. The code generator's reason for the other order is not known.
+
+**Decision.** The pair is accepted as one narrowly pinned reviewed class
+(section, offset, both byte strings, both listings, relocation move, both ELF
+hashes). No second link: `c254_seed_continue_r1b.py` binds the retained r1
+attempt and runs the unchanged inventory, media and finish steps into
+`build/card-254-product-r1b`; every other byte is still judged by the
+unchanged rules. The link budget (one Seed link, one Final link) holds. The
+Final replay must run its inventory inside the same class. Two dry
+continuations gave the same medium (819,200 B, sha256 `250fdc76…ef5d`).
+
+**Emulator rows.** Decisions for the row driver drafts
+(`build/card-254-final-prep-r1`): all 29 rows with a device-dependent
+expectation stay capture-then-review, none passes automatically; the monitor
+write to the break flag counts only as an emulator stand-in, the physical
+RUN/STOP row stays a device row; the E3 receipt keeps its own pin; the legacy
+comfort, backspace and lane instruments stay as in 2.5.3.
+
+### 2.5.4: sealed check-source green; E3 proven on the product world; Seed tools — 2026-10-04
+
+**Sealed check-source r2** (`build/card-254-check-source-r2`) on `04294d56`:
+exit 0, 3,412 s, HEAD unchanged, no changed file. `04294d56` is the source
+authority for the 2.5.4 Seed. After that commit the plain sealed target
+`lcc-nesting-ladder-check` also passed (exit 0, no read-only error).
+
+**E3 on the delivered IDE** (`build/card-254-e3-product-r1`, repeated by the
+Seed tooling in `build/card-254-e3-dry-r1a`): the harness world is the emitted
+product IDE image itself (15,223 B, 204 objects, sha256 `84a7d3e4…a4aa`). With
+the two product seams (publication before the product's `(poll-key)` in
+`%ide-drain-pending`; `ide-event-command` reset in `ide`) an abort at every VM
+instruction boundary keeps every finished step: 381,706 points and 52,091
+multi-buffer points, 0 violations. Both controls fail as required: without the
+seams 170,774 violations, without the Return copy 7,262. The Return copy, the
+keymap seam, save fix A and the refusal of a save during a source load project
+onto the product world without a seam. Decision D-E3: the seams are adopted.
+The host proof does not cover aborts inside native primitives, during garbage
+collection or at out-of-memory; emulator rows on the Seed and the physical
+RUN/STOP row on the device remain required.
+
+**Seed tools** (`c254_*`, attempt r1, medium `media-254/c254.d81`): the Seed
+refuses to start unless the exhaustive product-world E3 receipt belongs to
+its preflight, its tool bytes and the pinned authority, and unless the emitted
+IDE image is the proven one. Native rule: `.text` stays exactly 36,899 B; the
+pre-link prediction over 28 immediate sites reports no flag. Dry chain green:
+build id `0x829db958`, SHELF 101,155 B, static code 50,901 B; changed images
+stdlib-p0 19,860 B, ide 15,223 B, lcc 8,401 B; idex, m65d, buffer exact;
+REPL-COMFORT 2,207 B and DEFSTRUCT 1,051 B re-emitted, all six package
+envelopes rebound. The object-size limit applies to the stored object length
+(`src/vm.c`, `len > 255`): `ide-split-line` and the largest REPL-COMFORT
+object are 253 B, so each has 2 B left. Final-side tools follow after the Seed.
+
+### 2.5.4: sealed run r1 red on one gate tool; correction on E3 — 2026-10-04
+
+**Sealed check-source r1** (`build/card-254-check-source-r1`, HEAD `8bd8f1db`):
+exit 2, HEAD unchanged, no changed file, one red target,
+`lcc-nesting-ladder-check`. Cause: the committed receipt
+`lcc-nesting-ladder-v254-20261003.json` binds
+`build/lcc-nesting-ladder-v254-20261003-live/resident/suite.json` as an input,
+the sealed runner mounts every bound path read-only, and the gate rewrites that
+file on every check. Unsealed runs do not show this. No link was spent. Fix:
+successor tool `lcc_nesting_ladder_v254_r2_20261004.py` writes only into a
+fresh scratch directory and binds stable inputs (the frozen 2.5.3 preflight
+resident suite and tracked sources); its ladder equals the 20261003 receipt on
+all 35 shapes. Card-5 v254 r2. The committed 20261003 receipt and the Card-5 r1
+pair stay as history. Before this commit the fix was run under the real sealed
+runner through a wrapper that adds the still-untracked files to the protected
+set (eight targets exit 0); the plain sealed target is re-run after the commit.
+Rule from now on: a receipt never binds a path its own tool writes, and new
+gate tools run once under the sealed runner before a full sealed run.
+
+**Correction to the entry below.** The E3 abort-point sweep (8,425 points) and
+the figure "ide 216 objects" describe the library world. The delivered IDE is
+built from a frozen older world with 204 objects
+(`build/card-253-preflight-r8/projection/ide/sources/`), which has no
+`%ide-idle`, `%ide-init` or `%ide-poll`; of the five `lib/ide-ui.lisp` hunks
+only `ide-bind-key` and route 14 project onto it. The E3 publication and the
+pending `C-x` reset do not reach the product as committed
+(`build/card-254-seed-prep-r1/plan.txt`, D-E3). Reviewer decision: keep E3 in
+scope through reviewed product seams (publish before the product's
+`(poll-key)` in `%ide-drain-pending`; reset `ide-event-command` in `ide`), on
+condition that the abort sweep and its no-copy control are repeated on the
+projected product sources and that the Seed tooling refuses to run without
+that proof. If the product-world sweep fails, the Seed is not started and the
+owner decides between 2.5.4 without E3 and a redesign.
+
+### 2.5.4 scope and integrated source candidate — 2026-10-04
+
+Owner word 2026-10-03: continue directly with 2.5.4. Basis
+`build/scope-254-r1/report.txt`; reviewer decisions D1–D10: scope = E3
+(each finished editing step is stored before the next key poll without
+allocating; Return copies the typing list; a pending `C-x` is reset after
+RUN/STOP), a lean IDE keymap/extension seam (`ide-bind-key`; an unbound
+`C-x` + key shows "unknown command"; built-in keys cannot be overridden), the
+closure fix (`(funcall (lambda …) args)` is compiled as the direct form; a
+lambda stored at top level stays refused), save fix A (the save string is
+built through the staging primitive; every IDE save is refused while a source
+load is active — a direct `m65d-save` outside the IDE is not guarded),
+`mapcan` beyond 12 results, arity checks for `eq`/`eql`/bit operations, and
+three package corrections (bounded Comfort result output: depth over 8, more
+than 1,100 conses or a cycle is refused; `defstruct` rejects colliding
+generated names; recalled history with a comment submits at once). Native
+code +0; 842 B are usable after `.text` in the 2.5.3 ELF. Deferred: save
+fix B, `%m65d-mask` private-inline, all native items, block reclaim.
+
+Further reviewer decisions during integration: the editor-allocation budget
+is re-baselined for the E3 copy (wrap key 224/201 cells and two collections;
+plain keys unchanged); the frozen Werkbank suites stay byte-identical and the
+omission audit skips superseded suites; the directory headroom was restored by
+folding the two new IDE helpers into their callers instead of lowering the
+floors (ide 216 objects, headroom 38/32 as at `22ab180e`).
+
+Three cards (`build/card-254-{ide,lcc,pkg}-r1`) merged in the tree
+(`build/card-254-integrate-r1`, `-r2`). Host evidence on the merged tree: E3
+sweep 8,425 abort points with 0 violations (the no-copy control fails as
+required), seam 768 rows with 0 mismatches, save matrix 10/10, product-path
+LCC probes 68/68, nesting ladder not below 2.5.3 on any of 35 shapes, P5
+fixpoint green. Prices: ide +160, lcc +52, stdlib-p0 +46 code bytes;
+REPL-COMFORT +112, DEFSTRUCT +13; estimated free code at boot about 6,718 B
+(7,088 B in 2.5.3). New permanent gates `v254-package-suites-check` and
+`dialect-v2-lcc-surface-v254-check`. Unsealed `make -k check-source` exit 0
+(`build/card-254-integrate-r1/run4`). Two reds outside the release aggregates
+are in the register. Next: sealed check-source, Seed tooling with package
+re-emission, Seed, emulator rows, Final.
+
+### 2.5.3 published — 2026-10-03
+
+Public main `bf9d7c0c` (parent `fde9fb13`, tree `55303a9f`, exact source
+projection `f572cbe6`), annotated tag `v2.5.3`, GitHub release published as
+latest with four assets; draft and published readbacks PASS (release body,
+downloaded assets byte-equal, remote refs, source tree). Private chain: Final r8
+(D81 `7df9db67…`, ELF `5eb056e0…`), two public-source reproductions, sealed
+check-host r8b on `88b2208b` green, device session passed, Before-Ship
+`437beff3`; the first post-commit seal stopped before writing because the
+acceptance record was missing from the reviewed source delta (delta r3 and
+contract r4 in `547613a1`; aborted attempt retained as
+`build/release-v2.5.3/r2-sealed-aborted-delta-20261003`); proof commit
+`710fc69d`, tag `proof/v2.5.3`. Next: 2.5.4 per the owner's feature roadmap
+(E3, small corrections, keymap/extension seam; the out-of-memory fix already
+shipped in 2.5.3), then 2.6 (sound, graphics — needs a device-verified DMA
+scratch area, the gap $17A0..$17FF is not free on the device — structure editor).
+
 ### 2.5.3 device session passed; owner word for Ship and Publish — 2026-10-03
 
 [Device report](release-2.5.3-device-report.md): Final r8 medium `7df9db67…`

@@ -458,6 +458,23 @@
          (%ide-state-with-message state "unknown command")))
    (%ide-command-named name)))
 
+;; ---- 2.5.4 key extension seam ----
+;; A loaded package binds a command with (ide-bind-key KEY FUNCTION).  KEY is
+;; the character code typed after C-x; only printable keys that the generated
+;; keymap leaves unbound reach this registry, so built-in bindings can never be
+;; overridden.  FUNCTION (normally a quoted symbol) is called with the current
+;; buffer and returns a new buffer, a message string, or nil (no change).  The
+;; registry is a flat (key function ...) list in the value cell of the public
+;; symbol ide-bind-key itself (no extra symbol); a later binding of the same
+;; key shadows the earlier one.  An unbound C-x + printable key reports
+;; "unknown command".  The registry lookup and the call live in route 14 of
+;; %ide-dispatch-route-high (no separate directory object).
+(defun ide-bind-key (key function)
+  (progn
+    (set-symbol-value (quote ide-bind-key)
+                      (cons key (cons function (symbol-value (quote ide-bind-key)))))
+    key))
+
 (defun %ide-page-rows (state)
   ((lambda (rows)
      (if rows
@@ -698,6 +715,19 @@
         ((eq route 11) (%ide-cycle-buffer state nil))
         ((eq route 12) (%ide-motion-key state command))
         ((eq route 13) (%ide-state-with-message state 1015))
+        ((eq route 14)
+         ((lambda (function)
+            (if function
+                ((lambda (result)
+                   (progn
+                     (set-symbol-value (quote ide-render) nil)
+                     (if (stringp result)
+                         (%ide-state-with-message state result)
+                         (if result (%ide-state-with-buffer state result) state))))
+                 (funcall function (ide-state-buffer state)))
+                (%ide-state-with-message state "unknown command")))
+          (%ide-keymap-lookup (- command 1200)
+                              (symbol-value (quote ide-bind-key)))))
         (t state)))
 
 (defun %ide-dispatch-command (state command event)
@@ -1602,6 +1632,13 @@
 ;; Render coalescing prevents lagging behind during fast typing: while more
 ;; keys wait in the queue, run only ide-step instead of step+render.  The poll
 ;; itself still passes through the one IDE input owner.
+;; E3 (2.5.4): accepted-edit persistence.  The step just completed is
+;; published before the next abortable input poll, so RUN/STOP or an abort
+;; during a later key or the batch render keeps every accepted edit.  In the
+;; steady state the current buffer already heads the alist and publication is
+;; one allocation-free rplacd of the unflushed buffer; the batch-end
+;; %ide-persist-state still stores the materialized buffer the idle path reads.
+;; The publication is written in place (no separate directory object).
 (defun %ide-drain-pending (state)
   (if (eq (ide-state-message state) 1015)
       state
@@ -1609,7 +1646,14 @@
          (if k
              (%ide-drain-pending (ide-step state k))
              state))
-       (%ide-idle 4 nil nil nil nil nil nil nil nil))))
+       (progn
+         ((lambda (buf alist)
+            (if (if alist (eq (car buf) (car (car alist))) nil)
+                (rplacd (car alist) buf)
+                (%ide-store-buffer buf)))
+          (ide-state-buffer state)
+          (%ide-buffers-alist))
+         (%ide-idle 4 nil nil nil nil nil nil nil nil)))))
 
 ;; One nonblocking IDE loop.  Empty polls advance at most one self-capped pass
 ;; and one blink phase; an input handoff restores stale paint and forces the
@@ -1780,7 +1824,11 @@
                      (list -1 point 0 0 (ide-current-line buffer) 0 0
                            (cons 0 0) (cons 0 0) nil
                            (ide-cursor-row state rows) columns))))
-    (progn (set-symbol-value (quote %ide-idle) idle) state)))
+    ;; 2.5.4: a C-x prefix left pending by RUN/STOP must not capture the
+    ;; first key of the next session.
+    (progn (set-symbol-value (quote %ide-idle) idle)
+           (set-symbol-value (quote ide-event-command) nil)
+           state)))
 
 (defun %ide-input-finish (state)
   (progn

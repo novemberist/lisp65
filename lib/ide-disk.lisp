@@ -22,30 +22,32 @@
 ;; lisp65.
 
 ;; ---- Buffer lines -> ONE source string (lines joined with \n) ----
-(defun %ide-source-size (lines total)
-  (if lines
-      (%ide-source-size (cdr lines)
-        (+ total (+ (string-length (car lines)) (if (cdr lines) 1 0))))
-      total))
-
-(defun %ide-copy-line (out line at)
+;; 2.5.4 save fix A: the join writes every byte through the resident staging
+;; primitive %fasl-stage (no runtime overlay) and then builds the arena string
+;; in one step: (%buffer-alloc 2 n) copies the stage into one new Buffer and
+;; (%buffer-read 3 ...) freezes it in place.  Two Buffer overlay calls per join
+;; instead of one per byte.  The total length falls out of the copy.  An OOM at
+;; the allocation still happens before any M65D write, so the J1/G1 contract
+;; (old file intact, source string rooted by the caller) is unchanged.  The
+;; stage is scratch shared with load/compile staging; the join is a leaf.
+(defun %ide-copy-line (line at)
   (let ((len (string-length line)))
     (dotimes (i len nil)
-      (%buffer-write out (+ at i) (string-ref line i)))
+      (%fasl-stage (+ at i) (string-ref line i)))
     (+ at len)))
 
-(defun %ide-copy-lines (lines out at)
+(defun %ide-copy-lines (lines at)
   (if lines
-      (let ((next (%ide-copy-line out (car lines) at)))
+      (let ((next (%ide-copy-line (car lines) at)))
         (if (cdr lines)
             (progn
-              (%buffer-write out next 10)
-              (%ide-copy-lines (cdr lines) out (1+ next)))
-            (%buffer-read 3 out)))
-      (%buffer-read 3 out)))
+              (%fasl-stage next 10)
+              (%ide-copy-lines (cdr lines) (1+ next)))
+            next))
+      at))
 
 (defun %ide-join (lines)
-  (%ide-copy-lines lines (%buffer-alloc 0 (%ide-source-size lines 0)) 0))
+  (%buffer-read 3 (%buffer-alloc 2 (%ide-copy-lines lines 0))))
 
 (defun %ide-current-buffer ()
   ((lambda (alist) (if alist (cdr (car alist)) nil))
@@ -311,17 +313,27 @@
         (set-symbol-value (quote ide-error) "not source")
         nil)))
 
+;; 2.5.4 (D8): a save while a source file is being loaded is refused before
+;; the join and before any disk access.  The loader streams the rest of its
+;; file from the disk while the file's top-level forms run; a save from such a
+;; form (typically the file saving itself) would replace and release the very
+;; chain the loader is still reading.  (%disk-load-lib) with no argument is the
+;; native loader-idle query (t = no source load active).
 (defun save-buffer-to (file &rest buffer-name)
   ((lambda (buf)
      (if buf
          (if (%ide-source-file-p file)
-             ((lambda (source)
-                (if (%ide-cow-save file source)
-                    (progn
-                      (%ide-store-buffer (%ide-disk-clean-buffer buf file))
-                      't)
-                    nil))
-              (%ide-buffer-source buf))
+             (if (%disk-load-lib)
+                 ((lambda (source)
+                    (if (%ide-cow-save file source)
+                        (progn
+                          (%ide-store-buffer (%ide-disk-clean-buffer buf file))
+                          't)
+                        nil))
+                  (%ide-buffer-source buf))
+                 (progn
+                   (set-symbol-value (quote ide-error) "save refused while a file loads")
+                   nil))
              (progn
                (set-symbol-value (quote ide-error) "not source")
                nil))

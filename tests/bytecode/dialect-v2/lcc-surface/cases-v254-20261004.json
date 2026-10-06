@@ -1,0 +1,155 @@
+{
+ "format": "lisp65-dialect-v2-lcc-surface-cases-v1",
+ "cases": [
+  {
+   "id": "arity-ash-one-argument-refused",
+   "source": "(ash 3)",
+   "dialect-v1": "!error:undefined-public-name",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-ash-three-arguments-refused",
+   "source": "(ash 3 2 1)",
+   "dialect-v1": "!error:undefined-public-name",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-ash-two-arguments",
+   "source": "(ash 3 2)",
+   "dialect-v1": "!error:undefined-public-name",
+   "dialect-v2": "12"
+  },
+  {
+   "id": "arity-eq-in-defun-refused",
+   "source": "(defun v254-eq3 (a) (eq a a a))",
+   "dialect-v1": "v254-eq3",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-eq-one-argument-refused",
+   "source": "(eq 1)",
+   "dialect-v1": "nil",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-eq-surplus-argument-not-dropped",
+   "source": "(let ((x 0)) (eq 1 1 (setq x 5)) x)",
+   "dialect-v1": "0",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-eq-three-arguments-refused",
+   "source": "(eq 1 1 2)",
+   "dialect-v1": "t",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-eq-two-arguments",
+   "source": "(eq 1 1)",
+   "dialect-v1": "t",
+   "dialect-v2": "t"
+  },
+  {
+   "id": "arity-eql-one-argument-refused",
+   "source": "(eql 2)",
+   "dialect-v1": "nil",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-eql-three-arguments-refused",
+   "source": "(eql 2 2 2)",
+   "dialect-v1": "t",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-logand-one-argument-refused",
+   "source": "(logand 12)",
+   "dialect-v1": "!error:undefined-public-name",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-logand-three-arguments-refused",
+   "source": "(logand 12 10 6)",
+   "dialect-v1": "!error:undefined-public-name",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-logand-two-arguments",
+   "source": "(logand 12 10)",
+   "dialect-v1": "!error:undefined-public-name",
+   "dialect-v2": "8"
+  },
+  {
+   "id": "arity-logior-three-arguments-refused",
+   "source": "(logior 12 10 6)",
+   "dialect-v1": "!error:undefined-public-name",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "arity-logxor-three-arguments-refused",
+   "source": "(logxor 12 10 6)",
+   "dialect-v1": "!error:undefined-public-name",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "funcall-lambda-argument-order",
+   "source": "(let ((n 0)) (funcall (lambda (a b) (list a b)) (setq n (+ n 1)) (setq n (+ n 10))))",
+   "dialect-v1": "(1 11)",
+   "dialect-v2": "(1 11)"
+  },
+  {
+   "id": "funcall-lambda-arguments",
+   "source": "(funcall (lambda (x y) (+ x y)) 3 4)",
+   "dialect-v1": "7",
+   "dialect-v2": "7"
+  },
+  {
+   "id": "funcall-lambda-constant",
+   "source": "(funcall (lambda () 27))",
+   "dialect-v1": "27",
+   "dialect-v2": "27"
+  },
+  {
+   "id": "funcall-lambda-nested",
+   "source": "(funcall (lambda (x) (funcall (lambda (y) (+ x y)) 2)) 40)",
+   "dialect-v1": "42",
+   "dialect-v2": "42"
+  },
+  {
+   "id": "funcall-lambda-optional-default",
+   "source": "(funcall (lambda (a &optional b) (list a b)) 1)",
+   "dialect-v1": "(1 nil)",
+   "dialect-v2": "(1 nil)"
+  },
+  {
+   "id": "funcall-lambda-reads-enclosing-let",
+   "source": "(let ((x 5)) (funcall (lambda () x)))",
+   "dialect-v1": "5",
+   "dialect-v2": "5"
+  },
+  {
+   "id": "funcall-lambda-rest",
+   "source": "(funcall (lambda (a &rest r) (list a r)) 1 2 3)",
+   "dialect-v1": "(1 3)",
+   "dialect-v2": "(1 (2 3))"
+  },
+  {
+   "id": "funcall-lambda-setq-enclosing-let",
+   "source": "(let ((s 0) (i 7)) (funcall (lambda () (setq s (+ i 1)))) s)",
+   "dialect-v1": "0",
+   "dialect-v2": "8"
+  },
+  {
+   "id": "funcall-lambda-too-few-refused",
+   "source": "(funcall (lambda (x) x))",
+   "dialect-v1": "nil",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  },
+  {
+   "id": "funcall-lambda-too-many-refused",
+   "source": "(funcall (lambda (x) x) 1 2)",
+   "dialect-v1": "1",
+   "dialect-v2": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+  }
+ ]
+}

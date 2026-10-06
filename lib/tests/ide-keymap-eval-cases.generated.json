@@ -285,7 +285,7 @@
     {
       "name": "ide-exit-cx-shift-q-does-not-exit",
       "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 24 nil)) (ide-event-command (list (quote key) 81 nil)))",
-      "expect": "NIL"
+      "expect": "1281"
     },
     {
       "name": "ide-exit-cx-control-q-or-cursor-down-does-not-exit",
@@ -295,6 +295,21 @@
     {
       "name": "ide-exit-q-clears-prefix",
       "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 24 nil)) (ide-event-command (list (quote key) 113 nil)) (symbol-value (quote ide-event-command)))",
+      "expect": "NIL"
+    },
+    {
+      "name": "ide-extension-cx-unbound-printable-command",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 24 nil)) (ide-event-command (list (quote key) 102 nil)))",
+      "expect": "1302"
+    },
+    {
+      "name": "ide-extension-command-route",
+      "input": "(list (%ide-command-route 1233) (%ide-command-route 1326))",
+      "expect": "(14 14)"
+    },
+    {
+      "name": "ide-extension-clears-prefix",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 24 nil)) (ide-event-command (list (quote key) 102 nil)) (symbol-value (quote ide-event-command)))",
       "expect": "NIL"
     }
   ]

@@ -2061,7 +2061,7 @@ dialect-v2-lists-type-errors-check:
 	python3 tools/host-lisp/dialect_v2_lists_type_errors.py check
 
 dialect-v2-system-runtime-check: $(DISK_R7_V1_BUILD) $(DISK_R7_V2_BUILD)
-	python3 tools/host-lisp/dialect_v2_system_runtime_disk_r7_v253_20260930.py check
+	python3 tools/host-lisp/dialect_v2_system_runtime_disk_r7_v254_20261003.py check
 
 dialect-v2-strings-selftest:
 	python3 tools/host-lisp/dialect_v2_prelude_control.py --fixture $(DIALECT_V2_STRINGS_FIXTURE) selftest
@@ -2119,10 +2119,10 @@ dialect-v2-strings-lcc-stage3-check: dialect-v2-strings-lcc-selftest $(DIALECT_V
 dialect-v2-strings-matrix: dialect-v2-strings-native-matrix dialect-v2-strings-p0-check dialect-v2-strings-lcc-check
 
 v2-string-codec-workload-selftest: v2-workbench-codemod
-	python3 tools/host-lisp/v2_string_codec_workloads_v253_r2_20261001.py selftest
+	python3 tools/host-lisp/v2_string_codec_workloads_v254_r3_20261003.py selftest
 
 v2-string-codec-workload-check: v2-string-codec-workload-selftest
-	python3 tools/host-lisp/v2_string_codec_workloads_v253_r2_20261001.py check
+	python3 tools/host-lisp/v2_string_codec_workloads_v254_r3_20261003.py check
 
 v2-prim-lowering-check:
 	python3 tools/host-lisp/v2_prim_lowering.py
@@ -2187,13 +2187,13 @@ dialect-v2-strings-evidence-check: dialect-v2-strings-evidence-build
 	python3 tools/host-lisp/dialect_v2_prelude_evidence.py --family strings check
 
 dialect-v2-system-runtime-evidence-selftest:
-	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_v253_20260930.py --family system-runtime selftest
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_v254_20261003.py --family system-runtime selftest
 
 dialect-v2-system-runtime-evidence-build: dialect-v2-system-runtime-check dialect-v2-system-runtime-evidence-selftest
 	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_20260930.py --family system-runtime generate
 
 dialect-v2-system-runtime-evidence-check: dialect-v2-system-runtime-evidence-build
-	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_v253_20260930.py --family system-runtime check
+	python3 tools/host-lisp/dialect_v2_prelude_evidence_disk_r7_v254_20261003.py --family system-runtime check
 
 dialect-v2-ide-evidence-check:
 	python3 tools/host-lisp/dialect_v2_ide_evidence.py check
@@ -3007,8 +3007,12 @@ v2-fasl-save-host-check: v2-fasl-save-host-selftest
 # 2.5.3 successor (2026-10-02): src/eval.c moved, hence the live equivalence
 # binary hash; the successor asserts that is the only delta against the
 # retained v240 verdict. The original tool and receipts stay unchanged.
+# 2.5.4 host successor (2026-10-05): the build host moved to Fedora 45, the live equivalence
+# binary was rebuilt with the installed compiler and its hash moved; the successor asserts that
+# this is the only delta against the retained v240 and v253 verdicts and pins the v254 receipt.
 dialect-v2-number-to-string-check: $(DIALECT_V2_EQUIVALENCE_BUILD)
-	python3 tools/host-lisp/dialect_v2_number_to_string_v253_20261002.py check
+	python3 tools/host-lisp/dialect_v2_number_to_string_v254_20261005.py selftest
+	python3 tools/host-lisp/dialect_v2_number_to_string_v254_20261005.py check
 
 # Live attribution consumes two caller-built, real MOS relocatable ELFs. It
 # explains ownership, but never replaces the LTO/ICF product-floor metric.
@@ -3055,6 +3059,17 @@ dialect-v2-lcc-surface-check: dialect-v2-lcc-surface-selftest $(DIALECT_V1_EQUIV
 		--binary-v1 $(DIALECT_V1_EQUIVALENCE_HOST) \
 		--binary-v2 $(DIALECT_V2_EQUIVALENCE_HOST) \
 		--source-root-v1 $(DIALECT_V1_SOURCE_ROOT) --source-root-v2 .
+
+# 2.5.4 dated LCC surface fixture (funcall of a literal lambda, eq/eql/bit-operation arity); the base
+# fixture above is frozen by its exact id population.
+.PHONY: dialect-v2-lcc-surface-v254-check
+dialect-v2-lcc-surface-v254-check: $(DIALECT_V1_EQUIVALENCE_BUILD) $(DIALECT_V2_EQUIVALENCE_BUILD)
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/dialect_v2_lcc_surface_v254_20261004.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/dialect_v2_lcc_surface_v254_20261004.py check \
+		--binary-v1 $(DIALECT_V1_EQUIVALENCE_HOST) \
+		--binary-v2 $(DIALECT_V2_EQUIVALENCE_HOST) \
+		--source-root-v1 $(DIALECT_V1_SOURCE_ROOT) --source-root-v2 .
+check-host: dialect-v2-lcc-surface-v254-check
 
 dialect-v2-prelude-evidence-selftest:
 	python3 tools/host-lisp/dialect_v2_prelude_evidence_v253_20260930.py selftest
@@ -3165,9 +3180,13 @@ bytecode-p0-bundle-check:
 # which the legacy v1 profile does not run as a primitive). The dated
 # p0-stdlib-werkbank-subset-v253-20261002.json drops those two names and the
 # case ide-disk-join-len; the recipe excludes the frozen original.
+# 2.5.4 successor (2026-10-03): save fix A removed %ide-source-size (the stage
+# join yields the length while copying). The dated
+# p0-stdlib-werkbank-subset-v254-20261003.json drops that name; the recipe
+# also excludes the v253-20261002 suite.
 bytecode-p0-stdlib-check:
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --screen-rvs-selftest
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $$(python3 -c "import glob,json;t=set(a['source_suite'] for a in json.load(open('config/v2-workbench-artifact-closure.json'))['artifacts'])|{'tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json'};print(' '.join(p for p in sorted(glob.glob('tests/bytecode/stdlib/*.json')) if p not in t))")
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $$(python3 -c "import glob,json;t=set(a['source_suite'] for a in json.load(open('config/v2-workbench-artifact-closure.json'))['artifacts'])|{'tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json','tests/bytecode/stdlib/p0-stdlib-werkbank-subset-v253-20261002.json'};print(' '.join(p for p in sorted(glob.glob('tests/bytecode/stdlib/*.json')) if p not in t))")
 
 bytecode-p0-stdlib-artifacts: | build/bytecode
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_STDLIB_PREFIX) $(BYTECODE_STDLIB_SUITE)
@@ -3353,7 +3372,7 @@ gc-symbol-scan-timing-check:
 		--out build/reports/workbench-live/gc-symbol-scan-timing.json
 
 bytecode-p0-omission-contract-check:
-	python3 tools/host-lisp/bytecode_p0_omissions_o2_lite_20260929.py
+	python3 tools/host-lisp/bytecode_p0_omissions_v254_20261003.py
 
 ide-capacity-selftest:
 	python3 tools/host-lisp/ide_capacity_report.py --selftest

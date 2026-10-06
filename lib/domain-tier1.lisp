@@ -102,8 +102,14 @@
                         (cons (apply fn (%cars lists)) acc)))
       (if lists (%list-malformed-error) (reverse acc))))
 
+; The number of results is the argument count of a native apply (VM_MAXARGS 12),
+; so fold them two at a time from the right; the last result stays uncopied,
+; exactly like (apply append ...).
 (defun mapcan (fn &rest lists)
-  (apply (function append) (apply (function mapcar) (cons fn lists))))
+  (let* ((rev (reverse (apply (function mapcar) (cons fn lists))))
+         (acc (car rev)))
+    (dolist (x (cdr rev) acc)
+      (setq acc (append x acc)))))
 
 (defun %mapc (fn xs)
   (if (consp xs)

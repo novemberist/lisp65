@@ -34,7 +34,9 @@
   (if names
       (if (function-kind (car names))
           nil
-          (%defstruct-names-free-p (cdr names)))
+          (if (%defstruct-member (car names) (cdr names))
+              nil
+              (%defstruct-names-free-p (cdr names))))
       t))
 
 (defun %defstruct-slot-names (name slots)

@@ -1,0 +1,3242 @@
+{
+ "format": "card254-rows-v1",
+ "status": "2.5.4 Seed row table.  Every expected text carries derivation.mark: HOST-EXECUTED = executed on the product world of the named preflight (screen rule applied); NOT-DERIVED = could not be derived by execution on the product world (reason recorded).  Emulator not run.",
+ "authority": "worktree@04294d56dd874268d8f679ff43c3622128900e7d",
+ "format_change": "vs card253-rows-v2: rows may carry driver, session, depends_on, host_first, status_rule; expected entries may carry proof/forbid; expected.keys/texts/stop (key-sequence rows); timing_rules; fixture_files",
+ "screen_rule": "as c253_rows_20261001.json: REPL echo upper-cased; errors \"*** \" + upper(text); a refusal symbol follows COMPILE FAILED on the same line (%LCC-ERROR-INVALID-PARAMETER-LIST)",
+ "sessions": {
+  "repl": [
+   "closure-compile",
+   "closure-still-refused",
+   "lcc-ladder-closure",
+   "mapcan-beyond-12",
+   "mapcan-heap-edge",
+   "arity-bitops-eq-refused",
+   "arity-toplevel-direct",
+   "rp1-bounded-result",
+   "rp1-accepted-large",
+   "rp1-depth8-reentry",
+   "lib1-defstruct-collision",
+   "hist1-recall-comment",
+   "hist1-recall-two-comments"
+  ],
+  "oom": [
+   "rp1-flat-1101-heap"
+  ],
+  "ide": [
+   "stop-probe",
+   "e3-stop-after-burst",
+   "e3-stop-mid-burst",
+   "e3-stop-return-burst",
+   "e3-stop-long-line-return",
+   "e3-stop-during-render",
+   "e3-stop-backspace-mix",
+   "e3-stop-idle",
+   "e3-pending-cx-reset",
+   "e3-pending-cx-reset-bound",
+   "seam-prepare",
+   "seam-unbound-unknown",
+   "seam-bind-buffer",
+   "seam-message-result",
+   "seam-nil-result",
+   "seam-control-cancels",
+   "seam-builtin-not-overridable",
+   "seam-registry-value"
+  ],
+  "disk": [
+   "save-refused-during-load"
+  ]
+ },
+ "timing_rules": {
+  "note": "Pass rules for the existing save/eval rows (rows executed unchanged; the table adds only the timing rule).  Metric = step wall seconds as recorded by Session.step (includes the 1.5 s settle and 0.1 s poll quantisation) AND, once the driver reads it, DWX cycles key-queued -> result+prompt stable.  Same-session control on the 2.5.3 Seed r8 (build/card-253-product-r8) is the primary reference because host load changed the 2.5.3 numbers by up to 2x between r7 and r8.",
+  "baselines_253_emulator_wall_s": {
+   "save-buffer-to 20x40 (r8 / r7-c)": [
+    46.1,
+    50.8
+   ],
+   "save-buffer-to 50x40": [
+    101.4,
+    107.6
+   ],
+   "save-buffer-to 100x20": [
+    136.6,
+    271.4
+   ],
+   "eval-buffer 50 forms": [
+    190.4,
+    429.5
+   ],
+   "eval-buffer 5 forms": [
+    25.7,
+    55.6
+   ],
+   "m65d-remount (unchanged by 2.5.4: fix B deferred)": [
+    41.4,
+    46.8
+   ],
+   "save-buffer-to 100x40 (OOM refusal)": [
+    190.7,
+    191.2
+   ]
+  },
+  "baselines_253_device_s": {
+   "save 20x40": 37.7,
+   "save 50x40": 92.1,
+   "eval-buffer 50": 217.0,
+   "source": "build/scope-254-r1/report.txt section 6 (device receipts disk-u-01) and card-254-ide-r1 notes section 2"
+  },
+  "model_254_device_s": {
+   "save 20x40": 2.9,
+   "save 50x40": 5.1,
+   "eval-buffer 50": 93.0,
+   "source": "build/card-254-ide-r1/evidence/save.json (model: 47 ms x removed overlay calls; NOT a measurement)"
+  },
+  "rules": {
+   "ide-save-20x40": "save step <= 0.35 x control AND <= 20 s wall",
+   "ide-save-50x40": "save step <= 0.30 x control AND <= 30 s wall",
+   "ide-save-100x20": "save step <= 0.30 x control AND <= 30 s wall",
+   "eval-buffer-50": "eval step <= 0.75 x control AND <= 150 s wall (compile/run per form is unchanged: only the join gets cheaper)",
+   "eval-buffer-5": "OBSERVED (record)",
+   "ide-save-100x40-refusal": "OBSERVED: still OOM (single arena allocation, J1/G1 unchanged) but the 190 s of per-byte join before it should vanish: expect < 30 s; success with byte-identical readback is also acceptable",
+   "m65d-remount": "unchanged +-15 % (fix B not taken): 31-46 s",
+   "all": "byte-identical host readback stays mandatory; a faster save with different bytes is a FAIL"
+  },
+  "proposed_by": "seed-prep rows agent; thresholds are a reviewer decision"
+ },
+ "rows": [
+  {
+   "id": "closure-compile",
+   "group": "closure",
+   "session": "repl",
+   "driver": "step",
+   "title": "funcall of a literal lambda compiles as the direct form (2.5.3: *** VM: BAD BYTECODE)",
+   "setup": [],
+   "steps": [
+    "(let ((x 5)) (funcall (lambda () x)))",
+    "(let ((i 1)(s 0)) (funcall (lambda () (setq s i))) s)",
+    "(let ((s 0)(i 7)) (funcall (lambda () (setq s (+ i 1)))) s)",
+    "(let ((a 2)) (let ((b 3)) (funcall (lambda () (* a b)))))",
+    "(funcall (lambda () 27))",
+    "(funcall (lambda (x y) (+ x y)) 3 4)",
+    "(let ((k 10)) (funcall (lambda (x) (+ x k)) 5))",
+    "(funcall (lambda (a &optional b) (list a b)) 1 2)",
+    "(funcall (lambda (a &optional b) (list a b)) 1)",
+    "(funcall (lambda (a &rest r) (list a r)) 1 2 3)",
+    "(let ((n 0)) (funcall (lambda (a b) (list a b)) (setq n (+ n 1)) (setq n (+ n 10))))",
+    "(funcall (lambda (x) (funcall (lambda (y) (+ x y)) 2)) 40)",
+    "(defun f254 (x) (funcall (lambda () (+ x 1))))",
+    "(f254 7)",
+    "(funcall (lambda (l) (car l)) (quote (9 8)))"
+   ],
+   "expect": "every form prints the value; never *** VM: BAD BYTECODE",
+   "oracle": "LCC card r1 probe (product LCC path on the P0 VM, %c2-compile-form); closure/report.txt root cause",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((x 5)) (funcall (lambda () x)))",
+      "screen": "5",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((i 1)(s 0)) (funcall (lambda () (setq s i))) s)",
+      "screen": "1",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((s 0)(i 7)) (funcall (lambda () (setq s (+ i 1)))) s)",
+      "screen": "8",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((a 2)) (let ((b 3)) (funcall (lambda () (* a b)))))",
+      "screen": "6",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(funcall (lambda () 27))",
+      "screen": "27",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(funcall (lambda (x y) (+ x y)) 3 4)",
+      "screen": "7",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((k 10)) (funcall (lambda (x) (+ x k)) 5))",
+      "screen": "15",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(funcall (lambda (a &optional b) (list a b)) 1 2)",
+      "screen": "(1 2)",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(funcall (lambda (a &optional b) (list a b)) 1)",
+      "screen": "(1 NIL)",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(funcall (lambda (a &rest r) (list a r)) 1 2 3)",
+      "screen": "(1 (2 3))",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((n 0)) (funcall (lambda (a b) (list a b)) (setq n (+ n 1)) (setq n (+ n 10))))",
+      "screen": "(1 11)",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(funcall (lambda (x) (funcall (lambda (y) (+ x y)) 2)) 40)",
+      "screen": "42",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun f254 (x) (funcall (lambda () (+ x 1))))",
+      "screen": "F254",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(f254 7)",
+      "screen": "8",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(funcall (lambda (l) (car l)) (quote (9 8)))",
+      "screen": "9",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json funcall-lambda-*) value; device route/print path HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "none: LCC image is a plain static-plane change (+52 B)"
+   ],
+   "host_first": [
+    "REPL routing (direct call tree vs compile path) of each form: c254_row_oracles lcc_carrier route field",
+    "printed NIL spelling inside lists (screen decode upper-case, as 2.5.3 rows)"
+   ]
+  },
+  {
+   "id": "closure-still-refused",
+   "group": "closure",
+   "session": "repl",
+   "driver": "step",
+   "title": "a lambda used as a VALUE at top level stays refused (unchanged by design)",
+   "setup": [],
+   "steps": [
+    "(let ((f (lambda () 27))) (funcall f))",
+    "(progn (setq savedlambda254 (lambda () 27)) 19)",
+    "(funcall (function (lambda () 5)))",
+    "(mapcar (lambda (x) (+ x 1)) (quote (1 2 3)))",
+    "(+ 4 5)"
+   ],
+   "expect": "*** VM: BAD BYTECODE x4, prompt usable, (+ 4 5) = 9",
+   "oracle": "LCC card r1 probe-head-vs-cand.txt closure-still-refused rows (helper + transient BCODE literal unchanged); scope report section 4",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((f (lambda () 27))) (funcall f))",
+      "screen": "*** VM: BAD BYTECODE",
+      "proof": "EMULATOR-253 build/card-253-rows-r8/253-bb + Comfort rows reg-lambda (class: lambda as a value in a top-level form); per-form text HOST-FIRST (host target VM models closures as BadOpcode so the oracle cannot give it)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "the host target VM has no closure opcode; its refusal is a host-model limit, not the product path (2.5.3 emulator class evidence)",
+       "host": null,
+       "host_route": "compile"
+      }
+     },
+     {
+      "input": "(progn (setq savedlambda254 (lambda () 27)) 19)",
+      "screen": "*** VM: BAD BYTECODE",
+      "proof": "EMULATOR-253 build/card-253-rows-r8/253-bb + Comfort rows reg-lambda (class: lambda as a value in a top-level form); per-form text HOST-FIRST (host target VM models closures as BadOpcode so the oracle cannot give it)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "the host target VM has no closure opcode; its refusal is a host-model limit, not the product path (2.5.3 emulator class evidence)",
+       "host": null,
+       "host_route": "compile"
+      }
+     },
+     {
+      "input": "(funcall (function (lambda () 5)))",
+      "screen": "*** VM: BAD BYTECODE",
+      "proof": "EMULATOR-253 build/card-253-rows-r8/253-bb + Comfort rows reg-lambda (class: lambda as a value in a top-level form); per-form text HOST-FIRST (host target VM models closures as BadOpcode so the oracle cannot give it)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "the host target VM has no closure opcode; its refusal is a host-model limit, not the product path (2.5.3 emulator class evidence)",
+       "host": null,
+       "host_route": "compile"
+      }
+     },
+     {
+      "input": "(mapcar (lambda (x) (+ x 1)) (quote (1 2 3)))",
+      "screen": "*** VM: BAD BYTECODE",
+      "proof": "EMULATOR-253 build/card-253-rows-r8/253-bb + Comfort rows reg-lambda (class: lambda as a value in a top-level form); per-form text HOST-FIRST (host target VM models closures as BadOpcode so the oracle cannot give it)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "the host target VM has no closure opcode; its refusal is a host-model limit, not the product path (2.5.3 emulator class evidence)",
+       "host": "wrong argument count for <code@7fe4050b8520>: expected 1..1, got 0",
+       "host_route": "compile"
+      }
+     },
+     {
+      "input": "(+ 4 5)",
+      "screen": "9",
+      "proof": "trivial",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "exact refusal text of forms 1, 3, 4 (only the setq form has a 2.5.3 emulator observation)"
+   ],
+   "status_rule": "text differs but prompt returns = OBSERVED, record the text; hang = FAIL"
+  },
+  {
+   "id": "lcc-ladder-closure",
+   "group": "lcc-depth",
+   "session": "repl",
+   "driver": "step",
+   "title": "Nesting ladder points that the closure fix moved (OBSERVED; 2.5.3: upvalue 5->8, lambda-funcall-arg 3->5, -body 2->16)",
+   "setup": [],
+   "steps": [
+    "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))))) s)",
+    "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))))) s)",
+    "(funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) 1)))))",
+    "(funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) 1))))))",
+    "(funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () 1))))))))))))))))"
+   ],
+   "expect": "as the host model; a one-level difference is recorded, not a blocker (uncalibrated)",
+   "oracle": "tests/bytecode/dialect-v2/evidence/capability-carrier/lcc-nesting-ladder-v254-20261003.json (35 shapes >= 2.5.2 and >= 2.5.3)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))))) s)",
+      "screen": "9",
+      "proof": "HOST-PROVEN lcc-nesting-ladder-v254-20261003.json upvalue-setq candidate 8 (host model, uncalibrated on the emulator)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))))))) s)",
+      "screen": "*** VM: STACK OVERFLOW",
+      "proof": "HOST-PROVEN same receipt: overflow:frames one level deeper (model; emulator OBSERVED)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "device soft-frame/native-stack limit; the host VM has none (ladder gate model)",
+       "host_value": "10"
+      }
+     },
+     {
+      "input": "(funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) 1)))))",
+      "screen": "1",
+      "proof": "HOST-PROVEN receipt lambda-funcall-arg candidate 5",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) (funcall (lambda (x) x) 1))))))",
+      "screen": "*** VM: STACK OVERFLOW",
+      "proof": "HOST-PROVEN receipt: 6 deeper than candidate 5 (model)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "device soft-frame/native-stack limit; the host VM has none (ladder gate model)",
+       "host_value": "1"
+      }
+     },
+     {
+      "input": "(funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () (funcall (lambda () 1))))))))))))))))",
+      "screen": "1",
+      "proof": "HOST-PROVEN receipt lambda-funcall-body candidate 16 (k=8 ok; k=16 does not fit one input line)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "the receipt is a host model: values at the limit are proven, the emulator limit is not"
+   ],
+   "status_rule": "OBSERVED / OBSERVED-MATCH like lcc-ladder-host-only"
+  },
+  {
+   "id": "mapcan-beyond-12",
+   "group": "mapcan",
+   "session": "repl",
+   "driver": "step",
+   "title": "mapcan with more than 12 results (2.5.3: argc exceeds max_call_args 12)",
+   "setup": [],
+   "steps": [
+    "(length (mapcan (function list) (quote (0 1 2 3 4 5 6 7 8 9 10 11 12))))",
+    "(length (mapcan (function list) (quote (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))))",
+    "(length (mapcan (function list) (quote (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39))))",
+    "(mapcan (function list) (quote (0 1 2 3 4 5 6 7 8 9 10 11 12)))",
+    "(let ((l nil)) (dotimes (i 40) (setq l (cons i l))) (let ((s 0)) (dolist (x (mapcan (function list) l)) (setq s (+ s x))) s))",
+    "(length (mapcan (function list) (quote (0 1 2)) (quote (0 1 2))))",
+    "(let* ((l2 (list 8 9)) (r (mapcan (function identity) (list (list 1) l2)))) (eq (cdr r) l2))",
+    "(length (mapcan (function list) (quote (1 2 3))))"
+   ],
+   "expect": "lengths 13/16/40, content of 13, checksum of 40, shared last cdr, control 3",
+   "oracle": "LCC card r1 probe-results.json mapcan group; lib/domain-tier1.lisp mapcan (pairwise append fold)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(length (mapcan (function list) (quote (0 1 2 3 4 5 6 7 8 9 10 11 12))))",
+      "screen": "13",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json mapcan list 13",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(length (mapcan (function list) (quote (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))))",
+      "screen": "16",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json mapcan list 16",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(length (mapcan (function list) (quote (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39))))",
+      "screen": "40",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json mapcan list 40",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(mapcan (function list) (quote (0 1 2 3 4 5 6 7 8 9 10 11 12)))",
+      "screen": "(0 1 2 3 4 5 6 7 8 9 10 11 12)",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json mapcan content 13",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((l nil)) (dotimes (i 40) (setq l (cons i l))) (let ((s 0)) (dolist (x (mapcan (function list) l)) (setq s (+ s x))) s))",
+      "screen": "780",
+      "proof": "HOST-FIRST (arithmetic: sum 0..39 = 780; compile/run of the typed form not yet host-run)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(length (mapcan (function list) (quote (0 1 2)) (quote (0 1 2))))",
+      "screen": "6",
+      "proof": "HOST-FIRST (2 lists; probe has only 2x13/2x40)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let* ((l2 (list 8 9)) (r (mapcan (function identity) (list (list 1) l2)))) (eq (cdr r) l2))",
+      "screen": "T",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json mapcan last result shared",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(length (mapcan (function list) (quote (1 2 3))))",
+      "screen": "3",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json mapcan nil results mixed (control, 2.5.3 unchanged)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "stdlib-p0 re-seal (new mapcan in the Seed): a Seed built with the OLD resident mapcan fails 13/16/40"
+   ],
+   "host_first": [
+    "heap: the host VM has a larger heap; on the device mapcan holds list + results + reversed copy + accumulator (about 5n cells) against 1,071 total, ~650 live at boot: n=40 (~200 cells) should fit, n=100 may not"
+   ]
+  },
+  {
+   "id": "mapcan-heap-edge",
+   "group": "mapcan",
+   "session": "repl",
+   "driver": "step",
+   "title": "mapcan with 100 results and 2x40 results (OBSERVED: value or a clean heap refusal)",
+   "setup": [],
+   "steps": [
+    "(let ((l nil)) (dotimes (i 100) (setq l (cons i l))) (length (mapcan (function list) l)))",
+    "(let ((l nil)) (dotimes (i 40) (setq l (cons i l))) (length (mapcan (function list) l l)))",
+    "(+ 1 2)"
+   ],
+   "expect": "100 (or *** VM: OUT OF MEMORY with the prompt back, then (+ 1 2) = 3); 80 (or OOM)",
+   "oracle": "host value 100 / 80 from probe-results.json (quoted-list variants); heap fit unmodelled",
+   "expected": {
+    "screen": [],
+    "any_of": {
+     "(let ((l nil)) (dotimes (i 100) (setq l (cons i l))) (length (mapcan (function list) l)))": {
+      "any_of": [
+       "100",
+       "*** VM: OUT OF MEMORY"
+      ],
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "host_value": "100",
+       "why": "device heap fit decides between the value and the OOM line"
+      }
+     },
+     "(let ((l nil)) (dotimes (i 40) (setq l (cons i l))) (length (mapcan (function list) l l)))": {
+      "any_of": [
+       "80",
+       "*** VM: OUT OF MEMORY"
+      ],
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "host_value": "80",
+       "why": "device heap fit decides between the value and the OOM line"
+      }
+     },
+     "(+ 1 2)": {
+      "any_of": [
+       "3"
+      ],
+      "draft_any_of": [
+       "3"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     }
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "100 and 80 as typed (generator form instead of the 291-char quoted list that exceeds one input line)",
+    "whether the device heap admits them"
+   ],
+   "status_rule": "value = PASS; OOM with prompt back and (+ 1 2) = 3 = OBSERVED (heap limit, not a mapcan defect); livelock/hang = FAIL; driver: choice step (any_of)"
+  },
+  {
+   "id": "arity-bitops-eq-refused",
+   "group": "arity",
+   "session": "repl",
+   "driver": "step",
+   "title": "eq / eql / logand / logior / logxor / ash with the wrong argument count are refused at compile time",
+   "setup": [],
+   "steps": [
+    "(defun ar-eq (a) (eq a a a))",
+    "(defun ar-eql (a) (eql a a a))",
+    "(defun ar-logand (a) (logand a a a))",
+    "(defun ar-logior (a) (logior a a a))",
+    "(defun ar-logxor (a) (logxor a a a))",
+    "(defun ar-ash (a) (ash a a a))",
+    "(defun ar-e1 (a) (eq a))",
+    "(defun ar-l1 (a) (eql a))",
+    "(defun ar-a1 (a) (logand a))",
+    "(defun ar-s1 (a) (ash a))",
+    "(defun ar-e0 () (eq))",
+    "(let ((x 0)) (eq 1 1 (setq x 5)) x)",
+    "(let ((x 0)) (logand 1 1 (setq x 5)) x)",
+    "(let ((x 0)) (logior 1 1 (setq x 5)) x)",
+    "(let ((x 0)) (logxor 1 1 (setq x 5)) x)",
+    "(let ((x 0)) (ash 1 1 (setq x 5)) x)",
+    "(let ((x 0)) (eql 1 1 (setq x 5)) x)",
+    "(defun ar-ok (a b) (eq a b))",
+    "(ar-ok (quote x) (quote x))",
+    "(eq 1 1)",
+    "(eq 1 2)",
+    "(eql 2 2)",
+    "(logand 12 10)",
+    "(logior 12 10)",
+    "(logxor 12 10)",
+    "(ash 3 2)",
+    "(ash 12 -2)",
+    "(defun ka2 () (car (quote (1)) 2))"
+   ],
+   "expect": "COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST for every wrong count in a defun or a let body; valid two-argument forms unchanged",
+   "oracle": "LCC card r1 probe-results.json arity group; lcc-surface cases-v254 arity-* (code 59 / %lcc-error-invalid-parameter-list)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(defun ar-eq (a) (eq a a a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"defun body 3 args\" (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json arity-eq-in-defun-refused for eq); text mapping = 2.5.3 Seed r8 emulator",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-eql (a) (eql a a a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"defun body 3 args\" (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json arity-eq-in-defun-refused for eq); text mapping = 2.5.3 Seed r8 emulator",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-logand (a) (logand a a a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"defun body 3 args\" (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json arity-eq-in-defun-refused for eq); text mapping = 2.5.3 Seed r8 emulator",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-logior (a) (logior a a a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"defun body 3 args\" (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json arity-eq-in-defun-refused for eq); text mapping = 2.5.3 Seed r8 emulator",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-logxor (a) (logxor a a a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"defun body 3 args\" (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json arity-eq-in-defun-refused for eq); text mapping = 2.5.3 Seed r8 emulator",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-ash (a) (ash a a a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"defun body 3 args\" (+ tests/bytecode/dialect-v2/lcc-surface/cases-v254-20261004.json arity-eq-in-defun-refused for eq); text mapping = 2.5.3 Seed r8 emulator",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-e1 (a) (eq a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-FIRST (probe has 0/1-arg only at top level, same %lcc-2args-p path)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-l1 (a) (eql a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-FIRST (probe has 0/1-arg only at top level, same %lcc-2args-p path)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-a1 (a) (logand a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-FIRST (probe has 0/1-arg only at top level, same %lcc-2args-p path)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-s1 (a) (ash a))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-FIRST (probe has 0/1-arg only at top level, same %lcc-2args-p path)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-e0 () (eq))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-FIRST (probe has 0/1-arg only at top level, same %lcc-2args-p path)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((x 0)) (eq 1 1 (setq x 5)) x)",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"eq 3 args (side effect)\" compile refused; compile-path text as lcc-setq-odd (2.5.3 emulator)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((x 0)) (logand 1 1 (setq x 5)) x)",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"logand 3 args (side effect)\" compile refused; compile-path text as lcc-setq-odd (2.5.3 emulator)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((x 0)) (logior 1 1 (setq x 5)) x)",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"logior 3 args (side effect)\" compile refused; compile-path text as lcc-setq-odd (2.5.3 emulator)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((x 0)) (logxor 1 1 (setq x 5)) x)",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"logxor 3 args (side effect)\" compile refused; compile-path text as lcc-setq-odd (2.5.3 emulator)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((x 0)) (ash 1 1 (setq x 5)) x)",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"ash 3 args (side effect)\" compile refused; compile-path text as lcc-setq-odd (2.5.3 emulator)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(let ((x 0)) (eql 1 1 (setq x 5)) x)",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json \"eql 3 args (side effect)\"",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ar-ok (a b) (eq a b))",
+      "screen": "AR-OK",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json arity eq tail in defun",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(ar-ok (quote x) (quote x))",
+      "screen": "T",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(eq 1 1)",
+      "screen": "T",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json eq ok",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(eq 1 2)",
+      "screen": "NIL",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(eql 2 2)",
+      "screen": "T",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(logand 12 10)",
+      "screen": "8",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(logior 12 10)",
+      "screen": "14",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(logxor 12 10)",
+      "screen": "6",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(ash 3 2)",
+      "screen": "12",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(ash 12 -2)",
+      "screen": "3",
+      "proof": "HOST-PROVEN build/card-254-lcc-r1/probe-results.json",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident"
+      }
+     },
+     {
+      "input": "(defun ka2 () (car (quote (1)) 2))",
+      "screen": "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+      "proof": "EMULATOR-253 lcc-arity-compiled (2.5.3 control, unchanged)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "compile",
+       "world": "lcc image + projected resident"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "bare top-level wrong-count forms (eq 1 1 2) (ash 3) etc. are NOT in this row: they may take the C2 direct path (text *** WRONG ARGUMENT COUNT as (car 1 2) in 2.5.3) -- see arity-toplevel-direct",
+    "defun forms with 0/1 arguments"
+   ]
+  },
+  {
+   "id": "arity-toplevel-direct",
+   "group": "arity",
+   "session": "repl",
+   "driver": "step",
+   "title": "bare top-level wrong-count forms (OBSERVED: which of the two refusal texts)",
+   "setup": [],
+   "steps": [
+    "(eq 1 1 2)",
+    "(eql 2 2 2)",
+    "(logand 12 10 6)",
+    "(logior 12 10 6)",
+    "(logxor 12 10 6)",
+    "(ash 3 2 1)",
+    "(ash 3)",
+    "(eq 1)",
+    "(logand 12)"
+   ],
+   "expect": "either *** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST or *** WRONG ARGUMENT COUNT per form; never a value; prompt usable",
+   "oracle": "routing: %c2-published-direct-call-p classifies the form in the host carrier (c253_row_oracles.lcc_carrier route field); 2.5.3: (car 1 2) = WRONG ARGUMENT COUNT (direct), (setq a 1 b) = COMPILE FAILED...",
+   "expected": {
+    "screen": [],
+    "any_of": {
+     "(eq 1 1 2)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     },
+     "(eql 2 2 2)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     },
+     "(logand 12 10 6)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     },
+     "(logior 12 10 6)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     },
+     "(logxor 12 10 6)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     },
+     "(ash 3 2 1)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     },
+     "(ash 3)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     },
+     "(eq 1)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     },
+     "(logand 12)": {
+      "any_of": [
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "draft_any_of": [
+       "*** COMPILE FAILED%LCC-ERROR-INVALID-PARAMETER-LIST",
+       "*** WRONG ARGUMENT COUNT"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "route": "direct",
+       "world": "lcc image + projected resident",
+       "caution": "the route predicate ran on the host; 2.5.3 r8 saw one host/device route divergence (progn-wrapped car)"
+      }
+     }
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "the text of every form: fixed per form by the oracle route field (direct -> callee arity authority code 48 = WRONG ARGUMENT COUNT; compile -> suffixed COMPILE FAILED)"
+   ],
+   "status_rule": "after the oracle run the table must say exactly one text per form; until then OBSERVED; driver: choice step"
+  },
+  {
+   "id": "rp1-bounded-result",
+   "group": "rp1",
+   "session": "repl",
+   "driver": "step",
+   "title": "Comfort result print is bounded: depth 8 prints; depth 9, a cycle, a path-count over 1,100 are refused with one line",
+   "setup": [],
+   "steps": [
+    "(let ((x nil) (i 0)) (while (< i 8) (setq x (list x)) (setq i (+ i 1))) x)",
+    "(let ((x nil) (i 0)) (while (< i 9) (setq x (list x)) (setq i (+ i 1))) x)",
+    "(let ((x nil) (i 0)) (while (< i 20) (setq x (list x)) (setq i (+ i 1))) x)",
+    "(let ((x (cons 1 nil))) (rplacd x x) x)",
+    "(let ((x (cons 1 nil))) (rplaca x x) x)",
+    "(let ((a (list 1 2))) (rplacd (cdr a) a) a)",
+    "(let ((x (list 1)) (i 0)) (while (< i 5) (setq x (list x x x x x x)) (setq i (+ i 1))) x)",
+    "(list 1 (list 2 (list 3 \"x\")) (quote sym))",
+    "(cons 1 2)",
+    "(+ 1 2)"
+   ],
+   "expect": "depth 8 prints; depth 9 / 20 / cycles / 6x5 DAG print *** RESULT TOO DEEP, TOO LARGE OR CIRCULAR; controls print; prompt returns each time",
+   "oracle": "build/card-254-pkg-r1/host-rp1.json (24 rows, 0 failures), evidence/host-rp1.txt; known-issues-254.txt",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((x nil) (i 0)) (while (< i 8) (setq x (list x)) (setq i (+ i 1))) x)",
+      "screen": "((((((((NIL))))))))",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"nest 8 (depth bound, accepted)\" answer_head; typed form returns x instead of calling %lt-write: HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write (accepted) + lcc value",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(let ((x nil) (i 0)) (while (< i 9) (setq x (list x)) (setq i (+ i 1))) x)",
+      "screen": "*** RESULT TOO DEEP, TOO LARGE OR CIRCULAR",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"nest 9\" refused; text = lib/repl-comfort-v250.lisp %lt-write literal (upper-cased on screen)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(let ((x nil) (i 0)) (while (< i 20) (setq x (list x)) (setq i (+ i 1))) x)",
+      "screen": "*** RESULT TOO DEEP, TOO LARGE OR CIRCULAR",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"nest 20\" refused",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(let ((x (cons 1 nil))) (rplacd x x) x)",
+      "screen": "*** RESULT TOO DEEP, TOO LARGE OR CIRCULAR",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"cyclic cdr\"",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(let ((x (cons 1 nil))) (rplaca x x) x)",
+      "screen": "*** RESULT TOO DEEP, TOO LARGE OR CIRCULAR",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"cyclic car\"",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(let ((a (list 1 2))) (rplacd (cdr a) a) a)",
+      "screen": "*** RESULT TOO DEEP, TOO LARGE OR CIRCULAR",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"two-cell cdr cycle\"",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(let ((x (list 1)) (i 0)) (while (< i 5) (setq x (list x x x x x x)) (setq i (+ i 1))) x)",
+      "screen": "*** RESULT TOO DEEP, TOO LARGE OR CIRCULAR",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"shared DAG 6-wide x5 (7776 paths, budget)\": the size refusal reachable with 31 cells",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(list 1 (list 2 (list 3 \"x\")) (quote sym))",
+      "screen": "(1 (2 (3 \"X\")) SYM)",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"nested mixed list\" (control)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write (accepted) + lcc value",
+       "route": "direct"
+      }
+     },
+     {
+      "input": "(cons 1 2)",
+      "screen": "(1 . 2)",
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"dotted pair\" (control)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write (accepted) + lcc value",
+       "route": "direct"
+      }
+     },
+     {
+      "input": "(+ 1 2)",
+      "screen": "3",
+      "proof": "trivial: prompt and history intact after the refusals",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write (accepted) + lcc value",
+       "route": "direct"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "typed forms (host rows call %lt-write directly; the Comfort loop path lcc-run -> %lt-write is bytecode-checked only)",
+    "soft-frame margin on the device: host peak 9 frames + 3-4 REPL base frames vs VM_SOFT_FRAME_MAX 16 (emulator depth row still needed, pkg notes)"
+   ],
+   "note": "NEVER type (prin1 x)/(print x)/(write x) of a cyclic or deep value: explicit printing is unbounded and a circular print does not return (reset required)."
+  },
+  {
+   "id": "rp1-accepted-large",
+   "group": "rp1",
+   "session": "repl",
+   "driver": "step",
+   "title": "a legitimate large result at the depth bound still prints (2-wide DAG, 254 conses, depth 8)",
+   "setup": [],
+   "steps": [
+    "(let ((x nil) (i 0)) (while (< i 2) (setq x (list x)) (setq i (+ i 1))) x)",
+    "(let ((x (list 1)) (i 0)) (while (< i 7) (setq x (list x x)) (setq i (+ i 1))) x)",
+    "(+ 1 2)"
+   ],
+   "expect": "no refusal line, no *** error, prompt back",
+   "oracle": "host-rp1.json \"shared DAG 2-wide x7\"",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((x nil) (i 0)) (while (< i 2) (setq x (list x)) (setq i (+ i 1))) x)",
+      "screen": "((NIL))",
+      "proof": "derived: nest depth 2",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write (accepted) + lcc value",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(let ((x (list 1)) (i 0)) (while (< i 7) (setq x (list x x)) (setq i (+ i 1))) x)",
+      "screen": null,
+      "forbid": [
+       "*** RESULT TOO DEEP, TOO LARGE OR CIRCULAR"
+      ],
+      "proof": "HOST-PROVEN build/card-254-pkg-r1/host-rp1.json \"shared DAG 2-wide x7 (depth 8, 254 conses, accepted)\": long output, check only that it is NOT refused",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "host_refused": false,
+       "route": "compile",
+       "note": "row checks \"no refusal line\""
+      }
+     },
+     {
+      "input": "(+ 1 2)",
+      "screen": "3",
+      "proof": "trivial",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write (accepted) + lcc value",
+       "route": "direct"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "status_rule": "step with no want: noerr = no *** line; forbid the refusal text"
+  },
+  {
+   "id": "rp1-depth8-reentry",
+   "group": "rp1",
+   "session": "repl",
+   "driver": "step+prompt",
+   "title": "depth-8 result after leaving Comfort and re-entering with (repl) (frames from a native caller)",
+   "setup": [],
+   "steps": [
+    "",
+    "(repl)",
+    "(let ((x nil) (i 0)) (while (< i 8) (setq x (list x)) (setq i (+ i 1))) x)"
+   ],
+   "expect": "NIL at LISP65>, then L65>, then the depth-8 list prints (not the refusal)",
+   "oracle": "d-exit / d-reentry rows of the Comfort 79 plan; frame count on the device is not host-modelled",
+   "expected": {
+    "screen": [
+     {
+      "input": "",
+      "screen": "NIL",
+      "proof": "EMULATOR-253 comfort row d-exit",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "native prompt / re-entry is not modelled on the host"
+      }
+     },
+     {
+      "input": "(repl)",
+      "screen": null,
+      "proof": "EMULATOR-253 comfort row d-reentry (prompt only)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "native prompt / re-entry is not modelled on the host"
+      }
+     },
+     {
+      "input": "(let ((x nil) (i 0)) (while (< i 8) (setq x (list x)) (setq i (+ i 1))) x)",
+      "screen": "((((((((NIL))))))))",
+      "proof": "HOST-FIRST (as rp1-bounded-result; extra native frames below the REPL loop)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted REPL-COMFORT %lt-write (accepted) + lcc value",
+       "route": "compile"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "the stack margin: only the emulator decides"
+   ]
+  },
+  {
+   "id": "rp1-flat-1101-heap",
+   "group": "rp1",
+   "session": "oom",
+   "driver": "oom_step",
+   "title": "a flat 1,101-cons list cannot be built (heap 1,071 cells, ~650 live at boot): the heap refusal comes first, not the RP1 line",
+   "setup": [],
+   "steps": [
+    "(let ((x nil) (i 0)) (while (< i 1101) (setq x (cons i x)) (setq i (+ i 1))) x)",
+    "(+ 1 2)",
+    "(length (list 1 2 3))"
+   ],
+   "expect": "*** VM: OUT OF MEMORY (prompt back, memory usable again) -- NOT the RP1 refusal; then 3, 3",
+   "oracle": "heap geometry: build/card-253-rows-final-r1/measurements.json (live cells at last GC 658 of 1,071); oom-repl-local recovery (2.5.3 r8 PASS)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(let ((x nil) (i 0)) (while (< i 1101) (setq x (cons i x)) (setq i (+ i 1))) x)",
+      "screen": "*** VM: OUT OF MEMORY",
+      "proof": "derived from heap size HOST-FIRST (not run anywhere)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "device heap limit (1,071 cells); on the host the form completes and the print is REFUSED",
+       "host_refused": true
+      }
+     },
+     {
+      "input": "(+ 1 2)",
+      "screen": "3",
+      "proof": "EMULATOR-253 oom-repl-local",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "device heap limit (1,071 cells); on the host the form completes and the print is accepted",
+       "host_refused": false
+      }
+     },
+     {
+      "input": "(length (list 1 2 3))",
+      "screen": "3",
+      "proof": "EMULATOR-253 oom-repl-local",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "device heap limit (1,071 cells); on the host the form completes and the print is accepted",
+       "host_refused": false
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "status_rule": "OOM -> PASS; the RP1 line -> OBSERVED (heap larger than modelled; then the 1,100 budget is reachable and 1,100 / 1,101 rows can be added)",
+   "note": "run in the oom session after oom-repl-local/global (own fresh boot); the 1,100-cons budget edge (1,100 fits, 1,101 refused) is host-only: host-rp1.json"
+  },
+  {
+   "id": "lib1-defstruct-collision",
+   "group": "lib1",
+   "session": "repl",
+   "driver": "step",
+   "title": "defstruct refuses colliding generated names; non-colliding structs still work",
+   "setup": [],
+   "steps": [
+    "(require \"defstruct\")",
+    "(defstruct r p)",
+    "(defstruct s x set-x)",
+    "(defstruct u x with-x)",
+    "(make-r 1)",
+    "(defstruct pt x y)",
+    "(pt-x (make-pt 7 8))",
+    "(defstruct rr pp)"
+   ],
+   "expect": "the three collisions print the layout-error text; controls define and work",
+   "oracle": "build/card-254-pkg-r1: LIB1 (%defstruct-names-free-p also rejects a later duplicate); no new message text by design (pkg notes deviation 3)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(require \"defstruct\")",
+      "screen": "T",
+      "proof": "EMULATOR-253 comfort row d-require-defstruct",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "needs the loaded DEFSTRUCT package inside the REPL (require / installed accessors)"
+      }
+     },
+     {
+      "input": "(defstruct r p)",
+      "screen": "*** UNDEFINED FUNCTION: %DEFSTRUCT-ERROR-INVALID-LAYOUT",
+      "proof": "HOST-FIRST (expansion is the call (%defstruct-error-invalid-layout): tests/bytecode/libs/p0-defstruct-names-r254.json macro-collision-refused; the symbol is an unresolved error symbol, so the REPL text is inferred)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted DEFSTRUCT macro expansion (%defstruct-error-invalid-layout), then the packed LCC / REPL route",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(defstruct s x set-x)",
+      "screen": "*** UNDEFINED FUNCTION: %DEFSTRUCT-ERROR-INVALID-LAYOUT",
+      "proof": "HOST-FIRST (macro-collision-setter-refused)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted DEFSTRUCT macro expansion (%defstruct-error-invalid-layout), then the packed LCC / REPL route",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(defstruct u x with-x)",
+      "screen": "*** UNDEFINED FUNCTION: %DEFSTRUCT-ERROR-INVALID-LAYOUT",
+      "proof": "HOST-FIRST (macro-collision-updater-refused)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "re-emitted DEFSTRUCT macro expansion (%defstruct-error-invalid-layout), then the packed LCC / REPL route",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(make-r 1)",
+      "screen": "*** UNDEFINED FUNCTION: MAKE-R",
+      "proof": "HOST-FIRST (nothing of the refused struct was defined)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "lcc image + projected resident (nothing defined)",
+       "route": "compile"
+      }
+     },
+     {
+      "input": "(defstruct pt x y)",
+      "screen": null,
+      "proof": "HOST-PROVEN tests/bytecode/libs/p0-defstruct-names-r254.json macro-control-expands (head progn); device print line HOST-FIRST",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "accepted: the macro expands (head (progn (%setf-register-b...); the printed line of the defstruct form is device output",
+       "host_expansion_head": "(progn (%setf-register-begin) (progn (quote %c2-definition-g"
+      }
+     },
+     {
+      "input": "(pt-x (make-pt 7 8))",
+      "screen": "7",
+      "proof": "HOST-FIRST (control; accessor naming per lib/defstruct.lisp:50-57)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "needs the loaded DEFSTRUCT package inside the REPL (require / installed accessors)"
+      }
+     },
+     {
+      "input": "(defstruct rr pp)",
+      "screen": null,
+      "proof": "HOST-PROVEN p0-defstruct-names-r254.json names-control-p-prefix-slot-pp / macro-control-p-prefix-expands (accepted); print line HOST-FIRST",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "accepted: the macro expands (head (progn (%setf-register-b...); the printed line of the defstruct form is device output",
+       "host_expansion_head": "(progn (%setf-register-begin) (progn (quote %c2-definition-g"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "DEFSTRUCT package re-emission (+13 B) must be in the Seed medium"
+   ],
+   "host_first": [
+    "exact REPL text of the refusal (undefined-function of an error symbol): fix by the host oracle with the packaged DEFSTRUCT + REPL error rendering",
+    "result lines of the two accepted defstructs"
+   ]
+  },
+  {
+   "id": "hist1-recall-comment",
+   "group": "hist1",
+   "session": "repl",
+   "driver": "keyseq",
+   "title": "recalled history with a comment submits at once (2.5.3: asks for another line)",
+   "setup": [],
+   "steps": [
+    "(progn ;c RET",
+    " 42) RET",
+    "UP",
+    "RET",
+    "(+ 1 2)"
+   ],
+   "expect": "second Return after UP evaluates to 42 at once, prompt L65> (no continuation prompt); control: single-line recall unchanged",
+   "oracle": "build/card-254-pkg-r1/host-hist1.json: candidate 8/8, baseline fails the 4 comment rows (\"unexpected empty input poll\")",
+   "expected": {
+    "keys": [
+     {
+      "send": "(progn ;c\n",
+      "want_prompt": "K"
+     },
+     {
+      "send": " 42)\n",
+      "want_lines": [
+       "42"
+      ],
+      "want_prompt": "C"
+     },
+     {
+      "send": [
+       "UP"
+      ],
+      "want_prompt": "C"
+     },
+     {
+      "send": [
+       13
+      ],
+      "want_lines": [
+       "42"
+      ],
+      "want_prompt": "C",
+      "forbid_prompt": "K"
+     },
+     {
+      "send": "(+ 1 2)\n",
+      "want_lines": [
+       "3"
+      ],
+      "want_prompt": "C"
+     }
+    ],
+    "proof": "HOST-PROVEN build/card-254-pkg-r1/host-hist1.json \"comment+LF then close\"; device key transport and echo HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "re-emitted REPL-COMFORT (%repl-step with scripted keys)",
+     "typed": [
+      {
+       "keys": "(progn ;c\n 42)\n",
+       "submitted": "(progn ;c\n   42)",
+       "error": null
+      },
+      {
+       "keys": "(+ 1 2)\n",
+       "submitted": "(+ 1 2)",
+       "error": null
+      }
+     ],
+     "recall": [
+      {
+       "recalled": "(progn ;c\n   42)",
+       "submitted_at_once": true,
+       "error": null
+      },
+      {
+       "recalled": "(+ 1 2)",
+       "submitted_at_once": true,
+       "error": null
+      }
+     ],
+     "not_derived": "the evaluated values on the device screen and the prompt glyphs (the host proves the submitted text; the value of that text is ordinary evaluation)"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "the typed first line gets Comfort auto-indent on the continuation: the recalled text equals the typed text (host recall rows use the stored text)"
+   ],
+   "status_rule": "after UP + Return the segment shows 42 and the active prompt is L65> (C), not the continuation prompt (K)"
+  },
+  {
+   "id": "hist1-recall-two-comments",
+   "group": "hist1",
+   "session": "repl",
+   "driver": "keyseq",
+   "title": "recall with two comment lines (host row) and with a comment hiding a close paren",
+   "setup": [],
+   "steps": [
+    "(progn ;a RET",
+    " ;b RET",
+    " 42) RET",
+    "UP",
+    "RET",
+    "(list 1 ;x) RET",
+    " 2) RET",
+    "UP",
+    "RET"
+   ],
+   "expect": "42 after the first recall; the form (list 1 ;x) LF 2) evaluates to (1 2) at typing time and again after recall; prompt L65> each time, never a continuation prompt after the recall Return",
+   "oracle": "host-hist1.json rows 2 and 3",
+   "expected": {
+    "keys": [
+     {
+      "send": "(progn ;a\n",
+      "want_prompt": "K"
+     },
+     {
+      "send": " ;b\n",
+      "want_prompt": "K"
+     },
+     {
+      "send": " 42)\n",
+      "want_lines": [
+       "42"
+      ],
+      "want_prompt": "C"
+     },
+     {
+      "send": [
+       "UP"
+      ],
+      "want_prompt": "C"
+     },
+     {
+      "send": [
+       13
+      ],
+      "want_lines": [
+       "42"
+      ],
+      "want_prompt": "C",
+      "forbid_prompt": "K"
+     },
+     {
+      "send": "(list 1 ;x)\n",
+      "want_prompt": "K"
+     },
+     {
+      "send": " 2)\n",
+      "want_lines": [
+       "(1 2)"
+      ],
+      "want_prompt": "C"
+     },
+     {
+      "send": [
+       "UP"
+      ],
+      "want_prompt": "C"
+     },
+     {
+      "send": [
+       13
+      ],
+      "want_lines": [
+       "(1 2)"
+      ],
+      "want_prompt": "C",
+      "forbid_prompt": "K"
+     }
+    ],
+    "proof": "HOST-PROVEN build/card-254-pkg-r1/host-hist1.json rows 2,3 (submitted text); screen result lines HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "re-emitted REPL-COMFORT (%repl-step with scripted keys)",
+     "typed": [
+      {
+       "keys": "(progn ;a\n ;b\n 42)\n",
+       "submitted": "(progn ;a\n   ;b\n   42)",
+       "error": null
+      },
+      {
+       "keys": "(list 1 ;x)\n 2)\n",
+       "submitted": "(list 1 ;x)\n   2)",
+       "error": null
+      }
+     ],
+     "recall": [
+      {
+       "recalled": "(progn ;a\n   ;b\n   42)",
+       "submitted_at_once": true,
+       "error": null
+      },
+      {
+       "recalled": "(list 1 ;x)\n   2)",
+       "submitted_at_once": true,
+       "error": null
+      }
+     ],
+     "not_derived": "the evaluated values on the device screen and the prompt glyphs (the host proves the submitted text; the value of that text is ordinary evaluation)"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "value (1 2) of the typed form: host rows cover the submitted TEXT after recall, not the evaluation result on the device"
+   ]
+  },
+  {
+   "id": "stop-probe",
+   "group": "e3",
+   "session": "ide",
+   "driver": "stop",
+   "title": "driver proof: the injected RUN/STOP aborts a running form and an idle editor (exactly one *** STOPPED (RUN/STOP), then L65>)",
+   "setup": [],
+   "steps": [
+    "(while t nil)",
+    "inject STOP",
+    "(+ 4 5)"
+   ],
+   "expect": "*** STOPPED (RUN/STOP) once, prompt L65>, (+ 4 5) = 9",
+   "oracle": "src/interrupt.c:206 string \"stopped (run/stop)\"; device: ide-exit-device-report.md row RUN/STOP (virtual matrix 0x3f); no emulator precedent (c253 driver has no STOP)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(while t nil)",
+      "screen": "*** STOPPED (RUN/STOP)",
+      "proof": "source string src/interrupt.c:206 + device report HOST-FIRST on the emulator transport",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "no host execution for this step (emulator transport or native service)"
+      }
+     },
+     {
+      "input": "(+ 4 5)",
+      "screen": "9",
+      "proof": "device report",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "no host execution for this step (emulator transport or native service)"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "NOT-DERIVED",
+     "why": "RUN/STOP transport of the emulator driver; text from src/interrupt.c / error-texts code 1"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "whether writing 1 to C2K_BREAK_PENDING (what the IRQ does, src/c2_kernal_irq_base.s:28) is a faithful RUN/STOP in Xemu -- decided by this row itself"
+   ],
+   "status_rule": "must PASS before any e3-* row is trusted; FAIL = driver cannot inject STOP, E3 rows NOT RUN"
+  },
+  {
+   "id": "e3-stop-after-burst",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "E3: a b c burst, STOP right after the last key was taken (poll-boundary abort)",
+   "setup": [],
+   "steps": [
+    "(ide \"e3a\")",
+    "queue keys",
+    "inject STOP (after-last-taken)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"e3a\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "the re-entered text equals the text after j-1 or j accepted keys (j = keys counted by C2K_INPUT_EVENTS_TAKEN at the STOP); never fewer; idle: exactly the full text",
+   "oracle": "build/card-254-ide-r1/evidence/e3-patched.json (8,455 abort points, 0 violations; acceptance rule j-1 or j); lib/ide-ui.lisp %ide-drain-pending",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     99
+    ],
+    "texts_after_m_keys": [
+     "",
+     "a",
+     "ab",
+     "abc"
+    ],
+    "stop": {
+     "stop": "after-last-taken"
+    },
+    "final_screen_contains_full_text_when_idle": false,
+    "proof": "HOST-PROVEN e3-patched.json for the text rule; device behaviour HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (real loop ide-run; drain shape equal: True)",
+     "what": "texts_after_m_keys and the j-1/j rule (c254_e3_product sweeps)",
+     "not_derived": "where the device aborts, the counter j, the screen after re-entry"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3: the shipped IDE world is the frozen older one (ide-run + %ide-drain-pending/(poll-key), no %ide-idle): E3 publication does not project mechanically; rows test the INTENDED behaviour"
+   ],
+   "host_first": [
+    "the whole row on the emulator (host sweep is a model of the VM instruction grid)",
+    "j = counter delta is read after the abort: C2K_INPUT_EVENTS_TAKEN may count a key whose step was interrupted"
+   ],
+   "status_rule": "on a world WITHOUT E3 (2.5.3 Seed r8 control run) the same row is expected to FAIL for stop-after-burst / return-burst / long-line / render: that control proves the row can detect the defect"
+  },
+  {
+   "id": "e3-stop-mid-burst",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "E3: eight keys queued without waiting, STOP queued after 1 / 4 / 7 keys were counted (j is measured)",
+   "setup": [],
+   "steps": [
+    "(ide \"e3m\")",
+    "queue keys",
+    "inject STOP (after-k-counted)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"e3m\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "the re-entered text equals the text after j-1 or j accepted keys (j = keys counted by C2K_INPUT_EVENTS_TAKEN at the STOP); never fewer; idle: exactly the full text",
+   "oracle": "build/card-254-ide-r1/evidence/e3-patched.json (8,455 abort points, 0 violations; acceptance rule j-1 or j); lib/ide-ui.lisp %ide-drain-pending",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     99,
+     100,
+     101,
+     102,
+     103,
+     104
+    ],
+    "texts_after_m_keys": [
+     "",
+     "a",
+     "ab",
+     "abc",
+     "abcd",
+     "abcde",
+     "abcdef",
+     "abcdefg",
+     "abcdefgh"
+    ],
+    "stop": {
+     "stop": "after-k-counted",
+     "k": [
+      1,
+      4,
+      7
+     ]
+    },
+    "final_screen_contains_full_text_when_idle": false,
+    "proof": "HOST-PROVEN e3-patched.json for the text rule; device behaviour HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (real loop ide-run; drain shape equal: True)",
+     "what": "texts_after_m_keys and the j-1/j rule (c254_e3_product sweeps)",
+     "not_derived": "where the device aborts, the counter j, the screen after re-entry"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3: the shipped IDE world is the frozen older one (ide-run + %ide-drain-pending/(poll-key), no %ide-idle): E3 publication does not project mechanically; rows test the INTENDED behaviour"
+   ],
+   "host_first": [
+    "the whole row on the emulator (host sweep is a model of the VM instruction grid)",
+    "j = counter delta is read after the abort: C2K_INPUT_EVENTS_TAKEN may count a key whose step was interrupted"
+   ],
+   "status_rule": "on a world WITHOUT E3 (2.5.3 Seed r8 control run) the same row is expected to FAIL for stop-after-burst / return-burst / long-line / render: that control proves the row can detect the defect"
+  },
+  {
+   "id": "e3-stop-return-burst",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "E3: a b RET c d burst: STOP after RET consumed, after the last key, +0.3 s",
+   "setup": [],
+   "steps": [
+    "(ide \"e3r\")",
+    "queue keys",
+    "inject STOP (after-k-counted-then-delay)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"e3r\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "the re-entered text equals the text after j-1 or j accepted keys (j = keys counted by C2K_INPUT_EVENTS_TAKEN at the STOP); never fewer; idle: exactly the full text",
+   "oracle": "build/card-254-ide-r1/evidence/e3-patched.json (8,455 abort points, 0 violations; acceptance rule j-1 or j); lib/ide-ui.lisp %ide-drain-pending",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     13,
+     99,
+     100
+    ],
+    "texts_after_m_keys": [
+     "",
+     "a",
+     "ab",
+     "ab\n",
+     "ab\nc",
+     "ab\ncd"
+    ],
+    "stop": {
+     "stop": "after-k-counted-then-delay",
+     "k": [
+      3,
+      5
+     ],
+     "delay_s": [
+      0.0,
+      0.3
+     ]
+    },
+    "final_screen_contains_full_text_when_idle": false,
+    "proof": "HOST-PROVEN e3-patched.json for the text rule; device behaviour HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (real loop ide-run; drain shape equal: True)",
+     "what": "texts_after_m_keys and the j-1/j rule (c254_e3_product sweeps)",
+     "not_derived": "where the device aborts, the counter j, the screen after re-entry"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3: the shipped IDE world is the frozen older one (ide-run + %ide-drain-pending/(poll-key), no %ide-idle): E3 publication does not project mechanically; rows test the INTENDED behaviour"
+   ],
+   "host_first": [
+    "the whole row on the emulator (host sweep is a model of the VM instruction grid)",
+    "j = counter delta is read after the abort: C2K_INPUT_EVENTS_TAKEN may count a key whose step was interrupted"
+   ],
+   "status_rule": "on a world WITHOUT E3 (2.5.3 Seed r8 control run) the same row is expected to FAIL for stop-after-burst / return-burst / long-line / render: that control proves the row can detect the defect"
+  },
+  {
+   "id": "e3-stop-long-line-return",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "E3: 31 characters + RET burst (wrap/copy path), STOP at delays 0 / 0.1 / 0.5 / 1 / 2 s after the last key was taken",
+   "setup": [],
+   "steps": [
+    "(ide \"e3l\")",
+    "queue keys",
+    "inject STOP (delay-after-last-taken)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"e3l\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "the re-entered text equals the text after j-1 or j accepted keys (j = keys counted by C2K_INPUT_EVENTS_TAKEN at the STOP); never fewer; idle: exactly the full text",
+   "oracle": "build/card-254-ide-r1/evidence/e3-patched.json (8,455 abort points, 0 violations; acceptance rule j-1 or j); lib/ide-ui.lisp %ide-drain-pending",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     99,
+     100,
+     101,
+     102,
+     103,
+     104,
+     105,
+     106,
+     107,
+     108,
+     109,
+     110,
+     111,
+     112,
+     113,
+     114,
+     115,
+     116,
+     117,
+     118,
+     119,
+     120,
+     121,
+     122,
+     48,
+     49,
+     50,
+     51,
+     52,
+     13
+    ],
+    "texts_after_m_keys": [
+     "",
+     "a",
+     "ab",
+     "abc",
+     "abcd",
+     "abcde",
+     "abcdef",
+     "abcdefg",
+     "abcdefgh",
+     "abcdefghi",
+     "abcdefghij",
+     "abcdefghijk",
+     "abcdefghijkl",
+     "abcdefghijklm",
+     "abcdefghijklmn",
+     "abcdefghijklmno",
+     "abcdefghijklmnop",
+     "abcdefghijklmnopq",
+     "abcdefghijklmnopqr",
+     "abcdefghijklmnopqrs",
+     "abcdefghijklmnopqrst",
+     "abcdefghijklmnopqrstu",
+     "abcdefghijklmnopqrstuv",
+     "abcdefghijklmnopqrstuvw",
+     "abcdefghijklmnopqrstuvwx",
+     "abcdefghijklmnopqrstuvwxy",
+     "abcdefghijklmnopqrstuvwxyz",
+     "abcdefghijklmnopqrstuvwxyz0",
+     "abcdefghijklmnopqrstuvwxyz01",
+     "abcdefghijklmnopqrstuvwxyz012",
+     "abcdefghijklmnopqrstuvwxyz0123",
+     "abcdefghijklmnopqrstuvwxyz01234",
+     "abcdefghijklmnopqrstuvwxyz01234\n"
+    ],
+    "stop": {
+     "stop": "delay-after-last-taken",
+     "delay_s": [
+      0.0,
+      0.1,
+      0.5,
+      1.0,
+      2.0
+     ]
+    },
+    "final_screen_contains_full_text_when_idle": false,
+    "proof": "HOST-PROVEN e3-patched.json for the text rule; device behaviour HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (real loop ide-run; drain shape equal: True)",
+     "what": "texts_after_m_keys and the j-1/j rule (c254_e3_product sweeps)",
+     "not_derived": "where the device aborts, the counter j, the screen after re-entry"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3: the shipped IDE world is the frozen older one (ide-run + %ide-drain-pending/(poll-key), no %ide-idle): E3 publication does not project mechanically; rows test the INTENDED behaviour"
+   ],
+   "host_first": [
+    "the whole row on the emulator (host sweep is a model of the VM instruction grid)",
+    "j = counter delta is read after the abort: C2K_INPUT_EVENTS_TAKEN may count a key whose step was interrupted"
+   ],
+   "status_rule": "on a world WITHOUT E3 (2.5.3 Seed r8 control run) the same row is expected to FAIL for stop-after-burst / return-burst / long-line / render: that control proves the row can detect the defect"
+  },
+  {
+   "id": "e3-stop-during-render",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "E3: two lines then STOP while the screen is still being painted (delays 0.05 / 0.2 / 0.5 / 1 / 2 s)",
+   "setup": [],
+   "steps": [
+    "(ide \"e3p\")",
+    "queue keys",
+    "inject STOP (delay-after-last-taken)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"e3p\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "the re-entered text equals the text after j-1 or j accepted keys (j = keys counted by C2K_INPUT_EVENTS_TAKEN at the STOP); never fewer; idle: exactly the full text",
+   "oracle": "build/card-254-ide-r1/evidence/e3-patched.json (8,455 abort points, 0 violations; acceptance rule j-1 or j); lib/ide-ui.lisp %ide-drain-pending",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     13,
+     99,
+     100
+    ],
+    "texts_after_m_keys": [
+     "",
+     "a",
+     "ab",
+     "ab\n",
+     "ab\nc",
+     "ab\ncd"
+    ],
+    "stop": {
+     "stop": "delay-after-last-taken",
+     "delay_s": [
+      0.05,
+      0.2,
+      0.5,
+      1.0,
+      2.0
+     ]
+    },
+    "final_screen_contains_full_text_when_idle": false,
+    "proof": "HOST-PROVEN e3-patched.json for the text rule; device behaviour HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (real loop ide-run; drain shape equal: True)",
+     "what": "texts_after_m_keys and the j-1/j rule (c254_e3_product sweeps)",
+     "not_derived": "where the device aborts, the counter j, the screen after re-entry"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3: the shipped IDE world is the frozen older one (ide-run + %ide-drain-pending/(poll-key), no %ide-idle): E3 publication does not project mechanically; rows test the INTENDED behaviour"
+   ],
+   "host_first": [
+    "the whole row on the emulator (host sweep is a model of the VM instruction grid)",
+    "j = counter delta is read after the abort: C2K_INPUT_EVENTS_TAKEN may count a key whose step was interrupted"
+   ],
+   "status_rule": "on a world WITHOUT E3 (2.5.3 Seed r8 control run) the same row is expected to FAIL for stop-after-burst / return-burst / long-line / render: that control proves the row can detect the defect"
+  },
+  {
+   "id": "e3-stop-backspace-mix",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "E3: a b c d BS x burst, STOP right after the last key",
+   "setup": [],
+   "steps": [
+    "(ide \"e3b\")",
+    "queue keys",
+    "inject STOP (after-last-taken)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"e3b\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "the re-entered text equals the text after j-1 or j accepted keys (j = keys counted by C2K_INPUT_EVENTS_TAKEN at the STOP); never fewer; idle: exactly the full text",
+   "oracle": "build/card-254-ide-r1/evidence/e3-patched.json (8,455 abort points, 0 violations; acceptance rule j-1 or j); lib/ide-ui.lisp %ide-drain-pending",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     99,
+     100,
+     20,
+     120
+    ],
+    "texts_after_m_keys": [
+     "",
+     "a",
+     "ab",
+     "abc",
+     "abcd",
+     "abc",
+     "abcx"
+    ],
+    "stop": {
+     "stop": "after-last-taken"
+    },
+    "final_screen_contains_full_text_when_idle": false,
+    "proof": "HOST-PROVEN e3-patched.json for the text rule; device behaviour HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (real loop ide-run; drain shape equal: True)",
+     "what": "texts_after_m_keys and the j-1/j rule (c254_e3_product sweeps)",
+     "not_derived": "where the device aborts, the counter j, the screen after re-entry"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3: the shipped IDE world is the frozen older one (ide-run + %ide-drain-pending/(poll-key), no %ide-idle): E3 publication does not project mechanically; rows test the INTENDED behaviour"
+   ],
+   "host_first": [
+    "the whole row on the emulator (host sweep is a model of the VM instruction grid)",
+    "j = counter delta is read after the abort: C2K_INPUT_EVENTS_TAKEN may count a key whose step was interrupted"
+   ],
+   "status_rule": "on a world WITHOUT E3 (2.5.3 Seed r8 control run) the same row is expected to FAIL for stop-after-burst / return-burst / long-line / render: that control proves the row can detect the defect"
+  },
+  {
+   "id": "e3-stop-idle",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "E3: type a b c, wait until the screen is stable (2.5 s), STOP at the idle editor: whole text kept",
+   "setup": [],
+   "steps": [
+    "(ide \"e3i\")",
+    "queue keys",
+    "inject STOP (idle)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"e3i\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "the re-entered text equals the text after j-1 or j accepted keys (j = keys counted by C2K_INPUT_EVENTS_TAKEN at the STOP); never fewer; idle: exactly the full text",
+   "oracle": "build/card-254-ide-r1/evidence/e3-patched.json (8,455 abort points, 0 violations; acceptance rule j-1 or j); lib/ide-ui.lisp %ide-drain-pending",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     99
+    ],
+    "texts_after_m_keys": [
+     "",
+     "a",
+     "ab",
+     "abc"
+    ],
+    "stop": {
+     "stop": "idle"
+    },
+    "final_screen_contains_full_text_when_idle": true,
+    "proof": "HOST-PROVEN e3-patched.json for the text rule; device behaviour HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (real loop ide-run; drain shape equal: True)",
+     "what": "texts_after_m_keys and the j-1/j rule (c254_e3_product sweeps)",
+     "not_derived": "where the device aborts, the counter j, the screen after re-entry"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3: the shipped IDE world is the frozen older one (ide-run + %ide-drain-pending/(poll-key), no %ide-idle): E3 publication does not project mechanically; rows test the INTENDED behaviour"
+   ],
+   "host_first": [
+    "the whole row on the emulator (host sweep is a model of the VM instruction grid)",
+    "j = counter delta is read after the abort: C2K_INPUT_EVENTS_TAKEN may count a key whose step was interrupted"
+   ],
+   "status_rule": "on a world WITHOUT E3 (2.5.3 Seed r8 control run) the same row is expected to FAIL for stop-after-burst / return-burst / long-line / render: that control proves the row can detect the defect"
+  },
+  {
+   "id": "e3-pending-cx-reset",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "E3/D4: C-x left pending by RUN/STOP does not capture the first key of the next (ide) session",
+   "setup": [],
+   "steps": [
+    "(ide \"e3x\")",
+    "a b C-x (counted)",
+    "inject STOP",
+    "(ide \"e3x\")",
+    "f",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "text after re-entry and f: abf; no UNKNOWN COMMAND on screen",
+   "oracle": "lib/ide-ui.lisp %ide-init (set-symbol-value (quote ide-event-command) nil); e3-patched.json D4 row (\"abf\", no message)",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     24
+    ],
+    "then": [
+     102
+    ],
+    "texts_final": [
+     "abf"
+    ],
+    "forbid_screen": [
+     "UNKNOWN COMMAND"
+    ],
+    "proof": "HOST-PROVEN e3-patched.json D4 row; device HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide \"audit\") entry",
+     "host": {
+      "pending_before_stop": 24,
+      "prefix_after_first_key": null,
+      "first_key_line": "abf",
+      "ok": true
+     }
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3: the %ide-init hunk does not project onto the frozen IDE world (no %ide-init there); intended behaviour"
+   ]
+  },
+  {
+   "id": "e3-pending-cx-reset-bound",
+   "group": "e3",
+   "session": "ide",
+   "driver": "e3",
+   "title": "same with f bound by ide-bind-key: after STOP+re-entry f inserts f, it does NOT run the bound command",
+   "setup": [],
+   "steps": [
+    "(defun seam-bang (buf) (ide-insert-char buf 33))",
+    "(ide-bind-key 102 (quote seam-bang))",
+    "(ide \"e3y\")",
+    "a b C-x",
+    "inject STOP",
+    "(ide \"e3y\")",
+    "f",
+    "C-x q"
+   ],
+   "expect": "text abf (not ab!)",
+   "oracle": "D4 + seam: HOST-PROVEN logic e3-patched.json + seam.json; device HOST-FIRST",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     24
+    ],
+    "then": [
+     102
+    ],
+    "texts_final": [
+     "abf"
+    ],
+    "forbid_screen": [
+     "UNKNOWN COMMAND"
+    ],
+    "prep": [
+     "(defun seam-bang (buf) (ide-insert-char buf 33))",
+     "(ide-bind-key 102 (quote seam-bang))"
+    ],
+    "proof": "HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image",
+     "host": {
+      "first_key_line": "abf"
+     }
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "D-E3"
+   ]
+  },
+  {
+   "id": "seam-prepare",
+   "group": "seam",
+   "session": "ide",
+   "driver": "step",
+   "title": "REPL side: define the extension functions (public ide-* names only)",
+   "setup": [],
+   "steps": [
+    "(defun seam-bang (buf) (ide-insert-char buf 33))",
+    "(defun seam-hash (buf) (ide-insert-char buf 35))",
+    "(defun seam-hello (buf) \"hello\")",
+    "(defun seam-nil (buf) nil)",
+    "(symbol-value (quote ide-bind-key))"
+   ],
+   "expect": "four definitions print their names; registry empty",
+   "oracle": "build/card-254-ide-r1/harness/seam_harness.py USER list",
+   "expected": {
+    "screen": [
+     {
+      "input": "(defun seam-bang (buf) (ide-insert-char buf 33))",
+      "screen": "SEAM-BANG",
+      "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict) USER[0] (seam-bang); device print HOST-FIRST",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "REPL defun print line; the functions run on the host as harness drivers"
+      }
+     },
+     {
+      "input": "(defun seam-hash (buf) (ide-insert-char buf 35))",
+      "screen": "SEAM-HASH",
+      "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "REPL defun print line; the functions run on the host as harness drivers"
+      }
+     },
+     {
+      "input": "(defun seam-hello (buf) \"hello\")",
+      "screen": "SEAM-HELLO",
+      "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "REPL defun print line; the functions run on the host as harness drivers"
+      }
+     },
+     {
+      "input": "(defun seam-nil (buf) nil)",
+      "screen": "SEAM-NIL",
+      "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "REPL defun print line; the functions run on the host as harness drivers"
+      }
+     },
+     {
+      "input": "(symbol-value (quote ide-bind-key))",
+      "screen": "NIL",
+      "proof": "HOST-FIRST (registry empty before the first binding: value cell of ide-bind-key, lib/ide-ui.lisp:472-476; unbound value could print differently)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "(load-lib \"ide\") first (session prelude); ide-insert-char must be a public name of the product IDE image"
+   ],
+   "host_first": [
+    "ide-insert-char resolvable from a REPL-compiled function in the product world",
+    "initial value of the registry"
+   ]
+  },
+  {
+   "id": "seam-unbound-unknown",
+   "group": "seam",
+   "session": "ide",
+   "driver": "seam",
+   "title": "unbound printable key after C-x shows \"unknown command\" and changes nothing (2.5.3: silently ignored)",
+   "setup": [],
+   "steps": [
+    "(ide \"sm\")",
+    "a b",
+    "C-x f (unbound)",
+    "read screen"
+   ],
+   "expect": "status line UNKNOWN COMMAND, text ab",
+   "oracle": "build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+   "expected": {
+    "keys": [
+     97,
+     98,
+     24,
+     102
+    ],
+    "expect_screen": [
+     "AB",
+     "UNKNOWN COMMAND"
+    ],
+    "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict) 'unbound_cx_f_unknown_command'; status-line placement HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (ide-step path)",
+     "host": {
+      "line": "ab",
+      "message": "unknown command"
+     },
+     "host_all": {
+      "unbound_cx_f": {
+       "line": "ab",
+       "message": "unknown command"
+      },
+      "bound_cx_f": {
+       "line": "ab!",
+       "message": null
+      },
+      "bound_cx_f_twice": {
+       "line": "ab!!",
+       "message": null
+      },
+      "later_binding_shadows": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "string_result_is_message": {
+       "line": "ab!!#",
+       "message": "hello"
+      },
+      "nil_result_unchanged": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "cx_control_key": {
+       "line": "ab!!#",
+       "message": null,
+       "prefix": null
+      },
+      "f_after_cancel": {
+       "line": "ab!!#f",
+       "message": null
+      },
+      "builtin_cx_q": {
+       "line": "ab!!#",
+       "message": 1015
+      }
+     },
+     "not_derived": "status-line placement on the screen, HWA key codes"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "where the message is drawn (status line) and that screen_has finds it after the full redraw"
+   ]
+  },
+  {
+   "id": "seam-bind-buffer",
+   "group": "seam",
+   "session": "ide",
+   "driver": "seam",
+   "title": "a bound key runs the function on the buffer and the new buffer replaces it (twice), then a later binding shadows",
+   "setup": [],
+   "steps": [
+    "(ide-bind-key 102 (quote seam-bang))",
+    "(ide \"sm\")",
+    "C-x f",
+    "C-x f",
+    "C-x q",
+    "(ide-bind-key 102 (quote seam-hash))",
+    "(ide \"sm\")",
+    "C-x f",
+    "C-x q"
+   ],
+   "expect": "ide-bind-key returns 102; text ab! then ab!!; after shadowing ab!!#",
+   "oracle": "build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(ide-bind-key 102 (quote seam-bang))",
+      "screen": "102",
+      "proof": "HOST-PROVEN lib/ide-ui.lisp:472-476 (returns key); print HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image"
+      }
+     }
+    ],
+    "keys": [
+     {
+      "send": [
+       24,
+       102
+      ],
+      "expect_text": "ab!"
+     },
+     {
+      "send": [
+       24,
+       102
+      ],
+      "expect_text": "ab!!"
+     }
+    ],
+    "after_shadow": [
+     {
+      "send": [
+       24,
+       102
+      ],
+      "expect_text": "ab!!#"
+     }
+    ],
+    "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict) 'bound_cx_f_applies_function','bound_cx_f_twice','later_binding_shadows'",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (ide-step path)",
+     "host": {
+      "line": "ab!!",
+      "message": null
+     },
+     "host_all": {
+      "unbound_cx_f": {
+       "line": "ab",
+       "message": "unknown command"
+      },
+      "bound_cx_f": {
+       "line": "ab!",
+       "message": null
+      },
+      "bound_cx_f_twice": {
+       "line": "ab!!",
+       "message": null
+      },
+      "later_binding_shadows": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "string_result_is_message": {
+       "line": "ab!!#",
+       "message": "hello"
+      },
+      "nil_result_unchanged": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "cx_control_key": {
+       "line": "ab!!#",
+       "message": null,
+       "prefix": null
+      },
+      "f_after_cancel": {
+       "line": "ab!!#f",
+       "message": null
+      },
+      "builtin_cx_q": {
+       "line": "ab!!#",
+       "message": 1015
+      }
+     },
+     "not_derived": "status-line placement on the screen, HWA key codes"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "REPL print of the key (102) returned by ide-bind-key"
+   ]
+  },
+  {
+   "id": "seam-message-result",
+   "group": "seam",
+   "session": "ide",
+   "driver": "seam",
+   "title": "a function returning a string shows it as the status message, buffer unchanged",
+   "setup": [],
+   "steps": [
+    "(ide-bind-key 104 (quote seam-hello))",
+    "(ide \"sm\")",
+    "C-x h",
+    "C-x q"
+   ],
+   "expect": "status line HELLO, text unchanged",
+   "oracle": "build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(ide-bind-key 104 (quote seam-hello))",
+      "screen": "104",
+      "proof": "HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image"
+      }
+     }
+    ],
+    "keys": [
+     {
+      "send": [
+       24,
+       104
+      ],
+      "expect_screen": [
+       "HELLO"
+      ],
+      "expect_text_unchanged": true
+     }
+    ],
+    "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict) 'string_result_is_message'",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (ide-step path)",
+     "host": {
+      "line": "ab!!#",
+      "message": "hello"
+     },
+     "host_all": {
+      "unbound_cx_f": {
+       "line": "ab",
+       "message": "unknown command"
+      },
+      "bound_cx_f": {
+       "line": "ab!",
+       "message": null
+      },
+      "bound_cx_f_twice": {
+       "line": "ab!!",
+       "message": null
+      },
+      "later_binding_shadows": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "string_result_is_message": {
+       "line": "ab!!#",
+       "message": "hello"
+      },
+      "nil_result_unchanged": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "cx_control_key": {
+       "line": "ab!!#",
+       "message": null,
+       "prefix": null
+      },
+      "f_after_cancel": {
+       "line": "ab!!#f",
+       "message": null
+      },
+      "builtin_cx_q": {
+       "line": "ab!!#",
+       "message": 1015
+      }
+     },
+     "not_derived": "status-line placement on the screen, HWA key codes"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true
+  },
+  {
+   "id": "seam-nil-result",
+   "group": "seam",
+   "session": "ide",
+   "driver": "seam",
+   "title": "a function returning nil leaves buffer and message unchanged",
+   "setup": [],
+   "steps": [
+    "(ide-bind-key 110 (quote seam-nil))",
+    "(ide \"sm\")",
+    "C-x n",
+    "C-x q"
+   ],
+   "expect": "no change, no message",
+   "oracle": "build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(ide-bind-key 110 (quote seam-nil))",
+      "screen": "110",
+      "proof": "HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image"
+      }
+     }
+    ],
+    "keys": [
+     {
+      "send": [
+       24,
+       110
+      ],
+      "expect_text_unchanged": true,
+      "forbid_screen": [
+       "UNKNOWN COMMAND",
+       "HELLO"
+      ]
+     }
+    ],
+    "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict) 'nil_result_unchanged'",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (ide-step path)",
+     "host": {
+      "line": "ab!!#",
+      "message": null
+     },
+     "host_all": {
+      "unbound_cx_f": {
+       "line": "ab",
+       "message": "unknown command"
+      },
+      "bound_cx_f": {
+       "line": "ab!",
+       "message": null
+      },
+      "bound_cx_f_twice": {
+       "line": "ab!!",
+       "message": null
+      },
+      "later_binding_shadows": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "string_result_is_message": {
+       "line": "ab!!#",
+       "message": "hello"
+      },
+      "nil_result_unchanged": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "cx_control_key": {
+       "line": "ab!!#",
+       "message": null,
+       "prefix": null
+      },
+      "f_after_cancel": {
+       "line": "ab!!#f",
+       "message": null
+      },
+      "builtin_cx_q": {
+       "line": "ab!!#",
+       "message": 1015
+      }
+     },
+     "not_derived": "status-line placement on the screen, HWA key codes"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true
+  },
+  {
+   "id": "seam-control-cancels",
+   "group": "seam",
+   "session": "ide",
+   "driver": "seam",
+   "title": "a control key after C-x cancels the prefix; the next f is an ordinary character",
+   "setup": [],
+   "steps": [
+    "(ide \"sm\")",
+    "C-x C-h (8)",
+    "f",
+    "C-x q"
+   ],
+   "expect": "f is inserted, no bound command runs",
+   "oracle": "build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+   "expected": {
+    "keys": [
+     {
+      "send": [
+       24,
+       8,
+       102
+      ],
+      "expect_text_suffix": "f",
+      "forbid_text_suffix": "!"
+     }
+    ],
+    "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict) 'cx_control_key_cancels_prefix'; Ctrl-H as HWA code 8 HOST-FIRST",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (ide-step path)",
+     "host": {
+      "line": "ab!!#f",
+      "message": null
+     },
+     "host_all": {
+      "unbound_cx_f": {
+       "line": "ab",
+       "message": "unknown command"
+      },
+      "bound_cx_f": {
+       "line": "ab!",
+       "message": null
+      },
+      "bound_cx_f_twice": {
+       "line": "ab!!",
+       "message": null
+      },
+      "later_binding_shadows": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "string_result_is_message": {
+       "line": "ab!!#",
+       "message": "hello"
+      },
+      "nil_result_unchanged": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "cx_control_key": {
+       "line": "ab!!#",
+       "message": null,
+       "prefix": null
+      },
+      "f_after_cancel": {
+       "line": "ab!!#f",
+       "message": null
+      },
+      "builtin_cx_q": {
+       "line": "ab!!#",
+       "message": 1015
+      }
+     },
+     "not_derived": "status-line placement on the screen, HWA key codes"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "HWA key code 8 is delivered as C-h by the transport (host uses key code 8 event)"
+   ]
+  },
+  {
+   "id": "seam-builtin-not-overridable",
+   "group": "seam",
+   "session": "ide",
+   "driver": "seam",
+   "title": "binding 113 (q) cannot override C-x q: the editor still exits",
+   "setup": [],
+   "steps": [
+    "(ide-bind-key 113 (quote seam-bang))",
+    "(ide \"sm\")",
+    "C-x q",
+    "prompt L65>"
+   ],
+   "expect": "exits to L65>; no ! inserted; run this row LAST in the editor group",
+   "oracle": "build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict)",
+   "expected": {
+    "screen": [
+     {
+      "input": "(ide-bind-key 113 (quote seam-bang))",
+      "screen": "113",
+      "proof": "HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image"
+      }
+     }
+    ],
+    "keys": [
+     {
+      "send": [
+       24,
+       113
+      ],
+      "expect_prompt": "C"
+     }
+    ],
+    "proof": "HOST-PROVEN build/card-254-ide-r1/harness/seam_harness.py:210-240 (expect dict) 'builtin_cx_q_not_overridable'",
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image (ide-step path)",
+     "host": {
+      "line": "ab!!#",
+      "message": 1015
+     },
+     "host_all": {
+      "unbound_cx_f": {
+       "line": "ab",
+       "message": "unknown command"
+      },
+      "bound_cx_f": {
+       "line": "ab!",
+       "message": null
+      },
+      "bound_cx_f_twice": {
+       "line": "ab!!",
+       "message": null
+      },
+      "later_binding_shadows": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "string_result_is_message": {
+       "line": "ab!!#",
+       "message": "hello"
+      },
+      "nil_result_unchanged": {
+       "line": "ab!!#",
+       "message": null
+      },
+      "cx_control_key": {
+       "line": "ab!!#",
+       "message": null,
+       "prefix": null
+      },
+      "f_after_cancel": {
+       "line": "ab!!#f",
+       "message": null
+      },
+      "builtin_cx_q": {
+       "line": "ab!!#",
+       "message": 1015
+      }
+     },
+     "not_derived": "status-line placement on the screen, HWA key codes"
+    }
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true
+  },
+  {
+   "id": "seam-registry-value",
+   "group": "seam",
+   "session": "ide",
+   "driver": "step",
+   "title": "registry is the flat newest-first list in the value cell of ide-bind-key",
+   "setup": [],
+   "steps": [
+    "(symbol-value (quote ide-bind-key))"
+   ],
+   "expect": "(113 SEAM-BANG 110 SEAM-NIL 104 SEAM-HELLO 102 SEAM-HASH 102 SEAM-BANG) after the six bindings above",
+   "oracle": "lib/ide-ui.lisp:472-476 (cons key (cons function old))",
+   "expected": {
+    "screen": [
+     {
+      "input": "(symbol-value (quote ide-bind-key))",
+      "screen": "(113 SEAM-BANG 110 SEAM-NIL 104 SEAM-HELLO 102 SEAM-HASH 102 SEAM-BANG)",
+      "proof": "source order HOST-FIRST; depends on the exact binding order executed",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image",
+       "note": "binding order 102 bang, 102 hash, 104 hello, 110 nil, 113 bang in ONE boot (seam group)"
+      }
+     }
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "host_first": [
+    "list text (derived by hand from the source)"
+   ]
+  },
+  {
+   "id": "save-refused-during-load",
+   "group": "save",
+   "session": "disk",
+   "driver": "step+image",
+   "title": "every IDE save is refused while a source file is loading (D8); save after the load works",
+   "setup": [],
+   "steps": [
+    "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"one\" \"selfbuf\"))",
+    "(ide-error)",
+    "(load \"self\")",
+    "(ide-error)",
+    "(save-buffer-to \"selfok\" \"selfbuf\")",
+    "(ide-error)"
+   ],
+   "expect": "during the load the nested save returns NIL with ide-error \"save refused while a file loads\"; no write (D81 bytes equal before/after the load); afterwards the same save works",
+   "oracle": "build/card-254-ide-r1/harness/save_harness.py section 3 (D8, d8_ok); lib/ide-disk.lisp:335 string",
+   "expected": {
+    "fixture_files": [
+     {
+      "name": "self",
+      "content": "(save-buffer-to \"selfout\" \"selfbuf\")"
+     }
+    ],
+    "screen": [
+     {
+      "input": "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"one\" \"selfbuf\"))",
+      "screen": "T",
+      "proof": "EMULATOR-253 row prep",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "native loader / fixture step (device return value)"
+      }
+     },
+     {
+      "input": "(ide-error)",
+      "screen": "NIL",
+      "proof": "HOST-FIRST (before any refusal; 2.5.3 rows show NIL after successful saves)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image, loader flag set by the host (disk_source_active)",
+       "host_value": null,
+       "nested_save_result": null
+      }
+     },
+     {
+      "input": "(load \"self\")",
+      "screen": "T",
+      "proof": "HOST-PROVEN save_harness.py load_hook (returns t) -- host MODEL of the loader; device return HOST-FIRST",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "native loader / fixture step (device return value)"
+      }
+     },
+     {
+      "input": "(ide-error)",
+      "screen": "\"SAVE REFUSED WHILE A FILE LOADS\"",
+      "proof": "HOST-PROVEN lib/ide-disk.lisp:335 (string) screen = upper-case with quotes as in disk-d4-mitigation; save.json d8",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image, loader flag set by the host (disk_source_active)",
+       "host_value": "save refused while a file loads",
+       "nested_save_result": null
+      }
+     },
+     {
+      "input": "(save-buffer-to \"selfok\" \"selfbuf\")",
+      "screen": "T",
+      "proof": "HOST-PROVEN save_harness.py d8 save_after_load.saved",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image, loader flag set by the host (disk_source_active)",
+       "host_value": true,
+       "nested_save_result": null
+      }
+     },
+     {
+      "input": "(ide-error)",
+      "screen": "NIL",
+      "proof": "HOST-FIRST",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "world": "projected product IDE image, loader flag set by the host (disk_source_active)",
+       "host_value": null,
+       "nested_save_result": null
+      }
+     }
+    ],
+    "host_checks": [
+     "image bytes before == after the (load \"self\") step (zero writes)",
+     "SELFOUT absent after the session",
+     "SELFOK present after the session with the bytes of buffer selfbuf (= file ONE = b\"one\", 3 bytes)"
+    ]
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_254": true,
+   "depends_on": [
+    "fixture SELF added to the u1 image (user_images)"
+   ],
+   "host_first": [
+    "(load \"self\") return value and that the loader runs SELF forms with the source-load flag set on the device (host harness models it)",
+    "eval-buffer is NOT a source load: a save inside eval-buffer stays allowed (O2, not a row)"
+   ]
+  }
+ ],
+ "expected_overrides": {
+  "source": "closure fix (lcc.lisp %lcc-expr-form funcall-of-literal-lambda clause): rows of the 2.5.3 tables whose text moves; the 2.5.3 tables stay byte-identical; apply AFTER loading all tables (c253_rows.py applies overrides after SPEC.update)",
+  "rows": {
+   "lcc-ladder-host-only": [
+    {
+     "input": "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i))))))))) s)",
+     "was": "*** VM: STACK OVERFLOW",
+     "screen": "7",
+     "why": "closure fix: upvalue-setq limit 5 -> 8 (ladder v254), 6 pluses now compile (value 1+6); 2.5.3 emulator saw STACK OVERFLOW at 5 and BAD BYTECODE at 4 (build/card-253-rows-r8/253-bb)"
+    }
+   ]
+  },
+  "unchanged_but_now_working_not_bad_bytecode": [
+   "(let ((i 1)(s 0)) (funcall (lambda () (setq s (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 i)))))))) s)"
+  ]
+ },
+ "oracle": {
+  "receipt": {
+   "path": "build/card-254-row-oracles-dry-r1b/receipt.json",
+   "bytes": 61158,
+   "sha256": "814c31826729546b750a3bc074f43a548a2d86641272fd59ab01d4431847dd93"
+  },
+  "preflight": {
+   "path": "build/card-254-preflight-dry-r1a/receipt.json",
+   "bytes": 131031,
+   "sha256": "7f9a28cb2f307031573f2eaf6b1d7bed7389b8926c4b07c7316257b7af4dd156"
+  },
+  "candidate_blobs": {
+   "buffer": [
+    "d218ff4ba23620eb02fbdb35c4b9795cf98404c0955091bcb7ded6487c24c747",
+    104
+   ],
+   "ide": [
+    "84a7d3e443d384d5bf1c72cf765188315913be02bfa2aaee9e85fa184d21a4aa",
+    15223
+   ],
+   "idex": [
+    "8e3b8936694f631873346e57ad652ed182b82ed48d9b2fc93bffef474c663e39",
+    2940
+   ],
+   "lcc": [
+    "8e8c13652677e084348b41c5eb2a7299e61068fb92cd7476a66a7f645d13baca",
+    8401
+   ],
+   "m65d": [
+    "80f1a7553ad8e8d46deca508487bfd15f0869fddda2fa1c5e151a4c745257d04",
+    4373
+   ],
+   "stdlib-p0": [
+    "6ed68c796dcf347eaeb5c30e96829ffe364cb70888a7ea8e123ef9cb8d8b1bcb",
+    19860
+   ]
+  },
+  "package_blobs": {
+   "defstruct": [
+    "4e2f8e7f5d991acfd5d6c03342c176f41ab651b044e83a372417038fff2f4c4e",
+    1051
+   ],
+   "repl-comfort": [
+    "b5677e317b5e95c15f58edc47163346c96ccc757388de9cbe71ad395c416a7c9",
+    2207
+   ]
+  },
+  "marks": {
+   "HOST-EXECUTED": 110,
+   "NOT-DERIVED": 26
+  },
+  "changes_against_draft": [],
+  "draft": {
+   "path": "build/card-254-seed-prep-r1/drafts/c254_rows_20261004.json",
+   "sha256": "4eb594cbe0cc46bb584de4d3c2834ebf951ca9208027ccc2b72e98cf4628dfd9"
+  }
+ }
+}

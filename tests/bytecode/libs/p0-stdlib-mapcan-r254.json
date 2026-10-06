@@ -1,0 +1,43 @@
+{
+ "extends": "../stdlib/p0-stdlib-subset.json",
+ "name": "stdlib-mapcan-r254",
+ "description": "2.5.4 stdlib: mapcan folds its results instead of applying append, so more than 12 result lists (the VM call-argument limit) work; sharing and order controls.",
+ "max_call_args": 12,
+ "cases": [
+  {
+   "name": "mapcan-r254-12-results",
+   "expr": "(length (mapcan (function list) '(0 1 2 3 4 5 6 7 8 9 10 11)))",
+   "expect": "12"
+  },
+  {
+   "name": "mapcan-r254-13-results",
+   "expr": "(mapcan (function list) '(0 1 2 3 4 5 6 7 8 9 10 11 12))",
+   "expect": "(0 1 2 3 4 5 6 7 8 9 10 11 12)"
+  },
+  {
+   "name": "mapcan-r254-40-results",
+   "expr": "(let ((xs nil) (i 0)) (while (< i 40) (setq xs (cons i xs)) (setq i (+ i 1))) (length (mapcan (function list) xs)))",
+   "expect": "40"
+  },
+  {
+   "name": "mapcan-r254-two-lists-13-pairs",
+   "expr": "(length (mapcan (lambda (a b) (list a b)) '(0 1 2 3 4 5 6 7 8 9 10 11 12) '(0 1 2 3 4 5 6 7 8 9 10 11 12)))",
+   "expect": "26"
+  },
+  {
+   "name": "mapcan-r254-nil-results-mixed",
+   "expr": "(mapcan (lambda (x) (if (< x 2) (list x) nil)) '(0 5 1 7 9))",
+   "expect": "(0 1)"
+  },
+  {
+   "name": "mapcan-r254-order-and-empty-middle",
+   "expr": "(mapcan (function cdr) '((0 1 2) (0 3) (0) (0 4)))",
+   "expect": "(1 2 3 4)"
+  },
+  {
+   "name": "mapcan-r254-empty",
+   "expr": "(mapcan (function list) nil)",
+   "expect": "nil"
+  }
+ ]
+}

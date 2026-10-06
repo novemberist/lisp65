@@ -76,6 +76,21 @@
       (%lt-drive history pending packed nil)
       (progn (write-line "*** history limit") nil)))
 
+; Bounded result print (RP1): refuse a cyclic, too deep (> 8) or too large
+; (> 1,100 conses) result instead of hanging.  Explicit prin1/print stay unbounded.
+(defun %lt-fit (x n d)
+  (if (consp x)
+      (if (or (< n 1) (< d 1))
+          -1
+          (let ((m (%lt-fit (car x) (- n 1) (- d 1))))
+            (if (< m 0) m (%lt-fit (cdr x) m d))))
+      n))
+
+(defun %lt-write (x)
+  (if (< (%lt-fit x 1100 8) 0)
+      (write-line "*** result too deep, too large or circular")
+      (write x)))
+
 ; History is published before evaluation, so a native unwind preserves it.
 (defun %repl-loop (history)
   (let ((source (%repl-step history "" 0)))
@@ -90,7 +105,7 @@
                (result (progn (poke 255 141 255) (lcc-run form))))
           (poke 255 140 0)
           (poke 255 141 0)
-          (write result)
+          (%lt-write result)
           (terpri)
           (%repl-loop saved))
         (progn (poke 255 141 255)

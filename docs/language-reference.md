@@ -138,7 +138,7 @@ Short notes on the less obvious names:
   `(list* 1 2 '(3))` is `(1 2 3)`.
 - `(butlast xs [n])` drops the last `n` elements, defaulting to one.
 - `(copy-list xs)` returns a fresh top-level copy.
-- `(mapcan fn list …)` applies `fn` like `mapcar` and appends the results.
+- `(mapcan fn list …)` applies `fn` like `mapcar` and appends the results. Since 2.5.4 the number of results is not limited to 12 (they are appended two at a time from the right; the last result is not copied).
 - `(nreverse xs)`, `(rplaca cons x)` and `(rplacd cons x)` mutate the cells
   they are given and return the reversed list or the modified cons.
 - `(getf plist key [default])` reads a property-list value and `(remf plist
@@ -311,7 +311,10 @@ designators, `funcall` and `apply`. Hardware/internal primitives beginning with
 `%` are not user API.
 
 Wrong arity, invalid types, and unavailable functions fail loudly, and since
-2.0.0 an unsupported list domain does too. The REPL
+2.0.0 an unsupported list domain does too. Since 2.5.3 the compiler refuses
+`car`, `cdr`, `consp`, `not`, `null` with other than one argument and `cons`,
+`mod` with other than two; since 2.5.4 it does the same for `eq`, `eql`,
+`logand`, `logior`, `logxor` and `ash` (exactly two arguments). The REPL
 recovers after an error; a failed form does not invalidate the session. Disk
 status and recovery rules are documented separately in the [User Guide](user-guide.md).
 

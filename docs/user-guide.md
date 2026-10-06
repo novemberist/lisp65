@@ -1,6 +1,20 @@
-# lisp65 2.5.3 — current release boundary
+# lisp65 2.5.4 — current release boundary
 
-2.5.3 is the current release candidate: its Final is built and sealed, it is not published, its physical-device session passed on 2026-10-03 (see the [device report](planning/release-2.5.3-device-report.md)), and its Before-Ship record is pending. The published release is 2.5.2.
+2.5.4 is the current release candidate: its Final is built and sealed; it is not published. Device results for 2.5.4: PASSED on a physical MEGA65 on 2026-10-05 in a manual owner session (boot 42 s by stopwatch; see the [device report](planning/release-2.5.4-device-report.md)); large saves, out-of-memory rows and the `$D703` check were not done on the device, and type-ahead typed while the IDE editor opens is lost. The Before-Ship record is pending. The published release is 2.5.3. Emulator rows on the Seed medium (byte-identical to the Final medium) showed no product failure; three rows are not green and unchanged from 2.5.3 (see the release notes). See the [2.5.4 release notes](releases/2.5.4.md). The 2.5.3, 2.5.2 and 2.5.1 text below is historical.
+
+What 2.5.4 changes for the user:
+
+- An interrupted IDE edit (RUN/STOP while typing) keeps every editing step that had already finished; the key being processed at the abort may be lost. **Only the IDE path is protected: a direct `m65d-save` call is not protected by this mechanism.** The host proof covers aborts at VM instruction boundaries on the delivered IDE image; aborts inside native primitives, during garbage collection or at out-of-memory are the subject of emulator rows (all abort points passed on the Seed medium; the RUN/STOP stand-in there is a monitor write to the break flag and counts for the emulator only) and of one physical RUN/STOP row, which passed on the device for text that was visible before the stop. **Wait until the editor is on screen before typing: type-ahead typed while the editor opens is lost.**
+- A loaded package can bind `C-x` plus a printable key with `(ide-bind-key KEY FUNCTION)`. `KEY` is the character code, `FUNCTION` (normally a quoted symbol) receives the current buffer and returns a new buffer, a message string or `nil`. Built-in keys cannot be overridden; an unbound `C-x` plus printable key shows `unknown command`.
+- `C-x C-s`, `save-buffer-to` and `eval-buffer` build their source string through the staging primitive. Every IDE save is refused while a source file is loading (`save refused while a file loads`); a direct `m65d-save` outside the IDE is not guarded. On the device the 20x40 save took 5 s by stopwatch (2.5.3: 37.7 s).
+- `(funcall (lambda ...) args)` compiles as the direct form (a lambda stored in a top-level form stays refused), `mapcan` accepts more than 12 results, and `eq`, `eql`, `logand`, `logior`, `logxor` and `ash` refuse other than two arguments.
+- At the Comfort prompt a result deeper than 8 levels, larger than 1,100 conses or circular is refused with `*** result too deep, too large or circular`; explicit `prin1`/`print` and the native `LISP65>` prompt are not bounded. `defstruct` rejects colliding generated names; a recalled history entry with a comment is submitted at once.
+
+---
+
+# lisp65 2.5.3 — previous release boundary (historical, published)
+
+2.5.3 was published on 2026-10-03. The text below is its boundary at publication; its statements that `mapcan` fails beyond 12 elements, that `eq`/`eql` surplus arguments are dropped or that a physical 50x40 save takes minutes describe 2.5.3, see 2.5.4 above.
 
 2.5.3 is 2.5.2 plus larger IDE saves and `eval-buffer` runs, IDE editing fixes,
 compiler fixes and safer disk handling. `C-x C-s`, `save-buffer-to` and
@@ -631,10 +645,19 @@ reports `source missing` and returns the cursor to the buffer.
   Meta/Alt identity is not claimed.
 - `C-x q` exits normally and preserves buffers; release Ctrl before q. The
   IDE-exit predecessor passed virtual-keyboard device rows; physical keys remain open.
+- Since 2.5.4 a loaded package can bind further `C-x` plus printable-key
+  commands with `(ide-bind-key KEY FUNCTION)`; built-in bindings cannot be
+  overridden and an unbound `C-x` plus printable key shows `unknown command`.
+  A `C-x` prefix left pending by RUN/STOP is reset.
 - `C-x C-c` remains logically bound, but physical Ctrl-C is drained before
   the IDE and leaves any pending C-x prefix waiting for the next delivered key.
 - RUN/STOP is not an editor key. During evaluation it aborts to a usable REPL
-  with `stopped (run/stop)`; while idle it has no product action.
+  with `stopped (run/stop)`; while idle it has no product action. Since 2.5.4
+  an abort during IDE typing keeps the editing steps that had finished (the
+  key being processed may be lost); this protects the IDE path only, not a
+  direct `m65d-save`. The emulator rows passed with a monitor write to the
+  break flag as the stand-in for the key; the physical RUN/STOP row passed on
+  the device (text visible before the stop was complete after re-entry).
 
 The generated table, dispatcher data, evaluation cases, and hardware matrix are
 derived from one registry. A documented binding therefore cannot be added
@@ -787,9 +810,13 @@ so it is slower on a well-filled disk.
   the data stays live. Reset (power-cycle); unsaved buffers are lost. Observed
   in the emulator only. See [Known Issues](known-issues.md).
 - Closures that capture a `let` variable, such as
-  `(funcall (lambda () (setq s i)))` at the Comfort prompt, give
-  `*** VM: BAD BYTECODE` (the top-level anonymous-`lambda` limitation, also in
-  2.5.2); the prompt returns.
+  `(funcall (lambda () (setq s i)))` at the Comfort prompt, gave
+  `*** VM: BAD BYTECODE` in 2.5.2 and 2.5.3. 2.5.4 compiles
+  `(funcall (lambda ...) args)` as the direct form (the emulator rows on the
+  Seed medium passed); a lambda stored in a top-level form stays refused.
+- Since 2.5.4 a direct `m65d-save` is not covered by the edit-persistence
+  mechanism and does not refuse a save during a source load; both protections
+  apply to the IDE path only.
 - The Ship Builder creates bootable application disks from L65P-v1 projects,
   but does not turn arbitrary live Workbench session state into an image.
 - Function metadata proves exact arity for 103 of its 139 entries; 36 native

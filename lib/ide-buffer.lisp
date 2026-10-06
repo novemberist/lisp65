@@ -448,11 +448,11 @@
          (line-index (ide-point-line point))
          (column (ide-point-column point))
          (cache (ide-buffer-locals buffer)))
-    ;; The ordinary typing cache owns its reverse character list.  At the fill
-    ;; boundary this operation consumes the cache, so nreverse may turn it into
-    ;; the committed string without allocating a second 79-cell list.  The
-    ;; returned buffer clears locals; no live successor observes the consumed
-    ;; cache.
+    ;; E3 (2.5.4): the typing cache is shared with the buffer published after
+    ;; the previous key, so it is copied (%ide-rev-onto), never consumed: an
+    ;; abort between an nreverse and the next publication would truncate the
+    ;; published line.  Peak cells equal the batch-end flush, which reverses
+    ;; the same list; the copy reuses this function's %ide-rev-onto literal.
     (if (and cache
              (= (car cache) line-index)
              (= (car (cdr (cdr cache))) column))
@@ -462,7 +462,7 @@
           (%ide-lines-replace
            (car (cdr (cdr buffer)))
            line-index
-           (list->string (nreverse (car (cdr cache)))))
+           (list->string (%ide-rev-onto (car (cdr cache)) nil)))
           (+ line-index 1)
           (%ide-empty-str))
          (cons (+ line-index 1) 0))

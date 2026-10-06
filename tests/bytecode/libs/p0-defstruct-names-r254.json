@@ -1,0 +1,92 @@
+{
+  "extends": "p0-place-defstruct-v1-integration.json",
+  "name": "place-defstruct-integration-names-r254",
+  "description": "2.5.4 LIB1: defstruct generated-name collision refusal (predicate/setter/updater against slot readers) with non-collision controls.",
+  "cases": [
+    {
+      "name": "names-collide-predicate-vs-slot-p",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'r '(p)))",
+      "expect": "nil"
+    },
+    {
+      "name": "names-collide-setter-vs-slot-set-x",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 's '(x set-x)))",
+      "expect": "nil"
+    },
+    {
+      "name": "names-collide-updater-vs-slot-with-x",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'u '(x with-x)))",
+      "expect": "nil"
+    },
+    {
+      "name": "names-collide-slot-set-x-first",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 's '(set-x x)))",
+      "expect": "nil"
+    },
+    {
+      "name": "names-collide-slot-with-x-first",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'u '(with-x x)))",
+      "expect": "nil"
+    },
+    {
+      "name": "names-collide-late-in-long-layout",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'r '(a b c d p)))",
+      "expect": "nil"
+    },
+    {
+      "name": "names-control-two-slots",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'point '(x y)))",
+      "expect": "t"
+    },
+    {
+      "name": "names-control-p-prefix-slot-pp",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'r '(pp)))",
+      "expect": "t"
+    },
+    {
+      "name": "names-control-slot-set-without-x",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 's '(x set)))",
+      "expect": "t"
+    },
+    {
+      "name": "names-control-slot-with-without-x",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'u '(x with)))",
+      "expect": "t"
+    },
+    {
+      "name": "names-control-five-slots",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'person '(name age city phone mail)))",
+      "expect": "t"
+    },
+    {
+      "name": "names-control-no-slots",
+      "expr": "(%defstruct-names-free-p (%defstruct-generated-names 'unit 'nil))",
+      "expect": "t"
+    },
+    {
+      "name": "macro-collision-refused",
+      "expr": "(funcall (quote defstruct) (quote r) (quote p))",
+      "expect": "(%defstruct-error-invalid-layout)"
+    },
+    {
+      "name": "macro-collision-setter-refused",
+      "expr": "(funcall (quote defstruct) (quote s) (quote x) (quote set-x))",
+      "expect": "(%defstruct-error-invalid-layout)"
+    },
+    {
+      "name": "macro-collision-updater-refused",
+      "expr": "(funcall (quote defstruct) (quote u) (quote x) (quote with-x))",
+      "expect": "(%defstruct-error-invalid-layout)"
+    },
+    {
+      "name": "macro-control-expands",
+      "expr": "(car (funcall (quote defstruct) (quote pt) (quote x) (quote y)))",
+      "expect": "progn"
+    },
+    {
+      "name": "macro-control-p-prefix-expands",
+      "expr": "(car (funcall (quote defstruct) (quote r) (quote pp)))",
+      "expect": "progn"
+    }
+  ]
+}
