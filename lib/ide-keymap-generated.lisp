@@ -25,7 +25,7 @@
 
 (defun %ide-command-route (command)
   (if (< command 1200)
-      (%ide-keymap-lookup command (quote (1001 4 1002 5 1003 1 1004 6 1006 7 1007 8 1008 9 1009 10 1010 11 1011 12 1012 12 1013 12 1014 12 1015 13 1101 1 1102 1 1103 3 1104 2 1106 1 1107 1 1108 1 1109 1 1110 1 1111 1 1112 1 1113 1 1114 1 1115 1 1116 1 1117 1 1118 1 1119 1 1120 1 1121 1 1122 1 1123 1 1124 1)))
+      (%ide-keymap-lookup command (quote (1110 1 1101 1 1109 1 1106 1 1107 1 1108 1 1003 1 1001 4 1002 5 1004 6 1006 7 1007 8 1008 9 1009 10 1010 11 1011 12 1012 12 1013 12 1014 12 1015 13 1102 1 1103 3 1104 2 1111 1 1112 1 1113 1 1114 1 1115 1 1116 1 1117 1 1118 1 1119 1 1120 1 1121 1 1122 1 1123 1 1124 1)))
       14))
 
 (defun %ide-direct-p (command)
@@ -51,14 +51,10 @@
                 (%ide-prefix-command code)
                 (if (= code 24)
                     (progn (set-symbol-value (quote ide-event-command) 24) nil)
-                    ((lambda (command)
-                       (if command
-                           command
-                           (if (and (>= code 32)
-                                    (<= code 126))
-                               1110
-                               nil)))
-                     (%ide-base-command code))))))
+                    (if (and (>= code 32)
+                             (<= code 126))
+                        1110
+                        (%ide-base-command code))))))
       (%ide-modifier-command code modifiers)))
    (ide-event-code event)
    (ide-event-modifiers event)))

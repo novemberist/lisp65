@@ -283,8 +283,8 @@
   ;; window escape in the C driver: color stores for rows >=13 hit CIA2 $DD00,
   ;; the VIC bank register. Fixed in src/screen.c (CRAM_WINDOW). Clamp row-offset
   ;; so the cursor remains in the body (rows-1).
-  (let* ((line (car (ide-buffer-point (ide-state-buffer state))))
-         (off (ide-state-row-offset state))
+  (let* ((line (car (car (cdr (cdr (cdr (car state)))))))
+         (off (car (cdr (cdr state))))
          (body (- rows 1)))
     (if (< line off)
         (%ide-state-with-row-offset state line)
@@ -339,12 +339,12 @@
           (car s7))))
 
 (defun ide-state-render-lines-for-size (state columns rows)
-  (let* ((render-columns (ide-state-render-columns state))
-         (render-rows (ide-state-render-rows state)))
+  (let* ((render-columns (car (cdr (cdr (cdr (cdr (cdr state)))))))
+         (render-rows (car (cdr (cdr (cdr (cdr (cdr (cdr state)))))))))
     (if (and render-columns
              (= render-columns columns)
              (= render-rows rows))
-        (ide-state-render-lines state)
+        (car (cdr (cdr (cdr state))))
         nil)))
 
 (defun ide-event-code (event)
@@ -390,17 +390,17 @@
            state
            (ide-insert-char
             (if split (ide-split-line buffer) buffer)
-            (ide-event-code event)))))
-     (ide-point-column (ide-buffer-point buffer))
-     (>= (ide-point-column (ide-buffer-point buffer)) (%ide-fill-column))))
-   (ide-state-buffer state)))
+            (car (cdr event))))))
+     (cdr (car (cdr (cdr (cdr buffer)))))
+     (>= (cdr (car (cdr (cdr (cdr buffer))))) (%ide-fill-column))))
+   (car state)))
 
 (defun %ide-newline-command (state)
-  (if (string= (ide-buffer-name (ide-state-buffer state)) "*directory*")
-      (%ide-find-file-named state (ide-current-line (ide-state-buffer state)))
+  (if (string= (car (car state)) "*directory*")
+      (%ide-find-file-named state (ide-current-line (car state)))
       ;; Automatic indentation (ide-syntax.lisp): split and indent the new line
       ;; to the parenthesis depth.
-      (%ide-state-with-buffer state (ide-split-line-indented (ide-state-buffer state)))))
+      (%ide-state-with-buffer state (ide-split-line-indented (car state)))))
 
 (defun %ide-delete-forward-command (state)
   (progn
@@ -577,19 +577,19 @@
                    (if (> c 0)
                        (%ide-hint-merge (- c 1) 1)
                        (set-symbol-value (quote ide-render) nil)))
-                 (cdr (ide-buffer-point (ide-state-buffer state))))
+                 (cdr (car (cdr (cdr (cdr (car state)))))))
                 (%ide-state-with-buffer state
-                                        (ide-delete-backward-char (ide-state-buffer state))))
+                                        (ide-delete-backward-char (car state))))
               (if (eq command 1102)
                   (%ide-delete-forward-command state)
                   (if (eq command 1106)
-                      (%ide-state-with-buffer state (ide-move-left (ide-state-buffer state)))
+                      (%ide-state-with-buffer state (ide-move-left (car state)))
                       (if (eq command 1107)
-                          (%ide-state-with-buffer state (ide-move-right (ide-state-buffer state)))
+                          (%ide-state-with-buffer state (ide-move-right (car state)))
                           (if (eq command 1108)
-                              (%ide-state-with-buffer state (ide-move-up (ide-state-buffer state)))
+                              (%ide-state-with-buffer state (ide-move-up (car state)))
                               (if (eq command 1003)
-                                  (%ide-state-with-buffer state (ide-move-down (ide-state-buffer state)))
+                                  (%ide-state-with-buffer state (ide-move-down (car state)))
                                   (%ide-x 'apply state command event)))))))))))
 
 (defun %ide-switch-key (state)
@@ -839,7 +839,7 @@
 (defun %ide-render-frame-lines-from (state lines columns rows)
   (if (> rows 0)
       (let* ((body-rows (- rows 1))
-             (row-offset (ide-state-row-offset state))
+             (row-offset (car (cdr (cdr state))))
              (body-reversed (%ide-render-visible-body-into
                              (%ide-drop-lines lines row-offset)
                              body-rows
@@ -862,9 +862,9 @@
 (defun ide-cursor-row (state rows)
   (if (eq (car (cdr state)) 1005)
       nil
-      (let* ((buffer (ide-state-buffer state))
-             (point (ide-buffer-point buffer))
-             (y (- (car point) (ide-state-row-offset state))))
+      (let* ((buffer (car state))
+             (point (car (cdr (cdr (cdr buffer)))))
+             (y (- (car point) (car (cdr (cdr state))))))
         (if (and (>= y 0) (< y (- rows 1))) y nil))))
 
 (defun %ide-dirty-line-indices-from (old-lines new-lines i cursor-row previous-cursor-row acc)
@@ -1208,7 +1208,7 @@
 ;; during rendering, instead of two ide-buffer-lines reconstructions in the
 ;; fast path: here and in ide-render-cursor-from.
 (defun %ide-render-fast-same-row (state lines old-lines cursor-row columns rows)
-  (let* ((row-offset (ide-state-row-offset state))
+  (let* ((row-offset (car (cdr (cdr state))))
          (line-index (+ row-offset cursor-row))
          (visible (ide-visible-line
                    (%ide-line-at lines line-index)
@@ -1263,7 +1263,7 @@
          (hint (if (boundp (quote ide-render))
                    (symbol-value (quote ide-render))
                    nil))
-         (column (cdr (ide-buffer-point (ide-state-buffer state)))))
+         (column (cdr (car (cdr (cdr (cdr (car state))))))))
     (progn
       (%ide-render-status-cached state columns status-row)
       (if hint
@@ -1323,12 +1323,12 @@
       ((lambda (x)
          (screen-put-char (if (< x columns) x (- columns 1)) (- rows 1) 95 attr))
        (%ide-mini-drawn state))
-      (let* ((buffer (ide-state-buffer state))
-             (point (ide-buffer-point buffer))
+      (let* ((buffer (car state))
+             (point (car (cdr (cdr (cdr buffer)))))
              (line-index (car point))
              (column (cdr point))
              (x column)
-             (y (- line-index (ide-state-row-offset state)))
+             (y (- line-index (car (cdr (cdr state)))))
              (body-rows (- rows 1)))
         (if (and (>= x 0)
                  (< x columns)
@@ -1355,7 +1355,7 @@
     (state buffer cache old-lines cursor-row columns rows)
   (if (and cache
            (= (car cache)
-              (+ (ide-state-row-offset state) cursor-row)))
+              (+ (car (cdr (cdr state))) cursor-row)))
       (%ide-render-fast-cached-row
        state cache old-lines cursor-row columns rows)
       (%ide-render-materialized-fast
@@ -1407,11 +1407,11 @@
          (columns (car size))
          (rows (car (cdr size)))
          (state (%ide-scrolled state rows))
-         (buffer (ide-state-buffer state))
-         (cache (ide-buffer-locals buffer))
+         (buffer (car state))
+         (cache (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr buffer)))))))))
          (old-lines (ide-state-render-lines-for-size state columns rows))
          (cursor-row (ide-cursor-row state rows))
-         (previous-cursor-row (ide-state-render-cursor-row state)))
+         (previous-cursor-row (car (cdr (cdr (cdr (cdr state)))))))
     (if (and old-lines
              cursor-row
              previous-cursor-row
@@ -1424,7 +1424,7 @@
                  previous-cursor-row
                  (= cursor-row (+ previous-cursor-row 1))
                  (= (car cache)
-                    (+ (ide-state-row-offset state) cursor-row)))
+                    (+ (car (cdr (cdr state))) cursor-row)))
             (%ide-render-cached-next-row
              state
              buffer
@@ -1730,7 +1730,7 @@
 (defun ide-run (state)
   (progn
     (%ide-input-open)
-    (%ide-poll (%ide-persist-state state))))
+    (%ide-poll state)))
 
 ;; ---- Buffer persistence plus MULTIPLE named buffers (hardware user finding/request,
 ;; 2026-07-05) ----
@@ -1781,7 +1781,7 @@
                                 (cons (cons name buf)
                                       (%ide-buffers-remove name alist)))
               't)))
-      (ide-buffer-name buf)
+      (car buf)
       (%ide-buffers-alist)))
    (%ide-buffer-flush-cache buf)))
 
@@ -1839,6 +1839,7 @@
   (progn
     (dotimes (counter 4 nil) (poke 188 (+ 252 counter) 0))
     (%ide-input-finish
-     (ide-run (%ide-init (ide-render (ide-make-state
-                                      (%ide-resume-buffer
-                                       (if name (car name) nil)))))))))
+     (ide-run (%ide-persist-state
+               (%ide-init (ide-render (ide-make-state
+                                       (%ide-resume-buffer
+                                        (if name (car name) nil))))))))))

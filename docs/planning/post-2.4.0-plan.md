@@ -60,6 +60,300 @@ none is claimed for 2.4.0:
 
 ## Journal
 
+### 2.5.5: device session, ship-time layer — 2026-10-07
+
+**Sealed check-host.** r1 on `c9a789fd` is green: exit 0, 4,701 s, HEAD unchanged, no changed file.
+
+**Device session, 2026-10-07, owner at the physical MEGA65** (record:
+`docs/planning/release-2.5.5-device-report.md`). `D255.D81` and `D255U.D81` uploaded and read back byte-identical.
+Boot by stopwatch unchanged, 20 s plus 22 s. Typing in the IDE editor, owner: "Stark verbessert, Backspace immer
+noch leicht verzögert, stärker wenn Taste gehalten wird". A held key gave 227 characters in 10 s in the editor on an
+empty line and 202 at the `L65>` prompt (80-column screen); the reviewer reads both as the keyboard repeat rate,
+which was not measured; no 2.5.4 device count exists. Two buffers with the physical RUN/STOP key (switches by hand,
+RUN/STOP at idle) were complete after re-entry. Two buffers saved with `save-buffer-to` read back as expected after
+the power cycle (files `12ONE`, `12TWO`); the 20x40 save took 4 s (2.5.4: 5 s) and is byte-identical to its source.
+The product medium is unchanged after the session. Not done on the device: the keymap seam, the long checklist
+rows, `$D703`, held-key counts at column 35 and line 20. The checklist said "40 columns per line"; the screen has
+80, corrected in the session.
+
+**Findings.** Backspace in the editor is still slightly delayed on the device, more so when the key is held. Side
+finding, pre-existing and documented since 2.5.0: Return at the empty `L65>` prompt leaves Comfort; the owner finds
+it surprising; a small card is proposed in the register (an empty Return stays in Comfort, leaving gets an explicit
+way).
+
+**Reproductions.** Both public-source reproductions equal the Final in ELF, PRG, LTO and D81. The merged bitcode of
+the public replay differs from the Final's on the same host (same size), so "host-dependent" did not fully explain
+the 2.5.4 difference; cause not investigated.
+
+**Ship-time layer.** Release note and status documents with these results, device report and Before-Ship record,
+document gates r2, Card-5 r3. Acceptance record with eight gates: Comfort rows, Backspace rows, the Comfort lane,
+the measured editor key cost (new), the reviewed emulator rows, the GC session recorded as FAIL, device upload and
+owner rows. Its status is `FAIL-GATE-RECORDED: gc-session`. Five changed routes ran as single sealed targets, all
+exit 0.
+
+**Owner word 2026-10-07** (after the session; asked: Ship and Publish of 2.5.5, and acceptance of the GC gate
+recorded as FAIL as in 2.5.4 with figures identical to 2.5.4; recommendation yes to both): "Freigabe erteilt. Wir
+folgen deinen Empfehlungen". Ship and Publish of 2.5.5 are approved and the GC gate is accepted as recorded.
+Neither has been done.
+
+The Backspace finding was part of the session summary the owner approved on;
+the GC session was run on the Seed medium, which is byte-identical to the
+sealed Final (only `pending32` was repeated on the Final itself).
+
+### 2.5.5: Final sealed, pending32 settled, public authority, reproductions — 2026-10-07
+
+**Final r1.** Sealed check-source on `bb238142`
+(`build/card-255-check-source-final-r1`): exit 0, 3,985 s, HEAD unchanged, no
+changed file. Final chain: probe, final, seal and seal check pass, one product
+link. `build/card-255-final-r1`: D81 `4f0b76ad…245523b` and ELF `592b2c71…`
+byte-identical to the Seed. One Seed link, one Final link.
+
+**pending32.** The breakpoint timeout of one GC attempt is not reproduced: 0
+of 5 fresh boots on the sealed 2.5.5 Final and 0 of 2 on the 2.5.4 Final, all
+with identical figures (`build/card-255-gc-pending32-r1`). The failed attempt
+shows the forced allocation inside `gc_collect` with the frame interrupt taken
+at the breakpoint boundary: the emulator held the CPU at the first instruction
+of the product's interrupt handler while the driver waited for the next
+address. It is the only such stop among 50,320 breakpoint stops; how the
+emulator produces the coincidence is inferred. Harness, not a product stall.
+
+**Release layer (candidate time).** Release note `docs/releases/2.5.5.md` and
+status documents, every device statement pending; the correction of the
+2.5.4 statement (the editor is about 10 times, not 30 times, slower than the
+REPL) in the status documents and as a dated line on the 2.5.4 note; the
+published release text is not edited. Document-gate successors, Card-5 r2 and
+a Card-5 product successor. Public-source authority `c2_v255_r1_public_*`:
+same form as 2.5.4; Seed, Final and reproductions use one Fedora 45 host and
+one pin set; 2.5.4 moves under the historical host pin rule, so the v252,
+v253 and v254 routes no longer touch the live host; the residue rule is read
+from the medium alone. `AUTOBOOT.C65` keeps six bytes of 2.5.4 slack that the
+zeroing step does not cover; they are carried by the tail-repeat rule (2.5.3
+precedent) and stated in the documents.
+
+**Reproductions.** Two clean public-source reproductions give ELF
+`592b2c71…`, PRG `7a6e6a51…`, LTO `0d01e16f…` and D81 `4f0b76ad…245523b`,
+byte-identical to the Final. The merged bitcode differs from the Final's even
+on the same host; it is recorded, not required. Seven document files changed
+after the export (the pending32 sentence); none is a producer input, they are
+allowed-delta rows as in 2.5.4. Ten changed routes ran as single sealed
+targets, all exit 0.
+
+**Open for the owner:** Ship and Publish for 2.5.5 and the acceptance of the
+GC gate recorded as FAIL (two history stalls, as in 2.5.4).
+
+### 2.5.5: Seed r1b, measured typing cost, emulator rows, Final tools — 2026-10-06
+
+**Seed.** `c255_seed_continue_r1b.py continue` finished on the retained r1
+link: `build/card-255-product-r1b`, medium `media-255/c255.d81` sha256
+`4f0b76ad…245523b`, ELF `592b2c71…`, build id `0x43a72fbb`, `.text` 36,899 B,
+residue 0.
+
+**Measured typing cost** (`build/card-255-typing-measure-r1`; emulator, cycle
+counter, 40.5 MHz; 2.5.4 control and 2.5.5 Seed measured the same day, seven
+samples per point, medians without a collection):
+
+| Point | 2.5.4 | 2.5.5 | Ratio |
+|---|---|---|---|
+| Insert, column 1 | 124.2 ms | 57.3 ms | 0.461 |
+| Insert, column 20 | 137.1 ms | 57.3 ms | 0.418 |
+| Insert, column 39 | 150.0 ms | 57.3 ms | 0.382 |
+| Insert, line 20 | 153.5 ms | 57.1 ms | 0.372 |
+| Backspace, column 20 | 119.7 ms | 60.4 ms | 0.505 |
+| Return, 30 characters | 462.9 ms | 416.3 ms | 0.899 |
+| Burst of 8 | 687 ms | 244 ms | 0.355 |
+| REPL, key to glyph | 14.0 ms | 14.0 ms | 1.000 |
+
+Every pass rule holds; the largest deviation from the prediction model is
+2.3 %. Typing 60 single characters triggers 5 collections instead of 9; with
+them the cost is 67 ms per key instead of 152 ms. A collection still costs
+about 120 ms and the first key after entering the editor about 90 ms more, in
+both versions. Not measured: the physical device.
+
+**Emulator rows on the Seed** (`build/card-255-rows-r1`, reviews
+`build/card-255-rows-r1-review-*`): the 14 new behaviour rows for lever L2
+(several buffers, switch, exit, re-entry, save and eval of a buffer left by a
+switch or after an abort) are reviewed and pass; one of them failed in the
+first run through a driver defect (the key counter was read after the abort)
+and passes in the rerun. Every 2.5.4 row keeps its status; the three known
+rows stay red unchanged. In a boot with the user disk swapped in the STOPPED
+line shares its row with leftover status cells; four isolated boots show the
+same abort behaviour on 2.5.4 and 2.5.5.
+
+**GC session on the Seed** (`build/card-255-gc-r1`): collections, allocations
+per transition and both peaks equal the 2.5.4 Final in every scenario (the
+scenarios drive the REPL line editor, not the IDE); headroom 43 cells; the two
+history scenarios stall as before, so the gate is recorded as FAIL as in
+2.5.4. One `pending32` attempt ended in a breakpoint timeout at collection
+471; the rerun passed; cause not found. No scenario covers the IDE editor
+under forced collection.
+
+**Final tools** `c255_final_pins/final/replay/seal/final_rehearsal`, row and GC
+drivers `c255_rows/emulator/gc_session`. Replay `build/final-255-prep/reviewed-r6`
+(13,414 inputs, sha256 `b1ab7176…830b`), Final selftest 127 tests, rehearsal
+phases pass with 0 compiles and 0 links. Three provenance rules of the replay,
+each pinned and with negative controls: Fedora 44 host-tool hashes are
+accepted in old receipts; the two 2.5.4 reproduction records and the 2.5.4
+seal are pinned as records and not walked (the 2.5.4 worlds that 2.5.5
+consumes are bound file by file); the two host-tool rows of the native
+identity may differ by host generation. The replay binds the Python
+interpreter: the host must not be updated before the seal.
+
+### 2.5.5 Seed r1: halt after the link, reviewed continuation r1b — 2026-10-06
+
+Pre-chain r1 on tools commit `26be6184` passed with the dry values. Seed r1
+(`build/card-255-product-r1`) ran its 75 commands and the one product link and
+halted in the inventory on `.lisp65_rt_c2d_00b`: the instruction pair at
+`$C473` in `c2_stream_phase_00b` is back in the 2.5.3 order (`sta $0a` /
+`clc`; the 2.5.4 baseline has `clc` / `sta $0a`), the mirror image of the
+class reviewed in 2.5.4. `.text` is 36,899 B, changed `[]`, immediate only
+`main`; no section moved or changed size; eight of nine differing sections
+are explained by the existing rules. The order of this pair has now changed
+with every build id; the code generator's reason is still not known.
+
+Decision as in 2.5.4: one narrowly pinned reviewed class, no second link.
+`c255_seed_continue_r1b.py` binds the retained r1 attempt and runs the
+unchanged inventory, media and finish steps into `build/card-255-product-r1b`.
+Two dry continuations give the same medium. A standing two-state class for
+exactly this pair is proposed in `build/card-255-seed-continue-r1b/notes.txt`
+and not implemented.
+
+### 2.5.5: sealed check-source green, Seed tools — 2026-10-06
+
+Sealed check-source on the source candidate `f6333f4a`
+(`build/card-255-check-source-r1`): exit 0, 3,837 s, HEAD unchanged, no changed
+file. `f6333f4a` is the source authority of the 2.5.5 Seed.
+
+Seed tools `c255_*` (attempt r1, medium `media-255/c255.d81`), baseline the
+2.5.4 Final r1. Dry chain green: only the ide image changes (15,223 to
+15,081 B, sha256 `27bfa662…`), the other five images and all six packages are
+byte-exact against 2.5.4; build id `0x43a72fbb`, SHELF 100,621 B, static code
+50,759 B; immediate-shape prediction without a flag; exhaustive product-world
+E3 with `c255_e3_product.py`: 0 violations in both shapes, the control fails
+in both. Product seams: the two E3 seams of 2.5.4 and the two L2 seams.
+
+Decisions. The reviewed commuting-pair class of 2.5.4 is not carried: the
+2.5.4 baseline already holds that order; any unexplained instruction
+difference after the link halts as before, and there is no probe link (one
+Seed link, one Final link). Host tool pins are the Fedora 45 tools. Because
+SHELF.BIN shrinks by two sectors, the unchanged packer would leave 729 bytes
+of the 2.5.4 medium in two freed sectors and in the slack of the last sector;
+they are zeroed by an explicit, asserted media step (no reader reaches them;
+receipt `residue-zeroing.json`); two rehearsals give the same dry medium.
+Pass rule for the measured typing row: insert at most 0.60 and Backspace at
+most 0.65 of the 2.5.4 control in cycles, Return not slower, growth with column
+and row at most 5 %, REPL within 1 %; more than 15 % off the model is a
+review, not a pass.
+
+### Owner word: 2.5.5 = typing in the IDE editor — 2026-10-06
+
+**Scope (owner, 2026-10-06).** 2.5.5 is one card: make typing in the IDE
+editor faster. Four levers on the Lisp plane, no native change (`.text` stays
+36,899 B), E3 edit persistence and the key extension seam unchanged. A
+dedicated self-insert path and a native code-object cache are later cards.
+
+**Study** (`build/scope-editor-typing-r1/report.txt`). One plain insert at
+line length 20 costs 5,553,702 cycles (137.1 ms) in 2.5.4. 73 % of it is
+loading code objects: the VM has one 56-byte execution buffer, so every call,
+tail call and return reloads; a call costs about 23,000 cycles before the
+callee runs. 23 to 24 % is interpretation; screen work is three cells. A
+printable key walked 24 base-table entries and 23 routes (48 tail calls), the
+render path makes 35 calls for three cells, and the loop stored a flushed copy
+of the buffer before every key (cost growing with column and row, two thirds
+of the 75 cells allocated per key).
+
+**Correction.** The typing comparison of 2026-10-05 said "REPL insert
+4.17 ms" and, derived from it, "the editor is about 30 times slower than the
+REPL". 4.17 ms is the time from the consumed key to the next input poll; the
+glyph is on the screen 566,5xx cycles = 14.0 ms after the key is consumed
+(`build/scope-editor-typing-r1/r2/repl-echo.json`). The editor is about
+10 times slower than the REPL for the same visible effect, not 30 times. The
+editor figures (124 to 150 ms) stand. The sentence in
+`docs/project-status.md`, in `docs/planning/release-2.5.4-before-ship.md`,
+the 4.17 ms in `docs/known-issues.md` and in the published
+`docs/releases/2.5.4.md` still carry "30 times / 4.17 ms"; they are pinned or
+published and are corrected with the 2.5.5 document layer, not in place. The
+published release text is not edited.
+
+**Levers** (`build/card-255-typing-r1/notes.txt`, patches per lever):
+- L1: a printable code is the insert command before the base table is
+  searched; the insert route stands first.
+- L4: the routes of Backspace, Return and the cursor keys follow it. (The
+  planned self tail call does not exist: `tailcall_self` is a check, the
+  compiler emits an ordinary tail call; a `while` loop is unknown to the IDE
+  eval oracle.)
+- L3: the one-instruction accessors are written out as `car`/`cdr` in 21
+  functions of the key path (72 call sites). `ide-event-command` keeps its two
+  accessor calls: the keymap end-to-end gate mutates them.
+- L2: the loop stores the buffer once at entry, not before every key. What
+  is published per key is unchanged (the E3 publication before the next
+  poll).
+
+**Counted on the projected product world** (VM instructions / code-object
+reads / cells per insert at length 20): 1,955 / 359 / 95 in 2.5.4,
+921 / 145 / 39 with all four levers; no growth with column or row any more.
+The read model equals the emulator's `vm_object_load` counts of 2.5.4 exactly
+at six points.
+
+**Predicted, not measured:** insert 137 ms to about 57 ms, Backspace 120 to
+about 61 ms, Return on a 30-character line 463 to about 416 ms; one collection
+per 10 to 11 keys instead of 5 to 6. The prediction is a two-parameter fit to
+the 16 measured 2.5.4 emulator points (largest error 5.4 %). A medium with the
+changed IDE image needs the native of a real link; the first emulator
+measurement comes with the 2.5.5 Seed.
+
+**Proof.** Product world of the final combination (ide image `27bfa662...`,
+15,081 B, -142 B against 2.5.4). The E3 sweep was first run with the committed
+2.5.4 tool and passed; that tool turned out to be blind in one place (below),
+so the proof stands on its successor `c255_e3_product.py`: exhaustive, every VM
+instruction boundary, `drain` shape 74,442 points and `run` shape 127,914
+points, multi-buffer 10,056 and 27,871, no violation under either rule; the
+no-abort text of every case equals the independent reference; the named point
+`abc-after-last-poll` keeps "abc". Controls: without the publication 29,812 of
+36,037 (`drain`) and 74,548 of 80,800 (`run`) points fail, multi-buffer 5,892
+of 8,885 and 23,773 of 26,775; the no-copy control 3,601 in each shape. Every
+key code maps to the same command and every command to the same route (2,379
+rows per step).
+
+**The E3 tool was blind in the `run` shape.** The 2.5.4 sweep took its
+reference texts from the swept world itself; in the `run` shape they came from
+the per-key store that L2 removes. In the control without the publication the
+`run` shape then reported no violation although that world loses every
+finished step, even at the idle prompt. The successor reads its references
+from the stepped state, independent of every store, requires the no-abort
+texts of the product world to equal them, and requires the control to fail in
+both shapes at half of the points or more
+(`build/card-255-typing-r1/control-analysis.json`, `notes-phase2.txt`).
+
+**Gates.** Six gates bound the old bytes and have dated successors (keymap
+entry point and receipt, exit key path with the source-parity gate, editor
+allocation r6, function metadata r8, string codec workloads r4); Card-5 has
+the successor `c2_v255_r1_card5.py`. New in check-source:
+`c2-v255-editor-key-cost-check`, ceilings on what one editing key costs on
+the host VM (library world). The allocation contract does not move; the
+string codec workloads run 170 and 48 VM ops fewer.
+
+### 2.5.4 published — 2026-10-06
+
+Sealed check-host r7 on `6e78e898` is green (exit 0, 4,636 s, HEAD unchanged,
+no changed file); the release contract r1 binds it. Before-Ship commit
+`d7d04023`, proof commit `50550838`, tag `proof/v2.5.4`. The first seal attempt
+stopped because the seal script refused the three absolute host-tool rows; the
+successor `seal-after-commit-r2.py` checks them by the host rule and the seal
+passed on the same commit, with the same four assets.
+
+Published: public `main` `bdaf2dd96a6bf77d7a02cccdf0db148cefe914a1` with parent
+`bf9d7c0c4eaeccdd5a4b0265b9e3f3e3b000d387` (no forced push), tag `v2.5.4`,
+source projection `151eb121e664e11dc60e6920365b9a320f2b4717`, GitHub release
+`v2.5.4` with four assets; draft and published state verified by download
+(release body, assets, remote refs, source tree).
+
+Known limits carried by this release: editor typing latency, type-ahead lost
+while the editor opens, long `m65d-remount`, overdrawn recall of very long
+history entries at the bottom of the screen, 3 cells and 88 bytes less heap
+than 2.5.3, `$D703` not checked on hardware. Next cycle, by owner decision:
+editor typing first, then sound as a disk package, kernel diet, graphics,
+structure editor.
+
 ### 2.5.4: device session, typing comparison, GC session, owner decisions — 2026-10-06
 
 **Sealed check-host.** r3 to r5 on `645d3243` were red for environment

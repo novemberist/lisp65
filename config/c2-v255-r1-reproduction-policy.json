@@ -1,0 +1,349 @@
+{
+  "artifacts": {
+    "D81": {
+      "bytes": 819200,
+      "sha256": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b"
+    },
+    "ELF": {
+      "bytes": 664176,
+      "sha256": "592b2c71c30901d2bb9599d2324678be5cd910865fbbfaf888c5d28ecb2e701f"
+    },
+    "LTO": {
+      "bytes": 651076,
+      "sha256": "0d01e16f1315101d37effed0002f331a878f652552d41d0b9761269730e11c24"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "sha256": "7a6e6a5195cb667b5719a645b2a11837b77fcf0c5ca5e5b05dd25b198822dc1a"
+    }
+  },
+  "comfort_reemission": {
+    "blob_bytes": 2207,
+    "package_bytes": 3981
+  },
+  "commands": 75,
+  "configs": [
+    "config/c2-v255-r1-public-replay.json",
+    "config/c2-v255-r1-public-normalization.json",
+    "config/c2-v255-r1-public-include-closure.json",
+    "config/c2-v255-r1-public-plane.json",
+    "config/c2-v255-r1-public-media-reproduction.json",
+    "config/c2-v255-r1-public-export-policy.json",
+    "config/c2-v255-r1-public-build-authority.json",
+    "config/c2-v255-r1-public-comfort-reemission.json",
+    "config/c2-v255-r1-public-defstruct-reemission.json"
+  ],
+  "defstruct_reemission": {
+    "blob_bytes": 1051,
+    "package_bytes": 2935
+  },
+  "environment_keys": [
+    "PYTHONHASHSEED",
+    "LC_ALL",
+    "TZ"
+  ],
+  "format": "lisp65-v255-reproduction-policy-v1",
+  "helper_scope": "directly imported host modules of the 11 producer tools; the whole tools tree is additionally covered by the export manifest",
+  "helpers": [
+    "tools/host-lisp/boot_only_carrier_prg.py",
+    "tools/host-lisp/bytecode_p0_stdlib.py",
+    "tools/host-lisp/c2_defstruct_foundations_gate.py",
+    "tools/host-lisp/c2_full_emission.py",
+    "tools/host-lisp/c2_lite_canonical_product.py",
+    "tools/host-lisp/c2_lite_media_product.py",
+    "tools/host-lisp/c2_product_substitution_link.py",
+    "tools/host-lisp/c2_require_resolver_gate.py",
+    "tools/host-lisp/c2_v160_refill_boundary_witness_media_repair.py",
+    "tools/host-lisp/c2_v250_public_normalization.py",
+    "tools/host-lisp/c2_v251_public_normalization.py",
+    "tools/host-lisp/c2_v251_r2_20260929_public_normalization.py",
+    "tools/host-lisp/c2_v252_r1_public_normalization.py",
+    "tools/host-lisp/c2_v253_r1_public_normalization.py",
+    "tools/host-lisp/c2_v253_r2_public_normalization.py",
+    "tools/host-lisp/c2_v254_r1_public_normalization.py",
+    "tools/host-lisp/c2_v255_r1_toolchain.py",
+    "tools/host-lisp/comfort_default_media.py",
+    "tools/host-lisp/d81_persistence_fault.py",
+    "tools/host-lisp/editor_product_list_domain.py",
+    "tools/host-lisp/elf_truth.py",
+    "tools/host-lisp/public_export.py",
+    "tools/host-lisp/runtime_overlay_bank.py"
+  ],
+  "host_qualification": {
+    "final_host": "Fedora 45",
+    "final_host_tools": [
+      {
+        "path": "/usr/bin/cc",
+        "sha256": "66317f5338535ded9ce9e2fc7b1c20d33bf96b7d6d1c35a71aa6dc309be3a57e"
+      },
+      {
+        "path": "/usr/bin/llvm-link",
+        "sha256": "dc265a662955c414c16eea8b4eec8af24322608bf6b5be6ee585f72fef90d47c"
+      },
+      {
+        "path": "/usr/bin/setarch",
+        "sha256": "8a6670f4aa0a72a08715a076549efa35832c0ce3b69c5926b96c6636a2075f3e"
+      }
+    ],
+    "host_dependent_intermediate": {
+      "final_host": {
+        "bytes": 265228,
+        "sha256": "acbc520145282652de2348b2d4375c24a631ad79132b3c1525f25bbe461f29cf"
+      },
+      "path": "build/card-255-final-r1/wplto/.canonical-objects-lisp65-c2-substitution-linked/combined-c.bc",
+      "producer": "/usr/bin/llvm-link (command 73)"
+    },
+    "reproduction_host": "Fedora 45",
+    "rule": "Seed, Final r1 and the public reproductions run on one host with one set of pinned host tools. ELF, LTO object, PRG and D81 must be byte-identical to the Final. The merged bitcode written by /usr/bin/llvm-link is an intermediate, not an artifact: it is recorded, must agree between the two reproductions, and its equality with the file the Final wrote is recorded, not required."
+  },
+  "host_tools": [
+    {
+      "path": "/usr/bin/cc",
+      "sha256": "66317f5338535ded9ce9e2fc7b1c20d33bf96b7d6d1c35a71aa6dc309be3a57e"
+    },
+    {
+      "path": "/usr/bin/llvm-link",
+      "sha256": "dc265a662955c414c16eea8b4eec8af24322608bf6b5be6ee585f72fef90d47c"
+    },
+    {
+      "path": "/usr/bin/setarch",
+      "sha256": "8a6670f4aa0a72a08715a076549efa35832c0ce3b69c5926b96c6636a2075f3e"
+    }
+  ],
+  "producer_bindings": [
+    {
+      "bytes": 4019,
+      "path": "tools/host-lisp/c2_v255_r1_public_product.py",
+      "sha256": "c9dddbca9bc866f6e21104f21585175a4d8f6b3feded4fd0f8e3249ff7d208c2"
+    },
+    {
+      "bytes": 12656,
+      "path": "tools/host-lisp/c2_v255_r1_public_native.py",
+      "sha256": "ce334eb9dd93c590f203f04f8aca167dfbf7351ece63b58ff0b8a4e7fce0f4a4"
+    },
+    {
+      "bytes": 5867,
+      "path": "tools/host-lisp/c2_v255_r1_public_source.py",
+      "sha256": "ef404e8a0101b3010e61a25f1605f99d038677beef7096ac444a145c54c056d7"
+    },
+    {
+      "bytes": 2808,
+      "path": "tools/host-lisp/c2_v255_r1_public_normalization.py",
+      "sha256": "2bc7cb3ca721cb1ed3254db644c997625e5e0b8ce6fd7a9e7825067c70019e6e"
+    },
+    {
+      "bytes": 9734,
+      "path": "tools/host-lisp/c2_v255_r1_public_reproduction.py",
+      "sha256": "0c167e904ce8d223e5b0f0c8a64f8e3f71015fe04e4671a1505307d5bd6adf68"
+    },
+    {
+      "bytes": 14308,
+      "path": "tools/host-lisp/c2_v255_r1_public_media.py",
+      "sha256": "58093f43b59ac65706674f387241851f5a485460bc4f5225503741bce219c35e"
+    },
+    {
+      "bytes": 9902,
+      "path": "tools/host-lisp/c2_v255_r1_public_media_reproduction.py",
+      "sha256": "1592cd08a56b69791e897a39668f7190624c319d0f4e4497dbbbf90a2f8178a6"
+    },
+    {
+      "bytes": 8252,
+      "path": "tools/host-lisp/c2_v255_r1_public_libraries.py",
+      "sha256": "900ddb207ea36e64c9ba793a19a94419ef4827526b529d4f79c578a6eb2e9a00"
+    },
+    {
+      "bytes": 2961,
+      "path": "tools/host-lisp/c2_v255_r1_public_plane.py",
+      "sha256": "dc968c09871be3c2a16d29d5575da62d57b27149338858872499f26bd0dd8a76"
+    },
+    {
+      "bytes": 1346,
+      "path": "tools/host-lisp/c2_v255_r1_public_includes.py",
+      "sha256": "80b400e6ec169e1d08531c0e52725faa6c3f8c8b60f0d27ec69454d4bec5e20f"
+    },
+    {
+      "bytes": 6341,
+      "path": "tools/host-lisp/c2_v255_r1_public_overlays.py",
+      "sha256": "2c4ed2ff5b07992dde79ec86ccbce1fcb7063a8f83fc6dea5ff1904652933b45"
+    },
+    {
+      "bytes": 7413,
+      "path": "tools/host-lisp/boot_only_carrier_prg.py",
+      "sha256": "49d4379953a7368c2e549c0c116b988f857b719214d7cf923fcec59c11c6a5f4"
+    },
+    {
+      "bytes": 136327,
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "39d91ab5d63232bfae13e19bffa45a280245239930e61c65f2073b36e3201528"
+    },
+    {
+      "bytes": 12811,
+      "path": "tools/host-lisp/c2_defstruct_foundations_gate.py",
+      "sha256": "151090a88195e8008e706bada7225681f257f42b871a7cc1907375e6cd755ff9"
+    },
+    {
+      "bytes": 44460,
+      "path": "tools/host-lisp/c2_full_emission.py",
+      "sha256": "ff789b96325e0fa717b70df885de3ea88b279242e6b451aa04ad4e434ee746ef"
+    },
+    {
+      "bytes": 88655,
+      "path": "tools/host-lisp/c2_lite_canonical_product.py",
+      "sha256": "887b4e9a2d2c9fde76fd6a9adee191cd6535c61c9553b2fabe0bdf13a99906f6"
+    },
+    {
+      "bytes": 53233,
+      "path": "tools/host-lisp/c2_lite_media_product.py",
+      "sha256": "0a5c9ff27b96e62ae0c0c6dc5d22cffc36d90f2e715afe73f67e520be21dc0f2"
+    },
+    {
+      "bytes": 468813,
+      "path": "tools/host-lisp/c2_product_substitution_link.py",
+      "sha256": "9e8c048ab750e6609601d37ddd00f4f785a39554d73347e09ea99af702db3abf"
+    },
+    {
+      "bytes": 46707,
+      "path": "tools/host-lisp/c2_require_resolver_gate.py",
+      "sha256": "2918b08e7aa52d4d146af9887d6af0cdde100c00f2727e43b33f51f8add231fb"
+    },
+    {
+      "bytes": 19536,
+      "path": "tools/host-lisp/c2_v160_refill_boundary_witness_media_repair.py",
+      "sha256": "9ddb370c26390bf15c44a1f0cf80acd038eabd05b27b538a337dd90909ac6b7c"
+    },
+    {
+      "bytes": 1317,
+      "path": "tools/host-lisp/c2_v250_public_normalization.py",
+      "sha256": "a069c8aa39b40e515c0e2f95191c4a185372f10be94e79560c39b77d4a729f37"
+    },
+    {
+      "bytes": 1336,
+      "path": "tools/host-lisp/c2_v251_public_normalization.py",
+      "sha256": "ee4569ec51b30888000d16b1fbd7ff24863a6bed6a522221796de94f6cb1f566"
+    },
+    {
+      "bytes": 1360,
+      "path": "tools/host-lisp/c2_v251_r2_20260929_public_normalization.py",
+      "sha256": "94d818756ee79788963904bf9525acba2dc7b90f4a13320e2384c1ad6d2288db"
+    },
+    {
+      "bytes": 2800,
+      "path": "tools/host-lisp/c2_v252_r1_public_normalization.py",
+      "sha256": "35be411cb7ffbf0cef2f022a5ba838fe061ea43adfc0e5b3c00e0f7684fc37c6"
+    },
+    {
+      "bytes": 2808,
+      "path": "tools/host-lisp/c2_v253_r1_public_normalization.py",
+      "sha256": "3910eab5677318cdd60f0c3667c2e538946afabf7efe66c9ad62e1151dd46c93"
+    },
+    {
+      "bytes": 2808,
+      "path": "tools/host-lisp/c2_v253_r2_public_normalization.py",
+      "sha256": "44e04e479f428e7fed9d3d83db6a6d81be716e882d1d6925038b86ecc936ecb6"
+    },
+    {
+      "bytes": 2808,
+      "path": "tools/host-lisp/c2_v254_r1_public_normalization.py",
+      "sha256": "b5cf2c3cbc42b8f285e1cbb206a26de80a4e3b21b8c4dfd79590a910e361fb77"
+    },
+    {
+      "bytes": 6965,
+      "path": "tools/host-lisp/c2_v255_r1_toolchain.py",
+      "sha256": "c5649a2f9e196fa7cd89f541fbe9160cdf1fd519405533505898dbff42343b4c"
+    },
+    {
+      "bytes": 16637,
+      "path": "tools/host-lisp/comfort_default_media.py",
+      "sha256": "8a6a5ff14dc5051d9385f346b2c103fad5315ebe27d820bebbcb97514b9eec14"
+    },
+    {
+      "bytes": 24671,
+      "path": "tools/host-lisp/d81_persistence_fault.py",
+      "sha256": "349cf6e01912403b152ad8a63df3069de5c863f7ee70edda14bea2f198fd4e6e"
+    },
+    {
+      "bytes": 4549,
+      "path": "tools/host-lisp/editor_product_list_domain.py",
+      "sha256": "8033bdc5f354f887c01aa8b08171cf43f74d2f3e267d966097cfcdd36645a733"
+    },
+    {
+      "bytes": 18934,
+      "path": "tools/host-lisp/elf_truth.py",
+      "sha256": "b10ee96bf33b54f408dab3e6869b6705966bce5477efa0aced9bbc85c0bff6e9"
+    },
+    {
+      "bytes": 15827,
+      "path": "tools/host-lisp/public_export.py",
+      "sha256": "1dd51d823b051fac8243059931b499b5edd6b66d42884ed0dc54333ac7cc8eec"
+    },
+    {
+      "bytes": 118931,
+      "path": "tools/host-lisp/runtime_overlay_bank.py",
+      "sha256": "d7e9ff74bddc81232d9576d4d44b93031ad00e489f4bba06fd46e22c255f15aa"
+    },
+    {
+      "bytes": 898795,
+      "path": "config/c2-v255-r1-public-replay.json",
+      "sha256": "0dab218b5709f35f4a2bfa13b01bc98f846108d78ded7a1716852de9d471462f"
+    },
+    {
+      "bytes": 1347,
+      "path": "config/c2-v255-r1-public-normalization.json",
+      "sha256": "c5bcf2e5c8040bf56dac20b3baa3b5db1414bf23bc9a0109a1658e5479127753"
+    },
+    {
+      "bytes": 314753,
+      "path": "config/c2-v255-r1-public-include-closure.json",
+      "sha256": "1707cdeab7a04ed975760a382887d1ba9cf04b9c70b762dfd7d2451bcb074f2e"
+    },
+    {
+      "bytes": 4207,
+      "path": "config/c2-v255-r1-public-plane.json",
+      "sha256": "0b0c6b3f42619ef5b9bf3a7434ccf5db271953ee23176afd3c6cb5253d4f75a4"
+    },
+    {
+      "bytes": 172309,
+      "path": "config/c2-v255-r1-public-media-reproduction.json",
+      "sha256": "decfee8aadd32f8d0484f952a9f0796965e243d90fe40407ce47ce9bbaf07b0a"
+    },
+    {
+      "bytes": 9612,
+      "path": "config/c2-v255-r1-public-export-policy.json",
+      "sha256": "d971accc1f1218bce369bb288f98c8b939c7c34949becc57a08bc1000ab192e0"
+    },
+    {
+      "bytes": 118585,
+      "path": "config/c2-v255-r1-public-build-authority.json",
+      "sha256": "2e36ed4d444155a70219aa0249c92c6ada89ed8dc3f908e5ba1f3a750db0ef68"
+    },
+    {
+      "bytes": 10896,
+      "path": "config/c2-v255-r1-public-comfort-reemission.json",
+      "sha256": "06e1628bc7d550f86c28160fa5e2b2dc8f581aa742f47e3cbe513460d99884b4"
+    },
+    {
+      "bytes": 10534,
+      "path": "config/c2-v255-r1-public-defstruct-reemission.json",
+      "sha256": "d4a49f1b6511972d9c261b603000579dfc18b3c64c92789717aba72ae8a74d9d"
+    }
+  ],
+  "producers": [
+    "tools/host-lisp/c2_v255_r1_public_product.py",
+    "tools/host-lisp/c2_v255_r1_public_native.py",
+    "tools/host-lisp/c2_v255_r1_public_source.py",
+    "tools/host-lisp/c2_v255_r1_public_normalization.py",
+    "tools/host-lisp/c2_v255_r1_public_reproduction.py",
+    "tools/host-lisp/c2_v255_r1_public_media.py",
+    "tools/host-lisp/c2_v255_r1_public_media_reproduction.py",
+    "tools/host-lisp/c2_v255_r1_public_libraries.py",
+    "tools/host-lisp/c2_v255_r1_public_plane.py",
+    "tools/host-lisp/c2_v255_r1_public_includes.py",
+    "tools/host-lisp/c2_v255_r1_public_overlays.py"
+  ],
+  "product_build_id": "0x43a72fbb",
+  "product_links": 1,
+  "release": "2.5.5",
+  "rule": "Two fresh exported roots with distinct absolute paths and differing PYTHONHASHSEED/LC_ALL/TZ; ELF/PRG/LTO/D81 must equal the Final and each other.",
+  "toolchain_format": "lisp65-v255-toolchain-v1",
+  "translation_units": 73
+}

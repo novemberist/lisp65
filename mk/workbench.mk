@@ -3,9 +3,9 @@
 .PHONY: v11-c1-repl-latency-check v11-source-stream-lifetime-selftest v11-source-stream-lifetime-check v11-wave2-error-text-library-check v11-wave2-list-unification-selftest v11-wave2-list-unification-check v11-wave2-policy-name-implementation-collect v11-wave2-policy-name-implementation-check v11-wave2-common-repin-collect v11-wave2-common-repin-check v11-function-metadata-selftest v11-function-metadata-check v11-l-lite-keymap-check v11-l-lite-keymap-dry-check v11-color-scroll-binding-check v11-wave3-fail-fast-check v11-wave3-dry-smoke v11-l-lite-probe-check v11-wave3-l-lite-repin-collect v11-wave3-l-lite-repin-check
 
 v11-l-lite-keymap-check:
-	python3 tools/host-lisp/c2_v254_r1_keymap.py selftest
-	python3 tools/host-lisp/c2_v254_r1_keymap.py check
-	python3 tools/host-lisp/c2_v254_r1_keymap_receipt.py check
+	python3 tools/host-lisp/c2_v255_r1_keymap.py selftest
+	python3 tools/host-lisp/c2_v255_r1_keymap.py check
+	python3 tools/host-lisp/c2_v255_r1_keymap_receipt.py check
 
 v11-color-scroll-binding-check:
 	python3 tools/host-lisp/v11_color_scroll_binding.py selftest
@@ -57,10 +57,10 @@ v11-wave2-common-repin-check: workbench-overlay-stack-guard v2-workbench-library
 	python3 tools/host-lisp/v11_wave2_common_repin.py check
 
 v11-function-metadata-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-host-artifacts c2-random-base-check
-	python3 tools/host-lisp/v11_function_metadata_disk_r7_v254_r7_20261003.py selftest
+	python3 tools/host-lisp/v11_function_metadata_disk_r7_v255_r8_20261006.py selftest
 
 v11-function-metadata-check: v11-function-metadata-selftest
-	python3 tools/host-lisp/v11_function_metadata_disk_r7_v254_r7_20261003.py check
+	python3 tools/host-lisp/v11_function_metadata_disk_r7_v255_r8_20261006.py check
 
 .PHONY: l65m-verdict-equivalence-selftest l65m-verdict-equivalence-gate asm-c-constant-contract-selftest asm-c-constant-contract-check f011-transaction-context-selftest f011-transaction-context-check f011-mount-window-selftest workbench-f011-mount-window-audit
 

@@ -96,7 +96,7 @@ check-source: public-export-population-selftest
 
 .PHONY: v210-bundle-docs-check
 v210-bundle-docs-check:
-	python3 tools/host-lisp/c2_v254_r2_v210_bundle_docs.py check
+	python3 tools/host-lisp/c2_v255_r2_v210_bundle_docs.py check
 
 .PHONY: workspace-capacity-selftest workspace-capacity-check doctor doctor-selftest source-syntax-check ci-selftest document-index-selftest document-index-check c2-product-profile-parity-selftest c2-product-profile-parity-check c2-lite-v6-roots-fronts-product-profile-selftest c2-lite-v6-roots-fronts-product-profile-check c2-lite-media-acceptance-selftest c2-lite-public-clean-build-selftest c2-lite-public-clean-build-qualify c2-final-island-identity-check c2-append-final-hybrid-check c2-vm-badopcode-detail-check c2-install-phase-discriminator-check c2-phase06a-cutpoint-check c2-append-suffix-read-domain-check c2-l-full-keymap-end-to-end-check c2-crc-codegen-selftest c2-historical-gate-inheritance-selftest c2-historical-gate-inheritance-check c2-address-identity-contract-selftest c2-address-identity-contract-check c2-kernal-residency-audit-selftest c2-kernal-residency-audit-check c2-kernal-unmap-contract-check c2-kernal-unmap-contract-receipt-check c2-nested-append-v5-selftest c2-nested-append-v5-check c2-q-check upstream-verification-selftest upstream-verification-check proof-hooks-install evidence-archive-assets-selftest evidence-archive-assets-check evidence-archive-assets-remote-check evidence-archive-index-size-gate evidence-archive-history-size-gate history-transport-bootstrap history-transport-rewrite-check remote-source-binding-selftest remote-source-binding-receipt-check promotion-register-check promotion-preflight-check r4-product-candidate-check r5-global-g5-input-check r5-global-g5-seal-selftest r6-ship-selftest r6-g6-selftest r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check workbench-product-reproducibility-selftest workbench-product-reproducibility-check workbench-product-reproducibility-preflight media-guard-bank-attribution-check post-capture-planning-capacity-check chain-walker-inventory-check dialect-contract-selftest dialect-contract-check bytecode-abi-ledger-selftest bytecode-abi-ledger-check code-object-arity-contract-selftest code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check r3-product-block-build r3-current-product-block-check r3-g3-g6-contract-check r3-g3-g6-environment-check r3-product-block-check r3-product-reproducibility-check r3-g3-static-preflight-check r3-stager-probe-check workbench-ux-harness-selftest semantic-contracts-selftest semantic-contracts-lint semantic-contracts-g0 semantic-contracts-g1 semantic-contracts-g2 bytecode-p0-omission-contract-check ci-check-source ci-check-host check-source check-host check-product check-reference reference-diagnostics check-emulator check-hardware-dry-run check-hardware
 .PHONY: block-26-build-integrity-selftest block-26-build-integrity-check
@@ -113,10 +113,10 @@ block-26-closure-check: block-26-closure-selftest
 check-source: block-26-closure-check
 
 block-26-build-integrity-selftest:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_card5.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_card5.py selftest
 
 block-26-build-integrity-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_card5.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_card5.py check
 check-source: block-26-build-integrity-check
 
 .PHONY: native-cycle-stationary-check
@@ -367,7 +367,7 @@ c2-bound-artifact-source-parity-selftest:
 	python3 tools/host-lisp/c2_bound_artifact_source_parity.py --selftest
 
 c2-bound-artifact-source-parity-check: c2-bound-artifact-source-parity-selftest
-	python3 tools/host-lisp/c2_bound_artifact_source_parity_v254_20261003.py
+	python3 tools/host-lisp/c2_bound_artifact_source_parity_v255_20261006.py
 
 # Acceptance-chain form: absence of the bound product is a hard failure here.
 # Wired as a prerequisite of r4-product-candidate-check, where the bound
@@ -375,7 +375,7 @@ c2-bound-artifact-source-parity-check: c2-bound-artifact-source-parity-selftest
 # because a link cycle repairs a stale binding by building first and
 # rebinding after (a mid-build hook would be a chicken-and-egg block).
 c2-bound-artifact-source-parity-required-check: c2-bound-artifact-source-parity-selftest
-	python3 tools/host-lisp/c2_bound_artifact_source_parity_v254_20261003.py --require-artifact
+	python3 tools/host-lisp/c2_bound_artifact_source_parity_v255_20261006.py --require-artifact
 
 c2-interrupt-ownership-selftest:
 	python3 tools/host-lisp/c2_interrupt_ownership_gate.py --selftest
@@ -1054,10 +1054,10 @@ c2-append-suffix-read-domain-check:
 	python3 tools/host-lisp/c2_append_suffix_read_domain_gate.py check-source
 
 c2-l-full-keymap-end-to-end-check:
-	python3 tools/host-lisp/c2_v254_r1_keymap.py selftest
-	python3 tools/host-lisp/c2_v254_r1_keymap.py check
-	python3 tools/host-lisp/c2_v254_r1_keymap_receipt.py check
-	python3 tools/host-lisp/c2_ide_exit_key_path_v254_r1.py
+	python3 tools/host-lisp/c2_v255_r1_keymap.py selftest
+	python3 tools/host-lisp/c2_v255_r1_keymap.py check
+	python3 tools/host-lisp/c2_v255_r1_keymap_receipt.py check
+	python3 tools/host-lisp/c2_ide_exit_key_path_v255_r1.py
 
 c2-l-full-static-plane-check:
 	python3 tools/host-lisp/c2_l_full_static_plane_gate.py
@@ -1607,10 +1607,10 @@ c2-v21-loading-libraries-stage-breadcrumb-media-check: c2-v21-loading-libraries-
 .PHONY: c2-media-builder-closure-enumeration-selftest
 .PHONY: c2-media-builder-closure-enumeration-check
 c2-media-builder-closure-enumeration-selftest: c2-v21-loading-libraries-stage-breadcrumb-media-check
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_media_census.py selftest >/dev/null
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_media_census.py selftest >/dev/null
 
 c2-media-builder-closure-enumeration-check: c2-media-builder-closure-enumeration-selftest c2-v160-item1-only-media-check
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_media_census.py check >/dev/null
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_media_census.py check >/dev/null
 
 check-source: c2-media-builder-closure-enumeration-check
 
@@ -1868,6 +1868,7 @@ check-source: c2-v124-time-check
 check-source: c2-require-prior-append-option-a-check
 check-source: ship-builder-contract-check
 check-source: c2-v126-editor-allocation-check
+check-source: c2-v255-editor-key-cost-check
 check-source: c2-reset-domain-completeness-check
 check-source: c2-v130-static-input-carrier-check
 check-source: c2-m65-hw-check
@@ -1927,10 +1928,17 @@ c2-v16-vm-progress-noninterference-check: c2-v16-vm-progress-noninterference-sel
 
 .PHONY: c2-v126-editor-allocation-selftest c2-v126-editor-allocation-check
 c2-v126-editor-allocation-selftest:
-	python3 tools/host-lisp/c2_v126_editor_allocation_o2_lite_r5_20261003.py selftest
+	python3 tools/host-lisp/c2_v126_editor_allocation_o2_lite_r6_20261006.py selftest
 
 c2-v126-editor-allocation-check: c2-v126-editor-allocation-selftest v2-workbench-artifacts
-	python3 tools/host-lisp/c2_v126_editor_allocation_o2_lite_r5_20261003.py check
+	python3 tools/host-lisp/c2_v126_editor_allocation_o2_lite_r6_20261006.py check
+
+# 2.5.5: what one editing key costs on the host VM (instructions, calls, code-object
+# reads, cells), with ceilings; library world, tracked inputs only, writes nothing.
+.PHONY: c2-v255-editor-key-cost-check
+c2-v255-editor-key-cost-check: v2-workbench-artifacts
+	python3 tools/host-lisp/c2_v255_editor_key_cost_20261006.py selftest
+	python3 tools/host-lisp/c2_v255_editor_key_cost_20261006.py check
 
 .PHONY: c2-v16-defstruct-phase-a-selftest c2-v16-defstruct-phase-a-check
 c2-v16-defstruct-phase-a-selftest:
@@ -3910,10 +3918,10 @@ check-source: public-surface-domain-audit-check
 
 .PHONY: public-naming-audit-selftest public-naming-audit-check
 public-naming-audit-selftest:
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v254_r2_public_naming.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v255_r2_public_naming.py selftest
 
 public-naming-audit-check: public-naming-audit-selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v254_r2_public_naming.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v255_r2_public_naming.py check
 
 check-source: public-naming-audit-check
 
@@ -4395,9 +4403,14 @@ check-source: put-kit-contract-check
 # gates and receipts are immutable history.
 # 2.5.4 ship time (2026-10-05, device session passed as a manual owner session): the three routes run the r2
 # successors (c2_v254_r2_*); the r1 candidate-time gates and receipts are immutable history.
+# 2.5.5 candidate time (2026-10-07, Final sealed, device session pending): the three routes run the 2.5.5 r1
+# successors (c2_v255_r1_bundle_docs_gate, c2_v255_r1_public_naming, c2_v255_r1_v210_bundle_docs); the 2.5.4 r2
+# gates and receipts are immutable history.
+# 2.5.5 ship time (2026-10-07, device session passed as a manual owner session): the three routes run the r2
+# successors (c2_v255_r2_*); the r1 candidate-time gates and receipts are immutable history.
 .PHONY: v250-bundle-docs-check v250-public-authority-check
 v250-bundle-docs-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r2_bundle_docs_gate.py
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r2_bundle_docs_gate.py
 v250-public-authority-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v251_v250_release_era.py
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v250_reproduction_gate.py check
@@ -4441,10 +4454,10 @@ disk-r7-product-selftest:
 
 .PHONY: disk-r7-product-card5-receipt-build disk-r7-product-card5-check
 disk-r7-product-card5-receipt-build:
-	python3 tools/host-lisp/c2_v254_r1_card5_product.py build
+	python3 tools/host-lisp/c2_v255_r1_card5_product.py build
 
 disk-r7-product-card5-check: block-26-build-integrity-check disk-r7-static-plane-check disk-r7-media-check
-	python3 tools/host-lisp/c2_v254_r1_card5_product.py check
+	python3 tools/host-lisp/c2_v255_r1_card5_product.py check
 
 .PHONY: disk-r7-consumer-mutation-check
 disk-r7-consumer-mutation-check:
@@ -4454,15 +4467,19 @@ disk-r7-consumer-mutation-check:
 # sources moved with 2.5.3, so the 2.5.2 preflight and documents run in the era reader; the
 # recorded two-reproduction receipt is still checked live.
 .PHONY: v252-public-authority-check v253-public-authority-check v253-document-index-check v254-document-index-check
-.PHONY: v254-public-authority-check
+.PHONY: v254-public-authority-check v255-public-authority-check v255-document-index-check
 # 2026-10-04, build host moved to Fedora 45: HISTORICAL HOST PIN rule (tools/host-lisp/historical_host_pin_20261004.py).
 # A host tool row of a past release is accepted when its recorded hash equals the pin in that release's own
 # committed reproduction policy; the live /usr/bin binary is verified only for the current release (2.5.4,
 # c2_v254_r1_toolchain.py). The 2.5.2 and 2.5.3 era readers run unchanged under that rule
 # (c2_release_era_host_pin_v254_20261004.py), and so do the r7 product receipts (disk_r7_product_receipts_v254_r2_20261004.py).
+# 2026-10-07, 2.5.5: the current release is 2.5.5 (live pins: c2_v255_r1_toolchain.py; Seed, Final and reproductions
+# on the same Fedora 45 host, one pin set). 2.5.4 is now a past release: the rule's successor
+# (historical_host_pin_v255_20261007.py) names it, and the routes of 2.5.2, 2.5.3 and 2.5.4 below run the successor
+# wrapper c2_release_era_host_pin_v255_20261007.py. No route verifies a past release against the live host any more.
 v252-public-authority-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v254_20261004.py selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v254_20261004.py check 2.5.2
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v255_20261007.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v255_20261007.py check 2.5.2
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v252_r1_reproduction_gate.py check
 check-host: v252-public-authority-check
 
@@ -4476,11 +4493,12 @@ check-host: v252-public-authority-check
 # 2026-10-04 (Fedora 45): the live-host selftest is the 2.5.4 toolchain tool; the 2.5.3 reproduction-gate SELFTEST
 # (its dry-run binds the live host against the Fedora 44 pins) left the route, its receipt `check` stays; the era
 # check runs under the historical host pin rule.
+# 2026-10-07 (2.5.5): the live-host selftest is the 2.5.5 toolchain tool; the era check runs under the successor rule.
 v253-public-authority-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_toolchain.py --selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_toolchain.py --selftest
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v253_release_era_v254_20261004.py selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v254_20261004.py selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v254_20261004.py check 2.5.3
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v255_20261007.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v255_20261007.py check 2.5.3
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v253_r2_reproduction_gate.py check
 check-host: v253-public-authority-check
 
@@ -4492,12 +4510,35 @@ check-host: v253-public-authority-check
 # DEFSTRUCT travel as compiled manifests and blobs and are re-emitted from the public sources as a check. The
 # reproduction gate is red until two clean public-source reproductions of Final r1 have been recorded. The media
 # census route (c2-media-builder-closure-enumeration-*) runs the 2.5.4 successor, which registers the new packer.
+# 2026-10-07 (2.5.5): 2.5.4 is a past release and moves under the historical host pin rule, as 2.5.3 and 2.5.2 did
+# on 2026-10-04. Its preflight ran against the live host (host_bound of the replay recipe) and its reproduction-gate
+# SELFTEST binds the live host through c2_v254_r1_toolchain in its dry-run: the preflight now runs inside the rule
+# (check 2.5.4, with a corrupted-source control), the gate selftest left the route, its receipt `check` stays, and
+# the live-host selftest is the 2.5.5 toolchain tool. No source the 2.5.4 preflight reads moved with 2.5.5, so it
+# still runs on the live tree (no era reader yet). The census route runs the 2.5.5 successor.
 v254-public-authority-check:
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_toolchain.py --selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_reproduction_gate.py selftest
-	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_public_product.py preflight
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_toolchain.py --selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v255_20261007.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_release_era_host_pin_v255_20261007.py check 2.5.4
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_reproduction_gate.py check
 check-host: v254-public-authority-check
+
+# 2.5.5 Final r1 public authority (c2_v255_r1_public_*, config/c2-v255-r1-public-*). Only the ide image changes
+# against 2.5.4; the authority is nevertheless complete (native inputs at the 2.5.5 Seed paths, six plane images,
+# six packages). Host: Seed, Final and both reproductions ran on the same Fedora 45 host; c2_v255_r1_toolchain.py
+# has one pin set, the rows the Seed recorded are bound live, and there is no host drift class. The Lisp plane
+# travels as compiled manifests and blobs (this covers the projected product IDE with its four reviewed seams);
+# REPL-COMFORT and DEFSTRUCT (frozen in 2.5.5) travel in the 2.5.4 form and are re-emitted from the public sources
+# as a check. Residue zeroing: the freed SHELF.BIN sectors and its last-sector slack are zero in the Final medium
+# and fall under the media writer's zero default; the rule is read from the medium alone
+# (c2_v255_r1_public_media.residue_rule). The reproduction gate is red until two clean public-source reproductions
+# of Final r1 have been recorded. The census route (c2-media-builder-closure-enumeration-*) runs the 2.5.5 successor.
+v255-public-authority-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_toolchain.py --selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_reproduction_gate.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_public_product.py preflight
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_reproduction_gate.py check
+check-host: v255-public-authority-check
 
 # Prospective document population including the untracked 2.5.3 release note.
 v253-document-index-check:
@@ -4505,6 +4546,9 @@ v253-document-index-check:
 # 2.5.4 successor (standalone like its predecessor; not in check-host).
 v254-document-index-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v254_r1_document_index.py
+# 2.5.5 successor (standalone like its predecessors; not in check-host).
+v255-document-index-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 -B tools/host-lisp/c2_v255_r1_document_index.py
 
 # 2.5.3 M65D disk integrity: D3 lossless load/save round trip, D5 full
 # directory remount, D2/D4 ownership check (representative cut-point subset;

@@ -1,8 +1,20 @@
-# lisp65 2.5.4 — current release boundary
+# lisp65 2.5.5 — current release boundary
 
-2.5.4 is the current release candidate: its Final is built and sealed; it is not published. Device results for 2.5.4: PASSED on a physical MEGA65 on 2026-10-05 in a manual owner session (boot 42 s by stopwatch; see the [device report](planning/release-2.5.4-device-report.md)); large saves, out-of-memory rows and the `$D703` check were not done on the device, and type-ahead typed while the IDE editor opens is lost. The Before-Ship record is pending. The published release is 2.5.3. Emulator rows on the Seed medium (byte-identical to the Final medium) showed no product failure; three rows are not green and unchanged from 2.5.3 (see the release notes). See the [2.5.4 release notes](releases/2.5.4.md). The 2.5.3, 2.5.2 and 2.5.1 text below is historical.
+2.5.5 is the current release candidate: its Final is built and sealed; it is not published. Device results for 2.5.5: PASSED on a physical MEGA65 on 2026-10-07 in a manual owner session (see the [device report](planning/release-2.5.5-device-report.md)): boot unchanged at 20 s plus 22 s by stopwatch; the owner found typing in the IDE editor strongly improved, with Backspace still slightly delayed, more so when the key is held; a held key gave 227 characters in 10 s in the editor and 202 at the prompt; two buffers survived the physical RUN/STOP key; two saved buffers and a 20x40 save (4 s) read back as expected. The keymap seam, the long checklist rows and the `$D703` check were not done on the device. The Before-Ship record is pending. The published release is 2.5.4. Emulator rows on the Seed medium (byte-identical to the Final medium) showed no product failure; three rows are not green and unchanged from 2.5.4 (see the release notes). See the [2.5.5 release notes](releases/2.5.5.md). The 2.5.4, 2.5.3, 2.5.2 and 2.5.1 text below is historical.
 
-What 2.5.4 changes for the user:
+What 2.5.5 changes for the user:
+
+- Typing in the IDE editor is faster. In the emulator a plain insert costs 57 ms per key instead of 124 to 150 ms and Backspace 60 ms instead of 107 to 133 ms, and the cost no longer grows with the column or the line. These are emulator measurements, not device timings; on the device the owner found typing strongly improved (see above).
+- Nothing else changes: the keys, the commands, edit persistence (finished editing steps survive RUN/STOP on the IDE path; a direct `m65d-save` call is not protected by this mechanism) and `ide-bind-key` behave as in 2.5.4.
+- What stays: a garbage collection still pauses typing for about 120 ms (now on about every twelfth key instead of every sixth or seventh), the first key after entering the editor costs about 90 ms more, and Return takes about 0.4 s on a 30-character line. **Wait until the editor is on screen before typing: type-ahead typed while the editor opens is lost.**
+
+---
+
+# lisp65 2.5.4 — previous release boundary (historical, published)
+
+2.5.4 was published on 2026-10-06. The text below is its boundary at publication. Its device session passed on a physical MEGA65 on 2026-10-05 in a manual owner session (boot 42 s by stopwatch; see the [device report](planning/release-2.5.4-device-report.md)); large saves, out-of-memory rows and the `$D703` check were not done on the device.
+
+What 2.5.4 changed for the user:
 
 - An interrupted IDE edit (RUN/STOP while typing) keeps every editing step that had already finished; the key being processed at the abort may be lost. **Only the IDE path is protected: a direct `m65d-save` call is not protected by this mechanism.** The host proof covers aborts at VM instruction boundaries on the delivered IDE image; aborts inside native primitives, during garbage collection or at out-of-memory are the subject of emulator rows (all abort points passed on the Seed medium; the RUN/STOP stand-in there is a monitor write to the break flag and counts for the emulator only) and of one physical RUN/STOP row, which passed on the device for text that was visible before the stop. **Wait until the editor is on screen before typing: type-ahead typed while the editor opens is lost.**
 - A loaded package can bind `C-x` plus a printable key with `(ide-bind-key KEY FUNCTION)`. `KEY` is the character code, `FUNCTION` (normally a quoted symbol) receives the current buffer and returns a new buffer, a message string or `nil`. Built-in keys cannot be overridden; an unbound `C-x` plus printable key shows `unknown command`.

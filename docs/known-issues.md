@@ -1,9 +1,75 @@
-# lisp65 2.5.4 — current release boundary
+# lisp65 2.5.5 — current release boundary
 
-2.5.4 is the current release candidate: its Final is built and sealed; it is
-not published. Device results for 2.5.4: PASSED on a physical MEGA65 on 2026-10-05 in a manual owner session (boot 42 s by stopwatch; see the [device report](planning/release-2.5.4-device-report.md)); large saves, out-of-memory rows and the `$D703` check were not done on the device, and type-ahead typed while the IDE editor opens is lost. The Before-Ship record is pending. The published release is
-2.5.3. Emulator rows on the Seed medium (byte-identical to the Final medium) showed no product failure; three rows are not green and unchanged from 2.5.3 (see the release notes).
-The 2.5.3, 2.5.2 and 2.5.1 text below is historical.
+2.5.5 is the current release candidate: its Final is built and sealed; it is
+not published. Device results for 2.5.5: PASSED on a physical MEGA65 on 2026-10-07 in a manual owner session (see the [device report](planning/release-2.5.5-device-report.md)): boot unchanged at 20 s plus 22 s by stopwatch; the owner found typing in the IDE editor strongly improved, with Backspace still slightly delayed, more so when the key is held; a held key gave 227 characters in 10 s in the editor and 202 at the prompt; two buffers survived the physical RUN/STOP key; two saved buffers and a 20x40 save (4 s) read back as expected. The keymap seam, the long checklist rows and the `$D703` check were not done on the device. The Before-Ship record is pending. The published release is
+2.5.4. Emulator rows on the Seed medium (byte-identical to the Final medium) showed no product failure; three rows are not green and unchanged from 2.5.4 (see the release notes).
+The 2.5.4, 2.5.3, 2.5.2 and 2.5.1 text below is historical.
+
+2.5.5 is 2.5.4 plus faster typing in the IDE editor; nothing else changes.
+Only the IDE library differs (15,223 to 15,081 B); native `.text` is unchanged
+at 36,899 B, and edit persistence and the key-binding seam behave as in 2.5.4.
+In the emulator a plain insert costs 57 ms per key (2.5.4: 124 to 150 ms) and
+Backspace 60 ms (2.5.4: 107 to 133 ms), and the cost no longer grows with the
+column or the line. These are emulator measurements, not device timings. See
+the [2.5.5 release notes](releases/2.5.5.md).
+
+Found in the 2.5.5 device session: Backspace in the IDE editor is still
+slightly delayed, more so when the key is held (owner). Not a 2.5.5 matter but
+noted by the owner: Return at the empty `L65>` prompt leaves Comfort for the
+native prompt (documented behaviour since 2.5.0; `(repl)` re-arms Comfort).
+
+What stays, by the same emulator measurement:
+
+- Typing in the IDE editor is still about 4 times slower than at the REPL
+  (57 ms against 14 ms from the key to the visible glyph).
+- A garbage collection costs about 120 ms, as before. That is now about twice
+  the cost of a key; it falls on about every twelfth key instead of every
+  sixth or seventh.
+- The first key after entering the editor costs about 90 ms more.
+- Return takes 416 ms on a 30-character line (2.5.4: 463 ms).
+- Type-ahead typed while the IDE editor is still opening is lost (wait for the
+  editor).
+- `(m65d-remount)` takes very long on a well-filled disk.
+- With the prompt at the bottom of the screen, recalling a very long history
+  entry (250 characters) draws it over the rows above without scrolling
+  (display only).
+- The `$D703` (DMA format) check has not been done on hardware.
+
+The garbage-collection stress session of 2.5.5 (emulator, Seed medium) is
+recorded as FAIL by the committed rules, as in 2.5.4: two history scenarios
+stall on the display defect above; every figure equals 2.5.4. One attempt of
+the scenario `pending32` ended in a breakpoint timeout at collection 471. It
+was not reproduced in seven repeats (five on the 2.5.5 Final, two on the 2.5.4
+Final, all passing with identical figures) and is a coincidence of driver and
+emulator, not a product stall: the frame interrupt was taken on the boundary of
+the driver's breakpoint and the emulator held the CPU there (mechanism
+inferred from the records, not provoked deliberately).
+No scenario covers the IDE editor under forced collection. The owner accepted
+the gate recorded as it is on 2026-10-07 (see the release notes).
+
+**Correction of a statement published with 2.5.4.** The 2.5.4 documents said
+that the REPL inserts a character in 4.17 ms and that the editor is about 30
+times slower than the REPL. 4.17 ms is the time from the consumed key to the
+next input poll; the REPL glyph is visible 14.0 ms after the key. The 2.5.4
+editor was about 10 times slower than the REPL, not 30 times. The editor
+figures of 2.5.4 stand. The published GitHub release text is not edited.
+
+Carried over from 2.5.4: 3 heap cells and 88 arena bytes less than 2.5.3; a
+direct `m65d-save` is not protected by edit persistence; the Freezer black
+screen (cause unknown); the heap held by live data that cannot be released
+from the keyboard; the disk limits (REL/GEOS/1581-boot-sector disks refused
+for writing, no reclaim of leaked blocks); string literals over 255 bytes;
+physical `C-x C-c`.
+
+---
+
+# lisp65 2.5.4 — previous release boundary (historical, published)
+
+2.5.4 was published on 2026-10-06 (public main `bdaf2dd9`, tag `v2.5.4`). The
+text below is the 2.5.4 boundary as it stood at publication, with the REPL
+comparison corrected on 2026-10-07 (see 2.5.5 above).
+
+(Historical 2.5.4 summary:) its device session passed on a physical MEGA65 on 2026-10-05 in a manual owner session (boot 42 s by stopwatch; see the [device report](planning/release-2.5.4-device-report.md)); large saves, out-of-memory rows and the `$D703` check were not done on the device, and type-ahead typed while the IDE editor opens is lost. Emulator rows on the Seed medium (byte-identical to the Final medium) showed no product failure; three rows were not green and unchanged from 2.5.3.
 
 2.5.4 is 2.5.3 plus edit persistence in the IDE, a key-binding seam, a cheaper
 IDE save string and small compiler, library and package corrections. An IDE
@@ -43,9 +109,11 @@ or emulator facts, not device results.
 Found in the 2.5.4 device session, none a 2.5.4 regression by current
 evidence: type-ahead typed while the IDE editor is still opening is lost (wait
 for the editor); typing in the IDE editor is clearly slower than at the REPL
-(keys are not lost, they appear late; an editor latency card is planned for the
-next cycle; in the emulator a 2.5.4 editor key costs 124 to 150 ms against 122
-to 148 ms in 2.5.3 and 4.17 ms at the REPL); `(m65d-remount)` is slow on the
+(keys are not lost, they appear late; in the emulator a 2.5.4 editor key costs
+124 to 150 ms against 122 to 148 ms in 2.5.3; the REPL shows the glyph 14.0 ms
+after the key, so the editor was about 10 times slower than the REPL; the
+figure "4.17 ms at the REPL" published here with 2.5.4 was the time to the next
+input poll and is corrected; 2.5.5 addresses the editor latency); `(m65d-remount)` is slow on the
 device. The `$D703` (DMA format) check was not done on hardware. With the
 prompt at the bottom of the screen, recalling a very long history entry (250
 characters) draws it over the rows above without scrolling (display only, also
@@ -239,7 +307,7 @@ The final section preserves entries that were closed in an earlier release.
 
 ### Anonymous `lambda` outside `defun` bodies refused
 
-2.5.4 (candidate): `(funcall (lambda (p ...) body) a ...)` is compiled as the
+2.5.4: `(funcall (lambda (p ...) body) a ...)` is compiled as the
 direct form `((lambda (p ...) body) a ...)`; a lambda that is stored in a
 top-level form (`setq`, `mapcar`, `let` binding) stays refused as described
 below. The emulator rows on the Seed medium passed for both cases.

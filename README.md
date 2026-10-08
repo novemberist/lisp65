@@ -39,21 +39,30 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The published baseline is **lisp65 2.5.3**, published on 2026-10-03, using
-**Dialect V2** (public main `bf9d7c0c`, tag `v2.5.3`; see the
-[2.5.3 release notes](docs/releases/2.5.3.md) and the
-[device report](docs/planning/release-2.5.3-device-report.md)). **2.5.4** is the
+The published baseline is **lisp65 2.5.4**, published on 2026-10-06, using
+**Dialect V2** (public main `bdaf2dd9`, tag `v2.5.4`; see the
+[2.5.4 release notes](docs/releases/2.5.4.md) and the
+[device report](docs/planning/release-2.5.4-device-report.md)). **2.5.5** is the
 current release candidate and is **not published**: its Final is built and
 sealed and its device session passed, but it is not published and its
-Before-Ship record is pending (see the [2.5.4 release notes](docs/releases/2.5.4.md)
-and the [device report](docs/planning/release-2.5.4-device-report.md)). The
+Before-Ship record is pending (see the [2.5.5 release notes](docs/releases/2.5.5.md)
+and the [device report](docs/planning/release-2.5.5-device-report.md)). The
 qualified product still displays `WORKBENCH 2.0.0` in its boot banner; the
-published package version is 2.5.3. The known issues listed in the release
+published package version is 2.5.4. The known issues listed in the release
 notes apply to the published release.
 
 ## Highlights
 
-- 2.5.4 (release candidate, not published): finished editing steps survive an
+- 2.5.5 (release candidate, not published): typing in the IDE editor is
+  faster. In the emulator a plain insert costs 57 ms instead of 124 to 150 ms
+  and Backspace 60 ms instead of 107 to 133 ms, and the cost no longer grows
+  with the column or the line (an emulator measurement, not a device timing).
+  A garbage collection still costs about 120 ms and Return about 0.4 s. Native
+  `.text` is unchanged; only the IDE library changes. The emulator rows on the
+  Seed medium showed no product failure; the device session passed on
+  2026-10-07 (manual owner session; the owner found typing strongly improved,
+  Backspace still slightly delayed).
+- 2.5.4: finished editing steps survive an
   interrupted IDE edit (RUN/STOP) when saving goes through the IDE, a key-binding
   seam `ide-bind-key` for packages (`C-x` plus a printable key), a cheaper IDE
   save string, `(funcall (lambda ...) args)` compiled as the direct form,
@@ -117,14 +126,14 @@ notes apply to the published release.
 
 ## Get the release
 
-The published baseline is `lisp65-2.5.3.tar.gz` from
-the [v2.5.3 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.5.3).
-2.5.4 is a release candidate and is not available as a release.
+The published baseline is `lisp65-2.5.4.tar.gz` from
+the [v2.5.4 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.5.4).
+2.5.5 is a release candidate and is not available as a release.
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-2.5.3.tar.gz
-cd lisp65-2.5.3
+tar -xzf lisp65-2.5.4.tar.gz
+cd lisp65-2.5.4
 python3 verify.py
 ```
 
@@ -132,7 +141,7 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [2.5.3 release notes](docs/releases/2.5.3.md) for the complete change
+See the [2.5.4 release notes](docs/releases/2.5.4.md) for the complete change
 summary and evidence boundary.
 
 ## Reproduce the 2.5.2 release
@@ -215,7 +224,7 @@ unattended operation, or large applications.
 | Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v2.0 makes no matcher/blink claim. |
 | Permissive hot `car`/`cdr` opcodes | Tier-1 library functions raise a VM type error on an unsupported domain, but the hot opcodes stay permissive: `(car nil)` and `(car 1)` both return `nil`. | A fully checked Tier-2 implementation was measured but did not fit the resident text budget; it remains sealed for the 2.x series. |
 | Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`. A session has 64 code images; a redefinition consumes a new one. At capacity a definition is refused with `OUT OF MEMORY` at a live prompt; a product-disk restart frees the images. | The C2D session store separates immutable code from mutable session state; slot reuse and dependency-aware reclamation remain later work. |
-| Top-level anonymous `lambda` refused | An anonymous `lambda` outside a `defun` body is refused with `VM: BAD BYTECODE`; the prompt recovers and nothing already defined is affected. Lambdas inside `defun` bodies work. This includes `(funcall (lambda () ...))` at the Comfort prompt when the lambda captures a `let` variable (same in 2.5.2 and 2.5.3). The 2.5.4 candidate compiles `(funcall (lambda ...) args)` as the direct form; a lambda stored in a top-level form stays refused (both observed in the emulator on the Seed medium). | Set B is frozen; the stored-lambda refusal remains in 2.5.4. |
+| Top-level anonymous `lambda` refused | An anonymous `lambda` outside a `defun` body is refused with `VM: BAD BYTECODE`; the prompt recovers and nothing already defined is affected. Lambdas inside `defun` bodies work. This includes `(funcall (lambda () ...))` at the Comfort prompt when the lambda captures a `let` variable (same in 2.5.2 and 2.5.3). 2.5.4 compiles `(funcall (lambda ...) args)` as the direct form; a lambda stored in a top-level form stays refused (both observed in the emulator on the Seed medium). | Set B is frozen; the stored-lambda refusal remains in 2.5.4. |
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
 | Heap held by live data cannot be released from the keyboard | In 2.5.2 the prompt could stay dead after `*** VM: OUT OF MEMORY`; the 2.5.3 candidate returns to the prompt (runaway garbage in a `let`-local, a failed IDE save, typing with many IDE buffers). If the heap is filled by data the program still holds, for example a global list, typing the form that drops it runs out of memory while it is typed, the Comfort prompt gives way to the native `LISP65>` and the data stays live. Observed in emulator runs. | Reset (power cycle); unsaved buffers are lost. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
@@ -264,7 +273,7 @@ the [device report](docs/planning/release-2.5.3-device-report.md) and the
 [2.5.3 release notes](docs/releases/2.5.3.md). 2.5.3 was published on
 2026-10-03.
 
-The 2.5.4 release candidate passed a device session on 2026-10-05 (manual
+The 2.5.4 release passed a device session on 2026-10-05 (manual
 owner session, Final medium D81 SHA-256 `250fdc763ae9e5b04cf149a6f2a7a3aa9fb293ff8da58e9a703e0c601efaef5d`,
 read back byte-identical): boot took 42 s by the owner's stopwatch, physical
 RUN/STOP aborted a running form and kept the visible editor text, the keymap
@@ -274,7 +283,23 @@ evidence: type-ahead typed while the editor opens is lost, typing in the IDE
 editor is clearly slower than at the REPL, and `(m65d-remount)` is slow. Large
 saves, out-of-memory rows and the `$D703` check were not done on the device.
 See the [device report](docs/planning/release-2.5.4-device-report.md) and the
-[2.5.4 release notes](docs/releases/2.5.4.md). The Before-Ship record and
+[2.5.4 release notes](docs/releases/2.5.4.md). 2.5.4 was published on
+2026-10-06. Correction of a statement published with 2.5.4: the editor was
+about 10 times slower than the REPL, not 30 times (the REPL glyph is visible
+14.0 ms after the key; 4.17 ms was the time to the next input poll).
+
+The 2.5.5 release candidate passed a device session on 2026-10-07 (manual
+owner session, Final medium D81 SHA-256 `4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b`,
+read back byte-identical): boot unchanged at 20 s plus 22 s by the owner's
+stopwatch; the owner found typing in the IDE editor strongly improved, with
+Backspace still slightly delayed, more so when the key is held; a held key
+gave 227 characters in 10 s in the editor and 202 at the prompt; two buffers
+survived the physical RUN/STOP key, and two saved buffers and a 20x40 save
+(4 s; 2.5.4: 5 s) read back as expected. The keymap seam, the long checklist
+rows and the `$D703` check were not done on the device. The typing times in
+the release notes are emulator measurements. See the
+[device report](docs/planning/release-2.5.5-device-report.md) and the
+[2.5.5 release notes](docs/releases/2.5.5.md). The Before-Ship record and
 publication are pending.
 
 ### Historical 2.5.1 verification
@@ -343,7 +368,8 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
-- [Release Notes for 2.5.4 (release candidate)](docs/releases/2.5.4.md)
+- [Release Notes for 2.5.5 (release candidate)](docs/releases/2.5.5.md)
+- [Release Notes for 2.5.4](docs/releases/2.5.4.md)
 - [Release Notes for 2.5.3](docs/releases/2.5.3.md)
 - [Release Notes for 2.5.2](docs/releases/2.5.2.md)
 - [Release Notes for 2.5.1](docs/releases/2.5.1-before-ship-r3.md)

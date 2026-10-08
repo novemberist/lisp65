@@ -1,0 +1,674 @@
+{
+  "artifacts": {
+    "D81": {
+      "bytes": 819200,
+      "path": "build/card-255-final-r1/media-255/c255.d81",
+      "sha256": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b"
+    },
+    "ELF": {
+      "bytes": 664176,
+      "path": "build/card-255-final-r1/wplto/resident-island-seed.prg.elf",
+      "sha256": "592b2c71c30901d2bb9599d2324678be5cd910865fbbfaf888c5d28ecb2e701f"
+    },
+    "LTO": {
+      "bytes": 651076,
+      "path": "build/card-255-final-r1/wplto/resident-island-seed.prg.lto.o",
+      "sha256": "0d01e16f1315101d37effed0002f331a878f652552d41d0b9761269730e11c24"
+    },
+    "PRG": {
+      "bytes": 41811,
+      "path": "build/card-255-final-r1/wplto/resident-island-seed.prg",
+      "sha256": "7a6e6a5195cb667b5719a645b2a11837b77fcf0c5ca5e5b05dd25b198822dc1a"
+    }
+  },
+  "final_identity": {
+    "bytes": 3112,
+    "path": "build/card-255-final-r1/final-identity.json",
+    "sha256": "869f2e918400224ea9af5e4510b58bca051bcbd4952cac795ce9ac45f32d8c0d"
+  },
+  "format": "lisp65-v255-target-acceptance-v1",
+  "gates": {
+    "backspace-rows": {
+      "checks": [
+        {
+          "equals": "DONE",
+          "pointer": "/status"
+        },
+        {
+          "equals": null,
+          "pointer": "/error"
+        },
+        {
+          "equals": 7,
+          "pointer": "/passed"
+        },
+        {
+          "equals": [],
+          "pointer": "/failed"
+        }
+      ],
+      "receipt": {
+        "bytes": 3258,
+        "path": "build/card-255-rows-r1/backspace/receipt.json",
+        "sha256": "a1a8b7d31c8aa2695fa2eedaba7dff06d53244529d3f9a7247b8567d208f1af9"
+      },
+      "status": "PASS"
+    },
+    "comfort-rows": {
+      "checks": [
+        {
+          "equals": "DONE",
+          "pointer": "/status"
+        },
+        {
+          "equals": null,
+          "pointer": "/error"
+        },
+        {
+          "equals": 79,
+          "pointer": "/passed"
+        },
+        {
+          "equals": [],
+          "pointer": "/failed"
+        }
+      ],
+      "receipt": {
+        "bytes": 64068,
+        "path": "build/card-255-rows-r1/comfort/receipt.json",
+        "sha256": "efc76312add5c23c7afe059025af7abaf040db24e988ed8b9dc712e429f90219"
+      },
+      "status": "PASS"
+    },
+    "device-upload": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "592b2c71c30901d2bb9599d2324678be5cd910865fbbfaf888c5d28ecb2e701f",
+          "pointer": "/elf/sha256"
+        },
+        {
+          "equals": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b",
+          "pointer": "/readback/sha256"
+        },
+        {
+          "equals": true,
+          "pointer": "/new_file_witness"
+        },
+        {
+          "equals": 0,
+          "pointer": "/product_ram_writes"
+        },
+        {
+          "equals": "D255.D81",
+          "pointer": "/remote"
+        },
+        {
+          "equals": "D255U.D81",
+          "pointer": "/user_remote"
+        },
+        {
+          "equals": true,
+          "pointer": "/post_session_readback/product_unchanged"
+        },
+        {
+          "equals": true,
+          "pointer": "/post_session_readback/out20x40_equals_src20x40"
+        },
+        {
+          "equals": [
+            "12ONE",
+            "12TWO",
+            "OUT20X40"
+          ],
+          "pointer": "/post_session_readback/user_new_files"
+        },
+        {
+          "equals": {
+            "12ONE": [
+              "alpha",
+              "gamma"
+            ],
+            "12TWO": [
+              "beta-delta"
+            ]
+          },
+          "pointer": "/post_session_readback/l2_save_files/lines"
+        },
+        {
+          "equals": true,
+          "pointer": "/post_session_readback/bam_valid"
+        },
+        {
+          "equals": null,
+          "pointer": "/driver"
+        }
+      ],
+      "receipt": {
+        "bytes": 3752,
+        "path": "build/release-v2.5.5/device-upload-r1.json",
+        "sha256": "ce0e650cf3f50b551b8a5e4d0099ef11f4c6715050efd4a3598237b7d101373e"
+      },
+      "status": "PASS"
+    },
+    "emulator-rows": {
+      "checks": [
+        {
+          "equals": "REVIEWED",
+          "pointer": "/status"
+        },
+        {
+          "equals": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b",
+          "pointer": "/medium_sha256"
+        },
+        {
+          "equals": [
+            "l2-abort-idle-after-switch",
+            "l2-abort-mid-burst-after-switch",
+            "l2-abort-reenter-type-exit",
+            "l2-abort-second-buffer-reenter-first",
+            "l2-eval-buffer-after-abort",
+            "l2-eval-buffer-after-edits",
+            "l2-fresh-buffer-abort-at-entry",
+            "l2-long-typing-with-collections",
+            "l2-return-backspace-exit",
+            "l2-save-after-abort",
+            "l2-save-buffer-left-by-switch",
+            "l2-switch-back-and-forth",
+            "l2-two-buffers-switch-exit",
+            "l2-type-exit-reenter"
+          ],
+          "pointer": "/l2_rows"
+        },
+        {
+          "equals": "FAIL",
+          "pointer": "/reviews/l2/verdict"
+        },
+        {
+          "equals": [
+            "l2-abort-mid-burst-after-switch"
+          ],
+          "pointer": "/reviews/l2/not_pass"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/reviews/l2-rerun-midburst/verdict"
+        },
+        {
+          "equals": [],
+          "pointer": "/reviews/l2-rerun-midburst/not_pass"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/reviews/new-r2/verdict"
+        },
+        {
+          "equals": [],
+          "pointer": "/reviews/new-r2/not_pass"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/l2_first_run_fail/rerun_status"
+        },
+        {
+          "equals": "a7a3866ee893d32cb10efc86400f180fdf8cb77ce13b9d46ed13ccb3d2ab8f05",
+          "pointer": "/reviews/l2/record/sha256"
+        },
+        {
+          "equals": "ecfedbb46ff890a0c124b23e5a2a77470446e119056700d2347136623ff7402e",
+          "pointer": "/reviews/l2-rerun-midburst/record/sha256"
+        },
+        {
+          "equals": "5a8d50ffaf32360751453965e673e88f5f9721d1a2e31df469d19e965b1f84e7",
+          "pointer": "/reviews/new-r2/record/sha256"
+        }
+      ],
+      "receipt": {
+        "bytes": 5348,
+        "path": "build/release-v2.5.5/emulator-rows-r1.json",
+        "sha256": "8013395487fab0bc8a896c88797c87898ea0d0ce297128dc2bc7b630d584629c"
+      },
+      "scope_note": "Reviewed records of the emulator rows on the 2.5.5 Seed medium (byte-identical to the Final): the 14 new rows for the entry store and the 2.5.4 rows. Nothing is unreviewed. The top-level verdict of the first l2 review is FAIL and is asserted as such: one row (l2-abort-mid-burst-after-switch) failed through a driver defect (the key counter was read after the abort) and passes in the rerun with the fixed driver, which is the second record. Three regression rows that are not green and unchanged from 2.5.4 (ide-buffer-switch-two-keys, ide-save-100x20-keys, oom-repl-global) are in the run notes, not in these reviews.",
+      "status": "REVIEWED"
+    },
+    "gc-session": {
+      "checks": [
+        {
+          "equals": "gc-session",
+          "pointer": "/gate"
+        },
+        {
+          "equals": "FAIL",
+          "pointer": "/status"
+        },
+        {
+          "equals": true,
+          "pointer": "/no_regression_vs_254"
+        },
+        {
+          "equals": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b",
+          "pointer": "/world/medium_sha"
+        },
+        {
+          "equals": "592b2c71c30901d2bb9599d2324678be5cd910865fbbfaf888c5d28ecb2e701f",
+          "pointer": "/world/elf_sha"
+        },
+        {
+          "equals": 1070,
+          "pointer": "/ceiling/live_cells"
+        },
+        {
+          "equals": 1027,
+          "pointer": "/highest_peak_live_cells"
+        },
+        {
+          "equals": 43,
+          "pointer": "/headroom_at_highest_peak"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/0/status_255"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/1/status_255"
+        },
+        {
+          "equals": "STALL",
+          "pointer": "/scenarios/2/status_255"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/3/status_255"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/4/status_255"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/5/status_255"
+        },
+        {
+          "equals": "STALL",
+          "pointer": "/scenarios/6/status_255"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/7/status_255"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/0/status_254"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/1/status_254"
+        },
+        {
+          "equals": "STALL",
+          "pointer": "/scenarios/2/status_254"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/3/status_254"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/4/status_254"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/5/status_254"
+        },
+        {
+          "equals": "STALL",
+          "pointer": "/scenarios/6/status_254"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/scenarios/7/status_254"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/0/collections/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/1/collections/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/2/collections/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/3/collections/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/4/collections/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/5/collections/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/6/collections/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/7/collections/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/0/peak_live_cells/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/1/peak_live_cells/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/2/peak_live_cells/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/3/peak_live_cells/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/4/peak_live_cells/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/5/peak_live_cells/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/6/peak_live_cells/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/7/peak_live_cells/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/0/peak_arena_bytes/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/1/peak_arena_bytes/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/2/peak_arena_bytes/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/3/peak_arena_bytes/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/4/peak_arena_bytes/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/5/peak_arena_bytes/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/6/peak_arena_bytes/delta"
+        },
+        {
+          "equals": 0,
+          "pointer": "/scenarios/7/peak_arena_bytes/delta"
+        }
+      ],
+      "receipt": {
+        "bytes": 14287,
+        "path": "build/card-255-gc-r1/summary.json",
+        "sha256": "7c5cd2113951a58a6817aef25594b4d0949f3836da94235b0fbf27d1c374dffa"
+      },
+      "scope_note": "GC-stress session on the 2.5.5 Seed medium (byte-identical to the Final medium; forced collection at every allocation of each measured transition; emulator). Status FAIL by the committed rules, bound as recorded and not reworded: history10 and history-home-delete-refill250 STALL on a pre-existing display defect, exactly as on the 2.5.4 Final. Six of eight scenarios PASS; collections, allocations and both peaks equal the 2.5.4 Final in every scenario; headroom at the highest peak 43 of 1,070 cells; no out-of-memory. The first pending32 attempt ended in a breakpoint timeout (a coincidence of driver and emulator; mechanism inferred); it was not reproduced in seven repeats, five on the sealed 2.5.5 Final and two on the sealed 2.5.4 Final (build/card-255-gc-pending32-r1/notes.txt; receipts final255-1, final255-2, final255-3, final255-4, final255-5, lite-1, lite-2). No scenario covers the IDE editor under forced collection. Whether the release ships with this FAIL is the owner decision; it is bound through the authorization record (owner word 2026-10-07T21:42:44Z in the observations file).",
+      "status": "FAIL"
+    },
+    "owner-rows": {
+      "checks": [
+        {
+          "equals": "PASS",
+          "pointer": "/status"
+        },
+        {
+          "equals": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b",
+          "pointer": "/medium/sha256"
+        },
+        {
+          "equals": "MEASURED",
+          "pointer": "/rows/0/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/1/status"
+        },
+        {
+          "equals": "MEASURED",
+          "pointer": "/rows/2/status"
+        },
+        {
+          "equals": "MEASURED",
+          "pointer": "/rows/3/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/4/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/5/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/6/status"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/rows/7/status"
+        },
+        {
+          "equals": "FINDING",
+          "pointer": "/rows/8/status"
+        },
+        {
+          "equals": "FINDING",
+          "pointer": "/rows/9/status"
+        },
+        {
+          "equals": [
+            "keymap seam rows (unchanged against 2.5.4; emulator rows identical)",
+            "the long checklist rows",
+            "$D703 check (stays open on hardware)",
+            "held-key counts at column 35 and at line 20",
+            "a 2.5.4 held-key count on the device for comparison (none exists)"
+          ],
+          "pointer": "/not_done"
+        }
+      ],
+      "receipt": {
+        "bytes": 4747,
+        "path": "build/release-v2.5.5/owner-rows-r1.json",
+        "sha256": "d717ffe620faed04508f46d5ac54089ec844131d924d355c9ae78ca0df635552"
+      },
+      "status": "PASS"
+    },
+    "paired-typing": {
+      "checks": [
+        {
+          "equals": 1146714.175,
+          "pointer": "/baseline/mean_cycles_per_key"
+        },
+        {
+          "equals": 1146716.025,
+          "pointer": "/candidate/mean_cycles_per_key"
+        },
+        {
+          "equals": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b",
+          "pointer": "/candidate/medium_sha256"
+        },
+        {
+          "equals": "592b2c71c30901d2bb9599d2324678be5cd910865fbbfaf888c5d28ecb2e701f",
+          "pointer": "/candidate/elf_sha256"
+        },
+        {
+          "equals": true,
+          "pointer": "/candidate/equal_to_final_d81"
+        }
+      ],
+      "receipt": {
+        "bytes": 1776,
+        "path": "build/release-v2.5.5/paired-typing-r1.json",
+        "sha256": "63db8805866542d891c8ea97c0e2ced80c23b6524194c8322af8a7d0bb078094"
+      },
+      "status": "PASS"
+    },
+    "typing-measure": {
+      "checks": [
+        {
+          "equals": "4f0b76ad395ed861da104960859b8d9416750a00684dd4826a1193b14245523b",
+          "pointer": "/candidate_medium_sha256"
+        },
+        {
+          "equals": "592b2c71c30901d2bb9599d2324678be5cd910865fbbfaf888c5d28ecb2e701f",
+          "pointer": "/candidate_elf_sha256"
+        },
+        {
+          "equals": true,
+          "pointer": "/equal_to_final_d81"
+        },
+        {
+          "equals": 18,
+          "pointer": "/rules_passed"
+        },
+        {
+          "equals": "PASS",
+          "pointer": "/row/status"
+        },
+        {
+          "equals": 124.2,
+          "pointer": "/points/insert-column-1/ms_254"
+        },
+        {
+          "equals": 57.3,
+          "pointer": "/points/insert-column-1/ms_255"
+        },
+        {
+          "equals": 0.461,
+          "pointer": "/points/insert-column-1/ratio"
+        },
+        {
+          "equals": 137.1,
+          "pointer": "/points/insert-column-20/ms_254"
+        },
+        {
+          "equals": 57.3,
+          "pointer": "/points/insert-column-20/ms_255"
+        },
+        {
+          "equals": 0.418,
+          "pointer": "/points/insert-column-20/ratio"
+        },
+        {
+          "equals": 150.0,
+          "pointer": "/points/insert-column-39/ms_254"
+        },
+        {
+          "equals": 57.3,
+          "pointer": "/points/insert-column-39/ms_255"
+        },
+        {
+          "equals": 0.382,
+          "pointer": "/points/insert-column-39/ratio"
+        },
+        {
+          "equals": 153.5,
+          "pointer": "/points/insert-line-20/ms_254"
+        },
+        {
+          "equals": 57.1,
+          "pointer": "/points/insert-line-20/ms_255"
+        },
+        {
+          "equals": 0.372,
+          "pointer": "/points/insert-line-20/ratio"
+        },
+        {
+          "equals": 119.7,
+          "pointer": "/points/backspace-column-20/ms_254"
+        },
+        {
+          "equals": 60.4,
+          "pointer": "/points/backspace-column-20/ms_255"
+        },
+        {
+          "equals": 0.505,
+          "pointer": "/points/backspace-column-20/ratio"
+        },
+        {
+          "equals": 462.9,
+          "pointer": "/points/return-30-characters/ms_254"
+        },
+        {
+          "equals": 416.3,
+          "pointer": "/points/return-30-characters/ms_255"
+        },
+        {
+          "equals": 0.899,
+          "pointer": "/points/return-30-characters/ratio"
+        },
+        {
+          "equals": 14.0,
+          "pointer": "/points/repl-key-to-glyph/ms_254"
+        },
+        {
+          "equals": 14.0,
+          "pointer": "/points/repl-key-to-glyph/ms_255"
+        },
+        {
+          "equals": 1.0,
+          "pointer": "/points/repl-key-to-glyph/ratio"
+        }
+      ],
+      "receipt": {
+        "bytes": 2996,
+        "path": "build/release-v2.5.5/typing-measure-r1.json",
+        "sha256": "09ccb4ca8e52b32435db3ee93ada7e4dc194ab8df3a3cb77dbf67101f5649fec"
+      },
+      "status": "PASS"
+    }
+  },
+  "pending_physical_rows": [
+    "No device driver session: no tool-clock boot receipt and no automated device rows exist for 2.5.5 (as for 2.5.4); boot is an owner stopwatch value",
+    "gc-session FAIL by the committed rules, as in 2.5.4: two of eight scenarios (history10, history-home-delete-refill250) STALL on a pre-existing display defect (recall of a 250-character history entry at the bottom of the screen is drawn over the rows above); six PASS; every figure equals the 2.5.4 Final; no out-of-memory",
+    "The GC session ran on the Seed medium (byte-identical to the Final medium); on the sealed Final only pending32 was repeated (five runs, all PASS)",
+    "No GC scenario covers the IDE editor under forced collection",
+    "Every typing figure is an emulator measurement; on the device only the owner impression and two held-key counts exist (227 characters in 10 s in the editor, 202 at the prompt); the keyboard repeat rate was not measured and no 2.5.4 device count exists",
+    "Finding: Backspace in the IDE editor is still slightly delayed on the device, more so when the key is held (owner)",
+    "Finding (pre-existing since 2.5.0, documented, not a 2.5.5 matter): Return at the empty L65> prompt leaves Comfort for the native prompt",
+    "Not recorded: whether the MEGA65 was power-cycled before the upload",
+    "Not done on the device: keymap seam rows (unchanged against 2.5.4), the long checklist rows, held-key counts at column 35 and line 20",
+    "$D703 check: open on hardware (emulator probe survived; emulator DMA semantics not shown)",
+    "Edit persistence with a RUN/STOP in the middle of a key burst: emulator rows only (not possible by hand on the device); the physical RUN/STOP row was at idle",
+    "Carried from 2.5.4 and not re-tested on the device: type-ahead typed while the editor opens is lost; (m65d-remount) takes very long",
+    "Not green in the emulator and unchanged from 2.5.4: ide-buffer-switch-two-keys and ide-save-100x20-keys (harness expectation), oom-repl-global (known behaviour)",
+    "Physical IDE C-x C-c remains unavailable (known issue; C-x q is the supported exit)"
+  ],
+  "status": "FAIL-GATE-RECORDED: gc-session"
+}

@@ -1,0 +1,2983 @@
+{
+ "format": "card255-rows-v1",
+ "status": "2.5.5 Seed row table.  New rows only: group l2 (behaviour that lever L2 could break) and the measured typing row.  l2 expectations are filled by c255_row_oracles.py (oracles on the preflight world, then table); a table without an `oracle` key is the draft form, in which every mark is NOT-DERIVED.",
+ "authority": "f6333f4ae4193245493909e74407d95ba6df10f0",
+ "regression": {
+  "rule": "the 2.5.4 emulator rows are run UNCHANGED on the 2.5.5 Seed medium and must give the 2.5.4 results",
+  "tables": [
+   "tools/host-lisp/c254_rows_20261004.json",
+   "tools/host-lisp/c253_rows_20261001.json",
+   "tools/host-lisp/c253_rows_r8_20261003.json"
+  ],
+  "sessions": "all sessions of c254_rows.py (repl, lib1, oom-rp1, e3, seam, disk-h, reg-repl, reg-disk, reg-ide, reg-oom)",
+  "reference": "the reviewed 2.5.4 row runs (build/card-254-rows-r1c and its review); texts must be equal, the 2.5.4 timing rules stay",
+  "e3_note": "the E3 rows of the 2.5.4 table are the device-side check of what c255_e3_product.py proves on the host: with L2 the editor has NO per-key store left, so on 2.5.5 every e3-* row rests on the publication alone"
+ },
+ "format_change": "vs card254-rows-v1: group l2 rows carry expected.script (sessions of key codes through the real (ide NAME) entry, end = exit | abort-idle), expected.checks (reenter-screen, saved-file, buffer-names, repl-value, save-result, stop-text) and optionally expected.prefix_rule; the typing row carries expected.rule (machine-readable pass rule)",
+ "screen_rule": "as c254_rows_20261004.json",
+ "key_codes": {
+  "C-x": 24,
+  "q": 113,
+  "C-n (next buffer after C-x)": 14,
+  "C-p (previous buffer after C-x)": 16,
+  "RET": 13,
+  "DEL": 20
+ },
+ "sessions": {
+  "l2": [
+   "l2-type-exit-reenter",
+   "l2-return-backspace-exit",
+   "l2-two-buffers-switch-exit",
+   "l2-switch-back-and-forth",
+   "l2-save-buffer-left-by-switch",
+   "l2-abort-idle-after-switch",
+   "l2-abort-mid-burst-after-switch",
+   "l2-save-after-abort",
+   "l2-eval-buffer-after-edits",
+   "l2-eval-buffer-after-abort",
+   "l2-abort-reenter-type-exit",
+   "l2-abort-second-buffer-reenter-first",
+   "l2-fresh-buffer-abort-at-entry",
+   "l2-long-typing-with-collections"
+  ],
+  "typing": [
+   "typing-key-cost"
+  ]
+ },
+ "session_notes": {
+  "l2": "ONE fresh boot for the whole group is wrong: rows share buffer names (one, two, ev).  Each row starts with (set-symbol-value (quote ide-buffers) nil) as its first REPL step, or runs in its own boot; rows with a RUN/STOP need the stop-probe row first.  Never in the boot of the e3 or seam groups.",
+  "typing": "two boots (control, seed), each on a fresh medium copy; one Xemu at a time; after a STALL of a driver its Xemu can linger: check with pgrep before the next boot, never kill a foreign process"
+ },
+ "rows": [
+  {
+   "id": "l2-type-exit-reenter",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "type, exit, re-enter: the text is the typed text (one store at entry, one at exit)",
+   "setup": [],
+   "steps": [
+    "(ide \"one\")",
+    "hello",
+    "C-x q",
+    "(ide \"one\")",
+    " world",
+    "C-x q",
+    "(ide \"one\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "after the second exit the buffer reads \"hello world\"; nothing typed is lost although no key stores the buffer",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       104,
+       101,
+       108,
+       108,
+       111,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "one",
+      "keys": [
+       32,
+       119,
+       111,
+       114,
+       108,
+       100,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "reenter-screen",
+      "buffer": "one",
+      "how": "(ide \"one\"), read the text area of the screen, C-x q",
+      "text": "hello world",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "buffer-names",
+      "names": [
+       "one"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "(ide-buffers)"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "hello"
+        ],
+        "source": "hello",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "hello world"
+        ],
+        "source": "hello world",
+        "point": [
+         0,
+         11
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "one"
+     ],
+     "buffers": {
+      "one": {
+       "lines": [
+        "hello world"
+       ],
+       "source": "hello world",
+       "point": [
+        0,
+        11
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": []
+  },
+  {
+   "id": "l2-return-backspace-exit",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "Return, Backspace across a line join, exit, re-enter",
+   "setup": [],
+   "steps": [
+    "(ide \"one\")",
+    "ab RET cd DEL RET RET e DEL DEL f",
+    "C-x q",
+    "(ide \"one\")",
+    "read screen",
+    "C-x q"
+   ],
+   "expect": "the lines after re-entry are the edited lines (Return and the join are the two expensive keys of the card)",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       97,
+       98,
+       13,
+       99,
+       100,
+       20,
+       13,
+       13,
+       101,
+       20,
+       20,
+       102,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "reenter-screen",
+      "buffer": "one",
+      "how": "(ide \"one\"), read the text area of the screen, C-x q",
+      "text": "ab\nc\nf",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "ab",
+         "c",
+         "f"
+        ],
+        "source": "ab\nc\nf",
+        "point": [
+         2,
+         1
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "one"
+     ],
+     "buffers": {
+      "one": {
+       "lines": [
+        "ab",
+        "c",
+        "f"
+       ],
+       "source": "ab\nc\nf",
+       "point": [
+        2,
+        1
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": []
+  },
+  {
+   "id": "l2-two-buffers-switch-exit",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "two buffers: type in the second, switch to the first with C-x C-n, type there, exit",
+   "setup": [],
+   "steps": [
+    "(ide \"one\")",
+    "first",
+    "C-x q",
+    "(ide \"two\")",
+    "second",
+    "C-x C-n",
+    "!",
+    "C-x q",
+    "(ide \"one\") read C-x q",
+    "(ide \"two\") read C-x q"
+   ],
+   "expect": "the buffer left by the switch keeps \"second\"; the buffer switched to has the key typed after the switch",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       102,
+       105,
+       114,
+       115,
+       116,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "two",
+      "keys": [
+       115,
+       101,
+       99,
+       111,
+       110,
+       100,
+       24,
+       14,
+       33,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "reenter-screen",
+      "buffer": "one",
+      "how": "(ide \"one\"), read the text area of the screen, C-x q",
+      "text": "first!",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "reenter-screen",
+      "buffer": "two",
+      "how": "(ide \"two\"), read the text area of the screen, C-x q",
+      "text": "second",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "buffer-names",
+      "names": [
+       "one",
+       "two"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "(ide-buffers)"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "first!"
+        ],
+        "source": "first!",
+        "point": [
+         0,
+         6
+        ]
+       },
+       "two": {
+        "lines": [
+         "second"
+        ],
+        "source": "second",
+        "point": [
+         0,
+         6
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "one",
+      "two"
+     ],
+     "buffers": {
+      "one": {
+       "lines": [
+        "first!"
+       ],
+       "source": "first!",
+       "point": [
+        0,
+        6
+       ]
+      },
+      "two": {
+       "lines": [
+        "second"
+       ],
+       "source": "second",
+       "point": [
+        0,
+        6
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": []
+  },
+  {
+   "id": "l2-switch-back-and-forth",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "three switches with edits in between (C-x C-p / C-x C-n), exit",
+   "setup": [],
+   "steps": [
+    "(ide \"one\")",
+    "first",
+    "C-x q",
+    "(ide \"two\")",
+    "ab",
+    "C-x C-p",
+    "x",
+    "C-x C-n",
+    "y RET z",
+    "C-x C-p",
+    "w",
+    "C-x q",
+    "re-enter both, read"
+   ],
+   "expect": "every buffer holds exactly the keys typed while it was current",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       102,
+       105,
+       114,
+       115,
+       116,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "two",
+      "keys": [
+       97,
+       98,
+       24,
+       16,
+       120,
+       24,
+       14,
+       121,
+       13,
+       122,
+       24,
+       16,
+       119,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "reenter-screen",
+      "buffer": "one",
+      "how": "(ide \"one\"), read the text area of the screen, C-x q",
+      "text": "firstxw",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "reenter-screen",
+      "buffer": "two",
+      "how": "(ide \"two\"), read the text area of the screen, C-x q",
+      "text": "aby\nz",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstxw"
+        ],
+        "source": "firstxw",
+        "point": [
+         0,
+         7
+        ]
+       },
+       "two": {
+        "lines": [
+         "aby",
+         "z"
+        ],
+        "source": "aby\nz",
+        "point": [
+         1,
+         1
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "one",
+      "two"
+     ],
+     "buffers": {
+      "one": {
+       "lines": [
+        "firstxw"
+       ],
+       "source": "firstxw",
+       "point": [
+        0,
+        7
+       ]
+      },
+      "two": {
+       "lines": [
+        "aby",
+        "z"
+       ],
+       "source": "aby\nz",
+       "point": [
+        1,
+        1
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": []
+  },
+  {
+   "id": "l2-save-buffer-left-by-switch",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "save, from the REPL, a buffer that was last left by a SWITCH (never by an exit)",
+   "setup": [],
+   "steps": [
+    "(ide \"one\") alpha C-x q",
+    "(ide \"two\") beta C-x q",
+    "(ide \"one\")",
+    "RET gamma",
+    "C-x C-n",
+    "-delta",
+    "C-x q",
+    "(save-buffer-to \"l2one\" \"one\")",
+    "(save-buffer-to \"l2two\" \"two\")",
+    "host readback of both files"
+   ],
+   "expect": "file L2ONE holds the text of buffer one INCLUDING the keys typed before the switch; file L2TWO holds two",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       97,
+       108,
+       112,
+       104,
+       97,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "two",
+      "keys": [
+       98,
+       101,
+       116,
+       97,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "one",
+      "keys": [
+       13,
+       103,
+       97,
+       109,
+       109,
+       97,
+       24,
+       14,
+       45,
+       100,
+       101,
+       108,
+       116,
+       97,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "saved-file",
+      "buffer": "one",
+      "file": "l2one",
+      "how": "(save-buffer-to \"l2one\" \"one\"), host readback of the file from the D81: byte-identical",
+      "text": "alpha\ngamma",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "saved-file",
+      "buffer": "two",
+      "file": "l2two",
+      "how": "(save-buffer-to \"l2two\" \"two\"), host readback of the file from the D81: byte-identical",
+      "text": "beta-delta",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "save-result",
+      "text": "T",
+      "why": "device return value of save-buffer-to (native disk service)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "device return value of save-buffer-to (native disk service)"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "alpha"
+        ],
+        "source": "alpha",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "two",
+       "one"
+      ],
+      "buffers": {
+       "two": {
+        "lines": [
+         "beta"
+        ],
+        "source": "beta",
+        "point": [
+         0,
+         4
+        ]
+       },
+       "one": {
+        "lines": [
+         "alpha"
+        ],
+        "source": "alpha",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "two",
+       "one"
+      ],
+      "buffers": {
+       "two": {
+        "lines": [
+         "beta-delta"
+        ],
+        "source": "beta-delta",
+        "point": [
+         0,
+         10
+        ]
+       },
+       "one": {
+        "lines": [
+         "alpha",
+         "gamma"
+        ],
+        "source": "alpha\ngamma",
+        "point": [
+         1,
+         5
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "two",
+      "one"
+     ],
+     "buffers": {
+      "two": {
+       "lines": [
+        "beta-delta"
+       ],
+       "source": "beta-delta",
+       "point": [
+        0,
+        10
+       ]
+      },
+      "one": {
+       "lines": [
+        "alpha",
+        "gamma"
+       ],
+       "source": "alpha\ngamma",
+       "point": [
+        1,
+        5
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [
+    "the save is a native disk transaction; the host gives the text the save READS (%ide-buffer-source)"
+   ]
+  },
+  {
+   "id": "l2-abort-idle-after-switch",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "RUN/STOP at the idle editor after a switch: both buffers complete",
+   "setup": [],
+   "steps": [
+    "(ide \"one\") first C-x q",
+    "(ide \"two\")",
+    "ab",
+    "C-x C-p",
+    "x",
+    "C-x C-n",
+    "y RET z",
+    "wait until the screen is stable",
+    "inject STOP (idle)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"one\") read C-x q",
+    "(ide \"two\") read C-x q"
+   ],
+   "expect": "after the abort buffer one reads \"firstx\" and buffer two the two lines typed there: the buffer left by the switch was stored by the switch, the current one is the published buffer (E3)",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       102,
+       105,
+       114,
+       115,
+       116,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "two",
+      "keys": [
+       97,
+       98,
+       24,
+       16,
+       120,
+       24,
+       14,
+       121,
+       13,
+       122
+      ],
+      "end": "abort-idle"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "stop-text",
+      "text": "*** STOPPED (RUN/STOP)",
+      "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)"
+      }
+     },
+     {
+      "kind": "reenter-screen",
+      "buffer": "one",
+      "how": "(ide \"one\"), read the text area of the screen, C-x q",
+      "text": "firstx",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "reenter-screen",
+      "buffer": "two",
+      "how": "(ide \"two\"), read the text area of the screen, C-x q",
+      "text": "aby\nz",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "buffer-names",
+      "names": [
+       "two",
+       "one"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "(ide-buffers)"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "two",
+       "one"
+      ],
+      "buffers": {
+       "two": {
+        "lines": [
+         "aby",
+         "z"
+        ],
+        "source": "aby\nz",
+        "point": [
+         1,
+         1
+        ]
+       },
+       "one": {
+        "lines": [
+         "firstx"
+        ],
+        "source": "firstx",
+        "point": [
+         0,
+         6
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "two",
+      "one"
+     ],
+     "buffers": {
+      "two": {
+       "lines": [
+        "aby",
+        "z"
+       ],
+       "source": "aby\nz",
+       "point": [
+        1,
+        1
+       ]
+      },
+      "one": {
+       "lines": [
+        "firstx"
+       ],
+       "source": "firstx",
+       "point": [
+        0,
+        6
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [],
+   "status_rule": "needs the stop-probe row of the 2.5.4 table (RUN/STOP stand-in) to PASS first; else NOT RUN"
+  },
+  {
+   "id": "l2-abort-mid-burst-after-switch",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "RUN/STOP right after the last key of a burst typed after a switch (j-1 / j rule)",
+   "setup": [],
+   "steps": [
+    "(ide \"one\") first C-x q",
+    "(ide \"two\")",
+    "queue ab C-x C-p pqrs RET tu as one burst",
+    "inject STOP (after-last-taken)",
+    "wait *** STOPPED (RUN/STOP) + L65>",
+    "(ide \"one\") read C-x q",
+    "(ide \"two\") read C-x q"
+   ],
+   "expect": "the two buffers equal the host state after j-1 or j accepted keys of the burst (j = keys counted by C2K_INPUT_EVENTS_TAKEN at the STOP); never fewer; a buffer that was left by the switch is never behind the switch",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       102,
+       105,
+       114,
+       115,
+       116,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "two",
+      "keys": [
+       97,
+       98,
+       24,
+       16,
+       112,
+       113,
+       114,
+       115,
+       13,
+       116,
+       117
+      ],
+      "end": "abort-idle"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "stop-text",
+      "text": "*** STOPPED (RUN/STOP)",
+      "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "prefix_rule": true,
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstpqrs",
+         "tu"
+        ],
+        "source": "firstpqrs\ntu",
+        "point": [
+         1,
+         2
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "one",
+      "two"
+     ],
+     "buffers": {
+      "one": {
+       "lines": [
+        "firstpqrs",
+        "tu"
+       ],
+       "source": "firstpqrs\ntu",
+       "point": [
+        1,
+        2
+       ]
+      },
+      "two": {
+       "lines": [
+        "ab"
+       ],
+       "source": "ab",
+       "point": [
+        0,
+        2
+       ]
+      }
+     }
+    },
+    "after_m_keys_of_last_session": [
+     {
+      "names": [
+       "two",
+       "one"
+      ],
+      "buffers": {
+       "two": {
+        "lines": [
+         ""
+        ],
+        "source": "",
+        "point": [
+         0,
+         0
+        ]
+       },
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "two",
+       "one"
+      ],
+      "buffers": {
+       "two": {
+        "lines": [
+         "a"
+        ],
+        "source": "a",
+        "point": [
+         0,
+         1
+        ]
+       },
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "two",
+       "one"
+      ],
+      "buffers": {
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       },
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "two",
+       "one"
+      ],
+      "buffers": {
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       },
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "first"
+        ],
+        "source": "first",
+        "point": [
+         0,
+         5
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstp"
+        ],
+        "source": "firstp",
+        "point": [
+         0,
+         6
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstpq"
+        ],
+        "source": "firstpq",
+        "point": [
+         0,
+         7
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstpqr"
+        ],
+        "source": "firstpqr",
+        "point": [
+         0,
+         8
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstpqrs"
+        ],
+        "source": "firstpqrs",
+        "point": [
+         0,
+         9
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstpqrs",
+         ""
+        ],
+        "source": "firstpqrs\n",
+        "point": [
+         1,
+         0
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstpqrs",
+         "t"
+        ],
+        "source": "firstpqrs\nt",
+        "point": [
+         1,
+         1
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "firstpqrs",
+         "tu"
+        ],
+        "source": "firstpqrs\ntu",
+        "point": [
+         1,
+         2
+        ]
+       },
+       "two": {
+        "lines": [
+         "ab"
+        ],
+        "source": "ab",
+        "point": [
+         0,
+         2
+        ]
+       }
+      }
+     }
+    ],
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [
+    "where the device aborts; j is read after the abort"
+   ],
+   "status_rule": "compare BOTH buffers with after_m_keys_of_last_session[m] for m in (j-1, j); FAIL if neither matches"
+  },
+  {
+   "id": "l2-save-after-abort",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "save, from the REPL, the buffer of an editor that was aborted at idle (published, never stored by an exit)",
+   "setup": [],
+   "steps": [
+    "(ide \"one\")",
+    "(defun l2g () RET   7)",
+    "wait stable",
+    "inject STOP (idle)",
+    "(save-buffer-to \"l2ab\" \"one\")",
+    "host readback"
+   ],
+   "expect": "file L2AB holds both lines: the reader of the published buffer includes the line that was being edited",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       40,
+       100,
+       101,
+       102,
+       117,
+       110,
+       32,
+       108,
+       50,
+       103,
+       32,
+       40,
+       41,
+       13,
+       32,
+       32,
+       55,
+       41
+      ],
+      "end": "abort-idle"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "stop-text",
+      "text": "*** STOPPED (RUN/STOP)",
+      "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)"
+      }
+     },
+     {
+      "kind": "saved-file",
+      "buffer": "one",
+      "file": "l2ab",
+      "how": "(save-buffer-to \"l2ab\" \"one\"), host readback of the file from the D81: byte-identical",
+      "text": "(defun l2g ()\n    7)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "save-result",
+      "text": "T",
+      "why": "device return value of save-buffer-to",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "device return value of save-buffer-to"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "(defun l2g ()",
+         "    7)"
+        ],
+        "source": "(defun l2g ()\n    7)",
+        "point": [
+         1,
+         6
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "one"
+     ],
+     "buffers": {
+      "one": {
+       "lines": [
+        "(defun l2g ()",
+        "    7)"
+       ],
+       "source": "(defun l2g ()\n    7)",
+       "point": [
+        1,
+        6
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [],
+   "status_rule": "needs stop-probe; FAIL if the file lacks the last line"
+  },
+  {
+   "id": "l2-eval-buffer-after-edits",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "eval-buffer reads the buffer as edited: after an exit, and after a re-entry that changes it",
+   "setup": [],
+   "steps": [
+    "(ide \"ev\")",
+    "(defun l2f () 42)",
+    "C-x q",
+    "(eval-buffer \"ev\")",
+    "(l2f)",
+    "(ide \"ev\")",
+    "DEL DEL DEL 43)",
+    "C-x q",
+    "(eval-buffer \"ev\")",
+    "(l2f)"
+   ],
+   "expect": "(l2f) prints 42 after the first eval-buffer and 43 after the second",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "ev",
+      "keys": [
+       40,
+       100,
+       101,
+       102,
+       117,
+       110,
+       32,
+       108,
+       50,
+       102,
+       32,
+       40,
+       41,
+       32,
+       52,
+       50,
+       41,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "ev",
+      "keys": [
+       20,
+       20,
+       20,
+       52,
+       51,
+       41,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "reenter-screen",
+      "buffer": "ev",
+      "how": "(ide \"ev\"), read the text area of the screen, C-x q",
+      "text": "(defun l2f () 43)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "repl-value",
+      "input": "(l2f)",
+      "text": "43",
+      "after": "second (eval-buffer \"ev\")",
+      "why": "eval-buffer runs the device compiler; the host derives the SOURCE text it reads, not the value",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "eval-buffer runs the device compiler; the host derives the SOURCE text it reads, not the value"
+      }
+     },
+     {
+      "kind": "repl-value",
+      "input": "(l2f)",
+      "text": "42",
+      "after": "first (eval-buffer \"ev\")",
+      "why": "as above",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "as above"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "ev"
+      ],
+      "buffers": {
+       "ev": {
+        "lines": [
+         "(defun l2f () 42)"
+        ],
+        "source": "(defun l2f () 42)",
+        "point": [
+         0,
+         17
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "ev"
+      ],
+      "buffers": {
+       "ev": {
+        "lines": [
+         "(defun l2f () 43)"
+        ],
+        "source": "(defun l2f () 43)",
+        "point": [
+         0,
+         17
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "ev"
+     ],
+     "buffers": {
+      "ev": {
+       "lines": [
+        "(defun l2f () 43)"
+       ],
+       "source": "(defun l2f () 43)",
+       "point": [
+        0,
+        17
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": []
+  },
+  {
+   "id": "l2-eval-buffer-after-abort",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "eval-buffer after RUN/STOP at the idle editor reads the published buffer",
+   "setup": [],
+   "steps": [
+    "(ide \"ev\") (defun l2h () 5) C-x q",
+    "(ide \"ev\")",
+    "DEL DEL 6)",
+    "wait stable",
+    "inject STOP (idle)",
+    "(eval-buffer \"ev\")",
+    "(l2h)"
+   ],
+   "expect": "(l2h) prints 6: the edit made before the abort is what eval-buffer compiles",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "ev",
+      "keys": [
+       40,
+       100,
+       101,
+       102,
+       117,
+       110,
+       32,
+       108,
+       50,
+       104,
+       32,
+       40,
+       41,
+       32,
+       53,
+       41,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "ev",
+      "keys": [
+       20,
+       20,
+       54,
+       41
+      ],
+      "end": "abort-idle"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "stop-text",
+      "text": "*** STOPPED (RUN/STOP)",
+      "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)"
+      }
+     },
+     {
+      "kind": "reenter-screen",
+      "buffer": "ev",
+      "how": "(ide \"ev\"), read the text area of the screen, C-x q",
+      "text": "(defun l2h () 6)",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "repl-value",
+      "input": "(l2h)",
+      "text": "6",
+      "after": "(eval-buffer \"ev\")",
+      "why": "device compiler path",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "device compiler path"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "ev"
+      ],
+      "buffers": {
+       "ev": {
+        "lines": [
+         "(defun l2h () 5)"
+        ],
+        "source": "(defun l2h () 5)",
+        "point": [
+         0,
+         16
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "ev"
+      ],
+      "buffers": {
+       "ev": {
+        "lines": [
+         "(defun l2h () 6)"
+        ],
+        "source": "(defun l2h () 6)",
+        "point": [
+         0,
+         16
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "ev"
+     ],
+     "buffers": {
+      "ev": {
+       "lines": [
+        "(defun l2h () 6)"
+       ],
+       "source": "(defun l2h () 6)",
+       "point": [
+        0,
+        16
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [],
+   "status_rule": "needs stop-probe"
+  },
+  {
+   "id": "l2-abort-reenter-type-exit",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "abort at idle, re-enter, type, exit: nothing of the first session is lost, nothing doubled",
+   "setup": [],
+   "steps": [
+    "(ide \"one\")",
+    "abc",
+    "inject STOP (idle)",
+    "(ide \"one\")",
+    "def",
+    "C-x q",
+    "(ide \"one\") read C-x q"
+   ],
+   "expect": "the buffer reads \"abcdef\"",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       97,
+       98,
+       99
+      ],
+      "end": "abort-idle"
+     },
+     {
+      "ide": "one",
+      "keys": [
+       100,
+       101,
+       102,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "stop-text",
+      "text": "*** STOPPED (RUN/STOP)",
+      "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)"
+      }
+     },
+     {
+      "kind": "reenter-screen",
+      "buffer": "one",
+      "how": "(ide \"one\"), read the text area of the screen, C-x q",
+      "text": "abcdef",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "abc"
+        ],
+        "source": "abc",
+        "point": [
+         0,
+         3
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "abcdef"
+        ],
+        "source": "abcdef",
+        "point": [
+         0,
+         6
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "one"
+     ],
+     "buffers": {
+      "one": {
+       "lines": [
+        "abcdef"
+       ],
+       "source": "abcdef",
+       "point": [
+        0,
+        6
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [],
+   "status_rule": "needs stop-probe"
+  },
+  {
+   "id": "l2-abort-second-buffer-reenter-first",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "abort in a second buffer, then work in the first",
+   "setup": [],
+   "steps": [
+    "(ide \"one\") abc C-x q",
+    "(ide \"two\")",
+    "xy RET",
+    "inject STOP (idle)",
+    "(ide \"one\")",
+    "!",
+    "C-x q",
+    "re-enter both, read"
+   ],
+   "expect": "one reads \"abc!\", two reads \"xy\" and an empty second line",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "one",
+      "keys": [
+       97,
+       98,
+       99,
+       24,
+       113
+      ],
+      "end": "exit"
+     },
+     {
+      "ide": "two",
+      "keys": [
+       120,
+       121,
+       13
+      ],
+      "end": "abort-idle"
+     },
+     {
+      "ide": "one",
+      "keys": [
+       33,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "stop-text",
+      "text": "*** STOPPED (RUN/STOP)",
+      "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)"
+      }
+     },
+     {
+      "kind": "reenter-screen",
+      "buffer": "one",
+      "how": "(ide \"one\"), read the text area of the screen, C-x q",
+      "text": "abc!",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "reenter-screen",
+      "buffer": "two",
+      "how": "(ide \"two\"), read the text area of the screen, C-x q",
+      "text": "xy\n",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     },
+     {
+      "kind": "buffer-names",
+      "names": [
+       "one",
+       "two"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "(ide-buffers)"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "one"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "abc"
+        ],
+        "source": "abc",
+        "point": [
+         0,
+         3
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "two",
+       "one"
+      ],
+      "buffers": {
+       "two": {
+        "lines": [
+         "xy",
+         ""
+        ],
+        "source": "xy\n",
+        "point": [
+         1,
+         0
+        ]
+       },
+       "one": {
+        "lines": [
+         "abc"
+        ],
+        "source": "abc",
+        "point": [
+         0,
+         3
+        ]
+       }
+      }
+     },
+     {
+      "names": [
+       "one",
+       "two"
+      ],
+      "buffers": {
+       "one": {
+        "lines": [
+         "abc!"
+        ],
+        "source": "abc!",
+        "point": [
+         0,
+         4
+        ]
+       },
+       "two": {
+        "lines": [
+         "xy",
+         ""
+        ],
+        "source": "xy\n",
+        "point": [
+         1,
+         0
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "one",
+      "two"
+     ],
+     "buffers": {
+      "one": {
+       "lines": [
+        "abc!"
+       ],
+       "source": "abc!",
+       "point": [
+        0,
+        4
+       ]
+      },
+      "two": {
+       "lines": [
+        "xy",
+        ""
+       ],
+       "source": "xy\n",
+       "point": [
+        1,
+        0
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [],
+   "status_rule": "needs stop-probe"
+  },
+  {
+   "id": "l2-fresh-buffer-abort-at-entry",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "a NEW buffer name, RUN/STOP before any key: the buffer exists (the one store at entry)",
+   "setup": [],
+   "steps": [
+    "(ide \"fresh\")",
+    "wait stable",
+    "inject STOP (idle)",
+    "(ide-buffers)"
+   ],
+   "expect": "(ide-buffers) lists \"fresh\" (2.5.4 stored it before the first key; 2.5.5 stores it once at entry)",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "fresh",
+      "keys": [],
+      "end": "abort-idle"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "stop-text",
+      "text": "*** STOPPED (RUN/STOP)",
+      "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)",
+      "derivation": {
+       "mark": "NOT-DERIVED",
+       "why": "emulator RUN/STOP stand-in transport (row stop-probe of the 2.5.4 table)"
+      }
+     },
+     {
+      "kind": "buffer-names",
+      "names": [
+       "fresh"
+      ],
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "(ide-buffers)"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "fresh"
+      ],
+      "buffers": {
+       "fresh": {
+        "lines": [
+         ""
+        ],
+        "source": "",
+        "point": [
+         0,
+         0
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "fresh"
+     ],
+     "buffers": {
+      "fresh": {
+       "lines": [
+        ""
+       ],
+       "source": "",
+       "point": [
+        0,
+        0
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [],
+   "status_rule": "needs stop-probe"
+  },
+  {
+   "id": "l2-long-typing-with-collections",
+   "group": "l2",
+   "session": "l2",
+   "driver": "l2",
+   "title": "148 keys over four lines without leaving the editor (several collections), exit, re-enter",
+   "setup": [],
+   "steps": [
+    "(ide \"long\")",
+    "four lines of 36 characters, each ended by RET",
+    "C-x q",
+    "(ide \"long\") read C-x q"
+   ],
+   "expect": "all four lines and the empty fifth are intact; gc_runs grew during the typing",
+   "oracle": "c255_row_oracles.py oracles (product IDE world of the preflight, real (ide NAME) entry; same script on the 2.5.4 product IDE world: results must be equal)",
+   "expected": {
+    "script": [
+     {
+      "ide": "long",
+      "keys": [
+       40,
+       115,
+       101,
+       116,
+       113,
+       32,
+       118,
+       48,
+       32,
+       40,
+       108,
+       105,
+       115,
+       116,
+       32,
+       49,
+       32,
+       50,
+       32,
+       51,
+       32,
+       52,
+       32,
+       53,
+       32,
+       54,
+       32,
+       55,
+       32,
+       56,
+       32,
+       57,
+       41,
+       41,
+       13,
+       40,
+       115,
+       101,
+       116,
+       113,
+       32,
+       118,
+       49,
+       32,
+       40,
+       108,
+       105,
+       115,
+       116,
+       32,
+       49,
+       32,
+       50,
+       32,
+       51,
+       32,
+       52,
+       32,
+       53,
+       32,
+       54,
+       32,
+       55,
+       32,
+       56,
+       32,
+       57,
+       41,
+       41,
+       13,
+       40,
+       115,
+       101,
+       116,
+       113,
+       32,
+       118,
+       50,
+       32,
+       40,
+       108,
+       105,
+       115,
+       116,
+       32,
+       49,
+       32,
+       50,
+       32,
+       51,
+       32,
+       52,
+       32,
+       53,
+       32,
+       54,
+       32,
+       55,
+       32,
+       56,
+       32,
+       57,
+       41,
+       41,
+       13,
+       40,
+       115,
+       101,
+       116,
+       113,
+       32,
+       118,
+       51,
+       32,
+       40,
+       108,
+       105,
+       115,
+       116,
+       32,
+       49,
+       32,
+       50,
+       32,
+       51,
+       32,
+       52,
+       32,
+       53,
+       32,
+       54,
+       32,
+       55,
+       32,
+       56,
+       32,
+       57,
+       41,
+       41,
+       13,
+       24,
+       113
+      ],
+      "end": "exit"
+     }
+    ],
+    "checks": [
+     {
+      "kind": "reenter-screen",
+      "buffer": "long",
+      "how": "(ide \"long\"), read the text area of the screen, C-x q",
+      "text": "(setq v0 (list 1 2 3 4 5 6 7 8 9))\n(setq v1 (list 1 2 3 4 5 6 7 8 9))\n(setq v2 (list 1 2 3 4 5 6 7 8 9))\n(setq v3 (list 1 2 3 4 5 6 7 8 9))\n",
+      "derivation": {
+       "mark": "HOST-EXECUTED",
+       "what": "source text the reader returns"
+      }
+     }
+    ],
+    "derivation": {
+     "mark": "HOST-EXECUTED",
+     "world": "projected product IDE image, real (ide NAME) entry, real loop",
+     "what": "(ide-buffers), lines after re-entry, source text, point after every session",
+     "not_derived": "screen layout, where the device aborts, native services"
+    },
+    "stored_after_each_session": [
+     {
+      "names": [
+       "long"
+      ],
+      "buffers": {
+       "long": {
+        "lines": [
+         "(setq v0 (list 1 2 3 4 5 6 7 8 9))",
+         "(setq v1 (list 1 2 3 4 5 6 7 8 9))",
+         "(setq v2 (list 1 2 3 4 5 6 7 8 9))",
+         "(setq v3 (list 1 2 3 4 5 6 7 8 9))",
+         ""
+        ],
+        "source": "(setq v0 (list 1 2 3 4 5 6 7 8 9))\n(setq v1 (list 1 2 3 4 5 6 7 8 9))\n(setq v2 (list 1 2 3 4 5 6 7 8 9))\n(setq v3 (list 1 2 3 4 5 6 7 8 9))\n",
+        "point": [
+         4,
+         0
+        ]
+       }
+      }
+     }
+    ],
+    "final": {
+     "names": [
+      "long"
+     ],
+     "buffers": {
+      "long": {
+       "lines": [
+        "(setq v0 (list 1 2 3 4 5 6 7 8 9))",
+        "(setq v1 (list 1 2 3 4 5 6 7 8 9))",
+        "(setq v2 (list 1 2 3 4 5 6 7 8 9))",
+        "(setq v3 (list 1 2 3 4 5 6 7 8 9))",
+        ""
+       ],
+       "source": "(setq v0 (list 1 2 3 4 5 6 7 8 9))\n(setq v1 (list 1 2 3 4 5 6 7 8 9))\n(setq v2 (list 1 2 3 4 5 6 7 8 9))\n(setq v3 (list 1 2 3 4 5 6 7 8 9))\n",
+       "point": [
+        4,
+        0
+       ]
+      }
+     }
+    },
+    "equal_to_254": true
+   },
+   "path": "emulator+device",
+   "forced_gc_variant": true,
+   "new_in_255": true,
+   "host_first": [
+    "the collections happen on the device only (host VM has no heap limit); the row reads gc_runs before and after"
+   ]
+  },
+  {
+   "id": "typing-key-cost",
+   "group": "typing",
+   "session": "typing",
+   "driver": "keycost",
+   "title": "MEASURED: editor cost per key (cycles, TAKE to idle), 2.5.5 Seed medium against the 2.5.4 Final medium",
+   "setup": [],
+   "steps": [
+    "boot the control world (2.5.4 Final medium), run the keycost series",
+    "boot the 2.5.5 Seed medium, run the same series",
+    "c255_row_oracles.py timing --seed <results.json> --control <results.json> --table <this file>"
+   ],
+   "expect": "insert at column 20 at least 40 % cheaper than 2.5.4 in cycles; Backspace at least 35 % cheaper; Return and the join not slower; no growth with the column or the row beyond 5 %; REPL key cost unchanged",
+   "oracle": "method of build/card-254-ide-typing-r1/keycost.py (PC breakpoints at TAKE and EMPTY of c2_kernal_event_poll, DWX cycle counter read while stopped, 7 samples per point, median of the samples without a collection); prediction build/card-255-typing-r1/model.json (fit error up to 5.4 %)",
+   "expected": {
+    "metric": "cycles from TAKE (inc C2K_INPUT_EVENTS_TAKEN) to the start of the idle wait; 40.5 MHz",
+    "measured_254_cycles": {
+     "ide-insert@1": 5028089,
+     "ide-insert@10": 5278359,
+     "ide-insert@20": 5552668,
+     "ide-insert@30": 5827113,
+     "ide-insert@39": 6073800,
+     "ide-backspace@1": 4322249,
+     "ide-backspace@10": 4572501,
+     "ide-backspace@20": 4846841,
+     "ide-backspace@30": 5121291,
+     "ide-backspace@39": 5367973,
+     "ide-return30@30": 18745612,
+     "ide-join30@30": 18785152,
+     "ide-insert-line5@10": 5474991,
+     "ide-insert-line20@10": 6215326,
+     "ide-backspace-line20@10": 5509463,
+     "repl-insert@20": 168822,
+     "repl-backspace@20": 717818,
+     "ide-burst32@32 (TAKE to TAKE step)": 2502382
+    },
+    "measured_254_source": "build/card-254-ide-typing-r1/seed-a/summary.json (2.5.4 Seed medium = Final medium, byte-identical)",
+    "predicted_255_cycles": {
+     "ide-insert@1": 2310180,
+     "ide-insert@10": 2313455,
+     "ide-insert@20": 2313455,
+     "ide-insert@39": 2313455,
+     "ide-backspace@20": 2466245,
+     "ide-return30@30": 16855138,
+     "ide-join30@30": 16673064,
+     "ide-insert-line20@10": 2313455
+    },
+    "predicted_255_ms": {
+     "insert@20": 57.1,
+     "backspace@20": 60.9,
+     "return30": 416.2,
+     "join30": 411.7
+    },
+    "worlds": {
+     "control": {
+      "name": "2.5.4 Final r1",
+      "medium": "build/card-254-final-r1/media-254/c254.d81",
+      "medium_sha": "250fdc763ae9e5b04cf149a6f2a7a3aa9fb293ff8da58e9a703e0c601efaef5d",
+      "elf_sha": "7b951eb9c92bc8797278903465b7483b3168a0eb935237a8f62ea3757f205244"
+     },
+     "seed": {
+      "name": "2.5.5 Seed r1 [PLACEHOLDER P-SEED: set both hashes from the Seed receipts]",
+      "medium": "build/card-255-product-r1/media-255/c255.d81",
+      "medium_sha": null,
+      "elf_sha": null
+     }
+    },
+    "rule": {
+     "ratio_max": [
+      [
+       "insert at column 20: at least 40 % cheaper",
+       "ide-insert",
+       20,
+       0.6
+      ],
+      [
+       "Backspace at column 20: at least 35 % cheaper",
+       "ide-backspace",
+       20,
+       0.65
+      ],
+      [
+       "insert at column 1: at least 40 % cheaper",
+       "ide-insert",
+       1,
+       0.6
+      ],
+      [
+       "insert at column 39: at least 40 % cheaper",
+       "ide-insert",
+       39,
+       0.6
+      ],
+      [
+       "Return at the end of a 30-character line: not slower",
+       "ide-return30",
+       30,
+       1.0
+      ],
+      [
+       "Backspace joining two lines: not slower",
+       "ide-join30",
+       30,
+       1.0
+      ]
+     ],
+     "growth_max": [
+      [
+       "no growth with the column (39 against 1)",
+       [
+        "ide-insert",
+        39
+       ],
+       [
+        "ide-insert",
+        1
+       ],
+       0.05
+      ],
+      [
+       "no growth with the row (line 20 against line 1, column 10)",
+       [
+        "ide-insert-line20",
+        10
+       ],
+       [
+        "ide-insert",
+        10
+       ],
+       0.05
+      ]
+     ],
+     "unchanged": [
+      [
+       "REPL insert unchanged (native code is byte-identical)",
+       "repl-insert",
+       20,
+       0.01
+      ],
+      [
+       "REPL Backspace unchanged",
+       "repl-backspace",
+       20,
+       0.01
+      ]
+     ],
+     "control_reference": [
+      [
+       "the method reproduces the 2.5.4 measurement on the control world",
+       "ide-insert",
+       20,
+       5552668,
+       0.005
+      ]
+     ],
+     "burst": [
+      [
+       "burst of 32: step per coalesced key not slower, ONE render",
+       "ide-burst32",
+       32
+      ]
+     ],
+     "prediction": [
+      [
+       "insert at column 20 against the model",
+       "ide-insert",
+       20,
+       2313455
+      ],
+      [
+       "Backspace at column 20 against the model",
+       "ide-backspace",
+       20,
+       2466245
+      ],
+      [
+       "Return at column 30 against the model",
+       "ide-return30",
+       30,
+       16855138
+      ]
+     ],
+     "prediction_tolerance": 0.15,
+     "min_samples": 7,
+     "spread_max": 0.02,
+     "min_stable": 3,
+     "required_points": [
+      [
+       "ide-insert",
+       1
+      ],
+      [
+       "ide-insert",
+       10
+      ],
+      [
+       "ide-insert",
+       20
+      ],
+      [
+       "ide-insert",
+       30
+      ],
+      [
+       "ide-insert",
+       39
+      ],
+      [
+       "ide-backspace",
+       1
+      ],
+      [
+       "ide-backspace",
+       10
+      ],
+      [
+       "ide-backspace",
+       20
+      ],
+      [
+       "ide-backspace",
+       30
+      ],
+      [
+       "ide-backspace",
+       39
+      ],
+      [
+       "ide-return30",
+       30
+      ],
+      [
+       "ide-join30",
+       30
+      ],
+      [
+       "ide-insert-line5",
+       10
+      ],
+      [
+       "ide-insert-line20",
+       10
+      ],
+      [
+       "ide-backspace-line20",
+       10
+      ],
+      [
+       "repl-insert",
+       20
+      ],
+      [
+       "repl-backspace",
+       20
+      ],
+      [
+       "ide-burst8",
+       8
+      ],
+      [
+       "ide-burst32",
+       32
+      ]
+     ]
+    },
+    "rule_text": [
+     "FAIL: any ratio / growth / unchanged / control-reference / burst rule, a key that is not rendered, fewer than 7 samples, a point with fewer than 3 samples within 2 % of its median (samples with a collection excluded; 2.5.4 had 3 to 7), a missing point, or more collections in the single editor keys than the control run",
+     "REVIEW (no automatic pass, no fail): a measured point more than 15 % away from the model prediction -- the gain is real but the model is wrong; explain before the ship",
+     "PASS: everything else.  Thresholds are a proposal; they are a reviewer decision (D-TIME)"
+    ],
+    "derivation": {
+     "mark": "NOT-DERIVED",
+     "why": "emulator measurement; the host gives VM instruction counts and the model only"
+    }
+   },
+   "path": "emulator",
+   "forced_gc_variant": false,
+   "new_in_255": true,
+   "host_first": [
+    "the whole row; real hardware timing is not modelled (keyboard matrix scan, repeat)"
+   ],
+   "status_rule": "MEASURED row: status = the verdict of c255_row_oracles.py timing; the control run is part of the row"
+  }
+ ],
+ "oracle": {
+  "receipt": {
+   "path": "build/card-255-row-oracles-dry-r1b/receipt.json",
+   "sha256": "9c68cf8360e8e28f337df6260edb6e7305ec5162c7175fa2d6a040c914d7d259"
+  },
+  "world_identity": {
+   "suite": {
+    "path": "build/card-255-preflight-dry-r1b/emission/ide/suite.json",
+    "sha256": "032256279bd0e85ca4cec8e791ea4b3d9c025149fbc6da9c23ace8be79d0f163"
+   },
+   "world_blob_sha256": "27bfa66240ede0654a359e13f9a10736b708ba3881b7b04196bdacd6710d4e9b",
+   "world_blob_bytes": 15081,
+   "emitted": {
+    "path": "build/card-255-preflight-dry-r1b/emission/ide/ide.blob.bin",
+    "sha256": "27bfa66240ede0654a359e13f9a10736b708ba3881b7b04196bdacd6710d4e9b",
+    "bytes": 15081
+   },
+   "equal": true
+  },
+  "preflight": {
+   "path": "build/card-255-preflight-dry-r1b/receipt.json",
+   "sha256": "999a1249a6728b19d8d34622ce3253ba14a6e6876d06d88152422a7b6ef8f5a6"
+  },
+  "stand_in_world": false,
+  "all_l2_rows_equal_to_254": true,
+  "marks": {
+   "HOST-EXECUTED": 36,
+   "NOT-DERIVED": 12
+  }
+ }
+}

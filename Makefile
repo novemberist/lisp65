@@ -2119,10 +2119,10 @@ dialect-v2-strings-lcc-stage3-check: dialect-v2-strings-lcc-selftest $(DIALECT_V
 dialect-v2-strings-matrix: dialect-v2-strings-native-matrix dialect-v2-strings-p0-check dialect-v2-strings-lcc-check
 
 v2-string-codec-workload-selftest: v2-workbench-codemod
-	python3 tools/host-lisp/v2_string_codec_workloads_v254_r3_20261003.py selftest
+	python3 tools/host-lisp/v2_string_codec_workloads_v255_r4_20261006.py selftest
 
 v2-string-codec-workload-check: v2-string-codec-workload-selftest
-	python3 tools/host-lisp/v2_string_codec_workloads_v254_r3_20261003.py check
+	python3 tools/host-lisp/v2_string_codec_workloads_v255_r4_20261006.py check
 
 v2-prim-lowering-check:
 	python3 tools/host-lisp/v2_prim_lowering.py

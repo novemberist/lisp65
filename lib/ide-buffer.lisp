@@ -9,7 +9,7 @@
 
 (defun ide-buffer-lines (buffer)
   (let* ((lines (car (cdr (cdr buffer))))
-         (cache (ide-buffer-locals buffer)))
+         (cache (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr buffer))))))))))
     (if cache
         (%ide-lines-replace lines
                             (car cache)
@@ -413,11 +413,11 @@
     buffer))
 
 (defun ide-insert-char (buffer code)
-  (let* ((point (ide-buffer-point buffer))
+  (let* ((point (car (cdr (cdr (cdr buffer)))))
          (line-index (car point))
          (column (cdr point))
          (raw-lines (car (cdr (cdr buffer))))
-         (cache (ide-buffer-locals buffer))
+         (cache (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr buffer)))))))))
          (cached (and cache
                       (= (car cache) line-index)
                       (= (car (cdr (cdr cache))) column)))
@@ -444,10 +444,10 @@
                (cons line-index new-column)))))))
 
 (defun ide-split-line (buffer)
-  (let* ((point (ide-buffer-point buffer))
-         (line-index (ide-point-line point))
-         (column (ide-point-column point))
-         (cache (ide-buffer-locals buffer)))
+  (let* ((point (car (cdr (cdr (cdr buffer)))))
+         (line-index (car point))
+         (column (cdr point))
+         (cache (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr buffer))))))))))
     ;; E3 (2.5.4): the typing cache is shared with the buffer published after
     ;; the previous key, so it is copied (%ide-rev-onto), never consumed: an
     ;; abort between an nreverse and the next publication would truncate the
@@ -485,11 +485,11 @@
          (ide-line-at buffer line-index)))))
 
 (defun ide-delete-backward-char (buffer)
-  (let* ((point (ide-buffer-point buffer))
+  (let* ((point (car (cdr (cdr (cdr buffer)))))
          (line-index (car point))
          (column (cdr point))
          (raw-lines (car (cdr (cdr buffer))))
-         (cache (ide-buffer-locals buffer))
+         (cache (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr buffer)))))))))
          (cached (and cache
                       (> column 0)
                       (= (car cache) line-index)
@@ -642,27 +642,27 @@
 
 (defun ide-move-left (buffer)
   ((lambda (point)
-     (if (> (ide-point-column point) 0)
-         (ide-set-point buffer (ide-point-line point) (- (ide-point-column point) 1))
-         (if (> (ide-point-line point) 0)
+     (if (> (cdr point) 0)
+         (ide-set-point buffer (car point) (- (cdr point) 1))
+         (if (> (car point) 0)
              ((lambda (prev-line)
                 (ide-set-point buffer
-                               (- (ide-point-line point) 1)
+                               (- (car point) 1)
                                (string-length prev-line)))
-              (ide-line-at buffer (- (ide-point-line point) 1)))
+              (ide-line-at buffer (- (car point) 1)))
              buffer)))
-   (ide-buffer-point buffer)))
+   (car (cdr (cdr (cdr buffer))))))
 
 (defun ide-move-right (buffer)
   ((lambda (point)
      ((lambda (line)
-        (if (< (ide-point-column point) (string-length line))
-            (ide-set-point buffer (ide-point-line point) (+ (ide-point-column point) 1))
-            (if (< (+ (ide-point-line point) 1) (ide-line-count buffer))
-                (ide-set-point buffer (+ (ide-point-line point) 1) 0)
+        (if (< (cdr point) (string-length line))
+            (ide-set-point buffer (car point) (+ (cdr point) 1))
+            (if (< (+ (car point) 1) (ide-line-count buffer))
+                (ide-set-point buffer (+ (car point) 1) 0)
                 buffer)))
-      (ide-line-at buffer (ide-point-line point))))
-   (ide-buffer-point buffer)))
+      (ide-line-at buffer (car point))))
+   (car (cdr (cdr (cdr buffer))))))
 
 (defun ide-move-line-relative (buffer delta)
   ((lambda (point)
@@ -788,25 +788,25 @@
 
 (defun ide-move-up (buffer)
   ((lambda (point)
-     (if (> (ide-point-line point) 0)
+     (if (> (car point) 0)
          ((lambda (line)
             (ide-set-point buffer
-                           (- (ide-point-line point) 1)
-                           (%ide-min (ide-point-column point) (string-length line))))
-          (ide-line-at buffer (- (ide-point-line point) 1)))
+                           (- (car point) 1)
+                           (%ide-min (cdr point) (string-length line))))
+          (ide-line-at buffer (- (car point) 1)))
          buffer))
-   (ide-buffer-point buffer)))
+   (car (cdr (cdr (cdr buffer))))))
 
 (defun ide-move-down (buffer)
   ((lambda (point)
-     (if (< (+ (ide-point-line point) 1) (ide-line-count buffer))
+     (if (< (+ (car point) 1) (ide-line-count buffer))
          ((lambda (line)
             (ide-set-point buffer
-                           (+ (ide-point-line point) 1)
-                           (%ide-min (ide-point-column point) (string-length line))))
-          (ide-line-at buffer (+ (ide-point-line point) 1)))
+                           (+ (car point) 1)
+                           (%ide-min (cdr point) (string-length line))))
+          (ide-line-at buffer (+ (car point) 1)))
          buffer))
-   (ide-buffer-point buffer)))
+   (car (cdr (cdr (cdr buffer))))))
 
 (defun %ide-top-level-line-p (line)
   (if (> (string-length line) 0)
